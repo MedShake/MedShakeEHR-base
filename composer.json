@@ -1,0 +1,10 @@
+{
+    "require": {
+        "twig/twig": "^2.0",
+        "altorouter/altorouter": "^1.2",
+        "mustangostang/spyc": "^0.6.1",
+        "wixel/gump": "^1.4",
+        "dompdf/dompdf": "^0.8.0",
+        "phpmailer/phpmailer": "^5.2"
+    }
+}

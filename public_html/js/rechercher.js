@@ -1,0 +1,89 @@
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Fonctions JS pour la recherche patients / pros
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+$(document).ready(function() {
+  updateListingPatients();
+
+  $(".searchupdate").on("keyup", function(e) {
+    updateListingPatients();
+  });
+  $('body').on("click", ".openPatient td:nth-child(-n+6)", function(e) {
+    window.location.href = $(this).closest('tr').attr('data-url');
+  });
+
+
+  
+  //envoyer pour signature
+  $('body').on("click", "a.sendSign", function(e) {
+    e.preventDefault();
+    source=$(this);
+    $.ajax({
+      url: '/patients/ajax/patientsSendSign/',
+      type: 'post',
+      data: {
+        patientID: $(this).attr('data-patientID')
+      },
+      dataType: "html",
+      success: function(data) {
+        el = source.closest('tr');
+        el.css("background", "#efffe8");
+        setTimeout(function() {
+          el.css("background", "");
+        }, 1000);
+        //alert('Patiente envoyée !');
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+});
+
+
+function updateListingPatients() {
+
+  $.ajax({
+    url: '/patients/ajax/patientsListByCrit/',
+    type: 'post',
+    data: {
+      porp: $('#listing').attr('data-porp'),
+      d2: $('#d2').val(),
+      d3: $('#d3').val(),
+      autreCrit: $('#autreCrit option:selected').val(),
+      autreCritVal: $('#autreCritVal').val(),
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#listing').html(data);
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+
+}

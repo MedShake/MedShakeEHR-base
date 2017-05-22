@@ -1,0 +1,95 @@
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Js pour le module ordonnance du dossier patient
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+$.getScriptOnce("../bower_components/autogrow/autogrow.min.js");
+
+$(document).ready(function() {
+
+  //close button zone newOrdo
+  $('#newOrdo').on("click", "#cleanNewOrdo", function(e) {
+    $('#newOrdo').html('');
+  });
+
+  //supprimer ligne ordo
+  $('#newOrdo').on("click", "button.cleanLigneOrdo", function(e) {
+    $(this).closest('div.ligneOrdo').remove();
+  });
+
+  //ajout ligne à ordo
+  $('#newOrdo').on("change", 'select.selectPrescriptionStarter', function() {
+    ajouterLigneOrdo($(this));
+  });
+
+  //retour à la racine du dossier patient quand submit d'ordo.
+  $('#newOrdo').on("submit", '#ordoComposer', function() {
+    setTimeout(function() {
+      window.location.reload();
+    }, 1000);
+  });
+
+  //supprimer ligne ordo
+  $('#newOrdo').on("keyup", "textarea", function(e) {
+    autoGrowOrdo(this);
+  });
+
+
+  autoGrowOrdo();
+});
+
+
+//ajouter une ligne à l'ordo
+function ajouterLigneOrdo(selecteur) {
+  id = selecteur.attr('id');
+  item = $('#' + id + ' option:selected').val();
+
+  $.ajax({
+    url: '/patient/ajax/getLigneOrdo/',
+    type: 'post',
+    data: {
+      ligneID: item,
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#ordoComposer div.insertBeforeMe').before(data);
+      autoGrowOrdo();
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+
+}
+
+//auto_grow
+
+function autoGrowOrdo() {
+  $("#ordoComposer textarea").each(function(index) {
+    $(this).css("height", "10px");
+    $(this).css("overflow", "hidden");
+    auto_grow(this);
+  });
+}

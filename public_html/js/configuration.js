@@ -1,0 +1,196 @@
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Fonctions JS pour les pages de configuration
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+$(document).ready(function() {
+
+  // extract by primary key
+  $("button.edit-by-prim-key").on("click", function(e) {
+
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    var id = $(this).attr("data-id");
+    var table = $(this).attr("data-table");
+
+    $.ajax({
+      url: '/configuration/ajax/configExtractByPrimaryKey/',
+      type: 'post',
+      data: {
+        id: id,
+        table: table
+      },
+      dataType: "json",
+      success: function(data) {
+        $(form).append('<input type="hidden" value="' + data.id + '" name="id" />');
+        $(modal + ' form select option').removeProp('selected');
+        $(modal + ' form textarea').val('');
+        $.each(data, function(index, value) {
+          if ($(form + ' input[name="' + index + '"]').length) {
+            $(form + ' input[name="' + index + '"]').attr('value', value);
+          } else if ($(form + ' select[name="' + index + '"]').length) {
+            $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
+          } else if ($(form + ' textarea[name="' + index + '"]').length) {
+            $(form + ' textarea[name="' + index + '"]').val(value);
+          }
+        });
+        $(modal).modal('show');
+
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+
+  });
+
+  // duplicate
+  $("button.duplicate").on("click", function(e) {
+    var id = $(this).attr("data-id");
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    var table = $(this).attr("data-table");
+
+    $.ajax({
+      url: '/configuration/ajax/configExtractByPrimaryKey/',
+      type: 'post',
+      data: {
+        id: id,
+        table: table
+      },
+      dataType: "json",
+      success: function(data) {
+        $(modal + ' form select option').removeProp('selected');
+        $(modal + ' form textarea').val('');
+        $.each(data, function(index, value) {
+          if ($(form + ' input[name="' + index + '"]').length) {
+            $(form + ' input[name="' + index + '"]').attr('value', value);
+          } else if ($(form + ' select[name="' + index + '"]').length) {
+            $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
+          } else if ($(form + ' textarea[name="' + index + '"]').length) {
+            $(form + ' textarea[name="' + index + '"]').val(value);
+          }
+        });
+        $(modal).modal('show');
+
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+
+  });
+
+  //ajax save form in modal
+  $("button.modal-save").on("click", function(e) {
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalFormSave(form, modal);
+
+  });
+
+  //delete by primary key
+  $("button.delete-by-prim-key").on("click", function(e) {
+
+    var id = $(this).attr("data-id");
+    var table = $(this).attr("data-table");
+
+    if (confirm("Êtes-vous certain ?")) {
+
+
+      $.ajax({
+        url: '/configuration/ajax/configDelByPrimaryKey/',
+        type: 'post',
+        data: {
+          id: id,
+          table: table
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    }
+  });
+
+
+  // reset modal form
+  $("button.reset-modal").on("click", function(e) {
+    var modal = $(this).attr("data-target");
+    $(modal + ' form input[name="id"]').remove();
+
+    $(modal + ' form input').attr('value', '');
+    $(modal + ' form textarea').val('');
+    $(modal + ' form select option').removeProp('selected');
+    $(modal + ' form select option:eq(0)').prop('selected', 'selected');
+
+  });
+
+
+  $("button.typeToggleVisibility").on("click", function(e) {
+
+    classToToggle = $(this).attr('id');
+    $('.'+classToToggle).toggle();
+
+  });
+
+});
+
+function ajaxModalFormSave(form, modal) {
+  var data = {};
+  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
+    var input = $(this);
+    data[input.attr('name')] = input.val();
+  });
+
+  var url = $(form).attr('action');
+  data["groupe"] = $(form).attr('data-groupe');
+
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: data,
+    dataType: "json",
+    success: function(data) {
+      if (data.status == 'ok') {
+        $(modal).modal('hide');
+        location.reload();
+      } else {
+        $(modal + ' div.alert').show();
+        $(modal + ' div.alert ul').html('');
+        $.each(data.msg, function(index, value) {
+          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
+        });
+      }
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+
+}

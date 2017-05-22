@@ -1,0 +1,119 @@
+#
+# This file is part of MedShakeEHR.
+#
+# Copyright (c) 2017
+# Bertrand Boutillier <b.boutillier@gmail.com>
+# http://www.medshake.net
+#
+# MedShakeEHR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# MedShakeEHR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#######################################
+#
+# Routes
+#
+# Ensemble des routes nécessaires à la bonne résolution des url au format yaml
+# (Thanks to AltoRouter <http://altorouter.com/> !)
+#
+#######################################
+
+
+root: ['GET', '/', 'index']
+userLogIn: ['GET', '/login/', 'login/logIn']
+userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
+userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
+
+#Ajax general
+ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/', 'actions/ajax']
+ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
+
+#chercher patients / pros
+patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
+patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
+
+#créer / éditer patient/pros
+peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
+peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/peopleRegister']
+peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
+
+# pro : voir fiche praticien
+proView: ['GET', '/pro/[i:proID]/', 'people/proView']
+
+#dossier patient
+patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
+patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
+patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
+
+#dicom
+dicomActions: ['GET|POST', '/dicom/actions/[a:m]/', 'dicom/actions/dicomActions']
+dcViewPatient: ['GET', '/dicom/[i:patientID]/', 'dicom/viewPatient']
+dcViewStudy: ['GET', '/dicom/[i:patientID]/study/[:dcStudyID]/', 'dicom/viewStudy']
+
+#logs
+logs: ['GET', '/logs/[i:patient]?/[i:typeID]?/[i:instance]?/', 'logs/logs']
+historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiquePrint']
+historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
+
+#pdf
+makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo:printType]/[i:examen]/', 'print/pdfMake']
+makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
+showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
+
+#compta
+comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
+comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
+comptaToday: ['GET|POST', '/compta/aujourdhui/', 'compta/today']
+compta: ['GET|POST', '/compta/', 'compta/compta']
+
+#inbox
+inboxAjax: ['POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
+inboxActions: ['POST|GET', '/inbox/actions/[a:m]/[i:mailID]?/', 'inbox/actions/inboxActions']
+inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
+
+#configuration
+configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']
+configActions: ['POST|GET', '/configuration/actions/[a:m]/', 'configuration/actions/configActions']
+configIndex: ['GET', '/configuration/', 'configuration/configIndex']
+configDataType: ['GET', '/configuration/data-type/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/[i:cat]?/', 'configuration/configDataType']
+configDataTypeValues: ['GET', '/configuration/data-type/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/[i:cat]/[i:typeID]/', 'configuration/configDataTypeValues']
+configDataCat: ['GET', '/configuration/data-cat/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/', 'configuration/configDataCat']
+configPrescriptions: ['GET', '/configuration/prescriptions/[i:cat]?/', 'configuration/configPrescriptions']
+configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configuration/configPrescriptionsCat']
+configActes: ['GET', '/configuration/actes/[i:cat]?/', 'configuration/configActes']
+configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesCat']
+configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
+configLicence: ['GET', '/licence/', 'configuration/configLicence']
+
+# Configuration forms
+configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
+configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
+configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
+
+# configuration technique
+configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
+
+# configuration Users
+configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
+configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configuration/configUpdatePassword']
+configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
+
+#public
+publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
+publicSigner: ['GET', '/public/signer/', 'public/signer']
+publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
+
+#routes pour le module
+moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
+moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']

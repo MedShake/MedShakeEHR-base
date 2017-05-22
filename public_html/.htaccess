@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^public/.* public.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]

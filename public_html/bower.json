@@ -1,0 +1,29 @@
+{
+  "name": "medshakeehr",
+  "description": "MedShakeEHR",
+  "main": "",
+  "authors": [
+    "Bertrand Boutillier"
+  ],
+  "license": "GNU GPL",
+  "homepage": "https://www.medshake.net",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.43",
+    "moment": "^2.17.1",
+    "magnific-popup": "https://github.com/dimsemenov/Magnific-Popup.git#^1.1.0",
+    "jquery-typewatch": "^3.0.0",
+    "tinymce": "^4.5.7",
+    "jquery": "^3.2.1",
+    "uploader": "https://github.com/danielm/uploader.git",
+    "jSignature": "^2.1.1"
+  }
+}

@@ -1,0 +1,447 @@
+<?php
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ *
+ * Liaison entre MedShakeEHR et Orthanc <http://www.orthanc-server.com/>,
+ * Orthanc est serveur DICOM libre et open source qui doit être installé sur
+ * le réseau informatique où MedShake est employé. L'appareil d'imagerie doit
+ * être configuré pour envoyer ses données à Orthanc (Stockage et SR).
+ * MedShakeEHR récupère ensuite mesures et images auprès d'Orthanc.
+ * A l'inverse, MedShakeEHR envoie les données patient à Orthanc qui les adressera
+ * à l'appareil d'imagerie pour pré configurer l'examen.
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+class msDicom
+{
+    /**
+ * @var int ID patient de MedShakeEHR
+ */
+    private $_toID;
+/**
+ * @var int ID patient Orthanc
+ */
+    private $_dcPatientID;
+/**
+ * @var string studyID Orthanc
+ */
+    private $_dcStudyID;
+/**
+ * @var array data étude d'orthanc sur l'étude courante
+ */
+    private $_dcStudyData;
+/**
+ * @var string ID serie orthanc
+ */
+    private $_dcSerieID;
+/**
+ * @var string ID de l'instance Orthanc
+ */
+    private $_dcInstanceID;
+/**
+ * @var array data Orthanc sur l'instance
+ */
+    private $_dcInstanceData;
+/**
+ * @var array array data Orthanc sur l'instance courante
+ */
+    private $_dcInstanceDataSR;
+/**
+ * @var string URL de base pour requète curl
+ */
+    private $_baseCurlUrl; //ll'url de base pour requète curl
+
+
+/**
+ * Construire l'url de base pour curl
+ */
+    public function __construct()
+    {
+        global $p;
+        $this->_baseCurlUrl='http://'.$p['config']['dicomHost'].':8042';
+    }
+
+/**
+ * Definri l'ID patient
+ * Definir l'ID Orthanc via l'ID patient MedShakeEHR
+ * @param [type] $v [description]
+ */
+    public function setToID($v)
+    {
+        $this->_toID = $v;
+        $this->_makeDcPatientID();
+        return $this->_toID;
+    }
+
+/**
+ * Définir la studyID pour Orthanc
+ * @param string $v studyID Orthanc
+ */
+    public function setDcStudyID($v)
+    {
+        return $this->_dcStudyID = $v;
+    }
+
+/**
+ * Définir la serieID pour Orthanc
+ * @param string $v serieID Orthanc
+ */
+    public function setDcSerieID($v)
+    {
+        return $this->_dcSerieID = $v;
+    }
+
+/**
+ * Définir l'instanceID pour Orthanc
+ * @param string $v instanceID Orthanc
+ */
+    public function setDcInstanceID($v)
+    {
+        return $this->_dcInstanceID = $v;
+    }
+
+/**
+ * Obtenir les data via un studyID Orthanc
+ * @return array array
+ */
+    public function getStudyDcData()
+    {
+        $url=$this->_baseCurlUrl.'/studies/'.$this->_dcStudyID;
+        return  $this->_dcStudyData = $this->_dcGetContent($url);
+    }
+
+/**
+ * Obtenir la studyID à partir de l'instanceID
+ * @return string studyID
+ */
+    public function getStudyDcFromInstance()
+    {
+        $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/study';
+        $data = $this->_dcInstanceData = $this->_dcGetContent($url);
+        return $data['ID'];
+    }
+
+/**
+ * Obtenir les tags DICOM d'une instance
+ * @return array tags DICOM de l'instance
+ */
+    public function getInstanceDcTags()
+    {
+        if (!isset($this->_dcInstanceID)) {
+            throw new Exception('InstanceID is not set');
+        }
+
+        $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/simplified-tags/';
+        return  $this->_dcInstanceData = $this->_dcGetContent($url);
+    }
+
+/**
+ * Obtenir et sauver l'image d'une instance
+ * @return void
+ */
+    public function getImageFromInstance()
+    {
+        global $p;
+        if (!isset($this->_dcStudyID)) {
+            $this->_dcStudyID=$this->getStudyDcFromInstance();
+        }
+        $targetDirectory = $p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/';
+        msTools::checkAndBuildTargetDir($targetDirectory);
+        $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/preview';
+        $saveto = $targetDirectory.$this->_dcInstanceID.'.png';
+        $this->_dcGetImage($url, $saveto);
+    }
+
+/**
+ * Obtenir toutes les images d'une étude
+ * @return array chemin relatif de toutes les images
+ */
+    public function getAllImagesFromStudy()
+    {
+        global $p;
+        $url=$this->_baseCurlUrl.'/studies/'.$this->_dcStudyID.'/instances';
+
+        $data =  $this->_dcGetContent($url);
+        foreach ($data as $k=>$v) {
+            $this->_dcInstanceID = $v['ID'];
+            $this->getImageFromInstance();
+
+            $file=$p['config']['workingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/'.$this->_dcInstanceID.'.png';
+            if (is_file($file)) {
+                $tabImg[$this->_dcInstanceID]=str_replace($p['config']['webDirectory'], '', $file);
+            }
+        }
+        return $tabImg;
+    }
+
+/**
+ * Obtenir toutes les études d'un patient
+ * @return array données sur toutes les études
+ */
+    public function getAllStudiesFromPatientDcData()
+    {
+        $url=$this->_baseCurlUrl.'/patients/'.$this->_dcPatientID.'/studies/';
+        //return  $this->_dcGetContent($url);
+
+        $studies =  $this->_dcGetContent($url);
+        if (count($studies)>1) {
+            foreach ($studies as $k=>$study) {
+                $r[$study['MainDicomTags']['StudyDate'].$study['MainDicomTags']['StudyTime']]=$study;
+            }
+            krsort($r);
+            $r=array_values($r);
+        } else {
+            $r=$studies;
+        }
+        return $r;
+    }
+
+/**
+ * Obtenir la dernière instance SR pour un patient
+ * ( = rapatrier les mesures de l'examen du jour)
+ * @return array data SR
+ */
+    public function getLastSRinstanceFromPatientID()
+    {
+        if ($pd=$this->getAllStudiesFromPatientDcData()) {
+            $this->_dcStudyID = $pd[0]['ID'];
+            return $this->getSRinstanceFromStudy();
+        }
+
+        return false;
+    }
+
+/**
+ * Obtenir les data SR d'une étude
+ * @return array data SR de l'étude
+ */
+    public function getSRinstanceFromStudy()
+    {
+        global $p;
+        $url=$this->_baseCurlUrl.'/studies/'.$this->_dcStudyID.'/series';
+        $data =  $this->_dcGetContent($url);
+
+        $i=0;
+        while (isset($data[$i]) and !isset($stop)) {
+            if ($data[$i]['MainDicomTags']['Modality']=='SR') {
+                $this->_dcInstanceID=$data[$i]['Instances'][0];
+                $this->_dcStudyID=$data[$i]['ParentStudy'];
+                $this->_dcSerieID=$data[$i]['ID'];
+
+                $stop='stop';
+            }
+            $i++;
+        }
+        if (isset($stop)) {
+            return $this->_dcInstanceID;
+        } else {
+            return false;
+        }
+    }
+
+/**
+ * Obtenir toutes les mesures d'un instance SR
+ * @param  bool $calcMinMaxAvg Calculer ou pas max / min / avg
+ * @return array
+ */
+    public function getAllSrMesuresFromInstance($calcMinMaxAvg = false)
+    {
+        $data = msDicom::_getAllSrMesuresBlocFromInstance($this->getInstanceDcTags());
+
+        foreach ($data as $v) {
+
+          //best value
+          if (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])  and isset($v['ContentSequence'])) {
+              $tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']]['bv']=array(
+              'CodeValue'=>$v['ConceptNameCodeSequence'][0]['CodeValue'],
+              'CodeMeaning'=>$v['ConceptNameCodeSequence'][0]['CodeMeaning'],
+              'NumericValue'=>$v['MeasuredValueSequence'][0]['NumericValue'],
+              'MeasurementUnits'=>$v['MeasuredValueSequence'][0]['MeasurementUnitsCodeSequence'][0]['CodeValue']
+            );
+          } elseif (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])) {
+              $tabindex=@count($tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']])+1;
+              $tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']][$tabindex]=array(
+              'CodeValue'=>$v['ConceptNameCodeSequence'][0]['CodeValue'],
+              'CodeMeaning'=>$v['ConceptNameCodeSequence'][0]['CodeMeaning'],
+              'NumericValue'=>$v['MeasuredValueSequence'][0]['NumericValue'],
+              'MeasurementUnits'=>$v['MeasuredValueSequence'][0]['MeasurementUnitsCodeSequence'][0]['CodeValue']
+            );
+
+              $tab4calc[$v['ConceptNameCodeSequence'][0]['CodeValue']][]=$v['MeasuredValueSequence'][0]['NumericValue'];
+          }
+        }
+
+        //calcul de min, max et avg
+        if (count($tab4calc) > 0 and $calcMinMaxAvg==true) {
+            foreach ($tab4calc as $k=>$values) {
+                $tabVal[$k]['min']['NumericValue'] = min($values);
+                $tabVal[$k]['max']['NumericValue'] = max($values);
+                $tabVal[$k]['avg']['NumericValue'] = number_format((array_sum($values) / count($values)), 2, ".", "");
+            }
+        }
+
+        $this->_saveNewDicomTagsInDB($tabVal);
+
+        return $this->_dcInstanceDataSR = $tabVal;
+    }
+
+/**
+ * Obtenir le tableau de mesures pour l'exploiter dans MedShakeEHR
+ * @return array
+ */
+    public function getAllSrMesuresReturnTab()
+    {
+        if (!isset($this->_dcInstanceDataSR)) {
+            throw new Exception('dcInstanceDataSR is not set');
+        }
+        $array=$this->_dcInstanceDataSR;
+
+        $tags=array_keys($array);
+
+        if (count($tags)>0) {
+            $corres=msSQL::sql2tabKey("select typeID, dicomTag, returnValue, roundDecimal from dicomTags where dicomTag in ('".implode("','", $tags)."')", 'typeID');
+            if (count($corres)>0) {
+                foreach ($corres as $k=>$v) {
+                    if ($k>0) {
+                        if (isset($array[$v['dicomTag']][$v['returnValue']]['NumericValue'])) {
+                            $data['data'][$k]=round($array[$v['dicomTag']][$v['returnValue']]['NumericValue'], $v['roundDecimal']);
+                            $data['debug'][$k]=$v['returnValue'];
+                        } elseif (isset($array[$v['dicomTag']]['bv']['NumericValue'])) {
+                            $data['data'][$k]=round($array[$v['dicomTag']]['bv']['NumericValue'], $v['roundDecimal']);
+                            $data['debug'][$k]='bv';
+                        } elseif (isset($array[$v['dicomTag']][1]['NumericValue'])) {
+                            $data['data'][$k]=round($array[$v['dicomTag']][1]['NumericValue'], $v['roundDecimal']);
+                            $data['debug'][$k]='1';
+                        }
+                    }
+                }
+                $data['find']=true;
+                $data['dicom']=array(
+                  'study'=>$this->_dcStudyID,
+                  'serie'=>$this->_dcSerieID,
+                  'instance'=>$this->_dcInstanceID
+                );
+            } else {
+                $data['find']=false;
+            }
+        } else {
+            $data['find']=false;
+        }
+        return $data;
+    }
+
+/**
+ * Obtenir tous les blocs contenant des mesures dans les data DICOM
+ * @param  array $array le tableau des datas DICOM de l'instnace SR
+ * @return array        array
+ */
+    private function _getAllSrMesuresBlocFromInstance($array)
+    {
+        if (!isset($b)) {
+            $b=array();
+        }
+
+        foreach ($array as $k=>$v) {
+            if (is_array($v)) {
+                if (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])) {
+                    $b[] = $v;
+                } else {
+                    $b=array_merge($b, $this->_getAllSrMesuresBlocFromInstance($v));
+                }
+            }
+        }
+        return $b;
+    }
+
+/**
+ * Enregistrer en base les nouveau tag DICOM SR rencontrés
+ * (en vue des les attacher à une donnée MedShake si besoin)
+ * @param  array $tab data DICOM
+ * @return void
+ */
+    private function _saveNewDicomTagsInDB($tab)
+    {
+        foreach ($tab as $k=>$v) {
+            if (!msSQL::sqlUniqueChamp("select dicomTag from dicomTags where dicomTag='".$k."' limit 1")) {
+                $data= array(
+              'dicomTag'=>$k,
+              'dicomCodeMeaning'=>$v[1]['CodeMeaning'],
+              'dicomUnits'=>$v[1]['MeasurementUnits']
+            );
+                msSQL::sqlInsert("dicomTags", $data);
+            }
+        }
+    }
+
+/**
+ * Construire l'ID patient Orthanc
+ * @return void
+ */
+    private function _makeDcPatientID()
+    {
+        global $p;
+        $s=$p['config']['dicomPrefixIdPatient'].$this->_toID;
+        $s=sha1($s);
+        $s=chunk_split($s, 8, '-');
+        $s=rtrim($s, '-');
+        $this->_dcPatientID=$s;
+    }
+
+/**
+ * Faire une requète curl vers Orthanc
+ * @param  string $url url curl
+ * @return array      array php
+ */
+    private function _dcGetContent($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result=curl_exec($ch);
+        curl_close($ch);
+        return json_decode($result, true);
+    }
+
+/**
+ * Rapatrier une image via une requète curl
+ * @param  string $url    url curl
+ * @param  string $saveto fichier sauvé et chemin
+ * @return void
+ */
+    private function _dcGetImage($url, $saveto)
+    {
+        if (!is_file($saveto)) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+            $raw=curl_exec($ch);
+            curl_close($ch);
+            if (strlen($raw)>0) {
+                file_put_contents($saveto, $raw);
+            }
+        }
+    }
+}

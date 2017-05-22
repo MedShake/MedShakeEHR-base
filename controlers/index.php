@@ -1,0 +1,3 @@
+<?php
+
+msTools::redirection('/patients/');
