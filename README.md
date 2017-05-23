@@ -1,6 +1,8 @@
 # MedShakeEHR-base
 Base pour MedShakeEHR, logiciel modulaire, universel, open source pour les praticiens santé.
 
+Les information ci dessous sont une rapide introduction. N'hésitez pas à consulter le [Wiki MedShakeEHR](https://github.com/MedShake/MedShakeEHR-base/wiki) pour plus d'informations ! 
+
 ## Avertissements
 Ce logiciel ne doit pas être utilisé en l'état pour la stockage de données patient sur un réseau ouvert.  
 Son utilisation doit être exclusivement limitée à un réseau privé sans utilisateur potentiellement hostile.
