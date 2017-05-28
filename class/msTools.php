@@ -165,7 +165,7 @@ class msTools
     if (isset($txt[1])) {
         $txt=explode('<!-- stop body -->', $txt[1]);
     } else {
-        $txt=explode('<!-- stop body -->', $txt);
+        $txt=explode('<!-- stop body -->', $txt[0]);
     }
     $txt=$txt[0];
 
