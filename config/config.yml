@@ -99,6 +99,12 @@ dicomWorkingDirectory: '/home/EHR/public_html/workingDirectory/'
 dicomAutoSendPatient2Echo: 'false'
 
 #######################################
+## agenda
+agendaDistantLink: 'http://monagenda.agenda.abc'
+agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
+agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
+
+#######################################
 ## Twig
 templateBaseFolder: 'gynobs'
 twig:
