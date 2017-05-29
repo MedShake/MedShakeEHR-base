@@ -88,9 +88,7 @@ apicryptPopHost: 'pop.intermedic.org'
 apicryptPopPort: '110'
 apicryptPopUser: 'prenom.NOM'
 apicryptPopPass: 'passwordapicrypt'
-
-
-
+apicryptDefautSujet: 'Document concernant votre patient'
 
 #######################################
 ## dicom

@@ -43,8 +43,8 @@ if ($_POST['mailType']=='ns') {
     $catModelesMails=58;
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['109']=$p['config']['apicryptAdresse'];
-    $preValues['111']="Cher confrère,\n\n\nBien confraternellement,";
-    $preValues['112']="Document concernant votre patient";
+    $preValues['111']="";
+    $preValues['112']=$p['config']['apicryptDefautSujet'];
     $catModelesMails=59;
 }
 
