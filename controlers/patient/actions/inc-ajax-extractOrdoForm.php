@@ -49,7 +49,7 @@ if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as ca
 if (is_numeric($_POST['objetID'])) {
     $p['page']['courrier']['objetID']=$_POST['objetID'];
 
-    if ($ordoData=msSQL::sql2tab("select ald.value as ald, concat(p.parentTypeID,'_',UNIX_TIMESTAMP(),'_',p.id) as formname, 'Ligne importée' as label, p.value as description, p.typeID, concat(' (initiallement : ',pres.label,')') as labelInitiale, p.id
+    if ($ordoData=msSQL::sql2tab("select ald.value as ald, concat(p.parentTypeID,'_',UNIX_TIMESTAMP(),'_',p.id) as formname, 'Ligne importée' as label, p.value as description, p.typeID, concat(' (initialement : ',pres.label,')') as labelInitiale, p.id
     from objets_data as p
     left join objets_data as ald on p.id=ald.instance and ald.typeID=191 and ald.outdated='' and ald.deleted=''
     left join prescriptions as pres on pres.id=p.parentTypeID
