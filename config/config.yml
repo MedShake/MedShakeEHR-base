@@ -71,6 +71,7 @@ smtpHost: 'smtp.net'
 smtpPort: 587
 smtpUsername: 'smtpuserlogin'
 smtpPassword: 'smtppassword'
+smtpDefautSujet: 'Document vous concernant'
 
 #######################################
 ## apicrypt

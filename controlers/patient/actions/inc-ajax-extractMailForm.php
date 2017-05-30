@@ -40,10 +40,11 @@ if ($_POST['mailType']=='ns') {
     $preValues['109']=$p['config']['smtpFrom'];
     $preValues['110']=$toAdminData['4'];
     $preValues['111']="Madame,\n\n";
+    $preValues['112']=$p['config']['smtpDefautSujet'];
     $catModelesMails=58;
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['109']=$p['config']['apicryptAdresse'];
-    $preValues['111']="";
+    $preValues['111']="Cher confrère,\n\n\nBien confraternellement,";
     $preValues['112']=$p['config']['apicryptDefautSujet'];
     $catModelesMails=59;
 }
