@@ -44,6 +44,13 @@ spl_autoload_register(function ($class) {
 $p['config']=Spyc::YAMLLoad('../config/config.yml');
 $p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
 
+/////////// correction pour host non présent (IP qui change)
+if ($p['config']['host']=='') {
+  $p['config']['host']=$_SERVER['SERVER_ADDR'];
+  $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
+
+}
+
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
@@ -96,7 +103,6 @@ if (isset($template)) {
 
     // patients of the day
     $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");

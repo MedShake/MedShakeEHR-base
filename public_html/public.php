@@ -44,6 +44,13 @@
  $p['config']=Spyc::YAMLLoad('../config/config.yml');
  $p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
 
+ /////////// correction pour host non présent (IP qui change)
+ if ($p['config']['host']=='') {
+   $p['config']['host']=$_SERVER['SERVER_ADDR'];
+   $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
+
+ }
+
  /////////// SQL connexion
  $mysqli=msSQL::sqlConnect();
 
