@@ -40,7 +40,7 @@ $validation=$form->getValidation();
 
 if ($validation === false) {
     // pas d'exploitation car pas de champ required
-    // utilisés ici.  
+    // utilisés ici.
 } else {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
@@ -66,9 +66,7 @@ if ($validation === false) {
         }
         if (isset($id)) {
             if (is_numeric($id)) {
-                if (!empty(trim($v))) {
-                    $patient->createNewObjet($id, $v, $supportID);
-                }
+                $patient->createNewObjet($id, $v, $supportID);
             }
         }
     }
