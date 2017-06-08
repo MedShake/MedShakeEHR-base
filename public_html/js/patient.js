@@ -31,7 +31,7 @@ $(document).ready(function() {
   ///////// Charger les scripts JS correspondant au module et forms inclus dans la page
 
   //charger le fichier commun de fonctions aux forms médicaux
-  $.getScriptOnce("../js/module/common.js");
+  //$.getScriptOnce("../js/module/common.js");
 
   ///////// Charger les scripts JS correspondant au form inclus dans la page
   if (typeof(formScripts) != "undefined") {

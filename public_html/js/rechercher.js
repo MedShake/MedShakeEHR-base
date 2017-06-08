@@ -36,7 +36,7 @@ $(document).ready(function() {
   });
 
 
-  
+
   //envoyer pour signature
   $('body').on("click", "a.sendSign", function(e) {
     e.preventDefault();
@@ -54,7 +54,7 @@ $(document).ready(function() {
         setTimeout(function() {
           el.css("background", "");
         }, 1000);
-        //alert('Patiente envoyée !');
+        
       },
       error: function() {
         alert('Problème, rechargez la page !');
