@@ -85,11 +85,18 @@ apicryptCheminVersClefs: '/home/EHR/apicrypt/'
 apicryptCheminVersBinaires: '/home/EHR/apicrypt/bin/'
 apicryptUtilisateur: 'prenom.NOM'
 apicryptAdresse: 'prenom.NOM@medicalXX.apicrypt.org'
+apicryptSmtpHost: 'smtp.intermedic.org'
+apicryptSmtpPort: '25'
 apicryptPopHost: 'pop.intermedic.org'
 apicryptPopPort: '110'
 apicryptPopUser: 'prenom.NOM'
 apicryptPopPass: 'passwordapicrypt'
 apicryptDefautSujet: 'Document concernant votre patient'
+
+#######################################
+## ecofax OVH
+ecofaxMyNumber: '0900000000'
+ecofaxPass: 'password'
 
 #######################################
 ## dicom
