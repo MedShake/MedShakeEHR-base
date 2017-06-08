@@ -93,15 +93,23 @@ class msPop3
     }
 
 /**
- * Supprimer un message
+ * Marquer un message à supprimer 
  * @param  resource $connection connection
  * @param  int $message    message number
  * @return void
  */
     public function pop3_dele($connection, $message)
     {
-        //imap_setflag_full($connection, '1:'.$message, '\\Deleted');
         imap_delete($connection, trim($message));
+    }
+
+/**
+ * Supprimer tous les messages
+ * @param  resource $connection connection
+ * @return void
+ */
+    public function pop3_expunge($connection)
+    {
         imap_expunge($connection);
     }
 
@@ -178,7 +186,7 @@ class msPop3
  * @param  int $message_number message number
  * @param  int $part           portion
  * @param  int $prefix         prefix
- * @return array                 
+ * @return array
  */
     private function mail_decode_part($connection, $message_number, $part, $prefix)
     {
