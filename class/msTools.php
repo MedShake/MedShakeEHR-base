@@ -209,4 +209,14 @@ class msTools
       return $d{6}.$d{7}.$d{8}.$d{9}.$d{3}.$d{4}.$d{0}.$d{1};
   }
 
+/**
+ * Nettoyer le nom d'un fichier
+ * @param  string $filename nom du fichier
+ * @return string           nom du fichier simplifié
+ */
+  public static function sanitizeFilename($filename) 
+  {
+    return preg_replace("/[^a-z0-9\.]/", "", strtolower($filename));
+  }
+
 }

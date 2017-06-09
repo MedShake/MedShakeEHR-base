@@ -66,7 +66,7 @@ if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']
                     if ($kpart > 0 and isset($part['is_attachment'])) {
                         if (strlen($part['data'])>10) {
                             msTools::checkAndBuildTargetDir($p['config']['apicryptCheminInbox'].$dirname);
-                            $filec=$p['config']['apicryptCheminInbox'].$dirname.'/'.$part['filename'];
+                            $filec=$p['config']['apicryptCheminInbox'].$dirname.'/'.msTools::sanitizeFilename($part['filename']);
                             $filenc=$p['config']['apicryptCheminInbox'].$dirname.'/';
                             file_put_contents($filec, $part['data']);
                             msApicrypt::decrypterPJ($filec, $filenc);
@@ -109,35 +109,35 @@ foreach ($scanned_directory as $file) {
 
   //si c'est un txt
   if (substr($file, -4) == '.txt') {
-    $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].'/'.$file);
+      $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].'/'.$file);
 
-    $hprim=msTools::utf8_converter($hprim);
+      $hprim=msTools::utf8_converter($hprim);
 
-    $filedata = msInbox::getFileDataFromName($file);
+      $filedata = msInbox::getFileDataFromName($file);
 
     //pj
     $dir=$p['config']['apicryptCheminInbox'].'/'.str_ireplace('.txt', '.f', $file);
-    if (is_dir($dir)) {
-      $pj = array_diff(scandir($dir), array('..', '.'));
-    } else {
-      $pj=null;
-    }
+      if (is_dir($dir)) {
+          $pj = array_diff(scandir($dir), array('..', '.'));
+      } else {
+          $pj=null;
+      }
 
 
-    $data=array(
-    'txtFileName'=>$file,
-    'txtDatetime'=>$filedata['datetime'],
-    'txtNumOrdre'=>$filedata['numOrdre'],
-    'hprimIdentite'=>$hprim['prenom'].' '.$hprim['nom'],
-    'hprimExpediteur'=>$hprim['expediteur'],
-    'hprimCodePatient'=>$hprim['codePatient'],
-    'hprimDateDossier'=>$hprim['dateDossier'],
-    'hprimAllSerialize'=>serialize($hprim),
-    'pjNombre'=>count($pj),
-    'pjSerializeName'=>serialize($pj)
+      $data=array(
+      'txtFileName'=>$file,
+      'txtDatetime'=>$filedata['datetime'],
+      'txtNumOrdre'=>$filedata['numOrdre'],
+      'hprimIdentite'=>$hprim['prenom'].' '.$hprim['nom'],
+      'hprimExpediteur'=>$hprim['expediteur'],
+      'hprimCodePatient'=>$hprim['codePatient'],
+      'hprimDateDossier'=>$hprim['dateDossier'],
+      'hprimAllSerialize'=>serialize($hprim),
+      'pjNombre'=>count($pj),
+      'pjSerializeName'=>serialize($pj)
     );
 
-    msSQL::sqlInsert('inbox', $data);
-    echo mysqli_error($mysqli);
+      msSQL::sqlInsert('inbox', $data);
+      echo mysqli_error($mysqli);
   }
 }
