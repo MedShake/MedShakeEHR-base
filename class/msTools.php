@@ -214,9 +214,27 @@ class msTools
  * @param  string $filename nom du fichier
  * @return string           nom du fichier simplifié
  */
-  public static function sanitizeFilename($filename) 
+  public static function sanitizeFilename($filename)
   {
     return preg_replace("/[^a-z0-9\.]/", "", strtolower($filename));
   }
+
+/**
+ * Nettoyer les noms des fichiers d'un répertoire
+ * @param  string $dir nom du répertoire
+ * @return void
+ */
+  public static function sanitizeDirectoryFiles($dir)
+  {
+    $scanned_directory = array_diff(scandir($dir), array('..', '.'));
+    if(count($scanned_directory) > 0) {
+      foreach($scanned_directory as $file) {
+        if(is_file($dir.$file)) {
+            rename($dir.$file,$dir.msTools::sanitizeFilename($file));
+        }
+      }
+    }
+  }
+
 
 }

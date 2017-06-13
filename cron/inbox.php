@@ -109,15 +109,16 @@ foreach ($scanned_directory as $file) {
 
   //si c'est un txt
   if (substr($file, -4) == '.txt') {
-      $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].'/'.$file);
+      $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$file);
 
       $hprim=msTools::utf8_converter($hprim);
 
       $filedata = msInbox::getFileDataFromName($file);
 
     //pj
-    $dir=$p['config']['apicryptCheminInbox'].'/'.str_ireplace('.txt', '.f', $file);
+    $dir=$p['config']['apicryptCheminInbox'].str_ireplace('.txt', '.f', $file);
       if (is_dir($dir)) {
+          msTools::sanitizeDirectoryFiles($dir.'/');
           $pj = array_diff(scandir($dir), array('..', '.'));
       } else {
           $pj=null;
