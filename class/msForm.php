@@ -58,6 +58,11 @@ class msForm
      * @var array Le tableau de tous les typeID distincts présent dans le form
      */
     private $_typesInForm=[];
+    /**
+     * @var string Le type de nomage des champs du formulaire (byID / byName)
+     */
+    private $_typeForNameInForm='byID';
+
 
 /**
  * Définir le numéro du formulaire
@@ -83,6 +88,16 @@ class msForm
             throw new Exception('Instance is not numeric');
         }
     }
+
+/**
+ * Définir typeForNameInForm
+ * @param string $typeForNameInForm le type : byID / byName
+ */
+    public function setTypeForNameInForm($typeForNameInForm)
+    {
+          return $this->_typeForNameInForm = $typeForNameInForm;
+    }
+
 /**
  * Définir les datas envoyées en $_POST
  * @param array $v Datas envoyées en POST
@@ -452,7 +467,11 @@ class msForm
 
                 if ($type=$this->_formExtractType($bloc[0], $dataset)) {
 
-                    $type['name']='p_'.$type['id'];
+                    if($this->_typeForNameInForm=='byName') {
+
+                    } else {
+                      $type['name']='p_'.$type['id'];
+                    }
 
                     //valeur par défaut si présente
                     if (isset($this->_prevalues[$bloc[0]])) {

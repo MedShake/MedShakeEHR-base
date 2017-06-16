@@ -28,20 +28,22 @@
 
 $mail = new PHPMailer;
 $mail->CharSet = 'UTF-8';
-//$mail->SMTPDebug = 3;
+//$mail->SMTPDebug = 4;
 $mail->isSMTP();
 $mail->Host = $p['config']['smtpHost'];
 $mail->SMTPAuth = true;
 $mail->Username = $p['config']['smtpUsername'];
 $mail->Password = $p['config']['smtpPassword'];
-// $mail->SMTPOptions = array(
-// 'ssl' => array(
-// 'verify_peer' => false,
-// 'verify_peer_name' => false,
-// 'allow_self_signed' => true
-// )
-// );
-$mail->SMTPSecure = 'ssl';
+if($p['config']['smtpOptions'] == 'on') {
+  $mail->SMTPOptions = array(
+    'ssl' => array(
+      'verify_peer' => false,
+      'verify_peer_name' => false,
+      'allow_self_signed' => true
+    )
+  );
+}
+if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
 $mail->Port = $p['config']['smtpPort'];
 
 
@@ -55,15 +57,15 @@ if (isset($_POST['objetID'])) {
 
 
 $mail->isHTML(false);
-$mail->Subject = $_POST['p_112'];
+$mail->Subject = $_POST['mailSujet'];
 
-$mail->setFrom($_POST['p_109']);
-$mail->addAddress($_POST['p_110']);
+$mail->setFrom($_POST['mailFrom']);
+$mail->addAddress($_POST['mailTo']);
 
 if (is_file($sourceFile)) {
     $mail->addAttachment($sourceFile, "document.".$ext);
 }
-$mail->Body    =  nl2br($_POST['p_111']);
+$mail->Body    =  nl2br($_POST['mailBody']);
 $mail->AltBody = $mail->Body;
 
 
@@ -80,22 +82,22 @@ if (!$mail->send()) {
 
     //support (avec PJ ou sans)
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjet(177, '', $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjet(177, '');
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
     }
 
     //from
-    $patient->createNewObjet(109, $_POST['p_109'], $supportID);
+    $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
     //to
-    $patient->createNewObjet(110, $_POST['p_110'], $supportID);
+    $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
     //sujet
-    $patient->createNewObjet(112, $_POST['p_112'], $supportID);
+    $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
     //message
-    $patient->createNewObjet(111, $_POST['p_111'], $supportID);
+    $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
     //pj ID
     if (isset($_POST['objetID'])) {
-        $patient->createNewObjet(178, $_POST['objetID'], $supportID);
+        $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
     }
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');

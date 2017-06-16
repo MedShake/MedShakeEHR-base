@@ -46,10 +46,10 @@ if (isset($_POST['objetID'])) {
 }
 
 $mail->isHTML(false);
-$mail->Subject = $_POST['p_112'];
+$mail->Subject = $_POST['mailSujet'];
 
-$mail->setFrom($_POST['p_109']);
-$mail->addAddress($_POST['p_179']);
+$mail->setFrom($_POST['mailFrom']);
+$mail->addAddress($_POST['mailToApicrypt']);
 
 $hprimData = new msPeople();
 $hprimData->setToID($_POST['patientID']);
@@ -70,15 +70,14 @@ $texte.=str_replace(' ', '', $hprimData['180'])."\n";
 $texte.=$_POST['patientID']."\n"; //num de dossier
 $texte.="\n"; //date dossier
 $texte.='.         '.' '.strstr($p['config']['apicryptAdresse'], '@', true)."\n"; //code expediteur expediteur
-$texte.='.         '.' ';
-strstr($_POST['p_179'], '@', true)."\n"; //code desti destinataire
-$texte.="\n".trim($_POST['p_111']);
+$texte.='.         '.' '.strstr($_POST['mailToApicrypt'], '@', true)."\n"; //code desti destinataire
+$texte.="\n".trim($_POST['mailBody']);
 $texte.="\n".'****FIN****'."\n";
 $texte.='****FINFICHIER****'."\n";
-$mail->Body = msApicrypt::crypterCorps($texte, $_POST['p_179']);
+$mail->Body = msApicrypt::crypterCorps($texte, $_POST['mailToApicrypt']);
 
 if (is_file($sourceFile)) {
-    msApicrypt::crypterPJ($sourceFile, $_POST['p_179'], $_POST['objetID'].'.'.$ext);
+    msApicrypt::crypterPJ($sourceFile, $_POST['mailToApicrypt'], $_POST['objetID'].'.'.$ext);
     $mail->addAttachment($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.pdf.apz', "document.".$ext.".apz");
 }
 
@@ -98,24 +97,19 @@ if (!$mail->send()) {
     $patient->setToID($_POST['patientID']);
 
     //support (avec PJ ou sans)
-    if(isset( $_POST['objetID'])) $supportID=$patient->createNewObjet(177, '', $_POST['objetID']);
-    else $supportID=$patient->createNewObjet(177, '');
+    if(isset( $_POST['objetID'])) $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
+    else $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
 
     //from
-    $patient->createNewObjet(109, $_POST['p_109'], $supportID);
+    $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
     //to
-    if (isset($_POST['p_110'])) {
-        $patient->createNewObjet(110, $_POST['p_110'], $supportID);
-    }
-    if (isset($_POST['p_179'])) {
-        $patient->createNewObjet(179, $_POST['p_179'], $supportID);
-    }
+    $patient->createNewObjetByTypeName('mailToApicrypt', $_POST['mailToApicrypt'], $supportID);
     //sujet
-    $patient->createNewObjet(112, $_POST['p_112'], $supportID);
+    $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
     //message
-    $patient->createNewObjet(111, $_POST['p_111'], $supportID);
+    $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
     //pj ID
-    if (isset($_POST['objetID'])) $patient->createNewObjet(178, $_POST['objetID'], $supportID);
+    if (isset($_POST['objetID'])) $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
 
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');

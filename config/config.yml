@@ -69,6 +69,8 @@ templateCourrierHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
 smtpFrom: 'user@domain.net'
 smtpHost: 'smtp.net'
 smtpPort: 587
+smtpSecureType: 'tls'
+smtpOptions: 'off'
 smtpUsername: 'smtpuserlogin'
 smtpPassword: 'smtppassword'
 smtpDefautSujet: 'Document vous concernant'

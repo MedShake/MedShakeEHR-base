@@ -37,16 +37,16 @@ $to=new msPeople();
 
 //définir les valeurs par défaut
 if ($_POST['mailType']=='ns') {
-    $preValues['109']=$p['config']['smtpFrom'];
-    $preValues['110']=$toAdminData['4'];
-    $preValues['111']="";
-    $preValues['112']=$p['config']['smtpDefautSujet'];
-    $catModelesMails=58;
+    $preValues['mailFrom']=$p['config']['smtpFrom'];
+    $preValues['mailTo']=$toAdminData['4'];
+    $preValues['mailBody']="";
+    $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
+    $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');
 } elseif ($_POST['mailType']=='apicrypt') {
-    $preValues['109']=$p['config']['apicryptAdresse'];
-    $preValues['111']="";
-    $preValues['112']=$p['config']['apicryptDefautSujet'];
-    $catModelesMails=59;
+    $preValues['mailFrom']=$p['config']['apicryptAdresse'];
+    $preValues['mailBody']="";
+    $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
+    $catModelesMails=msData::getCatIDFromName('catModelesMailsToApicrypt');
 } else {
     $catModelesMails=0;
 }
@@ -89,6 +89,7 @@ if (isset($_POST['objetID'])) {
 $form = new msForm();
 $form->setFormID($_POST['formID']);
 $form->setPrevalues($preValues);
+$form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 $p['page']['formID']=$_POST['formID'];

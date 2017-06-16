@@ -35,13 +35,15 @@ class msTools
  * @param  string $rights  droits
  * @return void
  */
-  public static function checkAndBuildTargetDir($dirName, $rights='0777') {
-    $dirs = explode('/', $dirName);
-    $dir='';
-    foreach ($dirs as $part) {
-      $dir.=$part.'/';
-      if (!is_dir($dir) && strlen($dir)>0)
-        mkdir($dir);
+  public static function checkAndBuildTargetDir($dirName, $rights='0777')
+  {
+      $dirs = explode('/', $dirName);
+      $dir='';
+      foreach ($dirs as $part) {
+          $dir.=$part.'/';
+          if (!is_dir($dir) && strlen($dir)>0) {
+              mkdir($dir);
+          }
       }
   }
 
@@ -160,16 +162,17 @@ class msTools
  * @param  string $txt texte d'entrée
  * @return string      texte de sortie
  */
-  public static function cutHtmlHeaderAndFooter($txt) {
-    $txt=explode('<!-- stop head -->', $txt);
-    if (isset($txt[1])) {
-        $txt=explode('<!-- stop body -->', $txt[1]);
-    } else {
-        $txt=explode('<!-- stop body -->', $txt[0]);
-    }
-    $txt=$txt[0];
+  public static function cutHtmlHeaderAndFooter($txt)
+  {
+      $txt=explode('<!-- stop head -->', $txt);
+      if (isset($txt[1])) {
+          $txt=explode('<!-- stop body -->', $txt[1]);
+      } else {
+          $txt=explode('<!-- stop body -->', $txt[0]);
+      }
+      $txt=$txt[0];
 
-    return $txt;
+      return $txt;
   }
 
 /**
@@ -216,7 +219,7 @@ class msTools
  */
   public static function sanitizeFilename($filename)
   {
-    return preg_replace("/[^a-z0-9\.]/", "", strtolower($filename));
+      return preg_replace("/[^a-z0-9\.]/", "", strtolower($filename));
   }
 
 /**
@@ -226,15 +229,34 @@ class msTools
  */
   public static function sanitizeDirectoryFiles($dir)
   {
-    $scanned_directory = array_diff(scandir($dir), array('..', '.'));
-    if(count($scanned_directory) > 0) {
-      foreach($scanned_directory as $file) {
-        if(is_file($dir.$file)) {
-            rename($dir.$file,$dir.msTools::sanitizeFilename($file));
-        }
+      $scanned_directory = array_diff(scandir($dir), array('..', '.'));
+      if (count($scanned_directory) > 0) {
+          foreach ($scanned_directory as $file) {
+              if (is_file($dir.$file)) {
+                  rename($dir.$file, $dir.msTools::sanitizeFilename($file));
+              }
+          }
       }
-    }
   }
 
-
+/**
+ * Nettoyer un répertoire recursivement
+ * @param  string $dir le chemin du répertoire racine
+ * @return void
+ */
+  public static function rmdir_recursive($dir)
+  {
+      $dir=rtrim($dir, "/");
+      foreach (scandir($dir) as $file) {
+          if ('.' === $file || '..' === $file) {
+              continue;
+          }
+          if (is_dir("$dir/$file")) {
+              msTools::rmdir_recursive("$dir/$file");
+          } else {
+              unlink("$dir/$file");
+          }
+      }
+      rmdir($dir);
+  }
 }

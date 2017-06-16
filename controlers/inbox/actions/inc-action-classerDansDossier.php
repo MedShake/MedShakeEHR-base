@@ -47,7 +47,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             if (is_file($source)) {
 
                 //support
-                $supportID=$patient->createNewObjet(184, $corps);
+                $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
 
                 //ajout d'un titre
                 if (!empty($_POST['titre'])) {
@@ -65,9 +65,9 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
                 }
 
                 //nom original
-                $patient->createNewObjet(185, $file, $supportID);
+                $patient->createNewObjetByTypeName('docOriginalName', $file, $supportID);
                 //type
-                $patient->createNewObjet(183, $ext, $supportID);
+                $patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
                 ////////////////////////////
                 // stockage actif
@@ -102,7 +102,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             $patient->setToID($_POST['patientID']);
 
             //support
-            $supportID=$patient->createNewObjet(184, $corps);
+            $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
 
             //ajout d'un titre
             if (!empty($_POST['titre'])) {
@@ -112,7 +112,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             }
 
             //nom original
-            $patient->createNewObjet(185, $data['txtFileName'], $supportID);
+            $patient->createNewObjetByTypeName('docOriginalName', $data['txtFileName'], $supportID);
 
             //extension
             $mimetype=msTools::getmimetype($source);
@@ -123,7 +123,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             }
 
             //type
-            $patient->createNewObjet(183, $ext, $supportID);
+            $patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
             ////////////////////////////
             // stockage actif

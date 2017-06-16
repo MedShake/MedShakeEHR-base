@@ -29,12 +29,15 @@
 $debug='';
 $template="historiqueMailSend";
 
-if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID=177 order by creationDate desc")) {
-    $mailsElements=msSQL::sql2tab("select value, typeID, creationDate, instance, toID from objets_data where instance in (".implode(',', $mailsListe).") ");
+if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID=".msData::getTypeIDFromName("mailPorteur")." order by creationDate desc")) {
+    $mailsElements=msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name
+    from objets_data as o
+    left join data_types as t on o.typeID=t.id
+    where o.instance in (".implode(',', $mailsListe).") ");
 
     foreach ($mailsElements as $k=>$v) {
         $p['page']['patientID']=$v['toID'];
-        $p['page']['mailListe'][$v['instance']][$v['typeID']]=$v['value'];
+        $p['page']['mailListe'][$v['instance']][$v['name']]=$v['value'];
         $p['page']['mailListe'][$v['instance']]['creationDate']=$v['creationDate'];
     }
 }

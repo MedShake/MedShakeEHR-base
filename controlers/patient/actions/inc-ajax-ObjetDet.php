@@ -52,27 +52,30 @@ if (is_numeric($_POST['objetID'])) {
         $template='inc-ajax-detReglement';
         $data = new msObjet();
 
-        $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID']);
-        $p['page']['acteFacture']=msSQL::sqlUnique("select * from actes where id='".$p['page']['datareg']['192']['parentTypeID']."'");
+        $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID'], 'name');
+        $p['page']['acteFacture']=msSQL::sqlUnique("select * from actes where id='".$p['page']['datareg']['reglePorteur']['parentTypeID']."'");
     } elseif ($data['groupe']=="mail") {
         $template='inc-ajax-detMail';
         $data = new msObjet();
-        $p['page']['dataMail'] = $data->getObjetAndSons($_POST['objetID']);
+        $p['page']['dataMail'] = $data->getObjetAndSons($_POST['objetID'], 'name');
 
     } elseif ($data['groupe']=="ordo") {
 
         $template='inc-ajax-detOrdo';
 
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression','ordoLigneOrdo']);
+
         if ($ordoData=msSQL::sql2tab("select ald.value as ald, p.value as description, p.typeID, p.id
         from objets_data as p
-        left join objets_data as ald on p.id=ald.instance and ald.typeID=191 and ald.outdated='' and ald.deleted=''
-        where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in (189,190)
+        left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
+        where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."')
         group by p.id
         order by p.id asc")) {
             $modePrint='standard';
 
             foreach ($ordoData as $v) {
-                if ($v['typeID']=='189') {
+                if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
                     $modePrint=$v['description'];
                 } else {
                     if ($v['ald']==1) {

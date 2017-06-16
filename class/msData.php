@@ -75,8 +75,22 @@ class msData
  */
     public function getDataTypesFromCatID($catID, $col=['*'])
     {
+        if(!is_numeric($catID)) throw new Exception('catID is not numeric');
         return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' order by displayOrder, label");
     }
+
+/**
+ * Obtenir toutes les données types d'une catégorie
+ * @param  string $name name de la catégorie
+ * @param  array $col   array des colonnes sql à retourner
+ * @return array        array
+ */
+    public function getDataTypesFromCatName($name, $col=['*'])
+    {
+        $catID=$this->getCatIDFromName($name);
+        return $this->getDataTypesFromCatID($catID, $col);
+    }
+
 
 /**
  * Obtenir toutes les données types à partir d'un groupe
@@ -110,6 +124,36 @@ class msData
     public function getLabelFromTypeID($ar=['1'])
     {
         return msSQL::sql2tabKey("select label, id from data_types where id in (".implode(',', $ar).")", 'id', 'label');
+    }
+
+/**
+ * Obtenir les typeID à partir d'un array de Name
+ * @param  array $ar array de name
+ * @return array     array name=>typeID
+ */
+    public function getTypeIDsFromName($ar=['1'])
+    {
+        return msSQL::sql2tabKey("select name, id from data_types where name in ('".implode("','", $ar)."')", 'name', 'id');
+    }
+
+/**
+ * Obtenir le typeID à partir de son nom
+ * @param  string $name nom du type
+ * @return int     typeID
+ */
+    public static function getTypeIDFromName($name)
+    {
+        return msSQL::sqlUniqueChamp("select id from data_types where name = '".$name."' ");
+    }
+
+/**
+ * Obtenir le catID à partir de son nom
+ * @param  string $name nom du type
+ * @return int     catID
+ */
+    public static function getCatIDFromName($name)
+    {
+        return msSQL::sqlUniqueChamp("select id from data_cat where name = '".$name."' ");
     }
 
 /**

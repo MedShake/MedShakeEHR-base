@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : obtenir le formulaire de règlement 
+ * Patient > ajax : obtenir le formulaire de règlement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -34,10 +34,6 @@ $template="patientReglementForm";
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
 
-//si edition
-if (isset($_POST['objetID'])) {
-  $regData=msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value');
-}
 
 //pour menu de choix de l'acte, par catégories
 if ($tabTypes=msSQL::sql2tab("select a.id, concat(a.label,' ',a.code) as optionmenu , c.label as catLabel
@@ -59,6 +55,7 @@ if (isset($_POST['objetID'])) {
 
 $form = new msForm();
 $form->setFormID('17');
+$form->setTypeForNameInForm('byName');
 if (isset($_POST['objetID'])) {
   $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));
 }

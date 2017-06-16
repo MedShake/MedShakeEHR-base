@@ -43,7 +43,7 @@ if (isset($ext)) {
     if($ext=='txt') $corps=msInbox::getMessageBody($fichier['tmp_name']); else $corps='';
 
     //support
-    $supportID=$patient->createNewObjet(184,  $corps);
+    $supportID=$patient->createNewObjetByTypeName('docPorteur',  $corps);
 
     //non fonctionnel car non supporté par l'uploader ...
     // if(isset($_POST['titre'])) {
@@ -52,9 +52,9 @@ if (isset($ext)) {
     // }
 
     //nom original
-    $patient->createNewObjet(185, $fichier['name'], $supportID);
+    $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
     //type
-    $patient->createNewObjet(183, $ext, $supportID);
+    $patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
     //folder
     $folder=msStockage::getFolder($supportID);

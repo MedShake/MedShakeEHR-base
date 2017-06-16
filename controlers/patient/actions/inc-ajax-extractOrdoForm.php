@@ -49,17 +49,20 @@ if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as ca
 if (is_numeric($_POST['objetID'])) {
     $p['page']['courrier']['objetID']=$_POST['objetID'];
 
+    $name2typeID = new msData();
+    $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression','ordoLigneOrdo']);
+
     if ($ordoData=msSQL::sql2tab("select ald.value as ald, concat(p.parentTypeID,'_',UNIX_TIMESTAMP(),'_',p.id) as formname, 'Ligne importée' as label, p.value as description, p.typeID, concat(' (initialement : ',pres.label,')') as labelInitiale, p.id
     from objets_data as p
-    left join objets_data as ald on p.id=ald.instance and ald.typeID=191 and ald.outdated='' and ald.deleted=''
+    left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
     left join prescriptions as pres on pres.id=p.parentTypeID
-    where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in (189,190)
+    where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."')
     group by p.id
     order by p.id asc")) {
         $modePrint='standard';
 
         foreach ($ordoData as $v) {
-            if ($v['typeID']=='189') {
+            if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
                 $modePrint=$v['description'];
                 $p['page']['courrier']['modeprintObjetID']=$v['id'];
             } else {

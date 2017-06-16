@@ -35,28 +35,28 @@ if (count($_POST)>0) {
     $supportID = $_POST['objetID'];
 
     //cheque
-    if (!isset($_POST['p_193'])) {
-        $_POST['p_193']='';
+    if (!isset($_POST['regleCheque'])) {
+        $_POST['regleCheque']='';
     }
-    $patient->createNewObjet(193, $_POST['p_193'], $supportID);
+    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque'], $supportID);
 
     //cb
-    if (!isset($_POST['p_194'])) {
-        $_POST['p_194']='';
+    if (!isset($_POST['regleCB'])) {
+        $_POST['regleCB']='';
     }
-    $patient->createNewObjet(194, $_POST['p_194'], $supportID);
+    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB'], $supportID);
 
     //espèces
-    if (!isset($_POST['p_195'])) {
-        $_POST['p_195']='';
+    if (!isset($_POST['regleEspeces'])) {
+        $_POST['regleEspeces']='';
     }
-    $patient->createNewObjet(195, $_POST['p_195'], $supportID);
+    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces'], $supportID);
 
     //identité chèque
-    if (!isset($_POST['p_205'])) {
-        $_POST['p_205']='';
+    if (!isset($_POST['regleIdentiteCheque'])) {
+        $_POST['regleIdentiteCheque']='';
     }
-    $patient->createNewObjet(205, $_POST['p_205'], $supportID);
+    $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
 
     msTools::redirection('/compta/aujourdhui/');
 } else {

@@ -313,9 +313,12 @@ class msPDF
     {
         global $p;
 
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression']);
+
         if ($ordoData=msSQL::sql2tab("select p.*, ald.value as ald
           from objets_data as p
-          left join objets_data as ald on p.id=ald.instance and ald.typeID=191 and ald.outdated='' and ald.deleted=''
+          left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
           where p.instance='".$this->_objetID."' and p.outdated='' and p.deleted=''
           group by p.id
           order by p.id asc")) {
@@ -330,7 +333,7 @@ class msPDF
 
             foreach ($ordoData as $v) {
                 //on chope au passage le mode d'impression
-                if ($v['typeID']=='189') {
+                if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
                     $modePrint=$v['value'];
                 }
 

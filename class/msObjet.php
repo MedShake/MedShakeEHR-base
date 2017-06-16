@@ -144,14 +144,37 @@ class msObjet
 /**
  * Obtenir les datas de l'objet ainsi que celles de ses enfants
  * @param  int $id ID de l'objet
+ * @param  string $by clef du tableau
  * @return array     Array avec datas objet et de ses enfants
  */
-    public function getObjetAndSons($id)
+    public function getObjetAndSons($id, $by='typeID')
     {
-        return msSQL::sql2tabKey("select *
-        from objets_data
-        where id='".$id."' or instance='".$id."' and outdated='' and deleted='' ", 'typeID');
+        return msSQL::sql2tabKey("select o.*, t.name 
+        from objets_data as o
+        left join data_types as t on o.typeID=t.id
+        where o.id='".$id."' or o.instance='".$id."' and o.outdated='' and o.deleted='' ", $by);
     }
+
+/**
+ * Créer ou mettre à jour un objet par son nom
+ *
+ * @param  int $name       name du type de l'objet
+ * @param  string $value        value de l'objet
+ * @param  int $parentID     ID du parent de l'objet
+ * @param  int $parentTypeID typeID du parent de l'objet
+ * @param  int $objetID      ID de l'objet (si mise à jour en particulier)
+ * @return int|false                 Retourne ID de l'objet ou false si problème
+ */
+    public function createNewObjetByTypeName($name, $value, $parentID='0', $parentTypeID='0', $objetID='')
+    {
+        $typeID = msData::getTypeIDFromName($name);
+        if (!is_numeric($typeID)) {
+            throw new Exception('TypeID is not numeric');
+        } else {
+            return $this->createNewObjet($typeID, $value, $parentID, $parentTypeID, $objetID);
+        }
+    }
+
 
 /**
  * Créer ou mettre à jour un objet

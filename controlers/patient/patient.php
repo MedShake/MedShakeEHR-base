@@ -45,6 +45,6 @@ $p['page']['patient']['historique']=$patient->getHistorique();
 
 //les certificats
 $certificats=new msData();
-$p['page']['modelesCertif']=$certificats->getDataTypesFromCatID(37, ['id','label']);
+$p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','label']);
 //les courriers
-$p['page']['modelesCourrier']=$certificats->getDataTypesFromCatID(38, ['id','label']);
+$p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','label']);

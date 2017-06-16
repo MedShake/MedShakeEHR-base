@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$detsinataireFAX=trim(str_replace(' ','',$_POST['p_481'])).'@ecofax.fr';
+$detsinataireFAX=trim(str_replace(' ','',$_POST['mailToEcofaxNumber'])).'@ecofax.fr';
 
 $mail = new PHPMailer;
 $mail->CharSet = 'UTF-8';
@@ -36,7 +36,16 @@ $mail->Host = $p['config']['smtpHost'];
 $mail->SMTPAuth = true;
 $mail->Username = $p['config']['smtpUsername'];
 $mail->Password = $p['config']['smtpPassword'];
-$mail->SMTPSecure = 'ssl';
+if($p['config']['smtpOptions'] == 'on') {
+  $mail->SMTPOptions = array(
+    'ssl' => array(
+      'verify_peer' => false,
+      'verify_peer_name' => false,
+      'allow_self_signed' => true
+    )
+  );
+}
+if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
 $mail->Port = $p['config']['smtpPort'];
 
 
@@ -75,22 +84,22 @@ if (!$mail->send()) {
 
     //support (avec PJ ou sans)
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjet(177, '', $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjet(177, '');
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
     }
 
     //from
-    $patient->createNewObjet(109, $p['config']['smtpFrom'], $supportID);
+    $patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], $supportID);
     //to
-    $patient->createNewObjet(110, $detsinataireFAX, $supportID);
-    //sujet
-    $patient->createNewObjet(112, $p['config']['ecofaxMyNumber'], $supportID);
+    $patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, $supportID);
     //numero destinataire
-    $patient->createNewObjet(481, $_POST['p_481'], $supportID);
+    $patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], $supportID);
+    //numero destinataire
+    $patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], $supportID);
     //pj ID
     if (isset($_POST['objetID'])) {
-        $patient->createNewObjet(178, $_POST['objetID'], $supportID);
+        $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
     }
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');

@@ -181,7 +181,7 @@ class msDicom
     {
         global $p;
         $url=$this->_baseCurlUrl.'/studies/'.$this->_dcStudyID.'/instances';
-
+        $tabImg=[];
         $data =  $this->_dcGetContent($url);
         foreach ($data as $k=>$v) {
             $this->_dcInstanceID = $v['ID'];

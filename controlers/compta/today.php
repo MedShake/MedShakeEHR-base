@@ -39,13 +39,14 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
 }
 
 //sortir les regelements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
+  left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
   left join objets_data as p on p.toID=pd.toID and p.typeID=3
   left join objets_data as n on n.toID=pd.toID and n.typeID=2
   where pd.typeId in (".implode(',', $tabliste).")  and DATE(pd.creationDate) = CURDATE() and pd.deleted=''
-  order by pd.creationDate desc
+  order by pd.instance, pd.creationDate desc
   ")) {
 
     //constituer le tableau
@@ -53,17 +54,18 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
         if ($v['instance']==0) {
             $tabReg[$v['id']]=$v;
         } else {
-            $tabReg[$v['instance']][$v['typeID']]=$v['value'];
+            $tabReg[$v['instance']][$v['name']]=$v['value'];
         }
     }
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
-      $tabReg[$k]['dejaPaye']=$v[193]+$v[194]+$v[195]+$v[200];
+      $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
+      $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');
     }
 
     //séparer en paiement complété et paiement à faire
     foreach ($tabReg as $k=>$v) {
-      if($tabReg[$k]['dejaPaye'] != $tabReg[$k]['196']) $p['page']['tabRegNC'][$k]=$tabReg[$k]; else $p['page']['tabRegC'][$k]=$tabReg[$k];
+      if($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) $p['page']['tabRegNC'][$k]=$tabReg[$k]; else $p['page']['tabRegC'][$k]=$tabReg[$k];
     }
 }

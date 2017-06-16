@@ -21,7 +21,7 @@
  */
 
 /**
- * Compta : la page générale de compta  
+ * Compta : la page générale de compta
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -41,6 +41,7 @@ if(isset($_POST['periodeQuickSelect'])) $p['page']['periode']['quick']=$_POST['p
 //quick options
 $p['page']['periode']['quickOptions']=array(
 "today"=>"Aujourd'hui",
+"yesterday"=>"Hier",
 "thisweek"=>"Cette semaine",
 "lastweek"=>"Semaine dernière",
 "thismonth"=>"Ce mois",
@@ -57,12 +58,13 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
 
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
+  left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
   left join objets_data as p on p.toID=pd.toID and p.typeID=3
   left join objets_data as n on n.toID=pd.toID and n.typeID=2
-  where pd.typeId in (".implode(',', $tabliste).")  and DATE(pd.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd.deleted=''
+  where pd.typeID in (".implode(',', $tabliste).")  and DATE(pd.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd.deleted=''
   order by pd.creationDate asc
   ")) {
 
@@ -71,26 +73,26 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
         if ($v['instance']==0) {
             $tabReg[$v['id']]=$v;
         } else {
-            $tabReg[$v['instance']][$v['typeID']]=$v['value'];
+            $tabReg[$v['instance']][$v['name']]=$v['value'];
         }
     }
     //tableau des totaux
     $tabTot=array(
-      '193' => '',
-      '194' => '',
-      '195' => '',
-      '196' => '',
-      '200' => '');
+      'regleCheque' => '',
+      'regleCB' => '',
+      'regleEspeces' => '',
+      'regleFacture' => '',
+      'regleTiersPayeur' => '');
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
-        $tabReg[$k]['dejaPaye']=$v[193]+$v[194]+$v[195]+$v[200];
+        $tabReg[$k]['dejaPaye']=$v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'];
 
-        $tabTot['193']=$tabTot['193']+$v['193'];
-        $tabTot['194']=$tabTot['194']+$v['194'];
-        $tabTot['195']=$tabTot['195']+$v['195'];
-        $tabTot['196']=$tabTot['196']+$v['196'];
-        $tabTot['200']=$tabTot['200']+$v['200'];
+        $tabTot['regleCheque']=$tabTot['regleCheque']+$v['regleCheque'];
+        $tabTot['regleCB']=$tabTot['regleCB']+$v['regleCB'];
+        $tabTot['regleEspeces']=$tabTot['regleEspeces']+$v['regleEspeces'];
+        $tabTot['regleFacture']=$tabTot['regleFacture']+$v['regleFacture'];
+        $tabTot['regleTiersPayeur']=$tabTot['regleTiersPayeur']+$v['regleTiersPayeur'];
     }
 
     //transmission à la page

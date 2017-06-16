@@ -33,16 +33,17 @@ if (count($_POST)>2) {
 
     //support
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjet(186, '', '0', '0', $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', '0', '0', $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjet(186, '');
+        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
     }
+
 
     //type d'impression modeprintObjetID
     if (isset($_POST['modeprintObjetID'])) {
-        $patient->createNewObjet(189, $_POST['p_189'], $supportID, '0', $_POST['modeprintObjetID']);
+        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
     } else {
-        $patient->createNewObjet(189, $_POST['p_189'], $supportID);
+        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
     }
 
     foreach ($_POST as $k=>$v) {
@@ -52,13 +53,13 @@ if (count($_POST)>2) {
             } else {
                 $postObjetId='0';
             }
-            $id=$patient->createNewObjet(190, $v, $supportID, $m[1], $postObjetId);
+            $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
 
             if ($postObjetId>0) {
-                msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='191' ");
+                msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
             }
             if (isset($_POST[$k.'CB'])) {
-                $patient->createNewObjet(191, $_POST[$k.'CB'], $id);
+                $patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k.'CB'], $id);
             }
         }
     }

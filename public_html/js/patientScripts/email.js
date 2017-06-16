@@ -34,8 +34,8 @@ $(document).ready(function() {
   });
 
   //injection du modèle
-  $('body').on("change", "#p_446ID", function(e) {
-    modeleID = $('#p_446ID option:selected').val();
+  $('body').on("change", "select[name='mailModeles']", function(e) {
+    modeleID = $("select[name='mailModeles'] option:selected").val();
     $.ajax({
       url: '/patient/ajax/extractMailModele/',
       type: 'post',
@@ -44,7 +44,7 @@ $(document).ready(function() {
       },
       dataType: "html",
       success: function(data) {
-        $('#p_111ID').val(data);
+        $("textarea[name='mailBody']").val(data);
       },
       error: function() {
         alert('Problème, rechargez la page !');
@@ -55,7 +55,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour les destinataire apicrypt
-  $('body').delegate('#p_179ID', 'focusin', function() {
+  $('body').delegate('input[name="mailToApicrypt"]', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: '/ajax/getAutocompleteFormValues/data_types/59/',

@@ -41,28 +41,33 @@ $(document).ready(function() {
   });
 
   //observer la situation Type de réglement
-  $("#newReglement").on("change", "#p_197ID", function(e) {
+  $("#newReglement").on("change", "select[name='regleSituationPatient']", function(e) {
     e.preventDefault();
+    setDefautTarifEtDepa();
     calcResteDu();
   });
 
   //observer lle changement sur dépassement
-  $("#newReglement").on("change, keyup", "#p_199ID", function(e) {
+  $("#newReglement").on("change, keyup", "input[name='regleDepaCejour']", function(e) {
     e.preventDefault();
     calcResteDu();
   });
 
   //le style du champ Reste du
-  $("#newReglement").on("change", "#p_196ID", function(e) {
-    val = $("#p_196ID").val();
+  $("#newReglement").on("change", "input[name='regleFacture']", function(e) {
+    val = $("input[name='regleFacture']").val();
     if (val > 0 || val < 0) {
-      $("#p_196ID").closest("div.form-group").removeClass('has-success');
-      $("#p_196ID").closest("div.form-group").addClass('has-error');
+      $("input[name='regleFacture']").closest("div.form-group").removeClass('has-success');
+      $("input[name='regleFacture']").closest("div.form-group").addClass('has-error');
     } else {
-      $("#p_196ID").closest("div.form-group").removeClass('has-error');
-      $("#p_196ID").closest("div.form-group").addClass('has-success');
+      $("input[name='regleFacture']").closest("div.form-group").removeClass('has-error');
+      $("input[name='regleFacture']").closest("div.form-group").addClass('has-success');
     }
   });
+
+  //reinjection pour édition
+  $("input[name='regleTarifCejour']").attr('data-tarifdefaut', $("input[name='regleTarifCejour']").val());
+  $("input[name='regleDepaCejour']").attr('data-tarifdefaut',$("input[name='regleDepaCejour']").val());
 
 });
 
@@ -85,10 +90,12 @@ function searchAndInsertActeData(selecteur) {
     },
     dataType: "json",
     success: function(data) {
-      $('#p_198ID').val(data['tarif']);
-      $('#p_199ID').val(data['depassement']);
+      $("input[name='regleTarifCejour']").attr('data-tarifdefaut', data['tarif']);
+      $("input[name='regleDepaCejour']").attr('data-tarifdefaut',data['depassement']);
+
       $('input[name="acteID"]').val(acteID);
 
+      setDefautTarifEtDepa();
       calcResteDu();
     },
     error: function() {
@@ -98,33 +105,63 @@ function searchAndInsertActeData(selecteur) {
 
 }
 
-function calcResteDu() {
+function setDefautTarifEtDepa() {
   resetModesReglement();
 
-  cas = $('#p_197ID option:selected').val();
+  $("input[name='regleTarifCejour']").val($("input[name='regleTarifCejour']").attr('data-tarifdefaut'));
+  $("input[name='regleDepaCejour']").val($("input[name='regleDepaCejour']").attr('data-tarifdefaut'));
 
-  tarif = parseFloat($('#p_198ID').val());
-  depassement = parseFloat($('#p_199ID').val());
+
+
+  cas = $('select[name="regleSituationPatient"] option:selected').val();
+
+  tarif = parseFloat($("input[name='regleTarifCejour']").val());
+  depassement = parseFloat($("input[name='regleDepaCejour']").val());
 
   //tout venant
   if (cas == 'G') {
-    $('#p_199ID').removeAttr('readonly');
+    $("input[name='regleDepaCejour']").removeAttr('readonly');
+  //CMU
+  } else if (cas == 'CMU') {
+    $("input[name='regleDepaCejour']").attr('readonly', 'readonly');
+    $("input[name='regleDepaCejour']").val('0');
+  } if (cas == 'TP') {
+    $("input[name='regleDepaCejour']").removeAttr('readonly');
+    $("input[name='regleDepaCejour']").val('0');
+  }
+}
+
+function calcResteDu() {
+  cas = $('select[name="regleSituationPatient"] option:selected').val();
+  tarif = parseFloat($("input[name='regleTarifCejour']").val());
+  depassement = parseFloat($("input[name='regleDepaCejour']").val());
+
+  //tout venant
+  if (cas == 'G') {
     total = parseFloat(tarif) + parseFloat(depassement);
-    $('#p_196ID').val(total).change();
-    $('#p_200ID').val('');
+    $("input[name='regleFacture']").val(total).change();
+    $("input[name='regleTiersPayeur']").val('');
     //CMU
-  } else if (cas == 'CMU' || cas == 'TP') {
-    $('#p_199ID').attr('readonly', 'readonly');
+  } else if (cas == 'CMU') {
     total = parseFloat(tarif);
-    $('#p_200ID').val(total);
-    $('#p_196ID').val(total).change();
+    $("input[name='regleTiersPayeur']").val(total);
+    $("input[name='regleFacture']").val(total).change();
+  } if (cas == 'TP') {
+    total = parseFloat(tarif) + parseFloat(depassement);
+    tiers = Math.round((tarif * 70 / 100)*100) /100;
+    reste = Math.round((total-tiers)*100)/100;
+    $("input[name='regleTiersPayeur']").val(tiers);
+    $("input[name='regleFacture']").val(total).change();
+    $("label[for='p_200ID']").html('Tiers (reste à payer : '+ reste +'€)');
   }
 
 }
 
 function resetModesReglement() {
-  $('#p_193ID').val('');
-  $('#p_194ID').val('');
-  $('#p_195ID').val('');
-  $('#p_196ID').val('').change();
+
+  $("input[name='regleCheque']").val('');
+  $("input[name='regleCB']").val('');
+  $("input[name='regleEspeces']").val('');
+  $("input[name='regleFacture']").val('').change();
+  $("label[for='p_200ID']").html('Tiers');
 }

@@ -44,7 +44,7 @@ $(document).ready(function() {
     $('#newReglement').html('');
   });
 
-  //mettre en route les tooltip bootsrap
+  //mettre en route les tooltip bootstrap
   $(function() {
     $('[data-toggle="tooltip"]').tooltip()
   })
@@ -55,6 +55,9 @@ $(document).ready(function() {
     if (choix == 'today') {
       $('#beginPeriodeID').val(moment().format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().format('DD/MM/gggg'));
+    } else if (choix == 'yesterday') {
+      $('#beginPeriodeID').val(moment().add(-1, 'days').format('DD/MM/gggg'));
+      $('#endPeriodeID').val(moment().add(-1, 'days').format('DD/MM/gggg'));
     } else if (choix == 'thisweek') {
       $('#beginPeriodeID').val(moment().startOf('week').format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().endOf('week').format('DD/MM/gggg'));
