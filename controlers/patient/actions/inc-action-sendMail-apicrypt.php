@@ -78,7 +78,7 @@ $mail->Body = msApicrypt::crypterCorps($texte, $_POST['mailToApicrypt']);
 
 if (is_file($sourceFile)) {
     msApicrypt::crypterPJ($sourceFile, $_POST['mailToApicrypt'], $_POST['objetID'].'.'.$ext);
-    $mail->addAttachment($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.pdf.apz', "document.".$ext.".apz");
+    $mail->addAttachment($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.'.$ext.'.apz', "document.".$ext.".apz");
 }
 
 
