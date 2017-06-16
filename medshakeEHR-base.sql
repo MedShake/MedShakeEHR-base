@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Lun 22 Mai 2017 à 15:19
+-- Généré le :  Ven 16 Juin 2017 à 10:07
 -- Version du serveur :  5.7.18-0ubuntu0.16.04.1
--- Version de PHP :  7.0.15-0ubuntu0.16.04.4
+-- Version de PHP :  7.0.18-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `ehr-base`
+-- Base de données :  `ehr`
 --
 
 -- --------------------------------------------------------
@@ -79,24 +79,24 @@ INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, 
 (1, 'admin', 'identity', 'Etat civil', 'Datas relatives à l\'identité d\'une personne', 'base', 1, '2016-12-15 12:22:35'),
 (2, 'admin', 'addressPerso', 'Adresse personnelle', 'datas de l\'adresse personnelle', 'base', 1, '2017-03-26 15:12:14'),
 (3, 'admin', 'internet', 'Internet', 'Datas liées aux services internet', 'base', 0, '1000-01-01 00:00:00'),
-(24, 'admin', 'contact', 'Contact', 'Moyens de contact', 'user', 1, '2016-12-13 19:18:57'),
-(25, 'admin', 'activity', 'Activités', 'Activités professionnelles et de loisir', 'user', 1, '2016-12-15 12:04:59'),
-(26, 'admin', 'divers', 'Divers', 'Divers', 'user', 1, '2016-12-16 13:35:52'),
-(36, 'admin', 'numAdmin', 'Numéros administratifs', 'RPPS et compagnie', 'user', 1, '2017-03-14 14:43:16'),
-(37, 'courrier', 'courrierCertificat', 'Certificats', 'certificats divers', 'user', 1, '2017-03-15 16:10:14'),
-(38, 'courrier', 'courrierCat', 'Courriers', 'modèles de courrier libres', 'user', 1, '2017-03-16 15:07:01'),
-(39, 'mail', 'mailForm', 'Data mail', 'data pour les mails expédiés', 'user', 1, '2017-04-07 15:44:51'),
-(41, 'mail', 'porteursTech', 'Porteurs', 'porteurs pour les données enfants', 'user', 1, '2017-03-20 12:52:07'),
-(42, 'doc', 'docForm', 'Data documents importés / créés', 'données pour le formulaire documents importés ou créés', 'user', 1, '2017-05-15 13:37:29'),
-(43, 'doc', 'docPorteur', 'Porteur', 'porteur pour doc importés', 'user', 1, '2017-03-21 10:24:51'),
-(44, 'ordo', 'poteursOrdo', 'Porteurs', 'porteurs ordonnance', 'user', 1, '2017-03-22 14:06:30'),
-(45, 'reglement', 'porteursReglement', 'Porteurs', 'porteur d\'un règlement', 'user', 1, '2017-03-24 14:41:40'),
-(46, 'reglement', 'reglementItems', 'Règlement', 'items d\'un réglement', 'user', 1, '2017-03-24 14:42:21'),
-(47, 'admin', 'adressPro', 'Adresse professionnelle', 'Data de l\'adresse professionnelle', 'user', 1, '2017-03-26 15:13:00'),
-(55, 'dicom', 'idDicom', 'ID Dicom', 'ID du dicom', 'user', 1, '2017-04-13 14:24:10'),
-(56, 'user', 'dicom', 'Dicom', 'Paramètres DICOM', 'user', 1, '2017-04-25 20:26:19'),
-(58, 'courrier', 'modelesMailPatient', 'Mails aux patients', 'modèles de mail', 'user', 1, '2017-05-15 09:03:46'),
-(59, 'courrier', 'modeleMailsPros', 'Mails aux praticiens', 'modèles de mails pour les praticien (apicrypt)', 'user', 1, '2017-05-15 09:04:40');
+(24, 'admin', 'contact', 'Contact', 'Moyens de contact', 'base', 1, '2016-12-13 19:18:57'),
+(25, 'admin', 'activity', 'Activités', 'Activités professionnelles et de loisir', 'base', 1, '2016-12-15 12:04:59'),
+(26, 'admin', 'divers', 'Divers', 'Divers', 'base', 1, '2016-12-16 13:35:52'),
+(36, 'admin', 'numAdmin', 'Numéros administratifs', 'RPPS et compagnie', 'base', 1, '2017-03-14 14:43:16'),
+(37, 'courrier', 'catModelesCertificats', 'Certificats', 'certificats divers', 'base', 1, '2017-06-15 11:13:49'),
+(38, 'courrier', 'catModelesCourriers', 'Courriers', 'modèles de courrier libres', 'base', 1, '2017-06-15 11:14:52'),
+(39, 'mail', 'mailForm', 'Data mail', 'data pour les mails expédiés', 'base', 1, '2017-04-07 15:44:51'),
+(41, 'mail', 'porteursTech', 'Porteurs', 'porteurs pour les données enfants', 'base', 1, '2017-03-20 12:52:07'),
+(42, 'doc', 'docForm', 'Data documents importés / créés', 'données pour le formulaire documents importés ou créés', 'base', 1, '2017-05-15 13:37:29'),
+(43, 'doc', 'docPorteur', 'Porteur', 'porteur pour doc importés', 'base', 1, '2017-03-21 10:24:51'),
+(44, 'ordo', 'poteursOrdo', 'Porteurs', 'porteurs ordonnance', 'base', 1, '2017-03-22 14:06:30'),
+(45, 'reglement', 'porteursReglement', 'Porteurs', 'porteur d\'un règlement', 'base', 1, '2017-03-24 14:41:40'),
+(46, 'reglement', 'reglementItems', 'Règlement', 'items d\'un réglement', 'base', 1, '2017-03-24 14:42:21'),
+(47, 'admin', 'adressPro', 'Adresse professionnelle', 'Data de l\'adresse professionnelle', 'base', 1, '2017-03-26 15:13:00'),
+(55, 'dicom', 'idDicom', 'ID Dicom', 'ID du dicom', 'base', 1, '2017-04-13 14:24:10'),
+(56, 'user', 'dicom', 'Dicom', 'Paramètres DICOM', 'base', 1, '2017-04-25 20:26:19'),
+(58, 'courrier', 'catModelesMailsToPatient', 'Mails aux patients', 'modèles de mail', 'base', 1, '2017-06-15 11:13:58'),
+(59, 'courrier', 'catModelesMailsToApicrypt', 'Mails aux praticiens', 'modèles de mails pour les praticien (apicrypt)', 'base', 1, '2017-06-15 11:14:05');
 
 -- --------------------------------------------------------
 
@@ -134,75 +134,74 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (3, 'admin', 'given', 'prénom', 'Prénom', 'Prénom figurant sur la pièce d\'identité', 'identite', 'Le prénom est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-18 15:17:58', 3600, 1),
 (4, 'admin', 'personalEmail', 'email@domain.ext', 'Email personnelle', 'Adresse email personnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2017-03-10 12:02:13', 3600, 1),
 (5, 'admin', 'profesionnalEmail', 'email@domain.ext', 'Email professionnelle', 'Adresse email professionnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2016-12-14 16:21:28', 3600, 1),
-(6, 'admin', 'twitterAccount', '', 'Twitter', 'Compte twitter', 'twitterAccount', '', 'text', '', 'user', 3, 1, '2016-12-13 19:17:36', 3600, 1),
-(7, 'admin', 'mobilePhone', '06 xx xx xx xx', 'Téléphone mobile', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile est incorrect', 'tel', '', 'user', 24, 1, '2016-12-16 15:34:13', 3600, 1),
-(8, 'admin', 'birthdate', 'dd/mm/YYYY', 'Date de naissance', 'Date de naissance au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de naissance indiquée n\'est pas valide', 'date', '', 'user', 1, 1, '2017-03-10 20:37:23', 3600, 1),
-(9, 'admin', 'streetNumber', 'numéro dans la rue', 'Numéro', 'Adresse perso : numéro dans la rue', 'alpha_space', 'Le numéro de rue est incorrect', 'text', '', 'user', 2, 1, '2017-03-09 15:58:39', 3600, 1),
-(10, 'admin', 'homePhone', '0x xx xx xx xx', 'Téléphone domicile', 'Téléphone du domicile de la forme 0x xx xx xx xx', 'phone', 'Le numéro de téléphone du domicile n\'est pas correct', 'tel', '', 'user', 24, 1, '2016-12-31 11:33:02', 3600, 1),
-(11, 'admin', 'street', 'rue', 'Rue', 'Adresse perso : rue', '', '', 'text', '', 'user', 2, 1, '2017-03-09 16:14:08', 3600, 1),
-(12, 'admin', 'city', 'ville', 'Ville', 'Adresse perso : ville', '', '', 'text', '', 'user', 2, 1, '2017-03-09 15:59:04', 3600, 1),
-(13, 'admin', 'postalCodePerso', 'code postal', 'Code postal', 'Adresse perso : code postal', '', 'Le code postal n\'est pas correct', 'text', '', 'user', 2, 1, '2017-03-31 15:35:04', 3600, 1),
-(14, 'admin', 'administrativeGenderCode', '', 'Sexe', 'Sexe', '', '', 'select', 'F: \'Femme\'\nM: \'Homme\'\nU: \'Inconnu\'', 'user', 1, 1, '2016-12-18 15:17:45', 3600, 1),
-(15, 'admin', 'website', '', 'Site web', 'Site web', 'url', '', 'text', '', 'user', 3, 1, '2016-12-13 20:00:15', 3600, 1),
-(19, 'admin', 'job', 'activité professionnelle', 'Activité professionnelle', 'Activité professionnelle', '', 'L\'activité professionnelle n\'est pas correcte', 'text', '', 'user', 25, 1, '2017-03-10 12:42:48', 3600, 1),
-(20, 'admin', 'sport', 'sport exercé', 'Sport', 'Sport exercé', '', 'Le sport indiqué n\'est pas correct', 'text', '', 'user', 25, 1, '2016-12-15 12:07:34', 3600, 1),
-(21, 'admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'user', 26, 1, '2016-12-16 13:36:46', 3600, 1),
-(22, 'admin', 'othersfirstname', 'liste des prénoms secondaires', 'Autres prénoms', 'Les autres prénoms d\'une personne', '', '', 'text', '', 'user', 1, 1, '2016-12-16 18:01:37', 3600, 1),
-(51, 'admin', 'titre', 'Dr, Pr ...', 'Titre', 'Titre du pro de santé', '', '', 'text', '', 'user', 1, 1, '2017-03-12 21:21:47', 3600, 1),
-(53, 'admin', 'codePostalPro', 'code postal', 'Code postal', 'Adresse pro : code postal', 'alpha_space', 'Le code postal n\'est pas conforme', 'text', '', 'user', 47, 1, '2017-03-26 15:13:34', 3600, 1),
-(54, 'admin', 'numAdressePro', 'n°', 'Numéro', 'Adresse pro : numéro dans la rue', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'user', 47, 1, '2017-03-26 15:13:46', 3600, 1),
-(55, 'admin', 'rueAdressePro', 'rue', 'Rue', 'Adresse pro : rue', '', '', 'text', '', 'user', 47, 1, '2017-03-26 15:13:53', 3600, 1),
-(56, 'admin', 'villeAdressePro', 'ville', 'Ville', 'Adresse pro : ville', '', '', 'text', '', 'user', 47, 1, '2017-03-26 15:14:01', 3600, 1),
-(57, 'admin', 'telPro', 'téléphone professionnel', 'Téléphone professionnel', 'Téléphone pro.', 'phone', '', 'tel', '', 'user', 24, 1, '2017-03-12 21:33:56', 3600, 1),
-(58, 'admin', 'faxPro', 'fax professionel', 'Fax professionnel', 'FAx pro', 'phone', '', 'tel', '', 'user', 24, 1, '2017-03-12 21:34:44', 3600, 1),
-(59, 'admin', 'emailApicrypt', 'adresse mail apicript', 'Email apicrypt', 'Email apicrypt', 'valid_email', '', 'email', '', 'user', 24, 1, '2017-03-12 23:01:07', 3600, 1),
-(103, 'admin', 'rpps', 'rpps', 'RPPS', 'rpps', 'numeric', '', 'number', '', 'user', 36, 1, '2017-03-14 14:46:29', 3600, 1),
-(104, 'admin', 'adeli', 'adeli', 'Adeli', 'n° adeli', '', '', 'text', '', 'user', 36, 1, '2017-03-14 14:48:26', 3600, 1),
-(107, 'courrier', 'modeleCourrierVierge', '', 'Courrier', 'modèle de courrier vierge', '', '', '', 'courrier-courrierVierge', 'user', 38, 1, '2017-04-10 16:14:47', 3600, 0),
-(108, 'courrier', 'modeleCertifVierge', '', 'Certificat', 'modèle de certificat vierge', '', '', '', 'certif-certificatVierge', 'user', 37, 1, '2017-05-22 14:32:44', 3600, 0),
-(109, 'mail', 'mailFrom', 'email@domain.net', 'De', 'mail from', '', '', 'email', '', 'user', 39, 1, '2017-03-21 10:20:08', 1576800000, 1),
-(110, 'mail', 'mailTo', '', 'A', 'mail to', '', '', 'email', '', 'user', 39, 1, '2017-03-21 10:20:21', 1576800000, 1),
-(111, 'mail', 'mailBody', 'texte du message', 'Message', 'texte du message', '', '', 'textarea', '', 'user', 39, 1, '2017-03-16 19:51:28', 1576800000, 1),
-(112, 'mail', 'mailSujet', 'sujet du mail', 'Sujet', 'sujet du mail', '', '', 'text', '', 'user', 39, 1, '2017-03-16 19:52:04', 1576800000, 1),
-(177, 'mail', 'porteurMail', '', 'Mail', 'porteur pour les mails', '', '', '', '', 'user', 41, 1, '2017-03-20 12:53:14', 1576800000, 1),
-(178, 'mail', 'pj1', '', 'ID pièce jointe', 'id de la pièce jointe au mail', '', '', '', '', 'user', 39, 1, '2017-03-20 13:03:35', 1576800000, 1),
-(179, 'mail', 'aApicrypt', '', 'A (correspondant apicrypt)', 'Champ pour les correspondants apicrypt', '', '', 'email', '', 'user', 39, 1, '2017-03-21 10:20:33', 1576800000, 1),
-(180, 'admin', 'nss', '', 'Numéro de sécu', 'numéro de sécurité sociale', '', '', 'text', '', 'user', 36, 1, '2017-03-20 15:05:17', 3600, 1),
-(181, 'doc', 'docTitle', '', 'Titre', 'titre du document', '', '', '', '', 'user', 42, 1, '2017-03-21 11:57:32', 3600, 1),
-(182, 'doc', 'docOrigine', '', 'Origine du document', 'origine du document : interne ou externe(null)', '', '', 'text', '', 'user', 42, 1, '2017-05-15 13:36:57', 3600, 1),
-(183, 'doc', 'docType', '', 'Type du document', 'type du document importé', '', '', 'text', '', 'user', 42, 1, '2017-03-21 10:30:16', 3600, 1),
-(184, 'doc', 'docPorteur', '', 'Document', 'porteur pour nouveau document importé', '', '', '', '', 'user', 43, 1, '2017-03-21 21:08:37', 1576800000, 1),
-(185, 'doc', 'docOriginalName', '', 'Nom original', 'nom original du document', '', '', '', '', 'user', 42, 1, '2017-03-21 11:57:32', 3600, 1),
-(186, 'ordo', 'porteurOrdo', '', 'Ordonnance', 'porteur ordonnance', '', '', '', '', 'user', 44, 1, '2017-03-23 10:56:41', 3600, 1),
-(187, 'ordo', 'porteurCatPres1', '', 'Prescriptions médicamenteuses', '', '', '', 'select', '', 'user', 44, 1, '2017-04-01 12:24:38', 3600, 1),
-(188, 'ordo', 'porteurPresNonMedic', '', 'Prescritpions non médicamenteuses', 'prescritpion non médicamenteuse', '', '', 'select', '', 'user', 44, 1, '2017-04-01 12:24:29', 3600, 1),
-(189, 'ordo', 'ordoTypeFormImpression', '', 'Type ordonnance impression', 'type d\'ordonnance pour impression', '', '', '', '', 'user', 44, 1, '2017-03-22 15:52:54', 3600, 1),
-(190, 'ordo', 'ligneOrdo', '', 'Ligne d\'ordonnance', 'porteur pour une ligne d\'ordo', '', '', '', '', 'user', 44, 1, '2017-03-22 16:06:35', 3600, 1),
-(191, 'ordo', 'ligneOrdoALDouPas', '', 'Ligne d\'ordonnance : ald', '1 si ald', '', '', '', '', 'user', 44, 1, '2017-03-22 17:17:31', 3600, 1),
-(192, 'reglement', 'porteurReglement', '', 'Règlement', '', '', '', '', '', 'user', 45, 1, '2017-03-27 08:39:41', 1576800000, 1),
-(193, 'reglement', 'regleCheque', '', 'Chèque', 'montant versé en chèque', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:38:26', 1576800000, 1),
-(194, 'reglement', 'regleCB', '', 'CB', 'montant versé en CB', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:38:21', 1576800000, 1),
-(195, 'reglement', 'regleEspeces', '', 'Espèces', 'montant versé en espèce', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:38:47', 1576800000, 1),
-(196, 'reglement', 'aFacturer', '', 'Facturé', 'facturé ce jour', '', '', 'text', '0', 'user', 46, 1, '2017-04-27 13:39:03', 1576800000, 1),
-(197, 'reglement', 'regleType', '', 'Situation du patient', '', '', '', 'select', '\'G\' : \'Tout venant\'\n\'CMU\' : \'CMU\'\n\'TP\' : \'Tiers payant\'', 'user', 46, 1, '2017-03-27 10:27:04', 1576800000, 1),
-(198, 'reglement', 'regleTarifCejour', '', 'Tarif SS', 'tarif SS appliqué ce jour', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:39:12', 1576800000, 1),
-(199, 'reglement', 'regleDepaCejour', '', 'Dépassement', 'dépassement pratiqué ce jour', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:38:32', 1576800000, 1),
-(200, 'reglement', 'regleTiersPayeur', '', 'Tiers', 'part du tiers', '', '', 'text', '', 'user', 46, 1, '2017-04-27 13:39:23', 1576800000, 1),
-(205, 'reglement', 'identiteCheque', 'si différent patient', 'Identité payeur', '', '', '', 'text', '', 'user', 46, 1, '2017-03-27 13:14:03', 1576800000, 1),
-(247, 'admin', 'mobilePhonePro', '06 xx xx xx xx', 'Téléphone mobile pro.', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile pro est incorrect', 'tel', '', 'user', 24, 1, '2017-04-04 09:09:52', 3600, 1),
-(248, 'admin', 'telPro2', 'téléphone professionnel 2', 'Téléphone professionnel 2', 'Téléphone pro. 2', 'phone', '', 'tel', '', 'user', 24, 1, '2017-04-04 09:16:41', 3600, 1),
-(249, 'admin', 'serviceAdressePro', 'service', 'Service', 'Adresse pro : service', '', '', 'text', '', 'user', 47, 1, '2017-04-04 09:35:37', 3600, 1),
-(250, 'admin', 'etablissementAdressePro', 'établissement', 'Établissement', 'Adresse pro : établissement', '', '', 'text', '', 'user', 47, 1, '2017-04-04 09:36:21', 3600, 1),
-(433, 'dicom', 'dicomStudyID', '', 'StudyID', '', '', '', 'text', '', 'user', 55, 1, '2017-04-13 14:25:00', 3600, 1),
-(434, 'dicom', 'dicomSerieID', '', 'SerieID', '', '', '', 'text', '', 'user', 55, 1, '2017-04-13 16:25:25', 3600, 1),
-(435, 'dicom', 'dicomInstanceID', '', 'InstanceID', '', '', '', 'text', '', 'user', 55, 1, '2017-04-13 16:25:49', 3600, 1),
-(436, 'user', 'dicomAutoSendPatient2Echo', '', 'dicomAutoSendPatient2Echo', 'Pousser le dossier patient à l\'ouverture dans le serveur DICOM', '', '', 'text', 'false', 'user', 56, 1, '2017-04-25 22:06:41', 3600, 1),
-(443, 'admin', 'notesPro', 'notes pros', 'Notes pros', 'Zone de notes pros', '', '', 'textarea', '', 'user', 26, 1, '2017-05-04 10:53:11', 3600, 1),
-(446, 'mail', 'modelesMails', '', 'Modèle', 'liste des modèles', '', '', 'select', '', 'user', 39, 1, '2017-05-15 08:14:44', 1576800000, 1),
-(464, 'courrier', 'mmPratDef', '', 'Cher confrère', 'modèle mail confrère', '', '', '', 'Cher Confrère, Chère Consœur,', 'user', 59, 1, '2017-05-22 14:34:45', 3600, 1),
-(466, 'courrier', 'mmPatient', '', 'Cher', 'modèle mail bilan bio normal', '', '', '', 'Chère Madame, Cher Monsieur,', 'user', 58, 1, '2017-05-22 14:34:07', 3600, 1),
-(477, 'admin', 'nReseau', '', 'Numéro de réseau', 'numéro de réseau (dépistage)', '', '', 'text', '', 'user', 36, 1, '2017-05-16 22:21:00', 3600, 1),
-(481, 'mail', 'ecofaxTo', '', 'Numéro du destinataire', 'Numéro du destinataire du fax (ecofax OVH)', '', '', 'text', '', 'user', 39, 1, '2017-06-08 13:28:08', 1576800000, 1);
+(6, 'admin', 'twitterAccount', '', 'Twitter', 'Compte twitter', 'twitterAccount', '', 'text', '', 'base', 3, 1, '2016-12-13 19:17:36', 3600, 1),
+(7, 'admin', 'mobilePhone', '06 xx xx xx xx', 'Téléphone mobile', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile est incorrect', 'tel', '', 'base', 24, 1, '2016-12-16 15:34:13', 3600, 1),
+(8, 'admin', 'birthdate', 'dd/mm/YYYY', 'Date de naissance', 'Date de naissance au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de naissance indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2017-03-10 20:37:23', 3600, 1),
+(9, 'admin', 'streetNumber', 'numéro dans la rue', 'Numéro', 'Adresse perso : numéro dans la rue', 'alpha_space', 'Le numéro de rue est incorrect', 'text', '', 'base', 2, 1, '2017-03-09 15:58:39', 3600, 1),
+(10, 'admin', 'homePhone', '0x xx xx xx xx', 'Téléphone domicile', 'Téléphone du domicile de la forme 0x xx xx xx xx', 'phone', 'Le numéro de téléphone du domicile n\'est pas correct', 'tel', '', 'base', 24, 1, '2016-12-31 11:33:02', 3600, 1),
+(11, 'admin', 'street', 'rue', 'Rue', 'Adresse perso : rue', '', '', 'text', '', 'base', 2, 1, '2017-03-09 16:14:08', 3600, 1),
+(12, 'admin', 'city', 'ville', 'Ville', 'Adresse perso : ville', '', '', 'text', '', 'base', 2, 1, '2017-03-09 15:59:04', 3600, 1),
+(13, 'admin', 'postalCodePerso', 'code postal', 'Code postal', 'Adresse perso : code postal', '', 'Le code postal n\'est pas correct', 'text', '', 'base', 2, 1, '2017-03-31 15:35:04', 3600, 1),
+(14, 'admin', 'administrativeGenderCode', '', 'Sexe', 'Sexe', '', '', 'select', 'F: \'Femme\'\nM: \'Homme\'\nU: \'Inconnu\'', 'base', 1, 1, '2016-12-18 15:17:45', 3600, 1),
+(15, 'admin', 'website', '', 'Site web', 'Site web', 'url', '', 'text', '', 'base', 3, 1, '2016-12-13 20:00:15', 3600, 1),
+(19, 'admin', 'job', 'activité professionnelle', 'Activité professionnelle', 'Activité professionnelle', '', 'L\'activité professionnelle n\'est pas correcte', 'text', '', 'base', 25, 1, '2017-03-10 12:42:48', 3600, 1),
+(20, 'admin', 'sport', 'sport exercé', 'Sport', 'Sport exercé', '', 'Le sport indiqué n\'est pas correct', 'text', '', 'base', 25, 1, '2016-12-15 12:07:34', 3600, 1),
+(21, 'admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', 26, 1, '2016-12-16 13:36:46', 3600, 1),
+(22, 'admin', 'othersfirstname', 'liste des prénoms secondaires', 'Autres prénoms', 'Les autres prénoms d\'une personne', '', '', 'text', '', 'base', 1, 1, '2016-12-16 18:01:37', 3600, 1),
+(51, 'admin', 'titre', 'Dr, Pr ...', 'Titre', 'Titre du pro de santé', '', '', 'text', '', 'base', 1, 1, '2017-03-12 21:21:47', 3600, 1),
+(53, 'admin', 'codePostalPro', 'code postal', 'Code postal', 'Adresse pro : code postal', 'alpha_space', 'Le code postal n\'est pas conforme', 'text', '', 'base', 47, 1, '2017-03-26 15:13:34', 3600, 1),
+(54, 'admin', 'numAdressePro', 'n°', 'Numéro', 'Adresse pro : numéro dans la rue', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'base', 47, 1, '2017-03-26 15:13:46', 3600, 1),
+(55, 'admin', 'rueAdressePro', 'rue', 'Rue', 'Adresse pro : rue', '', '', 'text', '', 'base', 47, 1, '2017-03-26 15:13:53', 3600, 1),
+(56, 'admin', 'villeAdressePro', 'ville', 'Ville', 'Adresse pro : ville', '', '', 'text', '', 'base', 47, 1, '2017-03-26 15:14:01', 3600, 1),
+(57, 'admin', 'telPro', 'téléphone professionnel', 'Téléphone professionnel', 'Téléphone pro.', 'phone', '', 'tel', '', 'base', 24, 1, '2017-03-12 21:33:56', 3600, 1),
+(58, 'admin', 'faxPro', 'fax professionel', 'Fax professionnel', 'FAx pro', 'phone', '', 'tel', '', 'base', 24, 1, '2017-03-12 21:34:44', 3600, 1),
+(59, 'admin', 'emailApicrypt', 'adresse mail apicript', 'Email apicrypt', 'Email apicrypt', 'valid_email', '', 'email', '', 'base', 24, 1, '2017-03-12 23:01:07', 3600, 1),
+(103, 'admin', 'rpps', 'rpps', 'RPPS', 'rpps', 'numeric', '', 'number', '', 'base', 36, 1, '2017-03-14 14:46:29', 3600, 1),
+(104, 'admin', 'adeli', 'adeli', 'Adeli', 'n° adeli', '', '', 'text', '', 'base', 36, 1, '2017-03-14 14:48:26', 3600, 1),
+(107, 'courrier', 'modeleCourrierVierge', '', 'Courrier', 'modèle de courrier vierge', '', '', '', 'courrier-courrierVierge', 'base', 38, 1, '2017-04-10 16:14:47', 3600, 0),
+(108, 'courrier', 'modeleCertifVierge', '', 'Certificat', 'modèle de certificat vierge', '', '', '', 'certif-certificatVierge', 'base', 37, 1, '2017-04-10 16:13:45', 3600, 0),
+(109, 'mail', 'mailFrom', 'email@domain.net', 'De', 'mail from', '', '', 'email', '', 'base', 39, 1, '2017-03-21 10:20:08', 1576800000, 1),
+(110, 'mail', 'mailTo', '', 'A', 'mail to', '', '', 'email', '', 'base', 39, 1, '2017-03-21 10:20:21', 1576800000, 1),
+(111, 'mail', 'mailBody', 'texte du message', 'Message', 'texte du message', '', '', 'textarea', '', 'base', 39, 1, '2017-03-16 19:51:28', 1576800000, 1),
+(112, 'mail', 'mailSujet', 'sujet du mail', 'Sujet', 'sujet du mail', '', '', 'text', '', 'base', 39, 1, '2017-03-16 19:52:04', 1576800000, 1),
+(177, 'mail', 'mailPorteur', '', 'Mail', 'porteur pour les mails', '', '', '', '', 'base', 41, 1, '2017-06-09 10:24:05', 1576800000, 1),
+(178, 'mail', 'mailPJ1', '', 'ID pièce jointe', 'id de la pièce jointe au mail', '', '', '', '', 'base', 39, 1, '2017-06-09 10:22:50', 1576800000, 1),
+(179, 'mail', 'mailToApicrypt', '', 'A (correspondant apicrypt)', 'Champ pour les correspondants apicrypt', '', '', 'email', '', 'base', 39, 1, '2017-06-09 10:22:19', 1576800000, 1),
+(180, 'admin', 'nss', '', 'Numéro de sécu', 'numéro de sécurité sociale', '', '', 'text', '', 'base', 36, 1, '2017-03-20 15:05:17', 3600, 1),
+(181, 'doc', 'docTitle', '', 'Titre', 'titre du document', '', '', '', '', 'base', 42, 1, '2017-03-21 11:57:32', 3600, 1),
+(182, 'doc', 'docOrigine', '', 'Origine du document', 'origine du document : interne ou externe(null)', '', '', 'text', '', 'base', 42, 1, '2017-05-15 13:36:57', 3600, 1),
+(183, 'doc', 'docType', '', 'Type du document', 'type du document importé', '', '', 'text', '', 'base', 42, 1, '2017-03-21 10:30:16', 3600, 1),
+(184, 'doc', 'docPorteur', '', 'Document', 'porteur pour nouveau document importé', '', '', '', '', 'base', 43, 1, '2017-03-21 21:08:37', 1576800000, 1),
+(185, 'doc', 'docOriginalName', '', 'Nom original', 'nom original du document', '', '', '', '', 'base', 42, 1, '2017-03-21 11:57:32', 3600, 1),
+(186, 'ordo', 'ordoPorteur', '', 'Ordonnance', 'porteur ordonnance', '', '', '', '', 'base', 44, 1, '2017-06-09 14:19:14', 3600, 1),
+(189, 'ordo', 'ordoTypeImpression', '', 'Type ordonnance impression', 'type d\'ordonnance pour impression', '', '', '', '', 'base', 44, 1, '2017-06-09 15:26:40', 3600, 1),
+(190, 'ordo', 'ordoLigneOrdo', '', 'Ligne d\'ordonnance', 'porteur pour une ligne d\'ordo', '', '', '', '', 'base', 44, 1, '2017-06-09 15:25:25', 3600, 1),
+(191, 'ordo', 'ordoLigneOrdoALDouPas', '', 'Ligne d\'ordonnance : ald', '1 si ald', '', '', '', '', 'base', 44, 1, '2017-06-09 15:25:35', 3600, 1),
+(192, 'reglement', 'reglePorteur', '', 'Règlement', '', '', '', '', '', 'base', 45, 1, '2017-06-09 21:12:32', 1576800000, 1),
+(193, 'reglement', 'regleCheque', '', 'Chèque', 'montant versé en chèque', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:38:26', 1576800000, 1),
+(194, 'reglement', 'regleCB', '', 'CB', 'montant versé en CB', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:38:21', 1576800000, 1),
+(195, 'reglement', 'regleEspeces', '', 'Espèces', 'montant versé en espèce', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:38:47', 1576800000, 1),
+(196, 'reglement', 'regleFacture', '', 'Facturé', 'facturé ce jour', '', '', 'text', '0', 'base', 46, 1, '2017-06-09 21:12:56', 1576800000, 1),
+(197, 'reglement', 'regleSituationPatient', '', 'Situation du patient', 'situation du patient : cmu / tp / tout venant', '', '', 'select', '\'G\' : \'Tout venant\'\n\'CMU\' : \'CMU\'\n\'TP\' : \'Tiers payant\'', 'base', 46, 1, '2017-06-09 21:14:35', 1576800000, 1),
+(198, 'reglement', 'regleTarifCejour', '', 'Tarif SS', 'tarif SS appliqué ce jour', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:39:12', 1576800000, 1),
+(199, 'reglement', 'regleDepaCejour', '', 'Dépassement', 'dépassement pratiqué ce jour', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:38:32', 1576800000, 1),
+(200, 'reglement', 'regleTiersPayeur', '', 'Tiers', 'part du tiers', '', '', 'text', '', 'base', 46, 1, '2017-04-27 13:39:23', 1576800000, 1),
+(205, 'reglement', 'regleIdentiteCheque', 'si différent patient', 'Identité payeur', 'identité du payeur si différente', '', '', 'text', '', 'base', 46, 1, '2017-06-09 21:13:30', 1576800000, 1),
+(247, 'admin', 'mobilePhonePro', '06 xx xx xx xx', 'Téléphone mobile pro.', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile pro est incorrect', 'tel', '', 'base', 24, 1, '2017-04-04 09:09:52', 3600, 1),
+(248, 'admin', 'telPro2', 'téléphone professionnel 2', 'Téléphone professionnel 2', 'Téléphone pro. 2', 'phone', '', 'tel', '', 'base', 24, 1, '2017-04-04 09:16:41', 3600, 1),
+(249, 'admin', 'serviceAdressePro', 'service', 'Service', 'Adresse pro : service', '', '', 'text', '', 'base', 47, 1, '2017-04-04 09:35:37', 3600, 1),
+(250, 'admin', 'etablissementAdressePro', 'établissement', 'Établissement', 'Adresse pro : établissement', '', '', 'text', '', 'base', 47, 1, '2017-04-04 09:36:21', 3600, 1),
+(433, 'dicom', 'dicomStudyID', '', 'StudyID', '', '', '', 'text', '', 'base', 55, 1, '2017-04-13 14:25:00', 3600, 1),
+(434, 'dicom', 'dicomSerieID', '', 'SerieID', '', '', '', 'text', '', 'base', 55, 1, '2017-04-13 16:25:25', 3600, 1),
+(435, 'dicom', 'dicomInstanceID', '', 'InstanceID', '', '', '', 'text', '', 'base', 55, 1, '2017-04-13 16:25:49', 3600, 1),
+(436, 'user', 'dicomAutoSendPatient2Echo', '', 'dicomAutoSendPatient2Echo', 'Pousser le dossier patient à l\'ouverture dans le serveur DICOM', '', '', 'text', 'false', 'base', 56, 1, '2017-04-25 22:06:41', 3600, 1),
+(443, 'admin', 'notesPro', 'notes pros', 'Notes pros', 'Zone de notes pros', '', '', 'textarea', '', 'base', 26, 1, '2017-05-04 10:53:11', 3600, 1),
+(444, 'courrier', 'consentementEcho', '', 'Consentement échographie foetale', 'Consentement échographie foetale', '', '', '', 'consentementEcho', 'base', 37, 1, '2017-05-09 17:47:38', 3600, 1),
+(446, 'mail', 'mailModeles', '', 'Modèle', 'liste des modèles', '', '', 'select', '', 'base', 39, 1, '2017-06-09 10:23:17', 1576800000, 1),
+(477, 'admin', 'nReseau', '', 'Numéro de réseau', 'numéro de réseau (dépistage)', '', '', 'text', '', 'base', 36, 1, '2017-05-16 22:21:00', 3600, 1),
+(479, 'courrier', 'mmDefautApi', '', 'Défaut', 'modèle mail par défaut', '', '', '', 'Cher confrère,\n\nVeuillez trouver en pièce jointe un document concernant notre patient commun.\nVous souhaitant bonne réception.\n\nBien confraternellement', 'base', 59, 1, '2017-05-29 10:41:14', 3600, 0),
+(481, 'mail', 'mailToEcofaxNumber', '', 'Numéro de fax du destinataire', 'Numéro du destinataire du fax (ecofax OVH)', '', '', 'text', '', 'base', 39, 1, '2017-06-09 21:48:01', 1576800000, 1),
+(484, 'mail', 'mailToEcofaxName', '', 'Destinataire du fax', 'Destinataire du fax (ecofax OVH)', '', '', 'text', '', 'base', 39, 1, '2017-06-09 21:49:09', 1576800000, 1);
 
 -- --------------------------------------------------------
 
@@ -255,12 +254,11 @@ INSERT INTO `forms` (`id`, `name`, `description`, `dataset`, `groupe`, `formMeth
 (14, 'Formulaire mail Apicrypt', 'formulaire pour expédier un mail vers un correspondant apicrypt', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 109,required\r\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - 179,required\r\n row2:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 112,required\r\n row3:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 446\r\n row4:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 111,rows=10', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 109,required\r\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - 179,required\r\n row2:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 112,required\r\n row3:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 446\r\n row4:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 111,rows=10', ''),
 (15, 'Fomulaire d\'import de document externe', 'fomulaire d\'import de document externe', 'data_types', 'doc', 'post', NULL, 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 181', 'structure:\r\n row1:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - 181', ''),
 (16, 'Formulaire ordonnance', 'formualire ordonnance', 'data_types', 'ordo', 'post', NULL, 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 187\r\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - 188', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 187\r\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - 188', ''),
-(17, 'Formulaire règlement', 'formulaire pour le règlement', 'data_types', 'reglement', 'post', '/patient/actions/saveReglementForm/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 197\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 198,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 199,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 196,readonly,plus={€}\r\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 200,plus={€}\r\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 205', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 197\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 198,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 199,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 196,readonly,plus={€}\r\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 200,plus={€}\r\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 205', ''),
+(17, 'Formulaire règlement', 'formulaire pour le règlement', 'data_types', 'reglement', 'post', '/patient/actions/saveReglementForm/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 197\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 198,readonly,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 199,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 196,readonly,plus={€}\r\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 200,plus={€}\r\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 205', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 197\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 198,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 199,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 196,readonly,plus={€}\r\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - 200,plus={€}\r\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - 205', ''),
 (18, 'Formulaire simplifié règlement (page compta)', 'formulaire simplifié pour le règlement', 'data_types', 'reglement', 'post', '/compta/actions/saveReglementForm/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n row2:\r\n  col1: \r\n    size: 9\r\n    bloc: \r\n      - 205', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n row2:\r\n  col1: \r\n    size: 9\r\n    bloc: \r\n      - 205', ''),
 (19, 'Recherche règlements', 'formulaire recherche règlement', 'form_basic_types', 'admin', 'post', '', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 3', ''),
 (22, 'Import', 'formulaire pour consultation importée d\'une source externe', 'data_types', 'medical', 'post', '', 5, 'public', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              \r\n    head: \'Consultation importée\'\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - 252,rows=10', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              # 1re rangée\r\n    head: \'Consultation importée\'\r\n    col1:                            # 1re colonne  \r\n      size: 12\r\n      bloc:                          # Types utilisés\r\n        - 252,rows=10', 'csImportee'),
-(25, 'Assigner un mot de passe', 'formulaire assigner un password à un utilisateur', 'form_basic_types', 'admin', 'post', '/configuration/actions/configUpdatePassword/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', ''),
-(29, 'Formulaire écofax', 'formulaire pour ecofax OVH', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 4\r\n    bloc: \r\n      - 481,required', NULL, '');
+(25, 'Assigner un mot de passe', 'formulaire assigner un password à un utilisateur', 'form_basic_types', 'admin', 'post', '/configuration/actions/configUpdatePassword/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', '');
 
 -- --------------------------------------------------------
 
@@ -415,7 +413,7 @@ CREATE TABLE `people` (
 --
 
 INSERT INTO `people` (`id`, `type`, `rank`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
-(1, 'pro', 'admin', 0x75a548542f3c5d2917b7ecb03112ddcc, NULL, NULL, '127.0.0.1', '2017-05-21 15:01:36', 'bb07ccd899b821bf1451e93dc8907f63831e7415');
+(1, 'pro', 'admin', 0x75a548542f3c5d2917b7ecb03112ddcc, NULL, NULL, '127.0.0.1', '2017-05-23 20:15:30', '4b7425f9d6cc059e94bb32f6627bda5acd049a84');
 
 -- --------------------------------------------------------
 
@@ -431,14 +429,6 @@ CREATE TABLE `prescriptions` (
   `fromID` smallint(5) UNSIGNED NOT NULL,
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `prescriptions`
---
-
-INSERT INTO `prescriptions` (`id`, `cat`, `label`, `description`, `fromID`, `creationDate`) VALUES
-(1, 2, 'Ligne vierge', '', 1, '2017-03-22 15:26:08'),
-(2, 4, 'Ligne vierge', '', 1, '2017-03-22 15:27:26');
 
 -- --------------------------------------------------------
 
@@ -504,13 +494,15 @@ ALTER TABLE `actes_cat`
 -- Index pour la table `data_cat`
 --
 ALTER TABLE `data_cat`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Index pour la table `data_types`
 --
 ALTER TABLE `data_types`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
   ADD KEY `groupe` (`groupe`),
   ADD KEY `cat` (`cat`),
   ADD KEY `groupe_2` (`groupe`,`id`);
@@ -608,17 +600,17 @@ ALTER TABLE `actes`
 -- AUTO_INCREMENT pour la table `actes_cat`
 --
 ALTER TABLE `actes_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `data_cat`
 --
 ALTER TABLE `data_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `data_types`
 --
 ALTER TABLE `data_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=479;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `dicomTags`
 --
@@ -628,17 +620,17 @@ ALTER TABLE `dicomTags`
 -- AUTO_INCREMENT pour la table `forms`
 --
 ALTER TABLE `forms`
-  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `forms_cat`
 --
 ALTER TABLE `forms_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `form_basic_types`
 --
 ALTER TABLE `form_basic_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `hprim`
 --
@@ -658,17 +650,17 @@ ALTER TABLE `objets_data`
 -- AUTO_INCREMENT pour la table `people`
 --
 ALTER TABLE `people`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `prescriptions_cat`
 --
 ALTER TABLE `prescriptions_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `printed`
 --
