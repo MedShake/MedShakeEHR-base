@@ -54,13 +54,42 @@ $(document).ready(function() {
         setTimeout(function() {
           el.css("background", "");
         }, 1000);
-        
+        //alert('Patient envoyé !');
       },
       error: function() {
         alert('Problème, rechargez la page !');
       }
     });
   });
+
+  //ajouter / retirer liste des Praticiens
+  $('body').on("click", "a.switchPraticienListe", function(e) {
+    e.preventDefault();
+    source=$(this);
+    $.ajax({
+      url: '/patients/ajax/switchPraticienListe/',
+      type: 'post',
+      data: {
+        patientID: $(this).attr('data-patientID')
+      },
+      dataType: "json",
+      success: function(data) {
+        el = source.closest('tr');
+        if(data.type == 'pro') {
+          source.html('Retirer de la liste Praticiens');
+          el.addClass('info')
+        } else {
+          el.removeClass('info')
+          source.html('Ajouter de la liste Praticiens');
+        };
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+
 
 });
 

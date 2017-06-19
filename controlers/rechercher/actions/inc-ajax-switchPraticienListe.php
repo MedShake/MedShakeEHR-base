@@ -21,38 +21,30 @@
  */
 
 /**
- * Patients > ajax : requêtes ajax
+ * Patients > ajax : ajout / retrait d'un dossier à la liste des Praticiens.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+header('Content-Type: application/json');
 
+if(is_numeric($_POST['patientID'])) {
+  if($statutActu=msSQL::sqlUniqueChamp("select type from people where id='".$_POST['patientID']."'")) {
+    if($statutActu=='patient') {
+      $statutFutur='pro';
+    } else {
+      $statutFutur='patient';
+    }
 
-$debug='';
-$m=$match['params']['m'];
+    $data=array(
+      'id'=>$_POST['patientID'],
+      'type'=>$statutFutur
+    );
 
-$acceptedModes=array(
-    'patientsListByCrit', // Générer liste des patients
-    'patientsSendSign', // envoyer à la signature
-    'switchPraticienListe' // ajouter/ retirer de la liste des praticiens
-);
+    msSQL::sqlInsert('people', $data);
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
+    echo json_encode($data);
 
+  }
 
-// Générer liste des patients
-if ($m=='patientsListByCrit') {
-  include('inc-ajax-patientsListByCrit.php');
-}
-
-// Générer liste des patients
-elseif ($m=='patientsSendSign') {
-  include('inc-ajax-patientsSendSign.php');
-}
-
-// ajouter/ retirer de la liste des praticiens
-elseif ($m=='switchPraticienListe') {
-  include('inc-ajax-switchPraticienListe.php');
 }

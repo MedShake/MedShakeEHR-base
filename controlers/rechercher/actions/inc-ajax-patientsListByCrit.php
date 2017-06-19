@@ -26,6 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$debug='';
 
 $template="listing";
 
@@ -84,8 +85,10 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$fo
         }
     }
 
+    //patient ou pro en fonction
+    if($_POST['porp']=='patient') $peopleType=array('pro','patient'); else $peopleType=array('pro');
 
-    $sql='select p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type="'.msSQL::cleanVar($_POST['porp']).'" '.$where.' order by '.implode(', ', $orderby).' limit 50';
+    $sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
@@ -131,6 +134,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$fo
         foreach ($row as $patientID=>$v) {
             foreach ($v as $k=>$q) {
                 $p['page']['outputTableRow'][$patientID][]=implode($separator[$k], array_filter($q));
+                $p['page']['outputType'][$patientID]['type']=$data[$patientID]['type'];
             }
         }
     }
