@@ -63,4 +63,26 @@ $(document).ready(function() {
     });
   });
 
+  //autocomplete pour le destinataire ecofax
+  $('body').delegate('input[name="mailToEcofaxName"]', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
+      select: function( event, ui ) {
+        $( 'input[name="mailToEcofaxNumber"]' ).val( ui.item.d58 );
+      }
+    });
+  });
+
+  //autocomplete pour le numero ecofax (reverse)
+  $('body').delegate('input[name="mailToEcofaxNumber"]', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
+      select: function( event, ui ) {
+        $( 'input[name="mailToEcofaxName"]' ).val( ui.item.d2 + ' ' + ui.item.d3 );
+      }
+    });
+  });
+
 });
