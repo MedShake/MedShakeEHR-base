@@ -498,7 +498,7 @@ function suppCs(el) {
     },
     dataType: "html",
     success: function() {
-      $('.tr' + objetID).hide();
+      $('.tr' + objetID).remove();
     },
     error: function() {
       alert('Problème, rechargez la page !');
