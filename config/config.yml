@@ -115,6 +115,21 @@ agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.jso
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
 
 #######################################
+## Rappels RDV par mail
+mailRappelLogCampaignDirectory: '/home/EHR/public_html/mailsRappelRdvArchives/'
+mailRappelDaysBeforeRDV: '3'
+
+#######################################
+## allMySMS (cf /servicesTiers/sms/ )
+smsProvider: ''
+smsLogCampaignDirectory: '/home/EHR/public_html/smsArchives/'
+smsDaysBeforeRDV: '3'
+smsCreditsFile: 'creditsSMS.txt'
+smsSeuilCreditsAlerte: '150'
+smsTpoa: 'Dr ....'
+
+
+#######################################
 ## Twig
 templateBaseFolder: 'gynobs'
 twig:

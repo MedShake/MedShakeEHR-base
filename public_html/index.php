@@ -104,6 +104,11 @@ if (isset($template)) {
     // patients of the day
     $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
 
+    // crédits SMS
+    if(is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
+      $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
+    }
+
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
