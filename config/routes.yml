@@ -35,17 +35,25 @@ userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
 userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 
 #Ajax general
-ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/', 'actions/ajax']
+ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
+
+#agenda
+agendaAjax: ['GET|POST', '/agenda/[i:userID]/ajax/[a:m]/', 'agenda/actions/agendaAjax']
+agenda: ['GET', '/agenda/[i:userID]?/', 'agenda/agenda']
 
 #chercher patients / pros
 patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
 patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
 
 #créer / éditer patient/pros
+peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
 peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/peopleRegister']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
+
+# relations
+peopleRelations: ['GET', '/patient/relations/[i:patient]/', 'people/peopleRelations']
 
 # pro : voir fiche praticien
 proView: ['GET', '/pro/[i:proID]/', 'people/proView']
@@ -88,9 +96,9 @@ inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']
 configActions: ['POST|GET', '/configuration/actions/[a:m]/', 'configuration/actions/configActions']
 configIndex: ['GET', '/configuration/', 'configuration/configIndex']
-configDataType: ['GET', '/configuration/data-type/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/[i:cat]?/', 'configuration/configDataType']
-configDataTypeValues: ['GET', '/configuration/data-type/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/[i:cat]/[i:typeID]/', 'configuration/configDataTypeValues']
-configDataCat: ['GET', '/configuration/data-cat/[admin|medical|typecs|courrier|mail|doc|ordo|reglement|dicom|user:groupe]/', 'configuration/configDataCat']
+configDataType: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]?/', 'configuration/configDataType']
+configDataTypeValues: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]/[i:typeID]/', 'configuration/configDataTypeValues']
+configDataCat: ['GET', '/configuration/data-cat/[a:groupe]/', 'configuration/configDataCat']
 configPrescriptions: ['GET', '/configuration/prescriptions/[i:cat]?/', 'configuration/configPrescriptions']
 configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configuration/configPrescriptionsCat']
 configActes: ['GET', '/configuration/actes/[i:cat]?/', 'configuration/configActes']
