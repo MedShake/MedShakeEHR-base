@@ -21,36 +21,17 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * Requêtes AJAX > enregistrement des données patient 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
-header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData' // Enregistrer des données patient
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-
-// Autocomplete des forms - version simple
-if ($m=='getAutocompleteFormValues') {
-    include('inc-ajax-getAutocompleteFormValues.php');
-}
-// Autocomplete des forms - version complexe
-elseif ($m=='getAutocompleteLinkType') {
-    include('inc-ajax-getAutocompleteLinkType.php');
-}
-// Enregistrer des données patient
-elseif ($m=='setPeopleData') {
-    include('inc-ajax-setPeopleData.php');
-}
+ $patient = new msObjet();
+ $patient->setFromID($p['user']['id']);
+ $patient->setToID($_POST['patientID']);
+ if ($patient->createNewObjet($_POST['typeID'], $_POST['value'], $_POST['instance']) > 0) {
+     $return['status']='ok';
+     echo json_encode($return);
+ } else {
+     header('HTTP/1.1 401 Unauthorized');
+ }

@@ -1,0 +1,202 @@
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Fonctions JS pour les relations patient <-> patient et patient <-> praticien
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+
+$(document).ready(function() {
+
+  // reset recherche patient
+  $('body').on("click", "#searchPatientID", function(e) {
+    $('#searchPatientID').val('');
+    $('#searchPatientID').attr('data-id', '');
+  });
+
+  //autocomplete pour la relation patient <-> patient
+  $('body').delegate('#searchPatientID', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/people/ajax/getRelationsPatients/',
+      select: function(event, ui) {
+        $('#searchPatientID').val(ui.item.label);
+        $('#searchPatientID').attr('data-id', ui.item.id);
+      }
+    });
+  });
+
+  //ajouter une relation patient <-> patient
+  $('body').on("click", "#addRelationPatientPatients", function(e) {
+    e.preventDefault();
+    patient2ID = $('#searchPatientID').attr('data-id');
+    patientID = $('#identitePatient').attr("data-patientID");
+    preRelationPatientPatient = $('#preRelationPatientPatientID').val();
+
+    if (patient2ID > 0) {
+      $.ajax({
+        url: '/people/ajax/addRelationPatientPatient/',
+        type: 'post',
+        data: {
+          patientID: patientID,
+          patient2ID: patient2ID,
+          preRelationPatientPatient: preRelationPatientPatient
+        },
+        dataType: "html",
+        success: function(data) {
+          getRelationsPatientPatientsTab();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    } else {
+      alert("Le patient n'est pas correctement sélectionné");
+    }
+
+  });
+
+  // reset recherche praticien
+  $('body').on("click", "#searchPratID", function(e) {
+    $('#searchPratID').val('');
+    $('#searchPratID').attr('data-id', '');
+  });
+
+  //autocomplete pour la relation patient <-> praticien
+  $('body').delegate('#searchPratID', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/people/ajax/getRelationsPraticiens/',
+      select: function(event, ui) {
+        $('#searchPratID').val(ui.item.label);
+        $('#searchPratID').attr('data-id', ui.item.id);
+      }
+    });
+  });
+
+  //ajouter une relation patient <-> praticien
+  $('body').on("click", "#addRelationPatientPrat", function(e) {
+    e.preventDefault();
+    praticienID = $('#searchPratID').attr('data-id');
+    patientID = $('#identitePatient').attr("data-patientID");
+    preRelationPatientPrat = $('#preRelationPatientPratID').val();
+    if (praticienID > 0) {
+      $.ajax({
+        url: '/people/ajax/addRelationPatientPraticien/',
+        type: 'post',
+        data: {
+          patientID: patientID,
+          praticienID: praticienID,
+          preRelationPatientPrat: preRelationPatientPrat
+        },
+        dataType: "html",
+        success: function(data) {
+          getRelationsPatientPraticiensTab();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    } else {
+      alert("Le praticien n'est pas correctement sélectionné");
+    }
+
+  });
+
+  //retirer une relation patient <-> praticien/patient
+  $('body').on("click", ".removeRelationPatient", function(e) {
+    e.preventDefault();
+    ID2 = $(this).attr('data-peopleID');
+    ID1 = $('#identitePatient').attr("data-patientID");
+    if (ID1 > 0 && ID2 > 0) {
+      $.ajax({
+        url: '/people/ajax/removeRelationPatient/',
+        type: 'post',
+        data: {
+          ID1: ID1,
+          ID2: ID2,
+        },
+        dataType: "html",
+        success: function(data) {
+          getRelationsPatientPraticiensTab();
+          getRelationsPatientPatientsTab();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    } else {
+      alert("Le praticien n'est pas correctement sélectionné");
+    }
+
+  });
+
+  getRelationsPatientPraticiensTab();
+  getRelationsPatientPatientsTab();
+
+});
+
+function getRelationsPatientPatientsTab() {
+  patientID = $('#identitePatient').attr("data-patientID");
+  $.ajax({
+    url: '/people/ajax/getRelationsPatientPatientsTab/',
+    type: 'post',
+    data: {
+      patientID: patientID,
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#bodyTabRelationPatientPatients').html('');
+      $.each(data, function(index, value) {
+        $('#bodyTabRelationPatientPatients').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="/patient/' + value.patientID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.patientID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+      });
+
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}
+
+
+function getRelationsPatientPraticiensTab() {
+  patientID = $('#identitePatient').attr("data-patientID");
+  $.ajax({
+    url: '/people/ajax/getRelationsPatientPraticiensTab/',
+    type: 'post',
+    data: {
+      patientID: patientID,
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#bodyTabRelationPatientPrat').html('');
+      $.each(data, function(index, value) {
+        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+      });
+
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}

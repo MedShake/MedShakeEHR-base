@@ -21,36 +21,26 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * Requêtes AJAX > autocomplete des forms, version simple 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ $type=$match['params']['type'];
+ $dataset=$match['params']['dataset'];
 
-header('Content-Type: application/json');
+ $dataset2database=array(
+     'data_types'=>'objets_data'
+ );
 
-$m=$match['params']['m'];
+ $database=$dataset2database[$dataset];
 
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData' // Enregistrer des données patient
-);
+ if (isset($match['params']['setTypes'])) {
+     $searchTypes=explode(':', $match['params']['setTypes']);
+ } else {
+     $searchTypes[]=$type;
+ }
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
+ $data=msSQL::sql2tab("select distinct(value) from ".$database." where typeID in ('".implode("','", $searchTypes)."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
 
-
-// Autocomplete des forms - version simple
-if ($m=='getAutocompleteFormValues') {
-    include('inc-ajax-getAutocompleteFormValues.php');
-}
-// Autocomplete des forms - version complexe
-elseif ($m=='getAutocompleteLinkType') {
-    include('inc-ajax-getAutocompleteLinkType.php');
-}
-// Enregistrer des données patient
-elseif ($m=='setPeopleData') {
-    include('inc-ajax-setPeopleData.php');
-}
+ echo json_encode($data);

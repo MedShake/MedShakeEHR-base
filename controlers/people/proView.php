@@ -21,7 +21,7 @@
  */
 
 /**
- * people : voir les infos sur un pro 
+ * people : voir les infos sur un pro
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -37,3 +37,14 @@ $p['page']['proData']=$patient->getSimpleAdminDatas();
 
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeID(array_keys($p['page']['proData']));
+
+//les patients connus
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['relationID']);
+$p['page']['patientsConnus']=msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, n.value as nom, p.value as prenom
+from objets_data as o
+left join objets_data as c on c.instance=o.id
+left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
+left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+where o.toID='".$match['params']['proID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
+group by o.value order by nom asc");

@@ -67,6 +67,15 @@ class msObjet
     }
 
 /**
+ * Obtenir le toID
+ * @return int toID
+ */
+public function getToID()
+{
+  return $this->_toID;
+}
+
+/**
  * Définir le user qui enregistre l'objet
  * @param [type] $v [description]
  * @return int fromID
@@ -149,7 +158,7 @@ class msObjet
  */
     public function getObjetAndSons($id, $by='typeID')
     {
-        return msSQL::sql2tabKey("select o.*, t.name 
+        return msSQL::sql2tabKey("select o.*, t.name
         from objets_data as o
         left join data_types as t on o.typeID=t.id
         where o.id='".$id."' or o.instance='".$id."' and o.outdated='' and o.deleted='' ", $by);
@@ -209,13 +218,13 @@ class msObjet
         $d=$data->getDataType($typeID);
         $value = $data->treatBeforeSave();
 
-        $pd=array(
-          'fromID' => $this->_fromID,
-          'toID' => $this->_toID,
-          'typeID' => $typeID,
-          'parentTypeID' => $parentTypeID,
-          'instance'=> $parentID,
-          'value' => $value
+      $pd=array(
+        'fromID' => $this->_fromID,
+        'toID' => $this->_toID,
+        'typeID' => $typeID,
+        'parentTypeID' => $parentTypeID,
+        'instance'=> $parentID,
+        'value' => $value
       );
 
       //si creationDate est fixée
@@ -224,9 +233,10 @@ class msObjet
       }
 
       //mode à adopter en fonction du type d'objet
-      if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc') {
+      if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc' or $d['groupe']=='relation') {
           $lastID=msSQL::sqlInsert('objets_data', $pd);
-      } elseif ($d['groupe']=='ordo') {
+
+      } elseif ($d['groupe']=='ordo' or $d['groupe']=='courrier') {
 
             //recup le titre
             if (is_numeric($objetID)) {
@@ -244,25 +254,7 @@ class msObjet
                 }
             }
           $lastID=msSQL::sqlInsert('objets_data', $pd);
-      } elseif ($d['groupe']=='courrier') {
 
-            //recup le titre
-            if (is_numeric($objetID)) {
-                $pd['titre']=msSQL::sqlUniqueChamp("select titre from objets_data where id='".$objetID."' limit 1");
-            }
-
-            //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
-            if ($precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
-            from objets_data
-            where id = '".$objetID."'
-            order by id desc limit 1")) {
-                if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
-                    $pd['id']=$precedent['id'];
-                    $pd['updateDate'] = date("Y/m/d H:i:s");
-                }
-            }
-
-          $lastID=msSQL::sqlInsert('objets_data', $pd);
       } elseif ($d['groupe']=='reglement') {
           if (is_numeric($objetID)) {
               $pd['id']=$objetID;

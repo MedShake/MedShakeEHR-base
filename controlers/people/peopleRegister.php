@@ -73,5 +73,7 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formNumber]);
 
-    msTools::redirection('/'.$match['params']['porp'].'s/');
+
+
+    msTools::redirection('/patient/relations/'.$patient->getToID().'/');
 }

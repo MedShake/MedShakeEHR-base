@@ -340,9 +340,9 @@ function mapDicomSRData2CurrentForm(data) {
 }
 
 function addDicomSRInfo2CurrentForm(data) {
-  $('#nouvelleCs form.newCS').append('<input type="hidden" name="p_433" value="' + data['study'] + '" />');
-  $('#nouvelleCs form.newCS').append('<input type="hidden" name="p_434" value="' + data['serie'] + '" />');
-  $('#nouvelleCs form.newCS').append('<input type="hidden" name="p_435" value="' + data['instance'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_433" value="' + data['study'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_434" value="' + data['serie'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_435" value="' + data['instance'] + '" />');
 
 }
 

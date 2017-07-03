@@ -21,36 +21,20 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * People : ajax > obtenir la liste des patients pour l'autocomplete Relations
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 
-header('Content-Type: application/json');
 
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData' // Enregistrer des données patient
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
+ $data=msSQL::sql2tab("select trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, ''))) as value, trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, ''))) as label, p.id
+ from objets_data as do
+ left join objets_data as d2 on do.toID = d2.toID and d2.typeID='2' and d2.outdated='' and d2.deleted=''
+ left join objets_data as d3 on do.toID = d3.toID and d3.typeID='3' and d3.outdated='' and d3.deleted=''
+ left join people as p on p.id=do.toID
+ where do.typeID in ('2', '3') and concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%'
+ group by label limit 25");
 
 
-// Autocomplete des forms - version simple
-if ($m=='getAutocompleteFormValues') {
-    include('inc-ajax-getAutocompleteFormValues.php');
-}
-// Autocomplete des forms - version complexe
-elseif ($m=='getAutocompleteLinkType') {
-    include('inc-ajax-getAutocompleteLinkType.php');
-}
-// Enregistrer des données patient
-elseif ($m=='setPeopleData') {
-    include('inc-ajax-setPeopleData.php');
-}
+ echo json_encode($data);

@@ -58,7 +58,7 @@ $(document).ready(function() {
   $('body').delegate('input[name="mailToApicrypt"]', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteFormValues/data_types/59/',
+      source: '/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
       autoFocus: true
     });
   });

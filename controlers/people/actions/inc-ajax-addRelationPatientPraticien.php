@@ -21,36 +21,23 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * People : ajax > ajouter une relation patient <-> praticien
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+// patient -> praticien
+$patient = new msObjet();
+$patient->setToID($_POST['patientID']);
+$patient->setFromID($p['user']['id']);
+$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['praticienID']);
+$patient->createNewObjetByTypeName('relationPatientPraticien', $_POST['preRelationPatientPrat'], $supportID);
 
-header('Content-Type: application/json');
+// praticien -> patient
+$praticien = new msObjet();
+$praticien->setToID($_POST['praticienID']);
+$praticien->setFromID($p['user']['id']);
+$supportID=$praticien->createNewObjetByTypeName('relationID', $_POST['patientID']);
+$praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $supportID);
 
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData' // Enregistrer des données patient
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-
-// Autocomplete des forms - version simple
-if ($m=='getAutocompleteFormValues') {
-    include('inc-ajax-getAutocompleteFormValues.php');
-}
-// Autocomplete des forms - version complexe
-elseif ($m=='getAutocompleteLinkType') {
-    include('inc-ajax-getAutocompleteLinkType.php');
-}
-// Enregistrer des données patient
-elseif ($m=='setPeopleData') {
-    include('inc-ajax-setPeopleData.php');
-}
+echo json_encode(array('ok'));
