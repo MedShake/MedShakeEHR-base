@@ -60,7 +60,7 @@
  $data=msSQL::sql2tab("select trim(concat(".implode(', " ",', $concatValue).")) as value, trim(concat(".implode(', " ",', $concatLabel).")) as label, ".implode(",", $sel)."
  from ".$database." as do
  ".implode(" ", $joinleft)."
- where do.typeID in ('".implode("','", $searchTypes)."') and do.value like '%".msSQL::cleanVar($_GET['term'])."%'
+ where do.typeID in ('".implode("','", $searchTypes)."') and trim(concat(".implode(', " ",', $concatLabel).")) like '%".msSQL::cleanVar($_GET['term'])."%'
  and d".$type.".value is not null
  group by label limit 25");
 

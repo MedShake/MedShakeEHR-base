@@ -63,6 +63,15 @@ $(document).ready(function() {
     });
   });
 
+  //autocomplete pour les destinataire mail (adresse non apicrypt des pro)
+  $('body').delegate('input[name="mailTo"]', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
+      autoFocus: true
+    });
+  });
+
   //autocomplete pour le destinataire ecofax
   $('body').delegate('input[name="mailToEcofaxName"]', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
