@@ -21,8 +21,7 @@
  */
 
 /**
- * Gestion SMS spécifique à allMySMS <https://www.allmysms.com/> pour son
- * utilisation dans MedShakeEHR
+ * Gestion SMS
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -38,7 +37,7 @@ class msSMS
   private $_campaign_name;
 
 /**
- * Data de la campagne
+ * Data de la camapgne
  * @var string
  */
   private $_campaign_data;
@@ -419,7 +418,11 @@ public function getSendedCampaignData($date) {
 
           //intégartion Acc recep
           foreach ($dataw as $k => $v) {
-            if(isset($v['MOBILEPHONE']) ) $dataw[$k]['accRecep']=$dataAcc[$v['MOBILEPHONE']];
+            if(isset($v['MOBILEPHONE']) ) {
+              if(isset($dataAcc[$v['MOBILEPHONE']]) ) {
+                $dataw[$k]['accRecep']=$dataAcc[$v['MOBILEPHONE']];
+              }
+            }
           }
 
 
