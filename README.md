@@ -34,12 +34,14 @@ Chaque paramètre peut être surchargé au niveau utilisateur dans l'interface d
 - rédaction de courrier et certificat (modèles préétablis enregistrables à l'infini)
 - gestion des règlements en fonction d'une liste d'actes préétablis (éditable)
 - gestion d'une liste de professionnels correspondants
-- envoi par mail depuis le dossier patient de n'importe quelle pièce générée (ordo, certificat ...) vers un correspondant apicrypt ou vers l'email du patient.
+- assignation de praticiens correspondants à un dossier patient
+- gestion des liens familiaux unissant plusieurs dossiers patients
+- envoi par mail depuis le dossier patient de n'importe quelle pièce générée (ordo, certificat ...) vers un correspondant apicrypt, vers l'email du patient, ou vers un fax 
 - impression propre de toutes les pièces générées (le logiciel génère du PDF : impression simple depuis le navigateur)
 - historique des consultations et actes du jour, triable par type (consultation, courrier, ordonnance ...) offrant au clic une prévisualisation de chaque élément.
 - mise en valeur dans l'historique d’éléments importants, titre de chaque élément personnalisable.
-- Récapitulatif des paiements reçus par dates (bornes) et par type avec listing complet.
-- Page d'enregistrement des paiements des patients du jour sans nécessité d'accès au dossier (encaissement par secrétaire)
+- récapitulatif des paiements reçus par dates (bornes) et par type avec listing complet.
+- page d'enregistrement des paiements des patients du jour sans nécessité d'accès au dossier (encaissement par secrétaire)
 
 ### Fonctions liées à un appareil d'imagerie
 Toutes les fonctions liées à un appareil d'imagerie (on pense en particulier aux échographes) se font de façon transparente via l'intermédiaire du [serveur DICOM Orthanc](http://www.orthanc-server.com/) (logiciel open source !).
@@ -54,3 +56,7 @@ Toutes les fonctions liées à un appareil d'imagerie (on pense en particulier a
 - réception de mail apicrypt avec pièce jointe et intégration automatique dans le bon dossier
 
 NB : les fichiers nécessaires au chiffrage / déchiffrage apicrypt ne sont pas fournis ici.
+
+### Gestion des rappels de rendez-vous
+- rappels par mail 
+- rappels par SMS 
