@@ -62,7 +62,7 @@ CREATE TABLE `actes_cat` (
 
 CREATE TABLE `data_cat` (
   `id` smallint(5) NOT NULL,
-  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user') NOT NULL DEFAULT 'admin',
+  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
@@ -106,7 +106,7 @@ INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, 
 
 CREATE TABLE `data_types` (
   `id` int(10) UNSIGNED NOT NULL,
-  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user') NOT NULL DEFAULT 'admin',
+  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `placeholder` varchar(255) NOT NULL,
   `label` varchar(60) NOT NULL,
@@ -234,7 +234,7 @@ CREATE TABLE `forms` (
   `name` varchar(60) NOT NULL,
   `description` varchar(250) NOT NULL,
   `dataset` varchar(60) NOT NULL DEFAULT 'data_types',
-  `groupe` enum('admin','medical','mail','doc','courrier','ordo','reglement') NOT NULL DEFAULT 'medical',
+  `groupe` enum('admin','medical','mail','doc','courrier','ordo','reglement','relation') NOT NULL DEFAULT 'medical',
   `formMethod` enum('post','get') NOT NULL DEFAULT 'post',
   `formAction` varchar(255) DEFAULT '/patient/actions/saveCsForm/',
   `cat` smallint(4) DEFAULT NULL,
