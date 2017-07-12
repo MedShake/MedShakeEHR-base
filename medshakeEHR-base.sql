@@ -30,12 +30,33 @@ CREATE TABLE `actes` (
   `id` smallint(4) UNSIGNED NOT NULL,
   `cat` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `label` varchar(250) NOT NULL,
-  `tarif` float NOT NULL DEFAULT '0',
-  `depassement` float NOT NULL DEFAULT '0',
-  `code` varchar(250) NOT NULL DEFAULT '',
+  `shortLabel` varchar(255) DEFAULT NULL,
+  `details` text NOT NULL,
+  `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
+  `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
   `fromID` smallint(5) UNSIGNED NOT NULL,
+  `toID` mediumint(6) NOT NULL DEFAULT '0',
   `creationDate` datetime NOT NULL DEFAULT '1000-01-01 00:00:00'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `actes_base`
+--
+
+CREATE TABLE `actes_base` (
+  `id` mediumint(6) UNSIGNED NOT NULL,
+  `code` varchar(7) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `type` enum('NGAP','CCAM') NOT NULL DEFAULT 'CCAM',
+  `tarifs1` float NOT NULL,
+  `tarifs2` float NOT NULL,
+  `fromID` mediumint(7) UNSIGNED NOT NULL DEFAULT '1',
+  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -205,7 +226,10 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (488, 'relation', 'relationID', '', 'Porteur de relation', 'porteur de relation entre patients ou entre patients et praticiens', '', '', 'number', '', 'base', 63, 1, '2017-06-29 15:28:56', 1576800000, 1),
 (489, 'relation', 'relationPatientPatient', '', 'Relation patient patient', 'relation patient patient', '', '', 'select', '\'conjoint\': \'conjoint\'\n\'enfant\': \'parent\'\n\'parent\': \'enfant\'\n\'grand parent\': \'petit enfant\'\n\'petit enfant\': \'grand parent\'\n\'sœur / frère\': \'sœur / frère\' \n\'tante / oncle\': \'nièce / neveu\' \n\'cousin\': \'cousin\'', 'base', 63, 1, '2017-06-30 10:36:59', 1576800000, 1),
 (490, 'relation', 'relationPatientPraticien', '', 'Relation patient praticien', 'relation patient  praticien', '', '', 'select', '\'MT\': \'Médecin traitant\'\n\'MS\': \'Médecin spécialiste\'\n\'Autre\': \'Autre correspondant\'', 'base', 63, 1, '2017-06-29 15:29:16', 1576800000, 1);
-
+INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+(492, 'user', 'administratifPeutAvoirPrescriptionsTypes', '', 'administratifPeutAvoirPrescriptionsTypes', 'permet à l\'utilisateur sélectionné d\'avoir des prescriptions types', '', '', 'text', 'false', 'base', 64, 1, '2017-07-10 20:06:36', 3600, 1),
+(493, 'user', 'administratifPeutAvoirFacturesTypes', '', 'administratifPeutAvoirFacturesTypes', 'permet à l\'utilisateur sélectionné d\'avoir des factures types', '', '', 'text', 'false', 'base', 64, 1, '2017-07-10 20:06:59', 3600, 1),
+(494, 'admin', 'administratifMarqueurSuppression', 'Dr, Pr ...', 'Dossier supprimé', 'marqueur pour la suppression d\'un dossier', '', '', 'text', '', 'user', 65, 1, '2017-07-11 09:24:16', 3600, 1);
 
 -- --------------------------------------------------------
 
@@ -358,6 +382,7 @@ CREATE TABLE `hprim` (
 
 CREATE TABLE `inbox` (
   `id` int(7) UNSIGNED NOT NULL,
+  `mailForUserID` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `txtFileName` varchar(30) NOT NULL,
   `txtDatetime` datetime NOT NULL,
   `txtNumOrdre` smallint(4) UNSIGNED NOT NULL,
@@ -402,7 +427,7 @@ CREATE TABLE `objets_data` (
 
 CREATE TABLE `people` (
   `id` int(11) UNSIGNED NOT NULL,
-  `type` enum('patient','pro') NOT NULL DEFAULT 'patient',
+  `type` enum('patient','pro','deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `pass` varbinary(60) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
@@ -431,6 +456,7 @@ CREATE TABLE `prescriptions` (
   `label` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `fromID` smallint(5) UNSIGNED NOT NULL,
+  `toID` mediumint(7) UNSIGNED NOT NULL DEFAULT '0',
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -482,11 +508,20 @@ CREATE TABLE `printed` (
 -- Index pour les tables exportées
 --
 
---
+---
 -- Index pour la table `actes`
 --
 ALTER TABLE `actes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `toID` (`toID`),
+  ADD KEY `cat` (`cat`);
+
+--
+-- Index pour la table `actes_base`
+--
+ALTER TABLE `actes_base`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
 
 --
 -- Index pour la table `actes_cat`
@@ -494,12 +529,6 @@ ALTER TABLE `actes`
 ALTER TABLE `actes_cat`
   ADD PRIMARY KEY (`id`);
 
---
--- Index pour la table `data_cat`
---
-ALTER TABLE `data_cat`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Index pour la table `data_types`
@@ -591,85 +620,7 @@ ALTER TABLE `printed`
   ADD PRIMARY KEY (`id`),
   ADD KEY `examenID` (`objetID`);
 
---
--- AUTO_INCREMENT pour les tables exportées
---
 
---
--- AUTO_INCREMENT pour la table `actes`
---
-ALTER TABLE `actes`
-  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `actes_cat`
---
-ALTER TABLE `actes_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `data_cat`
---
-ALTER TABLE `data_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `data_types`
---
-ALTER TABLE `data_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `dicomTags`
---
-ALTER TABLE `dicomTags`
-  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `forms`
---
-ALTER TABLE `forms`
-  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `forms_cat`
---
-ALTER TABLE `forms_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `form_basic_types`
---
-ALTER TABLE `form_basic_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `hprim`
---
-ALTER TABLE `hprim`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `inbox`
---
-ALTER TABLE `inbox`
-  MODIFY `id` int(7) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `objets_data`
---
-ALTER TABLE `objets_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `people`
---
-ALTER TABLE `people`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `prescriptions`
---
-ALTER TABLE `prescriptions`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `prescriptions_cat`
---
-ALTER TABLE `prescriptions_cat`
-  MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `printed`
---
-ALTER TABLE `printed`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
