@@ -27,7 +27,7 @@
  */
 
 
-$debug='';
+$debug='y';
 $template="patient";
 
 //le patient
@@ -36,6 +36,9 @@ $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+
+//type du dossier
+$p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['patient']."' limit 1");
 
 //historique du jour des consultation du patient
 $p['page']['patient']['today']=$patient->getToday();
@@ -55,7 +58,7 @@ $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientP
 
 $p['page']['correspondants']=msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, n.value as nom, p.value as prenom
 from objets_data as o
-inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."'
+inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
 left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
 left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
 where o.toID='".$match['params']['patient']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''

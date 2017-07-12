@@ -40,7 +40,7 @@ $(document).ready(function() {
   //envoyer pour signature
   $('body').on("click", "a.sendSign", function(e) {
     e.preventDefault();
-    source=$(this);
+    source = $(this);
     $.ajax({
       url: '/patients/ajax/patientsSendSign/',
       type: 'post',
@@ -54,7 +54,6 @@ $(document).ready(function() {
         setTimeout(function() {
           el.css("background", "");
         }, 1000);
-        //alert('Patient envoyé !');
       },
       error: function() {
         alert('Problème, rechargez la page !');
@@ -62,10 +61,45 @@ $(document).ready(function() {
     });
   });
 
+  //marquer dossier comme supprimé
+  $('body').on("click", "a.markDeleted", function(e) {
+    e.preventDefault();
+    if (confirm("Ce dossier ne sera plus visible et sera marqué comme supprimé.\nIl pourra cependant être restauré si besoin\nSouhaitez-vous poursuivre ? ")) {
+      if (confirm("Confirmez-vous le marquage comme supprimé de ce dossier ?")) {
+
+        motif=prompt("Motif de suppression ?");
+
+        source = $(this);
+        $.ajax({
+          url: '/patients/ajax/markDeleted/',
+          type: 'post',
+          data: {
+            patientID: $(this).attr('data-patientID'),
+            motif: motif
+          },
+          dataType: "html",
+          success: function(data) {
+            el = source.closest('tr');
+            el.css("background", "#efffe8");
+            setTimeout(function() {
+              el.css("background", "");
+              el.remove();
+            }, 1000);
+
+          },
+          error: function() {
+            alert('Problème, rechargez la page !');
+          }
+        });
+      }
+    }
+  });
+
+
   //ajouter / retirer liste des Praticiens
   $('body').on("click", "a.switchPraticienListe", function(e) {
     e.preventDefault();
-    source=$(this);
+    source = $(this);
     $.ajax({
       url: '/patients/ajax/switchPraticienListe/',
       type: 'post',
@@ -75,7 +109,7 @@ $(document).ready(function() {
       dataType: "json",
       success: function(data) {
         el = source.closest('tr');
-        if(data.type == 'pro') {
+        if (data.type == 'pro') {
           source.html('Retirer de la liste Praticiens');
           el.addClass('info')
         } else {

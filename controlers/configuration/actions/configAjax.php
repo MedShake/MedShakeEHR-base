@@ -40,6 +40,7 @@ $acceptedModes=array(
     'configPrescriptionCreate', //Création d'une prescription type
     'configPrescriptionsCatCreate', //Création d'une cat de prescription type
     'configActesCreate', //Création d'un acte
+    'configActesBaseCreate', //Création d'un acte de base, ngap ou ccam
     'configActesCatCreate', //Création d'une cat d'actes
     'configTagDicomCreate' //Associer tag dicom et typeID
 );
@@ -91,6 +92,11 @@ elseif ($m=='configPrescriptionsCatCreate') {
 // Création d'un acte
 elseif ($m=='configActesCreate') {
     include('inc-ajax-configActesCreate.php');
+}
+
+// Création d'un acte de base, ngap ou ccam
+elseif ($m=='configActesBaseCreate') {
+    include('inc-ajax-configActesBaseCreate.php');
 }
 
 // Création d'une cat pour données

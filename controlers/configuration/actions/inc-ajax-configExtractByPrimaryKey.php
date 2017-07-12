@@ -34,6 +34,7 @@ $acceptedTables=array(
     'prescriptions_cat',
     'actes',
     'actes_cat',
+    'actes_base',
     'dicomTags'
 );
 

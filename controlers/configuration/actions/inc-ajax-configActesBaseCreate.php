@@ -21,19 +21,41 @@
  */
 
 /**
- * Inbox : la page inbox
+ * Config > ajax : créer un acte de base, ngap ou ccam
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="inbox";
+//check & validate datas
+$gump=new GUMP();
+$_POST = $gump->sanitize($_POST);
 
-if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%d/%m/%y') as day, hprimIdentite, hprimExpediteur, pjNombre, archived
-from inbox
-where archived!='y' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."'
-order by txtDatetime desc, txtNumOrdre desc")) {
-    foreach ($mails as $mail) {
-        $p['page']['inbox']['mails'][$mail['day']][]=$mail;
+if (isset($_POST['id'])) {
+    $gump->validation_rules(array(
+            'id'=> 'required|numeric',
+            'code'=> 'required'
+        ));
+} else {
+    $gump->validation_rules(array(
+            'code'=> 'required'
+
+        ));
+}
+
+$validated_data = $gump->run($_POST);
+
+if ($validated_data === false) {
+    $return['status']='failed';
+    $return['msg']=$gump->get_errors_array();
+} else {
+    $validated_data['fromID']=$p['user']['id'];
+    $validated_data['creationDate']=date("Y-m-d H:i:s");
+
+    if (msSQL::sqlInsert('actes_base', $validated_data) > 0) {
+        $return['status']='ok';
+    } else {
+        $return['status']='failed';
+        $return['msg']=mysqli_error($mysqli);
     }
 }
+echo json_encode($return);

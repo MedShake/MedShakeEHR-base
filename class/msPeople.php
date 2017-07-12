@@ -173,6 +173,22 @@ class msPeople
         where dt.groupe='".$groupe."'
         order by dt.displayOrder, dt.label");
     }
+/**
+ * Obtenir la liste des utilisateurs ayant accès à un service
+ * @param  [type] $service [description]
+ * @return [type]          [description]
+ */
+  public function getUsersListForService($service) {
+
+    $typeID=msData::getTypeIDFromName($service);
+
+    return msSQL::sql2tabKey("select p.id, concat(o2.value , ' ' , o.value) as identite
+        from people as p
+        join objets_data as dt on dt.toID=p.id and dt.typeID='".$typeID."' and dt.value='true'
+        left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
+        left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+        where p.pass!='' order by identite", 'id', 'identite');
+  }
 
 /**
  * Historique complet des actes pour un individu

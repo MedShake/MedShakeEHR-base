@@ -35,6 +35,7 @@ $acceptedTables=array(
     'actes',
     'prescriptions_cat',
     'actes_cat',
+    'actes_base',
     'dicomTags'
 );
 
@@ -77,8 +78,15 @@ if ($table=='data_cat') {
         $do=true;
     }
 } elseif ($table=='dicomTags') {
+
     $do=true;
-} 
+    
+} elseif ($table=='actes_base') {
+  $code=msSQL::sqlUniqueChamp("select code from actes_base where id = '".$id."' limit 1 ");
+  if (msSQL::sqlUniqueChamp("select count(id) from actes where details like '%$code:%'")==0) {
+      $do=true;
+  }
+}
 
 // do it if you can !
 if ($do) {

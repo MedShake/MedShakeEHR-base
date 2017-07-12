@@ -38,10 +38,6 @@ userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
 
-#agenda
-agendaAjax: ['GET|POST', '/agenda/[i:userID]/ajax/[a:m]/', 'agenda/actions/agendaAjax']
-agenda: ['GET', '/agenda/[i:userID]?/', 'agenda/agenda']
-
 #chercher patients / pros
 patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
 patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
@@ -51,6 +47,7 @@ peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
 peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/peopleRegister']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
+peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
 # relations
 peopleRelations: ['GET', '/patient/relations/[i:patient]/', 'people/peopleRelations']
@@ -99,10 +96,12 @@ configIndex: ['GET', '/configuration/', 'configuration/configIndex']
 configDataType: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]?/', 'configuration/configDataType']
 configDataTypeValues: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]/[i:typeID]/', 'configuration/configDataTypeValues']
 configDataCat: ['GET', '/configuration/data-cat/[a:groupe]/', 'configuration/configDataCat']
-configPrescriptions: ['GET', '/configuration/prescriptions/[i:cat]?/', 'configuration/configPrescriptions']
+configPrescriptions: ['GET', '/configuration/prescriptions/[i:user]?/[i:cat]?/', 'configuration/configPrescriptions']
 configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configuration/configPrescriptionsCat']
-configActes: ['GET', '/configuration/actes/[i:cat]?/', 'configuration/configActes']
+configActes: ['GET', '/configuration/actes/[i:user]?/[i:cat]?/', 'configuration/configActes']
 configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesCat']
+configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActesBase']
+configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/licence/', 'configuration/configLicence']
 
@@ -128,3 +127,4 @@ publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 #routes pour le module
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
 moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
+

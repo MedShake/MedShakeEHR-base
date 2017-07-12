@@ -33,27 +33,53 @@
      $template="configActes";
      $debug='';
 
+     //utilisateurs différents
+     $autoUsers= new msPeople();
+     $p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirFacturesTypes');
+     if(is_array($p['page']['users'])) $p['page']['users']=array('0'=>'Tous')+$p['page']['users']; else {$p['page']['users']=array('0'=>'Tous');}
+
+
+     // si user
+     if (isset($match['params']['user'])) {
+         $p['page']['selectUser']=$match['params']['user'];
+         if (is_numeric($p['page']['selectUser'])) {
+             $where[]="a.toID='".$p['page']['selectUser']."'";
+         }
+
+     } else {
+         $where[]="a.toID='0'";
+         $p['page']['selectUser']=0;
+     }
+
+
+     // si catégorie
      if (isset($match['params']['cat'])) {
          $cat=$match['params']['cat'];
          if (is_numeric($cat)) {
-             $where="where a.cat='".$cat."'";
+             $where[]="a.cat='".$cat."'";
          }
-     } else {
-         $where=null;
      }
 
-	    // liste des types par catégorie
-	    if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel
+     if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel
 					from actes as a
 					left join actes_cat as c on c.id=a.cat
-          $where
+          where ".implode(' and ', $where)."
 					group by a.id
-					order by c.label asc, a.label asc")) {
-	        foreach ($tabTypes as $v) {
-	            $p['page']['tabTypes'][$v['catName']][]=$v;
-	        }
-	    }
+					order by c.displayOrder, c.label asc, a.label asc")) {
+         foreach ($tabTypes as $v) {
+             $reglement = new msReglement();
+             $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+             $reglement->set_factureTypeID($v['id']);
+             $reglement->set_factureTypeData($v);
+             $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
+         }
+     }
 
-	    // liste des catégories
-	    $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat order by label", 'id', 'label');
-	}
+     // liste des catégories
+     $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat order by label", 'id', 'label');
+
+     //utilisation de chaque facture type
+     $typeID= msData::getTypeIDFromName('reglePorteur');
+     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID = $typeID group by parentTypeID", 'parentTypeID', 'nb');
+
+ }

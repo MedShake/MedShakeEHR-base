@@ -21,19 +21,30 @@
  */
 
 /**
- * Patient > ajax : obtenir les informations de règlement d'un acte
+ * Patients > ajax : marquer un dossier patient comme effacé
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-header('Content-Type: application/json');
-
-$reglement = new msReglement();
-$reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
-$reglement->set_factureTypeID($_POST['acteID']);
-$data = $reglement->getCalculateFactureTypeData();
+if(is_numeric($_POST['patientID'])) {
 
 
-echo json_encode($data);
+  // création d'un marqueur pour sauvegarde de l'info
+  // on place en valeur le type du dossier + motif converti en yaml
 
-die();
+  $value['typeDossier']=msSQL::sqlUniqueChamp("select type from people where id='".$_POST['patientID']."' limit 1");
+  $value['motif']=$_POST['motif'];
+  $value = Spyc::YAMLDump($value);
+
+  $marqueur=new msObjet();
+  $marqueur->setFromID($p['user']['id']);
+  $marqueur->setToID($_POST['patientID']);
+  $marqueur->createNewObjetByTypeName('administratifMarqueurSuppression', $value);
+
+  // on marque le dossier dans people
+  $data=array(
+    'id'=>$_POST['patientID'],
+    'type'=>'deleted'
+  );
+  msSQL::sqlInsert('people', $data);
+}

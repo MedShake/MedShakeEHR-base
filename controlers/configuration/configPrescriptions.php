@@ -33,19 +33,36 @@
      $template="configPrescriptions";
      $debug='';
 
+     //utilisateurs différents
+     $autoUsers= new msPeople();
+     $p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirPrescriptionsTypes');
+     if(is_array($p['page']['users'])) $p['page']['users']=array('0'=>'Tous')+$p['page']['users']; else {$p['page']['users']=array('0'=>'Tous');}
+
+     // si user
+     if (isset($match['params']['user'])) {
+         $p['page']['selectUser']=$match['params']['user'];
+         if (is_numeric($p['page']['selectUser'])) {
+             $where[]="p.toID='".$p['page']['selectUser']."'";
+         }
+
+     } else {
+         $where[]="p.toID='0'";
+         $p['page']['selectUser']=0;
+     }
+
+
+     // si catégorie
      if (isset($match['params']['cat'])) {
          $cat=$match['params']['cat'];
          if (is_numeric($cat)) {
-             $where="where p.cat='".$cat."'";
+             $where[]="p.cat='".$cat."'";
          }
-     } else {
-         $where=null;
      }
 
      if ($tabTypes=msSQL::sql2tab("select p.* , c.name as catName, c.label as catLabel
 					from prescriptions as p
 					left join prescriptions_cat as c on c.id=p.cat
-          $where
+          where ".implode(' and ', $where)."
 					group by p.id
 					order by c.label asc, p.label asc")) {
          foreach ($tabTypes as $v) {

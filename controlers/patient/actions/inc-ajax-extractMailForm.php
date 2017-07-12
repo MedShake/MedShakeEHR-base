@@ -73,6 +73,7 @@ if (isset($_POST['objetID'])) {
 
     if ($doc->testDocExist()) {
         $p['page']['doc']['url']=$doc->getWebPathToDoc();
+        $p['page']['doc']['filesize']=$doc->getFileSize(0);
     } else {
         $pdf= new msPDF();
         $pdf->setObjetID($_POST['objetID']);
@@ -81,6 +82,7 @@ if (isset($_POST['objetID'])) {
 
         if ($doc->testDocExist()) {
             $p['page']['doc']['url']=$doc->getWebPathToDoc();
+            $p['page']['doc']['filesize']=$doc->getFileSize(0);
         }
     }
 }

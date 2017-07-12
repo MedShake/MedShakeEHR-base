@@ -26,8 +26,18 @@
  * 1) relève la boite
  * 2) insère le résultat en base
  *
+ * Nécessité impérative de configurer un paramètre si multiple utilisateurs
+ * Cf infra
+ *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
+/// A CONFIGURER IMPERATIVEMENT SI MULTIPLE UTILISATEURS SUR LA MEME INSTALLATION
+/// ID de l'utilisateur dont le mail est relevé par ce script
+$mailForUserID=0;
+///
+
+
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
@@ -45,8 +55,15 @@ spl_autoload_register(function ($class) {
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad('../config/config.yml');
 
+
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
+
+/////////// Surcharge de la config pour l'utilisateur concerné
+if ($mailForUserID > 0) {
+    msUser::applySpecificConfig($p['config'], $mailForUserID);
+}
+
 
 /////////// Relever le compte pop3
 
@@ -127,6 +144,7 @@ foreach ($scanned_directory as $file) {
 
       $data=array(
       'txtFileName'=>$file,
+      'mailForUserID'=>$mailForUserID,
       'txtDatetime'=>$filedata['datetime'],
       'txtNumOrdre'=>$filedata['numOrdre'],
       'hprimIdentite'=>$hprim['prenom'].' '.$hprim['nom'],

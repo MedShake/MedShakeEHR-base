@@ -27,22 +27,53 @@
 
 $(document).ready(function() {
 
-//autocomplete pour la liaison code postal - > ville
-$('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
-  type = $(this).attr('data-typeID');
-  if(type == 53) dest = 56;
-  else if(type == 13) dest = 12;
+  //autocomplete pour la liaison code postal - > ville
+  $('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
+    type = $(this).attr('data-typeID');
+    if (type == 53) dest = 56;
+    else if (type == 13) dest = 12;
 
-  if ($(this).is(':data(autocomplete)')) return;
-  $(this).autocomplete({
-    source: '/ajax/getAutocompleteLinkType/data_types/'+ type +'/'+ type +'/'+ type +':'+ dest +'/',
-    autoFocus: true,
-    minLength: 3,
-    select: function( event, ui ) {
-      destival= eval('ui.item.d'+dest);
-      $( '#p_'+dest+'ID' ).val( destival);
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/' + type + '/' + type + '/' + type + ':' + dest + '/',
+      autoFocus: true,
+      minLength: 3,
+      select: function(event, ui) {
+        destival = eval('ui.item.d' + dest);
+        $('#p_' + dest + 'ID').val(destival);
+      }
+    });
+  });
+
+
+  //réactiver un dossier marqué comme supprimé
+  $('body').on("click", "a.unmarkDeleted", function(e) {
+    e.preventDefault();
+    if (confirm("Ce dossier sera à nouveau visible dans les listings de recherche.\nSouhaitez-vous poursuivre ? ")) {
+      source = $(this);
+      $.ajax({
+        url: '/patients/ajax/unmarkDeleted/',
+        type: 'post',
+        data: {
+          patientID: $(this).attr('data-patientID'),
+        },
+        dataType: "html",
+        success: function(data) {
+          el = source.closest('tr');
+          el.css("background", "#efffe8");
+          setTimeout(function() {
+            el.css("background", "");
+            el.remove();
+          }, 1000);
+
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+
     }
   });
-});
+
 
 });

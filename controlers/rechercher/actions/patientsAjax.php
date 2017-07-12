@@ -34,7 +34,9 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'patientsListByCrit', // Générer liste des patients
     'patientsSendSign', // envoyer à la signature
-    'switchPraticienListe' // ajouter/ retirer de la liste des praticiens
+    'switchPraticienListe', // ajouter/ retirer de la liste des praticiens
+    'markDeleted', // marquer un dossier comme effacé
+    'unmarkDeleted', // marquer un dossier comme à nouveau utilisable
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -47,7 +49,7 @@ if ($m=='patientsListByCrit') {
   include('inc-ajax-patientsListByCrit.php');
 }
 
-// Générer liste des patients
+// envoyer à la signature sur tablette
 elseif ($m=='patientsSendSign') {
   include('inc-ajax-patientsSendSign.php');
 }
@@ -55,4 +57,14 @@ elseif ($m=='patientsSendSign') {
 // ajouter/ retirer de la liste des praticiens
 elseif ($m=='switchPraticienListe') {
   include('inc-ajax-switchPraticienListe.php');
+}
+
+// marquer un dossier comme effacé
+elseif ($m=='markDeleted') {
+  include('inc-ajax-markDeleted.php');
+}
+
+// marquer un dossier comme à nouveau utilisable
+elseif ($m=='unmarkDeleted') {
+  include('inc-ajax-unmarkDeleted.php');
 }

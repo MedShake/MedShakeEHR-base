@@ -48,6 +48,11 @@ sqlUser: 'user'
 sqlPass: 'password'
 sqlVarPassword: '4fd45sf78s8'
 
+#######################################
+## administratif
+administratifSecteurHonoraires: 1
+administratifPeutAvoirFacturesTypes: 'false'
+administratifPeutAvoirPrescriptionsTypes: 'false'
 
 #######################################
 ## templates impression
@@ -80,6 +85,7 @@ smtpDefautSujet: 'Document vous concernant'
 
 apicryptCheminInbox: '/home/EHR/public_html/inbox/'
 apicryptCheminArchivesInbox: '/home/EHR/public_html/inboxArchives/'
+apicryptInboxMailForUserID: '0'
 
 apicryptCheminFichierNC: '/home/EHR/public_html/workingDirectory/NC/'
 apicryptCheminFichierC: '/home/EHR/public_html/workingDirectory/C/'
@@ -120,7 +126,7 @@ mailRappelLogCampaignDirectory: '/home/EHR/public_html/mailsRappelRdvArchives/'
 mailRappelDaysBeforeRDV: '3'
 
 #######################################
-## allMySMS (cf /servicesTiers/sms/ )
+## SMS (cf /servicesTiers/sms/ )
 smsProvider: ''
 smsLogCampaignDirectory: '/home/EHR/public_html/smsArchives/'
 smsDaysBeforeRDV: '3'

@@ -35,6 +35,9 @@ $patient = new msPeople();
 $patient->setToID($p['page']['proDataID']);
 $p['page']['proData']=$patient->getSimpleAdminDatas();
 
+//type du dossier (pour deleted en particulier)
+$p['page']['proData']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['proID']."' limit 1");
+
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeID(array_keys($p['page']['proData']));
 

@@ -85,8 +85,10 @@ if (count($_POST['acteID'])>0) {
     $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
 
     //titre
-    $code = msSQL::sqlUniqueChamp("select code from actes where id='".$_POST['acteID']."' limit 1");
-    $patient->setTitleObjet($supportID, $code.' / '.$_POST['regleFacture'].'€');
+    $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");
+    $codes = Spyc::YAMLLoad($codes);
+    $codes = implode(' + ', array_keys($codes));
+    $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');
 } else {

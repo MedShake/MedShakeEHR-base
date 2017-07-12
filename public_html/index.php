@@ -98,11 +98,13 @@ if (isset($template)) {
         $p['session']=$_SESSION;
     }
 
-    //inbox number of messages
-    $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n'");
+    if (isset($p['user']['id'])) {
+      //inbox number of messages
+      $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
-    // patients of the day
-    $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      // patients of the day
+      $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+    }
 
     // crédits SMS
     if(is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {

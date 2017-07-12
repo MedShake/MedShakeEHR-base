@@ -92,8 +92,20 @@ function searchAndInsertActeData(selecteur) {
     success: function(data) {
       $("input[name='regleTarifCejour']").attr('data-tarifdefaut', data['tarif']);
       $("input[name='regleDepaCejour']").attr('data-tarifdefaut',data['depassement']);
-
       $('input[name="acteID"]').val(acteID);
+
+      if(data['flagCmu'] == "1") {
+        $("select[name='regleSituationPatient']").val('CMU');
+      } else {
+        $("select[name='regleSituationPatient']").val('G');
+      }
+
+      $('#detFacturation tbody').html('');
+      $.each(data['details'], function( index, value ) {
+        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + value['pourcents'] + "</td><td>" + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
+
+      });
+      $('#detFacturation').show();
 
       setDefautTarifEtDepa();
       calcResteDu();

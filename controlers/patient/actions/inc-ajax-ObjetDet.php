@@ -40,6 +40,7 @@ if (is_numeric($_POST['objetID'])) {
         if ($pdf->testDocExist()) {
             $p['page']['pj']['href']=$pdf->getWebPathToDoc();
             $p['page']['pj']['html']=strtoupper($pdf->getFileExtOfDoc());
+            $p['page']['pj']['filesize']= $pdf->getFileSize(0);
         }
 
         if (!empty($data['value'])) {
