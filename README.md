@@ -1,7 +1,8 @@
+**Les information ci dessous sont une rapide introduction purement technique ! 
+Consultez [www.logiciel-cabinet-medical.fr](http://www.logiciel-cabinet-medical.fr/) pour toutes les informations sur le logiciel MedShakeEHR !**
+
 # MedShakeEHR-base
 Base pour MedShakeEHR, logiciel modulaire, universel, open source pour les praticiens santé.
-
-**Les information ci dessous sont une rapide introduction. N'hésitez pas à consulter le [Wiki MedShakeEHR](https://github.com/MedShake/MedShakeEHR-base/wiki) pour plus d'informations !**
 
 ## Avertissements
 Ce logiciel ne doit pas être utilisé en l'état pour la stockage de données patient sur un réseau ouvert.  
@@ -22,41 +23,3 @@ Un dump MySQL est founi avec les éléments essentiels. Utiliser de préfèrence
 L'ensemble du paramétrage de base (chemin, base de données, smtp ...) est à faire dans config/config.yml. 
 Chaque paramètre peut être surchargé au niveau utilisateur dans l'interface de configuration.  
 
-## Fonctions principales 
-### Fonctions de gestion de base
-- création / édition de dossiers patient
-- recherche multicritère de patient et affichage de listing
-- enregistrement des consultations, celles-ci pouvant être de différent type avec un questionnaire de recueil et un modèle d'impression de compte rendu spécifiques à chacune.
-- mise en forme automatique des comptes redus des examens, en particulier d'imagerie avec liaison DICOM à l'appareil utilisé (voir plus bas)
-- gestion et intégration au dossier patient de documents, soit en provenance d'un fichier PDF / TXT externe déposé par drag and drop, soit via récupération automatique d'une boite mail apicrypt.
-- gestion des balises HPRIM à l'export (mail apicrypt) comme à l'import (indexation du document dans le bon dossier, présentation plus lisible de la biologie)
-- rédaction d'ordonnances à partir de prescriptions types pré enregistrées (modifiables) avec impression ALD ou non.
-- rédaction de courrier et certificat (modèles préétablis enregistrables à l'infini)
-- gestion des règlements en fonction d'une liste d'actes préétablis (éditable)
-- gestion d'une liste de professionnels correspondants
-- assignation de praticiens correspondants à un dossier patient
-- gestion des liens familiaux unissant plusieurs dossiers patients
-- envoi par mail depuis le dossier patient de n'importe quelle pièce générée (ordo, certificat ...) vers un correspondant apicrypt, vers l'email du patient, ou vers un fax 
-- impression propre de toutes les pièces générées (le logiciel génère du PDF : impression simple depuis le navigateur)
-- historique des consultations et actes du jour, triable par type (consultation, courrier, ordonnance ...) offrant au clic une prévisualisation de chaque élément.
-- mise en valeur dans l'historique d’éléments importants, titre de chaque élément personnalisable.
-- récapitulatif des paiements reçus par dates (bornes) et par type avec listing complet.
-- page d'enregistrement des paiements des patients du jour sans nécessité d'accès au dossier (encaissement par secrétaire)
-
-### Fonctions liées à un appareil d'imagerie
-Toutes les fonctions liées à un appareil d'imagerie (on pense en particulier aux échographes) se font de façon transparente via l'intermédiaire du [serveur DICOM Orthanc](http://www.orthanc-server.com/) (logiciel open source !).
-
-- envoi de l'identité et des données du patient à l'appareil (fonction worklist)
-- réception des dernières mesures du dernier examen pour intégration automatique au compte-rendu (fonction DICOM SR)
-- visualisation de tous les examens d'un patient, images et mesures (données DICOM SR)
-- constitution de PDF (ou de ZIP) à partir des images pour expédition par mail ou impression 
-
-### Fonctions liées à Apicrypt
-- envoi de mail avec pièce jointe à un correspondant apicrypt avec en-tête HPRIM
-- réception de mail apicrypt avec pièce jointe et intégration automatique dans le bon dossier
-
-NB : les fichiers nécessaires au chiffrage / déchiffrage apicrypt ne sont pas fournis ici.
-
-### Gestion des rappels de rendez-vous
-- rappels par mail 
-- rappels par SMS 
