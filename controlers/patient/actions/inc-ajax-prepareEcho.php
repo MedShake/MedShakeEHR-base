@@ -44,9 +44,12 @@ if (is_file($p['config']['homeDirectory'].'controlers/module/patient/actions/inc
     include($p['config']['homeDirectory'].'controlers/module/patient/actions/inc-ajax-prepareEcho.php');
 }
 
+// les variables d'environnement twig
+if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
+if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
 
 $loaderPDF = new Twig_Loader_Filesystem($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'].'/');
-$twigPDF = new Twig_Environment($loaderPDF, $p['config']['twig']['environnement']);
+$twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
 $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
 $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
 

@@ -65,6 +65,7 @@
 
  ///////// Controler else -> 404
  if ($match and is_file('../controlers/'.$match['target'].'.php')) {
+
      include '../controlers/'.$match['target'].'.php';
 
      // complément lié au module installé
@@ -86,12 +87,15 @@
      header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
      header("Pragma: no-cache");
 
-     foreach ($p['config']['twig']['templatesPath'] as $k=>$v) {
-         $p['config']['twig']['templatesPath'][$k]=$p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'].$v.'/';
-     }
+     //les répertoires de templates twig
+     $twigTemplateDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'],'/');
 
-     $loader = new Twig_Loader_Filesystem($p['config']['twig']['templatesPath']);
-     $twig = new Twig_Environment($loader, $p['config']['twig']['environnement']);
+     // les variables d'environnement twig
+     if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
+     if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+
+     $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
+     $twig = new Twig_Environment($loader, $twigEnvironment);
      $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
      $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
 

@@ -71,7 +71,9 @@ templateCourrierHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
 
 #######################################
 ## smtp
+smtpTracking: ''
 smtpFrom: 'user@domain.net'
+smtpFromName: ''
 smtpHost: 'smtp.net'
 smtpPort: 587
 smtpSecureType: 'tls'
@@ -113,6 +115,7 @@ dicomPrefixIdPatient: '1.100.100'
 dicomWorkListDirectory: '/home/EHR/public_html/workingDirectory/'
 dicomWorkingDirectory: '/home/EHR/public_html/workingDirectory/'
 dicomAutoSendPatient2Echo: 'false'
+dicomDiscoverNewTags: 'true'
 
 #######################################
 ## agenda
@@ -138,20 +141,6 @@ smsTpoa: 'Dr ....'
 #######################################
 ## Twig
 templateBaseFolder: 'gynobs'
-twig:
-    environnement:
-      cache: false #'/tmp/templates_cache/'
-      autoescape: false
-    templatesPath:
-        - '/'
-        - '/login/'
-        - '/rechercher/'
-        - '/patient/'
-        - '/people/'
-        - '/configuration/'
-        - '/models4print/'
-        - '/logs/'
-        - '/compta/'
-        - '/inbox/'
-        - '/dicom/'
-        - '/public/'
+twigPdfTemplatesDir: 'models4print'
+twigEnvironnementCache: false #'/tmp/templates_cache/'
+twigEnvironnementAutoescape: false

@@ -27,7 +27,7 @@
  */
 
 
-$debug='y';
+$debug='';
 $template="patient";
 
 //le patient
@@ -54,13 +54,14 @@ $p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesC
 
 //les correspondants et liens familiaux
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre']);
 
-$p['page']['correspondants']=msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, n.value as nom, p.value as prenom
+$p['page']['correspondants']=msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, n.value as nom, p.value as prenom, t.value as titre 
 from objets_data as o
 inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
 left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
 left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted=''
 where o.toID='".$match['params']['patient']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
 group by o.value order by typeRelation = 'MT' desc, nom asc");
 

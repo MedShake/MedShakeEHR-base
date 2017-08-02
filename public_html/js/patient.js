@@ -103,6 +103,18 @@ $(document).ready(function() {
     catchLastDicomSrData();
   });
 
+  //modal liste dicom studies
+  $('.catchOthersDicomSrData').on('click', function(e) {
+    e.preventDefault();
+    listePatientDicomStudies();
+  })
+
+  //modal liste dicom studies submit
+  $('#listeDicomStudiesSubmit').on('click', function(e) {
+    e.preventDefault();
+    catchOtherDicomSrData();
+  })
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations déclenchement actions d'injections dans la page
 
@@ -294,6 +306,31 @@ function setPeopleData(value, patientID, typeID, source, instance) {
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions DICOM
 
+function listePatientDicomStudies() {
+  $.ajax({
+    url: '/patient/ajax/listPatientDicomStudies/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#listeDicomStudiesModal #listeDicomStudies').html('');
+      $.each(data, function(index, item) {
+        str = '<option value="' + item['ID'] + '">Examen du ' + moment(item['Datetime']).format('DD-MM-YYYY');
+        if(item['ehr']) str= str + ' - ' + item['ehr']['label'];
+        str = str + '</option>';
+        $('#listeDicomStudiesModal #listeDicomStudies').append(str);
+
+      });
+      $('#listeDicomStudiesModal').modal('show');
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}
+
 function prepareEcho() {
 
   $.ajax({
@@ -325,6 +362,28 @@ function catchLastDicomSrData() {
         mapDicomSRData2CurrentForm(data['data']);
         addDicomSRInfo2CurrentForm(data['dicom']);
       }
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}
+
+function catchOtherDicomSrData() {
+  $.ajax({
+    url: '/patient/ajax/catchLastDicomSrData/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+      studyID: $('#listeDicomStudies').val()
+    },
+    dataType: "json",
+    success: function(data) {
+      if (data['find'] == 1) {
+        mapDicomSRData2CurrentForm(data['data']);
+        addDicomSRInfo2CurrentForm(data['dicom']);
+      }
+      $('#listeDicomStudiesModal').modal('toggle');
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -424,7 +483,9 @@ function sendFormToOrdoDiv(el) {
       $('#newOrdo').html(data);
       $.getScriptOnce("../js/patientScripts/ordonnance.js");
       scrollTo('body');
-      if (typeof(autoGrowOrdo) != "undefined") {if($.isFunction(autoGrowOrdo)) autoGrowOrdo();}
+      if (typeof(autoGrowOrdo) != "undefined") {
+        if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
+      }
     },
     error: function() {
       alert('Problème, rechargez la page !');

@@ -424,8 +424,13 @@ class msPDF
     public function makeWithTwig($template)
     {
         global $p;
-        $loaderPDF = new Twig_Loader_Filesystem($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'].'/models4print/');
-        $twigPDF = new Twig_Environment($loaderPDF, $p['config']['twig']['environnement']);
+
+        // les variables d'environnement twig
+        if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
+        if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+
+        $loaderPDF = new Twig_Loader_Filesystem($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'].'/'.$p['config']['twigPdfTemplatesDir'].'/');
+        $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
         $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
         return $twigPDF->render($template, $p);

@@ -74,6 +74,7 @@ function ajouterLigneOrdo(selecteur) {
     },
     dataType: "html",
     success: function(data) {
+      selecteur.val('');
       $('#ordoComposer div.insertBeforeMe').before(data);
       autoGrowOrdo();
     },

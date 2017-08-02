@@ -114,12 +114,16 @@ if (isset($template)) {
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
-    foreach ($p['config']['twig']['templatesPath'] as $k=>$v) {
-        $p['config']['twig']['templatesPath'][$k]=$p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'].$v.'/';
-    }
 
-    $loader = new Twig_Loader_Filesystem($p['config']['twig']['templatesPath']);
-    $twig = new Twig_Environment($loader, $p['config']['twig']['environnement']);
+    //les répertoires de templates twig
+    $twigTemplateDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'],'/');
+
+    // les variables d'environnement twig
+    if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
+    if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+
+    $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
+    $twig = new Twig_Environment($loader, $twigEnvironment);
     $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
     $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
 

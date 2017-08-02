@@ -34,7 +34,8 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'getAutocompleteFormValues', // Autocomplete des forms
     'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData' // Enregistrer des données patient
+    'setPeopleData', // Enregistrer des données patient
+    'mailTracking' // Retourner les infos de tracking d'un mail
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -53,4 +54,8 @@ elseif ($m=='getAutocompleteLinkType') {
 // Enregistrer des données patient
 elseif ($m=='setPeopleData') {
     include('inc-ajax-setPeopleData.php');
+}
+// Retourner les infos de tracking d'un mail
+elseif ($m=='mailTracking') {
+    include('inc-ajax-mailTracking.php');
 }

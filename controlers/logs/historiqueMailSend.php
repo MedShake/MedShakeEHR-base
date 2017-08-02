@@ -29,8 +29,11 @@
 $debug='';
 $template="historiqueMailSend";
 
-if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID=".msData::getTypeIDFromName("mailPorteur")." order by creationDate desc")) {
-    $mailsElements=msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name
+$typeIdMailPorteur=msData::getTypeIDFromName("mailPorteur");
+
+if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID=".$typeIdMailPorteur." order by creationDate desc")) {
+
+    $mailsElements=msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
     from objets_data as o
     left join data_types as t on o.typeID=t.id
     where o.instance in (".implode(',', $mailsListe).") ");
@@ -39,5 +42,13 @@ if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance=
         $p['page']['patientID']=$v['toID'];
         $p['page']['mailListe'][$v['instance']][$v['name']]=$v['value'];
         $p['page']['mailListe'][$v['instance']]['creationDate']=$v['creationDate'];
+        $p['page']['mailListe'][$v['instance']]['expediteurID']=$v['fromID'];
     }
 }
+
+$p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
+  from objets_data as m
+  left join objets_data as n on n.toID=m.fromID and n.typeID=2
+  left join objets_data as p on p.toID=m.fromID and p.typeID=3
+  where m.typeID='".$typeIdMailPorteur."'
+  group by m.fromID order by n.value", "id", "identite");

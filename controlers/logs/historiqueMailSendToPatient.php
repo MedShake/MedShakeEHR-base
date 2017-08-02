@@ -21,29 +21,21 @@
  */
 
 /**
- * Config : liste des tags DICOM rencontrés et associés à une data
+ * Logs : présente l'historique des mails envoyés à un patient et l'état de réception
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDicomTags";
-     $debug='';
+$debug='';
+$template="historiqueMailSendToPatient";
 
-     if($tags = msSQL::sql2tab("select dt.*, d.label, dc.label as labelCat
-     from dicomTags dt
-      left join data_types as d on d.id=dt.typeID
-      left join data_cat as dc on dc.id=d.cat
-      where dt.dicomTag !='' order by dt.dicomCodeMeaning")) {
+$patient = new msPeople();
+$patient->setToID($match['params']['patientID']);
+$p['page']['patientData']= $patient->getSimpleAdminDatas();
+$p['page']['patientData']['id']=$match['params']['patientID'];
 
-       foreach($tags as $v) {
-         $p['page']['tags'][$v['dicomTag']][]=$v;
-       }
-
-     }
-
-
- }
+$mj = new msMailTracking();
+$mj->set_contactEmail($p['page']['patientData'][4]);
+$mj->getListMessagesSendedToContact();
+$mj->addCampaignDataToMessagesList();
+$p['page']['listeMessages']=$mj->get_contactMessagesList();

@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > action : envoyer un mail
+ * Patient > action : envoyer un mail (smtp standard)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -59,7 +59,7 @@ if (isset($_POST['objetID'])) {
 $mail->isHTML(false);
 $mail->Subject = $_POST['mailSujet'];
 
-$mail->setFrom($_POST['mailFrom']);
+$mail->setFrom($_POST['mailFrom'], $_POST['mailFromName']);
 $mail->addAddress($_POST['mailTo']);
 
 if (is_file($sourceFile)) {

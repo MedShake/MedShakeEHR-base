@@ -21,29 +21,11 @@
  */
 
 /**
- * Config : liste des tags DICOM rencontrés et associés à une data
+ * Outils : roulette obstétricale
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDicomTags";
-     $debug='';
 
-     if($tags = msSQL::sql2tab("select dt.*, d.label, dc.label as labelCat
-     from dicomTags dt
-      left join data_types as d on d.id=dt.typeID
-      left join data_cat as dc on dc.id=d.cat
-      where dt.dicomTag !='' order by dt.dicomCodeMeaning")) {
-
-       foreach($tags as $v) {
-         $p['page']['tags'][$v['dicomTag']][]=$v;
-       }
-
-     }
-
-
- }
+ $template="outilsRouletteObs";
+ $debug='';

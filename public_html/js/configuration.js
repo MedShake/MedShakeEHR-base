@@ -151,6 +151,13 @@ $(document).ready(function() {
 
   });
 
+  // ajout à la modale pour dicom
+  $("button.addtomodaldicom").on("click", function(e) {
+    var modal = $(this).attr("data-target");
+    $(modal + ' form input[name="dicomTag"]').val($(this).attr('data-dicomtag'));
+    $(modal + ' form input[name="dicomCodeMeaning"]').val($(this).attr('data-dicomcodemeaning'));
+  });
+
 
   $("button.typeToggleVisibility").on("click", function(e) {
 

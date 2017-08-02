@@ -58,7 +58,7 @@ class msDicom
 /**
  * @var string ID de l'instance Orthanc
  */
-    private $_dcInstanceID;
+    protected $_dcInstanceID;
 /**
  * @var array data Orthanc sur l'instance
  */
@@ -70,8 +70,31 @@ class msDicom
 /**
  * @var string URL de base pour requète curl
  */
-    private $_baseCurlUrl; //ll'url de base pour requète curl
+    protected $_baseCurlUrl; //ll'url de base pour requète curl
 
+/**
+ * @return string
+ */
+public function getDcStudyID()
+{
+  return $this->_dcStudyID;
+}
+
+/**
+ * @return string
+ */
+public function getDcSerieID()
+{
+  return $this->_dcSerieID;
+}
+
+/**
+ * @return string
+ */
+public function getDcInstanceID()
+{
+  return $this->_dcInstanceID;
+}
 
 /**
  * Construire l'url de base pour curl
@@ -233,7 +256,7 @@ class msDicom
     }
 
 /**
- * Obtenir les data SR d'une étude
+ * Obtenir l'instance des data SR d'une étude à partir de study 
  * @return array data SR de l'étude
  */
     public function getSRinstanceFromStudy()
@@ -257,140 +280,6 @@ class msDicom
             return $this->_dcInstanceID;
         } else {
             return false;
-        }
-    }
-
-/**
- * Obtenir toutes les mesures d'un instance SR
- * @param  bool $calcMinMaxAvg Calculer ou pas max / min / avg
- * @return array
- */
-    public function getAllSrMesuresFromInstance($calcMinMaxAvg = false)
-    {
-        $data = msDicom::_getAllSrMesuresBlocFromInstance($this->getInstanceDcTags());
-
-        foreach ($data as $v) {
-
-          //best value
-          if (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])  and isset($v['ContentSequence'])) {
-              $tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']]['bv']=array(
-              'CodeValue'=>$v['ConceptNameCodeSequence'][0]['CodeValue'],
-              'CodeMeaning'=>$v['ConceptNameCodeSequence'][0]['CodeMeaning'],
-              'NumericValue'=>$v['MeasuredValueSequence'][0]['NumericValue'],
-              'MeasurementUnits'=>$v['MeasuredValueSequence'][0]['MeasurementUnitsCodeSequence'][0]['CodeValue']
-            );
-          } elseif (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])) {
-              $tabindex=@count($tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']])+1;
-              $tabVal[$v['ConceptNameCodeSequence'][0]['CodeValue']][$tabindex]=array(
-              'CodeValue'=>$v['ConceptNameCodeSequence'][0]['CodeValue'],
-              'CodeMeaning'=>$v['ConceptNameCodeSequence'][0]['CodeMeaning'],
-              'NumericValue'=>$v['MeasuredValueSequence'][0]['NumericValue'],
-              'MeasurementUnits'=>$v['MeasuredValueSequence'][0]['MeasurementUnitsCodeSequence'][0]['CodeValue']
-            );
-
-              $tab4calc[$v['ConceptNameCodeSequence'][0]['CodeValue']][]=$v['MeasuredValueSequence'][0]['NumericValue'];
-          }
-        }
-
-        //calcul de min, max et avg
-        if (count($tab4calc) > 0 and $calcMinMaxAvg==true) {
-            foreach ($tab4calc as $k=>$values) {
-                $tabVal[$k]['min']['NumericValue'] = min($values);
-                $tabVal[$k]['max']['NumericValue'] = max($values);
-                $tabVal[$k]['avg']['NumericValue'] = number_format((array_sum($values) / count($values)), 2, ".", "");
-            }
-        }
-
-        $this->_saveNewDicomTagsInDB($tabVal);
-
-        return $this->_dcInstanceDataSR = $tabVal;
-    }
-
-/**
- * Obtenir le tableau de mesures pour l'exploiter dans MedShakeEHR
- * @return array
- */
-    public function getAllSrMesuresReturnTab()
-    {
-        if (!isset($this->_dcInstanceDataSR)) {
-            throw new Exception('dcInstanceDataSR is not set');
-        }
-        $array=$this->_dcInstanceDataSR;
-
-        $tags=array_keys($array);
-
-        if (count($tags)>0) {
-            $corres=msSQL::sql2tabKey("select typeID, dicomTag, returnValue, roundDecimal from dicomTags where dicomTag in ('".implode("','", $tags)."')", 'typeID');
-            if (count($corres)>0) {
-                foreach ($corres as $k=>$v) {
-                    if ($k>0) {
-                        if (isset($array[$v['dicomTag']][$v['returnValue']]['NumericValue'])) {
-                            $data['data'][$k]=round($array[$v['dicomTag']][$v['returnValue']]['NumericValue'], $v['roundDecimal']);
-                            $data['debug'][$k]=$v['returnValue'];
-                        } elseif (isset($array[$v['dicomTag']]['bv']['NumericValue'])) {
-                            $data['data'][$k]=round($array[$v['dicomTag']]['bv']['NumericValue'], $v['roundDecimal']);
-                            $data['debug'][$k]='bv';
-                        } elseif (isset($array[$v['dicomTag']][1]['NumericValue'])) {
-                            $data['data'][$k]=round($array[$v['dicomTag']][1]['NumericValue'], $v['roundDecimal']);
-                            $data['debug'][$k]='1';
-                        }
-                    }
-                }
-                $data['find']=true;
-                $data['dicom']=array(
-                  'study'=>$this->_dcStudyID,
-                  'serie'=>$this->_dcSerieID,
-                  'instance'=>$this->_dcInstanceID
-                );
-            } else {
-                $data['find']=false;
-            }
-        } else {
-            $data['find']=false;
-        }
-        return $data;
-    }
-
-/**
- * Obtenir tous les blocs contenant des mesures dans les data DICOM
- * @param  array $array le tableau des datas DICOM de l'instnace SR
- * @return array        array
- */
-    private function _getAllSrMesuresBlocFromInstance($array)
-    {
-        if (!isset($b)) {
-            $b=array();
-        }
-
-        foreach ($array as $k=>$v) {
-            if (is_array($v)) {
-                if (isset($v['ConceptNameCodeSequence']) and isset($v['MeasuredValueSequence'])) {
-                    $b[] = $v;
-                } else {
-                    $b=array_merge($b, $this->_getAllSrMesuresBlocFromInstance($v));
-                }
-            }
-        }
-        return $b;
-    }
-
-/**
- * Enregistrer en base les nouveau tag DICOM SR rencontrés
- * (en vue des les attacher à une donnée MedShake si besoin)
- * @param  array $tab data DICOM
- * @return void
- */
-    private function _saveNewDicomTagsInDB($tab)
-    {
-        foreach ($tab as $k=>$v) {
-            if (!msSQL::sqlUniqueChamp("select dicomTag from dicomTags where dicomTag='".$k."' limit 1")) {
-                $data= array(
-              'dicomTag'=>$k,
-              'dicomCodeMeaning'=>$v[1]['CodeMeaning'],
-              'dicomUnits'=>$v[1]['MeasurementUnits']
-            );
-                msSQL::sqlInsert("dicomTags", $data);
-            }
         }
     }
 

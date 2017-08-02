@@ -70,6 +70,8 @@ logsActions: ['GET|POST', '/logs/actions/[a:m]/', 'logs/actions/logsActions']
 logs: ['GET', '/logs/[i:patient]?/[i:typeID]?/[i:instance]?/', 'logs/logs']
 historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiquePrint']
 historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
+historiqueMailSendGeneral: ['GET', '/logs/historiqueGeneralMailSend/[i:user]?/[i:start]?/', 'logs/historiqueMailSendGeneral']
+historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patientID]/', 'logs/historiqueMailSendToPatient']
 historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/', 'logs/historiqueRappelsSMS']
 historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'logs/historiqueRappelsMail']
 
@@ -83,11 +85,15 @@ comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
 comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
 comptaToday: ['GET|POST', '/compta/aujourdhui/', 'compta/today']
 compta: ['GET|POST', '/compta/', 'compta/compta']
+comptaMemoTarif: ['GET', '/compta/memo-tarifs/[i:user]?/', 'compta/comptaMemoTarifs']
 
 #inbox
 inboxAjax: ['POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
 inboxActions: ['POST|GET', '/inbox/actions/[a:m]/[i:mailID]?/', 'inbox/actions/inboxActions']
 inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
+
+#outils
+outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
 
 #configuration
 configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']
@@ -127,4 +133,3 @@ publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 #routes pour le module
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
 moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
-

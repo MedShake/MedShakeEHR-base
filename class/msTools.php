@@ -299,4 +299,24 @@ class msTools
   		), $texte);
   	return $texte;
   }
+
+
+/**
+ * Obtenir tous les sous repertoires d'un répertoire, avec récusrsivité
+ * @param  string $directory           répertoire racine
+ * @param  string $directory_seperator séparateur de répertoire dans le chemin (/)
+ * @return array                      array des répertoires et sous répertoires
+ */
+  public static function getAllSubDirectories( $directory, $directory_seperator )
+  {
+  	$dirs = array_map( function($item)use($directory_seperator){ return $item . $directory_seperator;}, array_filter( glob( $directory . '*' ), 'is_dir') );
+
+  	foreach( $dirs AS $dir )
+  	{
+  		$dirs = array_merge( $dirs, msTools::getAllSubDirectories( $dir, $directory_seperator ) );
+  	}
+
+  	return $dirs;
+  }
+
 }

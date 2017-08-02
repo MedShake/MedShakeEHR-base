@@ -137,8 +137,13 @@ function setDefautTarifEtDepa() {
   } else if (cas == 'CMU') {
     $("input[name='regleDepaCejour']").attr('readonly', 'readonly');
     $("input[name='regleDepaCejour']").val('0');
-  } if (cas == 'TP') {
+  // TP
+  } else if (cas == 'TP') {
     $("input[name='regleDepaCejour']").removeAttr('readonly');
+    $("input[name='regleDepaCejour']").val('0');
+  // TP ALD
+  } else if (cas == 'TP ALD') {
+    $("input[name='regleDepaCejour']").attr('readonly', 'readonly');
     $("input[name='regleDepaCejour']").val('0');
   }
 }
@@ -158,13 +163,17 @@ function calcResteDu() {
     total = parseFloat(tarif);
     $("input[name='regleTiersPayeur']").val(total);
     $("input[name='regleFacture']").val(total).change();
-  } if (cas == 'TP') {
+  } else if (cas == 'TP') {
     total = parseFloat(tarif) + parseFloat(depassement);
     tiers = Math.round((tarif * 70 / 100)*100) /100;
     reste = Math.round((total-tiers)*100)/100;
     $("input[name='regleTiersPayeur']").val(tiers);
     $("input[name='regleFacture']").val(total).change();
     $("label[for='p_200ID']").html('Tiers (reste à payer : '+ reste +'€)');
+  } else if (cas == 'TP ALD') {
+    total = parseFloat(tarif);
+    $("input[name='regleTiersPayeur']").val(total);
+    $("input[name='regleFacture']").val(total).change();
   }
 
 }

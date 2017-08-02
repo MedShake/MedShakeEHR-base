@@ -38,7 +38,7 @@ $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas()
 $p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
 
 //l'examen
-$dc = new msDicom();
+$dc = new msDicomSR();
 $dc->setToID($match['params']['patientID']);
 $dc->setDcStudyID($match['params']['dcStudyID']);
 $p['page']['studyDcData'] = $dc->getStudyDcData();
@@ -47,9 +47,10 @@ if (count($p['page']['studyDcData']) > 0) {
     $p['page']['studyDcData']['Datetime'] =  $p['page']['studyDcData']['MainDicomTags']['StudyDate'].'T'.$p['page']['studyDcData']['MainDicomTags']['StudyTime'];
     $p['page']['imagesPath'] = $dc->getAllImagesFromStudy();
 
-    //SR instance
+
+    //Données du SR via le XML
     $dc->getSRinstanceFromStudy();
-    $p['page']['studyDcDataSR']=$dc->getAllSrMesuresFromInstance();
+    $p['page']['studyDcDataSRFull']=$dc->getSrData();
 
     //on cherche les examens EHR qui peuvent être attachés.
     if ($d=msSQL::sqlUniqueChamp("select instance from objets_data where typeID='433' and toID='".$match['params']['patientID']."' and value='".$match['params']['dcStudyID']."' ")) {

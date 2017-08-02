@@ -21,29 +21,22 @@
  */
 
 /**
- * Config : liste des tags DICOM rencontrés et associés à une data
+ * Requêtes AJAX > retourner les infos de tracking d'un mail
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDicomTags";
-     $debug='';
+ if (!empty($p['config']['smtpTracking'])) {
+     if ($data= msMailTracking::getMessageTrackingData($_POST['mailID'])) {
+         $res=[];
+         $res['numberEvents']= $data['Count'];
+         $res['mailTrackingID']=$_POST['mailID'];
+         foreach ($data['Data'] as $k=>$v) {
+             $res['lastStatus']=$v['EventType'];
+             $res['lastDate']=date("d/m/Y H:i:s", $v['EventAt']);
+             $res['data'][$k]=$v;
+         }
 
-     if($tags = msSQL::sql2tab("select dt.*, d.label, dc.label as labelCat
-     from dicomTags dt
-      left join data_types as d on d.id=dt.typeID
-      left join data_cat as dc on dc.id=d.cat
-      where dt.dicomTag !='' order by dt.dicomCodeMeaning")) {
-
-       foreach($tags as $v) {
-         $p['page']['tags'][$v['dicomTag']][]=$v;
-       }
-
+         echo json_encode($res);
      }
-
-
  }

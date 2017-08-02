@@ -21,7 +21,7 @@
  */
 
 /**
- * Cron : rappels mails
+ * Cron : rappels mails / Mailjet
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -45,7 +45,6 @@ $p['config']=Spyc::YAMLLoad('../config/config.yml');
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-
 /**
  * Envoi du mail de rappel
  * @param  array $pa tableau des var
@@ -55,39 +54,49 @@ function sendmail($pa)
 {
     global $p;
 
-    $mail = new PHPMailer;
-    $mail->isHTML(true);
-    $mail->CharSet = 'UTF-8';
-    $mail->isSMTP();
-    $mail->Host = $p['config']['smtpHost'];
-    $mail->SMTPAuth = true;
-    $mail->Username = $p['config']['smtpUsername'];
-    $mail->Password = $p['config']['smtpPassword'];
-    if($p['config']['smtpOptions'] == 'on') {
-      $mail->SMTPOptions = array(
-        'ssl' => array(
-          'verify_peer' => false,
-          'verify_peer_name' => false,
-          'allow_self_signed' => true
-        )
-      );
-    }
-    if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
-    $mail->Port = $p['config']['smtpPort'];
+    $msgRappel="Madame,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à une patiente n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
 
-    $mail->setFrom($p['config']['smtpFrom'], $p['config']['smtpFromName']);
-    $mail->addAddress($pa['email'], $pa['identite']);
-    $mail->Subject = 'Rappel rdv le '.$pa['jourRdv'].' à '.$pa['heureRdv'];
+    $mailParams=array(
+    "FromEmail"=>$p['config']['smtpFrom'],
+    "FromName"=>$p['config']['smtpFromName'],
+    "Subject"=>'Rappel rendez-vous Dr ... le '.$pa['jourRdv'].' à '.$pa['heureRdv'],
+    "Text-part"=>$msgRappel,
+    "Html-part"=>nl2br($msgRappel),
+    "Recipients"=>[
+      [
+      "Email"=>$pa['email'],
+      "Name"=>$pa['identite']
+      ]
+    ],
+    );
 
-    $msgRappel="Bonjour,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à une patiente n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
+    $ch = curl_init();
 
-    $mail->Body = nl2br($msgRappel);
-    $mail->AltBody = $msgRappel;
+    curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/send");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($mailParams));
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
-    if (!$mail->send()) {
-        $pa['status']=$mail->ErrorInfo;
+    $headers = array();
+    $headers[] = "Content-Type: application/json";
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        $pa['status'] = 'Error:' . curl_error($ch);
     } else {
-        $pa['status']="message envoyé";
+        $pa['status']='problème';
+        curl_close($ch);
+
+        $result = json_decode($result, true);
+
+        if (isset($result['Sent'][0]['MessageID'])) {
+            if (is_numeric($result['Sent'][0]['MessageID'])) {
+                $pa['mailTrackingID']=$result['Sent'][0]['MessageID'];
+                $pa['status']='message envoyé';
+            }
+        }
     }
     return $pa;
 }
@@ -95,9 +104,8 @@ function sendmail($pa)
 
 $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 
-$patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+$patientsList=file_get_contents('http://192.168.1.113:82/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
 $patientsList=json_decode($patientsList, true);
-
 
 
 if (is_array($patientsList)) {
@@ -111,8 +119,6 @@ if (is_array($patientsList)) {
     foreach ($patientsList as $patient) {
         if (isset($listeEmail[$patient['id']])) {
             if (!in_array($listeEmail[$patient['id']], $dejaInclus)) {
-
-
                 $detinataire=array(
                   'id'=>$patient['id'],
                   'typeCs'=>$patient['type'],
@@ -131,5 +137,4 @@ if (is_array($patientsList)) {
     $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
     msTools::checkAndBuildTargetDir($logFileDirectory);
     file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
-
 }
