@@ -62,6 +62,10 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
                     $ext='pdf';
                 } elseif ($mimetype=='text/plain') {
                     $ext='txt';
+                } elseif ($mimetype=='image/jpeg') {
+                    $ext='jpg';
+                } else {
+                    $ext= pathinfo($source,PATHINFO_EXTENSION);
                 }
 
                 //nom original

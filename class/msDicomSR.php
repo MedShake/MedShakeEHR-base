@@ -67,9 +67,10 @@ class msDicomSR extends msDicom
 
         global $p;
         $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/file/';
+        msTools::checkAndBuildTargetDir($p['config']['dicomWorkingDirectory'].$p['user']['id'].'/');
         $saveto = $p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$this->_dcInstanceID.'.dcm';
-        //if (!is_file($saveto)) {
-            $ch = curl_init($url);
+
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
@@ -78,7 +79,7 @@ class msDicomSR extends msDicom
         if (strlen($raw)>0) {
             file_put_contents($saveto, $raw);
         }
-        //}
+        
     }
 
 /**
