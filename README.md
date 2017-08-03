@@ -18,7 +18,7 @@ MedShakeEHR fonctionne sur un serveur LAMP. Il a été testé sous Apache 2, PHP
 
 Utiliser Composer (cf composer.json) pour l'installation des packages PHP nécessaires back-end et Bower (cf public_html/bower.json) pour les scripts front-end.  
 
-Un dump MySQL est founi avec les éléments essentiels. Utiliser de préfèrence celui fourni avec le module que vous utiliserez.
+Un dump MySQL est founi : il comporte uniquement les structures des tables. Utilisez le dump fourni avec le module que vous adopterez pour le contenu de départ. 
 
 L'ensemble du paramétrage de base (chemin, base de données, smtp ...) est à faire dans config/config.yml. 
 Chaque paramètre peut être surchargé au niveau utilisateur dans l'interface de configuration.  
