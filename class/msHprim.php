@@ -112,15 +112,15 @@ class msHprim
             $count++;
             switch ($count) {
               case "1":
-              $d['codePatient'] = fgets($file);
+              $d['codePatient'] = substr(fgets($file), 0, 10);
               break;
 
               case "2":
-              $d['nom'] = fgets($file);
+              $d['nom'] = substr(fgets($file),0 , 50);
               break;
 
               case "3":
-              $d['prenom'] = fgets($file);
+              $d['prenom'] = substr(fgets($file),0 ,50);
               break;
 
               case "4":
@@ -148,7 +148,7 @@ class msHprim
               $d['numDossier'] = fgets($file);
               break;
               case "10":
-              $d['dateDossier'] = fgets($file);
+              $d['dateDossier'] = substr(fgets($file), 0, 15);
               break;
 
               case "11":
@@ -165,6 +165,7 @@ class msHprim
             }
         }
         $d = array_map('trim', $d);
+
         return $d;
     }
 

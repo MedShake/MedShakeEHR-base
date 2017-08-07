@@ -29,9 +29,10 @@
 $debug='';
 $template='mailView';
 
-$p['page']['mail']=msSQL::sqlUnique("select id, txtFileName, txtDatetime, hprimExpediteur, hprimAllSerialize, pjNombre, pjSerializeName, archived, assoToID from inbox where id='".$_POST['mailID']."'");
+$p['page']['mail']=msSQL::sqlUnique("select id, txtFileName, mailHeaderInfos, txtDatetime, hprimExpediteur, hprimAllSerialize, pjNombre, pjSerializeName, archived, assoToID from inbox where id='".$_POST['mailID']."'");
 $p['page']['mail']['hprimAllSerialize']=unserialize($p['page']['mail']['hprimAllSerialize']);
 $p['page']['mail']['pjSerializeName']=unserialize($p['page']['mail']['pjSerializeName']);
+$p['page']['mail']['mailHeaderInfos']=unserialize($p['page']['mail']['mailHeaderInfos']);
 
 $p['page']['mail']['corps']=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$p['page']['mail']['txtFileName']);
 //hprim

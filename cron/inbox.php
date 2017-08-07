@@ -76,10 +76,10 @@ if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']
             $message=$pop->mail_mime_to_array($connection, $msgID, false);
 
             if (is_array($message)) {
-                foreach ($message as $kpart=>$part) {
-                    $filename=date("Ymd-His", $msgV['udate']).'-'.$msgV['uid'];
-                    $dirname=date("Ymd-His", $msgV['udate']).'-'.$msgV['uid'].'.f';
+                $filename=date("Ymd-His", $msgV['udate']).'-'.$msgV['uid'];
+                $dirname=date("Ymd-His", $msgV['udate']).'-'.$msgV['uid'].'.f';
 
+                foreach ($message as $kpart=>$part) {
                     if ($kpart > 0 and isset($part['is_attachment'])) {
                         if (strlen($part['data'])>10) {
                             msTools::checkAndBuildTargetDir($p['config']['apicryptCheminInbox'].$dirname);
@@ -105,6 +105,39 @@ if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']
                         }
                     }
                 }
+
+                // sauvegarder en base
+                $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$filename.'.txt');
+                $hprim=msTools::utf8_converter($hprim);
+
+                // pj
+                $dir=$p['config']['apicryptCheminInbox'].$dirname;
+                if (is_dir($dir)) {
+                    msTools::sanitizeDirectoryFiles($dir.'/');
+                    $pj = array_diff(scandir($dir), array('..', '.'));
+                } else {
+                    $pj=null;
+                }
+
+
+                $data=array(
+                  'txtFileName'=>$filename.'.txt',
+                  'mailForUserID'=>$mailForUserID,
+                  'mailHeaderInfos'=>serialize(msTools::utf8_converter($msgV)),
+                  'txtDatetime'=>date("Y-m-d H:i:s", $msgV['udate']),
+                  'txtNumOrdre'=>$msgV['uid'],
+                  'hprimIdentite'=>$hprim['prenom'].' '.$hprim['nom'],
+                  'hprimExpediteur'=>$hprim['expediteur'],
+                  'hprimCodePatient'=>$hprim['codePatient'],
+                  'hprimDateDossier'=>$hprim['dateDossier'],
+                  'hprimAllSerialize'=>serialize($hprim),
+                  'pjNombre'=>count($pj),
+                  'pjSerializeName'=>serialize($pj)
+                );
+
+                msSQL::sqlInsert('inbox', $data);
+
+
                 // supprimer le message
                 $pop->pop3_dele($connection, $msgID);
             }
@@ -112,51 +145,4 @@ if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']
         // supprimer les messages
         $pop->pop3_expunge($connection);
     }
-}
-
-
-/////////// Rentrer en base
-$scanned_directory = array_diff(scandir($p['config']['apicryptCheminInbox']), array('..', '.'));
-
-//print_r($scanned_directory);
-
-foreach ($scanned_directory as $file) {
-
-
-
-  //si c'est un txt
-  if (substr($file, -4) == '.txt') {
-      $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$file);
-
-      $hprim=msTools::utf8_converter($hprim);
-
-      $filedata = msInbox::getFileDataFromName($file);
-
-    //pj
-    $dir=$p['config']['apicryptCheminInbox'].str_ireplace('.txt', '.f', $file);
-      if (is_dir($dir)) {
-          msTools::sanitizeDirectoryFiles($dir.'/');
-          $pj = array_diff(scandir($dir), array('..', '.'));
-      } else {
-          $pj=null;
-      }
-
-
-      $data=array(
-      'txtFileName'=>$file,
-      'mailForUserID'=>$mailForUserID,
-      'txtDatetime'=>$filedata['datetime'],
-      'txtNumOrdre'=>$filedata['numOrdre'],
-      'hprimIdentite'=>$hprim['prenom'].' '.$hprim['nom'],
-      'hprimExpediteur'=>$hprim['expediteur'],
-      'hprimCodePatient'=>$hprim['codePatient'],
-      'hprimDateDossier'=>$hprim['dateDossier'],
-      'hprimAllSerialize'=>serialize($hprim),
-      'pjNombre'=>count($pj),
-      'pjSerializeName'=>serialize($pj)
-    );
-
-      msSQL::sqlInsert('inbox', $data);
-      echo mysqli_error($mysqli);
-  }
 }
