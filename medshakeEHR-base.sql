@@ -143,6 +143,7 @@ CREATE TABLE `inbox` (
   `id` int(7) UNSIGNED NOT NULL,
   `mailForUserID` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `txtFileName` varchar(30) NOT NULL,
+  `mailHeaderInfos` blob,
   `txtDatetime` datetime NOT NULL,
   `txtNumOrdre` smallint(4) UNSIGNED NOT NULL,
   `hprimIdentite` varchar(250) NOT NULL,
