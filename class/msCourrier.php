@@ -245,6 +245,7 @@ class msCourrier
         foreach ($tabPatientData as $k=>$v) {
             if (isset($data[$k][$v])) {
                 $tabPatientData[$k]=$data[$k][$v];
+                $tabPatientData['val'.$k]=$v;
             }
         }
 

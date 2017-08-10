@@ -269,6 +269,12 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Voir les notes sur le patient
+  $("#voirNotesPatient").on("click", function(e) {
+    e.preventDefault();
+    $('#notesPatient').toggle();
+  });
 
 });
 

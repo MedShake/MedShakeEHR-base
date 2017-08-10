@@ -77,7 +77,7 @@ class msDicom
  */
 public function getDcStudyID()
 {
-  return $this->_dcStudyID;
+    return $this->_dcStudyID;
 }
 
 /**
@@ -85,7 +85,7 @@ public function getDcStudyID()
  */
 public function getDcSerieID()
 {
-  return $this->_dcSerieID;
+    return $this->_dcSerieID;
 }
 
 /**
@@ -93,7 +93,7 @@ public function getDcSerieID()
  */
 public function getDcInstanceID()
 {
-  return $this->_dcInstanceID;
+    return $this->_dcInstanceID;
 }
 
 /**
@@ -228,16 +228,21 @@ public function getDcInstanceID()
         //return  $this->_dcGetContent($url);
 
         $studies =  $this->_dcGetContent($url);
-        if (count($studies)>1) {
-            foreach ($studies as $k=>$study) {
-                $r[$study['MainDicomTags']['StudyDate'].$study['MainDicomTags']['StudyTime']]=$study;
+        if (!isset($studies['HttpError'])) {
+            if (count($studies)>1) {
+                foreach ($studies as $k=>$study) {
+                    $r[$study['MainDicomTags']['StudyDate'].$study['MainDicomTags']['StudyTime']]=$study;
+                }
+                krsort($r);
+                $r=array_values($r);
+            } else {
+                $r=$studies;
             }
-            krsort($r);
-            $r=array_values($r);
+            return $r;
         } else {
-            $r=$studies;
+          return $studies;
         }
-        return $r;
+
     }
 
 /**
@@ -256,7 +261,7 @@ public function getDcInstanceID()
     }
 
 /**
- * Obtenir l'instance des data SR d'une étude à partir de study 
+ * Obtenir l'instance des data SR d'une étude à partir de study
  * @return array data SR de l'étude
  */
     public function getSRinstanceFromStudy()
