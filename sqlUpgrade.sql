@@ -1,6 +1,6 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
--- 1.1.0 to
+-- 1.1.0 to 1.2.0
 
 CREATE TABLE `agenda` (
   `id` int(12) UNSIGNED NOT NULL,
