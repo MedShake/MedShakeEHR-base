@@ -53,6 +53,7 @@ sqlVarPassword: '4fd45sf78s8'
 administratifSecteurHonoraires: 1
 administratifPeutAvoirFacturesTypes: 'false'
 administratifPeutAvoirPrescriptionsTypes: 'false'
+administratifPeutAvoirAgenda: 'false'
 
 #######################################
 ## templates impression
@@ -122,6 +123,7 @@ dicomDiscoverNewTags: 'true'
 agendaDistantLink: 'http://monagenda.agenda.abc'
 agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
+agendaNumberForPatientsOfTheDay: 0
 
 #######################################
 ## Rappels RDV par mail

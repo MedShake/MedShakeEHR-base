@@ -38,6 +38,11 @@ userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
 
+#agenda
+agendaAjax: ['GET|POST', '/agenda/[i:userID]/ajax/[a:m]/', 'agenda/actions/agendaAjax']
+agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
+agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
+
 #chercher patients / pros
 patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
 patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
@@ -110,6 +115,9 @@ configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActe
 configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/licence/', 'configuration/configLicence']
+
+# Configuration Agenda
+configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
 
 # Configuration forms
 configForms: ['GET', '/configuration/forms/', 'configuration/configForms']

@@ -39,7 +39,14 @@
 
      $p['page']['userData']=$data->getSimpleAdminDatas();
 
-     $p['page']['userParams']=$data->getPeopleDataFromDataTypeGroupe('user', ['dt.*', 'od.value as userVal']);
+     if($data=$data->getPeopleDataFromDataTypeGroupe('user', ['dt.*', 'od.value as userVal'])) {
+       foreach($data as $v) {
+         $p['page']['userParams'][$v['cat']][]=$v;
+       }
+     }
 
      $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+
+     // liste des catégories
+     if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='user' order by label", 'id', 'label'));
  }

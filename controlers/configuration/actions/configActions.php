@@ -35,7 +35,8 @@ $acceptedModes=array(
     'configFormEdit', // Edition du formulaire
     'configUpdatePassword', //Attribuer un password à un user
     'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
-    'configGiveAdmin' // Toggle droit d'admin
+    'configGiveAdmin', // Toggle droit d'admin
+    'configAgendaSave' // sauvegarder config agenda
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -58,4 +59,8 @@ elseif ($m=='configSpecificUserParam') {
 // Donner / retirer droit d'admin à un utilisateur
 elseif ($m=='configGiveAdmin') {
     include('inc-action-configGiveAdmin.php');
+}
+// sauvegarder config agenda
+elseif ($m=='configAgendaSave') {
+    include('inc-action-configAgendaSave.php');
 }

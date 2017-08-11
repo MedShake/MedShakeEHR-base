@@ -112,7 +112,16 @@ $p['page']['thanks'][
   'description'=>'A popular general-purpose scripting language',
   'url'=>'http://php.net/'
 );
-
+$p['page']['thanks'][
+  'FullCalendar']=array(
+  'description'=>'A JavaScript event calendar. Customizable and open source',
+  'url'=>'https://fullcalendar.io/'
+);
+$p['page']['thanks'][
+  'jQuery contextMenu']=array(
+  'description'=>'jQuery contextMenu plugin & polyfill',
+  'url'=>'https://github.com/swisnl/jQuery-contextMenu'
+);
 
 
 uksort($p['page']['thanks'], 'strcasecmp');

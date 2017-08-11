@@ -36,6 +36,19 @@ CREATE TABLE `actes_cat` (
   `displayOrder` smallint(3) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `agenda` (
+  `id` int(12) UNSIGNED NOT NULL,
+  `userid` smallint(5) UNSIGNED NOT NULL DEFAULT '3',
+  `start` datetime DEFAULT NULL,
+  `end` datetime DEFAULT NULL,
+  `type` varchar(10) DEFAULT NULL,
+  `dateAdd` datetime DEFAULT NULL,
+  `patientid` mediumint(6) UNSIGNED DEFAULT NULL,
+  `statut` enum('actif','deleted') DEFAULT 'actif',
+  `absente` enum('non','oui') DEFAULT 'non',
+  `motif` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `data_cat` (
   `id` smallint(5) NOT NULL,
   `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
@@ -236,6 +249,10 @@ ALTER TABLE `actes_cat`
 ALTER TABLE `data_cat`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `agenda`
+  ADD PRIMARY KEY (`id`,`userid`) USING BTREE,
+  ADD KEY `patientid` (`patientid`);
 
 ALTER TABLE `data_types`
   ADD PRIMARY KEY (`id`),

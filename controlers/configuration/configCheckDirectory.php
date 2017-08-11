@@ -87,4 +87,14 @@
           $p['page']['check']['cheminFichierC']['is_dir']=false;
           $p['page']['check']['cheminFichierC']['is_writable']=false;
       }
+      //repertoire crypte apicrypt
+      if (is_dir($p['config']['webDirectory'].'agendasConfigurations/')) {
+          $p['page']['check']['agendasConfigurations']['is_dir']=true;
+          if (is_writable($p['config']['webDirectory'].'agendasConfigurations/')) {
+              $p['page']['check']['agendasConfigurations']['is_writable']=true;
+          }
+      } else {
+          $p['page']['check']['agendasConfigurations']['is_dir']=false;
+          $p['page']['check']['agendasConfigurations']['is_writable']=false;
+      }
  }

@@ -6,7 +6,7 @@
     "Bertrand Boutillier"
   ],
   "license": "GNU GPL",
-  "homepage": "https://www.medshake.net",
+  "homepage": "http://www.medshake.net",
   "private": true,
   "ignore": [
     "**/.*",
@@ -24,6 +24,8 @@
     "tinymce": "^4.5.7",
     "jquery": "^3.2.1",
     "uploader": "https://github.com/danielm/uploader.git",
-    "jSignature": "^2.1.1"
+    "jSignature": "^2.1.1",
+    "fullcalendar": "^3.4.0",
+    "jQuery-contextMenu": "^2.5.0"
   }
 }

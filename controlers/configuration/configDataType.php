@@ -41,16 +41,6 @@
         $catRestriction=null;
     }
 
-    // liste des types par catégorie
-    // if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel, count(d.typeID) as enfants
-    // 	from data_types as t
-    // 	left join data_cat as c on c.id=t.cat
-    // 	left join objets_data as d on d.typeID=t.id
-    // 	where t.id > 0 and t.groupe='".$p['page']['groupe']."' ".$catRestriction."
-    // 	group by t.id
-    // 	order by c.label asc, t.label asc")) {
-
-
 
     if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel,
         (select count(id) from objets_data as d where d.typeID=t.id ) as enfants

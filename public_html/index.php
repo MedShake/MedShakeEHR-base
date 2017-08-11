@@ -103,13 +103,26 @@ if (isset($template)) {
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
-      $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      if(isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
+        if($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+          $events = new msAgenda();
+          $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+        }
+      }
+      if(!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
+        $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      }
     }
 
     // crédits SMS
     if(is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
       $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
     }
+
+    //utilisateurs pouvant avoir un agenda
+    $agendaUsers= new msPeople();
+    $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
