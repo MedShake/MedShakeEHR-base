@@ -76,7 +76,7 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
       foreach ($_POST['images'] as $k=>$v) {
         $imagepath=$p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$_POST['dcStudyID'].'/'.$v.'.png';
         if(is_file($imagepath)) {
-          $zip->addFile($imagepath, "/image".$i.".png");
+          $zip->addFile($imagepath, "image".$i.".png");
           $i++;
         }
       }

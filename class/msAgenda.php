@@ -390,6 +390,7 @@ class msAgenda
     }
 
     public function getPatientsOfTheDay() {
+      $tab=array();
       if (!isset($this->_userID)) {
           throw new Exception('UserID n\'est pas défini');
       }
