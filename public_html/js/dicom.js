@@ -36,6 +36,10 @@ $(document).ready(function() {
 
   });
 
+  $('span.voirframes').on("click", function(e) {
+    frames = $(this).attr("data-frames");
+    $('span.'+frames).toggle();
+  });
 
   $('button.selectAll').on("click", function(e) {
     status = $(this).attr('data-status');

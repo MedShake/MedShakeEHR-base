@@ -189,11 +189,19 @@ public function getDcInstanceID()
         if (!isset($this->_dcStudyID)) {
             $this->_dcStudyID=$this->getStudyDcFromInstance();
         }
-        $targetDirectory = $p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/';
-        msTools::checkAndBuildTargetDir($targetDirectory);
-        $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/preview';
-        $saveto = $targetDirectory.$this->_dcInstanceID.'.png';
-        $this->_dcGetImage($url, $saveto);
+        if($framesArray=$this->_dcGetNumberOfFramesInInstance()) {
+          $targetDirectory = $p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/';
+          msTools::checkAndBuildTargetDir($targetDirectory);
+
+          foreach($framesArray as $frame) {
+            //$url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/preview';
+            $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/frames/'.$frame.'/preview';
+            $saveto = $targetDirectory.$this->_dcInstanceID.'-'.$frame.'.png';
+            $this->_dcGetImage($url, $saveto);
+
+          }
+          return $framesArray;
+        }
     }
 
 /**
@@ -208,11 +216,13 @@ public function getDcInstanceID()
         $data =  $this->_dcGetContent($url);
         foreach ($data as $k=>$v) {
             $this->_dcInstanceID = $v['ID'];
-            $this->getImageFromInstance();
-
-            $file=$p['config']['workingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/'.$this->_dcInstanceID.'.png';
-            if (is_file($file)) {
-                $tabImg[$this->_dcInstanceID]=str_replace($p['config']['webDirectory'], '', $file);
+            if($framesArray=$this->getImageFromInstance()) {
+              foreach($framesArray as $frame) {
+                $file=$p['config']['workingDirectory'].$p['user']['id'].'/'.$this->_dcStudyID.'/'.$this->_dcInstanceID.'-'.$frame.'.png';
+                if (is_file($file)) {
+                    $tabImg[$this->_dcInstanceID][$frame]=str_replace($p['config']['webDirectory'], '', $file);
+                }
+              }
             }
         }
         return $tabImg;
@@ -338,4 +348,18 @@ public function getDcInstanceID()
             }
         }
     }
+
+/**
+ * Obtenir le nombre de frames (images) dans une instance
+ * @return array Array des frames [0,1,2 ...]
+ */
+    private function _dcGetNumberOfFramesInInstance() {
+      if (!isset($this->_dcInstanceID)) {
+          throw new Exception('InstanceID is not set');
+      }
+
+      $url=$this->_baseCurlUrl.'/instances/'.$this->_dcInstanceID.'/frames';
+      return $this->_dcGetContent($url);
+    }
+
 }
