@@ -28,7 +28,6 @@
 #
 #######################################
 
-
 root: ['GET', '/', 'index']
 userLogIn: ['GET', '/login/', 'login/logIn']
 userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
@@ -118,6 +117,9 @@ configLicence: ['GET', '/licence/', 'configuration/configLicence']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
+
+# Configuration Apicrypt clefs
+configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
 
 # Configuration forms
 configForms: ['GET', '/configuration/forms/', 'configuration/configForms']

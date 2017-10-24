@@ -175,8 +175,8 @@ class msPeople
     }
 /**
  * Obtenir la liste des utilisateurs ayant accès à un service
- * @param  [type] $service [description]
- * @return [type]          [description]
+ * @param  string $service service spécifique
+ * @return array          tableau userID=>identité
  */
   public function getUsersListForService($service) {
 
@@ -189,6 +189,30 @@ class msPeople
         left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
         where p.pass!='' order by identite", 'id', 'identite');
   }
+
+  /**
+   * Obtenir la liste des utilisateurs ayant une valeur spécifique pour un paramètre de configuration donné
+   * @param  string $param param spécifique
+   * @return array          tableau
+   */
+    public function getUsersWithSpecificParam($param) {
+
+      $typeID=msData::getTypeIDFromName($param);
+
+      if($data=msSQL::sql2tab("select p.id, concat(o2.value , ' ' , o.value) as identite, dt.value
+          from people as p
+          join objets_data as dt on dt.toID=p.id and dt.typeID='".$typeID."'
+          left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
+          left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+          where p.pass!='' order by identite")) {
+            $tab=array();
+            foreach($data as $v) {
+                $tab[$v['id']]['identite']=$v['identite'];
+                $tab[$v['id']]['paramValue']=$v['value'];
+            }
+            return $tab;
+          }
+    }
 
 /**
  * Historique complet des actes pour un individu

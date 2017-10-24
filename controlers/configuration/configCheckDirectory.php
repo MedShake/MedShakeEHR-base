@@ -68,26 +68,26 @@
 
       //repertoire non crypte apicrypt
       if (is_dir($p['config']['apicryptCheminFichierNC'])) {
-          $p['page']['check']['cheminFichierNC']['is_dir']=true;
+          $p['page']['check']['apicryptCheminFichierNC']['is_dir']=true;
           if (is_writable($p['config']['apicryptCheminFichierNC'])) {
-              $p['page']['check']['cheminFichierNC']['is_writable']=true;
+              $p['page']['check']['apicryptCheminFichierNC']['is_writable']=true;
           }
       } else {
-          $p['page']['check']['cheminFichierNC']['is_dir']=false;
-          $p['page']['check']['cheminFichierNC']['is_writable']=false;
+          $p['page']['check']['apicryptCheminFichierNC']['is_dir']=false;
+          $p['page']['check']['apicryptCheminFichierNC']['is_writable']=false;
       }
 
       //repertoire crypte apicrypt
       if (is_dir($p['config']['apicryptCheminFichierC'])) {
-          $p['page']['check']['cheminFichierC']['is_dir']=true;
+          $p['page']['check']['apicryptCheminFichierC']['is_dir']=true;
           if (is_writable($p['config']['apicryptCheminFichierC'])) {
-              $p['page']['check']['cheminFichierC']['is_writable']=true;
+              $p['page']['check']['apicryptCheminFichierC']['is_writable']=true;
           }
       } else {
-          $p['page']['check']['cheminFichierC']['is_dir']=false;
-          $p['page']['check']['cheminFichierC']['is_writable']=false;
+          $p['page']['check']['apicryptCheminFichierC']['is_dir']=false;
+          $p['page']['check']['apicryptCheminFichierC']['is_writable']=false;
       }
-      //repertoire crypte apicrypt
+      //repertoire agenda
       if (is_dir($p['config']['webDirectory'].'agendasConfigurations/')) {
           $p['page']['check']['agendasConfigurations']['is_dir']=true;
           if (is_writable($p['config']['webDirectory'].'agendasConfigurations/')) {

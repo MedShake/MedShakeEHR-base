@@ -42,7 +42,9 @@ $acceptedModes=array(
     'configActesCreate', //Création d'un acte
     'configActesBaseCreate', //Création d'un acte de base, ngap ou ccam
     'configActesCatCreate', //Création d'une cat d'actes
-    'configTagDicomCreate' //Associer tag dicom et typeID
+    'configTagDicomCreate', //Associer tag dicom et typeID
+    'configUploadApicryptClef', //Downloader une clef apicrypt
+    'configDeleteApicryptClef' //Delete d'une clef apicrypt 
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -107,6 +109,16 @@ elseif ($m=='configActesCatCreate') {
 // Création d'une cat pour données
 elseif ($m=='configTagDicomCreate') {
     include('inc-ajax-configTagDicomCreate.php');
+}
+
+// Upload d'une clef apicrypt
+elseif ($m=='configUploadApicryptClef') {
+    include('inc-ajax-configUploadApicryptClef.php');
+}
+
+// Delete d'une clef apicrypt
+elseif ($m=='configDeleteApicryptClef') {
+    include('inc-ajax-configDeleteApicryptClef.php');
 }
 
 die();

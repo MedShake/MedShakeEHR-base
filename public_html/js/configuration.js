@@ -162,8 +162,52 @@ $(document).ready(function() {
   $("button.typeToggleVisibility").on("click", function(e) {
 
     classToToggle = $(this).attr('id');
-    $('.'+classToToggle).toggle();
+    $('.' + classToToggle).toggle();
 
+  });
+
+  // Uploade clef apicrypt par drag@drop
+  $("#dropZoneClefApicrypt").dmUploader({
+    url: '/configuration/ajax/configUploadApicryptClef/',
+    extraData: {
+      destination: $('#dropZoneClefApicrypt').attr("data-destination"),
+    },
+    dataType: 'html',
+    maxFiles: 1,
+    onUploadSuccess: function(id, data) {
+      $(".progress-bar").css('width', '0%');
+      location.reload();
+    },
+    onUploadProgress: function(id, percent) {
+      $(".progress-bar").css('width', percent + '%');
+    }
+  });
+
+  //delete clef apicrypt
+  $("a.delApicryptClef").on("click", function(e) {
+    e.preventDefault();
+    var userID = $(this).attr("data-user");
+    var file = $(this).attr("data-file");
+
+    if (confirm("Êtes-vous certain ?")) {
+
+
+      $.ajax({
+        url: '/configuration/ajax/configDeleteApicryptClef/',
+        type: 'post',
+        data: {
+          userID: userID,
+          file: file
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    }
   });
 
 });
@@ -199,5 +243,4 @@ function ajaxModalFormSave(form, modal) {
       alert('Problème, rechargez la page !');
     }
   });
-
 }
