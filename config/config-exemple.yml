@@ -1,0 +1,150 @@
+#
+# This file is part of MedShakeEHR.
+#
+# Copyright (c) 2017
+# Bertrand Boutillier <b.boutillier@gmail.com>
+# http://www.medshake.net
+#
+# MedShakeEHR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# MedShakeEHR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#######################################
+#
+# FICHIER EXEMPLE A RENOMMER config.yml
+#
+# Configuration générale de MedShakeEHR au format yaml
+#
+# Chaque paramètre peut être surchargé de façon spécifique pour chaque
+# utilisateur (voir la zone de configuration)
+#
+#######################################
+
+#######################################
+##  general config
+protocol: 'http://'
+host: 'ehr.local'
+homeDirectory: '/home/EHR/'
+webDirectory: '/home/EHR/public_html/'
+stockageLocation: '/home/EHR/public_html/stockage/'
+workingDirectory: '/home/EHR/public_html/workingDirectory/'
+cookieDomain: 'ehr.local'
+cookieDuration: 31104000
+fingerprint: 'dfsdjh54ezaz5'
+
+#######################################
+## sql access
+sqlServeur: 'localhost'
+sqlBase: 'ehr'
+sqlUser: 'user'
+sqlPass: 'password'
+sqlVarPassword: '4fd45sf78s8'
+
+#######################################
+## administratif
+administratifSecteurHonoraires: 1
+administratifPeutAvoirFacturesTypes: 'false'
+administratifPeutAvoirPrescriptionsTypes: 'false'
+administratifPeutAvoirAgenda: 'false'
+
+#######################################
+## templates impression
+
+# defaut
+templateDefautPage: 'base-page-headAndFoot.html.twig'
+# ordonnance
+templateOrdoHeadAndFoot: 'base-page-headAndFoot.html.twig'
+templateOrdoBody: 'ordonnanceBody.html.twig'
+templateOrdoALD: 'ordonnanceALD.html.twig'
+# compte rendu
+templateCrHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
+# courrier et certificat
+templateCourrierHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
+
+
+#######################################
+## smtp
+smtpTracking: ''
+smtpFrom: 'user@domain.net'
+smtpFromName: ''
+smtpHost: 'smtp.net'
+smtpPort: 587
+smtpSecureType: 'tls'
+smtpOptions: 'off'
+smtpUsername: 'smtpuserlogin'
+smtpPassword: 'smtppassword'
+smtpDefautSujet: 'Document vous concernant'
+
+#######################################
+## apicrypt
+
+apicryptCheminInbox: '/home/EHR/public_html/inbox/'
+apicryptCheminArchivesInbox: '/home/EHR/public_html/inboxArchives/'
+apicryptInboxMailForUserID: '0'
+
+apicryptCheminFichierNC: '/home/EHR/public_html/workingDirectory/NC/'
+apicryptCheminFichierC: '/home/EHR/public_html/workingDirectory/C/'
+apicryptCheminVersClefs: '/home/EHR/apicrypt/'
+apicryptCheminVersBinaires: '/home/EHR/apicrypt/bin/'
+apicryptUtilisateur: 'prenom.NOM'
+apicryptAdresse: 'prenom.NOM@medicalXX.apicrypt.org'
+apicryptSmtpHost: 'smtp.intermedic.org'
+apicryptSmtpPort: '25'
+apicryptPopHost: 'pop.intermedic.org'
+apicryptPopPort: '110'
+apicryptPopUser: 'prenom.NOM'
+apicryptPopPass: 'passwordapicrypt'
+apicryptDefautSujet: 'Document concernant votre patient'
+
+#######################################
+## ecofax OVH
+ecofaxMyNumber: '0900000000'
+ecofaxPass: 'password'
+
+#######################################
+## dicom
+dicomHost: '192.168.xxx.xxx'
+dicomPrefixIdPatient: '1.100.100'
+dicomWorkListDirectory: '/home/EHR/public_html/workingDirectory/'
+dicomWorkingDirectory: '/home/EHR/public_html/workingDirectory/'
+dicomAutoSendPatient2Echo: 'false'
+dicomDiscoverNewTags: 'true'
+
+#######################################
+## agenda
+agendaDistantLink: 'http://monagenda.agenda.abc'
+agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
+agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
+agendaNumberForPatientsOfTheDay: 0
+
+#######################################
+## Rappels RDV par mail
+mailRappelLogCampaignDirectory: '/home/EHR/public_html/mailsRappelRdvArchives/'
+mailRappelDaysBeforeRDV: '3'
+
+#######################################
+## SMS (cf /servicesTiers/sms/ )
+smsProvider: ''
+smsLogCampaignDirectory: '/home/EHR/public_html/smsArchives/'
+smsDaysBeforeRDV: '3'
+smsCreditsFile: 'creditsSMS.txt'
+smsSeuilCreditsAlerte: '150'
+smsTpoa: 'Dr ....'
+
+
+#######################################
+## Twig
+templateBaseFolder: 'gynobs'
+twigPdfTemplatesDir: 'models4print'
+twigEnvironnementCache: false #'/tmp/templates_cache/'
+twigEnvironnementAutoescape: false
