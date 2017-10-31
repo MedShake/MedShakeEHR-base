@@ -31,10 +31,10 @@ $template="historiqueRappelsSMS";
 
 
 //date concernée
-if(isset($_POST['dateSel'])) {
+if (isset($_POST['dateSel'])) {
     $date = DateTime::createFromFormat('d/m/Y', $_POST['dateSel']);
     $date=$date->format("U") ;
-} elseif(isset($match['params']['date'])) {
+} elseif (isset($match['params']['date'])) {
     $date=strtotime($match['params']['date']);
 } else {
     $date=time()-($p['config']['smsDaysBeforeRDV']*24*60*60);
@@ -48,5 +48,8 @@ $p['page']['dates']['suivant']=$date+(60*60*24);
 $p['page']['dates']['smsPourAujour']=time()-($p['config']['smsDaysBeforeRDV']*24*60*60);
 $p['page']['dates']['smsEnvoyeAujour']=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
 
-$campaign = new msSMS();
-$p['page']['data']=$campaign->getSendedCampaignData($date);
+$msSMS='msSMS'.$p['config']['smsProvider'];
+if (class_exists($msSMS)) {
+    $campaign = new $msSMS();
+    $p['page']['data']=$campaign->getSendedCampaignData($date);
+}

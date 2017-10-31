@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$mail = new PHPMailer;
+$mail = new PHPMailer\PHPMailer\PHPMailer;
 $mail->CharSet = 'UTF-8';
 //$mail->SMTPDebug = 4;
 $mail->isSMTP();

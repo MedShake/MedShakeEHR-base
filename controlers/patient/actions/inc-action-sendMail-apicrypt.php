@@ -27,7 +27,7 @@
  */
 
 
-$mail = new PHPMailer;
+$mail = new PHPMailer\PHPMailer\PHPMailer;
 $mail->CharSet = 'iso-8859-1';
 //$mail->SMTPDebug = 3;
 $mail->isSMTP();

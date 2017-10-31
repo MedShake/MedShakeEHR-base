@@ -36,7 +36,9 @@ require '../vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    if (is_file('../class/' . $class . '.php')) {
+        include '../class/' . $class . '.php';
+    }
 });
 
 
@@ -46,9 +48,8 @@ $p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
-  $p['config']['host']=$_SERVER['SERVER_ADDR'];
-  $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
-
+    $p['config']['host']=$_SERVER['SERVER_ADDR'];
+    $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
 
 /////////// SQL connexion
@@ -99,25 +100,25 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-      //inbox number of messages
+        //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
-      if(isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
-        if($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-          $events = new msAgenda();
-          $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      if (isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
+          if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+              $events = new msAgenda();
+              $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+              $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+          }
+      }
+        if (!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
+            $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
         }
-      }
-      if(!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
-        $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-      }
     }
 
     // crédits SMS
-    if(is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
-      $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
+    if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
+        $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
     }
 
     //utilisateurs pouvant avoir un agenda
@@ -129,11 +130,19 @@ if (isset($template)) {
 
 
     //les répertoires de templates twig
-    $twigTemplateDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'],'/');
+    $twigTemplateDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'], '/');
 
     // les variables d'environnement twig
-    if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
-    if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+    if (isset($p['config']['twigEnvironnementCache'])) {
+        $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
+    } else {
+        $twigEnvironment['cache']=false;
+    }
+    if (isset($p['config']['twigEnvironnementAutoescape'])) {
+        $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
+    } else {
+        $twigEnvironment['autoescape']=false;
+    }
 
     $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
     $twig = new Twig_Environment($loader, $twigEnvironment);

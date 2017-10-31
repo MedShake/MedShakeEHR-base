@@ -36,7 +36,9 @@
 
  /////////// Class medshakeEHR auto-upload
  spl_autoload_register(function ($class) {
-     include '../class/' . $class . '.php';
+     if (is_file('../class/' . $class . '.php')) {
+         include '../class/' . $class . '.php';
+     }
  });
 
 

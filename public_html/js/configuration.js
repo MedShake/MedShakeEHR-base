@@ -236,6 +236,8 @@ function ajaxModalFormSave(form, modal) {
         $(modal + ' div.alert ul').html('');
         $.each(data.msg, function(index, value) {
           $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
+          $('#'+index+'ID').parent('div').addClass('has-error');
+        
         });
       }
     },

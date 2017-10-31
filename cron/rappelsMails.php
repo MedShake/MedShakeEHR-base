@@ -21,7 +21,7 @@
  */
 
 /**
- * Cron : rappels mails
+ * Cron : rappels mails (smtp)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -55,7 +55,7 @@ function sendmail($pa)
 {
     global $p;
 
-    $mail = new PHPMailer;
+    $mail = new PHPMailer\PHPMailer\PHPMailer;
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';
     $mail->isSMTP();

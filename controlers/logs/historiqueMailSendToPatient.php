@@ -34,8 +34,11 @@ $patient->setToID($match['params']['patientID']);
 $p['page']['patientData']= $patient->getSimpleAdminDatas();
 $p['page']['patientData']['id']=$match['params']['patientID'];
 
-$mj = new msMailTracking();
-$mj->set_contactEmail($p['page']['patientData'][4]);
-$mj->getListMessagesSendedToContact();
-$mj->addCampaignDataToMessagesList();
-$p['page']['listeMessages']=$mj->get_contactMessagesList();
+$msMailTracking='msMailTracking'.$p['config']['smtpTracking'];
+if (class_exists($msMailTracking)) {
+    $mj = new $msMailTracking();
+    $mj->set_contactEmail($p['page']['patientData'][4]);
+    $mj->getListMessagesSendedToContact();
+    $mj->addCampaignDataToMessagesList();
+    $p['page']['listeMessages']=$mj->get_contactMessagesList();
+}
