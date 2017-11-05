@@ -24,6 +24,7 @@
  * Outils divers
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <http://www.github.com/fr33z00>
  */
 class msTools
 {
@@ -74,7 +75,7 @@ class msTools
       if ($type=='404') {
           header('HTTP/1.1 404 Not Found');
       }
-      header('Location: '.$p['config']['protocol'].$p['config']['host'].$routes[$routeAbrev][1]);
+      header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$routes[$routeAbrev][1]);
       die;
   }
 
@@ -100,7 +101,7 @@ class msTools
       if ($type=='404') {
           header('HTTP/1.1 404 Not Found');
       }
-      header('Location: '.$p['config']['protocol'].$p['config']['host'].$url);
+      header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$url);
       die;
   }
 

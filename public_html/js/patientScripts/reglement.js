@@ -23,6 +23,7 @@
  * Js pour le module règlement du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -83,7 +84,7 @@ function searchAndInsertActeData(selecteur) {
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
 
   $.ajax({
-    url: '/patient/ajax/getReglementData/',
+    url: urlBase+'/patient/ajax/getReglementData/',
     type: 'post',
     data: {
       acteID: acteID,

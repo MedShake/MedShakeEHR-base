@@ -23,6 +23,7 @@
  * Fonctions JS pour le dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -31,13 +32,13 @@ $(document).ready(function() {
   ///////// Charger les scripts JS correspondant au module et forms inclus dans la page
 
   //charger le fichier commun de fonctions aux forms médicaux
-  //$.getScriptOnce("../js/module/common.js");
+  //$.getScriptOnce(urlBase+"/js/module/common.js");
 
   ///////// Charger les scripts JS correspondant au form inclus dans la page
   if (typeof(formScripts) != "undefined") {
     if ($.isArray(formScripts)) {
       $.each(formScripts, function(index, value) {
-        $.getScriptOnce("../js/module/formsScripts/" + value + ".js");
+        $.getScriptOnce(urlBase+"/js/module/formsScripts/" + value + ".js");
       });
     }
   }
@@ -159,7 +160,7 @@ $(document).ready(function() {
   $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
-    $.getScriptOnce("../js/patientScripts/docupload.js");
+    $.getScriptOnce(urlBase+"/js/patientScripts/docupload.js");
   });
 
   //bouton de nouveau mail
@@ -286,7 +287,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
   //alert(patientID);
   if (patientID && typeID && source) {
     $.ajax({
-      url: '/ajax/setPeopleData/',
+      url: urlBase+'/ajax/setPeopleData/',
       type: 'post',
       data: {
         value: value,
@@ -314,7 +315,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
 
 function listePatientDicomStudies() {
   $.ajax({
-    url: '/patient/ajax/listPatientDicomStudies/',
+    url: urlBase+'/patient/ajax/listPatientDicomStudies/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -340,7 +341,7 @@ function listePatientDicomStudies() {
 function prepareEcho() {
 
   $.ajax({
-    url: '/patient/ajax/prepareEcho/',
+    url: urlBase+'/patient/ajax/prepareEcho/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -357,7 +358,7 @@ function prepareEcho() {
 
 function catchLastDicomSrData() {
   $.ajax({
-    url: '/patient/ajax/catchLastDicomSrData/',
+    url: urlBase+'/patient/ajax/catchLastDicomSrData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -377,7 +378,7 @@ function catchLastDicomSrData() {
 
 function catchOtherDicomSrData() {
   $.ajax({
-    url: '/patient/ajax/catchLastDicomSrData/',
+    url: urlBase+'/patient/ajax/catchLastDicomSrData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -417,7 +418,7 @@ function addDicomSRInfo2CurrentForm(data) {
 //envoyer le form de CS dans le div CS
 function sendFormToCsDiv(el) {
   $.ajax({
-    url: '/patient/ajax/extractCsForm/',
+    url: urlBase+'/patient/ajax/extractCsForm/',
     type: 'post',
     data: {
       formID: el.attr('data-formtocall'),
@@ -431,7 +432,7 @@ function sendFormToCsDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#nouvelleCs').html(data);
-      $.getScriptOnce("../js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       afficherFxNbFoetus();
       scrollTo('body');
     },
@@ -444,7 +445,7 @@ function sendFormToCsDiv(el) {
 //envoyer le form de Courrier dans le div newCourrier
 function sendFormToCourrierDiv(el) {
   $.ajax({
-    url: '/patient/ajax/extractCourrierForm/',
+    url: urlBase+'/patient/ajax/extractCourrierForm/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -454,7 +455,7 @@ function sendFormToCourrierDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newCourrier').html(data);
-      $.getScriptOnce("../js/patientScripts/print.js");
+      $.getScriptOnce(urlBase+"/js/patientScripts/print.js");
 
       tinymce.init({
         selector: '#editeurCourrier',
@@ -477,7 +478,7 @@ function sendFormToOrdoDiv(el) {
   }
 
   $.ajax({
-    url: '/patient/ajax/extractOrdoForm/',
+    url: urlBase+'/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
       objetID: objetID,
@@ -487,7 +488,7 @@ function sendFormToOrdoDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newOrdo').html(data);
-      $.getScriptOnce("../js/patientScripts/ordonnance.js");
+      $.getScriptOnce(urlBase+"/js/patientScripts/ordonnance.js");
       scrollTo('body');
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
@@ -502,7 +503,7 @@ function sendFormToOrdoDiv(el) {
 //envoyer le form newMail dans le div newMail
 function sendFormToMailDiv(el) {
   $.ajax({
-    url: '/patient/ajax/extractMailForm/',
+    url: urlBase+'/patient/ajax/extractMailForm/',
     type: 'post',
     data: {
       formID: el.attr('data-formtocall'),
@@ -513,7 +514,7 @@ function sendFormToMailDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newMail').html(data);
-      $.getScriptOnce("../js/patientScripts/email.js");
+      $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
       scrollTo('body');
     },
     error: function() {
@@ -531,7 +532,7 @@ function sendFormToReglementDiv(el) {
   }
 
   $.ajax({
-    url: '/patient/ajax/extractReglementForm/',
+    url: urlBase+'/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
       objetID: objetID,
@@ -541,7 +542,7 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce("../js/patientScripts/reglement.js");
+      $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
       scrollTo('body');
     },
     error: function() {
@@ -558,7 +559,7 @@ function suppCs(el) {
   objetID = el.attr('data-objetID');
 
   $.ajax({
-    url: '/patient/ajax/suppCs/',
+    url: urlBase+'/patient/ajax/suppCs/',
     type: 'post',
     data: {
       objetID: objetID
@@ -579,7 +580,7 @@ function toogleImportant(el) {
   objetID = el.attr('data-objetID');
 
   $.ajax({
-    url: '/patient/ajax/importanceCsToogle/',
+    url: urlBase+'/patient/ajax/importanceCsToogle/',
     type: 'post',
     data: {
       importanceActu: importanceActu,
@@ -610,7 +611,7 @@ function modalAlternateTitreChange() {
   objetID = $('#alternatTitreModal #objetID').val();
 
   $.ajax({
-    url: '/patient/ajax/completerTitreCs/',
+    url: urlBase+'/patient/ajax/completerTitreCs/',
     type: 'post',
     data: {
       titre: titreActu,
@@ -637,7 +638,7 @@ function showObjetDet(element) {
   if (destination.length == 0) {
 
     $.ajax({
-      url: '/patient/ajax/ObjetDet/',
+      url: urlBase+'/patient/ajax/ObjetDet/',
       type: 'post',
       data: {
         objetID: objetID,

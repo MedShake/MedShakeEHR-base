@@ -23,6 +23,7 @@
  * Fonctions JS pour la partie compta
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -90,7 +91,7 @@ $(document).ready(function() {
 function sendFormToReglementDiv(el) {
 
   $.ajax({
-    url: '/compta/ajax/extractReglementForm/',
+    url: urlBase+'/compta/ajax/extractReglementForm/',
     type: 'post',
     data: {
       objetID: el.attr('data-objetID'),

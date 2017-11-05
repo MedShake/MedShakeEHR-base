@@ -24,6 +24,7 @@
  * Pivot central des pages loguées
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 ini_set('display_errors', 1);
@@ -62,6 +63,7 @@ require '../fonctions/validators.php';
 $router = new AltoRouter();
 $routes=Spyc::YAMLLoad('../config/routes.yml');
 $router->addRoutes($routes);
+$router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
 
 

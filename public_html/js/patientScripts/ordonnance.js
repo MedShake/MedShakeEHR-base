@@ -23,9 +23,10 @@
  * Js pour le module ordonnance du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$.getScriptOnce("../bower_components/autogrow/autogrow.min.js");
+$.getScriptOnce(urlBase+"/bower_components/autogrow/autogrow.min.js");
 
 $(document).ready(function() {
 
@@ -67,7 +68,7 @@ function ajouterLigneOrdo(selecteur) {
   item = $('#' + id + ' option:selected').val();
 
   $.ajax({
-    url: '/patient/ajax/getLigneOrdo/',
+    url: urlBase+'/patient/ajax/getLigneOrdo/',
     type: 'post',
     data: {
       ligneID: item,

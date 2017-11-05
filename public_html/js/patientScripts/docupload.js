@@ -23,12 +23,13 @@
  * Js pour le module upload document du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
 
   $("#dropZoneDoc").dmUploader({
-    url: '/patient/ajax/uploadNewDoc/',
+    url: urlBase+'/patient/ajax/uploadNewDoc/',
     extraData: {
       patientID: $('#identitePatient').attr("data-patientID"),
     },

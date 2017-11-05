@@ -34,6 +34,7 @@
 ##  general config
 protocol: 'http://'
 host: 'ehr.local'
+urlHostSuffixe: ''
 homeDirectory: '/home/EHR/'
 webDirectory: '/home/EHR/public_html/'
 stockageLocation: '/home/EHR/public_html/stockage/'

@@ -23,6 +23,7 @@
  * Fonctions JS pour le tracking des mails et l'affichage du statut
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -32,7 +33,7 @@ $(document).ready(function() {
     mailID = $(this).attr('data-mailtrackingid');
 
     $.ajax({
-      url: '/ajax/mailTracking/',
+      url: urlBase+'/ajax/mailTracking/',
       type: 'post',
       data: {
         mailID: mailID,

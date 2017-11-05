@@ -23,6 +23,7 @@
  * Fonctions JS pour la recherche patients / pros
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -32,7 +33,7 @@ $(document).ready(function() {
     updateListingPatients();
   });
   $('body').on("click", ".openPatient td:nth-child(-n+6)", function(e) {
-    window.location.href = $(this).closest('tr').attr('data-url');
+    window.location.href = urlBase+$(this).closest('tr').attr('data-url');
   });
 
 
@@ -42,7 +43,7 @@ $(document).ready(function() {
     e.preventDefault();
     source = $(this);
     $.ajax({
-      url: '/patients/ajax/patientsSendSign/',
+      url: urlBase+'/patients/ajax/patientsSendSign/',
       type: 'post',
       data: {
         patientID: $(this).attr('data-patientID')
@@ -71,7 +72,7 @@ $(document).ready(function() {
 
         source = $(this);
         $.ajax({
-          url: '/patients/ajax/markDeleted/',
+          url: urlBase+'/patients/ajax/markDeleted/',
           type: 'post',
           data: {
             patientID: $(this).attr('data-patientID'),
@@ -101,7 +102,7 @@ $(document).ready(function() {
     e.preventDefault();
     source = $(this);
     $.ajax({
-      url: '/patients/ajax/switchPraticienListe/',
+      url: urlBase+'/patients/ajax/switchPraticienListe/',
       type: 'post',
       data: {
         patientID: $(this).attr('data-patientID')
@@ -131,7 +132,7 @@ $(document).ready(function() {
 function updateListingPatients() {
 
   $.ajax({
-    url: '/patients/ajax/patientsListByCrit/',
+    url: urlBase+'/patients/ajax/patientsListByCrit/',
     type: 'post',
     data: {
       porp: $('#listing').attr('data-porp'),
