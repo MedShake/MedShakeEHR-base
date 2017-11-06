@@ -50,7 +50,7 @@ $(document).ready(function() {
         },
         dataType: "html",
         success: function() {
-          window.location.href = 'urlBase+/public/signer/merci/';
+          window.location.href = urlBase+'/public/signer/merci/';
         },
         error: function() {
           alert('Problème, rechargez la page !');
