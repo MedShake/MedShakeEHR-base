@@ -28,8 +28,8 @@
 
 $debug='';
 $template="login";
-$p['page']['formNumber']='3';
+
 
 $formpatient = new msForm();
-$formpatient->setFormID($p['page']['formNumber']);
+$p['page']['formNumber']=$formpatient->setFormIDbyName('baseLogin');
 $p['page']['form']=$formpatient->getForm($p['page']['formNumber']);

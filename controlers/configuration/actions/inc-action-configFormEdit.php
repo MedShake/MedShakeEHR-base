@@ -28,6 +28,7 @@
 
 $data=array(
     'id'=>$_POST['id'],
+    'internalName'=>$_POST['internalName'],
     'name'=>$_POST['name'],
     'description'=>$_POST['description'],
     'cat'=>$_POST['cat'],

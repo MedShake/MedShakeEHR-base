@@ -77,6 +77,19 @@ class msForm
         }
     }
 /**
+ * Définir le numéro du formulaire à partir de son nom interne 
+ * @param int $formName Nom interne du formulaire
+ */
+    public function setFormIDbyName($formName)
+    {
+      if($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
+        return $this->_formID = $formID;
+      } else {
+        throw new Exception('Forumulaire non trouvé à partir de son nom');
+      }
+    }
+
+/**
  * Définir l'instance
  * @param int $instance l'ID de l'instance
  */

@@ -1,5 +1,7 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
+ALTER TABLE forms ADD internalName varchar(60) after id;
+
 -- 1.3.0 to 1.4.0
 
 ALTER TABLE data_types MODIFY COLUMN placeholder VARCHAR(255) DEFAULT null;

@@ -63,7 +63,7 @@ if (isset($_POST['objetID'])) {
 }
 
 $form = new msForm();
-$form->setFormID('17');
+$form->setFormIDbyName('baseReglement');
 $form->setTypeForNameInForm('byName');
 if (isset($_POST['objetID'])) {
     $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));

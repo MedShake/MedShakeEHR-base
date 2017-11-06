@@ -33,9 +33,7 @@
      $template="configUpdatePassword";
      $debug='';
 
-     $p['page']['formNumber']='25';
-
      $formpatient = new msForm();
-     $formpatient->setFormID($p['page']['formNumber']);
+     $p['page']['formNumber']=$formpatient->setFormIDbyName('basePasswordChange');
      $p['page']['form']=$formpatient->getForm($p['page']['formNumber']);
  }

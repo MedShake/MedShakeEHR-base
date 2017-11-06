@@ -22,8 +22,8 @@
 
 /**
  * people :  créer un individus
- * soit en mode patient -> formulaire n°1
- * soit en mode pro -> formualire n°7
+ * soit en mode patient -> formulaire baseNewPatient
+ * soit en mode pro -> formualire baseNewPro
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -34,14 +34,14 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formNumber']='1';
+    $p['page']['formInternalName']='baseNewPatient';
 } elseif ($p['page']['porp']=='pro') {
-    $p['page']['formNumber']='7';
+    $p['page']['formInternalName']='baseNewPro';
 }
 
 
 $formpatient = new msForm();
-$formpatient->setFormID($p['page']['formNumber']);
+$p['page']['formNumber']=$formpatient->setFormIDbyName($p['page']['formInternalName']);
 if (isset($_SESSION['form'][$p['page']['formNumber']]['formValues'])) {
     $formpatient->setPrevalues($_SESSION['form'][$p['page']['formNumber']]['formValues']);
 }

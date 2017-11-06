@@ -41,7 +41,7 @@ $p['page']['patient']=$patient->getSimpleAdminDatas();
 $p['page']['patient']['id']=$_POST['patientID'];
 
 $form = new msForm();
-$form->setFormID('18');
+$form->setFormIDbyName('baseReglementSimple');
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');

@@ -91,6 +91,7 @@ CREATE TABLE `dicomTags` (
 
 CREATE TABLE `forms` (
   `id` smallint(4) UNSIGNED NOT NULL,
+  `internalName` varchar(60) NOT NULL,
   `name` varchar(60) NOT NULL,
   `description` varchar(250) NOT NULL,
   `dataset` varchar(60) NOT NULL DEFAULT 'data_types',
@@ -268,8 +269,9 @@ ALTER TABLE `dicomTags`
   ADD KEY `typeID` (`typeID`);
 
 ALTER TABLE `forms`
-  ADD PRIMARY KEY (`id`);
-
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `internalName` (`internalName`);
+    
 ALTER TABLE `forms_cat`
   ADD PRIMARY KEY (`id`);
 

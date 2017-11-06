@@ -53,6 +53,6 @@ if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$
 
 //formulaire prise rdv
 $formPriseRdv = new msForm();
-$formPriseRdv->setFormID(30);
+$p['page']['formNumber']=$formPriseRdv->setFormIDbyName('baseAgendaPriseRDV');
 $formPriseRdv->setTypeForNameInForm('byName');
 $p['page']['formPriseRdv']=$formPriseRdv->getForm();
