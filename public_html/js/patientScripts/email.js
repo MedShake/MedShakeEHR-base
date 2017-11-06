@@ -23,6 +23,7 @@
  * Js pour le module email du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -37,7 +38,7 @@ $(document).ready(function() {
   $('body').on("change", "select[name='mailModeles']", function(e) {
     modeleID = $("select[name='mailModeles'] option:selected").val();
     $.ajax({
-      url: '/patient/ajax/extractMailModele/',
+      url: urlBase+'/patient/ajax/extractMailModele/',
       type: 'post',
       data: {
         modeleID: modeleID,

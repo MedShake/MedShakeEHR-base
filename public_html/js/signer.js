@@ -23,6 +23,7 @@
  * Fonctions JS pour la signature sur périphérique tactil
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -42,14 +43,14 @@ $(document).ready(function() {
       signatureSvg = $("#signature").jSignature("getData", "svg");
 
       $.ajax({
-        url: '/public/ajax/publicMakeDocSigne/',
+        url: urlBase+'/public/ajax/publicMakeDocSigne/',
         type: 'post',
         data: {
           signatureSvg: signatureSvg
         },
         dataType: "html",
         success: function() {
-          window.location.href = '/public/signer/merci/';
+          window.location.href = urlBase+'/public/signer/merci/';
         },
         error: function() {
           alert('Problème, rechargez la page !');

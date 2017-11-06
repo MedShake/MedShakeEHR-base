@@ -23,6 +23,7 @@
  * Fonctions JS pour la page print
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -44,7 +45,7 @@ $(document).ready(function() {
     $('#courrierBodyID').val(courrierBody);
     patientID = $('#invisible_form').attr('data-patientID');
     setTimeout(function() {
-      location.href = '/patient/' + patientID + '/'
+      location.href = urlBase + '/patient/' + patientID + '/'
     }, 2000);
     $("#editeurCourrier").tinymce().remove();
     $('#invisible_form').submit();

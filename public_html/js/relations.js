@@ -23,6 +23,7 @@
  * Fonctions JS pour les relations patient <-> patient et patient <-> praticien
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 
@@ -55,7 +56,7 @@ $(document).ready(function() {
 
     if (patient2ID > 0) {
       $.ajax({
-        url: '/people/ajax/addRelationPatientPatient/',
+        url: urlBase+'/people/ajax/addRelationPatientPatient/',
         type: 'post',
         data: {
           patientID: patientID,
@@ -102,7 +103,7 @@ $(document).ready(function() {
     preRelationPatientPrat = $('#preRelationPatientPratID').val();
     if (praticienID > 0) {
       $.ajax({
-        url: '/people/ajax/addRelationPatientPraticien/',
+        url: urlBase+'/people/ajax/addRelationPatientPraticien/',
         type: 'post',
         data: {
           patientID: patientID,
@@ -130,7 +131,7 @@ $(document).ready(function() {
     ID1 = $('#identitePatient').attr("data-patientID");
     if (ID1 > 0 && ID2 > 0) {
       $.ajax({
-        url: '/people/ajax/removeRelationPatient/',
+        url: urlBase+'/people/ajax/removeRelationPatient/',
         type: 'post',
         data: {
           ID1: ID1,
@@ -159,7 +160,7 @@ $(document).ready(function() {
 function getRelationsPatientPatientsTab() {
   patientID = $('#identitePatient').attr("data-patientID");
   $.ajax({
-    url: '/people/ajax/getRelationsPatientPatientsTab/',
+    url: urlBase+'/people/ajax/getRelationsPatientPatientsTab/',
     type: 'post',
     data: {
       patientID: patientID,
@@ -168,7 +169,7 @@ function getRelationsPatientPatientsTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPatients').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPatients').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="/patient/' + value.patientID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.patientID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPatients').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/patient/' + value.patientID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.patientID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
       });
 
     },
@@ -182,7 +183,7 @@ function getRelationsPatientPatientsTab() {
 function getRelationsPatientPraticiensTab() {
   patientID = $('#identitePatient').attr("data-patientID");
   $.ajax({
-    url: '/people/ajax/getRelationsPatientPraticiensTab/',
+    url: urlBase+'/people/ajax/getRelationsPatientPraticiensTab/',
     type: 'post',
     data: {
       patientID: patientID,
@@ -191,7 +192,7 @@ function getRelationsPatientPraticiensTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPrat').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
       });
 
     },

@@ -23,6 +23,7 @@
  * Fonctions JS pour inbox
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -74,7 +75,7 @@ $(document).ready(function() {
 
 function viewMail(el) {
   $.ajax({
-    url: '/inbox/ajax/viewMail/',
+    url: urlBase+'/inbox/ajax/viewMail/',
     type: 'post',
     data: {
       mailID: el.attr('data-mailID'),

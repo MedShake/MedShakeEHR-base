@@ -23,6 +23,7 @@
  * Js pour le module creation patient / praticien
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -52,7 +53,7 @@ $(document).ready(function() {
     if (confirm("Ce dossier sera à nouveau visible dans les listings de recherche.\nSouhaitez-vous poursuivre ? ")) {
       source = $(this);
       $.ajax({
-        url: '/patients/ajax/unmarkDeleted/',
+        url: urlBase+'/patients/ajax/unmarkDeleted/',
         type: 'post',
         data: {
           patientID: $(this).attr('data-patientID'),

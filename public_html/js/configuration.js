@@ -23,6 +23,7 @@
  * Fonctions JS pour les pages de configuration
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -36,7 +37,7 @@ $(document).ready(function() {
     var table = $(this).attr("data-table");
 
     $.ajax({
-      url: '/configuration/ajax/configExtractByPrimaryKey/',
+      url: urlBase+'/configuration/ajax/configExtractByPrimaryKey/',
       type: 'post',
       data: {
         id: id,
@@ -74,7 +75,7 @@ $(document).ready(function() {
     var table = $(this).attr("data-table");
 
     $.ajax({
-      url: '/configuration/ajax/configExtractByPrimaryKey/',
+      url: urlBase+'/configuration/ajax/configExtractByPrimaryKey/',
       type: 'post',
       data: {
         id: id,
@@ -121,7 +122,7 @@ $(document).ready(function() {
 
 
       $.ajax({
-        url: '/configuration/ajax/configDelByPrimaryKey/',
+        url: urlBase+'/configuration/ajax/configDelByPrimaryKey/',
         type: 'post',
         data: {
           id: id,
@@ -168,7 +169,7 @@ $(document).ready(function() {
 
   // Uploade clef apicrypt par drag@drop
   $("#dropZoneClefApicrypt").dmUploader({
-    url: '/configuration/ajax/configUploadApicryptClef/',
+    url: urlBase+'/configuration/ajax/configUploadApicryptClef/',
     extraData: {
       destination: $('#dropZoneClefApicrypt').attr("data-destination"),
     },
@@ -193,7 +194,7 @@ $(document).ready(function() {
 
 
       $.ajax({
-        url: '/configuration/ajax/configDeleteApicryptClef/',
+        url: urlBase+'/configuration/ajax/configDeleteApicryptClef/',
         type: 'post',
         data: {
           userID: userID,
