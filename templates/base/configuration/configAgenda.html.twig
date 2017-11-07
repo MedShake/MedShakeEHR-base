@@ -1,0 +1,131 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : édition des paramètres agenda
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+<h1>Edition des paramètres agenda</h1>
+
+<ol class="breadcrumb">
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="active">
+    Agenda
+  </li>
+</ol>
+
+{# Nav tabs #}
+<ul class="nav nav-tabs bottom-space" role="tablist">
+    <li role="presentation" {% if page.selectUser < 1 %}class="active"{% endif %}>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
+    </li>
+    {% for id, user in page.agendaUsers %}
+      <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/{{ id }}/" aria-controls="prescriptions" role="tab">Agenda : {{ user }}</a>
+      </li>
+    {% endfor %}
+
+</ul>
+
+{% if page.selectUser > 0 %}
+<div class="row">
+	<form class="col-md-6"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAgendaSave/">
+
+		{{ f.input ({
+			'input' : {
+				'type' : 'hidden',
+				'name' : 'userID',
+				'value' : page.selectUser
+			},
+		}) }}
+
+
+		<div class="form-group">
+		{{ f.textarea ({
+			'textarea' : {
+				'name' : 'configAgenda',
+				'placeholder' : 'entrer ici du javascript',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.configAgenda,
+				'add' : 'rows="20" style="font-family:monospace;"'
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Paramètrage général (javascript)'
+			}
+		}) }}
+		</div>
+
+    <div class="form-group">
+		{{ f.textarea ({
+			'textarea' : {
+				'name' : 'configTypesRdv',
+				'placeholder' : 'entrer ici du yaml',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.typeRdv,
+				'add' : 'rows="20" style="font-family:monospace;"'
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Paramètrage des types de rendez-vous (yaml)'
+			}
+		}) }}
+		</div>
+
+		<button type="submit" class="btn btn-primary">Valider</button>
+
+	</form>
+</div>
+{% else %}
+<table class="table table-hover">
+  <thead>
+    <th>Paramètre</th>
+    <th>Valeur</th>
+  </thead>
+  <tbody>
+<tr><td>agendaDistantLink</td><td>{{ page.configDefaut.agendaDistantLink }}</td></tr>
+<tr><td>agendaDistantPatientsOfTheDay</td><td>{{ page.configDefaut.agendaDistantPatientsOfTheDay }}</td></tr>
+<tr><td>agendaLocalPatientsOfTheDay</td><td>{{ page.configDefaut.agendaLocalPatientsOfTheDay }}</td></tr>
+<tr><td>agendaNumberForPatientsOfTheDay</td><td>{{ page.configDefaut.agendaNumberForPatientsOfTheDay }}</td></tr>
+<tr><td>administratifPeutAvoirAgenda</td><td>{{ page.configDefaut.administratifPeutAvoirAgenda }}</td></tr>
+</tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

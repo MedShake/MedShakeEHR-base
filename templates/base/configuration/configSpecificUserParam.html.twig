@@ -1,0 +1,118 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : paramètres de configuration spécifiques aux utilisteurs
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Paramètres spécifiques à l'utilisateur {{ page.userData.3 }} {{ page.userData.2 }} <small>#{{ page.userID }}</small></h1>
+
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+  		<li>
+  				<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Liste des utilisateurs</a>
+  		</li>
+  		<li class="active">Paramètres spécifiques à {{ page.userData.3 }} {{ page.userData.2 }}
+  		</li>
+  </ol>
+
+
+  <form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configSpecificUserParam/">
+
+
+{% for k,v in page.userParams %}
+
+  <h2 id="cat{{ k }}">{{ page['catList'][k] }}</h2>
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th class="col-md-3">Paramètre</th>
+        <th class="col-md-2">Valeur défaut</th>
+        <th class="col-md-2">Valeur utilisateur</th>
+        <th class="col-md-5">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+  {% for w in v %}
+  <tr>
+    <td>{{ w.name }}</td>
+    <td>{{ page['configDefaut'][w.name] }}</td>
+    <td>
+
+      {{ f.input ({
+        'input' : {
+          'type' : w.formType,
+          'name' : 'p_' ~ w.id,
+          'id' : w.name ~ 'ID',
+          'placeholder' : w.placeholder,
+          'class' : 'form-control',
+          'value' : w.userVal,
+          'autocomplete' : 'off'
+        }
+      }) }}
+
+
+    </td>
+    <td>{{ w.description }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endfor %}
+
+
+
+
+{{ f.input ({
+  'input' : {
+    'type' : 'hidden',
+    'name' : 'userID',
+    'value' : page.userID
+  }
+}) }}
+
+{{ f.input ({
+  'input' : {
+    'type' : 'submit',
+    'value' : 'Enregistrer',
+    'class' : 'btn btn-primary'
+  }
+}) }}
+
+</form>
+
+{% endblock %}

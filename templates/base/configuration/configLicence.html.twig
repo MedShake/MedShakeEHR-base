@@ -1,0 +1,90 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : licence / remerciements
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : licence et remerciements{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+  <h1>Licence et remerciements</h1>
+
+  <div class="container-fluid">
+    <div class="row">
+    <h2>Auteur et licence</h2>
+
+      <div class="well col-md-6">
+        Copyright (c) 2017<br>
+        Bertrand Boutillier <b.boutillier@gmail.com><br>
+        <a href="http://www.medshake.net">MedShake</a> &amp; <a href="http://www.logiciel-cabinet-medical.fr/">MedShakeEHR</a>
+        <br><br>
+        MedShakeEHR is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        any later version.
+        <br><br>
+        MedShakeEHR is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        <br><br>
+        You should have received a copy of the GNU General Public License
+        along with MedShakeEHR.  If not, see <<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>>.
+        <br><br>
+        The modules for this software developed by Bertrand Boutillier
+        are distributed under the same terms and conditions.
+      </div>
+    </div>
+
+    <div class="row">
+      <h2>Remerciements</h2>
+
+      <p>MedShakeEHR uses or is based (non exhaustive list!) on these excellent softwares, libraries, class, plugins ... Thanks to their respective authors!</p>
+
+      <table class="table table-striped table-hover">
+        {% for k, v in page.thanks %}
+          <tr>
+            <td>
+              {{ k }}
+            </td>
+            <td>
+              {{ v.description }}
+            </td>
+            <td>
+              <a href="{{ v.url }}">{{ v.url }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+  </div>
+{% endblock %}

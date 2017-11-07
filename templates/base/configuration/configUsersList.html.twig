@@ -1,0 +1,80 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : liste des utilisateurs
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Liste des utilisateurs</h1>
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+  		<li class="active">
+  				Liste des utilisateurs
+  		</li>
+  </ol>
+
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Identité</th>
+        <th>Administrateur</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in page.users %}
+        <tr>
+          <td>{{ v.id }}</td>
+          <td>{{ v.prenom }} {{ v.nom }}</td>
+          <td>{% if v.rank =='admin' %}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{% endif %}</td>
+          <td>
+            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Paramètres spécifiques</a>
+          {% if v.rank =='admin' and v.id > 1 %}
+            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configGiveAdmin/?id={{ v.id }}"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Retirer droits administration</a>
+          {% elseif v.id > 1   %}
+            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configGiveAdmin/?id={{ v.id }}"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Accorder droits administration</a>
+          {% endif %}
+
+          </td>
+        </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

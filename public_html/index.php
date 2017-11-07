@@ -131,8 +131,20 @@ if (isset($template)) {
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 
-    //les répertoires de templates twig
-    $twigTemplateDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templateBaseFolder'], '/');
+    //les répertoires de templates twig : module puis base
+    if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/')) {
+        $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/', '/');
+    }
+    if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/')) {
+        $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/', '/');
+    }
+    $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
+    if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/')) {
+        $twigTemplateDirs[]=$p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/';
+    }
+    if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/')) {
+        $twigTemplateDirs[]=$p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/';
+    }
 
     // les variables d'environnement twig
     if (isset($p['config']['twigEnvironnementCache'])) {

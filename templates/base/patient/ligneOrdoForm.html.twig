@@ -1,0 +1,71 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : formulaire d'ajout d'une ligne à l'ordonnance
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+{% import "macroForm.html.twig" as f %}
+
+{% if page.ligneOrdo %}{% set ligne = page.ligneOrdo %}{% endif %}
+
+<div class="row ligneOrdo">
+    <div class="col-md-12">
+
+        <div class="form-group">
+            <button type="button" class="close cleanLigneOrdo" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <div class="row">
+                <div class="col-md-11">
+                  {{ f.textarea ({
+                    'textarea' : {
+                      'name' : ligne.formname ,
+                      'id' : 'ligne' ~ ligne.formname ~'ID',
+                      'class' : 'form-control',
+                      'value' : ligne.description ,
+                      'autocomplete' : 'off',
+                      'rows' : '5'
+                    },
+                    'label' : {
+                      'position' : 'before',
+                      'label' : ligne.label ~ ligne.labelInitiale,
+                      'class' : 'control-label'
+                    }
+                  }) }}
+
+
+                </div>
+                <div class="col-md-1">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="1" name="{{ ligne.formname ~ 'CB' }}" {% if ligne.ald == 1 %} checked="checked"{% endif %}/>
+                            ALD
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : details sur un règlement pour l'historique
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<td></td>
+<td colspan="4">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Facturation</div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th colspan="2">{{ page.acteFacture.label }}</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tarif SS</td>
+                    <td>{{ page.datareg.regleTarifCejour.value }}€</td>
+                </tr>
+                <tr>
+                    <td>Dépassement</td>
+                    <td>{{ page.datareg.regleDepaCejour.value }}€</td>
+                </tr>
+                <tr>
+                    <td>Facturé ce jour</td>
+                    <td>{{ page.datareg.regleFacture.value }}€</td>
+                </tr>
+
+                {% if page.datareg.regleCheque. value > 0 %}
+                    <tr>
+                        <td>Chèque</td>
+                        <td>{{ page.datareg.regleCheque.value }}€</td>
+                    </tr>
+                {% endif %}
+
+                {% if page.datareg.regleCB. value > 0 %}
+                    <tr>
+                        <td>CB</td>
+                        <td>{{ page.datareg.regleCB.value }}€</td>
+                    </tr>
+                {% endif %}
+
+                {% if page.datareg.regleEspeces. value > 0 %}
+                    <tr>
+                        <td>Espèces</td>
+                        <td>{{ page.datareg.regleEspeces.value }}€</td>
+                    </tr>
+                {% endif %}
+
+                {% if page.datareg.regleTiersPayeur. value > 0 %}
+                    <tr>
+                        <td>Tiers (CMU ou TP)</td>
+                        <td>{{ page.datareg.regleTiersPayeur.value }}€</td>
+                    </tr>
+                {% endif %}
+
+            </tbody>
+        </table>
+    </div>
+
+</td>

@@ -1,0 +1,229 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Compta : compta
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : comptabilité{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/compta.js"></script>
+
+    <style>
+        #recettes {
+            border: 2px solid #ddd;
+        }
+        #recettes td:nth-child(6),
+        #recettes th:nth-child(6) {
+            border-left: 3px double #ddd;
+        }
+        #recettes td:nth-child(7),
+        #recettes th:nth-child(7) {
+            border-left: 3px double #ddd;
+        }
+        #recettes td:nth-child(11),
+        #recettes th:nth-child(11) {
+            border-left: 3px double #ddd;
+        }
+        #recettes td:nth-child(13),
+        #recettes th:nth-child(13) {
+            border-left: 3px double #ddd;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Recettes</h1>
+
+
+    <form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin-bottom : 30px;">
+
+                <div class="form-group">
+
+                    <label class="control-label" for="beginPeriodeID">Début de période
+                    </label>
+                    <div id="beginPeriodeIDB" class="input-group date datepick">
+                    <input type="text" id="beginPeriodeID" name="beginPeriode" class="form-control" autocomplete="off" value="{{ page.periode.begin }}"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="control-label" for="endPeriodeID">Fin de période
+                    </label>
+                    <div id="endPeriodeIDB" class="input-group date datepick">
+                        <input type="text" id="endPeriodeID" name="endPeriode" class="form-control" autocomplete="off" value="{{ page.periode.end }}"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-default">Chercher</button>
+                  <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control" autocomplete="off" />
+                  <option>Selection rapide</option>
+                  {% for k,v in page.periode.quickOptions %}
+                    <option {% if page.periode.quick == k %}selected="selected"{% endif %} value="{{ k }}">{{ v }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-group">
+
+                </div>
+
+    </form>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <table id="recettes" class="table table-hover table-striped ">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Patiente</th>
+                        <th class="text-right">Actes</th>
+                        <th class="text-right">CMU / TP</th>
+                        <th class="text-right">Montant facturé</th>
+                        <th class="text-right">Chèque</th>
+                        <th class="text-right">CB</th>
+                        <th class="text-right">Espèces</th>
+                        <th class="text-right">TP</th>
+                        <th class="text-right">Payé</th>
+                        <th class="text-right">Impayé</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obj, reg in page.tabReg %}
+                        <tr>
+                            <td>#{{ loop.index }}</td>
+                            <td>
+                                {{ reg.creationDate|date("d/m/Y H:i") }}
+                            </td>
+                            <td>
+                                <strong>{{ reg.prenom|e }}
+                                    {{ reg.nom|e }}</strong>
+                                {% if reg.regleIdentiteCheque %}(réglé par
+                                    {{ reg.regleIdentiteCheque|e }}){% endif %}
+                            </td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-default  btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient|e }}{% endif %}
+                            </td>
+
+                            <td class="text-right">
+                                {{ reg.regleFacture|number_format(2, '.', ' ')|e }}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleCheque > 0%}{{ reg.regleCheque|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleCB > 0%}{{ reg.regleCB|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleEspeces > 0%}{{ reg.regleEspeces|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleTiersPayeur > 0%}{{ reg.regleTiersPayeur|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.dejaPaye > 0%}{{ reg.dejaPaye|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if reg.regleFacture - reg.dejaPaye > 0 %}{{ (reg.regleFacture-reg.dejaPaye)|number_format(2, '.', ' ')|e }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li>
+                                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">Dossier patiente</a>
+                                        </li>
+                                        <li role="separator" class="divider"></li>
+                                        <li class="disabled">
+                                            <a href="#">#{{ obj }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Patiente</th>
+                        <th class="text-right">Actes</th>
+                        <th class="text-right">CMU / TP</th>
+                        <th class="text-right">Montant facturé</th>
+                        <th class="text-right">Chèque</th>
+                        <th class="text-right">CB</th>
+                        <th class="text-right">Espèces</th>
+                        <th class="text-right">TP</th>
+                        <th class="text-right">Payé</th>
+                        <th class="text-right">Impayé</th>
+                        <th class="text-right"></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-right">{{ page.tabTot.regleFacture|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ page.tabTot.regleCheque|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ page.tabTot.regleCB|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ page.tabTot.regleEspeces|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ page.tabTot.regleTiersPayeur|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur)|number_format(2, '.', ' ')|e }}</th>
+                        <th class="text-right">{{ (page.tabTot.regleFacture - (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur))|number_format(2, '.', ' ')|e }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    {% endblock %}

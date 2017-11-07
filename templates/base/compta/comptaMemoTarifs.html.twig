@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : actes
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}Mémo des tarifs de consultation - MedShakeEHR{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+    <style>
+      .texteadroite {
+        text-align: right;
+      }
+
+      tr.details {
+        display: none;
+      }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Mémo des tarifs de consultation</h1>
+    <div>
+        <div>
+
+          {# Nav tabs #}
+          {% if page.users|length > 1 %}
+          <ul class="nav nav-tabs" role="tablist">
+              {% for id, user in page.users %}
+                <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/{{ id }}/" aria-controls="prescriptions" role="tab">{% if id == 0 %}Tarifs communs{% else %}Tarifs : {{ user }}{% endif %}</a>
+                </li>
+              {% endfor %}
+
+          </ul>
+          {% endif %}
+
+            {# Tab panes #}
+            <div class="tab-content">
+
+                {# categories tab #}
+                <div role="tabpanel" class="tab-pane active" id="prescriptions">
+
+                    <p></p>
+
+                    {% for k, v in page.tabTypes %}
+                        <h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h2>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-2">Code</th>
+                                    <th class="col-md-3">Label</th>
+
+                                    <th class="texteadroite">Tarif&nbsp;SS</th>
+                                    <th class="texteadroite">Dépassement</th>
+                                    <th class="texteadroite">Total</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for w in v %}
+                                    <tr>
+
+                                        <td>
+                                          {{ (w.details|keys)|join(' + ') }}
+                                        </td>
+                                        <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
+
+                                        <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">
+                                            <button type="button" class="btn btn-default btn-xs typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
+                                                <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% for key,det in w.details %}
+                                      <tr class="active small details details{{ w.id }}" >
+                                        <td></td>
+                                        <td>{{ key }}  ({{ det.pourcents }}%)</td>
+
+                                        <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
+                                        <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        <td colspan="2"></td>
+                                      </tr>
+                                    {% endfor %}
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        </div>
+
+ {% endblock %}
