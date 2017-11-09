@@ -215,7 +215,7 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (446, 'mail', 'mailModeles', '', 'Modèle', 'liste des modèles', '', '', 'select', '', 'base', 39, 1, '2017-06-09 10:23:17', 1576800000, 1),
 (477, 'admin', 'nReseau', '', 'Numéro de réseau', 'numéro de réseau (dépistage)', '', '', 'text', '', 'base', 36, 1, '2017-05-16 22:21:00', 3600, 1),
 (478, 'courrier', 'modeleCourrierResumeDossier', '', 'Résumé dossier', 'modèle de courrier pour un résumé du dossier', '', '', '', 'courrier-resumeDossier', 'user', 38, 1, '2017-05-19 09:20:43', 3600, 1),
-(479, 'courrier', 'mmDefautApi', '', 'Défaut', 'modèle mail par défaut', '', '', '', 'Cher confrère,\n\nVeuillez trouver en pièce jointe un document concernant notre patiente commune.\nVous souhaitant bonne réception.\n\nBien confraternellement\n\nDocteur ', 'base', 59, 1, '2017-05-29 10:41:14', 3600, 0),
+(479, 'courrier', 'mmDefautApi', '', 'Défaut', 'modèle mail par défaut', '', '', '', 'Cher confrère,\n\nVeuillez trouver en pièce jointe un document concernant notre patient commun.\nVous souhaitant bonne réception.\n\nBien confraternellement\n\nDocteur ', 'base', 59, 1, '2017-05-29 10:41:14', 3600, 0),
 (481, 'mail', 'mailToEcofaxNumber', '', 'Numéro de fax du destinataire', 'Numéro du destinataire du fax (ecofax OVH)', '', '', 'text', '', 'base', 39, 1, '2017-06-09 21:48:01', 1576800000, 1),
 (482, 'courrier', 'modeleCourrierDemandeRdv', '', 'Demande de rendez-vous', 'modèle de courrier vierge', '', '', '', 'courrier-demandeDeRdv', 'user', 38, 1, '2017-06-08 15:10:43', 3600, 0),
 (484, 'mail', 'mailToEcofaxName', '', 'Destinataire du fax', 'Destinataire du fax (ecofax OVH)', '', '', 'text', '', 'base', 39, 1, '2017-06-09 21:49:09', 1576800000, 1),

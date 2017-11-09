@@ -229,7 +229,7 @@ $(document).ready(function() {
     $('#calendar').fullCalendar('gotoDate', $(this).attr('data-date'));
   });
 
-  //chercher patiente
+  //chercher patient
   $('#search').autocomplete({
     source: urlBase+'/agenda/' + userID + '/ajax/searchPatient/',
     select: function(event, ui) {
