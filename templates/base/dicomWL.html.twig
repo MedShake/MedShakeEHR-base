@@ -1,0 +1,61 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dicom : fichier worklist pour Orthanc         
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+# Dicom-File-Format
+
+# Dicom-Meta-Information-Header
+# Used TransferSyntax: Little Endian Explicit
+(0002,0000) UL 202                                                              #   4, 1 FileMetaInformationGroupLength
+(0002,0001) OB 00\01                                                            #   2, 1 FileMetaInformationVersion
+(0002,0002) UI [1.2.276.0.7230010.3.1.0.1]                                      #  26, 1 MediaStorageSOPClassUID
+(0002,0003) UI [1.2.276.0.7230010.3.1.4.2831176407.11154.1448031138.805061]     #  58, 1 MediaStorageSOPInstanceUID
+(0002,0010) UI =LittleEndianExplicit                                            #  20, 1 TransferSyntaxUID
+(0002,0012) UI [1.2.276.0.7230010.3.0.3.6.0]                                    #  28, 1 ImplementationClassUID
+(0002,0013) SH [OFFIS_DCMTK_360]                                                #  16, 1 ImplementationVersionName
+
+# Dicom-Data-Set
+# Used TransferSyntax: Little Endian Explicit
+(0008,0005) CS [ISO_IR 100]                                                     #  10, 1 SpecificCharacterSet
+(0008,0050) SH [{{ page.patient.dicomPatientID }}]                              #   6, 1 AccessionNumber
+(0010,0010) PN [{{ page.patient.2 }}^{{ page.patient.3 }}]                      #  16, 1 PatientName
+(0010,0020) LO [{{ page.patient.dicomPatientID }}]                              #   8, 1 PatientID
+(0010,0030) DA [{{ page.patient.dicomBirthdate }}]                              #   8, 1 PatientBirthDate
+(0010,0040) CS [{{ page.patient.14 }}]                                          #   2, 1 PatientSex
+{% if page.patient.dicomDDR %}(0010,21D0) DA [{{ page.patient.dicomDDR }}]      #   2, 1 Patient's Last Menstrual Date
+{% endif %}{% if page.patient.34 %}(0010,1030) DS [{{ page.patient.34 }}]                  #   2, 1 Patient's Weight
+{% endif %}{% if page.patient.35 %}(0010,1020) DS [{{ page.patient.35 }}]                  #   2, 1 Patient's Height
+{% endif %}(0020,000d) UI [1.2.826.0.1.3680043.9.3007.{{ page.patient.id }}.{{ "now"|date("His") }}]   #  26, 1 StudyInstanceUID
+(0008,0090) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]                            #   6, 1 Referring Physician
+(0032,1032) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]                            #   6, 1 RequestingPhysician
+(0032,1060) LO [Echographie]                                                    #   6, 1 RequestedProcedureDescription
+
+(0040,0100) SQ                                                                  # Scheduled Procedure Step Sequence
+  (fffe,e000) na                                                                # Item
+    (0008,0060) CS [US]                                                         # Modality
+    (0040,0002) DA [{{ "now"|date("Ymd") }}]                                    # Scheduled Procedure Step Start Date
+    (0040,0003) TM [{{ "now"|date("His") }}]                                    # Scheduled Procedure Step Start Time
+  (fffe,e00d) na (ItemDelimitationItem for re-encoding)                         # ItemDelimitationItem
+(fffe,e0dd) na (SequenceDelimitationItem for re-encod.)                         # SequenceDelimitationItem

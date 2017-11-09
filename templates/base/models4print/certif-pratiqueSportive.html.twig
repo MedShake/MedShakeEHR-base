@@ -20,19 +20,22 @@
  #/
 
 /##
- # Template > Compta : formulaire de réglement pour patients du jour
+ # Template > models4print : certificat pratique sportive
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-{% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
-    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+{% set tag = page.courrier %}
 
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
 
-    {{ f.formbuilder(page.form , page.formID ) }}
 
-</div>
+<p style="text-align:right">New York, le {{ "now"|date("d/m/Y") }}</p>
+<br><br><br>
+
+<p>Je soussigné Docteur Stephen STRANGE certifie que l'état de santé de {% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %} {{ tag.3 }} {{ tag.2 }} ({{ tag.8 }}), lui permet de pratiquer  .
+
+<p>Certificat remis en mains propre pour faire valoir ce que de droit.</p>
+
+<br><br><br><br><br><br>
+
+<p style="text-align:right">Docteur Stephen STRANGE</p>

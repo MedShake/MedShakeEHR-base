@@ -55,7 +55,7 @@
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/uploader/src/dmuploader.min.js"></script>
         <script>
-          var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}'; 
+          var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
         </script>
 
         {% block head %}{% endblock %}
@@ -69,151 +69,143 @@
                     <a href="" class="navbar-brand">MedShakeEHR</a>
                 </div>
 
-                <ul class="nav navbar-nav">
-                    {% if config.agendaDistantLink %}
-                      <li>
-                          <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
-                      </li>
-                    {% elseif page.agendaUsers|length == 1 %}
-                      {% for k,v in page.agendaUsers %}
-                        <li>
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
-                        </li>
-                      {% endfor %}
-                    {% else %}
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for k,v in page.agendaUsers %}
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                      </li>
-                    {% endif %}
-                    <li class="dropdown">
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patientes
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
-                            </li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
-                            </li>
+                {% if user.id > 0 %}
 
-                            {% if page.patientsOfTheDay %}
-                              <li role="separator" class="divider"></li>
-                              <li class="dropdown-header">Patientes du jour</li>
-                              {% for v in page.patientsOfTheDay %}
+                  <ul class="nav navbar-nav">
+                      {% if config.agendaDistantLink %}
+                        <li>
+                            <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                        </li>
+                      {% elseif page.agendaUsers|length == 1 %}
+                        {% for k,v in page.agendaUsers %}
+                          <li>
+                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                          </li>
+                        {% endfor %}
+                      {% else %}
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              {% for k,v in page.agendaUsers %}
                               <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
                               </li>
                               {% endfor %}
-
-                            {% endif %}
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Praticiens
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
-                            </li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comptabilité
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
-                            </li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
-                            {% if page.inbox.numberOfMsg > 0 %}
-                                <span class="badge">{{ page.inbox.numberOfMsg }}</span>
-                            {% endif %}
-                        </a>
-                    </li>
-
-                    {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
-                    <li class="dropdown">
-                      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %} <span class="caret"></span></a>
-
-                      <ul class="dropdown-menu">
-                          <li class="dropdown-header">Outils</li>
-                          <li>
-                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
-                              <li role="separator" class="divider"></li>
-                          </li>
-
-                          {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
-                            <li class="dropdown-header">Historique rappels RDV</li>
-
-                            {% if config.mailRappelDaysBeforeRDV %}
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
-                              </li>
-                            {% endif %}
-                            {% if config.smsProvider %}
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
-                              </li>
-                              <li class="disabled"><a {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a></li>
-
-                            {% endif %}
-                            <li role="separator" class="divider"></li>
-                          {% endif %}
-                          <li class="dropdown-header">Patients</li>
-                          <li>
-                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
-                          </li>
-                          <li>
-                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
-                          </li>
-                      </ul>
-                    </li>
-                    {% endif %}
-
-                    {% if user.rank == 'admin' %}
-                        <li>
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+                          </ul>
                         </li>
-                    {% endif %}
-                </ul>
+                      {% endif %}
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patients
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
+                              </li>
 
-                {% if user.id > 0 %}
+                              {% if page.patientsOfTheDay %}
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Patients du jour</li>
+                                {% for v in page.patientsOfTheDay %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
+                                </li>
+                                {% endfor %}
+
+                              {% endif %}
+                          </ul>
+                      </li>
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Praticiens
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
+                              </li>
+                          </ul>
+                      </li>
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comptabilité
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
+                              </li>
+                              <li role="separator" class="divider"></li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
+                              </li>
+                          </ul>
+                      </li>
+                      <li>
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
+                              {% if page.inbox.numberOfMsg > 0 %}
+                                  <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                              {% endif %}
+                          </a>
+                      </li>
+
+                      {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
+                      <li class="dropdown">
+                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %} <span class="caret"></span></a>
+
+                        <ul class="dropdown-menu">
+
+                            {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
+                              <li class="dropdown-header">Historique rappels RDV</li>
+
+                              {% if config.mailRappelDaysBeforeRDV %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
+                                </li>
+                              {% endif %}
+                              {% if config.smsProvider %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
+                                </li>
+                                <li class="disabled"><a {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a></li>
+
+                              {% endif %}
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
+                            <li class="dropdown-header">Patients</li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
+                            </li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
+                            </li>
+                        </ul>
+                      </li>
+                      {% endif %}
+
+                      {% if user.rank == 'admin' %}
+                          <li>
+                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+                          </li>
+                      {% endif %}
+                  </ul>
+
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Moi
+                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+                                {{ user.nom }}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="disabled">
-                                    <a href="#">{{ user.prenom }}
-                                        {{ user.nom }}</a>
-                                </li>
-                                <li role="separator" class="divider"></li>
                                 <li>
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
                                 </li>

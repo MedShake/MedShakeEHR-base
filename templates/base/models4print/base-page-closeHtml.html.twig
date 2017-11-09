@@ -20,19 +20,13 @@
  #/
 
 /##
- # Template > Compta : formulaire de réglement pour patients du jour
+ # Template > models4print : le bas de page qui referme le html
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-{% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
-    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
-
-    {{ f.formbuilder(page.form , page.formID ) }}
-
 </div>
+<!-- stop body -->
+<!-- Le texte du footer est dans le header !  -->
+</body>
+</html>

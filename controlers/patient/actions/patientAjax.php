@@ -42,9 +42,6 @@ $acceptedModes=array(
     'getLigneOrdo', // Obtenir les infos sur une ligne type d'ordonnnace
     'getReglementData', // Obtenir les infos sur un acte pour le réglement
     'ObjetDet', // obtenir le détail sur un objet (sa version imprimée)
-    'prepareEcho', //préparer l'échographe
-    'catchLastDicomSrData', //attraper les dernière mesures DICOM pour un patient
-    'listPatientDicomStudies', // lister les studies dicom du patient
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm' // Extraire l'éditeur de courrier
 );
@@ -107,21 +104,6 @@ elseif ($m=='suppCs' and is_numeric($_POST['objetID'])) {
 // obtenir détails sur objet
 elseif ($m=='ObjetDet' and is_numeric($_POST['objetID'])) {
     include('inc-ajax-ObjetDet.php');
-}
-
-// préparer l'échographe
-elseif ($m=='prepareEcho' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-prepareEcho.php');
-}
-
-// attraper les dernières data SR de l'échographe pour un patient
-elseif ($m=='catchLastDicomSrData' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-catchLastDicomSrData.php');
-}
-
-// lister les studies dicom pour un patient
-elseif ($m=='listPatientDicomStudies' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-listPatientDicomStudies.php');
 }
 
 // attraper les dernières data SR de l'échographe pour un patient

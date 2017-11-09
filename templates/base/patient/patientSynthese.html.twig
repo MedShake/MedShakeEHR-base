@@ -20,19 +20,21 @@
  #/
 
 /##
- # Template > Compta : formulaire de réglement pour patients du jour
+ # Template > patient : tableau de gestion synthèse
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
-    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<div class="row changeObserv" id="synthesePatient" style="">
 
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
+    <div class="jumbotron">
+        {{ f.formbuilder(page.formSynthese , page.formNumberSynthese ) }}
+        {% for v in page.typeCsBase %}
+            <button type="button" class="btn btn-success btn-sm newCS" style="margin-bottom : 3px;" data-parentID='0' data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+        {% endfor %}
 
-    {{ f.formbuilder(page.form , page.formID ) }}
+    </div>
 
 </div>

@@ -20,19 +20,32 @@
  #/
 
 /##
- # Template > Compta : formulaire de réglement pour patients du jour
+ # Template > models4print : modèle pour création PDF images écho
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-{% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
-    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+{% set tag = page.courrier %}
 
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
 
-    {{ f.formbuilder(page.form , page.formID ) }}
+<p style="text-align : right;">New York, le
+    {{ tag.date|date("d/m/Y") }}</p>
 
-</div>
+<h2 style="text-align : center">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %} 
+    {{ tag.3 }}
+    {{ tag.2 }}
+    ({{ tag.8 }})</h2>
+
+{{ tag.images|length }} image{% if tag.images|length > 1 %}s{% endif %} - {{ (tag.images|length / 6)|round(0, 'ceil') }} page{% if tag.images|length > 6 %}s{% endif %}
+
+<table>
+    <tr>
+        {% for img in tag.images %}
+            <td style="width : 50%"><img src="{{ img }}" style="width : 8.5cm" /></td>
+            {% if loop.index is even %}
+            </tr>
+            <tr>
+            {% endif %}
+        {% endfor %}
+    </tr>
+</table>

@@ -20,19 +20,28 @@
  #/
 
 /##
- # Template > Compta : formulaire de réglement pour patients du jour
+ # Template > models4print : corps d'une ordonnance non ALD
+ # (header et footer sont indiqués en fichier de config)
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-{% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
-    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+{% set tag = page.courrier %}
+{% set ms = page.courrier.medoc.standard %}
+{% set ma = page.courrier.medoc.ald %}
 
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
 
-    {{ f.formbuilder(page.form , page.formID ) }}
+<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
 
-</div>
+<h2 style="text-align : center; margin-bottom : 30pt;">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %} {{ tag.3 }} {{ tag.2 }} ({{ tag.8 }})</h2>
+
+
+
+{% for v in ms %}
+<p style="margin-bottom: 12pt;">{{ v|nl2br }}</p>
+{% endfor %}
+
+
+<br><br><br><br>
+
+<p style="text-align:right">Docteur Stephen STRANGE</p>
