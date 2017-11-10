@@ -59,6 +59,10 @@
   </li>
 </ol>
 
+{% if page.templatesDirAutorisationEcriture == false %}
+  <div class="alert alert-danger" role="alert">Le répertoire {{ page.fichier.chemin }} n'est pas accessible en écriture. Le template ne peut être édité par cette méthode.</div>
+{% endif %}
+
 <div class="row">
 
 <form class="col-md-12"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configTemplatePDFSave/">
@@ -106,8 +110,8 @@
   </div>
 
 
-  <button type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
-  <button type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
 
   <p>
   {{ page.form.yaml }}

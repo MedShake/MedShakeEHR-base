@@ -60,6 +60,14 @@
      if (!is_file($p['page']['repertoireTemplatesPDF'].$fichier)) {
          die("Ce fichier n'existe pas");
      } else {
+
+         //test autorisation d'écriture du dossier template
+         if (is_writable($p['page']['repertoireTemplatesPDF'])) {
+             $p['page']['templatesDirAutorisationEcriture'] = true;
+         } else {
+             $p['page']['templatesDirAutorisationEcriture'] = false;
+         }
+
          $p['page']['fichier']['name']=$fichier;
          $p['page']['fichier']['chemin']=$p['page']['repertoireTemplatesPDF'];
          $p['page']['fichier']['code']= file_get_contents($p['page']['repertoireTemplatesPDF'].$fichier);
