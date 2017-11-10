@@ -126,8 +126,6 @@ $(document).ready(function() {
       }
     },
     eventClick: function(eventClicked, jsEvent, view) {
-      if (eventClicked.patientid != undefined)
-        window.open(urlBase+'/patient/' + eventClicked.patientid + '/', '_patient');
     },
     eventDragStart: function( event, jsEvent, ui, view ) {
       popstop = 1;
