@@ -23,8 +23,7 @@
 /**
  *
  * Traitement d'une donnée avant enregistrement pour formatage
- * Module gynéco obstétrique
- *
+  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
