@@ -125,7 +125,10 @@ $(document).ready(function() {
         });
       }
     },
-    eventClick: function(eventClicked, jsEvent, view) {},
+    eventClick: function(eventClicked, jsEvent, view) {
+      if (eventClicked.patientid != undefined)
+        window.open(urlBase+'/patient/' + eventClicked.patientid + '/', '_patient');
+    },
     eventDragStart: function( event, jsEvent, ui, view ) {
       popstop = 1;
     },
@@ -156,7 +159,7 @@ $(document).ready(function() {
     },
     select: function(start, end, jsEvent, view) {
       $('div.popover').popover('hide');
-      formatRdvData4Display(start, end);
+      formatRdvData4Display(start, moment(start).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm'));
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
@@ -179,7 +182,7 @@ $(document).ready(function() {
         }
       },
       ouvrirDossier: {
-        name: "Ouvrir le dossier patient",
+        name: "Ouvrir le dossier patient (nouvel onglet)",
         callback: function(key, opt) {
           eventid = this.attr('data-eventid');
           eventData = $('#calendar').fullCalendar('clientEvents', eventid);
@@ -268,7 +271,7 @@ function setNewRdv() {
       patientID: $('#patientID').val(),
       userID: $('#calendar').attr('data-userID'),
       start: $('#eventStartID').val(),
-      end: $('#eventEndID').val(),
+      end: moment($('#eventStartID').val()).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm').format("YYYY-MM-DD HH:mm:SS"),
       type: $('#type').val(),
       motif: $('#motif').val(),
     },

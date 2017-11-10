@@ -102,7 +102,7 @@
           <label for="type">Type de rendez-vous</label>
           <select id="type" class="form-control" autocomplete="off">
             {% for k, v in page.typeRdv if k != '[off]' %}
-              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;">{{ v.duree }}' :
+              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}">{{ v.duree }}' :
                 {{ v.descriptif }}</option>
             {% endfor %}
           </select>
