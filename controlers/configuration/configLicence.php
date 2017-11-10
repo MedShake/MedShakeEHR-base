@@ -122,6 +122,10 @@ $p['page']['thanks'][
   'description'=>'jQuery contextMenu plugin & polyfill',
   'url'=>'https://github.com/swisnl/jQuery-contextMenu'
 );
-
+$p['page']['thanks'][
+  'CodeMirror']=array(
+  'description'=>'A versatile text editor implemented in JavaScript for the browser',
+  'url'=>'https://codemirror.net/'
+);
 
 uksort($p['page']['thanks'], 'strcasecmp');
