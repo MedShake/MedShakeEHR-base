@@ -21,7 +21,8 @@
  */
 
 /**
- * Configuration > ajax : upload par drag&drop d'une nouvelle clef apicrypt
+ * Configuration > ajax : upload par drag&drop de fichier en zone Configuration
+ * (clef apicrypt, templates ...)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
