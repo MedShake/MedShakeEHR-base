@@ -91,19 +91,19 @@
      header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
      header("Pragma: no-cache");
 
-     //les répertoires de templates twig : module puis base
-     if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/')) {
-         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/', '/');
+     //les répertoires de templates twig
+     if (is_dir($p['config']['templatesModuleFolder'])) {
+         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
      }
-     if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/')) {
-         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/', '/');
+     if (is_dir($p['config']['templatesBaseFolder'])) {
+         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
      }
      $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
-     if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/')) {
-         $twigTemplateDirs[]=$p['config']['homeDirectory'].'templates/'.$p['config']['templatesModuleFolder'].'/';
+     if (is_dir($p['config']['templatesModuleFolder'])) {
+         $twigTemplateDirs[]=$p['config']['templatesModuleFolder'];
      }
-     if (is_dir($p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/')) {
-         $twigTemplateDirs[]=$p['config']['homeDirectory'].'templates/'.$p['config']['templatesBaseFolder'].'/';
+     if (is_dir($p['config']['templatesBaseFolder'])) {
+         $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
      }
 
      // les variables d'environnement twig

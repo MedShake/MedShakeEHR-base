@@ -429,7 +429,7 @@ class msPDF
         if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
         if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
 
-        $loaderPDF = new Twig_Loader_Filesystem($p['config']['homeDirectory'].'templates/'.$p['config']['twigPdfTemplatesDir'].'/');
+        $loaderPDF = new Twig_Loader_Filesystem($p['config']['templatesPdfFolder']);
         $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
         $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
