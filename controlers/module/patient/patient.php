@@ -22,7 +22,6 @@
 
 /**
  * Patient : la page du dossier patient
- * Module Gynéco Obstétrique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -33,7 +32,7 @@
  $formLat->getPrevaluesForPatient($match['params']['patient']);
  $p['page']['formLat']=$formLat->getForm();
 
-//formulaire synthèse de gynéco
+//formulaire de synthèse patient
 $formSynthese = new msForm();
 $p['page']['formNumberbaseSynthese']=$p['page']['listeForms'][]=$formSynthese->setFormIDbyName('baseSynthese');
 $formSynthese->getPrevaluesForPatient($match['params']['patient']);
