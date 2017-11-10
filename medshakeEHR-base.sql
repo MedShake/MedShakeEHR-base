@@ -117,7 +117,7 @@ CREATE TABLE `data_types` (
   `description` varchar(255) DEFAULT NULL,
   `validationRules` varchar(255) DEFAULT NULL,
   `validationErrorMsg` varchar(255) DEFAULT NULL,
-  `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea') NOT NULL DEFAULT '',
+  `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','checkbox') NOT NULL DEFAULT '',
   `formValues` text,
   `type` enum('base','user') NOT NULL DEFAULT 'user',
   `cat` smallint(5) UNSIGNED NOT NULL,
@@ -160,7 +160,7 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (44, 'medical', 'synthese', 'synthèse patient', 'Synthèse patient', 'Synthèse patient', '', '', 'textarea', '', 'user', 29, 1, '2017-11-07 22:32:46', 3600, 1),
 (434, 'dicom', 'dicomSerieID', '', 'SerieID', '', '', '', 'text', '', 'base', 55, 1, '2017-04-13 16:25:25', 3600, 1),
 (435, 'dicom', 'dicomInstanceID', '', 'InstanceID', '', '', '', 'text', '', 'base', 55, 1, '2017-04-13 16:25:49', 3600, 1),
-(436, 'user', 'dicomAutoSendPatient2Echo', '', 'dicomAutoSendPatient2Echo', 'Pousser le dossier patient à l\'ouverture dans le serveur DICOM', '', '', 'text', 'false', 'base', 56, 1, '2017-04-25 22:06:41', 3600, 1),
+(436, 'user', 'dicomAutoSendPatient2Echo', '', 'dicomAutoSendPatient2Echo', 'Pousser le dossier patient à l\'ouverture dans le serveur DICOM', '', '', 'checkbox', 'false', 'base', 56, 1, '2017-04-25 22:06:41', 3600, 1),
 (51, 'admin', 'titre', 'Dr, Pr ...', 'Titre', 'Titre du pro de santé', '', '', 'text', '', 'base', 1, 1, '2017-03-12 21:21:47', 3600, 1),
 (53, 'admin', 'codePostalPro', 'code postal', 'Code postal', 'Adresse pro : code postal', 'alpha_space', 'Le code postal n\'est pas conforme', 'text', '', 'base', 47, 1, '2017-03-26 15:13:34', 3600, 1),
 (54, 'admin', 'numAdressePro', 'n°', 'Numéro', 'Adresse pro : numéro dans la rue', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'base', 47, 1, '2017-03-26 15:13:46', 3600, 1),
@@ -225,11 +225,11 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (488, 'relation', 'relationID', '', 'Porteur de relation', 'porteur de relation entre patients ou entre patients et praticiens', '', '', 'number', '', 'base', 63, 1, '2017-06-29 15:28:56', 1576800000, 1),
 (489, 'relation', 'relationPatientPatient', '', 'Relation patient patient', 'relation patient patient', '', '', 'select', '\'conjoint\': \'conjoint\'\n\'enfant\': \'parent\'\n\'parent\': \'enfant\'\n\'grand parent\': \'petit enfant\'\n\'petit enfant\': \'grand parent\'\n\'sœur / frère\': \'sœur / frère\' \n\'tante / oncle\': \'nièce / neveu\' \n\'cousin\': \'cousin\'', 'base', 63, 1, '2017-06-30 10:36:59', 1576800000, 1),
 (490, 'relation', 'relationPatientPraticien', '', 'Relation patient praticien', 'relation patient  praticien', '', '', 'select', '\'MT\': \'Médecin traitant\'\n\'MS\': \'Médecin spécialiste\'\n\'Autre\': \'Autre correspondant\'', 'base', 63, 1, '2017-06-29 15:29:16', 1576800000, 1),
-(492, 'user', 'administratifPeutAvoirPrescriptionsTypes', '', 'administratifPeutAvoirPrescriptionsTypes', 'permet à l\'utilisateur sélectionné d\'avoir des prescriptions types', '', '', 'text', 'false', 'base', 64, 1, '2017-07-10 20:06:36', 3600, 1),
-(493, 'user', 'administratifPeutAvoirFacturesTypes', '', 'administratifPeutAvoirFacturesTypes', 'permet à l\'utilisateur sélectionné d\'avoir des factures types', '', '', 'text', 'false', 'base', 64, 1, '2017-07-10 20:06:59', 3600, 1),
+(492, 'user', 'administratifPeutAvoirPrescriptionsTypes', '', 'administratifPeutAvoirPrescriptionsTypes', 'permet à l\'utilisateur sélectionné d\'avoir des prescriptions types', '', '', 'checkbox', 'false', 'base', 64, 1, '2017-07-10 20:06:36', 3600, 1),
+(493, 'user', 'administratifPeutAvoirFacturesTypes', '', 'administratifPeutAvoirFacturesTypes', 'permet à l\'utilisateur sélectionné d\'avoir des factures types', '', '', 'checkbox', 'false', 'base', 64, 1, '2017-07-10 20:06:59', 3600, 1),
 (494, 'admin', 'administratifMarqueurSuppression', 'Dr, Pr ...', 'Dossier supprimé', 'marqueur pour la suppression d\'un dossier', '', '', 'text', '', 'user', 65, 1, '2017-07-11 09:24:16', 3600, 1),
 (495, 'mail', 'mailTrackingID', '', 'TrackingID', 'num de tracking du mail dans le service externe', '', '', '', '', 'user', 39, 1, '2017-07-17 16:34:18', 1576800000, 1),
-(496, 'user', 'administratifPeutAvoirAgenda', '', 'administratifPeutAvoirAgenda', 'permet à l\'utilisateur sélectionné d\'avoir son agenda', '', '', 'text', 'false', 'base', 64, 1, '2017-08-09 15:00:18', 3600, 1),
+(496, 'user', 'administratifPeutAvoirAgenda', '', 'administratifPeutAvoirAgenda', 'permet à l\'utilisateur sélectionné d\'avoir son agenda', '', '', 'checkbox', 'false', 'base', 64, 1, '2017-08-09 15:00:18', 3600, 1),
 (497, 'user', 'agendaNumberForPatientsOfTheDay', '', 'agendaNumberForPatientsOfTheDay', 'permet d\'indiquer le n° d\'agenda à utiliser pour la liste patients du jour pour cet utilisateur', '', '', 'number', '1', 'base', 64, 1, '2017-08-09 17:45:52', 3600, 1);
 
 CREATE TABLE `dicomTags` (

@@ -77,6 +77,7 @@
 		{% if v.input.readonly %} readonly="{{ v.input.readonly }}" {% endif %}
     {% if v.input.required == 'required' %} required="required" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
+    {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
 		{{ v.input.add }} />
 
 		{# après le input #}
