@@ -32,16 +32,51 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
 {% endblock %}
 
 {% block body %}
   <h1>Configuration</h1>
 
-  <div class="row">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#users" aria-controls="users" role="tab" data-toggle="tab">Gestion des utilisateurs</a>
+    </li>
+    <li role="presentation">
+      <a href="#rc" aria-controls="rc" role="tab" data-toggle="tab">Paramétrage courant</a>
+    </li>
 
-    <div class="col-md-5">
+    <li role="presentation">
+      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramétrage avancé</a>
+    </li>
+    <li role="presentation">
+      <a href="#licence" aria-controls="licence" role="tab" data-toggle="tab">Licence</a>
+    </li>
+  </ul>
 
+  <div class="tab-content">
+
+    <div role="tabpanel" class="tab-pane" id="rc">
+
+      <h2>Paramétrage courant</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions type</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/">Actes et tarifs</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Paramétrage des agendas</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Gestion des clefs Apicrypt</a>
+        </li>
+      </ul>
+
+    </div>
+
+    <div role="tabpanel" class="tab-pane active" id="users">
       <h2>Utilisateurs</h2>
       <ul class="list-group">
         <li class="list-group-item">
@@ -54,6 +89,26 @@
         </li>
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/user/">Paramètres utilisateur</a>
+        </li>
+      </ul>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="ca">
+
+      <h2>Formulaires et templates</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Edition des formulaires</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Gestion des templates d'impression de PDF</a>
+        </li>
+      </ul>
+
+      <h2>DICOM</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/tags-dicom/">Correspondances DICOM</a>
         </li>
       </ul>
 
@@ -105,79 +160,15 @@
         </ul>
 
       </div>
-      <div class="col-md-5">
-        <div class="row">
-          <h2>Prescriptions</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions type</a>
-            </li>
 
-          </ul>
-        </div>
+      <div role="tabpanel" class="tab-pane" id="licence">
+        <h2>Licence</h2>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/licence/">Licence et remerciements</a>
+          </li>
 
-        <div class="row">
-          <h2>Actes &amp; tarifs</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/">Actes et tarifs</a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="row">
-          <h2>Formulaires</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Edition des formulaires</a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="row">
-          <h2>Agendas</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Paramétrage des agendas</a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="row">
-          <h2>Apicrypt</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Gestion des clefs</a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="row">
-          <h2>DICOM</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/tags-dicom/">Correspondances DICOM</a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="row">
-          <h2>Licence</h2>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/licence/">Licence et remerciements</a>
-            </li>
-
-          </ul>
-        </div>
-
+        </ul>
       </div>
-
     </div>
-
   {% endblock %}
