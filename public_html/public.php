@@ -49,9 +49,8 @@
 
  /////////// correction pour host non présent (IP qui change)
  if ($p['config']['host']=='') {
-   $p['config']['host']=$_SERVER['SERVER_ADDR'];
-   $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
-
+     $p['config']['host']=$_SERVER['SERVER_ADDR'];
+     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
  }
 
  /////////// SQL connexion
@@ -69,7 +68,6 @@
 
  ///////// Controler else -> 404
  if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-
      include '../controlers/'.$match['target'].'.php';
 
      // complément lié au module installé
@@ -105,10 +103,21 @@
      if (is_dir($p['config']['templatesBaseFolder'])) {
          $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
      }
+     if (is_dir($p['config']['templatesPdfFolder'])) {
+         $twigTemplateDirs[]=$p['config']['templatesPdfFolder'];
+     }
 
      // les variables d'environnement twig
-     if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
-     if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+     if (isset($p['config']['twigEnvironnementCache'])) {
+         $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
+     } else {
+         $twigEnvironment['cache']=false;
+     }
+     if (isset($p['config']['twigEnvironnementAutoescape'])) {
+         $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
+     } else {
+         $twigEnvironment['autoescape']=false;
+     }
 
      $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
      $twig = new Twig_Environment($loader, $twigEnvironment);

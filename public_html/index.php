@@ -145,6 +145,9 @@ if (isset($template)) {
     if (is_dir($p['config']['templatesBaseFolder'])) {
         $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
     }
+    if (is_dir($p['config']['templatesPdfFolder'])) {
+        $twigTemplateDirs[]=$p['config']['templatesPdfFolder'];
+    }
 
     // les variables d'environnement twig
     if (isset($p['config']['twigEnvironnementCache'])) {
