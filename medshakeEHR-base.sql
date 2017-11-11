@@ -151,7 +151,6 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (32, 'typecs', 'csBaseGroup', '', 'Consultation', 'support parent pour les consultations', '', '', '', '10', 'user', 33, 1, '2017-05-04 20:36:31', 86400, 1),
 (34, 'medical', 'poids', 'kg', 'Poids', 'poids du patient', '', '', 'text', '', 'user', 28, 1, '2017-03-10 09:59:48', 3600, 1),
 (35, 'medical', 'taillePatient', 'cm', 'Taille', 'taille du patient', '', '', 'text', '', 'user', 28, 1, '2017-04-04 11:08:28', 3600, 1),
-(37, 'medical', 'groupeSanguin', '', 'Groupe sg', 'groupe sanguin patient', '', '', 'select', '\'groupeSangIndeter\' : \'?\'\n\'A+\' : \'A+\'\n\'A-\' : \'A-\'\n\'B+\' : \'B+\'\n\'B-\' : \'B-\'\n\'AB+\' : \'AB+\'\n\'AB-\' : \'AB-\'\n\'O+\' : \'O+\'\n\'O-\' : \'O-\'', 'user', 31, 1, '2017-04-04 17:57:55', 3600, 1),
 (38, 'medical', 'atcdFamiliaux', 'Antécédents familiaux', 'Antécédents familiaux', 'Antécédents familiaux', '', '', 'textarea', '', 'user', 29, 1, '2017-03-10 10:17:21', 3600, 1),
 (39, 'medical', 'atcdPerso', 'Antécédents personnels médicaux', 'Antécédents médicaux', 'Antécédents médicaux', '', '', 'textarea', '', 'user', 29, 1, '2017-11-07 21:43:18', 3600, 1),
 (41, 'medical', 'atcdMedicChir', 'Antécédents médico-chirugicaux personnels', 'Antécédents médico-chirugicaux', 'Antécédents médico-chirugicaux personnels', '', '', 'textarea', '', 'user', 29, 1, '2017-03-10 10:27:22', 3600, 1),
