@@ -36,6 +36,16 @@
 {% endblock %}
 
 {% block body %}
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+  		<li class="active">
+  				Paramètres utilisateur
+  		</li>
+  </ol>
+
   <h1>Paramètres spécifiques à l'utilisateur {{ page.userData.3 }} {{ page.userData.2 }} <small>#{{ page.userID }}</small></h1>
 
 

@@ -36,6 +36,18 @@
  {% endblock %}
 
  {% block body %}
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+    </li>
+	  <li class="active">
+			  Correspondances DICOM
+	  </li>
+  </ol>
+
    <h1>Tags DICOM</h1>
 
    <p></p>

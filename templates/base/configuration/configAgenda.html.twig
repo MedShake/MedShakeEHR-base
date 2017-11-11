@@ -36,16 +36,20 @@
 {% endblock %}
 
 {% block body %}
-<h1>Edition des paramètres agenda</h1>
 
 <ol class="breadcrumb">
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
+  <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cr">Paramétrage courant</a>
+  </li>
   <li class="active">
     Agenda
   </li>
 </ol>
+
+<h1>Edition des paramètres agenda</h1>
 
 {# Nav tabs #}
 <ul class="nav nav-tabs bottom-space" role="tablist">
