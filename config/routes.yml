@@ -114,7 +114,7 @@ configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActe
 configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
-configThanks: ['GET', '/configuration/thanks/', 'configuration/configThanks']
+configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
