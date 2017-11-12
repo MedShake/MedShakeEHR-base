@@ -60,6 +60,15 @@
     {% endif %}
     </script>
 
+    <script>
+        window.addEventListener("beforeunload", function(e) {
+            if ($("#newReglement .jumbotron").length || $("#newCourrier .jumbotron").length || $("#newOrdo .jumbotron").length || $("#nouvelleCs .jumbotron").length) {
+                e.returnValue = "\o/";
+                return "\o/";
+            }
+        }, false);
+    </script>
+
 {% endblock %}
 
 {% block body %}
