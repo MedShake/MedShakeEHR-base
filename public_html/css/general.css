@@ -6,6 +6,10 @@
 	font-weight: bold;
 }
 
+.underlined {
+	text-decoration: underline;
+}
+
 /*Style pour la zone de preview dans historique patient*/
 
 .appercu .gras {

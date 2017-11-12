@@ -273,25 +273,38 @@ class msAgenda
               $class=array('hasmenu');
           }
 
-          $re=@array(
-          'id'=>$e['id'],
-          'title'=>$e['name'],
-          'allDay'=>false,
-          'start'=>$e['start'],
-          'end'=>$e['end'],
-          'editable'=>true,
-          'backgroundColor'=> $this->_tabTypeRdv[$e['type']]['backgroundColor'],
-          'borderColor' => $this->_tabTypeRdv[$e['type']]['borderColor'],
-          'textColor'=>$textColor,
-          'className'=>$class,
-          'motif'=>$e['motif'],
-          'type'=>$e['type'],
-          'patientid'=>$e['patientid'],
-          'absent'=>$e['absente']
-          );
-
           if ($e['type']=='[off]') {
-              $re['title']="Fermeture";
+              $re=@array(
+              'id'=>$e['id'],
+              'title'=>'Fermé',
+              'allDay'=>false,
+              'start'=>$e['start'],
+              'end'=>$e['end'],
+              'editable'=>true,
+              'className'=>'fc-nonbusiness',
+              'motif'=>'',
+              'type'=>$e['type'],
+              'patientid'=>$e['patientid'],
+              );
+          }
+          else
+          {
+              $re=@array(
+              'id'=>$e['id'],
+              'title'=> $e['name'],
+              'allDay'=>false,
+              'start'=>$e['start'],
+              'end'=>$e['end'],
+              'editable'=>true,
+              'backgroundColor'=> $this->_tabTypeRdv[$e['type']]['backgroundColor'],
+              'borderColor' => $this->_tabTypeRdv[$e['type']]['borderColor'],
+              'textColor'=>$textColor,
+              'className'=>$class,
+              'motif'=>$e['motif'],
+              'type'=>$e['type'],
+              'patientid'=>$e['patientid'],
+              'absent'=>$e['absente']
+              );
           }
 
           return $re;

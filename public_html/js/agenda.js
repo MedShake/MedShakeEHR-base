@@ -26,6 +26,8 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+var selected_period;
+
 $(document).ready(function() {
   popstop = 0;
   $(function() {
@@ -33,7 +35,7 @@ $(document).ready(function() {
 
   })
 
-  userID = $('#calendar').attr('data-userID');
+  var userID = $('#calendar').attr('data-userID');
   if (typeof hiddenDays == 'undefined') {
     hiddenDays = [0];
   }
@@ -107,6 +109,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
+    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#type,#type option,#motif,input',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
@@ -126,6 +129,19 @@ $(document).ready(function() {
       }
     },
     eventClick: function(eventClicked, jsEvent, view) {
+      setTimeout(resetTitle, 1);
+      if (eventClicked.patientid != "0") {
+        getEventData4Edit(eventClicked);
+        setTimeout(function(){
+          var title = $(jsEvent.currentTarget).find("div.fc-title");
+          title.addClass("underlined");
+          title.on("click", function(){
+            window.open(urlBase+'/patient/'+eventClicked.patientid+'/', "_patient");
+          });
+        }, 10);
+      }
+      else
+        clean();
     },
     eventDragStart: function( event, jsEvent, ui, view ) {
       popstop = 1;
@@ -156,17 +172,22 @@ $(document).ready(function() {
       }
     },
     select: function(start, end, jsEvent, view) {
+      resetTitle();
+      selected_period = {start: start, end : end};
+      $("#buttonRemove").hide();
       $('div.popover').popover('hide');
       formatRdvData4Display(start, moment(start).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm'));
     },
+    unselect: function( jsEvent, view) {
+      selected_period = undefined;
+      clean();
+    },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
-      if (confirm("Souhaitez-vous fermer cette journée ?")) {
-        closeDay(date);
-      }
+      if (confirm("Souhaitez-vous fermer cette journée ?"))
+        closePeriod(date);
     }
   })
-
 
   $.contextMenu({
     selector: ".hasmenu",
@@ -174,16 +195,14 @@ $(document).ready(function() {
       editer: {
         name: "Editer ce rendez-vous",
         callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          eventData = $('#calendar').fullCalendar('clientEvents', eventid);
+          var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
           getEventData4Edit(eventData[0]);
         }
       },
       ouvrirDossier: {
         name: "Ouvrir le dossier patient (nouvel onglet)",
         callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          eventData = $('#calendar').fullCalendar('clientEvents', eventid);
+          var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
           window.open(urlBase+'/patient/' + eventData[0]['patientid'] + '/', '_blank');
         }
       },
@@ -191,30 +210,66 @@ $(document).ready(function() {
       pasvenupasprev: {
         name: "Marquer RDV honoré / non honoré",
         callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          setEventPasVenu(eventid);
+          setEventPasVenu(this.attr('data-eventid'));
         }
       },
       separator2: "-----",
       supprimer: {
         name: "Supprimer",
         callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          deleteEvent(eventid);
+          deleteEvent(this.attr('data-eventid'));
         }
       },
     }
   });
 
+  $.contextMenu({
+    selector: ".fc-highlight",
+    items: {
+      fermer: {
+        name: "Fermer cette période",
+        callback: function(key, opt) {
+          closePeriod();
+        }
+      },
+    }
+  });
 
-  $("#buttonCanceled").on("click", function(e) {
+  $.contextMenu({
+    selector: ".fc-nonbusiness",
+    items: {
+      fermer: {
+        name: "Rouvrir cette période",
+        callback: function(key, opt) {
+          deleteEvent(this.attr('data-eventid'));
+        }
+      },
+    }
+  });
+
+  $(window).on("click", function(e){
+    e.preventDefault();
+    resetTitle();
+  });
+
+  $("#buttonCancel").on("click", function(e) {
     e.preventDefault();
     clean();
   });
 
-  $("#buttonSubmit").on("click", function(e) {
+  $("#buttonRemove").on("click", function(e) {
     e.preventDefault();
-    setNewRdv();
+    deleteEvent($("#eventID").val());
+  });
+
+  $("#buttonNew").on("click", function(e) {
+    e.preventDefault();
+    setRdv(true);
+  });
+
+  $("#buttonEdit").on("click", function(e) {
+    e.preventDefault();
+    setRdv();
   });
 
   $("#formRdv").on("click", ".donothing", function(e) {
@@ -260,12 +315,18 @@ $(document).ready(function() {
 
 });
 
-function setNewRdv() {
+function resetTitle () {
+  var title = $("div.fc-title.underlined");
+  title.removeClass("underlined");
+  title.unbind("click");
+};
+
+function setRdv(isnew) {
   $.ajax({
     url: urlBase+'/agenda/' + userID + '/ajax/setNewRdv/',
     type: "post",
     data: {
-      eventID: $('#eventID').val(),
+      eventID: isnew ? "" : $('#eventID').val(),
       patientID: $('#patientID').val(),
       userID: $('#calendar').attr('data-userID'),
       start: $('#eventStartID').val(),
@@ -284,8 +345,11 @@ function setNewRdv() {
   });
 }
 
-function closeDay(date) {
-  datedujour = date.format('YYYY-MM-DD');
+function closePeriod(date) {
+  if (!date && !selected_period)
+    return;
+  var start = date ? date.format('YYYY-MM-DD') + ' ' + minTime : selected_period.start.format("YYYY-MM-DD HH:mm:SS");
+  var end = date ? date.format('YYYY-MM-DD') + ' ' + maxTime : selected_period.end.format("YYYY-MM-DD HH:mm:SS");
   $.ajax({
     url: urlBase+'/agenda/' + userID + '/ajax/setNewRdv/',
     type: "post",
@@ -293,8 +357,8 @@ function closeDay(date) {
       eventID: '',
       patientID: '0',
       userID: $('#calendar').attr('data-userID'),
-      start: datedujour + ' ' + minTime,
-      end: datedujour + ' ' + maxTime,
+      start: start,
+      end: end,
       type: '[off]',
       motif: 'Fermé',
     },
@@ -376,7 +440,8 @@ function getEventData4Edit(eventClicked) {
 
   $("#motif").val(eventClicked.motif);
   $("#type").val(eventClicked.type);
-
+  $("#buttonRemove").show();
+  $("#buttonEdit").show();
   formatRdvData4Display(eventClicked.start, eventClicked.end);
 }
 
@@ -388,7 +453,7 @@ function formatRdvData4Display(start, end) {
   $('#eventStartID').val(start.format('YYYY-MM-DD HH:mm:SS'));
   $('#eventEndID').val(end.format('YYYY-MM-DD HH:mm:SS'));
 
-  if ($("#patientID").val() > 0) $('#buttonSubmit').removeAttr('disabled');
+  if ($("#patientID").val() > 0) $('#buttonNew').removeAttr('disabled');
 }
 
 function clean() {
@@ -403,11 +468,12 @@ function clean() {
   $('#eventStartID').val('');
   $('#eventEndID').val('');
 
-  $('#buttonSubmit').attr('disabled', 'disabled');
+  $('#buttonNew').attr('disabled', 'disabled');
   $('#historiquePatient').hide();
   $('#historiquePatient ul').html('');
   $('#HistoriqueRdvResume button').html('');
-
+  $("#buttonRemove").hide();
+  $("#buttonEdit").hide();
 }
 
 function deleteEvent(eventid) {
