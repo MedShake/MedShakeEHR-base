@@ -27,8 +27,10 @@
  */
 
 var selected_period;
+var selected_event;
 
 $(document).ready(function() {
+
   popstop = 0;
   $(function() {
     $('[data-toggle="popover"]').popover();
@@ -82,24 +84,80 @@ $(document).ready(function() {
 
     defaultView: 'agendaWeek',
     locale: 'fr',
+    themeSystem: 'bootstrap3',
     hiddenDays: hiddenDays,
     customButtons: {
       nextMonth: {
-        icon: 'right-double-arrow',
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
         }
       },
       lastMonth: {
-        icon: 'left-double-arrow',
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
         }
       },
+      dossier: {
+        click: function(){
+          if (!selected_event || selected_event.patientid=="0")
+            return alert("Sélectionnez d'abord un RDV, puis cliquez ce bouton pour ouvrir le dossier du patient");
+          window.open(urlBase+'/patient/'+selected_event.patientid+'/', '_patient');
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      editer: {
+        click: function(){
+          if (!selected_event || !selected_period)
+            return alert("Sélectionnez d'abord un événement à déplacer, puis sa nouvelle position, puis cliquez ce bouton");
+	        selected_event.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+	        selected_event.start = selected_period.start;
+          moveEvent(selected_event);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      supprimer: {
+        click: function(){
+          if (!selected_event)
+            return alert("cliquez d'abord un événement à supprimer, puis ce bouton");
+          deleteEvent(selected_event.id);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      bloquer: {
+        click: function(){
+          if (!selected_period)
+            return alert("Sélectionnez d'abord une période à fermer, puis cliquez ce bouton");
+          closePeriod();
+          selected_period = undefined;
+        },
+      },
+      honorer: {
+        click: function(){
+          if (!selected_event)
+            return alert("selectionnez d'abord un RDV à marquer honoré/non honoré, puis cliquez ce bouton");
+          setEventPasVenu(selected_event.id);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+    },
+    bootstrapGlyphicons: {
+      lastMonth: 'glyphicon-chevron-left',
+      nextMonth: 'glyphicon-chevron-right',
+      prev: 'glyphicon-menu-left',
+      next: 'glyphicon-menu-right',
+      dossier: 'glyphicon-folder-open',
+      editer: 'glyphicon-edit',
+      bloquer: 'glyphicon-cutlery',
+      supprimer: 'glyphicon-remove',
+      honorer: 'glyphicon-ok',
     },
     header: {
       left: 'lastMonth,prev,next,nextMonth today',
-      center: '',
+      center: 'bloquer dossier,editer,honorer,supprimer',
       right: 'title'
     },
     minTime: minTime,
@@ -109,7 +167,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
-    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#type,#type option,#motif,input',
+    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-editer-button',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
@@ -129,17 +187,14 @@ $(document).ready(function() {
       }
     },
     eventClick: function(eventClicked, jsEvent, view) {
-      setTimeout(resetTitle, 1);
-      if (eventClicked.patientid != "0") {
+      selected_event = eventClicked;
+      setTimeout(deselectObject, 1);
+      setTimeout(function(){
+        $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
+        $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
+      }, 10);
+      if (eventClicked.patientid != "0")
         getEventData4Edit(eventClicked);
-        setTimeout(function(){
-          var title = $(jsEvent.currentTarget).find("div.fc-title");
-          title.addClass("underlined");
-          title.on("click", function(){
-            window.open(urlBase+'/patient/'+eventClicked.patientid+'/', "_patient");
-          });
-        }, 10);
-      }
       else
         clean();
     },
@@ -172,7 +227,7 @@ $(document).ready(function() {
       }
     },
     select: function(start, end, jsEvent, view) {
-      resetTitle();
+      deselectObject();
       selected_period = {start: start, end : end};
       $("#buttonRemove").hide();
       $('div.popover').popover('hide');
@@ -180,6 +235,7 @@ $(document).ready(function() {
     },
     unselect: function( jsEvent, view) {
       selected_period = undefined;
+      selected_event = undefined;
       clean();
     },
     navLinks: true,
@@ -189,67 +245,69 @@ $(document).ready(function() {
     }
   })
 
-  $.contextMenu({
-    selector: ".hasmenu",
-    items: {
-      editer: {
-        name: "Editer ce rendez-vous",
-        callback: function(key, opt) {
-          var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
-          getEventData4Edit(eventData[0]);
-        }
-      },
-      ouvrirDossier: {
-        name: "Ouvrir le dossier patient (nouvel onglet)",
-        callback: function(key, opt) {
-          var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
-          window.open(urlBase+'/patient/' + eventData[0]['patientid'] + '/', '_blank');
-        }
-      },
-      separator1: "-----",
-      pasvenupasprev: {
-        name: "Marquer RDV honoré / non honoré",
-        callback: function(key, opt) {
-          setEventPasVenu(this.attr('data-eventid'));
-        }
-      },
-      separator2: "-----",
-      supprimer: {
-        name: "Supprimer",
-        callback: function(key, opt) {
-          deleteEvent(this.attr('data-eventid'));
-        }
-      },
-    }
-  });
+  if ($(window).width() >= 1024) {
+    $.contextMenu({
+      selector: ".hasmenu",
+      items: {
+        editer: {
+          name: "Editer ce rendez-vous",
+          callback: function(key, opt) {
+            var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
+            getEventData4Edit(eventData[0]);
+          }
+        },
+        ouvrirDossier: {
+          name: "Ouvrir le dossier patient (nouvel onglet)",
+          callback: function(key, opt) {
+            var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
+            window.open(urlBase+'/patient/' + eventData[0]['patientid'] + '/', '_blank');
+          }
+        },
+        separator1: "-----",
+        pasvenupasprev: {
+          name: "Marquer RDV honoré / non honoré",
+          callback: function(key, opt) {
+            setEventPasVenu(this.attr('data-eventid'));
+          }
+        },
+        separator2: "-----",
+        supprimer: {
+          name: "Supprimer",
+          callback: function(key, opt) {
+            deleteEvent(this.attr('data-eventid'));
+          }
+        },
+      }
+    });
 
-  $.contextMenu({
-    selector: ".fc-highlight",
-    items: {
-      fermer: {
-        name: "Fermer cette période",
-        callback: function(key, opt) {
-          closePeriod();
-        }
-      },
-    }
-  });
+    $.contextMenu({
+      selector: ".fc-highlight",
+      items: {
+        fermer: {
+          name: "Fermer cette période",
+          callback: function(key, opt) {
+            closePeriod();
+            selected_period = undefined;
+          }
+        },
+      }
+    });
 
-  $.contextMenu({
-    selector: ".fc-nonbusiness",
-    items: {
-      fermer: {
-        name: "Rouvrir cette période",
-        callback: function(key, opt) {
-          deleteEvent(this.attr('data-eventid'));
-        }
-      },
-    }
-  });
+    $.contextMenu({
+      selector: ".fc-nonbusiness",
+      items: {
+        fermer: {
+          name: "Rouvrir cette période",
+          callback: function(key, opt) {
+            deleteEvent(this.attr('data-eventid'));
+          }
+        },
+      }
+    });
+  };
 
   $(window).on("click", function(e){
-    e.preventDefault();
-    resetTitle();
+    deselectObject();
   });
 
   $("#buttonCancel").on("click", function(e) {
@@ -315,10 +373,9 @@ $(document).ready(function() {
 
 });
 
-function resetTitle () {
-  var title = $("div.fc-title.underlined");
-  title.removeClass("underlined");
-  title.unbind("click");
+function deselectObject () {
+  $("div.fc-title.underlined").removeClass("underlined");
+  $("div.fc-bg.selected").removeClass("selected");
 };
 
 function setRdv(isnew) {
@@ -529,6 +586,7 @@ function moveEvent(event) {
     },
     dataType: "json",
     success: function(data) {
+      $('#calendar').fullCalendar('refetchEvents');
       clean();
     },
     error: function() {
