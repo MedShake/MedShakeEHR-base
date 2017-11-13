@@ -43,16 +43,20 @@
 {% endblock %}
 
 {% block body %}
-<h1>Gestion des templates PDF</h1>
 
 <ol class="breadcrumb">
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+  </li>
   <li class="active">
     Gestion des templates PDF
   </li>
 </ol>
+
+<h1>Gestion des templates PDF</h1>
 
 {# Nav tabs #}
 <ul class="nav nav-tabs bottom-space" role="tablist">

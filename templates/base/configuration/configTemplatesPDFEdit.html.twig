@@ -40,11 +40,12 @@
 {% endblock %}
 
 {% block body %}
-<h1>Edition du template PDF <small>{{ page.fichier.name }}{% if page.selectUser > 0 %} de {{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}{% endif %}</small></h1>
-
 <ol class="breadcrumb">
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
   </li>
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des templates</a>
@@ -58,6 +59,9 @@
     Édition
   </li>
 </ol>
+
+<h1>Edition du template PDF <small>{{ page.fichier.name }}{% if page.selectUser > 0 %} de {{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}{% endif %}</small></h1>
+
 
 {% if page.templatesDirAutorisationEcriture == false %}
   <div class="alert alert-danger" role="alert">Le répertoire {{ page.fichier.chemin }} n'est pas accessible en écriture. Le template ne peut être édité par cette méthode.</div>
