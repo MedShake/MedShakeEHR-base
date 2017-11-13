@@ -48,6 +48,10 @@
     <li>
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
     </li>
+  {% else %}
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
+    </li>
   {% endif %}
 	  <li class="active">
       {% if page.groupe == "admin" %}
