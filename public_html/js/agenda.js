@@ -106,10 +106,19 @@ $(document).ready(function() {
           selected_period = undefined;
         },
       },
+      cloner: {
+        click: function(){
+          if (!selected_event || !selected_period)
+            return alert("Sélectionnez d'abord un événement à cloner, puis la position où placer le clone, avant de cliquez sur ce bouton");
+          setRDV(true);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
       editer: {
         click: function(){
           if (!selected_event || !selected_period)
-            return alert("Sélectionnez d'abord un événement à déplacer, puis sa nouvelle position, puis cliquez ce bouton");
+            return alert("Sélectionnez d'abord un événement à déplacer, puis sa nouvelle position, avant de cliquer ce bouton");
 	        selected_event.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
 	        selected_event.start = selected_period.start;
           moveEvent(selected_event);
@@ -120,7 +129,7 @@ $(document).ready(function() {
       supprimer: {
         click: function(){
           if (!selected_event)
-            return alert("cliquez d'abord un événement à supprimer, puis sur ce bouton");
+            return alert("cliquez d'abord un événement à supprimer, avant de cliquer ce bouton");
           deleteEvent(selected_event.id);
           selected_event = undefined;
           selected_period = undefined;
@@ -129,7 +138,7 @@ $(document).ready(function() {
       bloquer: {
         click: function(){
           if (!selected_period)
-            return alert("Sélectionnez d'abord une période à fermer, puis cliquez ce bouton");
+            return alert("Sélectionnez d'abord une période à fermer, avant de cliquer ce bouton");
           closePeriod();
           selected_period = undefined;
         },
@@ -137,7 +146,7 @@ $(document).ready(function() {
       honorer: {
         click: function(){
           if (!selected_event)
-            return alert("selectionnez d'abord un RDV à marquer honoré/non honoré, puis cliquez ce bouton");
+            return alert("selectionnez d'abord un RDV à marquer honoré/non honoré, avant de cliquer ce bouton");
           setEventPasVenu(selected_event.id);
           selected_event = undefined;
           selected_period = undefined;
@@ -150,14 +159,15 @@ $(document).ready(function() {
       prev: 'glyphicon-menu-left',
       next: 'glyphicon-menu-right',
       dossier: 'glyphicon-folder-open',
-      editer: 'glyphicon-edit',
-      bloquer: 'glyphicon-cutlery',
+      editer: 'glyphicon-transfer',
+      bloquer: 'glyphicon-ban-circle',
+      cloner: 'glyphicon-duplicate',
       supprimer: 'glyphicon-remove',
-      honorer: 'glyphicon-ok',
+      honorer: 'glyphicon-alert',
     },
     header: {
       left: 'lastMonth,prev,next,nextMonth today',
-      center: 'bloquer dossier,editer,honorer,supprimer',
+      center: 'bloquer dossier,editer,cloner,honorer,supprimer',
       right: 'title'
     },
     minTime: minTime,
@@ -167,7 +177,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
-    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-editer-button',
+    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-editer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
@@ -189,10 +199,11 @@ $(document).ready(function() {
     eventClick: function(eventClicked, jsEvent, view) {
       selected_event = eventClicked;
       setTimeout(deselectObject, 1);
+      $("#buttonNew").hide();
+      $("#buttonMark").html(eventClicked.absent=="oui" ? "Honoré" : "Non honoré");
       setTimeout(function(){
         $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
         $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
-        $("#buttonNew").html("Cloner");
       }, 10);
       if (eventClicked.patientid != "0")
         getEventData4Edit(eventClicked);
@@ -228,9 +239,15 @@ $(document).ready(function() {
       }
     },
     select: function(start, end, jsEvent, view) {
-      deselectObject();
+      if (selected_event) {
+        $("#buttonNew").show().html("Cloner");
+        $("#buttonEdit").show();
+      }
+      else
+        deselectObject();
       selected_period = {start: start, end : end};
       $("#buttonRemove").hide();
+      $("#buttonMark").hide();
       $('div.popover').popover('hide');
       formatRdvData4Display(start, moment(start).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm'));
     },
@@ -245,6 +262,17 @@ $(document).ready(function() {
         closePeriod(date);
     }
   })
+
+  $(".fc-lastMonth-button").attr("title", "Mois précédent");
+  $(".fc-prev-button").attr("title", "Semaine précédente");
+  $(".fc-next-button").attr("title", "Semaine suivante");
+  $(".fc-nextMonth-button").attr("title", "Mois suivant");
+  $(".fc-editer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
+  $(".fc-cloner-button").attr("title", "Cloner un événement\n\nSelectionnez d'abord l'événement à cloner,\npuis l'emplacement du clone");
+  $(".fc-supprimer-button").attr("title", "Supprimer un événement\n\nSelectionnez d'abord un événement");
+  $(".fc-honorer-button").attr("title", "Marquer un RDV honoré/non honoré\n\nSelectionnez d'abord un RDV");
+  $(".fc-bloquer-button").attr("title", "Fermer une période\n\nSelectionnez d'abord une période");
+  $(".fc-dossier-button").attr("title", "Ouvrir dossier patient\n\nSelectionnez d'abord un RDV");
 
   if ($(window).width() >= 1024) {
     $.contextMenu({
@@ -315,6 +343,12 @@ $(document).ready(function() {
     e.preventDefault();
     clean();
   });
+  $("#buttonMark").on("click", function(e) {
+    e.preventDefault();
+    setEventPasVenu(selected_event.id);
+    $("#buttonNew").show();
+    clean();
+  });
 
   $("#buttonRemove").on("click", function(e) {
     e.preventDefault();
@@ -328,7 +362,9 @@ $(document).ready(function() {
 
   $("#buttonEdit").on("click", function(e) {
     e.preventDefault();
-    setRdv();
+    selected_event.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+    selected_event.start = selected_period.start;
+    moveEvent(selected_event);
   });
 
   $("#formRdv").on("click", ".donothing", function(e) {
@@ -499,8 +535,8 @@ function getEventData4Edit(eventClicked) {
 
   $("#motif").val(eventClicked.motif);
   $("#type").val(eventClicked.type);
+  $("#buttonMark").show();
   $("#buttonRemove").show();
-  $("#buttonEdit").show();
   formatRdvData4Display(eventClicked.start, eventClicked.end);
 }
 
@@ -532,11 +568,12 @@ function clean() {
   $('#historiquePatient ul').html('');
   $('#HistoriqueRdvResume button').html('');
   $("#buttonRemove").hide();
+  $("#buttonMark").hide();
   $("#buttonEdit").hide();
 }
 
 function deleteEvent(eventid) {
-  if (confirm("Confirmez-vous la suppression de ce rendez-vous ?")) {
+  if (confirm("Confirmez-vous la suppression de cet événement ?")) {
     userID = $('#calendar').attr('data-userID');
     $.ajax({
       url: urlBase+'/agenda/' + userID + '/ajax/delEvent/',

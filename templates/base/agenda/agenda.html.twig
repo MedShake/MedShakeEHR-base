@@ -44,6 +44,10 @@
       a.eventAbsent .fc-title {
         text-decoration: line-through;
       }
+      .selected {
+        border: solid 3px #4399e4;
+        opacity: 0.8;
+      }
 
       .fc-event {
         font-size: 1em;
@@ -120,9 +124,10 @@
           <textarea id="motif" class="form-control" rows="3" autocomplete="off"></textarea>
         </div>
 
-        <button id="buttonEdit" class="btn btn-success" type="submit" style="display: none">Modifier</button>
+        <button id="buttonEdit" class="btn btn-success" type="submit" style="display: none">Déplacer</button>
         <button id="buttonNew" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
         <button id="buttonRemove" class="btn btn-danger" style="display: none">Supprimer</button>
+        <button id="buttonMark" class="btn btn-warning" style="display: none">Non honoré</button>
         <button id="buttonCancel" class="btn btn-default" type="submit">Abandonner</button>
       </div>
     </form>
