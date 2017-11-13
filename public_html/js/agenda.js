@@ -120,7 +120,7 @@ $(document).ready(function() {
       supprimer: {
         click: function(){
           if (!selected_event)
-            return alert("cliquez d'abord un événement à supprimer, puis ce bouton");
+            return alert("cliquez d'abord un événement à supprimer, puis sur ce bouton");
           deleteEvent(selected_event.id);
           selected_event = undefined;
           selected_period = undefined;
@@ -192,6 +192,7 @@ $(document).ready(function() {
       setTimeout(function(){
         $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
         $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
+        $("#buttonNew").html("Cloner");
       }, 10);
       if (eventClicked.patientid != "0")
         getEventData4Edit(eventClicked);
@@ -206,7 +207,7 @@ $(document).ready(function() {
     },
     eventDrop: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
-      if (confirm("Confirmez-vous le déplacement de ce rendez-vous ?")) {
+      if (confirm("Confirmez-vous le déplacement de cet événement ?")) {
         moveEvent(event);
       } else {
         revertFunc();
@@ -220,7 +221,7 @@ $(document).ready(function() {
     },
     eventResize: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
-      if (confirm("Confirmez-vous le changement de durée de ce rendez-vous ?")) {
+      if (confirm("Confirmez-vous le changement de durée de cet événement ?")) {
         resizeEvent(event);
       } else {
         revertFunc();
@@ -376,6 +377,7 @@ $(document).ready(function() {
 function deselectObject () {
   $("div.fc-title.underlined").removeClass("underlined");
   $("div.fc-bg.selected").removeClass("selected");
+  $("#buttonNew").html("Créer");
 };
 
 function setRdv(isnew) {
@@ -586,7 +588,7 @@ function moveEvent(event) {
     },
     dataType: "json",
     success: function(data) {
-      $('#calendar').fullCalendar('refetchEvents');
+   	  $('#calendar').fullCalendar('refetchEvents');
       clean();
     },
     error: function() {
