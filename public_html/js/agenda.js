@@ -28,10 +28,10 @@
 
 var selected_period;
 var selected_event;
+var popstop = $(window).width() < 1024;
 
 $(document).ready(function() {
 
-  popstop = 0;
   $(function() {
     $('[data-toggle="popover"]').popover();
 
@@ -214,7 +214,7 @@ $(document).ready(function() {
       popstop = 1;
     },
     eventDragStop: function( event, jsEvent, ui, view ) {
-      popstop = 0;
+      popstop = $(window).width() < 1024;
     },
     eventDrop: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
@@ -228,7 +228,7 @@ $(document).ready(function() {
       popstop = 1;
     },
     eventResizeStop: function( event, jsEvent, ui, view ) {
-      popstop = 0;
+      popstop = $(window).width() < 1024;
     },
     eventResize: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');

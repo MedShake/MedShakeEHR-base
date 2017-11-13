@@ -63,12 +63,19 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </button>
                     <a href="" class="navbar-brand">MedShakeEHR</a>
                 </div>
 
+                <div class="collapse navbar-collapse" id="top-navbar">
                 {% if user.id > 0 %}
 
                   <ul class="nav navbar-nav">
@@ -223,10 +230,11 @@
                         </li>
                     </ul>
                 {% endif %}
+                </div>
             </div>
         </nav>
 
-        <div class="container-fluid" role="main" style="padding-bottom : 50px;">
+        <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
             {% block body %}{% endblock %}
         </div>
 
