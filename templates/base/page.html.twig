@@ -164,6 +164,12 @@
 
                         <ul class="dropdown-menu">
 
+                            <li class="dropdown-header">Outils</li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                                <li role="separator" class="divider"></li>
+                            </li>
+
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                               <li class="dropdown-header">Historique rappels RDV</li>
 
