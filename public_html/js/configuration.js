@@ -47,7 +47,7 @@ $(document).ready(function() {
     var table = $(this).attr("data-table");
 
     $.ajax({
-      url: urlBase+'/configuration/ajax/configExtractByPrimaryKey/',
+      url: urlBase + '/configuration/ajax/configExtractByPrimaryKey/',
       type: 'post',
       data: {
         id: id,
@@ -85,7 +85,7 @@ $(document).ready(function() {
     var table = $(this).attr("data-table");
 
     $.ajax({
-      url: urlBase+'/configuration/ajax/configExtractByPrimaryKey/',
+      url: urlBase + '/configuration/ajax/configExtractByPrimaryKey/',
       type: 'post',
       data: {
         id: id,
@@ -132,7 +132,7 @@ $(document).ready(function() {
 
 
       $.ajax({
-        url: urlBase+'/configuration/ajax/configDelByPrimaryKey/',
+        url: urlBase + '/configuration/ajax/configDelByPrimaryKey/',
         type: 'post',
         data: {
           id: id,
@@ -177,11 +177,11 @@ $(document).ready(function() {
 
   });
 
-  // Uploade clef apicrypt par drag@drop
-  $("#dropZoneClefApicrypt").dmUploader({
-    url: urlBase+'/configuration/ajax/configUploadApicryptClef/',
+  // Upload fichier par drag@drop
+  $("#dropZoneFichierZoneConfig").dmUploader({
+    url: urlBase + '/configuration/ajax/configUploadFichierZoneConfig/',
     extraData: {
-      destination: $('#dropZoneClefApicrypt').attr("data-destination"),
+      destination: $('#dropZoneFichierZoneConfig').attr("data-destination"),
     },
     dataType: 'html',
     maxFiles: 1,
@@ -204,7 +204,7 @@ $(document).ready(function() {
 
 
       $.ajax({
-        url: urlBase+'/configuration/ajax/configDeleteApicryptClef/',
+        url: urlBase + '/configuration/ajax/configDeleteApicryptClef/',
         type: 'post',
         data: {
           userID: userID,
@@ -220,6 +220,43 @@ $(document).ready(function() {
       });
     }
   });
+
+  //delete template PDF
+  $("a.delTemplatePDF").on("click", function(e) {
+    e.preventDefault();
+    var userID = $(this).attr("data-user");
+    var file = $(this).attr("data-file");
+
+    if (confirm("Êtes-vous certain ?")) {
+
+
+      $.ajax({
+        url: urlBase + '/configuration/ajax/configTemplatePDFDelete/',
+        type: 'post',
+        data: {
+          userID: userID,
+          file: file
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    }
+  });
+
+  //activation de codemirror pour édition templates
+  if ($("#templateEditor").length ) {
+    var editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
+      lineNumbers: true,
+      mode: "twig",
+      lineWrapping: true
+    });
+    editor.setSize(null, 400);
+  }
 
 });
 
@@ -247,8 +284,8 @@ function ajaxModalFormSave(form, modal) {
         $(modal + ' div.alert ul').html('');
         $.each(data.msg, function(index, value) {
           $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
-          $('#'+index+'ID').parent('div').addClass('has-error');
-        
+          $('#' + index + 'ID').parent('div').addClass('has-error');
+
         });
       }
     },

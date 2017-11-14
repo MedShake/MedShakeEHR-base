@@ -26,6 +26,7 @@
     "uploader": "https://github.com/danielm/uploader.git",
     "jSignature": "^2.1.1",
     "fullcalendar": "^3.4.0",
-    "jQuery-contextMenu": "^2.5.0"
+    "jQuery-contextMenu": "^2.5.0",
+    "codemirror": "^5.31.0"
   }
 }

@@ -122,6 +122,10 @@ configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/confi
 # Configuration Apicrypt clefs
 configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
 
+# Configuration Templates PDF edit
+configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'configuration/configTemplatesPDF']
+configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[i:userID]?/', 'configuration/configTemplatesPDFEdit']
+
 # Configuration forms
 configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']

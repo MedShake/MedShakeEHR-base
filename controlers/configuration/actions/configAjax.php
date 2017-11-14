@@ -43,8 +43,9 @@ $acceptedModes=array(
     'configActesBaseCreate', //Création d'un acte de base, ngap ou ccam
     'configActesCatCreate', //Création d'une cat d'actes
     'configTagDicomCreate', //Associer tag dicom et typeID
-    'configUploadApicryptClef', //Downloader une clef apicrypt
-    'configDeleteApicryptClef' //Delete d'une clef apicrypt 
+    'configUploadFichierZoneConfig', //Downloader une clef apicrypt
+    'configDeleteApicryptClef', //Delete d'une clef apicrypt
+    'configTemplatePDFDelete' //Delete d'un template
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -112,13 +113,18 @@ elseif ($m=='configTagDicomCreate') {
 }
 
 // Upload d'une clef apicrypt
-elseif ($m=='configUploadApicryptClef') {
-    include('inc-ajax-configUploadApicryptClef.php');
+elseif ($m=='configUploadFichierZoneConfig') {
+    include('inc-ajax-configUploadFichierZoneConfig.php');
 }
 
 // Delete d'une clef apicrypt
 elseif ($m=='configDeleteApicryptClef') {
     include('inc-ajax-configDeleteApicryptClef.php');
+}
+
+// Delete d'un template PDF
+elseif ($m=='configTemplatePDFDelete') {
+    include('inc-ajax-configTemplatePDFDelete.php');
 }
 
 die();
