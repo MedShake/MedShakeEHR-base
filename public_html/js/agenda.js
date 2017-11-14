@@ -417,7 +417,7 @@ $(document).ready(function() {
 function deselectObject () {
   $("div.fc-title.underlined").removeClass("underlined");
   $("div.fc-bg.selected").removeClass("selected");
-  $("#buttonNew").html("Créer");
+  $("#buttonNew").html("Créer").show();
 };
 
 function setRdv(isnew) {
