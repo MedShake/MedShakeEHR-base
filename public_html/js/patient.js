@@ -433,13 +433,28 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      afficherFxNbFoetus();
       scrollTo('body');
+      // checkboxes dans les formulaires
+      $("input").unbind("click");
+      $("input").on("click", function(e) {
+        chkboxClick(this);
+      });
+      // pour éviter de perdre des données
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+        $(window).unbind("beforeunload");
+      });
+
     },
     error: function() {
       alert('Problème, rechargez la page !');
     }
   });
+}
+
+function preventDataLoss(e) {
+  e.returnValue = "\o/";
+  return "\o/";
 }
 
 //envoyer le form de Courrier dans le div newCourrier
@@ -462,6 +477,11 @@ function sendFormToCourrierDiv(el) {
         height: "500"
       });
       scrollTo('body');
+      // pour éviter de perdre des données
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -493,6 +513,10 @@ function sendFormToOrdoDiv(el) {
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -516,6 +540,10 @@ function sendFormToMailDiv(el) {
       $('#newMail').html(data);
       $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
       scrollTo('body');
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -544,6 +572,10 @@ function sendFormToReglementDiv(el) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
       scrollTo('body');
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
