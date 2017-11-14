@@ -478,7 +478,13 @@ class msForm
             foreach ($bloc as $k=>$v) {
                 $bloc=explode(',', $v);
 
-                if ($type=$this->_formExtractType($bloc[0], $dataset)) {
+                if (!is_numeric($bloc[0])) {
+                  $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                              'type'=>'label',
+                              'value'=>$bloc[0]
+                          );
+                }
+                else if ($type=$this->_formExtractType($bloc[0], $dataset)) {
 
                     if($this->_typeForNameInForm=='byName') {
 
