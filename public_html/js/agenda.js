@@ -37,28 +37,33 @@ $(document).ready(function() {
 
   })
 
-  if (typeof hiddenDays == 'undefined') {
+  if (!hiddenDays) {
     hiddenDays = [0];
   }
-  if (typeof minTime == 'undefined') {
+  if (!minTime) {
     minTime = '08:00:00';
   }
-  if (typeof maxTime == 'undefined') {
+  if (!maxTime) {
     maxTime = '20:45:00';
   }
-  if (typeof slotDuration == 'undefined') {
+  if (!slotDuration) {
     slotDuration = '00:15:00';
   }
-  if (typeof businessHours == 'undefined') {
+  if (!businessHours) {
     businessHours = [{
       dow: [1, 2, 3, 4, 5, 6],
       start: '08:00',
       end: '21:20',
     }];
   }
-  if (typeof eventSources == 'undefined') {
+  if (!boutonsHeaderCenter) {
+    boutonsHeaderCenter = 'bloquer dossier,editer,cloner,honorer,supprimer';
+  }
+
+
+  if (!eventSources) {
     eventSources = [{
-        url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
+        url: urlBase+'/agenda/' + userID + '/ajax/getEvents/'
       },
       {
         events: [{
@@ -166,7 +171,7 @@ $(document).ready(function() {
     },
     header: {
       left: 'lastMonth,prev,next,nextMonth today',
-      center: 'bloquer dossier,editer,cloner,honorer,supprimer',
+      center: boutonsHeaderCenter,
       right: 'title'
     },
     minTime: minTime,
