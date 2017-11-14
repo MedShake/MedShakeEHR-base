@@ -114,7 +114,12 @@ $(document).ready(function() {
         click: function(){
           if (!selected_event || !selected_period)
             return alert("Sélectionnez d'abord un événement à cloner, puis la position où placer le clone, avant de cliquez sur ce bouton");
-          setRDV(true);
+          if (selected_event.patientid != "0")
+            setRdv(true);
+          else {
+  	        selected_period.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+            closePeriod();
+          }
           selected_event = undefined;
           selected_period = undefined;
         },
