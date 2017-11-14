@@ -36,16 +36,21 @@
 {% endblock %}
 
 {% block body %}
-<h1>Gestion des clefs Apicrypt</h1>
 
 <ol class="breadcrumb">
   <li>
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cr">Paramétrage courant</a>
   </li>
   <li class="active">
-    Gestion des clefs Apicrypt
+	    Gestion des clefs Apicrypt
   </li>
 </ol>
+
+<h1>Gestion des clefs Apicrypt</h1>
+
 
 {# Nav tabs #}
 <ul class="nav nav-tabs bottom-space" role="tablist">

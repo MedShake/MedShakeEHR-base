@@ -26,36 +26,44 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+var selected_period;
+var selected_event;
+var popstop = $(window).width() < 1024;
+
 $(document).ready(function() {
-  popstop = 0;
+
   $(function() {
     $('[data-toggle="popover"]').popover();
 
   })
 
-  userID = $('#calendar').attr('data-userID');
-  if (typeof hiddenDays == 'undefined') {
+  if (!hiddenDays) {
     hiddenDays = [0];
   }
-  if (typeof minTime == 'undefined') {
+  if (!minTime) {
     minTime = '08:00:00';
   }
-  if (typeof maxTime == 'undefined') {
+  if (!maxTime) {
     maxTime = '20:45:00';
   }
-  if (typeof slotDuration == 'undefined') {
+  if (!slotDuration) {
     slotDuration = '00:15:00';
   }
-  if (typeof businessHours == 'undefined') {
+  if (!businessHours) {
     businessHours = [{
       dow: [1, 2, 3, 4, 5, 6],
       start: '08:00',
       end: '21:20',
     }];
   }
-  if (typeof eventSources == 'undefined') {
+  if (!boutonsHeaderCenter) {
+    boutonsHeaderCenter = 'bloquer dossier,editer,cloner,honorer,supprimer';
+  }
+
+
+  if (!eventSources) {
     eventSources = [{
-        url: urlBase+'/agenda/' + userID + '/ajax/getEvents/'
+        url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
       },
       {
         events: [{
@@ -80,24 +88,90 @@ $(document).ready(function() {
 
     defaultView: 'agendaWeek',
     locale: 'fr',
+    themeSystem: 'bootstrap3',
     hiddenDays: hiddenDays,
     customButtons: {
       nextMonth: {
-        icon: 'right-double-arrow',
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
         }
       },
       lastMonth: {
-        icon: 'left-double-arrow',
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
         }
       },
+      dossier: {
+        click: function(){
+          if (!selected_event || selected_event.patientid=="0")
+            return alert("Sélectionnez d'abord un RDV, puis cliquez ce bouton pour ouvrir le dossier du patient");
+          window.open(urlBase+'/patient/'+selected_event.patientid+'/', '_patient');
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      cloner: {
+        click: function(){
+          if (!selected_event || !selected_period)
+            return alert("Sélectionnez d'abord un événement à cloner, puis la position où placer le clone, avant de cliquez sur ce bouton");
+          setRDV(true);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      editer: {
+        click: function(){
+          if (!selected_event || !selected_period)
+            return alert("Sélectionnez d'abord un événement à déplacer, puis sa nouvelle position, avant de cliquer ce bouton");
+	        selected_event.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+	        selected_event.start = selected_period.start;
+          moveEvent(selected_event);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      supprimer: {
+        click: function(){
+          if (!selected_event)
+            return alert("cliquez d'abord un événement à supprimer, avant de cliquer ce bouton");
+          deleteEvent(selected_event.id);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+      bloquer: {
+        click: function(){
+          if (!selected_period)
+            return alert("Sélectionnez d'abord une période à fermer, avant de cliquer ce bouton");
+          closePeriod();
+          selected_period = undefined;
+        },
+      },
+      honorer: {
+        click: function(){
+          if (!selected_event)
+            return alert("selectionnez d'abord un RDV à marquer honoré/non honoré, avant de cliquer ce bouton");
+          setEventPasVenu(selected_event.id);
+          selected_event = undefined;
+          selected_period = undefined;
+        },
+      },
+    },
+    bootstrapGlyphicons: {
+      lastMonth: 'glyphicon-chevron-left',
+      nextMonth: 'glyphicon-chevron-right',
+      prev: 'glyphicon-menu-left',
+      next: 'glyphicon-menu-right',
+      dossier: 'glyphicon-folder-open',
+      editer: 'glyphicon-transfer',
+      bloquer: 'glyphicon-ban-circle',
+      cloner: 'glyphicon-duplicate',
+      supprimer: 'glyphicon-remove',
+      honorer: 'glyphicon-alert',
     },
     header: {
       left: 'lastMonth,prev,next,nextMonth today',
-      center: '',
+      center: boutonsHeaderCenter,
       right: 'title'
     },
     minTime: minTime,
@@ -107,6 +181,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
+    unselectCancel: '.context-menu-item,#buttonNew,#buttonEdit,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-editer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
@@ -125,16 +200,29 @@ $(document).ready(function() {
         });
       }
     },
-    eventClick: function(eventClicked, jsEvent, view) {},
+    eventClick: function(eventClicked, jsEvent, view) {
+      selected_event = eventClicked;
+      setTimeout(deselectObject, 1);
+      $("#buttonNew").hide();
+      $("#buttonMark").html(eventClicked.absent=="oui" ? "Honoré" : "Non honoré");
+      setTimeout(function(){
+        $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
+        $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
+      }, 10);
+      if (eventClicked.patientid != "0")
+        getEventData4Edit(eventClicked);
+      else
+        clean();
+    },
     eventDragStart: function( event, jsEvent, ui, view ) {
       popstop = 1;
     },
     eventDragStop: function( event, jsEvent, ui, view ) {
-      popstop = 0;
+      popstop = $(window).width() < 1024;
     },
     eventDrop: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
-      if (confirm("Confirmez-vous le déplacement de ce rendez-vous ?")) {
+      if (confirm("Confirmez-vous le déplacement de cet événement ?")) {
         moveEvent(event);
       } else {
         revertFunc();
@@ -144,76 +232,143 @@ $(document).ready(function() {
       popstop = 1;
     },
     eventResizeStop: function( event, jsEvent, ui, view ) {
-      popstop = 0;
+      popstop = $(window).width() < 1024;
     },
     eventResize: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
-      if (confirm("Confirmez-vous le changement de durée de ce rendez-vous ?")) {
+      if (confirm("Confirmez-vous le changement de durée de cet événement ?")) {
         resizeEvent(event);
       } else {
         revertFunc();
       }
     },
     select: function(start, end, jsEvent, view) {
+      if (selected_event) {
+        $("#buttonNew").show().html("Cloner");
+        $("#buttonEdit").show();
+      }
+      else
+        deselectObject();
+      selected_period = {start: start, end : end};
+      $("#buttonRemove").hide();
+      $("#buttonMark").hide();
       $('div.popover').popover('hide');
-      formatRdvData4Display(start, end);
+      formatRdvData4Display(start, moment(start).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm'));
+    },
+    unselect: function( jsEvent, view) {
+      selected_period = undefined;
+      selected_event = undefined;
+      clean();
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
-      if (confirm("Souhaitez-vous fermer cette journée ?")) {
-        closeDay(date);
-      }
+      if (confirm("Souhaitez-vous fermer cette journée ?"))
+        closePeriod(date);
     }
   })
 
+  $(".fc-lastMonth-button").attr("title", "Mois précédent");
+  $(".fc-prev-button").attr("title", "Semaine précédente");
+  $(".fc-next-button").attr("title", "Semaine suivante");
+  $(".fc-nextMonth-button").attr("title", "Mois suivant");
+  $(".fc-editer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
+  $(".fc-cloner-button").attr("title", "Cloner un événement\n\nSelectionnez d'abord l'événement à cloner,\npuis l'emplacement du clone");
+  $(".fc-supprimer-button").attr("title", "Supprimer un événement\n\nSelectionnez d'abord un événement");
+  $(".fc-honorer-button").attr("title", "Marquer un RDV honoré/non honoré\n\nSelectionnez d'abord un RDV");
+  $(".fc-bloquer-button").attr("title", "Fermer une période\n\nSelectionnez d'abord une période");
+  $(".fc-dossier-button").attr("title", "Ouvrir dossier patient\n\nSelectionnez d'abord un RDV");
 
-  $.contextMenu({
-    selector: ".hasmenu",
-    items: {
-      editer: {
-        name: "Editer ce rendez-vous",
-        callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          eventData = $('#calendar').fullCalendar('clientEvents', eventid);
-          getEventData4Edit(eventData[0]);
-        }
-      },
-      ouvrirDossier: {
-        name: "Ouvrir le dossier patient",
-        callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          eventData = $('#calendar').fullCalendar('clientEvents', eventid);
-          window.open(urlBase+'/patient/' + eventData[0]['patientid'] + '/', '_blank');
-        }
-      },
-      separator1: "-----",
-      pasvenupasprev: {
-        name: "Marquer RDV honoré / non honoré",
-        callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          setEventPasVenu(eventid);
-        }
-      },
-      separator2: "-----",
-      supprimer: {
-        name: "Supprimer",
-        callback: function(key, opt) {
-          eventid = this.attr('data-eventid');
-          deleteEvent(eventid);
-        }
-      },
-    }
+  if ($(window).width() >= 1024) {
+    $.contextMenu({
+      selector: ".hasmenu",
+      items: {
+        editer: {
+          name: "Editer ce rendez-vous",
+          callback: function(key, opt) {
+            var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
+            getEventData4Edit(eventData[0]);
+          }
+        },
+        ouvrirDossier: {
+          name: "Ouvrir le dossier patient (nouvel onglet)",
+          callback: function(key, opt) {
+            var eventData = $('#calendar').fullCalendar('clientEvents', this.attr('data-eventid'));
+            window.open(urlBase+'/patient/' + eventData[0]['patientid'] + '/', '_blank');
+          }
+        },
+        separator1: "-----",
+        pasvenupasprev: {
+          name: "Marquer RDV honoré / non honoré",
+          callback: function(key, opt) {
+            setEventPasVenu(this.attr('data-eventid'));
+          }
+        },
+        separator2: "-----",
+        supprimer: {
+          name: "Supprimer",
+          callback: function(key, opt) {
+            deleteEvent(this.attr('data-eventid'));
+          }
+        },
+      }
+    });
+
+    $.contextMenu({
+      selector: ".fc-highlight",
+      items: {
+        fermer: {
+          name: "Fermer cette période",
+          callback: function(key, opt) {
+            closePeriod();
+            selected_period = undefined;
+          }
+        },
+      }
+    });
+
+    $.contextMenu({
+      selector: ".fc-nonbusiness",
+      items: {
+        fermer: {
+          name: "Rouvrir cette période",
+          callback: function(key, opt) {
+            deleteEvent(this.attr('data-eventid'));
+          }
+        },
+      }
+    });
+  };
+
+  $(window).on("click", function(e){
+    deselectObject();
   });
 
-
-  $("#buttonCanceled").on("click", function(e) {
+  $("#buttonCancel").on("click", function(e) {
     e.preventDefault();
     clean();
   });
-
-  $("#buttonSubmit").on("click", function(e) {
+  $("#buttonMark").on("click", function(e) {
     e.preventDefault();
-    setNewRdv();
+    setEventPasVenu(selected_event.id);
+    $("#buttonNew").show();
+    clean();
+  });
+
+  $("#buttonRemove").on("click", function(e) {
+    e.preventDefault();
+    deleteEvent($("#eventID").val());
+  });
+
+  $("#buttonNew").on("click", function(e) {
+    e.preventDefault();
+    setRdv(true);
+  });
+
+  $("#buttonEdit").on("click", function(e) {
+    e.preventDefault();
+    selected_event.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+    selected_event.start = selected_period.start;
+    moveEvent(selected_event);
   });
 
   $("#formRdv").on("click", ".donothing", function(e) {
@@ -231,7 +386,7 @@ $(document).ready(function() {
 
   //chercher patient
   $('#search').autocomplete({
-    source: urlBase+'/agenda/' + userID + '/ajax/searchPatient/',
+    source: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
     select: function(event, ui) {
       getPatientAdminData(ui.item.patientID);
     }
@@ -259,16 +414,22 @@ $(document).ready(function() {
 
 });
 
-function setNewRdv() {
+function deselectObject () {
+  $("div.fc-title.underlined").removeClass("underlined");
+  $("div.fc-bg.selected").removeClass("selected");
+  $("#buttonNew").html("Créer");
+};
+
+function setRdv(isnew) {
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/setNewRdv/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setNewRdv/',
     type: "post",
     data: {
-      eventID: $('#eventID').val(),
+      eventID: isnew ? "" : $('#eventID').val(),
       patientID: $('#patientID').val(),
       userID: $('#calendar').attr('data-userID'),
       start: $('#eventStartID').val(),
-      end: $('#eventEndID').val(),
+      end: moment($('#eventStartID').val()).add($($("#type")[0].selectedOptions[0]).attr("data-duree"), 'm').format("YYYY-MM-DD HH:mm:SS"),
       type: $('#type').val(),
       motif: $('#motif').val(),
     },
@@ -283,17 +444,20 @@ function setNewRdv() {
   });
 }
 
-function closeDay(date) {
-  datedujour = date.format('YYYY-MM-DD');
+function closePeriod(date) {
+  if (!date && !selected_period)
+    return;
+  var start = date ? date.format('YYYY-MM-DD') + ' ' + minTime : selected_period.start.format("YYYY-MM-DD HH:mm:SS");
+  var end = date ? date.format('YYYY-MM-DD') + ' ' + maxTime : selected_period.end.format("YYYY-MM-DD HH:mm:SS");
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/setNewRdv/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setNewRdv/',
     type: "post",
     data: {
       eventID: '',
       patientID: '0',
       userID: $('#calendar').attr('data-userID'),
-      start: datedujour + ' ' + minTime,
-      end: datedujour + ' ' + maxTime,
+      start: start,
+      end: end,
       type: '[off]',
       motif: 'Fermé',
     },
@@ -309,9 +473,8 @@ function closeDay(date) {
 }
 
 function getPatientAdminData(patientID) {
-  userID = $('#calendar').attr('data-userID');
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/getPatientAdminData/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getPatientAdminData/',
     type: "post",
     data: {
       patientID: patientID,
@@ -332,7 +495,7 @@ function getPatientAdminData(patientID) {
 
 function getHistoriquePatient(patientID) {
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/getHistoriquePatient/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getHistoriquePatient/',
     type: "post",
     data: {
       patientID: patientID,
@@ -375,7 +538,8 @@ function getEventData4Edit(eventClicked) {
 
   $("#motif").val(eventClicked.motif);
   $("#type").val(eventClicked.type);
-
+  $("#buttonMark").show();
+  $("#buttonRemove").show();
   formatRdvData4Display(eventClicked.start, eventClicked.end);
 }
 
@@ -387,7 +551,7 @@ function formatRdvData4Display(start, end) {
   $('#eventStartID').val(start.format('YYYY-MM-DD HH:mm:SS'));
   $('#eventEndID').val(end.format('YYYY-MM-DD HH:mm:SS'));
 
-  if ($("#patientID").val() > 0) $('#buttonSubmit').removeAttr('disabled');
+  if ($("#patientID").val() > 0) $('#buttonNew').removeAttr('disabled');
 }
 
 function clean() {
@@ -402,18 +566,19 @@ function clean() {
   $('#eventStartID').val('');
   $('#eventEndID').val('');
 
-  $('#buttonSubmit').attr('disabled', 'disabled');
+  $('#buttonNew').attr('disabled', 'disabled');
   $('#historiquePatient').hide();
   $('#historiquePatient ul').html('');
   $('#HistoriqueRdvResume button').html('');
-
+  $("#buttonRemove").hide();
+  $("#buttonMark").hide();
+  $("#buttonEdit").hide();
 }
 
 function deleteEvent(eventid) {
-  if (confirm("Confirmez-vous la suppression de ce rendez-vous ?")) {
-    userID = $('#calendar').attr('data-userID');
+  if (confirm("Confirmez-vous la suppression de cet événement ?")) {
     $.ajax({
-      url: urlBase+'/agenda/' + userID + '/ajax/delEvent/',
+      url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/delEvent/',
       type: "post",
       data: {
         eventid: eventid,
@@ -431,9 +596,8 @@ function deleteEvent(eventid) {
 }
 
 function setEventPasVenu(eventid) {
-  userID = $('#calendar').attr('data-userID');
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/setEventPasVenu/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventPasVenu/',
     type: "post",
     data: {
       eventID: eventid,
@@ -450,10 +614,8 @@ function setEventPasVenu(eventid) {
 
 function moveEvent(event) {
 
-  userID = $('#calendar').attr('data-userID');
-
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/moveEvent/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/moveEvent/',
     type: "post",
     data: {
       eventid: event.id,
@@ -462,6 +624,7 @@ function moveEvent(event) {
     },
     dataType: "json",
     success: function(data) {
+   	  $('#calendar').fullCalendar('refetchEvents');
       clean();
     },
     error: function() {
@@ -473,10 +636,8 @@ function moveEvent(event) {
 
 function resizeEvent(event) {
 
-  userID = $('#calendar').attr('data-userID');
-
   $.ajax({
-    url: urlBase+'/agenda/' + userID + '/ajax/moveEvent/',
+    url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/moveEvent/',
     type: "post",
     data: {
       eventid: event.id,

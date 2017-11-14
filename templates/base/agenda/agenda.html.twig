@@ -44,6 +44,10 @@
       a.eventAbsent .fc-title {
         text-decoration: line-through;
       }
+      .selected {
+        border: solid 3px #4399e4;
+        opacity: 0.8;
+      }
 
       .fc-event {
         font-size: 1em;
@@ -63,6 +67,13 @@
     </style>
 
     <script>
+    var boutonsHeaderCenter;
+    var hiddenDays;
+    var minTime;
+    var maxTime;
+    var businessHours;
+    var slotDuration;
+    var eventSources;
     {{ page.configAgenda }}
     </script>
 
@@ -102,7 +113,7 @@
           <label for="type">Type de rendez-vous</label>
           <select id="type" class="form-control" autocomplete="off">
             {% for k, v in page.typeRdv if k != '[off]' %}
-              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;">{{ v.duree }}' :
+              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}">{{ v.duree }}' :
                 {{ v.descriptif }}</option>
             {% endfor %}
           </select>
@@ -120,8 +131,11 @@
           <textarea id="motif" class="form-control" rows="3" autocomplete="off"></textarea>
         </div>
 
-        <button id="buttonSubmit" disabled="disabled" class="btn btn-primary" type="submit">Valider</button>
-        <button id="buttonCanceled" class="btn btn-default" type="submit">Annuler</button>
+        <button id="buttonEdit" class="btn btn-success" type="submit" style="display: none">Déplacer</button>
+        <button id="buttonNew" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
+        <button id="buttonRemove" class="btn btn-danger" style="display: none">Supprimer</button>
+        <button id="buttonMark" class="btn btn-warning" style="display: none">Non honoré</button>
+        <button id="buttonCancel" class="btn btn-default" type="submit">Abandonner</button>
       </div>
     </form>
 

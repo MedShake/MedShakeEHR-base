@@ -63,12 +63,19 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </button>
                     <a href="" class="navbar-brand">MedShakeEHR</a>
                 </div>
 
+                <div class="collapse navbar-collapse" id="top-navbar">
                 {% if user.id > 0 %}
 
                   <ul class="nav navbar-nav">
@@ -82,7 +89,7 @@
                               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
                           </li>
                         {% endfor %}
-                      {% else %}
+                      {% elseif page.agendaUsers %}
                         <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
                               <span class="caret"></span>
@@ -164,6 +171,12 @@
 
                         <ul class="dropdown-menu">
 
+                            <li class="dropdown-header">Outils</li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                                <li role="separator" class="divider"></li>
+                            </li>
+
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                               <li class="dropdown-header">Historique rappels RDV</li>
 
@@ -217,10 +230,11 @@
                         </li>
                     </ul>
                 {% endif %}
+                </div>
             </div>
         </nav>
 
-        <div class="container-fluid" role="main" style="padding-bottom : 50px;">
+        <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
             {% block body %}{% endblock %}
         </div>
 

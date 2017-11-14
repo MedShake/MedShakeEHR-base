@@ -33,6 +33,19 @@
 {% endblock %}
 
 {% block body %}
+
+    <ol class="breadcrumb">
+      <li>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+      </li>
+      <li>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+      </li>
+	    <li class="active">
+			    Vérifications des répertoires de stockage 
+	    </li>
+    </ol>
+
     <h1>Accessibilité en écriture des répertoires généraux</h1>
 
     <p>Les répertoires testés sont ceux de la configuration générale (fichier config.yml).</p>

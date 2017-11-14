@@ -113,7 +113,8 @@ configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesC
 configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActesBase']
 configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
-configLicence: ['GET', '/licence/', 'configuration/configLicence']
+configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
+configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']

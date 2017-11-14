@@ -36,6 +36,19 @@
 {% endblock %}
 
 {% block body %}
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cr">Paramétrage courant</a>
+    </li>
+		<li class="active">
+				Prescriptions types
+		</li>
+  </ol>
+
     <h1>Gestion des prescriptions types</h1>
     <div>
         <div>

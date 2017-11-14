@@ -29,22 +29,24 @@
 {# input #}
 {% macro input(v) %}
 
-		{# label avant ou autour #}
-		{% if v.label.position == 'before' or v.label.position == 'around' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
+		{% if v.label.label != '' %}
+			{# label avant ou autour #}
+			{% if v.label.position == 'before' or v.label.position == 'around' %}
+				<label
+				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
+				>{{ v.label.label|e }}
+			{% endif %}
 
-		{# label avant #}
-		{% if v.label.position == 'before' %}
-			</label>
+			{# label avant #}
+			{% if v.label.position == 'before' %}
+				</label>
+			{% endif %}
 		{% endif %}
 
 		{# avant le input #}
-    {% if v.input.before %}
-    	{{ v.input.before }}
+	  {% if v.input.before %}
+	  	{{ v.input.before }}
 			{% if v.input.plusg %}
 				<span class="input-group-addon" id="{{v.input.name}}IDAddOnG">{{ v.input.plusg }}</span>
 			{% endif %}
@@ -77,6 +79,7 @@
 		{% if v.input.readonly %} readonly="{{ v.input.readonly }}" {% endif %}
     {% if v.input.required == 'required' %} required="required" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
+    {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
 		{{ v.input.add }} />
 
 		{# après le input #}
@@ -91,18 +94,20 @@
 			</div>
 		{% endif %}
 
-		{# label après #}
-		{% if v.label.position == 'after' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
+		{% if v.label.label != '' %}
+			{# label après #}
+			{% if v.label.position == 'after' %}
+				<label
+				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
+				>{{ v.label.label|e }}
+			{% endif %}
 
-		{# label après ou autour #}
-	    {% if v.label.position == 'after' or v.label.position == 'around' %}
-	    	</label>
-    {% endif %}
+			{# label après ou autour #}
+			  {% if v.label.position == 'after' or v.label.position == 'around' %}
+			  	</label>
+		  {% endif %}
+	  {% endif %}
 
 {% endmacro %}
 
@@ -299,10 +304,12 @@
 					{% for el in col.elements %}
 						{% if el.type == "head" %}
 							<h4>{{ el.value }}</h4>
+						{% elseif el.type == "label" %}
+							<p>{{ el.value }}</p>
 						{% else %}
 
 
-							{% if el.value.formType in ['text','email','tel','password', 'number'] %}
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox'] %}
 								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {

@@ -123,7 +123,28 @@ $(document).ready(function() {
     }
   });
 
+  // checkboxes dans les formulaires
+  $("input").on("click", function(e) {
+    chkboxClick(this);
+  });
+
 });
+
+// checkboxes dans les formulaires
+function chkboxClick(el) {
+  if (el.type != "checkbox")
+    return;
+  var hid = document.getElementById("cloned" + el.id);
+  if (hid == undefined) {
+    hid = el.cloneNode(true);
+    hid.id = "cloned" + this.id;
+    hid.style.display = "none";
+    el.parentNode.appendChild(hid);
+    hid.checked = true;
+  }
+  hid.value = el.checked.toString();
+  el.value = el.checked.toString();
+}
 
 // scroller vers un élément
 function scrollTo(element) {

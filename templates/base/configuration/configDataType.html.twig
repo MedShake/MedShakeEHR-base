@@ -40,6 +40,46 @@
 {% set labelDefaut='Label' %}
 {% set nomUsageInterneDefaut='Nom à usage interne ' %}
 
+<ol class="breadcrumb">
+  <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  {% if page.groupe != "user" %}
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+    </li>
+  {% else %}
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
+    </li>
+  {% endif %}
+	  <li class="active">
+      {% if page.groupe == "admin" %}
+	      Données administratives
+      {% elseif page.groupe == "medical" %}
+	      Données médicales
+      {% elseif page.groupe == "typecs" %}
+	      Types de consultations
+      {% elseif page.groupe == "courrier" %}
+	      Courriers et certificats
+	      {% set valeurParDefaut='Courrier : nom du template associé / Mail : texte par défaut' %}
+      {% elseif page.groupe == "mail" %}
+	      Mail
+      {% elseif page.groupe == "doc" %}
+	      Documents importés
+      {% elseif page.groupe == "ordo" %}
+	      Ordonnances
+      {% elseif page.groupe == "reglement" %}
+	      Règlement
+      {% elseif page.groupe == "dicom" %}
+	      Dicom
+      {% elseif page.groupe == "user" %}
+	      Types des données User
+      {% elseif page.groupe == "relation" %}
+	      Données relation
+      {% endif %}
+	  </li>
+</ol>
 {% if page.groupe == "admin" %}
 	<h1>Types des données administratives</h1>
 {% elseif page.groupe == "medical" %}

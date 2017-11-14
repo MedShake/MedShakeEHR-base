@@ -36,11 +36,13 @@
 {% endblock %}
 
 {% block body %}
-<h1>Edition de formulaire : {{ page.form.name }}</h1>
 
 <ol class="breadcrumb">
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
   </li>
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
@@ -48,6 +50,8 @@
   <li class="active">{{ page.form.name }}
   </li>
 </ol>
+
+<h1>Edition de formulaire : {{ page.form.name }}</h1>
 
 <div class="row">
 	<div class="col-md-5">
