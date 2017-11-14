@@ -1,0 +1,97 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > signer sur périphérique tactil
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+{% import "macroForm.html.twig" as f %}
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      Signer
+    </title>
+    <meta name="Description" content="{% block metaDescription %}{% endblock %}"/>
+    <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
+
+    {# css #}
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+
+    {# js #}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jSignature/src/jSignature.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jSignature/src/plugins/jSignature.CompressorSVG.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/signer.js"></script>
+
+    <script>
+      var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+    </script>
+
+    <style>
+      body {
+        padding : 10px;
+      }
+      #consignes {
+        text-align: center;
+        color: #444;
+        font-size: 20px;
+        margin-top : 40px;
+        height: 50px;
+      }
+
+      #signature {
+        background: #EEE;
+        border: 2px solid #888;
+        margin-bottom : 80px;
+      }
+
+      .tailleFont{
+        font-size: 14px;
+      }
+    </style>
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body>
+    {% include('consentementEcho.html.twig') %}
+
+    <div id="consignes">
+      <button class="btn btn-primary btn-lg resetSignature pull-left">Recommencer</button>
+      Merci de signer dans la zone grise ci-dessous puis de valider
+      <button class="btn btn-danger btn-lg saveSignature pull-right">Valider</button></div>
+    <div id="signature"></div>
+
+    <p>
+
+
+  </p>
+  </body>
+</html>

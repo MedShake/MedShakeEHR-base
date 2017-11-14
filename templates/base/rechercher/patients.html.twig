@@ -1,0 +1,150 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : listing recherche patients / pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : {% if page.porp == 'patient'%}
+recherche patient
+{% elseif page.porp == 'pro' %}
+recherche praticien
+{% endif %}{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js"></script>
+<style>
+.openPatient td:nth-child(-n+7) {
+	cursor: pointer;
+}
+</style>
+{% endblock %}
+{% block body %}
+
+
+{% if page.porp == 'patient'%}
+<h1>Recherche patient</h1>
+{% elseif page.porp == 'pro' %}
+<h1>Recherche praticien</h1>
+{% endif %}
+
+
+<div class="row" style="margin-top : 40px;">
+
+
+<form class="form-inline col-md-10" data-dataset="data_types">
+
+
+
+
+	<div class="form-group">
+	{{ f.input ({
+		'input' : {
+			'type' : 'text',
+			'id' : 'd2',
+			'name' : 'lastname',
+			'placeholder' : 'nom',
+			'class' : 'form-control searchupdate jqautocomplete',
+			'autocomplete' : 'off',
+			'dataAcTypeID' : 'data-acTypeID="2:1"',
+			'datatypeid' : '2'
+		},
+		'label' : {
+			'position' : 'before',
+			'label' : 'Nom',
+		}
+	}) }}
+	</div>
+	<div class="form-group">
+	{{ f.input ({
+		'input' : {
+			'type' : 'text',
+			'id' : 'd3',
+			'name' : 'firstname',
+			'placeholder' : 'prénom',
+			'class' : 'form-control searchupdate jqautocomplete',
+			'autocomplete' : 'off',
+			'dataAcTypeID' : 'data-acTypeID="3:22:230:235:241"',
+			'datatypeid' : '3'
+		},
+		'label' : {
+			'position' : 'before',
+			'label' : 'Prenom',
+		}
+	}) }}
+	</div>
+
+	<div class="form-group">
+	{{ f.selectOptgroup ({
+		'select' : {
+			'id' : 'autreCrit',
+			'name' : 'autre',
+			'class' : 'form-control',
+			'values' : page.tabTypes,
+			'valueDefaut' : '8'
+		},
+		'label' : {
+			'position' : 'before',
+			'label' : 'Autre',
+		}
+	}) }}
+	</div>
+
+	<div class="form-group">
+	{{ f.input ({
+		'input' : {
+			'id' : 'autreCritVal',
+			'type' : 'text',
+			'name' : 'autre',
+			'class' : 'form-control searchupdate'
+		},
+		'label' : {
+			'position' : 'before',
+			'label' : '',
+		}
+	}) }}
+	</div>
+
+</form>
+
+<div class="col-md-2">
+
+{% if page.porp == 'patient'%}
+<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary pull-right" role="button">Nouveau patient</a>
+{% elseif page.porp == 'pro' %}
+<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary pull-right" role="button">Nouveau praticien</a>
+{% endif %}
+</div>
+
+</div>
+
+
+<div id="listing" data-porp="{{ page.porp }}" class="row col-md-12" style="margin-top : 40px;">
+
+</div>
+
+{% endblock %}

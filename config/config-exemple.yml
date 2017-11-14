@@ -108,7 +108,7 @@ apicryptPopPass: 'passwordapicrypt'
 apicryptDefautSujet: 'Document concernant votre patient'
 
 #######################################
-## fax en ligne 
+## fax en ligne
 faxService: 'ecofaxOVH'
 ecofaxMyNumber: '0900000000'
 ecofaxPass: 'password'
@@ -146,7 +146,8 @@ smsTpoa: 'Dr ....'
 
 #######################################
 ## Twig
-templateBaseFolder: 'gynobs'
+templatesBaseFolder: 'base'
+templatesModuleFolder: 'gynobs'
 twigPdfTemplatesDir: 'models4print'
 twigEnvironnementCache: false #'/tmp/templates_cache/'
 twigEnvironnementAutoescape: false

@@ -1,0 +1,216 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : actes
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+    <style>
+      .texteadroite {
+        text-align: right;
+      }
+
+      tr.details {
+        display: none;
+      }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <ol class="breadcrumb">
+      <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+      </li>
+      <li>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cr">Paramétrage courant</a>
+      </li>
+      <li class="active">
+        Actes et tarifs
+      </li>
+    </ol>
+
+    <h1>Gestion des factures types</h1>
+    <div>
+        <div>
+
+            {# Nav tabs #}
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation">
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/" aria-controls="categories" role="tab">Catégories</a>
+                </li>
+                <li role="presentation">
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/" aria-controls="prescriptions" role="tab">Actes NGAP / CCAM</a>
+                </li>
+                {% for id, user in page.users %}
+                  <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
+                      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/{{ id }}/{% if page.groupe > 0 %}{{ page.groupe }}/{% endif %}" aria-controls="prescriptions" role="tab">{% if id == 0 %}Factures types communes{% else %}Factures types : {{ user }}{% endif %}</a>
+                  </li>
+                {% endfor %}
+
+            </ul>
+
+            {# Tab panes #}
+            <div class="tab-content">
+
+                {# categories tab #}
+                <div role="tabpanel" class="tab-pane active" id="prescriptions">
+
+                    <p></p>
+                    <button type="button" class="btn btn-primary pull-right reset-modal" data-toggle="modal" data-target="#modalNewCat">
+                        Nouvel acte
+                    </button>
+
+                    {% for k, v in page.tabTypes %}
+                        <h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }} <small><a class="btn btn-default btn-sm" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/{{ page.selectUser }}/{{ v.0.cat }}/"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></small></h2>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1">#</th>
+                                    <th class="col-md-2">Code</th>
+                                    <th class="col-md-3">Label</th>
+                                    <th class="col-md-2">Label court</th>
+                                    <th class="col-md-1">Utilisation</th>
+                                    <th class="texteadroite">Tarif&nbsp;SS</th>
+                                    <th class="texteadroite">Dépassement</th>
+                                    <th class="texteadroite">Total</th>
+                                    <th class="col-md-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for w in v %}
+                                    <tr>
+                                        <td>{{ w.id }}</td>
+                                        <td>
+                                          {{ (w.details|keys)|join(' + ') }}
+                                        </td>
+                                        <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
+                                        <td>{{ w.shortLabel }}</td>
+                                        <td>{{ page['utilisationParFacture'][w.id] }}</td>
+                                        <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">
+                                            <button type="button" class="btn btn-default btn-xs typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
+                                                <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                                            </button>
+
+                                            <button type="button" class="btn btn-default btn-xs edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="actes" data-form="formModalNewCat" data-modal="modalNewCat">
+                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                            </button>
+
+                                            <button type="button" {% if page['utilisationParFacture'][w.id] > 0 %} disabled="disabled" {% endif %}class="btn btn-default btn-xs delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.type=="base" %} disabled="disabled" {% endif %} data-id="{{ w.id }}" data-table="actes">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </button>
+
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu dropdown-menu-right">
+                                                <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-fsepyx/{{ w.id }}/">Générer facture type Pyxvital</a></li>
+                                              </ul>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    {% for key,det in w.details %}
+                                      <tr class="active small details details{{ w.id }}" >
+                                        <td colspan="2"></td>
+                                        <td>{{ key }}  ({{ det.pourcents }}%)</td>
+                                        <td></td>
+                                        <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
+                                        <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        <td colspan="2"></td>
+                                      </tr>
+                                    {% endfor %}
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        </div>
+
+        {# modal new category #}
+        <div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="alert alert-danger" role="alert" style="display : none;">
+                            Merci de considérer les informations suivantes et de corriger les champs concernés :
+                            <ul></ul>
+                        </div>
+
+                        <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configActesCreate/">
+
+                            <div class="form-group">
+                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'label', 'placeholder' : 'intitulé', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'shortLabel', 'placeholder' : 'intitulé court', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label court', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.select ({ 'select' : { 'name' : 'cat', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : page.catList, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.select ({ 'select' : { 'name' : 'toID', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : page.users, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Utilisateur', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.textarea ({ 'textarea' : {'name' : 'details', 'placeholder' : 'détails', 'class' : 'form-control', 'autocomplete' : 'off', 'rows': '8' }, 'label' : { 'position' : 'before', 'label' : 'Détails', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.select ({ 'select' : { 'name' : 'flagCmu', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'0' : 'Non', '1' : 'Oui'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Acte pour patient CMU', } }) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ f.select ({ 'select' : { 'name' : 'flagImportant', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'0' : 'Non', '1' : 'Oui'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Acte important', } }) }}
+                            </div>
+
+                          </form>
+                        </div>
+                        <div class="modal-footer"> <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button> <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button> </div> </div>
+                                </div> </div> {% endblock %}

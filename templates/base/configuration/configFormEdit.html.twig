@@ -1,0 +1,251 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : édition d'un formulaire
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+  </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
+  </li>
+  <li class="active">{{ page.form.name }}
+  </li>
+</ol>
+
+<h1>Edition de formulaire : {{ page.form.name }}</h1>
+
+<div class="row">
+	<div class="col-md-5">
+	<h2>Références</h2>
+	<form>
+		<h3>Défauts</h3>
+		<div class="form-group">
+		{{ f.textarea ({
+			'textarea' : {
+				'name' : 'yamlStructure',
+				'placeholder' : 'valeurs par défaut',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.yamlStructureDefaut,
+				'add' : 'rows="10" readonly style="font-family:monospace;"'
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Structure du formulaire par defaut'
+			}
+		}) }}
+		</div>
+	</form>
+
+	<h3>Types utilisables <small><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/administratives-data/types/">Modifier</a></small></h3>
+
+		<table class="table table-hover">
+		<tr>
+			<th class="col-md-1">#</th>
+			<th class="col-md-4">Label</th>
+			<th class="col-md-7">Description</th>
+		</tr>
+		{% for k,v in page.tabTypes %}
+		<tr>
+			<th colspan="3">
+				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-default btn-xs typeToggleVisibility">
+  				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				</button> {{ v.0.catLabel }}
+			</th>
+		</tr>
+		{% for w in v %}
+			<tr class="cat{{ v.0.cat }}" style="display : none;">
+			<td>{{ w.id }}</td>
+			<td>{{ w.label }}</td>
+			<td>{{ w.description }}</td>
+			</tr>
+		{% endfor %}
+		{% endfor %}
+		</table>
+
+
+
+	</div>
+
+	<div class="col-md-1">
+	</div>
+
+	<form class="col-md-5"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
+		{{ f.input ({
+			'input' : {
+				'type' : 'hidden',
+				'name' : 'id',
+				'value' : page.form.id
+			},
+		}) }}
+
+    <div class="form-group">
+		{{ f.input ({
+			'input' : {
+				'type' : 'text',
+				'name' : 'internalName',
+				'placeholder' : 'nom à usage interne, pas d\'espace, pas d\'accent',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.internalName
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Nom à usage interne',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.input ({
+			'input' : {
+				'type' : 'text',
+				'name' : 'name',
+				'placeholder' : 'nom du formulaire',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.name
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Nom du formulaire',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.input ({
+			'input' : {
+				'type' : 'text',
+				'name' : 'description',
+				'placeholder' : 'description du formulaire',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.description
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Description du formulaire',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.select ({
+			'select' : {
+				'name' : 'cat',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'values' : page.tabCat,
+				'valueDefaut': page.form.cat
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Catégorie',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.input ({
+			'input' : {
+				'type' : 'text',
+				'name' : 'printModel',
+				'placeholder' : 'modèle pour l\'impression',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.printModel
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Modèle pour l\'impression',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.input ({
+			'input' : {
+				'type' : 'text',
+				'name' : 'formAction',
+				'placeholder' : 'url de destination à la validation',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.formAction
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'URL de destination à la validation (action)',
+			}
+		}) }}
+		</div>
+
+		<div class="form-group">
+		{{ f.textarea ({
+			'textarea' : {
+				'name' : 'yamlStructure',
+				'placeholder' : 'valeurs par défaut',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'value' : page.form.yamlStructure,
+				'add' : 'rows="70" style="font-family:monospace;"'
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Structure du formulaire (format yaml)'
+			}
+		}) }}
+		</div>
+
+
+		<button type="submit" class="btn btn-primary">Valider</button>
+
+		<p>
+		{{ page.form.yaml }}
+		</p>
+
+	</form>
+
+</div>
+
+{% endblock %}

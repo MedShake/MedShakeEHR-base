@@ -1,4 +1,23 @@
 -- Modifications de structure de la bdd d'une version à la suivante
+update forms set internalName='baseNewPatient' where id='1';
+update forms set internalName='baseListingPatients' where id='2';
+update forms set internalName='baseLogin' where id='3';
+update forms set internalName='baseATCD' where id='4';
+update forms set internalName='baseSynthese' where id='5';
+update forms set internalName='baseNewPro' where id='7';
+update forms set internalName='baseListingPro' where id='8';
+update forms set internalName='baseConsult' where id='10';
+update forms set internalName='baseSendMail' where id='11';
+update forms set internalName='baseSendMailApicrypt' where id='14';
+update forms set internalName='baseImportDocExterne' where id='15';
+update forms set internalName='baseOrdonnance' where id='16';
+update forms set internalName='baseReglement' where id='17';
+update forms set internalName='baseReglementSimple' where id='18';
+update forms set internalName='baseReglementSearch' where id='19';
+update forms set internalName='baseImportExternal' where id='22';
+update forms set internalName='basePasswordChange' where id='25';
+update forms set internalName='baseFax' where id='29';
+update forms set internalName='baseAgendaPriseRDV' where id='30';
 
 ALTER TABLE forms ADD internalName varchar(60) after id;
 

@@ -1,0 +1,64 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : formulaire d'upload par drag&drop     
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+<div class="jumbotron">
+    <button id="cleanNewDocImport" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    <h3>Importer un document dans le dossier du patient</h3>
+
+    <div class="row">
+        <div id="dropZoneDoc"  class="col-md-9 bg-danger center-block" style="padding : 30px; border-radius : 6px">
+            Déposer ici le document ou sélectionnez-le avec le bouton ci-dessous<br/>
+            <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
+
+
+            <div class="progress" style="margin-top : 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 00%;">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+
+            <!-- {{ f.input ({
+              'input' : {
+                'type' :'text',
+                'name' :'titre',
+                'id' : 'titreForImportDoc',
+                'placeholder' : 'Optionnel : titre du document',
+                'class' : 'form-control',
+                'autocomplete' : 'off',
+                'value' : ''
+
+              }
+            }) }} -->
+
+        </div>
+    </div>
+
+</div>

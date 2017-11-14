@@ -1,0 +1,162 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > people : voir les infos sur un pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+{% if page.proData.dossierType =="deleted" %}
+<div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
+{% endif %}
+
+  <h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
+    {% if page.proData.51 %}{{ page.proData.51 }}
+    {% endif %}
+    {{ page.proData.3 }}
+    {{ page.proData.2 }}
+     <small>{{ page.proData.19 }}</small>
+  </h1>
+
+  <div class="row">
+
+      <div class="col-md-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading gras">Informations professionnelles</div>
+              <div class="panel-body">
+                <p>Informations professionnelles sur ce praticien
+                  <a class="btn btn-default pull-right" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/" role="button">Editer infos pros</a>
+                </p>
+              </div>
+
+              <table class="table table-hover">
+                {% if page.proData.249 or page.proData.250 %}<tr><td>
+                  {% if  page.proData.249 %}{{ page.proDataLabel.249 }}{% endif %}
+                  {% if page.proData.249 and page.proData.250 %} - {% endif %}
+                  {% if  page.proData.250 %}{{ page.proDataLabel.250 }}{% endif %}
+                  <td><td>
+                  {% if  page.proData.249 %}{{ page.proData.249 }} {% endif %}
+                  {% if page.proData.249 and page.proData.250 %} - {% endif %}
+                  {% if  page.proData.250 %}{{ page.proData.250 }}{% endif %}
+                </td></tr>{% endif %} {# service / etablissement #}
+                {% if page.proData.54 or page.proData.55 or page.proData.53 or page.proData.56 %}<tr><td>Adresse professionnelle<td><td>
+                  {% if  page.proData.54 %}{{ page.proData.54 }} {% endif %}
+                  {% if  page.proData.55 %}{{ page.proData.55 }} {% endif %}
+                  {% if  page.proData.53 %}{{ page.proData.53 }} {% endif %}
+                  {% if  page.proData.56 %}{{ page.proData.56 }}{% endif %}
+                </td></tr>{% endif %} {# Adresse pro #}
+                {% if page.proData.57 %}<tr><td>{{ page.proDataLabel.57 }}<td><td>{{ page.proData.57 }}</td></tr>{% endif %} {# tel pro #}
+                {% if page.proData.248 %}<tr><td>{{ page.proDataLabel.248 }}<td><td>{{ page.proData.248 }}</td></tr>{% endif %} {# tel pro #}
+                {% if page.proData.247 %}<tr><td>{{ page.proDataLabel.247 }}<td><td>{{ page.proData.247 }}</td></tr>{% endif %} {# tel mob pro #}
+                {% if page.proData.58 %}<tr><td>{{ page.proDataLabel.58 }}<td><td>{{ page.proData.58 }}</td></tr>{% endif %} {# fax pro #}
+                {% if page.proData.59 %}<tr><td>{{ page.proDataLabel.59 }}<td><td>{{ page.proData.59 }}</td></tr>{% endif %} {# email apicrypt #}
+                {% if page.proData.5 %}<tr><td>{{ page.proDataLabel.5 }}<td><td>{{ page.proData.5 }}</td></tr>{% endif %} {# email pro #}
+                {% if page.proData.443 %}<tr><td>{{ page.proDataLabel.443 }}<td><td>{{ page.proData.443|nl2br }}</td></tr>{% endif %} {# notes pros #}
+              </table>
+
+              <div class="panel-footer">&nbsp;</div>
+            </div>
+      </div>
+
+
+      <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-heading gras">Informations personnelles</div>
+              <div class="panel-body">
+                <p>Informations personnelles sur ce praticien
+                <a class="btn btn-default pull-right" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/" role="button">Editer infos persos</a></p>
+              </div>
+
+              <table class="table table-hover">
+                {% if page.proData.8 %}<tr><td>{{ page.proDataLabel.8 }}<td><td>{{ page.proData.8 }}</td></tr>{% endif %} {# ddn #}
+                {% if page.proData.9 or page.proData.11 or page.proData.13 or page.proData.12 %}<tr><td>Adresse personnelle<td><td>
+                  {% if  page.proData.9 %}{{ page.proData.9 }} {% endif %}
+                  {% if  page.proData.11 %}{{ page.proData.11 }} {% endif %}
+                  {% if  page.proData.13 %}{{ page.proData.13 }} {% endif %}
+                  {% if  page.proData.12 %}{{ page.proData.12 }}{% endif %}
+                </td></tr>{% endif %} {# Adresse perso #}
+                {% if page.proData.7 %}<tr><td>{{ page.proDataLabel.7 }}<td><td>{{ page.proData.7 }}</td></tr>{% endif %} {# tel mob perso #}
+                {% if page.proData.10 %}<tr><td>{{ page.proDataLabel.10 }}<td><td>{{ page.proData.10 }}</td></tr>{% endif %} {# tel perso #}
+                {% if page.proData.4 %}<tr><td>{{ page.proDataLabel.4 }}<td><td>{{ page.proData.4 }}</td></tr>{% endif %} {# email perso #}
+                {% if page.proData.21 %}<tr><td>{{ page.proDataLabel.21 }}<td><td>{{ page.proData.21|nl2br }}</td></tr>{% endif %} {# notes perso #}
+              </table>
+              <div class="panel-footer">&nbsp;</div>
+            </div>
+
+      </div>
+</div>
+
+{% if page.patientsConnus %}
+<div class="row">
+
+    <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading gras">Patients connus</div>
+            <div class="panel-body">
+              <p>Patients reliés à ce praticien.
+
+              </p>
+            </div>
+
+            <table class="table table-striped table-hover">
+      				<thead>
+      					<tr>
+      						<th class="col-md-1"></th>
+      						<th class="col-md-10">Identité</th>
+      					</tr>
+      				</thead>
+      				<tbody>
+                {% for v in page.patientsConnus %}
+                <tr>
+                  <td>
+                    <a title="Accès au dossier" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a>
+                    <a title="Éditer les relations du patient" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+                  </td>
+                  <td>{{ v.nom }} {{ v.prenom }}</td>
+
+                </tr>
+                {% endfor %}
+      				</tbody>
+
+      			</table>
+
+            <div class="panel-footer">&nbsp;</div>
+          </div>
+    </div>
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

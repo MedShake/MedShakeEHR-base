@@ -79,7 +79,7 @@ function sendmail($pa)
     $mail->addAddress($pa['email'], $pa['identite']);
     $mail->Subject = 'Rappel rdv le '.$pa['jourRdv'].' à '.$pa['heureRdv'];
 
-    $msgRappel="Bonjour,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à une patiente n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
+    $msgRappel="Bonjour,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
 
     $mail->Body = nl2br($msgRappel);
     $mail->AltBody = $msgRappel;
