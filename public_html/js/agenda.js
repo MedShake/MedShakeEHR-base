@@ -63,7 +63,7 @@ $(document).ready(function() {
 
   if (!eventSources) {
     eventSources = [{
-        url: urlBase+'/agenda/' + userID + '/ajax/getEvents/'
+        url: urlBase+'/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
       },
       {
         events: [{
