@@ -208,10 +208,9 @@ $(document).ready(function() {
     eventClick: function(eventClicked, jsEvent, view) {
       selected_event = eventClicked;
       setTimeout(deselectObject, 1);
-      $("#buttonNew").hide();
       $("#buttonMark").html(eventClicked.absent=="oui" ? "Honoré" : "Non honoré");
       setTimeout(function(){
-        $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
+        $("#buttonNew").hide();
         $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
       }, 10);
       if (eventClicked.patientid != "0")
@@ -420,7 +419,6 @@ $(document).ready(function() {
 });
 
 function deselectObject () {
-  $("div.fc-title.underlined").removeClass("underlined");
   $("div.fc-bg.selected").removeClass("selected");
   $("#buttonNew").html("Créer").show();
 };
