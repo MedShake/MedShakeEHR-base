@@ -39,11 +39,6 @@
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/common.js"></script>
 
     <style>
-        .foetusB,
-        .foetusC {
-            display: none;
-        }
-
         #newDoc{
           display: none;
         }
@@ -58,15 +53,6 @@
     {% if page.listeForms|length > 0 %}
       var formScripts = new Array({{ page.listeForms|join(',') }});
     {% endif %}
-    </script>
-
-    <script>
-        window.addEventListener("beforeunload", function(e) {
-            if ($("#newReglement .jumbotron").length || $("#newCourrier .jumbotron").length || $("#newOrdo .jumbotron").length || $("#nouvelleCs .jumbotron").length) {
-                e.returnValue = "\o/";
-                return "\o/";
-            }
-        }, false);
     </script>
 
 {% endblock %}
