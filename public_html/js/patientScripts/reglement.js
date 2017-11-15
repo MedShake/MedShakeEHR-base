@@ -31,6 +31,7 @@ $(document).ready(function() {
 
   //close button zone newReglement
   $('body').on("click", "#cleanNewReglement", function(e) {
+    $(window).unbind("beforeunload");
     $('#newReglement').html('');
   });
 

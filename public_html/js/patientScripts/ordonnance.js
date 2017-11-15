@@ -32,6 +32,7 @@ $(document).ready(function() {
 
   //close button zone newOrdo
   $('#newOrdo').on("click", "#cleanNewOrdo", function(e) {
+    $(window).unbind("beforeunload");
     $('#newOrdo').html('');
   });
 
