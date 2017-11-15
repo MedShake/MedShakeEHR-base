@@ -193,6 +193,7 @@ $(document).ready(function() {
   //close button zone newCS
   $('body').on("click", "#cleanNewCS", function(e) {
     $('#nouvelleCs').html('');
+    $(window).unbind("beforeunload");
   });
 
   ////////////////////////////////////////////////////////////////////////

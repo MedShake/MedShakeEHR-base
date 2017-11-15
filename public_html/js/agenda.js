@@ -114,7 +114,12 @@ $(document).ready(function() {
         click: function(){
           if (!selected_event || !selected_period)
             return alert("Sélectionnez d'abord un événement à cloner, puis la position où placer le clone, avant de cliquez sur ce bouton");
-          setRDV(true);
+          if (selected_event.patientid != "0")
+            setRdv(true);
+          else {
+  	        selected_period.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
+            closePeriod();
+          }
           selected_event = undefined;
           selected_period = undefined;
         },
@@ -203,10 +208,9 @@ $(document).ready(function() {
     eventClick: function(eventClicked, jsEvent, view) {
       selected_event = eventClicked;
       setTimeout(deselectObject, 1);
-      $("#buttonNew").hide();
       $("#buttonMark").html(eventClicked.absent=="oui" ? "Honoré" : "Non honoré");
       setTimeout(function(){
-        $(jsEvent.currentTarget).find("div.fc-title").addClass("underlined");
+        $("#buttonNew").hide();
         $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
       }, 10);
       if (eventClicked.patientid != "0")
@@ -415,9 +419,8 @@ $(document).ready(function() {
 });
 
 function deselectObject () {
-  $("div.fc-title.underlined").removeClass("underlined");
   $("div.fc-bg.selected").removeClass("selected");
-  $("#buttonNew").html("Créer");
+  $("#buttonNew").html("Créer").show();
 };
 
 function setRdv(isnew) {
