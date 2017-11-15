@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of MedShakeEHR.
  *
@@ -21,30 +20,23 @@
  */
 
 /**
- * Patient : la page du dossier patient
+ * Js pour le formulaire 5 (synthèse gynéco patiente)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-//formulaire latéral ATCD
-$formLat = new msForm();
-$formLat->setFormIDbyName('baseATCD');
-$formLat->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formLat']=$formLat->getForm();
+$(document).ready(function() {
 
-//formulaire de synthèse patient
-$formSynthese = new msForm();
-$formSynthese->setFormIDbyName('baseSynthese');
-$formSynthese->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formSynthese']=$formSynthese->getForm();
+  // ajustement automatique de la hauteur des textarea 
+  $("#formNamebaseSynthese textarea").each(function( index ) {
+    $(this).css("overflow","hidden");
+    auto_grow(this);
+  });
 
-//types de consultation de base.
-$typeCsBase=new msData;
-$p['page']['typeCsBase']=$typeCsBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
+  $("#formNamebaseSynthese textarea").on("keyup", function() {
+    $(this).css("overflow","hidden");
+    auto_grow(this);
+  });
 
-//noms des scripts JS (potentiels) associés aux formulaires
-$scripts = msSQL::sql2tabKey("select internalName from forms where groupe='medical'", "internalName");
-foreach ($scripts as $k=>$v)
-  $p['page']['formName'.$k]=$p['page']['listeForms'][]=$k;
-
+});

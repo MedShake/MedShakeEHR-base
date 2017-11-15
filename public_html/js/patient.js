@@ -35,13 +35,17 @@ $(document).ready(function() {
   //$.getScriptOnce(urlBase+"/js/module/common.js");
 
   ///////// Charger les scripts JS correspondant au form inclus dans la page
-  if (typeof(formScripts) != "undefined") {
+/*  if (typeof(formScripts) != "undefined") {
     if ($.isArray(formScripts)) {
       $.each(formScripts, function(index, value) {
         $.getScriptOnce(urlBase+"/js/module/formsScripts/" + value + ".js");
       });
     }
   }
+*/
+  for (var i = 0; formScripts && i < formScripts.length; i++)
+    if (typeof init[formScripts[i]] == "function")
+      init[formScripts[i]]();
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
@@ -194,6 +198,7 @@ $(document).ready(function() {
   $('body').on("click", "#cleanNewCS", function(e) {
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
+    if (typeof kill[el.attr('data-formtocall')] == "function") kill[el.attr('data-formtocall')]();
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -433,7 +438,8 @@ function sendFormToCsDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#nouvelleCs').html(data);
-      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+//      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+      if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       scrollTo('body');
       // checkboxes dans les formulaires
       $("input").unbind("click");
@@ -444,6 +450,7 @@ function sendFormToCsDiv(el) {
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
         $(window).unbind("beforeunload");
+        if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       });
 
     },

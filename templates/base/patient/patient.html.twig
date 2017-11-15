@@ -36,7 +36,10 @@
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/tinymce.min.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/jquery.tinymce.min.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
-
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/common.js"></script>
+    {% for i in page.listeForms %}
+      <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js"></script>
+    {% endfor %}
     <style>
         #newDoc{
           display: none;
@@ -47,11 +50,10 @@
     {# provoquer l'envoie asynchrone du patient dans le DICOM si config ok #}
     {# formulaire JS à charger #}
     <script>
+      var init = {};
+      var kill = {};
+      var formScripts = ['baseATCD', 'baseSynthese'];
       var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
-
-    {% if page.listeForms|length > 0 %}
-      var formScripts = new Array({{ page.listeForms|join(',') }});
-    {% endif %}
     </script>
 
 {% endblock %}
@@ -233,7 +235,7 @@
             <div  class="col-md-3">
               {# Formulaire dlatéral des ATCD #}
               <div id="latForm" class=" changeObserv">
-                  {{ f.formbuilder(page.formLat , page.formNumberBaseATCD , valFormLat ) }}
+                  {{ f.formbuilder(page.formLat , page.formNameBaseATCD , valFormLat ) }}
               </div>
               {# Liens familiaux #}
               {% if page.liensFamiliaux %}
