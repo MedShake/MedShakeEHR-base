@@ -58,6 +58,7 @@ CREATE TABLE `agenda` (
   `type` varchar(10) DEFAULT NULL,
   `dateAdd` datetime DEFAULT NULL,
   `patientid` mediumint(6) UNSIGNED DEFAULT NULL,
+  `fromID` mediumint(6) UNSIGNED DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
   `absente` enum('non','oui') DEFAULT 'non',
   `motif` text
@@ -70,7 +71,7 @@ CREATE TABLE `agenda_changelog` (
   `fromID` smallint(5) UNSIGNED NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `operation` enum('edit','move','delete','missing') NOT NULL,
-  `olddata` mediumblob DEFAULT NULL
+  `olddata` mediumblob
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `data_cat` (
@@ -456,8 +457,9 @@ ALTER TABLE `data_cat`
   ADD UNIQUE KEY `name` (`name`);
 
 ALTER TABLE `agenda`
-  ADD PRIMARY KEY (`id`,`userid`) USING BTREE,
-  ADD KEY `patientid` (`patientid`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `patientid` (`patientid`),
+  ADD KEY `userid` (`userid`);
 
 ALTER TABLE `agenda_changelog`
   ADD PRIMARY KEY (`id`),
@@ -477,8 +479,8 @@ ALTER TABLE `dicomTags`
   ADD KEY `typeID` (`typeID`);
 
 ALTER TABLE `forms`
-    ADD PRIMARY KEY (`id`),
-    ADD UNIQUE KEY `internalName` (`internalName`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `internalName` (`internalName`);
 
 ALTER TABLE `forms_cat`
   ADD PRIMARY KEY (`id`);
@@ -554,5 +556,7 @@ ALTER TABLE `prescriptions_cat`
   MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `printed`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `agenda`
+  MODIFY `id` int(12) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `agenda_changelog`
   MODIFY `id` int(8) UNSIGNED NOT NULL AUTO_INCREMENT;
