@@ -21,7 +21,7 @@
  */
 
 /**
- * Agenda : ajouter un rdv dans l'agenda
+ * Agenda : ajouter / éditer un rdv dans l'agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -30,13 +30,13 @@ $event = new msAgenda();
 if($_POST['eventID']>0) $event->set_eventID($_POST['eventID']);
 $event->set_userID($match['params']['userID']);
 $event->set_patientID($_POST['patientID']);
+$event->set_fromID($p['user']['id']);
 $event->setStartDate($_POST['start']);
 $event->setEndDate($_POST['end']);
 $event->set_motif($_POST['motif']);
 $event->set_type($_POST['type']);
 $dataEvent=$event->addOrUpdateRdv();
 
-//print_r($_POST);
 
 header('Content-Type: application/json');
 echo json_encode($dataEvent);
