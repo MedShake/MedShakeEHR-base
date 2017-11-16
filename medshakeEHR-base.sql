@@ -63,6 +63,16 @@ CREATE TABLE `agenda` (
   `motif` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `agenda_changelog` (
+  `id` int(8) UNSIGNED NOT NULL,
+  `eventID` int(12) UNSIGNED NOT NULL,
+  `userID` smallint(5) UNSIGNED NOT NULL,
+  `fromID` smallint(5) UNSIGNED NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `operation` enum('edit','move','delete','missing') NOT NULL,
+  `olddata` mediumblob DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `data_cat` (
   `id` smallint(5) NOT NULL,
   `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
@@ -449,6 +459,10 @@ ALTER TABLE `agenda`
   ADD PRIMARY KEY (`id`,`userid`) USING BTREE,
   ADD KEY `patientid` (`patientid`);
 
+ALTER TABLE `agenda_changelog`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `eventID` (`eventID`);
+
 ALTER TABLE `data_types`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
@@ -465,7 +479,7 @@ ALTER TABLE `dicomTags`
 ALTER TABLE `forms`
     ADD PRIMARY KEY (`id`),
     ADD UNIQUE KEY `internalName` (`internalName`);
-    
+
 ALTER TABLE `forms_cat`
   ADD PRIMARY KEY (`id`);
 
@@ -540,3 +554,5 @@ ALTER TABLE `prescriptions_cat`
   MODIFY `id` smallint(5) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `printed`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `agenda_changelog`
+  MODIFY `id` int(8) UNSIGNED NOT NULL AUTO_INCREMENT;
