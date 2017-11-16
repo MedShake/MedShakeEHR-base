@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+init.docupload = function() {
 
   $("#dropZoneDoc").dmUploader({
     url: urlBase+'/patient/ajax/uploadNewDoc/',
@@ -44,4 +44,4 @@ $(document).ready(function() {
     }
   });
 
-});
+};

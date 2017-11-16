@@ -195,7 +195,7 @@ class msForm
       );
     }
 /**
- * Obtenir les règles de validation du formaulaire
+ * Obtenir les règles de validation du formulaire
  * @return array Array des règles de validation pour GUMP
  */
     public function getValidation()

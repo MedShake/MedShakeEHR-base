@@ -38,7 +38,7 @@ $to=new msPeople();
 //définir les valeurs par défaut
 if ($_POST['mailType']=='ns') {
     $preValues['mailFrom']=$p['config']['smtpFrom'];
-    $preValues['mailTo']=array_key_exists('4', $toAdminData) ? $toAdminData['4'] : '';
+    $preValues['mailTo']= array_key_exists('4', $toAdminData) ? $toAdminData['4'] : '';
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
     $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');
@@ -89,7 +89,10 @@ if (isset($_POST['objetID'])) {
 
 //formulaire
 $form = new msForm();
-$form->setFormID($_POST['formID']);
+if (is_numeric($_POST['formID']))
+  $form->setFormID($_POST['formID']);
+else
+  $form->setFormIDbyName($_POST['formID']);
 $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();

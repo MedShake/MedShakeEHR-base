@@ -26,15 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (is_numeric($_POST['formNumber'])) {
-    $formNumber=$_POST['formNumber'];
-} else {
-    die();
-}
+$formNumber=$_POST['formNumber'];
 
 //definition formulaire de travail
 $form = new msForm();
-$form->setFormID($formNumber);
+if (is_numeric($formNumber))
+  $form->setFormID($formNumber);
+else
+  $form->setFormIDbyName($formNumber);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 

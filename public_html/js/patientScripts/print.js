@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+init.print = function() {
   $(document).on('focusin', function(e) {
     if ($(e.target).closest(".mce-window").length) {
       e.stopImmediatePropagation();
@@ -53,4 +53,4 @@ $(document).ready(function() {
 
   });
 
-});
+};

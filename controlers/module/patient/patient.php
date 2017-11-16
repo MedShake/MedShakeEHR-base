@@ -27,24 +27,20 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-//formulaire latéral ATCD
-$formLat = new msForm();
-$formLat->setFormIDbyName('baseATCD');
-$formLat->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formLat']=$formLat->getForm();
+$forms = msSQL::sql2tabKey("SELECT internalName FROM forms WHERE groupe='medical'", "internalName");
+foreach ($forms as $k=>$v) {
+  //noms des scripts JS (potentiels) associés aux formulaires
+  $p['page']['formName_'.$k]=$p['page']['listeForms'][]=$k;
+  //données de formulaires
+  $form = new msForm();
+  $form->setFormIDbyName($k);
+  $form->getPrevaluesForPatient($match['params']['patient']);
+  $p['page']['formData_'.$k]=$form->getForm();
+}
 
-//formulaire de synthèse patient
-$formSynthese = new msForm();
-$formSynthese->setFormIDbyName('baseSynthese');
-$formSynthese->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formSynthese']=$formSynthese->getForm();
-
-//types de consultation de base.
-$typeCsBase=new msData;
-$p['page']['typeCsBase']=$typeCsBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
-
-//noms des scripts JS (potentiels) associés aux formulaires
-$scripts = msSQL::sql2tabKey("select internalName from forms where groupe='medical'", "internalName");
-foreach ($scripts as $k=>$v)
-  $p['page']['formName'.$k]=$p['page']['listeForms'][]=$k;
-
+//données de consultation
+$typesCs = msSQL::sql2tabKey("SELECT name FROM `data_cat` WHERE groupe='typecs'", "name");
+foreach ($typesCs as $k=>$v){
+  $typeCs=new msData;
+  $p['page']['typeCs_'.$k]=$typeCs->getDataTypesFromCatName($k, array('id','label', 'formValues'));
+}

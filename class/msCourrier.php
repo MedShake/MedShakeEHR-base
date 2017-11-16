@@ -272,7 +272,10 @@ class msCourrier
         }
 
         $examenFormData = new msForm();
-        $examenFormData->setFormID($formID);
+        if (is_numeric($formID))
+          $examenFormData->setFormID($formID);
+        else
+          $examenFormData->setFormIDbyName($formID);
         $examenFormData->setInstance($instance);
         $examenFData = $examenFormData->getPrevaluesForPatient($patientID);
 
@@ -310,6 +313,9 @@ class msCourrier
  */
     private function _getPrintModel($formID)
     {
-        return msSQL::sqlUniqueChamp("select printModel from forms where id='".$formID."' limit 1");
+        if (is_numeric($formID))
+          return msSQL::sqlUniqueChamp("select printModel from forms where id='".$formID."' limit 1");
+        else
+          return msSQL::sqlUniqueChamp("select printModel from forms where internalName='".$formID."' limit 1");
     }
 }

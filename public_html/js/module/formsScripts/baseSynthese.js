@@ -29,12 +29,12 @@
 $(document).ready(function() {
 
   // ajustement automatique de la hauteur des textarea 
-  $("#formNamebaseSynthese textarea").each(function( index ) {
+  $("#formName_baseSynthese textarea").each(function( index ) {
     $(this).css("overflow","hidden");
     auto_grow(this);
   });
 
-  $("#formNamebaseSynthese textarea").on("keyup", function() {
+  $("#formName_baseSynthese textarea").on("keyup", function() {
     $(this).css("overflow","hidden");
     auto_grow(this);
   });

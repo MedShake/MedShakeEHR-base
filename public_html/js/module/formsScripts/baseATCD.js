@@ -48,13 +48,14 @@ init.baseATCD = function(){
   }
 
   //ajutement auto des textarea en hauteur
-  $("#formNamebaseATCD textarea").each(function(index) {
+  $("#formName_baseATCD textarea").each(function(index) {
     $(this).css("overflow", "hidden");
     auto_grow(this);
   });
 
-  $("#formNamebaseATCD textarea").on("keyup", function() {
-    $(this).css("overflow", "auto");
+  $("#formName_baseATCD textarea").on("keyup", function() {
+    $(this).css("overflow", "hidden");
+    auto_grow(this);
   });
 
 };

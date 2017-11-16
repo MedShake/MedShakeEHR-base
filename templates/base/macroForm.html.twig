@@ -268,7 +268,7 @@
 		<form
 		{% if t.global.formAction %}action="{{ t.config.protocol }}{{ t.config.host }}{{ t.config.urlHostSuffixe }}{{ t.global.formAction }}" {% endif %}
 		{% if t.global.formMethod %}method="{{ t.global.formMethod }}" {% endif %}
-		id="formName{{ formNumber }}"
+		id="formName_{{ formNumber }}"
 		class="{{ t.global.formClass }}"
 		data-dataset="{{ t.global.dataset }}"
 		data-instance="{{ t.global.instance }}" >
