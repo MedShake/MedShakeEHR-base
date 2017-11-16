@@ -38,7 +38,7 @@ $to=new msPeople();
 //définir les valeurs par défaut
 if ($_POST['mailType']=='ns') {
     $preValues['mailFrom']=$p['config']['smtpFrom'];
-    $preValues['mailTo']=$toAdminData['4'];
+    $preValues['mailTo']=array_key_exists('4', $toAdminData) ? $toAdminData['4'] : '';
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
     $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');

@@ -35,6 +35,7 @@ $(document).ready(function() {
 
   //close button zone newCourrier
   $('#newCourrier').on("click", "#cleanNewCourrier", function(e) {
+    $(window).unbind("beforeunload");
     $("#editeurCourrier").tinymce().remove();
     $('#newCourrier').html('');
   });

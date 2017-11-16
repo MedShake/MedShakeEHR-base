@@ -31,6 +31,7 @@ $(document).ready(function() {
 
   //close button zone newMail
   $('body').on("click", "#cleanNewMail", function(e) {
+    $(window).unbind("beforeunload");
     $('#newMail').html('');
   });
 
