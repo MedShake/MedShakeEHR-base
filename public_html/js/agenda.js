@@ -210,7 +210,6 @@ $(document).ready(function() {
       }
     },
     eventClick: function(eventClicked, jsEvent, view) {
-      //alert('eventClick');
       $(".fc-bg").removeClass("selected");
 
       selected_event = eventClicked;
@@ -254,7 +253,6 @@ $(document).ready(function() {
       }
     },
     select: function(start, end, jsEvent, view) {
-      //alert($('#patientID').val());
       selected_period = {
         start: start,
         end: end
@@ -269,9 +267,6 @@ $(document).ready(function() {
 
     },
     unselect: function(jsEvent, view) {
-      // selected_period = undefined;
-      // selected_event = undefined;
-      // clean();
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
@@ -688,7 +683,6 @@ function resizeEvent(event) {
 
 //fonction pour la sauvegarde automatique
 function setPeopleData(value, patientID, typeID, source, instance) {
-  //alert(patientID);
   if (patientID && typeID && source) {
     $.ajax({
       url: urlBase + '/ajax/setPeopleData/',
