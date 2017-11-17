@@ -80,8 +80,8 @@
                         <tr class="{% if v.type == '[off]' %}info{% elseif v.operation is not defined %}success{% elseif v.operation == 'missing' %}warning{% elseif v.operation == 'delete' %}danger{% endif %}">
                             <td>{{ v.date }}
                             </td>
-                            <td><a href="/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }} {{ page['agendaUsers'][v.agendaID] }}</a></td>
-                            <td><a href="/logs/agenda/{{ v.agendaID }}/{{ v.eventID }}/">#{{ v.eventID }}</a></td>
+                            <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }} {{ page['agendaUsers'][v.agendaID] }}</a></td>
+                            <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/{{ v.eventID }}/">#{{ v.eventID }}</a></td>
                             <td>{{ v.start }} &rarr; {{ v.end }}</td>
                             <td>{{ v.type }}</td>
                             <td>#{{ v.patientID }}</td><td>{{ v.patientPrenom }} {{ v.patientNom }}</td>
