@@ -78,6 +78,7 @@ historiqueMailSendGeneral: ['GET', '/logs/historiqueGeneralMailSend/[i:user]?/[i
 historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patientID]/', 'logs/historiqueMailSendToPatient']
 historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/', 'logs/historiqueRappelsSMS']
 historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'logs/historiqueRappelsMail']
+logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
 
 #pdf
 makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo:printType]/[i:examen]/', 'print/pdfMake']

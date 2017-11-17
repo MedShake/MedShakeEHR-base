@@ -266,8 +266,7 @@ $(document).ready(function() {
       }
 
     },
-    unselect: function(jsEvent, view) {
-    },
+    unselect: function(jsEvent, view) {},
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
       if (confirm("Souhaitez-vous fermer cette journée ?"))
@@ -318,6 +317,13 @@ $(document).ready(function() {
             deleteEvent(this.attr('data-eventid'));
           }
         },
+        separator3: "-----",
+        logs: {
+          name: "Historique des modifications de ce rdv",
+          callback: function(key, opt) {
+            window.open(urlBase + '/logs/agenda/' + $('#calendar').attr('data-userID') + '/' + this.attr('data-eventid') + '/', '_blank');
+          }
+        }
       }
     });
 
