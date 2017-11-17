@@ -38,7 +38,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as catLabel
   from prescriptions as p
   left join prescriptions_cat as c on c.id=p.cat
-  where p.toID in ('0','".$p['user']['id']."') 
+  where p.toID in ('0','".$p['user']['id']."')
   group by p.id
   order by c.displayOrder, p.id in (1,2) desc, c.label asc, p.label asc")) {
     foreach ($tabTypes as $v) {
@@ -58,7 +58,7 @@ if (is_numeric($_POST['objetID'])) {
     left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
     left join prescriptions as pres on pres.id=p.parentTypeID
     where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."')
-    group by p.id
+    group by p.id, ald.id
     order by p.id asc")) {
         $modePrint='standard';
 
