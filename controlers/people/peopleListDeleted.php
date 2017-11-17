@@ -39,7 +39,7 @@ left join objets_data as m on m.toID=p.id and m.typeID='".$administratifMarqueur
 left join objets_data as o3 on o3.toID=m.fromID and o3.typeID=2 and o3.outdated=''
 left join objets_data as o4 on o4.toID=m.fromID and o4.typeID=3 and o4.outdated=''
 where p.type='deleted'
-group by p.id
+group by p.id, o.id, o2.id, m.id, o3.id, o4.id 
 order by p.id")) {
 
   foreach($p['page']['users'] as $k=>$v) {

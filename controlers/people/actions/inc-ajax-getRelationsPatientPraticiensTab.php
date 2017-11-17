@@ -44,7 +44,8 @@ inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['rel
 left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
 left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
 where o.toID='".$patientID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-group by o.value order by typeRelation = 'MT' desc, nom asc")) {
+group by o.value, c.id, n.id, p.id 
+order by typeRelation = 'MT' desc, nom asc")) {
 
   foreach($data as $k=>$v) {
     $data[$k]['typeRelationDisplay']=$typeRelations[$v['typeRelation']];

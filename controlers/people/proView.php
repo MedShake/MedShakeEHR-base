@@ -50,4 +50,5 @@ left join objets_data as c on c.instance=o.id
 left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
 left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
 where o.toID='".$match['params']['proID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-group by o.value order by nom asc");
+group by o.value, c.id, n.id, p.id 
+order by nom asc");

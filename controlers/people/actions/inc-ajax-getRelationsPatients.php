@@ -34,7 +34,8 @@
  left join objets_data as d3 on do.toID = d3.toID and d3.typeID='3' and d3.outdated='' and d3.deleted=''
  left join people as p on p.id=do.toID
  where do.typeID in ('2', '3') and concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%'
- group by label limit 25");
+ group by label, d2.id, d3.id, p.id 
+ limit 25");
 
 
  echo json_encode($data);

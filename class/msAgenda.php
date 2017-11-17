@@ -226,7 +226,7 @@ class msAgenda
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
           where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
-          group by a.id")) {
+          group by a.id, n.value, p.value")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
               }
@@ -263,7 +263,7 @@ class msAgenda
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
           where a.id= '".$this->_eventID."'
-          group by a.id")) {
+          group by a.id, n.value, p.value")) {
               $formatedEvent=$this->_formatEvent($event);
           }
           return $formatedEvent;

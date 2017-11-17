@@ -35,7 +35,7 @@
  left join objets_data as d8 on d8.toID=p.id and d8.typeID=8 and d8.outdated='' and d8.deleted=''
  left join objets_data as d3 on d3.toID=p.id and d3.typeID=3 and d3.outdated='' and d3.deleted=''
  where concat(d2.value, ' ', d3.value) like '%".$term."%'
- group by p.id
+ group by p.id, d2.value, d3.value, d8.value
  order by d2.value, d3.value limit 20")) {
 
  	foreach ($data as $k=>$v) {
