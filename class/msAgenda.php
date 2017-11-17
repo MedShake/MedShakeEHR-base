@@ -354,6 +354,8 @@ class msAgenda
               throw new Exception('UserID n\'est pas défini');
           }
 
+          $this->_addToLog('delete');
+
           $data=array(
             'id'=>$this->_eventID,
             'userid'=>$this->_userID,
@@ -361,7 +363,7 @@ class msAgenda
           );
           msSQL::sqlInsert('agenda', $data);
 
-          $this->_addToLog('delete');
+
       }
 
     /**
@@ -382,6 +384,9 @@ class msAgenda
           if (!isset($this->_endDate)) {
               throw new Exception('EndDate n\'est pas définie');
           }
+
+          $this->_addToLog('move');
+
           $data=array(
             'id'=>$this->_eventID,
             'userid'=>$this->_userID,
@@ -390,7 +395,6 @@ class msAgenda
           );
           msSQL::sqlInsert('agenda', $data);
 
-          $this->_addToLog('move');
       }
     /**
     * Obtenir l'historique de rdv du patient
@@ -429,6 +433,8 @@ class msAgenda
             $absent='oui';
         }
 
+        $this->_addToLog('missing');
+
         $data=array(
           'id'=>$this->_eventID,
           'userid'=>$this->_userID,
@@ -436,7 +442,6 @@ class msAgenda
         );
         msSQL::sqlInsert('agenda', $data);
 
-        $this->_addToLog('missing');
     }
 
 /**
