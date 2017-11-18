@@ -29,6 +29,8 @@
 
 $forms = msSQL::sql2tabKey("SELECT internalName FROM forms WHERE groupe='medical'", "internalName");
 foreach ($forms as $k=>$v) {
+  if ($k == 'baseConsult' || $k == 'baseImportExternal')
+    continue;
   //noms des scripts JS (potentiels) associés aux formulaires
   $p['page']['formName_'.$k]=$p['page']['listeForms'][]=$k;
   //données de formulaires
