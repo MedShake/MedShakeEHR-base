@@ -86,7 +86,7 @@
 	<h1>Types des données médicales</h1>
 {% elseif page.groupe == "typecs" %}
 	<h1>Types des données consultation</h1>
-	{% set valeurParDefaut='Numéro du formulaire associé' %}
+	{% set valeurParDefaut='Nom du formulaire associé' %}
 {% elseif page.groupe == "courrier" %}
 	<h1>Types des données courrier</h1>
 	{% set valeurParDefaut='Courrier : nom du template associé / Mail : texte par défaut' %}
@@ -359,7 +359,7 @@
 					<div class="form-group">
 						{{ f.input ({
 							'input' : {
-								'type' : 'number',
+								'type' : 'text',
 								'name' : 'formValues',
 								'id' : 'formValuesID',
 								'class' : 'form-control',
