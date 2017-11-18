@@ -43,7 +43,7 @@
             {{ page.doc.label|e }}
             {{ page.doc.titre|e }}
             <small>(Taille : {{ page.doc.filesize|e }})</small>
-            <a class="btn btn-default btn-xs" href="{{ page.doc.url }}" role="button" target="_blank" title="Voir">
+            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" role="button" target="_blank" title="Voir">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Voir
             </a>
 
