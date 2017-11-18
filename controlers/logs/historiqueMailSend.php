@@ -48,7 +48,8 @@ if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance=
 
 $p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID=2
-  left join objets_data as p on p.toID=m.fromID and p.typeID=3
+  left join objets_data as n on n.toID=m.fromID and n.typeID=2 and n.outdated='' and n.deleted=''
+  left join objets_data as p on p.toID=m.fromID and p.typeID=3 and p.outdated='' and p.deleted=''
   where m.typeID='".$typeIdMailPorteur."'
-  group by m.fromID order by n.value", "id", "identite");
+  group by m.fromID, p.value, n.value
+  order by n.value", "id", "identite");

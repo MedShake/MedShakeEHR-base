@@ -152,26 +152,29 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs
           </a>
         </li>
-        <ul class="list-group">
-          <li class="list-group-item">
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Vérifications des répertoires de stockage
-            </a>
-          </li>
-        </ul>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Logs des agendas
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Vérifications des répertoires de stockage
+          </a>
+        </li>
+      </ul>
 
-      </div>
-
-      <div role="tabpanel" class="tab-pane" id="licence">
-        <h2>Licence</h2>
-        <ul class="list-group">
-          <li class="list-group-item">
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>
-          </li>
-          <li class="list-group-item">
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/credits/">Credits</a>
-          </li>
-
-        </ul>
-      </div>
     </div>
-  {% endblock %}
+
+    <div role="tabpanel" class="tab-pane" id="licence">
+      <h2>Licence</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/credits/">Credits</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+{% endblock %}

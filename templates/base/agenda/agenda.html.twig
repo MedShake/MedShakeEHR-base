@@ -131,11 +131,23 @@
           <textarea id="motif" class="form-control" rows="3" autocomplete="off"></textarea>
         </div>
 
-        <button id="buttonEdit" class="btn btn-success" type="submit" style="display: none">Déplacer</button>
-        <button id="buttonNew" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
-        <button id="buttonRemove" class="btn btn-danger" style="display: none">Supprimer</button>
-        <button id="buttonMark" class="btn btn-warning" style="display: none">Non honoré</button>
-        <button id="buttonCancel" class="btn btn-default" type="submit">Abandonner</button>
+        <button id="buttonPrincipal" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
+
+        <div class="btn-group">
+          <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="disabled">
+            Autres actions <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+
+            <li><a id="buttonMark" href="#">Non honoré</a></li>
+            <li><a id="buttonClone" href="#">Cloner</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a id="buttonRemove" href="#">Supprimer</a></li>
+          </ul>
+        </div>
+
+        <button id="buttonCancel" disabled="disabled" class="btn btn-default  pull-right" type="submit">Abandonner</button>
+
       </div>
     </form>
 

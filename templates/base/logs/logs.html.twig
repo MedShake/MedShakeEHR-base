@@ -56,7 +56,7 @@
                 </thead>
                 <tbody>
                     {% for v in page.logs %}
-                        <tr class="{% if v.groupe == 'typecs' %}info{% elseif v.groupe == 'courrier' or v.typeID in [177,186,184,192,488] %}success{% elseif v.groupe == 'admin' %}warning{% elseif v.groupe == 'user' %}danger{% endif %}"">
+                        <tr class="{% if v.groupe == 'typecs' %}info{% elseif v.groupe == 'courrier' or v.typeID in [177,186,184,192,488] %}success{% elseif v.groupe == 'admin' %}warning{% elseif v.groupe == 'user' %}danger{% endif %}">
                             <td>#{{ v.id }}</td>
                             <td>{{ v.creationDate }}
                                 {% if v.creationDate != v.updateDate %}<br>{{ v.updateDate }}{% endif %}
@@ -75,7 +75,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-
+              </table>
             </div>
         </div>
 

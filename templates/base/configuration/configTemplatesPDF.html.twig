@@ -136,7 +136,7 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a href="/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}" class="btn btn-default btn-xs">
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}" class="btn btn-default btn-xs">
                       {% if page.templatesDirAutorisationEcriture == false %}
                         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                       {% else %}

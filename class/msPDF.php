@@ -320,7 +320,7 @@ class msPDF
           from objets_data as p
           left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
           where p.instance='".$this->_objetID."' and p.outdated='' and p.deleted=''
-          group by p.id
+          group by p.id, ald.value
           order by p.id asc")) {
 
             // sortir les infos

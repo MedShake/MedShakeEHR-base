@@ -27,6 +27,7 @@
  */
 
 $event = new msAgenda();
+$event->set_fromID($p['user']['id']);
 $event->set_userID($match['params']['userID']);
 $event->set_eventID($_POST['eventid']);
 $event->setStartDate($_POST['start']);
