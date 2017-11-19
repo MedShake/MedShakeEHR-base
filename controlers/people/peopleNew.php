@@ -34,16 +34,16 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formInternalName']='baseNewPatient';
+    $p['page']['formID']='baseNewPatient';
 } elseif ($p['page']['porp']=='pro') {
-    $p['page']['formInternalName']='baseNewPro';
+    $p['page']['formID']='baseNewPro';
 }
 
 
 $formpatient = new msForm();
-$p['page']['formNumber']=$formpatient->setFormIDbyName($p['page']['formInternalName']);
-if (isset($_SESSION['form'][$p['page']['formNumber']]['formValues'])) {
-    $formpatient->setPrevalues($_SESSION['form'][$p['page']['formNumber']]['formValues']);
+$formpatient->setFormIDbyName($p['page']['formID']);
+if (isset($_SESSION['form'][$p['page']['formID']]['formValues'])) {
+    $formpatient->setPrevalues($_SESSION['form'][$p['page']['formID']]['formValues']);
 }
 $p['page']['form']=$formpatient->getForm();
 $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary');

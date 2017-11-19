@@ -28,12 +28,12 @@
 
  //admin uniquement
  if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
+    $template="forbidden";
  } else {
-     $template="configUpdatePassword";
-     $debug='';
+    $template="configUpdatePassword";
+    $debug='';
 
-     $formpatient = new msForm();
-     $p['page']['formNumber']=$formpatient->setFormIDbyName('basePasswordChange');
-     $p['page']['form']=$formpatient->getForm($p['page']['formNumber']);
+    $formpatient = new msForm();
+    $formpatient->setFormIDbyName('basePasswordChange');
+    $p['page']['form']=$formpatient->getForm();
  }

@@ -261,14 +261,14 @@
 {% endmacro %}
 
 {# formBuilder #}
-{% macro formbuilder(t , formNumber, prevalue ) %}
+{% macro formbuilder(t , formID, prevalue ) %}
 	{% import _self as f %}
 
 	{% if t.global.noFormTags is not defined %}
 		<form
 		{% if t.global.formAction %}action="{{ t.config.protocol }}{{ t.config.host }}{{ t.config.urlHostSuffixe }}{{ t.global.formAction }}" {% endif %}
 		{% if t.global.formMethod %}method="{{ t.global.formMethod }}" {% endif %}
-		id="formName_{{ formNumber }}"
+		id="formName_{{ formID }}"
 		class="{{ t.global.formClass }}"
 		data-dataset="{{ t.global.dataset }}"
 		data-instance="{{ t.global.instance }}" >
@@ -278,8 +278,8 @@
 	{{ f.input ({
 		'input' : {
 			'type' : 'hidden',
-			'name' : 'formNumber',
-			'value' : formNumber
+			'name' : 'formID',
+			'value' : formID
 		}
 	}) }}
 
@@ -310,7 +310,7 @@
 
 
 							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox'] %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group{% if el.value.name in prevalue['form'][formID]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {
 										'type' : el.value.formType,
@@ -341,7 +341,7 @@
 								</div>
 
 							{% elseif el.value.formType == "lcc" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group{% if el.value.name in prevalue['form'][formID]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {
 										'type' : 'text',
@@ -373,7 +373,7 @@
 
 
 							{% elseif el.value.formType == "textarea" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group{% if el.value.name in prevalue['form'][formID]['validationErrors'] %} has-error{% endif %}">
 								{{ f.textarea ({
 									'textarea' : {
 										'name' : el.value.name,
@@ -397,7 +397,7 @@
 								</div>
 
 							{% elseif el.value.formType == "select" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group{% if el.value.name in prevalue['form'][formID]['validationErrors'] %} has-error{% endif %}">
 								{{ f.select ({
 									'select' : {
 										'name' : el.value.name,
@@ -419,7 +419,7 @@
 								</div>
 
 							{% elseif el.value.formType == "date" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formNumber]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group{% if el.value.name in prevalue['form'][formID]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {
 										'type' : 'text',

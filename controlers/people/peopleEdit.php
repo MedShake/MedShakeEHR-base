@@ -45,7 +45,8 @@ $p['page']['patient']=$patient->getSimpleAdminDatas();
 $p['page']['patient']['id']=$match['params']['patient'];
 
 $formpatient = new msForm();
-$p['page']['formNumber']=$formpatient->setFormIDbyName($p['page']['formInternalName']);
+$formpatient->setFormIDbyName($p['page']['formInternalName']);
+$p['page']['formID']='formInternalName';
 $formpatient->setPrevalues($p['page']['patient']);
 $p['page']['form']=$formpatient->getForm();
 

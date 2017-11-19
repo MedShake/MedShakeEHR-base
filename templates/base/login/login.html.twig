@@ -36,9 +36,9 @@
 {% block body %}
 
 {# validation error display bloc #}
-{{ f.errorFormDiv( session['form'][page.formNumber]['validationErrorsMsg'] ) }}
+{{ f.errorFormDiv( session['form'][page.formID]['validationErrorsMsg'] ) }}
 
 {# form display #}
-{{ f.formbuilder(page.form , page.formNumber , session) }}
+{{ f.formbuilder(page.form , page.formID , session) }}
 
 {% endblock %}

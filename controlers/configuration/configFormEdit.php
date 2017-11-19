@@ -32,14 +32,14 @@
  } else {
      $debug='';
      $template="configFormEdit";
-     $p['page']['formNumber']=$match['params']['form'];
-     if (!is_numeric($p['page']['formNumber'])) {
+     $p['page']['formID']=$match['params']['form'];
+     if (!is_numeric($p['page']['formID'])) {
          die();
      }
 
 
     //sortie du formulaire et préparation à son exploitation par le templates
-    if ($p['page']['form']=msSQL::sqlUnique("select * from forms where id='".$p['page']['formNumber']."' limit 1")) {
+    if ($p['page']['form']=msSQL::sqlUnique("select * from forms where id='".$p['page']['formID']."' limit 1")) {
         if ($p['page']['tabCat']=msSQL::sql2tabKey("select c.id, c.label
     		from forms_cat as c
     		order by c.label asc", 'id', 'label')) {

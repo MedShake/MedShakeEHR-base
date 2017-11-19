@@ -29,15 +29,15 @@
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 // form number
-if (is_numeric($_POST['formNumber'])) {
-    $formNumber=$_POST['formNumber'];
-} else {
-    die();
-}
+//if (is_numeric($_POST['formID'])) {
+    $formID=$_POST['formID'];
+//} else {
+//    die();
+//}
 
 //construc validation rules
 $form = new msForm();
-$form->setFormID($formNumber);
+$form->setFormIDbyName($formID);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
@@ -50,10 +50,10 @@ if ($validation === false) {
     //check login
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_1'], $_POST['p_2'])) {
-        unset($_SESSION['form'][$formNumber]);
+        unset($_SESSION['form'][$formID]);
         $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
-        if (!in_array($message, $_SESSION['form'][$formNumber]['validationErrorsMsg'])) {
-            $_SESSION['form'][$formNumber]['validationErrorsMsg'][]=$message;
+        if (!in_array($message, $_SESSION['form'][$formID]['validationErrorsMsg'])) {
+            $_SESSION['form'][$formID]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
     }
@@ -61,7 +61,7 @@ if ($validation === false) {
     //do login
     if ($validation != false) {
         $user-> doLogin();
-        unset($_SESSION['form'][$formNumber]);
+        unset($_SESSION['form'][$formID]);
         msTools::redirection('/patients/');
     } else {
         $form->savePostValues2Session();

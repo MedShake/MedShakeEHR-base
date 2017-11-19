@@ -272,10 +272,7 @@ class msCourrier
         }
 
         $examenFormData = new msForm();
-        if (is_numeric($formID))
-          $examenFormData->setFormID($formID);
-        else
-          $examenFormData->setFormIDbyName($formID);
+        $examenFormData->setFormIDbyName($formID);
         $examenFormData->setInstance($instance);
         $examenFData = $examenFormData->getPrevaluesForPatient($patientID);
 

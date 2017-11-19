@@ -89,10 +89,7 @@ if (isset($_POST['objetID'])) {
 
 //formulaire
 $form = new msForm();
-if (is_numeric($_POST['formID']))
-  $form->setFormID($_POST['formID']);
-else
-  $form->setFormIDbyName($_POST['formID']);
+$form->setFormIDbyName($_POST['formID']);
 $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();

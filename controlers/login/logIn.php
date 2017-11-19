@@ -31,5 +31,6 @@ $template="login";
 
 
 $formpatient = new msForm();
-$p['page']['formNumber']=$formpatient->setFormIDbyName('baseLogin');
-$p['page']['form']=$formpatient->getForm($p['page']['formNumber']);
+$formpatient->setFormIDbyName('baseLogin');
+$p['page']['formID']='baseLogin';
+$p['page']['form']=$formpatient->getForm($p['page']['formID']);

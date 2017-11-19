@@ -37,10 +37,7 @@ $p['page']['formInfos'] = $formInfos->getDataType($_POST['csID'], array('label')
 
 //formulaire
 $form = new msForm();
-if (is_numeric($formID))
-  $form->setFormID($formID);
-else
-  $form->setFormIDbyName($formID);
+$form->setFormIDbyName($formID);
 
 //chargement des values si demandé
 if (isset($_POST['prevalues'])) {
