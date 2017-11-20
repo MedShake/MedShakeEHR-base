@@ -89,12 +89,11 @@ if (isset($_POST['objetID'])) {
 
 //formulaire
 $form = new msForm();
-$form->setFormIDbyName($_POST['formID']);
+$form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
 $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
-$p['page']['formID']=$_POST['formID'];
 
 $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],

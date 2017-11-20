@@ -427,7 +427,7 @@ function sendFormToCsDiv(el) {
     url: urlBase+'/patient/ajax/extractCsForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       csID: el.attr('data-csID'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
@@ -538,7 +538,7 @@ function sendFormToMailDiv(el) {
     url: urlBase+'/patient/ajax/extractMailForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
       mailType: el.attr('data-mailtype'),

@@ -24,6 +24,7 @@
  * Login : page de login
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
@@ -31,6 +32,5 @@ $template="login";
 
 
 $formpatient = new msForm();
-$formpatient->setFormIDbyName('baseLogin');
-$p['page']['formID']='baseLogin';
-$p['page']['form']=$formpatient->getForm($p['page']['formID']);
+$formpatient->setFormIDbyName($p['page']['formIN']='baseLogin');
+$p['page']['form']=$formpatient->getForm();

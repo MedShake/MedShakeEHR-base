@@ -30,15 +30,15 @@
 $forms = msSQL::sql2tabKey("SELECT internalName FROM forms WHERE groupe='medical'", "internalName");
 foreach ($forms as $k=>$v)
   if ($k != 'baseConsult' && $k != 'baseImportExternal')
-    $p['page']['formName_'.$k]=$p['page']['listeForms'][]=$k;
+    $p['page']['listeForms'][]=$k;
 
 $form_baseATCD = new msForm();
-$form_baseATCD->setFormIDbyName('baseATCD');
+$form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
 $form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
 $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 
 $form_baseSynthese = new msForm();
-$form_baseSynthese->setFormIDbyName('baseSynthese');
+$form_baseSynthese->setFormIDbyName($p['page']['formName_baseSynthese']='baseSynthese');
 $form_baseSynthese->getPrevaluesForPatient($match['params']['patient']);
 $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 

@@ -26,11 +26,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$formID=$_POST['formID'];
+$formIN=$_POST['formIN'];
 
 //definition formulaire de travail
 $form = new msForm();
-$form->setFormIDbyName($formID);
+$form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
@@ -68,7 +68,7 @@ if ($validation === false) {
     }
 
 
-    unset($_SESSION['form'][$formID]);
+    unset($_SESSION['form'][$formIN]);
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');
 }

@@ -29,7 +29,7 @@
 
 //template
 $template="patientCsForm";
-$formID = $_POST['formID'];
+$formIN = $p['page']['formIN'] = $_POST['formIN'];
 
 //infos sur le form
 $formInfos = new msData();
@@ -37,7 +37,7 @@ $p['page']['formInfos'] = $formInfos->getDataType($_POST['csID'], array('label')
 
 //formulaire
 $form = new msForm();
-$form->setFormIDbyName($formID);
+$form->setFormIDbyName($formIN);
 
 //chargement des values si demandé
 if (isset($_POST['prevalues'])) {
@@ -48,7 +48,6 @@ if (isset($_POST['prevalues'])) {
 }
 $p['page']['form']=$form->getForm();
 if($_POST['mode'] == 'update' or $_POST['mode'] == 'create' ) $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
-$p['page']['formID']=$_POST['formID'];
 
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(

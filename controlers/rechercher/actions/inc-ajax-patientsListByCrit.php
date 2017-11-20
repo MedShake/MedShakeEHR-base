@@ -24,6 +24,7 @@
  * Patients > ajax : obtenir le listing des patients ou des pros
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
@@ -31,16 +32,16 @@ $debug='';
 $template="listing";
 
 if ($_POST['porp']=='patient') {
-    $formID='baseListingPatients';
+    $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
-    $formID='baseListingPro';
+    $formIN='baseListingPro';
 } else {
     die();
 }
 
 $p['page']['porp']=$_POST['porp'];
 
-if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formID."' limit 1")) {
+if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formIN."' limit 1")) {
     $form=Spyc::YAMLLoad($form);
 
 
