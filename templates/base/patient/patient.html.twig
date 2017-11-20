@@ -33,6 +33,7 @@
 
 {% block head %}
     <script>
+      var init = {};
       var kill = {};
       {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
       var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
