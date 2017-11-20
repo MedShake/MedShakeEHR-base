@@ -43,9 +43,9 @@ $(document).ready(function() {
     }
   }
 */
-  for (var i = 0; typeof(formScripts) != "undefined" && formScripts && i < formScripts.length; i++)
-    if (typeof init[formScripts[i]] == "function")
-      init[formScripts[i]]();
+  // for (var i = 0; typeof(formScripts) != "undefined" && formScripts && i < formScripts.length; i++)
+  //   if (typeof init[formScripts[i]] == "function")
+  //     init[formScripts[i]]();
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
@@ -438,8 +438,9 @@ function sendFormToCsDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#nouvelleCs').html(data);
-//      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
+      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+
+      //if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       scrollTo('body');
       // checkboxes dans les formulaires
       $("input[type='checkbox']").unbind("click");
@@ -450,7 +451,7 @@ function sendFormToCsDiv(el) {
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
         $(window).unbind("beforeunload");
-        if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
+        //if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       });
 
     },
