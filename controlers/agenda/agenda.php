@@ -24,6 +24,7 @@
  * Agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
@@ -53,6 +54,6 @@ if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$
 
 //formulaire prise rdv
 $formPriseRdv = new msForm();
-$p['page']['formNumber']=$formPriseRdv->setFormIDbyName('baseAgendaPriseRDV');
+$formPriseRdv->setFormIDbyName($p['page']['formIN']='baseAgendaPriseRDV');
 $formPriseRdv->setTypeForNameInForm('byName');
 $p['page']['formPriseRdv']=$formPriseRdv->getForm();

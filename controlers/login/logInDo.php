@@ -24,20 +24,16 @@
  * Login : loguer ou renvoyer
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
-// form number
-if (is_numeric($_POST['formNumber'])) {
-    $formNumber=$_POST['formNumber'];
-} else {
-    die();
-}
+$formIN=$_POST['formIN'];
 
 //construc validation rules
 $form = new msForm();
-$form->setFormID($formNumber);
+$form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
@@ -50,10 +46,10 @@ if ($validation === false) {
     //check login
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_1'], $_POST['p_2'])) {
-        unset($_SESSION['form'][$formNumber]);
+        unset($_SESSION['form'][$formIN]);
         $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
-        if (!in_array($message, $_SESSION['form'][$formNumber]['validationErrorsMsg'])) {
-            $_SESSION['form'][$formNumber]['validationErrorsMsg'][]=$message;
+        if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
+            $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
     }
@@ -61,7 +57,7 @@ if ($validation === false) {
     //do login
     if ($validation != false) {
         $user-> doLogin();
-        unset($_SESSION['form'][$formNumber]);
+        unset($_SESSION['form'][$formIN]);
         msTools::redirection('/patients/');
     } else {
         $form->savePostValues2Session();

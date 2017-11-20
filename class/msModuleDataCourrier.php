@@ -47,7 +47,7 @@ class msModuleDataCourrier
 
     //atcd du patient (data du formulaire latéral)
     $atcd = new msCourrier();
-    $atcd = $atcd->getExamenData($d['patientID'], 4, 0);
+    $atcd = $atcd->getExamenData($d['patientID'], 'baseATCD', 0);
     if(is_array($atcd)) {
       $d=$d+$atcd;
     }
@@ -63,7 +63,7 @@ class msModuleDataCourrier
 
     // extraction des ATCD
     $atcd = new msCourrier();
-    $atcd = $atcd->getExamenData($d['patientID'], 4, 0);
+    $atcd = $atcd->getExamenData($d['patientID'], 'baseATCD', 0);
     if(is_array($atcd)) {
       $d=$d+$atcd;
     }

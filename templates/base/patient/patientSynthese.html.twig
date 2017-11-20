@@ -30,8 +30,8 @@
 <div class="row changeObserv" id="synthesePatient" style="">
 
     <div class="jumbotron">
-        {{ f.formbuilder(page.formSynthese , page.formNumberbaseSynthese ) }}
-        {% for v in page.typeCsBase %}
+        {{ f.formbuilder(page.formData_baseSynthese , page.formName_baseSynthese ) }}
+        {% for v in page.typeCs_csBase %}
             <button type="button" class="btn btn-success btn-sm newCS" style="margin-bottom : 3px;" data-parentID='0' data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
 

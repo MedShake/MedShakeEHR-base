@@ -26,9 +26,9 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$.getScriptOnce(urlBase+"/bower_components/autogrow/autogrow.min.js");
+//$.getScriptOnce(urlBase+"/bower_components/autogrow/autogrow.min.js");
 
-$(document).ready(function() {
+init.ordonnance = function() {
 
   //close button zone newOrdo
   $('#newOrdo').on("click", "#cleanNewOrdo", function(e) {
@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 
   autoGrowOrdo();
-});
+};
 
 
 //ajouter une ligne à l'ordo
