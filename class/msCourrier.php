@@ -134,7 +134,7 @@ class msCourrier
         }
 
         //complément dans le module pour ce formulaire spécifique ?
-         $methodToCall = "getCourrierDataCompleteModuleForm".$objetData['formValues'];
+         $methodToCall = "getCourrierDataCompleteModuleForm_".$objetData['formValues'];
          if (method_exists("msModuleDataCourrier", $methodToCall)) {
                msModuleDataCourrier::$methodToCall($tabRetour);
          }
