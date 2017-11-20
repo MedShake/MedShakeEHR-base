@@ -1,5 +1,7 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
+-- 1.4.0 to 2.0.0
+
 CREATE TABLE agenda_changelog (
   `id` int(8) UNSIGNED NOT NULL,
   `eventID` int(12) UNSIGNED NOT NULL,
