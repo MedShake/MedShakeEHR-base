@@ -29,25 +29,6 @@
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// Charger les scripts JS correspondant au module et forms inclus dans la page
-
-  //charger le fichier commun de fonctions aux forms médicaux
-  //$.getScriptOnce(urlBase+"/js/module/common.js");
-
-  ///////// Charger les scripts JS correspondant au form inclus dans la page
-/*  if (typeof(formScripts) != "undefined") {
-    if ($.isArray(formScripts)) {
-      $.each(formScripts, function(index, value) {
-        $.getScriptOnce(urlBase+"/js/module/formsScripts/" + value + ".js");
-      });
-    }
-  }
-*/
-  // for (var i = 0; typeof(formScripts) != "undefined" && formScripts && i < formScripts.length; i++)
-  //   if (typeof init[formScripts[i]] == "function")
-  //     init[formScripts[i]]();
-
-  ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
   $(".changeObserv input:not(.datepic), .changeObserv textarea").typeWatch({
     wait: 1000,

@@ -33,23 +33,23 @@
 
 {% block head %}
     <script>
-      var init = {};
       var kill = {};
-      var formScripts = ['baseATCD', 'baseSynthese'];
-    {# provoquer l'envoie asynchrone du patient dans le DICOM si config ok #}
+      {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
       var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
     </script>
 
     {{ parent() }}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/tinymce.min.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/jquery.tinymce.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/common.js"></script>
+
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/email.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/print.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/docupload.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/reglement.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/ordonnance.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/autogrow/autogrow.min.js"></script>
+
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/common.js"></script>
     {% for i in page.listeForms %}
       <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js"></script>
     {% endfor %}
