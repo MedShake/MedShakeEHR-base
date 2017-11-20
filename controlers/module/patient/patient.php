@@ -28,21 +28,20 @@
  */
 
 $forms = msSQL::sql2tabKey("SELECT internalName FROM forms WHERE groupe='medical'", "internalName");
-foreach ($forms as $k=>$v) {
-  if ($k == 'baseConsult' || $k == 'baseImportExternal')
-    continue;
-  //noms des scripts JS (potentiels) associés aux formulaires
-  $p['page']['formName_'.$k]=$p['page']['listeForms'][]=$k;
-  //données de formulaires
-  $form = new msForm();
-  $form->setFormIDbyName($k);
-  $form->getPrevaluesForPatient($match['params']['patient']);
-  $p['page']['formData_'.$k]=$form->getForm();
-}
+foreach ($forms as $k=>$v)
+  if ($k != 'baseConsult' && $k != 'baseImportExternal')
+    $p['page']['formName_'.$k]=$p['page']['listeForms'][]=$k;
 
-//données de consultation
-$typesCs = msSQL::sql2tabKey("SELECT name FROM `data_cat` WHERE groupe='typecs'", "name");
-foreach ($typesCs as $k=>$v){
-  $typeCs=new msData;
-  $p['page']['typeCs_'.$k]=$typeCs->getDataTypesFromCatName($k, array('id','label', 'formValues'));
-}
+$form_baseATCD = new msForm();
+$form_baseATCD->setFormIDbyName('baseATCD');
+$form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
+$p['page']['formData_baseATCD']=$form_baseATCD->getForm();
+
+$form_baseSynthese = new msForm();
+$form_baseSynthese->setFormIDbyName('baseSynthese');
+$form_baseSynthese->getPrevaluesForPatient($match['params']['patient']);
+$p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
+
+$typeCs_csBase = new msData;
+$p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
+
