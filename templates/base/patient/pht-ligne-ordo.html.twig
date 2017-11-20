@@ -52,14 +52,14 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a class="newMail" href="#" data-formtocall="11" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
+          <a class="newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
         </li>
         <li>
-          <a class="newMail" href="#" data-formtocall="14" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
+          <a class="newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
         </li>
         <li role="separator" class="divider"></li>
         <li>
-          <a class="newMail" href="#" data-formtocall="29" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
+          <a class="newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
         </li>
         {% if cs.sendMail > 0 %}
           <li role="separator" class="divider"></li>

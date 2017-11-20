@@ -111,7 +111,7 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                      <li><a class="newMail" href="#" data-formtocall="11" data-mailtype="ns">Envoyer un mail</a></li>
+                      <li><a class="newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
                       {% if config.smtpTracking %}
                         <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
                       {% endif %}
