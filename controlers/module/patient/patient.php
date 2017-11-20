@@ -26,11 +26,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- // le formulaire latéral ATCD
- $formLat = new msForm();
- $p['page']['formNumberbaseATCD']=$p['page']['listeForms'][]=$formLat->setFormIDbyName('baseATCD');
- $formLat->getPrevaluesForPatient($match['params']['patient']);
- $p['page']['formLat']=$formLat->getForm();
+// le formulaire latéral ATCD
+$formLat = new msForm();
+$p['page']['formNumberbaseATCD']=$p['page']['listeForms'][]=$formLat->setFormIDbyName('baseATCD');
+$formLat->getPrevaluesForPatient($match['params']['patient']);
+$p['page']['formLat']=$formLat->getForm();
 
 //formulaire de synthèse patient
 $formSynthese = new msForm();
