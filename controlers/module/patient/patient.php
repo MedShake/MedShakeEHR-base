@@ -24,20 +24,18 @@
  * Patient : la page du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-// le formulaire latéral ATCD
-$formLat = new msForm();
-$p['page']['formNumberbaseATCD']=$p['page']['listeForms'][]=$formLat->setFormIDbyName('baseATCD');
-$formLat->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formLat']=$formLat->getForm();
+$form_baseATCD = new msForm();
+$form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
+$form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
+$p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 
-//formulaire de synthèse patient
-$formSynthese = new msForm();
-$p['page']['formNumberbaseSynthese']=$p['page']['listeForms'][]=$formSynthese->setFormIDbyName('baseSynthese');
-$formSynthese->getPrevaluesForPatient($match['params']['patient']);
-$p['page']['formSynthese']=$formSynthese->getForm();
+$form_baseSynthese = new msForm();
+$form_baseSynthese->setFormIDbyName($p['page']['formName_baseSynthese']='baseSynthese');
+$form_baseSynthese->getPrevaluesForPatient($match['params']['patient']);
+$p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 
-//types de consultation de base.
-$typeCsBase=new msData;
-$p['page']['typeCsBase']=$typeCsBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
+$typeCs_csBase = new msData;
+$p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));

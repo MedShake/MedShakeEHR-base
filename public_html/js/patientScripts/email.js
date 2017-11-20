@@ -26,17 +26,17 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+init.email = function() {
 
 
   //close button zone newMail
-  $('body').on("click", "#cleanNewMail", function(e) {
+  $("#cleanNewMail").on("click" , function(e) {
     $(window).unbind("beforeunload");
     $('#newMail').html('');
   });
 
   //injection du modèle
-  $('body').on("change", "select[name='mailModeles']", function(e) {
+  $("select[name='mailModeles']").on("change", function(e) {
     modeleID = $("select[name='mailModeles'] option:selected").val();
     $.ajax({
       url: urlBase+'/patient/ajax/extractMailModele/',
@@ -57,7 +57,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour les destinataire apicrypt
-  $('body').delegate('input[name="mailToApicrypt"]', 'focusin', function() {
+  $('input[name="mailToApicrypt"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: '/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
@@ -66,7 +66,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour les destinataire mail (adresse non apicrypt des pro)
-  $('body').delegate('input[name="mailTo"]', 'focusin', function() {
+  $('input[name="mailTo"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: '/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
@@ -75,7 +75,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour le destinataire ecofax
-  $('body').delegate('input[name="mailToEcofaxName"]', 'focusin', function() {
+  $('input[name="mailToEcofaxName"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: '/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
@@ -86,7 +86,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour le numero ecofax (reverse)
-  $('body').delegate('input[name="mailToEcofaxNumber"]', 'focusin', function() {
+  $('input[name="mailToEcofaxNumber"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: '/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
@@ -96,4 +96,4 @@ $(document).ready(function() {
     });
   });
 
-});
+};

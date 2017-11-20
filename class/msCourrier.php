@@ -258,21 +258,21 @@ class msCourrier
 /**
  * Retourne les données de l'examen
  * @param  int $patientID l'ID de l'individu concerné
- * @param  int $formID    l'ID du formulaire ayant généré ces données
+ * @param  int $formIN    internalName du formulaire ayant généré ces données
  * @param  int $instance    l'ID d'instance du formulaire (= objetID)
  * @return array            array avec les données de l'examen
  */
-    public function getExamenData($patientID, $formID, $instance)
+    public function getExamenData($patientID, $formIN, $instance)
     {
         if (!isset($patientID)) {
             throw new Exception('PatientID is not defined');
         }
-        if (!isset($formID)) {
-            throw new Exception('FormID is not defined');
+        if (!isset($formIN)) {
+            throw new Exception('formIN is not defined');
         }
 
         $examenFormData = new msForm();
-        $examenFormData->setFormID($formID);
+        $examenFormData->setformIDbyName($formIN);
         $examenFormData->setInstance($instance);
         $examenFData = $examenFormData->getPrevaluesForPatient($patientID);
 
@@ -305,11 +305,11 @@ class msCourrier
 
 /**
  * Obtenir le template à utiliser pour l'mpression
- * @param  int $formID ID du formulaire
+ * @param  int $formIN internalName du formulaire
  * @return string          nom du template (sans extension)
  */
-    private function _getPrintModel($formID)
+    private function _getPrintModel($formIN)
     {
-        return msSQL::sqlUniqueChamp("select printModel from forms where id='".$formID."' limit 1");
+        return msSQL::sqlUniqueChamp("select printModel from forms where internalName='".$formIN."' limit 1");
     }
 }

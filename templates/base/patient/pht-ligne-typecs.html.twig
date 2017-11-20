@@ -30,7 +30,7 @@
   <td>{{ cs.creationTime }}</td>
   <td>
     {# view / edit #}
-    <button type="button" class="btn btn-default btn-xs newCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formNumber }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}">
+    <button type="button" class="btn btn-default btn-xs newCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}">
 
       {% if cs.iconeType == 'update' %}
         <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="Editer"></span>
@@ -54,14 +54,14 @@
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="11" data-mailtype="ns">Envoyer en clair</a>
+            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer en clair</a>
           </li>
           <li>
-            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="14" data-mailtype="apicrypt">Envoyer en apicrypt</a>
+            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMailApicrypt" data-mailtype="apicrypt">Envoyer en apicrypt</a>
           </li>
           <li role="separator" class="divider"></li>
           <li>
-            <a class="newMail" href="#" data-formtocall="29" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
+            <a class="newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
           </li>
           {% if cs.sendMail > 0 %}
             <li role="separator" class="divider"></li>
@@ -117,7 +117,7 @@
           <a data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
         </li>
         <li>
-          <a class="newCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formNumber }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update">Forcer l'édition</a>
+          <a class="newCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update">Forcer l'édition</a>
         </li>
         <li role="separator" class="divider"></li>
         <li class="disabled">

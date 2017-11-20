@@ -28,16 +28,11 @@
 
 $debug='';
 
-// form number
-if (is_numeric($_POST['formNumber'])) {
-    $formNumber=$_POST['formNumber'];
-} else {
-    die();
-}
+$formIN=$_POST['formIN'];
 
 //definition formulaire de travail
 $form = new msForm();
-$form->setFormID($formNumber);
+$form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
@@ -71,7 +66,7 @@ if ($validation === false) {
         }
     }
 
-    unset($_SESSION['form'][$formNumber]);
+    unset($_SESSION['form'][$formIN]);
 
 
 

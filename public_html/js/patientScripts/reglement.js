@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+init.reglement = function (){
 
 
   //close button zone newReglement
@@ -71,7 +71,7 @@ $(document).ready(function() {
   $("input[name='regleTarifCejour']").attr('data-tarifdefaut', $("input[name='regleTarifCejour']").val());
   $("input[name='regleDepaCejour']").attr('data-tarifdefaut',$("input[name='regleDepaCejour']").val());
 
-});
+};
 
 
 
@@ -127,7 +127,7 @@ function setDefautTarifEtDepa() {
 
 
 
-  cas = $('select[name="regleSituationPatient"] option:selected').val();
+  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
 
   tarif = parseFloat($("input[name='regleTarifCejour']").val());
   depassement = parseFloat($("input[name='regleDepaCejour']").val());
@@ -151,7 +151,7 @@ function setDefautTarifEtDepa() {
 }
 
 function calcResteDu() {
-  cas = $('select[name="regleSituationPatient"] option:selected').val();
+  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
   tarif = parseFloat($("input[name='regleTarifCejour']").val());
   depassement = parseFloat($("input[name='regleDepaCejour']").val());
 

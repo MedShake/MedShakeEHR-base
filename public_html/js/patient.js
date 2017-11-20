@@ -35,13 +35,17 @@ $(document).ready(function() {
   //$.getScriptOnce(urlBase+"/js/module/common.js");
 
   ///////// Charger les scripts JS correspondant au form inclus dans la page
-  if (typeof(formScripts) != "undefined") {
+/*  if (typeof(formScripts) != "undefined") {
     if ($.isArray(formScripts)) {
       $.each(formScripts, function(index, value) {
         $.getScriptOnce(urlBase+"/js/module/formsScripts/" + value + ".js");
       });
     }
   }
+*/
+  for (var i = 0; typeof(formScripts) != "undefined" && formScripts && i < formScripts.length; i++)
+    if (typeof init[formScripts[i]] == "function")
+      init[formScripts[i]]();
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
@@ -160,7 +164,7 @@ $(document).ready(function() {
   $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
-    $.getScriptOnce(urlBase+"/js/patientScripts/docupload.js");
+    init.docupload();
   });
 
   //bouton de nouveau mail
@@ -192,6 +196,7 @@ $(document).ready(function() {
 
   //close button zone newCS
   $('body').on("click", "#cleanNewCS", function(e) {
+    if (typeof kill[$("newCS").attr('data-formtocall')] == "function") kill[$("newCS").attr('data-formtocall')]();
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });
@@ -422,7 +427,7 @@ function sendFormToCsDiv(el) {
     url: urlBase+'/patient/ajax/extractCsForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       csID: el.attr('data-csID'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
@@ -433,17 +438,19 @@ function sendFormToCsDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#nouvelleCs').html(data);
-      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+//      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+      if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       scrollTo('body');
       // checkboxes dans les formulaires
-      $("input").unbind("click");
-      $("input").on("click", function(e) {
+      $("input[type='checkbox']").unbind("click");
+      $("input[type='checkbox']").on("click", function(e) {
         chkboxClick(this);
       });
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
         $(window).unbind("beforeunload");
+        if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       });
 
     },
@@ -471,7 +478,7 @@ function sendFormToCourrierDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newCourrier').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/print.js");
+      init.print();
 
       tinymce.init({
         selector: '#editeurCourrier',
@@ -509,7 +516,7 @@ function sendFormToOrdoDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newOrdo').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/ordonnance.js");
+      init.ordonnance();
       scrollTo('body');
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
@@ -531,7 +538,7 @@ function sendFormToMailDiv(el) {
     url: urlBase+'/patient/ajax/extractMailForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
       mailType: el.attr('data-mailtype'),
@@ -539,7 +546,7 @@ function sendFormToMailDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newMail').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
+      init.email();
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
@@ -571,7 +578,7 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
+      init.reglement();
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {

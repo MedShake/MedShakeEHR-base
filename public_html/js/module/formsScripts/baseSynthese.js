@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of MedShakeEHR.
  *
@@ -21,16 +20,23 @@
  */
 
 /**
- * Login : page de login
+ * Js pour le formulaire 5 (synthèse gynéco patiente)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$debug='';
-$template="login";
+$(document).ready(function() {
 
+  // ajustement automatique de la hauteur des textarea 
+  $("#formName_baseSynthese textarea").each(function( index ) {
+    $(this).css("overflow","hidden");
+    auto_grow(this);
+  });
 
-$formpatient = new msForm();
-$formpatient->setFormIDbyName($p['page']['formIN']='baseLogin');
-$p['page']['form']=$formpatient->getForm();
+  $("#formName_baseSynthese textarea").on("keyup", function() {
+    $(this).css("overflow","hidden");
+    auto_grow(this);
+  });
+
+});
