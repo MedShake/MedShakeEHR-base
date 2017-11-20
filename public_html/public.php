@@ -89,12 +89,15 @@
      header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
      header("Pragma: no-cache");
 
-     //les répertoires de templates twig
      if (is_dir($p['config']['templatesModuleFolder'])) {
          $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
+     } else {
+         $twigTemplateBaseDirs=[];
      }
      if (is_dir($p['config']['templatesBaseFolder'])) {
          $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
+     } else {
+         $twigTemplateModuleDirs=[];
      }
      $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
      if (is_dir($p['config']['templatesModuleFolder'])) {
