@@ -28,12 +28,7 @@
 
 $debug='';
 
-// form number
-//if (is_numeric($_POST['formID'])) {
-    $formID=$_POST['formID'];
-//} else {
-//    die();
-//}
+$formID=$_POST['formID'];
 
 //definition formulaire de travail
 $form = new msForm();

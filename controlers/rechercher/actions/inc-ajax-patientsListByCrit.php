@@ -31,16 +31,16 @@ $debug='';
 $template="listing";
 
 if ($_POST['porp']=='patient') {
-    $formID='2';
+    $formID='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
-    $formID='8';
+    $formID='baseListingPro';
 } else {
     die();
 }
 
 $p['page']['porp']=$_POST['porp'];
 
-if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$formID."' limit 1")) {
+if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formID."' limit 1")) {
     $form=Spyc::YAMLLoad($form);
 
 

@@ -28,12 +28,7 @@
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
-// form number
-//if (is_numeric($_POST['formID'])) {
-    $formID=$_POST['formID'];
-//} else {
-//    die();
-//}
+$formID=$_POST['formID'];
 
 //construc validation rules
 $form = new msForm();
