@@ -182,12 +182,6 @@ $(document).ready(function() {
     $(window).unbind("beforeunload");
   });
 
-  //close button zone newMail
-  $('body').on("click", "#cleanNewMail", function(e) {
-    $('#newMail').html('');
-    $(window).unbind("beforeunload");
-  });
-
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations spécifiques aux lignes de l'historique  (dont modal)
 
