@@ -1,0 +1,82 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs : log général
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : logs{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h1>Logs</h1>
+    <div class="container-fluid">
+
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="">#</th>
+                        <th class="col-md-2">date</th>
+                        <th class="col-md-1">prescripteur</th>
+                        {% if page.patientID =='' %}<th>patient</th>{% endif %}
+                        <th class="">parent</th>
+                        <th class="col-md-2">type data</th>
+                        <th class="">titre</th>
+                        <th class="col-md-6">valeur</th>
+                        <th class="">outdated</th>
+                        <th class="">deleted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in page.logs %}
+                        <tr class="{% if v.groupe == 'typecs' %}info{% elseif v.groupe == 'courrier' or v.typeID in [177,186,184,192,488] %}success{% elseif v.groupe == 'admin' %}warning{% elseif v.groupe == 'user' %}danger{% endif %}">
+                            <td>#{{ v.id }}</td>
+                            <td>{{ v.creationDate }}
+                                {% if v.creationDate != v.updateDate %}<br>{{ v.updateDate }}{% endif %}
+                            </td>
+                            <td>{{ v.prescripteur }}</td>
+                            {% if page.patientID =='' %}<td>  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/">#{{ v.toID }}</a></td>{% endif %}
+                            <td>#{{ v.instance }}</td>
+                            <td>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/{{ v.typeID }}/{{ v.instance }}/">#{{ v.typeID }}</a>
+                                {{ v.label|e }}</td>
+                            <td>{{ v.titre|e }}</td>
+                            <td>{{ v.value|e }}</td>
+
+                            <td>{{ v.outdated }}</td>
+                            <td>{{ v.deleted }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+        </div>
+
+    {% endblock %}

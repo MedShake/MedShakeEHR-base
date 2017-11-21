@@ -1,0 +1,242 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > page web racine
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+{% import "macroForm.html.twig" as f %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head{% if page.ogHead %} {{ page.ogHead }} {% endif %}>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+        <meta name="Description" content="{% block metaDescription %}{% endblock %}"/>
+        <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
+
+        {# css #}
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+
+        {# js #}
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/moment/min/moment.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/uploader/src/dmuploader.min.js"></script>
+        <script>
+          var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+        </script>
+
+        {% block head %}{% endblock %}
+    </head>
+
+    <body {% block bodyTagAdd %} {% endblock %}>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <a href="" class="navbar-brand">MedShakeEHR</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="top-navbar">
+                {% if user.id > 0 %}
+
+                  <ul class="nav navbar-nav">
+                      {% if config.agendaDistantLink %}
+                        <li>
+                            <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                        </li>
+                      {% elseif page.agendaUsers|length == 1 %}
+                        {% for k,v in page.agendaUsers %}
+                          <li>
+                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                          </li>
+                        {% endfor %}
+                      {% elseif page.agendaUsers %}
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              {% for k,v in page.agendaUsers %}
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                              </li>
+                              {% endfor %}
+                          </ul>
+                        </li>
+                      {% endif %}
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patients
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
+                              </li>
+
+                              {% if page.patientsOfTheDay %}
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Patients du jour</li>
+                                {% for v in page.patientsOfTheDay %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
+                                </li>
+                                {% endfor %}
+
+                              {% endif %}
+                          </ul>
+                      </li>
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Praticiens
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
+                              </li>
+                          </ul>
+                      </li>
+                      <li class="dropdown">
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comptabilité
+                              <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
+                              </li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
+                              </li>
+                              <li role="separator" class="divider"></li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
+                              </li>
+                          </ul>
+                      </li>
+                      <li>
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
+                              {% if page.inbox.numberOfMsg > 0 %}
+                                  <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                              {% endif %}
+                          </a>
+                      </li>
+
+                      {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
+                      <li class="dropdown">
+                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %} <span class="caret"></span></a>
+
+                        <ul class="dropdown-menu">
+
+                            <li class="dropdown-header">Outils</li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+
+                            {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
+                              <li class="dropdown-header">Historique rappels RDV</li>
+
+                              {% if config.mailRappelDaysBeforeRDV %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
+                                </li>
+                              {% endif %}
+                              {% if config.smsProvider %}
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
+                                </li>
+                                <li class="disabled"><a {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a></li>
+
+                              {% endif %}
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
+                            <li class="dropdown-header">Patients</li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
+                            </li>
+                            <li>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
+                            </li>
+                        </ul>
+                      </li>
+                      {% endif %}
+
+                      {% if user.rank == 'admin' %}
+                          <li>
+                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+                          </li>
+                      {% endif %}
+                  </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+                                {{ user.nom }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">Déconnexion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
+            {% block body %}{% endblock %}
+        </div>
+
+    </body>
+</html>

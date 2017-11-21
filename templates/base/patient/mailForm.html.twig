@@ -1,0 +1,54 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : formulaire d'envoi de mail
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+{# Formulaire de synthèse #}
+<div class="jumbotron">
+    <button id="cleanNewMail" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    {% if page.form.addHidden.mailType == 'ns' %}
+        <h3>Envoyer par mail non sécurisé</h3>
+    {% elseif page.form.addHidden.mailType == 'apicrypt' %}
+        <h3>Envoyer par mail Apicrypt</h3>
+    {% endif %}
+
+    {% if page.doc %}
+        <p>Document à expédier :
+            {{ page.doc.label|e }}
+            {{ page.doc.titre|e }}
+            <small>(Taille : {{ page.doc.filesize|e }})</small>
+            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" role="button" target="_blank" title="Voir">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Voir
+            </a>
+
+        </p>
+    {% endif %}
+
+    {{ f.formbuilder(page.form , page.formIN ) }}
+</div>

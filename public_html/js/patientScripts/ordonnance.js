@@ -26,12 +26,11 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$.getScriptOnce(urlBase+"/bower_components/autogrow/autogrow.min.js");
-
 $(document).ready(function() {
 
   //close button zone newOrdo
   $('#newOrdo').on("click", "#cleanNewOrdo", function(e) {
+    $(window).unbind("beforeunload");
     $('#newOrdo').html('');
   });
 

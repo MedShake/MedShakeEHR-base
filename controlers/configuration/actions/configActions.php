@@ -36,7 +36,8 @@ $acceptedModes=array(
     'configUpdatePassword', //Attribuer un password à un user
     'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
     'configGiveAdmin', // Toggle droit d'admin
-    'configAgendaSave' // sauvegarder config agenda
+    'configAgendaSave', // sauvegarder config agenda
+    'configTemplatePDFSave' // sauvegarder un template PDF
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -63,4 +64,8 @@ elseif ($m=='configGiveAdmin') {
 // sauvegarder config agenda
 elseif ($m=='configAgendaSave') {
     include('inc-action-configAgendaSave.php');
+}
+// sauvegarder un template PDF
+elseif ($m=='configTemplatePDFSave') {
+    include('inc-action-configTemplatePDFSave.php');
 }

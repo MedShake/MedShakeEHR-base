@@ -29,21 +29,6 @@
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// Charger les scripts JS correspondant au module et forms inclus dans la page
-
-  //charger le fichier commun de fonctions aux forms médicaux
-  //$.getScriptOnce(urlBase+"/js/module/common.js");
-
-  ///////// Charger les scripts JS correspondant au form inclus dans la page
-  if (typeof(formScripts) != "undefined") {
-    if ($.isArray(formScripts)) {
-      $.each(formScripts, function(index, value) {
-        $.getScriptOnce(urlBase+"/js/module/formsScripts/" + value + ".js");
-      });
-    }
-  }
-
-  ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
   $(".changeObserv input:not(.datepic), .changeObserv textarea").typeWatch({
     wait: 1000,
@@ -193,6 +178,7 @@ $(document).ready(function() {
   //close button zone newCS
   $('body').on("click", "#cleanNewCS", function(e) {
     $('#nouvelleCs').html('');
+    $(window).unbind("beforeunload");
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -421,7 +407,7 @@ function sendFormToCsDiv(el) {
     url: urlBase+'/patient/ajax/extractCsForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       csID: el.attr('data-csID'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
@@ -433,13 +419,28 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      afficherFxNbFoetus();
       scrollTo('body');
+      // checkboxes dans les formulaires
+      $("input[type='checkbox']").unbind("click");
+      $("input[type='checkbox']").on("click", function(e) {
+        chkboxClick(this);
+      });
+      // pour éviter de perdre des données
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+        $(window).unbind("beforeunload");
+      });
+
     },
     error: function() {
       alert('Problème, rechargez la page !');
     }
   });
+}
+
+function preventDataLoss(e) {
+  e.returnValue = "\o/";
+  return "\o/";
 }
 
 //envoyer le form de Courrier dans le div newCourrier
@@ -462,6 +463,11 @@ function sendFormToCourrierDiv(el) {
         height: "500"
       });
       scrollTo('body');
+      // pour éviter de perdre des données
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -493,6 +499,10 @@ function sendFormToOrdoDiv(el) {
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -506,7 +516,7 @@ function sendFormToMailDiv(el) {
     url: urlBase+'/patient/ajax/extractMailForm/',
     type: 'post',
     data: {
-      formID: el.attr('data-formtocall'),
+      formIN: el.attr('data-formtocall'),
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
       mailType: el.attr('data-mailtype'),
@@ -516,6 +526,10 @@ function sendFormToMailDiv(el) {
       $('#newMail').html(data);
       $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
       scrollTo('body');
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -544,6 +558,10 @@ function sendFormToReglementDiv(el) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
       scrollTo('body');
+      $(window).on("beforeunload", preventDataLoss);
+      $('form').submit(function () {
+          $(window).unbind("beforeunload");
+      });
     },
     error: function() {
       alert('Problème, rechargez la page !');

@@ -1,0 +1,95 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs : historique général d'envoi de mails
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}Historique général des envois par mail - MedShakeEHR{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js"></script>{% endif %}
+{% endblock %}
+
+{% block body %}
+<h1>Historique général des envois par mail <small>(hors fax et apicrypt)</small></h1>
+
+    <div class="container-fluid">
+
+      <div class="row bottom-space">
+        <ul class="nav nav-tabs">
+          <li role="presentation" {% if page.expediteurID ==  0 %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/0/">Expéditeurs : tous</a></li>
+          {% for k,v in page.expediteurs %}
+          <li role="presentation" {% if k == page.expediteurID %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ k }}/">{{ v }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="row">
+            <div class="btn-group  pull-right" role="group" aria-label="...">
+              <a type="button" {% if page.nextStart < 0 %}disabled="disabled"{% endif %} class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/"> <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Suivants</a>
+              <a type="button" class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">Précédents  <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a>
+            </div>
+      </div>
+
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-2">Date</th>
+                        <th class="col-md-2">De</th>
+                        <th class="col-md-2">A</th>
+                        <th class="col-md-3">Concernant</th>
+                        <th class="col-md-3">Sujet</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for v in page.mailListe %}
+                        <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
+                            <td>{{ v.date }}</td>
+                            <td>{{ page['expediteurs'][v.fromID] }}<br>
+                            <small>{{ v.from }}</small></td>
+                            <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
+                            <td> <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
+                              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                            </a>
+                              {{ v.patient.3 }} {{ v.patient.2 }}
+                            </td>
+
+                            <td>{{ v.sujet|e }}</td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

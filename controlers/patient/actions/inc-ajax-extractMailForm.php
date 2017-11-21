@@ -38,7 +38,7 @@ $to=new msPeople();
 //définir les valeurs par défaut
 if ($_POST['mailType']=='ns') {
     $preValues['mailFrom']=$p['config']['smtpFrom'];
-    $preValues['mailTo']=$toAdminData['4'];
+    $preValues['mailTo']= array_key_exists('4', $toAdminData) ? $toAdminData['4'] : '';
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
     $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');
@@ -89,12 +89,11 @@ if (isset($_POST['objetID'])) {
 
 //formulaire
 $form = new msForm();
-$form->setFormID($_POST['formID']);
+$form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
 $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
-$p['page']['formID']=$_POST['formID'];
 
 $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],

@@ -27,6 +27,7 @@
  */
 
 $(document).ready(function() {
+
   $(document).on('focusin', function(e) {
     if ($(e.target).closest(".mce-window").length) {
       e.stopImmediatePropagation();
@@ -35,6 +36,7 @@ $(document).ready(function() {
 
   //close button zone newCourrier
   $('#newCourrier').on("click", "#cleanNewCourrier", function(e) {
+    $(window).unbind("beforeunload");
     $("#editeurCourrier").tinymce().remove();
     $('#newCourrier').html('');
   });

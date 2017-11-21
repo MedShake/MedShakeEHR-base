@@ -1,0 +1,61 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs: historique d'impression d'un document
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : historique impression{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h1>Historique des versions PDF générées</h1>
+<p>
+<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/" role="button">Retour dossier patient</a>
+</p>
+<div>
+<ul class="nav nav-tabs" role="tablist">
+  {% for v in page.print %}
+  <li role="presentation" {% if loop.index0 == 0 %}class="active"{% endif %}><a href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a></li>
+  {% endfor %}
+</ul>
+</div>
+
+
+<div class="tab-content">
+{% for v in page.print %}
+<div role="tabpanel" class="tab-pane{% if loop.index0 == 0 %} active{% endif %}" id="print{{ v.id }}">
+  <div class="appercu">
+    {{ v.value }}
+  </div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

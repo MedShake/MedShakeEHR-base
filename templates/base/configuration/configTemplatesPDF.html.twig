@@ -1,0 +1,184 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : gestion des templates d'impression PDF
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : gestions des templates PDF{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+<style>
+  .linkedTo {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+  </li>
+  <li class="active">
+    Gestion des templates PDF
+  </li>
+</ol>
+
+<h1>Gestion des templates PDF</h1>
+
+{# Nav tabs #}
+<ul class="nav nav-tabs bottom-space" role="tablist">
+    <li role="presentation" {% if page.selectUser < 1 %}class="active"{% endif %}>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/" aria-controls="categories" role="tab">Configuration générale</a>
+    </li>
+    {% for id, user in page.templatesDirUsers %}
+      {% if user.paramValue is not empty %}
+      <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ id }}/" aria-controls="prescriptions" role="tab">{{ user.identite }}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+</ul>
+
+
+  <h2>Répertoire</h2>
+
+
+  <table class="table">
+      <tr>
+          <th class="col-md-2">
+              Paramètre
+          </th>
+          <th class="col-md-6">
+              Répertoire local
+          </th>
+          <th class="col-md-2">
+              Est accessible en lecture
+          </th>
+          <th class="col-md-2">
+              Est accessible en écriture
+          </th>
+      </tr>
+
+          <tr>
+              <td>templatesPdfFolder</td>
+              <td>{{ page.repertoireTemplatesPDF }}</td>
+              <td class="{% if page.templatesDirAutorisationLecture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+              <td class="{% if page.templatesDirAutorisationEcriture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+          </tr>
+
+  </table>
+
+
+  <h2>Templates présents</h2>
+
+  {% if page.templatesDirAutorisationLecture == 1 %}
+
+    {% if page.listeTemplates|length < 1 %}
+      <div class="alert alert-danger" role="alert">Aucun template n'est disponible.</div>
+    {% else %}
+      <table class="table table-hover">
+          <tr>
+              <th class="col-md-2">
+                  Fichier
+              </th>
+              <th class="col-md-6">
+                  Lié à
+              </th>
+              <th class="col-md-2">
+                  Gérer
+              </th>
+          </tr>
+          {% for k,v in page.listeTemplates %}
+            {% if v.file %}
+              <tr>
+                  <td>{{ v.file }}</td>
+                  <td>
+                    {% if v.linkedTo %}
+                      <ul class="linkedTo">
+                      {% for l,w in v.linkedTo %}
+                      <li>{{ w.type }} : {{ w.name }}</li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}" class="btn btn-default btn-xs">
+                      {% if page.templatesDirAutorisationEcriture == false %}
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      {% else %}
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                      {% endif %}
+                    </a>
+                    <a href="#" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}" class="delTemplatePDF btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                  </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+      </table>
+    {% endif %}
+
+  {% else %}
+    <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en lecture. Les templates ne peuvent être listés et gérés par cette interface.</div>
+  {% endif %}
+
+  <h2>Ajouter des templates</h2>
+
+  {% if page.templatesDirAutorisationEcriture == 1 %}
+
+
+      <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireTemplatesPDF }}" class="col-md-9 bg-warning center-block" style="padding : 30px; border-radius : 6px">
+          Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
+          <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
+
+
+          <div class="progress" style="margin-top : 20px;">
+            <div class="progress-bar" role="progressbar" style="width: 00%;">
+              <span class="sr-only"></span>
+            </div>
+          </div>
+      </div>
+
+
+  {% else %}
+    <div class="alert alert-danger" role="alert">Le répertoire de clefs n'est pas accessible en écriture. Les clefs ne peuvent être ajoutées via cette interface.</div>
+  {% endif %}
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,222 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > inbox : message
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% if page.mail.mailHeaderInfos.from %}
+ <div class="panel panel-default">
+     <div class="panel-heading gras">Message</div>
+     <div class="panel-body">
+       <table class="table table-hover">
+           <thead>
+               <tr>
+                   <th>De</th>
+                   <th>À</th>
+                   <th>Sujet</th>
+               </tr>
+           </thead>
+           <tbody>
+             <tr>
+                 <td>{{ page.mail.mailHeaderInfos.from|e }}</td>
+                 <td>{{ page.mail.mailHeaderInfos.to|e }}</td>
+                 <td>{{ page.mail.mailHeaderInfos.subject|e }}</td>
+               </tr>
+          </tbody>
+        </table>
+     </div>
+</div>
+{% endif %}
+
+<div class="panel panel-default">
+    <div class="panel-heading gras">Patient</div>
+    <div class="panel-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Date de naissance</th>
+                    <th>Adresse</th>
+                    <th>SS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>HPRIM</th>
+                    <td>{{ page.mail.hprimAllSerialize.nom|e }}</td>
+                    <td>{{ page.mail.hprimAllSerialize.prenom|e }}</td>
+                    <td>{{ page.mail.hprimAllSerialize.ddn|e }}</td>
+                    <td>
+                        <small>{{ page.mail.hprimAllSerialize.adresse1v }}
+                            {% if page.mail.hprimAllSerialize.adresse2 != page.mail.hprimAllSerialize.adresse1 and page.mail.hprimAllSerialize.adresse2 %}
+                                {{ page.mail.hprimAllSerialize.adresse2 }}
+                            {% endif %}
+                            {{ page.mail.hprimAllSerialize.cp|e }}
+                            {{ page.mail.hprimAllSerialize.ville|e }}</small>
+                    </td>
+                    <td>
+                        <small>{{ page.mail.hprimAllSerialize.nss|e }}</small>
+                    </td>
+                    <td></td>
+                </tr>
+                {% for k, v in page.mail.patientsPossibles %}
+
+                    <tr class="patietSelect {% if loop.index0 == 0 %} success gras{% endif %}" data-patientID="{{ v.id }}">
+                        <td>#{{ v.id }}</td>
+                        <td>{{ v.2|e }}</td>
+                        <td>{{ v.3|e }}</td>
+                        <td>{{ v.8|e }}</td>
+                        <td>
+                            <small>{{ v.9|e }}
+                                {{ v.11|e }}
+                                {{ v.13|e }}
+                                {{ v.12|e }}</small>
+                        </td>
+                        <td>
+                            <small>{{ v.180|e }}</small>
+                        </td>
+                        <td>
+                            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" role="button" target="_blank">
+                                <span class="glyphicon glyphicon-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% if page.mail.archived == 'n' %}
+  <form id="classerDansDossier" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/classerDansDossier/" target="_blank" method="post" class="form-horizontal" style="margin-bottom : 20px;">
+      <input type="hidden" name="mailID" value="{{ page.mail.id }}"/>
+
+      <div class="form-group">
+          <label for="titreOptionnel" id="idConfirmPatientIDLabel" style="display : none" class="col-sm-6 control-label">Numéro de dossier</label>
+          <div class="col-sm-6">
+              <input type="hidden" class="form-control" id="idConfirmPatientID" name="patientID" value="{{ page.mail.patientsPossibles.0.id }}">
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="titreOptionnel" class="col-sm-6 control-label">Titre (optionnel)</label>
+          <div class="col-sm-6">
+              <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.mail.hprimExpediteur }}">
+          </div>
+      </div>
+      <button type="submit" id="submitBoutonClasser" class="btn btn-danger pull-right" {% if page.mail.patientsPossibles.0.id <= 0 %} style="display : none" {% endif %}>Classer dans le dossier #<span id="submitIndicID">{{ page.mail.patientsPossibles.0.id }}</span>
+      </button>
+
+      <div class="btn-group pull-right" style="margin-right : 5px;">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+              <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+              <li>
+                  <a id="specifierPatientIDManu" href="#">Spécifier numéro de dossier manuellement</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                  <a class="confirmBefore" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppSansClasser/{{ page.mail.id }}/">Supprimer sans archiver</a>
+              </li>
+          </ul>
+      </div>
+
+      <span class="clearfix"></span>
+  </form>
+{% elseif page.mail.archived == 'c' %}
+
+  <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppInbox/" method="post" class="form-horizontal" style="margin-bottom : 20px;">
+      <input type="hidden" name="mailID" value="{{ page.mail.id }}"/>
+      <button type="submit" id="submitBoutonSupp" class="btn btn-danger pull-right">Déjà classé : supprimer
+      </button>
+      <span class="clearfix"></span>
+  </form>
+{% endif %}
+
+{% if page.mail.pjSerializeName %}
+  <div class="panel panel-default">
+      <div class="panel-heading gras">Pièces jointes</div>
+      <div class="panel-body">
+          {% for pj in page.mail.pjSerializeName %}
+              <a class="btn btn-info" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" role="button" target="_blank">
+                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                  {{ pj }}</a>
+          {% endfor %}
+      </div>
+  </div>
+{% endif %}
+
+{% if page.mail.bioHprim %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading gras">Résultats biologiques extraits du corps du message</div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Analyse</th>
+                    <th>Résultat</th>
+                    <th>Valeur normale inf.</th>
+                    <th>Valeur normale sup.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in page.mail.bioHprim %}
+                    <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="danger"{% endif %}>
+                        <td>
+                            {{ v.label|e }}
+                        </td>
+                        <td>
+                            {{ v.resultat|e }}
+                            {{ v.unite|e }}
+                        </td>
+                        <td>
+                            {{ v.normaleInf|e }}
+                        </td>
+                        <td>
+                            {{ v.normaleSup|e }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading gras">Corps du message</div>
+    <div class="panel-body">
+        {{ page.mail.corps|e|nl2br }}
+    </div>
+</div>

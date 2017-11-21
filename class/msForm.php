@@ -77,7 +77,7 @@ class msForm
         }
     }
 /**
- * Définir le numéro du formulaire à partir de son nom interne 
+ * Définir le numéro du formulaire à partir de son nom interne
  * @param int $formName Nom interne du formulaire
  */
     public function setFormIDbyName($formName)
@@ -85,7 +85,7 @@ class msForm
       if($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
         return $this->_formID = $formID;
       } else {
-        throw new Exception('Forumulaire non trouvé à partir de son nom');
+        throw new Exception('Formulaire non trouvé à partir de son nom');
       }
     }
 
@@ -195,7 +195,7 @@ class msForm
       );
     }
 /**
- * Obtenir les règles de validation du formaulaire
+ * Obtenir les règles de validation du formulaire
  * @return array Array des règles de validation pour GUMP
  */
     public function getValidation()
@@ -478,7 +478,13 @@ class msForm
             foreach ($bloc as $k=>$v) {
                 $bloc=explode(',', $v);
 
-                if ($type=$this->_formExtractType($bloc[0], $dataset)) {
+                if (!is_numeric($bloc[0])) {
+                  $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                              'type'=>'label',
+                              'value'=>$bloc[0]
+                          );
+                }
+                else if ($type=$this->_formExtractType($bloc[0], $dataset)) {
 
                     if($this->_typeForNameInForm=='byName') {
 

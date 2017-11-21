@@ -34,9 +34,9 @@ $template="peopleEdit";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formInternalName']='baseNewPatient';
+    $p['page']['formIN']='baseNewPatient';
 } elseif ($p['page']['porp']=='pro') {
-    $p['page']['formInternalName']='baseNewPro';
+    $p['page']['formIN']='baseNewPro';
 }
 
 $patient = new msPeople();
@@ -45,7 +45,7 @@ $p['page']['patient']=$patient->getSimpleAdminDatas();
 $p['page']['patient']['id']=$match['params']['patient'];
 
 $formpatient = new msForm();
-$p['page']['formNumber']=$formpatient->setFormIDbyName($p['page']['formInternalName']);
+$formpatient->setFormIDbyName($p['page']['formIN']);
 $formpatient->setPrevalues($p['page']['patient']);
 $p['page']['form']=$formpatient->getForm();
 

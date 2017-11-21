@@ -1,0 +1,146 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs : historique des rappels SMS
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : historique rappels SMS pour les consultations du
+  {{ page.dates.rdv|date("d/m/Y") }}{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <h1 class="bottom-space">Historique rappels SMS pour les consultations du
+    {{ page.dates.rdv|date("d/m/Y") }}</h1>
+
+  <div class="container-fluid">
+
+    <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline bottom-space">
+
+      <a class="btn btn-default btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/" role="button">
+        <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        Jour précédent</a>
+      <a class="btn btn-default btn-default{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/" role="button">Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})</a>
+      <a class="btn btn-default btn-default{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/" role="button">Jour suivant <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+      </a>
+
+      <a class="btn btn-default btn-default{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" role="button" style="margin-right: 20px">Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)</a>
+
+      <div id="dateSel" class="input-group date datepick" >
+        <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+      <button type="submit" class="btn btn-default">Chercher</button>
+    </form>
+
+    {% if page.data %}
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+
+          <div class="panel-heading gras">
+            Campagne du {{ page.dates.emission|date("d/m/Y") }}
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-default btn-xs pull-right">Voir rappels mail</a>
+          </div>
+
+          <ul class="list-group">
+            <li class="list-group-item">Statut :
+              {{ page.data.campaign.status }}
+              /
+              {{ page.data.campaign.statusText }}</li>
+            <li class="list-group-item">Numéros invalides :
+              {{ page.data.campaign.invalidNumbers }}</li>
+            <li class="list-group-item">Nombre de SMS :
+              {{ page.data.campaign.nbSms }}</li>
+            <li class="list-group-item">Nombre de crédits utilisés :
+              {{ page.data.campaign.creditsUsed }}</li>
+            <li class="list-group-item">Nombre de crédits restants :
+              {{ page.data.campaign.credits }}</li>
+            <li class="list-group-item">N° de campagne :
+              {{ page.data.campaign.campaignId }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+
+        <div class="panel panel-default">
+
+          <div class="panel-heading gras">SMS envoyés
+          </div>
+
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th class="col-md-1">RDV</th>
+                <th class="col-md-2">Identité</th>
+                <th class="col-md-2">N°</th>
+                <th class="col-md-3">
+                  <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
+                    Statut
+                    <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
+                    <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
+                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Mettre à jour</button>
+                  </form>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for k, v in page.data.sms %}
+                <tr>
+                  <td>{{ v.heureRdv }}</td>
+                  <td>{{ v.identite }}</td>
+                  <td>{{ v.telFrDisplay }}</td>
+                  <td>
+                    {% if v.accRecepComment %}{{ v.accRecepComment }}
+                      /
+                      {{ v.accRecepRecepDate }}{% endif %}
+                  </td>
+                </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-warning" role="alert">Pas de campagne enregistrée pour cette date.</div>
+
+    {% endif %}
+
+  </div>
+
+{% endblock %}

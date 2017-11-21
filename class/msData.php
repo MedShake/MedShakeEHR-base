@@ -62,7 +62,7 @@ class msData
         if (is_numeric($typeID)) {
             return $this->_typeID = $typeID;
         } else {
-            throw new Exception('formID is not numeric');
+            throw new Exception('typeID is not numeric');
         }
     }
 

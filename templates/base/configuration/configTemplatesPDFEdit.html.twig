@@ -1,0 +1,128 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : edition d'un templates d'impression PDF
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : édition du template{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/lib/codemirror.css">
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/lib/codemirror.js"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/mode/twig/twig.js"></script>
+
+{% endblock %}
+
+{% block body %}
+<ol class="breadcrumb">
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+  </li>
+  <li>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des templates</a>
+  </li>
+  {% if page.selectUser > 0 %}
+    <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}</a>
+    </li>
+  {% endif %}
+  <li class="active">
+    Édition
+  </li>
+</ol>
+
+<h1>Edition du template PDF <small>{{ page.fichier.name }}{% if page.selectUser > 0 %} de {{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}{% endif %}</small></h1>
+
+
+{% if page.templatesDirAutorisationEcriture == false %}
+  <div class="alert alert-danger" role="alert">Le répertoire {{ page.fichier.chemin }} n'est pas accessible en écriture. Le template ne peut être édité par cette méthode.</div>
+{% endif %}
+
+<div class="row">
+
+<form class="col-md-12"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configTemplatePDFSave/">
+  {{ f.input ({
+    'input' : {
+      'type' : 'hidden',
+      'name' : 'userID',
+      'value' : page.selectUser
+    },
+  }) }}
+
+  <div class="form-group">
+  {{ f.input ({
+    'input' : {
+      'type' : 'text',
+      'name' : 'fichier',
+      'placeholder' : 'nom du fichier',
+      'class' : 'form-control',
+      'autocomplete' : 'off',
+      'value' : page.fichier.name
+    },
+    'label' : {
+      'position' : 'before',
+      'label' : 'Nom du fichier (indiquer un nouveau nom pour conserver l\'original)',
+    }
+  }) }}
+  </div>
+
+  <div class="form-group">
+  {{ f.textarea ({
+    'textarea' : {
+      'name' : 'code',
+      'id' : 'templateEditor',
+      'placeholder' : 'valeurs par défaut',
+      'class' : 'form-control',
+      'autocomplete' : 'off',
+      'value' : page.fichier.code,
+      'add' : 'rows="45" style="font-family:monospace;"'
+    },
+    'label' : {
+      'position' : 'before',
+      'label' : 'Code source'
+    }
+  }) }}
+  </div>
+
+
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
+
+  <p>
+  {{ page.form.yaml }}
+  </p>
+
+</form>
+
+</div>
+
+{% endblock %}

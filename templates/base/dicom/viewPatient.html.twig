@@ -1,0 +1,124 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dicom : voir tous les examens d'un patient   
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
+
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js"></script>
+
+    <style>
+        .imageDc img {
+            display: inline-block;
+            width: 330px;
+            margin: 5px;
+            vertical-align: top;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <h1>Examens de
+            {{ page['patient']['administrativeDatas']['3']['value']|e }}
+            {# firstname #}
+            {{ page['patient']['administrativeDatas']['2']['value']|e }}
+            {# name #}
+            {% if page['patient']['administrativeDatas']['1']['value'] %}
+                ({{ page['patient']['administrativeDatas']['1']['value']|e }}){% endif %}
+            <small>
+                {{ page['patient']['administrativeDatas']['8']['value']|e }}
+                -
+                {# birthdate #}
+                {{ page['patient']['administrativeDatas']['8']['age']|e }}
+                an{% if page['patient']['administrativeDatas']['8']['age'] > 0 %}s{% endif %}
+                {# age #}
+
+            </small>
+        </h1>
+
+        <ol class="breadcrumb">
+            <li class="active">{{ page['patient']['administrativeDatas']['3']['value']|e }}
+                {{ page['patient']['administrativeDatas']['2']['value']|e }}</li>
+        </ol>
+
+        <div class="row">
+
+            <div class="col-md-9">
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">Examens du patient</div>
+                    <div class="panel-body">
+                        {% if page.studiesDcData %}
+                            <p>Liste des examens du patient trouvés sur le serveur DICOM</p>
+                        {% else %}
+                            <p>Pas d'examens référencés pour ce patient.</p>
+                        {% endif %}
+                    </div>
+                    {% if page.studiesDcData %}
+                        <table id="listeExamens" class="table table-striped table-hover">
+                            <thead>
+                                <th></th>
+                                <th>Date</th>
+                                <th>Opérateur</th>
+                                <th>Acte correspondant</th>
+                            </thead>
+                            <tbody>
+                                {% for v in page.studiesDcData %}
+                                  <tr>
+                                    <td>
+                                        <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/" role="button">
+                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                        </a>
+                                    </td>
+                                    <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>
+                                    <td>{{ v.MainDicomTags.ReferringPhysicianName }}</td>
+                                    <td>{{ page['studiesDcDataRapro'][v.ID]['label'] }}
+                                        {% if page['studiesDcDataRapro'][v.ID]['titre'] %}
+                                            :
+                                            {{ page['studiesDcDataRapro'][v.ID]['titre'] }}
+                                        <small>({{ page['studiesDcDataRapro'][v.ID]['creationDate']|date('d/m/Y H:i') }})</small>{% endif %}
+                                    </td>
+                                  </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

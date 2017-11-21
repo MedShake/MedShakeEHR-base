@@ -1,0 +1,73 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : montrer les tags disponibles pour la rédaction d'un template
+ # à partir d'un objet et de son ID
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Tags disponibles pour l'objet</h1>
+
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tag</th>
+        <th>Label</th>
+        <th>Valeur</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for k,v in page.tabTags %}
+        <tr>
+          <td class="gras" colspan="4">
+            {% if k =='calc' %}Tags calculés{% else %}{{ v.catName }}{% endif %}
+          </td>
+        </tr>
+        {% for l,w in v.tags %}
+          <tr>
+            <td>{{ l }}</td>
+            <td>
+              tag.{{ l }}
+              {% if page['tabTagsSelect']['val'~l] %} // tag.val{{ l }}{% endif %}
+            </td>
+            <td>{{ w.infos.label }}</td>
+            <td>{{ w.value }}{% if page['tabTagsSelect']['val'~l] %} // {{ page['tabTagsSelect']['val'~l] }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

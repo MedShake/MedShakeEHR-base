@@ -1,0 +1,31 @@
+Instructions pour l'upgrade
+
+==============================
+1.x.x --> 2.0.0
+==============================
+
+
+Préambule : faire une sauvegarde complète de l'installation : dossiers et base de données.
+
+
+1) Considérer les nouveaux de paramètres de configuration en se reportant si besoin à la documentation sur http://www.logiciel-cabinet-medical.fr/ :
+- urlHostSuffixe (facultatif)
+- templatesPdfFolder: '/home/EHR/templates/models4print/'
+- templatesBaseFolder: '/home/EHR/templates/base/'
+- templatesModuleFolder: '/home/EHR/templates/gynobs/'
+
+
+2) Considérer la nouvelle répartition théorique de templates :
+- les templates de "templatesBaseFolder" constituent un jeu complet fonctionnel minimal permettant un affichage dès l'installation de la base seule
+- les templates contenus dans "templatesModuleFolder" sont prioritaires si présents sur ceux de "templatesBaseFolder"
+- les templates de génération de PDF sont isolables du reste des templates en utilisant "templatesPdfFolder"
+- les chemins présentés ci-dessus pour chaque variable illustrent l'arborescence recommandée
+
+
+3) Appliquer les changements indispensables sur la base de données via le commandes SQL indiquées dans sqlUpgrade.sql de la base ET du module
+
+
+4) Copier / remplacer l’ensemble des fichiers de votre version actuelle par la nouvelle version. Débuter par la base de MedShakeEHR, terminer par le module spécifique (certains fichiers du module remplaceront des fichiers de la base)
+
+
+5) Retirer dans la configuration de chaque agenda le type de rendez-vous [OFF]

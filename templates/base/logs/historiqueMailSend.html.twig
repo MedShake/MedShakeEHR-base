@@ -1,0 +1,85 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs : historique d'envoi d'un document
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : historique des envois par mail{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js"></script>{% endif %}
+{% endblock %}
+
+{% block body %}
+<h1>Historique d'envoi par mail</h1>
+<p>
+<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/" role="button">Retour dossier patient</a>
+</p>
+    <div class="container-fluid">
+        <div class="row">
+            <table class="table table-hover ">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">Date</th>
+                        <th class="col-md-2">De</th>
+                        <th class="col-md-2">A</th>
+                        <th class="col-md-3">Sujet</th>
+                        <th class="col-md-4">Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for v in page.mailListe %}
+                        <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
+                            <td>{{ v.creationDate }}</td>
+                            <td>
+                              {{ page['expediteurs'][v.expediteurID] }}<br>
+                              <small>{{ v.mailFrom|e }}</small>
+                            </td>
+                            <td><strong>
+                              {% if v.mailToEcofaxName %}{{ v.mailToEcofaxName }}<br>{% endif %}
+                              {{ v.mailTo|e }}
+                              {{ v.mailToApicrypt|e }}
+                            </strong>
+                            <div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div>
+                          </td>
+                            <td>
+                              {{ v.mailSujet|e }}
+
+                            </td>
+                            <td class="small">{{ v.mailBody|e|nl2br }}</td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

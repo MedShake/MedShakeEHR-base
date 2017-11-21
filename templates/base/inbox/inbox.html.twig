@@ -1,0 +1,86 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > inbox : inbox
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : inbox{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js"></script>
+    <style>
+        tr.mailClicView:hover, tr.patietSelect:hover {
+            cursor: pointer;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+
+
+        <h1>Boite de réception</h1>
+
+        <div class="row" style="margin-top : 40px;">
+
+            <div class="col-md-3">
+                <table class="table table-hover" style="font-size : 12px">
+
+                    {% for k, mails in page.inbox.mails %}
+                      {% set parentLoop = loop.index %}
+                        <tr>
+                            <td class="bg-primary" colspan="3">
+                                <strong>{{ k }}</strong>
+                            </td>
+                        </tr>
+                        {% for mail in mails %}
+                            <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} success{% elseif mail.archived == 'c' %} warning{% endif %}" data-mailID="{{ mail.id }}" data-status="{{ mail.archived }}">
+                                <td class="gras">
+                                {{ mail.hprimIdentite|e }}
+                                </td>
+                                <td>
+                                    {{ mail.hprimExpediteur|e }}
+                                </td>
+                                <td>
+                                    {% if mail.pjNombre > 0 %}
+                                        <span class="badge">{{ mail.pjNombre }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+
+                </table>
+            </div>
+
+            <div id="view" class="col-md-9"></div>
+
+        </div>
+
+{% endblock %}

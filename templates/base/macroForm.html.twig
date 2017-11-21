@@ -1,0 +1,473 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > macro de construction des formulaires
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{# input #}
+{% macro input(v) %}
+
+		{% if v.label.label != '' %}
+			{# label avant ou autour #}
+			{% if v.label.position == 'before' or v.label.position == 'around' %}
+				<label
+				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
+				>{{ v.label.label|e }}
+			{% endif %}
+
+			{# label avant #}
+			{% if v.label.position == 'before' %}
+				</label>
+			{% endif %}
+		{% endif %}
+
+		{# avant le input #}
+	  {% if v.input.before %}
+	  	{{ v.input.before }}
+			{% if v.input.plusg %}
+				<span class="input-group-addon" id="{{v.input.name}}IDAddOnG">{{ v.input.plusg }}</span>
+			{% endif %}
+		{% elseif v.input.plus or v.input.plusg %}
+			<div class="input-group">
+
+				{% if v.input.plusg %}
+					<span class="input-group-addon" id="{{v.input.name}}IDAddOnG">{{ v.input.plusg }}</span>
+				{% endif %}
+
+		{% endif %}
+
+		{# input #}
+    <input type="{{ v.input.type }}"
+		title="{{ v.input.name }}"
+		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
+		{% if v.input.name %} name="{{ v.input.name }}" {% endif %}
+    {% if v.input.value != 'noPreValue' %} value="{{ v.input.value|e('html_attr') }}"
+		{% elseif v.input.value == 'noPreValue' and  v.input.defaut != '' %} value="{{ v.input.defaut|e('html_attr') }}"
+		{% endif %}
+    {% if v.input.placeholder %} placeholder="{{ v.input.placeholder|e('html_attr') }}" {% endif %}
+		{% if v.input.class %} class="{{ v.input.class }}{% if v.input.error %} inputErreur"{% endif %}" {% endif %}
+    {% if v.input.min or v.input.min == '0' %} min="{{ v.input.min }}" {% endif %}
+    {% if v.input.max or v.input.max == '0' %} max="{{ v.input.max }}" {% endif %}
+    {% if v.input.step or v.input.step == '0' %} step="{{ v.input.step }}" {% endif %}
+    {% if v.input.pattern %} pattern="{{ v.input.pattern }}" {% endif %}
+    {% if v.input.autocomplete %} autocomplete="{{ v.input.autocomplete }}" {% endif %}
+		{% if v.input.dataAcTypeID %} {{ v.input.dataAcTypeID }} {% endif %}
+		{% if v.input.disabled %} disabled="{{ v.input.disabled }}" {% endif %}
+		{% if v.input.readonly %} readonly="{{ v.input.readonly }}" {% endif %}
+    {% if v.input.required == 'required' %} required="required" {% endif %}
+    {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
+    {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
+		{{ v.input.add }} />
+
+		{# après le input #}
+    {% if v.input.after %}
+    	{{ v.input.after }}
+		{% elseif v.input.plus %}
+			<span class="input-group-addon" id="{{v.input.name}}IDAddOn">{{ v.input.plus }}</span>
+		{% endif %}
+
+		{% if v.input.before %}
+		{% elseif v.input.plus or v.input.plusg %}
+			</div>
+		{% endif %}
+
+		{% if v.label.label != '' %}
+			{# label après #}
+			{% if v.label.position == 'after' %}
+				<label
+				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
+				>{{ v.label.label|e }}
+			{% endif %}
+
+			{# label après ou autour #}
+			  {% if v.label.position == 'after' or v.label.position == 'around' %}
+			  	</label>
+		  {% endif %}
+	  {% endif %}
+
+{% endmacro %}
+
+
+
+{# select #}
+{% macro select(v) %}
+	{% if v.label.position == 'before' or v.label.position == 'around' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+	{% if v.label.position == 'before' %}
+		</label>
+	{% endif %}
+
+	<select title="{{ v.select.name }}"
+	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur"{% endif %}" {% endif %}
+	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
+	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
+	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
+	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
+	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{{ v.select.add }}>
+	{% if v.select.valueDefaut is iterable %}
+		{% for key,value in v.select.valueDefaut %}
+			<option value="{{ key|e('html_attr') }}">{{ value|e }}</option>
+		{% endfor %}
+	{% else %}
+		{% for key,value in v.select.values %}
+			<option
+			{% if v.select.valueDefaut == key %} selected="selected" {% endif %}
+			value="{{ key|e('html_attr') }}">{{ value|e }}
+			</option>
+		{% endfor %}
+	{% endif %}
+
+	</select>
+
+	{% if v.label.position == 'after' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+
+    {% if v.label.position == 'after' or v.label.position == 'around' %}
+    	</label>
+    {% endif %}
+{% endmacro %}
+
+
+
+{# select avec optgroup #}
+{% macro selectOptgroup(v) %}
+	{% if v.label.position == 'before' or v.label.position == 'around' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+	{% if v.label.position == 'before' %}
+		</label>
+	{% endif %}
+
+	<select title="{{ v.select.name }}"
+	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur"{% endif %}" {% endif %}
+	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
+	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
+	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
+	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
+	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{{ v.select.add }}>
+	{% for key,options in v.select.values %}
+	 	<optgroup label="{{ key|e('html_attr') }}">
+		{% for k,va in options %}
+			<option
+			{% if v.select.valueDefaut == va.id %} selected="selected" {% endif %}
+			value="{{ va.id|e('html_attr') }}">{{ va.label|e }}
+			</option>
+		{% endfor %}
+		</optgroup>
+	{% endfor %}
+	</select>
+
+	{% if v.label.position == 'after' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+
+    {% if v.label.position == 'after' or v.label.position == 'around' %}
+    	</label>
+    {% endif %}
+{% endmacro %}
+
+
+{# textarea #}
+{% macro textarea(v) %}
+	{% if v.label.position == 'before' or v.label.position == 'around' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+	{% if v.label.position == 'before' %}
+		</label>
+	{% endif %}
+
+	<textarea title="{{ v.textarea.name }}"
+	{% if v.textarea.id %} id="{{ v.textarea.id }}" {% endif %}
+	{% if v.textarea.name %} name="{{ v.textarea.name }}" {% endif %}
+  {% if v.textarea.placeholder %} placeholder="{{ v.textarea.placeholder|e('html_attr') }}" {% endif %}
+	{% if v.textarea.datatypeid %} data-typeid="{{ v.textarea.datatypeid }}" {% endif %}
+	{% if v.textarea.autocomplete %} autocomplete="{{ v.textarea.autocomplete }}" {% endif %}
+	{% if v.textarea.disabled %} disabled="{{ v.textarea.disabled }}" {% endif %}
+	{% if v.textarea.readonly %} readonly="{{ v.textarea.readonly }}" {% endif %}
+	{% if v.textarea.class %} class="{{ v.textarea.class }}{% if v.textareaerror %} textareaErreur"{% endif %}" {% endif %}
+	{% if v.textarea.rows %} rows="{{ v.textarea.rows }}" {% endif %}
+	{{ v.textarea.add }}
+
+	>{% if v.textarea.value != 'noPreValue' %}{{ v.textarea.value|e }}{% elseif v.textarea.value == 'noPreValue' and  v.textarea.defaut != '' %}{{ v.textarea.defaut|e }}{% endif %}</textarea>
+
+	{% if v.label.position == 'after' %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
+		>{{ v.label.label|e }}
+	{% endif %}
+
+    {% if v.label.position == 'after' or v.label.position == 'around' %}
+    	</label>
+    {% endif %}
+{% endmacro %}
+
+
+{# form errors bloc #}
+{% macro errorFormDiv( validationErrorsMsg ) %}
+	{% if validationErrorsMsg %}
+	<div class="alert alert-danger" role="alert">
+		Merci de considérer les informations suivantes et de corriger les champs concernés :
+		<ul>
+		{% for message in validationErrorsMsg %}
+	    {% if message %}<li>{{ message }}</li>{% endif %}
+		{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+{% endmacro %}
+
+{# formBuilder #}
+{% macro formbuilder(t , formIN, prevalue ) %}
+	{% import _self as f %}
+
+	{% if t.global.noFormTags is not defined %}
+		<form
+		{% if t.global.formAction %}action="{{ t.config.protocol }}{{ t.config.host }}{{ t.config.urlHostSuffixe }}{{ t.global.formAction }}" {% endif %}
+		{% if t.global.formMethod %}method="{{ t.global.formMethod }}" {% endif %}
+		id="formName_{{ formIN }}"
+		class="{{ t.global.formClass }}"
+		data-dataset="{{ t.global.dataset }}"
+		data-instance="{{ t.global.instance }}" >
+	{% endif %}
+
+	{# form number #}
+	{{ f.input ({
+		'input' : {
+			'type' : 'hidden',
+			'name' : 'formIN',
+			'value' : formIN
+		}
+	}) }}
+
+ {# champ cachés #}
+ {% for khc,hc in t.addHidden %}
+ {{ f.input ({
+	 'input' : {
+		 'type' : 'hidden',
+		 'name' : khc,
+		 'value' : hc
+	 }
+ }) }}
+ {% endfor %}
+
+	{% for row in t.structure %}
+	<div class="row{% if row.elements.class %} {{row.elements.class}}{% endif %}">
+		{% for keycol, col in row %}
+			{% if keycol == "elements" %}
+				<div class="col-md-12"><h3>{{ col.value }}</h3></div>
+			{% else %}
+				<div class="col-md-{{ col.size }}">
+					{% for el in col.elements %}
+						{% if el.type == "head" %}
+							<h4>{{ el.value }}</h4>
+						{% elseif el.type == "label" %}
+							<p>{{ el.value }}</p>
+						{% else %}
+
+
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox'] %}
+								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								{{ f.input ({
+									'input' : {
+										'type' : el.value.formType,
+										'name' : el.value.name,
+										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'placeholder' : el.value.placeholder,
+										'class' : 'form-control' ~ el.value.autocompleteclass,
+										'value' : el.value.preValue,
+										'defaut' : el.value.formValues,
+										'required' : el.value.required,
+										'disabled' : el.value.disabled,
+										'readonly' : el.value.readonly,
+										'datatypeid' : el.value.id,
+										'autocomplete' : 'off',
+										'dataAcTypeID' : el.value.dataAcTypeID,
+										'min' : el.value.min,
+										'max' : el.value.max,
+										'step' : el.value.step,
+										'plus' : el.value.plus,
+										'plusg' : el.value.plusg
+									},
+									'label' : {
+										'position' : 'before',
+										'label' : el.value.label,
+										'class' : 'control-label'
+									}
+								}) }}
+								</div>
+
+							{% elseif el.value.formType == "lcc" %}
+								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								{{ f.input ({
+									'input' : {
+										'type' : 'text',
+										'name' : el.value.name,
+										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'placeholder' : el.value.placeholder,
+										'class' : 'form-control' ~ el.value.autocompleteclass,
+										'value' : el.value.preValue,
+										'defaut' : el.value.formValues,
+										'required' : el.value.required,
+										'disabled' : el.value.disabled,
+										'readonly' : el.value.readonly,
+										'datatypeid' : el.value.id,
+										'autocomplete' : 'off',
+										'dataAcTypeID' : el.value.dataAcTypeID,
+										'min' : el.value.min,
+										'max' : el.value.max,
+										'step' : el.value.step,
+										'before' : '<div class="input-group">',
+										'after' : '<span class="input-group-btn" id="' ~ el.value.name ~ 'IDAddOn"><button id="' ~ el.value.name ~ 'Button" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>'
+									},
+									'label' : {
+										'position' : 'before',
+										'label' : el.value.label,
+										'class' : 'control-label'
+									}
+								}) }}
+								</div>
+
+
+							{% elseif el.value.formType == "textarea" %}
+								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								{{ f.textarea ({
+									'textarea' : {
+										'name' : el.value.name,
+										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'class' : 'form-control',
+										'value' : el.value.preValue,
+										'defaut' : el.value.formValues,
+										'disabled' : el.value.disabled,
+										'datatypeid' : el.value.id,
+										'autocomplete' : 'off',
+										'placeholder' : el.value.placeholder,
+										'readonly' : el.value.readonly,
+										'rows' : el.value.rows
+									},
+									'label' : {
+										'position' : 'before',
+										'label' : el.value.label,
+										'class' : 'control-label'
+									}
+								}) }}
+								</div>
+
+							{% elseif el.value.formType == "select" %}
+								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								{{ f.select ({
+									'select' : {
+										'name' : el.value.name,
+										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'class' : 'form-control',
+										'values' : el.value.formValues,
+										'valueDefaut' : el.value.preValue,
+										'readonly' : el.value.readonly,
+										'disabled' : el.value.disabled,
+										'datatypeid' : el.value.id,
+										'autocomplete' : 'off'
+									},
+									'label' : {
+										'position' : 'before',
+										'label' : el.value.label,
+										'class' : 'control-label'
+									}
+								}) }}
+								</div>
+
+							{% elseif el.value.formType == "date" %}
+								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								{{ f.input ({
+									'input' : {
+										'type' : 'text',
+										'name' : el.value.name,
+										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'placeholder' : el.value.placeholder,
+										'datatypeid' : el.value.id,
+										'autocomplete' : 'off',
+										'disabled' : el.value.disabled,
+										'readonly' : el.value.readonly,
+										'class' : 'form-control datepic',
+										'before' : '<div id="'~ el.value.name ~ 'Id" class="input-group date datepick" data-typeid="'~ el.value.id ~'">',
+										'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>',
+										'value' : el.value.preValue,
+										'defaut' : el.value.formValues,
+										'plusg' : el.value.plusg
+									},
+									'label' : {
+										'position' : 'before',
+										'label' : el.value.label,
+										'class' : 'control-label'
+									}
+								}) }}
+								<span id="{{ el.value.name }}IdHelp" class="help-block"></span>
+								</div>
+
+							{% elseif el.value.formType == "submit" %}
+
+								{{ f.input ({
+									'input' : {
+										'type' : 'submit',
+										'value' : el.value.label,
+										'disabled' : el.value.disabled,
+										'class' : 'btn '~ el.value.class
+									}
+								}) }}
+
+							{% endif %}
+
+
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+	{% endfor %}
+
+	{% if t.global.noFormTags is not defined %}</form>{% endif %}
+
+{% endmacro %}

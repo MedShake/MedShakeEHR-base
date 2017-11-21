@@ -21,20 +21,25 @@
  */
 
 /**
- * Configuration > ajax : upload par drag&drop d'une nouvelle clef apicrypt
+ * Calculs médicaux
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if (!msUser::checkUserIsAdmin()) {die;}
+class msModuleCalcMed
+{
 
-$fichier=$_FILES['file'];
-if(!isset($_POST['destination'])) die;
 
-//creation folder si besoin
-msTools::checkAndBuildTargetDir($_POST['destination']);
+/**
+ * Calcule de l'IMC
+ * @param  float $poidskg  poids en kg
+ * @param  float $taillecm taille en cm
+ * @return float           IMC
+ */
+      public static function imc($poidskg, $taillecm) {
+        if(is_numeric($poidskg) and is_numeric($taillecm)) {
+          return number_format(round($poidskg / ($taillecm/100 * $taillecm/100), 1), 1, '.', '');
+        }
+      }
 
-$destination_file = $_POST['destination'].$fichier['name'];
-move_uploaded_file($fichier['tmp_name'], $destination_file);
-
-die();
+}

@@ -55,7 +55,7 @@ if (!in_array($m, $acceptedModes)) {
 
 
 // Extraire un form et lancer nouvelle Cs
-if ($m=='extractCsForm' and is_numeric($_POST['formID'])) {
+if ($m=='extractCsForm') {
     include('inc-ajax-extractCsForm.php');
 }
 
@@ -70,7 +70,7 @@ elseif ($m=='extractOrdoForm' and is_numeric($_POST['patientID'])) {
 }
 
 // Extraire le form de mail et le lancer dans le div
-elseif ($m=='extractMailForm' and is_numeric($_POST['formID'])) {
+elseif ($m=='extractMailForm') {
     include('inc-ajax-extractMailForm.php');
 }
 

@@ -97,4 +97,14 @@
           $p['page']['check']['agendasConfigurations']['is_dir']=false;
           $p['page']['check']['agendasConfigurations']['is_writable']=false;
       }
+      //repertoire templates PDF
+      if (is_dir($p['config']['templatesPdfFolder'])) {
+          $p['page']['check']['templatesPdfFolder']['is_dir']=true;
+          if (is_writable($p['config']['templatesPdfFolder'])) {
+              $p['page']['check']['templatesPdfFolder']['is_writable']=true;
+          }
+      } else {
+          $p['page']['check']['templatesPdfFolder']['is_dir']=false;
+          $p['page']['check']['templatesPdfFolder']['is_writable']=false;
+      }
  }

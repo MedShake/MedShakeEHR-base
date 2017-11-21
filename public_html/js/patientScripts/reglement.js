@@ -31,6 +31,7 @@ $(document).ready(function() {
 
   //close button zone newReglement
   $('body').on("click", "#cleanNewReglement", function(e) {
+    $(window).unbind("beforeunload");
     $('#newReglement').html('');
   });
 
@@ -126,7 +127,7 @@ function setDefautTarifEtDepa() {
 
 
 
-  cas = $('select[name="regleSituationPatient"] option:selected').val();
+  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
 
   tarif = parseFloat($("input[name='regleTarifCejour']").val());
   depassement = parseFloat($("input[name='regleDepaCejour']").val());
@@ -150,7 +151,7 @@ function setDefautTarifEtDepa() {
 }
 
 function calcResteDu() {
-  cas = $('select[name="regleSituationPatient"] option:selected').val();
+  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
   tarif = parseFloat($("input[name='regleTarifCejour']").val());
   depassement = parseFloat($("input[name='regleDepaCejour']").val());
 

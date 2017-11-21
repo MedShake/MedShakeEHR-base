@@ -60,8 +60,12 @@ administratifPeutAvoirAgenda: 'false'
 
 #######################################
 ## templates impression
+##
 
-# defaut
+# répertoire par défaut
+templatesPdfFolder: '/home/EHR/templates/models4print/'
+
+# modèle par defaut
 templateDefautPage: 'base-page-headAndFoot.html.twig'
 # ordonnance
 templateOrdoHeadAndFoot: 'base-page-headAndFoot.html.twig'
@@ -108,7 +112,7 @@ apicryptPopPass: 'passwordapicrypt'
 apicryptDefautSujet: 'Document concernant votre patient'
 
 #######################################
-## fax en ligne 
+## fax en ligne
 faxService: 'ecofaxOVH'
 ecofaxMyNumber: '0900000000'
 ecofaxPass: 'password'
@@ -145,8 +149,12 @@ smsTpoa: 'Dr ....'
 
 
 #######################################
-## Twig
-templateBaseFolder: 'gynobs'
-twigPdfTemplatesDir: 'models4print'
+## Templates affichage écran
+templatesBaseFolder: '/home/EHR/templates/base/'
+templatesModuleFolder: '/home/EHR/templates/gynobs/'
+
+
+#######################################
+## Twig configuration
 twigEnvironnementCache: false #'/tmp/templates_cache/'
 twigEnvironnementAutoescape: false

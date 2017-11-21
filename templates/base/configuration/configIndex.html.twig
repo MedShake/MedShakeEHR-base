@@ -1,0 +1,180 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : sommaire de configuration
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Configuration</h1>
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#users" aria-controls="users" role="tab" data-toggle="tab">Gestion des utilisateurs</a>
+    </li>
+    <li role="presentation">
+      <a href="#rc" aria-controls="rc" role="tab" data-toggle="tab">Paramétrage courant</a>
+    </li>
+
+    <li role="presentation">
+      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramétrage avancé</a>
+    </li>
+    <li role="presentation">
+      <a href="#licence" aria-controls="licence" role="tab" data-toggle="tab">Licence</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <div role="tabpanel" class="tab-pane" id="rc">
+
+      <h2>Paramétrage courant</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions type</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/">Actes et tarifs</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Paramétrage des agendas</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Gestion des clefs Apicrypt</a>
+        </li>
+      </ul>
+
+    </div>
+
+    <div role="tabpanel" class="tab-pane active" id="users">
+      <h2>Utilisateurs</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Liste des utilisateurs et options
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configUpdatePassword/">Assigner un mot de passe (créer un utilisateur)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/user/">Paramètres utilisateur</a>
+        </li>
+      </ul>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="ca">
+
+      <h2>Formulaires et templates</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Edition des formulaires</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Gestion des templates d'impression de PDF</a>
+        </li>
+      </ul>
+
+      <h2>DICOM</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/tags-dicom/">Correspondances DICOM</a>
+        </li>
+      </ul>
+
+      <h2>Modèles des données</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/admin/">Données administratives</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/">Données médicales</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/typecs/">Types de consultations</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/courrier/">Courriers et certificats</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/mail/">Mail</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/doc/">Documents importés</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/ordo/">Ordonnances</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/reglement/">Règlement</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/relation/">Données relation</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/dicom/">Dicom</a>
+        </li>
+      </ul>
+
+      <h2>Vérifications techniques</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Logs des agendas
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Vérifications des répertoires de stockage
+          </a>
+        </li>
+      </ul>
+
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="licence">
+      <h2>Licence</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/credits/">Credits</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+{% endblock %}

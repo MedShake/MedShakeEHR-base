@@ -39,7 +39,11 @@ class msAgenda
     * @var int
     */
     private $_userID;
-
+    /**
+    * From ID ( utilisateur faisant l'action )
+    * @var int
+    */
+    private $_fromID;
     /**
     * Date de début au format ISO8601
     * @var string
@@ -136,6 +140,16 @@ class msAgenda
     }
 
     /**
+    * Set fromID
+    * @param int $_fromID User faisant l'action
+    */
+    public function set_fromID($_fromID)
+    {
+        $this->_fromID = $_fromID;
+        return $this;
+    }
+
+    /**
     * Set endDate
     * @param string $endDate format ISO8601
     */
@@ -178,13 +192,16 @@ class msAgenda
 
         if (isset($this->_eventID)) {
             $data['id']=$this->_eventID;
+            $this->_addToLog('edit');
         } else {
-            $this->_eventID=$data['id']=time();
+            //$this->_eventID=$data['id']=time();
             $data['dateAdd']=date('Y-m-d H:i:s');
+            $data['fromID']=$this->_fromID;
         }
 
-        msSQL::sqlInsert('agenda', $data);
-        return $this->getEventByID();
+        if($this->_eventID = msSQL::sqlInsert('agenda', $data)) {
+          return $this->getEventByID();
+        }
     }
 
     /**
@@ -209,34 +226,48 @@ class msAgenda
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
           where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
-          group by a.id")) {
+          group by a.id, n.value, p.value")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
               }
           }
           return $formatedEvents;
       }
-
-    /**
-     * Obtenir les data d'un rendez-vous par son ID
-     * @return array tableau des rendez-vous
-     */
-        public function getEventByID()
-        {
-            if (!isset($this->_eventID)) {
-                throw new Exception('EventID n\'est pas définie');
-            }
-
-            if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, concat(n.value, ' ', p.value) as name
-            from agenda as a
-            left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
-            left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
-            where a.id= '".$this->_eventID."'
-            group by a.id")) {
-                $formatedEvent=$this->_formatEvent($event);
-            }
-            return $formatedEvent;
+/**
+ * Obtenir les data brute d'un rendez-vous par son ID
+ * @return array tableau des data
+ */
+    public function getBrutEventByID()
+    {
+        if (!isset($this->_eventID)) {
+            throw new Exception('EventID n\'est pas définie');
         }
+
+        return msSQL::sqlUnique("select a.*
+        from agenda as a
+        where a.id= '".$this->_eventID."'
+        limit 1");
+    }
+  /**
+   * Obtenir les data d'un rendez-vous par son ID
+   * @return array tableau des rendez-vous
+   */
+      public function getEventByID()
+      {
+          if (!isset($this->_eventID)) {
+              throw new Exception('EventID n\'est pas définie');
+          }
+
+          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, concat(n.value, ' ', p.value) as name
+          from agenda as a
+          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
+          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
+          where a.id= '".$this->_eventID."'
+          group by a.id, n.value, p.value")) {
+              $formatedEvent=$this->_formatEvent($event);
+          }
+          return $formatedEvent;
+      }
 
     /**
     * Formater un rendez-vous
@@ -273,25 +304,38 @@ class msAgenda
               $class=array('hasmenu');
           }
 
-          $re=@array(
-          'id'=>$e['id'],
-          'title'=>$e['name'],
-          'allDay'=>false,
-          'start'=>$e['start'],
-          'end'=>$e['end'],
-          'editable'=>true,
-          'backgroundColor'=> $this->_tabTypeRdv[$e['type']]['backgroundColor'],
-          'borderColor' => $this->_tabTypeRdv[$e['type']]['borderColor'],
-          'textColor'=>$textColor,
-          'className'=>$class,
-          'motif'=>$e['motif'],
-          'type'=>$e['type'],
-          'patientid'=>$e['patientid'],
-          'absent'=>$e['absente']
-          );
-
           if ($e['type']=='[off]') {
-              $re['title']="Fermeture";
+              $re=@array(
+              'id'=>$e['id'],
+              'title'=>'Fermé',
+              'allDay'=>false,
+              'start'=>$e['start'],
+              'end'=>$e['end'],
+              'editable'=>true,
+              'className'=>'fc-nonbusiness',
+              'motif'=>'',
+              'type'=>$e['type'],
+              'patientid'=>$e['patientid'],
+              );
+          }
+          else
+          {
+              $re=@array(
+              'id'=>$e['id'],
+              'title'=> $e['name'],
+              'allDay'=>false,
+              'start'=>$e['start'],
+              'end'=>$e['end'],
+              'editable'=>true,
+              'backgroundColor'=> $this->_tabTypeRdv[$e['type']]['backgroundColor'],
+              'borderColor' => $this->_tabTypeRdv[$e['type']]['borderColor'],
+              'textColor'=>$textColor,
+              'className'=>$class,
+              'motif'=>$e['motif'],
+              'type'=>$e['type'],
+              'patientid'=>$e['patientid'],
+              'absent'=>$e['absente']
+              );
           }
 
           return $re;
@@ -310,12 +354,16 @@ class msAgenda
               throw new Exception('UserID n\'est pas défini');
           }
 
+          $this->_addToLog('delete');
+
           $data=array(
-          'id'=>$this->_eventID,
-          'userid'=>$this->_userID,
-          'statut'=>'deleted'
-        );
+            'id'=>$this->_eventID,
+            'userid'=>$this->_userID,
+            'statut'=>'deleted'
+          );
           msSQL::sqlInsert('agenda', $data);
+
+
       }
 
     /**
@@ -336,13 +384,17 @@ class msAgenda
           if (!isset($this->_endDate)) {
               throw new Exception('EndDate n\'est pas définie');
           }
+
+          $this->_addToLog('move');
+
           $data=array(
-          'id'=>$this->_eventID,
-          'userid'=>$this->_userID,
-          'start'=>$this->_startDate,
-          'end'=>$this->_endDate
-        );
+            'id'=>$this->_eventID,
+            'userid'=>$this->_userID,
+            'start'=>$this->_startDate,
+            'end'=>$this->_endDate
+          );
           msSQL::sqlInsert('agenda', $data);
+
       }
     /**
     * Obtenir l'historique de rdv du patient
@@ -381,14 +433,21 @@ class msAgenda
             $absent='oui';
         }
 
+        $this->_addToLog('missing');
+
         $data=array(
-      'id'=>$this->_eventID,
-      'userid'=>$this->_userID,
-      'absente'=>$absent
-      );
+          'id'=>$this->_eventID,
+          'userid'=>$this->_userID,
+          'absente'=>$absent
+        );
         msSQL::sqlInsert('agenda', $data);
+
     }
 
+/**
+ * Obtenir un array des patients du jour
+ * @return array patients du jour
+ */
     public function getPatientsOfTheDay() {
       $tab=array();
       if (!isset($this->_userID)) {
@@ -410,4 +469,40 @@ class msAgenda
         return $tab;
       }
     }
+
+    private function _addToLog($action) {
+      if (!isset($this->_eventID)) {
+          throw new Exception('EventID n\'est pas défini');
+      }
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
+      if (!isset($this->_fromID)) {
+          throw new Exception('FromID n\'est pas définie');
+      }
+      if (!isset($action)) {
+          throw new Exception('Action n\'est pas définie');
+      }
+
+      $data=array(
+        'eventID'=>$this->_eventID,
+        'userID'=>$this->_userID,
+        'fromID'=>$this->_fromID,
+        'operation'=>$action
+      );
+
+      if($oldEventData=$this->getBrutEventByID()) {
+        $data['olddata']=serialize(array(
+          'start'=>$oldEventData['start'],
+          'end'=>$oldEventData['end'],
+          'type'=>$oldEventData['type'],
+          'statut'=>$oldEventData['statut'],
+          'absente'=>$oldEventData['absente'],
+          'motif'=>$oldEventData['motif']
+        ));
+      }
+
+      msSQL::sqlInsert('agenda_changelog', $data);
+    }
+
 }

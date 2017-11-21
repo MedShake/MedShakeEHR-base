@@ -1,0 +1,79 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : formulaire de règlement
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+<div class="jumbotron">
+    <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    {% if page.formActes.prevalue %}
+        <h3>Édition du règlement</h3>
+    {% else %}
+        <h3>Nouveau règlement</h3>
+    {% endif %}
+
+    <div class="row" style="margin-bottom : 30px">
+        {% for k, v in page.menusActes %}
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
+                    </label>
+                    <select class="form-control selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
+                        <option value=''></option>
+                        {% for val in v %}
+                            <option value="{{ val.id }}"
+                            {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}
+                             style="padding-top : 6px; padding-bottom : 6px; border-top : 1px solid #DDD;
+                            {% if val.flagCmu %}background : #EEE; {% endif %}
+                            {% if val.flagImportant %}font-weight : bold; {% endif %}
+                            "
+                          >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ (val.details|keys)|join(' + ') }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="detFacturation" class="panel panel-default" style="display: none;">
+      <div class="panel-heading">Détails par acte dans le règlement sélectionné</div>
+
+      <table class="table table-condensed">
+        <thead>
+          <th>acte</th>
+          <th>%</th>
+          <th>tarif</th>
+          <th>depassement</th>
+          <th>total</th>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    {{ f.formbuilder(page.form , page.formIN ) }}
+
+</div>

@@ -42,7 +42,7 @@ class msSQL
           die('Echec de connexion');
       } else {
           $mysqli->query('SELECT @password:="'.$p['config']['sqlVarPassword'].'"');
-          $mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+          //$mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
           return $mysqli;
       }
   }

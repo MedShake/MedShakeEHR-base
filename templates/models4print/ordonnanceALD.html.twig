@@ -1,0 +1,157 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : ordonnance ALD
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+{% set ms = page.courrier.medoc.standard %}
+{% set ma = page.courrier.medoc.ald %}
+
+<head>
+    <html>
+        <head>
+            <style>
+                @page {
+                    margin: 140pt 50pt 100pt;
+                    font-family: Helvetica;
+                }
+
+                #header {
+                    position: fixed;
+                    left: 0;
+                    top: -110pt;
+                    right: 0;
+                    height: 110pt;
+                    margin-bottom: 30pt;
+
+                }
+                #footer {
+                    position: fixed;
+                    left: 0;
+                    bottom: -110pt;
+                    right: 0;
+                    height: 100pt;
+                    font-size: 8pt;
+                    padding-top: 10pt;
+                    border-top: 1pt solid #777;
+                }
+
+                #footer p {
+                    display: inline-block;
+                    width: 30%;
+                    text-align: center;
+                    vertical-align: top;
+                }
+
+                .gras {
+                    font-weight: bold;
+                }
+
+                .blocsepa {
+                    width: 100%;
+                    border: 1px solid #000;
+                    text-align: center;
+                }
+
+                .centrer {
+                  text-align : center;
+                }
+                .t6 {
+                  font-size : 6pt;
+                }
+                .t8 {
+                  font-size : 8pt;
+                }
+                .t9 {
+                  font-size : 9pt;
+                }
+                .t10 {
+                  font-size : 10pt;
+                }
+                .t12 {
+                  font-size : 12pt;
+                }
+
+            </style>
+            <body>
+
+                <div id="header">
+                    <div class="centrer t8" style="display : inline-block; width : 45%;vertical-align : top; border : 1px solid #000;height : 110pt">
+                        <span class="gras t10">Docteur Stephen STRANGE</span><br>
+                        Conventionnée secteur 2<br>
+                        N°ADELI : <br>
+                        RPPS : <br>
+                        Stephen.STANGE@medical.apicrypt.org<br>
+                        177 A, Bleecker Street, New York<br>
+                        Consultations sur RDV : 02 00 00 00 00<br>
+                        En cas d’urgence, composez le 15
+                    </div>
+
+                    <div class="centrer t10" style=" display : inline-block; float : right; width : 45%; vertical-align : top; border : 1px solid #000; height : 110pt">
+                        <br><br><br>
+                        <span class="gras t10">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %}
+                            {{ tag.3 }}
+                            {{ tag.2 }}</span><br>({{ tag.8 }})
+                    </div>
+                </div>
+
+                <!-- footer standard -->
+                <div id="footer">
+                    <p>RPPS<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/rpps.jpg" style="width : 130px; height : 40px"></p>
+                    <p>ADELI<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/adeli.jpg" style="width : 130px; height : 40px"></p>
+                    <p><br>Membre d’une AGA, règlement par chèque accepté.</p>
+                </div>
+                <!-- stop head -->
+                <div class="t10">
+                    <p style="text-align : right;">New York, le
+                        {{ tag.date|date("d/m/Y") }}</p>
+
+                    <div style="height : 200pt;">
+                        <div class="centrer" style="width: 100%; border: 1px solid #000;">
+                            <strong>Prescriptions relatives au traitement de l'affection de longue durée reconnue (liste ou hors liste)</strong><br>
+                            (AFFECTION EXONERANTE)
+                        </div>
+
+                        {% for v in ma %}
+                            <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="centrer" style="width: 100%; border: 1px solid #000;">
+                        <strong>Prescriptions SANS RAPPORTS avec l'affection de longue durée</strong><br>
+                        (MALADIES INTERCURRENTES)
+                    </div>
+
+                    {% for v in ms %}
+                        <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>
+                    {% endfor %}
+
+                </div>
+                <!-- stop body -->
+            </body>
+        </html>

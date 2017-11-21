@@ -1,0 +1,171 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Agenda
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}Agenda MedShakeEHR{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
+
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/fullcalendar.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/locale/fr.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
+
+    <style>
+      a.eventAbsent .fc-title {
+        text-decoration: line-through;
+      }
+      .selected {
+        border: solid 3px #4399e4;
+        opacity: 0.8;
+      }
+
+      .fc-event {
+        font-size: 1em;
+        border-radius: 0;
+        border-width: 1px 0;
+        padding-left: 5px;
+      }
+
+      .fc-nonbusiness {
+      	background: #607d8b;
+      }
+
+      th.fc-day-header a {
+        color : black;
+      }
+
+    </style>
+
+    <script>
+    var boutonsHeaderCenter;
+    var hiddenDays;
+    var minTime;
+    var maxTime;
+    var businessHours;
+    var slotDuration;
+    var eventSources;
+    {{ page.configAgenda }}
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+{% if page.agendaUsers|length > 1 %}
+  <ul class="nav nav-tabs bottom-space" >
+
+    {% for k,v in page.agendaUsers %}
+      <li role="presentation" {% if k == page.userID %}class="active"{% endif %}>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="row">
+  <div class="col-md-3">
+
+    <form id="formRdv">
+      <div class="form-group">
+        <label for="search">Rechercher un patient</label>
+        <input id="search" type="text" class="form-control" placeholder="nom prenom" autocomplete="off">
+      </div>
+      <input id="eventID" type="hidden" name="eventid" value="" autocomplete="off"/>
+      <input id="userID" type="hidden" name="userid" value="{{ page.userID }}" autocomplete="off"/>
+      <input id="patientID" type="hidden" name="patientid" value="" autocomplete="off"/>
+      <input id="eventStartID" type="hidden" name="eventStart" value="" autocomplete="off"/>
+      <input id="eventEndID" type="hidden" name="eventEnd" value="" autocomplete="off"/>
+      <div class="well">
+        <h3 id="titreRdv" style="margin-top : 0">Nouveau rendez-vous</h3>
+        {{ f.formbuilder(page.formPriseRdv , page.formIN , valFormLat ) }}
+
+        <div class="form-group">
+          <label for="type">Type de rendez-vous</label>
+          <select id="type" class="form-control" autocomplete="off">
+            {% for k, v in page.typeRdv if k != '[off]' %}
+              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}">{{ v.duree }}' :
+                {{ v.descriptif }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Date et heure sélectionnées</label>
+          <div>
+            <p class="form-control-static dateHeureDisplay bg-danger" style="padding-left : 2px;">Selectionner sur l'agenda</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="motif">Motif</label>
+          <textarea id="motif" class="form-control" rows="3" autocomplete="off"></textarea>
+        </div>
+
+        <button id="buttonPrincipal" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
+
+        <div class="btn-group">
+          <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="disabled">
+            Autres actions <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+
+            <li><a id="buttonMark" href="#">Non honoré</a></li>
+            <li><a id="buttonClone" href="#">Cloner</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a id="buttonRemove" href="#">Supprimer</a></li>
+          </ul>
+        </div>
+
+        <button id="buttonCancel" disabled="disabled" class="btn btn-default  pull-right" type="submit">Abandonner</button>
+
+      </div>
+    </form>
+
+    <div id="historiquePatient" class="panel panel-default" style="display: none;">
+      <div class="panel-heading gras">
+        <div id="HistoriqueRdvResume" class="btn-group pull-right" role="group">
+          <button title="total" type="button" disabled="disabled" class="btn btn-xs btn-default donothing gras">0</button>
+          <button title="honorés" type="button" disabled="disabled" class="btn btn-xs btn-success donothing gras">0</button>
+          <button title="annulés" type="button" disabled="disabled" class="btn btn-xs btn-warning donothing gras">0</button>
+          <button title="patient absent" type="button" disabled="disabled" class="btn btn-xs btn-danger donothing gras">0</button>
+        </div>
+        Derniers rendez-vous
+      </div>
+      <ul class="list-group"></ul>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div id="calendar" data-userID="{{ page.userID }}"></div>
+  </div>
+</div>
+{% endblock %}

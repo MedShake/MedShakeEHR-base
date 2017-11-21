@@ -1,0 +1,94 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : résultat recherche patients / pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% if page.outputTableHead %}
+  <table class="table table-hover">
+    <caption></caption>
+    <thead>
+      <tr>
+        <th></th>
+        {% for th in page.outputTableHead %}
+          {{ th }}
+        {% endfor %}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for patientID, tab in page.outputTableRow %}
+        <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% endif %}" data-url="/{{ page.porp }}/{{ patientID }}/">
+          <td>
+            <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.porp }}/{{ patientID }}/">
+              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+            </a>
+          </td>
+
+          {% for k, p in tab %}
+            <td>{{ p }}</td>
+          {% endfor %}
+
+          <td>
+
+            <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.porp }}/edit/{{ patientID }}/" title="Édition des données administratives">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+            {% if page.porp == 'patient' %}
+              <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.porp }}/relations/{{ patientID }}/" title="Édition des relations">
+                  <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+
+              <a class="btn btn-default btn-xs sendSign" data-patientID="{{ patientID }}" role="button" href="#" title="Faire signer consentement">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+            {% endif %}
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.porp }}/edit/{{ patientID }}/">Éditer</a></li>
+                {% if page['outputType'][patientID]['type'] == 'patient' %}
+                  <li><a class="switchPraticienListe" data-patientID="{{ patientID }}" href="#">Ajouter à la liste Praticiens</a></li>
+                {% else %}
+                  <li><a class="switchPraticienListe" data-patientID="{{ patientID }}" href="#">Retirer de la liste Praticiens</a></li>
+                {% endif %}
+                <li role="separator" class="divider"></li>
+                <li><a class="sendSign" data-patientID="{{ patientID }}" href="#">Faire signer consentement</a></li>
+                {% if config.smtpTracking %}
+                  <li role="separator" class="divider"></li>
+                  <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientID }}/" >Historique des mails envoyés</a></li>
+                {% endif %}  
+                <li role="separator" class="divider"></li>
+                <li><a class="markDeleted" data-patientID="{{ patientID }}" href="#">Supprimer ce dossier</a></li>
+              </ul>
+            </div>
+
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  Pas de résultat correspondant à la recherche
+{% endif %}
