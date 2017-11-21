@@ -28,7 +28,7 @@
 
 //$.getScriptOnce(urlBase+"/bower_components/autogrow/autogrow.min.js");
 
-init.ordonnance = function() {
+$(document).ready(function() {
 
   //close button zone newOrdo
   $('#newOrdo').on("click", "#cleanNewOrdo", function(e) {
@@ -60,7 +60,7 @@ init.ordonnance = function() {
 
 
   autoGrowOrdo();
-};
+});
 
 
 //ajouter une ligne à l'ordo

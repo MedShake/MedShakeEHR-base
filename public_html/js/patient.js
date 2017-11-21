@@ -145,7 +145,7 @@ $(document).ready(function() {
   $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
-    init.docupload();
+    $.getScriptOnce(urlBase+"/js/patientScripts/docupload.js");
   });
 
   //bouton de nouveau mail
@@ -177,7 +177,6 @@ $(document).ready(function() {
 
   //close button zone newCS
   $('body').on("click", "#cleanNewCS", function(e) {
-    if (typeof kill[$("newCS").attr('data-formtocall')] == "function") kill[$("newCS").attr('data-formtocall')]();
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });
@@ -420,8 +419,6 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-
-      //if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       scrollTo('body');
       // checkboxes dans les formulaires
       $("input[type='checkbox']").unbind("click");
@@ -432,7 +429,6 @@ function sendFormToCsDiv(el) {
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
         $(window).unbind("beforeunload");
-        //if (typeof init[el.attr('data-formtocall')] == "function") init[el.attr('data-formtocall')]();
       });
 
     },
@@ -460,7 +456,7 @@ function sendFormToCourrierDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newCourrier').html(data);
-      init.print();
+      $.getScriptOnce(urlBase+"/js/patientScripts/print.js");
 
       tinymce.init({
         selector: '#editeurCourrier',
@@ -498,7 +494,7 @@ function sendFormToOrdoDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newOrdo').html(data);
-      init.ordonnance();
+      $.getScriptOnce(urlBase+"/js/patientScripts/ordonnance.js");
       scrollTo('body');
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
@@ -528,7 +524,7 @@ function sendFormToMailDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newMail').html(data);
-      init.email();
+      $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {
@@ -560,7 +556,7 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      init.reglement();
+      $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function () {

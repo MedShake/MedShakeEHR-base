@@ -33,8 +33,6 @@
 
 {% block head %}
     <script>
-      var init = {};
-      var kill = {};
       {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
       var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
     </script>
@@ -43,18 +41,16 @@
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/tinymce.min.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/jquery.tinymce.min.js"></script>
 
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/email.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/print.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/docupload.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/reglement.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/ordonnance.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/autogrow/autogrow.min.js"></script>
+    {# JS général du dossier patient #}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
 
+    {# JS commun au formulaire de consultation du module #}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/common.js"></script>
+
+    {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
     {% for i in page.listeForms %}
       <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js"></script>
     {% endfor %}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
 
     <style>
         #newDoc{

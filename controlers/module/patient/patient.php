@@ -27,6 +27,9 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+// liste des formulaires fixes au 1er affichage dossier patient pour JS
+$p['page']['listeForms']=array('baseATCD','baseSynthese');
+
 $form_baseATCD = new msForm();
 $form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
 $form_baseATCD->getPrevaluesForPatient($match['params']['patient']);

@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-init.reglement = function (){
+$(document).ready(function() {
 
 
   //close button zone newReglement
@@ -71,7 +71,7 @@ init.reglement = function (){
   $("input[name='regleTarifCejour']").attr('data-tarifdefaut', $("input[name='regleTarifCejour']").val());
   $("input[name='regleDepaCejour']").attr('data-tarifdefaut',$("input[name='regleDepaCejour']").val());
 
-};
+});
 
 
 

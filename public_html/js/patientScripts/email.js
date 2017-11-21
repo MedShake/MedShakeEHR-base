@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-init.email = function() {
+$(document).ready(function() {
 
 
   //close button zone newMail
@@ -96,4 +96,4 @@ init.email = function() {
     });
   });
 
-};
+});

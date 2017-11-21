@@ -26,7 +26,7 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-init.baseATCD = function(){ 
+$(document).ready(function() {
 
   //calcul IMC
   if ($('#p_43ID').length > 0) {
@@ -58,8 +58,4 @@ init.baseATCD = function(){
     auto_grow(this);
   });
 
-};
-
-kill.baseATCD = function(){
-  $("input[data-typeid='34'] , input[data-typeid='35']").unbind("keyup");
-};
+});
