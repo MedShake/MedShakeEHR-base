@@ -29,6 +29,7 @@
 {# input #}
 {% macro input(v) %}
 
+		{# si un label existe #}
 		{% if v.label.label != '' %}
 			{# label avant ou autour #}
 			{% if v.label.position == 'before' or v.label.position == 'around' %}
@@ -44,7 +45,7 @@
 			{% endif %}
 		{% endif %}
 
-		{# avant le input #}
+		{# insertion avant le input #}
 	  {% if v.input.before %}
 	  	{{ v.input.before }}
 			{% if v.input.plusg %}
@@ -82,7 +83,7 @@
     {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
 		{{ v.input.add }} />
 
-		{# après le input #}
+		{# insertion après le input #}
     {% if v.input.after %}
     	{{ v.input.after }}
 		{% elseif v.input.plus %}
@@ -94,6 +95,7 @@
 			</div>
 		{% endif %}
 
+		{# si un label existe #}
 		{% if v.label.label != '' %}
 			{# label après #}
 			{% if v.label.position == 'after' %}
@@ -115,14 +117,18 @@
 
 {# select #}
 {% macro select(v) %}
-	{% if v.label.position == 'before' or v.label.position == 'around' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
-	{% if v.label.position == 'before' %}
-		</label>
+
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'before' or v.label.position == 'around' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
+		{% if v.label.position == 'before' %}
+			</label>
+		{% endif %}
 	{% endif %}
 
 	<select title="{{ v.select.name }}"
@@ -148,30 +154,37 @@
 
 	</select>
 
-	{% if v.label.position == 'after' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'after' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
 
-    {% if v.label.position == 'after' or v.label.position == 'around' %}
-    	</label>
-    {% endif %}
+	    {% if v.label.position == 'after' or v.label.position == 'around' %}
+	    	</label>
+	    {% endif %}
+	{% endif %}
 {% endmacro %}
 
 
 
 {# select avec optgroup #}
 {% macro selectOptgroup(v) %}
-	{% if v.label.position == 'before' or v.label.position == 'around' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
-	{% if v.label.position == 'before' %}
-		</label>
+
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'before' or v.label.position == 'around' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
+		{% if v.label.position == 'before' %}
+			</label>
+		{% endif %}
 	{% endif %}
 
 	<select title="{{ v.select.name }}"
@@ -194,29 +207,36 @@
 	{% endfor %}
 	</select>
 
-	{% if v.label.position == 'after' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'after' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
 
-    {% if v.label.position == 'after' or v.label.position == 'around' %}
-    	</label>
-    {% endif %}
+	    {% if v.label.position == 'after' or v.label.position == 'around' %}
+	    	</label>
+	    {% endif %}
+		{% endif %}
 {% endmacro %}
 
 
 {# textarea #}
 {% macro textarea(v) %}
-	{% if v.label.position == 'before' or v.label.position == 'around' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
-	{% if v.label.position == 'before' %}
-		</label>
+
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'before' or v.label.position == 'around' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
+		{% if v.label.position == 'before' %}
+			</label>
+		{% endif %}
 	{% endif %}
 
 	<textarea title="{{ v.textarea.name }}"
@@ -233,16 +253,19 @@
 
 	>{% if v.textarea.value != 'noPreValue' %}{{ v.textarea.value|e }}{% elseif v.textarea.value == 'noPreValue' and  v.textarea.defaut != '' %}{{ v.textarea.defaut|e }}{% endif %}</textarea>
 
-	{% if v.label.position == 'after' %}
-		<label
-		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-		{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
-		>{{ v.label.label|e }}
-	{% endif %}
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'after' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
 
     {% if v.label.position == 'after' or v.label.position == 'around' %}
     	</label>
     {% endif %}
+	{% endif %}
 {% endmacro %}
 
 

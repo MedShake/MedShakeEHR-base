@@ -82,11 +82,11 @@ class msForm
  */
     public function setFormIDbyName($formName)
     {
-      if($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
-        return $this->_formID = $formID;
-      } else {
-        throw new Exception('Formulaire non trouvé à partir de son nom');
-      }
+        if ($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
+            return $this->_formID = $formID;
+        } else {
+            throw new Exception('Formulaire non trouvé à partir de son nom');
+        }
     }
 
 /**
@@ -108,7 +108,7 @@ class msForm
  */
     public function setTypeForNameInForm($typeForNameInForm)
     {
-          return $this->_typeForNameInForm = $typeForNameInForm;
+        return $this->_typeForNameInForm = $typeForNameInForm;
     }
 
 /**
@@ -152,10 +152,10 @@ class msForm
             $where=null;
         }
 
-        if($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->_formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' ".$where, "typeID", "value")) {
-          return $this->_prevalues;
+        if ($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->_formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' ".$where, "typeID", "value")) {
+            return $this->_prevalues;
         } else {
-          return $this->_prevalues=array();
+            return $this->_prevalues=array();
         }
     }
 /**
@@ -274,8 +274,12 @@ class msForm
         $gump=new GUMP();
         $flatPOST = $gump->sanitize($this->_postdatas);
 
-        if (!empty($r['validation'])) $gump->validation_rules($r['validation']);
-        if (!empty($r['filter'])) $gump->filter_rules($r['filter']);
+        if (!empty($r['validation'])) {
+            $gump->validation_rules($r['validation']);
+        }
+        if (!empty($r['filter'])) {
+            $gump->filter_rules($r['filter']);
+        }
 
         $validated_data = $gump->run($flatPOST);
 
@@ -479,17 +483,14 @@ class msForm
                 $bloc=explode(',', $v);
 
                 if (!is_numeric($bloc[0])) {
-                  $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                               'type'=>'label',
                               'value'=>$bloc[0]
                           );
-                }
-                else if ($type=$this->_formExtractType($bloc[0], $dataset)) {
-
-                    if($this->_typeForNameInForm=='byName') {
-
+                } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
+                    if ($this->_typeForNameInForm=='byName') {
                     } else {
-                      $type['name']='p_'.$type['id'];
+                        $type['name']='p_'.$type['id'];
                     }
 
                     //valeur par défaut si présente
@@ -501,26 +502,35 @@ class msForm
                         $type['preValue']='noPreValue';
                     }
 
+                    //traitement des flags communs
+                    if (in_array('nolabel', $bloc)) {
+                        unset($type['label']);
+                    }
+                    if (in_array('disabled', $bloc)) {
+                        $type['disabled']='disabled';
+                    }
+                    if (in_array('readonly', $bloc)) {
+                        $type['readonly']='readonly';
+                    }
+                    if (in_array('required', $bloc)) {
+                        $type['required']='required';
+                    }
 
+                    //traitement spécifique au select
                     if ($type['formType']=="select") {
-                        if (in_array('disabled', $bloc)) {
-                            $type['disabled']='disabled';
-                        }
                         $type['formValues']=Spyc::YAMLLoad($type['formValues']);
                         $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+
+                    //traitement spécifique au textarea
                     } elseif ($type['formType']=="textarea") {
-                        if (in_array('disabled', $bloc)) {
-                            $type['disabled']='disabled';
-                        }
-                        if (in_array('readonly', $bloc)) {
-                            $type['readonly']='readonly';
-                        }
                         foreach ($bloc as $h) {
                             if (preg_match('#rows=([0-9]+)#i', $h, $match)) {
                                 $type['rows']=$match[1];
                             }
                         }
                         $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+
+                    //traitement spécifique au submit
                     } elseif ($type['formType']=="submit") {
                         if (isset($bloc[1])) {
                             $type['label']=$bloc[1];
@@ -528,16 +538,9 @@ class msForm
                             $type['label']="Go";
                         }
                         $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+
+                    //traitement spécifique au number
                     } elseif ($type['formType']=="number") {
-                        if (in_array('required', $bloc)) {
-                            $type['required']='required';
-                        }
-                        if (in_array('disabled', $bloc)) {
-                            $type['disabled']='disabled';
-                        }
-                        if (in_array('readonly', $bloc)) {
-                            $type['readonly']='readonly';
-                        }
                         foreach ($bloc as $h) {
                             if (preg_match('#max=([0-9]+)#i', $h, $match)) {
                                 $type['max']=$match[1];
@@ -549,16 +552,9 @@ class msForm
                         }
 
                         $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+
+                    //traitement spécifique aux autres input
                     } else {
-                        if (in_array('required', $bloc)) {
-                            $type['required']='required';
-                        }
-                        if (in_array('disabled', $bloc)) {
-                            $type['disabled']='disabled';
-                        }
-                        if (in_array('readonly', $bloc)) {
-                            $type['readonly']='readonly';
-                        }
                         if (in_array('autocomplete', $bloc)) {
                             $type['autocompleteclass']=' jqautocomplete';
 
@@ -567,7 +563,9 @@ class msForm
                                     $type['dataAcTypeID']=$h;
                                 }
                             }
-                            if(!isset($type['dataAcTypeID'])) $type['dataAcTypeID']='data-acTypeID='.$type['id'];
+                            if (!isset($type['dataAcTypeID'])) {
+                                $type['dataAcTypeID']='data-acTypeID='.$type['id'];
+                            }
                         }
 
                         foreach ($bloc as $h) {
