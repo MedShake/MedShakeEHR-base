@@ -483,9 +483,10 @@ class msForm
                 $bloc=explode(',', $v);
 
                 if (!is_numeric($bloc[0])) {
+                    if(empty(trim($bloc))) $bloc='&nbsp;';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                               'type'=>'label',
-                              'value'=>$bloc[0]
+                              'value'=>$bloc
                           );
                 } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
                     if ($this->_typeForNameInForm=='byName') {
@@ -593,6 +594,7 @@ class msForm
  */
     private function _formBuilderHeadRow($value, $rowNumber, $colNumber, &$r)
     {
+        if(empty(trim($value))) $value='&nbsp;';
         $r['structure'][$rowNumber]['elements']=array(
             'type'=>'head',
             'value'=>$value
@@ -609,6 +611,7 @@ class msForm
  */
     private function _formBuilderHead($value, $rowNumber, $colNumber, &$r)
     {
+        if(empty(trim($value))) $value='&nbsp;';
         $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
             'type'=>'head',
             'value'=>$value
