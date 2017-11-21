@@ -26,28 +26,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- /**
-  * Actions communes aux formulaires médicaux
-  *
-  */
-
-
-//disable
-function disabledForm(classToDisabled) {
-  $(classToDisabled + ' input').attr('disabled', 'disabled');
-  $(classToDisabled + ' select').attr('disabled', 'disabled');
-  $(classToDisabled + ' textarea').attr('disabled', 'disabled');
-  $(classToDisabled + ' checkbox').attr('disabled', 'disabled');
-}
-
-//enabled
-function enabledForm(classToEnabled) {
-  $(classToEnabled + ' input').removeAttr('disabled');
-  $(classToEnabled + ' select').removeAttr('disabled', 'disabled');
-  $(classToEnabled + ' textarea').removeAttr('disabled', 'disabled');
-  $(classToEnabled + ' checkbox').removeAttr('disabled', 'disabled');
-}
-
 /**
  * Fonctions JS pour les calcules médicaux
  *
@@ -126,5 +104,3 @@ function imcCalc(poids, taille) {
     return imc;
   }
 }
-
-
