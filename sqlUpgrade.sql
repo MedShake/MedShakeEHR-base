@@ -1,5 +1,11 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
+-- 2.0.0. to 2.1.0
+
+ALTER TABLE actes_base MODIFY `tarifs1` float DEFAULT NULL;
+ALTER TABLE actes_base MODIFY `tarifs2` float DEFAULT NULL;
+ALTER TABLE actes MODIFY `details` text DEFAULT NULL;
+
 -- 1.4.0 to 2.0.0
 
 CREATE TABLE agenda_changelog (

@@ -6,12 +6,12 @@ CREATE TABLE `actes` (
   `cat` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `label` varchar(250) NOT NULL,
   `shortLabel` varchar(255) DEFAULT NULL,
-  `details` text NOT NULL,
+  `details` text DEFAULT NULL,
   `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
   `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
   `fromID` smallint(5) UNSIGNED NOT NULL,
   `toID` mediumint(6) NOT NULL DEFAULT '0',
-  `creationDate` datetime NOT NULL DEFAULT '1000-01-01 00:00:00'
+  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `actes` (`id`, `cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`) VALUES
@@ -23,8 +23,8 @@ CREATE TABLE `actes_base` (
   `code` varchar(7) NOT NULL,
   `label` varchar(255) DEFAULT NULL,
   `type` enum('NGAP','CCAM') NOT NULL DEFAULT 'CCAM',
-  `tarifs1` float NOT NULL,
-  `tarifs2` float NOT NULL,
+  `tarifs1` float DEFAULT NULL,
+  `tarifs2` float DEFAULT NULL,
   `fromID` mediumint(7) UNSIGNED NOT NULL DEFAULT '1',
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
