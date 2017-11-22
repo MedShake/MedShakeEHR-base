@@ -190,7 +190,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
-    unselectCancel: '.context-menu-item,#buttonPrincipal,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-editer-button,.fc-cloner-button',
+    unselectCancel: '.context-menu-item,#buttonPrincipal,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-deplacer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
@@ -278,7 +278,7 @@ $(document).ready(function() {
   $(".fc-prev-button").attr("title", "Semaine précédente");
   $(".fc-next-button").attr("title", "Semaine suivante");
   $(".fc-nextMonth-button").attr("title", "Mois suivant");
-  $(".fc-editer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
+  $(".fc-deplacer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
   $(".fc-cloner-button").attr("title", "Cloner un événement\n\nSelectionnez d'abord l'événement à cloner,\npuis l'emplacement du clone");
   $(".fc-supprimer-button").attr("title", "Supprimer un événement\n\nSelectionnez d'abord un événement");
   $(".fc-honorer-button").attr("title", "Marquer un RDV honoré/non honoré\n\nSelectionnez d'abord un RDV");
