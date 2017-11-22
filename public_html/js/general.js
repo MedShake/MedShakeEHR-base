@@ -100,7 +100,7 @@ $(document).ready(function() {
   // autocomplete
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
+      source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
   });

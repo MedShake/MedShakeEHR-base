@@ -39,7 +39,7 @@ $(document).ready(function() {
   $('body').delegate('#searchPatientID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/people/ajax/getRelationsPatients/',
+      source: urlBase+'/people/ajax/getRelationsPatients/',
       select: function(event, ui) {
         $('#searchPatientID').val(ui.item.label);
         $('#searchPatientID').attr('data-id', ui.item.id);
@@ -87,7 +87,7 @@ $(document).ready(function() {
   $('body').delegate('#searchPratID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/people/ajax/getRelationsPraticiens/',
+      source: urlBase+'/people/ajax/getRelationsPraticiens/',
       select: function(event, ui) {
         $('#searchPratID').val(ui.item.label);
         $('#searchPratID').attr('data-id', ui.item.id);

@@ -60,7 +60,7 @@ $(document).ready(function() {
   $('input[name="mailToApicrypt"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
+      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
       autoFocus: true
     });
   });
@@ -69,7 +69,7 @@ $(document).ready(function() {
   $('input[name="mailTo"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
+      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
       autoFocus: true
     });
   });
@@ -78,7 +78,7 @@ $(document).ready(function() {
   $('input[name="mailToEcofaxName"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
+      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
       select: function( event, ui ) {
         $( 'input[name="mailToEcofaxNumber"]' ).val( ui.item.d58 );
       }
@@ -89,7 +89,7 @@ $(document).ready(function() {
   $('input[name="mailToEcofaxNumber"]').on('focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
+      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
       select: function( event, ui ) {
         $( 'input[name="mailToEcofaxName"]' ).val( ui.item.d2 + ' ' + ui.item.d3 );
       }
