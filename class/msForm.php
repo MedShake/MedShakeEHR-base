@@ -483,6 +483,7 @@ class msForm
                 $bloc=explode(',', $v);
 
                 if (!is_numeric($bloc[0])) {
+                    $bloc=implode(',', $bloc);
                     if(empty(trim($bloc))) $bloc='&nbsp;';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                               'type'=>'label',
