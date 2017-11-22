@@ -1,6 +1,6 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
--- 2.0.0. to 2.0.1
+-- 2.0.0. to 2.1.0
 
 ALTER TABLE actes_base MODIFY `tarifs1` float DEFAULT NULL;
 ALTER TABLE actes_base MODIFY `tarifs2` float DEFAULT NULL;
