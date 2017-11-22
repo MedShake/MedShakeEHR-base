@@ -190,7 +190,7 @@ $(document).ready(function() {
     allDaySlot: false,
     allDayText: '-',
     selectable: true,
-    unselectCancel: '.context-menu-item,#buttonPrincipal,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-editer-button,.fc-cloner-button',
+    unselectCancel: '.context-menu-item,#buttonPrincipal,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-deplacer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
     nowIndicator: true,
     businessHours: businessHours,
