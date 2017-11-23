@@ -324,19 +324,19 @@ class msForm
 
 /**
  * Traiter un bloc du form pour en extraire les règles de validation
- * @param  array $bloc      Array du bloc
+ * @param  array $blocs      Array du bloc
  * @param  int $rowNumber Numéro de ligne
  * @param  int $colNumber Numéro de colonne
  * @param  array $r         Le tableau général final
  * @param  string $dataset   Le jeu de données impliqué dans le form
  * @return void
  */
-    private function _formValidationBloc($bloc, $rowNumber, $colNumber, &$r, $dataset)
+    private function _formValidationBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
     {
-        if (is_array($bloc)) {
-            foreach ($bloc as $k=>$v) {
+        if (is_array($blocs)) {
+            foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
-                if ($type=$this->_formExtractType($bloc[0], $dataset)) {
+                if (is_numeric($bloc[0]) and $type=$this->_formExtractType($bloc[0], $dataset)) {
                     $type['originalname']=$type['name'];
                     $type['name']='p_'.$type['id'];
 
@@ -469,17 +469,17 @@ class msForm
 
 /**
  * Construire le formulaire : traitement de chaque bloc
- * @param  array $bloc      Array du bloc
+ * @param  array $blocs      Array du bloc
  * @param  int $rowNumber Numéro de la ligne
  * @param  int $colNumber Numéro de la colonne
  * @param  array $r         Array final de résultat
  * @param  string $dataset   Jeu de données concerné par le form
  * @return void
  */
-    private function _formBuilderBloc($bloc, $rowNumber, $colNumber, &$r, $dataset)
+    private function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
     {
-        if (is_array($bloc)) {
-            foreach ($bloc as $k=>$v) {
+        if (is_array($blocs)) {
+            foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
 
                 if (!is_numeric($bloc[0])) {
