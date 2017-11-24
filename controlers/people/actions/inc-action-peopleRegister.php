@@ -21,7 +21,7 @@
  */
 
 /**
- * people : enregistrer un individu
+ * people : action > enregistrer un individu
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -29,6 +29,13 @@
 $debug='';
 
 $formIN=$_POST['formIN'];
+
+if (!isset($_POST['actAsAjax'])) {
+    $actAsAjax=false;
+} else {
+    $actAsAjax=$_POST['actAsAjax'];
+    $match['params']['porp']=$_POST['porp'];
+}
 
 //definition formulaire de travail
 $form = new msForm();
@@ -38,7 +45,11 @@ $validation=$form->getValidation();
 
 
 if ($validation === false) {
-    msTools::redirection('/'.$match['params']['porp'].'/create/');
+    if ($actAsAjax) {
+        echo json_encode(array('status'=>'error'));
+    } else {
+        msTools::redirection('/'.$match['params']['porp'].'/create/');
+    }
 } else {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
@@ -57,18 +68,25 @@ if ($validation === false) {
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {
             $id = substr($k, $pos+1);
-        }
 
-        if (is_numeric($id)) {
-            if (!empty(trim($v))) {
-                $patient->createNewObjet($id, $v);
+            if (is_numeric($id)) {
+                if (!empty(trim($v))) {
+                    $patient->createNewObjet($id, $v);
+                }
             }
+
         }
     }
 
     unset($_SESSION['form'][$formIN]);
 
-
-
-    msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+    if ($actAsAjax) {
+        echo json_encode(array('status'=>'ok'));
+    } else {
+        if($match['params']['porp']=='pro') {
+          msTools::redirection('/pro/'.$patient->getToID().'/');  
+        } else {
+          msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+        }
+    }
 }

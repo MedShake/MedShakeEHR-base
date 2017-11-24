@@ -39,7 +39,7 @@ $(document).ready(function() {
   $('body').delegate('#searchPatientID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/people/ajax/getRelationsPatients/',
+      source: urlBase + '/people/ajax/getRelationsPatients/',
       select: function(event, ui) {
         $('#searchPatientID').val(ui.item.label);
         $('#searchPatientID').attr('data-id', ui.item.id);
@@ -56,7 +56,7 @@ $(document).ready(function() {
 
     if (patient2ID > 0) {
       $.ajax({
-        url: urlBase+'/people/ajax/addRelationPatientPatient/',
+        url: urlBase + '/people/ajax/addRelationPatientPatient/',
         type: 'post',
         data: {
           patientID: patientID,
@@ -87,7 +87,7 @@ $(document).ready(function() {
   $('body').delegate('#searchPratID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/people/ajax/getRelationsPraticiens/',
+      source: urlBase + '/people/ajax/getRelationsPraticiens/',
       select: function(event, ui) {
         $('#searchPratID').val(ui.item.label);
         $('#searchPratID').attr('data-id', ui.item.id);
@@ -103,7 +103,7 @@ $(document).ready(function() {
     preRelationPatientPrat = $('#preRelationPatientPratID').val();
     if (praticienID > 0) {
       $.ajax({
-        url: urlBase+'/people/ajax/addRelationPatientPraticien/',
+        url: urlBase + '/people/ajax/addRelationPatientPraticien/',
         type: 'post',
         data: {
           patientID: patientID,
@@ -131,7 +131,7 @@ $(document).ready(function() {
     ID1 = $('#identitePatient').attr("data-patientID");
     if (ID1 > 0 && ID2 > 0) {
       $.ajax({
-        url: urlBase+'/people/ajax/removeRelationPatient/',
+        url: urlBase + '/people/ajax/removeRelationPatient/',
         type: 'post',
         data: {
           ID1: ID1,
@@ -155,12 +155,21 @@ $(document).ready(function() {
   getRelationsPatientPraticiensTab();
   getRelationsPatientPatientsTab();
 
+  //ajax save form in modal
+  $("button.modal-save").on("click", function(e) {
+    alert('ok');
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalFormSave(form, modal);
+
+  });
+
 });
 
 function getRelationsPatientPatientsTab() {
   patientID = $('#identitePatient').attr("data-patientID");
   $.ajax({
-    url: urlBase+'/people/ajax/getRelationsPatientPatientsTab/',
+    url: urlBase + '/people/ajax/getRelationsPatientPatientsTab/',
     type: 'post',
     data: {
       patientID: patientID,
@@ -183,7 +192,7 @@ function getRelationsPatientPatientsTab() {
 function getRelationsPatientPraticiensTab() {
   patientID = $('#identitePatient').attr("data-patientID");
   $.ajax({
-    url: urlBase+'/people/ajax/getRelationsPatientPraticiensTab/',
+    url: urlBase + '/people/ajax/getRelationsPatientPraticiensTab/',
     type: 'post',
     data: {
       patientID: patientID,
@@ -195,6 +204,41 @@ function getRelationsPatientPraticiensTab() {
         $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
       });
 
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}
+
+function ajaxModalFormSave(form, modal) {
+  var data = {};
+  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
+    var input = $(this);
+    data[input.attr('name')] = input.val();
+  });
+
+  var url = $(form).attr('action');
+  data["groupe"] = $(form).attr('data-groupe');
+
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: data,
+    dataType: "json",
+    success: function(data) {
+      if (data.status == 'ok') {
+        $(modal).modal('hide');
+
+      } else {
+        $(modal + ' div.alert').show();
+        $(modal + ' div.alert ul').html('');
+        $.each(data.msg, function(index, value) {
+          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
+          $('#' + index + 'ID').parent('div').addClass('has-error');
+
+        });
+      }
     },
     error: function() {
       alert('Problème, rechargez la page !');
