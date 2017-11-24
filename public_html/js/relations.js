@@ -201,7 +201,7 @@ function getRelationsPatientPraticiensTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPrat').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
       });
 
     },
