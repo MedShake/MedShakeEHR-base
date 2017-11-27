@@ -103,6 +103,7 @@ $(document).ready(function() {
       source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
+    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
   });
 
   //prevent form submit by enter key
