@@ -484,11 +484,25 @@ class msForm
 
                 if (!is_numeric($bloc[0])) {
                     $bloc=implode(',', $bloc);
-                    if(empty(trim($bloc))) $bloc='&nbsp;';
-                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
-                              'type'=>'label',
-                              'value'=>$bloc
-                          );
+
+                    //template
+                    if ((preg_match('#template{([a-zA-Z]+)}#i', $bloc, $match))) {
+                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                                'type'=>'template',
+                                'value'=>$match[1]
+                            );
+                    }
+                    //labels
+                    else {
+                        if (empty(trim($bloc))) {
+                            $bloc='&nbsp;';
+                        }
+                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                                                  'type'=>'label',
+                                                  'value'=>$bloc
+                                              );
+                    }
+                    
                 } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
                     if ($this->_typeForNameInForm=='byName') {
                     } else {
@@ -595,7 +609,9 @@ class msForm
  */
     private function _formBuilderHeadRow($value, $rowNumber, $colNumber, &$r)
     {
-        if(empty(trim($value))) $value='&nbsp;';
+        if (empty(trim($value))) {
+            $value='&nbsp;';
+        }
         $r['structure'][$rowNumber]['elements']=array(
             'type'=>'head',
             'value'=>$value
@@ -612,7 +628,9 @@ class msForm
  */
     private function _formBuilderHead($value, $rowNumber, $colNumber, &$r)
     {
-        if(empty(trim($value))) $value='&nbsp;';
+        if (empty(trim($value))) {
+            $value='&nbsp;';
+        }
         $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
             'type'=>'head',
             'value'=>$value
