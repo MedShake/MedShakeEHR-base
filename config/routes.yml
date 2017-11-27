@@ -85,6 +85,9 @@ makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo:printType]/[i:examen]/', 
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 
+#fichier (extraire vers navigateur)
+fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
+
 #compta
 comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
 comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
