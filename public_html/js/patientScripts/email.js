@@ -30,13 +30,13 @@ $(document).ready(function() {
 
 
   //close button zone newMail
-  $("#cleanNewMail").on("click" , function(e) {
+  $('body').on("click", "#cleanNewMail", function(e) {
     $(window).unbind("beforeunload");
     $('#newMail').html('');
   });
 
   //injection du modèle
-  $("select[name='mailModeles']").on("change", function(e) {
+  $('body').on("change", "select[name='mailModeles']", function(e) {
     modeleID = $("select[name='mailModeles'] option:selected").val();
     $.ajax({
       url: urlBase+'/patient/ajax/extractMailModele/',
@@ -57,7 +57,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour les destinataire apicrypt
-  $('input[name="mailToApicrypt"]').on('focusin', function() {
+  $('body').on('focusin', 'input[name="mailToApicrypt"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase+'/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
@@ -66,7 +66,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour les destinataire mail (adresse non apicrypt des pro)
-  $('input[name="mailTo"]').on('focusin', function() {
+  $('body').on('focusin', 'input[name="mailTo"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase+'/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
@@ -75,7 +75,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour le destinataire ecofax
-  $('input[name="mailToEcofaxName"]').on('focusin', function() {
+  $('body').on('focusin', 'input[name="mailToEcofaxName"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
@@ -86,7 +86,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour le numero ecofax (reverse)
-  $('input[name="mailToEcofaxNumber"]').on('focusin', function() {
+  $('body').on('focusin', 'input[name="mailToEcofaxNumber"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
