@@ -46,7 +46,11 @@ $validation=$form->getValidation();
 
 if ($validation === false) {
     if ($actAsAjax) {
-        echo json_encode(array('status'=>'error'));
+        echo json_encode(array(
+        'status'=>'error',
+        'msg'=>$_SESSION['form'][$formIN]['validationErrorsMsg'],
+        'code'=>$_SESSION['form'][$formIN]['validationErrors']
+      ));
     } else {
         msTools::redirection('/'.$match['params']['porp'].'/create/');
     }
@@ -74,7 +78,6 @@ if ($validation === false) {
                     $patient->createNewObjet($id, $v);
                 }
             }
-
         }
     }
 
@@ -83,10 +86,10 @@ if ($validation === false) {
     if ($actAsAjax) {
         echo json_encode(array('status'=>'ok'));
     } else {
-        if($match['params']['porp']=='pro') {
-          msTools::redirection('/pro/'.$patient->getToID().'/');  
+        if ($match['params']['porp']=='pro') {
+            msTools::redirection('/pro/'.$patient->getToID().'/');
         } else {
-          msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+            msTools::redirection('/patient/relations/'.$patient->getToID().'/');
         }
     }
 }

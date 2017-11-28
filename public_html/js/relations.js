@@ -157,7 +157,6 @@ $(document).ready(function() {
 
   //ajax save form in modal
   $("button.modal-save").on("click", function(e) {
-    alert('ok');
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
     ajaxModalFormSave(form, modal);
@@ -234,9 +233,10 @@ function ajaxModalFormSave(form, modal) {
         $(modal + ' div.alert').show();
         $(modal + ' div.alert ul').html('');
         $.each(data.msg, function(index, value) {
-          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
-          $('#' + index + 'ID').parent('div').addClass('has-error');
-
+          $(modal + ' div.alert ul').append('<li>' + value + '</li>');
+        });
+        $.each(data.code, function(index, value) {
+          $(modal + ' #' + value + 'ID').closest("div.form-group").addClass('has-error');
         });
       }
     },
