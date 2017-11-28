@@ -57,3 +57,18 @@ $formPriseRdv = new msForm();
 $formPriseRdv->setFormIDbyName($p['page']['formIN']='baseAgendaPriseRDV');
 $formPriseRdv->setTypeForNameInForm('byName');
 $p['page']['formPriseRdv']=$formPriseRdv->getForm();
+
+//formulaire nouveau patient
+$formpatient = new msForm();
+$formpatient->setFormIDbyName('baseNewPatient');
+if (isset($_SESSION['form']['baseNewPatient']['formValues'])) {
+    $formpatient->setPrevalues($_SESSION['form']['baseNewPatient']['formValues']);
+}
+$p['page']['formNewPatient']=$formpatient->getForm();
+//ajout champs cachés au form
+$p['page']['formNewPatient']['addHidden']=array(
+  'actAsAjax'=>'true',
+  'porp'=>'patient'
+);
+//modifier action pour url ajax
+$p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
