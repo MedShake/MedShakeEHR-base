@@ -37,6 +37,12 @@ $p['page']['patient']['id']=$match['params']['patient'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
 
+// le formulaire d'édition de ses données admin
+$formpatient = new msForm();
+$formpatient->setFormIDbyName('baseNewPatient');
+$formpatient->setPrevalues($patient->getSimpleAdminDatas());
+$p['page']['formEditAdmin']=$formpatient->getForm();
+
 //type du dossier
 $p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['patient']."' limit 1");
 
