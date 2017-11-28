@@ -46,7 +46,8 @@ $acceptedModes=array(
     'catchLastDicomSrData', //attraper les dernière mesures DICOM pour un patient
     'listPatientDicomStudies', // lister les studies dicom du patient
     'extractMailModele', // Extraire le modele de mail
-    'extractCourrierForm' // Extraire l'éditeur de courrier
+    'extractCourrierForm', // Extraire l'éditeur de courrier
+    'refreshHeaderPatientAdminData' // Mettre à jour les données administratives patient en tête de dossier
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -132,4 +133,9 @@ elseif ($m=='extractMailModele') {
 // extraire l'éditeur de courrier
 elseif ($m=='extractCourrierForm') {
     include('inc-ajax-extractCourrierForm.php');
+}
+
+// Mettre à jour les données administratives patient en tête de dossier
+elseif ($m=='refreshHeaderPatientAdminData') {
+    include('inc-ajax-refreshHeaderPatientAdminData.php');
 }

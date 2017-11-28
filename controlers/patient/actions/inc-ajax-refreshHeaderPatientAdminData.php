@@ -21,36 +21,19 @@
  */
 
 /**
- * Patient : la page du dossier patient
+ * Patient > ajax : générer le header du dossier patient (infos administratives)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
-$debug='';
-$template="patient";
+$template="inc-ajax-patientAdminData";
 
 //le patient
 $patient = new msPeople();
-$patient->setToID($match['params']['patient']);
-$p['page']['patient']['id']=$match['params']['patient'];
+$patient->setToID($_POST['patientID']);
+$p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
-
-//type du dossier
-$p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['patient']."' limit 1");
-
-//historique du jour des consultation du patient
-$p['page']['patient']['today']=$patient->getToday();
-
-//historique complet des consultation du patient
-$p['page']['patient']['historique']=$patient->getHistorique();
-
-//les certificats
-$certificats=new msData();
-$p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','label']);
-//les courriers
-$p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','label']);
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();

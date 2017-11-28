@@ -426,6 +426,13 @@ $(document).ready(function() {
     }
   });
 
+  //modal création nouveau patient
+  $("button.modal-save").on("click", function(e) {
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalFormSave(form, modal);
+
+  });
 
 });
 
@@ -712,4 +719,41 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       }
     });
   }
+}
+
+
+// Création de nouveau patient
+function ajaxModalFormSave(form, modal) {
+  var data = {};
+  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
+    var input = $(this);
+    data[input.attr('name')] = input.val();
+  });
+
+  var url = $(form).attr('action');
+  data["groupe"] = $(form).attr('data-groupe');
+
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: data,
+    dataType: "json",
+    success: function(data) {
+      if (data.status == 'ok') {
+        $(modal).modal('hide');
+      } else {
+        $(modal + ' div.alert').show();
+        $(modal + ' div.alert ul').html('');
+        $.each(data.msg, function(index, value) {
+          $(modal + ' div.alert ul').append('<li>' + value + '</li>');
+        });
+        $.each(data.code, function(index, value) {
+          $(modal + ' #' + value + 'ID').closest("div.form-group").addClass('has-error');
+        });
+      }
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
 }

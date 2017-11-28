@@ -48,8 +48,9 @@ patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
 
 #créer / éditer patient/pros
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
+peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
+peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/actions/peopleActions']
 peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
-peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/peopleRegister']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
@@ -135,6 +136,7 @@ configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 
 
 # configuration technique
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
+configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']

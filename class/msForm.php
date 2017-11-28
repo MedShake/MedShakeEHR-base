@@ -43,6 +43,10 @@ class msForm
      */
     private $_postdatas;
     /**
+    * @var int Le nom interne du questionnaire
+    */
+    private $_formIN;
+    /**
      * @var array Les règles de validation d'un questionnaire
      */
     private $_validationrules;
@@ -71,9 +75,40 @@ class msForm
     public function setFormID($formID)
     {
         if (is_numeric($formID)) {
+            if (!isset($this->_formIN)) {
+                if ($formIN=msSQL::sqlUniqueChamp("select internalName from forms where id='".msSQL::cleanVar($formID)."' limit 1")) {
+                    return $this->_formIN = $formIN;
+                } else {
+                    throw new Exception('Formulaire non trouvé à partir de son ID');
+                }
+            }
             return $this->_formID = $formID;
         } else {
             throw new Exception('formID is not numeric');
+        }
+    }
+/**
+ * Obtenir le formID
+ * @return int formID
+ */
+    public function getFormID()
+    {
+        if (is_numeric($this->_formID)) {
+            return $this->_formID;
+        } else {
+            throw new Exception('formID is not numeric');
+        }
+    }
+/**
+ * Obtenir le formIN
+ * @return int formIN
+ */
+    public function getFormIN()
+    {
+        if (isset($this->_formIN)) {
+            return $this->_formIN;
+        } else {
+            throw new Exception('formIN n\'est pas défini');
         }
     }
 /**
@@ -83,6 +118,7 @@ class msForm
     public function setFormIDbyName($formName)
     {
         if ($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
+            $this->_formIN=$formName;
             return $this->_formID = $formID;
         } else {
             throw new Exception('Formulaire non trouvé à partir de son nom');
@@ -285,15 +321,15 @@ class msForm
 
         if ($validated_data === false) {
             $errors=$gump->get_errors_array();
-            $_SESSION['form'][$this->_formID]['validationErrors']=array();
-            $_SESSION['form'][$this->_formID]['validationErrorsMsg']=array();
+            $_SESSION['form'][$this->_formIN]['validationErrors']=array();
+            $_SESSION['form'][$this->_formIN]['validationErrorsMsg']=array();
             foreach ($errors as $k=>$v) {
                 $correctName=str_replace(' ', '_', strtolower($k));
-                if (!in_array($correctName, $_SESSION['form'][$this->_formID]['validationErrors'])) {
-                    $_SESSION['form'][$this->_formID]['validationErrors'][]=$correctName;
+                if (!in_array($correctName, $_SESSION['form'][$this->_formIN]['validationErrors'])) {
+                    $_SESSION['form'][$this->_formIN]['validationErrors'][]=$correctName;
 
-                    if (!in_array($r['errormsg'][$correctName], $_SESSION['form'][$this->_formID]['validationErrorsMsg'])) {
-                        $_SESSION['form'][$this->_formID]['validationErrorsMsg'][]=$r['errormsg'][$correctName];
+                    if (!in_array($r['errormsg'][$correctName], $_SESSION['form'][$this->_formIN]['validationErrorsMsg'])) {
+                        $_SESSION['form'][$this->_formIN]['validationErrorsMsg'][]=$r['errormsg'][$correctName];
                     }
                 }
                 $this->savePostValues2Session();
@@ -502,7 +538,7 @@ class msForm
                                                   'value'=>$bloc
                                               );
                     }
-                    
+
                 } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
                     if ($this->_typeForNameInForm=='byName') {
                     } else {
