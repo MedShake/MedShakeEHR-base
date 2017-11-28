@@ -425,11 +425,6 @@ function sendFormToCsDiv(el) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo('body');
-      // checkboxes dans les formulaires
-      $("input[type='checkbox']").unbind("click");
-      $("input[type='checkbox']").on("click", function(e) {
-        chkboxClick(this);
-      });
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
