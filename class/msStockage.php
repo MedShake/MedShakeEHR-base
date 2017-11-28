@@ -101,9 +101,7 @@ class msStockage
         if (!isset($this->_objetID)) {
             throw new Exception('ObjetID is not numeric');
         }
-        global $p;
-        $path=$this->getPathToDoc();
-        return str_replace($p['config']['webDirectory'], '', $path);
+        return 'fichier/'.$this->_objetID.'/';
     }
 
 /**
