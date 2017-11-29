@@ -58,7 +58,7 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
 
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id

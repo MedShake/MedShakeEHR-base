@@ -129,6 +129,9 @@
                             <td>#{{ loop.index }}</td>
                             <td>
                                 {{ reg.creationDate|date("d/m/Y H:i") }}
+                                {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-default btn-xs" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
+                                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                </button>{% endif %}
                             </td>
                             <td>
                                 <strong>{{ reg.prenom|e }}

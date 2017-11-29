@@ -287,7 +287,7 @@
           </div>
         </div>
       </div>
-      
+
       {# modal éditer infos adminsitratives du patient #}
       <div id="editAdmin" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -301,6 +301,38 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# modal changer la date d'une ligne d'historique #}
+      <div id="modalCreationDate" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
+            </div>
+            <div class="modal-body">
+              <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
+              <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
+              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/changeObjetCreationDate/{{ page.patient.id }}/" method="post">
+                <input name="objetID" type="hidden" value="" />
+                <div class="form-group">
+                    <label for="datepickHistoValue">Modifier la date d'effet pour le</label>
+                    <div class="input-group date  col-md-6" id="datepickHisto">
+                        <input name="newCreationDate" type="text" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
             </div>
           </div>
         </div>

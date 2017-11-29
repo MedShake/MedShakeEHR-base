@@ -268,6 +268,34 @@ $(document).ready(function() {
     $('#notesPatient').toggle();
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Changer la date de création d'une ligne d'historique
+
+  // datepicker bootstrap
+  $('#datepickHisto').datetimepicker({
+    locale: 'fr',
+    format: 'Y-MM-DD HH:mm:ss',
+    sideBySide: true
+  });
+
+  $("body").on("click", ".changeCreationDate", function(e) {
+    e.preventDefault();
+    objetID = $(this).closest('tr').attr('data-objetID');
+    registerDate = $(this).closest('tr').attr('data-registerDate');
+    creationDate = $(this).closest('tr').attr('data-creationDate');
+
+    $("#modalCreationDate input[name='objetID']").val(objetID);
+    $("#modalRegisterDateDisplay").html(registerDate);
+    $("#modalCreationDateDisplay").html(creationDate);
+    $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
+    $("#modalCreationDate").modal('show');
+  });
+
+  $("body").on("click", ".modalCreationDateClose", function(e) {
+    e.preventDefault();
+    $('#formNewCreationDate').submit();
+  });
+  
 });
 
 ////////////////////////////////////////////////////////////////////////

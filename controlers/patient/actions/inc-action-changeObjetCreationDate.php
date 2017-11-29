@@ -21,25 +21,28 @@
  */
 
 /**
- * Patient : les actions avec reload de page
+ * Patient > action : changer la création date d'un élément de l'historique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+echo 'ok';
 
-//$debug='';
-$m=$match['params']['m'];
+if (isset($_POST['objetID']) and isset($_POST['newCreationDate'])) {
+    if (!is_numeric($_POST['objetID'])) {
+        die("L'objet indiqué n'est pas valide");
+    }
+    if (!msTools::validateDate($_POST['newCreationDate'], 'Y-m-d H:i:s')) {
+        die("La date indiquée n'est pas valide");
+    }
 
-$acceptedModes=array(
-    'saveCsForm', // sauver le formulaire de consultation
-    'sendMail', // envoyer un mail
-    'saveOrdoForm', // sauver une ordonnance
-    'saveReglementForm', // sauver une ordonnance
-    'changeObjetCreationDate' // changer le creationDate d'un objet
-);
+    $objet=new msObjet();
+    $objet->setID($_POST['objetID']);
+    $objet->setCreationDate($_POST['newCreationDate']);
+    $objet->changeCreationDate();
 
-if (!in_array($m, $acceptedModes)) {
-    die;
+
+    msTools::redirection('/patient/'.$match['params']['patientID'].'/#lh'.$_POST['objetID']);
 } else {
-    include('inc-action-'.$m.'.php');
+    msTools::redirection('/patient/'.$match['params']['patientID'].'/');
 }
