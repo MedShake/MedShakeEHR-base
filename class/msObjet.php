@@ -372,6 +372,7 @@ public function getToID()
         'id'=>$this->_ID,
         'creationDate'=>$this->_creationDate
       );
+      msSQL::sqlQuery("update objets_data set creationDate='".$this->_creationDate."' where instance='".$this->_ID."' ");
       return msSQL::sqlInsert('objets_data', $data);
 
     }
