@@ -30,13 +30,23 @@ $debug='';
 $template="compta";
 
 //gestion des plages
-if(!isset($_POST['beginPeriode'])) $beginPeriode = new DateTime(); else $beginPeriode= DateTime::createFromFormat('d/m/Y', $_POST['beginPeriode']);
-if(!isset($_POST['endPeriode'])) $endPeriode = new DateTime(); else $endPeriode= DateTime::createFromFormat('d/m/Y', $_POST['endPeriode']);
+if (!isset($_POST['beginPeriode'])) {
+    $beginPeriode = new DateTime();
+} else {
+    $beginPeriode= DateTime::createFromFormat('d/m/Y', $_POST['beginPeriode']);
+}
+if (!isset($_POST['endPeriode'])) {
+    $endPeriode = new DateTime();
+} else {
+    $endPeriode= DateTime::createFromFormat('d/m/Y', $_POST['endPeriode']);
+}
 
 
 $p['page']['periode']['begin']=$beginPeriode->format("d/m/Y") ;
 $p['page']['periode']['end']=$endPeriode->format("d/m/Y") ;
-if(isset($_POST['periodeQuickSelect'])) $p['page']['periode']['quick']=$_POST['periodeQuickSelect'];
+if (isset($_POST['periodeQuickSelect'])) {
+    $p['page']['periode']['quick']=$_POST['periodeQuickSelect'];
+}
 
 //quick options
 $p['page']['periode']['quickOptions']=array(
@@ -55,16 +65,33 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
     }
 }
 
+//liste praticiens autorisé
+$pratIdAutorises[]=$p['user']['id'];
+if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
+    $pratIdAutorises=array_merge($pratIdAutorises, explode(',', $p['config']['administratifComptaPeutVoirRecettesDe']));
+    $pratIdAutorises=array_unique($pratIdAutorises);
+}
+$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
+ from people as p
+ left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
+ left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+ where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
+//praticien concerné par la recherche actuelle
+if (isset($_POST['prat'])) {
+    $p['page']['pratsSelect'][]=$_POST['prat'];
+} else {
+    $p['page']['pratsSelect'][]=$p['user']['id'];
+}
 
 //sortir les reglements du jour
 if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
-  left join objets_data as p on p.toID=pd.toID and p.typeID=3
-  left join objets_data as n on n.toID=pd.toID and n.typeID=2
-  where pd.typeID in (".implode(',', $tabliste).")  and DATE(pd.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd.deleted=''
+  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
+  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+  where pd.typeID in (".implode(',', $tabliste).")  and DATE(pd.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd.deleted='' and pd.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
   order by pd.creationDate asc
   ")) {
 

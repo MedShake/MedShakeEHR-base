@@ -48,6 +48,7 @@
           <thead>
             <tr>
               <th>Patiente</th>
+              {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
               <th>CMU / TP ?</th>
               <th>Montant des actes</th>
               <th>Déjà réglé</th>
@@ -65,6 +66,11 @@
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}
                 </td>
+                {% if page.pratsAuto|length > 1 %}
+                  <td>
+                    {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
+                  </td>
+                {% endif %}
                 <td>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
                 </td>
@@ -102,6 +108,7 @@
           <thead>
             <tr>
               <th>Patiente</th>
+              {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
               <th>CMU / TP ?</th>
               <th>Montant à régler</th>
               <th>Payé</th>
@@ -118,6 +125,11 @@
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}
                 </td>
+                {% if page.pratsAuto|length > 1 %}
+                  <td>
+                    {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
+                  </td>
+                {% endif %}
                 <td>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
                 </td>

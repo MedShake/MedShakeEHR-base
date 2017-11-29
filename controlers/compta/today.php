@@ -38,14 +38,26 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
     }
 }
 
-//sortir les regelements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+//liste praticiens autorisé
+$pratIdAutorises[]=$p['user']['id'];
+if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
+    $pratIdAutorises=array_merge($pratIdAutorises, explode(',', $p['config']['administratifComptaPeutVoirRecettesDe']));
+    $pratIdAutorises=array_unique($pratIdAutorises);
+}
+$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
+ from people as p
+ left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
+ left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+ where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
+
+//sortir les reglements du jour
+if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
-  left join objets_data as p on p.toID=pd.toID and p.typeID=3
-  left join objets_data as n on n.toID=pd.toID and n.typeID=2
-  where pd.typeId in (".implode(',', $tabliste).")  and DATE(pd.creationDate) = CURDATE() and pd.deleted=''
+  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
+  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+  where pd.typeId in (".implode(',', $tabliste).")  and DATE(pd.creationDate) = CURDATE() and pd.deleted='' and pd.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."')
   order by pd.instance, pd.creationDate desc
   ")) {
 
@@ -60,12 +72,16 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
-      $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
-      $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');
+        $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2, '.', '');
+        $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2, '.', '');
     }
 
     //séparer en paiement complété et paiement à faire
     foreach ($tabReg as $k=>$v) {
-      if($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) $p['page']['tabRegNC'][$k]=$tabReg[$k]; else $p['page']['tabRegC'][$k]=$tabReg[$k];
+        if ($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) {
+            $p['page']['tabRegNC'][$k]=$tabReg[$k];
+        } else {
+            $p['page']['tabRegC'][$k]=$tabReg[$k];
+        }
     }
 }
