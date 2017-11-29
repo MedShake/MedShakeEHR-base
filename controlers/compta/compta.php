@@ -65,11 +65,14 @@ if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
     }
 }
 
-//liste praticiens autorisé
-$pratIdAutorises[]=$p['user']['id'];
+//liste praticiens autorisés
+$pratIdAutorises=array();
+if($p['config']['administratifPeutAvoirRecettes'] == 'true') $pratIdAutorises[]=$p['user']['id'];
 if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
+  if (!empty($p['config']['administratifComptaPeutVoirRecettesDe'])) {
     $pratIdAutorises=array_merge($pratIdAutorises, explode(',', $p['config']['administratifComptaPeutVoirRecettesDe']));
     $pratIdAutorises=array_unique($pratIdAutorises);
+  }
 }
 $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
  from people as p
@@ -81,7 +84,11 @@ $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as pren
 if (isset($_POST['prat'])) {
     $p['page']['pratsSelect'][]=$_POST['prat'];
 } else {
+  if($p['config']['administratifPeutAvoirRecettes'] == 'true') {
     $p['page']['pratsSelect'][]=$p['user']['id'];
+  } else {
+    $p['page']['pratsSelect'][]=key($p['page']['pratsAuto']);
+  }
 }
 
 //sortir les reglements du jour

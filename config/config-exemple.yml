@@ -57,6 +57,8 @@ administratifSecteurHonoraires: 1
 administratifPeutAvoirFacturesTypes: 'false'
 administratifPeutAvoirPrescriptionsTypes: 'false'
 administratifPeutAvoirAgenda: 'false'
+administratifPeutAvoirRecettes: 'true'
+administratifComptaPeutVoirRecettesDe:
 
 #######################################
 ## templates impression
