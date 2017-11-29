@@ -58,7 +58,7 @@ administratifPeutAvoirFacturesTypes: 'false'
 administratifPeutAvoirPrescriptionsTypes: 'false'
 administratifPeutAvoirAgenda: 'false'
 administratifPeutAvoirRecettes: 'true'
-administratifComptaPeutVoirRecettesDe:
+administratifComptaPeutVoirRecettesDe: ''
 
 #######################################
 ## templates impression
