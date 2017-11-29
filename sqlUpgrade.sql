@@ -1,6 +1,8 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
--- 2.1.0 to
+-- 2.1.0 to 2.2.0
+
+ALTER TABLE data_types CHANGE `formType` `formType` ENUM('','date','email','lcc','number','select','submit','tel','text','textarea','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '';
 
 ALTER TABLE `objets_data` ADD `registerDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `instance`;
 update objets_data set registerDate=creationDate;
