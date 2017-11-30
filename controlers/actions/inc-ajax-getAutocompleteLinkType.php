@@ -45,9 +45,8 @@
  }
 
  $joinleft=[];
- $sel[]="do.value as d".$type;
  $concat=[];
- $groupby=array('label', 'do.value');
+ $groupby=array('label');
  if (isset($match['params']['linkedTypes'])) {
      $linkedTypes=explode(':', $match['params']['linkedTypes']);
 
