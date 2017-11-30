@@ -106,6 +106,25 @@ $(document).ready(function() {
     $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
   });
 
+  //autocomplete pour la liaison code postal - > ville
+  $('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
+    type = $(this).attr('data-typeID');
+    if (type == 53) dest = 56;
+    else if (type == 13) dest = 12;
+
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/' + type + '/' + type + '/' + type + ':' + dest + '/',
+      autoFocus: true,
+      minLength: 3,
+      select: function(event, ui) {
+        destival = eval('ui.item.d' + dest);
+        $('#p_' + dest + 'ID').val(destival);
+      }
+    });
+    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+  });
+
   //prevent form submit by enter key
   $('body').on('keyup keypress', 'input', function(e) {
     var keyCode = e.keyCode || e.which;
