@@ -295,7 +295,7 @@ $(document).ready(function() {
     e.preventDefault();
     $('#formNewCreationDate').submit();
   });
-  
+
 });
 
 ////////////////////////////////////////////////////////////////////////
@@ -318,9 +318,9 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       success: function(data) {
         el = $(source);
         el.css("background", "#efffe8");
-        setTimeout(function() {
-          el.css("background", "");
-        }, 700);
+        el.delay(700).queue(function() {
+          $(this).css("background","").dequeue();
+        });
       },
       error: function() {
         //alert('Problème, rechargez la page !');
