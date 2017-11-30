@@ -30,14 +30,6 @@
 $debug='';
 $template="comptaToday";
 
-//select typeID du groupe reglement
-$listeTypeID = new msData();
-if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
-    foreach ($listeTypeID as $v) {
-        $tabliste[]=$v['id'];
-    }
-}
-
 //liste praticiens autorisé
 $pratIdAutorises[]=$p['user']['id'];
 if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
@@ -51,15 +43,34 @@ $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as pren
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['reglePorteur']);
+
+if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
   left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
   left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
-  where pd.typeId in (".implode(',', $tabliste).")  and DATE(pd.creationDate) = CURDATE() and pd.deleted='' and pd.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."')
-  order by pd.instance, pd.creationDate desc
+  where pd.id in (
+    select pd1.id from objets_data as pd1
+    where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) = CURDATE() and pd1.deleted='' and pd1.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
+
+  union
+
+  select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+  from objets_data as pd
+  left join data_types as dc on dc.id=pd.typeID
+  left join actes as a on pd.parentTypeID=a.id
+  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
+  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+  where pd.instance in (
+    select pd2.id from objets_data as pd2
+    where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
+
+  order by creationDate asc
   ")) {
+
 
     //constituer le tableau
     foreach ($lr as $v) {
@@ -72,16 +83,12 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
-        $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2, '.', '');
-        $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2, '.', '');
+      $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
+      $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');
     }
 
     //séparer en paiement complété et paiement à faire
     foreach ($tabReg as $k=>$v) {
-        if ($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) {
-            $p['page']['tabRegNC'][$k]=$tabReg[$k];
-        } else {
-            $p['page']['tabRegC'][$k]=$tabReg[$k];
-        }
+      if($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) $p['page']['tabRegNC'][$k]=$tabReg[$k]; else $p['page']['tabRegC'][$k]=$tabReg[$k];
     }
 }

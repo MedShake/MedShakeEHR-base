@@ -40,7 +40,13 @@
   <h1>Règlements du jour</h1>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6 col-md-7">
+      <div id="newReglement"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10 col-md-12">
 
       {% if page.tabRegNC %}
         <h2>Paiements à recevoir</h2>
@@ -90,8 +96,8 @@
                 <td>{{ reg.dejaPaye|e }}€</td>
                 <td>{{ reg.resteAPaye }}€</td>
                 <td>
-                  <a class="btn btn-default btn-xs editReglement" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}">
-                    <span class="glyphicon glyphicon-euro" aria-hidden="true" title="Enregistrer règlement"></span>
+                  <a class="btn btn-danger btn-xs editReglement pull-right" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}">
+                    Saisir règlement
                   </a>
 
                 </td>
@@ -145,7 +151,7 @@
                 </td>
                 <td>{{ reg.dejaPaye|e }}€</td>
                 <td>
-                  {% if reg.regleCheque > 0 %}chèque{% endif %}
+                  {% if reg.regleCheque > 0 %}Chèque{% endif %}
                   {% if reg.regleCB > 0 %}CB{% endif %}
                   {% if reg.regleEspeces > 0 %}Espèces{% endif %}
                 </td>
@@ -156,10 +162,6 @@
         </table>
       {% endif %}
 
-    </div>
-
-    <div class="col-md-6">
-      <div id="newReglement"></div>
     </div>
 
   </div>

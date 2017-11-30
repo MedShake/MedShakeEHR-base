@@ -57,13 +57,6 @@ $p['page']['periode']['quickOptions']=array(
 "thismonth"=>"Ce mois",
 "lastmonth"=>"Mois dernier");
 
-//select typeID du groupe reglement
-$listeTypeID = new msData();
-if ($listeTypeID = $listeTypeID->getDataTypesFromGroupe('reglement', ['id'])) {
-    foreach ($listeTypeID as $v) {
-        $tabliste[]=$v['id'];
-    }
-}
 
 //liste praticiens autorisés
 $pratIdAutorises=array();
@@ -92,15 +85,35 @@ if (isset($_POST['prat'])) {
 }
 
 //sortir les reglements du jour
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['reglePorteur']);
+
 if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
-  from objets_data as pd
-  left join data_types as dc on dc.id=pd.typeID
-  left join actes as a on pd.parentTypeID=a.id
-  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
-  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
-  where pd.typeID in (".implode(',', $tabliste).")  and DATE(pd.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd.deleted='' and pd.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
-  order by pd.creationDate asc
+      from objets_data as pd
+      left join data_types as dc on dc.id=pd.typeID
+      left join actes as a on pd.parentTypeID=a.id
+      left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
+      left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+      where
+      pd.id in (
+        select pd1.id from objets_data as pd1
+        where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+      )
+  union
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+      from objets_data as pd
+      left join data_types as dc on dc.id=pd.typeID
+      left join actes as a on pd.parentTypeID=a.id
+      left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
+      left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+      where
+      pd.instance in (
+        select pd2.id from objets_data as pd2
+        where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+      )
+  order by creationDate asc
   ")) {
+
 
     //constituer le tableau
     foreach ($lr as $v) {
