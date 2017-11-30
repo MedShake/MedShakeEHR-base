@@ -118,8 +118,20 @@ $(document).ready(function() {
       autoFocus: true,
       minLength: 3,
       select: function(event, ui) {
+        sourceval = eval('ui.item.d' + type);
         destival = eval('ui.item.d' + dest);
         $('#p_' + dest + 'ID').val(destival);
+        $('#p_' + type + 'ID').val(sourceval);
+
+        //si contexte de mise à jour automatique
+        patientID = $('#identitePatient').attr("data-patientID");
+        if ($('#p_' + dest + 'ID').parents('.changeObserv').length) {
+          setPeopleData(destival, patientID, dest, '#p_' + dest + 'ID', '0');
+        }
+        if ($('#p_' + type + 'ID').parents('.changeObserv').length) {
+          setPeopleData(sourceval, patientID, type, '#p_' + type + 'ID', '0');
+        }
+
       }
     });
     $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
