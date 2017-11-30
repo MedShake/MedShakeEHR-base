@@ -741,6 +741,12 @@ function ajaxModalFormSave(form, modal) {
     success: function(data) {
       if (data.status == 'ok') {
         $(modal).modal('hide');
+        $(modal + ' form input').attr('value', '');
+        $(modal + ' form input').val('');
+        $("#p_8Id").prev('label').append('Date de naissance');
+        $(modal + ' form textarea').val('');
+        $(modal + ' form select option').removeProp('selected');
+        $(modal + ' form select option:eq(0)').prop('selected', 'selected');
       } else {
         $(modal + ' div.alert').show();
         $(modal + ' div.alert ul').html('');
