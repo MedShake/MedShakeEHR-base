@@ -26,6 +26,9 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+ ////////////////////////////////////////////////////////////////////////
+ ///////// Déclaration variables
+
 var selected_period;
 var selected_event;
 var popstop = $(window).width() < 1024;
@@ -36,6 +39,10 @@ $(document).ready(function() {
     $('[data-toggle="popover"]').popover();
 
   })
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Définition des variables par défaut construction agenda
+
 
   if (!hiddenDays) {
     hiddenDays = [0];
@@ -83,6 +90,8 @@ $(document).ready(function() {
     ]
   }
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Construction agenda
 
   $('#calendar').fullCalendar({
 
@@ -274,6 +283,9 @@ $(document).ready(function() {
     }
   })
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Définition des titles boutons agenda
+
   $(".fc-lastMonth-button").attr("title", "Mois précédent");
   $(".fc-prev-button").attr("title", "Semaine précédente");
   $(".fc-next-button").attr("title", "Semaine suivante");
@@ -284,6 +296,9 @@ $(document).ready(function() {
   $(".fc-honorer-button").attr("title", "Marquer un RDV honoré/non honoré\n\nSelectionnez d'abord un RDV");
   $(".fc-bloquer-button").attr("title", "Fermer une période\n\nSelectionnez d'abord une période");
   $(".fc-dossier-button").attr("title", "Ouvrir dossier patient\n\nSelectionnez d'abord un RDV");
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Définition des menus clics droit
 
   if ($(window).width() >= 1024) {
     $.contextMenu({
@@ -353,6 +368,8 @@ $(document).ready(function() {
     });
   };
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Panneau latéral :  observations boutons agenda
 
   $("#buttonCancel").on("click", function(e) {
     e.preventDefault();
@@ -399,6 +416,9 @@ $(document).ready(function() {
     $('#calendar').fullCalendar('gotoDate', $(this).attr('data-date'));
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Panneau latéral : chercher / nouveau / editer
+
   //chercher patient : porte d'entrée d'un nouveau rdv
   $('#search').autocomplete({
     source: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
@@ -420,7 +440,7 @@ $(document).ready(function() {
         patientID = $('#patientID').val();
         typeID = $(this).attr("data-typeID");
         source = $(this);
-        instance = '';
+        instance = '0';
         setPeopleData(value, patientID, typeID, source, instance);
       }
     }
@@ -436,8 +456,11 @@ $(document).ready(function() {
 
 });
 
-function setRdv() {
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions
 
+// Enregistrer un rendez-vous
+function setRdv() {
   if ($('#eventID').val() > 0) {
     isnew = false;
   } else {
@@ -468,6 +491,7 @@ function setRdv() {
   });
 }
 
+// Fermer une période
 function closePeriod(date) {
   if (!date && !selected_period)
     return;
@@ -497,6 +521,7 @@ function closePeriod(date) {
   });
 }
 
+// Obtenir les données du patient
 function getPatientAdminData(patientID) {
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getPatientAdminData/',
@@ -519,6 +544,7 @@ function getPatientAdminData(patientID) {
   });
 }
 
+// Obtenir l'historique de rdv du patient
 function getHistoriquePatient(patientID) {
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getHistoriquePatient/',
@@ -556,6 +582,7 @@ function getHistoriquePatient(patientID) {
   });
 }
 
+// Mettre en place l'édition d'un rdv
 function getEventData4Edit(eventClicked) {
   $('#titreRdv').html('Editer rendez-vous');
   $("#patientID").val(eventClicked.patientid);
@@ -573,6 +600,7 @@ function getEventData4Edit(eventClicked) {
   formatRdvData4Display(eventClicked.start, eventClicked.end);
 }
 
+// Mettre en boutons date / heure dans le panneau lateral la plage horaire
 function formatRdvData4Display(start, end) {
   duree = end.diff(start, 'minutes');
   $('.dateHeureDisplay').removeClass('bg-danger');
@@ -584,6 +612,7 @@ function formatRdvData4Display(start, end) {
   if ($("#patientID").val() > 0) $('#buttonNew').removeAttr('disabled');
 }
 
+// Nettoyage pour retour à l'état initial de la page
 function clean() {
 
   $(".fc-bg").removeClass("selected");
@@ -609,6 +638,7 @@ function clean() {
   $('#HistoriqueRdvResume button').html('');
 }
 
+// Effacer un rdv
 function deleteEvent(eventid) {
   if (confirm("Confirmez-vous la suppression de cet événement ?")) {
     $.ajax({
@@ -630,6 +660,7 @@ function deleteEvent(eventid) {
   }
 }
 
+// Marquer le rdv comme non honoré
 function setEventPasVenu(eventid) {
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventPasVenu/',
@@ -649,6 +680,7 @@ function setEventPasVenu(eventid) {
   });
 }
 
+// Déplacer un rdv
 function moveEvent(event) {
 
   $.ajax({
@@ -672,6 +704,7 @@ function moveEvent(event) {
 
 }
 
+// Redimensionner les horaires d'un rdv
 function resizeEvent(event) {
 
   $.ajax({
