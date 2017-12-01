@@ -299,37 +299,6 @@ $(document).ready(function() {
 });
 
 ////////////////////////////////////////////////////////////////////////
-///////// Fonctions spécifiques à la sauvegarde automatique
-
-//fonction pour la sauvegarde automatique
-function setPeopleData(value, patientID, typeID, source, instance) {
-  //alert(patientID);
-  if (patientID && typeID && source) {
-    $.ajax({
-      url: urlBase + '/ajax/setPeopleData/',
-      type: 'post',
-      data: {
-        value: value,
-        patientID: patientID,
-        typeID: typeID,
-        instance: instance
-      },
-      dataType: "json",
-      success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
-        });
-      },
-      error: function() {
-        //alert('Problème, rechargez la page !');
-      }
-    });
-  }
-}
-
-////////////////////////////////////////////////////////////////////////
 ///////// Fonctions DICOM
 
 function listePatientDicomStudies() {

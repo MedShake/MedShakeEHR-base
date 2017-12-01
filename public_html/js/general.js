@@ -175,17 +175,47 @@ function chkboxClick(el) {
   el.value = el.checked.toString();
 }
 
-// scroller vers un élément
+// scroller vers un élément de la page
 function scrollTo(element) {
   $('html, body').animate({
     scrollTop: $(element).offset().top
   }, 2);
 }
 
-//agrandir un élément
+//agrandir un élément de formulaire automatiquement
 function auto_grow(element) {
   element.style.height = (element.scrollHeight) + "px";
 }
+
+//fonction pour la sauvegarde automatique de champ de formulaire
+function setPeopleData(value, patientID, typeID, source, instance) {
+  if (patientID && typeID && source) {
+    $.ajax({
+      url: urlBase + '/ajax/setPeopleData/',
+      type: 'post',
+      data: {
+        value: value,
+        patientID: patientID,
+        typeID: typeID,
+        instance: instance
+      },
+      dataType: "json",
+      success: function(data) {
+        el = $(source);
+        el.css("background", "#efffe8");
+        el.delay(700).queue(function() {
+          $(this).css("background","").dequeue();
+        });
+      },
+      error: function() {
+        //alert('Problème, rechargez la page !');
+      }
+    });
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions tierces
 
 /*! jQuery getScriptOnce - v0.1.0 - 2013-11-15
  * http://www.invetek.nl/?p=105

@@ -694,34 +694,6 @@ function resizeEvent(event) {
 
 }
 
-//fonction pour la sauvegarde automatique
-function setPeopleData(value, patientID, typeID, source, instance) {
-  if (patientID && typeID && source) {
-    $.ajax({
-      url: urlBase + '/ajax/setPeopleData/',
-      type: 'post',
-      data: {
-        value: value,
-        patientID: patientID,
-        typeID: typeID,
-        instance: '0'
-      },
-      dataType: "json",
-      success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        setTimeout(function() {
-          el.css("background", "");
-        }, 700);
-      },
-      error: function() {
-        //alert('Problème, rechargez la page !');
-      }
-    });
-  }
-}
-
-
 // Création de nouveau patient
 function ajaxModalFormSave(form, modal) {
   var data = {};
