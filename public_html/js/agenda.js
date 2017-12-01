@@ -740,13 +740,20 @@ function ajaxModalFormSave(form, modal) {
     dataType: "json",
     success: function(data) {
       if (data.status == 'ok') {
+        // gestion modal
         $(modal).modal('hide');
-        $(modal + ' form input').attr('value', '');
-        $(modal + ' form input').val('');
-        $("#p_8Id").prev('label').append('Date de naissance');
+        $(modal + ' form input[name^="p_"]').val('');
         $(modal + ' form textarea').val('');
-        $(modal + ' form select option').removeProp('selected');
-        $(modal + ' form select option:eq(0)').prop('selected', 'selected');
+        $(modal + ' form select option').prop('selected', function() {
+            return this.defaultSelected;
+        });
+        $("#p_8Id").prev('label').html('Date de naissance');
+
+        // injection du patient pour nouveau rdv
+        clean();
+        $('#buttonCancel').removeAttr('disabled');
+        getPatientAdminData(data.toID);
+
       } else {
         $(modal + ' div.alert').show();
         $(modal + ' div.alert ul').html('');
