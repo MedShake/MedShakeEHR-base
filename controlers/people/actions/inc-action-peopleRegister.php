@@ -84,7 +84,7 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     if ($actAsAjax) {
-        echo json_encode(array('status'=>'ok'));
+        echo json_encode(array('status'=>'ok', 'toID'=>$patient->getToID()));
     } else {
         if ($match['params']['porp']=='pro') {
             msTools::redirection('/pro/'.$patient->getToID().'/');
