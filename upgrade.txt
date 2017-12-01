@@ -1,6 +1,23 @@
 Instructions pour l'upgrade
 
 ==============================
+2.x.x --> 2.2.0
+==============================
+
+Préambule : faire une sauvegarde complète de l'installation : dossiers et base de données.
+
+
+1) Considérer les nouveaux de paramètres de configuration en se reportant si besoin à la documentation sur http://www.logiciel-cabinet-medical.fr/ :
+- administratifPeutAvoirRecettes: 'true'
+- administratifComptaPeutVoirRecettesDe: ''
+
+2) Appliquer les changements indispensables sur la base de données via le commandes SQL indiquées dans sqlUpgrade.sql de la base ET du module
+
+
+3) Copier / remplacer l’ensemble des fichiers de votre version actuelle par la nouvelle version. Débuter par la base de MedShakeEHR, terminer par le module spécifique (certains fichiers du module remplaceront des fichiers de la base)
+
+
+==============================
 1.x.x --> 2.0.0
 ==============================
 
