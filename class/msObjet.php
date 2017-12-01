@@ -29,7 +29,10 @@
 
 class msObjet
 {
-
+    /**
+     * @var int ID de l'objet
+     */
+    public $_ID;
     /**
      * @var int ID de l'individu concerné par l'objet
      */
@@ -50,7 +53,24 @@ class msObjet
      * @var string date au format mySQL
      */
     private $_creationDate;
+    /**
+     * @var string date au format mySQL
+     */
+    private $_registerDate;
 
+/**
+ * Définir l'objet concerné
+ * @param int $v ID de l'objet
+ * @return int ID
+ */
+    public function setID($v)
+    {
+        if (is_numeric($v)) {
+            return $this->_ID = $v;
+        } else {
+            throw new Exception('ID is not numeric');
+        }
+    }
 
 /**
  * Définir l'individu concerné
@@ -90,13 +110,23 @@ public function getToID()
     }
 
 /**
- * Définir la date de création de l'objet
- * (uniquement pour des besoins d'import, sinon curentdate)
- * @param string $v date au format mysql
+ * Définir la date de création affichée de l'objet
+ * @param string $v date au format mysql (Y-m-d H:i:s)
  */
     public function setCreationDate($v)
     {
         $this->_creationDate=$v;
+    }
+
+/**
+ * Définir la registerDate
+ * uniquement pour des besoins spéciifques (import)
+ * utiliser la creationDate pour changer la date affichée
+ * @param string $v date au format mysql (Y-m-d H:i:s)
+ */
+    public function setRegisterDate($v)
+    {
+        $this->_registerDate=$v;
     }
 
 /**
@@ -326,4 +356,25 @@ public function getToID()
       );
         msSQL::sqlInsert('objets_data', $data);
     }
+
+/**
+ * Changer la creationDate d'un objet
+ */
+    public function changeCreationDate() {
+      if (!isset($this->_ID)) {
+          throw new Exception('ID is not defined');
+      }
+      if (!isset($this->_creationDate)) {
+          throw new Exception('CreationDate is not defined');
+      }
+
+      $data=array(
+        'id'=>$this->_ID,
+        'creationDate'=>$this->_creationDate
+      );
+      msSQL::sqlQuery("update objets_data set creationDate='".$this->_creationDate."' where instance='".$this->_ID."' ");
+      return msSQL::sqlInsert('objets_data', $data);
+
+    }
+
 }

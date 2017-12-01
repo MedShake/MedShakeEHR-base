@@ -145,7 +145,7 @@ $(document).ready(function() {
   $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
-    $.getScriptOnce(urlBase+"/js/patientScripts/docupload.js");
+    $.getScriptOnce(urlBase + "/js/patientScripts/docupload.js");
   });
 
   //bouton de nouveau mail
@@ -256,52 +256,54 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
+  //fermeture modal data admin patient
+  $("button.modalAdminClose").on("click", function(e) {
+    ajaxModalPatientAdminCloseAndRefreshHeader();
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Voir les notes sur le patient
-  $("#voirNotesPatient").on("click", function(e) {
+  $('body').on("click", "#voirNotesPatient", function(e) {
     e.preventDefault();
     $('#notesPatient').toggle();
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Changer la date de création d'une ligne d'historique
+
+  // datepicker bootstrap
+  $('#datepickHisto').datetimepicker({
+    locale: 'fr',
+    format: 'Y-MM-DD HH:mm:ss',
+    sideBySide: true
+  });
+
+  $("body").on("click", ".changeCreationDate", function(e) {
+    e.preventDefault();
+    objetID = $(this).closest('tr').attr('data-objetID');
+    registerDate = $(this).closest('tr').attr('data-registerDate');
+    creationDate = $(this).closest('tr').attr('data-creationDate');
+
+    $("#modalCreationDate input[name='objetID']").val(objetID);
+    $("#modalRegisterDateDisplay").html(registerDate);
+    $("#modalCreationDateDisplay").html(creationDate);
+    $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
+    $("#modalCreationDate").modal('show');
+  });
+
+  $("body").on("click", ".modalCreationDateClose", function(e) {
+    e.preventDefault();
+    $('#formNewCreationDate').submit();
+  });
+
 });
-
-////////////////////////////////////////////////////////////////////////
-///////// Fonctions spécifiques à la sauvegarde automatique
-
-//fonction pour la sauvegarde automatique
-function setPeopleData(value, patientID, typeID, source, instance) {
-  //alert(patientID);
-  if (patientID && typeID && source) {
-    $.ajax({
-      url: urlBase+'/ajax/setPeopleData/',
-      type: 'post',
-      data: {
-        value: value,
-        patientID: patientID,
-        typeID: typeID,
-        instance: instance
-      },
-      dataType: "json",
-      success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        setTimeout(function() {
-          el.css("background", "");
-        }, 700);
-      },
-      error: function() {
-        //alert('Problème, rechargez la page !');
-      }
-    });
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions DICOM
 
 function listePatientDicomStudies() {
   $.ajax({
-    url: urlBase+'/patient/ajax/listPatientDicomStudies/',
+    url: urlBase + '/patient/ajax/listPatientDicomStudies/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -311,7 +313,7 @@ function listePatientDicomStudies() {
       $('#listeDicomStudiesModal #listeDicomStudies').html('');
       $.each(data, function(index, item) {
         str = '<option value="' + item['ID'] + '">Examen du ' + moment(item['Datetime']).format('DD-MM-YYYY');
-        if(item['ehr']) str= str + ' - ' + item['ehr']['label'];
+        if (item['ehr']) str = str + ' - ' + item['ehr']['label'];
         str = str + '</option>';
         $('#listeDicomStudiesModal #listeDicomStudies').append(str);
 
@@ -327,7 +329,7 @@ function listePatientDicomStudies() {
 function prepareEcho() {
 
   $.ajax({
-    url: urlBase+'/patient/ajax/prepareEcho/',
+    url: urlBase + '/patient/ajax/prepareEcho/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -344,7 +346,7 @@ function prepareEcho() {
 
 function catchLastDicomSrData() {
   $.ajax({
-    url: urlBase+'/patient/ajax/catchLastDicomSrData/',
+    url: urlBase + '/patient/ajax/catchLastDicomSrData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -364,7 +366,7 @@ function catchLastDicomSrData() {
 
 function catchOtherDicomSrData() {
   $.ajax({
-    url: urlBase+'/patient/ajax/catchLastDicomSrData/',
+    url: urlBase + '/patient/ajax/catchLastDicomSrData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -404,7 +406,7 @@ function addDicomSRInfo2CurrentForm(data) {
 //envoyer le form de CS dans le div CS
 function sendFormToCsDiv(el) {
   $.ajax({
-    url: urlBase+'/patient/ajax/extractCsForm/',
+    url: urlBase + '/patient/ajax/extractCsForm/',
     type: 'post',
     data: {
       formIN: el.attr('data-formtocall'),
@@ -418,11 +420,11 @@ function sendFormToCsDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#nouvelleCs').html(data);
-      $.getScriptOnce(urlBase+"/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
+      $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo('body');
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
-      $('form').submit(function () {
+      $('form').submit(function() {
         $(window).unbind("beforeunload");
       });
 
@@ -441,7 +443,7 @@ function preventDataLoss(e) {
 //envoyer le form de Courrier dans le div newCourrier
 function sendFormToCourrierDiv(el) {
   $.ajax({
-    url: urlBase+'/patient/ajax/extractCourrierForm/',
+    url: urlBase + '/patient/ajax/extractCourrierForm/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
@@ -451,7 +453,7 @@ function sendFormToCourrierDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newCourrier').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/print.js");
+      $.getScriptOnce(urlBase + "/js/patientScripts/print.js");
 
       tinymce.init({
         selector: '#editeurCourrier',
@@ -460,8 +462,8 @@ function sendFormToCourrierDiv(el) {
       scrollTo('body');
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
-      $('form').submit(function () {
-          $(window).unbind("beforeunload");
+      $('form').submit(function() {
+        $(window).unbind("beforeunload");
       });
     },
     error: function() {
@@ -479,7 +481,7 @@ function sendFormToOrdoDiv(el) {
   }
 
   $.ajax({
-    url: urlBase+'/patient/ajax/extractOrdoForm/',
+    url: urlBase + '/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
       objetID: objetID,
@@ -489,14 +491,14 @@ function sendFormToOrdoDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newOrdo').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/ordonnance.js");
+      $.getScriptOnce(urlBase + "/js/patientScripts/ordonnance.js");
       scrollTo('body');
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
       $(window).on("beforeunload", preventDataLoss);
-      $('form').submit(function () {
-          $(window).unbind("beforeunload");
+      $('form').submit(function() {
+        $(window).unbind("beforeunload");
       });
     },
     error: function() {
@@ -508,7 +510,7 @@ function sendFormToOrdoDiv(el) {
 //envoyer le form newMail dans le div newMail
 function sendFormToMailDiv(el) {
   $.ajax({
-    url: urlBase+'/patient/ajax/extractMailForm/',
+    url: urlBase + '/patient/ajax/extractMailForm/',
     type: 'post',
     data: {
       formIN: el.attr('data-formtocall'),
@@ -519,11 +521,11 @@ function sendFormToMailDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newMail').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/email.js");
+      $.getScriptOnce(urlBase + "/js/patientScripts/email.js");
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
-      $('form').submit(function () {
-          $(window).unbind("beforeunload");
+      $('form').submit(function() {
+        $(window).unbind("beforeunload");
       });
     },
     error: function() {
@@ -541,7 +543,7 @@ function sendFormToReglementDiv(el) {
   }
 
   $.ajax({
-    url: urlBase+'/patient/ajax/extractReglementForm/',
+    url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
       objetID: objetID,
@@ -551,11 +553,11 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce(urlBase+"/js/patientScripts/reglement.js");
+      $.getScriptOnce(urlBase + "/js/patientScripts/reglement.js");
       scrollTo('body');
       $(window).on("beforeunload", preventDataLoss);
-      $('form').submit(function () {
-          $(window).unbind("beforeunload");
+      $('form').submit(function() {
+        $(window).unbind("beforeunload");
       });
     },
     error: function() {
@@ -572,7 +574,7 @@ function suppCs(el) {
   objetID = el.attr('data-objetID');
 
   $.ajax({
-    url: urlBase+'/patient/ajax/suppCs/',
+    url: urlBase + '/patient/ajax/suppCs/',
     type: 'post',
     data: {
       objetID: objetID
@@ -593,7 +595,7 @@ function toogleImportant(el) {
   objetID = el.attr('data-objetID');
 
   $.ajax({
-    url: urlBase+'/patient/ajax/importanceCsToogle/',
+    url: urlBase + '/patient/ajax/importanceCsToogle/',
     type: 'post',
     data: {
       importanceActu: importanceActu,
@@ -624,7 +626,7 @@ function modalAlternateTitreChange() {
   objetID = $('#alternatTitreModal #objetID').val();
 
   $.ajax({
-    url: urlBase+'/patient/ajax/completerTitreCs/',
+    url: urlBase + '/patient/ajax/completerTitreCs/',
     type: 'post',
     data: {
       titre: titreActu,
@@ -651,7 +653,7 @@ function showObjetDet(element) {
   if (destination.length == 0) {
 
     $.ajax({
-      url: urlBase+'/patient/ajax/ObjetDet/',
+      url: urlBase + '/patient/ajax/ObjetDet/',
       type: 'post',
       data: {
         objetID: objetID,
@@ -669,4 +671,22 @@ function showObjetDet(element) {
     destination.toggle();
   }
 
+}
+
+// rafraichier le header du dossier patient (infos administratives)
+function ajaxModalPatientAdminCloseAndRefreshHeader() {
+  $.ajax({
+    url: urlBase+'/patient/ajax/refreshHeaderPatientAdminData/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID")
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#identitePatient').html(data);
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
 }

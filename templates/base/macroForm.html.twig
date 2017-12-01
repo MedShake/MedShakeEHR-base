@@ -329,6 +329,8 @@
 							<h4>{{ el.value }}</h4>
 						{% elseif el.type == "label" %}
 							<p>{{ el.value }}</p>
+						{% elseif el.type == "template" %}
+							{% include el.value ~ '.html.twig' %}
 						{% else %}
 
 

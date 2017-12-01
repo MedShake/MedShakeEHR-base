@@ -21,25 +21,19 @@
  */
 
 /**
- * Patient : les actions avec reload de page
+ * Renvoyer un fichier stocké dans le navigateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$debug='';
 
-//$debug='';
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'saveCsForm', // sauver le formulaire de consultation
-    'sendMail', // envoyer un mail
-    'saveOrdoForm', // sauver une ordonnance
-    'saveReglementForm', // sauver une ordonnance
-    'changeObjetCreationDate' // changer le creationDate d'un objet
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
+$fichier=new msStockage();
+$fichier->setObjetID($match['params']['fichierID']);
+if ($fichier->testDocExist()) {
+    $mimetype=msTools::getmimetype($fichier->getPathToDoc());
+    header("Content-type: ".$mimetype);
+    readfile($fichier->getPathToDoc());
 } else {
-    include('inc-action-'.$m.'.php');
+    die("Ce document n'existe pas.");
 }

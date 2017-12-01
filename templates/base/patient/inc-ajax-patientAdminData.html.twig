@@ -1,0 +1,102 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : en-tête du dossier patient (données administratives)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h1>{{ page['patient']['administrativeDatas']['3']['value']|e }}
+    {# firstname #}
+    {{ page['patient']['administrativeDatas']['2']['value']|e }}
+    {# name #}
+    {% if page['patient']['administrativeDatas']['1']['value'] %}
+        ({{ page['patient']['administrativeDatas']['1']['value']|e }}){% endif %}
+    <small>
+        {{ page['patient']['administrativeDatas']['8']['value']|e }}
+        -
+        {# birthdate #}
+        {{ page['patient']['administrativeDatas']['8']['age']|e }}
+        an{% if page['patient']['administrativeDatas']['8']['age'] > 0 %}s{% endif %}
+        {# age #}
+
+        {% if page['patient']['administrativeDatas']['21']['value'] %}
+          <button id="voirNotesPatient" type="button" class="btn btn-default btn-xs" title="Voir les notes">
+              <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+          </button>
+        {% endif %}
+
+        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+
+        {% if page.correspondants is empty %}
+        <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+            <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        </a>
+        {% endif %}
+    </small>
+</h1>
+<p>
+    {# email #}
+    {% if page['patient']['administrativeDatas']['4']['value'] %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ page['patient']['administrativeDatas']['4']['value']|e }} <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu">
+          <li><a class="newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
+          {% if config.smtpTracking %}
+            <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+       -
+
+    {% endif %}
+
+
+    {# tel #}
+    {{ page['patient']['administrativeDatas']['10']['value']|e }}
+    {% if page['patient']['administrativeDatas']['10']['value'] and page['patient']['administrativeDatas']['7']['value'] %} / {% endif %}
+    {{ page['patient']['administrativeDatas']['7']['value']|e }}
+     -
+    {# adresse #}
+    {{ page['patient']['administrativeDatas']['9']['value']|e }}
+    {{ page['patient']['administrativeDatas']['11']['value']|e }}
+    {{ page['patient']['administrativeDatas']['13']['value']|e }}
+    {{ page['patient']['administrativeDatas']['12']['value']|e }}
+
+    {% if page.correspondants %}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    </a>
+    {% for v in page.correspondants %}
+      <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">{% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}</a>
+    {% endfor %}
+    {% endif %}
+</p>
+
+<div id="notesPatient" class="well" style="display: none;">
+  {{ page['patient']['administrativeDatas']['21']['value']|e|nl2br }}
+</div>

@@ -43,7 +43,9 @@
                 <thead>
                     <tr>
                         <th class="">#</th>
-                        <th class="col-md-2">date</th>
+                        <th>date</th>
+                        <th>mise à jour</th>
+                        <th>date d'effet</th>
                         <th class="col-md-1">prescripteur</th>
                         {% if page.patientID =='' %}<th>patient</th>{% endif %}
                         <th class="">parent</th>
@@ -58,9 +60,10 @@
                     {% for v in page.logs %}
                         <tr class="{% if v.groupe == 'typecs' %}info{% elseif v.groupe == 'courrier' or v.typeID in [177,186,184,192,488] %}success{% elseif v.groupe == 'admin' %}warning{% elseif v.groupe == 'user' %}danger{% endif %}">
                             <td>#{{ v.id }}</td>
-                            <td>{{ v.creationDate }}
-                                {% if v.creationDate != v.updateDate %}<br>{{ v.updateDate }}{% endif %}
+                            <td>{{ v.registerDate|replace({' ':'&nbsp;'}) }}</td>
+                            <td>{% if v.registerDate != v.updateDate %}{{ v.updateDate|replace({' ':'&nbsp;'}) }}{% endif %}
                             </td>
+                            <td>{% if v.creationDate != v.registerDate %}{{ v.creationDate|replace({' ':'&nbsp;'}) }}{% endif %}</td>
                             <td>{{ v.prescripteur }}</td>
                             {% if page.patientID =='' %}<td>  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/">#{{ v.toID }}</a></td>{% endif %}
                             <td>#{{ v.instance }}</td>

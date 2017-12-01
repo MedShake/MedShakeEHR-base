@@ -49,3 +49,18 @@ $options = $data->getSelectOptionValue(array($typeID));
 foreach($options[$typeID] as $k=>$v) {
   $p['page']['preRelationPatientPatient']['formValues'][$k]=$k;
 }
+
+//formulaire de création praticien en modal
+$formPro = new msForm();
+$formPro->setFormIDbyName('baseNewPro');
+if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
+    $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
+}
+$p['page']['form']=$formPro->getForm();
+//ajout champs cachés au form
+$p['page']['form']['addHidden']=array(
+  'actAsAjax'=>'true',
+  'porp'=>'pro'
+);
+//modifier action pour url ajax
+$p['page']['form']['global']['formAction']='/people/actions/peopleRegister/';

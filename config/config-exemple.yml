@@ -37,7 +37,7 @@ host: 'ehr.local'
 urlHostSuffixe: ''
 homeDirectory: '/home/EHR/'
 webDirectory: '/home/EHR/public_html/'
-stockageLocation: '/home/EHR/public_html/stockage/'
+stockageLocation: '/home/EHR/stockage/'
 workingDirectory: '/home/EHR/public_html/workingDirectory/'
 cookieDomain: 'ehr.local'
 cookieDuration: 31104000
@@ -57,6 +57,8 @@ administratifSecteurHonoraires: 1
 administratifPeutAvoirFacturesTypes: 'false'
 administratifPeutAvoirPrescriptionsTypes: 'false'
 administratifPeutAvoirAgenda: 'false'
+administratifPeutAvoirRecettes: 'true'
+administratifComptaPeutVoirRecettesDe: ''
 
 #######################################
 ## templates impression

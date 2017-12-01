@@ -27,6 +27,10 @@
  */
 $(document).ready(function() {
 
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Paramètrages pour momentjs
+
   moment.locale('fr', {
     months: "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre".split("_"),
     monthsShort: "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split("_"),
@@ -72,7 +76,10 @@ $(document).ready(function() {
     }
   });
 
-  // datepicker bootstrap
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Obesrvations générales pour formulaires
+
+  //// datepicker bootstrap
   $('.datepick').datetimepicker({
     locale: 'fr',
     viewMode: 'years',
@@ -80,32 +87,62 @@ $(document).ready(function() {
     showClear: true
 
   });
-
   $("#nouvelleCs").delegate('div.datepick', "focusin click", function() {
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: 'years',
       format: 'L'
-
     });
   });
 
-  //age
+  // age affiché en label de l'input date de naissance
   $(".datepick[data-typeid='8']").on("dp.change", function(e) {
     bd = moment(e.date);
     age = moment().diff(bd, 'years');
     if (age > 0) $(this).prev('label').append(' - ' + age + ' ans');
   });
 
-  // autocomplete
+  // autocomplete simple
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
       source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
+    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
   });
 
-  //prevent form submit by enter key
+  //autocomplete pour la liaison code postal - > ville
+  $('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
+    type = $(this).attr('data-typeID');
+    if (type == 53) dest = 56;
+    else if (type == 13) dest = 12;
+
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: '/ajax/getAutocompleteLinkType/data_types/' + type + '/' + type + '/' + type + ':' + dest + '/',
+      autoFocus: true,
+      minLength: 3,
+      select: function(event, ui) {
+        sourceval = eval('ui.item.d' + type);
+        destival = eval('ui.item.d' + dest);
+        $('#p_' + dest + 'ID').val(destival);
+        $('#p_' + type + 'ID').val(sourceval);
+
+        //si contexte de mise à jour automatique
+        patientID = $('#identitePatient').attr("data-patientID");
+        if ($('#p_' + dest + 'ID').parents('.changeObserv').length) {
+          setPeopleData(destival, patientID, dest, '#p_' + dest + 'ID', '0');
+        }
+        if ($('#p_' + type + 'ID').parents('.changeObserv').length) {
+          setPeopleData(sourceval, patientID, type, '#p_' + type + 'ID', '0');
+        }
+
+      }
+    });
+    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+  });
+
+  //prévention du form submit sur la touche enter
   $('body').on('keyup keypress', 'input', function(e) {
     var keyCode = e.keyCode || e.which;
     if (keyCode === 13) {
@@ -113,6 +150,14 @@ $(document).ready(function() {
       return false;
     }
   });
+
+  // checkboxes dans les formulaires
+  $('body').on("click", "input[type=checkbox]", function(e) {
+    chkboxClick(e.target);
+  });
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Obesrvations générales pour éléments divers
 
   //alerte confirmation
   $('body').on('click', '.confirmBefore', function(e) {
@@ -123,12 +168,12 @@ $(document).ready(function() {
     }
   });
 
-  // checkboxes dans les formulaires
-  $('body').on("click", "input[type=checkbox]", function(e) {
-    chkboxClick(e.target);
-  });
 
 });
+
+
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions diverses
 
 // checkboxes dans les formulaires
 function chkboxClick(el) {
@@ -143,17 +188,47 @@ function chkboxClick(el) {
   el.value = el.checked.toString();
 }
 
-// scroller vers un élément
+// scroller vers un élément de la page
 function scrollTo(element) {
   $('html, body').animate({
     scrollTop: $(element).offset().top
   }, 2);
 }
 
-//agrandir un élément
+//agrandir un élément de formulaire automatiquement
 function auto_grow(element) {
   element.style.height = (element.scrollHeight) + "px";
 }
+
+//fonction pour la sauvegarde automatique de champ de formulaire
+function setPeopleData(value, patientID, typeID, source, instance) {
+  if (patientID && typeID && source) {
+    $.ajax({
+      url: urlBase + '/ajax/setPeopleData/',
+      type: 'post',
+      data: {
+        value: value,
+        patientID: patientID,
+        typeID: typeID,
+        instance: instance
+      },
+      dataType: "json",
+      success: function(data) {
+        el = $(source);
+        el.css("background", "#efffe8");
+        el.delay(700).queue(function() {
+          $(this).css("background","").dequeue();
+        });
+      },
+      error: function() {
+        //alert('Problème, rechargez la page !');
+      }
+    });
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions tierces
 
 /*! jQuery getScriptOnce - v0.1.0 - 2013-11-15
  * http://www.invetek.nl/?p=105

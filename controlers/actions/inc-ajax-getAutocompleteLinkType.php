@@ -45,8 +45,8 @@
  }
 
  $joinleft=[];
- $sel[]="do.value as d".$type;
  $concat=[];
+ $groupby=array('label');
  if (isset($match['params']['linkedTypes'])) {
      $linkedTypes=explode(':', $match['params']['linkedTypes']);
 
@@ -54,6 +54,7 @@
          $sel[]= " d".$v.".value as d".$v;
          $concatLabel[]= " COALESCE(d".$v.".value, '')";
          $joinleft[]=" left join ".$database." as d".$v." on do.toID = d".$v.".toID and d".$v.".typeID='".$v."' and d".$v.".outdated='' and d".$v.".deleted='' ";
+         $groupby[]='d'.$v.'.value';
      }
  }
 
@@ -62,7 +63,7 @@
  ".implode(" ", $joinleft)."
  where do.typeID in ('".implode("','", $searchTypes)."') and trim(concat(".implode(', " ",', $concatLabel).")) like '%".msSQL::cleanVar($_GET['term'])."%'
  and d".$type.".value is not null
- group by label limit 25");
+ group by ".implode(",", $groupby)." limit 25");
 
  //print_r($data);
 

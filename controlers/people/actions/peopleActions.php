@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient : les actions avec reload de page
+ * People : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -30,16 +30,16 @@
 //$debug='';
 $m=$match['params']['m'];
 
-$acceptedModes=array(
-    'saveCsForm', // sauver le formulaire de consultation
-    'sendMail', // envoyer un mail
-    'saveOrdoForm', // sauver une ordonnance
-    'saveReglementForm', // sauver une ordonnance
-    'changeObjetCreationDate' // changer le creationDate d'un objet
-);
+//compatibilité avec l'url /people/register/
+if(isset($match['params']['porp'])) $m='peopleRegister';
 
+//modes acceptés et die() si non connu
+$acceptedModes=array(
+    'peopleRegister', // sauver un nouveau patient / pro
+);
 if (!in_array($m, $acceptedModes)) {
     die;
-} else {
-    include('inc-action-'.$m.'.php');
 }
+
+//inclusion
+include('inc-action-'.$m.'.php');

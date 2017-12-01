@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_COOKIE} !userId<1 [NC]
+RewriteRule .* / [L]

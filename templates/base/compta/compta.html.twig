@@ -60,10 +60,14 @@
 
 {% block body %}
 
-    <h1>Recettes</h1>
+<h1>Recettes du praticien
+  {% for pratID in page.pratsSelect %}
+    {{ page['pratsAuto'][pratID]['prenom'] }} {{ page['pratsAuto'][pratID]['nom'] }}
+  {% endfor %}
+</h1>
 
 
-    <form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin-bottom : 30px;">
+<form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin : 30px 0;">
 
                 <div class="form-group">
 
@@ -89,16 +93,30 @@
                     </div>
 
                 </div>
+
+                {% if page.pratsAuto|length > 1 %}
+                  <div class="form-group">
+                      <label class="control-label" for="endPeriodeID">Praticien
+                      </label>
+                      <select name="prat" class="form-control">
+                          {% for prat in page.pratsAuto %}
+                            <option value="{{ prat.id }}" {% if prat.id in page.pratsSelect %}selected="selected"{% endif %}
+                            >{{ prat.prenom }} {{ prat.nom }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                {% else %}
+                  <input type="hidden" name="prat" value="{% for prat in page.pratsAuto %}{{ prat.id }}{% endfor %}" />
+                {% endif %}
+
                 <button type="submit" class="btn btn-default">Chercher</button>
-                  <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control" autocomplete="off" />
+
+                <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control" autocomplete="off" />
                   <option>Selection rapide</option>
                   {% for k,v in page.periode.quickOptions %}
                     <option {% if page.periode.quick == k %}selected="selected"{% endif %} value="{{ k }}">{{ v }}</option>
                     {% endfor %}
                 </select>
-                <div class="form-group">
-
-                </div>
 
     </form>
 
@@ -129,6 +147,9 @@
                             <td>#{{ loop.index }}</td>
                             <td>
                                 {{ reg.creationDate|date("d/m/Y H:i") }}
+                                {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-default btn-xs" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
+                                  <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                </button>{% endif %}
                             </td>
                             <td>
                                 <strong>{{ reg.prenom|e }}

@@ -159,6 +159,55 @@ class msPeople
         return $tab;
     }
 
+    /**
+     * Obtenir les pros en relation avec ce patient
+     * @return array array des pros en relation
+     */
+    public function getRelationsWithPros()
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre']);
+
+        return msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, n.value as nom, p.value as prenom, t.value as titre
+      from objets_data as o
+      inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
+      left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
+      left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+      left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted=''
+      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
+      group by o.value, c.id, n.id, p.id, t.id
+      order by typeRelation = 'MT' desc, nom asc");
+    }
+
+    /**
+     * Obtenir les autres patients liés généalogiquement avec ce patient
+     * @return array array des autres patients
+     *
+     */
+    public function getRelationsWithOtherPatients()
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre']);
+
+        return msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, n.value as nom, p.value as prenom, d.value as ddn
+      from objets_data as o
+      inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
+      left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
+      left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+      left join objets_data as d on d.toID=o.value and d.typeID=8 and p.outdated='' and p.deleted=''
+      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
+      group by o.value, c.id, n.id, p.id, d.id
+      order by nom asc");
+    }
+
 /**
  * Sortir tous les types et les valeurs liées à partir d'un groupe de cat
  * @param  string $groupe groupe de données
@@ -178,11 +227,11 @@ class msPeople
  * @param  string $service service spécifique
  * @return array          tableau userID=>identité
  */
-  public function getUsersListForService($service) {
+  public function getUsersListForService($service)
+  {
+      $typeID=msData::getTypeIDFromName($service);
 
-    $typeID=msData::getTypeIDFromName($service);
-
-    return msSQL::sql2tabKey("select p.id, concat(o2.value , ' ' , o.value) as identite
+      return msSQL::sql2tabKey("select p.id, concat(o2.value , ' ' , o.value) as identite
         from people as p
         join objets_data as dt on dt.toID=p.id and dt.typeID='".$typeID."' and dt.value='true'
         left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
@@ -195,23 +244,23 @@ class msPeople
    * @param  string $param param spécifique
    * @return array          tableau
    */
-    public function getUsersWithSpecificParam($param) {
+    public function getUsersWithSpecificParam($param)
+    {
+        $typeID=msData::getTypeIDFromName($param);
 
-      $typeID=msData::getTypeIDFromName($param);
-
-      if($data=msSQL::sql2tab("select p.id, concat(o2.value , ' ' , o.value) as identite, dt.value
+        if ($data=msSQL::sql2tab("select p.id, concat(o2.value , ' ' , o.value) as identite, dt.value
           from people as p
           join objets_data as dt on dt.toID=p.id and dt.typeID='".$typeID."'
           left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
           left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
           where p.pass!='' order by identite")) {
             $tab=array();
-            foreach($data as $v) {
+            foreach ($data as $v) {
                 $tab[$v['id']]['identite']=$v['identite'];
                 $tab[$v['id']]['paramValue']=$v['value'];
             }
             return $tab;
-          }
+        }
     }
 
 /**
@@ -227,26 +276,26 @@ class msPeople
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur']);
 
-      if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, n2.value as nom, f.printModel, mail.id as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
-      CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType
-      from objets_data as p
-      left join data_types as t on p.typeID=t.id
-      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID=3 and n1.outdated=''
-      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID=2 and n2.outdated=''
-      left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
-      left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
-      left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
-      left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
-      left join forms as f on f.internalName=t.formValues
-      where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted=''
-      group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value
-      order by p.creationDate desc")) {
-          foreach ($data as $v) {
-              $return[$v['creationYear']][]=$v;
-          }
+        if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, n2.value as nom, f.printModel, mail.id as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+        CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType
+        from objets_data as p
+        left join data_types as t on p.typeID=t.id
+        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID=3 and n1.outdated=''
+        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID=2 and n2.outdated=''
+        left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
+        left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
+        left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
+        left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
+        left join forms as f on f.internalName=t.formValues
+        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted=''
+        group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value
+        order by p.creationDate desc")) {
+              foreach ($data as $v) {
+                  $return[$v['creationYear']][]=$v;
+            }
 
-          return $return;
-      }
+            return $return;
+        }
     }
 
 /**
@@ -262,7 +311,7 @@ class msPeople
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur']);
 
-        return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, n2.value as nom, f.printModel, mail.id as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+        return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, n2.value as nom, f.printModel, mail.id as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType
         from objets_data as p
         left join data_types as t on p.typeID=t.id
@@ -274,7 +323,7 @@ class msPeople
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
         where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')   or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE()
-        group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value 
+        group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value
         order by p.creationDate desc");
     }
 

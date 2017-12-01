@@ -28,25 +28,6 @@
 
 $(document).ready(function() {
 
-  //autocomplete pour la liaison code postal - > ville
-  $('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
-    type = $(this).attr('data-typeID');
-    if (type == 53) dest = 56;
-    else if (type == 13) dest = 12;
-
-    if ($(this).is(':data(autocomplete)')) return;
-    $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/' + type + '/' + type + '/' + type + ':' + dest + '/',
-      autoFocus: true,
-      minLength: 3,
-      select: function(event, ui) {
-        destival = eval('ui.item.d' + dest);
-        $('#p_' + dest + 'ID').val(destival);
-      }
-    });
-  });
-
-
   //réactiver un dossier marqué comme supprimé
   $('body').on("click", "a.unmarkDeleted", function(e) {
     e.preventDefault();
