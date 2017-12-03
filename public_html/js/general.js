@@ -152,7 +152,7 @@ $(document).ready(function() {
   });
 
   // checkboxes dans les formulaires
-  $('body').on("click", "input[type=checkbox]", function(e) {
+  $('body').on("click", ".checkboxFixValue input[type=checkbox]", function(e) {
     chkboxClick(e.target);
   });
 

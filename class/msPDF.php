@@ -339,7 +339,7 @@ class msPDF
 
                 // on traite ligne par ligne
                 else {
-                    if ($v['ald']==1) {
+                    if ($v['ald']=='1' or $v['ald']=='true') {
                         $modePrint='ald';
                         $key='ald';
                     } else {

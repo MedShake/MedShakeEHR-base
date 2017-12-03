@@ -59,7 +59,7 @@
                 <div class="col-md-1">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" value="1" name="{{ ligne.formname ~ 'CB' }}" {% if ligne.ald == 1 %} checked="checked"{% endif %}/>
+                            <input type="checkbox" value="true" name="{{ ligne.formname ~ 'CB' }}" {% if ligne.ald == 'true' or ligne.ald == '1' %} checked="checked"{% endif %}/>
                             ALD
                         </label>
                     </div>
