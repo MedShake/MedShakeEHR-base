@@ -44,7 +44,7 @@ class msApicrypt
      msTools::checkAndBuildTargetDir($p['config']['apicryptCheminFichierNC'].$p['user']['id']);
      msTools::checkAndBuildTargetDir($p['config']['apicryptCheminFichierC'].$p['user']['id']);
 
-     $texte=iconv("UTF-8", "iso-8859-1", $texte);
+     $texte=iconv("UTF-8", "iso-8859-1//TRANSLIT", $texte);
 
     //donner un nom au fichier
     $filename=md5($texte.$to.time());
