@@ -146,7 +146,7 @@ $(document).ready(function() {
     e.preventDefault();
     $('#newDoc').toggle();
     $.getScriptOnce(urlBase + "/js/patientScripts/docupload.js");
-      $('html, body').animate({scrollTop: $("#newDoc").offset().top}, 600);
+    scrollTo("#newDoc", 400);
   });
 
   //bouton de nouveau mail
@@ -422,7 +422,7 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      $('html, body').animate({scrollTop: $("#nouvelleCs").offset().top}, 600);
+      scrollTo('#nouvelleCs', 400);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -460,7 +460,7 @@ function sendFormToCourrierDiv(el) {
         selector: '#editeurCourrier',
         height: "500"
       });
-      $('html, body').animate({scrollTop: $("#newCourrier").offset().top}, 600);
+      scrollTo('#newCourrier', 400);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -493,7 +493,7 @@ function sendFormToOrdoDiv(el) {
     success: function(data) {
       $('#newOrdo').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/ordonnance.js");
-      $('html, body').animate({scrollTop: $("#newOrdo").offset().top}, 600);
+      scrollTo('#newOrdo', 400);
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
@@ -523,7 +523,7 @@ function sendFormToMailDiv(el) {
     success: function(data) {
       $('#newMail').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/email.js");
-      $('html, body').animate({scrollTop: $("#newMail").offset().top}, 600);
+      scrollTo('#newMail', 400);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -555,7 +555,7 @@ function sendFormToReglementDiv(el) {
     success: function(data) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/reglement.js");
-      $('html, body').animate({scrollTop: $("#newReglement").offset().top}, 600);
+      scrollTo('#newReglement', 400);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
