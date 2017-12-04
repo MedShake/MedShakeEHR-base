@@ -20,6 +20,8 @@ UPDATE data_types set formType='checkbox' where id in ('436','492','493','496');
 
 -- 1.4.0 to 2.0.0
 
+ALTER TABLE forms ADD internalName varchar(60) after id;
+
 CREATE TABLE agenda_changelog (
   `id` int(8) UNSIGNED NOT NULL,
   `eventID` int(12) UNSIGNED NOT NULL,
@@ -56,7 +58,7 @@ update forms set internalName='basePasswordChange' where id='25';
 update forms set internalName='baseFax' where id='29';
 update forms set internalName='baseAgendaPriseRDV' where id='30';
 
-ALTER TABLE forms ADD internalName varchar(60) after id;
+
 
 ALTER TABLE agenda ADD fromID mediumint(6) UNSIGNED DEFAULT NULL after patientid;
 ALTER TABLE agenda DROP PRIMARY KEY;
