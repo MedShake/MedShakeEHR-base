@@ -288,7 +288,7 @@ class msPeople
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
         where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted=''
-        group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value
+        group by p.id, n1.value, n2.value, mail.value, doc.value, doc2.value, img.value
         order by p.creationDate desc")) {
               foreach ($data as $v) {
                   $return[$v['creationYear']][]=$v;
@@ -323,7 +323,7 @@ class msPeople
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
         where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')   or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE()
-        group by p.id, n1.value, n2.value, mail.id, doc.value, doc2.value, img.value
+        group by p.id, n1.value, n2.value, mail.value, doc.value, doc2.value, img.value
         order by p.creationDate desc");
     }
 
