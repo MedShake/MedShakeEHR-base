@@ -334,7 +334,7 @@
 						{% else %}
 
 
-							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox'] %}
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox','hidden','radio','range','reset'] %}
 								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {

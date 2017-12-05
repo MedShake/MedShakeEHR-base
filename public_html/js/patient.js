@@ -146,6 +146,7 @@ $(document).ready(function() {
     e.preventDefault();
     $('#newDoc').toggle();
     $.getScriptOnce(urlBase + "/js/patientScripts/docupload.js");
+    scrollTo("#newDoc", 400);
   });
 
   //bouton de nouveau mail
@@ -421,7 +422,7 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      scrollTo('body');
+      scrollTo('#nouvelleCs', 400);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -459,7 +460,7 @@ function sendFormToCourrierDiv(el) {
         selector: '#editeurCourrier',
         height: "500"
       });
-      scrollTo('body');
+      scrollTo('#newCourrier', 400);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -492,7 +493,7 @@ function sendFormToOrdoDiv(el) {
     success: function(data) {
       $('#newOrdo').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/ordonnance.js");
-      scrollTo('body');
+      scrollTo('#newOrdo', 400);
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
@@ -522,7 +523,7 @@ function sendFormToMailDiv(el) {
     success: function(data) {
       $('#newMail').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/email.js");
-      scrollTo('body');
+      scrollTo('#newMail', 400);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -554,7 +555,7 @@ function sendFormToReglementDiv(el) {
     success: function(data) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/reglement.js");
-      scrollTo('body');
+      scrollTo('#newReglement', 400);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");

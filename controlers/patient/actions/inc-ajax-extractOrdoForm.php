@@ -67,7 +67,7 @@ if (is_numeric($_POST['objetID'])) {
                 $modePrint=$v['description'];
                 $p['page']['courrier']['modeprintObjetID']=$v['id'];
             } else {
-                if ($v['ald']==1) {
+                if ($v['ald']=='true' or $v['ald']=='1') {
                     $modePrint='ald';
                 }
                 $p['page']['courrier']['medoc'][]=$v;

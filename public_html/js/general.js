@@ -152,7 +152,7 @@ $(document).ready(function() {
   });
 
   // checkboxes dans les formulaires
-  $('body').on("click", "input[type=checkbox]", function(e) {
+  $('body').on("click", ".checkboxFixValue input[type=checkbox]", function(e) {
     chkboxClick(e.target);
   });
 
@@ -189,10 +189,10 @@ function chkboxClick(el) {
 }
 
 // scroller vers un élément de la page
-function scrollTo(element) {
+function scrollTo(element, delai) {
   $('html, body').animate({
     scrollTop: $(element).offset().top
-  }, 2);
+  }, delai == undefined ? 2 : delai);
 }
 
 //agrandir un élément de formulaire automatiquement
