@@ -60,14 +60,14 @@
        }
       }
 
-
+      canvas {height:80px; margin-left:5px;}
 
      </style>
 
 
      {# js #}
-     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
-     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
  </head>
  <body>
@@ -83,37 +83,113 @@
      </div>
    </div>
    <div class="row">
-     <div class="col-xs-9">
+     <div id="videocontainer" class="col-xs-9">
       <video style="width:100%"></video>
+      <canvas id="prevue" style="display:none"><canvas>
     </div>
     <div class="col-xs-2">
-      <button class="btn btn-danger btn-lg btn-block"><i class="glyphicon glyphicon-send"></i></button>
+      <button id="declencher" class="btn btn-success btn-lg btn-block"><i class="glyphicon glyphicon-camera"></i></button>
+      <button id="rafraichir" class="btn btn-success btn-lg btn-block"><i class="glyphicon glyphicon-refresh"></i></button>
+      <button id="refaire" class="btn btn-success btn-lg btn-block"><i class="glyphicon glyphicon-repeat"></i></button>
       <br>
-      <button class="btn btn-success btn-lg btn-block"><i class="glyphicon glyphicon-camera"></i></button>
+      <button id="envoyer" class="btn btn-danger btn-lg btn-block"><i class="glyphicon glyphicon-send"></i></button>
     </div>
   </div>
-   <canvas width="1920" height="1080" style="width:640px;height:480px;display: none;"></canvas>
+   <div class="row" style="overflow-x:scroll;width:100%; height:85px">
+     <div id="miniatures" style="width:0;height:80px"></div>
+   </div>
 
  </div>
    <script>
-     var constraints = { audio: false, video: { width: 1920, height: 1080, frameRate: 4} };
+     $(document).ready(function(){
 
-     navigator.mediaDevices.getUserMedia(constraints)
-     .then(function(mediaStream) {
-       var video = document.querySelector('video');
-       video.srcObject = mediaStream;
-       video.onloadedmetadata = function(e) {
-         video.play();
-       };
-     })
-     .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+     $("#declencher").show();
+     $("#envoyer").hide();
+     $("#refaire").hide();
+     $("#rafraichir").hide();
 
-     document.querySelector('button').onclick = function(){
-       var canvas = document.querySelector('canvas');
+     function onTimeout(){
+       $("video")[0].srcObject.stop();
+       $("#declencher").hide();
+       $("#envoyer").hide();
+       $("#refaire").hide();
+       $("#rafraichir").show();
+       videoTO = undefined;
+     };
+     var videoTO = setTimeout(onTimeout, 30000);
+
+     $("#rafraichir").on("click", function(){
+       startVideo();
+       $("#declencher").show();
+       $("#envoyer").hide();
+       $("#refaire").hide();
+       $("#rafraichir").hide();
+       videoTO = setTimeout(onTimeout, 30000);
+     });
+
+     $("#refaire").on("click", function(){
+       $("video")[0].play();
+       $("#declencher").show();
+       $("#envoyer").hide();
+       $("#refaire").hide();
+       if (videoTO) {
+         clearTimeout(videoTO);
+         videoTO = setTimeout(onTimeout, 30000);
+       }
+     });
+     $("#declencher").on("click", function(){
+       $("video")[0].pause();
+       $("#declencher").hide();
+       $("#envoyer").show();
+       $("#refaire").show();
+       if (videoTO) {
+         clearTimeout(videoTO);
+         videoTO = setTimeout(onTimeout, 30000);
+       }
+     });
+     $("#envoyer").on("click", function(){
+       var canvas = document.createElement("canvas");
        var context = canvas.getContext('2d');
-       var video = document.querySelector('video');
-       context.drawImage(video, 0, 0, 1920, 1080);
-     }
+       var video = $("video")[0];
+       canvas.width = video.videoWidth;
+       canvas.height = video.videoHeight;
+       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+       context.fillStyle = "rgba(0,0,0,0.3)";
+       context.fillRect(0,1055,1920,1080);
+       context.fillStyle = "#ffffff";
+       context.font = "18px Arial";
+       context.fillText("{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})", 10,1075);
+
+       $("#miniatures").append(canvas);
+       //la valeur à envoyer via ajax
+       var a_envoyer = canvas.toDataURL('image/jpeg', 0.95);
+       $("#miniatures").width("+=" + (80*video.videoWidth/video.videoHeight + 5));
+       $("video")[0].play();
+       $("#declencher").show();
+       $("#envoyer").hide();
+       $("#refaire").hide();
+       if (videoTO) {
+         clearTimeout(videoTO);
+         videoTO = setTimeout(onTimeout, 60000);
+       }
+     });
+
+     function startVideo(){
+       var constraints = { audio: false, video: { width: 1920, height: 1080, frameRate: 10} };
+
+       navigator.mediaDevices.getUserMedia(constraints)
+       .then(function(mediaStream) {
+         var video = $('video')[0];
+         video.srcObject = mediaStream;
+         video.onloadedmetadata = function(e) {
+           video.play();
+         };
+       })
+       .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+     };
+     startVideo();
+
+   })
    </script>
  </body>
  </html>
