@@ -155,10 +155,10 @@
        canvas.height = video.videoHeight;
        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
        context.fillStyle = "rgba(0,0,0,0.3)";
-       context.fillRect(0,1055,1920,1080);
+       context.fillRect(0,video.videoHeight-25,video.videoWidth,video.videoHeight);
        context.fillStyle = "#ffffff";
        context.font = "18px Arial";
-       context.fillText("{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})", 10,1075);
+       context.fillText("{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})", 10,video.videoHeight-5);
 
        $("#miniatures").append(canvas);
        //la valeur à envoyer via ajax
@@ -170,7 +170,7 @@
        $("#refaire").hide();
        if (videoTO) {
          clearTimeout(videoTO);
-         videoTO = setTimeout(onTimeout, 60000);
+         videoTO = setTimeout(onTimeout, 30000);
        }
      });
 
