@@ -109,7 +109,7 @@
      $("#rafraichir").hide();
 
      function onTimeout(){
-       $("video")[0].srcObject.stop();
+       $("video")[0].srcObject.getVideoTracks()[0].stop();
        $("#declencher").hide();
        $("#envoyer").hide();
        $("#refaire").hide();
