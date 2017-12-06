@@ -154,3 +154,7 @@ publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 #routes pour le module
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
 moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
+
+#routes phonecapture
+phonecaptureAjax: ['POST|GET', '/phonecapture/ajax/[a:m]/', 'phonecapture/actions/phonecaptureAjax']
+phonecapture: ['GET', '/phonecapture/', 'phonecapture/phonecapture']

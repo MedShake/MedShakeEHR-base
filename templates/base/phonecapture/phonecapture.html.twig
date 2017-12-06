@@ -1,0 +1,119 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template >  page de capture dicom par smartphone
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+ <!DOCTYPE html>
+ <html>
+ <head{% if page.ogHead %} {{ page.ogHead }} {% endif %}>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <title>
+         PhoneCapture
+     </title>
+
+     {# css #}
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+
+     <style>
+     @media screen and (orientation:portrait) {
+       #landscape{
+         display: none;
+       }
+       #portrait{
+         display: auto;
+       }
+      }
+     @media screen and (orientation:landscape) {
+       #landscape{
+         display: auto;
+       }
+       #portrait{
+
+         display: none;
+       }
+      }
+
+
+
+     </style>
+
+
+     {# js #}
+     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+ </head>
+ <body>
+   <div id="portrait" class="container" style="padding-top: 40px;">
+     <div class="jumbotron" role="alert"><p>Placez votre téléphone en mode paysage !</p></div>
+   </div>
+
+   <div id="landscape" class="container" style="padding-top : 5px;">
+   <div class="row" style="margin-bottom : 5px;">
+     <div class="col-xs-12">
+     Praticien : {{ page.data.prat.2 }} {{ page.data.prat.3 }} /
+     Patient : {{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})
+     </div>
+   </div>
+   <div class="row">
+     <div class="col-xs-9">
+      <video style="width:100%"></video>
+    </div>
+    <div class="col-xs-2">
+      <button class="btn btn-danger btn-lg btn-block"><i class="glyphicon glyphicon-send"></i></button>
+      <br>
+      <button class="btn btn-success btn-lg btn-block"><i class="glyphicon glyphicon-camera"></i></button>
+    </div>
+  </div>
+   <canvas width="1920" height="1080" style="width:640px;height:480px;display: none;"></canvas>
+
+ </div>
+   <script>
+     var constraints = { audio: false, video: { width: 1920, height: 1080, frameRate: 4} };
+
+     navigator.mediaDevices.getUserMedia(constraints)
+     .then(function(mediaStream) {
+       var video = document.querySelector('video');
+       video.srcObject = mediaStream;
+       video.onloadedmetadata = function(e) {
+         video.play();
+       };
+     })
+     .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+
+     document.querySelector('button').onclick = function(){
+       var canvas = document.querySelector('canvas');
+       var context = canvas.getContext('2d');
+       var video = document.querySelector('video');
+       context.drawImage(video, 0, 0, 1920, 1080);
+     }
+   </script>
+ </body>
+ </html>
