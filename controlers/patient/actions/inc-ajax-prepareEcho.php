@@ -31,6 +31,7 @@ $template="dicomWL";
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
 $p['page']['prat']=$prat->getSimpleAdminDatas();
+$p['page']['prat']['pratID']=$p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
