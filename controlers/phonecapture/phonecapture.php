@@ -32,4 +32,19 @@
  $p['user']['id']=1;
 
  //récupération info prat et patient
- $p['page']['data']=json_decode(file_get_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json'),true);
+
+ $jsonFile=$p['config']['workingDirectory'].$p['user']['id'].'/workList.json';
+
+ if (is_file($jsonFile)) {
+     $p['page']['data']=json_decode(file_get_contents($jsonFile), true);
+     if (!is_array($p['page']['data'])) {
+         $p['page']['error']="Aucun dossier patient valide ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechagez la page !";
+     }
+ } else {
+     $p['page']['error']="Aucun dossier patient ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechagez la page !";
+ }
+
+//template si erreur
+if (isset($p['page']['error'])) {
+    $template="phonecaptureError";
+}

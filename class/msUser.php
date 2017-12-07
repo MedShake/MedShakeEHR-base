@@ -180,6 +180,8 @@ class msUser
         global $p;
         setcookie("userId", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("userIdPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("userPassPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         unset($_SESSION);
     }
 

@@ -1,0 +1,63 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template >  page de capture dicom par smartphone
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+ <!DOCTYPE html>
+ <html>
+ <head{% if page.ogHead %} {{ page.ogHead }} {% endif %}>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <title>
+         PhoneCapture - Erreur !
+     </title>
+
+     {# css #}
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+
+
+     {# js #}
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+     <script>
+       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+     </script>
+
+ </head>
+ <body>
+   <div class="container" style="padding-top: 40px;">
+     <div class="alert alert-danger" role="alert">{{ page.error }}</div>
+
+     <button class="btn btn-danger btn-lg btn-block" onClick="window.location.reload()"><i class="glyphicon glyphicon-repeat"></i> Recharger</button>
+   </div>
+
+
+ </body>
+ </html>
