@@ -90,7 +90,7 @@ $(document).ready(function() {
     context.fillRect(0, video.videoHeight - 25, video.videoWidth, video.videoHeight);
     context.fillStyle = "#ffffff";
     context.font = "18px Arial";
-    context.fillText("{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }}) - " + moment(Date.now()).format("YYYY-MM-DD HH:mm:SS"), 10, video.videoHeight - 5);
+    context.fillText(patientIdentite + " - " + moment(Date.now()).format("YYYY-MM-DD HH:mm:SS"), 10, video.videoHeight - 5);
 
     $("#miniatures").append(canvas);
     //la valeur à envoyer via ajax
