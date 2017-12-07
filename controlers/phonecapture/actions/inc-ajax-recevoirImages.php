@@ -27,9 +27,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//fake
-$p['user']['id']=1;
-
 if ($_POST['pngBase64']) {
 
     //Récupérer l'image et sauver

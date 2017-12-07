@@ -66,6 +66,20 @@
  $router->setBasePath($p['config']['urlHostSuffixe']);
  $match = $router->match();
 
+ ///////// user
+ if (isset($_COOKIE['userIdPc'])) {
+     $p['user']=msUser::userIdentificationPhonecapture();
+     if (isset($p['user']['id'])) {
+         msUser::applySpecificConfig($p['config'], $p['user']['id']);
+     }
+ } else {
+     $p['user']=null;
+     $p['user']['id']=null;
+     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+         msTools::redirRoute('userLogIn');
+     }
+ }
+
  ///////// Controler else -> 404
  if ($match and is_file('../controlers/'.$match['target'].'.php')) {
      include '../controlers/'.$match['target'].'.php';

@@ -21,26 +21,13 @@
  */
 
 /**
- * People : les actions avec reload de page
+ * Phonecapture : poser les cookies spécifiques pour ce périphérique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ $userPass=md5(md5(sha1(md5($p['user']['pass'].$p['config']['phonecaptureFingerprint']))));
+ setcookie("userIdPc", $p['user']['id'], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+ setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
 
-//$debug='';
-$m=$match['params']['m'];
-
-//compatibilité avec l'url /people/register/
-if(isset($match['params']['porp'])) $m='peopleRegister';
-
-//modes acceptés et die() si non connu
-$acceptedModes=array(
-    'peopleRegister', // sauver un nouveau patient / pro
-    'identPhonecapture', // poser les cookies pour les pages phonecapture
-);
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-//inclusion
-include('inc-action-'.$m.'.php');
+ msTools::redirection('/phonecapture/');

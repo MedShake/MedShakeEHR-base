@@ -129,6 +129,11 @@ dicomAutoSendPatient2Echo: 'false'
 dicomDiscoverNewTags: 'true'
 
 #######################################
+## PhoneCapture
+phonecaptureFingerprint: 'phonecapture'
+phonecaptureCookieDuration: 31104000
+
+#######################################
 ## agenda
 agendaDistantLink: 'http://monagenda.agenda.abc'
 agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
