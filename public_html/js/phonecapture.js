@@ -2,7 +2,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -22,7 +22,8 @@
 /**
  * Fonctions JS pour la fonction capture images smartphone
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
+ * @edited Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $(document).ready(function() {
@@ -93,8 +94,7 @@ $(document).ready(function() {
     context.fillText(patientIdentite + " - " + moment(Date.now()).format("YYYY-MM-DD HH:mm:SS"), 10, video.videoHeight - 5);
 
     $("#miniatures").append(canvas);
-    //la valeur à envoyer via ajax
-    var a_envoyer = canvas.toDataURL('image/png');
+    envoiImage(canvas.toDataURL('image/jpeg', 0.97));
     $("#miniatures").width("+=" + (80 * video.videoWidth / video.videoHeight + 5));
     $("video")[0].play();
     $("#declencher").show();
@@ -104,8 +104,9 @@ $(document).ready(function() {
       clearTimeout(videoTO);
       videoTO = setTimeout(onTimeout, 30000);
     }
+  });
 
-
+  function envoiImage(a_envoyer){
     $.ajax({
       xhr: function() {
         var xhr = new window.XMLHttpRequest();
@@ -135,7 +136,7 @@ $(document).ready(function() {
       url: urlBase + '/phonecapture/ajax/recevoirImages/',
       type: "post",
       data: {
-        pngBase64: a_envoyer
+        jpgBase64: a_envoyer
       },
       dataType: "json",
       beforeSend: function() {
@@ -151,9 +152,7 @@ $(document).ready(function() {
         location.reload();
       },
     });
-
-
-  });
+  };
 
   function startVideo() {
     var constraints = {
@@ -175,7 +174,7 @@ $(document).ready(function() {
       })
       .catch(function(err) {
         console.log(err.name + ": " + err.message);
-      }); // always check for errors at the end.
+      });
   };
   startVideo();
 

@@ -25,19 +25,27 @@
  * de cpature spécifique dédiée aux smartphone
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
-if ($_POST['pngBase64']) {
+$type = isset($_POST['pngBase64']) ? "png" : isset($_POST['jpgBase64']) ? "jpeg" : false;
+if ($type !== false) {
 
     // Vérification répertoire de travail
     msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
 
-    //Récupérer l'image et sauver
     $jpegFile=$p['config']['workingDirectory'].$p['user']['id'].'/dicomCreateJPG.jpg';
-    $image = imagecreatefrompng($_POST['pngBase64']);
-    imagejpeg($image, $jpegFile, 100);
-    imagedestroy($image);
-
+    //Récupérer l'image et sauver
+    if ($type == "png") {
+      $image = imagecreatefrompng($_POST['pngBase64']);
+      imagejpeg($image, $jpegFile, 100);
+      imagedestroy($image);
+    } else {
+      $image = fopen($jpegFile, 'wb'); 
+      fwrite($image, base64_decode(substr($_POST['jpgBase64'], strpos($_POST['jpgBase64'], ",")+1)));
+      fflush($image);
+      fclose($image);
+    }
     // récupérer data prat & patient
     $p['page']=json_decode(file_get_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json'), true);
 
