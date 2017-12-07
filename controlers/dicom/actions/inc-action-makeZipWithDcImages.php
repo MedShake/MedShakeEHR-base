@@ -63,7 +63,9 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
     //stockage
     $stockage = new msStockage();
     $stockage->setObjetID($supportID);
-    $file= $stockage->getPathToDoc();
+    $file = $stockage->getPathToDoc();
+    $directory = $p['config']['stockageLocation'].$stockage->getFolder($supportID);
+    msTools::checkAndBuildTargetDir($directory) ;
 
     //nouveau zip
     $zip = new ZipArchive();
