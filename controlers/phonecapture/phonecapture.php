@@ -29,8 +29,6 @@
  $debug='';
  $template="phonecapture";
 
- $p['user']['id']=1;
-
  //récupération info prat et patient
 
  $jsonFile=$p['config']['workingDirectory'].$p['user']['id'].'/workList.json';
