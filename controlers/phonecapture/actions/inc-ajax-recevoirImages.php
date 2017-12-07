@@ -29,6 +29,9 @@
 
 if ($_POST['pngBase64']) {
 
+    // Vérification répertoire de travail
+    msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
+
     //Récupérer l'image et sauver
     $jpegFile=$p['config']['workingDirectory'].$p['user']['id'].'/dicomCreateJPG.jpg';
     $image = imagecreatefrompng($_POST['pngBase64']);
