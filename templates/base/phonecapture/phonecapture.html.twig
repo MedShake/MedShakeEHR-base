@@ -91,8 +91,9 @@
    <div id="landscape" class="container">
    <div class="row" style="margin-bottom : 5px;">
      <div class="col-xs-12">
+       <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-refresh"></i></button>
      Praticien : {{ page.data.prat.2 }} {{ page.data.prat.3 }} /
-     Patient : {{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})
+     Patient : <strong>{{ page.data.patient.2 }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
      </div>
    </div>
    <div class="row">
