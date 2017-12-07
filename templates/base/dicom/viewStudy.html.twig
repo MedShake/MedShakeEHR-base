@@ -107,13 +107,13 @@
             <div class="panel-heading">Images de l'étude</div>
             <div class="panel-body imagesList">
               <button type="button" data-status="unchecked" class="btn btn-default btn-sm selectAll">Tout sélectionner / déselectionner</button>
-                <form action="/dicom/actions/makePdfWithDcImages/" method="post">
+                <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
                     <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
                     <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
                     {% for instance, frames in page.imagesPath %}
                       {% for frame,imagepath in frames %}
                         <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %}style="display: none;"{% endif %}>
-                            <a href="{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ imagepath }}" alt=""/></a>
+                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
                             <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off">
                             {% if frame == 0 and frames|length > 1 %}
 
