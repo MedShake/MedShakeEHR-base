@@ -31,6 +31,15 @@
 $type = isset($_POST['pngBase64']) ? "png" : isset($_POST['jpgBase64']) ? "jpeg" : false;
 if ($type !== false) {
 
+    // récupérer data prat & patient
+    $p['page']=json_decode(file_get_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json'), true);
+
+    //Si dossier ouvert à changer on coupe tout
+    if($_POST['dicomPatientID'] != $p['page']['patient']['dicomPatientID']) {
+      echo json_encode(array('status'=>'badDicomPatientID'));
+      die();
+    }
+
     // Vérification répertoire de travail
     msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
 
@@ -41,13 +50,11 @@ if ($type !== false) {
       imagejpeg($image, $jpegFile, 100);
       imagedestroy($image);
     } else {
-      $image = fopen($jpegFile, 'wb'); 
+      $image = fopen($jpegFile, 'wb');
       fwrite($image, base64_decode(substr($_POST['jpgBase64'], strpos($_POST['jpgBase64'], ",")+1)));
       fflush($image);
       fclose($image);
     }
-    // récupérer data prat & patient
-    $p['page']=json_decode(file_get_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json'), true);
 
     // compléter les data
     $p['page']['StudyInstanceUID']='1.7.12.9.3.11.'.$p['page']['prat']['pratID'].'.'.$p['page']['patient']['dicomPatientID'].'.'.date('Ymd');

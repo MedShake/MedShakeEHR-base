@@ -148,9 +148,16 @@ $(document).ready(function() {
       url: urlBase + '/phonecapture/ajax/recevoirImages/',
       type: "post",
       data: {
-        jpgBase64: canvas.toDataURL('image/jpeg', 0.97)
+        jpgBase64: canvas.toDataURL('image/jpeg', 0.97),
+        dicomPatientID: dicomPatientID
       },
       dataType: "json",
+      success: function(data) {
+        if(data['status'] == 'badDicomPatientID') {
+          alert("L'image n'a pas été enregistrée car le dossier ouvert sur l'ordinateur à changé entre temps. L'interface va être mise à jour.");
+          location.reload();
+        }
+      },
       error: function() {
         alert('Un problème est survenu.');
         location.reload();

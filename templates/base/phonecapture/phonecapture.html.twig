@@ -79,7 +79,9 @@
      <script>
        var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
 
-       var patientIdentite = '{{page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})';
+       var patientIdentite = '{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})';
+
+       var dicomPatientID = '{{ page.data.patient.dicomPatientID }}';
 
      </script>
 
