@@ -31,8 +31,8 @@
 {% block title %}MedShakeEHR{% endblock %}
 
 {% block head %}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/kjua/dist/kjua.min.js"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/kjua/dist/kjua.min.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js"></script>
 
   <script>
     var urlDestination = '{{ page.urlDestination }}';
@@ -43,9 +43,34 @@
 {% block body %}
 
   <div class="container-fluid">
-    {{ page.urlDestination }}
-    <div id="QRcode"></div>
-  </div>
+    <h1>Utiliser PhoneCapture</h1>
+    <div class="row">
+      <div class="col-md-6">
 
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title gras">Activation de PhoneCapture sur un périphérique mobile</h3>
+          </div>
+          <div class="panel-body">
+            <p>PhoneCapture de MedShakeEHR permet de capturer des photos directement dans le dossier ouvert à l'écran avec un périphérique mobile doté d'un navigateur récent.</p>
+            <p>Les images enregistrées le sont au format DICOM, le standard de l'imagerie médicale. C'est pourquoi le serveur DICOM libre et open source <a href="https://www.orthanc-server.com/">Orthanc</a> doit être installé et configuré sur votre réseau.</p>
+            <p>Pour utiliser un nouveau smartphone ou pour reconnecter un smartphone, utilisez le QR code ci-contre et flashez le avec une application adéquate. L'URL qu'il contient vous conduira directement à l'interface de prise de vue. Notez que l'URL est valable 5 minutes uniquement. Au delà, il faudra recharger cette page pour obtenir une nouvelle URL et un nouveau QR code.</p>
+
+
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-6">
+
+        <div class="panel panel-default">
+          <div class="panel-body text-center">
+            <span id="QRcode"></span><br>
+            {{ page.urlDestination }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
