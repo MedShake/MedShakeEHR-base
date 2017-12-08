@@ -29,18 +29,26 @@
  $debug='';
  $template="phonecapture";
 
- //récupération info prat et patient
+//vérification des cookies
+if ($p['user']['id']==null) {
+    $p['page']['error'][]="Vous n'êtes pas identifié pour PhoneCapture ! Flasher le QR code accessible par votre menu utilisateur une fois identifié dans MedShakeEHR sur votre ordinateur";
+    $p['page']['errorReloadButton']=false;
+} else {
+    $p['page']['errorReloadButton']=true;
 
- $jsonFile=$p['config']['workingDirectory'].$p['user']['id'].'/workList.json';
+    //récupération info prat et patient
 
- if (is_file($jsonFile)) {
-     $p['page']['data']=json_decode(file_get_contents($jsonFile), true);
-     if (!is_array($p['page']['data'])) {
-         $p['page']['error']="Aucun dossier patient valide ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechagez la page !";
-     }
- } else {
-     $p['page']['error']="Aucun dossier patient ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechagez la page !";
- }
+    $jsonFile=$p['config']['workingDirectory'].$p['user']['id'].'/workList.json';
+
+    if (is_file($jsonFile)) {
+      $p['page']['data']=json_decode(file_get_contents($jsonFile), true);
+      if (!is_array($p['page']['data'])) {
+          $p['page']['error'][]="Aucun dossier patient valide ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechargez la page !";
+      }
+    } else {
+      $p['page']['error'][]="Aucun dossier patient ne semble ouvert pour le moment. Ouvrez un dossier sur votre ordinateur et rechargez la page !";
+    }
+}
 
 //template si erreur
 if (isset($p['page']['error'])) {

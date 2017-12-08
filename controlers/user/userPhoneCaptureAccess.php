@@ -21,25 +21,20 @@
  */
 
 /**
- * People : les actions avec reload de page
+ * Utilisateur : générer et afficher la page utilisateur pour loguer
+ * un smartphone sur phonecapture
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ $debug='';
+ $template='userPhoneCaptureAccess';
 
-//$debug='';
-$m=$match['params']['m'];
+ $urlCrypt = new Atrapalo\UrlCrypt\UrlCrypt();
 
-//compatibilité avec l'url /people/register/
-if(isset($match['params']['porp'])) $m='peopleRegister';
+ $toEncrypt=$p['user']['id'].'&&'.time();
+ $key=bin2hex($p['config']['fingerprint']);
 
-//modes acceptés et die() si non connu
-$acceptedModes=array(
-    'peopleRegister', // sauver un nouveau patient / pro
-);
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
+ $encrypted = $urlCrypt->encrypt($toEncrypt, $key);
 
-//inclusion
-include('inc-action-'.$m.'.php');
+ $p['page']['urlDestination']=$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/phonecapture/login/'.urlencode($encrypted).'/';

@@ -21,13 +21,12 @@
  */
 
 /**
- * Phonecapture : poser les cookies spécifiques pour ce périphérique
+ * Phonecpature : logout
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $userPass=md5(md5(sha1(md5($p['user']['pass'].$p['config']['phonecaptureFingerprint']))));
- setcookie("userIdPc", $p['user']['id'], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
- setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+setcookie("userIdPc", 'out', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+setcookie("userPassPc", 'o', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
 
- msTools::redirection('/phonecapture/');
+msTools::redirection('/phonecapture/');

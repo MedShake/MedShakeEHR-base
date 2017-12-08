@@ -75,9 +75,6 @@
  } else {
      $p['user']=null;
      $p['user']['id']=null;
-     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
-         msTools::redirRoute('userLogIn');
-     }
  }
 
  ///////// Controler else -> 404
