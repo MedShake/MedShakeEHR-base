@@ -84,6 +84,10 @@ $(document).ready(function() {
     var canvas = document.createElement("canvas");
     var context = canvas.getContext('2d');
     var video = $("video")[0];
+    var div = document.createElement("div");
+    div.appendChild(canvas);
+    $(div).addClass("miniature");
+    $(div).width(80 * video.videoWidth / video.videoHeight);
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
@@ -93,8 +97,9 @@ $(document).ready(function() {
     context.font = "18px Arial";
     context.fillText(patientIdentite + " - " + moment(Date.now()).format("YYYY-MM-DD HH:mm:SS"), 10, video.videoHeight - 5);
 
-    $("#miniatures").append(canvas);
-    envoiImage(canvas.toDataURL('image/jpeg', 0.97));
+    $(div).css("left", $("#miniatures").width());
+    $("#miniatures").append(div);
+    envoiImage(canvas);
     $("#miniatures").width("+=" + (80 * video.videoWidth / video.videoHeight + 5));
     $("video")[0].play();
     $("#declencher").show();
@@ -106,29 +111,36 @@ $(document).ready(function() {
     }
   });
 
-  function envoiImage(a_envoyer){
+  function avancement(canvas, valeur){
+    canvas.width=canvas.width;//efface le canvas
+    var context = canvas.getContext('2d');
+    context.fillStyle = valeur== 1 ? "rgba(0,255,0,0.2)" : "rgba(255,0,0,0.2)";
+    context.fillRect(0, 0, 100*valeur, 1);
+  }
+
+  function envoiImage(canvas){
+    var avance = document.createElement("canvas");
+    avance.width=100;
+    avance.height=1;
+    $(canvas).parent().append(avance);
+    $(avance).width($(canvas).width())
+    .css("position", "absolute")
+    .css("z-index", "100")
+    .css("left", 0)
+    .css("top", 0);
     $.ajax({
       xhr: function() {
         var xhr = new window.XMLHttpRequest();
         xhr.upload.addEventListener("progress", function(evt) {
           if (evt.lengthComputable) {
             var percentComplete = evt.loaded / evt.total;
-            console.log(percentComplete);
-            $('#avancement').val(
-              percentComplete * 100
-            );
-            if (percentComplete === 1) {
-              $('#avancement').val(0);
-            }
+            avancement(avance, percentComplete);
           }
         }, false);
         xhr.addEventListener("progress", function(evt) {
           if (evt.lengthComputable) {
             var percentComplete = evt.loaded / evt.total;
-            console.log(percentComplete);
-            $('#avancement').val(
-              percentComplete * 100
-            );
+            avancement(avance, percentComplete);
           }
         }, false);
         return xhr;
@@ -136,17 +148,9 @@ $(document).ready(function() {
       url: urlBase + '/phonecapture/ajax/recevoirImages/',
       type: "post",
       data: {
-        jpgBase64: a_envoyer
+        jpgBase64: canvas.toDataURL('image/jpeg', 0.97)
       },
       dataType: "json",
-      beforeSend: function() {
-        $('#avancement').show();
-        $('#avancement').val(0);
-      },
-      success: function(data) {
-        $('#avancement').hide();
-        $('#avancement').val(0);
-      },
       error: function() {
         alert('Un problème est survenu.');
         location.reload();
