@@ -54,8 +54,10 @@
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/uploader/src/dmuploader.min.js"></script>
+        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/kjua/dist/kjua.min.js"></script>
         <script>
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+          var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
         </script>
 
         {% block head %}{% endblock %}
@@ -173,6 +175,9 @@
 
                             <li class="dropdown-header">Outils</li>
                             <li>
+                              <a href="" data-toggle="modal" data-target="#accesPhoneCapture">Accès PhoneCapture</a>
+                            </li>
+                            <li>
                                 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -240,6 +245,18 @@
         <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
             {% block body %}{% endblock %}
         </div>
+
+        {# modal accès phonecapture #}
+        <div class="modal fade" id="accesPhoneCapture" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body text-center">
+                <span id="QRcodeAccesPhoneCapture"></span><br>
+                {{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/
+              </div>
+             </div>
+           </div>
+         </div>
 
     </body>
 </html>
