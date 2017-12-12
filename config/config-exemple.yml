@@ -132,6 +132,8 @@ dicomDiscoverNewTags: 'true'
 ## PhoneCapture
 phonecaptureFingerprint: 'phonecapture'
 phonecaptureCookieDuration: 31104000
+phonecaptureResolutionWidth: 1920
+phonecaptureResolutionHeight: 1080
 
 #######################################
 ## agenda

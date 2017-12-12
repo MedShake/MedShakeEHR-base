@@ -83,6 +83,9 @@
 
        var dicomPatientID = '{{ page.data.patient.dicomPatientID }}';
 
+       var phonecaptureResolutionWidth = {% if config.phonecaptureResolutionWidth > 0 %}{{ config.phonecaptureResolutionWidth }}{% else %}1920{% endif %};
+       var phonecaptureResolutionHeight = {% if config.phonecaptureResolutionHeight > 0 %}{{ config.phonecaptureResolutionHeight }}{% else %}1080{% endif %};
+
      </script>
 
  </head>

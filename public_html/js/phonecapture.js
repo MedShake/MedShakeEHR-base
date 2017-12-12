@@ -171,8 +171,8 @@ $(document).ready(function() {
       var constraints = {
         audio: false,
         video: {
-          width: 1920,
-          height: 1080,
+          width: phonecaptureResolutionWidth,
+          height: phonecaptureResolutionWidth,
           frameRate: 10
         }
       };
