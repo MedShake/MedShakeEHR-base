@@ -147,6 +147,7 @@ configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configura
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
 # User
+userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
 userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhoneCaptureAccess']
 
 #public
