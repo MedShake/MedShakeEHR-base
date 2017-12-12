@@ -196,4 +196,64 @@ class msData
         }
     }
 
+/**
+ * Créer ou mettre à jour un data_type
+ * @param  array $d array clef=>value pour chaque colonne SQL
+ * @return array    array avec message erreur éventuel
+ */
+    public function createOrUpdateDataType($d)
+    {
+        global $p;
+        $gump=new GUMP();
+        $d = $gump->sanitize($d);
+
+        if (isset($d['id'])) {
+            $gump->validation_rules(array(
+              'id'=> 'required|numeric',
+              'name'=> 'required|alpha_numeric',
+              'label'=> 'required',
+              'cat' => 'required|numeric'
+          ));
+        } else {
+            $gump->validation_rules(array(
+              'name'=> 'required|alpha_numeric|presence_bdd,data_types',
+              'label'=> 'required',
+              'cat' => 'required|numeric'
+          ));
+        }
+
+        $validated_data = $gump->run($d);
+
+        if ($validated_data === false) {
+            $return['status']='failed';
+            $return['msg']=$gump->get_errors_array();
+        } else {
+            $validated_data['fromID']=$p['user']['id'];
+            $validated_data['creationDate']=date("Y-m-d H:i:s");
+
+            if ($typeID=msSQL::sqlInsert('data_types', $validated_data) > 0) {
+                $this->_typeID=$typeID;
+                $return['status']='ok';
+            } else {
+                $return['status']='failed';
+                $return['msg']=mysqli_error($mysqli);
+            }
+        }
+        return $return;
+    }
+
+/**
+ * Vérifier l'existence d'un data_type par son nom
+ * @param  string $name nom du data_type
+ * @return bool       true/false
+ */
+    public function checkDataTypeExistByName($name)
+    {
+        if ($typeID=msSQL::sqlUniqueChamp("select id from data_types where name='".msSQL::cleanVar($name)."' limit 1")) {
+            $this->_typeID=$typeID;
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
