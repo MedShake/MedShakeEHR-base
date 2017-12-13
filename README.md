@@ -19,3 +19,5 @@ Utiliser Composer (cf composer.json) pour l'installation des packages PHP néces
 
 L'ensemble du paramétrage de base (chemin, base de données, smtp ...) est à faire dans config/config.yml.
 Chaque paramètre peut être surchargé au niveau utilisateur dans l'interface de configuration.  
+
+La configuration complète du logiciel est documentée sur le site [www.logiciel-cabinet-medical.fr](http://www.logiciel-cabinet-medical.fr/) à la rubrique [Documentation technique](http://www.logiciel-cabinet-medical.fr/documentation-technique/).
