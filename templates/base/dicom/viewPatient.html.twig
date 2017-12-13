@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > dicom : voir tous les examens d'un patient   
+ # Template > dicom : voir tous les examens d'un patient
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @edited fr33z00 <https://github.com/fr33z00>
@@ -76,7 +76,7 @@
 
         <div class="row">
 
-            <div class="col-md-9">
+            <div class="col-md-10">
 
                 <div class="panel panel-default">
 
@@ -94,6 +94,7 @@
                                 <th></th>
                                 <th>Date</th>
                                 <th>Opérateur</th>
+                                <th>Description</th>
                                 <th>Acte correspondant</th>
                             </thead>
                             <tbody>
@@ -106,6 +107,7 @@
                                     </td>
                                     <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>
                                     <td>{{ v.MainDicomTags.ReferringPhysicianName }}</td>
+                                    <td>{{ v.MainDicomTags.StudyDescription }}</td>
                                     <td>{{ page['studiesDcDataRapro'][v.ID]['label'] }}
                                         {% if page['studiesDcDataRapro'][v.ID]['titre'] %}
                                             :

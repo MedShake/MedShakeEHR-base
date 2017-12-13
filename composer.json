@@ -5,6 +5,7 @@
         "mustangostang/spyc": "^0.6.1",
         "wixel/gump": "^1.4",
         "dompdf/dompdf": "^0.8.0",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "atrapalo/URLcrypt": "^1.0"
     }
 }

@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template >  page de capture dicom par smartphone
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @edited fr33z00 <https://github.com/fr33z00>
+ #}
+
+ <!DOCTYPE html>
+ <html>
+ <head{% if page.ogHead %} {{ page.ogHead }} {% endif %}>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <title>
+         PhoneCapture
+     </title>
+
+     {# css #}
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+
+     <style>
+     @media screen and (orientation:portrait) {
+       #landscape{
+         display: none;
+       }
+       #portrait{
+         display: auto;
+       }
+      }
+     @media screen and (orientation:landscape) {
+       #landscape{
+         display: auto;
+       }
+       #portrait{
+
+         display: none;
+       }
+      }
+
+      .nmt {
+        margin-top :0 !important;
+      }
+
+      #miniatures {position:relative;width:0;height:80px}
+      .miniature {position:absolute;height:80px;margin-left:5px}
+      .miniature canvas {height:80px;}
+     </style>
+
+
+     {# js #}
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/moment/min/moment.min.js"></script>
+     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js"></script>
+
+     <script>
+       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+
+       var patientIdentite = '{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})';
+
+       var dicomPatientID = '{{ page.data.patient.dicomPatientID }}';
+
+       var phonecaptureResolutionWidth = {% if config.phonecaptureResolutionWidth > 0 %}{{ config.phonecaptureResolutionWidth }}{% else %}1920{% endif %};
+       var phonecaptureResolutionHeight = {% if config.phonecaptureResolutionHeight > 0 %}{{ config.phonecaptureResolutionHeight }}{% else %}1080{% endif %};
+
+     </script>
+
+ </head>
+ <body>
+   <div id="portrait" class="container" style="padding-top: 40px;">
+     <div class="jumbotron" role="alert"><p>Placez votre téléphone en mode paysage !</p></div>
+   </div>
+
+   <div id="landscape" class="container">
+   <div class="row" style="margin-bottom : 5px;">
+     <div class="col-xs-12">
+       <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-refresh"></i></button>
+     Praticien : {{ page.data.prat.2 }} {{ page.data.prat.3 }} /
+     Patient : <strong>{{ page.data.patient.2 }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+     </div>
+   </div>
+   <div class="row">
+     <div id="videocontainer" class="col-xs-9">
+      <video style="width:100%"></video>
+      <canvas id="prevue" style="display:none"><canvas>
+    </div>
+    <div class="col-xs-3">
+      <button id="declencher" class="btn btn-success btn-lg btn-block nmt"><i class="glyphicon glyphicon-camera"></i></button>
+      <button id="rafraichir" class="btn btn-success btn-lg btn-block nmt"><i class="glyphicon glyphicon-play-circle"></i></button>
+      <button id="refaire" class="btn btn-success btn-lg btn-block nmt"><i class="glyphicon glyphicon-repeat"></i></button>
+      <br>
+      <button id="envoyer" class="btn btn-danger btn-lg btn-block nmt"><i class="glyphicon glyphicon-send"></i></button>
+    </div>
+  </div>
+   <div class="row" style="overflow-x:scroll;width:100%; height:85px">
+     <div id="miniatures"></div>
+   </div>
+   <div class="row" style="text-align: center;padding-bottom : 4px;">
+     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/logout/" id="logout" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-off"></i> Déconnexion</a>
+   </div>
+ </div>
+
+ </body>
+ </html>

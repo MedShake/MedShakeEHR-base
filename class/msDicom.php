@@ -299,6 +299,23 @@ public function getDcInstanceID()
     }
 
 /**
+ * Obtenir le nombre d'instances dans une série
+ * @return int nombre d'instances
+ */
+    public function getNumberInstancesInSeries() {
+
+      if (!isset($this->_dcSerieID)) {
+          throw new Exception('SerieID is not set');
+      }
+
+      global $p;
+      $url=$this->_baseCurlUrl.'/series/'.$this->_dcSerieID;
+      $data =  $this->_dcGetContent($url);
+      if(is_array($data['Instances'])) return count($data['Instances']);
+      return '0';
+    }
+
+/**
  * Construire l'ID patient Orthanc
  * @return void
  */
@@ -306,10 +323,19 @@ public function getDcInstanceID()
     {
         global $p;
         $s=$p['config']['dicomPrefixIdPatient'].$this->_toID;
-        $s=sha1($s);
-        $s=chunk_split($s, 8, '-');
-        $s=rtrim($s, '-');
-        $this->_dcPatientID=$s;
+        $this->_dcPatientID = $this->constructIdOrthanc($s);
+    }
+
+/**
+ * Construire le sha1 délimité spécifique à Orthanc
+ * @param  string $s chaine à passer en sha1
+ * @return string    ID Orthanc
+ */
+    public function constructIdOrthanc($s) {
+      $s=sha1($s);
+      $s=chunk_split($s, 8, '-');
+      $s=rtrim($s, '-');
+      return $s;
     }
 
 /**

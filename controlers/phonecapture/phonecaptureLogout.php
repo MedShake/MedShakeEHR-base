@@ -21,12 +21,12 @@
  */
 
 /**
- * Config > ajax : créer une données dans le modèle de données
+ * Phonecpature : logout
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //check & validate datas
- $dataType = new msData();
- $retour = $dataType->createOrUpdateDataType($_POST);
- echo json_encode($retour);
+setcookie("userIdPc", 'out', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+setcookie("userPassPc", 'o', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+
+msTools::redirection('/phonecapture/');

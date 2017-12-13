@@ -21,12 +21,22 @@
  */
 
 /**
- * Config > ajax : créer une données dans le modèle de données
+ * User : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //check & validate datas
- $dataType = new msData();
- $retour = $dataType->createOrUpdateDataType($_POST);
- echo json_encode($retour);
+
+//$debug='';
+$m=$match['params']['m'];
+
+//modes acceptés et die() si non connu
+$acceptedModes=array(
+    'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
+);
+if (!in_array($m, $acceptedModes)) {
+    die;
+}
+
+//inclusion
+include('inc-action-'.$m.'.php');

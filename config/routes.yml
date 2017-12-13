@@ -146,6 +146,10 @@ configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList
 configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configuration/configUpdatePassword']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
+# User
+userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
+userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhoneCaptureAccess']
+
 #public
 publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
 publicSigner: ['GET', '/public/signer/', 'public/signer']
@@ -154,3 +158,9 @@ publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 #routes pour le module
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
 moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
+
+#routes phonecapture
+phonecaptureAjax: ['POST|GET', '/phonecapture/ajax/[a:m]/', 'phonecapture/actions/phonecaptureAjax']
+phonecaptureQrCodeLogin: ['GET', '/phonecapture/login/[a:key]/', 'phonecapture/phonecaptureQrCodeLogin']
+phonecaptureLogout: ['GET', '/phonecapture/logout/', 'phonecapture/phonecaptureLogout']
+phonecapture: ['GET', '/phonecapture/', 'phonecapture/phonecapture']

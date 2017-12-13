@@ -27,6 +27,7 @@
     "jSignature": "^2.1.1",
     "fullcalendar": "^3.4.0",
     "jQuery-contextMenu": "^2.5.0",
-    "codemirror": "^5.31.0"
+    "codemirror": "^5.31.0",
+    "kjua": "https://github.com/lrsjng/kjua.git#^0.1.2"
   }
 }

@@ -71,6 +71,15 @@ $(document).ready(function() {
 
 function checkUncheck(el) {
 
+  numberOfChecked = $('.imagesList input:checkbox:checked').length;
+  if(numberOfChecked>0) {
+    $('#makePdfWithDcImages').removeAttr('disabled');
+    $('#makeZipWithDcImages').removeAttr('disabled');
+  } else {
+    $('#makePdfWithDcImages').attr('disabled','disabled');
+    $('#makeZipWithDcImages').attr('disabled','disabled');
+  }
+
   imgfor = '#' + el.attr('data-imgfor');
 
   if (el.is(':checked')) {

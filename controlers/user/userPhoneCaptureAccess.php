@@ -21,12 +21,20 @@
  */
 
 /**
- * Config > ajax : créer une données dans le modèle de données
+ * Utilisateur : générer et afficher la page utilisateur pour loguer
+ * un smartphone sur phonecapture
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //check & validate datas
- $dataType = new msData();
- $retour = $dataType->createOrUpdateDataType($_POST);
- echo json_encode($retour);
+ $debug='';
+ $template='userPhoneCaptureAccess';
+
+ $urlCrypt = new Atrapalo\UrlCrypt\UrlCrypt();
+
+ $toEncrypt=$p['user']['id'].'&&'.time();
+ $key=bin2hex($p['config']['fingerprint']);
+
+ $encrypted = $urlCrypt->encrypt($toEncrypt, $key);
+
+ $p['page']['urlDestination']=$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/phonecapture/login/'.urlencode($encrypted).'/';

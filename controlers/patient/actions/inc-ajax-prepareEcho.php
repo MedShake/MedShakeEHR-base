@@ -31,6 +31,7 @@ $template="dicomWL";
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
 $p['page']['prat']=$prat->getSimpleAdminDatas();
+$p['page']['prat']['pratID']=$p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
@@ -56,6 +57,14 @@ $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
 $fichierDicomTXT = $twigPDF->render($template.'.html.twig', $p);
 $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 
+// Vérification répertoire de travail
+msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
+
+//data patient pour phonecapture
+$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient']));
+file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
+
+//wl dicom
 file_put_contents($p['config']['workingDirectory'].'workList.txt', $fichierDicomTXT);
 exec("dump2dcm ".$p['config']['workingDirectory']."workList.txt ".$p['config']['dicomWorkListDirectory']."workList.wl");
 unlink($p['config']['workingDirectory'].'workList.txt');

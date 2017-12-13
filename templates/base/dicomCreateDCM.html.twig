@@ -1,0 +1,68 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If( not, see) <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dicom : creation d'un fichier DCM
+ # base sur laquelle on viendra greffer un JPG
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+# Dicom-File-Format
+
+# Dicom-Meta-Information-Header
+# Used TransferSyntax: Little Endian Explicit
+(0002,0000) UL 202                                                              #   4, 1 FileMetaInformationGroupLength
+(0002,0001) OB 00\01                                                            #   2, 1 FileMetaInformationVersion
+(0002,0002) UI [1.2.276.0.7230010.3.0.0.9]                                      #  26, 1 MediaStorageSOPClassUID
+(0002,0003) UI [1.2.276.0.7230010.3.0.0.9.11154.1448031138.805061]              #  58, 1 MediaStorageSOPInstanceUID
+(0002,0010) UI =LittleEndianExplicit                                            #  20, 1 TransferSyntaxUID
+(0002,0012) UI [1.2.276.0.7230010.3.0.0.9.9]                                    #  28, 1 ImplementationClassUID
+(0002,0013) SH [MEDSHAKEEHR]                                                    #  16, 1 ImplementationVersionName
+
+# Dicom-Data-Set
+# Used TransferSyntax: Little Endian Explicit
+(0008,0005) CS [ISO_IR 100]
+(0008,0008) CS [ORIGINAL]                                                  #ImageType
+(0008,0012) DA [{{ "now"|date("Ymd") }}]      #InstanceCreationDate
+(0008,0013) TM [{{ "now"|date("His") }}]      #InstanceCreationTime
+(0008,0016) UI [1.2.840.10008.5.1.4.1.1.77.1.4] #SOPClassUID
+(0008,0018) UI [1.2.276.0.7230010.3.0.0.9.11154.1448031138.{{ "now"|date("Ymd") }}.{{ "now"|date("His") }}] #SOPInstanceUID
+(0008,1030) LO [Capture photos]                #StudyDescription
+(0008,103e) LO [Capture photos]                #SeriesDescription
+(0008,0020) DA [{{ "now"|date("Ymd") }}]    #StudyDate
+(0008,0022) DA [{{ "now"|date("Ymd") }}]    #AcquisitionDate
+(0008,0030) TM [{{ "now"|date("His") }}]    #StudyTime
+(0008,0032) TM [{{ "now"|date("His") }}]    #AcquisitionTime
+(0008,0050) SH [MS.{{ "now"|date("YmdH") }}]#AccessionNumber
+(0008,0060) CS [XC]                         #Modality
+(0008,0070) LO [MEDSHAKEEHR]                #Manufacturer
+(0008,0090) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]     #ReferringPhysiciansName
+(0008,1010) SH [MEDSHAKEEHR PhoneCapture]               #StationName
+(0008,1070) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]    #OperatorsName
+(0010,0010) PN [{{ page.patient.2 }}^{{ page.patient.3 }}]  #PatientsName
+(0010,0020) LO [{{ page.patient.dicomPatientID }}] #PatientID
+(0010,0030) DA [{{ page.patient.dicomBirthdate }}] #PatientsBirthDate
+(0010,0040) CS [{{ page.patient.14 }}] #PatientsSex
+(0020,000d) UI [{{ page.StudyInstanceUID }}] #StudyInstanceUID
+(0020,000e) UI [{{ page.SeriesInstanceUID }}] #SeriesInstanceUID
+(0020,0010) SH #StudyID
+(0020,0011) IS [1] #SeriesNumber
+(0020,0013) IS [{{ page.instanceNumber }}] #InstanceNumber

@@ -65,15 +65,49 @@ class msUser
 
         $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
-        $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='3' and toID='".$user['id']."' and outdated='' limit 1");
-        $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='2' and toID='".$user['id']."' and outdated='' limit 1");
-
         if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
+            $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='3' and toID='".$user['id']."' and outdated='' limit 1");
+            $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='2' and toID='".$user['id']."' and outdated='' limit 1");
             return $user;
         } else {
             return msUser::cleanBadAuth();
         }
     }
+
+/**
+ * Indentification de l'utilisateur pour les pages phonecapture
+ * @return bool|array Si succès renvoie array avec données utilisateur
+ */
+    public static function userIdentificationPhonecapture()
+    {
+        global $p;
+        if (!is_numeric($_COOKIE['userIdPc'])) {
+            return msUser::cleanBadAuth();
+        }
+        if (!isset($_COOKIE['userPassPc'])) {
+            return msUser::cleanBadAuth();
+        }
+
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".msSQL::cleanVar($_COOKIE['userIdPc'])."' LIMIT 1");
+
+        //recherche clef de salage spécifique au user
+        $name2typeID = new msData();
+        if ($phonecaptureFingerprintID = $name2typeID->getTypeIDFromName('phonecaptureFingerprint')) {
+            $clef=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$phonecaptureFingerprintID."' and toID='".msSQL::cleanVar($_COOKIE['userIdPc'])."' and outdated='' and deleted='' limit 1");
+            if (!empty(trim($clef))) {
+                $p['config']['phonecaptureFingerprint']=$clef;
+            }
+        }
+
+        if ($_COOKIE['userPassPc']==md5(md5(sha1(md5($user['pass'].$p['config']['phonecaptureFingerprint']))))) {
+            return $user;
+        } else {
+            setcookie("userIdPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+            setcookie("userPassPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+            unset($_SESSION);
+        }
+    }
+
 
 /**
  * Nettoyage si mauvaise identification
@@ -146,6 +180,8 @@ class msUser
         global $p;
         setcookie("userId", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("userIdPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("userPassPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         unset($_SESSION);
     }
 
@@ -153,9 +189,14 @@ class msUser
  * Vérifier si un utilisater est admin
  * @return bool true or false
  */
-  public static function checkUserIsAdmin() {
-    global $p;
-    if($p['user']['rank']=='admin') return true; else return false;
+  public static function checkUserIsAdmin()
+  {
+      global $p;
+      if ($p['user']['rank']=='admin') {
+          return true;
+      } else {
+          return false;
+      }
   }
 
 /**
