@@ -10,15 +10,12 @@ Son utilisation doit être exclusivement limitée à un réseau privé sans util
 Il est livré ici sans aucune garantie, conformément à la licence GPL v3.
 
 ## Utilisation
-MedShakeEHR-base constitue le coeur commun du logiciel. Il doit être accompagné de l'un ou l'autre de ses modules pour fonctionner.
-En particulier, il ne présente aucun template nécessaire à l'affichage.
+MedShakeEHR-base constitue le coeur commun du logiciel. Il doit être accompagné de l'un ou l'autre de ses modules pour fonctionner de façon optimale.
 
 ## Installation
-MedShakeEHR fonctionne sur un serveur LAMP. Il a été testé sous Apache 2, PHP 7, Mysql 5.
+MedShakeEHR fonctionne sur un serveur xAMP. Il a été testé sous Apache 2, PHP 7, Mysql 5.
 
 Utiliser Composer (cf composer.json) pour l'installation des packages PHP nécessaires back-end et Bower (cf public_html/bower.json) pour les scripts front-end.  
-
-Un dump MySQL est founi : il comporte uniquement les structures des tables. Utilisez le dump fourni avec le module que vous adopterez pour le contenu de départ.
 
 L'ensemble du paramétrage de base (chemin, base de données, smtp ...) est à faire dans config/config.yml.
 Chaque paramètre peut être surchargé au niveau utilisateur dans l'interface de configuration.  

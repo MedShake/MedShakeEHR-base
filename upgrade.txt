@@ -1,6 +1,22 @@
 Instructions pour l'upgrade
 
 ==============================
+2.2.x --> 2.3.0
+==============================
+
+Préambule : faire une sauvegarde complète de l'installation : dossiers et base de données.
+
+1) Considérer les nouveaux de paramètres de configuration en se reportant si besoin à la documentation sur http://www.logiciel-cabinet-medical.fr/ :
+- phonecaptureFingerprint
+- phonecaptureCookieDuration
+- phonecaptureResolutionWidth
+- phonecaptureResolutionHeight
+
+2) Copier / remplacer l’ensemble des fichiers de votre version actuelle par la nouvelle version. Débuter par la base de MedShakeEHR, terminer par le module spécifique même si une nouvelle version n'est pas disponible (certains fichiers du module remplaceront des fichiers de la base)
+
+3) Mettre à jour les packages tiers avec Composer et Bower
+
+==============================
 2.x.x --> 2.2.0
 ==============================
 
