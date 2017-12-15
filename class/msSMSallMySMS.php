@@ -278,6 +278,7 @@ public function ajoutDestinataire($tel, $params=[]) {
       } else {
         $result['status']='0';
         $result['statusText']="Pas de destinataires pour cette campagne - API AllMySMS non sollicitée";
+        $result=json_encode($result);
       }
 
       $this->_campaign_answer=$result;
@@ -338,12 +339,16 @@ public function logCreditsRestants() {
       $data=json_decode(file_get_contents($logFile), true);
 
       unset($data['acks']);
-      $acks=$this->getAcksRecep($data['campaignId']);
-      if(is_array($acks)) $data['acks']=$acks;
+      if(isset($data['campaignId'])) {
+        $acks=$this->getAcksRecep($data['campaignId']);
+        if(is_array($acks)) $data['acks']=$acks;
 
-      $datajson=json_encode($data);
-      file_put_contents($logFile, $datajson);
-      if(is_array($acks)) return $acks; else return null;
+        $datajson=json_encode($data);
+        file_put_contents($logFile, $datajson);
+        if(is_array($acks)) return $acks; else return null;
+      } else {
+        return null;
+      }
     }
   }
 
@@ -409,14 +414,18 @@ public function getSendedCampaignData($date) {
       }
 
       //boucle sur liste patients
-      foreach($data['patientsList'] as $v){
-        $dataw[$v['heure']]=$v;
+      if(isset($data['patientsList'])) {
+        foreach($data['patientsList'] as $v){
+          $dataw[$v['heure']]=$v;
+        }
       }
 
       //boucle sur liste des envois
-      foreach($data['campaign_data']['DATA']['SMS'] as $v){
-        $v['telDisplay'] = preg_replace('/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/', '\1 \2 \3 \4 \5', $v['MOBILEPHONE']);
-        $dataw[$v['PARAM_2']]=array_merge($dataw[$v['PARAM_2']], $v);
+      if(isset($data['campaign_data']['DATA']['SMS'])) {
+        foreach($data['campaign_data']['DATA']['SMS'] as $v){
+          $v['telDisplay'] = preg_replace('/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/', '\1 \2 \3 \4 \5', $v['MOBILEPHONE']);
+          $dataw[$v['PARAM_2']]=array_merge($dataw[$v['PARAM_2']], $v);
+        }
       }
 
       //accusés récept
