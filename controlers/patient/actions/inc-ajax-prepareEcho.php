@@ -38,7 +38,7 @@ $patient->setToID($_POST['patientID']);
 $p['page']['patient']=$patient->getSimpleAdminDatas();
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
-$p['page']['patient']['dicomBirthdate']=msTools::readableDate2Reverse($p['page']['patient'][8]);
+if(isset($p['page']['patient'][8])) $p['page']['patient']['dicomBirthdate']=msTools::readableDate2Reverse($p['page']['patient'][8]);
 
 //inclusion si présence dans module installé du fichier sépcifique
 if (is_file($p['config']['homeDirectory'].'controlers/module/patient/actions/inc-ajax-prepareEcho.php')) {
