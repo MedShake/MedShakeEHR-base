@@ -1,7 +1,7 @@
 Instructions pour l'upgrade
 
 ==============================
-2.2.x --> 2.3.0
+2.2.x --> 2.3.x
 ==============================
 
 Préambule : faire une sauvegarde complète de l'installation : dossiers et base de données.
