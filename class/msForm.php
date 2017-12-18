@@ -248,10 +248,10 @@ class msForm
  */
     public function savePostValues2Session()
     {
-        if (!is_numeric($this->_formID)) {
-            throw new Exception('formID is not numeric');
+        if (!isset($this->_formIN)) {
+            throw new Exception('formIN is not defined');
         }
-        $_SESSION['form'][$this->_formID]['formValues']=$this->_postdatas;
+        $_SESSION['form'][$this->_formIN]['formValues']=$this->_postdatas;
     }
 
 /**
