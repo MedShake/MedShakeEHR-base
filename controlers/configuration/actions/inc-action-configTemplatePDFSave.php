@@ -34,7 +34,7 @@
  $p['page']['templatesDirUsers']=$specificUsers->getUsersWithSpecificParam('templatesPdfFolder');
 
  // si user
- if (isset($_POST['userID'])) {
+ if (is_numeric($_POST['userID'])) {
      msUser::applySpecificConfig($p['page']['configDefaut'], $_POST['userID']);
      $p['page']['repertoireTemplatesPDF']=$p['page']['templatesDirUsers'][$_POST['userID']]['paramValue'];
      $gotoSaveOnly='/configuration/templates-pdf/edit/'.$_POST['fichier'].'/'.$_POST['userID'].'/';
