@@ -29,8 +29,12 @@
 
 
 if(is_file($_POST['logFile'])) {
-  $logs=new msSMS();
-  $logs->addAcksToLogs($_POST['logFile']);
+
+  $msSMS='msSMS'.$p['config']['smsProvider'];
+  if (class_exists($msSMS)) {
+      $campaign = new $msSMS();
+      $campaign->addAcksToLogs($_POST['logFile']);
+  }
 }
 
 msTools::redirection('/logs/historiqueRappelsSMS/'.$_POST['date'].'/');

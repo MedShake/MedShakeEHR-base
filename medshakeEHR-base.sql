@@ -325,9 +325,9 @@ CREATE TABLE `form_basic_types` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-(1, 'userid', 'identifiant', 'Identifiant', 'identifiant numérique d\'utilisateur', 'required|numeric', 'L\'identifiant utilisateur n\'est pas correct', 'text', '', 'base', 0, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00'),
-(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00'),
-(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00'),
+(1, 'userid', 'identifiant', 'Identifiant', 'identifiant numérique d\'utilisateur', 'required|numeric', 'L\'identifiant utilisateur n\'est pas correct', 'text', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
+(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
+(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
 (4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
 
 CREATE TABLE `hprim` (

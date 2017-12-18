@@ -61,15 +61,14 @@
 		{% endif %}
 
 		{# input #}
-    <input type="{{ v.input.type }}"
-		title="{{ v.input.name }}"
+    <input type="{{ v.input.type }}" title="{{ v.input.name }}{% if v.input.internalName %} / {{ v.input.internalName }}{% endif %}"
 		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
 		{% if v.input.name %} name="{{ v.input.name }}" {% endif %}
     {% if v.input.value != 'noPreValue' %} value="{{ v.input.value|e('html_attr') }}"
 		{% elseif v.input.value == 'noPreValue' and  v.input.defaut != '' %} value="{{ v.input.defaut|e('html_attr') }}"
 		{% endif %}
     {% if v.input.placeholder %} placeholder="{{ v.input.placeholder|e('html_attr') }}" {% endif %}
-		{% if v.input.class %} class="{{ v.input.class }}{% if v.input.error %} inputErreur"{% endif %}" {% endif %}
+		{% if v.input.class %} class="{{ v.input.class }}{% if v.input.error %} inputErreur{% endif %}" {% endif %}
     {% if v.input.min or v.input.min == '0' %} min="{{ v.input.min }}" {% endif %}
     {% if v.input.max or v.input.max == '0' %} max="{{ v.input.max }}" {% endif %}
     {% if v.input.step or v.input.step == '0' %} step="{{ v.input.step }}" {% endif %}
@@ -80,6 +79,7 @@
 		{% if v.input.readonly %} readonly="{{ v.input.readonly }}" {% endif %}
     {% if v.input.required == 'required' %} required="required" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
+		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
     {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
 		{{ v.input.add }} />
 
@@ -131,13 +131,14 @@
 		{% endif %}
 	{% endif %}
 
-	<select title="{{ v.select.name }}"
-	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur"{% endif %}" {% endif %}
+	<select title="{{ v.select.name }}{% if v.select.internalName %} / {{ v.select.internalName }}{% endif %}"
+	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
 	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
 	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
 	{{ v.select.add }}>
 	{% if v.select.valueDefaut is iterable %}
 		{% for key,value in v.select.valueDefaut %}
@@ -187,13 +188,14 @@
 		{% endif %}
 	{% endif %}
 
-	<select title="{{ v.select.name }}"
-	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur"{% endif %}" {% endif %}
+	<select title="{{ v.select.name }}{% if v.select.internalName %} / {{ v.select.internalName }}{% endif %}"
+	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
 	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
 	{{ v.select.add }}>
 	{% for key,options in v.select.values %}
 	 	<optgroup label="{{ key|e('html_attr') }}">
@@ -239,7 +241,7 @@
 		{% endif %}
 	{% endif %}
 
-	<textarea title="{{ v.textarea.name }}"
+	<textarea title="{{ v.textarea.name }}{% if v.textarea.internalName %} / {{ v.textarea.internalName }}{% endif %}"
 	{% if v.textarea.id %} id="{{ v.textarea.id }}" {% endif %}
 	{% if v.textarea.name %} name="{{ v.textarea.name }}" {% endif %}
   {% if v.textarea.placeholder %} placeholder="{{ v.textarea.placeholder|e('html_attr') }}" {% endif %}
@@ -247,8 +249,9 @@
 	{% if v.textarea.autocomplete %} autocomplete="{{ v.textarea.autocomplete }}" {% endif %}
 	{% if v.textarea.disabled %} disabled="{{ v.textarea.disabled }}" {% endif %}
 	{% if v.textarea.readonly %} readonly="{{ v.textarea.readonly }}" {% endif %}
-	{% if v.textarea.class %} class="{{ v.textarea.class }}{% if v.textareaerror %} textareaErreur"{% endif %}" {% endif %}
+	{% if v.textarea.class %} class="{{ v.textarea.class }}{% if v.textareaerror %} textareaErreur{% endif %}" {% endif %}
 	{% if v.textarea.rows %} rows="{{ v.textarea.rows }}" {% endif %}
+	{% if v.textarea.internalName %} data-internalName="{{ v.textarea.internalName }}" {% endif %}
 	{{ v.textarea.add }}
 
 	>{% if v.textarea.value != 'noPreValue' %}{{ v.textarea.value|e }}{% elseif v.textarea.value == 'noPreValue' and  v.textarea.defaut != '' %}{{ v.textarea.defaut|e }}{% endif %}</textarea>
@@ -355,7 +358,8 @@
 										'max' : el.value.max,
 										'step' : el.value.step,
 										'plus' : el.value.plus,
-										'plusg' : el.value.plusg
+										'plusg' : el.value.plusg,
+										'internalName' : el.value.internalName,
 									},
 									'label' : {
 										'position' : 'before',
@@ -386,7 +390,8 @@
 										'max' : el.value.max,
 										'step' : el.value.step,
 										'before' : '<div class="input-group">',
-										'after' : '<span class="input-group-btn" id="' ~ el.value.name ~ 'IDAddOn"><button id="' ~ el.value.name ~ 'Button" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>'
+										'after' : '<span class="input-group-btn" id="' ~ el.value.name ~ 'IDAddOn"><button id="' ~ el.value.name ~ 'Button" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>',
+										'internalName' : el.value.internalName
 									},
 									'label' : {
 										'position' : 'before',
@@ -411,7 +416,8 @@
 										'autocomplete' : 'off',
 										'placeholder' : el.value.placeholder,
 										'readonly' : el.value.readonly,
-										'rows' : el.value.rows
+										'rows' : el.value.rows,
+										'internalName' : el.value.internalName
 									},
 									'label' : {
 										'position' : 'before',
@@ -433,7 +439,8 @@
 										'readonly' : el.value.readonly,
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
-										'autocomplete' : 'off'
+										'autocomplete' : 'off',
+										'internalName' : el.value.internalName
 									},
 									'label' : {
 										'position' : 'before',
@@ -460,7 +467,8 @@
 										'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>',
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
-										'plusg' : el.value.plusg
+										'plusg' : el.value.plusg,
+										'internalName' : el.value.internalName
 									},
 									'label' : {
 										'position' : 'before',

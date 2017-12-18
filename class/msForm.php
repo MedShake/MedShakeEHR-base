@@ -542,6 +542,7 @@ class msForm
                 } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
                     if ($this->_typeForNameInForm=='byName') {
                     } else {
+                        $type['internalName']=$type['name'];
                         $type['name']='p_'.$type['id'];
                     }
 

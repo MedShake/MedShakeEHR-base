@@ -54,7 +54,7 @@
         {% endif %}
     </small>
 </h1>
-<p>
+<div style="margin-bottom : 8px;">
     {# email #}
     {% if page['patient']['administrativeDatas']['4']['value'] %}
       <div class="btn-group">
@@ -95,7 +95,7 @@
       <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">{% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}</a>
     {% endfor %}
     {% endif %}
-</p>
+</div>
 
 <div id="notesPatient" class="well" style="display: none;">
   {{ page['patient']['administrativeDatas']['21']['value']|e|nl2br }}

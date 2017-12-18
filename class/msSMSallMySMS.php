@@ -191,17 +191,20 @@ public function set_date($_date)
  * @return void
  */
 public function ajoutDestinataire($tel, $params=[]) {
-  $destinataire['MOBILEPHONE']=$tel;
-  if(count($params)>0) {
+  $tel=trim(str_ireplace(array(' ', '/', '.'), '', $tel));
+  if(strlen($tel) == 10) {
+    $destinataire['MOBILEPHONE']=$tel;
+    if(count($params)>0) {
 
-    if(!isset($this->_dynamic)) $this->_dynamic=count($params);
+      if(!isset($this->_dynamic)) $this->_dynamic=count($params);
 
-    foreach($params as $k=>$v) {
-      $destinataire[$k]=$v;
+      foreach($params as $k=>$v) {
+        $destinataire[$k]=$v;
+      }
+
     }
-
+    $this->_destinataires[]=$destinataire;
   }
-  $this->_destinataires[]=$destinataire;
 }
 
 /**
@@ -237,39 +240,46 @@ public function ajoutDestinataire($tel, $params=[]) {
   public function sendCampaign() {
       global $p;
 
-      $this->_generateCampaign();
+      if(count($this->_destinataires)>0) {
+        $this->_generateCampaign();
 
-      //$url = 'https://api.allmysms.com/http/9.0/simulateCampaign/';
-      $url = 'http://api.allmysms.com/http/9.0/sendSms/';
+        //$url = 'https://api.allmysms.com/http/9.0/simulateCampaign/';
+        $url = 'http://api.allmysms.com/http/9.0/sendSms/';
 
-      //set POST variables
-      $fields = array(
-          'login' => urlencode($p['config']['allMySmsLogin']),
-          'apiKey'   => urlencode($p['config']['allMySmsApiKey']),
-          'smsData'   => urlencode(json_encode($this->_campaign_data)),
-      );
+        //set POST variables
+        $fields = array(
+            'login' => urlencode($p['config']['allMySmsLogin']),
+            'apiKey'   => urlencode($p['config']['allMySmsApiKey']),
+            'smsData'   => urlencode(json_encode($this->_campaign_data)),
+        );
 
-      $fieldsString = "";
-      //url-ify the data for the POST
-      foreach ($fields as $key=>$value) {
-          $fieldsString .= $key.'='.$value.'&';
+        $fieldsString = "";
+        //url-ify the data for the POST
+        foreach ($fields as $key=>$value) {
+            $fieldsString .= $key.'='.$value.'&';
+        }
+        rtrim($fieldsString, '&');
+
+        //open connection
+        $ch = curl_init();
+
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        //execute post
+        $result = curl_exec($ch);
+
+        //close connection
+        curl_close($ch);
+
+      } else {
+        $result['status']='0';
+        $result['statusText']="Pas de destinataires pour cette campagne - API AllMySMS non sollicitée";
+        $result=json_encode($result);
       }
-      rtrim($fieldsString, '&');
-
-      //open connection
-      $ch = curl_init();
-
-      //set the url, number of POST vars, POST data
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_POST, count($fields));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-      //execute post
-      $result = curl_exec($ch);
-
-      //close connection
-      curl_close($ch);
 
       $this->_campaign_answer=$result;
 
@@ -314,8 +324,10 @@ public function logCreditsRestants() {
   global $p;
   if(!isset($this->_campaign_answer)) throw new Exception('Campaign_answer n\'est pas définie');
   $credits=json_decode($this->_campaign_answer, true);
-  $credits=$credits['credits']/15;
-  file_put_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile'], $credits);
+  if(isset($credits['credits'])) {
+    $credits=$credits['credits']/15;
+    file_put_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile'], $credits);
+  }
 }
 
 /**
@@ -327,12 +339,16 @@ public function logCreditsRestants() {
       $data=json_decode(file_get_contents($logFile), true);
 
       unset($data['acks']);
-      $acks=$this->getAcksRecep($data['campaignId']);
-      if(is_array($acks)) $data['acks']=$acks;
+      if(isset($data['campaignId'])) {
+        $acks=$this->getAcksRecep($data['campaignId']);
+        if(is_array($acks)) $data['acks']=$acks;
 
-      $datajson=json_encode($data);
-      file_put_contents($logFile, $datajson);
-      if(is_array($acks)) return $acks; else return null;
+        $datajson=json_encode($data);
+        file_put_contents($logFile, $datajson);
+        if(is_array($acks)) return $acks; else return null;
+      } else {
+        return null;
+      }
     }
   }
 
@@ -398,14 +414,18 @@ public function getSendedCampaignData($date) {
       }
 
       //boucle sur liste patients
-      foreach($data['patientsList'] as $v){
-        $dataw[$v['heure']]=$v;
+      if(isset($data['patientsList'])) {
+        foreach($data['patientsList'] as $v){
+          $dataw[$v['heure']]=$v;
+        }
       }
 
       //boucle sur liste des envois
-      foreach($data['campaign_data']['DATA']['SMS'] as $v){
-        $v['telDisplay'] = preg_replace('/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/', '\1 \2 \3 \4 \5', $v['MOBILEPHONE']);
-        $dataw[$v['PARAM_2']]=array_merge($dataw[$v['PARAM_2']], $v);
+      if(isset($data['campaign_data']['DATA']['SMS'])) {
+        foreach($data['campaign_data']['DATA']['SMS'] as $v){
+          $v['telDisplay'] = preg_replace('/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/', '\1 \2 \3 \4 \5', $v['MOBILEPHONE']);
+          $dataw[$v['PARAM_2']]=array_merge($dataw[$v['PARAM_2']], $v);
+        }
       }
 
       //accusés récept
