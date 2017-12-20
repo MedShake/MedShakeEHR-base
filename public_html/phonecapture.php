@@ -101,16 +101,16 @@
      header("Pragma: no-cache");
 
      if (is_dir($p['config']['templatesModuleFolder'])) {
-         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-     } else {
-         $twigTemplateBaseDirs=[];
-     }
-     if (is_dir($p['config']['templatesBaseFolder'])) {
-         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
+         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
      } else {
          $twigTemplateModuleDirs=[];
      }
-     $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
+     if (is_dir($p['config']['templatesBaseFolder'])) {
+         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
+     } else {
+         $twigTemplateBaseDirs=[];
+     }
+     $twigTemplateDirs=array_merge($twigTemplateModuleDirs,$twigTemplateBaseDirs);
      if (is_dir($p['config']['templatesModuleFolder'])) {
          $twigTemplateDirs[]=$p['config']['templatesModuleFolder'];
      }
