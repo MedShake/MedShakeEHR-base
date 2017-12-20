@@ -203,7 +203,7 @@ class msData
  */
     public function createOrUpdateDataType($d)
     {
-        global $p;
+        global $p, $mysqli;
         $gump=new GUMP();
         $d = $gump->sanitize($d);
 
