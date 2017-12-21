@@ -124,32 +124,28 @@ class msGetHtml
  * Construire les répertoires par défaut à interroger pour obtenir le template
  * @return array Tableau des répertoires
  */
-  private function _construcDefaultTemplatesDirectories()
-  {
-      global $p;
+ private function _construcDefaultTemplatesDirectories()
+ {
+     global $p;
 
-      if (is_dir($p['config']['templatesModuleFolder'])) {
-          $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-      } else {
-          $twigTemplateModuleDirs=[];
-      }
-      if (is_dir($p['config']['templatesBaseFolder'])) {
-          $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
-      } else {
-          $twigTemplateBaseDirs=[];
-      }
-      $this->_templatesDirectories=array_merge($twigTemplateModuleDirs, $twigTemplateBaseDirs);
+     if (is_dir($p['config']['templatesModuleFolder'])) {
+         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
+         array_unshift($twigTemplateModuleDirs, $p['config']['templatesModuleFolder']);
+     } else {
+         $twigTemplateModuleDirs=[];
+     }
+     if (is_dir($p['config']['templatesBaseFolder'])) {
+         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
+         array_unshift($twigTemplateBaseDirs, $p['config']['templatesBaseFolder']);
+     } else {
+         $twigTemplateBaseDirs=[];
+     }
+     $this->_templatesDirectories=array_merge($twigTemplateModuleDirs, $twigTemplateBaseDirs);
 
-      if (is_dir($p['config']['templatesModuleFolder'])) {
-          $this->_templatesDirectories[]=$p['config']['templatesModuleFolder'];
-      }
-      if (is_dir($p['config']['templatesBaseFolder'])) {
-          $this->_templatesDirectories[]=$p['config']['templatesBaseFolder'];
-      }
-      if (is_dir($p['config']['templatesPdfFolder'])) {
-          $this->_templatesDirectories[]=$p['config']['templatesPdfFolder'];
-      }
+     if (is_dir($p['config']['templatesPdfFolder'])) {
+         $this->_templatesDirectories[]=$p['config']['templatesPdfFolder'];
+     }
 
-      return $this->_templatesDirectories;
-  }
+     return $this->_templatesDirectories;
+ }
 }
