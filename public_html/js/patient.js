@@ -26,6 +26,21 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+ ////////////////////////////////////////////////////////////////////////
+ ///////// Définition des variables par défaut
+
+ if (!scrollDestination) {
+   var scrollDestination = {
+     newDoc: '#newDoc',
+     nouvelleCs: '#nouvelleCs',
+     newCourrier: '#newCourrier',
+     newOrdo: '#newOrdo',
+     newMail: '#newMail',
+     newReglement: '#newReglement',
+     delai: 400
+   };
+ }
+
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
@@ -146,7 +161,7 @@ $(document).ready(function() {
     e.preventDefault();
     $('#newDoc').toggle();
     $.getScriptOnce(urlBase + "/js/patientScripts/docupload.js");
-    scrollTo("#newDoc", 400);
+    scrollTo(scrollDestination.newDoc, scrollDestination.delai);
   });
 
   //bouton de nouveau mail
@@ -422,7 +437,7 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      scrollTo('#nouvelleCs', 400);
+      scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -460,7 +475,7 @@ function sendFormToCourrierDiv(el) {
         selector: '#editeurCourrier',
         height: "500"
       });
-      scrollTo('#newCourrier', 400);
+      scrollTo(scrollDestination.newCourrier, scrollDestination.delai);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -493,7 +508,7 @@ function sendFormToOrdoDiv(el) {
     success: function(data) {
       $('#newOrdo').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/ordonnance.js");
-      scrollTo('#newOrdo', 400);
+      scrollTo(scrollDestination.newOrdo, scrollDestination.delai);
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
@@ -523,7 +538,7 @@ function sendFormToMailDiv(el) {
     success: function(data) {
       $('#newMail').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/email.js");
-      scrollTo('#newMail', 400);
+      scrollTo(scrollDestination.newMail, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -555,7 +570,7 @@ function sendFormToReglementDiv(el) {
     success: function(data) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/reglement.js");
-      scrollTo('#newReglement', 400);
+      scrollTo(scrollDestination.newReglement, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
