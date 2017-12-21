@@ -67,27 +67,13 @@ if ($type !== false) {
     $p['page']['instanceNumber']= $dicom->getNumberInstancesInSeries() + 1;
 
 
-    // les variables d'environnement twig
-    if (isset($p['config']['twigEnvironnementCache'])) {
-        $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
-    } else {
-        $twigEnvironment['cache']=false;
-    }
-    if (isset($p['config']['twigEnvironnementAutoescape'])) {
-        $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
-    } else {
-        $twigEnvironment['autoescape']=false;
-    }
-
-    $loaderPDF = new Twig_Loader_Filesystem($p['config']['templatesBaseFolder']);
-    $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
-    $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-    $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
-
     //générer le texte du template
-    $fichierDicomTXT = $twigPDF->render('dicomCreateDCM.html.twig', $p);
+    $getHtml = new msGetHtml();
+    $getHtml->set_template('dicomCreateDCM');
+    $fichierDicomTXT = $getHtml->genererHtml();
     $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 
+    //définition fichiers et chemins
     $templateForDCM=$p['config']['workingDirectory'].$p['user']['id'].'/dicomCreateDCM.txt';
     $dcmBaseFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomCreateDCM.dcm";
     $dcmFinalFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomInstanceDCM.dcm";

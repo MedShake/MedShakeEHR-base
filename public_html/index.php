@@ -131,48 +131,10 @@ if (isset($template)) {
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 
-    //les répertoires de templates twig : module puis base
-    if (is_dir($p['config']['templatesModuleFolder'])) {
-        $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-    } else {
-        $twigTemplateModuleDirs=[];
-    }
-    if (is_dir($p['config']['templatesBaseFolder'])) {
-        $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
-    } else {
-        $twigTemplateBaseDirs=[];
-    }
-    $twigTemplateDirs=array_merge($twigTemplateModuleDirs,$twigTemplateBaseDirs);
-    if (is_dir($p['config']['templatesModuleFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesModuleFolder'];
-    }
-    if (is_dir($p['config']['templatesBaseFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
-    }
-    if (is_dir($p['config']['templatesPdfFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesPdfFolder'];
-    }
-
-    // les variables d'environnement twig
-    if (isset($p['config']['twigEnvironnementCache'])) {
-        $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
-    } else {
-        $twigEnvironment['cache']=false;
-    }
-    if (isset($p['config']['twigEnvironnementAutoescape'])) {
-        $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
-    } else {
-        $twigEnvironment['autoescape']=false;
-    }
-
-    $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
-    $twig = new Twig_Environment($loader, $twigEnvironment);
-    $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-    $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
-
-
-    // display
-    echo $twig->render($template.'.html.twig', $p);
+    //générer et sortir le html
+    $getHtml = new msGetHtml();
+    $getHtml->set_template($template);
+    echo $getHtml->genererHtml();
 }
 
 //////// Debug
