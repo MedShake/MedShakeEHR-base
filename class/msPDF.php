@@ -427,7 +427,7 @@ class msPDF
 
         $getHtml = new msGetHtml();
         $getHtml->set_template($template);
-        $getHtml->set_templatesDirectories($p['config']['templatesPdfFolder']);
+        $getHtml->set_templatesDirectories((array)$p['config']['templatesPdfFolder']);
         return $getHtml->genererHtml();
     }
 }
