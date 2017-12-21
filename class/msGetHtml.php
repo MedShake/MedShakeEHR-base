@@ -128,20 +128,33 @@ class msGetHtml
  {
      global $p;
 
+     //repertoire perso de templates
+     $templatesPerso=$p['config']['homeDirectory'].'templates/templatesUser'.$p['user']['id'].'/';
+     if (is_dir($templatesPerso)) {
+         $twigTemplatePersoDirs=msTools::getAllSubDirectories($templatesPerso, '/');
+         array_unshift($twigTemplatePersoDirs, $templatesPerso);
+     } else {
+         $twigTemplatePersoDirs=[];
+     }
+     // module
      if (is_dir($p['config']['templatesModuleFolder'])) {
          $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
          array_unshift($twigTemplateModuleDirs, $p['config']['templatesModuleFolder']);
      } else {
          $twigTemplateModuleDirs=[];
      }
+     //base
      if (is_dir($p['config']['templatesBaseFolder'])) {
          $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
          array_unshift($twigTemplateBaseDirs, $p['config']['templatesBaseFolder']);
      } else {
          $twigTemplateBaseDirs=[];
      }
-     $this->_templatesDirectories=array_merge($twigTemplateModuleDirs, $twigTemplateBaseDirs);
 
+     //merge
+     $this->_templatesDirectories=array_merge($twigTemplatePersoDirs, $twigTemplateModuleDirs, $twigTemplateBaseDirs);
+
+     //templates pdf
      if (is_dir($p['config']['templatesPdfFolder'])) {
          $this->_templatesDirectories[]=$p['config']['templatesPdfFolder'];
      }
