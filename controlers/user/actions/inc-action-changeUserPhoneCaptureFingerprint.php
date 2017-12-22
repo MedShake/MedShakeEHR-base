@@ -56,7 +56,7 @@ if (is_numeric($p['user']['id'])) {
     $objet->setFromID($p['user']['id']);
     $objet->setToID($p['user']['id']);
     $key=substr(md5(rand(1, 10).rand(20, 99)), 0, 10);
-    $objet->createNewObjetByTypeName('phonecaptureFingerprint', $key);
+    $objet->createNewObjetByTypeName('phonecaptureFingerprint', $key, 1);
 }
 
 msTools::redirRoute('userPhoneCaptureAccess');

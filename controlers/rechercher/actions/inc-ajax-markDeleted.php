@@ -39,7 +39,7 @@ if(is_numeric($_POST['patientID'])) {
   $marqueur=new msObjet();
   $marqueur->setFromID($p['user']['id']);
   $marqueur->setToID($_POST['patientID']);
-  $marqueur->createNewObjetByTypeName('administratifMarqueurSuppression', $value);
+  $marqueur->createNewObjetByTypeName('administratifMarqueurSuppression', $value, $p['user']['moduleID']);
 
   // on marque le dossier dans people
   $data=array(

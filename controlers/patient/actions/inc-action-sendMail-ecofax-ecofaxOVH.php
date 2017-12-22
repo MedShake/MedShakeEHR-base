@@ -84,22 +84,22 @@ if (!$mail->send()) {
 
     //support (avec PJ ou sans)
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', 1, $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
+        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', 1);
     }
 
     //from
-    $patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], $supportID);
+    $patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], 1, $supportID);
     //to
-    $patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, $supportID);
+    $patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, 1, $supportID);
     //numero destinataire
-    $patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], $supportID);
+    $patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], 1, $supportID);
     //numero destinataire
-    $patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], $supportID);
+    $patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], 1, $supportID);
     //pj ID
     if (isset($_POST['objetID'])) {
-        $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
+        $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], 1, $supportID);
     }
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');

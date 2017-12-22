@@ -29,7 +29,7 @@
  $patient = new msObjet();
  $patient->setFromID($p['user']['id']);
  $patient->setToID($_POST['patientID']);
- if ($patient->createNewObjet($_POST['typeID'], $_POST['value'], $_POST['instance']) > 0) {
+ if ($patient->createNewObjet($_POST['typeID'], $_POST['value'], $p['user']['moduleID'], $_POST['instance']) > 0) {
      $return['status']='ok';
      echo json_encode($return);
  } else {

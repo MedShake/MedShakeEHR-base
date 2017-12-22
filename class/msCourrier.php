@@ -42,6 +42,10 @@ class msCourrier
  * @var int $_patientID du document concerné
  */
     private $_patientID;
+/**
+ * @var int $_moduleID du document concerné
+ */
+    private $_moduleID;
 
 
 
@@ -73,6 +77,15 @@ class msCourrier
     }
 
 /**
+ * Définir le moduleID
+ * @param int $data moduleID du document concerné
+ */
+    public function setModuleID($data)
+    {
+        return $this->_moduleID = $data;
+    }
+
+/**
  * Retourner les data courrier à partir d'un objetID
  * @return array Tableau typeID=>value
  */
@@ -85,6 +98,7 @@ class msCourrier
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_patientID=$data['toID'];
+        $this->_moduleID=$data['moduleID'];
 
         if ($data['groupe']=="courrier") {
             $this->_modeleID = $data['typeID'];
@@ -128,23 +142,25 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
+        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
+        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
-        if (method_exists("msModuleDataCourrier", "getCrDataCompleteModule")) {
-            msModuleDataCourrier::getCrDataCompleteModule($tabRetour);
+        if (method_exists($moduleName, "getCrDataCompleteModule")) {
+            call_user_func($moduleName.'::getCrDataCompleteModule',$tabRetour);
         }
 
         //complément dans le module pour ce formulaire spécifique ?
          $methodToCall = "getCourrierDataCompleteModuleForm_".$objetData['formValues'];
-         if (method_exists("msModuleDataCourrier", $methodToCall)) {
-               msModuleDataCourrier::$methodToCall($tabRetour);
+         if (method_exists($moduleName, $methodToCall)) {
+               call_user_func($moduleName.'::$methodToCall',$tabRetour);
          }
 
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
             $methodToCall = "type".$k."CompleteData";
-            if (method_exists("msModuleDataCourrier", $methodToCall)) {
-                msModuleDataCourrier::$methodToCall($tabRetour);
+            if (method_exists($moduleName, $methodToCall)) {
+                call_user_func($moduleName.'::$methodToCall',$tabRetour);
             }
         }
         ksort($tabRetour, SORT_REGULAR);
@@ -163,25 +179,28 @@ class msCourrier
         $tabRetour = $this->_getPatientData($this->_patientID);
         $tabRetour['date']=date('Y-m-d H:i:s');
         $tabRetour['patientID']=$this->_patientID;
+        $tabRetour['moduleID']=$this->_moduleID;
 
+        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
+        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément général dans le module ?
-        if (method_exists("msModuleDataCourrier", "getCourrierDataCompleteModule")) {
-           msModuleDataCourrier::getCourrierDataCompleteModule($tabRetour);
+        if (method_exists($moduleName, "getCourrierDataCompleteModule")) {
+           call_user_func($moduleName.'::getCourrierDataCompleteModule',$tabRetour);
         }
 
         //complément dans le module pour ce modeleID spécifique ?
         if (isset($this->_modeleID)) {
            $methodToCall = "getCourrierDataCompleteModuleModele".$this->_modeleID;
-           if (method_exists("msModuleDataCourrier", $methodToCall)) {
-               msModuleDataCourrier::$methodToCall($tabRetour);
+           if (method_exists($moduleName, $methodToCall)) {
+               call_user_func($moduleName.'::$methodToCall',$tabRetour);
            }
         }
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
            $methodToCall = "type".$k."CompleteData";
-           if (method_exists("msModuleDataCourrier", $methodToCall)) {
-               msModuleDataCourrier::$methodToCall($tabRetour);
+           if (method_exists($moduleName, $methodToCall)) {
+               call_user_func($moduleName.'::$methodToCall',$tabRetour);
            }
         }
 
@@ -211,16 +230,18 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
+        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
+        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
-        if (method_exists("msModuleDataCourrier", "getOrdoDataCompleteModule")) {
-          msModuleDataCourrier::getOrdoDataCompleteModule($tabRetour);
+        if (method_exists($moduleName, "getOrdoDataCompleteModule")) {
+          call_user_func($moduleName.'::getOrdoDataCompleteModule',$tabRetour);
         }
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
           $methodToCall = "type".$k."CompleteData";
-          if (method_exists("msModuleDataCourrier", $methodToCall)) {
-              msModuleDataCourrier::$methodToCall($tabRetour);
+          if (method_exists($moduleName, $methodToCall)) {
+              call_user_func($moduleName.'::$methodToCall',$tabRetour);
           }
         }
 

@@ -58,11 +58,11 @@ $doc = new msObjet();
 $doc->setFromID($p['user']['id']);
 $doc->setToID($_POST['patientID']);
 
-if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
+if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt, 1)) {
 
     //type et origine
-    $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
-    $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
+    $doc->createNewObjetByTypeName('docType', 'pdf', 1, $supportID);
+    $doc->createNewObjetByTypeName('docOrigine', 'interne', 1, $supportID);
 
     //titre doc
     $doc->setTitleObjet($supportID, 'pdf '.$nbImages.' images écho du '.date("d/m/Y H:i", strtotime($dcStudyDate)));

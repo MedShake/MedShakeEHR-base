@@ -159,8 +159,7 @@ smsTpoa: 'Dr ....'
 
 #######################################
 ## Templates affichage écran
-templatesBaseFolder: '/home/EHR/templates/base/'
-templatesModuleFolder: '/home/EHR/templates/gynobs/'
+templatesFolder: '/home/EHR/templates/'
 
 
 #######################################

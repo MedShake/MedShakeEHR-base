@@ -82,13 +82,18 @@ if (isset($_COOKIE['userId'])) {
 }
 
 
+$p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
+
 ///////// Controler else -> 404
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file('../controlers/module/'.$match['target'].'.php')) {
-        include '../controlers/module/'.$match['target'].'.php';
+    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    }
+    else if (is_file('../controlers/module/base/'.$match['target'].'.php')) {
+        include '../controlers/module/base/'.$match['target'].'.php';
     }
 } else {
     //$template='problem';
@@ -102,6 +107,7 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
+
         //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 

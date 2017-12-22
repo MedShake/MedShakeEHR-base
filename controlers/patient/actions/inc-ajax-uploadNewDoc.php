@@ -52,9 +52,9 @@ if (isset($ext)) {
     // }
 
     //nom original
-    $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
+    $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], 1, $supportID);
     //type
-    $patient->createNewObjetByTypeName('docType', $ext, $supportID);
+    $patient->createNewObjetByTypeName('docType', $ext, 1, $supportID);
 
     //folder
     $folder=msStockage::getFolder($supportID);

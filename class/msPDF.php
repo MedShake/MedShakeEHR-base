@@ -277,14 +277,14 @@ class msPDF
                   $sauverPd = new msObjet();
                   $sauverPd->setToID($this->_toID);
                   $sauverPd->setFromID($this->_fromID);
-                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), '0', '0', $this->_objetID);
+                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), $p['user']['moduleID'], '0', '0', $this->_objetID);
               }
               //nouveau courrier : on sauve
               else {
                   $sauverPd = new msObjet();
                   $sauverPd->setToID($this->_toID);
                   $sauverPd->setFromID($this->_fromID);
-                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body));
+                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), $p['user']['moduleID']);
               }
             }
         }

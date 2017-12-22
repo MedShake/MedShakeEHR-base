@@ -128,31 +128,26 @@ class msGetHtml
  {
      global $p;
 
-     //repertoire perso de templates
-     $templatesPerso=$p['config']['homeDirectory'].'templates/templatesUser'.$p['user']['id'].'/';
-     if (is_dir($templatesPerso)) {
-         $twigTemplatePersoDirs=msTools::getAllSubDirectories($templatesPerso, '/');
-         array_unshift($twigTemplatePersoDirs, $templatesPerso);
-     } else {
-         $twigTemplatePersoDirs=[];
+     $this->_templatesDirectories = [];
+     //templates utilisateur
+     $userFolder=$p['config']['templatesFolder'].'templatesUser'.$p['user']['id'].'/';
+     if (is_dir($userFolder)) {
+         $this->_templatesDirectories[]=$userFolder;
+         $this->_templatesDirectories=array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($userFolder, '/'));
      }
-     // module
-     if (is_dir($p['config']['templatesModuleFolder'])) {
-         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-         array_unshift($twigTemplateModuleDirs, $p['config']['templatesModuleFolder']);
-     } else {
-         $twigTemplateModuleDirs=[];
+     //templates module
+     $moduleFolder = $p['config']['templatesFolder'] . (isset($p['user']['module']) ? $p['user']['module'] : "public");
+     if (is_dir($moduleFolder)) {
+         $this->_templatesDirectories[]=$moduleFolder;
+         $this->_templatesDirectories=array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
      }
-     //base
-     if (is_dir($p['config']['templatesBaseFolder'])) {
-         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
-         array_unshift($twigTemplateBaseDirs, $p['config']['templatesBaseFolder']);
-     } else {
-         $twigTemplateBaseDirs=[];
+     //templates base
+     $baseFolder = $p['config']['templatesFolder']."base";
+     if (is_dir($baseFolder)) {
+         $this->_templatesDirectories[]=$baseFolder;
+         $this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($baseFolder, '/'));
      }
 
-     //merge
-     $this->_templatesDirectories=array_merge($twigTemplatePersoDirs, $twigTemplateModuleDirs, $twigTemplateBaseDirs);
 
      //templates pdf
      if (is_dir($p['config']['templatesPdfFolder'])) {

@@ -21,10 +21,11 @@
  */
 
 /**
- * Config : attribuer un mot de passe à un utilisateur 
+ * Config : attribuer un mot de passe et un module à un utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
-
- msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_2']."',@password) where id='".$_POST['p_1']."' limit 1");
+ $module = isset($_POST['p_5']) ? ($_POST['p_5'] != '' ? $_POST['p_5'] : 'public') : 'public';
+ msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_2']."',@password), module='".$module."' where id='".$_POST['p_1']."' limit 1");
  msTools::redirection('/configuration/');

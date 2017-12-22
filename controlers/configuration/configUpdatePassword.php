@@ -21,9 +21,10 @@
  */
 
 /**
- * Config : attribuer un password à un utilisteur
+ * Config : attribuer un password et un module à un utilisteur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -36,4 +37,5 @@
     $formpatient = new msForm();
     $formpatient->setFormIDbyName('basePasswordChange');
     $p['page']['form']=$formpatient->getForm();
+    $p['page']['modules']=msSQL::sql2tabSimple("SELECT module FROM system");
  }

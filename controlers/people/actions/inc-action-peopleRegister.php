@@ -75,7 +75,7 @@ if ($validation === false) {
 
             if (is_numeric($id)) {
                 if (!empty(trim($v))) {
-                    $patient->createNewObjet($id, $v);
+                    $patient->createNewObjet($id, $v, $p['user']['moduleID']);
                 }
             }
         }

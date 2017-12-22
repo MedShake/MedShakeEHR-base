@@ -1,6 +1,16 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+CREATE TABLE `system` (
+  `id` smallint(4) UNSIGNED NOT NULL,
+  `module` varchar(20) DEFAULT 'base',
+  `version` varchar(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `system` (`id`,`module`,`version`) VALUES
+(1, 'base', 'v2.3.1'),
+(2, 'public', 'v2.3.1');
+
 CREATE TABLE `actes` (
   `id` smallint(4) UNSIGNED NOT NULL,
   `cat` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
@@ -285,7 +295,7 @@ INSERT INTO `forms` (`id`, `internalName`, `name`, `description`, `dataset`, `gr
 (18, 'baseReglementSimple', 'Formulaire simplifié règlement (page compta)', 'formulaire simplifié pour le règlement', 'data_types', 'reglement', 'post', '/compta/actions/saveReglementForm/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n row2:\r\n  col1: \r\n    size: 9\r\n    bloc: \r\n      - 205', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 193,plus={€}\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 194,plus={€}\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 195,plus={€}\r\n row2:\r\n  col1: \r\n    size: 9\r\n    bloc: \r\n      - 205', ''),
 (19, 'baseReglementSearch', 'Recherche règlements', 'formulaire recherche règlement', 'form_basic_types', 'admin', 'post', '', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - 4\r\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - 3', ''),
 (22, 'baseImportExternal', 'Import', 'formulaire pour consultation importée d\'une source externe', 'data_types', 'medical', 'post', '', 5, 'public', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              \r\n    head: \'Consultation importée\'\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - 252,rows=10', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              # 1re rangée\r\n    head: \'Consultation importée\'\r\n    col1:                            # 1re colonne  \r\n      size: 12\r\n      bloc:                          # Types utilisés\r\n        - 252,rows=10', 'csImportee'),
-(25, 'basePasswordChange', 'Assigner un mot de passe', 'formulaire assigner un password à un utilisateur', 'form_basic_types', 'admin', 'post', '/configuration/actions/configUpdatePassword/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 3', ''),
+(25, 'basePasswordChange', 'Assigner un mot de passe et un module', 'formulaire assigner un password et un module à un utilisateur', 'form_basic_types', 'admin', 'post', '/configuration/actions/configUpdatePassword/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Assigner le mot de passe à l\'identifiant"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3', ''),
 (29, 'baseFax', 'Formulaire écofax', 'formulaire pour ecofax OVH', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 4\r\n    bloc: \r\n      - 484,required\r\n  col2: \r\n    size: 4\r\n    bloc: \r\n      - 481,required', NULL, ''),
 (30, 'baseAgendaPriseRDV', 'Agenda prise rdv', 'formulaire latéral de prise de rdv', 'data_types', 'admin', 'post', '', 5, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 2,readonly         \r\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 3,readonly\r\n  row2:\r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 8,readonly\r\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 4\r\n  row3:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 7    \r\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - 10', NULL, '');
 
@@ -328,7 +338,8 @@ INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `descripti
 (1, 'userid', 'identifiant', 'Identifiant', 'identifiant numérique d\'utilisateur', 'required|numeric', 'L\'identifiant utilisateur n\'est pas correct', 'text', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
 (2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
 (3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 0, '2012-07-01 14:26:00', 0, '2012-07-01 14:26:00'),
-(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00'),
+(5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
 
 CREATE TABLE `hprim` (
   `id` int(11) NOT NULL,
@@ -375,6 +386,7 @@ CREATE TABLE `objets_data` (
   `typeID` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `parentTypeID` int(11) UNSIGNED DEFAULT '0',
   `instance` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `moduleID` smallint(4) DEFAULT NULL,
   `registerDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -389,6 +401,7 @@ CREATE TABLE `people` (
   `id` int(11) UNSIGNED NOT NULL,
   `type` enum('patient','pro','deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
+  `moduleID` smallint(4) DEFAULT NULL,
   `pass` varbinary(60) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
   `fromID` smallint(5) DEFAULT NULL,
@@ -439,6 +452,10 @@ CREATE TABLE `printed` (
   `outdated` enum('','y') NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+ALTER TABLE `system`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `module` (`module`);
 
 ALTER TABLE `actes`
   ADD PRIMARY KEY (`id`),
@@ -525,6 +542,8 @@ ALTER TABLE `printed`
   ADD KEY `examenID` (`objetID`);
 
 
+ALTER TABLE `system`
+  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `actes`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `actes_base`

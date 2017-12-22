@@ -39,14 +39,14 @@
 $patient = new msObjet();
 $patient->setToID($_POST['patientID']);
 $patient->setFromID($p['user']['id']);
-$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['patient2ID']);
-$patient->createNewObjetByTypeName('relationPatientPatient', $_POST['preRelationPatientPatient'], $supportID);
+$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['patient2ID'], $p['user']['moduleID']);
+$patient->createNewObjetByTypeName('relationPatientPatient', $_POST['preRelationPatientPatient'], $p['user']['moduleID'], $supportID);
 
 // patient -> patientPrin
 $patient2 = new msObjet();
 $patient2->setToID($_POST['patient2ID']);
 $patient2->setFromID($p['user']['id']);
-$supportID=$patient2->createNewObjetByTypeName('relationID', $_POST['patientID']);
-$patient2->createNewObjetByTypeName('relationPatientPatient', $reversTab[$_POST['preRelationPatientPatient']], $supportID);
+$supportID=$patient2->createNewObjetByTypeName('relationID', $_POST['patientID'], $p['user']['moduleID']);
+$patient2->createNewObjetByTypeName('relationPatientPatient', $reversTab[$_POST['preRelationPatientPatient']], $p['user']['moduleID'], $supportID);
 
 echo json_encode(array('ok'));

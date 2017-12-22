@@ -178,7 +178,7 @@ class msData
  * Base pour le traitement automatique avant sauvegarder, par typeID
  * @return string valeur formatée si method correspondant existe
  */
-    public function treatBeforeSave()
+    public function treatBeforeSave($moduleID)
     {
         if (!isset($this->_value)) {
             throw new Exception('Data is not set');
@@ -188,7 +188,8 @@ class msData
         }
 
         $action = "type".$this->_typeID."TreatBeforeSave";
-        if (method_exists("msModuleDataSave", $action)) {
+        $moduleName="msMod".ucfirst(msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID))."DataSave";
+        if (method_exists($moduleName, $action)) {
             $data = new msModuleDataSave();
             return $data->$action($this->_value);
         } else {
