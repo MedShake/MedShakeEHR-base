@@ -25,6 +25,7 @@
  * d'un courrier, certificat ou ordonnance
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 class msCourrier
@@ -142,7 +143,7 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
-        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
+        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : isset($objetData['moduleID']) ? $objetData['moduleID'] : "base";
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
         if (method_exists($moduleName, "getCrDataCompleteModule")) {
@@ -230,7 +231,7 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
-        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
+        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : isset($objetData['moduleID']) ? $objetData['moduleID'] : "base";
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
         if (method_exists($moduleName, "getOrdoDataCompleteModule")) {

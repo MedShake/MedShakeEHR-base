@@ -1,5 +1,33 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
+-- 2.3.0 to 2.x.0
+
+CREATE TABLE `system` (
+  `id` smallint(4) UNSIGNED NOT NULL,
+  `module` varchar(20) DEFAULT 'base',
+  `version` varchar(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `system` (`id`,`module`,`version`) VALUES
+(1, 'base', 'v2.4.0'),
+(2, 'public', 'v2.4.0');
+
+ALTER TABLE `system`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `module` (`module`);
+
+ALTER TABLE `system`
+  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `objets_data` ADD `moduleID` smallint(4) DEFAULT NULL after `instance`;
+
+ALTER TABLE `people` ADD `moduleID` smallint(4) DEFAULT NULL after `rank`;
+
+INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
+(5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+
+UPDATE `forms` set `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' , `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' WHERE `id`=25;
+
 -- 2.1.0 to 2.2.0
 
 ALTER TABLE data_types CHANGE `formType` `formType` ENUM('','date','email','lcc','number','select','submit','tel','text','textarea','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '';

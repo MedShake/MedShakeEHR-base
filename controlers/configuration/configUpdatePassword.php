@@ -37,5 +37,5 @@
     $formpatient = new msForm();
     $formpatient->setFormIDbyName('basePasswordChange');
     $p['page']['form']=$formpatient->getForm();
-    $p['page']['modules']=msSQL::sql2tabSimple("SELECT module FROM system");
+    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, module FROM system", "id", "module");
  }

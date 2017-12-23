@@ -34,7 +34,7 @@
  * @edited fr33z00 <https://github.com/fr33z00>
  */
 
-class msModuleDataCourrier
+class msModBaseDataCourrier
 {
 
 

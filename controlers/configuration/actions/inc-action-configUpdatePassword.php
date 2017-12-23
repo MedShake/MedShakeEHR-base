@@ -26,6 +26,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @edited fr33z00 <https://github.com/fr33z00>
  */
- $module = isset($_POST['p_5']) ? ($_POST['p_5'] != '' ? $_POST['p_5'] : 'public') : 'public';
- msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_2']."',@password), module='".$module."' where id='".$_POST['p_1']."' limit 1");
+ $moduleID = isset($_POST['p_5']) ? ($_POST['p_5'] != '' ? $_POST['p_5'] : 'public') : 'public';
+ msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_2']."',@password), moduleID='".$moduleID."' where id='".$_POST['p_1']."' limit 1");
  msTools::redirection('/configuration/');
