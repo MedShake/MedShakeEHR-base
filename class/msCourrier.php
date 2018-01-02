@@ -100,7 +100,7 @@ class msCourrier
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_patientID=$data['toID'];
         $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$data['fromID']);
-        $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
+        $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID);
 
         if ($data['groupe']=="courrier") {
             $this->_modeleID = $data['typeID'];
@@ -146,7 +146,7 @@ class msCourrier
 
         if (!isset($this->_module)) {
           $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$objetData['fromID']);
-          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
+          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID);
         }
         $tabRetour['module']=$this->_module;
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
@@ -236,7 +236,7 @@ class msCourrier
 
         if (!isset($this->_module)) {
           $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$objetData['fromID']);
-          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
+          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID);
         }
         $tabRetour['module']=$this->_module;
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
