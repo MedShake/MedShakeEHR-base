@@ -277,14 +277,14 @@ class msPDF
                   $sauverPd = new msObjet();
                   $sauverPd->setToID($this->_toID);
                   $sauverPd->setFromID($this->_fromID);
-                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), $p['user']['moduleID'], '0', '0', $this->_objetID);
+                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), '0', '0', $this->_objetID);
               }
               //nouveau courrier : on sauve
               else {
                   $sauverPd = new msObjet();
                   $sauverPd->setToID($this->_toID);
                   $sauverPd->setFromID($this->_fromID);
-                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body), $p['user']['moduleID']);
+                  $this->_objetID=$sauverPd->createNewObjet($this->_modeleID, msTools::bbcodifier($this->_body));
               }
             }
         }
@@ -425,9 +425,14 @@ class msPDF
     {
         global $p;
 
-        $getHtml = new msGetHtml();
-        $getHtml->set_template($template);
-        $getHtml->set_templatesDirectories((array)$p['config']['templatesPdfFolder']);
-        return $getHtml->genererHtml();
+        // les variables d'environnement twig
+        if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
+        if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
+
+        $loaderPDF = new Twig_Loader_Filesystem($p['config']['templatesPdfFolder']);
+        $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
+        $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
+        $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+        return $twigPDF->render($template, $p);
     }
 }

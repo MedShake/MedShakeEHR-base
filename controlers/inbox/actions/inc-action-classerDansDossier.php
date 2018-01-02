@@ -47,7 +47,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             if (is_file($source)) {
 
                 //support
-                $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps, 1);
+                $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
 
                 //ajout d'un titre
                 if (!empty($_POST['titre'])) {
@@ -69,9 +69,9 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
                 }
 
                 //nom original
-                $patient->createNewObjetByTypeName('docOriginalName', $file, 1, $supportID);
+                $patient->createNewObjetByTypeName('docOriginalName', $file, $supportID);
                 //type
-                $patient->createNewObjetByTypeName('docType', $ext, 1, $supportID);
+                $patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
                 ////////////////////////////
                 // stockage actif
@@ -106,7 +106,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             $patient->setToID($_POST['patientID']);
 
             //support
-            $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps, 1);
+            $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
 
             //ajout d'un titre
             if (!empty($_POST['titre'])) {
@@ -116,7 +116,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             }
 
             //nom original
-            $patient->createNewObjetByTypeName('docOriginalName', $data['txtFileName'], 1, $supportID);
+            $patient->createNewObjetByTypeName('docOriginalName', $data['txtFileName'], $supportID);
 
             //extension
             $mimetype=msTools::getmimetype($source);
@@ -127,7 +127,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             }
 
             //type
-            $patient->createNewObjetByTypeName('docType', $ext, 1, $supportID);
+            $patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
             ////////////////////////////
             // stockage actif

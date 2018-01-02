@@ -52,7 +52,7 @@ if ($validation === false) {
         $doc->setObjetID($supportID);
         $doc->deleteDoc();
     } else {
-        $supportID=$patient->createNewObjet($_POST['csID'], '', $p['user']['moduleID'], $_POST['parentID']);
+        $supportID=$patient->createNewObjet($_POST['csID'], '', $_POST['parentID']);
     }
 
     //on traite chaque POST
@@ -62,7 +62,7 @@ if ($validation === false) {
         }
         if (isset($id)) {
             if (is_numeric($id)) {
-                $patient->createNewObjet($id, $v, $p['user']['moduleID'], $supportID);
+                $patient->createNewObjet($id, $v, $supportID);
             }
         }
     }

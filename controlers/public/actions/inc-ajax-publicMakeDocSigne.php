@@ -67,14 +67,14 @@ if ($signature and is_numeric($patientID)) {
     $doc->setToID($patientID);
 
 
-    if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '', 2)) {
+    if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
 
         //titre
         $doc->setTitleObjet($supportID, 'Consentement échographie foetale');
 
         //type
-        $doc->createNewObjetByTypeName('docType', 'pdf', 2, $supportID);
-        $doc->createNewObjetByTypeName('docOrigine', 'interne', 2, $supportID);
+        $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
+        $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
         $pdf->setFromID('0');
         $pdf->setToID($patientID);

@@ -89,25 +89,25 @@ if (curl_errno($ch)) {
 
       //support (avec PJ ou sans)
       if (isset($_POST['objetID'])) {
-          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', 1, $_POST['objetID']);
+          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
       } else {
-          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', 1);
+          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
       }
 
       //trackingID
-      $patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], 1, $supportID);
+      $patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], $supportID);
 
       //from
-      $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], 1, $supportID);
+      $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
       //to
-      $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], 1, $supportID);
+      $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
       //sujet
-      $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], 1, $supportID);
+      $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
       //message
-      $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], 1, $supportID);
+      $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
       //pj ID
       if (isset($_POST['objetID'])) {
-          $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], 1, $supportID);
+          $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
       }
 
             msTools::redirection('/patient/'.$_POST['patientID'].'/');

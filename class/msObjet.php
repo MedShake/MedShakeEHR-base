@@ -25,6 +25,7 @@
  * Manipulation des objets (enregistrement des data)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 class msObjet
@@ -204,13 +205,13 @@ public function getToID()
  * @param  int $objetID      ID de l'objet (si mise à jour en particulier)
  * @return int|false                 Retourne ID de l'objet ou false si problème
  */
-    public function createNewObjetByTypeName($name, $value, $moduleID, $parentID='0', $parentTypeID='0', $objetID='')
+    public function createNewObjetByTypeName($name, $value, $parentID='0', $parentTypeID='0', $objetID='')
     {
         $typeID = msData::getTypeIDFromName($name);
         if (!is_numeric($typeID)) {
             throw new Exception('TypeID is not numeric');
         } else {
-            return $this->createNewObjet($typeID, $value, $moduleID, $parentID, $parentTypeID, $objetID);
+            return $this->createNewObjet($typeID, $value, $parentID, $parentTypeID, $objetID);
         }
     }
 
@@ -229,7 +230,7 @@ public function getToID()
  * @param  int $objetID      ID de l'objet (si mise à jour en particulier)
  * @return int|false                 Retourne ID de l'objet ou false si problème
  */
-    public function createNewObjet($typeID, $value, $moduleID, $parentID='0', $parentTypeID='0', $objetID='')
+    public function createNewObjet($typeID, $value, $parentID='0', $parentTypeID='0', $objetID='')
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
@@ -246,7 +247,7 @@ public function getToID()
         $data->setValue($value);
         $data->setTypeID($typeID);
         $d=$data->getDataType($typeID);
-        $value = $data->treatBeforeSave($moduleID);
+        $value = $data->treatBeforeSave();
 
       $pd=array(
         'fromID' => $this->_fromID,
@@ -254,7 +255,6 @@ public function getToID()
         'typeID' => $typeID,
         'parentTypeID' => $parentTypeID,
         'instance'=> $parentID,
-        'moduleID'=> $moduleID,
         'value' => $value
       );
 

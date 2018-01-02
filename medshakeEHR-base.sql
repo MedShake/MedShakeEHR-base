@@ -386,7 +386,6 @@ CREATE TABLE `objets_data` (
   `typeID` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `parentTypeID` int(11) UNSIGNED DEFAULT '0',
   `instance` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `moduleID` smallint(4) DEFAULT NULL,
   `registerDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

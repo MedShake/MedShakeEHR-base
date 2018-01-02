@@ -19,8 +19,6 @@ ALTER TABLE `system`
 ALTER TABLE `system`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `objets_data` ADD `moduleID` smallint(4) DEFAULT NULL after `instance`;
-
 ALTER TABLE `people` ADD `moduleID` smallint(4) DEFAULT NULL after `rank`;
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES

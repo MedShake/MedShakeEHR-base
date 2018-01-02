@@ -33,17 +33,17 @@ if (count($_POST)>2) {
 
     //support
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', $p['user']['moduleID'], '0', '0', $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', '0', '0', $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', $p['user']['moduleID']);
+        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
     }
 
 
     //type d'impression modeprintObjetID
     if (isset($_POST['modeprintObjetID'])) {
-        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $p['user']['moduleID'], $supportID, '0', $_POST['modeprintObjetID']);
+        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
     } else {
-        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $p['user']['moduleID'], $supportID);
+        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
     }
 
     foreach ($_POST as $k=>$v) {
@@ -53,13 +53,13 @@ if (count($_POST)>2) {
             } else {
                 $postObjetId='0';
             }
-            $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $p['user']['moduleID'], $supportID, $m[1], $postObjetId);
+            $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
 
             if ($postObjetId>0) {
                 msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
             }
             if (isset($_POST[$k.'CB'])) {
-                $patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k.'CB'], $p['user']['moduleID'], $id);
+                $patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k.'CB'], $id);
             }
         }
     }

@@ -36,7 +36,7 @@ if (is_array($_POST)) {
             $objet = new msObjet();
             $objet->setFromID($p['user']['id']);
             $objet->setToID($_POST['userID']);
-            $objet->createNewObjet($typeID, $v, 1);
+            $objet->createNewObjet($typeID, $v);
         }
     }
 }

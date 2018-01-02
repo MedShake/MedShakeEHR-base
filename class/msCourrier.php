@@ -44,9 +44,9 @@ class msCourrier
  */
     private $_patientID;
 /**
- * @var int $_moduleID du document concerné
+ * @var int $_module du document concerné
  */
-    private $_moduleID;
+    private $_module;
 
 
 
@@ -78,12 +78,12 @@ class msCourrier
     }
 
 /**
- * Définir le moduleID
- * @param int $data moduleID du document concerné
+ * Définir le module
+ * @param int $data module du document concerné
  */
-    public function setModuleID($data)
+    public function setModule($data)
     {
-        return $this->_moduleID = $data;
+        return $this->_module = $data;
     }
 
 /**
@@ -99,7 +99,8 @@ class msCourrier
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_patientID=$data['toID'];
-        $this->_moduleID=$data['moduleID'];
+        $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$data['fromID']);
+        $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
 
         if ($data['groupe']=="courrier") {
             $this->_modeleID = $data['typeID'];
@@ -143,7 +144,11 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
-        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : isset($objetData['moduleID']) ? $objetData['moduleID'] : "base";
+        if (!isset($this->_module)) {
+          $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$objetData['fromID']);
+          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
+        }
+        $tabRetour['module']=$this->_module;
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
         if (method_exists($moduleName, "getCrDataCompleteModule")) {
@@ -180,10 +185,8 @@ class msCourrier
         $tabRetour = $this->_getPatientData($this->_patientID);
         $tabRetour['date']=date('Y-m-d H:i:s');
         $tabRetour['patientID']=$this->_patientID;
-        $tabRetour['moduleID']=$this->_moduleID;
 
-        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : "base";
-        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
+        $moduleName="msMod".ucfirst(isset($this->_module) ? $this->_module : "base")."DataCourrier";
         //complément général dans le module ?
         if (method_exists($moduleName, "getCourrierDataCompleteModule")) {
            call_user_func($moduleName.'::getCourrierDataCompleteModule',$tabRetour);
@@ -231,7 +234,11 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
-        $tabRetour['module']=isset($this->_moduleID) ? (msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$this->_moduleID)) : isset($objetData['moduleID']) ? $objetData['moduleID'] : "base";
+        if (!isset($this->_module)) {
+          $moduleID=msSQL::sqlUniqueChamp("SELECT moduleID FROM people WHERE id=".$objetData['fromID']);
+          $this->_module=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$moduleID));
+        }
+        $tabRetour['module']=$this->_module;
         $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
         if (method_exists($moduleName, "getOrdoDataCompleteModule")) {

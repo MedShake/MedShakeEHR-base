@@ -33,56 +33,56 @@ if (count($_POST['acteID'])>0) {
 
     //support
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', $p['user']['moduleID'], '0', $_POST['acteID'], $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', '0', $_POST['acteID'], $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', $p['user']['moduleID'], '0', $_POST['acteID']);
+        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', '0', $_POST['acteID']);
     }
 
     //situation patient
     if (!isset($_POST['regleSituationPatient'])) {
       $_POST['regleSituationPatient']='A';
     }
-    $patient->createNewObjetByTypeName('regleSituationPatient', $_POST['regleSituationPatient'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleSituationPatient', $_POST['regleSituationPatient'], $supportID);
     //tarif ss
     if (!isset($_POST['regleTarifCejour'])) {
       $_POST['regleTarifCejour']='';
     }
-    $patient->createNewObjetByTypeName('regleTarifCejour', $_POST['regleTarifCejour'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleTarifCejour', $_POST['regleTarifCejour'], $supportID);
     //dépassement
     if (!isset($_POST['regleDepaCejour'])) {
       $_POST['regleDepaCejour']='';
     }
-    $patient->createNewObjetByTypeName('regleDepaCejour', $_POST['regleDepaCejour'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleDepaCejour', $_POST['regleDepaCejour'], $supportID);
     //cheque
     if (!isset($_POST['regleCheque'])) {
       $_POST['regleCheque']='';
     }
-    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque'], $supportID);
     //cb
     if (!isset($_POST['regleCB'])) {
       $_POST['regleCB']='';
     }
-    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB'], $supportID);
     //espèces
     if (!isset($_POST['regleEspeces'])) {
       $_POST['regleEspeces']='';
     }
-    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces'], $supportID);
     //tiers
     if (!isset($_POST['regleTiersPayeur'])) {
       $_POST['regleTiersPayeur']='';
     }
-    $patient->createNewObjetByTypeName('regleTiersPayeur', $_POST['regleTiersPayeur'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleTiersPayeur', $_POST['regleTiersPayeur'], $supportID);
     //à régler
     if (!isset($_POST['regleFacture'])) {
       $_POST['regleFacture']='';
     }
-    $patient->createNewObjetByTypeName('regleFacture', $_POST['regleFacture'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleFacture', $_POST['regleFacture'], $supportID);
     //nom chèque
     if (!isset($_POST['regleIdentiteCheque'])) {
       $_POST['regleIdentiteCheque']='';
     }
-    $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $p['user']['moduleID'], $supportID);
+    $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
 
     //titre
     $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");

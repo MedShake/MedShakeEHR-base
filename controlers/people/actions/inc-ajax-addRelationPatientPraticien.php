@@ -30,14 +30,14 @@
 $patient = new msObjet();
 $patient->setToID($_POST['patientID']);
 $patient->setFromID($p['user']['id']);
-$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['praticienID'], $p['user']['moduleID']);
-$patient->createNewObjetByTypeName('relationPatientPraticien', $_POST['preRelationPatientPrat'], $p['user']['moduleID'], $supportID);
+$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['praticienID']);
+$patient->createNewObjetByTypeName('relationPatientPraticien', $_POST['preRelationPatientPrat'], $supportID);
 
 // praticien -> patient
 $praticien = new msObjet();
 $praticien->setToID($_POST['praticienID']);
 $praticien->setFromID($p['user']['id']);
-$supportID=$praticien->createNewObjetByTypeName('relationID', $_POST['patientID'], $p['user']['moduleID']);
-$praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $p['user']['moduleID'], $supportID);
+$supportID=$praticien->createNewObjetByTypeName('relationID', $_POST['patientID']);
+$praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $supportID);
 
 echo json_encode(array('ok'));
