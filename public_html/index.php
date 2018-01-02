@@ -72,10 +72,12 @@ if (isset($_COOKIE['userId'])) {
     $p['user']=msUser::userIdentification();
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        $p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
     }
 } else {
     $p['user']=null;
     $p['user']['id']=null;
+    $p['user']['module']='base';
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
@@ -97,7 +99,6 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-      $p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
       if ($match and is_file('../controlers/'.$match['target'].'.php')) {
           // complément lié au module installé
           if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
