@@ -70,6 +70,7 @@ $match = $router->match();
 ///////// user
 if (isset($_COOKIE['userId'])) {
     $p['user']=msUser::userIdentification();
+    $p['user']['module']='base';
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
         $p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
@@ -87,6 +88,10 @@ if (isset($_COOKIE['userId'])) {
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
 
+    // complément lié au module installé
+    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    }
 } else {
     //$template='problem';
 }
@@ -99,15 +104,6 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-      if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-          // complément lié au module installé
-          if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-              include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
-          }
-          else if (is_file('../controlers/module/base/'.$match['target'].'.php')) {
-              include '../controlers/module/base/'.$match['target'].'.php';
-          }
-      }
         //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
