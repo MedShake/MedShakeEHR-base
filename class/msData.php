@@ -180,6 +180,7 @@ class msData
  */
     public function treatBeforeSave()
     {
+        global $p;
         if (!isset($this->_value)) {
             throw new Exception('Data is not set');
         }
