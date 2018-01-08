@@ -191,7 +191,7 @@ class msData
         $action = "type".$this->_typeID."TreatBeforeSave";
         $moduleName="msMod".ucfirst($p['user']['module'])."DataSave";
         if (method_exists($moduleName, $action)) {
-            $data = new msModuleDataSave();
+            $data = new $moduleName();
             return $data->$action($this->_value);
         } else {
             return $this->_value;
