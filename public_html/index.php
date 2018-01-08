@@ -70,7 +70,6 @@ $match = $router->match();
 ///////// user
 if (isset($_COOKIE['userId'])) {
     $p['user']=msUser::userIdentification();
-    $p['user']['module']='base';
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
