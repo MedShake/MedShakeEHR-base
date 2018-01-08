@@ -135,7 +135,7 @@
 					<th class="col-md-1">Nom</th>
 					<th class="col-md-2">Label</th>
 					<th class="col-md-1">Utilisé</th>
-					<th class="col-md-1">Validation</th>
+					<th class="col-md-1">{% if page.groupe == "courrier" %}Module{% else %}Validation{% endif %}</th>
 					<th class="col-md-1">Type&nbsp;formulaire</th>
 					<th class="col-md-1">Vie</th>
 					<th class="col-md-3">Description</th>
@@ -298,7 +298,25 @@
 				}) }}
 			</div>
 
-				{% if page.groupe not in ["typecs", "courrier"] %}
+      {% if page.groupe == "courrier" %}
+        <div class="form-group">
+        {{ f.input ({
+          'input' : {
+            'type' : 'text',
+            'name' : 'validationRules',
+            'id' : 'validationRulesID',
+            'placeholder' : 'module (base par défaut)',
+            'class' : 'form-control',
+            'autocomplete' : 'off'
+          },
+          'label' : {
+            'position' : 'before',
+            'label' : 'Module',
+          }
+        }) }}
+        </div>
+
+				{% elseif page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">
 					{{ f.input ({
 						'input' : {
@@ -335,6 +353,7 @@
 					}) }}
 					</div>
 				{% endif %}
+
 
 				{% if page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">

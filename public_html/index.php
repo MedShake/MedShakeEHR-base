@@ -70,10 +70,8 @@ $match = $router->match();
 ///////// user
 if (isset($_COOKIE['userId'])) {
     $p['user']=msUser::userIdentification();
-    $p['user']['module']='base';
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
-        $p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
     }
 } else {
     $p['user']=null;

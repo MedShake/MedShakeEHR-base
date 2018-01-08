@@ -2,6 +2,9 @@
 
 -- 2.3.0 to 2.x.0
 
+ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+update `data_types` set validationRules='base' WHERE `groupe` = 'courrier' 
+
 CREATE TABLE `system` (
   `id` smallint(4) UNSIGNED NOT NULL,
   `module` varchar(20) DEFAULT 'base',
@@ -19,7 +22,7 @@ ALTER TABLE `system`
 ALTER TABLE `system`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `people` ADD `moduleID` smallint(4) DEFAULT NULL after `rank`;
+ALTER TABLE `people` ADD `module` VARCHAR(20) NULL DEFAULT NULL after `rank`;
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
 (5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
