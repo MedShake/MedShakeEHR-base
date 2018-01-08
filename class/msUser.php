@@ -63,7 +63,7 @@ class msUser
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
 
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, moduleID from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, module from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
         if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
             $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='3' and toID='".$user['id']."' and outdated='' limit 1");

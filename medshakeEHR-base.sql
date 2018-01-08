@@ -400,7 +400,7 @@ CREATE TABLE `people` (
   `id` int(11) UNSIGNED NOT NULL,
   `type` enum('patient','pro','deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
-  `moduleID` smallint(4) DEFAULT NULL,
+  `module` varchar(20) DEFAULT NULL,
   `pass` varbinary(60) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
   `fromID` smallint(5) DEFAULT NULL,
