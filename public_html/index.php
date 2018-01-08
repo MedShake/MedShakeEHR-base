@@ -70,25 +70,32 @@ $match = $router->match();
 ///////// user
 if (isset($_COOKIE['userId'])) {
     $p['user']=msUser::userIdentification();
+    $p['user']['module']='base';
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        $p['user']['module']=msSQL::sqlUniqueChamp("SELECT module FROM system WHERE id=".$p['user']['moduleID']);
     }
 } else {
     $p['user']=null;
     $p['user']['id']=null;
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    $p['user']['module']='base';
+    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
+        if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
+            msTools::redirRoute('userLogInFirst');
+        }
+    }
+    else if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
 }
-
 
 ///////// Controler else -> 404
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file('../controlers/module/'.$match['target'].'.php')) {
-        include '../controlers/module/'.$match['target'].'.php';
+    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
 } else {
     //$template='problem';
