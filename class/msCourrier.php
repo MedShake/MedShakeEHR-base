@@ -99,7 +99,7 @@ class msCourrier
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_patientID=$data['toID'];
-
+      
         if ($data['groupe']=="courrier") {
             $this->_modeleID = $data['typeID'];
             $tagsValues=$this->getCourrierData();

@@ -22,7 +22,7 @@ ALTER TABLE `system`
 ALTER TABLE `system`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `people` ADD `module` VARCHAR(20) NULL DEFAULT NULL after `rank`;
+ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
 (5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
