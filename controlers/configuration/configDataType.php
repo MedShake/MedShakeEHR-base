@@ -58,4 +58,7 @@
 
     // liste des catégories
     if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label'));
+
+    // liste des modules
+    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, module FROM system", "module", "module");
  }

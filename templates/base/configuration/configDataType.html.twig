@@ -300,14 +300,14 @@
 
       {% if page.groupe == "courrier" %}
         <div class="form-group">
-        {{ f.input ({
-          'input' : {
-            'type' : 'text',
+        {{ f.select ({
+          'select' : {
             'name' : 'validationRules',
             'id' : 'validationRulesID',
-            'placeholder' : 'module (base par défaut)',
             'class' : 'form-control',
-            'autocomplete' : 'off'
+            'values' : page.modules ,
+            'autocomplete' : 'off',
+            'valueDefaut': ''
           },
           'label' : {
             'position' : 'before',
