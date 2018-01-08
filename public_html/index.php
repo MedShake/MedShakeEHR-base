@@ -74,6 +74,8 @@ if (isset($_COOKIE['userId'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
 } else {
+    $p['user']=null;
+    $p['user']['id']=null;
     if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
         if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
             msTools::redirRoute('userLogInFirst');
@@ -88,6 +90,11 @@ if (isset($_COOKIE['userId'])) {
 ///////// Controler else -> 404
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
+
+    // complément lié au module installé
+    if (is_file('../controlers/module/'.$match['target'].'.php')) {
+        include '../controlers/module/'.$match['target'].'.php';
+    }
 } else {
     //$template='problem';
 }
