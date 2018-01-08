@@ -53,7 +53,6 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
         'id' => '1',
         'type' => 'pro',
         'rank' => 'admin',
-        'moduleID' => '1',
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 0
     );
