@@ -43,8 +43,8 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Tag</th>
-        <th>Label</th>
+        <th class="col-md-2">Tag</th>
+        <th class="col-md-2">Label</th>
         <th>Valeur</th>
       </tr>
     </thead>
@@ -57,13 +57,22 @@
         </tr>
         {% for l,w in v.tags %}
           <tr>
-            <td>{{ l }}</td>
+            <td>
+              {{ w.infos.id }}
+            </td>
             <td>
               tag.{{ l }}
-              {% if page['tabTagsSelect']['val'~l] %} // tag.val{{ l }}{% endif %}
+              {% if page['tagsValues']['val_'~l] %}<br>tag.val_{{ l }}{% endif %}
+              {% if page['tagsValues']['pct_'~l] %}<br>tag.pct_{{ l }}{% endif %}
             </td>
-            <td>{{ w.infos.label }}</td>
-            <td>{{ w.value }}{% if page['tabTagsSelect']['val'~l] %} // {{ page['tabTagsSelect']['val'~l] }}{% endif %}</td>
+            <td>{{ w.infos.label }}
+              {% if page['tagsValues']['val_'~l] %}<br>- valeur -{% endif %}
+              {% if page['tagsValues']['pct_'~l] %}<br>- percentiles -{% endif %}
+            </td>
+            <td>{{ w.value|nl2br }}
+              {% if page['tagsValues']['val_'~l] %}<br>{{ page['tagsValues']['val_'~l] }}{% endif %}
+              {% if page['tagsValues']['pct_'~l] %}<br>{{ page['tagsValues']['pct_'~l] }}{% endif %}
+            </td>
           </tr>
         {% endfor %}
       {% endfor %}

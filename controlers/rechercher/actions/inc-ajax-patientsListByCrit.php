@@ -58,7 +58,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
 
                 //order by
                 if ($i==1) {
-                    if($el[0] != 51) $orderby[]='c'.$el[0];
+                    if($el[0] != 'titre') $orderby[]='c'.$el[0];
                 }
             }
         }
