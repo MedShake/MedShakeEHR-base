@@ -56,5 +56,7 @@
                 $p['page']['tabTypes'][$v['catName']][]=$v;
             }
         }
+        //liste des modules
+        $p['page']['modules']=msSQL::sql2tabKey("SELECT module FROM system order by module", "module", "module");
     }
  }

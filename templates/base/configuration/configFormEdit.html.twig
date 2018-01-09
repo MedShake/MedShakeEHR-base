@@ -80,13 +80,14 @@
 
 		<table class="table table-hover">
 		<tr>
-			<th class="col-md-1">#</th>
+			<th>#</th>
+      <th class="col-md-2">Tag</th>
 			<th class="col-md-4">Label</th>
-			<th class="col-md-7">Description</th>
+			<th class="col-md-6">Description</th>
 		</tr>
 		{% for k,v in page.tabTypes %}
 		<tr>
-			<th colspan="3">
+			<th colspan="4">
 				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-default btn-xs typeToggleVisibility">
   				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 				</button> {{ v.0.catLabel }}
@@ -95,6 +96,7 @@
 		{% for w in v %}
 			<tr class="cat{{ v.0.cat }}" style="display : none;">
 			<td>{{ w.id }}</td>
+      <td>{{ w.name }}</td>
 			<td>{{ w.label }}</td>
 			<td>{{ w.description }}</td>
 			</tr>
@@ -133,6 +135,22 @@
 			'label' : {
 				'position' : 'before',
 				'label' : 'Nom à usage interne',
+			}
+		}) }}
+		</div>
+
+    <div class="form-group">
+		{{ f.select ({
+			'select' : {
+				'name' : 'module',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'values' : page.modules,
+				'valueDefaut': page.form.module
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Module concerné',
 			}
 		}) }}
 		</div>
