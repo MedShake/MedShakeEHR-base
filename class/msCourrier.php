@@ -99,7 +99,7 @@ class msCourrier
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_patientID=$data['toID'];
-      
+
         if ($data['groupe']=="courrier") {
             $this->_modeleID = $data['typeID'];
             $tagsValues=$this->getCourrierData();
@@ -134,8 +134,10 @@ class msCourrier
 
         //patient data
         $tabRetour=$tabRetour+$this->_getPatientData($objetData['toID']);
+
         //examen data
         $tabRetour=$tabRetour+$this->getExamenData($objetData['toID'], $objetData['formValues'], $objetData['id']);
+
         //data de l'instance mère
         if ($objetData['instance']>0) {
             $tabRetour=$tabRetour+$this->_getInstanceMereData($objetData['instance']);
@@ -143,33 +145,33 @@ class msCourrier
 
         ksort($tabRetour, SORT_REGULAR);
 
+        //la class spécifique au module
+        $moduleClass="msMod".ucfirst($tabRetour['module'])."DataCourrier";
 
-        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
-        if (method_exists($moduleName, "getCrDataCompleteModule")) {
-            $moduleName::getCrDataCompleteModule($tabRetour);
+        if (method_exists($moduleClass, "getCrDataCompleteModule")) {
+            $moduleClass::getCrDataCompleteModule($tabRetour);
         }
 
         //complément dans le module pour ce formulaire spécifique ?
-         $methodToCall = "getCourrierDataCompleteModuleForm_".$objetData['formValues'];
-        if (method_exists($moduleName, $methodToCall)) {
-            $moduleName::$methodToCall($tabRetour);
+        $methodToCall = "getCrDataCompleteModuleForm_".$objetData['formValues'];
+        if (method_exists($moduleClass, $methodToCall)) {
+            $moduleClass::$methodToCall($tabRetour);
         }
-
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
-            $methodToCall = "type".$k."CompleteData";
-            if (method_exists($moduleName, $methodToCall)) {
-                $moduleName::$methodToCall($tabRetour);
-            }
+          $methodToCall = "type_".$k."_CompleteData";
+          if (method_exists($moduleClass, $methodToCall)) {
+              $moduleClass::$methodToCall($tabRetour);
+          }
         }
         ksort($tabRetour, SORT_REGULAR);
         return $tabRetour;
     }
 
 /**
- * Retourne les patientData dans un array pour rédaction courrier / certificat
+ * Retourne les data dans un array pour rédaction courrier / certificat
  * @return array             les patientData dans un ['patientData'=>]
  */
     public function getCourrierData()
@@ -187,30 +189,32 @@ class msCourrier
             $objetData=$objetData->getObjetDataByID($this->_objetID, ['typeID']);
             $this->_modeleID=$objetData['typeID'];
         }
+
         $objetModule=new msData();
-        $objetModule=$objetModule->getDataType($this->_modeleID, ['validationRules']);
+        $objetModule=$objetModule->getDataType($this->_modeleID, ['validationRules','name']);
         $tabRetour['module']=$objetModule['validationRules'];
+        $tabRetour['modeleName']=$objetModule['name'];
 
 
-        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
+        $moduleClass="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément général dans le module ?
-        if (method_exists($moduleName, "getCourrierDataCompleteModule")) {
-            $moduleName::getCourrierDataCompleteModule($tabRetour);
+        if (method_exists($moduleClass, "getCourrierDataCompleteModule")) {
+            $moduleClass::getCourrierDataCompleteModule($tabRetour);
         }
 
         //complément dans le module pour ce modeleID spécifique ?
         if (isset($this->_modeleID)) {
-            $methodToCall = "getCourrierDataCompleteModuleModele".$this->_modeleID;
-            if (method_exists($moduleName, $methodToCall)) {
-                $moduleName::$methodToCall($tabRetour);
+            $methodToCall = "getCourrierDataCompleteModuleModele_".$tabRetour['modeleName'];
+            if (method_exists($moduleClass, $methodToCall)) {
+                $moduleClass::$methodToCall($tabRetour);
             }
         }
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
             $methodToCall = "type".$k."CompleteData";
-            if (method_exists($moduleName, $methodToCall)) {
-                $moduleName::$methodToCall($tabRetour);
+            if (method_exists($moduleClass, $methodToCall)) {
+                $moduleClass::$methodToCall($tabRetour);
             }
         }
 
@@ -241,17 +245,17 @@ class msCourrier
         ksort($tabRetour, SORT_REGULAR);
 
         $tabRetour['module']='base';
-        $moduleName="msMod".ucfirst($tabRetour['module'])."DataCourrier";
+        $moduleClass="msMod".ucfirst($tabRetour['module'])."DataCourrier";
         //complément dans le module ?
-        if (method_exists($moduleName, "getOrdoDataCompleteModule")) {
-            $moduleName::getOrdoDataCompleteModule($tabRetour);
+        if (method_exists($moduleClass, "getOrdoDataCompleteModule")) {
+            $moduleClass::getOrdoDataCompleteModule($tabRetour);
         }
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
             $methodToCall = "type".$k."CompleteData";
-            if (method_exists($moduleName, $methodToCall)) {
-                $moduleName::$methodToCall($tabRetour);
+            if (method_exists($moduleClass, $methodToCall)) {
+                $moduleClass::$methodToCall($tabRetour);
             }
         }
 
@@ -270,13 +274,27 @@ class msCourrier
         $patientData->setToID($patientID);
         $tabPatientData = $patientData->getSimpleAdminDatas();
 
-        $data = new msData();
-        $data = $data->getSelectOptionValue(array_keys($tabPatientData));
+        $dat = new msData();
+        $data = $dat->getSelectOptionValue(array_keys($tabPatientData));
+        $typeId2name = $dat->getNamesFromTypeIDs(array_keys($tabPatientData));
 
         foreach ($tabPatientData as $k=>$v) {
+            //tags numériques
             if (isset($data[$k][$v])) {
                 $tabPatientData[$k]=$data[$k][$v];
                 $tabPatientData['val'.$k]=$v;
+            } else {
+                $tabPatientData[$k]=$v;
+            }
+
+            //tags name
+            if(array_key_exists($k,$typeId2name )) {
+                if (isset($data[$k][$v])) {
+                  $tabPatientData[$typeId2name[$k]]=$data[$k][$v];
+                  $tabPatientData['val_'.$typeId2name[$k]]=$v;
+                } else {
+                  $tabPatientData[$typeId2name[$k]]=$v;
+                }
             }
         }
 
@@ -307,13 +325,28 @@ class msCourrier
         $examenFormData->setInstance($instance);
         $examenFData = $examenFormData->getPrevaluesForPatient($patientID);
 
-        $data = new msData();
-        $data = $data->getSelectOptionValue(array_keys($examenFData));
+        $dat = new msData();
+        $data = $dat->getSelectOptionValue(array_keys($examenFData));
+        $typeId2name = $dat->getNamesFromTypeIDs(array_keys($examenFData));
+
 
         foreach ($examenFData as $k=>$v) {
+            //tags numériques
             if (isset($data[$k][$v])) {
                 $examenFData[$k]=$data[$k][$v];
                 $examenFData['val'.$k]=$v;
+            } else {
+                $examenFData[$k]=$v;
+            }
+
+            // tags name
+            if(array_key_exists($k,$typeId2name )) {
+                if (isset($data[$k][$v])) {
+                  $examenFData[$typeId2name[$k]]=$data[$k][$v];
+                  $examenFData['val_'.$typeId2name[$k]]=$v;
+                } else {
+                  $examenFData[$typeId2name[$k]]=$v;
+                }
             }
         }
 
@@ -328,10 +361,16 @@ class msCourrier
  */
     private function _getInstanceMereData($instance)
     {
-        return msSQL::sql2tabKey("select od.typeID, od.value
+        if ($data=msSQL::sql2tabKey("select dt.id, dt.name, od.value
         from objets_data as od
         join data_types as dt on dt.id=od.typeID and groupe='medical'
-        where od.instance='".$instance."' and od.outdated='' and od.deleted=''", 'typeID', 'value');
+        where od.instance='".$instance."' and od.outdated='' and od.deleted=''", 'name')) {
+          foreach($data as $k=>$v) {
+            $tab[$k]=$v['value'];
+            $tab[$v['id']]=$v['value'];
+          }
+          return $tab;
+        }
     }
 
 /**

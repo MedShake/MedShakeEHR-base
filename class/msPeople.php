@@ -150,11 +150,10 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        $tab=msSQL::sql2tabKey("select d.typeID, d.value from objets_data as d
+        $tab=msSQL::sql2tabKey("select d.typeID, d.value
+        from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'
-
-			 ", "typeID", "value");
+			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "typeID", "value");
 
         return $tab;
     }

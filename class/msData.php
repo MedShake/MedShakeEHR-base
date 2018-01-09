@@ -137,6 +137,26 @@ class msData
     }
 
 /**
+ * Obtenir les name à partir d'un array de typeID
+ * @param  array $ar array de typeID
+ * @return array     array typeID=>name
+ */
+    public function getNamesFromTypeIDs($ar=['-1'])
+    {
+        return msSQL::sql2tabKey("select name, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'name');
+    }
+
+/**
+ * Obtenir le name à partir de son typeID
+ * @param  int $typeID id du type
+ * @return string     name
+ */
+    public static function getNameFromTypeID($typeID)
+    {
+        return msSQL::sqlUniqueChamp("select name from data_types where id = '".$typeID."' ");
+    }
+
+/**
  * Obtenir le typeID à partir de son nom
  * @param  string $name nom du type
  * @return int     typeID
@@ -188,10 +208,10 @@ class msData
             throw new Exception('TypeID is not set');
         }
 
-        $action = "type".$this->_typeID."TreatBeforeSave";
-        $moduleName="msMod".ucfirst($p['user']['module'])."DataSave";
-        if (method_exists($moduleName, $action)) {
-            $data = new $moduleName;
+        $action = "tbs_".msData::getNameFromTypeID($this->_typeID);
+        $moduleClass="msMod".ucfirst($p['user']['module'])."DataSave";
+        if (method_exists($moduleClass, $action)) {
+            $data = new $moduleClass;
             return $data->$action($this->_value);
         } else {
             return $this->_value;
