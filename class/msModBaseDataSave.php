@@ -44,32 +44,32 @@ class msModBaseDataSave
         }
         return $value;
       }
-      public function type45TreatBeforeSave($value)
+      public function tbs_DDR($value)
       {
           return $this->correctionDateBeforeSave($value);
       }
-      public function type49TreatBeforeSave($value)
+      public function tbs_ddgReel($value)
       {
           return $this->correctionDateBeforeSave($value);
       }
 
       // identité : nom en majuscule, prenom 1er lettre maj
-      public function type2TreatBeforeSave($value)
+      public function tbs_lastname($value)
       {
           return  mb_strtoupper($value);
       }
 
-      public function type1TreatBeforeSave($value)
+      public function tbs_birthname($value)
       {
           return  mb_strtoupper($value);
       }
 
-      public function type3TreatBeforeSave($value)
+      public function tbs_firstname($value)
       {
           return mb_convert_case($value, MB_CASE_TITLE, "UTF-8");
       }
 
-      public function type22TreatBeforeSave($value)
+      public function tbs_othersfirstname($value)
       {
           return mb_convert_case($value, MB_CASE_TITLE, "UTF-8");
       }
@@ -87,43 +87,43 @@ class msModBaseDataSave
 
       }
 
-      public function type7TreatBeforeSave($value)
+      public function tbs_mobilePhone($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
-      public function type10TreatBeforeSave($value)
+      public function tbs_homePhone($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
-      public function type57TreatBeforeSave($value)
+      public function tbs_telPro($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
-      public function type58TreatBeforeSave($value)
+      public function tbs_faxPro($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
-      public function type247TreatBeforeSave($value)
+      public function tbs_mobilePhonePro($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
-      public function type248TreatBeforeSave($value)
+      public function tbs_telPro2($value)
       {
           return $this->telephoneNumberTreatBeforeSave($value);
       }
 
       //ville : en majuscule
-      public function type12TreatBeforeSave($value)
+      public function tbs_city($value)
       {
           return  mb_strtoupper($value);
       }
 
-      public function type56TreatBeforeSave($value)
+      public function tbs_villeAdressePro($value)
       {
           return  mb_strtoupper($value);
       }
@@ -133,31 +133,31 @@ class msModBaseDataSave
       {
           return str_replace(',', '.', $value);
       }
-      public function type193TreatBeforeSave($value)
+      public function tbs_regleCheque($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type194TreatBeforeSave($value)
+      public function tbs_regleCB($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type195TreatBeforeSave($value)
+      public function tbs_regleEspeces($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type196TreatBeforeSave($value)
+      public function tbs_regleFacture($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type198TreatBeforeSave($value)
+      public function tbs_regleTarifCejour($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type199TreatBeforeSave($value)
+      public function tbs_regleDepaCejour($value)
       {
           return $this->formatDecimalNumber($value);
       }
-      public function type200TreatBeforeSave($value)
+      public function tbs_regleTiersPayeur($value)
       {
           return $this->formatDecimalNumber($value);
       }
