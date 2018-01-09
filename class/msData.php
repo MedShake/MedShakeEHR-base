@@ -123,7 +123,7 @@ class msData
  */
     public function getLabelFromTypeID($ar=['1'])
     {
-        return msSQL::sql2tabKey("select label, id from data_types where id in (".implode(',', $ar).")", 'id', 'label');
+        return msSQL::sql2tabKey("select label, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'label');
     }
 
 /**
