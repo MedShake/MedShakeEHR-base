@@ -33,7 +33,7 @@ $options = $data->getSelectOptionValue(array($typeID));
 $typeRelations=$options[$typeID];
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'firstname', 'lastname']);
 
 if(isset($_POST['patientID'])) $patientID=$_POST['patientID']; elseif(isset($_GET['patientID'])) $patientID=$_GET['patientID'];
 
@@ -41,10 +41,10 @@ $data=[];
 if($data = msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, n.value as nom, p.value as prenom
 from objets_data as o
 inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."'
-left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
-left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
 where o.toID='".$patientID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-group by o.value, c.id, n.id, p.id 
+group by o.value, c.id, n.id, p.id
 order by typeRelation = 'MT' desc, nom asc")) {
 
   foreach($data as $k=>$v) {

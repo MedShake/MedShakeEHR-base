@@ -30,6 +30,10 @@
 $debug='';
 $template="comptaToday";
 
+// sortie des typeID dont on va avoir besoin
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'reglePorteur']);
+
 //liste praticiens autorisé
 $pratIdAutorises[]=$p['user']['id'];
 if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
@@ -38,20 +42,17 @@ if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
 }
 $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
  from people as p
- left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
- left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+ left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
+ left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
 //sortir les reglements du jour
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['reglePorteur']);
-
 if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
-  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
-  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+  left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+  left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated=''  and n.deleted=''
   where pd.id in (
     select pd1.id from objets_data as pd1
     where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) = CURDATE() and pd1.deleted='' and pd1.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
@@ -62,8 +63,8 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
-  left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
-  left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+  left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated=''  and p.deleted=''
+  left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
   where pd.instance in (
     select pd2.id from objets_data as pd2
     where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))

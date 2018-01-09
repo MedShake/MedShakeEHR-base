@@ -116,7 +116,9 @@ class msStockage
 
         if(isset($this->_fileExt)) return $this->_fileExt;
 
-        if ($ext=msSQL::sqlUniqueChamp("select value from objets_data where instance='".$this->_objetID."' and typeID='183' limit 1")) {
+        $docTypeID = msData::getTypeIDFromName('docType');
+
+        if ($ext=msSQL::sqlUniqueChamp("select value from objets_data where instance='".$this->_objetID."' and typeID='".$docTypeID."' limit 1")) {
             $this->_fileExt=$ext;
             return $ext;
         } else {
@@ -126,7 +128,7 @@ class msStockage
 
 /**
  * Obtenir la taille d'un fichier
- * @param  int $decimal nombre de décimal souhaitées
+ * @param  int $decimals nombre de décimal souhaitées
  * @return string           taille du fichier
  */
 public function getFileSize($decimals = 2) {

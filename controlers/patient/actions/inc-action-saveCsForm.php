@@ -58,11 +58,11 @@ if ($validation === false) {
     //on traite chaque POST
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {
-            $id = substr($k, $pos+1);
+            $in = substr($k, $pos+1);
         }
-        if (isset($id)) {
-            if (is_numeric($id)) {
-                $patient->createNewObjet($id, $v, $supportID);
+        if (isset($in)) {
+            if (!empty($in)) {
+                $patient->createNewObjetByTypeName($in, $v, $supportID);
             }
         }
     }

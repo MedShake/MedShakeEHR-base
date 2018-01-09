@@ -221,10 +221,13 @@ class msAgenda
           }
           $formatedEvents=[];
 
+          $name2typeID = new msData();
+          $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
+
           if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, concat(n.value, ' ', p.value) as name
           from agenda as a
-          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
-          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
+          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
           where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
           group by a.id, n.value, p.value")) {
               foreach ($events as $e) {
@@ -258,10 +261,13 @@ class msAgenda
               throw new Exception('EventID n\'est pas définie');
           }
 
+          $name2typeID = new msData();
+          $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
+
           if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, concat(n.value, ' ', p.value) as name
           from agenda as a
-          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
-          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
+          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
           where a.id= '".$this->_eventID."'
           group by a.id, n.value, p.value")) {
               $formatedEvent=$this->_formatEvent($event);

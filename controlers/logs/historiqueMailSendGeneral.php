@@ -53,7 +53,7 @@ if (!isset($match['params']['start'])) {
 }
 
 $typeID = new msData();
-$typeID = $typeID-> getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber']);
+$typeID = $typeID-> getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber', 'firstname', 'lastname']);
 
 
 if ($mails=msSQL::sql2tab("select m.id from objets_data as m
@@ -91,8 +91,8 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
 
 $p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID=2 and n.outdated='' and n.deleted='' 
-  left join objets_data as p on p.toID=m.fromID and p.typeID=3 and p.outdated='' and p.deleted=''
+  left join objets_data as n on n.toID=m.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+  left join objets_data as p on p.toID=m.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
   where m.typeID='".$typeID['mailPorteur']."'
   group by m.fromID, p.value, n.value
   order by n.value", "id", "identite");

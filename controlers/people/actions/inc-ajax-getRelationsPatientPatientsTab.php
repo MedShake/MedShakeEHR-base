@@ -33,7 +33,7 @@ $options = $data->getSelectOptionValue(array($typeID));
 $typeRelations=$options[$typeID];
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPatient']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPatient', 'firstname', 'lastname', 'birthdate']);
 
 if(isset($_POST['patientID'])) $patientID=$_POST['patientID']; elseif(isset($_GET['patientID'])) $patientID=$_GET['patientID'];
 
@@ -41,9 +41,9 @@ $data=[];
 if($data = msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, n.value as nom, p.value as prenom, d.value as ddn
 from objets_data as o
 inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
-left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
-left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
-left join objets_data as d on d.toID=o.value and d.typeID=8 and d.outdated='' and d.deleted=''
+left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and d.outdated='' and d.deleted=''
 where o.toID='".$patientID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
 group by o.value, c.id, n.id, p.id, d.id
 order by typeRelation = 'MT' desc, nom asc")) {

@@ -62,7 +62,7 @@ $campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=
 if (is_array($patientsList)) {
     $listeID=array_column($patientsList, 'id');
 
-    $listeTel=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID=7 and deleted='' and outdated='' ", 'toID', 'value');
+    $listeTel=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('mobilePhone')."' and deleted='' and outdated='' ", 'toID', 'value');
 
     $date_sms=date("d/m/y", $tsJourRDV);
 

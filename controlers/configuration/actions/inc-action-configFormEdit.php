@@ -26,13 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$form=new msForm();
+$form->setFormID($_POST['id']);
+$formdata=$form->getFormFromDb();
+$cleanForm=$form->cleanForm($_POST['yamlStructure'],$formdata['global']['dataset']);
+
 $data=array(
     'id'=>$_POST['id'],
     'internalName'=>$_POST['internalName'],
     'name'=>$_POST['name'],
     'description'=>$_POST['description'],
     'cat'=>$_POST['cat'],
-    'yamlStructure'=>$_POST['yamlStructure'],
+    'yamlStructure'=>$cleanForm,
     'formAction'=>$_POST['formAction'],
     'printModel'=>$_POST['printModel']
 );

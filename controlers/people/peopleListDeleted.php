@@ -29,17 +29,18 @@
 $template="peopleListDeleted";
 $debug='';
 
-$administratifMarqueurSuppressionID=msData::getTypeIDFromName('administratifMarqueurSuppression');
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['administratifMarqueurSuppression', 'firstname', 'lastname']);
 
 if($p['page']['users']=msSQL::sql2tab("select p.id, concat (o.value, ' ',  o2.value) as identiteDossier , concat (o4.value, ' ',  o3.value) as identiteUser, m.value as mvalue, m.creationDate as dateDeleted, m.value as typeDossier
 from people as p
-left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
-left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
-left join objets_data as m on m.toID=p.id and m.typeID='".$administratifMarqueurSuppressionID."' and m.outdated='' and m.deleted=''
-left join objets_data as o3 on o3.toID=m.fromID and o3.typeID=2 and o3.outdated=''
-left join objets_data as o4 on o4.toID=m.fromID and o4.typeID=3 and o4.outdated=''
+left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated=''
+left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated=''
+left join objets_data as m on m.toID=p.id and m.typeID='".$name2typeID['administratifMarqueurSuppression']."' and m.outdated='' and m.deleted=''
+left join objets_data as o3 on o3.toID=m.fromID and o3.typeID='".$name2typeID['lastname']."' and o3.outdated=''
+left join objets_data as o4 on o4.toID=m.fromID and o4.typeID='".$name2typeID['firstname']."' and o4.outdated=''
 where p.type='deleted'
-group by p.id, o.id, o2.id, m.id, o3.id, o4.id 
+group by p.id, o.id, o2.id, m.id, o3.id, o4.id
 order by p.id")) {
 
   foreach($p['page']['users'] as $k=>$v) {

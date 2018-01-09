@@ -29,9 +29,10 @@
 $debug='';
 $template="historiqueMailSend";
 
-$typeIdMailPorteur=msData::getTypeIDFromName("mailPorteur");
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'mailPorteur']);
 
-if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID=".$typeIdMailPorteur." order by creationDate desc")) {
+if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID='".$name2typeID['mailPorteur']."' order by creationDate desc")) {
 
     $mailsElements=msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
     from objets_data as o
@@ -48,8 +49,8 @@ if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance=
 
 $p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID=2 and n.outdated='' and n.deleted=''
-  left join objets_data as p on p.toID=m.fromID and p.typeID=3 and p.outdated='' and p.deleted=''
-  where m.typeID='".$typeIdMailPorteur."'
+  left join objets_data as n on n.toID=m.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+  left join objets_data as p on p.toID=m.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+  where m.typeID='".$name2typeID['mailPorteur']."'
   group by m.fromID, p.value, n.value
   order by n.value", "id", "identite");

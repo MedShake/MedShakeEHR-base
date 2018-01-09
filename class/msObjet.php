@@ -173,10 +173,11 @@ public function getToID()
  */
     public function getCompleteObjetDataByID($id)
     {
+        $docTypeID = msData::getTypeIDFromName('docType');
         return msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
-        left join objets_data as doc on doc.instance=pd.id and doc.typeID=183
+        left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
         where pd.id='".$id."'");
     }
 

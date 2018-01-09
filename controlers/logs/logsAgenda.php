@@ -50,13 +50,15 @@ $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeu
 $lastAdd=[];
 $lasrUpdate=[];
 
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
 
 if ($lastAdd=msSQL::sql2tab("select a.id as eventID, a.userid as agendaID, a.start, a.end, a.type, a.dateAdd as date, a.patientid as patientID, a.fromID, a.statut, a.absente, a.motif, n.value as patientNom, p.value as patientPrenom, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree, n1.value as auteurNom, p1.value as auteurPrenom
   from agenda as a
-  left join objets_data as n on n.toID=a.patientid and n.typeID=2 and n.deleted = '' and n.outdated = ''
-  left join objets_data as p on p.toID=a.patientid and p.typeID=3 and p.deleted = '' and p.outdated = ''
-  left join objets_data as n1 on n1.toID=a.fromID and n1.typeID=2 and n1.deleted = '' and n1.outdated = ''
-  left join objets_data as p1 on p1.toID=a.fromID and p1.typeID=3 and p1.deleted = '' and p1.outdated = ''
+  left join objets_data as n on n.toID=a.patientid and n.typeID='".$name2typeID['lastname']."' and n.deleted = '' and n.outdated = ''
+  left join objets_data as p on p.toID=a.patientid and p.typeID='".$name2typeID['firstname']."' and p.deleted = '' and p.outdated = ''
+  left join objets_data as n1 on n1.toID=a.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
+  left join objets_data as p1 on p1.toID=a.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
   where ".implode(' and ', $whereLA)."
   group by a.id, n.value, p.value, n1.value, p1.value
   order by a.id desc
@@ -69,10 +71,10 @@ if ($lastAdd=msSQL::sql2tab("select a.id as eventID, a.userid as agendaID, a.sta
 if ($lastUpdate=msSQL::sql2tab("select l.eventID, l.userID as agendaID, l.date, l.operation, l.olddata, l.fromID, a.patientid as patientID, a.type as type, n.value as patientNom, p.value as patientPrenom, a.start, a.end, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree, n1.value as auteurNom, p1.value as auteurPrenom
   from agenda_changelog as l
   left join agenda as a on a.id=l.eventID
-  left join objets_data as n on n.toID=a.patientid and n.typeID=2 and n.deleted = '' and n.outdated = ''
-  left join objets_data as p on p.toID=a.patientid and p.typeID=3 and p.deleted = '' and p.outdated = ''
-  left join objets_data as n1 on n1.toID=a.fromID and n1.typeID=2 and n1.deleted = '' and n1.outdated = ''
-  left join objets_data as p1 on p1.toID=a.fromID and p1.typeID=3 and p1.deleted = '' and p1.outdated = ''
+  left join objets_data as n on n.toID=a.patientid and n.typeID='".$name2typeID['lastname']."' and n.deleted = '' and n.outdated = ''
+  left join objets_data as p on p.toID=a.patientid and p.typeID='".$name2typeID['firstname']."' and p.deleted = '' and p.outdated = ''
+  left join objets_data as n1 on n1.toID=a.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
+  left join objets_data as p1 on p1.toID=a.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
   where ".implode(' and ', $whereLU)."
   group by l.id, n.value, p.value, n1.value, p1.value
   order by l.id desc

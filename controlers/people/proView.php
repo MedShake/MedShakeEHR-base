@@ -43,12 +43,12 @@ $p['page']['proDataLabel'] = $labels->getLabelFromTypeID(array_keys($p['page']['
 
 //les patients connus
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['relationID']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'firstname', 'lastname']);
 $p['page']['patientsConnus']=msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, n.value as nom, p.value as prenom
 from objets_data as o
 left join objets_data as c on c.instance=o.id
-left join objets_data as n on n.toID=o.value and n.typeID=2 and n.outdated='' and n.deleted=''
-left join objets_data as p on p.toID=o.value and p.typeID=3 and p.outdated='' and p.deleted=''
+left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
 where o.toID='".$match['params']['proID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-group by o.value, c.id, n.id, p.id 
+group by o.value, c.id, n.id, p.id
 order by nom asc");

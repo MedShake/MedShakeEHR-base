@@ -26,15 +26,16 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
+ $name2typeID = new msData();
+ $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
 
  $data=msSQL::sql2tab("select trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, ''))) as value, trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, ''))) as label, p.id
  from objets_data as do
- left join objets_data as d2 on do.toID = d2.toID and d2.typeID='2' and d2.outdated='' and d2.deleted=''
- left join objets_data as d3 on do.toID = d3.toID and d3.typeID='3' and d3.outdated='' and d3.deleted=''
+ left join objets_data as d2 on do.toID = d2.toID and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
+ left join objets_data as d3 on do.toID = d3.toID and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
  left join people as p on p.id=do.toID
  where do.typeID in ('2', '3') and concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%'
- group by label, d2.id, d3.id, p.id 
+ group by label, d2.id, d3.id, p.id
  limit 25");
 
 

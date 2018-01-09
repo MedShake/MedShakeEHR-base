@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : obtenir le formulaire de consultation demandé 
+ * Patient > ajax : obtenir le formulaire de consultation demandé
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */

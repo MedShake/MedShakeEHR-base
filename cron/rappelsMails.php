@@ -103,7 +103,7 @@ $patientsList=json_decode($patientsList, true);
 if (is_array($patientsList)) {
     $listeID=array_column($patientsList, 'id');
 
-    $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID=4 and deleted='' and outdated='' ", 'toID', 'value');
+    $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('personalEmail')."' and deleted='' and outdated='' ", 'toID', 'value');
 
     $date_sms=date("d/m/y", $tsJourRDV);
 

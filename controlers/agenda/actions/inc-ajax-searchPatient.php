@@ -26,14 +26,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ $name2typeID = new msData();
+ $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthdate']);
+
  $term = msSQL::cleanVar($_GET['term']);
  $a_json = array();
 
  if ($data=msSQL::sql2tab("select p.id, concat(d2.value, ' ', d3.value) as  identite, d8.value as ddn
  from people as p
- left join objets_data as d2 on d2.toID=p.id and d2.typeID=2 and d2.outdated='' and d2.deleted=''
- left join objets_data as d8 on d8.toID=p.id and d8.typeID=8 and d8.outdated='' and d8.deleted=''
- left join objets_data as d3 on d3.toID=p.id and d3.typeID=3 and d3.outdated='' and d3.deleted=''
+ left join objets_data as d2 on d2.toID=p.id and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
+ left join objets_data as d8 on d8.toID=p.id and d8.typeID='".$name2typeID['birthdate']."' and d8.outdated='' and d8.deleted=''
+ left join objets_data as d3 on d3.toID=p.id and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
  where concat(d2.value, ' ', d3.value) like '%".$term."%'
  group by p.id, d2.value, d3.value, d8.value
  order by d2.value, d3.value limit 20")) {

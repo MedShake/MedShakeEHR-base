@@ -32,9 +32,13 @@
  } else {
      $template="configUsersList";
      $debug='';
+
+     $name2typeID = new msData();
+     $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
+
      $p['page']['users']=msSQL::sql2tab("select p.id, p.rank, o2.value as prenom, o.value as nom
       from people as p
-      left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
-      left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+      left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated=''
+      left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated=''
       where p.pass!='' order by p.id");
  }
