@@ -112,7 +112,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour la liaison code postal - > ville
-  $('body').delegate('#p_13ID, #p_53ID', 'focusin', function() {
+  $('body').delegate('#id_postalCodePerso_id, #id_codePostalPro_id', 'focusin', function() {
     type = $(this).attr('data-typeID');
     if (type == 53) dest = 56;
     else if (type == 13) dest = 12;
@@ -125,16 +125,16 @@ $(document).ready(function() {
       select: function(event, ui) {
         sourceval = eval('ui.item.d' + type);
         destival = eval('ui.item.d' + dest);
-        $('#p_' + dest + 'ID').val(destival);
-        $('#p_' + type + 'ID').val(sourceval);
+        $('input[data-typeid="' + dest + '"]').val(destival);
+        $('input[data-typeid="' + type + '"]').val(sourceval);
 
         //si contexte de mise à jour automatique
         patientID = $('#identitePatient').attr("data-patientID");
-        if ($('#p_' + dest + 'ID').parents('.changeObserv').length) {
-          setPeopleData(destival, patientID, dest, '#p_' + dest + 'ID', '0');
+        if ($('input[data-typeid="' + dest + '"]').parents('.changeObserv').length) {
+          setPeopleData(destival, patientID, dest, 'input[data-typeid="' + dest + '"]', '0');
         }
-        if ($('#p_' + type + 'ID').parents('.changeObserv').length) {
-          setPeopleData(sourceval, patientID, type, '#p_' + type + 'ID', '0');
+        if ($('input[data-typeid="' + type + '"]').parents('.changeObserv').length) {
+          setPeopleData(sourceval, patientID, type, 'input[data-typeid="' + type + '"]', '0');
         }
 
       }

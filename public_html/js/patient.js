@@ -404,15 +404,15 @@ function catchOtherDicomSrData() {
 
 function mapDicomSRData2CurrentForm(data) {
   jQuery.each(data, function(index, item) {
-    $('#p_' + index + 'ID').val(item);
-    $('#p_' + index + 'ID').trigger("keyup");
+    $('input[data-typeID="' + index + '"]').val(item);
+    $('input[data-typeID="' + index + '"]').trigger("keyup");
   });
 }
 
 function addDicomSRInfo2CurrentForm(data) {
-  $('#nouvelleCs form').append('<input type="hidden" name="p_433" value="' + data['study'] + '" />');
-  $('#nouvelleCs form').append('<input type="hidden" name="p_434" value="' + data['serie'] + '" />');
-  $('#nouvelleCs form').append('<input type="hidden" name="p_435" value="' + data['instance'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomStudyID" value="' + data['study'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomSerieID" value="' + data['serie'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomInstanceID" value="' + data['instance'] + '" />');
 
 }
 

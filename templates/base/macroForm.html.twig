@@ -49,19 +49,19 @@
 	  {% if v.input.before %}
 	  	{{ v.input.before }}
 			{% if v.input.plusg %}
-				<span class="input-group-addon" id="{{v.input.name}}IDAddOnG">{{ v.input.plusg }}</span>
+				<span class="input-group-addon" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
 			{% endif %}
 		{% elseif v.input.plus or v.input.plusg %}
 			<div class="input-group">
 
 				{% if v.input.plusg %}
-					<span class="input-group-addon" id="{{v.input.name}}IDAddOnG">{{ v.input.plusg }}</span>
+					<span class="input-group-addon" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
 				{% endif %}
 
 		{% endif %}
 
 		{# input #}
-    <input type="{{ v.input.type }}" title="{{ v.input.name }}{% if v.input.internalName %} / {{ v.input.internalName }}{% endif %}"
+    <input type="{{ v.input.type }}" title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"
 		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
 		{% if v.input.name %} name="{{ v.input.name }}" {% endif %}
     {% if v.input.value != 'noPreValue' %} value="{{ v.input.value|e('html_attr') }}"
@@ -87,7 +87,7 @@
     {% if v.input.after %}
     	{{ v.input.after }}
 		{% elseif v.input.plus %}
-			<span class="input-group-addon" id="{{v.input.name}}IDAddOn">{{ v.input.plus }}</span>
+			<span class="input-group-addon" id="{{v.input.id}}AddOn">{{ v.input.plus }}</span>
 		{% endif %}
 
 		{% if v.input.before %}
@@ -131,7 +131,7 @@
 		{% endif %}
 	{% endif %}
 
-	<select title="{{ v.select.name }}{% if v.select.internalName %} / {{ v.select.internalName }}{% endif %}"
+	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
 	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
@@ -188,7 +188,7 @@
 		{% endif %}
 	{% endif %}
 
-	<select title="{{ v.select.name }}{% if v.select.internalName %} / {{ v.select.internalName }}{% endif %}"
+	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
 	{% if v.select.name %} name="{{ v.select.name }}" {% endif %}
@@ -241,7 +241,7 @@
 		{% endif %}
 	{% endif %}
 
-	<textarea title="{{ v.textarea.name }}{% if v.textarea.internalName %} / {{ v.textarea.internalName }}{% endif %}"
+	<textarea title="{{ v.textarea.internalName }} / {{ v.textarea.datatypeid }}"
 	{% if v.textarea.id %} id="{{ v.textarea.id }}" {% endif %}
 	{% if v.textarea.name %} name="{{ v.textarea.name }}" {% endif %}
   {% if v.textarea.placeholder %} placeholder="{{ v.textarea.placeholder|e('html_attr') }}" {% endif %}
@@ -343,7 +343,7 @@
 									'input' : {
 										'type' : el.value.formType,
 										'name' : el.value.name,
-										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'placeholder' : el.value.placeholder,
 										'class' : 'form-control' ~ el.value.autocompleteclass,
 										'value' : el.value.preValue,
@@ -375,7 +375,7 @@
 									'input' : {
 										'type' : 'text',
 										'name' : el.value.name,
-										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'placeholder' : el.value.placeholder,
 										'class' : 'form-control' ~ el.value.autocompleteclass,
 										'value' : el.value.preValue,
@@ -390,7 +390,7 @@
 										'max' : el.value.max,
 										'step' : el.value.step,
 										'before' : '<div class="input-group">',
-										'after' : '<span class="input-group-btn" id="' ~ el.value.name ~ 'IDAddOn"><button id="' ~ el.value.name ~ 'Button" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>',
+										'after' : '<span class="input-group-btn" id="id_' ~ el.value.name ~ '_idAddOn"><button id="id_' ~ el.value.internalName ~ '_idButton" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>',
 										'internalName' : el.value.internalName
 									},
 									'label' : {
@@ -407,7 +407,7 @@
 								{{ f.textarea ({
 									'textarea' : {
 										'name' : el.value.name,
-										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'class' : 'form-control',
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
@@ -432,7 +432,7 @@
 								{{ f.select ({
 									'select' : {
 										'name' : el.value.name,
-										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'class' : 'form-control',
 										'values' : el.value.formValues,
 										'valueDefaut' : el.value.preValue,
@@ -456,14 +456,14 @@
 									'input' : {
 										'type' : 'text',
 										'name' : el.value.name,
-										'id' : 'p_' ~ el.value.id ~ 'ID',
+										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'placeholder' : el.value.placeholder,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'class' : 'form-control datepic',
-										'before' : '<div id="'~ el.value.name ~ 'Id" class="input-group date datepick" data-typeid="'~ el.value.id ~'">',
+										'before' : '<div id="before_'~ el.value.internalName ~ '" class="input-group date datepick" data-typeid="'~ el.value.id ~'">',
 										'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>',
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
@@ -476,7 +476,7 @@
 										'class' : 'control-label'
 									}
 								}) }}
-								<span id="{{ el.value.name }}IdHelp" class="help-block"></span>
+								<span id="id_{{ el.value.internalName }}_idHelp" class="help-block"></span>
 								</div>
 
 							{% elseif el.value.formType == "submit" %}

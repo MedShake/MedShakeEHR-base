@@ -49,7 +49,7 @@ $(document).ready(function() {
     calcResteDu();
   });
 
-  //observer lle changement sur dépassement
+  //observer le changement sur dépassement
   $("#newReglement").on("change, keyup", "input[name='regleDepaCejour']", function(e) {
     e.preventDefault();
     calcResteDu();
@@ -171,7 +171,7 @@ function calcResteDu() {
     reste = Math.round((total-tiers)*100)/100;
     $("input[name='regleTiersPayeur']").val(tiers);
     $("input[name='regleFacture']").val(total).change();
-    $("label[for='p_200ID']").html('Tiers (reste à payer : '+ reste +'€)');
+    $("label[for='id_regleTiersPayeur_id']").html('Tiers (reste à payer : '+ reste +'€)');
   } else if (cas == 'TP ALD') {
     total = parseFloat(tarif);
     $("input[name='regleTiersPayeur']").val(total);
@@ -186,5 +186,5 @@ function resetModesReglement() {
   $("input[name='regleCB']").val('');
   $("input[name='regleEspeces']").val('');
   $("input[name='regleFacture']").val('').change();
-  $("label[for='p_200ID']").html('Tiers');
+  $("label[for='id_regleTiersPayeur_id']").html('Tiers');
 }

@@ -29,20 +29,20 @@
 $(document).ready(function() {
 
   //calcul IMC
-  if ($('#p_43ID').length > 0) {
+  if ($('#id_imc_id').length > 0) {
 
-    imc = imcCalc($('#p_34ID').val(), $('#p_35ID').val());
+    imc = imcCalc($('#id_poids_id').val(), $('#id_taillePatient_id').val());
     if (imc > 0) {
-      $('#p_43ID').val(imc);
+      $('#id_imc_id').val(imc);
     }
 
-    $("input[data-typeid='34'] , input[data-typeid='35']").on("keyup", function() {
-      poids = $('#p_34ID').val();
-      taille = $('#p_35ID').val();
+    $("#id_poids_id , #id_taillePatient_id").on("keyup", function() {
+      poids = $('#id_poids_id').val();
+      taille = $('#id_taillePatient_id').val();
       imc = imcCalc(poids, taille);
-      $('#p_43ID').val(imc);
+      $('#id_imc_id').val(imc);
       patientID = $('#identitePatient').attr("data-patientID");
-      setPeopleData(imc, patientID, '43', '#p_43ID', '0');
+      setPeopleData(imc, patientID, '43', '#id_imc_id', '0');
 
     });
   }
