@@ -29,4 +29,4 @@
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
 header('Content-Type: application/json');
-echo json_encode($patient->getSimpleAdminDatas());
+echo json_encode($patient->getSimpleAdminDatasByName());

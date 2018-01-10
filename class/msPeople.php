@@ -158,6 +158,24 @@ class msPeople
         return $tab;
     }
 
+/**
+ * Obtenir les données administratives d'un individu avec key name
+ * @return array Array name=>value
+ */
+    public function getSimpleAdminDatasByName()
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        $tab=msSQL::sql2tabKey("select t.name, d.value
+        from objets_data as d
+        left join data_types as t on d.typeID=t.id
+			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "name", "value");
+
+        return $tab;
+    }
+
     /**
      * Obtenir les pros en relation avec ce patient
      * @return array array des pros en relation
@@ -248,6 +266,7 @@ class msPeople
     {
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName([$param, 'firstname', 'lastname']);
+        if(!isset($name2typeID[$param])) $name2typeID[$param]='';
 
         if ($data=msSQL::sql2tab("select p.id, concat(o2.value , ' ' , o.value) as identite, dt.value
           from people as p
