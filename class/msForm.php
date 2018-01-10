@@ -534,8 +534,20 @@ class msForm
             foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
 
-                // si c'est un bloc standard (ID ou internalName)
-                if (is_numeric($bloc[0]) or preg_match('#([a-zA-Z0-9]+)#i', $bloc[0])) {
+                //template
+                if ((preg_match('#template{([a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
+                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                            'type'=>'template',
+                            'value'=>$match[1]
+                        );
+                //label
+                } else if ((preg_match('#label{([a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
+                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                            'type'=>'label',
+                            'value'=>$match[1]
+                        );
+                // sinon c'est un bloc standard (ID ou internalName)
+                } else {
                     if (is_numeric($bloc[0])) {
                         $type=$this->_formExtractType($bloc[0], $dataset);
                     } else {
@@ -633,29 +645,6 @@ class msForm
 
                       $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
                   }
-                }
-
-                //si ce n'est pas un bloc standard
-                else {
-                    $bloc=implode(',', $bloc);
-
-                    //template
-                    if ((preg_match('#template{([a-zA-Z0-9]+)}#i', $bloc, $match))) {
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
-                                'type'=>'template',
-                                'value'=>$match[1]
-                            );
-                    }
-                    //labels
-                    else {
-                        if (empty(trim($bloc))) {
-                            $bloc='&nbsp;';
-                        }
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
-                                                  'type'=>'label',
-                                                  'value'=>$bloc
-                                              );
-                    }
                 }
             }
         }
