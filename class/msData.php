@@ -213,9 +213,13 @@ class msData
         if (method_exists($moduleClass, $action)) {
             $data = new $moduleClass;
             return $data->$action($this->_value);
+        } elseif (method_exists('msModBaseDataSave', $action)) {
+            $data = new msModBaseDataSave;
+            return $data->$action($this->_value);
         } else {
             return $this->_value;
         }
+
     }
 
 /**
