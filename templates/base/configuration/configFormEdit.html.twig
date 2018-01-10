@@ -54,7 +54,7 @@
 <h1>Edition de formulaire : {{ page.form.name }}</h1>
 
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-5" style="padding-right : 40px">
 	<h2>Références</h2>
 	<form>
 		<h3>Défauts</h3>
@@ -108,10 +108,9 @@
 
 	</div>
 
-	<div class="col-md-1">
-	</div>
 
-	<form class="col-md-5"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+
+	<form class="col-md-7"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
 	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
 		{{ f.input ({
 			'input' : {
