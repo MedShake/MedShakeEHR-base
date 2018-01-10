@@ -376,12 +376,24 @@ class msForm
         if (is_array($blocs)) {
             foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
-                if (is_numeric($bloc[0]) and $type=$this->_formExtractType($bloc[0], $dataset)) {
-                    $type['originalname']=$type['name'];
-                    $type['name']='p_'.$type['id'];
+
+                if (is_numeric($bloc[0]) or preg_match('#([a-zA-Z0-9]+)#i', $bloc[0])) {
+                    if (is_numeric($bloc[0])) {
+                        $type=$this->_formExtractType($bloc[0], $dataset);
+                    } else {
+                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
+                    }
+
+                    //$type['originalname']=$type['name'];
+                    //$type['name']='p_'.$type['id'];
+
+                    $type['internalName']=$type['name'];
+                    if ($this->_typeForNameInForm !='byName') {
+                        $type['name']='p_'.$type['name'];
+                    }
 
                     //post name -> type name
-                    $r['postname2typename'][$type['name']]=$type['originalname'];
+                    $r['postname2typename'][$type['name']]=$type['internalName'];
 
 
                     // si de type select
@@ -530,8 +542,8 @@ class msForm
                         $type=$this->_formExtractTypeByName($bloc[0], $dataset);
                     }
 
+                    $type['internalName']=$type['name'];
                     if ($this->_typeForNameInForm !='byName') {
-                        $type['internalName']=$type['name'];
                         $type['name']='p_'.$type['name'];
                     }
 
@@ -779,7 +791,7 @@ class msForm
             $ligneOriginale=$ligne;
             if(preg_match("#(\s+)- (template\{|')(.*)#i", $ligne, $match) ) {
               $ligne=explode('#', rtrim($ligne));
-              $ligne[0]=str_pad(rtrim($ligne[0]),40)."\t\t";
+              $ligne[0]=str_pad(rtrim($ligne[0]),50)."\t\t";
               $cleanform[]=implode('# ',$ligne);
             } elseif (preg_match("#(\s+)- ([a-zA-Z0-9]+)(.*)#i", $ligne, $match)) {
               $ligne=explode('#', rtrim($ligne));
@@ -791,7 +803,7 @@ class msForm
                   $type=$this->_formExtractTypeByName($match[2], $dataset);
               }
 
-              $cleanform[]=str_pad($match[1].'- '.$type['name'].trim($match[3]),40)." \t\t#".str_pad($type['id'],4).' '.str_replace("'", " ", $type['label']);
+              $cleanform[]=str_pad($match[1].'- '.$type['name'].trim($match[3]),50)." \t\t#".str_pad($type['id'],4).' '.str_replace("'", " ", $type['label']);
 
             } else {
                 $cleanform[]=$ligneOriginale;
