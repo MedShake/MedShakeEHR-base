@@ -135,6 +135,7 @@ configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[
 configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique

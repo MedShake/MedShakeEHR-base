@@ -465,6 +465,9 @@ class msForm
 
 
         // structure
+        // on sort si pas de structure (on est dans un formulaire affichage)
+        if(!isset($t['structure'])) return;
+
         $rowTotal=count($t['structure']);
 
         for ($rowNumber=1;$rowNumber<=$rowTotal;$rowNumber++) {
@@ -712,7 +715,7 @@ class msForm
         if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where id='".msSQL::cleanVar($id)."' limit 1")) {
             return $typeData;
         } else {
-            throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données');
+            throw new Exception('Le type de donnée '.$id.' n\'a pas pu être extrait de la base de données');
         }
     }
 
@@ -727,7 +730,7 @@ class msForm
           if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
               return $typeData;
           } else {
-              throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name');
+              throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name : '.$name);
           }
       }
 

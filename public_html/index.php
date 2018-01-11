@@ -134,6 +134,9 @@ if (isset($template)) {
     //générer et sortir le html
     $getHtml = new msGetHtml();
     $getHtml->set_template($template);
+    if(isset($forceAllTemplates)) {
+      $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'],'/'));
+    }
     echo $getHtml->genererHtml();
 }
 
