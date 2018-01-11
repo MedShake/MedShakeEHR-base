@@ -41,6 +41,7 @@ if ($_POST['porp']=='patient') {
 
 $p['page']['porp']=$_POST['porp'];
 
+
 if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formIN."' limit 1")) {
     $form=Spyc::YAMLLoad($form);
 
@@ -54,7 +55,14 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         if (isset($form['col'.$i]['bloc'])) {
             foreach ($form['col'.$i]['bloc'] as $v) {
                 $el=explode(',', $v);
-                $listeTypes[]=$el[0];
+                if(is_numeric($el[0])) {
+                  $name=msData::getNameFromTypeID($el[0]);
+                  $listeTypes[$name]=$el[0];
+                } else {
+                  $typeID=msData::getTypeIDFromName($el[0]);
+                  $listeTypes[$el[0]]=$typeID;
+                  $el[0]=$typeID;
+                }
 
                 //order by
                 if ($i==1) {
@@ -64,7 +72,6 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         }
     }
     $listeTypes=array_unique($listeTypes);
-
 
     foreach ($listeTypes as $type) {
         $select[]= 'd'.$type.'.value as c'.$type;
@@ -97,7 +104,11 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
             if (isset($form['col'.$i]['bloc'])) {
                 foreach ($form['col'.$i]['bloc'] as $v) {
                     $el=explode(',', $v);
-                    $id=$el[0];
+                    if(is_numeric($el[0])) {
+                      $id=$el[0];
+                    } else {
+                      $id=$listeTypes[$el[0]];
+                    }
                     unset($el[0]);
 
                     //col number for type
