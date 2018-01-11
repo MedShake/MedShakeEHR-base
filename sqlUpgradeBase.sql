@@ -2,7 +2,8 @@
 
 -- 2.3.0 to 2.x.0
 
-ALTER TABLE `actes` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+-- ALTER TABLE `actes` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+ALTER TABLE `actes_cat` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
 
 ALTER TABLE `actes_cat` ADD UNIQUE(`name`);
 
@@ -11,6 +12,7 @@ ALTER TABLE `data_types` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 C
 UPDATE `data_types` SET `name` = 'firstname' WHERE `data_types`.`id` = 3;
 
 ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+
 update `data_types` set validationRules='base' WHERE `groupe` = 'courrier'
 
 CREATE TABLE `system` (
@@ -23,9 +25,7 @@ INSERT INTO `system` (`id`,`module`,`version`) VALUES
 (1, 'base', 'v2.4.0'),
 (2, 'public', 'v2.4.0');
 
-ALTER TABLE `system`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `module` (`module`);
+ALTER TABLE `system` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `module` (`module`);
 
 ALTER TABLE `system`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
@@ -35,7 +35,7 @@ ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
 (5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
 
-UPDATE `forms` set `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' , `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' WHERE `id`=25;
+UPDATE `forms` set `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' , `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - 1,required\r\n      - 2,required\r\n      - 5,nolabel\r\n      - 3' WHERE `name`='basePasswordChange';
 
 -- 2.1.0 to 2.2.0
 
