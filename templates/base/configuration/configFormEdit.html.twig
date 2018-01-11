@@ -110,8 +110,10 @@
 
 
 
-	<form class="col-md-7"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+	<form id="formParamsEdit" class="col-md-7"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+    <button type="submit" class="btn btn-primary pull-right" style="margin-top : 25px">Enregistrer</button>
 	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
+
 		{{ f.input ({
 			'input' : {
 				'type' : 'hidden',
@@ -246,7 +248,7 @@
 				'class' : 'form-control',
 				'autocomplete' : 'off',
 				'value' : page.form.yamlStructure,
-				'add' : 'rows="70" style="font-family:monospace;"'
+				'add' : 'rows="20" style="font-family:monospace;"'
 			},
 			'label' : {
 				'position' : 'before',
@@ -256,7 +258,7 @@
 		</div>
 
 
-		<button type="submit" class="btn btn-primary">Valider</button>
+		<button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
 
 		<p>
 		{{ page.form.yaml }}

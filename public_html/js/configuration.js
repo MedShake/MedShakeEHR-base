@@ -33,10 +33,10 @@ $(document).ready(function() {
   }
   else if (document.URL.indexOf("#ca") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
-  } 
+  }
   else if (document.URL.indexOf("#licence") >= 0) {
     $($("ul.nav-tabs li")[3]).children("a")[0].click();
-  } 
+  }
 
   // extract by primary key
   $("button.edit-by-prim-key").on("click", function(e) {
@@ -257,6 +257,12 @@ $(document).ready(function() {
     });
     editor.setSize(null, 400);
   }
+
+  //auto_grow pour edition de formulaires
+  $("#formParamsEdit textarea").on("keyup, focus", function() {
+    $(this).css("overflow", "hidden");
+    auto_grow(this);
+  });
 
 });
 

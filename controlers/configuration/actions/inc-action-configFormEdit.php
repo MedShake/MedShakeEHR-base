@@ -33,6 +33,7 @@ $cleanForm=$form->cleanForm($_POST['yamlStructure'],$formdata['global']['dataset
 
 $data=array(
     'id'=>$_POST['id'],
+    'module'=>$_POST['module'],
     'internalName'=>$_POST['internalName'],
     'name'=>$_POST['name'],
     'description'=>$_POST['description'],
