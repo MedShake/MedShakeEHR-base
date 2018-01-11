@@ -376,8 +376,10 @@ class msForm
         if (is_array($blocs)) {
             foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
-
-                if (is_numeric($bloc[0]) or preg_match('#([a-zA-Z0-9]+)#i', $bloc[0])) {
+                if (preg_match('#(template|label).*#i', $bloc[0], $match)) {
+                    continue;
+                }
+                if (is_numeric($bloc[0]) or preg_match('#([_a-zA-Z0-9]+)#i', $bloc[0])) {
                     if (is_numeric($bloc[0])) {
                         $type=$this->_formExtractType($bloc[0], $dataset);
                     } else {
@@ -538,13 +540,13 @@ class msForm
                 $bloc=explode(',', $v);
 
                 //template
-                if ((preg_match('#template{([a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
+                if ((preg_match('#template{([_a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'template',
                             'value'=>$match[1]
                         );
                 //label
-                } else if ((preg_match('#label{([a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
+                } else if ((preg_match('#label{([ _a-zA-Z0-9]+)}#i', $bloc[0], $match))) {
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'label',
                             'value'=>$match[1]
@@ -744,7 +746,7 @@ class msForm
         if ($formyaml=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$this->_formID."' limit 1")) {
 
             $rtypes=[];
-            preg_match_all("# - ([a-zA-Z0-9]+)#i", $formyaml, $matchIN);
+            preg_match_all("# - (?!template|label)([ _a-zA-Z0-9]+)#i", $formyaml, $matchIN);
             if(count($matchIN[1])>0) {
               $types=new msData();
               if($types=$types->getTypeIDsFromName($matchIN[1])) $rtypes=$types;
@@ -785,13 +787,17 @@ class msForm
               $ligne=explode('#', rtrim($ligne));
               $ligne[0]=str_pad(rtrim($ligne[0]),50)."\t\t";
               $cleanform[]=implode('# ',$ligne);
+            } elseif(preg_match("#(\s+)- (label\{|')(.*)#i", $ligne, $match) ) {
+              $ligne=explode('#', rtrim($ligne));
+              $ligne[0]=str_pad(rtrim($ligne[0]),50)."\t\t";
+              $cleanform[]=implode('# ',$ligne);
             } elseif (preg_match("#(\s+)- ([a-zA-Z0-9]+)(.*)#i", $ligne, $match)) {
               $ligne=explode('#', rtrim($ligne));
               $ligne=$ligne[0];
 
               if (preg_match("#(\s+)- ([0-9]+)(.*)#i", $ligne, $match)) {
                   $type=$this->_formExtractType($match[2], $dataset);
-              } elseif(preg_match("#(\s+)- ([a-zA-Z0-9]+)(.*)#i", $ligne, $match)) {
+              } elseif(preg_match("#(\s+)- ([ _a-zA-Z0-9]+)(.*)#i", $ligne, $match)) {
                   $type=$this->_formExtractTypeByName($match[2], $dataset);
               }
 
