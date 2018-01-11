@@ -2,6 +2,12 @@
 
 -- 2.3.0 to 2.x.0
 
+ALTER TABLE `actes` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+
+ALTER TABLE `actes_cat` ADD UNIQUE(`name`);
+
+ALTER TABLE `data_types` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
+
 UPDATE `data_types` SET `name` = 'firstname' WHERE `data_types`.`id` = 3;
 
 ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
