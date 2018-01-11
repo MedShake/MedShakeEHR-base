@@ -84,7 +84,7 @@ class msSQL
   public static function sqlUniqueChamp($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if (mysqli_num_rows($query)==1) {
+      if ($query!=null and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           $row = $query->fetch_row();
           return $row[0];
@@ -100,13 +100,10 @@ class msSQL
  */
   public static function sqlUnique($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)==1) {
-              $query->data_seek(0);
-              return $query->fetch_array(MYSQLI_ASSOC);
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query!=null and mysqli_num_rows($query)==1) {
+          $query->data_seek(0);
+          return $query->fetch_array(MYSQLI_ASSOC);
       } else {
           return null;
       }
@@ -119,17 +116,14 @@ class msSQL
  */
   public static function sql2tab($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)>0) {
-              while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
-                  if ($row) {
-                      $result[]=$row;
-                  }
-              };
-              return $result;
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query!=null and mysqli_num_rows($query)>0) {
+          while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
+              if ($row) {
+                  $result[]=$row;
+              }
+          };
+          return $result;
       } else {
           return null;
       }
@@ -165,17 +159,14 @@ class msSQL
  */
   public static function sql2tabSimple($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)>0) {
-              while ($row=$query->fetch_array(MYSQLI_NUM)) {
-                  if ($row) {
-                      $result[]=$row[0];
-                  }
-              };
-              return $result;
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query!=null and mysqli_num_rows($query)>0) {
+          while ($row=$query->fetch_array(MYSQLI_NUM)) {
+              if ($row) {
+                  $result[]=$row[0];
+              }
+          };
+          return $result;
       } else {
           return null;
       }
