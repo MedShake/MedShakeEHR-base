@@ -125,19 +125,20 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        $datas=msSQL::sql2tab("select d.id, d.typeID, d.value, t.label , tt.label as parentLabel, d.parentTypeID, d.creationDate
+        if($datas=msSQL::sql2tab("select d.id, d.typeID, d.value, t.label , tt.label as parentLabel, d.parentTypeID, d.creationDate
   			from objets_data as d
   			left join data_types as t on d.typeID=t.id
   			left join data_types as tt on d.parentTypeID=tt.id
   			where d.toID='".$this->_toID."' and d.outdated='' and t.groupe='admin'
-  			order by d.parentTypeID ");
+  			order by d.parentTypeID ")) {
 
-
-        foreach ($datas as $v) {
-            $tab[$v['typeID']]=$v;
+          foreach ($datas as $v) {
+              $tab[$v['typeID']]=$v;
+          }
+          return $tab;
         }
 
-        return $tab;
+
     }
 
 /**

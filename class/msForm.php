@@ -163,7 +163,7 @@ class msForm
     {
         if (is_array($v)) {
             return $this->_prevalues = $v;
-        } else {
+        } elseif(!empty($v)) {
             throw new Exception('Var is not an array');
         }
     }
