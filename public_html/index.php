@@ -32,13 +32,13 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 
 /////////// Petites vérifications de l'installation
 if (!is_dir("../vendor")) {
-    die("L'installation de Medshake ne semble pas complète, veuillez lancer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)"); 
+    die("L'installation de Medshake ne semble pas complète, veuillez lancer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)");
 }
 if (!is_dir("bower_components")) {
-    die("L'installation de Medshake ne semble pas complète, veuillez lancer BOWER (<a href='https://bower.io'>https://bower.io</a>)"); 
+    die("L'installation de Medshake ne semble pas complète, veuillez lancer BOWER (<a href='https://bower.io'>https://bower.io</a>)");
 }
 if (!is_file('../config/config.yml')) {
-    die("L'installation de Medshake ne semble pas complète, veuillez créer le fichier config/config.yml"); 
+    die("L'installation de Medshake ne semble pas complète, veuillez créer le fichier config/config.yml");
 }
 
 session_start();
@@ -98,7 +98,7 @@ if (isset($_COOKIE['userId'])) {
     }
 }
 
-///////// Controler else -> 404
+///////// Controler
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
 
@@ -106,8 +106,8 @@ if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
         include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-} else {
-    //$template='problem';
+} elseif ($match and is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+    include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 

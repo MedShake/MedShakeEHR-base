@@ -158,9 +158,10 @@ publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
 publicSigner: ['GET', '/public/signer/', 'public/signer']
 publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 
-#routes pour le module
-moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
-moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
+#routes pour le module (! on part de controlers/module/ cette fois !)
+moduleAjax: ['POST', '/module/ajax/[a:m]/', 'actions/moduleAjax']
+moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'actions/moduleActions']
+
 
 #routes phonecapture
 phonecaptureAjax: ['POST|GET', '/phonecapture/ajax/[a:m]/', 'phonecapture/actions/phonecaptureAjax']
