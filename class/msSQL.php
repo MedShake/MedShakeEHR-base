@@ -84,7 +84,7 @@ class msSQL
   public static function sqlUniqueChamp($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if ($query!=null and mysqli_num_rows($query)==1) {
+      if ($query and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           $row = $query->fetch_row();
           return $row[0];
@@ -101,7 +101,7 @@ class msSQL
   public static function sqlUnique($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if ($query!=null and mysqli_num_rows($query)==1) {
+      if ($query and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           return $query->fetch_array(MYSQLI_ASSOC);
       } else {
@@ -117,7 +117,7 @@ class msSQL
   public static function sql2tab($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if ($query!=null and mysqli_num_rows($query)>0) {
+      if ($query and mysqli_num_rows($query)>0) {
           while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
               if ($row) {
                   $result[]=$row;
@@ -160,7 +160,7 @@ class msSQL
   public static function sql2tabSimple($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if ($query!=null and mysqli_num_rows($query)>0) {
+      if ($query and mysqli_num_rows($query)>0) {
           while ($row=$query->fetch_array(MYSQLI_NUM)) {
               if ($row) {
                   $result[]=$row[0];
