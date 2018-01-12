@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,10 +21,9 @@
  */
 
 /**
- * Login : loguer ou renvoyer
+ * Premier utilisateur
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -39,15 +38,31 @@ $validation=$form->getValidation();
 
 
 
-if ($validation === false) {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
     msTools::redirRoute('userLogIn');
+} else if ($validation === false) {
+    unset($_SESSION['form'][$formIN]);
+    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de mot de passe.';
+    msTools::redirRoute('userLogInFirst');
+} else if ($_POST['p_password'] != $_POST['p_verifPassword']) {
+    unset($_SESSION['form'][$formIN]);
+    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de mot de passe de façon identique.';
+    msTools::redirRoute('userLogInFirst');
 } else {
+    $data=array(
+        'id' => '1',
+        'type' => 'pro',
+        'rank' => 'admin',
+        'registerDate' => date("Y/m/d H:i:s"),
+        'fromID' => 0
+    );
+    msSQL::sqlInsert('people', $data);
+    msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) where id='1' limit 1");
 
-    //check login
     $user = new msUser();
-    if (!$user->checkLogin($_POST['p_userid'], $_POST['p_password'])) {
+    if (!$user->checkLogin('1', $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
-        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
+        $message='Un problème est survenu lors de la création de l\'utilisateur.';
         if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
@@ -58,9 +73,8 @@ if ($validation === false) {
     if ($validation != false) {
         $user-> doLogin();
         unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/patients/');
+        msTools::redirection('/pro/edit/1/');
     } else {
-        $form->savePostValues2Session();
         msTools::redirRoute('userLogIn');
     }
 }

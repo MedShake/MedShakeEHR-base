@@ -24,6 +24,7 @@
  * Fonctions MySQL
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 class msSQL
@@ -39,7 +40,7 @@ class msSQL
       $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
       $mysqli->set_charset("utf8");
       if (mysqli_connect_errno()) {
-          die('Echec de connexion');
+          die('Echec de connexion à la base de données');
       } else {
           $mysqli->query('SELECT @password:="'.$p['config']['sqlVarPassword'].'"');
           //$mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
