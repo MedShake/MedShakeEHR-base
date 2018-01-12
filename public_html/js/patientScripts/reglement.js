@@ -26,8 +26,17 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+if (!champsReglement)
+  var champsReglement = {
+    tarif: "input[name='regleTarifCejour']",
+    depacement: "input[name='regleDepaCejour']",
+    situation: "select[name='regleSituationPatient']",
+    facture: "input[name='regleFacture']",
+    tiers: "input[name='regleTiersPayeur']",
+    id_tiers: "label[for='id_regleTiersPayeur_id']"
+  };
 
+$(document).ready(function() {
 
   //close button zone newReglement
   $('body').on("click", "#cleanNewReglement", function(e) {
@@ -43,33 +52,33 @@ $(document).ready(function() {
   });
 
   //observer la situation Type de réglement
-  $("#newReglement").on("change", "select[name='regleSituationPatient']", function(e) {
+  $("#newReglement").on("change", champsReglement.situation, function(e) {
     e.preventDefault();
     setDefautTarifEtDepa();
     calcResteDu();
   });
 
   //observer le changement sur dépassement
-  $("#newReglement").on("change, keyup", "input[name='regleDepaCejour']", function(e) {
+  $("#newReglement").on("change, keyup", champsReglement.depacement, function(e) {
     e.preventDefault();
     calcResteDu();
   });
 
   //le style du champ Reste du
-  $("#newReglement").on("change", "input[name='regleFacture']", function(e) {
-    val = $("input[name='regleFacture']").val();
+  $("#newReglement").on("change", champsReglement.facture, function(e) {
+    val = $(champsReglement.facture).val();
     if (val > 0 || val < 0) {
-      $("input[name='regleFacture']").closest("div.form-group").removeClass('has-success');
-      $("input[name='regleFacture']").closest("div.form-group").addClass('has-error');
+      $(champsReglement.facture).closest("div.form-group").removeClass('has-success');
+      $(champsReglement.facture).closest("div.form-group").addClass('has-error');
     } else {
-      $("input[name='regleFacture']").closest("div.form-group").removeClass('has-error');
-      $("input[name='regleFacture']").closest("div.form-group").addClass('has-success');
+      $(champsReglement.facture).closest("div.form-group").removeClass('has-error');
+      $(champsReglement.facture).closest("div.form-group").addClass('has-success');
     }
   });
 
   //reinjection pour édition
-  $("input[name='regleTarifCejour']").attr('data-tarifdefaut', $("input[name='regleTarifCejour']").val());
-  $("input[name='regleDepaCejour']").attr('data-tarifdefaut',$("input[name='regleDepaCejour']").val());
+  $(champsReglement.tarif).attr('data-tarifdefaut', $(champsReglement.tarif).val());
+  $(champsReglement.depacement).attr('data-tarifdefaut',$(champsReglement.depacement).val());
 
 });
 
@@ -92,14 +101,14 @@ function searchAndInsertActeData(selecteur) {
     },
     dataType: "json",
     success: function(data) {
-      $("input[name='regleTarifCejour']").attr('data-tarifdefaut', data['tarif']);
-      $("input[name='regleDepaCejour']").attr('data-tarifdefaut',data['depassement']);
+      $(champsReglement.tarif).attr('data-tarifdefaut', data['tarif']);
+      $(champsReglement.depacement).attr('data-tarifdefaut',data['depassement']);
       $('input[name="acteID"]').val(acteID);
 
       if(data['flagCmu'] == "1") {
-        $("select[name='regleSituationPatient']").val('CMU');
+        $(champsReglement.situation).val('CMU');
       } else {
-        $("select[name='regleSituationPatient']").val('G');
+        $(champsReglement.situation).val('G');
       }
 
       $('#detFacturation tbody').html('');
@@ -122,60 +131,60 @@ function searchAndInsertActeData(selecteur) {
 function setDefautTarifEtDepa() {
   resetModesReglement();
 
-  $("input[name='regleTarifCejour']").val($("input[name='regleTarifCejour']").attr('data-tarifdefaut'));
-  $("input[name='regleDepaCejour']").val($("input[name='regleDepaCejour']").attr('data-tarifdefaut'));
+  $(champsReglement.tarif).val($(champsReglement.tarif).attr('data-tarifdefaut'));
+  $(champsReglement.depacement).val($(champsReglement.depacement).attr('data-tarifdefaut'));
 
 
 
-  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
+  cas = $(champsReglement.situation + ' option:selected').val() || 'G';
 
-  tarif = parseFloat($("input[name='regleTarifCejour']").val());
-  depassement = parseFloat($("input[name='regleDepaCejour']").val());
+  tarif = parseFloat($(champsReglement.tarif).val());
+  depassement = parseFloat($(champsReglement.depacement).val());
 
   //tout venant
   if (cas == 'G') {
-    $("input[name='regleDepaCejour']").removeAttr('readonly');
+    $(champsReglement.depacement).removeAttr('readonly');
   //CMU
   } else if (cas == 'CMU') {
-    $("input[name='regleDepaCejour']").attr('readonly', 'readonly');
-    $("input[name='regleDepaCejour']").val('0');
+    $(champsReglement.depacement).attr('readonly', 'readonly');
+    $(champsReglement.depacement).val('0');
   // TP
   } else if (cas == 'TP') {
-    $("input[name='regleDepaCejour']").removeAttr('readonly');
-    $("input[name='regleDepaCejour']").val('0');
+    $(champsReglement.depacement).removeAttr('readonly');
+    $(champsReglement.depacement).val('0');
   // TP ALD
   } else if (cas == 'TP ALD') {
-    $("input[name='regleDepaCejour']").attr('readonly', 'readonly');
-    $("input[name='regleDepaCejour']").val('0');
+    $(champsReglement.depacement).attr('readonly', 'readonly');
+    $(champsReglement.depacement).val('0');
   }
 }
 
 function calcResteDu() {
-  cas = $('select[name="regleSituationPatient"] option:selected').val() || 'G';
-  tarif = parseFloat($("input[name='regleTarifCejour']").val());
-  depassement = parseFloat($("input[name='regleDepaCejour']").val());
+  cas = $(champsReglement.situation +" option:selected").val() || 'G';
+  tarif = parseFloat($(champsReglement.tarif).val());
+  depassement = parseFloat($(champsReglement.depacement).val());
 
   //tout venant
   if (cas == 'G') {
     total = parseFloat(tarif) + parseFloat(depassement);
-    $("input[name='regleFacture']").val(total).change();
-    $("input[name='regleTiersPayeur']").val('');
+    $(champsReglement.facture).val(total).change();
+    $(champsReglement.tiers).val('');
     //CMU
   } else if (cas == 'CMU') {
     total = parseFloat(tarif);
-    $("input[name='regleTiersPayeur']").val(total);
-    $("input[name='regleFacture']").val(total).change();
+    $(champsReglement.tiers).val(total);
+    $(champsReglement.facture).val(total).change();
   } else if (cas == 'TP') {
     total = parseFloat(tarif) + parseFloat(depassement);
     tiers = Math.round((tarif * 70 / 100)*100) /100;
     reste = Math.round((total-tiers)*100)/100;
-    $("input[name='regleTiersPayeur']").val(tiers);
-    $("input[name='regleFacture']").val(total).change();
-    $("label[for='id_regleTiersPayeur_id']").html('Tiers (reste à payer : '+ reste +'€)');
+    $(champsReglement.tiers).val(tiers);
+    $(champsReglement.facture).val(total).change();
+    $(champsReglement.id_tiers).html('Tiers (reste à payer : '+ reste +'€)');
   } else if (cas == 'TP ALD') {
     total = parseFloat(tarif);
-    $("input[name='regleTiersPayeur']").val(total);
-    $("input[name='regleFacture']").val(total).change();
+    $(champsReglement.tiers).val(total);
+    $(champsReglement.facture).val(total).change();
   }
 
 }
@@ -185,6 +194,6 @@ function resetModesReglement() {
   $("input[name='regleCheque']").val('');
   $("input[name='regleCB']").val('');
   $("input[name='regleEspeces']").val('');
-  $("input[name='regleFacture']").val('').change();
-  $("label[for='id_regleTiersPayeur_id']").html('Tiers');
+  $(champsReglement.facture).val('').change();
+  $(champsReglement.id_tiers).html('Tiers');
 }
