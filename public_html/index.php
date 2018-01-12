@@ -29,8 +29,19 @@
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
-session_start();
 
+/////////// Petites vérifications de l'installation
+if (!is_dir("../vendor")) {
+    die("L'installation de Medshake ne semble pas complète, veuillez lancer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)"); 
+}
+if (!is_dir("bower_components")) {
+    die("L'installation de Medshake ne semble pas complète, veuillez lancer BOWER (<a href='https://bower.io'>https://bower.io</a>)"); 
+}
+if (!is_file('../config/config.yml')) {
+    die("L'installation de Medshake ne semble pas complète, veuillez créer le fichier config/config.yml"); 
+}
+
+session_start();
 
 /////////// Composer class auto-upload
 require '../vendor/autoload.php';
@@ -77,7 +88,12 @@ if (isset($_COOKIE['userId'])) {
     $p['user']=null;
     $p['user']['id']=null;
     $p['user']['module']='base';
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
+        if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
+            msTools::redirRoute('userLogInFirst');
+        }
+    }
+    else if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
 }

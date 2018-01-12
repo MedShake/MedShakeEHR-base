@@ -89,11 +89,6 @@ if (is_numeric($_POST['objetID'])) {
             $p['page']['courrier']['modeprint']=$modePrint;
         }
 
-
-    } elseif ($version=msSQL::sqlUniqueChamp("select value from printed where objetID='".$_POST['objetID']."' order by creationDate desc limit 1")) {
-        echo '<td></td><td colspan="4"><div class="well appercu">';
-        echo msTools::cutHtmlHeaderAndFooter($version);
-        echo '</div></td>';
     } else {
         $fakePDF = new msPDF();
         $fakePDF->setPageHeader('');
