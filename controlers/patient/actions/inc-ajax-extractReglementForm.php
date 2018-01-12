@@ -61,9 +61,10 @@ if (isset($_POST['objetID'])) {
 } else {
     $p['page']['formActes']['prevalue']=null;
 }
-
+$idReglement=msSQL::sqlUniqueChamp("select id from forms where internalName='".$p['user']['module']."Reglement' limit 1 ");
+$moduleReglement=is_numeric($idReglement)?$p['user']['module'].'Reglement':'baseReglement';
 $form = new msForm();
-$form->setFormIDbyName('baseReglement');
+$form->setFormIDbyName($moduleReglement);
 $form->setTypeForNameInForm('byName');
 if (isset($_POST['objetID'])) {
     $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));
