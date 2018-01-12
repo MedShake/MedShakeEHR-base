@@ -93,7 +93,7 @@ if (isset($_COOKIE['userId'])) {
             msTools::redirRoute('userLogInFirst');
         }
     }
-    else if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    elseif ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
 }
