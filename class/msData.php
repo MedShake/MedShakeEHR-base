@@ -40,6 +40,10 @@ class msData
  * @var int $_value
  */
     private $_value;
+/**
+ * @var $_modules : array des modules concernés
+ */
+    private $_modules;
 
 
 /**
@@ -66,6 +70,19 @@ class msData
         }
     }
 
+/**
+ * Définir les modules
+ * @param string $modules valeur
+ * @return string retour de la valeur
+ */
+    public function setModules($modules)
+    {
+      if (is_array($modules)) {
+        return $this->_modules = $modules;
+      } else {
+          throw new Exception('Modules is not array');
+      }
+    }
 
 /**
  * Obtenir toutes les données types d'une catégorie
@@ -76,7 +93,14 @@ class msData
     public function getDataTypesFromCatID($catID, $col=['*'])
     {
         if(!is_numeric($catID)) throw new Exception('catID is not numeric');
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' order by displayOrder, label");
+
+        if(isset($this->_modules)) {
+          $where ="and module in ('".implode("', '", $this->_modules)."')";
+        } else {
+          $where = null;
+        }
+
+        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' ".$where." order by displayOrder, label");
     }
 
 /**

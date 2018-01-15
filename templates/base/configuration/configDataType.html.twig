@@ -355,6 +355,43 @@
 				{% endif %}
 
 
+        {% if page.groupe == "courrier" %}
+					<div class="form-group">
+					{{ f.input ({
+						'input' : {
+							'type' : 'text',
+							'name' : 'validationRules',
+							'id' : 'validationRulesID',
+							'placeholder' : 'id utilisateur séparés par des virgules',
+							'class' : 'form-control',
+							'autocomplete' : 'off'
+						},
+						'label' : {
+							'position' : 'before',
+							'label' : 'Spécifique aux utilisateurs',
+						}
+					}) }}
+					</div>
+
+					<div class="form-group">
+					{{ f.input ({
+						'input' : {
+							'type' : 'text',
+							'name' : 'validationErrorMsg',
+							'id' : 'validationErrorMsgID',
+							'placeholder' : 'id utilisateur séparés par des virgules',
+							'class' : 'form-control',
+							'autocomplete' : 'off'
+						},
+						'label' : {
+							'position' : 'before',
+							'label' : 'Exclu aux utilisateurs',
+						}
+					}) }}
+					</div>
+				{% endif %}
+
+
 				{% if page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">
 					{{ f.input ({

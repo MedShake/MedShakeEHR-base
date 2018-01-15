@@ -54,9 +54,53 @@ $p['page']['patient']['historique']=$patient->getHistorique();
 
 //les certificats
 $certificats=new msData();
-$p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','label']);
+$certificats->setModules(['base', $p['user']['module']]);
+
+if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+  foreach($p['page']['modelesCertif'] as $k=>$v) {
+    if(isset($v['onlyfor'])) {
+      $p['page']['modelesCertif'][$k]['onlyfor']=explode(',', $v['onlyfor']);
+      if(is_array($p['page']['modelesCertif'][$k]['notfor'])) {
+        if(count(array_filter($p['page']['modelesCertif'][$k]['onlyfor']))>0) {
+          if(!in_array($p['user']['id'], $p['page']['modelesCertif'][$k]['onlyfor'])) {
+            unset($p['page']['modelesCertif'][$k]);
+          }
+        }
+      }
+    }
+    if(isset($v['notfor'])) {
+      $p['page']['modelesCertif'][$k]['notfor']=explode(',', $v['notfor']);
+      if(is_array($p['page']['modelesCertif'][$k]['notfor'])) {
+        if(in_array($p['user']['id'], $p['page']['modelesCertif'][$k]['notfor'])) {
+          unset($p['page']['modelesCertif'][$k]);
+        }
+      }
+    }
+  }
+}
 //les courriers
-$p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','label']);
+if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
+  foreach($p['page']['modelesCourrier'] as $k=>$v) {
+    if(isset($v['onlyfor'])) {
+      $p['page']['modelesCourrier'][$k]['onlyfor']=explode(',', $v['onlyfor']);
+      if(is_array($p['page']['modelesCourrier'][$k]['notfor'])) {
+        if(count(array_filter($p['page']['modelesCourrier'][$k]['onlyfor']))>0) {
+          if(!in_array($p['user']['id'], $p['page']['modelesCourrier'][$k]['onlyfor'])) {
+            unset($p['page']['modelesCourrier'][$k]);
+          }
+        }
+      }
+    }
+    if(isset($v['notfor'])) {
+      $p['page']['modelesCourrier'][$k]['notfor']=explode(',', $v['notfor']);
+      if(is_array($p['page']['modelesCourrier'][$k]['notfor'])) {
+        if(in_array($p['user']['id'], $p['page']['modelesCourrier'][$k]['notfor'])) {
+          unset($p['page']['modelesCourrier'][$k]);
+        }
+      }
+    }
+  }
+}
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();
