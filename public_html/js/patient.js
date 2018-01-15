@@ -43,7 +43,7 @@ if (!scrollDestination) {
 
 if (!scriptsList) {
   var scriptsList = {
-    ordo: "ordonnance.js",
+    ordonnance: "ordonnance.js",
     print: "print.js",
     docupload: "docupload.js",
     email: "email.js",
