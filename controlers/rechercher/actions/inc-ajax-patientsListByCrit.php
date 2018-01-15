@@ -80,7 +80,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
 
     $where=null;
     if (!empty($_POST['d2'])) {
-        $where.=" and d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='' ";
+        $where.=" and ((d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='') or (d1.value like '".msSQL::cleanVar($_POST['d2'])."%' and d1.outdated='') ) ";
     }
     if (!empty($_POST['d3'])) {
         $where.=" and d3.value like '".msSQL::cleanVar($_POST['d3'])."%' and d3.outdated='' ";
@@ -96,7 +96,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     //patient ou pro en fonction
     if($_POST['porp']=='patient') $peopleType=array('pro','patient'); else $peopleType=array('pro');
 
-    $sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
+    $p['page']['sqlString']=$sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
