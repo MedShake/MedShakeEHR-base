@@ -13,8 +13,6 @@ UPDATE `data_types` SET `name` = 'firstname' WHERE `data_types`.`id` = 3;
 
 ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
 
-update `data_types` set validationRules='base' WHERE `groupe` = 'courrier'
-
 CREATE TABLE `system` (
   `id` smallint(4) UNSIGNED NOT NULL,
   `module` varchar(20) DEFAULT 'base',
