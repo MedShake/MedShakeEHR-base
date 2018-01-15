@@ -2,6 +2,9 @@
 
 -- 2.3.0 to 2.x.0
 
+update data_types set placeholder='nom reçu à la naissance', label='Nom de naissance', description='Nom reçu à la naissance' where name='birthname';
+update data_types set placeholder='nom utilisé au quotidien', label='Nom d\'usage', description='Nom utilisé au quotidien' where name='lastname';
+
 -- ALTER TABLE `actes` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
 ALTER TABLE `actes_cat` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
 

@@ -437,8 +437,8 @@ INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, 
 
 INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 (0, 'admin', 'submit', '', '', '', '', '', 'submit', '', 'base', 0, 0, '1000-01-01 00:00:00', 3600, 1),
-(1, 'admin', 'birthname', 'nom de jeune-fille', 'Nom de jeune-fille', 'Nom porté avant mariage éventuel', 'identite', 'Le nom de jeune-fille est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-17 16:04:17', 3600, 1),
-(2, 'admin', 'lastname', 'nom', 'Nom', 'Nom utilisé au quotidien', 'identite', 'Le nom ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-17 16:00:48', 3600, 1),
+(1, 'admin', 'birthname', 'nom reçu à la naissance', 'Nom de naissance', 'Nom reçu à la naissance', 'identite', 'Le nom de jeune-fille est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-17 16:04:17', 3600, 1),
+(2, 'admin', 'lastname', 'nom utilisé au quotidien', 'Nom d\'usage', 'Nom utilisé au quotidien', 'identite', 'Le nom ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-17 16:00:48', 3600, 1),
 (3, 'admin', 'firstname', 'prénom', 'Prénom', 'Prénom figurant sur la pièce d\'identité', 'identite', 'Le prénom est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2016-12-18 15:17:58', 3600, 1),
 (4, 'admin', 'personalEmail', 'email@domain.ext', 'Email personnelle', 'Adresse email personnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2017-03-10 12:02:13', 3600, 1),
 (5, 'admin', 'profesionnalEmail', 'email@domain.ext', 'Email professionnelle', 'Adresse email professionnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2016-12-14 16:21:28', 3600, 1),
