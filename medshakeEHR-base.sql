@@ -566,7 +566,8 @@ INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `descripti
 (2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00'),
 (3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00'),
 (4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00'),
-(5, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
+(6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
 
 INSERT INTO `prescriptions` (`id`, `cat`, `label`, `description`, `fromID`, `toID`, `creationDate`) VALUES
 (1, 2, 'Ligne vierge', '', 1, 0, '2017-03-22 15:26:08'),
