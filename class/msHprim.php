@@ -186,10 +186,10 @@ class msHprim
 
         } else {
             $name2typeID = new msData();
-            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthdate', 'postalCodePerso', 'nss']);
+            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthdate', 'birthname', 'postalCodePerso', 'nss']);
 
             //le nom de famille
-            $nom=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['lastname']."' and value like '".$hprimData['nom']."' and outdated='' and deleted='' ");
+            $nom=msSQL::sql2tabSimple("select toID from objets_data where typeID in ('".$name2typeID['lastname']."', '".$name2typeID['birthname']."') and value like '".$hprimData['nom']."' and outdated='' and deleted='' ");
             //le prenom
             $prenom=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['firstname']."' and value like '".$hprimData['prenom']."' and outdated='' and deleted=''");
             //la ddn

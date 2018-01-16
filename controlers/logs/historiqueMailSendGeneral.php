@@ -52,14 +52,14 @@ if (!isset($match['params']['start'])) {
     $p['page']['previousStart']=$startSQL+$nbParPage;
 }
 
-$typeID = new msData();
-$typeID = $typeID-> getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber', 'firstname', 'lastname']);
+$name2typeID = new msData();
+$name2typeID = $name2typeID-> getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber', 'firstname', 'lastname', 'birthname']);
 
 
 if ($mails=msSQL::sql2tab("select m.id from objets_data as m
-  join objets_data as mto on mto.instance=m.id and mto.typeID='".$typeID['mailTo']."'
-  left join objets_data as mtof on mtof.instance=m.id and mtof.typeID='".$typeID['mailToEcofaxNumber']."'
-  where ".$where." m.typeID='".$typeID['mailPorteur']."' and mtof.id is null and m.deleted = ''
+  join objets_data as mto on mto.instance=m.id and mto.typeID='".$name2typeID['mailTo']."'
+  left join objets_data as mtof on mtof.instance=m.id and mtof.typeID='".$name2typeID['mailToEcofaxNumber']."'
+  where ".$where." m.typeID='".$name2typeID['mailPorteur']."' and mtof.id is null and m.deleted = ''
   group by m.id
   order by m.creationDate desc limit $startSQL,$nbParPage")) {
     foreach ($mails as $mail) {
@@ -68,9 +68,9 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
     }
 
     foreach ($objs as $k=>$v) {
-        if(isset($v[$typeID['mailTo']]['toID'])){
+        if(isset($v[$name2typeID['mailTo']]['toID'])){
           $patient = new msPeople();
-          $patient->setToID($v[$typeID['mailTo']]['toID']);
+          $patient->setToID($v[$name2typeID['mailTo']]['toID']);
           $patientData = $patient->getSimpleAdminDatas();
         } else {
           $patientData = null;
@@ -78,21 +78,23 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
         $p['page']['mailListe'][]=@array(
         'mailid'=>$k,
         'patient'=>$patientData,
-        'date'=>$v[$typeID['mailTo']]['creationDate'],
-        'to'=>$v[$typeID['mailTo']]['value'],
-        'toID'=>$v[$typeID['mailTo']]['toID'],
-        'fromID'=>$v[$typeID['mailTo']]['fromID'],
-        'from'=>$v[$typeID['mailFrom']]['value'],
-        'sujet'=>$v[$typeID['mailSujet']]['value'],
-        'mailTrackingID'=>$v[$typeID['mailTrackingID']]['value'],
+        'date'=>$v[$name2typeID['mailTo']]['creationDate'],
+        'to'=>$v[$name2typeID['mailTo']]['value'],
+        'toID'=>$v[$name2typeID['mailTo']]['toID'],
+        'fromID'=>$v[$name2typeID['mailTo']]['fromID'],
+        'from'=>$v[$name2typeID['mailFrom']]['value'],
+        'sujet'=>$v[$name2typeID['mailSujet']]['value'],
+        'mailTrackingID'=>$v[$name2typeID['mailTrackingID']]['value'],
       );
     }
 }
 
-$p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
+$p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id,
+  CASE WHEN n.value != '' THEN concat(p.value, ' ', n.value) ELSE concat(p.value, ' ', bn.value) END as identite
   from objets_data as m
   left join objets_data as n on n.toID=m.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
   left join objets_data as p on p.toID=m.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-  where m.typeID='".$typeID['mailPorteur']."'
-  group by m.fromID, p.value, n.value
+  left join objets_data as bn on bn.toID=m.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+  where m.typeID='".$name2typeID['mailPorteur']."'
+  group by m.fromID, bn.value, p.value, n.value
   order by n.value", "id", "identite");

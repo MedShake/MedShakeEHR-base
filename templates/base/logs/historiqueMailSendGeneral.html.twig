@@ -79,7 +79,14 @@
                             <td> <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
                               <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                             </a>
-                              {{ v.patient.3 }} {{ v.patient.2 }}
+                              {{ v.patient.3 }}
+                              {% if v.patient.1 and v.patient.2 %}
+                                {{ v.patient.2|e }} ({{ v.patient.1|e }})
+                              {% elseif v.patient.2 %}
+                                {{ v.patient.2 }}
+                              {% else %}
+                                {{ v.patient.1 }}
+                              {% endif %}
                             </td>
 
                             <td>{{ v.sujet|e }}</td>

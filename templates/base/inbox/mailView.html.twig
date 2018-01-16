@@ -89,7 +89,15 @@
 
                     <tr class="patietSelect {% if loop.index0 == 0 %} success gras{% endif %}" data-patientID="{{ v.id }}">
                         <td>#{{ v.id }}</td>
-                        <td>{{ v.2|e }}</td>
+                        <td>
+                          {% if v.1 and v.2 %}
+                            {{ v.2|e }} ({{ v.1|e }})
+                          {% elseif v.2 %}
+                            {{ v.2 }}
+                          {% else %}
+                            {{ v.1 }}
+                          {% endif %}
+                        </td>
                         <td>{{ v.3|e }}</td>
                         <td>{{ v.8|e }}</td>
                         <td>
