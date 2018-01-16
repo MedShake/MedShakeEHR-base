@@ -68,10 +68,13 @@ class msUser
         if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
 
             $name2typeID = new msData();
-            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
+            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
             $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['firstname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
             $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['lastname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
+            if(!$user['nom']) {
+                $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['birthname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
+            }
             return $user;
         } else {
             return msUser::cleanBadAuth();

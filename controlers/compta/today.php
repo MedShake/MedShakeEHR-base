@@ -32,7 +32,7 @@ $template="comptaToday";
 
 // sortie des typeID dont on va avoir besoin
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'reglePorteur']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname', 'reglePorteur']);
 
 //liste praticiens autorisé
 $pratIdAutorises[]=$p['user']['id'];
@@ -40,31 +40,42 @@ if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
     $pratIdAutorises=array_merge($pratIdAutorises, explode(',', $p['config']['administratifComptaPeutVoirRecettesDe']));
     $pratIdAutorises=array_unique($pratIdAutorises);
 }
-$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
+$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, CASE WHEN o.value != '' THEN o.value  ELSE bn.value END as nom
  from people as p
  left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
  left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
+ left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+  CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
+  WHEN n.value != '' THEN n.value
+  ELSE bn.value
+  END as nom
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
   left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
   left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated=''  and n.deleted=''
+  left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
   where pd.id in (
     select pd1.id from objets_data as pd1
     where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) = CURDATE() and pd1.deleted='' and pd1.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
 
   union
 
-  select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+  select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+  CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
+  WHEN n.value != '' THEN n.value
+  ELSE bn.value
+  END as nom
   from objets_data as pd
   left join data_types as dc on dc.id=pd.typeID
   left join actes as a on pd.parentTypeID=a.id
   left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated=''  and p.deleted=''
   left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+  left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
   where pd.instance in (
     select pd2.id from objets_data as pd2
     where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))

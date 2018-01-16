@@ -54,10 +54,10 @@
 (0008,0050) SH [MS.{{ "now"|date("YmdH") }}]#AccessionNumber
 (0008,0060) CS [XC]                         #Modality
 (0008,0070) LO [MEDSHAKEEHR]                #Manufacturer
-(0008,0090) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]     #ReferringPhysiciansName
+(0008,0090) PN [{% if page.prat.2 %}{{ page.prat.2 }}{% else %}{{ page.prat.1 }}{% endif %}^{{ page.prat.3 }}]     #ReferringPhysiciansName
 (0008,1010) SH [MEDSHAKEEHR PhoneCapture]               #StationName
-(0008,1070) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]    #OperatorsName
-(0010,0010) PN [{{ page.patient.2 }}^{{ page.patient.3 }}]  #PatientsName
+(0008,1070) PN [{% if page.prat.2 %}{{ page.prat.2 }}{% else %}{{ page.prat.1 }}{% endif %}^{{ page.prat.3 }}]    #OperatorsName
+(0010,0010) PN [{% if page.patient.2 %}{{ page.patient.2 }}{% else %}{{ page.patient.1 }}{% endif %}^{{ page.patient.3 }}]  #PatientsName
 (0010,0020) LO [{{ page.patient.dicomPatientID }}] #PatientID
 (0010,0030) DA [{{ page.patient.dicomBirthdate }}] #PatientsBirthDate
 (0010,0040) CS [{{ page.patient.14 }}] #PatientsSex

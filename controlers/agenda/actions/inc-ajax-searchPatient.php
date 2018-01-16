@@ -27,19 +27,24 @@
  */
 
  $name2typeID = new msData();
- $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthdate']);
+ $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname', 'birthdate']);
 
  $term = msSQL::cleanVar($_GET['term']);
  $a_json = array();
 
- if ($data=msSQL::sql2tab("select p.id, concat(d2.value, ' ', d3.value) as  identite, d8.value as ddn
+ if ($data=msSQL::sql2tab("select p.id, d8.value as ddn,
+ CASE
+  WHEN d2.value != '' and d1.Value != '' THEN concat(d2.value, ' (', d1.value ,') ', d3.value)
+  WHEN d2.value != '' and d1.Value = '' THEN concat(d2.value, ' ', d3.value)
+  ELSE concat(d1.value, ' ', d3.value) END as identite
  from people as p
+ left join objets_data as d1 on d1.toID=p.id and d1.typeID='".$name2typeID['birthname']."' and d1.outdated='' and d1.deleted=''
  left join objets_data as d2 on d2.toID=p.id and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
  left join objets_data as d8 on d8.toID=p.id and d8.typeID='".$name2typeID['birthdate']."' and d8.outdated='' and d8.deleted=''
  left join objets_data as d3 on d3.toID=p.id and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
- where concat(d2.value, ' ', d3.value) like '%".$term."%'
- group by p.id, d2.value, d3.value, d8.value
- order by d2.value, d3.value limit 20")) {
+ where concat(d2.value, ' ', d3.value) like '%".$term."%' or concat(d1.value, ' ', d3.value) like '%".$term."%'
+ group by p.id, d1.value, d2.value, d3.value, d8.value
+ order by identite limit 20")) {
 
  	foreach ($data as $k=>$v) {
  		$a_json[]=array(

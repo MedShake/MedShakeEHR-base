@@ -378,4 +378,31 @@ public function getToID()
 
     }
 
+/**
+ * Obtenir le dernier objet d'un type particulier pour un patient particulier
+ * @return array tableau avec information sur l'objet
+ */
+      public function getLastObjetByTypeName($name) {
+        if (!isset($this->_toID)) {
+            throw new Exception('toID is not defined');
+        }
+
+        $name2typeID=new msData;
+
+        if($name2typeID=$name2typeID->getTypeIDsFromName([$name, 'lastname', 'firstname', 'birthname'])) {
+          $data=msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, p.value as prenom,
+          CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+          from objets_data as pd
+          left join data_types as t on t.id=pd.typeID
+          left join objets_data as n on n.toID=pd.fromID and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as p on p.toID=pd.fromID and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
+          left join objets_data as bn on bn.toID=pd.fromID and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthame']."'
+          where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated=''
+          order by updateDate desc
+          limit 1");
+        }
+
+
+      }
+
 }

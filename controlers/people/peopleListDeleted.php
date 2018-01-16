@@ -30,17 +30,28 @@ $template="peopleListDeleted";
 $debug='';
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['administratifMarqueurSuppression', 'firstname', 'lastname']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['administratifMarqueurSuppression', 'firstname', 'lastname', 'birthname']);
 
-if($p['page']['users']=msSQL::sql2tab("select p.id, concat (o.value, ' ',  o2.value) as identiteDossier , concat (o4.value, ' ',  o3.value) as identiteUser, m.value as mvalue, m.creationDate as dateDeleted, m.value as typeDossier
+if($p['page']['users']=msSQL::sql2tab("select p.id, m.value as mvalue, m.creationDate as dateDeleted, m.value as typeDossier,
+CASE
+  WHEN o.value != '' and bn1.value != '' THEN concat(o.value, ' (', bn1.value, ') ', o2.value)
+  WHEN o.value != '' THEN concat(o.value, ' ', o2.value)
+  ELSE concat(bn1.value, ' ', o2.value)
+  END as identiteDossier,
+CASE
+  WHEN o3.value != '' THEN concat(o4.value, ' ', o3.value)
+  ELSE concat(o4.value, ' ', bn2.value)
+  END as identiteUser
 from people as p
 left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated=''
 left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated=''
+left join objets_data as bn1 on bn1.toID=p.id and bn1.typeID='".$name2typeID['birthname']."' and bn1.outdated=''
 left join objets_data as m on m.toID=p.id and m.typeID='".$name2typeID['administratifMarqueurSuppression']."' and m.outdated='' and m.deleted=''
 left join objets_data as o3 on o3.toID=m.fromID and o3.typeID='".$name2typeID['lastname']."' and o3.outdated=''
 left join objets_data as o4 on o4.toID=m.fromID and o4.typeID='".$name2typeID['firstname']."' and o4.outdated=''
+left join objets_data as bn2 on bn2.toID=m.fromID and bn2.typeID='".$name2typeID['birthname']."' and bn2.outdated=''
 where p.type='deleted'
-group by p.id, o.id, o2.id, m.id, o3.id, o4.id
+group by p.id, bn1.id, o.id, o2.id, m.id, bn2.id, o3.id, o4.id
 order by p.id")) {
 
   foreach($p['page']['users'] as $k=>$v) {

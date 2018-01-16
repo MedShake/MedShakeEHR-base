@@ -31,7 +31,14 @@
         <span aria-hidden="true">&times;</span>
     </button>
 
-    <h3>Nouveau règlement {{ page.patient.3|e }} {{ page.patient.2|e }}</h3>
+    <h3>Nouveau règlement {{ page.patient.3 }}
+    {% if page.patient.2 and page.patient.1 %}
+      {{ page.patient.2 }} <small>(né{% if page.patient.14 == 'F' %}e{% endif %} {{ page.patient.1 }})</small>
+    {% elseif page.patient.2 %}
+      {{ page.patient.2 }}
+    {% else %}
+      {{ page.patient.1 }}
+    {% endif %}</h3>
 
     {{ f.formbuilder(page.form , page.formIN ) }}
 

@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > dicom : fichier worklist pour Orthanc         
+ # Template > dicom : fichier worklist pour Orthanc
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
@@ -40,7 +40,7 @@
 # Used TransferSyntax: Little Endian Explicit
 (0008,0005) CS [ISO_IR 100]                                                     #  10, 1 SpecificCharacterSet
 (0008,0050) SH [{{ page.patient.dicomPatientID }}]                              #   6, 1 AccessionNumber
-(0010,0010) PN [{{ page.patient.2 }}^{{ page.patient.3 }}]                      #  16, 1 PatientName
+(0010,0010) PN [{% if page.patient.2 %}{{ page.patient.2 }}{% else %}{{ page.patient.1 }}{% endif %}^{{ page.patient.3 }}]                      #  16, 1 PatientName
 (0010,0020) LO [{{ page.patient.dicomPatientID }}]                              #   8, 1 PatientID
 (0010,0030) DA [{{ page.patient.dicomBirthdate }}]                              #   8, 1 PatientBirthDate
 (0010,0040) CS [{{ page.patient.14 }}]                                          #   2, 1 PatientSex
@@ -48,8 +48,8 @@
 {% endif %}{% if page.patient.34 %}(0010,1030) DS [{{ page.patient.34 }}]                  #   2, 1 Patient's Weight
 {% endif %}{% if page.patient.35 %}(0010,1020) DS [{{ page.patient.35 }}]                  #   2, 1 Patient's Height
 {% endif %}(0020,000d) UI [1.2.826.0.1.3680043.9.3007.{{ page.patient.id }}.{{ "now"|date("His") }}]   #  26, 1 StudyInstanceUID
-(0008,0090) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]                            #   6, 1 Referring Physician
-(0032,1032) PN [{{ page.prat.2 }}^{{ page.prat.3 }}]                            #   6, 1 RequestingPhysician
+(0008,0090) PN [{% if page.prat.2 %}{{ page.prat.2 }}{% else %}{{ page.prat.1 }}{% endif %}^{{ page.prat.3 }}]                            #   6, 1 Referring Physician
+(0032,1032) PN [{% if page.prat.2 %}{{ page.prat.2 }}{% else %}{{ page.prat.1 }}{% endif %}^{{ page.prat.3 }}]                            #   6, 1 RequestingPhysician
 (0032,1060) LO [Echographie]                                                    #   6, 1 RequestedProcedureDescription
 
 (0040,0100) SQ                                                                  # Scheduled Procedure Step Sequence
