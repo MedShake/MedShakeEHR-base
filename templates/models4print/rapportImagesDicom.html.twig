@@ -31,10 +31,7 @@
 <p style="text-align : right;">New York, le
     {{ tag.date|date("d/m/Y") }}</p>
 
-<h2 style="text-align : center">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %} 
-    {{ tag.3 }}
-    {{ tag.2 }}
-    ({{ tag.8 }})</h2>
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
 
 {{ tag.images|length }} image{% if tag.images|length > 1 %}s{% endif %} - {{ (tag.images|length / 6)|round(0, 'ceil') }} page{% if tag.images|length > 6 %}s{% endif %}
 

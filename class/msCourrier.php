@@ -298,8 +298,14 @@ class msCourrier
             }
         }
 
+        //ajout tags génériques
         $tabPatientData['id']=$patientID;
         $tabPatientData['age']=$patientData->getAge();
+
+        // ajouter tags identité
+        if($dataIdentite=$this->_formatIdentites($tabPatientData)) {
+          $tabPatientData=$tabPatientData+$dataIdentite;
+        }
 
         return $tabPatientData;
     }
@@ -392,4 +398,66 @@ class msCourrier
     {
         return msSQL::sqlUniqueChamp("select module from forms where internalName='".$formIN."' limit 1");
     }
+
+/**
+ * Générer des tags identité
+ * @param  array $data data patient
+ * @return array       array de data calculées
+ */
+    private function _formatIdentites($data) {
+
+      $data=array_filter($data);
+
+      //accord en fonction du genre
+      $motNe='né';
+      $titreCourt="";
+      $titreLong="";
+
+      if(isset($data['val_administrativeGenderCode'])) {
+        if($data['val_administrativeGenderCode']=='F') {
+          $motNe='née';
+          $titreCourt="Mme";
+          $titreLong="Madame";
+        } elseif($data['val_administrativeGenderCode']=='M') {
+          $titreCourt="M.";
+          $titreLong="Monsieur";
+        }
+      }
+
+      if(isset($data['lastname'],$data['birthname'],$data['firstname']) and $data['lastname']!=$data['birthname']) {
+
+        $rdata['nomsUsageNaissance'] = $data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
+
+        $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['lastname'];
+        $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
+        $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'];
+        $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
+        $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
+        $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].' le '.$data['birthdate'].')';
+
+      } elseif(isset($data['lastname'],$data['firstname'])) {
+
+        $rdata['nomsUsageNaissance'] = $data['lastname'];
+
+        $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['lastname'];
+        $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'];
+        $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'];
+        $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'];
+        $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
+        $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
+
+      } elseif(isset($data['birthname'],$data['firstname'])) {
+
+        $rdata['nomsUsageNaissance'] = $data['birthname'];
+
+        $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['birthname'];
+        $rdata['identiteComplete'] = $data['firstname'].' '.$data['birthname'];
+        $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'];
+        $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'];
+        $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
+        $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
+      }
+      if(isset($rdata)) return $rdata;
+    }
+
 }
