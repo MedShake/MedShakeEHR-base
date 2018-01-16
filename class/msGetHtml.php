@@ -130,10 +130,12 @@ class msGetHtml
 
      $this->_templatesDirectories = [];
      //templates utilisateur
-     $userFolder=$p['config']['templatesFolder'].'templatesUser'.$p['user']['id'].'/';
-     if (is_dir($userFolder)) {
-         $this->_templatesDirectories[]=$userFolder;
-         $this->_templatesDirectories=array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($userFolder, '/'));
+     if(isset($p['user']['id'])) {
+       $userFolder=$p['config']['templatesFolder'].'templatesUser'.$p['user']['id'].'/';
+       if (is_dir($userFolder)) {
+           $this->_templatesDirectories[]=$userFolder;
+           $this->_templatesDirectories=array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($userFolder, '/'));
+       }
      }
      //templates module
      $moduleFolder = $p['config']['templatesFolder'] . (isset($p['user']['module']) ? $p['user']['module'] : "public");
