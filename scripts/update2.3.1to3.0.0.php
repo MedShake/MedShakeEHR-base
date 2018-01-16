@@ -45,23 +45,24 @@
  $mysqli=msSQL::sqlConnect();
 
 
-
+// N'EST PLUS D'ACTUALITE
+// 
  // Changements
  // lastname => nom de naissance
  // birthname => usageName nom d'usage
 
- if($people=msSQL::sql2tabSimple("select id from people")) {
-   foreach($people as $id) {
-     $patient=new msPeople();
-     $patient->setToID($id);
-     $patient=$patient->getSimpleAdminDatas();
-     if(isset($patient['1']) and isset($patient['2'])) {
-       msSQL::sqlQuery("update objets_data set typeID='10000' where toID='".$id."' and typeID='1'");
-       msSQL::sqlQuery("update objets_data set typeID='1' where toID='".$id."' and typeID='2'");
-       msSQL::sqlQuery("update objets_data set typeID='2' where toID='".$id."' and typeID='10000'");
-
-     }
-   }
-
-
- }
+ // if($people=msSQL::sql2tabSimple("select id from people")) {
+ //   foreach($people as $id) {
+ //     $patient=new msPeople();
+ //     $patient->setToID($id);
+ //     $patient=$patient->getSimpleAdminDatas();
+ //     if(isset($patient['1']) and isset($patient['2'])) {
+ //       msSQL::sqlQuery("update objets_data set typeID='10000' where toID='".$id."' and typeID='1'");
+ //       msSQL::sqlQuery("update objets_data set typeID='1' where toID='".$id."' and typeID='2'");
+ //       msSQL::sqlQuery("update objets_data set typeID='2' where toID='".$id."' and typeID='10000'");
+ //
+ //     }
+ //   }
+ //
+ //
+ // }
