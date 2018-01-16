@@ -27,7 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='y';
+$debug='';
 $template='configShowTagsForCr';
 
 $tags = new msCourrier();
