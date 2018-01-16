@@ -64,12 +64,17 @@
         <h1>Examen du
             {{ page.studyDcData.Datetime|date('d/m/Y H:i') }}
             de
-            {{ page['patient']['administrativeDatas']['3']['value']|e }}
             {# firstname #}
-            {{ page['patient']['administrativeDatas']['2']['value']|e }}
+            {{ page['patient']['administrativeDatas']['3']['value']|e }}
             {# name #}
-            {% if page['patient']['administrativeDatas']['1']['value'] %}
-                ({{ page['patient']['administrativeDatas']['1']['value']|e }}){% endif %}
+            {% if page['patient']['administrativeDatas']['2']['value'] %}
+                {{ page['patient']['administrativeDatas']['2']['value']|e }}
+                {% if page['patient']['administrativeDatas']['1']['value'] %}
+                    ({{ page['patient']['administrativeDatas']['1']['value']|e }})
+                {% endif %}
+            {% else %}
+              {{ page['patient']['administrativeDatas']['1']['value']|e }}
+            {% endif %}
             <small>
                 {{ page['patient']['administrativeDatas']['8']['value']|e }}
                 -
