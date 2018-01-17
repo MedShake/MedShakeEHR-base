@@ -60,7 +60,7 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
         }
     }
 } 
-if (!empty($_POST['p_clicRdvUserId'])) {
+if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
     if (empty($_POST['p_clicRdvPassword'])) {

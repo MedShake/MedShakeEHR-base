@@ -33,3 +33,10 @@ $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='userParameters');
 $p['page']['form']=$form->getForm();
 
+if(isset($p['config']['clicRdvUserId'])) {
+    $p['page']['form']['structure'][1][1]['elements'][1]['value']['preValue']=$p['config']['clicRdvUserId'];
+    if (!empty($p['config']['clicRdvPassword'])) {
+        $p['page']['form']['structure'][1][1]['elements'][2]['value']['preValue']='********';
+    }
+}
+

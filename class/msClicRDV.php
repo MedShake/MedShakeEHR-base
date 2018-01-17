@@ -35,20 +35,28 @@ class msClicRDV
 
     private function _sendCurl($commande, $url, $data='') {
         if (!isset($this->_userpwd) or empty($this->_userpwd)) {
-            return false;
+            $this->setUserPwd();
         }
-        $baseurl='https://sandbox.clicrdv.com/api/v1/';
-        $api_key='&api_key=ee0ab7224b97430fbd7dc5a55a7bac40';
-        $ch = curl_init($baseurl.$url.$api_key);
-        curl_setopt($ch, CURLOPT_USERPWD, $p['user']['clicRdvUserId'].":".$pwd);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $sb_baseurl='https://sandbox.clicrdv.com/api/v1/';
+        $sb_api_key='&api_key=ee0ab7224b97430fbd7dc5a55a7bac40';
+        $baseurl='https://www.clicrdv.com/api/v1/';
+        $api_key='&api_key=2cb3ec1ad2744d8993529c1961d501ae';
+        $ch = curl_init();
         if ($commande = 'POST') {
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_POST, true);
         } else if ($commande = 'PUT') {
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_PUT, true);
         } else if ($commande = 'DELETE') {
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        } else {
+            curl_setopt($ch, CURLOPT_URL, $baseurl.$url.$api_key);
         }
+        curl_setopt($ch, CURLOPT_USERPWD, $p['user']['clicRdvUserId'].":".$pwd);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         if (!empty($data)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
@@ -62,7 +70,7 @@ class msClicRDV
 
     public function setUserPwd($user='', $pwd='') {
         if (empty($user)) {
-            $user=$p['user']['clicRdvUserId'];
+            $user=$p['config']['clicRdvUserId'];
         }
         if (empty($pwd)) {
             $pwd=msSQL::sqlUniqueChamp("set @pass=(select `value` from objets_data
@@ -118,10 +126,14 @@ class msClicRDV
         global $p;
         $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
         $req.="vevents/";
+        $taker="Tâche automatique";
+        if (isset($p['user']['prenom']) and isset($p['user']['nom'])) {
+            $taker=$p['user']['prenom']." ".$p['user']['nom'];
+        }
         $data=array("calendar_id"=>$$this->_calID,
                     "start"=>$start,
                     "end"=>$end,
-                    "taker"=>$p['user']['prenom']." ".$p['user']['prenom'],
+                    "taker"=>$taker,
                     "colorref"=>"#CCCCCC",
                     "text"=>$text,
                     "intervention_id"=>"0",
@@ -139,9 +151,13 @@ class msClicRDV
     public function modEvent($id, $start, $end, $text="", $comment="") {
         $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
         $req.="vevents/".$id;
-        $data=array("start"=>$start,
+        $taker="Tâche automatique";
+        if (isset($p['user']['prenom']) and isset($p['user']['nom'])) {
+            $taker=$p['user']['prenom']." ".$p['user']['nom'];
+        }
+       $data=array("start"=>$start,
                     "end"=>$end,
-                    "taker"=>$p['user']['prenom']." ".$p['user']['prenom'],
+                    "taker"=>$taker,
                     "text"=>$text,
                     "comments"=>$comment);
         return $this->_sendCurl("PUT", $req, $data);
