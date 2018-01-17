@@ -65,7 +65,7 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
     $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
     //titre doc
-    $doc->setTitleObjet($supportID, 'pdf '.$nbImages.' images écho du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
+    $doc->setTitleObjet($supportID, 'pdf '.$nbImages.' images du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
 
     //nouveau pdf
     $pdf= new msPDF();
