@@ -32,13 +32,13 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 
 /////////// Petites vérifications de l'installation
 if (!is_dir("../vendor")) {
-    die("L'installation de Medshake ne semble pas complète, veuillez lancer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)");
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
 if (!is_dir("bower_components")) {
-    die("L'installation de Medshake ne semble pas complète, veuillez lancer BOWER (<a href='https://bower.io'>https://bower.io</a>)");
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
 }
 if (!is_file('../config/config.yml')) {
-    die("L'installation de Medshake ne semble pas complète, veuillez créer le fichier config/config.yml");
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez créer le fichier config/config.yml");
 }
 
 session_start();
