@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,23 +21,15 @@
  */
 
 /**
- * User : les actions avec reload de page
+ * Login : page de login
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
+$debug='';
+$template="userParameters";
 
-//$debug='';
-$m=$match['params']['m'];
+$form = new msForm();
+$form->setFormIDbyName($p['page']['formIN']='userParameters');
+$p['page']['form']=$form->getForm();
 
-//modes acceptés et die() si non connu
-$acceptedModes=array(
-    'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
-    'changeUserParameters', // changer les paramètres utilisateur
-);
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-//inclusion
-include('inc-action-'.$m.'.php');
