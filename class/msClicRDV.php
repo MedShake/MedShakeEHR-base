@@ -38,23 +38,23 @@ class msClicRDV
             $this->setUserPwd();
         }
         $sb_baseurl='https://sandbox.clicrdv.com/api/v1/';
-        $sb_api_key='&api_key=ee0ab7224b97430fbd7dc5a55a7bac40';
+        $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40';
         $baseurl='https://www.clicrdv.com/api/v1/';
-        $api_key='&api_key=2cb3ec1ad2744d8993529c1961d501ae';
+        $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae';
         $ch = curl_init();
-        if ($commande = 'POST') {
+        if ($commande=='POST') {
             curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_POST, true);
-        } else if ($commande = 'PUT') {
+        } else if ($commande=='PUT') {
             curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_PUT, true);
-        } else if ($commande = 'DELETE') {
+        } else if ($commande=='DELETE') {
             curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         } else {
             curl_setopt($ch, CURLOPT_URL, $baseurl.$url.$api_key);
         }
-        curl_setopt($ch, CURLOPT_USERPWD, $p['user']['clicRdvUserId'].":".$pwd);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->_userpwd);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         if (!empty($data)) {
@@ -69,13 +69,13 @@ class msClicRDV
     }
 
     public function setUserPwd($user='', $pwd='') {
+        global $p;
         if (empty($user)) {
             $user=$p['config']['clicRdvUserId'];
         }
         if (empty($pwd)) {
-            $pwd=msSQL::sqlUniqueChamp("set @pass=(select `value` from objets_data
-                WHERE toID='".$p['user']['id']."' AND typeID='".msData::getTypeIDFromName('clicRdvPassword')."');
-                SELECT CONVERT(AES_DECRYPT(UNHEX(@pass),@password), CHAR)");
+            $pwd=msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(p.value),@password), CHAR) from objets_data AS p
+                WHERE p.toID='".$p['user']['id']."' AND p.typeID='".msData::getTypeIDFromName('clicRdvPassword')."' AND p.outdated=''");
         }
         $this->_userpwd = $user.":".$pwd;
 

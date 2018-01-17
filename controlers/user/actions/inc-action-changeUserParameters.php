@@ -81,13 +81,20 @@ if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********
 if ($changeMdp) {
     msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
 }
+$objet = new msObjet();
+$objet->setFromID($p['user']['id']);
+$objet->setToID($p['user']['id']);
 if ($setCRDV) {
-    $objet = new msObjet();
-    $objet->setFromID($p['user']['id']);
-    $objet->setToID($p['user']['id']);
     $objet->createNewObjet(msData::getTypeIDFromName('clicRdvUserId'), $_POST['p_clicRdvUserId']);
     $passID=$objet->createNewObjet(msData::getTypeIDFromName('clicRdvPassword'), $_POST['p_clicRdvPassword']);
     msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$_POST['p_clicRdvPassword']."',@password)) WHERE id='".$passID."' limit 1");
+}
+
+if (!empty($_POST['p_clicRdvGroupId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvGroupId']) {
+    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvGroupId'), $_POST['p_clicRdvGroupId']);
+}
+if (!empty($_POST['p_clicRdvCalId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvCalId']) {
+    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvCalId'), $_POST['p_clicRdvCalId']);
 }
 msTools::redirRoute('/');
 

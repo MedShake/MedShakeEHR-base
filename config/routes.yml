@@ -150,6 +150,7 @@ configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configura
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
 # User
+userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
 userParameters: ['GET', '/user/userParameters/', 'user/userParameters']
 userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhoneCaptureAccess']

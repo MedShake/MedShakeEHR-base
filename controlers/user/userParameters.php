@@ -37,6 +37,15 @@ if(isset($p['config']['clicRdvUserId'])) {
     $p['page']['form']['structure'][1][1]['elements'][1]['value']['preValue']=$p['config']['clicRdvUserId'];
     if (!empty($p['config']['clicRdvPassword'])) {
         $p['page']['form']['structure'][1][1]['elements'][2]['value']['preValue']='********';
+
+        if(isset($p['config']['clicRdvGroupId'])) {
+            $p['page']['form']['structure'][1][1]['elements'][3]['value']['formValues'][$p['config']['clicRdvGroupId']]=explode(':',$p['config']['clicRdvGroupId'])[1];
+            $p['page']['form']['structure'][1][1]['elements'][3]['value']['preValue']=$p['config']['clicRdvGroupId'];
+        }
+        if(isset($p['config']['clicRdvCalId'])) {
+            $p['page']['form']['structure'][1][1]['elements'][4]['value']['formValues'][$p['config']['clicRdvCalId']]=explode(':',$p['config']['clicRdvCalId'])[1];
+            $p['page']['form']['structure'][1][1]['elements'][4]['value']['preValue']=$p['config']['clicRdvCalId'];
+        }
     }
 }
 
