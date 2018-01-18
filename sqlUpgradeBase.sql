@@ -11,14 +11,14 @@ ALTER TABLE `data_types` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 C
 UPDATE `data_types` SET `name` = 'firstname' WHERE `data_types`.`id` = 3;
 
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('user', 'administratifPeutAvoirAgenda', '', 'administratifPeutAvoirAgenda', 'permet à l\'utilisateur sélectionné d\'avoir son agenda', '', '', 'checkbox', 'false', 'base', 64, 1, '2017-08-09 15:00:18', 3600, 1);
+('user', 'administratifPeutAvoirAgenda', '', 'administratifPeutAvoirAgenda', 'permet à l\'utilisateur sélectionné d\'avoir son agenda', '', '', 'checkbox', 'false', 'base', 64, 1, '2018-01-01 00:00:00', 3600, 1);
 
 
 ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
-(6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
+(6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00');
 
 ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
 
