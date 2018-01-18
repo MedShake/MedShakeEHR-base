@@ -2,18 +2,6 @@
 
 -- 2.3.0 to 3.0.0
 
-
-update `forms` set yamlStructureDefaut = 'col1:\r\n    head: "Nom de naissance"\r\n    bloc:\r\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\ncol2:\r\n    head: "Nom d\'usage"\r\n    bloc:\r\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n\r\ncol3:\r\n    head: "Prénom"\r\n    bloc:\r\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol4:\r\n    head: "Date de naissance" \r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\ncol5:\r\n    head: "Tel" \r\n    blocseparator: " - "\r\n    bloc: \r\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\ncol6:\r\n    head: "Email"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol7:\r\n    head: "Ville"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville'
-where internalName='baseListingPatients';
-
-update `forms` set yamlStructureDefaut = 'col1:\r\n    head: "Identité"\r\n    blocseparator: " "\r\n    bloc:\r\n        - titre,gras                               		#51   Titre\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol2:\r\n    head: "Activité pro" \r\n    bloc: \r\n        - job                                      		#19   Activité professionnelle\ncol3:\r\n    head: "Tel" \r\n    bloc: \r\n        - telPro                                   		#57   Téléphone professionnel\ncol4:\r\n    head: "Fax" \r\n    bloc: \r\n        - faxPro                                   		#58   Fax professionnel\ncol5:\r\n    head: "Email"\r\n    bloc-separator: " - "\r\n    bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - personalEmail                            		#4    Email personnelle\ncol6:\r\n    head: "Ville"\r\n    bloc:\r\n        - villeAdressePro,text-uppercase           		#56   Ville'
-where internalName='baseListingPro';
-
-update `forms` set yamlStructure = 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - birthname,readonly                       		#1    Nom de naissance\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - firstname,readonly                       		#3    Prénom\n  row2:\r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - lastname,readonly                        		#2    Nom d usage\n    col2:                              \r\n      size: 6\r\n      bloc: \r\n        - birthdate,readonly                       		#8    Date de naissance\n  row3:\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n         - personalEmail                           		#4    Email personnelle\n\r\n  row4:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone                              		#7    Téléphone mobile\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - homePhone                                		#10   Téléphone domicile'
-where internalName='baseAgendaPriseRDV';
-
-
-
 ALTER TABLE `actes_cat` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
 
 ALTER TABLE `actes_cat` ADD UNIQUE(`name`);
@@ -22,22 +10,9 @@ ALTER TABLE `data_types` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 C
 
 UPDATE `data_types` SET `name` = 'firstname' WHERE `data_types`.`id` = 3;
 
-ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('user', 'administratifPeutAvoirAgenda', '', 'administratifPeutAvoirAgenda', 'permet à l\'utilisateur sélectionné d\'avoir son agenda', '', '', 'checkbox', 'false', 'base', 64, 1, '2017-08-09 15:00:18', 3600, 1);
 
-CREATE TABLE `system` (
-  `id` smallint(4) UNSIGNED NOT NULL,
-  `module` varchar(20) DEFAULT 'base',
-  `version` varchar(20) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-INSERT INTO `system` (`id`,`module`,`version`) VALUES
-(1, 'base', 'v2.4.0'),
-(2, 'public', 'v2.4.0');
-
-ALTER TABLE `system` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `module` (`module`);
-
-ALTER TABLE `system`
-  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
 
@@ -45,10 +20,33 @@ INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `descripti
 (5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
 (6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
 
+ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
+
 UPDATE `forms` set `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - userid,required\r\n      - password\r\n      - module,nolabel\r\n      - submit' , `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - userid,required\r\n      - password\r\n      - module,nolabel\r\n      - submit' WHERE `name`='basePasswordChange';
 
 INSERT INTO `forms` (`internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('firstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc: \r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', NULL);
+
+update `forms` set yamlStructure = 'col1:\r\n    head: "Nom de naissance"\r\n    bloc:\r\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\ncol2:\r\n    head: "Nom d\'usage"\r\n    bloc:\r\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n\r\ncol3:\r\n    head: "Prénom"\r\n    bloc:\r\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol4:\r\n    head: "Date de naissance" \r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\ncol5:\r\n    head: "Tel" \r\n    blocseparator: " - "\r\n    bloc: \r\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\ncol6:\r\n    head: "Email"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol7:\r\n    head: "Ville"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville'
+where internalName='baseListingPatients';
+
+update `forms` set yamlStructure = 'col1:\r\n    head: "Identité"\r\n    blocseparator: " "\r\n    bloc:\r\n        - titre,gras                               		#51   Titre\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol2:\r\n    head: "Activité pro" \r\n    bloc: \r\n        - job                                      		#19   Activité professionnelle\ncol3:\r\n    head: "Tel" \r\n    bloc: \r\n        - telPro                                   		#57   Téléphone professionnel\ncol4:\r\n    head: "Fax" \r\n    bloc: \r\n        - faxPro                                   		#58   Fax professionnel\ncol5:\r\n    head: "Email"\r\n    bloc-separator: " - "\r\n    bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - personalEmail                            		#4    Email personnelle\ncol6:\r\n    head: "Ville"\r\n    bloc:\r\n        - villeAdressePro,text-uppercase           		#56   Ville'
+where internalName='baseListingPro';
+
+update `forms` set yamlStructure = 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - birthname,readonly                       		#1    Nom de naissance\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - firstname,readonly                       		#3    Prénom\n  row2:\r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - lastname,readonly                        		#2    Nom d usage\n    col2:                              \r\n      size: 6\r\n      bloc: \r\n        - birthdate,readonly                       		#8    Date de naissance\n  row3:\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n         - personalEmail                           		#4    Email personnelle\n\r\n  row4:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone                              		#7    Téléphone mobile\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - homePhone                                		#10   Téléphone domicile'
+where internalName='baseAgendaPriseRDV';
+
+CREATE TABLE `system` (
+  `id` smallint(4) UNSIGNED NOT NULL,
+  `module` varchar(20) DEFAULT 'base',
+  `version` varchar(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `system` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `module` (`module`);
+ALTER TABLE `system` MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
+INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v3.0.0');
+
+
 
 -- 2.1.0 to 2.2.0
 
