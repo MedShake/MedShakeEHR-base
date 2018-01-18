@@ -24,6 +24,7 @@
  * Premier utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @edited Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -53,6 +54,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
         'id' => '1',
         'type' => 'pro',
         'rank' => 'admin',
+        'module' => $_POST['p_moduleSelect'],
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 0
     );
