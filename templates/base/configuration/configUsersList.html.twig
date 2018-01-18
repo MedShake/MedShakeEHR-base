@@ -57,7 +57,8 @@
         <th>#</th>
         <th>Identité</th>
         <th>Administrateur</th>
-        <th></th>
+        <th>Module</th>
+        <th>Réglages</th>
       </tr>
     </thead>
     <tbody>
@@ -66,6 +67,7 @@
           <td>{{ v.id }}</td>
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>{% if v.rank =='admin' %}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{% endif %}</td>
+          <td>{{ v.module }}</td>
           <td>
             <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Paramètres spécifiques</a>
           {% if v.rank =='admin' and v.id > 1 %}
