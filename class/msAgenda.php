@@ -24,6 +24,7 @@
  * Gestion de l'agenda et des rendez-vous
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msAgenda
@@ -476,6 +477,23 @@ class msAgenda
         }
         return $tab;
       }
+    }
+
+    public function getRdvTypes($userID) {
+        global $p;
+        if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$userID.'.yml')) {
+          return Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$userID.'.yml');
+        } else {
+          return array(
+            '[C]'=> array(
+              'descriptif'=>'Consultation',
+              'backgroundColor'=>'#2196f3',
+              'borderColor'=>'#1e88e5',
+              'duree'=>15
+            )
+          );
+        }
+
     }
 
     private function _addToLog($action) {

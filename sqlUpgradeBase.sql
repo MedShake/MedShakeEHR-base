@@ -41,6 +41,7 @@ ALTER TABLE `system`
   MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
+ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','deleted') NOT NULL DEFAULT 'patient';
 
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('user', 'clicRdvUserId', 'identifiant', 'identifiant clicRDV', 'email@address.com', '', '', 'text', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),

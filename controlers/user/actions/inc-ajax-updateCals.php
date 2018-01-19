@@ -30,5 +30,5 @@ $clicRdv=new msClicRDV();
 if ($_POST['password']!="********") {
     $clicRdv->setUserPwd($_POST['userid'],$_POST['password']);
 }
-$clicRdv->setGroupID(explode(':', $_POST['groupid'])[0]);
-echo $clicRdv->getCalendars();
+header('Content-Type: application/json');
+echo $clicRdv->getCalendars(explode(':', $_POST['groupid'])[0]);

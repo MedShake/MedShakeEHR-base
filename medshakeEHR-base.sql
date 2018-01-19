@@ -44,6 +44,7 @@ CREATE TABLE `agenda` (
   `type` varchar(10) DEFAULT NULL,
   `dateAdd` datetime DEFAULT NULL,
   `patientid` mediumint(6) UNSIGNED DEFAULT NULL,
+  `externid` int UNSIGNED DEFAULT NULL,
   `fromID` mediumint(6) UNSIGNED DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
   `absente` enum('non','oui') DEFAULT 'non',
@@ -202,7 +203,7 @@ CREATE TABLE `objets_data` (
 
 CREATE TABLE `people` (
   `id` int(11) UNSIGNED NOT NULL,
-  `type` enum('patient','pro','deleted') NOT NULL DEFAULT 'patient',
+  `type` enum('patient','pro','externe','deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `module` varchar(20) DEFAULT 'base',
   `pass` varbinary(60) DEFAULT NULL,
@@ -271,6 +272,7 @@ ALTER TABLE `actes_cat`
 ALTER TABLE `agenda`
   ADD PRIMARY KEY (`id`),
   ADD KEY `patientid` (`patientid`),
+  ADD KEY `externid` (`externid`),
   ADD KEY `userid` (`userid`);
 
 ALTER TABLE `agenda_changelog`
@@ -432,7 +434,8 @@ INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, 
 (61, 'mail', 'dataSms', 'Data sms', 'data pour les sms envoyés', 'user', 1, '2017-06-20 09:32:49'),
 (63, 'relation', 'relationRelations', 'Relations', 'types permettant de définir une relation', 'user', 1, '2017-06-29 09:22:33'),
 (64, 'user', 'catParamsUsersAdmin', 'Services du logiciel', 'paramètres pour activation service par utilisateur', 'user', 1, '2017-07-10 20:05:10'),
-(65, 'admin', 'catMarqueursAdminDossiers', 'Marqueurs', 'marqueurs dossiers', 'user', 1, '2017-07-11 09:22:26');
+(65, 'admin', 'catMarqueursAdminDossiers', 'Marqueurs', 'marqueurs dossiers', 'user', 1, '2017-07-11 09:22:26'),
+(66, 'user', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', 1, '2018-01-18 21:45:55');
 
 
 INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -532,10 +535,13 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (501, 'user', 'phonecaptureFingerprint', 'indiquer une chaine aléatoire de caractères', 'phonecaptureFingerprint', 'clef utilisateur pour l\'identification des périphériques phonecapture', NULL, NULL, 'text', NULL, 'base', 56, 1, '2017-12-12 12:05:32', 3600, 0),
 (505, 'medical', 'examenDuJour', 'examen du jour', 'Examen du jour', 'examen du jour', '', '', 'textarea', '', 'base', 35, 1, '2017-11-07 20:53:14', 3600, 1),
 (506, 'medical', 'baseSynthese', 'synthèse sur le patient', 'Synthèse patient', 'Synthèse sur le patient', '', '', 'textarea', '', 'gynobs', 29, 1, '2017-03-10 23:49:02', 3600, 1),
-(507, 'user', 'clicRdvUserId', 'identifiant', 'identifiant clicRDV', 'email@address.com', '', '', 'text', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),
-(508, 'user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe clicRDV', 'Mot de passe', '', '', 'password', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),
-(509, 'user', 'clicRdvGroupId', 'Groupe', 'Groupe', '', '', '', 'select', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),
-(510, 'user', 'clicRdvCalId', 'Agenda', 'Agenda', '', '', '', 'select', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1);
+(507, 'user', 'clicRdvUserId', 'identifiant', 'identifiant', 'email@address.com', '', '', 'text', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 1),
+(508, 'user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe', 'Mot de passe (chiffré)', '', '', 'password', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 2),
+(509, 'user', 'clicRdvGroupId', 'Groupe', 'Groupe', 'Groupe Sélectionné', '', '', 'select', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 3),
+(510, 'user', 'clicRdvCalId', 'Agenda', 'Agenda', 'Agenda sélectionné', '', '', 'select', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 4),
+(511, 'user', 'clicRdvConsultId', 'Consultations', 'Consultations', 'Correspondance entre consultations', '', '', 'select', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 5),
+(512, 'admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', 26, 0, '2017-03-10 23:49:02', 3600, 1);
+
 
 
 
@@ -558,7 +564,7 @@ INSERT INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dat
 (35, 'base', 'baseATCD', 'Formulaire latéral écran patient principal (atcd)', 'formulaire en colonne latéral du dossier patient (atcd)', 'data_types', 'medical', 'post', '', 4, 'public', 'structure:\r\n  row1: \r\n    col1: \r\n      size: 4\r\n      bloc: \r\n        - poids                                    		#34   Poids\r\n    col2: \r\n      size: 4\r\n      bloc: \r\n       - taillePatient                             		#35   Taille\r\n    col3: \r\n      size: 4\r\n      bloc: \r\n       - imc,readonly                              		#43   IMC\r\n  row2: \r\n   col1: \r\n     size: 12\r\n     bloc: \r\n       - job                                       		#19   Activité professionnelle\r\n       - allergies,rows=2                          		#66   Allergies\r\n       - toxiques                                  		#42   Toxiques\r\n  row3: \r\n    col1: \r\n     size: 12\r\n     bloc: \r\n       - atcdMedicChir,rows=6                      		#41   Antécédents médico-chirugicaux\r\n       - atcdFamiliaux,rows=6                      		#38   Antécédents familiaux', 'structure:\r\n  row1: \r\n    col1: \r\n      size: 4\r\n      bloc: \r\n        - poids                                    		#34   Poids\r\n    col2: \r\n      size: 4\r\n      bloc: \r\n       - taillePatient                             		#35   Taille\r\n    col3: \r\n      size: 4\r\n      bloc: \r\n       - imc,readonly                              		#43   IMC\r\n  row2: \r\n   col1: \r\n     size: 12\r\n     bloc: \r\n       - job                                       		#19   Activité professionnelle\r\n       - allergies,rows=2                          		#66   Allergies\r\n       - toxiques                                  		#42   Toxiques\r\n  row3: \r\n    col1: \r\n     size: 12\r\n     bloc: \r\n       - atcdMedicChir,rows=6                      		#41   Antécédents médico-chirugicaux\r\n       - atcdFamiliaux,rows=6                      		#38   Antécédents familiaux', ''),
 (36, 'base', 'baseConsult', 'Formulaire CS', 'formulaire basique de consultation', 'data_types', 'medical', 'post', '/patient/actions/saveCsForm/', 4, 'public', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              \r\n    head: \'Consultation\'\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - examenDuJour,rows=10                     		#716  Examen du jour', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              \r\n    head: \'Consultation\'\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - examenDuJour,rows=10                     		#716  Examen du jour', 'csBase'),
 (37, 'base', 'firstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\n row1:\n  col1: \n    head: "Mot de passe de l\'utilisateur 1"\n    size: 3\n    bloc:\n      - userid,readonly \n      - password,required\n      - verifPassword,required\n      - submit', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc: \r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', NULL),
-(38, 'base', 'userParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/configuration/', 5, 'public', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId', NULL);
+(38, 'base', 'userParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/configuration/', 5, 'public', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL);
 
 
 INSERT INTO `forms_cat` (`id`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES

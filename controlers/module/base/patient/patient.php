@@ -24,7 +24,7 @@
  * Patient : la page du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 // liste des formulaires fixes au 1er affichage dossier patient pour JS

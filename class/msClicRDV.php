@@ -29,11 +29,9 @@
 class msClicRDV
 {
     // group ID
-    private $_groupID;
-    private $_calID;
     private $_userpwd;
 
-    private function _sendCurl($commande, $url, $data='') {
+    private function _sendCurl($commande, $req, $groupID='', $params='', $data='') {
         if (!isset($this->_userpwd) or empty($this->_userpwd)) {
             $this->setUserPwd();
         }
@@ -41,18 +39,19 @@ class msClicRDV
         $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40';
         $baseurl='https://www.clicrdv.com/api/v1/';
         $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae';
+        $group= $groupID=='' ? '' : 'groups/'.$groupID.'/';
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
         if ($commande=='POST') {
-            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
             curl_setopt($ch, CURLOPT_POST, true);
         } else if ($commande=='PUT') {
-            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
             curl_setopt($ch, CURLOPT_PUT, true);
         } else if ($commande=='DELETE') {
-            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$url.$sb_api_key);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         } else {
-            curl_setopt($ch, CURLOPT_URL, $baseurl.$url.$api_key);
+            curl_setopt($ch, CURLOPT_URL, $baseurl.$group.$req.$api_key.$params);
         }
         curl_setopt($ch, CURLOPT_USERPWD, $this->_userpwd);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -61,7 +60,7 @@ class msClicRDV
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
         if (curl_errno($ch)) {
-            $res = "Error: ".curl_error($ch);
+            $res = 'Error: '.curl_error($ch);
         } else {
             $res = curl_exec($ch);
         }
@@ -75,92 +74,130 @@ class msClicRDV
         }
         if (empty($pwd)) {
             $pwd=msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(p.value),@password), CHAR) from objets_data AS p
-                WHERE p.toID='".$p['user']['id']."' AND p.typeID='".msData::getTypeIDFromName('clicRdvPassword')."' AND p.outdated=''");
+                WHERE p.toID='".$p['user']['id']."' AND p.typeID='".msData::getTypeIDFromName('clicRdvPassword')."' AND p.outdated='' AND p.deleted=''");
         }
-        $this->_userpwd = $user.":".$pwd;
+        $this->_userpwd = $user.':'.$pwd;
 
     }
 
-
-    public function setGroupID($groupID) {
-        $this->_groupID = $groupID;
-    }
 
     public function getGroups() {
-        return $this->_sendCurl("GET", "groups"); 
+        return $this->_sendCurl('GET', 'groups'); 
     }
 
-    public function getCalendars() {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="/calendars";
-        return $this->_sendCurl("GET", $req);
+    public function getCalendars($group='') {
+        return $this->_sendCurl('GET', 'calendars.json', $group);
     }
 
-    public function getInterventions() {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="interventions";
-        return $this->_sendCurl("GET", $req);
+    public function getInterventions($group='',$cal='') {
+        return $this->_sendCurl('GET', 'interventions.json',$group, '&calendar_ids[]='.$cal);
     }
 
-    public function getIntervention($id) {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="interventions/".$id."/";
-        return $this->_sendCurl("GET", $req);
+    public function getFiche($id, $group='') {
+        return $this->_sendCurl('GET', 'fiches',$group, '&fiche_id='.$id);
     }
 
-    public function getEvents() {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.=isset($this->_calID)?"calendar/".$this->_calID."/":'';
-        $req.="vevents";
-        return $this->_sendCurl("GET", $req);
-    }
-
-    public function getEvent($id) {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.=isset($this->_calID)?"calendar/".$this->_calID."/":'';
-        $req.="vevents/".$id;
-        return $this->_sendCurl("GET", $req);
-    }
-
-    public function setEvent($event, $start, $end, $text="", $comment="") {
+    private function VeventToEvent($vevent, $patientid) {
         global $p;
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="vevents/";
-        $taker="Tâche automatique";
-        if (isset($p['user']['prenom']) and isset($p['user']['nom'])) {
-            $taker=$p['user']['prenom']." ".$p['user']['nom'];
+        if (!isset($p['config']['clicRdvConsultId'])) {
+            return false;
         }
-        $data=array("calendar_id"=>$$this->_calID,
-                    "start"=>$start,
-                    "end"=>$end,
-                    "taker"=>$taker,
-                    "colorref"=>"#CCCCCC",
-                    "text"=>$text,
-                    "intervention_id"=>"0",
-                    "fiche_id"=>"0",
-                    "comments"=>$comment);
-        return $this->_sendCurl("POST", $req, $data);
+        $types=decode_json($p['config']['clicRdvConsultId'])[1];
+        $class=$vevent['state']=='2'?array('hasmenu','eventAbsent'):array('hasmenu');
+        return array(
+              'id'=>$vevent['id'],
+              'title'=> $vevent['text'],
+              'allDay'=>false,
+              'start'=>$vevent['start'],
+              'end'=>$vevent['end'],
+              'editable'=>true,
+              'backgroundColor'=> $vevent['colorref'],
+              'borderColor' => '#ffffff',
+              'textColor'=>'#000000',
+              'className'=>$class,
+              'motif'=>'',
+              'type'=>$types[$vevent['intervention_id']][0],
+              'patientid'=>$patientid,
+              'absent'=>$vevent['state']=='2'
+        );
     }
 
-    public function delEvent($id) {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="vevents/".$id;
-        return $this->_sendCurl("DELETE", $req);
+    private function EventToVevent($eventID) {
+        global $p;
+        $event=getEventByID($eventID);
+        $user=new msPeople();
+        $user->setToID($event['fromID']);
+        $userData=$user->getSimpleAdminDatasByName();
+        $taker=(empty($userData['lastname'])?$userData['birthname']:$userData['lastname']).' '.$userData['firstname'];
+        $fiche_id=$user->getPeopleDataFromDataTypeGroupe('user', ['dt.name', 'od.value'])['clicRdvPatientId'];
+        if ($fiche_id===null) {
+            return array(
+                  'id'=>$event['id'],
+                  'text'=> $event['title'],
+                  'start'=>$event['start'],
+                  'end'=>$event['end'],
+                  'colorref'=> $event['backgroundColor'],
+                  'taker'=>$taker
+            );
+        } else {
+            return array(
+                  'id'=>$event['id'],
+                  'text'=> $event['title'],
+                  'start'=>$event['start'],
+                  'end'=>$event['end'],
+                  'colorref'=> $event['backgroundColor'],
+                  'taker'=>$taker
+            );
+        }
     }
 
-    public function modEvent($id, $start, $end, $text="", $comment="") {
-        $req=isset($this->_groupID)?"groups/".$this->_groupID."/":'';
-        $req.="vevents/".$id;
-        $taker="Tâche automatique";
-        if (isset($p['user']['prenom']) and isset($p['user']['nom'])) {
-            $taker=$p['user']['prenom']." ".$p['user']['nom'];
+    public function getEvents($group='', $cal='') {
+        $vevents=$this->_sendCurl('GET', 'vevents.json', $group, '&calendar_id='.$cal);
+        $events=array();
+        foreach($events as $k=>$v) {
+            $events[$k]=VeventToEvent($v);
         }
-       $data=array("start"=>$start,
-                    "end"=>$end,
-                    "taker"=>$taker,
-                    "text"=>$text,
-                    "comments"=>$comment);
-        return $this->_sendCurl("PUT", $req, $data);
+        return $events;
+    }
+
+    public function setEvent($eventID, $group='', $cal='') {
+        global $p;
+        $user=new msPeople();
+        $user->setToID($fromID);
+        $userData=$user->getSimpleAdminDatasByName();
+        $taker=(empty($userData['lastname'])?$userData['birthname']:$userData['lastname']).' '.$userData['firstname'];
+        $event=getEventByID($eventID);
+        $cal=!empty($cal)?:(empty($p['config']['clicRdvCalId'])?0:$p['config']['clicRdvCalId']);
+        $data=array('calendar_id'=> $cal,
+                    'start'=>$event['start'],
+                    'end'=>$event['end'],
+                    'taker'=>$taker,
+                    'colorref'=>$event['backgroundColor'],
+                    'text'=>$event['title'],
+                    'intervention_id'=>'0',
+                    'fiche_id'=>'0',
+                    'comments'=>'motif:'.$event['motif'].',msid:'.$event['id']);
+        return $this->_sendCurl('POST', 'vevents/', $group, '', $data);
+    }
+
+    public function delEvent($id, $group='') {
+        return $this->_sendCurl('DELETE', 'vevents/'.$id, $group);
+    }
+
+    public function modEvent($id, $start, $end, $absent, $fromID, $group='', $cal='', $text='', $comment='') {
+        $user=new msPeople();
+        $user->setToID($fromID);
+        $userData=$user->getSimpleAdminDatasByName();
+        $taker=(empty($userData['lastname'])?$userData['birthname']:$userData['lastname']).' '.$userData['firstname'];
+        $cal=$cal?:(empty($p['config']['clicRdvCalId'])?0:$p['config']['clicRdvCalId']);
+        $data=array('calendar_id'=> $cal,
+                    'start'=>$start,
+                    'end'=>$end,
+                    'state'=>($absent=='oui'?2:0),
+                    'taker'=>$taker,
+                    'text'=>$text,
+                    'comments'=>$comment);
+        return $this->_sendCurl('PUT', 'vevents/'.$id, $group, '', $data);
     }
 
 

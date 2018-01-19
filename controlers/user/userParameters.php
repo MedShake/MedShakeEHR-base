@@ -33,18 +33,32 @@ $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='userParameters');
 $p['page']['form']=$form->getForm();
 
+$p['page']['clicRdvConsultsRel']='[]';
+$consults=msAgenda::getRdvTypes($p['user']['id']);
+$p['page']['form']['structure'][1][1]['elements'][5]['value']['formValues']=array();
+foreach ($consults as $k=>$v) {
+    $p['page']['form']['structure'][1][1]['elements'][5]['value']['formValues'][$k]=$v['descriptif'].' (MedShakeEHR)';
+}
+if (count($consults)) {
+    $p['page']['clicRdvConsults']=json_encode($consults);
+}
+
 if(isset($p['config']['clicRdvUserId'])) {
     $p['page']['form']['structure'][1][1]['elements'][1]['value']['preValue']=$p['config']['clicRdvUserId'];
     if (!empty($p['config']['clicRdvPassword'])) {
         $p['page']['form']['structure'][1][1]['elements'][2]['value']['preValue']='********';
 
-        if(isset($p['config']['clicRdvGroupId'])) {
+        if(!empty($p['config']['clicRdvGroupId'])) {
             $p['page']['form']['structure'][1][1]['elements'][3]['value']['formValues'][$p['config']['clicRdvGroupId']]=explode(':',$p['config']['clicRdvGroupId'])[1];
             $p['page']['form']['structure'][1][1]['elements'][3]['value']['preValue']=$p['config']['clicRdvGroupId'];
         }
-        if(isset($p['config']['clicRdvCalId'])) {
+        if(!empty($p['config']['clicRdvCalId'])) {
             $p['page']['form']['structure'][1][1]['elements'][4]['value']['formValues'][$p['config']['clicRdvCalId']]=explode(':',$p['config']['clicRdvCalId'])[1];
             $p['page']['form']['structure'][1][1]['elements'][4]['value']['preValue']=$p['config']['clicRdvCalId'];
+        }
+
+        if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
+            $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
         }
     }
 }

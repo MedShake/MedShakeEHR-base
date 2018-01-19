@@ -41,7 +41,7 @@ $setCRDV=false;
 
 if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
     unset($_SESSION['form'][$formIN]);
-    if (!isset($_POST['p_actualPassword']) or empty($_POST['p_actualPassword'])) {
+    if (empty($_POST['p_actualPassword'])) {
         unset($_SESSION['form'][$formIN]);
         $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShake, vous devez entrer votre mot de passe actuel.';
         msTools::redirRoute('userParameters');
@@ -95,6 +95,18 @@ if (!empty($_POST['p_clicRdvGroupId']) and $_POST['p_clicRdvGroupId']!=$p['confi
 }
 if (!empty($_POST['p_clicRdvCalId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvCalId']) {
     $objet->createNewObjet(msData::getTypeIDFromName('clicRdvCalId'), $_POST['p_clicRdvCalId']);
+}
+
+
+$consult = array();
+for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
+    $exp=explode(':', $_POST['p_clicRdvConsultId'.$i]);
+    $consult[0][$exp[0]]=array($exp[1], $exp[2]);
+    $consult[1][$exp[1]]=array($exp[0], $exp[2]);
+}
+
+if (!empty($consult)) {
+    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvConsultId'), json_encode($consult));
 }
 msTools::redirRoute('/');
 
