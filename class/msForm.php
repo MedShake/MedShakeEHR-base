@@ -539,7 +539,7 @@ class msForm
             foreach ($blocs as $k=>$v) {
 
                 //template
-                if (preg_match('#template{([\w]+)}#i', $v, $match)) {
+                if (preg_match('#template{([\w-]+)}#i', $v, $match)) {
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'template',
                             'value'=>$match[1]
