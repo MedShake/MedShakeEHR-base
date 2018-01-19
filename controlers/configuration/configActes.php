@@ -60,7 +60,7 @@
          }
      }
 
-     if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel
+     if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
 					from actes as a
 					left join actes_cat as c on c.id=a.cat
           where ".implode(' and ', $where)."
@@ -76,7 +76,7 @@
      }
 
      // liste des catégories
-     $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat order by label", 'id', 'label');
+     $p['page']['catList']=msSQL::sql2tabKey("select id, concat(label, ' (module ',module, ')') as label from actes_cat order by label", 'id', 'label');
 
      //utilisation de chaque facture type
      $typeID= msData::getTypeIDFromName('reglePorteur');

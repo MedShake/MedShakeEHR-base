@@ -135,7 +135,7 @@
 					<th class="col-md-1">Nom</th>
 					<th class="col-md-2">Label</th>
 					<th class="col-md-1">Utilisé</th>
-					<th class="col-md-1">Validation</th>
+					<th class="col-md-1">{% if page.groupe == "courrier" %}Module{% else %}Validation{% endif %}</th>
 					<th class="col-md-1">Type&nbsp;formulaire</th>
 					<th class="col-md-1">Vie</th>
 					<th class="col-md-3">Description</th>
@@ -149,7 +149,7 @@
 					<td>{{ w.name }}</td>
 					<td>{{ w.label }}</td>
 					<td>{{ w.enfants }}</td>
-					<td>{{ w.validationRules }}</td>
+					<td>{% if page.groupe == "courrier" %}{{ w.module }}{% else %}{{ w.validationRules }}{% endif %}</td>
 					<td>{{ w.formType }}</td>
 					<td>{{ w.durationLife }}</td>
 					<td>{{ w.description }}</td>
@@ -160,7 +160,7 @@
 						<button type="button" class="btn btn-default btn-xs duplicate" aria-label="Editer" data-id="{{ w.id }}" data-table="data_types" data-form="formModalNewType" data-modal="modalNewType">
 						<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
 						</button>
-						<button type="button" class="btn btn-default btn-xs delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0  or w.type=="base" %}disabled="disabled"{% endif %} data-id="{{ w.id }}" data-table="data_types">
+						<button type="button" class="btn btn-default btn-xs delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %}disabled="disabled"{% endif %} data-id="{{ w.id }}" data-table="data_types">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 						</button>
 					</td>
@@ -298,7 +298,25 @@
 				}) }}
 			</div>
 
-				{% if page.groupe not in ["typecs", "courrier"] %}
+      {% if page.groupe == "courrier" %}
+        <div class="form-group">
+        {{ f.select ({
+          'select' : {
+            'name' : 'module',
+            'id' : 'moduleID',
+            'class' : 'form-control',
+            'values' : page.modules ,
+            'autocomplete' : 'off',
+            'valueDefaut': ''
+          },
+          'label' : {
+            'position' : 'before',
+            'label' : 'Module',
+          }
+        }) }}
+        </div>
+
+				{% elseif page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">
 					{{ f.input ({
 						'input' : {
@@ -335,6 +353,44 @@
 					}) }}
 					</div>
 				{% endif %}
+
+
+        {% if page.groupe == "courrier" %}
+					<div class="form-group">
+					{{ f.input ({
+						'input' : {
+							'type' : 'text',
+							'name' : 'validationRules',
+							'id' : 'validationRulesID',
+							'placeholder' : 'id utilisateur séparés par des virgules',
+							'class' : 'form-control',
+							'autocomplete' : 'off'
+						},
+						'label' : {
+							'position' : 'before',
+							'label' : 'Spécifique aux utilisateurs',
+						}
+					}) }}
+					</div>
+
+					<div class="form-group">
+					{{ f.input ({
+						'input' : {
+							'type' : 'text',
+							'name' : 'validationErrorMsg',
+							'id' : 'validationErrorMsgID',
+							'placeholder' : 'id utilisateur séparés par des virgules',
+							'class' : 'form-control',
+							'autocomplete' : 'off'
+						},
+						'label' : {
+							'position' : 'before',
+							'label' : 'Exclu aux utilisateurs',
+						}
+					}) }}
+					</div>
+				{% endif %}
+
 
 				{% if page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">

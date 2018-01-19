@@ -63,11 +63,18 @@ class msUser
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
 
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, module from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
         if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
-            $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='3' and toID='".$user['id']."' and outdated='' limit 1");
-            $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='2' and toID='".$user['id']."' and outdated='' limit 1");
+
+            $name2typeID = new msData();
+            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+
+            $user['prenom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['firstname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
+            $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['lastname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
+            if(!$user['nom']) {
+                $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['birthname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
+            }
             return $user;
         } else {
             return msUser::cleanBadAuth();

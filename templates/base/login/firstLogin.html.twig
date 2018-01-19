@@ -1,0 +1,49 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > firstLogin
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @edited Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : Bienvenue{% endblock %}
+
+{% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<h1>Bienvenue!</h1>
+<p>MedshakeEHR est désormais fonctionnel.<p>
+<p>Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration, afin de vous permettre de créer d'autres utilisateurs, de régler leurs paramètres, ainsi que de configurer le logiciel.</p>
+<p>Notez bien que ce premier utilisateur aura pour ID la valeur 1. Cet ID vous sera demandé les prochaines fois que vous voudrez vous identifier.</p>
+{# validation error display bloc #}
+{{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
+
+{# form display #}
+{{ f.formbuilder(page.form , page.formIN , session) }}
+
+{% endblock %}

@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-class msModuleCalcMed
+class msModBaseCalcMed
 {
 
 

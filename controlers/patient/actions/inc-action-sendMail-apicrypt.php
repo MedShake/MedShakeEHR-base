@@ -54,13 +54,18 @@ $mail->addAddress($_POST['mailToApicrypt']);
 $hprimData = new msPeople();
 $hprimData->setToID($_POST['patientID']);
 $hprimData=$hprimData->getSimpleAdminDatas();
+$hprimData=array_filter($hprimData);
 
 if (!isset($hprimData['180'])) {
     $hprimData['180']='';
 }
 
 $texte=$_POST['patientID']."\n";
-$texte.=strtoupper($hprimData['2'])."\n"; //nom
+if(isset($hprimData['2'])) {
+  $texte.=strtoupper($hprimData['2'])."\n"; //nom d'usage
+} else {
+  $texte.=strtoupper($hprimData['1'])."\n"; //nom de naissance
+}
 $texte.=$hprimData['3']."\n"; //prenom
 $texte.="\n"; //adresse 1
 $texte.="\n"; //adresse 2

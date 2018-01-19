@@ -38,4 +38,7 @@
 			left join actes as a on c.id=a.cat
 			group by c.id
 			order by c.displayOrder, c.label asc", 'id');
+
+      //liste des modules
+      $p['page']['modules']=msSQL::sql2tabKey("SELECT module FROM system order by module", "module", "module");
  }

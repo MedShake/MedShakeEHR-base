@@ -32,6 +32,8 @@ root: ['GET', '/', 'index']
 userLogIn: ['GET', '/login/', 'login/logIn']
 userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
 userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
+userLogInFirst: ['GET', '/login/logInFirst/', 'login/logInFirst']
+userLogInFirstDo: ['POST', '/login/logInFirstDo/', 'login/logInFirstDo']
 
 #Ajax general
 ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
@@ -135,6 +137,7 @@ configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[
 configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique
@@ -155,9 +158,10 @@ publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
 publicSigner: ['GET', '/public/signer/', 'public/signer']
 publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
 
-#routes pour le module
-moduleAjax: ['POST', '/module/ajax/[a:m]/', 'module/actions/moduleAjax']
-moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'module/actions/moduleActions']
+#routes pour le module (! on part de controlers/module/ cette fois !)
+moduleAjax: ['POST', '/module/ajax/[a:m]/', 'actions/moduleAjax']
+moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'actions/moduleActions']
+
 
 #routes phonecapture
 phonecaptureAjax: ['POST|GET', '/phonecapture/ajax/[a:m]/', 'phonecapture/actions/phonecaptureAjax']

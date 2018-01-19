@@ -59,10 +59,6 @@ class msForm
      */
     private $_instance=0;
     /**
-     * @var array Le tableau de tous les typeID distincts présent dans le form
-     */
-    private $_typesInForm=[];
-    /**
      * @var string Le type de nomage des champs du formulaire (byID / byName)
      */
     private $_typeForNameInForm='byID';
@@ -77,7 +73,7 @@ class msForm
         if (is_numeric($formID)) {
             if (!isset($this->_formIN)) {
                 if ($formIN=msSQL::sqlUniqueChamp("select internalName from forms where id='".msSQL::cleanVar($formID)."' limit 1")) {
-                    return $this->_formIN = $formIN;
+                    $this->_formIN = $formIN;
                 } else {
                     throw new Exception('Formulaire non trouvé à partir de son ID');
                 }
@@ -167,7 +163,7 @@ class msForm
     {
         if (is_array($v)) {
             return $this->_prevalues = $v;
-        } else {
+        } elseif(!empty($v)) {
             throw new Exception('Var is not an array');
         }
     }
@@ -201,7 +197,7 @@ class msForm
  */
     public function getForm()
     {
-        if ($formYaml=$this->_getFormFromDb($this->_formID)) {
+        if ($formYaml=$this->getFormFromDb($this->_formID)) {
             return $this->_formBuilder($formYaml);
         } else {
             throw new Exception('Form cannot be generated');
@@ -236,7 +232,7 @@ class msForm
  */
     public function getValidation()
     {
-        if ($formYaml=$this->_getFormFromDb($this->_formID)) {
+        if ($formYaml=$this->getFormFromDb($this->_formID)) {
             return $this->_formValidation($formYaml);
         } else {
             throw new Exception('Validations cannot be done');
@@ -259,9 +255,17 @@ class msForm
  * le modèle yaml est transformé en array php
  * @return array Le modèle du formulaire en array PHP brut
  */
-    private function _getFormFromDb()
+    public function getFormFromDb()
     {
+        if (!isset($this->_formID)) {
+            throw new Exception('formID is not defined');
+        }
         if ($formyaml=msSQL::sqlUnique("select yamlStructure, dataset, formMethod, formAction from forms where id='".$this->_formID."' limit 1")) {
+
+            if($this->_testNumericBloc($formyaml['yamlStructure'])) {
+              $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure'],$formyaml['dataset']);
+            }
+
             $form = Spyc::YAMLLoad($formyaml['yamlStructure']);
             $form['global']['dataset']=$formyaml['dataset'];
             $form['global']['formAction']=$formyaml['formAction'];
@@ -372,12 +376,26 @@ class msForm
         if (is_array($blocs)) {
             foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
-                if (is_numeric($bloc[0]) and $type=$this->_formExtractType($bloc[0], $dataset)) {
-                    $type['originalname']=$type['name'];
-                    $type['name']='p_'.$type['id'];
+                if (preg_match('#(template{|label{).*#i', $bloc[0])) {
+                    continue;
+                }
+                if (is_numeric($bloc[0]) or preg_match('#[\w]+#i', $bloc[0])) {
+                    if (is_numeric($bloc[0])) {
+                        $type=$this->_formExtractType($bloc[0], $dataset);
+                    } else {
+                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
+                    }
+
+                    //$type['originalname']=$type['name'];
+                    //$type['name']='p_'.$type['id'];
+
+                    $type['internalName']=$type['name'];
+                    if ($this->_typeForNameInForm !='byName') {
+                        $type['name']='p_'.$type['name'];
+                    }
 
                     //post name -> type name
-                    $r['postname2typename'][$type['name']]=$type['originalname'];
+                    $r['postname2typename'][$type['name']]=$type['internalName'];
 
 
                     // si de type select
@@ -449,6 +467,9 @@ class msForm
 
 
         // structure
+        // on sort si pas de structure (on est dans un formulaire affichage)
+        if(!isset($t['structure'])) return;
+
         $rowTotal=count($t['structure']);
 
         for ($rowNumber=1;$rowNumber<=$rowTotal;$rowNumber++) {
@@ -518,47 +539,44 @@ class msForm
             foreach ($blocs as $k=>$v) {
                 $bloc=explode(',', $v);
 
-                if (!is_numeric($bloc[0])) {
-                    $bloc=implode(',', $bloc);
-
-                    //template
-                    if ((preg_match('#template{([a-zA-Z]+)}#i', $bloc, $match))) {
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
-                                'type'=>'template',
-                                'value'=>$match[1]
-                            );
-                    }
-                    //labels
-                    else {
-                        if (empty(trim($bloc))) {
-                            $bloc='&nbsp;';
-                        }
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
-                                                  'type'=>'label',
-                                                  'value'=>$bloc
-                                              );
-                    }
-
-                } elseif ($type=$this->_formExtractType($bloc[0], $dataset)) {
-                    if ($this->_typeForNameInForm=='byName') {
+                //template
+                if (preg_match('#template{([\w]+)}#i', $bloc[0], $match)) {
+                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                            'type'=>'template',
+                            'value'=>$match[1]
+                        );
+                //label
+                } else if (preg_match('#label{(.*)}#i', $bloc[0], $match)) {
+                    $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
+                            'type'=>'label',
+                            'value'=>$match[1]
+                        );
+                // sinon c'est un bloc standard (ID ou internalName)
+                } else {
+                    if (is_numeric($bloc[0])) {
+                        $type=$this->_formExtractType($bloc[0], $dataset);
                     } else {
-                        $type['internalName']=$type['name'];
-                        $type['name']='p_'.$type['id'];
+                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
                     }
 
-                    //valeur par défaut si présente
-                    if (isset($this->_prevalues[$bloc[0]])) {
-                        $type['preValue']=$this->_prevalues[$bloc[0]];
-                    } elseif (isset($this->_prevalues[$type['name']])) {
-                        $type['preValue']=$this->_prevalues[$type['name']];
-                    } else {
-                        $type['preValue']='noPreValue';
+                    $type['internalName']=$type['name'];
+                    if ($this->_typeForNameInForm !='byName') {
+                        $type['name']='p_'.$type['name'];
                     }
 
-                    //traitement des flags communs
-                    if (in_array('nolabel', $bloc)) {
-                        unset($type['label']);
-                    }
+                  //valeur par défaut si présente
+                  if (isset($this->_prevalues[$type['id']])) {
+                      $type['preValue']=$this->_prevalues[$type['id']];
+                  } elseif (isset($this->_prevalues[$type['name']])) {
+                      $type['preValue']=$this->_prevalues[$type['name']];
+                  } else {
+                      $type['preValue']='noPreValue';
+                  }
+
+                  //traitement des flags communs
+                  if (in_array('nolabel', $bloc)) {
+                      unset($type['label']);
+                  }
                     if (in_array('disabled', $bloc)) {
                         $type['disabled']='disabled';
                     }
@@ -569,69 +587,69 @@ class msForm
                         $type['required']='required';
                     }
 
-                    //traitement spécifique au select
-                    if ($type['formType']=="select") {
-                        $type['formValues']=Spyc::YAMLLoad($type['formValues']);
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                  //traitement spécifique au select
+                  if ($type['formType']=="select") {
+                      $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
 
-                    //traitement spécifique au textarea
-                    } elseif ($type['formType']=="textarea") {
-                        foreach ($bloc as $h) {
-                            if (preg_match('#rows=([0-9]+)#i', $h, $match)) {
-                                $type['rows']=$match[1];
-                            }
-                        }
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                  //traitement spécifique au textarea
+                  } elseif ($type['formType']=="textarea") {
+                      foreach ($bloc as $h) {
+                          if (preg_match('#rows=([0-9]+)#i', $h, $match)) {
+                              $type['rows']=$match[1];
+                          }
+                      }
+                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
 
-                    //traitement spécifique au submit
-                    } elseif ($type['formType']=="submit") {
-                        if (isset($bloc[1])) {
-                            $type['label']=$bloc[1];
-                        } else {
-                            $type['label']="Go";
-                        }
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                  //traitement spécifique au submit
+                  } elseif ($type['formType']=="submit") {
+                      if (isset($bloc[1])) {
+                          $type['label']=$bloc[1];
+                      } else {
+                          $type['label']="Go";
+                      }
+                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
 
-                    //traitement spécifique au number
-                    } elseif ($type['formType']=="number") {
-                        foreach ($bloc as $h) {
-                            if (preg_match('#max=([0-9]+)#i', $h, $match)) {
-                                $type['max']=$match[1];
-                            } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
-                                $type['min']=$match[1];
-                            } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
-                                $type['step']=$match[1];
-                            }
-                        }
+                  //traitement spécifique au number
+                  } elseif ($type['formType']=="number") {
+                      foreach ($bloc as $h) {
+                          if (preg_match('#max=([0-9]+)#i', $h, $match)) {
+                              $type['max']=$match[1];
+                          } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
+                              $type['min']=$match[1];
+                          } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
+                              $type['step']=$match[1];
+                          }
+                      }
 
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
 
-                    //traitement spécifique aux autres input
-                    } else {
-                        if (in_array('autocomplete', $bloc)) {
-                            $type['autocompleteclass']=' jqautocomplete';
+                  //traitement spécifique aux autres input
+                  } else {
+                      if (in_array('autocomplete', $bloc)) {
+                          $type['autocompleteclass']=' jqautocomplete';
 
-                            foreach ($bloc as $h) {
-                                if (preg_match('#data-acTypeID=([0-9]+:{0,1})+#i', $h)) {
-                                    $type['dataAcTypeID']=$h;
-                                }
-                            }
-                            if (!isset($type['dataAcTypeID'])) {
-                                $type['dataAcTypeID']='data-acTypeID='.$type['id'];
-                            }
-                        }
+                          foreach ($bloc as $h) {
+                              if (preg_match('#data-acTypeID=([0-9]+:{0,1})+#i', $h)) {
+                                  $type['dataAcTypeID']=$h;
+                              }
+                          }
+                          if (!isset($type['dataAcTypeID'])) {
+                              $type['dataAcTypeID']='data-acTypeID='.$type['id'];
+                          }
+                      }
 
-                        foreach ($bloc as $h) {
-                            if (preg_match('#plus={(.*)}#i', $h, $match)) {
-                                $type['plus']=$match[1];
-                            }
-                            if (preg_match('#plusg={(.*)}#i', $h, $match)) {
-                                $type['plusg']=$match[1];
-                            }
-                        }
+                      foreach ($bloc as $h) {
+                          if (preg_match('#plus={(.*)}#i', $h, $match)) {
+                              $type['plus']=$match[1];
+                          }
+                          if (preg_match('#plusg={(.*)}#i', $h, $match)) {
+                              $type['plusg']=$match[1];
+                          }
+                      }
 
-                        $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
-                    }
+                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                  }
                 }
             }
         }
@@ -697,17 +715,26 @@ class msForm
     private function _formExtractType($id, $dataset)
     {
         if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where id='".msSQL::cleanVar($id)."' limit 1")) {
-            //stockage des data_types présents dans le form
-            if (!in_array($id, $this->_typesInForm)) {
-                $this->_typesInForm[]=$id;
-            }
-
             return $typeData;
         } else {
-            throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données');
+            throw new Exception('Le type de donnée '.$id.' n\'a pas pu être extrait de la base de données');
         }
     }
 
+  /**
+   * Extraire les infos sur un type de données par son name
+   * @param  string $name      name du type
+   * @param  string $dataset Jeu de données
+   * @return array          Infos sur le type
+   */
+      private function _formExtractTypeByName($name, $dataset)
+      {
+          if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
+              return $typeData;
+          } else {
+              throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name : '.$name);
+          }
+      }
 
 /**
  * Extraire tous les typeID présents dans un form
@@ -717,8 +744,73 @@ class msForm
     private function _formExtractDistinctTypes()
     {
         if ($formyaml=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$this->_formID."' limit 1")) {
+
+            $rtypes=[];
+            preg_match_all("# - (?!template|label)([\w]+)#i", $formyaml, $matchIN);
+            if(count($matchIN[1])>0) {
+              $types=new msData();
+              if($types=$types->getTypeIDsFromName($matchIN[1])) $rtypes=$types;
+            }
+
             preg_match_all("# - ([0-9]+)#i", $formyaml, $matches);
-            return $matches[1];
+            if(count($matches[1])>0) {
+              $rtypes=array_merge($rtypes, $matches[1]);
+            }
+
+            return array_unique($rtypes);
         }
     }
+
+/**
+ * Tester la présence de blocs numériques dans un form
+ * @param string $formyaml formulaire au formt yaml
+ * @return bool true or false
+ */
+    private function _testNumericBloc($formyaml)
+    {
+        preg_match_all("# - ([0-9]+)#i", $formyaml, $matches);
+        if(count($matches[1]) > 0) return true; else return false;
+    }
+
+/**
+ * Transformer les blocs numériques d'un formulaire en bloc name
+ * @param string $formyaml formulaire au formt yaml
+ * @param string $dataset dataset du formulaire
+ * @return string formulaire nettoyé
+ */
+  public function cleanForm($formyaml, $dataset)
+  {
+      if($form=explode("\n", $formyaml)) {
+        foreach ($form as $ligne) {
+            $ligneOriginale=$ligne;
+            if(preg_match("#(\s+)- (template\{|')(.*)#i", $ligne, $match) ) {
+              $ligne=explode('#', rtrim($ligne));
+              $ligne[0]=str_pad(rtrim($ligne[0]),50)."\t\t";
+              $cleanform[]=implode('# ',$ligne);
+            } elseif(preg_match("#(\s+)- (label\{|')(.*)#i", $ligne, $match) ) {
+              $ligne=explode('#', rtrim($ligne));
+              $ligne[0]=str_pad(rtrim($ligne[0]),50)."\t\t";
+              $cleanform[]=implode('# ',$ligne);
+            } elseif (preg_match("#(\s+)- ([\w]+)(.*)#i", $ligne, $match)) {
+              $ligne=explode('#', rtrim($ligne));
+              $ligne=$ligne[0];
+
+              if (preg_match("#(\s+)- ([0-9]+)(.*)#i", $ligne, $match)) {
+                  $type=$this->_formExtractType($match[2], $dataset);
+              } elseif(preg_match("#(\s+)- ([\w]+)(.*)#i", $ligne, $match)) {
+                  $type=$this->_formExtractTypeByName($match[2], $dataset);
+              }
+
+              $cleanform[]=str_pad($match[1].'- '.$type['name'].trim($match[3]),50)." \t\t#".str_pad($type['id'],4).' '.str_replace("'", " ", $type['label']);
+
+            } else {
+                $cleanform[]=$ligneOriginale;
+            }
+
+        }
+        return implode("\n", $cleanform);
+    } else {
+      return $formyaml;
+    }
+  }
 }

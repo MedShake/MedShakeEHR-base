@@ -41,6 +41,7 @@ if ($_POST['porp']=='patient') {
 
 $p['page']['porp']=$_POST['porp'];
 
+
 if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formIN."' limit 1")) {
     $form=Spyc::YAMLLoad($form);
 
@@ -54,17 +55,23 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         if (isset($form['col'.$i]['bloc'])) {
             foreach ($form['col'.$i]['bloc'] as $v) {
                 $el=explode(',', $v);
-                $listeTypes[]=$el[0];
+                if(is_numeric($el[0])) {
+                  $name=msData::getNameFromTypeID($el[0]);
+                  $listeTypes[$name]=$el[0];
+                } else {
+                  $typeID=msData::getTypeIDFromName($el[0]);
+                  $listeTypes[$el[0]]=$typeID;
+                  $el[0]=$typeID;
+                }
 
                 //order by
                 if ($i==1) {
-                    if($el[0] != 51) $orderby[]='c'.$el[0];
+                    if($el[0] != 'titre') $orderby[]='c'.$el[0];
                 }
             }
         }
     }
     $listeTypes=array_unique($listeTypes);
-
 
     foreach ($listeTypes as $type) {
         $select[]= 'd'.$type.'.value as c'.$type;
@@ -73,7 +80,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
 
     $where=null;
     if (!empty($_POST['d2'])) {
-        $where.=" and d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='' ";
+        $where.=" and ((d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='') or (d1.value like '".msSQL::cleanVar($_POST['d2'])."%' and d1.outdated='') ) ";
     }
     if (!empty($_POST['d3'])) {
         $where.=" and d3.value like '".msSQL::cleanVar($_POST['d3'])."%' and d3.outdated='' ";
@@ -89,7 +96,11 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     //patient ou pro en fonction
     if($_POST['porp']=='patient') $peopleType=array('pro','patient'); else $peopleType=array('pro');
 
-    $sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
+    $p['page']['sqlString']=$sql='select
+    CASE WHEN d2.value !="" THEN d2.value
+    ELSE d1.value
+    END as nomtri,
+    p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by trim(nomtri), c3  limit 50';
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
@@ -97,7 +108,11 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
             if (isset($form['col'.$i]['bloc'])) {
                 foreach ($form['col'.$i]['bloc'] as $v) {
                     $el=explode(',', $v);
-                    $id=$el[0];
+                    if(is_numeric($el[0])) {
+                      $id=$el[0];
+                    } else {
+                      $id=$listeTypes[$el[0]];
+                    }
                     unset($el[0]);
 
                     //col number for type

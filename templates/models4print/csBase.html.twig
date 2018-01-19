@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > models4print : compte-rendu de consultation 
+ # Template > models4print : compte-rendu de consultation
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @edited fr33z00 <https://github.com/fr33z00>
@@ -30,7 +30,7 @@
 
 <p style="text-align : right;">New-York, le {{ tag.date|date("d/m/Y") }}</p>
 
-<h2 style="text-align : center">{% if tag.14=='Homme' %}M.{% elseif tag.14=='Femme' %}Mme{% endif %} {{ tag.3 }}  {{ tag.2 }} ({{ tag.8 }})</h2>
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
 
 <h3>Consultation du jour</h3>
 

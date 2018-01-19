@@ -221,12 +221,16 @@ class msAgenda
           }
           $formatedEvents=[];
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, concat(n.value, ' ', p.value) as name
+          $name2typeID = new msData();
+          $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
-          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
-          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
+          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
+          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
           where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
-          group by a.id, n.value, p.value")) {
+          group by a.id, bn.value, n.value, p.value")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
               }
@@ -258,12 +262,16 @@ class msAgenda
               throw new Exception('EventID n\'est pas définie');
           }
 
-          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, concat(n.value, ' ', p.value) as name
+          $name2typeID = new msData();
+          $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+
+          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
-          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='2'
-          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='3'
+          left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
+          left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
           where a.id= '".$this->_eventID."'
-          group by a.id, n.value, p.value")) {
+          group by a.id, bn.value, n.value, p.value")) {
               $formatedEvent=$this->_formatEvent($event);
           }
           return $formatedEvent;

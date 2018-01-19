@@ -172,6 +172,7 @@ class msHprim
 /**
  * Obtenir la liste des patients correspondant aux datas HPRIM
  * @param  array $hprimData Data HPRIM
+ * @param int $patientID ID du patient
  * @return array            Array des patients possibles
  */
     public static function getPossiblePatients($hprimData, $patientID='')
@@ -184,16 +185,19 @@ class msHprim
           $final[$patientID] = 2;
 
         } else {
+            $name2typeID = new msData();
+            $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthdate', 'birthname', 'postalCodePerso', 'nss']);
+
             //le nom de famille
-            $nom=msSQL::sql2tabSimple("select toID from objets_data where typeID='2' and value like '".$hprimData['nom']."' ");
+            $nom=msSQL::sql2tabSimple("select toID from objets_data where typeID in ('".$name2typeID['lastname']."', '".$name2typeID['birthname']."') and value like '".$hprimData['nom']."' and outdated='' and deleted='' ");
             //le prenom
-            $prenom=msSQL::sql2tabSimple("select toID from objets_data where typeID='3' and value like '".$hprimData['prenom']."' ");
+            $prenom=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['firstname']."' and value like '".$hprimData['prenom']."' and outdated='' and deleted=''");
             //la ddn
-            $ddn=msSQL::sql2tabSimple("select toID from objets_data where typeID='8' and value = '".$hprimData['ddn']."' ");
+            $ddn=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['birthdate']."' and value = '".$hprimData['ddn']."' and outdated='' and deleted=''");
             //n secu
-            $nss=msSQL::sql2tabSimple("select toID from objets_data where typeID='180' and value = '".$hprimData['nss']."' ");
+            $nss=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['nss']."' and value = '".$hprimData['nss']."' and outdated='' and deleted=''");
             //code postal
-            $cp=msSQL::sql2tabSimple("select toID from objets_data where typeID='13' and value = '".$hprimData['cp']."' ");
+            $cp=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['postalCodePerso']."' and value = '".$hprimData['cp']."' and outdated='' and deleted=''");
 
 
             $final=array();

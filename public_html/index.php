@@ -29,8 +29,19 @@
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
-session_start();
 
+/////////// Petites vérifications de l'installation
+if (!is_dir("../vendor")) {
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
+}
+if (!is_dir("bower_components")) {
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
+}
+if (!is_file('../config/config.yml')) {
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez créer le fichier config/config.yml");
+}
+
+session_start();
 
 /////////// Composer class auto-upload
 require '../vendor/autoload.php';
@@ -76,22 +87,27 @@ if (isset($_COOKIE['userId'])) {
 } else {
     $p['user']=null;
     $p['user']['id']=null;
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    $p['user']['module']='base';
+    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
+        if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
+            msTools::redirRoute('userLogInFirst');
+        }
+    }
+    elseif ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
 }
 
-
-///////// Controler else -> 404
+///////// Controler
 if ($match and is_file('../controlers/'.$match['target'].'.php')) {
     include '../controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file('../controlers/module/'.$match['target'].'.php')) {
-        include '../controlers/module/'.$match['target'].'.php';
+    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-} else {
-    //$template='problem';
+} elseif ($match and is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+    include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 
@@ -131,48 +147,13 @@ if (isset($template)) {
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 
-    //les répertoires de templates twig : module puis base
-    if (is_dir($p['config']['templatesModuleFolder'])) {
-        $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-    } else {
-        $twigTemplateBaseDirs=[];
+    //générer et sortir le html
+    $getHtml = new msGetHtml();
+    $getHtml->set_template($template);
+    if(isset($forceAllTemplates)) {
+      $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'],'/'));
     }
-    if (is_dir($p['config']['templatesBaseFolder'])) {
-        $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
-    } else {
-        $twigTemplateModuleDirs=[];
-    }
-    $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
-    if (is_dir($p['config']['templatesModuleFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesModuleFolder'];
-    }
-    if (is_dir($p['config']['templatesBaseFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
-    }
-    if (is_dir($p['config']['templatesPdfFolder'])) {
-        $twigTemplateDirs[]=$p['config']['templatesPdfFolder'];
-    }
-
-    // les variables d'environnement twig
-    if (isset($p['config']['twigEnvironnementCache'])) {
-        $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
-    } else {
-        $twigEnvironment['cache']=false;
-    }
-    if (isset($p['config']['twigEnvironnementAutoescape'])) {
-        $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
-    } else {
-        $twigEnvironment['autoescape']=false;
-    }
-
-    $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
-    $twig = new Twig_Environment($loader, $twigEnvironment);
-    $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-    $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
-
-
-    // display
-    echo $twig->render($template.'.html.twig', $p);
+    echo $getHtml->genererHtml();
 }
 
 //////// Debug

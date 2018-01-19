@@ -533,7 +533,7 @@ function getPatientAdminData(patientID) {
     success: function(data) {
       $('#patientID').val(patientID);
       $.each(data, function(index, value) {
-        if ($("#p_2ID").length) $("#p_" + index + "ID").val(value);
+        if ($("#id_lastname_id").length) $("#id_" + index + "_id").val(value);
       });
       getHistoriquePatient(patientID);
     },
@@ -752,7 +752,7 @@ function ajaxModalFormSave(form, modal) {
         $(modal + ' form select option').prop('selected', function() {
             return this.defaultSelected;
         });
-        $("#p_8Id").prev('label').html('Date de naissance');
+        $("#id_birthdate_id").prev('label').html('Date de naissance');
 
         // injection du patient pour nouveau rdv
         clean();

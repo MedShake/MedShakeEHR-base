@@ -24,6 +24,7 @@
  * Patient > ajax : extraire l'éditeur de courrier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -46,6 +47,7 @@
      $courrier = new msCourrier();
      $courrier->setModeleID($_POST['modeleID']);
      $courrier->setPatientID($_POST['patientID']);
+     $courrier->setModule($p['user']['module']);
      $p['page']['courrier']=$courrier->getCourrierData();
 
      $data=new msData();

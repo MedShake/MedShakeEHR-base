@@ -26,6 +26,31 @@
  * @edited fr33z00 <https://www.github.com/fr33z00>
  */
 
+ ////////////////////////////////////////////////////////////////////////
+ ///////// Définition des variables par défaut
+
+if (!scrollDestination) {
+  var scrollDestination = {
+    newDoc: '#newDoc',
+    nouvelleCs: '#nouvelleCs',
+    newCourrier: '#newCourrier',
+    newOrdo: '#newOrdo',
+    newMail: '#newMail',
+    newReglement: '#newReglement',
+    delai: 400
+  };
+}
+
+if (!scriptsList) {
+  var scriptsList = {
+    ordonnance: "ordonnance.js",
+    print: "print.js",
+    docupload: "docupload.js",
+    email: "email.js",
+    reglement: "reglement.js"
+  };
+}
+ 
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
@@ -145,8 +170,8 @@ $(document).ready(function() {
   $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
-    $.getScriptOnce(urlBase + "/js/patientScripts/docupload.js");
-    scrollTo("#newDoc", 400);
+    $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.docupload);
+    scrollTo(scrollDestination.newDoc, scrollDestination.delai);
   });
 
   //bouton de nouveau mail
@@ -389,15 +414,15 @@ function catchOtherDicomSrData() {
 
 function mapDicomSRData2CurrentForm(data) {
   jQuery.each(data, function(index, item) {
-    $('#p_' + index + 'ID').val(item);
-    $('#p_' + index + 'ID').trigger("keyup");
+    $('input[data-typeID="' + index + '"]').val(item);
+    $('input[data-typeID="' + index + '"]').trigger("keyup");
   });
 }
 
 function addDicomSRInfo2CurrentForm(data) {
-  $('#nouvelleCs form').append('<input type="hidden" name="p_433" value="' + data['study'] + '" />');
-  $('#nouvelleCs form').append('<input type="hidden" name="p_434" value="' + data['serie'] + '" />');
-  $('#nouvelleCs form').append('<input type="hidden" name="p_435" value="' + data['instance'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomStudyID" value="' + data['study'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomSerieID" value="' + data['serie'] + '" />');
+  $('#nouvelleCs form').append('<input type="hidden" name="p_dicomInstanceID" value="' + data['instance'] + '" />');
 
 }
 
@@ -422,7 +447,7 @@ function sendFormToCsDiv(el) {
     success: function(data) {
       $('#nouvelleCs').html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
-      scrollTo('#nouvelleCs', 400);
+      scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -454,13 +479,13 @@ function sendFormToCourrierDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newCourrier').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/print.js");
+      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.print);
 
       tinymce.init({
         selector: '#editeurCourrier',
         height: "500"
       });
-      scrollTo('#newCourrier', 400);
+      scrollTo(scrollDestination.newCourrier, scrollDestination.delai);
       // pour éviter de perdre des données
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
@@ -492,8 +517,8 @@ function sendFormToOrdoDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newOrdo').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/ordonnance.js");
-      scrollTo('#newOrdo', 400);
+      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.ordonnance);
+      scrollTo(scrollDestination.newOrdo, scrollDestination.delai);
       if (typeof(autoGrowOrdo) != "undefined") {
         if ($.isFunction(autoGrowOrdo)) autoGrowOrdo();
       }
@@ -522,8 +547,8 @@ function sendFormToMailDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newMail').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/email.js");
-      scrollTo('#newMail', 400);
+      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.email);
+      scrollTo(scrollDestination.newMail, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -554,8 +579,8 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/reglement.js");
-      scrollTo('#newReglement', 400);
+      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      scrollTo(scrollDestination.newReglement, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");

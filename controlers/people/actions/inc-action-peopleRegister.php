@@ -71,11 +71,10 @@ if ($validation === false) {
 
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {
-            $id = substr($k, $pos+1);
-
-            if (is_numeric($id)) {
-                if (!empty(trim($v))) {
-                    $patient->createNewObjet($id, $v);
+            $in = substr($k, $pos+1);
+            if (isset($in)) {
+                if (!empty(trim($v)) and !empty(trim($in))) {
+                    $patient->createNewObjetByTypeName($in, $v);
                 }
             }
         }

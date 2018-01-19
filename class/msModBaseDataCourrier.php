@@ -34,7 +34,7 @@
  * @edited fr33z00 <https://github.com/fr33z00>
  */
 
-class msModuleDataCourrier
+class msModBaseDataCourrier
 {
 
 
@@ -59,7 +59,7 @@ class msModuleDataCourrier
  * @param  array $d tableau des tags
  * @return void
  */
-  public static function getCourrierDataCompleteModuleModele478(&$d) {
+  public static function getCourrierDataCompleteModuleModele_modeleCourrierResumeDossier(&$d) {
 
     // extraction des ATCD
     $atcd = new msCourrier();

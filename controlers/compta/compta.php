@@ -29,6 +29,10 @@
 $debug='';
 $template="compta";
 
+// sortie des typeID dont on va avoir besoin
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'reglePorteur', 'birthname']);
+
 //gestion des plages
 if (!isset($_POST['beginPeriode'])) {
     $beginPeriode = new DateTime();
@@ -67,10 +71,11 @@ if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
     $pratIdAutorises=array_unique($pratIdAutorises);
   }
 }
-$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, o.value as nom
+$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, CASE WHEN o.value != '' THEN o.value  ELSE bn.value END as nom
  from people as p
- left join objets_data as o on o.toID=p.id and o.typeID=2 and o.outdated=''
- left join objets_data as o2 on o2.toID=p.id and o2.typeID=3 and o2.outdated=''
+ left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
+ left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
+ left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
 //praticien concerné par la recherche actuelle
@@ -85,27 +90,34 @@ if (isset($_POST['prat'])) {
 }
 
 //sortir les reglements du jour
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['reglePorteur']);
-
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+      CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
+      WHEN n.value != '' THEN n.value
+      ELSE bn.value
+      END as nom
       from objets_data as pd
       left join data_types as dc on dc.id=pd.typeID
       left join actes as a on pd.parentTypeID=a.id
-      left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
-      left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+      left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+      left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+      left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
       where
       pd.id in (
         select pd1.id from objets_data as pd1
         where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
       )
   union
-      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , n.value as nom, a.label, dc.name
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+      CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
+      WHEN n.value != '' THEN n.value
+      ELSE bn.value
+      END as nom
       from objets_data as pd
       left join data_types as dc on dc.id=pd.typeID
       left join actes as a on pd.parentTypeID=a.id
-      left join objets_data as p on p.toID=pd.toID and p.typeID=3 and p.outdated=''
-      left join objets_data as n on n.toID=pd.toID and n.typeID=2 and n.outdated=''
+      left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+      left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+      left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
       where
       pd.instance in (
         select pd2.id from objets_data as pd2

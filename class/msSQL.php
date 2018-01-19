@@ -24,6 +24,7 @@
  * Fonctions MySQL
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @edited fr33z00 <https://github.com/fr33z00>
  */
 
 class msSQL
@@ -39,7 +40,7 @@ class msSQL
       $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
       $mysqli->set_charset("utf8");
       if (mysqli_connect_errno()) {
-          die('Echec de connexion');
+          die('Echec de connexion à la base de données');
       } else {
           $mysqli->query('SELECT @password:="'.$p['config']['sqlVarPassword'].'"');
           //$mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
@@ -84,7 +85,7 @@ class msSQL
   public static function sqlUniqueChamp($sql)
   {
       $query=msSQL::sqlQuery($sql);
-      if (mysqli_num_rows($query)==1) {
+      if ($query and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           $row = $query->fetch_row();
           return $row[0];
@@ -100,13 +101,10 @@ class msSQL
  */
   public static function sqlUnique($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)==1) {
-              $query->data_seek(0);
-              return $query->fetch_array(MYSQLI_ASSOC);
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query and mysqli_num_rows($query)==1) {
+          $query->data_seek(0);
+          return $query->fetch_array(MYSQLI_ASSOC);
       } else {
           return null;
       }
@@ -119,17 +117,14 @@ class msSQL
  */
   public static function sql2tab($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)>0) {
-              while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
-                  if ($row) {
-                      $result[]=$row;
-                  }
-              };
-              return $result;
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query and mysqli_num_rows($query)>0) {
+          while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
+              if ($row) {
+                  $result[]=$row;
+              }
+          };
+          return $result;
       } else {
           return null;
       }
@@ -165,17 +160,14 @@ class msSQL
  */
   public static function sql2tabSimple($sql)
   {
-      if ($query=msSQL::sqlQuery($sql)) {
-          if (mysqli_num_rows($query)>0) {
-              while ($row=$query->fetch_array(MYSQLI_NUM)) {
-                  if ($row) {
-                      $result[]=$row[0];
-                  }
-              };
-              return $result;
-          } else {
-              return null;
-          }
+      $query=msSQL::sqlQuery($sql);
+      if ($query and mysqli_num_rows($query)>0) {
+          while ($row=$query->fetch_array(MYSQLI_NUM)) {
+              if ($row) {
+                  $result[]=$row[0];
+              }
+          };
+          return $result;
       } else {
           return null;
       }

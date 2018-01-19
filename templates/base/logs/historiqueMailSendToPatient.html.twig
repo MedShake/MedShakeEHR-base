@@ -28,14 +28,29 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}Historique des mails envoyés à {{ page.patientData.3 }} {{ page.patientData.2 }}{% endblock %}
+{% block title %}Historique des mails envoyés à {{ page.patientData.3 }}
+  {% if page.patientData.1 and page.patientData.2 %}
+    {{ page.patientData.2|e }} ({{ page.patientData.1|e }})
+  {% elseif page.patientData.2 %}
+    {{ page.patientData.2|e }}
+  {% else %}
+    {{ page.patientData.1|e }}
+  {% endif %}
+{% endblock %}
 
 {% block head %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
-<h1>Historique des mails envoyés à {{ page.patientData.3 }} {{ page.patientData.2 }} <small>({{ page.patientData.4 }})</small></h1>
+<h1>Historique des mails envoyés à {{ page.patientData.3 }}
+{% if page.patientData.1 and page.patientData.2 %}
+    {{ page.patientData.2|e }} ({{ page.patientData.1|e }})
+  {% elseif page.patientData.2 %}
+    {{ page.patientData.2|e }}
+  {% else %}
+    {{ page.patientData.1|e }}
+  {% endif %} <small>({{ page.patientData.4 }})</small></h1>
 <p>
 <a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/" role="button">Retour dossier patient</a>
 </p>

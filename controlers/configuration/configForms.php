@@ -34,12 +34,12 @@
      $debug='';
 
         // liste des types par catégorie
-        if ($tabTypes=msSQL::sql2tab("select f.id,f.name, f.description, c.name as catName, c.label as catLabel
+        if ($tabTypes=msSQL::sql2tab("select f.id, f.internalName, f.name, f.description, f.module, c.name as catName, c.label as catLabel
 						from forms as f
 						left join forms_cat as c on c.id=f.cat
 						where f.id > 0 and f.type='public'
 						group by f.id
-						order by c.label asc, f.name asc")) {
+						order by c.label asc, f.name, f.id asc")) {
             foreach ($tabTypes as $v) {
                 $p['page']['tabTypes'][$v['catName']][]=$v;
             }
@@ -47,4 +47,7 @@
 
         // liste des catégories
         if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from forms_cat order by label", 'id', 'label'));
+
+        //liste des modules
+        $p['page']['modules']=msSQL::sql2tabKey("SELECT module FROM system order by module", "module", "module");
  }

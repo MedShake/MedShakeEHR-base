@@ -40,6 +40,10 @@ class msData
  * @var int $_value
  */
     private $_value;
+/**
+ * @var $_modules : array des modules concernés
+ */
+    private $_modules;
 
 
 /**
@@ -66,6 +70,19 @@ class msData
         }
     }
 
+/**
+ * Définir les modules
+ * @param string $modules valeur
+ * @return string retour de la valeur
+ */
+    public function setModules($modules)
+    {
+      if (is_array($modules)) {
+        return $this->_modules = $modules;
+      } else {
+          throw new Exception('Modules is not array');
+      }
+    }
 
 /**
  * Obtenir toutes les données types d'une catégorie
@@ -76,7 +93,14 @@ class msData
     public function getDataTypesFromCatID($catID, $col=['*'])
     {
         if(!is_numeric($catID)) throw new Exception('catID is not numeric');
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' order by displayOrder, label");
+
+        if(isset($this->_modules)) {
+          $where ="and module in ('".implode("', '", $this->_modules)."')";
+        } else {
+          $where = null;
+        }
+
+        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' ".$where." order by displayOrder, label");
     }
 
 /**
@@ -123,7 +147,7 @@ class msData
  */
     public function getLabelFromTypeID($ar=['1'])
     {
-        return msSQL::sql2tabKey("select label, id from data_types where id in (".implode(',', $ar).")", 'id', 'label');
+        return msSQL::sql2tabKey("select label, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'label');
     }
 
 /**
@@ -134,6 +158,26 @@ class msData
     public function getTypeIDsFromName($ar=['1'])
     {
         return msSQL::sql2tabKey("select name, id from data_types where name in ('".implode("','", $ar)."')", 'name', 'id');
+    }
+
+/**
+ * Obtenir les name à partir d'un array de typeID
+ * @param  array $ar array de typeID
+ * @return array     array typeID=>name
+ */
+    public function getNamesFromTypeIDs($ar=['-1'])
+    {
+        return msSQL::sql2tabKey("select name, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'name');
+    }
+
+/**
+ * Obtenir le name à partir de son typeID
+ * @param  int $typeID id du type
+ * @return string     name
+ */
+    public static function getNameFromTypeID($typeID)
+    {
+        return msSQL::sqlUniqueChamp("select name from data_types where id = '".$typeID."' ");
     }
 
 /**
@@ -180,6 +224,7 @@ class msData
  */
     public function treatBeforeSave()
     {
+        global $p;
         if (!isset($this->_value)) {
             throw new Exception('Data is not set');
         }
@@ -187,13 +232,18 @@ class msData
             throw new Exception('TypeID is not set');
         }
 
-        $action = "type".$this->_typeID."TreatBeforeSave";
-        if (method_exists("msModuleDataSave", $action)) {
-            $data = new msModuleDataSave();
+        $action = "tbs_".msData::getNameFromTypeID($this->_typeID);
+        $moduleClass="msMod".ucfirst($p['user']['module'])."DataSave";
+        if (method_exists($moduleClass, $action)) {
+            $data = new $moduleClass;
+            return $data->$action($this->_value);
+        } elseif (method_exists('msModBaseDataSave', $action)) {
+            $data = new msModBaseDataSave;
             return $data->$action($this->_value);
         } else {
             return $this->_value;
         }
+
     }
 
 /**
@@ -203,7 +253,7 @@ class msData
  */
     public function createOrUpdateDataType($d)
     {
-        global $p;
+        global $p, $mysqli;
         $gump=new GUMP();
         $d = $gump->sanitize($d);
 

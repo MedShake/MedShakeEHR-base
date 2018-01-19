@@ -54,7 +54,7 @@
 <h1>Edition de formulaire : {{ page.form.name }}</h1>
 
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-5" style="padding-right : 40px">
 	<h2>Références</h2>
 	<form>
 		<h3>Défauts</h3>
@@ -80,13 +80,14 @@
 
 		<table class="table table-hover">
 		<tr>
-			<th class="col-md-1">#</th>
+			<th>#</th>
+      <th class="col-md-2">Tag</th>
 			<th class="col-md-4">Label</th>
-			<th class="col-md-7">Description</th>
+			<th class="col-md-6">Description</th>
 		</tr>
 		{% for k,v in page.tabTypes %}
 		<tr>
-			<th colspan="3">
+			<th colspan="4">
 				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-default btn-xs typeToggleVisibility">
   				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 				</button> {{ v.0.catLabel }}
@@ -95,6 +96,7 @@
 		{% for w in v %}
 			<tr class="cat{{ v.0.cat }}" style="display : none;">
 			<td>{{ w.id }}</td>
+      <td>{{ w.name }}</td>
 			<td>{{ w.label }}</td>
 			<td>{{ w.description }}</td>
 			</tr>
@@ -106,11 +108,12 @@
 
 	</div>
 
-	<div class="col-md-1">
-	</div>
 
-	<form class="col-md-5"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+
+	<form id="formParamsEdit" class="col-md-7"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+    <button type="submit" class="btn btn-primary pull-right" style="margin-top : 25px">Enregistrer</button>
 	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
+
 		{{ f.input ({
 			'input' : {
 				'type' : 'hidden',
@@ -133,6 +136,22 @@
 			'label' : {
 				'position' : 'before',
 				'label' : 'Nom à usage interne',
+			}
+		}) }}
+		</div>
+
+    <div class="form-group">
+		{{ f.select ({
+			'select' : {
+				'name' : 'module',
+				'class' : 'form-control',
+				'autocomplete' : 'off',
+				'values' : page.modules,
+				'valueDefaut': page.form.module
+			},
+			'label' : {
+				'position' : 'before',
+				'label' : 'Module concerné',
 			}
 		}) }}
 		</div>
@@ -229,7 +248,7 @@
 				'class' : 'form-control',
 				'autocomplete' : 'off',
 				'value' : page.form.yamlStructure,
-				'add' : 'rows="70" style="font-family:monospace;"'
+				'add' : 'rows="20" style="font-family:monospace;"'
 			},
 			'label' : {
 				'position' : 'before',
@@ -239,7 +258,7 @@
 		</div>
 
 
-		<button type="submit" class="btn btn-primary">Valider</button>
+		<button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
 
 		<p>
 		{{ page.form.yaml }}

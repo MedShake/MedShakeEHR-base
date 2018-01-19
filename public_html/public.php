@@ -89,47 +89,10 @@
      header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
      header("Pragma: no-cache");
 
-     if (is_dir($p['config']['templatesModuleFolder'])) {
-         $twigTemplateBaseDirs=msTools::getAllSubDirectories($p['config']['templatesModuleFolder'], '/');
-     } else {
-         $twigTemplateBaseDirs=[];
-     }
-     if (is_dir($p['config']['templatesBaseFolder'])) {
-         $twigTemplateModuleDirs=msTools::getAllSubDirectories($p['config']['templatesBaseFolder'], '/');
-     } else {
-         $twigTemplateModuleDirs=[];
-     }
-     $twigTemplateDirs=array_merge($twigTemplateBaseDirs, $twigTemplateModuleDirs);
-     if (is_dir($p['config']['templatesModuleFolder'])) {
-         $twigTemplateDirs[]=$p['config']['templatesModuleFolder'];
-     }
-     if (is_dir($p['config']['templatesBaseFolder'])) {
-         $twigTemplateDirs[]=$p['config']['templatesBaseFolder'];
-     }
-     if (is_dir($p['config']['templatesPdfFolder'])) {
-         $twigTemplateDirs[]=$p['config']['templatesPdfFolder'];
-     }
-
-     // les variables d'environnement twig
-     if (isset($p['config']['twigEnvironnementCache'])) {
-         $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
-     } else {
-         $twigEnvironment['cache']=false;
-     }
-     if (isset($p['config']['twigEnvironnementAutoescape'])) {
-         $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
-     } else {
-         $twigEnvironment['autoescape']=false;
-     }
-
-     $loader = new Twig_Loader_Filesystem($twigTemplateDirs);
-     $twig = new Twig_Environment($loader, $twigEnvironment);
-     $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-     $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
-
-
-     // display
-     echo $twig->render($template.'.html.twig', $p);
+     //générer et sortir le html
+     $getHtml = new msGetHtml();
+     $getHtml->set_template($template);
+     echo $getHtml->genererHtml();
  }
 
  //////// Debug

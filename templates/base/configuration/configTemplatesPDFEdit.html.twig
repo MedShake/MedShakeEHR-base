@@ -52,7 +52,7 @@
   </li>
   {% if page.selectUser > 0 %}
     <li>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {% if page.fichier.proprio.2 %}{{ page.fichier.proprio.2 }}{% else %}{{ page.fichier.proprio.1 }}{% endif %}</a>
     </li>
   {% endif %}
   <li class="active">
@@ -60,7 +60,15 @@
   </li>
 </ol>
 
-<h1>Edition du template PDF <small>{{ page.fichier.name }}{% if page.selectUser > 0 %} de {{ page.fichier.proprio.3 }} {{ page.fichier.proprio.2 }}{% endif %}</small></h1>
+<h1>Edition du template PDF <small>{{ page.fichier.name }}
+{% if page.selectUser > 0 %}
+  de {{ page.fichier.proprio.3 }}
+  {% if page.fichier.proprio.2 %}
+    {{ page.fichier.proprio.2 }}
+  {% else %}
+    {{ page.fichier.proprio.1 }}
+  {% endif %}
+{% endif %}</small></h1>
 
 
 {% if page.templatesDirAutorisationEcriture == false %}

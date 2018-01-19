@@ -173,10 +173,11 @@ public function getToID()
  */
     public function getCompleteObjetDataByID($id)
     {
+        $docTypeID = msData::getTypeIDFromName('docType');
         return msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
-        left join objets_data as doc on doc.instance=pd.id and doc.typeID=183
+        left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
         where pd.id='".$id."'");
     }
 
@@ -376,5 +377,48 @@ public function getToID()
       return msSQL::sqlInsert('objets_data', $data);
 
     }
+
+  /**
+  * Obtenir le dernier objet d'un type particulier pour un patient particulier
+  * @param  string $name nom du type de l'objet
+  * @param  string $instance int de l'instance de l'objet
+  * @return array tableau avec information sur l'objet
+  */
+      public function getLastObjetByTypeName($name, $instance=false) {
+        if (!isset($this->_toID)) {
+            throw new Exception('toID is not defined');
+        }
+
+        if(is_numeric($instance)) {
+          $where = " and pd.instance='".$instance."'";
+        } else {
+          $where = null;
+        }
+
+        $name2typeID=new msData;
+
+        if($name2typeID=$name2typeID->getTypeIDsFromName([$name, 'lastname', 'firstname', 'birthname'])) {
+          if(isset($name2typeID[$name])) {
+            if($data=msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, p.value as prenom,
+            CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+            from objets_data as pd
+            left join data_types as t on t.id=pd.typeID
+            left join objets_data as n on n.toID=pd.fromID and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+            left join objets_data as p on p.toID=pd.fromID and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
+            left join objets_data as bn on bn.toID=pd.fromID and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
+            where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated='' $where
+            order by updateDate desc
+            limit 1")) {
+              return $data;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+
+        return false;
+      }
 
 }
