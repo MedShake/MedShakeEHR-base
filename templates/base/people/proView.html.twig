@@ -42,13 +42,19 @@
 <div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
 {% endif %}
 
-  <h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
-    {% if page.proData.51 %}{{ page.proData.51 }}
-    {% endif %}
-    {{ page.proData.3 }}
+<h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
+  {% if page.proData.51 %}{{ page.proData.51 }}
+  {% endif %}
+  {{ page.proData.3 }}
+  {% if page.proData.2 and page.proData.1 %}
+    {{ page.proData.2 }} <small>(né{% if page.proData.14 == 'F' %}e{% endif %} {{ page.proData.1 }})</small>
+  {% elseif page.proData.2 %}
     {{ page.proData.2 }}
-     <small>{{ page.proData.19 }}</small>
-  </h1>
+  {% else %}
+    {{ page.proData.1 }}
+  {% endif %}
+   <small>{{ page.proData.19 }}</small>
+</h1>
 
   <div class="row">
 
