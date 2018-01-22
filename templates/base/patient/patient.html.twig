@@ -29,7 +29,10 @@
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
 {% block title %}{{ page['patient']['administrativeDatas']['3']['value']|e }}
-    {{ page['patient']['administrativeDatas']['2']['value']|e }} : dossier patient - MedShakeEHR{% endblock %}
+    {% if page['patient']['administrativeDatas']['2']['value'] %}{{ page['patient']['administrativeDatas']['2']['value']|e }}
+    {% else %}{{ page['patient']['administrativeDatas']['1']['value']|e }}{% endif %}
+    : dossier patient - MedShakeEHR
+{% endblock %}
 
 {% block head %}
     <script>
