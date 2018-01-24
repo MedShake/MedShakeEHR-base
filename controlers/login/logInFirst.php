@@ -33,4 +33,9 @@ $template="firstLogin";
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='firstLogin');
 
+//forçage de la liste des modules
+$form->setPrevalues(array(
+  '7'=>msSQL::sql2tabKey("SELECT module FROM system order by module='base', module", "module", "module")
+));
+
 $p['page']['form']=$form->getForm();
