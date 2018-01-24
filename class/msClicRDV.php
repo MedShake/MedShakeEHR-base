@@ -51,10 +51,10 @@ class msClicRDV
         $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40';
         $baseurl='https://www.clicrdv.com/api/v1/';
         $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae';
-        $group= $groupID ? '' : 'groups/'.$groupID.'/';
+        $group= $groupID ? 'groups/'.$groupID.'/' : '';
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
         if ($commande=='POST') {
+            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
             curl_setopt($ch, CURLOPT_POST, true);
         } else if ($commande=='PUT') {
             curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
