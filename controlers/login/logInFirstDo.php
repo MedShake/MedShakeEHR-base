@@ -39,7 +39,7 @@ $validation=$form->getValidation();
 
 
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
     msTools::redirRoute('userLogIn');
 } else if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
@@ -73,9 +73,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
 
     //do login
     if ($validation != false) {
-        $user-> doLogin();
+        $id=$user-> doLogin();
         unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/pro/edit/'.$user->_userID.'/');
+        msTools::redirection('/pro/edit/'.$id.'/');
     } else {
         msTools::redirRoute('userLogIn');
     }

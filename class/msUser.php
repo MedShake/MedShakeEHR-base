@@ -58,7 +58,7 @@ class msUser
     public static function userIdentification()
     {
         global $p;
-        if (!is_numeric($_COOKIE['userName'])) {
+        if (!isset($_COOKIE['userName'])) {
             return msUser::cleanBadAuth();
         }
         if (!isset($_COOKIE['userPass'])) {
@@ -161,7 +161,7 @@ class msUser
  */
     public function checkLogin($userName, $pass)
     {
-        if ($userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($userName)."' and pass=AES_ENCRYPT('".msSQL::cleanVar($pass)."',@password)")) {
+        if ($userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where name='".msSQL::cleanVar($userName)."' and pass=AES_ENCRYPT('".msSQL::cleanVar($pass)."',@password)")) {
             $this->_userID=$userlogin['id'];
             $this->_userName=$userlogin['name'];
             $this->_userPass=$userlogin['pass'];
@@ -181,6 +181,7 @@ class msUser
     {
         $this->_logLastCon();
         $this->_loginSetCookies();
+        return $this->_userID;
     }
 
 /**
