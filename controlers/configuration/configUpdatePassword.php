@@ -24,7 +24,7 @@
  * Config : attribuer un password et un module à un utilisteur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement

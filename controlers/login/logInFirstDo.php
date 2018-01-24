@@ -24,7 +24,7 @@
  * Premier utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @edited Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);

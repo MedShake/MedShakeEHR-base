@@ -23,7 +23,7 @@
  * Fonctions JS pour la signature sur périphérique tactil
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {

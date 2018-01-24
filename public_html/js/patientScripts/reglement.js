@@ -23,7 +23,7 @@
  * Js pour le module règlement du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 if (!champsReglement)

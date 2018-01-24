@@ -24,7 +24,7 @@
  * Config : attribuer un mot de passe et un module à un utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 $module=isset($_POST['p_module'])?$_POST['p_module']:'public';
 $type=$module=='public'?'patient':'pro';
