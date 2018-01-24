@@ -24,6 +24,7 @@
  * Login : page de login
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $debug='';
@@ -31,6 +32,5 @@ $template="firstLogin";
 
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='firstLogin');
+
 $p['page']['form']=$form->getForm();
-//forçage de l'ID à 1
-$p['page']['form']['structure'][1][1]['elements'][1]['value']['preValue']='1';

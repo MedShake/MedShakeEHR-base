@@ -20,9 +20,10 @@
  #/
 
 /##
- # Template > firstLogin  
+ # Template > firstLogin
  #
  # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% extends "page.html.twig" %}
@@ -36,9 +37,8 @@
 {% block body %}
 
 <h1>Bienvenue!</h1>
-<p>MedshakeEHR est désormais fonctionnel.<br>
-Nous allons désormais créer le premier utilisateur. Celui-ci aura les droits d'administration, afin de vous permettre de créer d'autres utlisateurs, de régler leurs paramètres, ainsi que de configurer le logiciel.</p>
-<p>Notez bien que ce premier utilisateur aura pour ID la valeur 1. Cet ID vous sera demandé les prochaines fois que vous voudrez vous loguer.</p>
+<p>MedshakeEHR est désormais fonctionnel.<p>
+<p>Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration, afin de vous permettre de créer d'autres utilisateurs, de régler leurs paramètres, ainsi que de configurer le logiciel.</p>
 {# validation error display bloc #}
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 

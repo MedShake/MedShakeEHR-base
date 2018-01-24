@@ -28,11 +28,21 @@
  */
 $module=isset($_POST['p_module'])?$_POST['p_module']:'public';
 $type=$module=='public'?'patient':'pro';
-if (is_numeric($_POST['p_userid'])) {
-  if (empty($_POST['p_password'])) {
-    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE id='".$_POST['p_userid']."'");
-  } else {
-    msSQL::sqlQuery("INSERT INTO people (id, pass, type, module, fromID, registerDate) VALUES('".$_POST['p_userid']."', AES_ENCRYPT('".$_POST['p_password']."',@password), '".$type."', '".$module."','".$p['user']['id']."',NOW()) ON DUPLICATE KEY UPDATE pass=AES_ENCRYPT('".$_POST['p_password']."',@password), module='".$module."'");
-  }
+
+if (empty($_POST['p_password'])) {
+    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE name='".$_POST['p_username']."'");
+} else {
+    $data=array(
+        'name' => $_POST['p_username'],
+        'type' => $type,
+        'rank' => '',
+        'module' => $module,
+        'registerDate' => date("Y/m/d H:i:s"),
+        'fromID' => $p['user']['id']
+    );
+    msSQL::sqlInsert('people', $data);
+    msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
+    $id=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='".$_POST['p_username']."'");
+    msTools::redirection('/'.$type.'/edit/'.$id.'/');
 }
 msTools::redirection('/configuration/');

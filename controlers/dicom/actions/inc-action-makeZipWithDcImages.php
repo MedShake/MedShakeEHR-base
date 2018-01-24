@@ -58,7 +58,7 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
     $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
     //titre doc
-    $doc->setTitleObjet($supportID, 'zip '.$nbImages.' images écho du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
+    $doc->setTitleObjet($supportID, 'zip '.$nbImages.' images du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
 
     //stockage
     $stockage = new msStockage();

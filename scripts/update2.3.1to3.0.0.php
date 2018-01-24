@@ -44,25 +44,19 @@
  /////////// SQL connexion
  $mysqli=msSQL::sqlConnect();
 
+// conversion des Formulaires
 
-// N'EST PLUS D'ACTUALITE
-// 
- // Changements
- // lastname => nom de naissance
- // birthname => usageName nom d'usage
+if($forms=msSQL::sql2tabKey("select id, yamlStructure, dataset from forms", 'id')) {
+  foreach($forms as $id=>$d) {
+    $obform=new msForm();
+    $newyaml=$obform->cleanForm($d['yamlStructure'],$d['dataset']);
 
- // if($people=msSQL::sql2tabSimple("select id from people")) {
- //   foreach($people as $id) {
- //     $patient=new msPeople();
- //     $patient->setToID($id);
- //     $patient=$patient->getSimpleAdminDatas();
- //     if(isset($patient['1']) and isset($patient['2'])) {
- //       msSQL::sqlQuery("update objets_data set typeID='10000' where toID='".$id."' and typeID='1'");
- //       msSQL::sqlQuery("update objets_data set typeID='1' where toID='".$id."' and typeID='2'");
- //       msSQL::sqlQuery("update objets_data set typeID='2' where toID='".$id."' and typeID='10000'");
- //
- //     }
- //   }
- //
- //
- // }
+    if(msSQL::sqlQuery("update forms set yamlStructure='".addslashes($newyaml)."' where id='".$id."'")) {
+      echo $id." : ok\n";
+    } else {
+      echo $id." : PROBLEME !\n";
+    }
+
+  }
+
+}

@@ -96,7 +96,12 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     //patient ou pro en fonction
     if($_POST['porp']=='pro') $peopleType=array('pro'); else $peopleType=array('pro','patient');
 
-    $p['page']['sqlString']=$sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
+    $p['page']['sqlString']=$sql='select
+    CASE WHEN d2.value !="" THEN d2.value
+    WHEN d1.value !="" THEN d1.value
+    ELSE "(inconnu)"
+    END as nomtri,
+    p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by trim(nomtri), c3  limit 50';
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {

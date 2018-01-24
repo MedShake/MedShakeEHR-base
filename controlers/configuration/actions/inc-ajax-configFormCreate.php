@@ -33,12 +33,14 @@ $_POST = $gump->sanitize($_POST);
 if (isset($_POST['id'])) {
     $gump->validation_rules(array(
             'id'=> 'required|numeric',
+            'internalName'=> 'required',
             'name'=> 'required',
             'cat' => 'required|numeric'
         ));
 } else {
     $gump->validation_rules(array(
-            'name'=> 'required',
+            'name'=> 'required|presence_bdd,forms',
+            'internalName'=> 'required|presence_bdd,forms',
             'cat' => 'required|numeric'
         ));
 }

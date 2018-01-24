@@ -24,6 +24,7 @@
  * Premier utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -38,11 +39,11 @@ $validation=$form->getValidation();
 
 
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
     msTools::redirRoute('userLogIn');
 } else if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
-    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de mot de passe.';
+    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir l\'identifiant et les deux champs de mot de passe.';
     msTools::redirRoute('userLogInFirst');
 } else if ($_POST['p_password'] != $_POST['p_verifPassword']) {
     unset($_SESSION['form'][$formIN]);
@@ -50,17 +51,18 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
     msTools::redirRoute('userLogInFirst');
 } else {
     $data=array(
-        'id' => '1',
+        'name' => $_POST['p_username'],
         'type' => 'pro',
         'rank' => 'admin',
+        'module' => $_POST['p_moduleSelect'],
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 0
     );
     msSQL::sqlInsert('people', $data);
-    msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) where id='1' limit 1");
+    msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
 
     $user = new msUser();
-    if (!$user->checkLogin('1', $_POST['p_password'])) {
+    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
         $message='Un problème est survenu lors de la création de l\'utilisateur.';
         if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
@@ -71,9 +73,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
 
     //do login
     if ($validation != false) {
-        $user-> doLogin();
+        $id=$user-> doLogin();
         unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/pro/edit/1/');
+        msTools::redirection('/pro/edit/'.$id.'/');
     } else {
         msTools::redirRoute('userLogIn');
     }

@@ -537,22 +537,22 @@ class msForm
     {
         if (is_array($blocs)) {
             foreach ($blocs as $k=>$v) {
-                $bloc=explode(',', $v);
 
                 //template
-                if (preg_match('#template{([\w]+)}#i', $bloc[0], $match)) {
+                if (preg_match('#template{([\w-]+)}#i', $v, $match)) {
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'template',
                             'value'=>$match[1]
                         );
                 //label
-                } else if (preg_match('#label{(.*)}#i', $bloc[0], $match)) {
+                } else if (preg_match('#label{(.*)}#i', $v, $match)) {
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'label',
                             'value'=>$match[1]
                         );
                 // sinon c'est un bloc standard (ID ou internalName)
                 } else {
+                    $bloc=explode(',', $v);
                     if (is_numeric($bloc[0])) {
                         $type=$this->_formExtractType($bloc[0], $dataset);
                     } else {
