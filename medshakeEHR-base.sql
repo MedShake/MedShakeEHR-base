@@ -38,13 +38,13 @@ CREATE TABLE `actes_cat` (
 
 CREATE TABLE `agenda` (
   `id` int(12) UNSIGNED NOT NULL,
+  `externid` int UNSIGNED DEFAULT NULL,
   `userid` smallint(5) UNSIGNED NOT NULL DEFAULT '3',
   `start` datetime DEFAULT NULL,
   `end` datetime DEFAULT NULL,
   `type` varchar(10) DEFAULT NULL,
   `dateAdd` datetime DEFAULT NULL,
   `patientid` mediumint(6) UNSIGNED DEFAULT NULL,
-  `externid` int UNSIGNED DEFAULT NULL,
   `fromID` mediumint(6) UNSIGNED DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
   `absente` enum('non','oui') DEFAULT 'non',
@@ -203,7 +203,7 @@ CREATE TABLE `objets_data` (
 
 CREATE TABLE `people` (
   `id` int(11) UNSIGNED NOT NULL,
-  `type` enum('patient','pro','externe','deleted') NOT NULL DEFAULT 'patient',
+  `type` enum('patient','pro','externe','robot','deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `module` varchar(20) DEFAULT 'base',
   `pass` varbinary(60) DEFAULT NULL,
@@ -541,6 +541,7 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (510, 'user', 'clicRdvCalId', 'Agenda', 'Agenda', 'Agenda sélectionné', '', '', 'select', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 4),
 (511, 'user', 'clicRdvConsultId', 'Consultations', 'Consultations', 'Correspondance entre consultations', '', '', 'select', '', 'base', 66, 0, '2017-03-10 23:49:02', 3600, 5),
 (512, 'admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', 26, 0, '2017-03-10 23:49:02', 3600, 1);
+(513, 'relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', 63, 1, '2017-06-30 10:36:59', 1576800000, 1);
 
 
 
@@ -590,5 +591,7 @@ INSERT INTO `prescriptions_cat` (`id`, `name`, `label`, `description`, `type`, `
 (2, 'prescripMedic', 'Prescriptions médicamenteuses', 'prescriptions médicamenteuses', 'user', 1, '2017-03-22 12:36:12', 1),
 (4, 'prescriNonMedic', 'Prescriptions non médicamenteuses', 'prescriptions non médicamenteuses', 'user', 1, '2017-05-09 14:02:12', 1);
 
+INSERT INTO `people` (`id`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
+(1, 'robot', '', 'base', '', '2018-01-01 00:00:00', '0', '', '2018-01-01 00:00:00', '');
 
 INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v2.4.0');

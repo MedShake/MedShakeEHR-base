@@ -31,7 +31,7 @@ $debug='';
 
 $template="listing";
 
-if ($_POST['porp']=='patient') {
+if ($_POST['porp']=='patient' or $_POST['porp']=='externe') {
     $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
     $formIN='baseListingPro';
@@ -94,7 +94,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     //patient ou pro en fonction
-    if($_POST['porp']=='patient') $peopleType=array('pro','patient'); else $peopleType=array('pro');
+    if($_POST['porp']=='pro') $peopleType=array('pro'); else $peopleType=array('pro','patient');
 
     $p['page']['sqlString']=$sql='select p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by '.implode(', ', $orderby).' limit 50';
 

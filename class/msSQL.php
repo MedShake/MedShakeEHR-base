@@ -197,7 +197,6 @@ class msSQL
           $valeurs[]='\''.$val.'\'';
           $dupli[]=$key.'=VALUES('.$key.')';
       }
-
       if (msSQL::sqlQuery("insert into ".msSQL::cleanVar($table)." (".implode(',', $cols).") values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
           return $mysqli->insert_id;
       } else {

@@ -124,7 +124,46 @@ $(document).ready(function() {
     });
   });
 
+  $('body').on("click", ".extAsPatient", function(e){
+    e.preventDefault();
+    var externID = $('.extToNew').attr("data-externid");
+    var patientID = $(this).attr("data-patientid");
+    $.ajax({
+      url: urlBase+'/people/ajax/setExternAsPatient/',
+      type: 'post',
+      data: {
+        externID: externID,
+        patientID: patientID
+      },
+      dataType: "json",
+      success: function(data) {
+        window.location=urlBase+'/patient/'+externID+'/';
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
 
+  $('.extToNew').on("click", function(e){
+    e.preventDefault();
+    var externID = $(this).attr("data-externid");
+    $.ajax({
+      url: urlBase+'/people/ajax/setExternAsNewPatient/',
+      type: 'post',
+      data: {
+        externID: externID
+      },
+      dataType: "json",
+      success: function(data) {
+        window.location=urlBase+'/patient/edit/'+externID+'/';
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+    
+  });
 
 });
 

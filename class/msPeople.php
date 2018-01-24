@@ -96,7 +96,7 @@ class msPeople
  */
     public function setType($t)
     {
-        if (in_array($t, array('patient', 'pro'))) {
+        if (in_array($t, array('patient', 'pro', 'externe'))) {
             return $this->_type = $t;
         } else {
             throw new Exception('Type n\'est pas d\'une valeur autorisée');
@@ -114,6 +114,16 @@ class msPeople
         } else {
             throw new Exception('Dataset is not string');
         }
+    }
+/**
+ * Est-ce un patient externe?
+ * @return value true/false
+ */
+    public function isExterne() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        return msSQL::sqlUniqueChamp("SELECT type='externe' FROM people WHERE id='".$this->_toID."' limit 1")==1;
     }
 /**
  * Obtenir les données administratives d'un individu (version complète)

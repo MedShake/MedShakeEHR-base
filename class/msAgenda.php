@@ -36,6 +36,12 @@ class msAgenda
     private $_eventID;
 
     /**
+    * Extern ID
+    * @var int
+    */
+    private $_externID;
+
+    /**
     * User ID ( agenda de l'utilisateur n° )
     * @var int
     */
@@ -131,6 +137,16 @@ class msAgenda
     }
 
     /**
+    * Set externID
+    * @param int $_externID externID
+    */
+    public function set_externID($_externID)
+    {
+        $this->_externID = $_externID;
+        return $this;
+    }
+
+    /**
     * Set userID (= n° du calendrier)
     * @param int $_userID N° commun user/calendrier
     */
@@ -200,6 +216,10 @@ class msAgenda
             $data['fromID']=$this->_fromID;
         }
 
+        if (isset($this->_externID)) {
+            $data['externid']=$this->_externID;
+        }
+
         if($this->_eventID = msSQL::sqlInsert('agenda', $data)) {
           return $this->getEventByID();
         }
@@ -225,7 +245,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -266,7 +286,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -325,6 +345,7 @@ class msAgenda
               'motif'=>'',
               'type'=>$e['type'],
               'patientid'=>$e['patientid'],
+              'externid'=>$e['externid']
               );
           }
           else
@@ -343,6 +364,7 @@ class msAgenda
               'motif'=>$e['motif'],
               'type'=>$e['type'],
               'patientid'=>$e['patientid'],
+              'externid'=>$e['externid'],
               'absent'=>$e['absente']
               );
           }

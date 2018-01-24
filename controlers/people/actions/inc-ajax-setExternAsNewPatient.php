@@ -21,16 +21,14 @@
  */
 
 /**
- * user > ajax : récupère la liste des agendas d'un groupe d'un compte clicRDV
+ * People : ajax > change un externe en un patient
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
-$clicRdv=new msClicRDV();
-if ($_POST['password']!="********") {
-    $clicRdv->setUserPwd($_POST['userid'],$_POST['password']);
-} else {
-    $clicRdv->setUserID($p['user']['id'];
-}
-header('Content-Type: application/json');
-echo $clicRdv->getInterventions(explode(':', $_POST['groupid'])[0], explode(':', $_POST['calid'])[0]);
+
+if($_POST['externID']<1) die;
+
+msSQL::sqlQuery("UPDATE people SET type='patient' WHERE id='".$_POST['externID']."'");
+
+echo json_encode(array('ok'));

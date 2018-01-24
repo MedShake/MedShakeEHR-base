@@ -29,6 +29,8 @@
 $clicRdv=new msClicRDV();
 if ($_POST['password']!="********") {
     $clicRdv->setUserPwd($_POST['userid'],$_POST['password']);
+} else {
+    $clicRdv->setUserID($p['user']['id'];
 }
 header('Content-Type: application/json');
 echo $clicRdv->getGroups();

@@ -32,6 +32,8 @@
 recherche patient
 {% elseif page.porp == 'pro' %}
 recherche praticien
+{% elseif page.porp == 'externe' %}
+associer patient
 {% endif %}{% endblock %}
 
 {% block head %}
@@ -50,6 +52,8 @@ recherche praticien
 <h1>Recherche patient</h1>
 {% elseif page.porp == 'pro' %}
 <h1>Recherche praticien</h1>
+{% elseif page.porp == 'externe' %}
+<h1>Associer un patient externe à un patient MedShakeEHR</h1>
 {% endif %}
 
 
@@ -58,15 +62,13 @@ recherche praticien
 
 <form class="form-inline col-md-10" data-dataset="data_types">
 
-
-
-
 	<div class="form-group">
 	{{ f.input ({
 		'input' : {
 			'type' : 'text',
 			'id' : 'd2',
 			'name' : 'lastname',
+      'value' : page.patient.administrativeDatas.lastname|default(''),
 			'placeholder' : 'nom',
 			'class' : 'form-control searchupdate jqautocomplete',
 			'autocomplete' : 'off',
@@ -85,6 +87,7 @@ recherche praticien
 			'type' : 'text',
 			'id' : 'd3',
 			'name' : 'firstname',
+      'value' : page.patient.administrativeDatas.firstname|default(''),
 			'placeholder' : 'prénom',
 			'class' : 'form-control searchupdate jqautocomplete',
 			'autocomplete' : 'off',
@@ -104,8 +107,7 @@ recherche praticien
 			'id' : 'autreCrit',
 			'name' : 'autre',
 			'class' : 'form-control',
-			'values' : page.tabTypes,
-			'valueDefaut' : '8'
+			'values' : page.tabTypes
 		},
 		'label' : {
 			'position' : 'before',
@@ -137,6 +139,8 @@ recherche praticien
 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary pull-right" role="button">Nouveau patient</a>
 {% elseif page.porp == 'pro' %}
 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary pull-right" role="button">Nouveau praticien</a>
+{% elseif page.porp == 'externe' %}
+<a href="javascript:void(0)" class="btn btn-primary pull-right extToNew" data-externID={{ page.patient.id }} role="button">Nouveau patient</a>
 {% endif %}
 </div>
 
