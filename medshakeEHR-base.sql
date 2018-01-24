@@ -407,7 +407,7 @@ INSERT INTO `actes_cat` (`id`, `name`, `label`, `description`, `module`, `fromID
 INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
 (1, 'admin', 'identity', 'Etat civil', 'Datas relatives à l\'identité d\'une personne', 'base', 1, '2018-01-01 00:00:00'),
 (2, 'admin', 'addressPerso', 'Adresse personnelle', 'datas de l\'adresse personnelle', 'base', 1, '2018-01-01 00:00:00'),
-(3, 'admin', 'internet', 'Internet', 'Datas liées aux services internet', 'base', 0, '2018-01-01 00:00:00'),
+(3, 'admin', 'internet', 'Internet', 'Datas liées aux services internet', 'base', 1, '2018-01-01 00:00:00'),
 (24, 'admin', 'contact', 'Contact', 'Moyens de contact', 'base', 1, '2018-01-01 00:00:00'),
 (25, 'admin', 'activity', 'Activités', 'Activités professionnelles et de loisir', 'base', 1, '2018-01-01 00:00:00'),
 (26, 'admin', 'divers', 'Divers', 'Divers', 'base', 1, '2018-01-01 00:00:00'),
@@ -440,7 +440,7 @@ INSERT INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `type`, 
 (66, 'user', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', 1, '2018-01-01 00:00:00');
 
 INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-(0, 'admin', 'submit', '', '', '', '', '', 'submit', '', 'base', 0, 0, '2018-01-01 00:00:00', 3600, 1),
+(0, 'admin', 'submit', '', '', '', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 3600, 1),
 (1, 'admin', 'birthname', 'nom reçu à la naissance', 'Nom de naissance', 'Nom reçu à la naissance', 'identite', 'Le nom de naissance est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (2, 'admin', 'lastname', 'nom utilisé au quotidien', 'Nom d\'usage', 'Nom utilisé au quotidien', 'identite', 'Le nom d\'usage ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (3, 'admin', 'firstname', 'prénom', 'Prénom', 'Prénom figurant sur la pièce d\'identité', 'identite', 'Le prénom est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -536,12 +536,12 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (501, 'user', 'phonecaptureFingerprint', 'indiquer une chaine aléatoire de caractères', 'phonecaptureFingerprint', 'clef utilisateur pour l\'identification des périphériques phonecapture', NULL, NULL, 'text', NULL, 'base', 56, 1, '2018-01-01 00:00:00', 3600, 0),
 (505, 'medical', 'examenDuJour', 'examen du jour', 'Examen du jour', 'examen du jour', '', '', 'textarea', '', 'base', 35, 1, '2018-01-01 00:00:00', 3600, 1),
 (506, 'medical', 'baseSynthese', 'synthèse sur le patient', 'Synthèse patient', 'Synthèse sur le patient', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
-(507, 'user', 'clicRdvUserId', 'identifiant', 'identifiant', 'email@address.com', '', '', 'text', '', 'base', 66, 0, '2018-01-01 00:00:00', 3600, 1),
-(508, 'user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe', 'Mot de passe (chiffré)', '', '', 'password', '', 'base', 66, 0, '2018-01-01 00:00:00', 3600, 2),
-(509, 'user', 'clicRdvGroupId', 'Groupe', 'Groupe', 'Groupe Sélectionné', '', '', 'select', '', 'base', 66, 0, '2018-01-01 00:00:00', 3600, 3),
-(510, 'user', 'clicRdvCalId', 'Agenda', 'Agenda', 'Agenda sélectionné', '', '', 'select', '', 'base', 66, 0, '2018-01-01 00:00:00', 3600, 4),
-(511, 'user', 'clicRdvConsultId', 'Consultations', 'Consultations', 'Correspondance entre consultations', '', '', 'select', '', 'base', 66, 0, '2018-01-01 00:00:00', 3600, 5),
-(512, 'admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', 26, 0, '2018-01-01 00:00:00', 3600, 1);
+(507, 'user', 'clicRdvUserId', 'identifiant', 'identifiant', 'email@address.com', '', '', 'text', '', 'base', 66, 1, '2018-01-01 00:00:00', 3600, 1),
+(508, 'user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe', 'Mot de passe (chiffré)', '', '', 'password', '', 'base', 66, 1, '2018-01-01 00:00:00', 3600, 2),
+(509, 'user', 'clicRdvGroupId', 'Groupe', 'Groupe', 'Groupe Sélectionné', '', '', 'select', '', 'base', 66, 1, '2018-01-01 00:00:00', 3600, 3),
+(510, 'user', 'clicRdvCalId', 'Agenda', 'Agenda', 'Agenda sélectionné', '', '', 'select', '', 'base', 66, 1, '2018-01-01 00:00:00', 3600, 4),
+(511, 'user', 'clicRdvConsultId', 'Consultations', 'Consultations', 'Correspondance entre consultations', '', '', 'select', '', 'base', 66, 1, '2018-01-01 00:00:00', 3600, 5),
+(512, 'admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', 26, 1, '2018-01-01 00:00:00', 3600, 1),
 (513, 'relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', 63, 1, '2018-01-01 00:00:00', 1576800000, 1);
 
 INSERT INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
@@ -573,13 +573,13 @@ INSERT INTO `forms_cat` (`id`, `name`, `label`, `description`, `type`, `fromID`,
 (5, 'systemForm', 'Formulaires système', 'formulaires système', 'user', 1, '2018-01-01 00:00:00');
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-(1, 'username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
-(7, 'moduleSelect', '', 'Module', '', '', '', 'select', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00');
+(1, 'username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(6, 'module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
+(7, 'moduleSelect', '', 'Module', '', '', '', 'select', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00');
 
 INSERT INTO `prescriptions` (`id`, `cat`, `label`, `description`, `fromID`, `toID`, `creationDate`) VALUES
 (1, 2, 'Ligne vierge', '', 1, 0, '2018-01-01 00:00:00'),
@@ -589,7 +589,8 @@ INSERT INTO `prescriptions_cat` (`id`, `name`, `label`, `description`, `type`, `
 (2, 'prescripMedic', 'Prescriptions médicamenteuses', 'prescriptions médicamenteuses', 'user', 1, '2018-01-01 00:00:00', 1),
 (4, 'prescriNonMedic', 'Prescriptions non médicamenteuses', 'prescriptions non médicamenteuses', 'user', 1, '2018-01-01 00:00:00', 1);
 
-INSERT INTO `people` (`id`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
-(1, 'robot', '', 'base', '', '2018-01-01 00:00:00', '0', '', '2018-01-01 00:00:00', '');
+INSERT INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
+(1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
+(2, 'clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
 
 INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v3.0.0');
