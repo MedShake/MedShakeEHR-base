@@ -43,7 +43,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
     msTools::redirRoute('userLogIn');
 } else if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
-    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de mot de passe.';
+    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir l\'identifiant et les deux champs de mot de passe.';
     msTools::redirRoute('userLogInFirst');
 } else if ($_POST['p_password'] != $_POST['p_verifPassword']) {
     unset($_SESSION['form'][$formIN]);
@@ -51,7 +51,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
     msTools::redirRoute('userLogInFirst');
 } else {
     $data=array(
-        'id' => '1',
+        'name' => $_POST['p_username'],
         'type' => 'pro',
         'rank' => 'admin',
         'module' => $_POST['p_moduleSelect'],
@@ -59,10 +59,10 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
         'fromID' => 0
     );
     msSQL::sqlInsert('people', $data);
-    msSQL::sqlQuery("update people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) where id='1' limit 1");
+    msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
 
     $user = new msUser();
-    if (!$user->checkLogin('1', $_POST['p_password'])) {
+    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
         $message='Un problème est survenu lors de la création de l\'utilisateur.';
         if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
@@ -75,7 +75,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") != "0") {
     if ($validation != false) {
         $user-> doLogin();
         unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/pro/edit/1/');
+        msTools::redirection('/pro/edit/'.$user->_userID.'/');
     } else {
         msTools::redirRoute('userLogIn');
     }

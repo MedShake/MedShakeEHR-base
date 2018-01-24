@@ -28,11 +28,10 @@
  */
 $module=isset($_POST['p_module'])?$_POST['p_module']:'public';
 $type=$module=='public'?'patient':'pro';
-if (is_numeric($_POST['p_userid'])) {
-  if (empty($_POST['p_password'])) {
-    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE id='".$_POST['p_userid']."'");
-  } else {
-    msSQL::sqlQuery("INSERT INTO people (id, pass, type, module, fromID, registerDate) VALUES('".$_POST['p_userid']."', AES_ENCRYPT('".$_POST['p_password']."',@password), '".$type."', '".$module."','".$p['user']['id']."',NOW()) ON DUPLICATE KEY UPDATE pass=AES_ENCRYPT('".$_POST['p_password']."',@password), module='".$module."'");
-  }
+
+if (empty($_POST['p_password'])) {
+    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE name='".$_POST['p_username']."'");
+} else {
+    msSQL::sqlQuery("INSERT INTO people (name, pass, type, module, fromID, registerDate) VALUES('".$_POST['p_username']."', AES_ENCRYPT('".$_POST['p_password']."',@password), '".$type."', '".$module."','".$p['user']['id']."',NOW()) ON DUPLICATE KEY UPDATE pass=AES_ENCRYPT('".$_POST['p_password']."',@password), module='".$module."'");
 }
 msTools::redirection('/configuration/');

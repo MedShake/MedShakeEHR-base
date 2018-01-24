@@ -34,6 +34,10 @@ class msUser
  */
     private $_userID;
 /**
+ * @var int $_userName nom de l'utilisateur concerné
+ */
+    private $_userName;
+/**
  * @var string $_userPass Password de l'individus concerné
  */
     private $_userPass;
@@ -54,7 +58,7 @@ class msUser
     public static function userIdentification()
     {
         global $p;
-        if (!is_numeric($_COOKIE['userId'])) {
+        if (!is_numeric($_COOKIE['userName'])) {
             return msUser::cleanBadAuth();
         }
         if (!isset($_COOKIE['userPass'])) {
@@ -63,7 +67,7 @@ class msUser
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
 
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, module from people where id='".msSQL::cleanVar($_COOKIE['userId'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
+        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, module from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
         if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
 
@@ -155,10 +159,11 @@ class msUser
  * @param  string $pass  password
  * @return bool         true/false
  */
-    public function checkLogin($userID, $pass)
+    public function checkLogin($userName, $pass)
     {
-        if ($userlogin=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($userID)."' and pass=AES_ENCRYPT('".msSQL::cleanVar($pass)."',@password)")) {
+        if ($userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($userName)."' and pass=AES_ENCRYPT('".msSQL::cleanVar($pass)."',@password)")) {
             $this->_userID=$userlogin['id'];
+            $this->_userName=$userlogin['name'];
             $this->_userPass=$userlogin['pass'];
             $this->_loginChecked=true;
             return true;
@@ -185,7 +190,7 @@ class msUser
     public static function doLogout()
     {
         global $p;
-        setcookie("userId", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("userName", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userIdPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPassPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
@@ -244,7 +249,7 @@ class msUser
         global $p;
 
         $userPass=md5(md5(sha1(md5($this->_userPass))));
-        setcookie("userId", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
+        setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
     }
 }
