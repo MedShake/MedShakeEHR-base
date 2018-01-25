@@ -229,7 +229,7 @@ class msAgenda
     * Obtenir les rendez-vous sur une plage calendaire déterminée
     * @return array tableau des rendez-vous
     */
-      public function getEvents()
+      public function getEvents($statut=['actif'])
       {
           if (!isset($this->_startDate)) {
               throw new Exception('StartDate n\'est pas définie');
@@ -245,12 +245,12 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
-          where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
+          where a.userid='".$this->_userID."' and a.statut in ('".implode("','", $statut)."') and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
           group by a.id, bn.value, n.value, p.value")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
@@ -344,6 +344,8 @@ class msAgenda
               'className'=>'fc-nonbusiness',
               'motif'=>'',
               'type'=>$e['type'],
+              'statut'=>$e['statut'],
+              'fromID'=>$e['fromID'],
               'patientid'=>$e['patientid'],
               'externid'=>$e['externid']
               );
@@ -363,6 +365,8 @@ class msAgenda
               'className'=>$class,
               'motif'=>$e['motif'],
               'type'=>$e['type'],
+              'statut'=>$e['statut'],
+              'fromID'=>$e['fromID'],
               'patientid'=>$e['patientid'],
               'externid'=>$e['externid'],
               'absent'=>$e['absente']
@@ -553,4 +557,16 @@ class msAgenda
       msSQL::sqlInsert('agenda_changelog', $data);
     }
 
+    public function whoDidIt($operations) {
+        if (!isset($this->_startDate)) {
+            throw new Exception('StartDate n\'est pas définie');
+        }
+        if (!isset($this->_endDate)) {
+            throw new Exception('EndDate n\'est pas définie');
+        }
+        return msSQL::sql2tabKey("SELECT ac.eventID, ac.fromID, ac.operation FROM agenda_changelog AS ac 
+        INNER JOIN (SELECT eventID, MAX(date) AS MaxDate FROM agenda_changelog GROUP BY eventID) groupedac 
+        RIGHT JOIN agenda as a ON ac.eventID = groupedac.eventID AND ac.date = groupedac.MaxDate and a.id=ac.eventID
+        WHERE a.start >='".$this->_startDate."' AND a.end <= '".$this->_endDate."' AND operation in ('".implode("','", $operations)."')", "eventID");
+    }
 }
