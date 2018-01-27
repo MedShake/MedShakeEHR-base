@@ -24,15 +24,17 @@
  * Config : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if(!is_numeric($_GET['id'])) die;
-$actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_GET['id']."' limit 1");
+if(!is_numeric($_POST['id'])) die;
+$actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_POST['id']."' limit 1");
 
 if( $actualRank == 'admin') {
-  msSQL::sqlInsert('people', array('id'=>$_GET['id'], 'rank'=>''));
+  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>''));
 } else {
-  msSQL::sqlInsert('people', array('id'=>$_GET['id'], 'rank'=>'admin'));
+  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>'admin'));
 }
 
-msTools::redirection('/configuration/users/');
+echo json_encode(array('ok'));
+

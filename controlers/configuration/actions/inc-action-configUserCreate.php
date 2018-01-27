@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,28 +21,26 @@
  */
 
 /**
- * Config : attribuer un mot de passe et un module à un utilisateur
+ * Config : créer un utilisateur
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
+ * @author fr33z00 <https://github.com/fr33z00
  */
-$module=isset($_POST['p_module'])?$_POST['p_module']:'public';
-$type=$module=='public'?'patient':'pro';
 
-if (empty($_POST['p_password'])) {
-    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE name='".$_POST['p_username']."'");
-} else {
+if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
+    $module=isset($_POST['p_module'])?$_POST['p_module']:'base';
+    $user=$p['user']['id']?:1;
+
     $data=array(
         'name' => $_POST['p_username'],
-        'type' => $type,
+        'type' => 'pro',
         'rank' => '',
         'module' => $module,
         'registerDate' => date("Y/m/d H:i:s"),
-        'fromID' => $p['user']['id']
+        'fromID' => $user
     );
     msSQL::sqlInsert('people', $data);
     msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
     $id=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='".$_POST['p_username']."'");
-    msTools::redirection('/'.$type.'/edit/'.$id.'/');
+    msTools::redirection('/pro/edit/'.$id.'/');
 }
-msTools::redirection('/configuration/');
+msTools::redirection('/configuration/users/');
