@@ -33,9 +33,8 @@ $m=$match['params']['m'];
 
 $acceptedModes=array(
     'configFormEdit', // Edition du formulaire
-    'configUpdatePassword', //Attribuer un password à un user
+    'configUserCreate', //Créer un user
     'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
-    'configGiveAdmin', // Toggle droit d'admin
     'configAgendaSave', // sauvegarder config agenda
     'configTemplatePDFSave' // sauvegarder un template PDF
 );
@@ -50,16 +49,12 @@ if ($m=='configFormEdit') {
     include('inc-action-configFormEdit.php');
 }
 // Attribuer un password à un user
-elseif ($m=='configUpdatePassword') {
-    include('inc-action-configUpdatePassword.php');
+elseif ($m=='configUserCreate') {
+    include('inc-action-configUserCreate.php');
 }
 // Attribuer une config spécifique à un utilisateur
 elseif ($m=='configSpecificUserParam') {
     include('inc-action-configSpecificUserParam.php');
-}
-// Donner / retirer droit d'admin à un utilisateur
-elseif ($m=='configGiveAdmin') {
-    include('inc-action-configGiveAdmin.php');
 }
 // sauvegarder config agenda
 elseif ($m=='configAgendaSave') {

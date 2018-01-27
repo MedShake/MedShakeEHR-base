@@ -54,7 +54,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0"
         'name' => $_POST['p_username'],
         'type' => 'pro',
         'rank' => 'admin',
-        'module' => $_POST['p_moduleSelect'],
+        'module' => 'base',
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 0
     );

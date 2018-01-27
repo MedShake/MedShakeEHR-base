@@ -37,6 +37,10 @@ $acceptedModes=array(
     'configExtractByPrimaryKey', // Effacer dans une table par l'intermédiaire de la primary key
     'configFormsCatCreate', // Création d'une cat pour les forms
     'configFormCreate', // Création d'un form
+    'configChangeModule', // Change le module d'un utilisateur
+    'configChangePassword', // Change le mot de passe d'un utilisateur
+    'configGiveAdmin', // Toggle droit d'admin
+    'configRevokeUser', // Supprimer un utilisateur
     'configPrescriptionCreate', //Création d'une prescription type
     'configPrescriptionsCatCreate', //Création d'une cat de prescription type
     'configActesCreate', //Création d'un acte
@@ -60,6 +64,26 @@ if ($m=='configFormsCatCreate') {
 // Création d'un form
 elseif ($m=='configFormCreate') {
     include('inc-ajax-configFormCreate.php');
+}
+
+// Changer le module d'un utilisateur
+elseif ($m=='configChangeModule') {
+    include('inc-ajax-configChangeModule.php');
+}
+
+// Changer le mot de passe d'un utilisateur
+elseif ($m=='configChangePassword') {
+    include('inc-ajax-configChangePassword.php');
+}
+
+// Donner / retirer droit d'admin à un utilisateur
+elseif ($m=='configGiveAdmin') {
+    include('inc-ajax-configGiveAdmin.php');
+}
+
+// Révoquer un utilisateur
+elseif ($m=='configRevokeUser') {
+    include('inc-ajax-configRevokeUser.php');
 }
 
 // Création d'une cat pour données

@@ -21,16 +21,15 @@
  */
 
 /**
- * Login : page de login
+ * Config : changement de module utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="firstLogin";
+if (!isset($_POST['id']) or !isset($_POST['module'])) {
+    die;
+}
+msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'module'=>$_POST['module']));
 
-$form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='firstLogin');
+echo json_encode(array('ok'));
 
-$p['page']['form']=$form->getForm();

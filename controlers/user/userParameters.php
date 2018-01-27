@@ -60,6 +60,6 @@ if(isset($p['config']['clicRdvUserId'])) {
             $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
         }
     }
-    $form->setPrevalues($prevalues);
+    $form->setPrevalues($preValues);
 }
 

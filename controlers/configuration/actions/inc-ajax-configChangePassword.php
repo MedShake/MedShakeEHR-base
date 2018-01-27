@@ -21,16 +21,14 @@
  */
 
 /**
- * Login : page de login
+ * Config : change le mot de passe d'un utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="firstLogin";
+if(!is_numeric($_POST['id']) or !isset($_POST['password'])) die;
 
-$form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='firstLogin');
+msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['password']."',@password) WHERE id='".$_POST['id']."'");
 
-$p['page']['form']=$form->getForm();
+echo json_encode(array('ok'));
+

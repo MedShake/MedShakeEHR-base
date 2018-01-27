@@ -146,7 +146,6 @@ configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/confi
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
-configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configuration/configUpdatePassword']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
 # User

@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,21 +21,14 @@
  */
 
 /**
- * Config : attribuer un password et un module à un utilisteur
+ * Config : Enlever un utilisateur (sans enlever ses fiches)
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
- } else {
-    $template="configUpdatePassword";
-    $debug='';
+if(!isset($_POST['id']) or !is_numeric($_POST['id'])) die("Error");
 
-    $formpatient = new msForm();
-    $formpatient->setFormIDbyName('basePasswordChange');
-    $p['page']['form']=$formpatient->getForm();
-    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, module FROM system", "id", "module");
- }
+msSQL::sqlQuery("UPDATE people set rank='', name=NULL, pass='' WHERE id='".$_POST['id']."'");
+
+echo json_encode(array('ok'));
+
