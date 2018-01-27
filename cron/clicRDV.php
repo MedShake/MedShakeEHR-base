@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://www.github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,15 +21,9 @@
  */
 
 /**
- * Cron : relève le JSON patients du jour fourni par soft tiers
- * Doit fournir par rdv :
- * - id : numero du dossier patient
- * - identite : identité patient
- * - type : type de consultation
- * - heure : heure au format %h:%i
- * Le tableau json doit être pré trier asc.
+ * Cron : synchronisation des agendas clicRDV avec l'agenda intégré
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
 ini_set('display_errors', 1);
@@ -57,6 +51,6 @@ if(isset($p['config']['agendaClicRDV']) and $p['config']['agendaClicRDV']) {
     $clicrdv=new msClicRDV();
     foreach($clicUsers as $userid=>$value) {
         $clicrdv->setUserID($userid);
-        $clicrdv->syncAppointments();
+        $clicrdv->syncEvents();
     }
 }

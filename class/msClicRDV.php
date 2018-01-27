@@ -142,7 +142,7 @@ class msClicRDV
         $ret[1]=array_flip($ret[0]);
     }
 
-    public function syncAppointments() {
+    public function syncEvents() {
         $params=$this->_getUserParams();
         if (!array_key_exists('clicRdvUserId', $params)) {
             return false;
