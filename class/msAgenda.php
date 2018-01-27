@@ -178,7 +178,7 @@ class msAgenda
 
     /**
     * Ajouter ou update un rendez-vous en fonction de la présente ou non
-    * de l'envetID
+    * de l'eventID
     */
     public function addOrUpdateRdv()
     {
@@ -245,7 +245,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.lastModified, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -345,6 +345,7 @@ class msAgenda
               'motif'=>'',
               'type'=>$e['type'],
               'statut'=>$e['statut'],
+              'lastModified'=>$e['lastModified'],
               'fromID'=>$e['fromID'],
               'patientid'=>$e['patientid'],
               'externid'=>$e['externid']
@@ -367,6 +368,7 @@ class msAgenda
               'type'=>$e['type'],
               'statut'=>$e['statut'],
               'fromID'=>$e['fromID'],
+              'lastModified'=>$e['lastModified'],
               'patientid'=>$e['patientid'],
               'externid'=>$e['externid'],
               'absent'=>$e['absente']
@@ -395,6 +397,31 @@ class msAgenda
             'id'=>$this->_eventID,
             'userid'=>$this->_userID,
             'statut'=>'deleted'
+          );
+          msSQL::sqlInsert('agenda', $data);
+
+
+      }
+
+    /**
+    * remettre un rendez-vous
+    * @return void
+    */
+      public function undelEvent()
+      {
+          if (!isset($this->_eventID)) {
+              throw new Exception('EventID n\'est pas défini');
+          }
+          if (!isset($this->_userID)) {
+              throw new Exception('UserID n\'est pas défini');
+          }
+
+          $this->_addToLog('undelete');
+
+          $data=array(
+            'id'=>$this->_eventID,
+            'userid'=>$this->_userID,
+            'statut'=>'actif'
           );
           msSQL::sqlInsert('agenda', $data);
 
@@ -557,16 +584,4 @@ class msAgenda
       msSQL::sqlInsert('agenda_changelog', $data);
     }
 
-    public function whoDidIt($operations) {
-        if (!isset($this->_startDate)) {
-            throw new Exception('StartDate n\'est pas définie');
-        }
-        if (!isset($this->_endDate)) {
-            throw new Exception('EndDate n\'est pas définie');
-        }
-        return msSQL::sql2tabKey("SELECT ac.eventID, ac.fromID, ac.operation FROM agenda_changelog AS ac 
-        INNER JOIN (SELECT eventID, MAX(date) AS MaxDate FROM agenda_changelog GROUP BY eventID) groupedac 
-        RIGHT JOIN agenda as a ON ac.eventID = groupedac.eventID AND ac.date = groupedac.MaxDate and a.id=ac.eventID
-        WHERE a.start >='".$this->_startDate."' AND a.end <= '".$this->_endDate."' AND operation in ('".implode("','", $operations)."')", "eventID");
-    }
 }

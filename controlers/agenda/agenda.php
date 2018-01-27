@@ -33,11 +33,6 @@ $template="agenda";
 // userID
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
-//mettre à jour les rdv depuis clicRdv
-$clicrdv=new msClicRDV();
-$clicrdv->setUserID($p['page']['userID']);
-$clicrdv->syncAppointments();
-
 //paramètres de l'agenda
 if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
   $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');

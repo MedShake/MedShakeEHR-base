@@ -142,6 +142,11 @@ agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.jso
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
 agendaNumberForPatientsOfTheDay: 0
 
+
+#######################################
+## agenda clicRDV
+agendaClicRdv: false
+
 #######################################
 ## Rappels RDV par mail
 mailRappelLogCampaignDirectory: '/home/EHR/public_html/mailsRappelRdvArchives/'

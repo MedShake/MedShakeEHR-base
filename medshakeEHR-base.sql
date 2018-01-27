@@ -44,6 +44,7 @@ CREATE TABLE `agenda` (
   `end` datetime DEFAULT NULL,
   `type` varchar(10) DEFAULT NULL,
   `dateAdd` datetime DEFAULT NULL,
+  `lastModified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `patientid` mediumint(6) UNSIGNED DEFAULT NULL,
   `fromID` mediumint(6) UNSIGNED DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
