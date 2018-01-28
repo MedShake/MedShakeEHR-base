@@ -42,41 +42,34 @@
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
     <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
 		<li class="active">
-				Liste des utilisateurs
+				Utilisateurs et options
 		</li>
   </ol>
 
   <h1>Liste des utilisateurs</h1>
 
-  <a href="javascript:void(0)" class="btn btn-primary pull-right newUser" data-toggle="modal" data-target="#modalUserCreation" role="button">Nouvel utilisateur</a>
+  <a href="javascript:void(0)" class="btn btn-primary pull-right newUser" data-toggle="modal" data-target="#modalUserCreation" role="button" style="margin-bottom:10px">Nouvel utilisateur</a>
 
   <table class="table table-hover table-striped">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Identité</th>
         <th>Identifiant</th>
-        <th>Administrateur</th>
+        <th>Identité</th>
         <th>Module</th>
+        <th>Administrateur</th>
         <th>Réglages</th>
         <th>Mot de passe</th>
-        <th></th>
+        <th>Révoquer</th>
       </tr>
     </thead>
     <tbody>
       {% for v in page.users %}
         <tr>
-          <td>{{ v.id }}</td>
-          <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>{{ v.name }}</td>
-          <td>
-            <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
-              <span class="glyphicon glyphicon-{% if v.rank =='' %}unchecked{% else %}check{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
-            </a>
-          </td>
+          <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>
              <select class="changeModule" data-userid="{{ v.id }}">
               {% for mi,mv in page.modules %}
@@ -84,6 +77,11 @@
               {% endfor %} 
             </select>
          </td>
+          <td>
+            <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
+              <span class="glyphicon glyphicon-{% if v.rank =='' %}unchecked{% else %}check{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
+            </a>
+          </td>
           <td>
             <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Paramètres spécifiques</a>
           </td>

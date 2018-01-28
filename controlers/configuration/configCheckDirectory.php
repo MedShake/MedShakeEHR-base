@@ -30,7 +30,7 @@
  if (!msUser::checkUserIsAdmin()) {
      $template="forbidden";
  } else {
-     $template="configChekDirectory";
+     $template="configCheckDirectory";
      $debug='';
 
       //repertoire de stockage

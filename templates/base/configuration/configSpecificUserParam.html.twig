@@ -42,7 +42,7 @@
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
     <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
     <li>
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Liste des utilisateurs</a>
@@ -55,11 +55,11 @@
     </li>
   </ol>
 
-  <h1>Paramètres spécifiques à l'utilisateur {{ page.userData.3 }} {% if page.userData.2 %}
+  <h1>Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
     {{ page.userData.2 }}
   {% else %}
     {{ page.userData.1 }}
-  {% endif %} <small>#{{ page.userID }}</small></h1>
+  {% endif %}</h1>
 
   <form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configSpecificUserParam/">
 

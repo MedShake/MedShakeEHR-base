@@ -31,6 +31,6 @@ $debug='';
 $template="firstLogin";
 
 $form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='firstLogin');
+$form->setFormIDbyName($p['page']['formIN']='baseFirstLogin');
 
 $p['page']['form']=$form->getForm();

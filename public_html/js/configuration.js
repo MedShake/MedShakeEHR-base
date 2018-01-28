@@ -28,14 +28,11 @@
 
 $(document).ready(function() {
 
-  if (document.URL.indexOf("#cr") >= 0) {
+  if (document.URL.indexOf("#ca") >= 0) {
     $($("ul.nav-tabs li")[1]).children("a")[0].click();
   }
-  else if (document.URL.indexOf("#ca") >= 0) {
+  else if (document.URL.indexOf("#ap") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
-  }
-  else if (document.URL.indexOf("#licence") >= 0) {
-    $($("ul.nav-tabs li")[3]).children("a")[0].click();
   }
 
   // extract by primary key

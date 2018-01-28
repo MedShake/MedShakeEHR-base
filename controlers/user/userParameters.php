@@ -30,7 +30,7 @@ $debug='';
 $template="userParameters";
 
 $form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='userParameters');
+$form->setFormIDbyName($p['page']['formIN']='baseUserParameters');
 $p['page']['form']=$form->getForm();
 
 $p['page']['clicRdvConsultsRel']='[]';

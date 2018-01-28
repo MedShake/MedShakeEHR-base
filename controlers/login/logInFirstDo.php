@@ -56,7 +56,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0"
         'rank' => 'admin',
         'module' => 'base',
         'registerDate' => date("Y/m/d H:i:s"),
-        'fromID' => 0
+        'fromID' => 1
     );
     msSQL::sqlInsert('people', $data);
     msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");

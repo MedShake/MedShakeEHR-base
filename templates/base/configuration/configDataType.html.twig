@@ -44,22 +44,16 @@
   <li>
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  {% if page.groupe != "user" %}
     <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
     </li>
-  {% else %}
-    <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
-    </li>
-  {% endif %}
 	  <li class="active">
       {% if page.groupe == "admin" %}
-	      Données administratives
+	      Administratives
       {% elseif page.groupe == "medical" %}
-	      Données médicales
+	      Médicales
       {% elseif page.groupe == "typecs" %}
-	      Types de consultations
+	      Consultations
       {% elseif page.groupe == "courrier" %}
 	      Courriers et certificats
 	      {% set valeurParDefaut='Courrier : nom du template associé / Mail : texte par défaut' %}
@@ -70,13 +64,13 @@
       {% elseif page.groupe == "ordo" %}
 	      Ordonnances
       {% elseif page.groupe == "reglement" %}
-	      Règlement
+	      Règlements
       {% elseif page.groupe == "dicom" %}
 	      Dicom
       {% elseif page.groupe == "user" %}
-	      Types des données User
+	      Utilisateurs
       {% elseif page.groupe == "relation" %}
-	      Données relation
+	      Relations
       {% endif %}
 	  </li>
 </ol>
@@ -85,7 +79,7 @@
 {% elseif page.groupe == "medical" %}
 	<h1>Types des données médicales</h1>
 {% elseif page.groupe == "typecs" %}
-	<h1>Types des données consultation</h1>
+	<h1>Types des données de consultations</h1>
 	{% set valeurParDefaut='Nom du formulaire associé' %}
 {% elseif page.groupe == "courrier" %}
 	<h1>Types des données courrier</h1>
@@ -93,15 +87,15 @@
 {% elseif page.groupe == "mail" %}
 	<h1>Types des données mail</h1>
 {% elseif page.groupe == "doc" %}
-	<h1>Types des données document</h1>
+	<h1>Types des données documents</h1>
 {% elseif page.groupe == "ordo" %}
-	<h1>Types des données ordonnance</h1>
+	<h1>Types des données ordonnances</h1>
 {% elseif page.groupe == "reglement" %}
-	<h1>Types des données règlement</h1>
+	<h1>Types des données règlements</h1>
 {% elseif page.groupe == "dicom" %}
 	<h1>Types des données Dicom</h1>
 {% elseif page.groupe == "user" %}
-	<h1>Types des données User</h1>
+	<h1>Types des données utilisateurs</h1>
 	{% set labelDefaut='Nom de la variable de configuration  (répéter)' %}
 	{% set nomUsageInterneDefaut='Nom de la variable de configuration' %}
 {% elseif page.groupe == "relation" %}
