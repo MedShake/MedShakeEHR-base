@@ -44,7 +44,7 @@
 
       {% for patientID, tab in page.outputTableRow %}
         {% if page.porp == 'externe' %}
-          <tr class="extAsPatient" data-patientid="{{ patientID }}">
+          <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
         {% else %}
           <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% endif %}" data-url="/{{ porpurl }}/{{ patientID }}/">
         {% endif %}
