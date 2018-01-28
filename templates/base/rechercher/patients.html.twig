@@ -71,7 +71,7 @@ associer patient
 			'type' : 'text',
 			'id' : 'd2',
 			'name' : 'lastname',
-      'value' : page.patient.administrativeDatas.lastname|default(''),
+      'value' : page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')),
 			'placeholder' : 'nom',
 			'class' : 'form-control searchupdate jqautocomplete',
 			'autocomplete' : 'off',
@@ -142,8 +142,6 @@ associer patient
   <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary pull-right" role="button">Nouveau patient</a>
 {% elseif page.porp == 'pro' %}
   <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary pull-right" role="button">Nouveau praticien</a>
-{% elseif page.porp == 'externe' %}
-  <a href="javascript:void(0)" class="btn btn-primary pull-right extToNew" data-externID={{ page.patient.id }} role="button">Nouveau patient</a>
 {% endif %}
 </div>
 
@@ -151,7 +149,12 @@ associer patient
 
 
 <div id="listing" data-porp="{{ page.porp }}" class="row col-md-12" style="margin-top : 40px;">
-
 </div>
+
+{% if page.porp == 'externe' %}
+<div>
+  <a href="javascript:void(0)" class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button">Créer nouveau patient</a>
+</div>
+{% endif %}
 
 {% endblock %}
