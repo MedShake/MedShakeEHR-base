@@ -31,6 +31,21 @@ $template="userParameters";
 
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='baseUserParameters');
+
+if(isset($p['config']['clicRdvUserId'])) {
+    $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
+    if (!empty($p['config']['clicRdvPassword'])) {
+        $preValues['p_clicRdvPassword']='********';
+        if(!empty($p['config']['clicRdvGroupId'])) {
+            $preValues['p_clicRdvGroupId']=$p['config']['clicRdvGroupId'];
+        }
+        if(!empty($p['config']['clicRdvCalId'])) {
+            $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
+        }
+    }
+    $form->setPrevalues($preValues);
+}
+
 $p['page']['form']=$form->getForm();
 
 $p['page']['clicRdvConsultsRel']='[]';
@@ -44,22 +59,16 @@ if (count($consults)) {
 }
 
 if(isset($p['config']['clicRdvUserId'])) {
-    $preValues=array('1' => $p['config']['clicRdvUserId']);
     if (!empty($p['config']['clicRdvPassword'])) {
-        $preValues['2']='********';
         if(!empty($p['config']['clicRdvGroupId'])) {
             $p['page']['form']['structure'][1][1]['elements'][3]['value']['formValues'][$p['config']['clicRdvGroupId']]=explode(':',$p['config']['clicRdvGroupId'])[1];
-            $preValues['3']=$p['config']['clicRdvGroupId'];
         }
         if(!empty($p['config']['clicRdvCalId'])) {
             $p['page']['form']['structure'][1][1]['elements'][4]['value']['formValues'][$p['config']['clicRdvCalId']]=explode(':',$p['config']['clicRdvCalId'])[1];
-            $preValues['4']=$p['config']['clicRdvCalId'];
         }
-
         if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
             $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
         }
     }
-    $form->setPrevalues($preValues);
 }
 
