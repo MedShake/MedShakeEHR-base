@@ -66,12 +66,21 @@ $(document).ready(function() {
     k++
   }
 
+  $("#id_clicRdvUserId_id").on("keyup", function(){
+    if (!$(this).val() || $(this).val()=='') {
+      $('#id_clicRdvGroupId_id').hide();
+      $('#id_clicRdvCalId_id').hide();
+      $('.consults').remove();
+    }
+  });
+
   $("#id_clicRdvPassword_id").on("keyup", function(){
     $('#id_clicRdvGroupId_id').show();
     $('label[for="id_clicRdvGroupId_id"]').show();
     if ($('#id_clicRdvUserId_id').val() == '' || $('#id_clicRdvPassword_id').val() == '') {
       $('#id_clicRdvGroupId_id').hide();
       $('label[for="id_clicRdvGroupId_id"]').hide();
+      $('.consults').remove();
     }
   });
 

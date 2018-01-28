@@ -31,7 +31,7 @@ $debug='';
 
 $template="listing";
 
-if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='todaypatient') {
+if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
     $formIN='baseListingPro';
@@ -82,7 +82,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     if ($_POST['porp']=='today') {
         $agenda=new msAgenda();
         $agenda->set_userID($p['user']['id']);
-        $todays=array_column('id', $agenda->getPatientsOfTheDay());
+        $todays=array_column($agenda->getPatientsOfTheDay(), 'id');
         if (count($todays)) {
             $where.="and p.id in ('".implode("', '", $todays)."') ";
         }

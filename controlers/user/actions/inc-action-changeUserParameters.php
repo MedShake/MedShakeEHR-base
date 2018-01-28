@@ -60,6 +60,12 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
         }
     }
 } 
+
+$objet = new msObjet();
+$objet->setFromID($p['user']['id']);
+$objet->setToID($p['user']['id']);
+
+
 if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
@@ -76,25 +82,30 @@ if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********
     } else {
         $setCRDV=true;
     }
+} else {
+    if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
+        msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
+    }
+    if ($data=$objet->getLastObjetByTypeName('clicRdvPassword')) {
+        msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
+    }
 }
+
 
 if ($changeMdp) {
     msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
 }
-$objet = new msObjet();
-$objet->setFromID($p['user']['id']);
-$objet->setToID($p['user']['id']);
 if ($setCRDV) {
-    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvUserId'), $_POST['p_clicRdvUserId']);
-    $passID=$objet->createNewObjet(msData::getTypeIDFromName('clicRdvPassword'), $_POST['p_clicRdvPassword']);
+    $objet->createNewObjetByTypeName('clicRdvUserId', $_POST['p_clicRdvUserId']);
+    $passID=$objet->createNewObjetByTypeName('clicRdvPassword', $_POST['p_clicRdvPassword']);
     msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$_POST['p_clicRdvPassword']."',@password)) WHERE id='".$passID."' limit 1");
 }
 
 if (!empty($_POST['p_clicRdvGroupId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvGroupId']) {
-    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvGroupId'), $_POST['p_clicRdvGroupId']);
+    $objet->createNewObjetByTypeName('clicRdvGroupId', $_POST['p_clicRdvGroupId']);
 }
 if (!empty($_POST['p_clicRdvCalId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvCalId']) {
-    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvCalId'), $_POST['p_clicRdvCalId']);
+    $objet->createNewObjetByTypeName('clicRdvCalId', $_POST['p_clicRdvCalId']);
 }
 
 
@@ -106,7 +117,7 @@ for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
 }
 
 if (!empty($consult)) {
-    $objet->createNewObjet(msData::getTypeIDFromName('clicRdvConsultId'), json_encode($consult));
+    $objet->createNewObjetByTypeName('clicRdvConsultId', json_encode($consult));
 }
 msTools::redirRoute('/');
 
