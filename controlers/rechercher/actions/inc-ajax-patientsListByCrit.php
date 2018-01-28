@@ -31,7 +31,7 @@ $debug='';
 
 $template="listing";
 
-if ($_POST['porp']=='patient' or $_POST['porp']=='externe') {
+if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='todaypatient') {
     $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
     $formIN='baseListingPro';
@@ -79,6 +79,14 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     $where=null;
+    if ($_POST['porp']=='today') {
+        $agenda=new msAgenda();
+        $agenda->set_userID($p['user']['id']);
+        $todays=array_column('id', $agenda->getPatientsOfTheDay());
+        if (count($todays)) {
+            $where.="and p.id in ('".implode("', '", $todays)."') ";
+        }
+    }
     if (!empty($_POST['d2'])) {
         $where.=" and ((d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='') or (d1.value like '".msSQL::cleanVar($_POST['d2'])."%' and d1.outdated='') ) ";
     }
@@ -94,7 +102,13 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     //patient ou pro en fonction
-    if($_POST['porp']=='pro') $peopleType=array('pro'); else $peopleType=array('pro','patient');
+    if($_POST['porp']=='pro') {
+        $peopleType=array('pro');
+    } elseif($_POST['porp']=='today') {
+        $peopleType=array('pro', 'patient', 'externe');
+    } else {
+        $peopleType=array('pro','patient');
+    }
 
     $p['page']['sqlString']=$sql='select
     CASE WHEN d2.value !="" THEN d2.value

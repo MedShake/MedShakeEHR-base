@@ -28,7 +28,8 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : {% if page.porp == 'patient'%}
+{% block title %}MedShakeEHR : 
+{% if page.porp in ['patient', 'today'] %}
 recherche patient
 {% elseif page.porp == 'pro' %}
 recherche praticien
@@ -50,6 +51,8 @@ associer patient
 
 {% if page.porp == 'patient'%}
 <h1>Recherche patient</h1>
+{% elseif page.porp == 'today' %}
+<h1>Patients du jour</h1>
 {% elseif page.porp == 'pro' %}
 <h1>Recherche praticien</h1>
 {% elseif page.porp == 'externe' %}
@@ -135,12 +138,12 @@ associer patient
 
 <div class="col-md-2">
 
-{% if page.porp == 'patient'%}
-<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary pull-right" role="button">Nouveau patient</a>
+{% if page.porp in ['patient', 'today'] %}
+  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary pull-right" role="button">Nouveau patient</a>
 {% elseif page.porp == 'pro' %}
-<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary pull-right" role="button">Nouveau praticien</a>
+  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary pull-right" role="button">Nouveau praticien</a>
 {% elseif page.porp == 'externe' %}
-<a href="javascript:void(0)" class="btn btn-primary pull-right extToNew" data-externID={{ page.patient.id }} role="button">Nouveau patient</a>
+  <a href="javascript:void(0)" class="btn btn-primary pull-right extToNew" data-externID={{ page.patient.id }} role="button">Nouveau patient</a>
 {% endif %}
 </div>
 

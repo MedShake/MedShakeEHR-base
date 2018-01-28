@@ -45,8 +45,8 @@ agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
 agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
 
 #chercher patients / pros
-patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
-patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
+patientsAjax: ['GET|POST', '/[today|patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
+patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 
 #créer / éditer patient/pros
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
