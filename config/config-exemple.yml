@@ -145,7 +145,7 @@ agendaNumberForPatientsOfTheDay: 0
 
 #######################################
 ## agenda clicRDV
-agendaClicRdv: false
+agendaClicRDV: false
 
 #######################################
 ## Rappels RDV par mail

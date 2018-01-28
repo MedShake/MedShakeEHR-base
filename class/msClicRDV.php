@@ -71,6 +71,7 @@ class msClicRDV
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         if ($data) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            echo 'curl error on: '.$baseurl.$group.$req.$api_key.$params.'\n';
         }
         $res=curl_exec($ch);
         curl_close($ch);
@@ -126,6 +127,9 @@ class msClicRDV
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='clicRdvPatientId'", 'toID', 'value');
         //ret[1]=array(idClicRDV=>idMedShake)
+        if (!is_array($ret[0])) {
+            return(array(array(), array()));
+        }
         $ret[1]=array_flip($ret[0]);
         return $ret;
     }
@@ -139,6 +143,9 @@ class msClicRDV
               FROM objets_data AS od left join data_types AS dt
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='relationExternePatient'", 'toID', 'value');
+        if (!is_array($ret[0])) {
+            return(array(array(), array()));
+        }
         $ret[1]=array_flip($ret[0]);
     }
 
@@ -272,8 +279,7 @@ class msClicRDV
                         $patientID=$relatedPatients[1][$patientID];
                     }
                 //sinon on le crée
-                } elseif ($fiche=json_decode($this->_sendCurl('GET', 'fiches/'.$vclic['fiche_id'], $this->_groupID), true) and array_key_exists('records', $fiche)){
-                    $fiche=$fiche['records'][0];
+                } elseif ($fiche=json_decode($this->_sendCurl('GET', 'fiches/'.$vclic['fiche_id'].'.json', $this->_groupID), true) and array_key_exists('id', $fiche)){
                     $patient->setFromID($clicRDVservice);
                     $patient->setType('externe');
                     $patientID=$patient->createNew();
@@ -287,13 +293,15 @@ class msClicRDV
                     if ($fiche['birthdate'])
                     $data->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
                     $data->createNewObjetByTypeName('personalEmail', $fiche['email']);
-                    if ($fiche and (!strpos('06', $fiche['firstphone']) or !strpos('07', $vclic['fiche']['firstphone']))) {
+                    if ($fiche['firstphone'] and (!strpos('06', $fiche['firstphone']) or !strpos('07', $fiche['firstphone']))) {
                         $data->createNewObjetByTypeName('mobilePhone', $fiche['firstphone']);
                     } elseif ($fiche['secondphone'] and (!strpos('06', $fiche['secondphone']) or !strpos('07', $fiche['secondphone']))) {
                         $data->createNewObjetByTypeName('mobilePhone', $fiche['secondphone']);
                     } elseif ($fiche['firstphone']) {
                         $data->createNewObjetByTypeName('homePhone', $fiche['firstphone']);
                     }
+                } else {
+                    die("Erreur lors de la récupération d'une fiche\n".json_encode($fiche).'\n');
                 }
                 //on crée l'événement
                 $agenda->set_eventID(null);
