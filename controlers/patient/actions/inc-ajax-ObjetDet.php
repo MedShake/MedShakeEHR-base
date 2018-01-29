@@ -88,6 +88,15 @@ if (is_numeric($_POST['objetID'])) {
 
             $p['page']['courrier']['modeprint']=$modePrint;
         }
+    } elseif($data['groupe']=="typecs" and $data['name']=="csAldDeclaration") {
+      $debug='';
+      $template='inc-ajax-detCsAldDeclaration';
+      $data = new msObjet();
+      $p['page']['dataAld'] = $data->getObjetAndSons($_POST['objetID'], 'name');
+      $selectedAldLabel=new msData;
+      $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$p['page']['dataAld']['aldNumber']['typeID']]);
+
+      $p['page']['dataAld']['aldNumber']['aldLabel']=$selectedAldLabel[$p['page']['dataAld']['aldNumber']['typeID']][$p['page']['dataAld']['aldNumber']['value']];
 
     } else {
         $fakePDF = new msPDF();
