@@ -148,6 +148,9 @@ configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/confi
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
+# configuration crons
+configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
+
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']

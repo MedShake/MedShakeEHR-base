@@ -34,6 +34,7 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'configFormEdit', // Edition du formulaire
     'configUserCreate', //Créer un user
+    'configCronJobs', //Configurer les crons
     'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
     'configAgendaSave', // sauvegarder config agenda
     'configTemplatePDFSave' // sauvegarder un template PDF
@@ -51,6 +52,10 @@ if ($m=='configFormEdit') {
 // Attribuer un password à un user
 elseif ($m=='configUserCreate') {
     include('inc-action-configUserCreate.php');
+}
+// Configurer les crons
+elseif ($m=='configCronJobs') {
+    include('inc-action-configCronJobs.php');
 }
 // Attribuer une config spécifique à un utilisateur
 elseif ($m=='configSpecificUserParam') {

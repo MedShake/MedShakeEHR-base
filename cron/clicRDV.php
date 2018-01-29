@@ -26,6 +26,15 @@
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['clicRDV']=array(
+        'task' => 'Synchronisation clicRDV',
+        'defaults' => array('m'=>'0,15,30,45','h'=>'8-19','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Synchronise l\'agenda interne avec clicRDV. Si vous êtes complet plusieurs semaines à l\'avance, préférez une synchronisation quotidienne. A l\'inverse, si vous avez un faible remplissage, vous pouvez augmenter la fréquence.');
+    return;
+}
+
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();

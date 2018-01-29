@@ -25,7 +25,17 @@
  * idéalement, avant sauvegarde quotidienne
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['cleanWorkingDir']=array(
+        'task' => 'Nettoyage',
+        'defaults' => array('m'=>'0','h'=>'20','M'=>'*','dom'=>'*','dow'=>'*'),
+        'description' => 'Tâche de nettoyage du répertoire de travail');
+    return;
+}
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");

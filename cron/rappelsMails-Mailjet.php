@@ -24,7 +24,17 @@
  * Cron : rappels mails via Mailjet <https://www.mailjet.com/>
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['rappelsMails-Mailjet']=array(
+        'task' => 'Mails rappel Mailjet',
+        'defaults' => array('m'=>'0','h'=>'19','M'=>'*','dom'=>'*','dow'=>'0,1,2,3,4,5'),
+        'description' => 'Envoi les mails de rappel Mailjet');
+    return;
+}
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
@@ -50,7 +60,7 @@ $mysqli=msSQL::sqlConnect();
  * @param  array $pa tableau des var
  * @return array     tableau de log
  */
-function sendmail($pa)
+function sendmailjet($pa)
 {
     global $p;
 
@@ -127,7 +137,7 @@ if (is_array($patientsList)) {
                   'identite'=>$patient['identite'],
                   'email'=>$listeEmail[$patient['id']]
                 );
-                $log[]=sendmail($detinataire);
+                $log[]=sendmailjet($detinataire);
             }
             $dejaInclus[]=$listeEmail[$patient['id']];
         }

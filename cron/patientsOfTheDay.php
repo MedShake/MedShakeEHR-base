@@ -30,7 +30,17 @@
  * Le tableau json doit être pré trier asc.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['patientsOfTheDay']=array(
+        'task' => 'Patients du jour',
+        'defaults' => array('m'=>'0','h'=>'8','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Enregistre la liste des patients du jour.');
+    return;
+}
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
