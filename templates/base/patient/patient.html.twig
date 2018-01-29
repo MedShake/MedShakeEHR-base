@@ -163,45 +163,46 @@
         </div>
 
         <div class="row" style="margin-top : 40px;">
-            <div  class="col-md-3">
-              {# Formulaire dlatéral des ATCD #}
-              <div id="latForm" class=" changeObserv">
-                  {{ f.formbuilder(page.formData_baseATCD , page.formName_baseATCD , valFormLat ) }}
+          <div class="col-md-3">
+
+            {# Onglets colonne latérale #}
+            <ul class="nav nav-tabs" style="margin-bottom : 12px;">
+              <li role="presentation" class="active" data-toggle="tab" title="Panneau principal">
+                <a href="#panelATCD" data-toggle="tab"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+              </li>
+              <li role="presentation" title="Liens familiaux">
+                <a href="#panelLiensFamiliaux" data-toggle="tab"><span class="glyphicon glyphicon glyphicon-link" aria-hidden="true"></span></a></a>
+              </li>
+              <li role="presentation" title="Autres actions">
+                <a href="#panelOptions" data-toggle="tab"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></a></a>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+
+              {# Formulaire ajout ALD #}
+              <div role="tabpanel" class="tab-pane" id="panelOptions">
+                <button class="btn btn-info btn-block newCS" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter une ALD</button>
               </div>
-              {# Liens familiaux #}
-              {% if page.liensFamiliaux %}
 
-              <div class="panel panel-default">
-          			<div class="panel-heading gras">Liens familiaux <a class="btn btn-default btn-xs pull-right" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+              {# Formulaire latéral des ATCD #}
+              <div role="tabpanel" class="tab-pane active" id="panelATCD">
+                {% if page.patient.ALD %}
+                  {% include 'inc-patientAldStruc.html.twig' %}
+                {% endif %}
+                <div id="latForm" class="changeObserv">
+                  {{ f.formbuilder(page.formData_baseATCD , page.formName_baseATCD , valFormLat ) }}
                 </div>
+              </div>
 
-                <table class="table table-striped table-condensed table-hover small">
-          				<thead>
-          					<tr>
-          						<th class="col-md-1"></th>
-          						<th class="col-md-5">patient</th>
-                      <th class="col-md-3">ddn</th>
-          						<th class="col-md-3">relation</th>
-          					</tr>
-          				</thead>
-          				<tbody>
-                    {% for v in page.liensFamiliaux %}
-                    <tr>
-                      <td>
-                        <a target="_blank" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a>
-                      </td>
-                      <td class="gras">{{ v.nom }} {{v.prenom }}</td>
-                      <td>{{ v.ddn }}</td>
-                      <td>{{ v.typeRelation }}</td>
-                    </tr>
-                    {% endfor %}
-          				</tbody>
-
-          			</table>
-          		</div>
-
-              {% endif %}
+              {# Liens familiaux #}
+              <div role="tabpanel" class="tab-pane" id="panelLiensFamiliaux">
+                {% if page.liensFamiliaux %}
+                  {% include 'inc-patientLiensFamiliaux.html.twig' %}
+                {% endif %}
+              </div>
             </div>
+          </div>
 
             {# colonne principale #}
             <div class="col-md-9" style="padding-left : 35px">
@@ -238,106 +239,18 @@
     </div>
 
     {# modal changer nom consultation ou doc #}
-    <div class="modal fade" id="alternatTitreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-      aria-hidden="true">&times;</span></button>
+    {% include 'inc-patientModal-changerTitre.html.twig' %}
 
-            <h4 class="modal-title" id="exampleModalLabel">Compléter le titre</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="titreActu" class="control-label">Complément :</label>
-                <input type="text" class="form-control" id="titreActu">
-                <input type="hidden" id="objetID" value="" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-primary" id="alternatTitreModalSubmit">Modifier</button>
-           </div>
-         </div>
-       </div>
-     </div>
+    {# modal rapatrier mesures examen particulier #}
+    {% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
 
-     {# modal rapatrier mesures examen particulier #}
-     <div class="modal fade" id="listeDicomStudiesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-       <div class="modal-dialog" role="document">
-         <div class="modal-content">
-           <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-       aria-hidden="true">&times;</span></button>
+    {# modal éditer infos adminsitratives du patient #}
+    {% include 'inc-patientModal-editAdminData.html.twig' %}
 
-             <h4 class="modal-title">Choisir un examen</h4>
-           </div>
-           <div class="modal-body">
-             <form>
-               <div class="form-group">
-                 <label for="titreActu" class="control-label">Liste des études DICOM trouvées :</label>
-                 <select class="form-control" id="listeDicomStudies"></select>
+    {# recherche CIM10 #}
+    {% include 'inc-patientModal-searchCIM10.html.twig' %}
 
-               </div>
-             </form>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-             <button type="button" class="btn btn-primary" id="listeDicomStudiesSubmit">Rapatrier</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    {# modal changer la date d'une ligne d'historique #}
+    {% include 'inc-patientModal-changerDateEffet.html.twig' %}
 
-      {# modal éditer infos adminsitratives du patient #}
-      <div id="editAdmin" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Edition des informations administratives du patient</h4>
-            </div>
-            <div class="modal-body changeObserv">
-              {{ f.formbuilder(page.formEditAdmin , 'baseNewPatient' , session) }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# modal changer la date d'une ligne d'historique #}
-      <div id="modalCreationDate" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
-            </div>
-            <div class="modal-body">
-              <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
-              <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
-              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/changeObjetCreationDate/{{ page.patient.id }}/" method="post">
-                <input name="objetID" type="hidden" value="" />
-                <div class="form-group">
-                    <label for="datepickHisto">Modifier la date d'effet pour le</label>
-                    <div class="input-group date  col-md-6" id="datepickHisto">
-                        <input name="newCreationDate" type="text" class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-              <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
-            </div>
-          </div>
-        </div>
-      </div>
 {% endblock %}
