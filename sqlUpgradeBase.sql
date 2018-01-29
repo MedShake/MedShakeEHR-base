@@ -1,6 +1,6 @@
 -- Modifications de structure de la bdd d'une version à la suivante
 
--- 3.0.0 to LAP
+-- 3.0.0 to next 
 
 INSERT INTO `forms` ( `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('base', 'aldDeclaration', 'Déclaration d\'ALD', 'formulaire d\'enregistrement d\'une ALD', 'data_types', 'medical', 'post', '/patient/actions/saveCsForm/', 4, 'public', 'structure:\r\n  row1:\r\n    head: Enregistrement d\'une prise en charge en ALD\r\n    col1:\r\n     size: 12\r\n     bloc:\r\n       - aldNumber                                 		#878  ALD\n  row2:\r\n    col1:\r\n     size: 4\r\n     bloc:\r\n       - aldDateDebutPriseEnCharge                 		#879  Début de prise en charge\n    col2:\r\n      size: 4\r\n      bloc:\r\n       - aldDateFinPriseEnCharge                   		#880  Fin de prise en charge\n  row3:\r\n    col1:\r\n     size: 2\r\n     bloc:\r\n       - aldCIM10,plus={<i class="glyphicon glyphicon-search"></i>} 		#881  Code CIM10 associé\n    col2:\r\n     size: 10\r\n     bloc:\r\n       - aldCIM10label,readonly                    		#883  Label CIM10 associé', NULL, ''),
@@ -42,6 +42,30 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ('relation', 'allergieLibelleTheriaque', '', 'Libelle Thériaque de l\'allergie', 'libelle Thériaque de l\'allergie', '', '', 'text', '', 'base', @catID, 1, '2018-01-23 10:21:58', 3600, 0),
 ('relation', 'allergieCodeTheriaque', '', 'Code Thériaque de l\'allergie', 'codee Thériaque de l\'allergie', '', '', 'text', '', 'base', @catID, 1, '2018-01-23 10:22:21', 3600, 0);
 
+-- hors LAP
+
+ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
+ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
+ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','service', 'deleted') NOT NULL DEFAULT 'patient';
+
+ALTER TABLE `agenda` ADD `lastModified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `dateAdd`;
+
+ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','password','checkbox') NOT NULL DEFAULT '';
+
+DELETE FROM forms WHERE internalName='basePasswordChange';
+
+update `forms` set yamlStructureDefaut = 'col1:\r\n    head: "Nom de naissance"\r\n    bloc:\r\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\ncol2:\r\n    head: "Nom d\'usage"\r\n    bloc:\r\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n\r\ncol3:\r\n    head: "Prénom"\r\n    bloc:\r\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol4:\r\n    head: "Date de naissance" \r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\ncol5:\r\n    head: "Tel" \r\n    blocseparator: " - "\r\n    bloc: \r\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\ncol6:\r\n    head: "Email"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol7:\r\n    head: "Ville"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville'
+where internalName='baseListingPatients';
+
+UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identification utilisateur"\r\n    size: 3\r\n    bloc: \r\n      - username,required                            		#1    Identifiant\n      - password,required                          		#2    Mot de passe\n      - submit                                     		#3    Valider', `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identification utilisateur"\r\n    size: 3\r\n    bloc: \r\n      - username,required                            		#1    Identifiant\n      - password,required                          		#2    Mot de passe\n      - submit                                     		#3    Valider' WHERE internalName='baseLogin';
+
+UPDATE `forms` SET internalName='baseFirstLogin' internalName='firstLogin';
+
+UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider', `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider' WHERE internalName='baseFirstLogin';
+
+UPDATE `forms` SET internalName='baseUserParameters' WHERE internalName='userParameters';
+
+UPDATE `form_basic_types` SET `name`='username', `description`='identifiant utilisateur', `validationRules`='required', `validationErrorMsg`='L\'identifiant utilisateur est manquant' WHERE `name`='userid';
 
 -- 2.3.0 to 3.0.0
 
@@ -65,8 +89,6 @@ INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `descripti
 (7, 'moduleSelect', '', 'Module', '', '', '', 'select', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00');
 
 ALTER TABLE `forms` ADD `module` VARCHAR(20) NOT NULL DEFAULT 'base' AFTER `id`;
-
-UPDATE `forms` set `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - userid,required\r\n      - password\r\n      - module,nolabel\r\n      - submit' , `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Identifiant et mot de passe"\r\n    size: 3\r\n    bloc: \r\n      - userid,required\r\n      - password\r\n      - module,nolabel\r\n      - submit' WHERE `name`='basePasswordChange';
 
 INSERT INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('base', 'firstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider', '');
@@ -100,7 +122,24 @@ ALTER TABLE `system` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `module` (`module`);
 ALTER TABLE `system` MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v3.0.0');
 
+ALTER TABLE `system`
+  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
+ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','deleted') NOT NULL DEFAULT 'patient';
+
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('user', 'clicRdvUserId', 'identifiant', 'identifiant clicRDV', 'email@address.com', '', '', 'text', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),
+('user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe clicRDV', 'Mot de passe', '', '', 'password', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1);
+
+INSERT INTO `form_basic_types` (`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
+('actualPassword', 'Mot de passe de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel', '', '', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
+('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
+('module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+
+INSERT INTO `forms` (`internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
+('firstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc: \r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', NULL),
+('base', 'userParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/configuration/', 5, 'public', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword', NULL);
 
 -- 2.1.0 to 2.2.0
 
@@ -156,7 +195,6 @@ update forms set internalName='baseReglement' where id='17';
 update forms set internalName='baseReglementSimple' where id='18';
 update forms set internalName='baseReglementSearch' where id='19';
 update forms set internalName='baseImportExternal' where id='22';
-update forms set internalName='basePasswordChange' where id='25';
 update forms set internalName='baseFax' where id='29';
 update forms set internalName='baseAgendaPriseRDV' where id='30';
 
