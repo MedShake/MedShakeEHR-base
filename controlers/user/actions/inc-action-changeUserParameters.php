@@ -66,7 +66,7 @@ $objet->setFromID($p['user']['id']);
 $objet->setToID($p['user']['id']);
 
 
-if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
+if ($p['config']['agendaClicRDV'] and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
     if (empty($_POST['p_clicRdvPassword'])) {
@@ -82,7 +82,7 @@ if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********
     } else {
         $setCRDV=true;
     }
-} else {
+} elseif ($p['config']['agendaClicRDV']) {
     if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
         msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
     }

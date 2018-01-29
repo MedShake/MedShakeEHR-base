@@ -1,0 +1,95 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : liste des tâches planifiées
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+		<li class="active">
+				Tâches planifiées
+		</li>
+  </ol>
+
+  <h1>Liste des tâches planifiées</h1>
+
+  <form id="formCrons" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configCronJobs/" method="post">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Active</th>
+          <th>Minutes</th>
+          <th>Heures</th>
+          <th>Mois</th>
+          <th>Jours du mois</th>
+          <th>Jours de la semaine</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k,v in page.availableCrons %}
+          <tr>
+              <td rowspan="2">{{ v.task }}</td>
+              <td colspan="6">{{ v.description }}</td>
+          </tr>
+          <tr>
+            {% if v.values %}
+              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value="true" checked></input></td>
+              <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.values.m }}"></input></td>
+              <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.values.h }}"></input></td>
+              <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.values.M }}"></input></td>
+              <td><input class="form-control" type="text" name="p_dom{{ k }}" value="{{ v.values.dom }}"></input></td>
+              <td><input class="form-control" type="text" name="p_dow{{ k }}" value="{{ v.values.dow }}"></input></td>
+            {% else %}
+              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value=""></input></td>
+              <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.defaults.m }}"></input></td>
+              <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.defaults.h }}"></input></td>
+              <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.defaults.M }}"></input></td>
+              <td><input class="form-control" type="text" name="p_dom{{ k }}" value="{{ v.defaults.dom }}"></input></td>
+              <td><input class="form-control" type="text" name="p_dow{{ k }}" value="{{ v.defaults.dow }}"></input></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+  </form>
+
+{% endblock %}
