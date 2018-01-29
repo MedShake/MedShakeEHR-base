@@ -174,7 +174,7 @@ public function getToID()
     public function getCompleteObjetDataByID($id)
     {
         $docTypeID = msData::getTypeIDFromName('docType');
-        return msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, doc.value as ext
+        return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
         left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
@@ -194,6 +194,20 @@ public function getToID()
         left join data_types as t on o.typeID=t.id
         where o.id='".$id."' or o.instance='".$id."' and o.outdated='' and o.deleted='' ", $by);
     }
+
+/**
+ * Marquer DELETED l'objet ainsi que ses enfants
+ * @param  int $id ID de l'objet
+ * @return string résultat sql
+ */
+    public function setDeletedObjetAndSons($id)
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        return msSQL::sqlQuery("update objets_data set deleted='y' where (id='".$id."' or instance='".$id."') and toID='".$this->_toID."' and deleted='' ");
+    }
+
 
 /**
  * Créer ou mettre à jour un objet par son nom
