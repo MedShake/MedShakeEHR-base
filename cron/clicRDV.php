@@ -1,0 +1,65 @@
+<?php
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * fr33z00 <https://www.github.com/fr33z00>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Cron : synchronisation des agendas clicRDV avec l'agenda intégré
+ *
+ * @author fr33z00 <https://www.github.com/fr33z00>
+ */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['clicRDV']=array(
+        'task' => 'Synchronisation clicRDV',
+        'defaults' => array('m'=>'0,15,30,45','h'=>'8-19','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Synchronise l\'agenda interne avec clicRDV. Si vous êtes complet plusieurs semaines à l\'avance, préférez une synchronisation quotidienne. A l\'inverse, si vous avez un faible remplissage, vous pouvez augmenter la fréquence.');
+    return;
+}
+
+ini_set('display_errors', 1);
+setlocale(LC_ALL, "fr_FR.UTF-8");
+session_start();
+
+/////////// Composer class auto-upload
+require '../vendor/autoload.php';
+
+/////////// Class medshakeEHR auto-upload
+spl_autoload_register(function ($class) {
+    include '../class/' . $class . '.php';
+});
+
+
+/////////// Config loader
+$p['config']=Spyc::YAMLLoad('../config/config.yml');
+
+/////////// SQL connexion
+$mysqli=msSQL::sqlConnect();
+
+
+if(isset($p['config']['agendaClicRDV']) and $p['config']['agendaClicRDV']) {
+    $clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
+    $clicrdv=new msClicRDV();
+    foreach($clicUsers as $userid=>$value) {
+        $clicrdv->setUserID($userid);
+        $clicrdv->syncEvents();
+    }
+}

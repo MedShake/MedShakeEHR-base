@@ -24,7 +24,7 @@
  * Fonctions MySQL
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msSQL
@@ -197,7 +197,6 @@ class msSQL
           $valeurs[]='\''.$val.'\'';
           $dupli[]=$key.'=VALUES('.$key.')';
       }
-
       if (msSQL::sqlQuery("insert into ".msSQL::cleanVar($table)." (".implode(',', $cols).") values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
           return $mysqli->insert_id;
       } else {

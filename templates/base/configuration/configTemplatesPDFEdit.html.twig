@@ -45,10 +45,10 @@
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
   <li>
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
   <li>
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des templates</a>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des modèles</a>
   </li>
   {% if page.selectUser > 0 %}
     <li>
@@ -60,7 +60,7 @@
   </li>
 </ol>
 
-<h1>Edition du template PDF <small>{{ page.fichier.name }}
+<h1>Edition du modèle de rapport <small>{{ page.fichier.name }}
 {% if page.selectUser > 0 %}
   de {{ page.fichier.proprio.3 }}
   {% if page.fichier.proprio.2 %}

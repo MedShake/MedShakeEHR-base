@@ -24,14 +24,14 @@
  * Patients > ajax : obtenir le listing des patients ou des pros
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
 
 $template="listing";
 
-if ($_POST['porp']=='patient') {
+if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
     $formIN='baseListingPro';
@@ -79,6 +79,14 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     $where=null;
+    if ($_POST['porp']=='today') {
+        $agenda=new msAgenda();
+        $agenda->set_userID($p['user']['id']);
+        $todays=array_column($agenda->getPatientsOfTheDay(), 'id');
+        if (count($todays)) {
+            $where.=" and p.id in ('".implode("', '", $todays)."') ";
+        }
+    }
     if (!empty($_POST['d2'])) {
         $where.=" and ((d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='') or (d1.value like '".msSQL::cleanVar($_POST['d2'])."%' and d1.outdated='') ) ";
     }
@@ -94,11 +102,18 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     //patient ou pro en fonction
-    if($_POST['porp']=='patient') $peopleType=array('pro','patient'); else $peopleType=array('pro');
+    if($_POST['porp']=='pro') {
+        $peopleType=array('pro');
+    } elseif($_POST['porp']=='today') {
+        $peopleType=array('pro', 'patient', 'externe');
+    } else {
+        $peopleType=array('pro','patient');
+    }
 
     $p['page']['sqlString']=$sql='select
     CASE WHEN d2.value !="" THEN d2.value
-    ELSE d1.value
+    WHEN d1.value !="" THEN d1.value
+    ELSE "(inconnu)"
     END as nomtri,
     p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by trim(nomtri), c3  limit 50';
 

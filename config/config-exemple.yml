@@ -137,10 +137,14 @@ phonecaptureResolutionHeight: 1080
 
 #######################################
 ## agenda
+agendaClicRDV: false
+## si agendaClicRDV est à true, alors agendaDistantLink doit être mis à ''
 agendaDistantLink: 'http://monagenda.agenda.abc'
 agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
 agendaNumberForPatientsOfTheDay: 0
+
+
 
 #######################################
 ## Rappels RDV par mail

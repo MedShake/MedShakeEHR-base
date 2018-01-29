@@ -24,7 +24,7 @@
  * Login : loguer ou renvoyer
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -45,7 +45,7 @@ if ($validation === false) {
 
     //check login
     $user = new msUser();
-    if (!$user->checkLogin($_POST['p_userid'], $_POST['p_password'])) {
+    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
         $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
         if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {

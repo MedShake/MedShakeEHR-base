@@ -24,13 +24,15 @@
  * Patients : listing patients ou pros
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
 $template="patients";
 
-$p['page']['porp']=$match['params']['porp'];
-
+if (isset($match['params']['porp'])) {
+    $p['page']['porp']=$match['params']['porp'];
+}
 
 // liste des types par catégorie
 if ($tabTypes=msSQL::sql2tab("select t.label, t.id, c.label as catName, c.label as catLabel

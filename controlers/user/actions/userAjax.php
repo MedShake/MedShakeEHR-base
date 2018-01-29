@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://www.github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,21 +21,32 @@
  */
 
 /**
- * Config : attribuer un password et un module à un utilisteur
+ * user : les requête ajax
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
- } else {
-    $template="configUpdatePassword";
-    $debug='';
 
-    $formpatient = new msForm();
-    $formpatient->setFormIDbyName('basePasswordChange');
-    $p['page']['form']=$formpatient->getForm();
-    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, module FROM system", "id", "module");
- }
+$debug='';
+$m=$match['params']['m'];
+
+$acceptedModes=array(
+    'updateGroups', // Récupérer la liste des groupes de clicRDV
+    'updateCals', // Récupérer la liste des agendas d'un groupe de clicRDV
+    'updateConsults' // Récupérer la liste des types de consultation d'un agenda de clicRDV
+);
+
+if (!in_array($m, $acceptedModes)) {
+    die;
+}
+
+
+// Récupérer la liste des groupes de clicRDV
+if ($m=='updateGroups') {
+    include('inc-ajax-updateGroups.php');
+} elseif ($m=='updateCals') {
+    include('inc-ajax-updateCals.php');
+} elseif ($m=='updateConsults') {
+    include('inc-ajax-updateConsults.php');
+}
+

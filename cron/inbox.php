@@ -30,6 +30,7 @@
  * Cf infra
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 /// A CONFIGURER IMPERATIVEMENT SI MULTIPLE UTILISATEURS SUR LA MEME INSTALLATION
@@ -37,6 +38,14 @@
 $mailForUserID=0;
 ///
 
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['inbox']=array(
+        'task' => 'Mail',
+        'defaults' => array('m'=>'0,5,10,15,20,25,30,35,40,45,50,55','h'=>'8-20','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Relève les mails');
+    return;
+}
 
 
 ini_set('display_errors', 1);

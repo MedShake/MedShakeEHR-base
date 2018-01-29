@@ -45,8 +45,8 @@ agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
 agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
 
 #chercher patients / pros
-patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
-patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
+patientsAjax: ['GET|POST', '/[today|patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
+patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 
 #créer / éditer patient/pros
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
@@ -150,11 +150,15 @@ configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/confi
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
-configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configuration/configUpdatePassword']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
+# configuration crons
+configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
+
 # User
+userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
+userParameters: ['GET', '/user/userParameters/', 'user/userParameters']
 userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhoneCaptureAccess']
 
 #public

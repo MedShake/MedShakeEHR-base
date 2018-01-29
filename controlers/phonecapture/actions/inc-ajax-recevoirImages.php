@@ -25,7 +25,7 @@
  * de cpature spécifique dédiée aux smartphone
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $type = isset($_POST['pngBase64']) ? "png" : isset($_POST['jpgBase64']) ? "jpeg" : false;

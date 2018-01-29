@@ -21,18 +21,20 @@
  */
 
 /**
- * Config : attribuer un mot de passe et un module à un utilisateur
+ * Config : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
-$module=isset($_POST['p_module'])?$_POST['p_module']:'public';
-$type=$module=='public'?'patient':'pro';
-if (is_numeric($_POST['p_userid'])) {
-  if (empty($_POST['p_password'])) {
-    msSQL::sqlQuery("UPDATE people SET module='".$module."' WHERE id='".$_POST['p_userid']."'");
-  } else {
-    msSQL::sqlQuery("INSERT INTO people (id, pass, type, module, fromID, registerDate) VALUES('".$_POST['p_userid']."', AES_ENCRYPT('".$_POST['p_password']."',@password), '".$type."', '".$module."','".$p['user']['id']."',NOW()) ON DUPLICATE KEY UPDATE pass=AES_ENCRYPT('".$_POST['p_password']."',@password), module='".$module."'");
-  }
+
+if(!is_numeric($_POST['id'])) die;
+$actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_POST['id']."' limit 1");
+
+if( $actualRank == 'admin') {
+  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>''));
+} else {
+  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>'admin'));
 }
-msTools::redirection('/configuration/');
+
+echo json_encode(array('ok'));
+

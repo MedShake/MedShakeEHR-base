@@ -24,7 +24,7 @@
  * Outils divers
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <http://www.github.com/fr33z00>
+ * @contrib fr33z00 <http://www.github.com/fr33z00>
  */
 class msTools
 {

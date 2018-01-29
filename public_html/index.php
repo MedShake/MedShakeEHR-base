@@ -24,7 +24,7 @@
  * Pivot central des pages loguées
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 ini_set('display_errors', 1);
@@ -79,7 +79,7 @@ $match = $router->match();
 
 
 ///////// user
-if (isset($_COOKIE['userId'])) {
+if (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
@@ -88,7 +88,7 @@ if (isset($_COOKIE['userId'])) {
     $p['user']=null;
     $p['user']['id']=null;
     $p['user']['module']='base';
-    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
+    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") == "0") {
         if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
             msTools::redirRoute('userLogInFirst');
         }

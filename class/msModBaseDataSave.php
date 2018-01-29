@@ -77,7 +77,7 @@ class msModBaseDataSave
       // format téléphone et fax
       public function telephoneNumberTreatBeforeSave($value)
       {
-          $tel = str_replace(' ', '', $value);
+          $tel = preg_replace('([-_ \.])', '', $value);
           if (strlen($tel) == 10) {
               $tel = preg_replace('/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/', '\1 \2 \3 \4 \5', $tel);
               return $tel;

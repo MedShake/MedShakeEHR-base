@@ -37,7 +37,9 @@ $acceptedModes=array(
     'getRelationsPatientPraticiensTab', // Obtenir le tableau de relations patient <-> praticiens
     'getRelationsPatients', //Autocomplete : obtenir le json des patients
     'addRelationPatientPatient', //Ajouter une reelation patient <-> patient
-    'getRelationsPatientPatientsTab' // Obtenir le tableau de relations patient <-> patients
+    'getRelationsPatientPatientsTab', // Obtenir le tableau de relations patient <-> patients
+    'setExternAsPatient', //relier un externe à un patient
+    'setExternAsNewPatient' //transformer un externe en patient
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -74,4 +76,12 @@ elseif ($m=='addRelationPatientPatient') {
 // Obtenir le tableau de relations patient <-> patients
 elseif ($m=='getRelationsPatientPatientsTab') {
     include('inc-ajax-getRelationsPatientPatientsTab.php');
+}
+
+//relier un externe à un patient
+elseif ($m=='setExternAsPatient') {
+    include('inc-ajax-setExternAsPatient.php');
+}
+elseif ($m=='setExternAsNewPatient') {
+    include('inc-ajax-setExternAsNewPatient.php');
 }

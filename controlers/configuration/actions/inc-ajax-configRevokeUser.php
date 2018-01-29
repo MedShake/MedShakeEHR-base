@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,18 +21,14 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Config : Enlever un utilisateur (sans enlever ses fiches)
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
-if(!is_numeric($_GET['id'])) die;
-$actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_GET['id']."' limit 1");
+if(!isset($_POST['id']) or !is_numeric($_POST['id'])) die("Error");
 
-if( $actualRank == 'admin') {
-  msSQL::sqlInsert('people', array('id'=>$_GET['id'], 'rank'=>''));
-} else {
-  msSQL::sqlInsert('people', array('id'=>$_GET['id'], 'rank'=>'admin'));
-}
+msSQL::sqlQuery("UPDATE people set rank='', name=NULL, pass='' WHERE id='".$_POST['id']."'");
 
-msTools::redirection('/configuration/users/');
+echo json_encode(array('ok'));
+
