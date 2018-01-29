@@ -32,7 +32,7 @@ if (isset($p)) {
     $p['page']['availableCrons']['rappelsMails-Mailjet']=array(
         'task' => 'Mails rappel Mailjet',
         'defaults' => array('m'=>'0','h'=>'19','M'=>'*','dom'=>'*','dow'=>'0,1,2,3,4,5'),
-        'description' => 'Envoi les mails de rappel Mailjet');
+        'description' => 'Envoi des mails de rappel Mailjet');
     return;
 }
 

@@ -32,7 +32,7 @@ if (isset($p)) {
     $p['page']['availableCrons']['rappelsSMS-allMySMS']=array(
         'task' => 'Rappels SMS',
         'defaults' => array('m'=>'0','h'=>'19','M'=>'*','dom'=>'*','dow'=>'0,1,2,3,4,5'),
-        'description' => 'Envoi les SMS de rappel via allMySMS');
+        'description' => 'Envoi des SMS de rappel via allMySMS');
     return;
 }
 
