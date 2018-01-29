@@ -29,6 +29,11 @@
 $debug='';
 $template="userParameters";
 
+$p['page']['useClicRDV']=$p['config']['agendaClicRDV'];
+if (!$p['page']['useClicRDV']) {
+    return;
+}
+
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='baseUserParameters');
 
