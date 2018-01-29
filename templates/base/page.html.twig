@@ -111,9 +111,6 @@
                           </a>
                           <ul class="dropdown-menu">
                               <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Du jour</a>
-                              </li>
-                              <li>
                                   <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
                               </li>
                               <li>
@@ -123,6 +120,9 @@
                               {% if page.patientsOfTheDay %}
                                 <li role="separator" class="divider"></li>
                                 <li class="dropdown-header">Patients du jour</li>
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
+                                </li>
                                 {% for v in page.patientsOfTheDay %}
                                 <li>
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
