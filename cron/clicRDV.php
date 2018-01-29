@@ -55,11 +55,13 @@ $p['config']=Spyc::YAMLLoad('../config/config.yml');
 $mysqli=msSQL::sqlConnect();
 
 
-if(isset($p['config']['agendaClicRDV']) and $p['config']['agendaClicRDV']) {
+if(isset($p['config']['agendaService'])) {
+  if ($p['config']['agendaService'] == 'clicRDV') {
     $clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
     $clicrdv=new msClicRDV();
     foreach($clicUsers as $userid=>$value) {
         $clicrdv->setUserID($userid);
         $clicrdv->syncEvents();
     }
+  }
 }
