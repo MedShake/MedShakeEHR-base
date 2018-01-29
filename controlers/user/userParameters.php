@@ -29,8 +29,8 @@
 $debug='';
 $template="userParameters";
 
-$p['page']['useClicRDV']=$p['config']['agendaClicRDV'];
-if (!$p['page']['useClicRDV']) {
+$p['page']['useClicRDV']=$p['config']['agendaService'];
+if ($p['page']['useClicRDV'] != 'clicRDV') {
     return;
 }
 
@@ -76,4 +76,3 @@ if(isset($p['config']['clicRdvUserId'])) {
         }
     }
 }
-

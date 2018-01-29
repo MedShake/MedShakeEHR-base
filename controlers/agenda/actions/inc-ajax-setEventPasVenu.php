@@ -26,11 +26,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $event = new msAgenda();
- $event->set_fromID($p['user']['id']);
- $event->set_userID($match['params']['userID']);
- $event->set_eventID($_POST['eventID']);
- $event->setPasVenu();
+$event = new msAgenda();
+$event->set_fromID($p['user']['id']);
+$event->set_userID($match['params']['userID']);
+$event->set_eventID($_POST['eventID']);
+$event->setPasVenu();
+
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setEventPasVenu.php';
+    if (is_file($hook)) {
+        include($hook);
+    }
+}
 
 header('Content-Type: application/json');
 echo json_encode(array("status"=>"ok"));

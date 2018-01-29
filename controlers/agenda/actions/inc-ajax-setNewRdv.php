@@ -27,7 +27,9 @@
  */
 
 $event = new msAgenda();
-if($_POST['eventID']>0) $event->set_eventID($_POST['eventID']);
+if ($_POST['eventID']>0) {
+    $event->set_eventID($_POST['eventID']);
+}
 $event->set_userID($match['params']['userID']);
 $event->set_patientID($_POST['patientID']);
 $event->set_fromID($p['user']['id']);
@@ -37,6 +39,13 @@ $event->set_motif($_POST['motif']);
 $event->set_type($_POST['type']);
 $dataEvent=$event->addOrUpdateRdv();
 
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
+    if (is_file($hook)) {
+        include($hook);
+    }
+}
 
 header('Content-Type: application/json');
 echo json_encode($dataEvent);
