@@ -573,11 +573,11 @@ INSERT INTO `forms_cat` (`id`, `name`, `label`, `description`, `type`, `fromID`,
 (5, 'systemForm', 'Formulaires système', 'formulaires système', 'user', 1, '2018-01-01 00:00:00');
 
 INSERT INTO `form_basic_types` (`id`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-(1, 'username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
-(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
-(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
-(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00'),
-(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 1, '2018-01-01 00:00:00');
+(1, 'username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
+(2, 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
+(3, 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
+(4, 'date', '', 'Début de période', '', '', '', 'date', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
+(5, 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00');
 
 INSERT INTO `prescriptions` (`id`, `cat`, `label`, `description`, `fromID`, `toID`, `creationDate`) VALUES
 (1, 2, 'Ligne vierge', '', 1, 0, '2018-01-01 00:00:00'),
