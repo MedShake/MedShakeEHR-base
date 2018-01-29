@@ -52,6 +52,9 @@ $p['page']['patient']['today']=$patient->getToday();
 //historique complet des consultation du patient
 $p['page']['patient']['historique']=$patient->getHistorique();
 
+//les ALD du patient
+$p['page']['patient']['ALD']=$patient->getALD();
+
 //les certificats
 $certificats=new msData();
 $certificats->setModules(['base', $p['user']['module']]);
