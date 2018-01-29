@@ -32,6 +32,7 @@
     "chai": "~1.9.0",
     "jquery-mousewheel": "~3.1.9",
     "mocha": "~1.17.1",
-    "panzoom": "https://github.com/fr33z00/jquery.panzoom.git#v3.2.2+1Touch"
+    "panzoom": "https://github.com/fr33z00/jquery.panzoom.git#v3.2.2+1Touch",
+    "jquery-stupid-table": "^1.1.3"
   }
 }
