@@ -194,13 +194,14 @@ class msTools
  */
   public static function utf8_converter($array)
   {
+    if(is_array($array)) {
       array_walk_recursive($array, function (&$item, $key) {
           if (!mb_detect_encoding($item, 'utf-8', true)) {
               $item = utf8_encode($item);
           }
       });
-
-      return $array;
+    }
+    return $array;
   }
 
 /**
@@ -319,5 +320,14 @@ class msTools
 
   	return $dirs;
   }
+
+/**
+ * Convertir un object en array
+ * @param  object $objet objet à convertir
+ * @return array        array
+ */
+   public static function objectToArray($objet) {
+     return json_decode(json_encode($objet), true);
+   }
 
 }
