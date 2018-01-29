@@ -131,6 +131,9 @@
 		{% endif %}
 	{% endif %}
 
+	{% if v.select.before %}
+		{{ v.select.before }}
+	{% endif %}
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -188,6 +191,9 @@
 		{% endif %}
 	{% endif %}
 
+	{% if v.select.before %}
+		{{ v.select.before }}
+	{% endif %}
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -239,6 +245,10 @@
 		{% if v.label.position == 'before' %}
 			</label>
 		{% endif %}
+	{% endif %}
+
+	{% if v.textarea.before %}
+		{{ v.textarea.before }}
 	{% endif %}
 
 	<textarea title="{{ v.textarea.internalName }} / {{ v.textarea.datatypeid }}"
@@ -360,6 +370,7 @@
 										'plus' : el.value.plus,
 										'plusg' : el.value.plusg,
 										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',
@@ -417,7 +428,8 @@
 										'placeholder' : el.value.placeholder,
 										'readonly' : el.value.readonly,
 										'rows' : el.value.rows,
-										'internalName' : el.value.internalName
+										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',
@@ -440,7 +452,8 @@
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
-										'internalName' : el.value.internalName
+										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',
@@ -463,7 +476,7 @@
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'class' : 'form-control datepic',
-										'before' : '<div id="before_'~ el.value.internalName ~ '" class="input-group date datepick" data-typeid="'~ el.value.id ~'">',
+										'before' : t['before'][el.value.internalName] ~ '<div id="before_'~ el.value.internalName ~ '" class="input-group date datepick" data-typeid="'~ el.value.id ~'">',
 										'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>',
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
