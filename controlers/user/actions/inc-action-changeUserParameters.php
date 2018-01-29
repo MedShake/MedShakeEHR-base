@@ -59,14 +59,14 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
             msTools::redirRoute('userParameters');
         }
     }
-} 
+}
 
 $objet = new msObjet();
 $objet->setFromID($p['user']['id']);
 $objet->setToID($p['user']['id']);
 
 
-if ($p['config']['agendaClicRDV'] and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
+if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
     if (empty($_POST['p_clicRdvPassword'])) {
@@ -82,7 +82,7 @@ if ($p['config']['agendaClicRDV'] and !empty($_POST['p_clicRdvUserId']) and $_PO
     } else {
         $setCRDV=true;
     }
-} elseif ($p['config']['agendaClicRDV']) {
+} elseif ($p['config']['serviceAgenda'] == 'clicRDV') {
     if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
         msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
     }
@@ -120,4 +120,3 @@ if (!empty($consult)) {
     $objet->createNewObjetByTypeName('clicRdvConsultId', json_encode($consult));
 }
 msTools::redirRoute('/');
-
