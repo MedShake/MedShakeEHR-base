@@ -22,10 +22,12 @@
 
 /**
  * Patient > ajax : marquer un élément de l'historique médical comme supprimé
- * (pas de suppression réelle)  
+ * (pas de suppression réelle)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
+if(!is_numeric($_POST['objetID'])) die;
 
 $data=array(
 'id'=>$_POST['objetID'],

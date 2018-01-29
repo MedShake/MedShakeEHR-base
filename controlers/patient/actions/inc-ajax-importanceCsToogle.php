@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['objetID'])) die;
+
 if ($_POST['importanceActu']=='n') {
     $importance='y';
 } else {

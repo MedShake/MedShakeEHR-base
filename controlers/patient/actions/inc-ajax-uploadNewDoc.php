@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!isset($_FILES['file']) or !is_numeric($_POST['patientID'])) die;
+
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
 if ($mimetype=='application/pdf') {

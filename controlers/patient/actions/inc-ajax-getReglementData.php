@@ -28,6 +28,8 @@
 
 header('Content-Type: application/json');
 
+if(!is_numeric($_POST['acteID'])) die();
+
 $reglement = new msReglement();
 $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
 $reglement->set_factureTypeID($_POST['acteID']);
