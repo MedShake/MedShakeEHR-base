@@ -30,11 +30,35 @@
 // liste des formulaires fixes au 1er affichage dossier patient pour JS
 $p['page']['listeForms']=array('baseATCD','baseSynthese');
 
+// le formulaire latéral ATCD
 $form_baseATCD = new msForm();
 $form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
 $form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
 $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 
+// gestion atcd structurés
+$listeChampsAtcd=array('atcdMedicChir');
+$gethtml=new msGetHtml;
+$gethtml->set_template('inc-patientAtcdStruc');
+foreach($listeChampsAtcd as $v) {
+  $p['page']['beforeVar'][$v]=$patient->getAtcdStruc($v);
+  if(empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v]=array('fake');
+  $p['page']['formData_baseATCD']['before'][$v]=$gethtml->genererHtmlString($p['page']['beforeVar'][$v]);
+}
+unset($p['page']['beforeVar'], $listeChampsAtcd, $gethtml);
+
+// gestion allergies structurées
+$listeChampsAllergie=array('allergies');
+$gethtml=new msGetHtml;
+$gethtml->set_template('inc-patientAllergies');
+foreach($listeChampsAllergie as $v) {
+  $p['page']['beforeVar'][$v]=$patient->getAllergies($v);
+  if(empty($p['page']['beforeVar'][$v])) $p['page']['beforeVar'][$v]=array('fake');
+  $p['page']['formData_baseATCD']['before'][$v]=$gethtml->genererHtmlString($p['page']['beforeVar'][$v]);
+}
+unset($p['page']['beforeVar'], $listeChampsAllergie, $gethtml);
+
+// le formulaire de synthèse patient
 $form_baseSynthese = new msForm();
 $form_baseSynthese->setFormIDbyName($p['page']['formName_baseSynthese']='baseSynthese');
 $form_baseSynthese->getPrevaluesForPatient($match['params']['patient']);
