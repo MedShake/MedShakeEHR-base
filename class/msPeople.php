@@ -287,6 +287,107 @@ class msPeople
             return $tab;
         }
     }
+/**
+ * Obtenir les ALD enregistrées pour le patient
+ * @return array array des ALD
+ */
+    public function getALD()
+    {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['csAldDeclaration', 'firstname', 'lastname', 'birthname']);
+
+      if($csAldID=msSQL::sql2tabKey("select p.id, n1.value as prenom, CASE WHEN n2.value != '' THEN n2.value ELSE bn.value END as nom
+      from objets_data as p
+      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAldDeclaration']."' and p.deleted='' and p.outdated=''", 'id')) {
+        foreach($csAldID as $id=>$v) {
+            $ald=new msObjet;
+            $rd[$id]=$ald->getObjetAndSons($id, 'name');
+            $rd[$id]['fromName']=$v['prenom'].' '.$v['nom'];
+            $selectedAldLabel=new msData;
+            $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$rd[$id]['aldNumber']['typeID']]);
+
+            $rd[$id]['aldLabel']=$selectedAldLabel[$rd[$id]['aldNumber']['typeID']][$rd[$id]['aldNumber']['value']];
+
+        }
+        return $rd;
+      }
+
+    }
+
+    /**
+     * Obtenir les atcd structurés enregistrées pour le patient
+     * @param  string $parentTypeName   typeName du parent porter de l'ATCD
+     * @return array array des ALD
+     */
+        public function getAtcdStruc($parentTypeName)
+        {
+          if (!is_numeric($this->_toID)) {
+              throw new Exception('ToID is not numeric');
+          }
+
+          $msdata = new msData();
+          $name2typeID = $msdata->getTypeIDsFromName(['csAtcdStrucDeclaration', 'firstname', 'lastname', 'birthname',$parentTypeName]);
+
+          if(isset($name2typeID[$parentTypeName])) {
+            $rd['parentLabel']=$msdata->getLabelFromTypeID([$name2typeID[$parentTypeName]]);
+            $rd['parentLabel']=$rd['parentLabel'][$name2typeID[$parentTypeName]];
+          }
+
+          if(!isset($name2typeID[$parentTypeName])) return false;
+
+          if($csAldID=msSQL::sql2tabKey("select p.id, n1.value as prenom, CASE WHEN n2.value != '' THEN n2.value ELSE bn.value END as nom
+          from objets_data as p
+          left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+          left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+          left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+          where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAtcdStrucDeclaration']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id')) {
+            foreach($csAldID as $id=>$v) {
+                $ald=new msObjet;
+                $rd['atcd'][$id]=$ald->getObjetAndSons($id, 'name');
+                $rd['atcd'][$id]['fromName']=$v['prenom'].' '.$v['nom'];
+            }
+
+          }
+          $rd['parentTypeID']=$name2typeID[$parentTypeName];
+          $rd['parentTypeName']=$parentTypeName;
+          return $rd;
+        }
+
+  /**
+   * Obtenir les allergies structurées enregistrées pour le patient
+   * @param  string $parentTypeName   typeName du parent porter des allergies
+   * @return array array des ALD
+   */
+      public function getAllergies($parentTypeName)
+      {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(['allergieCodeTheriaque', 'allergieLibelleTheriaque', 'firstname', 'lastname', 'birthname', $parentTypeName]);
+
+        if(!isset($name2typeID[$parentTypeName])) return false;
+
+        $rd['allergiesData']=msSQL::sql2tabKey("select p.*, CASE WHEN n2.value != '' THEN concat(n1.value, ' ',n2.value) ELSE concat(n1.value, ' ', bn.value) END as fromName, p1.value as libelle
+        from objets_data as p
+        left join objets_data as p1 on p1.instance=p.id and p1.typeID='".$name2typeID['allergieLibelleTheriaque']."' and p1.outdated='' and p1.deleted=''
+        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+        where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['allergieCodeTheriaque']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id');
+
+        $rd['parentTypeID']=$name2typeID[$parentTypeName];
+        $rd['parentTypeName']=$parentTypeName;
+        return $rd;
+      }
 
 /**
  * Historique complet des actes pour un individu
@@ -299,7 +400,7 @@ class msPeople
         }
 
         $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname']);
+        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname', 'csAtcdStrucDeclaration']);
 
         if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
@@ -313,7 +414,7 @@ class msPeople
         left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted=''
+        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
         group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
         order by p.creationDate desc")) {
               foreach ($data as $v) {
@@ -335,7 +436,7 @@ class msPeople
         }
 
         $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname']);
+        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration']);
 
         return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
@@ -349,7 +450,7 @@ class msPeople
         left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')   or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE()
+        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')   or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE() and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
         group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
         order by p.creationDate desc");
     }
