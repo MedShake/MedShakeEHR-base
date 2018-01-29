@@ -7,11 +7,9 @@ ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','servic
 
 UPDATE `people` SET `name`=CONCAT('MedShake',`id`) WHERE name='' and `pass`!='';
 SET @lastid=(SELECT id from people ORDER BY id DESC limit 1);
-UPDATE `people` SET `id`=@lastid+1 WHERE `id`='1' and `name`!='medshake';
-UPDATE `people` SET `id`=@lastid+2 WHERE `id`='2' and `name`!='clicRDV';
-INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
-(1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
-(2, 'clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
+INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
+('medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
+('clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
 
 ALTER TABLE `agenda` ADD `externid` int UNSIGNED DEFAULT NULL AFTER `id`;
 ALTER TABLE `agenda` ADD `lastModified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `dateAdd`;
