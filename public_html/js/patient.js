@@ -50,7 +50,7 @@ if (!scriptsList) {
     reglement: "reglement.js"
   };
 }
- 
+
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
@@ -591,6 +591,8 @@ function sendFormToReglementDiv(el) {
     }
   });
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////
 /////////Fonctions spécifiques aux lignes de l'historique  (dont modal)

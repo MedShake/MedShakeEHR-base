@@ -58,4 +58,102 @@ $(document).ready(function() {
     auto_grow(this);
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Gestion Allergies
+
+  // ajout Allergies
+  $("button.getAllergiesPanel").on("click", function(e) {
+    e.preventDefault();
+    $('#texteRechercheAllergie').attr('data-parentid', $(this).attr('data-parentid'));
+  });
+  $('#searchAllergie').on('shown.bs.modal', function() {
+    $("#texteRechercheAllergie").val('');
+    $('#codeAllergietrouves').html('');
+    $("#texteRechercheAllergie").focus();
+  })
+
+  // interogation sur mot clé
+  $("#texteRechercheAllergie").typeWatch({
+    wait: 1000,
+    highlight: false,
+    allowSubmit: false,
+    captureLength: 3,
+    callback: function(value) {
+      $.ajax({
+        url: urlBase + '/lap/ajax/allergieSearch/',
+        type: 'post',
+        data: {
+          term: value,
+          parentid: $('#texteRechercheAllergie').attr('data-parentid')
+        },
+        dataType: "html",
+        beforeSend: function() {
+          $('#codeAllergietrouves').html('<div class="col-md-12">Attente des résultats de la recherche ...</div>');
+        },
+        success: function(data) {
+          $('#codeAllergietrouves').html(data);
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
+    }
+  });
+
+  // ajouter allergie
+  $("#searchAllergie").on("click", "button.addAllergieToPatient", function(e) {
+    origin = $(this);
+    label = $(this).attr('data-label');
+    $.ajax({
+      url: urlBase + '/lap/ajax/allergieAdd/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+        codeAller: $(this).attr('data-code'),
+        libelleAller: label,
+        parentID: $(this).attr('data-parentid')
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data['statut'] == 'ok') {
+          origin.closest('tr').addClass("success");
+          origin.attr('disabled', 'disabled');
+          $("#atcdTableauAllergieStruc").removeClass('hidden');
+          $("#atcdTableauAllergieStruc tbody").append('<tr class="tr{{ id }} warning"><td>' + label + '</td></tr>');
+        } else {
+          alert('Problème, rechargez la page !');
+        }
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  // retirer allergie
+  $("#latForm").on("click", "button.removeAllergie", function(e) {
+    e.preventDefault();
+    origin = $(this);
+    objetid = $(this).attr('data-objetid');
+    $.ajax({
+      url: urlBase + '/lap/ajax/allergieDel/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+        objetID: objetid
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data['statut'] == 'ok') {
+          $("#atcdTableauAllergieStruc tr.tr" + objetid).remove();
+        } else {
+          alert('Problème, rechargez la page !');
+        }
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
 });
