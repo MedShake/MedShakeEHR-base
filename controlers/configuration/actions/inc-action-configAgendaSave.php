@@ -34,7 +34,8 @@ $autorisedUsers=$agendaUsers->getUsersListForService('administratifPeutAvoirAgen
 msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurations/');
 
 if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers))) {
-  file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $_POST['configAgenda']);
+  $configAgenda=str_replace('#URL#', "urlBase + '/agenda/".$_POST['userID']."/ajax/getEvents/'", $_POST['configAgenda']);  
+  file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $configAgenda);
   file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
 
   if(empty($_POST['configAgenda'])) unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
