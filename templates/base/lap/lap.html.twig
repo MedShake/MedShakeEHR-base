@@ -1,0 +1,116 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > page web racine
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% set noMenuInBar ='yes' %}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}LAP - MedShakeEHR
+{% endblock %}
+
+{% block head %}
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-stupid-table/stupidtable.min.js"></script>
+
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+      <h1 id="identitePatient" data-patientID="{{ page.patient.id }}" style="margin-bottom : 14px;">
+        {# firstname #}
+        {{ page.patientAdminData.firstname|e }}
+
+        {# lastname & birthname #}
+        {% if page.patientAdminData.birthname and page.patientAdminData.lastname %}
+          {{ page.patientAdminData.lastname|e }}
+          (né{% if page.patientAdminData['14'] == 'F' %}e{% endif %}
+          {{ page.patientAdminData.birthname|e }})
+          {# birthname only #}
+        {% elseif page.patientAdminData.birthname %}
+          {{ page.patientAdminData.birthname|e }}
+          {# lastname only #}
+        {% elseif page.patientAdminData.lastname %}
+          {{ page.patientAdminData.lastname|e }}
+        {% endif %}
+        <small>
+          {{ page.patientAdminData.birthdate|e }}
+          -
+          {# birthdate #}
+          {{ page.patientAdminData.age|e }}
+          an{% if page.patientAdminData.age > 0 %}s{% endif %}
+
+          {# sexe #}
+          {% if page.patientAdminData.administrativeGenderCode == 'F' %}
+            - &#9792;
+          {% elseif page.patientAdminData.administrativeGenderCode =='M' %}
+            - &#9794;
+          {% endif %}
+        </small>
+      </h1>
+
+      <div class="row">
+        {# Colonne de gauche : données physio #}
+        <div id="patientLateralData" class="col-md-2">
+          {% include('inc-lapPatientLateralData.html.twig') %}
+        </div>
+
+        {# Colonne de droite #}
+        <div class="col-md-10">
+
+          {# Onglets #}
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#rechercher" aria-controls="home" role="tab" data-toggle="tab">Rechercher</a></li>
+            <li role="presentation"><a href="#ordonnance" aria-controls="profile" role="tab" data-toggle="tab">Ordonnance</a></li>
+            <li role="presentation"><a href="#tttencours" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a></li>
+          </ul>
+
+          <div class="tab-content">
+
+            {# Onglet Rechercher #}
+            <div role="tabpanel" class="tab-pane active" id="rechercher">
+              {% include('inc-lapOngletRechercher.html.twig') %}
+            </div>
+
+            {# Onglet Ordonnance #}
+            <div role="tabpanel" class="tab-pane" id="ordonnance">
+              <textarea class="form-control" rows="3" id="frappe" autocomplete="off" style="font-size:18px"></textarea>
+              <div id="resultat"></div>
+            </div>
+
+            {# Onglet Traitement en cours #}
+            <div role="tabpanel" class="tab-pane" id="tttencours">...</div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}

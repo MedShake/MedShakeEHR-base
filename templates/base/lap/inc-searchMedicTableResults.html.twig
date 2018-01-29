@@ -1,0 +1,76 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau de résultat de recherche de médicaments à ajouter
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="col-md-12">
+
+  {% if page.substances|length > 0 %}
+  {% endif %}
+
+  {% if page.medicListeSpe|length > 0 %}
+    <table id="tabMedicaments" class="table table-hover tablesorter">
+      <thead>
+        <th data-sort="string" data-sort-default="asc" data-sort-onload="yes">Nom</th>
+        <th data-sort="string">Forme</th>
+        <th data-sort="float">Prix/UCD</th>
+        <th data-sort="int">Taux SS</th>
+      </thead>
+      <tbody>
+        {% for medic in page.medicListeSpe %}
+          {% for pres in medic.presentations %}
+            {% if pres.reservhop == 'NON' and pres.pre_etat_commer != 'S' and pres.rbtVille != 'Non concerné' %}
+              <tr>
+                <td>
+                  {{ medic.sp_nom }}
+                  {% if pres.pre_adm %}
+                    -
+                    {{ pres.pre_adm }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if pres.pre_nat %}
+                    <span class="label label-default">{{ pres.pre_nat }}</span>{% endif %}
+                </td>
+                <td data-sort-value="{{ medic.prixEstim|number_format(5, '.', '') }}">
+                  {% if medic.prixEstim %}
+                    <span class="label label-default" title="{{ medic.prixEstim }}€">{{ medic.prixEstim|number_format(2, ',', ' ') }}€</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if pres.rbtVille not in  ['0 %'] %}
+                    <span class="label label-default">{{ pres.rbtVille }}</span>{% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning" role="alert">Votre recherche n'a produit aucun résultats</div>
+  {% endif %}
+</div>

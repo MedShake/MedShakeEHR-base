@@ -1,0 +1,107 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau de résultat de recherche physio patient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<label for="atcdTableauAllergieStruc">Données physiologiques</label>
+<table class="table table-condensed table-hover table-bordered">
+  {# poids #}
+  {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
+    <tr class="danger">
+      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Poids : valeur manquante !</td>
+    </tr>
+  {% elseif page.patientBasicPhysio.poids.statut == 'ok' %}
+    <tr class="active">
+      <td data-toggle="collapse" data-target="#physioPoidsDet" style="cursor: pointer">
+        Poids : {{ page.patientBasicPhysio.poids.value }} kg
+        <div id="physioPoidsDet" class="collapse">
+          <table class="table table-condensed small" style="margin-top:8px;">
+            <tr>
+              <td>Auteur</td>
+              <td>{{ page.patientBasicPhysio.poids.from }}</td>
+            </tr>
+            <tr>
+              <td>Ajout le</td>
+              <td>{{ page.patientBasicPhysio.poids.date }}</td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  {% endif %}
+
+  {# taille #}
+  {% if page.patientBasicPhysio.taillePatient.statut == 'missingValue' %}
+    <tr class="danger">
+      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Taille : valeur manquante !</td>
+    </tr>
+  {% elseif page.patientBasicPhysio.taillePatient.statut == 'ok' %}
+    <tr class="active">
+      <td data-toggle="collapse" data-target="#physioTaillePatientDet" style="cursor: pointer">
+        Taille : {{ page.patientBasicPhysio.taillePatient.value }} cm
+        <div id="physioTaillePatientDet" class="collapse">
+          <table class="table table-condensed small" style="margin-top:8px;">
+            <tr>
+              <td>Auteur</td>
+              <td>{{ page.patientBasicPhysio.taillePatient.from }}</td>
+            </tr>
+            <tr>
+              <td>Ajout le</td>
+              <td>{{ page.patientBasicPhysio.taillePatient.date }}</td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  {% endif %}
+
+  {# clairance #}
+  {% if page.patientBasicPhysio.clairanceCreatinine.statut == 'missingValue' %}
+    <tr class="danger">
+      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
+    </tr>
+  {% elseif page.patientBasicPhysio.clairanceCreatinine.statut == 'ok' %}
+    <tr class="active">
+      <td>Clairance Cr. :
+        {{ page.patientBasicPhysio.clairanceCreatinine.value }}
+      </td>
+    </tr>
+  {% endif %}
+
+  {# clairance #}
+  {% if page.patientBasicPhysio.allaitement.statut == 'missingValue' %}
+    <tr class="danger">
+      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Allaitement : valeur manquante !</td>
+    </tr>
+  {% elseif page.patientBasicPhysio.allaitement.statut == 'ok' %}
+    <tr class="active">
+      <td>Allaitement :
+        {{ page.patientBasicPhysio.allaitement.value }}
+      </td>
+    </tr>
+  {% endif %}
+
+</table>
