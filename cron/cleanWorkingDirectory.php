@@ -33,7 +33,7 @@ if (isset($p)) {
     $p['page']['availableCrons']['cleanWorkingDir']=array(
         'task' => 'Nettoyage',
         'defaults' => array('m'=>'0','h'=>'20','M'=>'*','dom'=>'*','dow'=>'*'),
-        'description' => 'Tâche de nettoyage du répertoire de travail');
+        'description' => 'Nettoyage du répertoire de travail');
     return;
 }
 

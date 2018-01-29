@@ -43,7 +43,7 @@ if (isset($p)) {
     $p['page']['availableCrons']['inbox']=array(
         'task' => 'Mail',
         'defaults' => array('m'=>'0,5,10,15,20,25,30,35,40,45,50,55','h'=>'8-20','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Relève les mails');
+        'description' => 'Relève des mails');
     return;
 }
 

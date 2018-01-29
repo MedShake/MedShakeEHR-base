@@ -29,9 +29,9 @@
 // pour le configurateur de cron
 if (isset($p)) {
     $p['page']['availableCrons']['clicRDV']=array(
-        'task' => 'Synchronisation clicRDV',
+        'task' => 'clicRDV',
         'defaults' => array('m'=>'0,15,30,45','h'=>'8-19','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Synchronise l\'agenda interne avec clicRDV. Si vous êtes complet plusieurs semaines à l\'avance, préférez une synchronisation quotidienne. A l\'inverse, si vous avez un faible remplissage, vous pouvez augmenter la fréquence.');
+        'description' => 'Synchronisation de l\'agenda interne avec clicRDV. Si vous êtes complet plusieurs semaines à l\'avance, préférez une ou deux synchronisations quotidiennes. A l\'inverse, si vous avez un faible remplissage, vous pouvez augmenter la fréquence.');
     return;
 }
 
