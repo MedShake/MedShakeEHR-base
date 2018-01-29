@@ -166,3 +166,8 @@ templatesFolder: '/home/EHR/templates/'
 ## Twig configuration
 twigEnvironnementCache: false #'/tmp/templates_cache/'
 twigEnvironnementAutoescape: false
+
+#######################################
+## LAP
+LapOnOff: on
+theriaqueWsURL: ''

@@ -62,6 +62,10 @@ peopleRelations: ['GET', '/patient/relations/[i:patient]/', 'people/peopleRelati
 # pro : voir fiche praticien
 proView: ['GET', '/pro/[i:proID]/', 'people/proView']
 
+# lap
+lapAjax: ['GET|POST', '/lap/ajax/[a:m]/', 'lap/actions/lapAjax']
+lap: ['GET|POST', '/lap/[i:patient]/', 'lap/lap']
+
 #dossier patient
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
