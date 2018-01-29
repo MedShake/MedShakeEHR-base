@@ -40,7 +40,7 @@ $event->set_type($_POST['type']);
 $dataEvent=$event->addOrUpdateRdv();
 
 //hook pour service externe
-if (iset($p['config']['agendaService'])) {
+if (isset($p['config']['agendaService'])) {
     $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
     if (is_file($hook)) {
         include($hook);

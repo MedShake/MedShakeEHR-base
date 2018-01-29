@@ -33,7 +33,7 @@ $event->set_eventID($_POST['eventid']);
 $event->delEvent();
 
 //hook pour service externe
-if (iset($p['config']['agendaService'])) {
+if (isset($p['config']['agendaService'])) {
    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
    if (is_file($hook)) {
        include($hook);
