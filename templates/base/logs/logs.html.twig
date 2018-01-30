@@ -74,7 +74,7 @@
                             <td>{{ v.value|e }}</td>
 
                             <td>{{ v.outdated }}</td>
-                            <td>{{ v.deleted }}</td>
+                            <td>{{ v.deleted }}{% if v.deletedByID > 0 %} #{{ v.deletedByID }}{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

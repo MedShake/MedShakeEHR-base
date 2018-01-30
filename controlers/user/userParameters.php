@@ -29,8 +29,8 @@
 $debug='';
 $template="userParameters";
 
-$p['page']['useClicRDV']=$p['config']['agendaService'];
-if ($p['page']['useClicRDV'] != 'clicRDV') {
+$p['page']['useClicRDV']=$p['config']['agendaService'] == 'clicRDV';
+if (!$p['page']['useClicRDV']) {
     return;
 }
 
@@ -39,16 +39,20 @@ $form->setFormIDbyName($p['page']['formIN']='baseUserParameters');
 
 if(isset($p['config']['clicRdvUserId'])) {
     $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
+    $options=array();
     if (!empty($p['config']['clicRdvPassword'])) {
         $preValues['p_clicRdvPassword']='********';
         if(!empty($p['config']['clicRdvGroupId'])) {
             $preValues['p_clicRdvGroupId']=$p['config']['clicRdvGroupId'];
+            $options['p_clicRdvGroupId']=array('0'=> explode(':',$p['config']['clicRdvGroupId'])[1]);
         }
         if(!empty($p['config']['clicRdvCalId'])) {
             $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
+            $options['p_clicRdvCalId']=array('0'=> explode(':',$p['config']['clicRdvCalId'])[1]);
         }
     }
     $form->setPrevalues($preValues);
+    $form->setOptionsForSelect($options);
 }
 
 $p['page']['form']=$form->getForm();
@@ -65,12 +69,14 @@ if (count($consults)) {
 
 if(isset($p['config']['clicRdvUserId'])) {
     if (!empty($p['config']['clicRdvPassword'])) {
+/*
         if(!empty($p['config']['clicRdvGroupId'])) {
             $p['page']['form']['structure'][1][1]['elements'][3]['value']['formValues'][$p['config']['clicRdvGroupId']]=explode(':',$p['config']['clicRdvGroupId'])[1];
         }
         if(!empty($p['config']['clicRdvCalId'])) {
             $p['page']['form']['structure'][1][1]['elements'][4]['value']['formValues'][$p['config']['clicRdvCalId']]=explode(':',$p['config']['clicRdvCalId'])[1];
         }
+*/
         if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
             $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
         }

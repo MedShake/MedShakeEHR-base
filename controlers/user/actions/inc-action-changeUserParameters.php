@@ -84,10 +84,10 @@ if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserI
     }
 } elseif ($p['config']['serviceAgenda'] == 'clicRDV') {
     if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
+        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
     }
     if ($data=$objet->getLastObjetByTypeName('clicRdvPassword')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y' where id='".$data['id']."'");
+        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
     }
 }
 

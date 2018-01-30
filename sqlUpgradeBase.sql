@@ -44,6 +44,9 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 
 -- hors LAP
 
+ALTER TABLE `objets_data` ADD `deletedByID` INT NULL DEFAULT NULL AFTER `deleted`;
+
+--people
 ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
 ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
 ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','service', 'deleted') NOT NULL DEFAULT 'patient';

@@ -44,5 +44,5 @@ if(is_numeric($_POST['patientID'])) {
   msSQL::sqlInsert('people', $data);
 
   // on marque deleted/outdated le marqueur
-  msSQL::sqlQuery("update objets_data set outdated='y', deleted='y' where toID='".msSQL::cleanVar($_POST['patientID'])."' and typeID='".$administratifMarqueurSuppressionID."'");
+  msSQL::sqlQuery("update objets_data set outdated='y', deleted='y', deletedByID='".$p['user']['id']."' where toID='".msSQL::cleanVar($_POST['patientID'])."' and typeID='".$administratifMarqueurSuppressionID."'");
 }

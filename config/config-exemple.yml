@@ -38,6 +38,7 @@ urlHostSuffixe: ''
 homeDirectory: '/home/EHR/'
 webDirectory: '/home/EHR/public_html/'
 stockageLocation: '/home/EHR/stockage/'
+backupLocation: '/home/EHR/backups/'
 workingDirectory: '/home/EHR/public_html/workingDirectory/'
 cookieDomain: 'ehr.local'
 cookieDuration: 31104000
@@ -138,8 +139,8 @@ phonecaptureResolutionHeight: 1080
 #######################################
 ## agenda
 
-serviceAgenda: '' 
-## si serviceAgenda est actif, alors agendaDistantLink doit être mis à ''
+agendaService: '' 
+## si agendaService est actif, alors agendaDistantLink doit être mis à ''
 agendaDistantLink: 'http://monagenda.agenda.abc'
 agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
