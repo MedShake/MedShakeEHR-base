@@ -56,6 +56,9 @@ $(document).ready(function() {
   if (!slotDuration) {
     slotDuration = '00:15:00';
   }
+  if (!slotLabelInterval) {
+    slotLabelInterval = '00:30:00';
+  }
   if (!businessHours) {
     businessHours = [{
       dow: [1, 2, 3, 4, 5, 6],
@@ -201,6 +204,7 @@ $(document).ready(function() {
     selectable: true,
     unselectCancel: '.context-menu-item,#buttonPrincipal,#buttonRemove,#buttonMark,#historiquePatient,#type,#type option,#motif,input,.fc-bloquer-button,.fc-supprimer-button,.fc-dossier-button,.fc-honorer-button,.fc-deplacer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
+    slotLabelInterval: slotLabelInterval,
     nowIndicator: true,
     businessHours: businessHours,
     slotEventOverlap: false,
