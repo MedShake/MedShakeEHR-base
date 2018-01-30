@@ -55,6 +55,11 @@ class msForm
      */
     private $_prevalues;
     /**
+     * @var array valeurs des <option> à injecter dans les selects du form en lieu de celles par défaut
+     * array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
+     */
+    private $_optionsForSelect;
+    /**
      * @var int Le numéro d'instance du questionnaire
      */
     private $_instance=0;
@@ -157,12 +162,24 @@ class msForm
     }
 /**
  * Définir les valeurs de remplissage par défaut du formulaire
- * @param array $v Array des valeur par défaut
+ * @param array $v Array des valeurs par défaut
  */
     public function setPrevalues($v)
     {
         if (is_array($v)) {
             return $this->_prevalues = $v;
+        } elseif(!empty($v)) {
+            throw new Exception('Var is not an array');
+        }
+    }
+/**
+ * Remplacer les valeurs de remplissage des selects du form par défaut
+ * @param array $v Array des valeurs array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
+ */
+    public function setOptionsForSelect($v)
+    {
+        if (is_array($v)) {
+            return $this->_optionsForSelect = $v;
         } elseif(!empty($v)) {
             throw new Exception('Var is not an array');
         }
@@ -408,7 +425,14 @@ class msForm
                         if (in_array('required', $bloc)) {
                             $r['validation'][$type['name']][]='required';
                         }
-                        $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                        //forcage des <option>
+                        if(isset($this->_optionsForSelect[$type['name']])) {
+                            $type['formValues']=$this->_optionsForSelect[$type['name']];
+                        }
+                        // ou valeur par défaut du type
+                        else {
+                            $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                        }
                         if (!empty($type['formValues'])) {
                             $r['validation'][$type['name']][]='contains_list,'.implode(';', array_keys($type['formValues']));
                         }
@@ -589,7 +613,15 @@ class msForm
 
                   //traitement spécifique au select
                   if ($type['formType']=="select") {
-                      $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+
+                      //forcage des <option> du type
+                      if(isset($this->_optionsForSelect[$type['name']])) {
+                        $type['formValues']=$this->_optionsForSelect[$type['name']];
+                      }
+                      // sinon valeur du type
+                      else {
+                        $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                      }
                       $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
 
                   //traitement spécifique au textarea
