@@ -41,6 +41,10 @@
 
      if($data=$data->getPeopleDataFromDataTypeGroupe('user', ['dt.*', 'od.value as userVal'])) {
        foreach($data as $v) {
+         if (array_key_exists('name', $v) and $v['name']=='agendaNumberForPatientsOfTheDay') {
+             $Values=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and pass!=''", "id", "name");
+             $v['formValues']=$Values;
+         }
          $p['page']['userParams'][$v['cat']][]=$v;
        }
      }

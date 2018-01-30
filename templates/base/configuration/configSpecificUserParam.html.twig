@@ -83,17 +83,32 @@
     <td>{{ page['configDefaut'][w.name] }}</td>
     <td>
 
-      {{ f.input ({
-        'input' : {
-          'type' : w.formType,
-          'name' : 'p_' ~ w.id,
-          'id' : w.name ~ 'ID',
-          'placeholder' : w.placeholder,
-          'class' : 'form-control',
-          'value' : w.userVal,
-          'autocomplete' : 'off'
-        }
-      }) }}
+      {% if w.formType == 'select' %}
+        {{ f.select ({
+          'select' : {
+            'type' : w.formType,
+            'name' : 'p_' ~ w.id,
+            'id' : w.name ~ 'ID',
+            'placeholder' : w.placeholder,
+            'class' : 'form-control',
+            'values' : w.formValues,
+            'valueDefaut' : w.userVal,
+            'autocomplete' : 'off'
+          }
+        }) }}
+      {% else %}
+        {{ f.input ({
+          'input' : {
+            'type' : w.formType,
+            'name' : 'p_' ~ w.id,
+            'id' : w.name ~ 'ID',
+            'placeholder' : w.placeholder,
+            'class' : 'form-control',
+            'value' : w.userVal,
+            'autocomplete' : 'off'
+          }
+        }) }}
+      {% endif %}
 
 
     </td>
