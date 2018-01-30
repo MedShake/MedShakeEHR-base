@@ -2,6 +2,8 @@
 
 -- 3.0.0 to 3.1.0
 
+ALTER TABLE `objets_data` ADD `deletedByID` INT NULL DEFAULT NULL AFTER `deleted`;
+
 --people
 ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
 ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
