@@ -45,20 +45,23 @@
   {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
   {# form display #}
-  <form id="formRdv" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/changeUserParameters/" method="post">
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active">
-        <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Paramètres MedShakeEHR</a>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Paramètres MedShakeEHR</a>
+    </li>
+    {% if page.useClicRDV %}
+      <li role="presentation">
+        <a href="#pc" aria-controls="pc" role="tab" data-toggle="tab">Paramètres ClicRDV</a>
       </li>
-      {% if page.useClicRDV %}
-        <li role="presentation">
-          <a href="#pc" aria-controls="pc" role="tab" data-toggle="tab">Paramètres ClicRDV</a>
-        </li>
-      {% endif %}
-    </ul>
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="pm" style="padding-top:10px">
-        <h4>Compte MedShakeEHR</h4>
+    {% endif %}
+  </ul>
+
+  <div class="tab-content">
+
+    {# formulaire mot de passe MedShake #}
+    <div role="tabpanel" class="tab-pane active" id="pm" style="padding-top:10px">
+      <h4>Compte MedShakeEHR</h4>
+      <form id="formRdv" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/changeUserParameters/" method="post">
         <div class="row">
           <div class="form-group col-md-3">
             <label class="control-label" for="id_clicRdvUserId_id">Mot de passe actuel</label>
@@ -77,14 +80,17 @@
             <input id="id_verifPassword_id" class="form-control" name="p_verifPassword" value="" autocomplete="off" type="password"></input>
           </div>
         </div>
-      </div>
-      {% if page.useClicRDV %}
-        <div role="tabpanel" class="tab-pane" id="pc" style="padding-top:10px">
-          {{ f.formbuilder(page.form , page.formIN , session) }}
-          <div id="clicInserts"></div>
-        </div>
-      {% endif %}
+        <button id="Submit" class="btn btn-primary" type="submit">Valider</button>
+      </form>
     </div>
-    <button id="Submit" class="btn btn-primary" type="submit">Valider</button>
-  </form>
+
+    {# formulaire clicRDV #}
+    {% if page.useClicRDV %}
+      <div role="tabpanel" class="tab-pane" id="pc" style="padding-top:10px">
+        {{ f.formbuilder(page.form , page.formIN , session) }}
+        <div id="clicInserts"></div>
+      </div>
+    {% endif %}
+
+  </div>
 {% endblock %}

@@ -45,8 +45,8 @@ $(document).ready(function() {
   var k = 0;
   for (var idx in clicRdvConsultsRel) {
     if (!k) 
-      $('#clicInserts').before('<h4 class="consults">Correspondances de consultations</h4>');
-    $('#clicInserts').before('<div class="row consults"><div class="col-md-3"><label class="control-label" for="id_clicRdvConsultId' + k + '_id">' + clicRdvConsultsRel[idx][1] + ' (clicRdv)</label><div class="form-group"></div></div></div>');
+      $('.insertBefore').before('<h4 class="consults">Correspondances de consultations</h4>');
+    $('.insertBefore').before('<div class="row consults"><div class="col-md-3"><label class="control-label" for="id_clicRdvConsultId' + k + '_id">' + clicRdvConsultsRel[idx][1] + ' (clicRdv)</label><div class="form-group"></div></div></div>');
     $('#id_clicRdvConsultId_id').clone()
     .attr('id', 'id_clicRdvConsultId' + k + '_id')
     .attr('name', 'p_clicRdvConsultId' + k)
@@ -194,8 +194,8 @@ function updateConsultList() {
 
 function addConsult(idx, consult) {
   if (idx=='0' || idx==0) 
-    $('#clicInserts').before('<h4 class="consults">Correspondances de consultations</h4>');
-  $('#clicInserts').before('<div class="row consults"><div class="col-md-3"><label class="control-label" for="id_clicRdvConsultId' + idx + '_id">' + consult.name + ' (clicRdv)</label><div class="form-group"></div></div></div>');
+    $('.insertBefore').before('<h4 class="consults">Correspondances de consultations</h4>');
+  $('.insertBefore').before('<div class="row consults"><div class="col-md-3"><label class="control-label" for="id_clicRdvConsultId' + idx + '_id">' + consult.name + ' (clicRdv)</label><div class="form-group"></div></div></div>');
   $('#id_clicRdvConsultId_id').clone()
   .attr('id', 'id_clicRdvConsultId' + idx + '_id')
   .attr('name', 'p_clicRdvConsultId' + idx)

@@ -54,8 +54,8 @@ if(isset($p['config']['clicRdvUserId'])) {
     $form->setPrevalues($preValues);
     $form->setOptionsForSelect($options);
 }
-
 $p['page']['form']=$form->getForm();
+$form->addSubmitToForm($p['page']['form'], $class='btn-primary insertBefore');
 
 $p['page']['clicRdvConsultsRel']='[]';
 $consults=msAgenda::getRdvTypes($p['user']['id']);
