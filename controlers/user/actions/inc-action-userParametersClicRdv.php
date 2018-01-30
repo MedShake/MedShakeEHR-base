@@ -26,6 +26,10 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+if ($p['config']['agendaService'] != 'clicRDV') {
+    return;
+}
+
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 $formIN=$_POST['formIN'];
@@ -43,7 +47,7 @@ $objet->setFromID($p['user']['id']);
 $objet->setToID($p['user']['id']);
 
 
-if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
+if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
     if (empty($_POST['p_clicRdvPassword'])) {
@@ -59,7 +63,7 @@ if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserI
     } else {
         $setCRDV=true;
     }
-} elseif ($p['config']['serviceAgenda'] == 'clicRDV') {
+} else{
     if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
         msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
     }

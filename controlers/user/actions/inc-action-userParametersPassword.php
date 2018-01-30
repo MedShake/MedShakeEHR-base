@@ -34,14 +34,12 @@ $formIN=$_POST['formIN'];
 $form = new msForm();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
-//$validation=$form->getValidation();
 
 $changeMdp=false;
-$setCRDV=false;
 
 if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
     unset($_SESSION['form'][$formIN]);
-    if (empty($_POST['p_actualPassword'])) {
+    if (empty($_POST['p_currentPassword'])) {
         unset($_SESSION['form'][$formIN]);
         $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShake, vous devez entrer votre mot de passe actuel.';
         msTools::redirRoute('userParameters');
@@ -51,7 +49,7 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
         msTools::redirRoute('userParameters');
     }
     else {
-        if (msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".$p['user']['id']."' and pass=AES_ENCRYPT('".$_POST['p_actualPassword']."',@password)")) {
+        if (msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".$p['user']['id']."' and pass=AES_ENCRYPT('".$_POST['p_currentPassword']."',@password)")) {
             $changeMdp=true;
         } else {
             unset($_SESSION['form'][$formIN]);
@@ -61,62 +59,8 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
     }
 }
 
-$objet = new msObjet();
-$objet->setFromID($p['user']['id']);
-$objet->setToID($p['user']['id']);
-
-
-if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
-    $clicRDV = new msClicRDV();
-    $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
-    if (empty($_POST['p_clicRdvPassword'])) {
-        unset($_SESSION['form'][$formIN]);
-        $changeMdp=false;
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe clicRDV est vide.';
-        msTools::redirRoute('userParameters');
-    } elseif ($clicRDV->getGroups()===false) {
-        unset($_SESSION['form'][$formIN]);
-        $changeMdp=false;
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Une erreur est survenue durant la tentative d\'accès à clicRDV. Vérifiez vos identifiants.';
-        msTools::redirRoute('userParameters');
-    } else {
-        $setCRDV=true;
-    }
-} elseif ($p['config']['serviceAgenda'] == 'clicRDV') {
-    if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
-    }
-    if ($data=$objet->getLastObjetByTypeName('clicRdvPassword')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
-    }
-}
-
-
 if ($changeMdp) {
     msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
 }
-if ($setCRDV) {
-    $objet->createNewObjetByTypeName('clicRdvUserId', $_POST['p_clicRdvUserId']);
-    $passID=$objet->createNewObjetByTypeName('clicRdvPassword', $_POST['p_clicRdvPassword']);
-    msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$_POST['p_clicRdvPassword']."',@password)) WHERE id='".$passID."' limit 1");
-}
 
-if (!empty($_POST['p_clicRdvGroupId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvGroupId']) {
-    $objet->createNewObjetByTypeName('clicRdvGroupId', $_POST['p_clicRdvGroupId']);
-}
-if (!empty($_POST['p_clicRdvCalId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvCalId']) {
-    $objet->createNewObjetByTypeName('clicRdvCalId', $_POST['p_clicRdvCalId']);
-}
-
-
-$consult = array();
-for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
-    $exp=explode(':', $_POST['p_clicRdvConsultId'.$i]);
-    $consult[0][$exp[0]]=array($exp[1], $exp[2]);
-    $consult[1][$exp[1]]=array($exp[0], $exp[2]);
-}
-
-if (!empty($consult)) {
-    $objet->createNewObjetByTypeName('clicRdvConsultId', json_encode($consult));
-}
 msTools::redirRoute('/');
