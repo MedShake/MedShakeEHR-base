@@ -80,7 +80,7 @@ CREATE TABLE `data_types` (
   `description` varchar(255) DEFAULT NULL,
   `validationRules` varchar(255) DEFAULT NULL,
   `validationErrorMsg` varchar(255) DEFAULT NULL,
-  `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','checkbox') NOT NULL DEFAULT '',
+  `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '',
   `formValues` text,
   `module` varchar(20) NOT NULL DEFAULT 'base',
   `cat` smallint(5) UNSIGNED NOT NULL,
