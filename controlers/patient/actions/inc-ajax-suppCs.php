@@ -22,15 +22,17 @@
 
 /**
  * Patient > ajax : marquer un élément de l'historique médical comme supprimé
- * (pas de suppression réelle)  
+ * (pas de suppression réelle)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$data=array(
-'id'=>$_POST['objetID'],
-'deleted'=>'y'
-);
-if (msSQL::sqlInsert('objets_data', $data)) {
-    msSQL::sqlQuery("update objets_data set deleted='y' where instance ='".$_POST['objetID']."' ");
+if(!is_numeric($_POST['objetID'])) die;
+
+$patient = new msObjet();
+$patient->setFromID($p['user']['id']);
+if ($patient->setDeletedObjetAndSons($_POST['objetID'])) {
+    echo json_encode(array("statut"=>'ok'));
+} else {
+    echo json_encode(array("statut"=>'error'));
 }

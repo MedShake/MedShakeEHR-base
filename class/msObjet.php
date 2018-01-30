@@ -174,7 +174,7 @@ public function getToID()
     public function getCompleteObjetDataByID($id)
     {
         $docTypeID = msData::getTypeIDFromName('docType');
-        return msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, doc.value as ext
+        return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
         left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
@@ -194,6 +194,20 @@ public function getToID()
         left join data_types as t on o.typeID=t.id
         where o.id='".$id."' or o.instance='".$id."' and o.outdated='' and o.deleted='' ", $by);
     }
+
+/**
+ * Marquer DELETED l'objet ainsi que ses enfants
+ * @param  int $id ID de l'objet
+ * @return string résultat sql
+ */
+    public function setDeletedObjetAndSons($id)
+    {
+        if (!is_numeric($this->_fromID)) {
+            throw new Exception('FromID is not numeric');
+        }
+        return msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where id='".$id."' or instance='".$id."' ");
+    }
+
 
 /**
  * Créer ou mettre à jour un objet par son nom
@@ -216,163 +230,163 @@ public function getToID()
     }
 
 
-    /**
-     * Créer ou mettre à jour un objet
-     * C'est la fonction clef : action en fonction du groupe de données et de la durée de vie
-     * attribuée au modèle.
-     * En règle général : on crée toujours une nouvelle entrée si l'utilisateur qui agit
-     * n'est pas le même que le précédent.
-     *
-     * @param  int $typeID       typeID de l'objet
-     * @param  string $value        value de l'objet
-     * @param  int $parentID     ID du parent de l'objet
-     * @param  int $parentTypeID typeID du parent de l'objet
-     * @param  int $objetID      ID de l'objet (si mise à jour en particulier)
-     * @return int|false                 Retourne ID de l'objet ou false si problème
-     */
-        public function createNewObjet($typeID, $value, $parentID='0', $parentTypeID='0', $objetID='')
-        {
-            if (!is_numeric($this->_toID)) {
-                throw new Exception('ToID is not numeric');
-            }
-            if (!is_numeric($this->_fromID)) {
-                throw new Exception('FromID is not numeric');
-            }
-            if (!is_numeric($typeID)) {
-                throw new Exception('TypeID is not numeric');
-            }
-
-          //infos déterminées par le type et traitement de la value
-          $data = new msData();
-            $data->setValue($value);
-            $data->setTypeID($typeID);
-            $d=$data->getDataType($typeID);
-            $value = $data->treatBeforeSave();
-
-          $pd=array(
-            'fromID' => $this->_fromID,
-            'toID' => $this->_toID,
-            'typeID' => $typeID,
-            'parentTypeID' => $parentTypeID,
-            'instance'=> $parentID,
-            'value' => $value
-          );
-
-          //si creationDate est fixée
-          if (isset($this->_creationDate)) {
-              $pd['creationDate']=$this->_creationDate;
-          }
-
-          //////mode à adopter en fonction du type d'objet
-
-          if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc' or $d['groupe']=='relation') {
-
-              // création d'un nouvel objet sans considération des objets antérieurs
-              // but : enregistrement d'objets qui n'ont pas vocation a être édités secondairement,
-              // uniquement marqués "deleted" si besoin.
-
-              $lastID=msSQL::sqlInsert('objets_data', $pd);
-
-          } elseif ($d['groupe']=='ordo' or $d['groupe']=='courrier') {
-
-              // création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
-              // pas de marquage des versions précédentes comme outdated
-              // but : générer des versions sucessives toutes visibles à partir du moment ou la durée de vie
-              // (temps autorisé d'édition) est dépassé ou que l'auteur n'est pas le même.
-
-              //recup le titre
-              if (is_numeric($objetID)) {
-                  $pd['titre']=msSQL::sqlUniqueChamp("select titre from objets_data where id='".$objetID."' limit 1");
-              }
-
-              //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
-              if ($precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
-              from objets_data
-              where id = '".$objetID."' and deleted = ''
-              order by id desc limit 1")) {
-                  if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
-                      $pd['id']=$precedent['id'];
-                      $pd['updateDate'] = date("Y/m/d H:i:s");
-                  }
-              }
-              $lastID=msSQL::sqlInsert('objets_data', $pd);
-
-          } elseif ($d['groupe']=='reglement') {
-
-              // attachement dès que possible à l'objet antérieur existant, sans notion d'auteur.
-              // but : données de réglement sans historique possible.
-
-              if (is_numeric($objetID)) {
-                  $pd['id']=$objetID;
-                  $pd['updateDate'] = date("Y/m/d H:i:s");
-              } elseif ($parentID > 0) {
-                  if ($precedent=msSQL::sqlUniqueChamp("select id
-                    from objets_data
-                    where instance='".$parentID."' and typeID = '".$typeID."' deleted = ''
-                    order by id desc limit 1")) {
-                      $pd['id']=$precedent;
-                      $pd['updateDate'] = date("Y/m/d H:i:s");
-                  }
-              }
-
-              $lastID=msSQL::sqlInsert('objets_data', $pd);
-          } elseif ($d['groupe']=='user') {
-
-              // création d'un nouvel objet uniquement si auteur différent ou si précédent effacé,
-              // pas d'entrée en jeu de la durée de vie du type
-              // on marque "deleted" les anciens éléments du même type
-              // but : pas de log excessif des versions de paramétrage utilisateur,
-              // en particulier quand il change lui même des valeurs (log si un tiers)
-
-              //on regarde le précédent enregistrement pour l'objet et on update si editeur n'est pas le même.
-              if ($precedent=msSQL::sqlUnique("select id, fromID
-              from objets_data
-              where typeID = '".$typeID."' and toID='".$this->_toID."' and outdated = '' and deleted = ''
-              order by id desc limit 1")) {
-                  if ($precedent['fromID']==$this->_fromID) {
-                      $pd['id']=$precedent['id'];
-                      $pd['updateDate'] = date("Y/m/d H:i:s");
-                  }
-              }
-              if($lastID=msSQL::sqlInsert('objets_data', $pd)) {
-                  msSQL::sqlQuery("update objets_data set deleted='y' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID);
-              }
-          }
-
-          // types : admin / medical / dicom
-          else {
-
-              // cas général : création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
-              // marquage des versions précédentes comme outdated
-              // but : enregistrement susccessif complet des modifications concernées
-
-              //on regarde le précédent du même parent
-              $precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
-              from objets_data
-              where typeID='".$typeID."'
-              and toID = '".$this->_toID."'
-              and instance = '".$parentID."'
-              and outdated = '' and deleted = ''
-              order by id desc limit 1");
-
-              //on update si ...
-              if (isset($precedent['id'])) {
-                  if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
-                      $pd['id']=$precedent['id'];
-                      $pd['updateDate'] = date("Y/m/d H:i:s");
-                  }
-              }
-              $lastID=msSQL::sqlInsert('objets_data', $pd);
-
-              msSQL::sqlQuery("update objets_data set outdated='y' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID." and instance='".$parentID."' ");
-          }
-
-          if (is_numeric($lastID)) {
-              return $lastID;
-          } else {
-              return false;
-          }
+/**
+ * Créer ou mettre à jour un objet
+ * C'est la fonction clef : action en fonction du groupe de données et de la durée de vie
+ * attribuée au modèle.
+ * En règle général : on crée toujours une nouvelle entrée si l'utilisateur qui agit
+ * n'est pas le même que le précédent.
+ *
+ * @param  int $typeID       typeID de l'objet
+ * @param  string $value        value de l'objet
+ * @param  int $parentID     ID du parent de l'objet
+ * @param  int $parentTypeID typeID du parent de l'objet
+ * @param  int $objetID      ID de l'objet (si mise à jour en particulier)
+ * @return int|false                 Retourne ID de l'objet ou false si problème
+ */
+    public function createNewObjet($typeID, $value, $parentID='0', $parentTypeID='0', $objetID='')
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
         }
+        if (!is_numeric($this->_fromID)) {
+            throw new Exception('FromID is not numeric');
+        }
+        if (!is_numeric($typeID)) {
+            throw new Exception('TypeID is not numeric');
+        }
+
+      //infos déterminées par le type et traitement de la value
+      $data = new msData();
+        $data->setValue($value);
+        $data->setTypeID($typeID);
+        $d=$data->getDataType($typeID);
+        $value = $data->treatBeforeSave();
+
+      $pd=array(
+        'fromID' => $this->_fromID,
+        'toID' => $this->_toID,
+        'typeID' => $typeID,
+        'parentTypeID' => $parentTypeID,
+        'instance'=> $parentID,
+        'value' => $value
+      );
+
+      //si creationDate est fixée
+      if (isset($this->_creationDate)) {
+          $pd['creationDate']=$this->_creationDate;
+      }
+
+      //////mode à adopter en fonction du type d'objet
+
+      if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc' or $d['groupe']=='relation') {
+
+          // création d'un nouvel objet sans considération des objets antérieurs
+          // but : enregistrement d'objets qui n'ont pas vocation a être édités secondairement,
+          // uniquement marqués "deleted" si besoin.
+
+          $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+      } elseif ($d['groupe']=='ordo' or $d['groupe']=='courrier') {
+
+          // création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
+          // pas de marquage des versions précédentes comme outdated
+          // but : générer des versions sucessives toutes visibles à partir du moment ou la durée de vie
+          // (temps autorisé d'édition) est dépassé ou que l'auteur n'est pas le même.
+
+          //recup le titre
+          if (is_numeric($objetID)) {
+              $pd['titre']=msSQL::sqlUniqueChamp("select titre from objets_data where id='".$objetID."' limit 1");
+          }
+
+          //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
+          if ($precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
+          from objets_data
+          where id = '".$objetID."' and deleted = ''
+          order by id desc limit 1")) {
+              if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
+                  $pd['id']=$precedent['id'];
+                  $pd['updateDate'] = date("Y/m/d H:i:s");
+              }
+          }
+          $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+      } elseif ($d['groupe']=='reglement') {
+
+          // attachement dès que possible à l'objet antérieur existant, sans notion d'auteur.
+          // but : données de réglement sans historique possible.
+
+          if (is_numeric($objetID)) {
+              $pd['id']=$objetID;
+              $pd['updateDate'] = date("Y/m/d H:i:s");
+          } elseif ($parentID > 0) {
+              if ($precedent=msSQL::sqlUniqueChamp("select id
+                from objets_data
+                where instance='".$parentID."' and typeID = '".$typeID."' deleted = ''
+                order by id desc limit 1")) {
+                  $pd['id']=$precedent;
+                  $pd['updateDate'] = date("Y/m/d H:i:s");
+              }
+          }
+
+          $lastID=msSQL::sqlInsert('objets_data', $pd);
+      } elseif ($d['groupe']=='user') {
+
+          // création d'un nouvel objet uniquement si auteur différent ou si précédent effacé,
+          // pas d'entrée en jeu de la durée de vie du type
+          // on marque "deleted" les anciens éléments du même type
+          // but : pas de log excessif des versions de paramétrage utilisateur,
+          // en particulier quand il change lui même des valeurs (log si un tiers)
+
+          //on regarde le précédent enregistrement pour l'objet et on update si editeur n'est pas le même.
+          if ($precedent=msSQL::sqlUnique("select id, fromID
+          from objets_data
+          where typeID = '".$typeID."' and toID='".$this->_toID."' and outdated = '' and deleted = ''
+          order by id desc limit 1")) {
+              if ($precedent['fromID']==$this->_fromID) {
+                  $pd['id']=$precedent['id'];
+                  $pd['updateDate'] = date("Y/m/d H:i:s");
+              }
+          }
+          if($lastID=msSQL::sqlInsert('objets_data', $pd)) {
+              msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID);
+          }
+      }
+
+      // types : admin / medical / dicom
+      else {
+
+          // cas général : création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
+          // marquage des versions précédentes comme outdated
+          // but : enregistrement susccessif complet des modifications concernées
+
+          //on regarde le précédent du même parent
+          $precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
+          from objets_data
+          where typeID='".$typeID."'
+          and toID = '".$this->_toID."'
+          and instance = '".$parentID."'
+          and outdated = '' and deleted = ''
+          order by id desc limit 1");
+
+          //on update si ...
+          if (isset($precedent['id'])) {
+              if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
+                  $pd['id']=$precedent['id'];
+                  $pd['updateDate'] = date("Y/m/d H:i:s");
+              }
+          }
+          $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+          msSQL::sqlQuery("update objets_data set outdated='y' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID." and instance='".$parentID."' ");
+      }
+
+      if (is_numeric($lastID)) {
+          return $lastID;
+      } else {
+          return false;
+      }
+    }
 
 /**
  * Définir un titre pour l'objet
