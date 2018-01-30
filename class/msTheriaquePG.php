@@ -70,7 +70,7 @@ class msTheriaquePG {
   public function get_the_specialite_multi_codeid($codeid,$vartyp,$monovir) {
     $codes=explode(',',$codeid);
     foreach($codes as $code) {
-      $arr[]=$this->get_data_from_pg('get_the_specialite(\''.$code.'\','.$vartyp.','.$monovir.')');
+      $arr=$this->get_data_from_pg('get_the_specialite(\''.$code.'\','.$vartyp.','.$monovir.')');
     }
     return msTools::utf8_converter($arr);
   }

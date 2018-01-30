@@ -169,8 +169,10 @@ public function getPresentations(&$rd, $colCode, $typCode)
 {
     foreach ($rd as $k=>$v) {
         $rd[$k]['presentations']=$this->_get_the_presentation($v[$colCode], $typCode);
-        foreach ($rd[$k]['presentations'] as $presK=>$presV) {
-            $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
+        if(!empty($rd[$k]['presentations'])) {
+          foreach ($rd[$k]['presentations'] as $presK=>$presV) {
+              $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
+          }
         }
     }
 }
@@ -333,19 +335,9 @@ private function _get_the_presentation($codeTheriaque, $typCode)
             }
             $rd=[];
             if ($data=$the->get_the_specialite_multi_codeid($classe.'%', 10, $monovir)) {
-                // 1 résultat
-          if (isset($data->item->sp_code_sq_pk)) {
-              $rd[0]=(array)$data->item;
-          }
-          // plusieurs
-          elseif (isset($data->item)) {
-              foreach ($data->item as $k=>$v) {
-                  $rd[$k]=(array)$v;
-              }
-          }
-
+                $rd=$this->_prepareData($data);
                 if (!empty($rd)) {
-                    $this->getPresentations($rd, 'sp_code_sq_pk', 1, 0);
+                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                     $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
                 }
                 return $rd;
