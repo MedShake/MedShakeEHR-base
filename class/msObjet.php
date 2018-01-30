@@ -322,7 +322,7 @@ public function getToID()
           } elseif ($parentID > 0) {
               if ($precedent=msSQL::sqlUniqueChamp("select id
                 from objets_data
-                where instance='".$parentID."' and typeID = '".$typeID."' deleted = ''
+                where instance='".$parentID."' and typeID = '".$typeID."' and deleted = ''
                 order by id desc limit 1")) {
                   $pd['id']=$precedent;
                   $pd['updateDate'] = date("Y/m/d H:i:s");
