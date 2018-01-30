@@ -30,6 +30,7 @@
 class msLAP
 {
 
+
  /**
   * @var int $_toID ID de l'individus concerné
   */
@@ -46,7 +47,21 @@ class msLAP
    * @var object $_the Instance Thériaque
    */
      private $_the;
+    private $_classTheriaque;
 
+
+ /**
+  * Constructeur : choix du fonctionnement
+  */
+     public function __construct()
+     {
+         global $p;
+         if ($p['config']['theriaqueMode']=='WS') {
+             $this->_classTheriaque='msTheriaqueWS';
+         } elseif ($p['config']['theriaqueMode']=='PG') {
+             $this->_classTheriaque='msTheriaquePG';
+         }
+     }
 
  /**
   * Définir l'individu concerné
@@ -56,13 +71,11 @@ class msLAP
      public function setToID($v)
      {
          if (is_numeric($v)) {
-
              $patient= new msPeople;
              $patient->setToID($v);
              $this->_patientAdminData=$patient->getSimpleAdminDatasByName();
              $this->_patientAdminData['age'] = DateTime::createFromFormat('d/m/Y', $this->_patientAdminData['birthdate'])->diff(new DateTime('now'))->y;
              return $this->_toID = $v;
-
          } else {
              throw new Exception('ToID is not numeric');
          }
@@ -88,7 +101,7 @@ class msLAP
   */
      public function getPatientAdminData()
      {
-       return $this->_patientAdminData;
+         return $this->_patientAdminData;
      }
 
 
@@ -116,26 +129,33 @@ class msLAP
  * @param  string $txt mot clé de recherche
  * @return array      tableau de retour
  */
-    public function getMedicInDC($txt) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
+    public function getMedicInDC($txt)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            $rd=[];
 
-        if($data=$the->get_the_denomination_commune(3, $txt.'%', 0)) {
-          // 1 résultat
-          if(isset($data->item->code)) {
-            $rd[0]=(array)$data->item;
+            if ($data=$the->get_the_denomination_commune(3, $txt.'%', 0)) {
+                // 1 résultat
+          if (isset($data->item->code)) {
+              $rd[0]=(array)$data->item;
           }
           // plusieurs
           elseif (isset($data->item)) {
-            foreach($data->item as $k=>$v) {
-              $rd[$k]=(array)$v;
-            }
+              foreach ($data->item as $k=>$v) {
+                  $rd[$k]=(array)$v;
+              }
           }
-          if(!empty($rd)) $this->attacherPrixMedic($rd,'code');
-          return $rd;
+                if (!empty($rd)) {
+                    $this->attacherPrixMedic($rd, 'code');
+                }
+                return $rd;
+            }
         }
-      }
     }
 
 /**
@@ -145,13 +165,14 @@ class msLAP
  * @param  string $typCode type du code passé (0 code thériaque cf doc)
  * @return array          tableau d'entrée modifié
  */
-public function getPresentations(&$rd, $colCode, $typCode) {
-  foreach($rd as $k=>$v) {
-      $rd[$k]['presentations']=$this->_get_the_presentation($v[$colCode], $typCode);
-      foreach($rd[$k]['presentations'] as $presK=>$presV) {
-        $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'],2);
-      }
-  }
+public function getPresentations(&$rd, $colCode, $typCode)
+{
+    foreach ($rd as $k=>$v) {
+        $rd[$k]['presentations']=$this->_get_the_presentation($v[$colCode], $typCode);
+        foreach ($rd[$k]['presentations'] as $presK=>$presV) {
+            $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
+        }
+    }
 }
 
 /**
@@ -160,56 +181,75 @@ public function getPresentations(&$rd, $colCode, $typCode) {
  * @param  string $typCode             type du code 0 : theriaque ... (cf doc Theriaque)
  * @return array                      tableau
  */
-private function _get_the_presentation($codeTheriaque, $typCode) {
-  if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-  $rd=[];
-  if($data=$the->get_the_presentation_v2($codeTheriaque, $typCode)) {
-    $rd=$this->_prepareData($data);
-    return $rd;
-  }
+private function _get_the_presentation($codeTheriaque, $typCode)
+{
+    if (isset($this->_the)) {
+        $the=$this->_the;
+    } else {
+        $this->_the=$the=new $this->_classTheriaque;
+    }
+    $rd=[];
+    if ($data=$the->get_the_presentation_v2($codeTheriaque, $typCode)) {
+        $rd=$this->_prepareData($data);
+        return $rd;
+    }
 }
 
-private function _get_the_pre_rbt_ville($code, $typCode) {
-  if(empty($code)) return false;
-  if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-  $rd=[];
-  if($data=$the->get_the_pre_rbt($code,$typCode)) {
-    if($data=msTools::objectToArray($data)) {
-      if(isset($data['item'])) {
-        $data=$data['item'];
-        $ou=array_column($data,'type');
-        if(isset($data[array_search('1',$ou)]['info_1'])) return $data[array_search('1',$ou)]['info_1'];
-      }
+    private function _get_the_pre_rbt_ville($code, $typCode)
+    {
+        if (empty($code)) {
+            return false;
+        }
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
+        }
+        $rd=[];
+        if ($data=$the->get_the_pre_rbt($code, $typCode)) {
+            if ($data=msTools::objectToArray($data)) {
+                if (isset($data['item'])) {
+                    $data=$data['item'];
+                    $ou=array_column($data, 'type');
+                    if (isset($data[array_search('1', $ou)]['info_1'])) {
+                        return $data[array_search('1', $ou)]['info_1'];
+                    }
+                }
+            }
+            return false;
+        }
     }
-    return false;
-  }
-}
 
 /**
  * Obtenir des substances
  * @param  string $txt mot clé de recherche
  * @return array      tableau de retour
  */
-    public function getSubstances($txt,$type) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
-        if($data=$the->get_the_sub_txt($txt,$type)) {
-          // 1 résultat
-          if(isset($data->item->code_sq_pk)) {
-            $rd[0]=(array)$data->item;
+    public function getSubstances($txt, $type)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            $rd=[];
+            if ($data=$the->get_the_sub_txt($txt, $type)) {
+                // 1 résultat
+          if (isset($data->item->code_sq_pk)) {
+              $rd[0]=(array)$data->item;
           }
           // plusieurs
           elseif (isset($data->item)) {
-            foreach($data->item as $k=>$v) {
-              $rd[$k]=(array)$v;
+              foreach ($data->item as $k=>$v) {
+                  $rd[$k]=(array)$v;
+              }
+          }
+                if (!empty($rd)) {
+                    return $rd;
+                }
             }
-          }
-          if(!empty($rd)) {
-            return $rd;
-          }
         }
-      }
     }
 
 /**
@@ -219,31 +259,36 @@ private function _get_the_pre_rbt_ville($code, $typCode) {
  * @param  string $monovir type de recherche 0 : spé / 1 : dci / 3 : tout
  * @return array      tableau de retour
  */
-    public function getMedicBySub($txt,$type, $monovir) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        if($subsTab=$this->getSubstances($txt,$type)) {
-          $subs=implode(",", array_column($subsTab, 'code_sq_pk'));
-          if($data=$the->get_the_specialite_multi_codeid( $subs, 7, $monovir)) {
-            // 1 résultat
-            if(isset($data->item->sp_code_sq_pk)) {
-              $rd[0]=(array)$data->item;
+    public function getMedicBySub($txt, $type, $monovir)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            if ($subsTab=$this->getSubstances($txt, $type)) {
+                $subs=implode(",", array_column($subsTab, 'code_sq_pk'));
+                if ($data=$the->get_the_specialite_multi_codeid($subs, 7, $monovir)) {
+                    // 1 résultat
+            if (isset($data->item->sp_code_sq_pk)) {
+                $rd[0]=(array)$data->item;
             }
             // plusieurs
             elseif (isset($data->item)) {
-              foreach($data->item as $k=>$v) {
-                $rd[$k]=(array)$v;
-              }
+                foreach ($data->item as $k=>$v) {
+                    $rd[$k]=(array)$v;
+                }
             }
-            if(!empty($rd)) {
-              $this->getPresentations($rd,'sp_code_sq_pk', 1);
-              $this->attacherPrixMedic($rd,'sp_code_sq_pk');
+                    if (!empty($rd)) {
+                        $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+                        $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                    }
+                    $rd['substances']=$subsTab;
+                    return $rd;
+                }
             }
-            $rd['substances']=$subsTab;
-            return $rd;
-          }
         }
-      }
     }
 
 /**
@@ -252,19 +297,24 @@ private function _get_the_pre_rbt_ville($code, $typCode) {
  * @param  string $monovir type de recherche 0 : spé / 1 : dci / 3 : tout
  * @return array      tableau de retour
  */
-    public function getMedicByName($txt,$monovir) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
-        if($data=$the->get_the_spe_txt($txt,$monovir)) {
-          $rd=$this->_prepareData($data);
-          if(!empty($rd)) {
-            $this->getPresentations($rd,'sp_code_sq_pk', 1);
-            $this->attacherPrixMedic($rd,'sp_code_sq_pk');
-          }
-          return $rd;
+    public function getMedicByName($txt, $monovir)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            $rd=[];
+            if ($data=$the->get_the_spe_txt($txt, $monovir)) {
+                $rd=$this->_prepareData($data);
+                if (!empty($rd)) {
+                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                }
+                return $rd;
+            }
         }
-      }
     }
 
 /**
@@ -273,29 +323,34 @@ private function _get_the_pre_rbt_ville($code, $typCode) {
  * @param  string $monovir type de recherche 0 : spé / 1 : dci / 3 : tout
  * @return array      tableau de retour
  */
-    public function getMedicByATC($classe,$monovir) {
-      if(strlen($classe)>=1) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
-        if($data=$the->get_the_specialite_multi_codeid($classe.'%',10,$monovir)) {
-          // 1 résultat
-          if(isset($data->item->sp_code_sq_pk)) {
-            $rd[0]=(array)$data->item;
+    public function getMedicByATC($classe, $monovir)
+    {
+        if (strlen($classe)>=1) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            $rd=[];
+            if ($data=$the->get_the_specialite_multi_codeid($classe.'%', 10, $monovir)) {
+                // 1 résultat
+          if (isset($data->item->sp_code_sq_pk)) {
+              $rd[0]=(array)$data->item;
           }
           // plusieurs
           elseif (isset($data->item)) {
-            foreach($data->item as $k=>$v) {
-              $rd[$k]=(array)$v;
-            }
+              foreach ($data->item as $k=>$v) {
+                  $rd[$k]=(array)$v;
+              }
           }
 
-          if(!empty($rd)) {
-            $this->getPresentations($rd,'sp_code_sq_pk', 1,0);
-            $this->attacherPrixMedic($rd,'sp_code_sq_pk');
-          }
-          return $rd;
+                if (!empty($rd)) {
+                    $this->getPresentations($rd, 'sp_code_sq_pk', 1, 0);
+                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                }
+                return $rd;
+            }
         }
-      }
     }
 
 /**
@@ -304,19 +359,26 @@ private function _get_the_pre_rbt_ville($code, $typCode) {
  * @param  string $col       colonne du tableau d'entrée qui contient le code thériaque du medoc
  * @return array            array d'entrée avec prixEstim
  */
-public function attacherPrixMedic(&$tabMedic, $col) {
-  if(is_array($tabMedic) ) {
-    $codesTheriaque=array_column($tabMedic, $col);
-    if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-    $codesTheriaqueListe=implode(',',$codesTheriaque);
+public function attacherPrixMedic(&$tabMedic, $col)
+{
+    if (is_array($tabMedic)) {
+        $codesTheriaque=array_column($tabMedic, $col);
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
+        }
+        $codesTheriaqueListe=implode(',', $codesTheriaque);
 
-    if($data=$this->_get_the_prix_unit_est($codesTheriaqueListe, 0)) {
-      $prixParUcd=array_column((array)$data, 'prix', 'code');
-      foreach($tabMedic as $k=>$v) {
-        if(isset($prixParUcd[$v[$col]])) $tabMedic[$k]['prixEstim']=$prixParUcd[$v[$col]];
-      }
+        if ($data=$this->_get_the_prix_unit_est($codesTheriaqueListe, 0)) {
+            $prixParUcd=array_column((array)$data, 'prix', 'code');
+            foreach ($tabMedic as $k=>$v) {
+                if (isset($prixParUcd[$v[$col]])) {
+                    $tabMedic[$k]['prixEstim']=$prixParUcd[$v[$col]];
+                }
+            }
+        }
     }
-  }
 }
 
 /**
@@ -325,13 +387,18 @@ public function attacherPrixMedic(&$tabMedic, $col) {
  * @param  string $typCode             type du code 0 : theriaque / 1 : UCD7 / 2 : UCD 13
  * @return array                      tableau
  */
-private function _get_the_prix_unit_est($codesTheriaqueListe, $typCode) {
-  if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-  $rd=[];
-  if($data=$the->get_the_prix_unit_est($codesTheriaqueListe, $typCode)) {
-    $rd=$this->_prepareData($data);
-    return $rd;
-  }
+private function _get_the_prix_unit_est($codesTheriaqueListe, $typCode)
+{
+    if (isset($this->_the)) {
+        $the=$this->_the;
+    } else {
+        $this->_the=$the=new $this->_classTheriaque;
+    }
+    $rd=[];
+    if ($data=$the->get_the_prix_unit_est($codesTheriaqueListe, $typCode)) {
+        $rd=$this->_prepareData($data);
+        return $rd;
+    }
 }
 
 /**
@@ -340,19 +407,26 @@ private function _get_the_prix_unit_est($codesTheriaqueListe, $typCode) {
  * @param  string $col       colonne du tableau d'entrée qui contient le code thériaque du medoc
  * @return array            array d'entrée avec codePrestaSecu
  */
-public function attacherPrestaSecuMedic(&$tabMedic, $col) {
-  if(is_array($tabMedic) ) {
-    $codesTheriaque=array_column($tabMedic, $col);
-    if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-    $codesTheriaqueListe=implode(',',$codesTheriaque);
+public function attacherPrestaSecuMedic(&$tabMedic, $col)
+{
+    if (is_array($tabMedic)) {
+        $codesTheriaque=array_column($tabMedic, $col);
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
+        }
+        $codesTheriaqueListe=implode(',', $codesTheriaque);
 
-    if($data=$this->_get_the_prix_unit_est($codesTheriaqueListe, 0)) {
-      $prixParUcd=array_column((array)$data, 'cpss', 'cip13');
-      foreach($tabMedic as $k=>$v) {
-        if(isset($prixParUcd[$v[$col]])) $tabMedic[$k]['codePrestaSecu']=$prixParUcd[$v[$col]];
-      }
+        if ($data=$this->_get_the_prix_unit_est($codesTheriaqueListe, 0)) {
+            $prixParUcd=array_column((array)$data, 'cpss', 'cip13');
+            foreach ($tabMedic as $k=>$v) {
+                if (isset($prixParUcd[$v[$col]])) {
+                    $tabMedic[$k]['codePrestaSecu']=$prixParUcd[$v[$col]];
+                }
+            }
+        }
     }
-  }
 }
 
 /**
@@ -361,13 +435,18 @@ public function attacherPrestaSecuMedic(&$tabMedic, $col) {
  * @param  string $typCode             type du code 0 : theriaque ... (cf doc Theriaque)
  * @return array                      tableau
  */
-private function _get_the_prestation($codesTheriaqueListe, $typCode) {
-  if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-  $rd=[];
-  if($data=$the->get_the_prestation($codesTheriaqueListe, $typCode)) {
-    $rd=$this->_prepareData($data);
-    return $rd;
-  }
+private function _get_the_prestation($codesTheriaqueListe, $typCode)
+{
+    if (isset($this->_the)) {
+        $the=$this->_the;
+    } else {
+        $this->_the=$the=new $this->_classTheriaque;
+    }
+    $rd=[];
+    if ($data=$the->get_the_prestation($codesTheriaqueListe, $typCode)) {
+        $rd=$this->_prepareData($data);
+        return $rd;
+    }
 }
 
 /**
@@ -375,28 +454,33 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode) {
  * @param  string $txt mot clé
  * @return array      résultats de recherche
  */
-    public function getCIM10fromKeywords($txt) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
-        if($data=$the->get_the_cim_10(3,$txt)) {
-          $data=$this->_prepareData($data);
+    public function getCIM10fromKeywords($txt)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
+            }
+            $rd=[];
+            if ($data=$the->get_the_cim_10(3, $txt)) {
+                $data=$this->_prepareData($data);
           // 1 résultat
-          if(isset($data['item']['code'])) {
-            $rd[(string)$data['item']['code']]=(string)$data['item']['libelle_long'];
-            return $rd;
+          if (isset($data['item']['code'])) {
+              $rd[(string)$data['item']['code']]=(string)$data['item']['libelle_long'];
+              return $rd;
           }
           // plusieurs
-          elseif(isset($data[0])) {
-            foreach($data as $k=>$d) {
-              if(isset($d['code'],$d['libelle_long'])) {
-                $rd[$d['code']]=$d['libelle_long'];
+          elseif (isset($data[0])) {
+              foreach ($data as $k=>$d) {
+                  if (isset($d['code'], $d['libelle_long'])) {
+                      $rd[$d['code']]=$d['libelle_long'];
+                  }
               }
-            }
           }
+            }
+            return $rd;
         }
-        return $rd;
-      }
     }
 
 /**
@@ -404,14 +488,19 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode) {
  * @param  string $code code CIM 10
  * @return string       libelle CIM 10
  */
-    public function getCIM10LabelFromCode($code) {
-      if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-      if($data=$the->get_the_cim_10(2,$code)) {
-        if(isset($data->item)) {
-          return (string)$data->item->libelle_long;
+    public function getCIM10LabelFromCode($code)
+    {
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
         }
-      }
-      return false;
+        if ($data=$the->get_the_cim_10(2, $code)) {
+            if (isset($data->item)) {
+                return (string)$data->item->libelle_long;
+            }
+        }
+        return false;
     }
 
 /**
@@ -419,30 +508,33 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode) {
  * @param  string $txt mot clé
  * @return array      résultats de recherche
  */
-    public function getAllergieFromKeywords($txt) {
-      if(strlen($txt)>=3) {
-        if(isset($this->_the)) $the=$this->_the; else $this->_the=$the=new msTheriaquePG;
-        $rd=[];
-        if($data=$the->get_the_allergie(3,$txt)) {
-          $data=$this->_prepareData($data);
-
-          // 1 résultat
-          if(isset($data['item']['code'])) {
-            $rd[(string)$data['item']['code']]=(string)$data['item']['libelle'];
-            return $rd;
-          }
-          // plusieurs
-          elseif(isset($data[0])) {
-            foreach($data as $k=>$d) {
-              if(isset($d['code'],$d['libelle'])) {
-                $rd[$d['code']]=$d['libelle'];
-              }
+    public function getAllergieFromKeywords($txt)
+    {
+        if (strlen($txt)>=3) {
+            if (isset($this->_the)) {
+                $the=$this->_the;
+            } else {
+                $this->_the=$the=new $this->_classTheriaque;
             }
-          }
+            $rd=[];
+            if ($data=$the->get_the_allergie(3, $txt)) {
+                $data=$this->_prepareData($data);
+                // 1 résultat
+                if (isset($data['item']['code'])) {
+                    $rd[(string)$data['item']['code']]=(string)$data['item']['libelle'];
+                    return $rd;
+                }
+                // plusieurs
+                elseif (isset($data[0])) {
+                    foreach ($data as $k=>$d) {
+                        if (isset($d['code'], $d['libelle'])) {
+                            $rd[$d['code']]=$d['libelle'];
+                        }
+                    }
+                }
+            }
+            return $rd;
         }
-
-        return $rd;
-      }
     }
 
 /**
@@ -573,59 +665,64 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode) {
 
          //chercher une grossesse en cours (cad si pas de type 245 associé)
          $name2typeID=new msData;
-         $name2typeID = $name2typeID->getTypeIDsFromName(['groFermetureSuivi', 'nouvelleGrossesse']);
-         if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
+           $name2typeID = $name2typeID->getTypeIDsFromName(['groFermetureSuivi', 'nouvelleGrossesse']);
+           if ($findGro=msSQL::sqlUnique("select pd.id as idGro, eg.id as idFin
          from objets_data as pd
          left join objets_data as eg on pd.id=eg.instance and eg.typeID='".$name2typeID['groFermetureSuivi']."' and eg.outdated='' and eg.deleted=''
          where pd.toID='".$this->_toID."' and pd.typeID='".$name2typeID['nouvelleGrossesse']."' and pd.outdated='' and pd.deleted='' order by pd.creationDate desc
          limit 1")) {
-             if (!$findGro['idFin']) {
-
-                 $objet=new msObjet;
-                 $objet->setToID($this->_toID);
+               if (!$findGro['idFin']) {
+                   $objet=new msObjet;
+                   $objet->setToID($this->_toID);
 
                  //$moduleClass="msMod".ucfirst($p['user']['module'])."CalcMed";
                  $moduleClass="msModGynobsCalcMed";
 
-                 if ($data=$objet->getLastObjetByTypeName('ddgReel', $findGro['idGro'])) {
-                   $rd['ddg']=$data['value'];
-                   $rd['basedOn']='ddgReel';
-                 } elseif ($data=$objet->getLastObjetByTypeName('DDR', $findGro['idGro'])) {
-                   $rd['ddr']=$data['value'];
-                   $rd['ddg']=$moduleClass::ddr2ddg($data['value']);
-                   $rd['basedOn']='DDR';
-                 } else {
-                     return $rd=array('statut'=>'missingValue');
-                 }
-                 $rd['terme']=$moduleClass::ddg2terme($rd['ddg'], date('d/m/Y'));
-                 $rd['termeMath']=$moduleClass::ddg2termeMath($rd['ddg'], date('d/m/Y'));
+                   if ($data=$objet->getLastObjetByTypeName('ddgReel', $findGro['idGro'])) {
+                       $rd['ddg']=$data['value'];
+                       $rd['basedOn']='ddgReel';
+                   } elseif ($data=$objet->getLastObjetByTypeName('DDR', $findGro['idGro'])) {
+                       $rd['ddr']=$data['value'];
+                       $rd['ddg']=$moduleClass::ddr2ddg($data['value']);
+                       $rd['basedOn']='DDR';
+                   } else {
+                       return $rd=array('statut'=>'missingValue');
+                   }
+                   $rd['terme']=$moduleClass::ddg2terme($rd['ddg'], date('d/m/Y'));
+                   $rd['termeMath']=$moduleClass::ddg2termeMath($rd['ddg'], date('d/m/Y'));
 
-                 if($rd['termeMath']>46) {
-                   $rd['statut']='termeDepasse46SA';
-                 } else {
-                   $rd['statut']='grossesseEnCours';
-                 }
-                 $rd['date']=$data['updateDate'];
-                 $rd['from']=$data['prenom'].' '.$data['nom'];
-                 $rd['fromID']=$data['fromID'];
+                   if ($rd['termeMath']>46) {
+                       $rd['statut']='termeDepasse46SA';
+                   } else {
+                       $rd['statut']='grossesseEnCours';
+                   }
+                   $rd['date']=$data['updateDate'];
+                   $rd['from']=$data['prenom'].' '.$data['nom'];
+                   $rd['fromID']=$data['fromID'];
 
-                 return $rd;
-             } else {
+                   return $rd;
+               } else {
+                   return $rd=array('statut'=>'absenceGrossesse');
+               }
+           } else {
                return $rd=array('statut'=>'absenceGrossesse');
-             }
-         } else {
-           return $rd=array('statut'=>'absenceGrossesse');
-         }
-     }
+           }
+       }
    }
 
-   private function _prepareData($data) {
-     if(is_object($data)) {
-       $data=msTools::object2objectToArray($data);
-       $rd=$data['item'];
-     } else {
-       $rd=$data;
-     }
-     return $rd;
-   }
+    private function _prepareData($data)
+    {
+        $rd=[];
+        if (is_object($data)) {
+            $data=msTools::objectToArray($data);
+            if (isset($data['item']['0'])) {
+                $rd=$data['item'];
+            } elseif(isset($data['item'])) {
+                $rd[0]=$data['item'];
+            }
+        } else {
+            $rd=$data;
+        }
+        return $rd;
+    }
 }

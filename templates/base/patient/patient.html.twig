@@ -84,8 +84,13 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
+                  {% if config.LapOnOff == 'on' %}
+                    <li>
+                      <a href="/lap/{{ page.patient.id }}/" target="_blank">Prescription médicamenteuse (LAP)</a>
+                    </li>
+                  {% endif %}
                   <li>
-                      <a id="linkAddNewOrdo" href="#">Nouvelle prescription</a>
+                    <a id="linkAddNewOrdo" href="#">{% if config.LapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
                   </li>
                 </ul>
             </div>
@@ -173,17 +178,21 @@
               <li role="presentation" title="Liens familiaux">
                 <a href="#panelLiensFamiliaux" data-toggle="tab"><span class="glyphicon glyphicon glyphicon-link" aria-hidden="true"></span></a></a>
               </li>
+              {% if config.LapOnOff == 'on' %}
               <li role="presentation" title="Autres actions">
                 <a href="#panelOptions" data-toggle="tab"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></a></a>
               </li>
+              {% endif %}
             </ul>
 
             <div class="tab-content">
 
               {# Formulaire ajout ALD #}
+              {% if config.LapOnOff == 'on' %}
               <div role="tabpanel" class="tab-pane" id="panelOptions">
                 <button class="btn btn-info btn-block newCS" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter une ALD</button>
               </div>
+              {% endif %}
 
               {# Formulaire latéral des ATCD #}
               <div role="tabpanel" class="tab-pane active" id="panelATCD">

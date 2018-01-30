@@ -25,7 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='y';
+$debug='';
 $template='inc-searchMedicTableResults';
 
 

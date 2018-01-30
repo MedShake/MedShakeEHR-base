@@ -37,7 +37,7 @@ $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 
 //si patient externe, on cherche une relation avec un patient, et si on trouve, on permute
-if ($externe=$patient->isExterne() and 
+if ($externe=$patient->isExterne() and
     ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
         ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
         WHERE od.toID='".$p['page']['patient']['id']."'"))) {
@@ -62,12 +62,12 @@ if ($externe and !$internePatient) {
     $name2typeID = $name2typeID->getTypeIDsFromName($keys);
 
     $candidats=array();
-    $candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p 
+    $candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
                WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']."')
                OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']."')");
 
-    $candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p 
+    $candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
                WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']."'");
 
@@ -107,7 +107,7 @@ $p['page']['patient']['today']=$patient->getToday();
 $p['page']['patient']['historique']=$patient->getHistorique();
 
 //les ALD du patient
-$p['page']['patient']['ALD']=$patient->getALD();
+if($p['config']['LapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}
 
 //les certificats
 $certificats=new msData();

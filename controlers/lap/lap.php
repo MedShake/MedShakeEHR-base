@@ -29,6 +29,8 @@
  $debug='';
  $template="lap";
 
+ if($p['config']['LapOnOff'] != 'on') die("Le LAP n'est pas activé");
+
  $p['page']['patient']['id']=$match['params']['patient'];
  $patient=new msPeople();
  $patient->setToID($match['params']['patient']);
