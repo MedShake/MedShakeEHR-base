@@ -34,10 +34,31 @@ $(document).ready(function() {
     $("#montant").html('Reste à payer: ' + $(this).attr('data-aregler') + '€');
     $("input[name=patientID]").val($(this).attr('data-patientID'));
     $("input[name=objetID]").val($(this).attr('data-objetID'));
+    $("input[name=apayer]").val($(this).attr('data-aregler'));
     $("input[name=dejapaye]").val($(this).attr('data-dejapaye'));
     $("input[name=dejaCheque]").val($(this).attr('data-dejaCheque'));
     $("input[name=dejaCB]").val($(this).attr('data-dejaCB'));
     $("input[name=dejaEspeces]").val($(this).attr('data-dejaEspeces'));
+  });
+
+  $(".checkAmount").on("keyup", function() {
+    var total = 0;
+    var filled = [0,0,0];
+    $(".checkAmount").each(function(idx,el){
+      total += parseFloat($(el).val()) || parseInt($(el).val()) || 0;
+      filled[idx] = $(el).val()!="";
+    });
+    $("input[type=submit]").removeClass("disabled");
+    $(".checkAmount").parent().removeClass('has-error');
+    $(".checkAmount").parent().removeClass('has-success');
+    $(".checkAmount").each(function(idx,el){
+      if (total > $("input[name=apayer]").val() && filled[idx]) {
+        $(el).parent().addClass('has-error');
+        $("input[type=submit]").addClass("disabled");
+      }
+      else if (total==$("input[name=apayer]").val() && filled[idx])
+        $(el).parent().addClass('has-success');
+    });
   });
 
   //close button zone newReglement

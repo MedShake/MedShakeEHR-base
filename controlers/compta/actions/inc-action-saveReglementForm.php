@@ -38,25 +38,27 @@ if (count($_POST)>0) {
     if (!isset($_POST['regleCheque'])) {
         $_POST['regleCheque']='';
     }
-    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque']+$_POST['dejaCheque'], $supportID);
 
     //cb
     if (!isset($_POST['regleCB'])) {
         $_POST['regleCB']='';
     }
-    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB']+$_POST['dejaCB'], $supportID);
 
     //espèces
     if (!isset($_POST['regleEspeces'])) {
         $_POST['regleEspeces']='';
     }
-    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces']+$_POST['dejaEspeces'], $supportID);
 
-    //identité chèque
     if (!isset($_POST['regleIdentiteCheque'])) {
         $_POST['regleIdentiteCheque']='';
     }
-    $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
+    
+    if (($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) <= $_POST['apayer']) {
+        $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque']+$_POST['dejaCheque'], $supportID);
+        $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB']+$_POST['dejaCB'], $supportID);
+        $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces']+$_POST['dejaEspeces'], $supportID);
+        $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
+    }
 
     if ($_POST['page']=='comptaToday') {
         msTools::redirection('/compta/aujourdhui/');
