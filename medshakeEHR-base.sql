@@ -461,6 +461,7 @@ INSERT INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `descr
 (20, 'admin', 'sport', 'sport exercé', 'Sport', 'Sport exercé', '', 'Le sport indiqué n\'est pas correct', 'text', '', 'base', 25, 1, '2018-01-01 00:00:00', 3600, 1),
 (21, 'admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', 26, 1, '2018-01-01 00:00:00', 3600, 1),
 (22, 'admin', 'othersfirstname', 'liste des prénoms secondaires', 'Autres prénoms', 'Les autres prénoms d\'une personne', '', '', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
+(32, 'typecs', 'csBaseGroup', '', 'Consultation', 'support parent pour les consultations', '', '', '', 'baseConsult', 'user', 33, 1, '2018-01-01 00:00:00', 86400, 1),
 (34, 'medical', 'poids', 'kg', 'Poids', 'poids du patient', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (35, 'medical', 'taillePatient', 'cm', 'Taille', 'taille du patient', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (38, 'medical', 'atcdFamiliaux', 'Antécédents familiaux', 'Antécédents familiaux', 'Antécédents familiaux', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
