@@ -34,6 +34,10 @@ $(document).ready(function() {
     $("#montant").html('Reste à payer: ' + $(this).attr('data-aregler') + '€');
     $("input[name=patientID]").val($(this).attr('data-patientID'));
     $("input[name=objetID]").val($(this).attr('data-objetID'));
+    $("input[name=dejapaye]").val($(this).attr('data-dejapaye'));
+    $("input[name=dejaCheque]").val($(this).attr('data-dejaCheque'));
+    $("input[name=dejaCB]").val($(this).attr('data-dejaCB'));
+    $("input[name=dejaEspeces]").val($(this).attr('data-dejaEspeces'));
   });
 
   //close button zone newReglement

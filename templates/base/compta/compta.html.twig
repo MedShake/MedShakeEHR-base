@@ -196,7 +196,7 @@
                             <td>
                                 {% if reg.regleFacture - reg.dejaPaye > 0 %}
                                 {% set apayer = reg.regleFacture - reg.dejaPaye %}
-                                  <a class="btn btn-danger btn-xs editReglement pull-right" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-aregler="{{ apayer }}" data-toggle="modal" data-target="#modalReglement">
+                                  <a class="btn btn-danger btn-xs editReglement pull-right" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-aregler="{{ apayer }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                                     Saisir règlement
                                   </a>
                                 {% endif %}
@@ -277,6 +277,9 @@
 		        <input title=" / " name="formIN" value="" type="hidden">
 		        <input title=" / " name="patientID" value="" type="hidden">
 		        <input title=" / " name="objetID" value="" type="hidden">
+		        <input title=" / " name="dejaCheque" value="" type="hidden">
+		        <input title=" / " name="dejaCB" value="" type="hidden">
+		        <input title=" / " name="dejaEspeces" value="" type="hidden">
             <div class="row">
               <div class="col-md-3">
                 <div class="form-group">

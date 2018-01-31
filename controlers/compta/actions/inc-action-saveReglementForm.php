@@ -38,19 +38,19 @@ if (count($_POST)>0) {
     if (!isset($_POST['regleCheque'])) {
         $_POST['regleCheque']='';
     }
-    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque'], $supportID);
+    $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque']+$_POST['dejaCheque'], $supportID);
 
     //cb
     if (!isset($_POST['regleCB'])) {
         $_POST['regleCB']='';
     }
-    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB'], $supportID);
+    $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB']+$_POST['dejaCB'], $supportID);
 
     //espèces
     if (!isset($_POST['regleEspeces'])) {
         $_POST['regleEspeces']='';
     }
-    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces'], $supportID);
+    $patient->createNewObjetByTypeName('regleEspeces', $_POST['regleEspeces']+$_POST['dejaEspeces'], $supportID);
 
     //identité chèque
     if (!isset($_POST['regleIdentiteCheque'])) {
