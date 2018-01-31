@@ -58,7 +58,9 @@ if (count($_POST)>0) {
     }
     $patient->createNewObjetByTypeName('regleIdentiteCheque', $_POST['regleIdentiteCheque'], $supportID);
 
-    msTools::redirection('/compta/aujourdhui/');
-} else {
-    echo 'Formulaire vide !';
+    if ($_POST['page']=='comptaToday') {
+        msTools::redirection('/compta/aujourdhui/');
+    } else {
+        msTools::redirection('/compta/');
+    }
 }

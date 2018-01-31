@@ -30,14 +30,10 @@ $(document).ready(function() {
 
   //bouton de nouveau reglement
   $(".editReglement").on("click", function(e) {
-    e.preventDefault();
-    if ($('#newReglement').html() != '') {
-      if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
-        sendFormToReglementDiv($(this));
-      }
-    } else {
-      sendFormToReglementDiv($(this));
-    }
+    $("#nomPatient").html($(this).attr('data-patientname'));
+    $("#montant").html('Reste à payer: ' + $(this).attr('data-aregler') + '€');
+    $("input[name=patientID]").val($(this).attr('data-patientID'));
+    $("input[name=objetID]").val($(this).attr('data-objetID'));
   });
 
   //close button zone newReglement
@@ -84,26 +80,3 @@ $(document).ready(function() {
 
 });
 
-
-
-
-//envoyer le form new Reglement dans le div Ordo
-function sendFormToReglementDiv(el) {
-
-  $.ajax({
-    url: urlBase+'/compta/ajax/extractReglementForm/',
-    type: 'post',
-    data: {
-      objetID: el.attr('data-objetID'),
-      patientID: el.attr('data-patientID'),
-      montant: el.attr('data-montant')
-    },
-    dataType: "html",
-    success: function(data) {
-      $('#newReglement').html(data);
-    },
-    error: function() {
-      alert('Problème, rechargez la page !');
-    }
-  });
-}
