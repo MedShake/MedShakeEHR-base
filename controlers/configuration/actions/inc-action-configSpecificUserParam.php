@@ -24,9 +24,12 @@
  * Config > action : enregistrer les paramètres spécifiques aux utilisateurs
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-
+$passwords=msSQL::sql2tabKey("SELECT dt.id as k, od.id as Id, od.value as Value FROM data_types AS dt
+        LEFT JOIN objets_data AS od on od.typeID=dt.id and od.toID='".$_POST['userID']."' and od.outdated='' and od.deleted=''
+        where dt.groupe='user' and dt.formType='password'", "k");
 if (is_array($_POST)) {
     foreach ($_POST as $k => $v) {
         $typeID=explode('_', $k);
@@ -36,7 +39,10 @@ if (is_array($_POST)) {
             $objet = new msObjet();
             $objet->setFromID($p['user']['id']);
             $objet->setToID($_POST['userID']);
-            $objet->createNewObjet($typeID, $v);
+            $id=$objet->createNewObjet($typeID, $v);
+            if (array_key_exists($typeID, $passwords) and $v!=$passwords[$typeID]['Value']) {
+                msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$v."',@password)) WHERE id='".$passwords[$typeID]['Id']."' limit 1");
+            }
         }
     }
 }
