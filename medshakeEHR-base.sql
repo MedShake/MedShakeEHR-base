@@ -252,8 +252,9 @@ CREATE TABLE `printed` (
 
 CREATE TABLE `system` (
   `id` smallint(4) UNSIGNED NOT NULL,
-  `module` varchar(20) DEFAULT 'base',
-  `version` varchar(20) DEFAULT NULL
+  `name` varchar(30) DEFAULT NULL,
+  `groupe` enum('system', 'module', 'cron', 'lock') DEFAULT 'system',
+  `value` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -346,7 +347,7 @@ ALTER TABLE `printed`
 
 ALTER TABLE `system`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `module` (`module`);
+  ADD UNIQUE KEY `name` (`name`);
 
 
 ALTER TABLE `actes`
@@ -594,4 +595,4 @@ INSERT INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `registerD
 (1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
 (2, 'clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
 
-INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v3.0.0');
+INSERT INTO `system` (`id`,`name`, `groupe`,`value`) VALUES (1, 'base', `module`, 'v3.0.0');

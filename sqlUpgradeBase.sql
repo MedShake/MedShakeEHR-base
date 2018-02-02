@@ -77,6 +77,14 @@ UPDATE `forms` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 UPDATE `form_basic_types` SET `name`='username', `description`='identifiant utilisateur', `validationRules`='required', `validationErrorMsg`='L\'identifiant utilisateur est manquant' WHERE `name`='userid';
 UPDATE `form_basic_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
+--system
+ALTER TABLE `system` CHANGE `module` `name` VARCHAR(30) NOT NULL;
+ALTER TABLE `system` ADD UNIQUE KEY `name` (`name`);
+ALTER TABLE `system` ADD `groupe` enum('system', 'module', 'cron', 'lock') DEFAULT 'system' after `name`;
+ALTER TABLE `system` CHANGE `version` `value` text DEFAULT NULL;
+
+UPDATE `system` SET `groupe`='module' WHERE `name`='base'; 
+
 -- 2.3.0 to 3.0.0
 
 ALTER TABLE `actes_cat` CHANGE `type` `module` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
