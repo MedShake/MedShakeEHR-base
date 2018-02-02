@@ -26,16 +26,6 @@
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
-
-/*
-différents cas à gérer :
-- rdv clicrdv fiche connue
-    traduction du vevent
-- rdv clicrdv fiche inconnue
-- rdv medshake nouveau patient
-- rdv medshake patient existant
-*/
-
 class msClicRDV
 {
     private $_userID;
@@ -149,22 +139,174 @@ class msClicRDV
         $ret[1]=array_flip($ret[0]);
     }
 
+    /*  envoyer un événement vers clicRDV
+        $event: événement au format interne à envoyer
+    */
+    public function sendEvent($event) {
+        //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
+        // tant pis... le rdv sera donc envoyé à la prochaine synchro
+        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+            return false;
+        }
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
+        $patient=new msPeople();
+        $this->_groupID=explode(':', $params['clicRdvGroupId'])[0];
+        $this->_calID=explode(':', $params['clicRdvCalId'])[0];
+        $interventions=json_decode($params['clicRdvConsultId'], true)[0];
+        $patients=$this->_getLocalPatients()[0];
+        $relatedPatients=$this->_getRelatedPatients()[0];
+        $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
+        $text='fermé';
+        if ($event['type']!='[off]' and $event['patientid']) {
+            $patient->setToID($event['patientid']);
+            $patientData=$patient->getSimpleAdminDatasByName();
+            if (array_key_exists('birthname', $patientData))
+                $text=$patientData['birthname'];
+            if (array_key_exists('lastname', $patientData))
+                $text=$patientData['lastname'];
+            if (array_key_exists('firstname', $patientData))
+                $text.=' '.$patientData['firstname'];
+        }
+        $eventClic=array();
+        $eventClic['vevent']=array(
+            'start'=>$event['start'],
+            'end'=>$event['end'],
+            'calendar_id'=>$this->_calID,
+            'text'=>$text,
+            'intervention_id'=>$event['type']=='[off]'?0:$interventions[$event['type']][0],
+            'taker'=>'MedShakeEHR',
+            'comments'=>$event['motif'],
+            'from_web'=>0
+        );
+        if ($event['type']=='[off]' or !$event['patientid']) {
+            $eventClic['vevent']['fiche_id']=0;
+            $eventClic['vevent']['colorref']='#CCCCCC';
+        //le patient interne a une fiche sur clic
+        } elseif (array_key_exists($event['patientid'], $patients)) {
+            $eventClic['vevent']['fiche_id']=$patients[$event['patientid']];
+        // le patient interne est lié à un externe qui a une fiche sur clic
+        } elseif (array_key_exists($patients[$event['patientid']], $relatedPatients)) {
+            $eventClic['vevent']['fiche_id']=$relatedPatients[$patients[$event['patientid']]];
+        } else {
+            //le patient n'a pas encore de fiche sur clic, donc on la crée
+            $ficheClic=array();
+            $ficheClic['fiche']=array();
+            $ficheClic['fiche']['group_id']=$this->_groupID;
+            $ficheClic['fiche']['externid']=$event['patientid'];
+            $ficheClic['fiche']['rappel_email']=0;
+            if (array_key_exists('firstname', $patientData))
+                $ficheClic['fiche']['firstname']=$patientData['firstname'];
+            if (array_key_exists('birthname', $patientData))
+                $ficheClic['fiche']['lastname']=$patientData['birthname'];
+            if (array_key_exists('lastname', $patientData))
+                $ficheClic['fiche']['lastname']=$patientData['lastname'];
+            if (array_key_exists('mobilePhone', $patientData))
+                $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
+            if (array_key_exists('personalEmail', $patientData))
+                $ficheClic['fiche']['email']=$patientData['personalEmail'];
+            if ($res=json_decode($this->_sendCurl('POST', 'fiches.json', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+                $obj=new msObjet();
+                $obj->setToID($event['patientid']);
+                $obj->setFromID($clicRDVservice);
+                $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
+            } else {
+                die("Erreur lors de la création d'une fiche\n");
+            }
+        }
+        //envoi de l'événement et récupération de la réponse
+        if ($evtc=json_decode($this->_sendCurl('POST', 'vevents.json', $this->_groupID, '', json_encode($eventClic)), true)) {
+            //enregistrement de son ID externe dans la base et dans les événements
+            msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$event['id']."'");
+        } else {
+            die("Erreur lors de la création d'un événement\n");
+        }
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+    }
+
+    /*  modifier un événement sur clicRDV
+        $event: événement au format interne à modifier
+    */
+    public function modEvent($event) {
+        //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
+        // tant pis... le rdv sera donc envoyé à la prochaine synchro
+        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+            return false;
+        }
+        //si l'événement n'a pas été synchronisé, on ne peut rien faire
+        if (!$event['externid']) {
+            return false;
+        }
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
+        $patient=new msPeople();
+        $this->_groupID=explode(':', $params['clicRdvGroupId'])[0];
+        $this->_calID=explode(':', $params['clicRdvCalId'])[0];
+        $patients=$this->_getLocalPatients()[0];
+        $relatedPatients=$this->_getRelatedPatients()[0];
+        $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
+        $eventClic=array();
+        $eventClic['vevent']=array(
+            'calendar_id'=>$this->_calID,
+            'start'=>$event['start'],
+            'end'=>$event['end']
+        );
+        $this->_sendCurl('PUT', 'vevents/'.$event['externid'].'.json', $this->_groupID, '', json_encode($eventClic));
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+    }
+
+    /*  supprimer un événement sur clicRDV
+        $event: événement au format interne à supprimer
+    */
+    public function delEvent($event) {
+        //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
+        // tant pis... le rdv sera donc envoyé à la prochaine synchro
+        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+            return false;
+        }
+        //si l'événement n'a pas été synchronisé, il n'y a rien à faire
+        if (!$event['externid']) {
+            return false;
+        }
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
+        $patient=new msPeople();
+        $this->_groupID=explode(':', $params['clicRdvGroupId'])[0];
+        $this->_calID=explode(':', $params['clicRdvCalId'])[0];
+        $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
+        $eventClic=array();
+        $eventClic['vevent']=array(
+            'calendar_id'=>$this->_calID,
+            'deleted'=>'1'
+        );
+        $this->_sendCurl('PUT', 'vevents/'.$event['externid'].'.json', $this->_groupID, '', json_encode($eventClic));
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+    }
+
     public function syncEvents() {
         $params=$this->_getUserParams();
         if (!array_key_exists('clicRdvUserId', $params)) {
             return false;
         }
+        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+            return false;
+        }
+        //acquisition du lock
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
+
         $this->_groupID=explode(':', $params['clicRdvGroupId'])[0];
         $this->_calID=explode(':', $params['clicRdvCalId'])[0];
         $interventions=json_decode($params['clicRdvConsultId'], true);
         $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
+        $lastupdate=msSQL::sqlQuery("SELECT value FROM system WHERE groupe='cron' and name='clicRDV'");
         $startdate=date("Y-m-d H:i:s");
         $enddate=(date("Y-m-d H:i:s", strtotime("+2 year")));
-        if (($res=$this->_sendCurl('GET', 'vevents.json', $this->_groupID, '&results=all&calendar_id='.$this->_calID.
+        $searchString='&results=all&calendar_id='.$this->_calID.
           '&conditions[0][field]=type&conditions[0][op]=%21%3D&conditions[0][value]=VfreebusyEvent'.
           '&conditions[1][field]=taker&conditions[1][op]=%21%3D&conditions[1][value]=clicRDV'.
           '&conditions[2][field]=start&conditions[2][op]=%3E%3D&conditions[2][value]='.str_replace(' ', '%20', $startdate).
-          '&conditions[3][field]=end&conditions[3][op]=%3C%3D&conditions[3][value]='.str_replace(' ', '%20', $enddate))) === false) {
+          '&conditions[3][field]=end&conditions[3][op]=%3C%3D&conditions[3][value]='.str_replace(' ', '%20', $enddate);
+        if ($lastupdate) {
+            $searchString+='&conditions[4][field]=updated_at&conditions[4][op]=%3E%3D&conditions[4][value]='.str_replace(' ', '%20', $lastupdate);
+        }
+        if (($res=$this->_sendCurl('GET', 'vevents.json', $this->_groupID, $searchString)) === false) {
             return false;
         }
         $res=json_decode($res, true);
@@ -172,6 +314,7 @@ class msClicRDV
         if (array_key_exists('records', $res)) {
             $rdvClic=$res['records'];
         }
+        $obj=new msObjet();
         $patient=new msPeople();
         $agenda=new msAgenda();
         $agenda->setStartDate($startdate);
@@ -249,11 +392,13 @@ class msClicRDV
                 if (array_key_exists('personalEmail', $patientData))
                     $ficheClic['fiche']['email']=$patientData['personalEmail'];
                 if ($res=json_decode($this->_sendCurl('POST', 'fiches.json', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
-                    $obj=new msObjet();
                     $obj->setToID($vlocal['patientid']);
                     $obj->setFromID($clicRDVservice);
                     $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
                     $patients[0][$vlocal['patientid']]=$res['records'][0]['id'];
+                } else {
+                    msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+                    die("Erreur lors de la création d'une fiche\n");
                 }
             }
             //envoi de l'événement et récupération de la réponse
@@ -262,6 +407,9 @@ class msClicRDV
                 msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$vlocal['id']."'");
                 $events[$k]['externid']=$evtc['id'];
                 $knownEvents[$evtc['id']]=$k;
+            } else {
+                msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+                die("Erreur lors de la création d'un événement\n");
             }
         }
         //sens clicRDV => local
@@ -284,24 +432,24 @@ class msClicRDV
                     $patient->setType('externe');
                     $patientID=$patient->createNew();
                     $patients[1][$fiche['id']]=$patientID;
-                    $data=new msObjet();
-                    $data->setToID($patientID);
-                    $data->setFromID($clicRDVservice);
-                    $data->createNewObjetByTypeName('clicRdvPatientId', $fiche['id']);
-                    $data->createNewObjetByTypeName('firstname', $fiche['firstname']);
-                    $data->createNewObjetByTypeName('lastname', $fiche['lastname']);
+                    $obj->setToID($patientID);
+                    $obj->setFromID($clicRDVservice);
+                    $obj->createNewObjetByTypeName('clicRdvPatientId', $fiche['id']);
+                    $obj->createNewObjetByTypeName('firstname', $fiche['firstname']);
+                    $obj->createNewObjetByTypeName('lastname', $fiche['lastname']);
                     if ($fiche['birthdate'])
-                    $data->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
-                    $data->createNewObjetByTypeName('personalEmail', $fiche['email']);
+                    $obj->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
+                    $obj->createNewObjetByTypeName('personalEmail', $fiche['email']);
                     if ($fiche['firstphone'] and (!strpos('06', $fiche['firstphone']) or !strpos('07', $fiche['firstphone']))) {
-                        $data->createNewObjetByTypeName('mobilePhone', $fiche['firstphone']);
+                        $obj->createNewObjetByTypeName('mobilePhone', $fiche['firstphone']);
                     } elseif ($fiche['secondphone'] and (!strpos('06', $fiche['secondphone']) or !strpos('07', $fiche['secondphone']))) {
-                        $data->createNewObjetByTypeName('mobilePhone', $fiche['secondphone']);
+                        $obj->createNewObjetByTypeName('mobilePhone', $fiche['secondphone']);
                     } elseif ($fiche['firstphone']) {
-                        $data->createNewObjetByTypeName('homePhone', $fiche['firstphone']);
+                        $obj->createNewObjetByTypeName('homePhone', $fiche['firstphone']);
                     }
                 } else {
-                    die("Erreur lors de la récupération d'une fiche\n".json_encode($fiche).'\n');
+                    msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+                    die("Erreur lors de la récupération d'une fiche\n");
                 }
                 //on crée l'événement
                 $agenda->set_eventID(null);
@@ -345,6 +493,8 @@ class msClicRDV
                 }
             }
         }
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'cron', 'value'=>$startdate));
+        msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
     }
 
 }
