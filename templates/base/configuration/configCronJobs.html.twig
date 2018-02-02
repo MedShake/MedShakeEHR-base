@@ -31,6 +31,9 @@
 
 {% block head %}
   {{ parent() }}
+  <style>
+    .leftcell {vertical-align:middle !important;text-align:center;border-right:1px solid #ddd;}
+  </style>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
 {% endblock %}
 
@@ -66,7 +69,7 @@
       <tbody>
         {% for k,v in page.availableCrons %}
           <tr>
-              <td rowspan="2">{{ v.task }}</td>
+              <td rowspan="2" class="leftcell">{{ v.task }}</td>
               <td colspan="6">{{ v.description }}</td>
           </tr>
           <tr>
