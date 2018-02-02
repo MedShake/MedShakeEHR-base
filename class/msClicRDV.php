@@ -143,6 +143,10 @@ class msClicRDV
         $event: événement au format interne à envoyer
     */
     public function sendEvent($event) {
+        $params=$this->_getUserParams();
+        if (!array_key_exists('clicRdvUserId', $params)) {
+            return false;
+        }
         //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
         // tant pis... le rdv sera donc envoyé à la prochaine synchro
         if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
@@ -227,6 +231,10 @@ class msClicRDV
         $event: événement au format interne à modifier
     */
     public function modEvent($event) {
+        $params=$this->_getUserParams();
+        if (!array_key_exists('clicRdvUserId', $params)) {
+            return false;
+        }
         //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
         // tant pis... le rdv sera donc envoyé à la prochaine synchro
         if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
@@ -257,6 +265,10 @@ class msClicRDV
         $event: événement au format interne à supprimer
     */
     public function delEvent($event) {
+        $params=$this->_getUserParams();
+        if (!array_key_exists('clicRdvUserId', $params)) {
+            return false;
+        }
         //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
         // tant pis... le rdv sera donc envoyé à la prochaine synchro
         if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
