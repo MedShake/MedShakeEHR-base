@@ -24,9 +24,15 @@
  * Patient > action : sauver un formulaire de consulation
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $formIN=$_POST['formIN'];
+
+$dontIgnoreEmpty=true;
+if (isset($match['params']['ignoreEmpty']) and isset($_POST['mode']) and $_POST['mode']=='create') {
+    $dontIgnoreEmpty = false;
+}
 
 //definition formulaire de travail
 $form = new msForm();
@@ -61,7 +67,7 @@ if ($validation === false) {
             $in = substr($k, $pos+1);
         }
         if (isset($in)) {
-            if (!empty($in)) {
+            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($in)))) {
                 $patient->createNewObjetByTypeName($in, $v, $supportID);
             }
         }
