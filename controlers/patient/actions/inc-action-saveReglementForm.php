@@ -24,6 +24,7 @@
  * Patient > action : sauver un règlement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 if (count($_POST['acteID'])>0) {
@@ -33,9 +34,9 @@ if (count($_POST['acteID'])>0) {
 
     //support
     if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', '0', $_POST['acteID'], $_POST['objetID']);
+        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName('reglePorteur', '', '0', $_POST['acteID']);
+        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID']);
     }
 
     //situation patient

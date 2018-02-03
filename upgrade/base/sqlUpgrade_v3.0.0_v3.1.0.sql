@@ -92,6 +92,10 @@ SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='relationRelations');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', @cat, 1, '2018-01-01 00:00:00', 1576800000, 1);
 
+SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='catParamsUsersAdmin');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('user', 'administratifComptaPeutVoirRecettesDe', '', 'administratifComptaPeutVoirRecettesDe', 'permet à l\'utilisateur sélectionné de voir les recettes des praticiens choisis', '', '', 'text', '', 'base', @cat, 1, '2018-01-01 00:00:00', 3600, 1);
+
 UPDATE `data_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
 --forms_cat
