@@ -63,6 +63,22 @@ class msTheriaqueWS {
       return $this->_client->get_the_specialite_multi_codeid($codeid,$vartyp,$monovir);
   }
 
+  public function get_the_secabilite($codeid) {
+    return $this->_client->get_the_secabilite($codeid);
+  }
+
+  public function get_the_voie_spe($codeid) {
+    return $this->_client->get_the_voie_spe($codeid);
+  }
+
+  public function get_the_gen_spe($codeid, $vartyp) {
+    return $this->_client->get_the_gen_spe($codeid, $vartyp);
+  }
+
+  public function get_the_unite($codeid, $typid) {
+    return $this->_client->get_the_unite($codeid, $typid);
+  }
+
   /// Présentations
   public function get_the_presentation_v2($codeid,$typid) {
     return $this->_client->get_the_presentation_v2($codeid,$typid);
@@ -70,6 +86,10 @@ class msTheriaqueWS {
 
   public function get_the_pre_rbt($codecip,$vartype) {
     return $this->_client->get_the_pre_rbt($codecip,$vartype);
+  }
+
+  public function get_the_desc_pres($codeid,$typid) {
+    return $this->_client->get_the_desc_pres($codeid,$typid);
   }
 
   /// Produits

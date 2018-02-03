@@ -1,0 +1,137 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : onglet de recherche
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div id="modalRecherche" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Nouvelle prescription</h4>
+      </div>
+      <div class="modal-body">
+
+        {# Onglets #}
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active">
+            <a id="recherchermedicTab" href="#recherchermedic" aria-controls="home" role="tab" data-toggle="tab">Rechercher</a>
+          </li>
+          <li role="presentation" class="disabled">
+            <a id="prescriremedicTab" href="#prescriremedic" aria-controls="profile" role="tab" data-toggle="tab">Prescrire</a>
+          </li>
+        </ul>
+        <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
+
+          {# Onglet Rechercher #}
+          <div role="tabpanel" class="tab-pane active" id="recherchermedic">
+            <form id="rechercheMedic">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="txtRechercheMedic">Rechercher</label>
+                  <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="nom de médicament ou de substance, code ..."/>
+                  <span id="txtRechercheMedicHB" class="help-block">Taper ici le texte de votre recherche</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="typeRechercheMedic">Dans</label>
+                  <select id="typeRechercheMedic" class="form-control" autocomplete="off">
+                    <option value="dci">Médicaments virtuels (DCI)</option>
+                    <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                    <option value="spe">Spécialités commerciales</option>
+                    <option value="suba">Substances actives</option>
+                    <option value="atc">Code ATC</option>
+                  </select>
+                  <span id="typeRechercheMedicHB" class="help-block">Lieu de recherche du texte indiqué</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
+                  <label for="typeRechercheMedic">Montrer</label>
+                  <select id="retourRechercheMedic" class="form-control" autocomplete="off">
+                    <option value="1">Médicaments virtuels (DCI)</option>
+                    <option value="3">Médicaments virtuels + Spécialités commerciales</option>
+                    <option value="0">Spécialités commerciales</option>
+                  </select>
+                  <span id="retourRechercheMedicHB" class="help-block">Médicaments retournés</span>
+                </div>
+              </div>
+            </form>
+
+            <div class="row">
+              <div id="rechercheResultats"></div>
+            </div>
+          </div>
+
+          {# Onglet Prescrire #}
+          <div role="tabpanel" class="tab-pane" id="prescriremedic">
+            <form>
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <textarea class="form-control gras" rows="2" id="lapFrappePrescription" autocomplete="off" style="font-size:30px" placeholder="saisir ici la prescription"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <select id='uniteUtilisee' class="form-control input-sm"></select>
+                  </div>
+                  <div class="form-group">
+                    <select id="voieUtilisee" class="form-control input-sm"></select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="jumbotron" id="prescriptionHuman">
+                <div id="prescriptionHumanMedicName" class="gras"></div>
+                <div id="prescriptionHumanRecap"></div>
+                <div id="prescriptionHumanPoso"></div>
+              </div>
+
+              <div class="checkbox-inline">
+                <label>
+                  <input type="checkbox" name="ald" value="">
+                  ALD
+                </label>
+              </div>
+              <div class="checkbox-inline">
+                <label>
+                  <input type="checkbox" name="chro" value="">
+                  TT chronique
+                </label>
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
+              </div>
+              <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>

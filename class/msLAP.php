@@ -46,8 +46,8 @@ class msLAP
   /**
    * @var object $_the Instance Thériaque
    */
-     private $_the;
-    private $_classTheriaque;
+    protected $_the;
+    protected $_classTheriaque;
 
 
  /**
@@ -125,6 +125,28 @@ class msLAP
     }
 
 /**
+ * Obtenir la DC à partir de la spécialité dont info prescriptibilité en DC ou non
+ * @param  int $typid type de recherche (1 : toutes les DC, 2: par code, 3: libellé)
+ * @param  string $var   chaine/code à recherche
+ * @param  int $dc    param de sélecction (0 : uniquement prescriptible en DC, 1: tout)
+ * @return array        array de retour de la DC
+ */
+    public function getDC($typid, $var, $dc) {
+      if (isset($this->_the)) {
+          $the=$this->_the;
+      } else {
+          $this->_the=$the=new $this->_classTheriaque;
+      }
+      if ($data=$the->get_the_denomination_commune($typid, $var, $dc)) {
+        $data=$this->_prepareData($data);
+        return $data;
+      } else {
+        return false;
+      }
+
+    }
+
+/**
  * Obtenir des médicaments en recherchant en DC
  * @param  string $txt mot clé de recherche
  * @return array      tableau de retour
@@ -159,6 +181,107 @@ class msLAP
     }
 
 /**
+ * Obtenir les détails d'une spécialité à partir de son code
+ * @param  string $codeid  code spe
+ * @param  int $vartyp  code nature de recherche
+ * @param  int $monovir code monovir (0 : classique, 1 virtuelle, 3 sans filtre)
+ * @return array          tableau de la spé
+ */
+public function getSpecialiteByCode($codeid,$vartyp,$monovir) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_specialite($codeid,$vartyp,$monovir);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
+ * Informations sur la sécabilité
+ * @param  string $codeid code spécialité
+ * @return array         tableau sécabilité
+ */
+public function getSpeSecabiliteByCode($codeid) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_secabilite($codeid);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
+ * Informations sur les unités de prise
+ * @param  string $codeid code
+ * @param  string $typid  type du code
+ * @return array         tableau des unités
+ */
+public function getUnite($codeid, $typid) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_unite($codeid, $typid);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
+ * Informations sur les unités de prise via description de présentations
+ * @param  string $codeid code
+ * @param  string $typid  type du code (0: The, 1: CIP7, 2: CIP13)
+ * @return array         tableau des unités
+ */
+public function getUniteViaPres($codeid, $typid) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_desc_pres($codeid, $typid);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
+ * Retrouver le générique
+ * @param  string $codeid code spécialité
+ * @param  string $vartyp  type du code
+ * @return array         tableau des unités
+ */
+public function getGenerique($codeid, $vartyp) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_gen_spe($codeid, $vartyp);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
+ * Informations sur les voie d'administration
+ * @param  int $codeid code spécialité thériaque
+ * @return array         tableau des voies
+ */
+public function getVoiesAdministration($codeid) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $data=$the->get_the_voie_spe($codeid);
+  $data=$this->_prepareData($data);
+  return $data;
+}
+
+/**
  * Obtenir les présentation d'une spécialité
  * @param  array $rd      tableau des médicaments
  * @param  string $colCode colonne du tableau où trouver le code theriaque
@@ -167,12 +290,30 @@ class msLAP
  */
 public function getPresentations(&$rd, $colCode, $typCode)
 {
+    global $p;
     foreach ($rd as $k=>$v) {
         $rd[$k]['presentations']=$this->_get_the_presentation($v[$colCode], $typCode);
-        if(!empty($rd[$k]['presentations'])) {
-          foreach ($rd[$k]['presentations'] as $presK=>$presV) {
-              $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
-          }
+          if(!empty($rd[$k]['presentations'])) {
+            foreach ($rd[$k]['presentations'] as $presK=>$presV) {
+
+                // on se débarasse des médic hospitaliers si ...
+                if($p['config']['theriaqueShowMedicHospi'] == 'non' and $presV['reservhop'] != 'NON') {
+                  unset($rd[$k]['presentations'][$presK]);
+                  continue;
+                }
+                // on se débarasse des non commercialisés si ...
+                if($p['config']['theriaqueShowMedicNonComer'] == 'non' and $presV['pre_etat_commer'] == 'S') {
+                  unset($rd[$k]['presentations'][$presK]);
+                  continue;
+                }
+
+                $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
+            }
+        }
+
+        // on se débarasse de la spécialité si elle ne contient plus de présentation
+        if(empty($rd[$k]['presentations'])) {
+          unset($rd[$k]);
         }
     }
 }
@@ -183,7 +324,7 @@ public function getPresentations(&$rd, $colCode, $typCode)
  * @param  string $typCode             type du code 0 : theriaque ... (cf doc Theriaque)
  * @return array                      tableau
  */
-private function _get_the_presentation($codeTheriaque, $typCode)
+protected function _get_the_presentation($codeTheriaque, $typCode)
 {
     if (isset($this->_the)) {
         $the=$this->_the;
@@ -197,6 +338,12 @@ private function _get_the_presentation($codeTheriaque, $typCode)
     }
 }
 
+/**
+ * Obtenir le % de remboursement sécu en ville
+ * @param  string $code   code CIP de la présentation
+ * @param  int $typCode type du code (1 CIP7, 2 CIP13)
+ * @return string          % de rbt
+ */
     private function _get_the_pre_rbt_ville($code, $typCode)
     {
         if (empty($code)) {
@@ -209,13 +356,14 @@ private function _get_the_presentation($codeTheriaque, $typCode)
         }
         $rd=[];
         if ($data=$the->get_the_pre_rbt($code, $typCode)) {
-            if ($data=msTools::objectToArray($data)) {
-                if (isset($data['item'])) {
-                    $data=$data['item'];
-                    $ou=array_column($data, 'type');
-                    if (isset($data[array_search('1', $ou)]['info_1'])) {
-                        return $data[array_search('1', $ou)]['info_1'];
-                    }
+            if(is_object($data)) {
+              $data=msTools::objectToArray($data);
+              if (isset($data['item'])) $data=$data['item'];
+            }
+            if (!empty($data)) {
+                $ou=array_column($data, 'type');
+                if (isset($data[array_search('1', $ou)]['info_1'])) {
+                    return $data[array_search('1', $ou)]['info_1'];
                 }
             }
             return false;
@@ -237,16 +385,7 @@ private function _get_the_presentation($codeTheriaque, $typCode)
             }
             $rd=[];
             if ($data=$the->get_the_sub_txt($txt, $type)) {
-                // 1 résultat
-          if (isset($data->item->code_sq_pk)) {
-              $rd[0]=(array)$data->item;
-          }
-          // plusieurs
-          elseif (isset($data->item)) {
-              foreach ($data->item as $k=>$v) {
-                  $rd[$k]=(array)$v;
-              }
-          }
+                $rd=$this->_prepareData($data);
                 if (!empty($rd)) {
                     return $rd;
                 }
@@ -263,6 +402,7 @@ private function _get_the_presentation($codeTheriaque, $typCode)
  */
     public function getMedicBySub($txt, $type, $monovir)
     {
+        global $p;
         if (strlen($txt)>=3) {
             if (isset($this->_the)) {
                 $the=$this->_the;
@@ -270,18 +410,13 @@ private function _get_the_presentation($codeTheriaque, $typCode)
                 $this->_the=$the=new $this->_classTheriaque;
             }
             if ($subsTab=$this->getSubstances($txt, $type)) {
-                $subs=implode(",", array_column($subsTab, 'code_sq_pk'));
+
+                if($p['config']['theriaqueMode'] == 'WS') $colonne = 'code_sq_pk';
+                else if($p['config']['theriaqueMode'] == 'PG') $colonne = 'sac_code_sq_pk';
+
+                $subs=implode(",", array_column($subsTab, $colonne));
                 if ($data=$the->get_the_specialite_multi_codeid($subs, 7, $monovir)) {
-                    // 1 résultat
-            if (isset($data->item->sp_code_sq_pk)) {
-                $rd[0]=(array)$data->item;
-            }
-            // plusieurs
-            elseif (isset($data->item)) {
-                foreach ($data->item as $k=>$v) {
-                    $rd[$k]=(array)$v;
-                }
-            }
+                    $rd=$this->_prepareData($data);
                     if (!empty($rd)) {
                         $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                         $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
@@ -702,7 +837,12 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode)
        }
    }
 
-    private function _prepareData($data)
+/**
+ * Transformer un objet en array avec correction du niveau si 1 seul retour
+ * @param  array $data array d'entrée
+ * @return array       array de sortie
+ */
+    protected function _prepareData($data)
     {
         $rd=[];
         if (is_object($data)) {

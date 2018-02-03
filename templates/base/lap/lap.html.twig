@@ -26,7 +26,7 @@
  #
 #}
 
-{% set noMenuInBar ='yes' %}
+{% set noMenuInBar = 'yes' %}
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
@@ -34,83 +34,90 @@
 {% endblock %}
 
 {% block head %}
-    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-stupid-table/stupidtable.min.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/mathjs/dist/math.min.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-stupid-table/stupidtable.min.js"></script>
 
-    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js"></script>
+
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-      <h1 id="identitePatient" data-patientID="{{ page.patient.id }}" style="margin-bottom : 14px;">
-        {# firstname #}
-        {{ page.patientAdminData.firstname|e }}
 
-        {# lastname & birthname #}
-        {% if page.patientAdminData.birthname and page.patientAdminData.lastname %}
-          {{ page.patientAdminData.lastname|e }}
-          (né{% if page.patientAdminData['14'] == 'F' %}e{% endif %}
-          {{ page.patientAdminData.birthname|e }})
-          {# birthname only #}
-        {% elseif page.patientAdminData.birthname %}
-          {{ page.patientAdminData.birthname|e }}
-          {# lastname only #}
-        {% elseif page.patientAdminData.lastname %}
-          {{ page.patientAdminData.lastname|e }}
-        {% endif %}
-        <small>
-          {{ page.patientAdminData.birthdate|e }}
-          -
-          {# birthdate #}
-          {{ page.patientAdminData.age|e }}
-          an{% if page.patientAdminData.age > 0 %}s{% endif %}
+  <h1 id="identitePatient" data-patientid="{{ page.patient.id }}" style="margin-bottom : 14px;">
+    {# firstname #}
+    {{ page.patientAdminData.firstname|e }}
 
-          {# sexe #}
-          {% if page.patientAdminData.administrativeGenderCode == 'F' %}
-            - &#9792;
-          {% elseif page.patientAdminData.administrativeGenderCode =='M' %}
-            - &#9794;
-          {% endif %}
-        </small>
-      </h1>
+    {# lastname & birthname #}
+    {% if page.patientAdminData.birthname and page.patientAdminData.lastname %}
+      {{ page.patientAdminData.lastname|e }}
+      (né{% if page.patientAdminData['14'] == 'F' %}e{% endif %}
+      {{ page.patientAdminData.birthname|e }})
+      {# birthname only #}
+    {% elseif page.patientAdminData.birthname %}
+      {{ page.patientAdminData.birthname|e }}
+      {# lastname only #}
+    {% elseif page.patientAdminData.lastname %}
+      {{ page.patientAdminData.lastname|e }}
+    {% endif %}
+    <small>
+      {{ page.patientAdminData.birthdate|e }}
+      -
+      {# birthdate #}
+      {{ page.patientAdminData.age|e }}
+      an{% if page.patientAdminData.age > 0 %}s{% endif %}
 
-      <div class="row">
-        {# Colonne de gauche : données physio #}
-        <div id="patientLateralData" class="col-md-2">
-          {% include('inc-lapPatientLateralData.html.twig') %}
+      {# sexe #}
+      {% if page.patientAdminData.administrativeGenderCode == 'F' %}
+        - &#9792;
+      {% elseif page.patientAdminData.administrativeGenderCode =='M' %}
+        - &#9794;
+      {% endif %}
+    </small>
+  </h1>
+
+  <div class="row">
+    {# Colonne de gauche : données physio #}
+    <div id="patientLateralData" class="col-md-2">
+      {% include('inc-lapPatientLateralData.html.twig') %}
+    </div>
+
+    {# Colonne de droite #}
+    <div class="col-md-10">
+
+      <div class="row" style="margin-top : 10px; margin-bottom: 15px">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRecherche">Nouvelle prescription</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRecherche">Saisir traitement</button>
+      </div>
+
+      {# Onglets #}
+      <ul class="nav nav-tabs gras" role="tablist">
+        <li class="active" role="presentation">
+          <a href="#ordonnanceTab" aria-controls="profile" role="tab" data-toggle="tab">Ordonnance</a>
+        </li>
+        <li role="presentation">
+          <a href="#tttencoursTab" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a>
+        </li>
+      </ul>
+
+      <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
+        {# Onglet Ordonnance #}
+        <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
+          <div id="conteneurOrdonnance"></div>
         </div>
 
-        {# Colonne de droite #}
-        <div class="col-md-10">
-
-          {# Onglets #}
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#rechercher" aria-controls="home" role="tab" data-toggle="tab">Rechercher</a></li>
-            <li role="presentation"><a href="#ordonnance" aria-controls="profile" role="tab" data-toggle="tab">Ordonnance</a></li>
-            <li role="presentation"><a href="#tttencours" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a></li>
-          </ul>
-
-          <div class="tab-content">
-
-            {# Onglet Rechercher #}
-            <div role="tabpanel" class="tab-pane active" id="rechercher">
-              {% include('inc-lapOngletRechercher.html.twig') %}
-            </div>
-
-            {# Onglet Ordonnance #}
-            <div role="tabpanel" class="tab-pane" id="ordonnance">
-              <textarea class="form-control" rows="3" id="frappe" autocomplete="off" style="font-size:18px"></textarea>
-              <div id="resultat"></div>
-            </div>
-
-            {# Onglet Traitement en cours #}
-            <div role="tabpanel" class="tab-pane" id="tttencours">...</div>
-          </div>
-
-
-
-        </div>
-
+        {# Onglet Traitement en cours #}
+        <div role="tabpanel" class="tab-pane" id="tttencoursTab"></div>
       </div>
 
     </div>
+
+  </div>
+
+  {# modal recherche de médicament #}
+  {% include 'inc-lapModalRechercher.html.twig' %}
+
+  {# modal ajout de médicament #}
+  {# include 'inc-lapModalAddMedic.html.twig' #}
+
 {% endblock %}

@@ -75,6 +75,22 @@ class msTheriaquePG {
     return msTools::utf8_converter($arr);
   }
 
+  public function get_the_unite($codeid, $typid) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_unite('$codeid', $typid)"));
+  }
+
+  public function get_the_secabilite($codeid) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_secabilite($codeid)"));
+  }
+
+  public function get_the_voie_spe($codeid) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_voie_spe($codeid)"));
+  }
+
+  public function get_the_gen_spe($codeid, $vartyp) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_gen_spe($codeid, $vartyp)"));
+  }
+
   /// Présentations
   public function get_the_presentation_v2($codeid,$typid) {
     return msTools::utf8_converter($this->get_data_from_pg("get_the_presentation_v2('$codeid',$typid)"));
@@ -82,6 +98,10 @@ class msTheriaquePG {
 
   public function get_the_pre_rbt($codecip,$vartype) {
     return msTools::utf8_converter($this->get_data_from_pg("get_the_pre_rbt('$codecip',$vartype)"));
+  }
+
+  public function get_the_desc_pres($codeid,$typid) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_desc_pres($codeid,$typid)"));
   }
 
   /// Produits

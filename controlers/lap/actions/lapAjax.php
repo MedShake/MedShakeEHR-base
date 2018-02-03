@@ -36,7 +36,10 @@ $acceptedModes=array(
     'allergieAdd', // ajouter allergies à un dossier patient
     'allergieDel', // retirer allergies à un dossier patient
     'searchNewMedic', // checher un médicament
-    'lapPatientLateralDataRefresh' // rafraichier la colonne lat du LAP (patient data)
+    'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
+    'lapInstallPrescription', //installer la prescription dans la modal
+    'lapAnalyseFrappePrescription', //analyse de la prescription frappée
+    'lapMakeLigneOrdonnance' //généré une ligne d'ordonnance 
 );
 
 if (!in_array($m, $acceptedModes)) {

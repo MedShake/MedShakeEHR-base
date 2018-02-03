@@ -1,0 +1,594 @@
+<?php
+/*
+ * This file is part of MedShakeEHR.
+ *
+ * Copyright (c) 2017
+ * Bertrand Boutillier <b.boutillier@gmail.com>
+ * http://www.medshake.net
+ *
+ * MedShakeEHR is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * MedShakeEHR is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ *
+ * LAP : analyse de prescription
+ *
+ * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ */
+
+class msLapPrescription extends msLAP
+{
+  private $_txtPrescription;
+  private $_speThe;
+  private $_presThe;
+  private $_medicVirtuel;
+  private $_nomSpe;
+  private $_nomDC;
+  private $_versionInterpreteur;
+  private $_divisibleEn;
+  private $_uniteUtilisee;
+  private $_unitesPossibles;
+  private $_voieUtilisee;
+  private $_lignes;
+  private $_lignesTraitees;
+  private $_lignesPosologiques;
+  private $_prescriptibleEnDC;
+  private $_prescriptionInterpretee;
+
+/**
+ * Définir le texte frappé
+ * @param string $txt texte de la prescription
+ * @return string texte
+ */
+    public function setTxtPrescription($txt)
+    {
+        if (is_string($txt)) {
+            return $this->_txtPrescription = rtrim($txt, "\n");
+        } else {
+            throw new Exception('Txt is not string');
+        }
+    }
+
+/**
+ * Définir le code spécialité Thériaque
+ * @param string $c code spé
+ * @return string code spé
+ */
+    public function setSpeThe($c)
+    {
+        if (is_string($c)) {
+            return $this->_speThe = $c;
+        } else {
+            throw new Exception('SpeThe is not string');
+        }
+    }
+
+/**
+ * Définir le code présentation Thériaque
+ * @param string $c code pres
+ * @return string code pres
+ */
+    public function setPresThe($c)
+    {
+        if (is_string($c)) {
+            return $this->_presThe = $c;
+        } else {
+            throw new Exception('PresThe is not string');
+        }
+    }
+
+/**
+ * Définir le nom de spécialité
+ * @param string $c code pres
+ * @return string code pres
+ */
+    public function setNomSpe($s)
+    {
+        if (is_string($s)) {
+            return $this->_nomSpe = $s;
+        } else {
+            throw new Exception('NomSpe is not string');
+        }
+    }
+
+/**
+ * Définir le nom en DC
+ * @param string $c code pres
+ * @return string code pres
+ */
+    public function setNomDC($s)
+    {
+        if (is_string($s)) {
+            return $this->_nomDC = $s;
+        } else {
+            throw new Exception('NomDC is not string');
+        }
+    }
+
+/**
+ * Définir medic viruel ou pas
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setMedicVirtuel($v)
+    {
+        return $this->_medicVirtuel = $v;
+    }
+
+/**
+ * Définir sécabilité
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setDivisibleEn($v)
+    {
+        return $this->_divisibleEn = $v;
+    }
+
+/**
+ * Définir unité utilisée
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setUniteUtilisee($v)
+    {
+        return $this->_uniteUtilisee = $v;
+    }
+
+/**
+ * Définir voie utilisée
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setVoieUtilisee($v)
+    {
+        return $this->_voieUtilisee = $v;
+    }
+
+/**
+ * Définir presciptibleEnDC
+ * @param string $v presciptibleEnDC
+ * @return string presciptibleEnDC
+ */
+    public function setPrescriptibleEnDC($v)
+    {
+        return $this->_prescriptibleEnDC = $v;
+    }
+
+/**
+ * Définir la version de l'interpréteur à utiliser
+ * @param string $v version interpréteur
+ * @return string version intrpréteur
+ */
+    public function setVersionInterpreteur($v)
+    {
+        if (is_numeric($v)) {
+            return $this->$_versionInterpreteur = $v;
+        } else {
+            throw new Exception('VersionInterpreteur is not string');
+        }
+    }
+
+    public function lapInstallPrescription() {
+
+      //spécialité
+      $dataSpe=$this->getSpecialiteByCode($this->_speThe,1,3);
+      $this->_nomSpe = $dataSpe[0]['sp_nom'];
+      if($dataSpe[0]['mono_vir'] == 1) {
+        $this->_medicVirtuel = 1;
+      } else {
+        $this->_medicVirtuel = 0;
+      }
+
+      // présentation
+      $dataPres=$this->_get_the_presentation($this->_presThe, 2);
+      // unités
+      $dataSpeUnite=$this->getUnite($this->_speThe, 0);
+      // voies d'administration possibles
+      $dataSpeVoiesAdmin=$this->getVoiesAdministration($this->_speThe);
+
+      //recherche DC
+      $dataGenerique=$this->getDC(2, $dataSpe[0]['sp_gsp_code_fk'], 1);
+      $this->_nomDC = $dataGenerique[0]['libelle'];
+      $this->_prescriptibleEnDC = $dataGenerique[0]['prescription_dc'];
+
+      //recherche du générique
+      //$dataGenerique=$this->getGenerique($this->_speThe, 4);
+      //$this->_nomDC = $dataGenerique[0]['gsp_nom'];
+
+      //sécabilité
+      $dataSpeSecabilite=$this->getSpeSecabiliteByCode($this->_speThe);
+      if(!empty($dataSpeSecabilite[0]['coeff'])) {
+        $this->_divisibleEn=$dataSpeSecabilite[0]['coeff'];
+      } else {
+        $this->_divisibleEn=-1;
+      }
+
+      //print_r($dataSpeUnite);
+
+
+      // unités possibles de prise
+      $this->_unitesPossibles = [];
+      if(!empty($dataSpeUnite[0]['ucd'])) {
+        $this->_unitesPossibles['ucd']=$this->_uniteAccordee($dataSpeUnite[0]['ucd'],1);
+      }
+      if(!empty($dataSpeUnite[0]['unite_prescription'])) {
+        $this->_unitesPossibles['unite_prescription']=$this->_uniteAccordee($dataSpeUnite[0]['unite_prescription'],1);
+      }
+      if(!empty($dataSpeUnite[0]['unite_prise'])) {
+        $this->_unitesPossibles['unite_prise']=$this->_uniteAccordee($dataSpeUnite[0]['unite_prise'],1);
+      }
+      // en désespoire de cause : NON CAR INCOHERENT
+      // if(empty($this->_unitesPossibles)) {
+      //   if($unitesPoss=$this->getUniteViaPres($this->_presThe, 1)) {
+      //     $this->_unitesPossibles['unite'] = $this->_uniteAccordee($unitesPoss[0]['unite'],1);
+      //   }
+      // }
+      //
+      if(empty($this->_unitesPossibles)) {
+        if(!empty($dataPres[0]['unit_prise'])) {
+           $this->_unitesPossibles['unit_prise']=$this->_uniteAccordee($dataPres[0]['unit_prise'],1);
+        }
+      }
+
+      // if(!empty($dataSpeUnite[0]['unite_prise'])) {
+      //   $this->_forme=$dataSpeUnite[0]['unite_prise'];
+      // } elseif(!empty($dataPres[0]['unite_prise'])) {
+      //   $this->_forme=$dataPres[0]['unite_prise'];
+      // } elseif(!empty($dataPres[0]['pre_nat'])) {
+      //   $this->_forme=$dataPres[0]['pre_nat'];
+      // } elseif(isset($dataSpeUnite[0]['ucd'])) {
+      //   $this->_forme=$dataSpeUnite[0]['ucd'];
+      // } else {
+      //   $this->_forme='';
+      // }
+
+      $tab = array(
+        'speThe'=>$this->_speThe,
+        'presThe'=> $this->_presThe,
+        'nomSpe'=> $this->_nomSpe,
+        'nomDC'=> $this->_nomDC,
+        'medicVirtuel'=> $this->_medicVirtuel,
+        'divisibleEn'=> $this->_divisibleEn,
+        'unitesPossibles'=> $this->_unitesPossibles,
+        'nomUtileFinal' => $this->determineNomUtileFinal(),
+        'voiesPossibles'=>$dataSpeVoiesAdmin,
+        'prescriptibleEnDC'=>$this->_prescriptibleEnDC,
+        'codeATC'=>$dataSpe[0]['sp_catc_code_fk']
+      );
+
+      return $tab;
+
+    }
+
+    public function interpreterPrescription()
+    {
+      if(!isset($this->_versionInterpreteur)) $this->_versionInterpreteur=1;
+
+      if($this->_lignes=explode("\n", $this->_txtPrescription)) {
+        foreach($this->_lignes as $indexLigne=>$ligne) {
+          $this->interpreterLigne($indexLigne, $ligne);
+        }
+        // nombre de lignes
+        $this->_prescriptionInterpretee['nbLignes']=count($this->_lignesTraitees);
+        $this->_prescriptionInterpretee['nbLignesPosologiques']=count($this->_lignesPosologiques);
+
+        // le texte posologique humain
+        $humanPosoBase = array_column($this->_lignesPosologiques,'humanPosoBase');
+        $posoDuree = array_column($this->_lignesPosologiques,'duree');
+        $humanPosoDuree = array_column($this->_lignesPosologiques,'humanPosoDuree');
+        $humanPosoTraine = array_column($this->_lignesPosologiques,'humanPosoTraine');
+        foreach($humanPosoBase as $k=>$v) {
+          if($posoDuree[$k] > 0) {
+            $human[] = $humanPosoBase[$k].' '.$humanPosoDuree[$k].' '.$humanPosoTraine[$k];
+          } else {
+            $human[] = $humanPosoBase[$k].' '.$humanPosoTraine[$k];
+          }
+        }
+        $this->_prescriptionInterpretee['human'] = implode('<br>', $human);
+
+        // la voie d'administration utilisée (txt humain)
+        $this->_prescriptionInterpretee['voieUtilisee'] = ucfirst($this->_voieUtilisee);
+
+        // la poso journalière max toutes lignes confondues
+        $this->_prescriptionInterpretee['posoJournaliereMax']=max(array_column($this->_lignesPosologiques,'posoJournaliere'));
+
+        // la poso Max par prise toutes lignes confondues
+        $this->_prescriptionInterpretee['posoMaxParPriseMax']=max(array_column($this->_lignesPosologiques,'posoMaxParPrise'));
+
+        // durée totale de la prescription
+        $dureeTotale = $this->_dureeTotalePrescription();
+        $this->_prescriptionInterpretee['dureeTotaleHuman']=$dureeTotale['dureeTotaleHuman'];
+        $this->_prescriptionInterpretee['dureeTotaleMachine']=$dureeTotale['dureeTotaleMachine'];
+      }
+
+    }
+
+    public function getPrescriptionInterpreteeJSON() {
+      echo json_encode($this->_prescriptionInterpretee);
+    }
+
+    private function determineNomUtileFinal() {
+      if($this->_prescriptibleEnDC != 1) return $this->_nomSpe;
+      if($this->_medicVirtuel == 1) {
+        return $this->_nomDC;
+      } else {
+        return $this->_nomDC.' ('.$this->_nomSpe.')';
+      }
+    }
+
+    public function interpreterLigne($indexLigne, $ligne) {
+        $regExs=$this->_getTheRegEx();
+        $ligne=$ligne.' ';
+        foreach($regExs as $regExIndex=>$regEx){
+          if(preg_match($regEx,$ligne,$m)) {
+            $methodeName='_traiterLigneRegEx'.$regExIndex.'V'.$this->_versionInterpreteur;
+            return $this->$methodeName($indexLigne, $m);
+          }
+        }
+    }
+
+    private function _traiterLigneRegEx0V1($indexLigne, $m) {
+        $human='';
+        $math = new Webit\Util\EvalMath\EvalMath;
+
+        $m['prefixeLigne'] = $m[1];
+        $m['doseMatin'] = $m[2];
+        $m['doseMidi'] = $m[3];
+        $m['doseSoir'] = $m[4];
+        $m['doseCoucher'] = @$m[5];
+        $m['joursSemaine'] = @$m[6];
+        $m['dureeNumeric'] = @$m[7];
+        $m['dureeUnite'] = @$m[8];
+        $m['traine'] = trim(@$m[9]);
+
+        // correction valeurs absentes
+        if(empty($m['doseCoucher'])) $m['doseCoucher']=0;
+
+        //conversion virgule en point
+        $m['doseMatinMath'] = $math->evaluate(str_replace(",", ".", $m['doseMatin']));
+        $m['doseMidiMath'] = $math->evaluate(str_replace(",", ".", $m['doseMidi']));
+        $m['doseSoirMath'] = $math->evaluate(str_replace(",", ".", $m['doseSoir']));
+        $m['doseCoucherMath'] = $math->evaluate(str_replace(",", ".", $m['doseCoucher']));
+
+        // durée
+        $dureeHuman=$this->_dureeAbrevEnMots($m['dureeNumeric'], $m['dureeUnite']);
+
+        //print_r($m);
+
+        // cas de posologie nulle => arrêt pendant x jour
+        if($m['doseMatinMath'] == 0 and $m['doseMidiMath'] == 0 and $m['doseSoirMath'] == 0 and $m['doseCoucherMath'] == 0) {
+          $human = 'arrêt ';
+        }
+        // cas ou la posologie m m s est égale
+        elseif ($m['doseMatinMath'] == $m['doseMidiMath'] and $m['doseMatinMath'] == $m['doseSoirMath'] and $m['doseCoucher'] == 0 ) {
+          $human = $m['doseMatin'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' matin midi et soir ';
+        }
+        // si poso m m s est différente
+        else {
+          if ($m['doseMatinMath'] > 0) $pmms[] = $m['doseMatin'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' le matin';
+          if ($m['doseMidiMath'] > 0) $pmms[] = $m['doseMidi'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMidiMath']) . ' le midi';
+          if ($m['doseSoirMath'] > 0) $pmms[] = $m['doseSoir'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseSoirMath']) . ' le soir';
+          if ($m['doseCoucherMath'] > 0) $pmms[] = $m['doseCoucher'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseCoucherMath']) . ' au coucher';
+          $human .= implode(', ',$pmms).' ';
+
+        }
+
+        if ($m['joursSemaine']) $human .= $this->_days($m['joursSemaine']);
+        if ($m['prefixeLigne']) $human = $m['prefixeLigne'] . ' ' . $human;
+
+        // tableau de retour
+        $tab['indexLigne'] = $indexLigne;
+        $tab['typeLigne'] = 'posologie';
+        $tab['prefixeLigne'] = $m['prefixeLigne'];
+        $tab['duree'] = $m['dureeNumeric'];
+        $tab['dureeUnite'] = $m['dureeUnite'];
+        $tab['posoJournaliere'] = $m['doseMatinMath'] + $m['doseMidiMath'] + $m['doseSoirMath'] + $m['doseCoucherMath'];
+        $tab['posoMaxParPrise'] = max($m['doseMatinMath'], $m['doseMidiMath'], $m['doseSoirMath'], $m['doseCoucherMath']);
+        $tab['humanPosoBase'] = $human;
+        $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
+        $tab['humanPosoTraine'] = $m['traine'];
+
+        $this->_lignesPosologiques[] = $tab;
+        return $this->_lignesTraitees[$indexLigne] = $tab;
+    }
+
+    private function _traiterLigneRegEx1V1($indexLigne, $m) {
+        $human='';
+        $math = new Webit\Util\EvalMath\EvalMath;
+
+        //print_r($m);
+        $m['prefixeLigne'] = $m[1];
+        $m['dose'] = $m[2];
+        $m['multipleDose'] = $m[3];
+        $m['multipleUnite'] = $m[4];
+        $m['joursSemaine'] = @$m[5];
+        $m['dureeNumeric'] = @$m[6];
+        $m['dureeUnite'] = @$m[7];
+        $m['traine'] = trim(@$m[8]);
+
+        // correction valeurs absentes
+
+        //conversion virgule en point
+        $m['doseMath'] = $math->evaluate(str_replace(",", ".", $m['dose']));
+        $m['multipleDoseMath'] = $math->evaluate(str_replace(",", ".", $m['multipleDose']));
+
+        // durée
+        $dureeHuman=$this->_dureeAbrevEnMots($m['dureeNumeric'], $m['dureeUnite']);
+
+        // cas de posologie nulle => arrêt pendant x jour
+        if($m['dose'] == 0) {
+          $human = 'arrêt ';
+        }
+        // cas ou la posologie m m s est égale
+        else {
+          $human = $m['dose'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMath']) . ' '.$m['multipleDose'].' fois par '.$this->_dureeAbrevEnMots($m['multipleDose'], $m['multipleUnite']).' ';
+        }
+
+        if ($m['joursSemaine']) $human .= $this->_days($m['joursSemaine']);
+        if ($m['prefixeLigne']) $human = $m['prefixeLigne'] . ' ' . $human;
+
+        // tableau de retour
+        $tab['indexLigne'] = $indexLigne;
+        $tab['typeLigne'] = 'posologie';
+        $tab['prefixeLigne'] = $m['prefixeLigne'];
+        $tab['duree'] = $m['dureeNumeric'];
+        $tab['dureeUnite'] = $m['dureeUnite'];
+        $tab['posoJournaliere'] = $m['doseMath'] * $m['multipleDoseMath'];
+        $tab['posoMaxParPrise'] = $m['doseMath'];
+        $tab['humanPosoBase'] = $human;
+        $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
+        $tab['humanPosoTraine'] = $m['traine'];
+
+        $this->_lignesPosologiques[] = $tab;
+        return $this->_lignesTraitees[$indexLigne] = $tab;
+    }
+
+    private function _dureeAbrevEnMots($nb, $abrev) {
+      if(empty($nb) or empty($abrev)) return;
+      $duree = [
+        'i'=> 'minute',
+        'h'=> 'heure',
+        'j'=> 'jour',
+        's'=> 'semaine',
+        'm'=> 'mois'
+      ];
+      if ($nb > 1 and $abrev != 'm') {
+        return $duree[$abrev] . 's';
+      } else {
+        return $duree[$abrev];
+      }
+    }
+
+    /**
+     * Transforme lmMjvsd en jour
+     * @param  string liste chaine entrée
+     * @return string       chaine formatée
+     */
+    private function _days($liste) {
+      $human=[];
+      if (strstr($liste, 'l') != FALSE) $human[]='lundis';
+      if (strstr($liste, 'm') != FALSE) $human[]='mardis';
+      if (strstr($liste, 'M') != FALSE) $human[]='mercredis';
+      if (strstr($liste, 'j') != FALSE) $human[]='jeudis';
+      if (strstr($liste, 'v') != FALSE) $human[]='vendredis';
+      if (strstr($liste, 's') != FALSE) $human[]='samedis';
+      if (strstr($liste, 'd') != FALSE) $human[]='dimanches';
+      if (strstr($liste, 'i') != FALSE) $human[]='jours impairs';
+      if (strstr($liste, 'p') != FALSE) $human[]='jours pairs';
+      $humanString = implode(' ', $human);
+      if (count($human) > 0) {
+        $humanString = 'les ' . $humanString . ' ';
+        return $humanString;
+      } else {
+        return '';
+      }
+    }
+
+    private function _getTheRegEx() {
+      if (isset($this->_versionInterpreteu)) {
+        throw new Exception('La version de l\'interpréteur n\'est pas définie');
+      }
+      $regEx[1][0] = "/^(et|puis)?\s*([0-9\/,\.+]+) ([0-9\/,\.+]+) ([0-9\/,\.+]+)(?: ([0-9\/,\.+]+))?(?: ([lmMjvsdip]*))? (?:([0-9]+)(j|s|m))?(.*)/i";
+
+      // 1 6xh|j|s|m 6h|j|s|m jp|ji
+      $regEx[1][1] = "/^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(h|j|s|m))?(.*)/i";
+
+      // 1 mms 6j|s|m jp|ji texte de traine
+      $regEx[1][2] = "/^(?:et |puis )?([0-9\/,\.]+) ([a-z]{1})([a-z]{1})([a-z]{1}) ([0-9]+)(j|s|m){1}\s?(jp|ji)?(.*)/i";
+
+      return $regEx[$this->_versionInterpreteur];
+
+    }
+
+    private function _uniteAccordee($forme, $nb) {
+      $f=array(
+        'APPLICATION(S)' => array('s'=>'application', 'p'=>'applications'),
+        'application' => array('s'=>'application', 'p'=>'applications'),
+        'COMPRIME(S)' => array('s'=>'comprimé', 'p'=>'comprimés'),
+        'comprimé' => array('s'=>'comprimé', 'p'=>'comprimés'),
+        'comprime' => array('s'=>'comprimé', 'p'=>'comprimés'),
+        'EMPLATRE(S)' => array('s'=>'emplâtre', 'p'=>'emplâtres'),
+        'GELULE' => array('s'=>'gélule', 'p'=>'gélules'),
+        'gélule' => array('s'=>'gélule', 'p'=>'gélules'),
+        'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes'),
+        'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
+        'pulverisation(s)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
+        'RECIPIENT(S) UNIDOSE(S)' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses'),
+        'SACHET(S)' => array('s'=>'sachet', 'p'=>'sachets'),
+        'SUPPOSITOIRE' => array('s'=>'suppositoire', 'p'=>'suppositoires'),
+      );
+      if(key_exists($forme,$f)) {
+        if($nb>1) return $f[$forme]['p'];
+        else return $f[$forme]['s'];
+      }
+      return strtolower($forme);
+
+    }
+
+    private function _dureeTotalePrescription($indexLignes=[]) {
+      $duree = [
+        'i'=> 0,
+        'h'=> 0,
+        'j'=> 0,
+        's'=> 0,
+        'm'=> 0
+      ];
+      // toutes les lignes traitées
+      if(empty($indexLignes)) {
+        foreach($this->_lignesTraitees as $l) {
+          if(!empty($l['duree'])) $duree[$l['dureeUnite']]=$duree[$l['dureeUnite']]+$l['duree'];
+        }
+      }
+      // sinon
+      else {
+        foreach($this->_lignesTraitees as $k=>$l) {
+          if(in_array($k,$indexLignes) and !empty($l['duree'])) $duree[$l['dureeUnite']]=$duree[$l['dureeUnite']]+$l['duree'];
+        }
+      }
+
+      if($duree['i'] / 60 >= 1) {
+        $duree['h'] = $duree['h'] + floor($duree['i'] / 60);
+        $duree['i'] = $duree['i'] % 60;
+      }
+      if($duree['h'] / 24 >= 1) {
+        $duree['j'] = $duree['j'] + floor($duree['h'] / 24);
+        $duree['h'] = $duree['h'] % 24;
+      }
+      if($duree['j'] / 7 >= 1) {
+        $duree['s'] = $duree['s'] + floor($duree['j'] / 7);
+        $duree['j'] = $duree['j'] % 7;
+      }
+      if($duree['s'] / 4 >= 1) {
+        $duree['m'] = $duree['m'] + floor($duree['s'] / 4);
+        $duree['s'] = $duree['s'] % 4;
+      }
+      $dureeTotalHuman =[];
+      foreach($duree as $dureeUnite=>$nb) {
+        if($nb > 0) $dureeTotalHuman[] = $nb.' '.$this->_dureeAbrevEnMots($nb, $dureeUnite);
+      }
+
+      //retour en jours si durée < 15j
+      if($duree['m']==0 and $duree['s']<2 and $duree['s']>0 and $duree['i']==0 and $duree['h']==0) {
+        $nouvelleDureeJours = $duree['s']*7 + $duree['j'];
+        if($nouvelleDureeJours>1) $nouvelleDureeJours=$nouvelleDureeJours.' jours'; else $nouvelleDureeJours=$nouvelleDureeJours.' jour';
+        $dureeTotalHuman=array($nouvelleDureeJours);
+      }
+
+      $retour['dureeTotaleHuman']=implode(' ',array_reverse($dureeTotalHuman));
+      $retour['dureeTotaleMachine']= $duree;
+      return $retour;
+    }
+
+}

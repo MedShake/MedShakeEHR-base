@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 $debug='';
-$template='inc-searchMedicTableResults';
+$template='inc-lapSearchMedicTableResults';
 
 
 $lap=new msLAP;

@@ -64,7 +64,6 @@ administratifComptaPeutVoirRecettesDe: ''
 #######################################
 ## templates impression
 ##
-
 # répertoire par défaut
 templatesPdfFolder: '/home/EHR/templates/models4print/'
 
@@ -78,7 +77,6 @@ templateOrdoALD: 'ordonnanceALD.html.twig'
 templateCrHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
 # courrier et certificat
 templateCourrierHeadAndFoot: 'base-page-headAndNoFoot.html.twig'
-
 
 #######################################
 ## smtp
@@ -95,7 +93,6 @@ smtpDefautSujet: 'Document vous concernant'
 
 #######################################
 ## apicrypt
-
 apicryptCheminInbox: '/home/EHR/public_html/inbox/'
 apicryptCheminArchivesInbox: '/home/EHR/public_html/inboxArchives/'
 apicryptInboxMailForUserID: '0'
@@ -138,15 +135,12 @@ phonecaptureResolutionHeight: 1080
 
 #######################################
 ## agenda
-
-agendaService: '' 
+agendaService: ''
 ## si agendaService est actif, alors agendaDistantLink doit être mis à ''
 agendaDistantLink: 'http://monagenda.agenda.abc'
 agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'
 agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'
 agendaNumberForPatientsOfTheDay: 0
-
-
 
 #######################################
 ## Rappels RDV par mail
@@ -162,11 +156,9 @@ smsCreditsFile: 'creditsSMS.txt'
 smsSeuilCreditsAlerte: '150'
 smsTpoa: 'Dr ....'
 
-
 #######################################
 ## Templates affichage écran
 templatesFolder: '/home/EHR/templates/'
-
 
 #######################################
 ## Twig configuration
@@ -175,5 +167,8 @@ twigEnvironnementAutoescape: false
 
 #######################################
 ## LAP
-LapOnOff: on
+LapOnOff: off
+theriaqueMode: 'WS'
 theriaqueWsURL: ''
+theriaqueShowMedicHospi: 'non'
+theriaqueShowMedicNonComer: 'non'
