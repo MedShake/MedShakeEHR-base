@@ -77,6 +77,20 @@ $router->addRoutes($routes);
 $router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
 
+///////// vérification de l'état de la base
+$state=msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'");
+if ($state=='maintenance') {
+    msTools::redirection('/maintenance.html');
+} elseif (!$state and !count(msSQL::sql2tabSimple("SHOW TABLES"))) {
+    //la base n'est pas installée
+    exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/base/sqlInstall.sql');
+    $modules=scandir('../upgrade/', GLOB_ONLYDIR);
+    foreach ($modules as $module) {
+        if ($module!='.' and $module!='..') {
+            exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/'.$module.'/sqlInstall.sql');
+        }
+    }
+}
 
 ///////// user
 if (isset($_COOKIE['userName'])) {
