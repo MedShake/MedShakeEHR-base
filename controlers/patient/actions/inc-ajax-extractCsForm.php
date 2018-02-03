@@ -58,6 +58,7 @@ $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],
   'parentID'=>$_POST['parentID'],
   'csID'=>$_POST['csID'],
+  'mode'=>$_POST['mode']
 );
 if (isset($_POST['objetID'])) {
     $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];

@@ -61,7 +61,7 @@ $firstDayOfMonth=date('Y-m-01');
 $lastWeek=date('Y-m-d', strtotime("-1 week"));
 $firstOfLastYear=date('Y-m-01', strtotime("-1 year"));
 foreach ($dumpsList as $dump) {
-    if (!preg_match('/'.$p['config']['sqlBase'].'_([0-9]+)-([0-9]+)-([0-9]+)_([0-9]+)-([-0-9]+)\.sql/', $dump, $matches)) {
+    if (!preg_match('/'.$p['config']['sqlBase'].'_([0-9]+)-([0-9]+)-([0-9]+)\.sql/', $dump, $matches)) {
         continue;
     }
     if (($matches[1].'-'.$matches[2].'-'.$matches[3])==$firstDayOfMonth) {

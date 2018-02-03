@@ -65,7 +65,7 @@
 					left join actes_cat as c on c.id=a.cat
           where ".implode(' and ', $where)."
 					group by a.id
-					order by c.displayOrder, c.label asc, a.label asc")) {
+					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
              $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);

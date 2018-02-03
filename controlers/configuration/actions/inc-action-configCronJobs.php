@@ -38,7 +38,7 @@ foreach ($_POST as $k=>$v) {
 exec("crontab -l", $cronFileLines);
 $newCronFileLines=array();
 foreach ($cronFileLines as $line) {
-    if (!preg_match('([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f \.\.\/cron\/(.*\.php)', trim($line))) {
+    if (!preg_match('/([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f \.\.\/cron\/(.*)\.php/', trim($line))) {
         $newCronFileLines[]=$line;
         continue;
     }

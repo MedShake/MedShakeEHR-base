@@ -35,7 +35,7 @@
 
      $name2typeID = new msData();
      $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
-     $p['page']['modules']=msSQL::sql2tabKey("SELECT id, module FROM system", "id", "module");
+     $p['page']['modules']=msSQL::sql2tabKey("SELECT id, name AS module FROM system WHERE groupe='module'", "id", "module");
      $p['page']['userid']=$p['user']['id'];
      $p['page']['users']=msSQL::sql2tab("select pp.id, pp.name, pp.rank, pp.module, p.value as prenom, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
       from people as pp

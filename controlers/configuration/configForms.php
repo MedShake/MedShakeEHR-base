@@ -31,6 +31,7 @@
      $template="forbidden";
  } else {
      $template="configForms";
+     $p['page']['groupe']=isset($match['params']['groupe'])?$match['params']['groupe']:'';
      $debug='';
 
         // liste des types par catégorie
@@ -39,7 +40,7 @@
 						left join forms_cat as c on c.id=f.cat
 						where f.id > 0 and f.type='public'
 						group by f.id
-						order by c.label asc, f.name, f.id asc")) {
+						order by c.label asc, f.module, f.id asc")) {
             foreach ($tabTypes as $v) {
                 $p['page']['tabTypes'][$v['catName']][]=$v;
             }
@@ -49,5 +50,5 @@
         if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from forms_cat order by label", 'id', 'label'));
 
         //liste des modules
-        $p['page']['modules']=msSQL::sql2tabKey("SELECT module FROM system order by module", "module", "module");
+        $p['page']['modules']=msSQL::sql2tabKey("SELECT name AS module FROM system WHERE groupe='module' order by name", "module", "module");
  }

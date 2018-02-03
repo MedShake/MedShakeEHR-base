@@ -139,6 +139,7 @@
                         <th class="text-right">Payé</th>
                         <th class="text-right">Impayé</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,6 +188,14 @@
                             <td class="text-right">
                                 {% if reg.regleFacture - reg.dejaPaye > 0 %}{{ (reg.regleFacture-reg.dejaPaye)|number_format(2, '.', ' ')|e }}{% endif %}
                             </td>
+                            <td>
+                                {% if reg.regleFacture - reg.dejaPaye > 0 %}
+                                {% set apayer = reg.regleFacture - reg.dejaPaye %}
+                                  <a class="btn btn-danger btn-xs editReglement pull-right" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-aregler="{{ apayer }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                                    Saisir règlement
+                                  </a>
+                                {% endif %}
+                            </td>
                             <td class="text-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -225,6 +234,7 @@
                         <th class="text-right">Payé</th>
                         <th class="text-right">Impayé</th>
                         <th class="text-right"></th>
+                        <th class="text-right"></th>
                     </tr>
                     <tr>
                         <th></th>
@@ -240,11 +250,81 @@
                         <th class="text-right">{{ (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur)|number_format(2, '.', ' ')|e }}</th>
                         <th class="text-right">{{ (page.tabTot.regleFacture - (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur))|number_format(2, '.', ' ')|e }}</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
 
             </table>
 
         </div>
+
+  <div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="nomPatient" class="modal-title gras"></h4>
+        </div>
+        <div class="modal-body">
+
+          <h4 id="montant"></h4>
+			    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
+		        <input title=" / " name="page" value="compta" type="hidden">
+		        <input title=" / " name="formIN" value="" type="hidden">
+		        <input title=" / " name="patientID" value="" type="hidden">
+		        <input title=" / " name="objetID" value="" type="hidden">
+		        <input title=" / " name="apayer" value="" type="hidden">
+		        <input title=" / " name="dejaCheque" value="" type="hidden">
+		        <input title=" / " name="dejaCB" value="" type="hidden">
+		        <input title=" / " name="dejaEspeces" value="" type="hidden">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label" for="id_regleCheque_id">Chèque
+                  </label>
+                  <div class="input-group">
+                    <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
+                    <span class="input-group-addon" id="id_regleCheque_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label" for="id_regleCB_id">CB
+                  </label>
+                  <div class="input-group">
+                    <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
+                    <span class="input-group-addon" id="id_regleCB_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label" for="id_regleEspeces_id">Espèces
+                  </label>
+                  <div class="input-group">
+                    <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
+                    <span class="input-group-addon" id="id_regleEspeces_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
+                  </label>
+                  <input title="regleIdentiteCheque / 205" id="id_regleIdentiteCheque_id" name="regleIdentiteCheque" placeholder="si différent patient" class="form-control" autocomplete="off" data-typeid="205" data-internalname="regleIdentiteCheque" type="text">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <input type="submit" class="btn btn-primary"></input>
+            </div>
+      	  </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
     {% endblock %}

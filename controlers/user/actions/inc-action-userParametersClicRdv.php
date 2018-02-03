@@ -26,6 +26,10 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+if ($p['config']['agendaService'] != 'clicRDV') {
+    return;
+}
+
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 $formIN=$_POST['formIN'];
@@ -36,37 +40,14 @@ $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 //$validation=$form->getValidation();
 
-$changeMdp=false;
 $setCRDV=false;
-
-if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
-    unset($_SESSION['form'][$formIN]);
-    if (empty($_POST['p_actualPassword'])) {
-        unset($_SESSION['form'][$formIN]);
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShake, vous devez entrer votre mot de passe actuel.';
-        msTools::redirRoute('userParameters');
-    } elseif ($_POST['p_password'] != $_POST['p_verifPassword']) {
-        unset($_SESSION['form'][$formIN]);
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de nouveau mot de passe de façon identique.';
-        msTools::redirRoute('userParameters');
-    }
-    else {
-        if (msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".$p['user']['id']."' and pass=AES_ENCRYPT('".$_POST['p_actualPassword']."',@password)")) {
-            $changeMdp=true;
-        } else {
-            unset($_SESSION['form'][$formIN]);
-            $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe actuel du compte MedShake n\'est pas correct.';
-            msTools::redirRoute('userParameters');
-        }
-    }
-}
 
 $objet = new msObjet();
 $objet->setFromID($p['user']['id']);
 $objet->setToID($p['user']['id']);
 
 
-if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
+if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
     $clicRDV = new msClicRDV();
     $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
     if (empty($_POST['p_clicRdvPassword'])) {
@@ -82,7 +63,7 @@ if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserI
     } else {
         $setCRDV=true;
     }
-} elseif ($p['config']['serviceAgenda'] == 'clicRDV') {
+} else{
     if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
         msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
     }
@@ -92,9 +73,6 @@ if ($p['config']['serviceAgenda'] == 'clicRDV' and !empty($_POST['p_clicRdvUserI
 }
 
 
-if ($changeMdp) {
-    msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
-}
 if ($setCRDV) {
     $objet->createNewObjetByTypeName('clicRdvUserId', $_POST['p_clicRdvUserId']);
     $passID=$objet->createNewObjetByTypeName('clicRdvPassword', $_POST['p_clicRdvPassword']);

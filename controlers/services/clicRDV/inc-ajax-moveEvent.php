@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,25 +21,12 @@
  */
 
 /**
- * Agenda : supprimer un rdv de l'agenda
+ * Agenda : déplacer un rdv de l'agenda clicRDV
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$agenda = new msAgenda();
-$agenda->set_fromID($p['user']['id']);
-$agenda->set_userID($match['params']['userID']);
-$agenda->set_eventID($_POST['eventid']);
-$agenda->delEvent();
+$clicrdv=new clicRDV();
+$clicrdv->setUserID($match['params']['userID']);
+$clicrdv->modEvent($event);
 
-//hook pour service externe
-if (isset($p['config']['agendaService'])) {
-    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
-    if (is_file($hook)) {
-        $event=$agenda->getEventByID($_POST['eventid']);
-        include($hook);
-   }
-}
-
-header('Content-Type: application/json');
-echo json_encode(array("status"=>"ok"));

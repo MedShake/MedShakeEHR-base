@@ -96,6 +96,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
       $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
+      $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
       $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');
     }
 

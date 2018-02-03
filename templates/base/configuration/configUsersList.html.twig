@@ -56,6 +56,7 @@
   <table class="table table-hover table-striped">
     <thead>
       <tr>
+        <th>#</th>
         <th>Identifiant</th>
         <th>Identité</th>
         <th>Module</th>
@@ -68,6 +69,7 @@
     <tbody>
       {% for v in page.users %}
         <tr>
+          <td>{{ v.id }}</td>
           <td>{{ v.name }}</td>
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>

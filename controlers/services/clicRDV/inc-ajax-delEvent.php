@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,25 +21,12 @@
  */
 
 /**
- * Compta : les requêtes ajax 
+ * Agenda : supprimer un rdv de l'agenda clicRDV
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$clicrdv=new clicRDV();
+$clicrdv->setUserID($match['params']['userID']);
+$clicrdv->delEvent($event);
 
-
-$acceptedModes=array(
-    'extractReglementForm' // Extraire le form de règlement
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-
-// Extraire un form et lancer nouvelle Cs
-if ($m=='extractReglementForm' and is_numeric($_POST['patientID']) and is_numeric($_POST['objetID'])) {
-    include('inc-ajax-extractReglementForm.php');
-}

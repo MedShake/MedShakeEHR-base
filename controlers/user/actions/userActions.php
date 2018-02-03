@@ -33,7 +33,8 @@ $m=$match['params']['m'];
 //modes acceptés et die() si non connu
 $acceptedModes=array(
     'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
-    'changeUserParameters', // changer les paramètres utilisateur
+    'userParametersPassword', // changer le mot de passe de l'utilisateur courant
+    'userParametersClicRdv', // changer les paramètres clicRDV
 );
 if (!in_array($m, $acceptedModes)) {
     die;

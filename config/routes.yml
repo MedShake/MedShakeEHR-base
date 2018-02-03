@@ -68,6 +68,7 @@ lap: ['GET|POST', '/lap/[i:patient]/', 'lap/lap']
 
 #dossier patient
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
+patientActionsIgnoreEmpty: ['GET|POST', '/patient/actions/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientActions']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
 patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
 
@@ -96,7 +97,6 @@ showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
 
 #compta
-comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
 comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
 comptaToday: ['GET|POST', '/compta/aujourdhui/', 'compta/today']
 compta: ['GET|POST', '/compta/', 'compta/compta']
@@ -138,10 +138,10 @@ configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'config
 configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[i:userID]?/', 'configuration/configTemplatesPDFEdit']
 
 # Configuration forms
-configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
 configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
+configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configForms']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique

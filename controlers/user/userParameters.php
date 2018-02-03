@@ -29,56 +29,59 @@
 $debug='';
 $template="userParameters";
 
+/************
+* Password
+************/
+
+$formPassword=new msForm();
+$formPassword->setFormIDbyName($p['page']['formIN']='baseUserParametersPassword');
+$p['page']['formPassword']=$formPassword->getForm();
+$formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
+
+
+
+
+/************
+* clicRDV
+************/
+
 $p['page']['useClicRDV']=$p['config']['agendaService'] == 'clicRDV';
-if (!$p['page']['useClicRDV']) {
-    return;
-}
 
-$form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='baseUserParameters');
-
-if(isset($p['config']['clicRdvUserId'])) {
-    $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
-    $options=array();
-    if (!empty($p['config']['clicRdvPassword'])) {
-        $preValues['p_clicRdvPassword']='********';
-        if(!empty($p['config']['clicRdvGroupId'])) {
-            $preValues['p_clicRdvGroupId']=$p['config']['clicRdvGroupId'];
-            $options['p_clicRdvGroupId']=array('0'=> explode(':',$p['config']['clicRdvGroupId'])[1]);
-        }
-        if(!empty($p['config']['clicRdvCalId'])) {
-            $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
-            $options['p_clicRdvCalId']=array('0'=> explode(':',$p['config']['clicRdvCalId'])[1]);
-        }
+if ($p['page']['useClicRDV']) {
+    $consults=msAgenda::getRdvTypes($p['user']['id']);
+    $p['page']['clicRdvConsultsRel']='[]';
+    if (count($consults)) {
+        $p['page']['clicRdvConsults']=json_encode($consults);
     }
-    $form->setPrevalues($preValues);
-    $form->setOptionsForSelect($options);
-}
 
-$p['page']['form']=$form->getForm();
+    $formClicRdv=new msForm();
+    $formClicRdv->setFormIDbyName($p['page']['formIN']='baseUserParametersClicRdv');
 
-$p['page']['clicRdvConsultsRel']='[]';
-$consults=msAgenda::getRdvTypes($p['user']['id']);
-$p['page']['form']['structure'][1][1]['elements'][5]['value']['formValues']=array();
-foreach ($consults as $k=>$v) {
-    $p['page']['form']['structure'][1][1]['elements'][5]['value']['formValues'][$k]=$v['descriptif'].' (MedShakeEHR)';
-}
-if (count($consults)) {
-    $p['page']['clicRdvConsults']=json_encode($consults);
-}
-
-if(isset($p['config']['clicRdvUserId'])) {
-    if (!empty($p['config']['clicRdvPassword'])) {
-/*
-        if(!empty($p['config']['clicRdvGroupId'])) {
-            $p['page']['form']['structure'][1][1]['elements'][3]['value']['formValues'][$p['config']['clicRdvGroupId']]=explode(':',$p['config']['clicRdvGroupId'])[1];
+    if(isset($p['config']['clicRdvUserId'])) {
+        $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
+        $options=array();
+        if (!empty($p['config']['clicRdvPassword'])) {
+            $preValues['p_clicRdvPassword']='********';
+            if(!empty($p['config']['clicRdvGroupId'])) {
+                $preValues['p_clicRdvGroupId']=$p['config']['clicRdvGroupId'];
+                $options['p_clicRdvGroupId']=array('0'=> explode(':',$p['config']['clicRdvGroupId'])[1]);
+            }
+            if(!empty($p['config']['clicRdvCalId'])) {
+                $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
+                $options['p_clicRdvCalId']=array('0'=> explode(':',$p['config']['clicRdvCalId'])[1]);
+                $options['p_clicRdvConsultId']=array();
+                foreach ($consults as $k=>$v) {
+                  $options['p_clicRdvConsultId'][]=$v['descriptif'].' (MedShakeEHR)';
+                }
+            }
+            if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
+                $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
+            }
         }
-        if(!empty($p['config']['clicRdvCalId'])) {
-            $p['page']['form']['structure'][1][1]['elements'][4]['value']['formValues'][$p['config']['clicRdvCalId']]=explode(':',$p['config']['clicRdvCalId'])[1];
-        }
-*/
-        if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
-            $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
-        }
+        $formClicRdv->setPrevalues($preValues);
+        $formClicRdv->setOptionsForSelect($options);
     }
+    $p['page']['formClicRdv']=$formClicRdv->getForm();
+    $formClicRdv->addSubmitToForm($p['page']['formClicRdv'], $class='btn-primary insertBefore');
+
 }

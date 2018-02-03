@@ -30,14 +30,35 @@ $(document).ready(function() {
 
   //bouton de nouveau reglement
   $(".editReglement").on("click", function(e) {
-    e.preventDefault();
-    if ($('#newReglement').html() != '') {
-      if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
-        sendFormToReglementDiv($(this));
+    $("#nomPatient").html($(this).attr('data-patientname'));
+    $("#montant").html('Reste à payer: ' + $(this).attr('data-aregler') + '€');
+    $("input[name=patientID]").val($(this).attr('data-patientID'));
+    $("input[name=objetID]").val($(this).attr('data-objetID'));
+    $("input[name=apayer]").val($(this).attr('data-aregler'));
+    $("input[name=dejapaye]").val($(this).attr('data-dejapaye'));
+    $("input[name=dejaCheque]").val($(this).attr('data-dejaCheque'));
+    $("input[name=dejaCB]").val($(this).attr('data-dejaCB'));
+    $("input[name=dejaEspeces]").val($(this).attr('data-dejaEspeces'));
+  });
+
+  $(".checkAmount").on("keyup", function() {
+    var total = 0;
+    var filled = [0,0,0];
+    $(".checkAmount").each(function(idx,el){
+      total += parseFloat($(el).val()) || parseInt($(el).val()) || 0;
+      filled[idx] = $(el).val()!="";
+    });
+    $("input[type=submit]").removeClass("disabled");
+    $(".checkAmount").parent().removeClass('has-error');
+    $(".checkAmount").parent().removeClass('has-success');
+    $(".checkAmount").each(function(idx,el){
+      if (total > $("input[name=apayer]").val() && filled[idx]) {
+        $(el).parent().addClass('has-error');
+        $("input[type=submit]").addClass("disabled");
       }
-    } else {
-      sendFormToReglementDiv($(this));
-    }
+      else if (total==$("input[name=apayer]").val() && filled[idx])
+        $(el).parent().addClass('has-success');
+    });
   });
 
   //close button zone newReglement
@@ -84,26 +105,3 @@ $(document).ready(function() {
 
 });
 
-
-
-
-//envoyer le form new Reglement dans le div Ordo
-function sendFormToReglementDiv(el) {
-
-  $.ajax({
-    url: urlBase+'/compta/ajax/extractReglementForm/',
-    type: 'post',
-    data: {
-      objetID: el.attr('data-objetID'),
-      patientID: el.attr('data-patientID'),
-      montant: el.attr('data-montant')
-    },
-    dataType: "html",
-    success: function(data) {
-      $('#newReglement').html(data);
-    },
-    error: function() {
-      alert('Problème, rechargez la page !');
-    }
-  });
-}
