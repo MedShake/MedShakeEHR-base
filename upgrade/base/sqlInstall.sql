@@ -595,4 +595,6 @@ INSERT INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `registerD
 (1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
 (2, 'clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
 
-INSERT INTO `system` (`id`,`name`, `groupe`,`value`) VALUES (1, 'base', `module`, 'v3.0.0');
+INSERT INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
+ (1, 'state', 'system', 'normal'),
+ (2, 'base', 'module', 'v3.1.0');
