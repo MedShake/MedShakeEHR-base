@@ -70,7 +70,7 @@ UPDATE `data_cat` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 --data_types
 ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','password','checkbox') NOT NULL DEFAULT '';
 UPDATE `data_types` SET `fromID`='1' WHERE `fromID`='0';
-UPDATE `data_types` SET `module`='base' WHERE `name`='baseSynthese';
+UPDATE `data_types` SET `module`='base' WHERE `name`in ('baseSynthese', 'csBaseGroup');
 UPDATE `data_types` SET `label` = 'agendaForPatientsOfTheDay', `description` = 'permet d\'indiquer l\'agenda à utiliser pour la liste patients du jour pour cet utilisateur', `formType` = 'select', `formValues` = '' WHERE `name` = 'agendaNumberForPatientsOfTheDay';
 
 SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='catParamsUsersAdmin');
@@ -103,6 +103,16 @@ UPDATE `forms_cat` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
 --forms
 DELETE FROM `forms` WHERE `internalName`='basePasswordChange';
+
+INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+('formATCD', 'Formulaires d\'antécédents', 'Formulaires pour construire les antécédents', 'user', 1, '2018-01-01 00:00:00'),
+('formSynthese', 'Formulaires de synthèse', 'Formulaires pour construire les synthèses', 'user', 1, '2018-01-01 00:00:00');
+
+SET @catID=(SELECT `id` FROM `forms_cat` WHERE `name`='formATCD');
+UPDATE `forms` SET `cat`=@catID WHERE `internalName`='baseATCD';
+
+SET @catID=(SELECT `id` FROM `forms_cat` WHERE `name`='formSynthese');
+UPDATE `forms` SET `cat`=@catID WHERE `internalName`='baseSynthese';
 
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('base', 'baseUserParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersClicRdv', 5, 'public', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL);
