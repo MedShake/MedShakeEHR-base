@@ -96,6 +96,9 @@ if ($state=='maintenance') {
 ///////// user
 if (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
+    if (is_file('../config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
+        $p['config']=array_merge($p['config'], Spyc::YAMLLoad('../config/config-'.$p['user']['module'].'.yml'));
+    }
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
