@@ -444,7 +444,7 @@ class msClicRDV
                     $obj->setFromID($clicRDVservice);
                     $obj->createNewObjetByTypeName('clicRdvPatientId', $fiche['id']);
                     $obj->createNewObjetByTypeName('firstname', $fiche['firstname']);
-                    $obj->createNewObjetByTypeName('lastname', $fiche['lastname']);
+                    $obj->createNewObjetByTypeName('birthname', $fiche['lastname']);
                     if ($fiche['birthdate'])
                     $obj->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
                     $obj->createNewObjetByTypeName('personalEmail', $fiche['email']);
