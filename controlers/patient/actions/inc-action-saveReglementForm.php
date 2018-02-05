@@ -33,7 +33,7 @@ if (count($_POST['acteID'])>0) {
     $patient->setToID($_POST['patientID']);
 
     //support
-    if (isset($_POST['objetID'])) {
+    if ($_POST['objetID']!=='') {
         $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
     } else {
         $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID']);
