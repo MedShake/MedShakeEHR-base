@@ -34,26 +34,23 @@ class msClicRDV
     private $_userpwd;
 
     private function _sendCurl($commande, $req, $groupID='', $params='', $data='') {
-        if (!isset($this->_userpwd)) {
+        if (!isset($this->_userpwd) or !$this->_userpwd) {
             $this->setUserPwd();
         }
         $sb_baseurl='https://sandbox.clicrdv.com/api/v1/';
-        $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40';
+        $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40&format=json';
         $baseurl='https://www.clicrdv.com/api/v1/';
-        $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae';
+        $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae&format=json';
         $group= $groupID ? 'groups/'.$groupID.'/' : '';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseurl.$group.$req.$api_key.$params);
         if ($commande=='POST') {
-//            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
             curl_setopt($ch, CURLOPT_POST, true);
         } else if ($commande=='PUT') {
-//            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         } else if ($commande=='DELETE') {
-//            curl_setopt($ch, CURLOPT_URL, $sb_baseurl.$group.$req.$sb_api_key.$params);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
         curl_setopt($ch, CURLOPT_USERPWD, $this->_userpwd);
@@ -61,7 +58,6 @@ class msClicRDV
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         if ($data) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            echo 'curl error on: '.$baseurl.$group.$req.$api_key.$params.'\n';
         }
         $res=curl_exec($ch);
         curl_close($ch);
@@ -94,11 +90,11 @@ class msClicRDV
     }
 
     public function getCalendars($group='') {
-        return $this->_sendCurl('GET', 'calendars.json', $group);
+        return $this->_sendCurl('GET', 'calendars', $group);
     }
 
     public function getInterventions($group='',$cal='') {
-        return $this->_sendCurl('GET', 'interventions.json',$group, '&calendar_ids[]='.$cal);
+        return $this->_sendCurl('GET', 'interventions',$group, '&calendar_ids[]='.$cal);
     }
 
     private function _getUserParams() {
@@ -149,7 +145,7 @@ class msClicRDV
         }
         //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
         // tant pis... le rdv sera donc envoyé à la prochaine synchro
-        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+        if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
             return false;
         }
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
@@ -208,7 +204,7 @@ class msClicRDV
                 $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
             if (array_key_exists('personalEmail', $patientData))
                 $ficheClic['fiche']['email']=$patientData['personalEmail'];
-            if ($res=json_decode($this->_sendCurl('POST', 'fiches.json', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+            if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
                 $obj=new msObjet();
                 $obj->setToID($event['patientid']);
                 $obj->setFromID($clicRDVservice);
@@ -218,7 +214,7 @@ class msClicRDV
             }
         }
         //envoi de l'événement et récupération de la réponse
-        if ($evtc=json_decode($this->_sendCurl('POST', 'vevents.json', $this->_groupID, '', json_encode($eventClic)), true)) {
+        if ($evtc=json_decode($this->_sendCurl('POST', 'vevents', $this->_groupID, '', json_encode($eventClic)), true)) {
             //enregistrement de son ID externe dans la base et dans les événements
             msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$event['id']."'");
         } else {
@@ -237,7 +233,7 @@ class msClicRDV
         }
         //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
         // tant pis... le rdv sera donc envoyé à la prochaine synchro
-        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+        if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
             return false;
         }
         //si l'événement n'a pas été synchronisé, on ne peut rien faire
@@ -257,7 +253,7 @@ class msClicRDV
             'start'=>$event['start'],
             'end'=>$event['end']
         );
-        $this->_sendCurl('PUT', 'vevents/'.$event['externid'].'.json', $this->_groupID, '', json_encode($eventClic));
+        $this->_sendCurl('PUT', 'vevents/'.$event['externid'], $this->_groupID, '', json_encode($eventClic));
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
     }
 
@@ -269,13 +265,13 @@ class msClicRDV
         if (!array_key_exists('clicRdvUserId', $params)) {
             return false;
         }
-        //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
-        // tant pis... le rdv sera donc envoyé à la prochaine synchro
-        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
-            return false;
-        }
         //si l'événement n'a pas été synchronisé, il n'y a rien à faire
         if (!$event['externid']) {
+            return false;
+        }
+        //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
+        // tant pis... le rdv sera donc envoyé à la prochaine synchro
+        if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
             return false;
         }
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
@@ -288,16 +284,16 @@ class msClicRDV
             'calendar_id'=>$this->_calID,
             'deleted'=>'1'
         );
-        $this->_sendCurl('PUT', 'vevents/'.$event['externid'].'.json', $this->_groupID, '', json_encode($eventClic));
+        $this->_sendCurl('PUT', 'vevents/'.$event['externid'], $this->_groupID, '', json_encode($eventClic));
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
     }
 
     public function syncEvents() {
         $params=$this->_getUserParams();
-        if (!array_key_exists('clicRdvUserId', $params)) {
+        if (!array_key_exists('clicRdvUserId', $params) or !$params['clicRdvUserId']) {
             return false;
         }
-        if (msSQL::sqlQuery("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'"))=='true') {
+        if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
             return false;
         }
         //acquisition du lock
@@ -307,7 +303,7 @@ class msClicRDV
         $this->_calID=explode(':', $params['clicRdvCalId'])[0];
         $interventions=json_decode($params['clicRdvConsultId'], true);
         $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
-        $lastupdate=msSQL::sqlQuery("SELECT value FROM system WHERE groupe='cron' and name='clicRDV'");
+        $lastupdate=msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='cron' and name='clicRDV'");
         $startdate=date("Y-m-d H:i:s");
         $enddate=(date("Y-m-d H:i:s", strtotime("+2 year")));
         $searchString='&results=all&calendar_id='.$this->_calID.
@@ -316,9 +312,9 @@ class msClicRDV
           '&conditions[2][field]=start&conditions[2][op]=%3E%3D&conditions[2][value]='.str_replace(' ', '%20', $startdate).
           '&conditions[3][field]=end&conditions[3][op]=%3C%3D&conditions[3][value]='.str_replace(' ', '%20', $enddate);
         if ($lastupdate) {
-            $searchString+='&conditions[4][field]=updated_at&conditions[4][op]=%3E%3D&conditions[4][value]='.str_replace(' ', '%20', $lastupdate);
+            $searchString.='&conditions[4][field]=updated_at&conditions[4][op]=%3E%3D&conditions[4][value]='.str_replace(' ', '%20', $lastupdate);
         }
-        if (($res=$this->_sendCurl('GET', 'vevents.json', $this->_groupID, $searchString)) === false) {
+        if (($res=$this->_sendCurl('GET', 'vevents', $this->_groupID, $searchString)) === false) {
             return false;
         }
         $res=json_decode($res, true);
@@ -403,7 +399,7 @@ class msClicRDV
                     $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
                 if (array_key_exists('personalEmail', $patientData))
                     $ficheClic['fiche']['email']=$patientData['personalEmail'];
-                if ($res=json_decode($this->_sendCurl('POST', 'fiches.json', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+                if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
                     $obj->setToID($vlocal['patientid']);
                     $obj->setFromID($clicRDVservice);
                     $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
@@ -414,7 +410,7 @@ class msClicRDV
                 }
             }
             //envoi de l'événement et récupération de la réponse
-            if ($evtc=json_decode($this->_sendCurl('POST', 'vevents.json', $this->_groupID, '', json_encode($eventClic)), true)) {
+            if ($evtc=json_decode($this->_sendCurl('POST', 'vevents', $this->_groupID, '', json_encode($eventClic)), true)) {
                 //enregistrement de son ID externe dans la base et dans les événements
                 msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$vlocal['id']."'");
                 $events[$k]['externid']=$evtc['id'];
@@ -439,7 +435,7 @@ class msClicRDV
                         $patientID=$relatedPatients[1][$patientID];
                     }
                 //sinon on le crée
-                } elseif ($fiche=json_decode($this->_sendCurl('GET', 'fiches/'.$vclic['fiche_id'].'.json', $this->_groupID), true) and array_key_exists('id', $fiche)){
+                } elseif ($fiche=json_decode($this->_sendCurl('GET', 'fiches/'.$vclic['fiche_id'], $this->_groupID), true) and array_key_exists('id', $fiche)){
                     $patient->setFromID($clicRDVservice);
                     $patient->setType('externe');
                     $patientID=$patient->createNew();
@@ -487,7 +483,7 @@ class msClicRDV
                             'start'=>$evt['start'],
                             'end'=>$evt['end']
                         );
-                        $this->_sendCurl('PUT', 'vevents/'.$vclic['id'].'.json', $this->_groupID, '', json_encode($evtc));
+                        $this->_sendCurl('PUT', 'vevents/'.$vclic['id'], $this->_groupID, '', json_encode($evtc));
                     }
                 //cas où l'événement clic a été modifié en dernier
                 } else {
