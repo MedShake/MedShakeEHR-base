@@ -199,7 +199,8 @@ CREATE TABLE `objets_data` (
   `outdated` enum('','y') NOT NULL DEFAULT '',
   `important` enum('n','y') DEFAULT 'n',
   `titre` varchar(255) NOT NULL DEFAULT '',
-  `deleted` enum('','y') NOT NULL DEFAULT ''
+  `deleted` enum('','y') NOT NULL DEFAULT '',
+  `deletedByID` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `people` (
