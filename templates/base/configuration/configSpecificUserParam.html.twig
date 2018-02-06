@@ -96,11 +96,10 @@
           }
         }) }}
       {% elseif w.name == 'administratifComptaPeutVoirRecettesDe' %}
-        <input type="hidden" name="{{ 'p_' ~ w.id ~ '[]' }}" value=""></input>
         {{ f.selectMultiple ({
           'select' : {
             'type' : w.formType,
-            'name' : 'p_' ~ w.id ~ '[]',
+            'name' : 'p_' ~ w.id,
             'id' : w.name ~ 'ID',
             'placeholder' : w.placeholder,
             'class' : 'form-control',
