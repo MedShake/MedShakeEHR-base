@@ -441,7 +441,6 @@ class msClicRDV
                     $patient->setFromID($clicRDVservice);
                     $patient->setType('externe');
                     $patientID=$patient->createNew();
-if (!$patientID) echo "on a eu un zero!\n";
                     $patients[1][$fiche['id']]=$patientID;
                     $obj->setToID($patientID);
                     $obj->setFromID($clicRDVservice);
