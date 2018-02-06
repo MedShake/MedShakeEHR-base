@@ -52,7 +52,7 @@
             <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientID }}/">
               {% if page['outputType'][patientID]['type']=='externe' or page.porp == 'externe' %}
                 <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-              {% else %}
+              {% elseif page.porp != 'pro' or config.PraticienPeutEtrePatient %}
                 <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
              {% endif %}
             </a>
