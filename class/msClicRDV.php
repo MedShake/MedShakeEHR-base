@@ -488,9 +488,11 @@ class msClicRDV
                 //cas où l'événement clic a été modifié en dernier
                 } else {
                     $agenda->set_eventID($evt['id']);
-                    //cas où l'evénement a été remis depuis clic
+                    //cas où l'evénement a été enlevé ou remis depuis clic
                     if ($evt['statut']=='deleted' and !$vclic['deleted']) {
                         $agenda->undelEvent();
+                    } elseif ($evt['statut']!='deleted' and $vclic['deleted']) {
+                        $agenda->delEvent();
                     } 
                     //cas où l'evénement a été modifié sur clic
                     if ($vclic['start'] != $evt['start'] or $vclic['end'] != $evt['end']) {
