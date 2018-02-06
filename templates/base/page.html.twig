@@ -85,7 +85,7 @@
                         <li>
                             <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
                         </li>
-                      {% elseif page.agendaUsers|length == 1 %}
+                      {% elseif page.agendaUsers|length == 1 and user.id in page.agendaUsers|keys %}
                         {% for k,v in page.agendaUsers %}
                           <li>
                               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
@@ -97,11 +97,19 @@
                               <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                              {% for k,v in page.agendaUsers %}
+                            {% if user.id in page.agendaUsers|keys %}
                               <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
                               </li>
-                              {% endfor %}
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
+                            {% for k,v in page.agendaUsers %}
+                              {% if k != user.id %}
+                                <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                                </li>
+                              {% endif %}
+                            {% endfor %}
                           </ul>
                         </li>
                       {% endif %}
