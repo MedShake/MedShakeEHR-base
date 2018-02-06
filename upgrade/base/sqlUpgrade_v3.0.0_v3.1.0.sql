@@ -133,12 +133,12 @@ UPDATE `forms` SET `internalName`='baseFirstLogin' WHERE `internalName`='firstLo
 
 UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider', `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider' WHERE `internalName`='baseFirstLogin';
 
--- ????? pas de fromID dans forms
-UPDATE `forms` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
-
 --forms_basic_types
 UPDATE `form_basic_types` SET `name`='username', `description`='identifiant utilisateur', `validationRules`='required', `validationErrorMsg`='L\'identifiant utilisateur est manquant' WHERE `name`='userid';
 UPDATE `form_basic_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
+
+--objets_data
+ALTER TABLE `objets_data` ADD `deletedByID` int(11) DEFAULT NULL after `deleted`;
 
 --system
 ALTER TABLE `system` CHANGE `module` `name` VARCHAR(30) NOT NULL;
