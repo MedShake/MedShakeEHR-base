@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['patientID'])) die;
+
 $template="dicomWL";
 
 $prat = new msPeople();
@@ -41,8 +43,8 @@ $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_P
 if(isset($p['page']['patient'][8])) $p['page']['patient']['dicomBirthdate']=msTools::readableDate2Reverse($p['page']['patient'][8]);
 
 //inclusion si présence dans module installé du fichier sépcifique
-if (is_file($p['config']['homeDirectory'].'controlers/module/patient/actions/inc-ajax-prepareEcho.php')) {
-    include($p['config']['homeDirectory'].'controlers/module/patient/actions/inc-ajax-prepareEcho.php');
+if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php')) {
+    include($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php');
 }
 
 //générer et sortir html

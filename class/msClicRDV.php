@@ -420,6 +420,7 @@ class msClicRDV
                 die("Erreur lors de la création d'un événement\n");
             }
         }
+
         //sens clicRDV => local
         foreach($rdvClic as $vclic) {
             //événement inconnu en local, et non supprimé sur clic 
@@ -436,18 +437,21 @@ class msClicRDV
                     }
                 //sinon on le crée
                 } elseif ($fiche=json_decode($this->_sendCurl('GET', 'fiches/'.$vclic['fiche_id'], $this->_groupID), true) and array_key_exists('id', $fiche)){
+                    $patient=new msPeople(); // pour supprimer le toID dans la class
                     $patient->setFromID($clicRDVservice);
                     $patient->setType('externe');
                     $patientID=$patient->createNew();
+if (!$patientID) echo "on a eu un zero!\n";
                     $patients[1][$fiche['id']]=$patientID;
                     $obj->setToID($patientID);
                     $obj->setFromID($clicRDVservice);
                     $obj->createNewObjetByTypeName('clicRdvPatientId', $fiche['id']);
                     $obj->createNewObjetByTypeName('firstname', $fiche['firstname']);
                     $obj->createNewObjetByTypeName('birthname', $fiche['lastname']);
-                    if ($fiche['birthdate'])
-                    $obj->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
                     $obj->createNewObjetByTypeName('personalEmail', $fiche['email']);
+                    if ($fiche['birthdate']) {
+                        $obj->createNewObjetByTypeName('birthdate', $fiche['birthdate']);
+                    }
                     if ($fiche['firstphone'] and (!strpos('06', $fiche['firstphone']) or !strpos('07', $fiche['firstphone']))) {
                         $obj->createNewObjetByTypeName('mobilePhone', $fiche['firstphone']);
                     } elseif ($fiche['secondphone'] and (!strpos('06', $fiche['secondphone']) or !strpos('07', $fiche['secondphone']))) {
