@@ -131,7 +131,9 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                      <a id="linkAddNewReglement" href="#">Nouveau règlement</a>
+                    {% for k,v in page.formReglement %}
+                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-reglementMod="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {%endif %}Nouveau règlement</a>
+                    {% endfor %}
                   </li>
                 </ul>
             </div>

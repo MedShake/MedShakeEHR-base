@@ -52,8 +52,8 @@ $(document).ready(function() {
     .attr('name', 'p_clicRdvConsultId' + k)
     .insertAfter('label[for="id_clicRdvConsultId' + k + '_id"]')
     .show();
-    $('#id_clicRdvConsultId' + k + '_id option').each(function(){
-      $(this).val($(this).val() + ':' + idx + ':' + clicRdvConsultsRel[idx][1]);
+    $('#id_clicRdvConsultId' + k + '_id option').each(function(i, el){
+      $(el).val($(el).val() + ':' + idx + ':' + clicRdvConsultsRel[idx][1]);
     });
     var j = 0;
     for (var i in clicRdvConsults) {
@@ -203,8 +203,8 @@ function addConsult(idx, consult) {
   .attr('name', 'p_clicRdvConsultId' + idx)
   .insertAfter('label[for="id_clicRdvConsultId' + idx + '_id"]')
   .show();
-  $('#id_clicRdvConsultId' + idx + '_id option').each(function(){
-    $(this).val($(this).val() + ':' + consult.id + ':' + consult.name);
+  $('#id_clicRdvConsultId' + idx + '_id option').each(function(i,el){
+    $(el).val($(el).val() + ':' + consult.id + ':' + consult.name);
   });
   var j = 0;
   for (var i in clicRdvConsults) {

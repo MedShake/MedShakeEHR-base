@@ -42,3 +42,6 @@ $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 
 $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
+
+$p['page']['formReglement']['reglePorteur']=array('module'=>'base', 'form'=>'baseReglement');
+

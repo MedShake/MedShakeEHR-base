@@ -77,10 +77,28 @@ $router->addRoutes($routes);
 $router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
 
+///////// vérification de l'état de la base
+$state=msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'");
+//si la base est en maintenance
+if ($state=='maintenance') {
+    msTools::redirection('/maintenance.html');
+//si la base n'est pas installée du tout, alors on le fait
+} elseif (!$state and !count(msSQL::sql2tabSimple("SHOW TABLES"))) {
+    exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/base/sqlInstall.sql');
+    $modules=scandir('../upgrade/');
+    foreach ($modules as $module) {
+        if ($module!='.' and $module!='..') {
+            exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/'.$module.'/sqlInstall.sql');
+        }
+    }
+}
 
 ///////// user
 if (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
+    if (is_file('../config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
+        $p['config']=array_merge($p['config'], Spyc::YAMLLoad('../config/config-'.$p['user']['module'].'.yml'));
+    }
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }

@@ -57,9 +57,14 @@ if ($p['page']['useClicRDV']) {
     $formClicRdv=new msForm();
     $formClicRdv->setFormIDbyName($p['page']['formIN']='baseUserParametersClicRdv');
 
+    $options=array();
+    $options['p_clicRdvConsultId']=array();
+    foreach ($consults as $k=>$v) {
+      $options['p_clicRdvConsultId'][$k]=$v['descriptif'].' (MedShakeEHR)';
+    }
+
     if(isset($p['config']['clicRdvUserId'])) {
         $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
-        $options=array();
         if (!empty($p['config']['clicRdvPassword'])) {
             $preValues['p_clicRdvPassword']='********';
             if(!empty($p['config']['clicRdvGroupId'])) {
@@ -69,18 +74,14 @@ if ($p['page']['useClicRDV']) {
             if(!empty($p['config']['clicRdvCalId'])) {
                 $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
                 $options['p_clicRdvCalId']=array('0'=> explode(':',$p['config']['clicRdvCalId'])[1]);
-                $options['p_clicRdvConsultId']=array();
-                foreach ($consults as $k=>$v) {
-                  $options['p_clicRdvConsultId'][]=$v['descriptif'].' (MedShakeEHR)';
-                }
             }
             if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
                 $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
             }
         }
         $formClicRdv->setPrevalues($preValues);
-        $formClicRdv->setOptionsForSelect($options);
     }
+    $formClicRdv->setOptionsForSelect($options);
     $p['page']['formClicRdv']=$formClicRdv->getForm();
     $formClicRdv->addSubmitToForm($p['page']['formClicRdv'], $class='btn-primary insertBefore');
 
