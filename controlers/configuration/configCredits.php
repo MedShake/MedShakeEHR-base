@@ -141,7 +141,7 @@ $p['page']['thanks'][
 $p['page']['thanks'][
   'jquery-mousewheel']=array(
   'description'=>'Mocha test framework',
-  'url'=>'(https://visionmedia.github.io/mocha/'
+  'url'=>'https://visionmedia.github.io/mocha/'
 );
 
 uksort($p['page']['thanks'], 'strcasecmp');
