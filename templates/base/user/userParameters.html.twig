@@ -47,7 +47,10 @@
   {# form display #}
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-      <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Paramètres MedShakeEHR</a>
+      <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Mot de passe MedShakeEHR</a>
+    </li>
+    <li role="presentation">
+      <a href="#pa" aria-controls="pa" role="tab" data-toggle="tab">Agenda MedShakeEHR</a>
     </li>
     {% if page.useClicRDV %}
       <li role="presentation">
@@ -62,6 +65,78 @@
     <div role="tabpanel" class="tab-pane active" id="pm" style="padding-top:10px">
       {{ f.formbuilder(page.formPassword , page.formIN , session) }}
     </div>
+
+    {# formulaire Agenda MedShake #}
+    <div role="tabpanel" class="tab-pane" id="pa" style="padding-top:10px">
+      <form id="formName_ConfAgenda" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/userParametersAgenda/">
+        <div class="col-md-6">
+          <table>
+            <tr>
+              <td style="vertical-align:middle">
+                <label for="minTime">Affichage débutant à</label>
+              </td>
+              <td style="vertical-align:middle">
+                <input name="minTime" value="{{ page.agenda.minTime }}" type="text"></input>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align:middle">
+                <label for="maxTime">Affichage finissant à</label>
+              </td>
+              <td style="vertical-align:middle">
+                <input name="maxTime" value="{{ page.agenda.maxTime }}" type="text"></input>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align:middle">
+                <label for="slotDuration">Durée d'un créneau</label>
+              </td>
+              <td style="vertical-align:middle">
+                <input name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text"></input>
+              </td>
+            </tr>
+          </table>
+          <div class="row">
+            <table class="table table-hover">
+              <tr>
+                  <th>Jour</th>
+                  <th>Visible</th>
+                  <th>Ouvré</th>
+                  <th>Premier Rdv</th>
+                  <th>Dernier Rdv</th>
+                  <th>Début de pause</th>
+                  <th>Fin de pause</th>
+              </tr>
+              {% for i in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+                <tr>
+                  <td style="vertical-align:middle">{{ i }}</td>
+                  <td style="vertical-align:middle">
+                    <input name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %}></input>
+                  </td>
+                  <td style="vertical-align:middle">
+                    <input name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input>
+                  </td>
+                  <td style="vertical-align:middle">
+                    <input name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text"></input>
+                  </td>
+                  <td style="vertical-align:middle">
+                    <input name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text"></input>
+                  </td>
+                  <td style="vertical-align:middle">
+                    <input name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text"></input>
+                  </td>
+                  <td style="vertical-align:middle">
+                    <input name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text"></input>
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+          <input class="btn btn-primary" type="submit" value="Valider"></input>
+        </div>
+      </form>
+    </div>
+
 
     {# formulaire clicRDV #}
     {% if page.useClicRDV %}

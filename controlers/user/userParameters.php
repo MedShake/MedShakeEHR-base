@@ -39,7 +39,27 @@ $p['page']['formPassword']=$formPassword->getForm();
 $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
 
 
-
+/************
+* Agenda
+************/
+//paramètres de l'agenda
+if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml');
+} else {
+  $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
+                            'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Mardi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Mercredi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Jeudi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Vendredi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Samedi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'12:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'12:00'),
+                            'Dimanche'=>array('worked'=> false, 'visible'=>false, 'minTime'=>'09:00', 'maxTime'=>'12:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'12:00')
+                          );
+}
+// types de rendez-vous
+if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml')) {
+ $p['page']['consultations']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml');
+}
 
 /************
 * clicRDV
