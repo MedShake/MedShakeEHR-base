@@ -97,4 +97,4 @@ for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
 if (!empty($consult)) {
     $objet->createNewObjetByTypeName('clicRdvConsultId', json_encode($consult));
 }
-msTools::redirRoute('/');
+msTools::redirRoute('userParameters');

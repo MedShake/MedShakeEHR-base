@@ -83,4 +83,4 @@ $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);
 
-msTools::redirRoute('/');
+msTools::redirRoute('userParameters');

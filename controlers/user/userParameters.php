@@ -56,10 +56,18 @@ if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p[
                             'Dimanche'=>array('worked'=> false, 'visible'=>false, 'minTime'=>'09:00', 'maxTime'=>'12:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'12:00')
                           );
 }
+
+/************
+* consultations
+************/
 // types de rendez-vous
 if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml')) {
- $p['page']['consultations']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml');
+    $consults=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml');
+    foreach ($consults as $k=>$v) {
+        $p['page']['consultations'][str_replace('[','',str_replace(']','',$k))]=$v;
+    }
 }
+
 
 /************
 * clicRDV

@@ -35,6 +35,7 @@ $acceptedModes=array(
     'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
     'userParametersPassword', // changer le mot de passe de l'utilisateur courant
     'userParametersAgenda', // changer les paramètres d'agenda
+    'userParametersConsultations', // changer les paramètres de consultations
     'userParametersClicRdv', // changer les paramètres clicRDV
 );
 if (!in_array($m, $acceptedModes)) {

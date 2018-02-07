@@ -31,11 +31,23 @@
 
 {% block head %}
 {{ parent() }}
+  <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/parameters.js"></script>
   <script>
     var clicRdvConsults={{ page.clicRdvConsults }};
     var clicRdvConsultsRel={{ page.clicRdvConsultsRel }};
   </script>
+  <style>
+    td {vertical-align:middle !important}
+    td.time {width:150px}
+    .consult td:nth-of-type(1) {width:40px}
+    .consult td:nth-of-type(2) {width:80px}
+    .consult td:nth-of-type(3) {width:300px}
+    .consult td:nth-of-type(4) {width:120px}
+    .consult td:nth-of-type(5) {width:120px}
+    .consult td:nth-of-type(6) {width:60px}
+  </style>
 {% endblock %}
 
 {% block body %}
@@ -47,10 +59,13 @@
   {# form display #}
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-      <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Mot de passe MedShakeEHR</a>
+      <a href="#pm" aria-controls="pm" role="tab" data-toggle="tab">Mot de passe</a>
     </li>
     <li role="presentation">
-      <a href="#pa" aria-controls="pa" role="tab" data-toggle="tab">Agenda MedShakeEHR</a>
+      <a href="#pa" aria-controls="pa" role="tab" data-toggle="tab">Agenda</a>
+    </li>
+    <li role="presentation">
+      <a href="#pt" aria-controls="pt" role="tab" data-toggle="tab">Consultations</a>
     </li>
     {% if page.useClicRDV %}
       <li role="presentation">
@@ -68,31 +83,47 @@
 
     {# formulaire Agenda MedShake #}
     <div role="tabpanel" class="tab-pane" id="pa" style="padding-top:10px">
+      <h3>Apparence de l'agenda MedShake</h3>
       <form id="formName_ConfAgenda" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/userParametersAgenda/">
         <div class="col-md-6">
-          <table>
+          <table class="table" style="width:300px">
             <tr>
-              <td style="vertical-align:middle">
-                <label for="minTime">Affichage débutant à</label>
+              <td>
+                Affichage débutant à
               </td>
-              <td style="vertical-align:middle">
-                <input name="minTime" value="{{ page.agenda.minTime }}" type="text"></input>
+              <td class="time">
+                <div class="md-col-1 input-group date">
+                    <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
               </td>
             </tr>
             <tr>
-              <td style="vertical-align:middle">
-                <label for="maxTime">Affichage finissant à</label>
+              <td>
+                Affichage finissant à
               </td>
-              <td style="vertical-align:middle">
-                <input name="maxTime" value="{{ page.agenda.maxTime }}" type="text"></input>
+              <td class="time">
+                <div class="md-col-1 input-group date">
+                    <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
               </td>
             </tr>
             <tr>
-              <td style="vertical-align:middle">
-                <label for="slotDuration">Durée d'un créneau</label>
+              <td>
+                Durée d'un créneau
               </td>
-              <td style="vertical-align:middle">
-                <input name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text"></input>
+              <td class="time">
+                <div class="md-col-1 input-group date">
+                    <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off"></input>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
               </td>
             </tr>
           </table>
@@ -109,24 +140,44 @@
               </tr>
               {% for i in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
                 <tr>
-                  <td style="vertical-align:middle">{{ i }}</td>
-                  <td style="vertical-align:middle">
-                    <input name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %}></input>
+                  <td>{{ i }}</td>
+                  <td>
+                    <input class="form-control" name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off"></input>
                   </td>
-                  <td style="vertical-align:middle">
-                    <input name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input>
+                  <td>
+                    <input class="form-control" name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input autocomplete="off">
                   </td>
-                  <td style="vertical-align:middle">
-                    <input name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text"></input>
+                  <td>
+                    <div class='input-group date'>
+                      <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off"></input>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
                   </td>
-                  <td style="vertical-align:middle">
-                    <input name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text"></input>
+                  <td>
+                    <div class='input-group date'>
+                      <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off"></input>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
                   </td>
-                  <td style="vertical-align:middle">
-                    <input name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text"></input>
+                  <td>
+                    <div class='input-group date'>
+                      <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off"></input>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
                   </td>
-                  <td style="vertical-align:middle">
-                    <input name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text"></input>
+                  <td>
+                    <div class='input-group date'>
+                      <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off"></input>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
                   </td>
                 </tr>
               {% endfor %}
@@ -137,6 +188,65 @@
       </form>
     </div>
 
+    {# formulaire Consultations MedShake #}
+    <div role="tabpanel" class="tab-pane" id="pt" style="padding-top:10px">
+      <h3>Consultations disponibles dans MedShake</h3>
+      <form id="formName_ConfConsults" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/userParametersConsultations/">
+        <div class="col-md-8">
+          <div class="row">
+            <table class="table table-hover consult">
+              <tr>
+                <th></th>
+                <th>Code</th>
+                <th>Descriptif</th>
+                <th>Couleur d'arrière plan</th>
+                <th>Couleur de bordure</th>
+                <th>Durée</th>
+              </tr>
+              {% for k,v in page.consultations %}
+              <tr>
+                <td>
+                  <a class="delConsult" href="javascript:void(0)">
+                    <span class="glyphicon glyphicon-minus"></span>
+                  </a>
+                </td>
+                <td>
+                  <input class="form-control" name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off">
+                </td>
+                <td>
+                  <input class="form-control" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off">
+                </td>
+                <td>
+                  <input class="form-control colorpicker" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off">
+                </td>
+                <td>
+                  <input class="form-control colorpicker" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off">
+                </td>
+                <td>
+                  <input class="form-control" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off">
+                </td>
+              </tr>
+              {% endfor %}
+              <tr class="adder">
+                <td>
+                  <a class="addConsult" href="javascript:void(0)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </a>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+          <div class="row">
+            <input class="btn btn-primary" type="submit" value="Valider"></input>
+          </div>
+        </div>
+      </form>
+    </div>
 
     {# formulaire clicRDV #}
     {% if page.useClicRDV %}

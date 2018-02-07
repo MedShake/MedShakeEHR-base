@@ -30,6 +30,53 @@ var gotCals = false;
 
 $(document).ready(function() {
 
+  //pour agenda
+  $('.date').datetimepicker({
+      format: 'HH:mm'
+  });
+
+  //pour les consultations
+  $("body").on("click", ".delConsult", function(e){
+      e.preventDefault();
+      $(this).parent().parent().remove();
+  });
+    $(function () {
+      $('.colorpicker').colorpicker();
+    });
+
+  $("body").on("click", ".addConsult", function(e){
+      e.preventDefault();
+      var id=(Math.random()*100000)>>0;
+      $(".adder").before('\
+              <tr>\
+                <td>\
+                  <a class="delConsult" href="javascript:void(0)">\
+                    <span class="glyphicon glyphicon-minus"></span>\
+                  </a>\
+                </td>\
+                <td>\
+                  <input class="form-control" name="key_new'+id+'" placeholder="ex: C1" type="text" value="" autocomplete="off">\
+                </td>\
+                <td>\
+                  <input class="form-control" name="desc_new'+id+'" type="text" placeholder="ex: consultation classique" value="" autocomplete="off">\
+                </td>\
+                <td>\
+                  <input class="form-control colorpicker" name="back_new'+id+'" type="text" value="" placeholder="ex: #dc874a" autocomplete="off">\
+                </td>\
+                <td>\
+                  <input class="form-control colorpicker" name="border_new'+id+'" type="text" value="" placeholder="ex: #dc874a" autocomplete="off">\
+                </td>\
+                <td>\
+                  <input class="form-control" name="duree_new'+id+'" type="text" value="" placeholder="ex: 20" autocomplete="off">\
+                </td>\
+              </tr>\
+      ');
+      $('.colorpicker[name=back_new'+id+']').colorpicker();
+      $('.colorpicker[name=border_new'+id+']').colorpicker();
+  });
+
+  //pour clicRDV
+
   $('#id_clicRdvConsultId_id').hide();
 
   if ($('#id_clicRdvUserId_id').val() == '') {
