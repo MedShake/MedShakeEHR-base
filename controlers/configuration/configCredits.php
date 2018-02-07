@@ -139,7 +139,7 @@ $p['page']['thanks'][
   'url'=>'https://github.com/jquery/jquery-mousewheel/'
 );
 $p['page']['thanks'][
-  'jquery-mousewheel']=array(
+  'Mocha']=array(
   'description'=>'Mocha test framework',
   'url'=>'https://visionmedia.github.io/mocha/'
 );
