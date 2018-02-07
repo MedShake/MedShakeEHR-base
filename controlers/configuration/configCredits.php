@@ -69,6 +69,11 @@ $p['page']['thanks'][
   'url'=>'http://eonasdan.github.io/bootstrap-datetimepicker/'
 );
 $p['page']['thanks'][
+  'Bootstrap 3 colorpicker v3']=array(
+  'description'=>'colorpicker for Bootstrap',
+  'url'=>'https://farbelous.github.io/bootstrap-colorpicker/'
+);
+$p['page']['thanks'][
   'Moment.js']=array(
   'description'=>'Parse, validate, manipulate, and display dates and times in JavaScript',
   'url'=>'http://momentjs.com/'
@@ -123,6 +128,20 @@ $p['page']['thanks'][
   'description'=>'jQuery contextMenu plugin & polyfill',
   'url'=>'https://github.com/swisnl/jQuery-contextMenu'
 );
-
+$p['page']['thanks'][
+  'panzoom']=array(
+  'description'=>'A jQuery plugin for panning and zooming elements',
+  'url'=>'https://github.com/timmywil/jquery.panzoom/'
+);
+$p['page']['thanks'][
+  'jquery-mousewheel']=array(
+  'description'=>'A jQuery plugin that adds cross-browser mouse wheel support',
+  'url'=>'https://github.com/jquery/jquery-mousewheel/'
+);
+$p['page']['thanks'][
+  'jquery-mousewheel']=array(
+  'description'=>'Mocha test framework',
+  'url'=>'(https://visionmedia.github.io/mocha/'
+);
 
 uksort($p['page']['thanks'], 'strcasecmp');
