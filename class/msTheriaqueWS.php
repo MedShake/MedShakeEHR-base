@@ -79,6 +79,17 @@ class msTheriaqueWS {
     return $this->_client->get_the_unite($codeid, $typid);
   }
 
+  //Psosologie
+  public function get_the_poso($idspe, $lstter) {
+    return $this->_client->get_the_poso($idspe, $lstter);
+  }
+  public function get_the_det_poso_spe($code, $typ) {
+    return $this->_client->get_the_det_poso_spe($code, $typ);
+  }
+  public function get_the_poso_text($lstidpos) {
+    return $this->_client->get_the_poso_text($lstidpos);
+  }
+
   /// Présentations
   public function get_the_presentation_v2($codeid,$typid) {
     return $this->_client->get_the_presentation_v2($codeid,$typid);

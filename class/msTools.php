@@ -330,4 +330,20 @@ class msTools
      return json_decode(json_encode($objet), true);
    }
 
+
+/**
+ * Trier un tableau en natural sorting via un nom de clef de colonne
+ * Thanks to Torleif Berger <https://www.geekality.net/2017/02/03/php-natural-sort-array-by-a-given-key/>
+ * @param  string $key   colonne sur laquelle trier
+ * @param  array  $array array à trier
+ * @return array        array trié
+ */
+   public static function array_natsort_by($key, array &$array)
+   {
+       return usort($array, function($x, $y) use ($key)
+       {
+           return strnatcasecmp($x[$key] ?? null, $y[$key] ?? null);
+       });
+   }
+
 }

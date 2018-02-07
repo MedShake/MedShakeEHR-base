@@ -25,6 +25,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+var medicData;
+var ligneData = [];
+var medicsData = {};
+var ordoMedics = [];
+var ordoMedicsG = [];
+var ordoMedicsALD = [];
+
 $(document).ready(function() {
 
   // envoyer médicament à la zone de prescription
@@ -58,41 +65,112 @@ $(document).ready(function() {
     matchAndGo();
   });
 
+  // bouton voir indications et posologies
+  $('#modalRecherche').on("click", "button.voirPosologies", function(e) {
+    e.preventDefault();
+    getPosologies(medicData['speThe']);
+    $('#posologiesmedicTab').parent('li').show();
+    $('#posologiesmedicTab').tab('show');
+  });
+  $('#modalRecherche').on('show.bs.collapse', 'div.fichearecevoir .collapse', function () {
+     fichesPosos = $(this).attr('data-fiches');
+     destination = $(this).children('div.panel-body');
+     if(fichesPosos && destination.html() == '') getFichesPosos(fichesPosos, destination);
+  })
+
   // envoyer prescription à l'ordonnance
   $('#modalRecherche').on("click", "button.sendToOrdonnance", function(e) {
     e.preventDefault();
-    $.ajax({
-      url: urlBase + '/lap/ajax/lapMakeLigneOrdonnance/',
-      type: 'post',
-      data: {
-        speThe: $('#lapFrappePrescription').attr('data-speThe'),
-        presThe: $('#lapFrappePrescription').attr('data-presThe'),
-        nomSpe: $('#lapFrappePrescription').attr('data-nomSpe'),
-        nomDC: $('#lapFrappePrescription').attr('data-nomDC'),
-        medicVirtuel: $('#lapFrappePrescription').attr('data-medicVirtuel'),
-        divisibleEn: $('#lapFrappePrescription').attr('data-divisibleEn'),
-        nomUtileFinal: $('#lapFrappePrescription').attr('data-nomUtileFinal'),
-        prescriptibleEnDC: $('#lapFrappePrescription').attr('data-prescriptibleEnDC'),
-        codeATC: $('#lapFrappePrescription').attr('data-codeATC'),
-        prescriptionHumanMedicName: $('#prescriptionHumanMedicName').html(),
-        prescriptionHumanRecap: $('#prescriptionHumanRecap').html(),
-        prescriptionHumanPoso: $('#prescriptionHumanPoso').html(),
-      },
-      dataType: "html",
-      success: function(nouvelleLigneOrdo) {
-        $('#conteneurOrdonnance').append(nouvelleLigneOrdo);
-        cleanModalRecherche();
-        $('#recherchermedicTab').tab('show');
-        $('#txtRechercheMedic').focus();
-        console.log('OK : ajout ligne à ordonnance');
-      },
-      error: function() {
-        console.log('PROBLEM : ajout ligne à ordonnance');
-      }
-    });
+
+    medicData['prescriptionHumanRecap'] = $('#prescriptionHumanRecap').html();
+    medicData['prescriptionHumanPoso'] = $('#prescriptionHumanPoso').html();
+    medicData['prescriptionMachinePoso'] = $('#lapFrappePrescription').val();
+
+    var ligne = {
+      medics: [medicData],
+      html: ''
+    };
+
+    if ($('#prescriptionAldCheckbox').is(':checked')) {
+      ordoMedicsALD.push(ligne);
+    } else {
+      ordoMedicsG.push(ligne);
+    }
+    ordoLiveSave();
+    isALD = $('#prescriptionAldCheckbox').is(':checked');
+
+    construireHtmlLigneOrdonnance(isALD, medicData);
+
+    cleanModalRecherche();
+    $('#recherchermedicTab').tab('show');
+    $('#txtRechercheMedic').focus();
+    console.log(ordoMedicsG);
+    console.log(ordoMedicsALD);
+
 
   });
 });
+
+function getPosologies(codeSpe) {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapGetPosologies/',
+    type: 'post',
+    data: {
+      codeSpe: codeSpe,
+    },
+    dataType: "html",
+    success: function(posologies) {
+      $('#posologiesmedic').html(posologies);
+      console.log('OK : obtenir posologies');
+    },
+    error: function() {
+      console.log('PROBLEM : obtenir posologies');
+    }
+  });
+}
+
+function getFichesPosos(codesFiches, destination) {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapGetFichesPosos/',
+    type: 'post',
+    data: {
+      codesFiches: codesFiches,
+    },
+    dataType: "html",
+    success: function(posologies) {
+      destination.html(posologies);
+      console.log('OK : obtenir posologies');
+    },
+    error: function() {
+      console.log('PROBLEM : obtenir posologies');
+    }
+  });
+}
+
+function construireHtmlLigneOrdonnance(isALD, medicData) {
+  var zoneDestination;
+  if (isALD == true) {
+    zoneDestination = $('#conteneurPrescriptionsALD');
+  } else {
+    zoneDestination = $('#conteneurPrescriptionsG');
+  }
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapMakeLigneOrdonnance/',
+    type: 'post',
+    data: {
+      isALD: isALD,
+      medicData: medicData,
+    },
+    dataType: "html",
+    success: function(nouvelleLigneOrdo) {
+      zoneDestination.append(nouvelleLigneOrdo);
+      console.log('OK : ajout ligne à ordonnance ');
+    },
+    error: function() {
+      console.log('PROBLEM : ajout ligne à ordonnance');
+    }
+  });
+}
 
 // nettoyage complet du modal de prescription
 function cleanModalRecherche() {
@@ -121,16 +199,19 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
     },
     dataType: "json",
     success: function(data) {
-      // ajouter en rafales les params sorties, sauf les array
-      $.each(data, function(index, value) {
-        if (index != 'voiesPossibles' && index != 'unitesPossibles') $('#lapFrappePrescription').attr('data-' + index, value);
-      });
+
+      // garder le retour sur ce medic
+      medicData = data;
+      medicsData[speThe] = {};
+      medicsData[speThe][presThe] = data;
+      console.log(medicsData);
+
       // supprimer la posologie qui aurait pu rester
       $('#lapFrappePrescription').val('');
       $('#prescriptionHumanPoso').html('');
 
       // placer le nom de la spé
-      $('#prescriptionHumanMedicName').html(data['nomUtileFinal']);
+      $('#prescriptionHumanMedicName').html(medicData['nomUtileFinal']);
 
       // voies d'administration
       $('#prescriptionHumanRecap').html('');
@@ -156,8 +237,8 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
 
 //mise à jour de la prescription à la frappe et au choix menus
 function matchAndGo() {
-  lignesOK = [];
-  lignes = $.trim($('#lapFrappePrescription').val()) + ' ';
+  var lignesOK = [];
+  var lignes = $.trim($('#lapFrappePrescription').val()) + ' ';
   lignes = lignes.split("\n");
   $.each(lignes, function(index, value) {
     if (matchLigne(index, value)) {
@@ -170,16 +251,11 @@ function matchAndGo() {
       url: urlBase + '/lap/ajax/lapAnalyseFrappePrescription/',
       type: 'post',
       data: {
+        medicData: medicData,
         txtPrescription: $('#lapFrappePrescription').val(),
-        speThe: $('#lapFrappePrescription').attr('data-speThe'),
-        presThe: $('#lapFrappePrescription').attr('data-presThe'),
-        nomSpe: $('#lapFrappePrescription').attr('data-nomSpe'),
-        nomDC: $('#lapFrappePrescription').attr('data-nomDC'),
-        medicVirtuel: $('#lapFrappePrescription').attr('data-medicVirtuel'),
-        divisibleEn: $('#lapFrappePrescription').attr('data-divisibleEn'),
         uniteUtilisee: $('#uniteUtilisee option:selected').text(),
+        uniteUtiliseeOrigine: $('#uniteUtilisee option:selected').attr('name'),
         voieUtilisee: $('#voieUtilisee option:selected').text(),
-        prescriptibleEnDC: $('#lapFrappePrescription').attr('data-prescriptibleEnDC'),
       },
       dataType: "json",
       success: function(data) {
@@ -187,6 +263,12 @@ function matchAndGo() {
         $('#prescriptionHumanPoso').html(data['human']);
         $('#prescriptionHumanRecap').html(data['voieUtilisee']);
         if (data['nbLignes'] > 1) $('#prescriptionHumanRecap').append(' - Durée totale : ' + data['dureeTotaleHuman']);
+        if (data['nbLignes'] > 0) $("button.sendToOrdonnance").removeAttr('disabled');
+        if (data['alerteSecabilite'] == true) {
+          $("#prescriptionAlertSecabilite").show();
+        } else {
+          $("#prescriptionAlertSecabilite").hide();
+        }
       },
       error: function() {
         console.log('PROBLEM: analyse prescription');
@@ -197,9 +279,9 @@ function matchAndGo() {
   }
 }
 
-// les ereg qui matchent et qui envoient en ajax un traitement des lignes de prescription 
+// les ereg qui matchent et qui envoient en ajax un traitement des lignes de prescription
 function matchLigne(index, ligne) {
-  regExp = [];
+  var regExp = [];
   ligne = ligne + ' ';
   // 1-1-1 6j|s|m jp|ji texte de traine
   regExp[0] = /^(et|puis)?\s*([0-9\/,\.+]+) ([0-9\/,\.+]+) ([0-9\/,\.+]+)(?: ([0-9\/,\.+]+))?(?: ([lmMjvsdip]*))? (?:([0-9]+)(j|s|m))?(.*)/i;

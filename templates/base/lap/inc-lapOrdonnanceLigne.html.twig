@@ -26,18 +26,25 @@
  #
 #}
 
-<div class="well lignePrescription"
- data-speThe="{{ page.speThe }}"
- data-presThe="{{ page.presThe }}"
- data-nomSpe="{{ page.nomSpe }}"
- data-nomDC="{{ page.nomDC }}"
- data-medicVirtuel="{{ page.medicVirtuel }}"
- data-divisibleEn="{{ page.divisibleEn }}"
- data-nomUtileFinal="{{ page.nomUtileFinal }}"
- data-prescriptibleEnDC="{{ page.prescriptibleEnDC }}"
- data-codeATC="{{ page.codeATC }}"
- >
-<div class="gras">{{ page.prescriptionHumanMedicName }}</div>
-<div>{{ page.prescriptionHumanRecap }}</div>
-<div>{{ page.prescriptionHumanPoso }}</div>
+<div class="well well-sm lignePrescription{% if page.isALD == 'true' %} ald{% endif %}">
+  <div class="pull-right text-right">
+    <button class="btn btn-default btn-xs removeLignePrescription"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li><a href="#" class=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ajouter un médicament à cette ligne de prescription</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#" class=""><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Convertir en DCI</a></li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="gras">{{ page.medicData.nomUtileFinal }}</div>
+  <div>{{ page.medicData.prescriptionHumanRecap }}</div>
+  <div>{{ page.medicData.prescriptionHumanPoso }}</div>
+  <textarea style="display: none;" class="lapFrappePrescription">{{ page.prescriptionMachinePoso }}</textarea>
+
 </div>

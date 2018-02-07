@@ -44,6 +44,9 @@
           <li role="presentation" class="disabled">
             <a id="prescriremedicTab" href="#prescriremedic" aria-controls="profile" role="tab" data-toggle="tab">Prescrire</a>
           </li>
+          <li role="presentation" class="disabled" style="display: none;">
+            <a id="posologiesmedicTab" href="#posologiesmedic" aria-controls="profile" role="tab" data-toggle="tab">Posologies</a>
+          </li>
         </ul>
         <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
 
@@ -104,8 +107,13 @@
                   <div class="form-group">
                     <select id="voieUtilisee" class="form-control input-sm"></select>
                   </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-info btn-xs voirPosologies">Indications & posologies</button>
+                  </div>
                 </div>
               </div>
+
+              <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
 
               <div class="jumbotron" id="prescriptionHuman">
                 <div id="prescriptionHumanMedicName" class="gras"></div>
@@ -115,23 +123,27 @@
 
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" name="ald" value="">
+                  <input id="prescriptionAldCheckbox" value="ald" type="checkbox" name="ald" value="">
                   ALD
                 </label>
               </div>
               <div class="checkbox-inline">
                 <label>
-                  <input type="checkbox" name="chro" value="">
+                  <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
                   TT chronique
                 </label>
               </div>
               <div class="form-group">
                 <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
               </div>
-              <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
+              <button type="button" class="btn btn-primary sendToOrdonnance" disabled="disabled">Ajouter à l'ordonnance</button>
             </form>
           </div>
 
+          {# Posologies #}
+          <div role="tabpanel" class="tab-pane" id="posologiesmedic">
+
+          </div>
         </div>
       </div>
     </div>

@@ -91,6 +91,17 @@ class msTheriaquePG {
     return msTools::utf8_converter($this->get_data_from_pg("get_the_gen_spe($codeid, $vartyp)"));
   }
 
+  //Psosologie
+  public function get_the_poso($idspe, $lstter) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_poso($idspe, $lstter)"));
+  }
+  public function get_the_det_poso_spe($code, $typ) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_det_poso_spe($code, $typ)"));
+  }
+  public function get_the_poso_text($lstidpos) {
+    return msTools::utf8_converter($this->get_data_from_pg("get_the_poso_text($lstidpos)"));
+  }
+
   /// Présentations
   public function get_the_presentation_v2($codeid,$typid) {
     return msTools::utf8_converter($this->get_data_from_pg("get_the_presentation_v2('$codeid',$typid)"));

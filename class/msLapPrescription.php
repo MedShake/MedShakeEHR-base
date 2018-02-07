@@ -38,6 +38,8 @@ class msLapPrescription extends msLAP
   private $_versionInterpreteur;
   private $_divisibleEn;
   private $_uniteUtilisee;
+  private $_uniteUtiliseeOrigine;
+  private $_unitesConversion;
   private $_unitesPossibles;
   private $_voieUtilisee;
   private $_lignes;
@@ -144,6 +146,26 @@ class msLapPrescription extends msLAP
     public function setUniteUtilisee($v)
     {
         return $this->_uniteUtilisee = $v;
+    }
+
+/**
+ * Définir unité utilisée origine
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setUniteUtiliseeOrigine($v)
+    {
+        return $this->_uniteUtiliseeOrigine = $v;
+    }
+
+/**
+ * Définir unité conversion
+ * @param string $v medic virt
+ * @return string medic virt
+ */
+    public function setUnitesConversion($v)
+    {
+        return $this->_unitesConversion = $v;
     }
 
 /**
@@ -262,6 +284,7 @@ class msLapPrescription extends msLAP
         'medicVirtuel'=> $this->_medicVirtuel,
         'divisibleEn'=> $this->_divisibleEn,
         'unitesPossibles'=> $this->_unitesPossibles,
+        'unitesConversion'=> $dataSpeUnite[0],
         'nomUtileFinal' => $this->determineNomUtileFinal(),
         'voiesPossibles'=>$dataSpeVoiesAdmin,
         'prescriptibleEnDC'=>$this->_prescriptibleEnDC,
@@ -296,7 +319,7 @@ class msLapPrescription extends msLAP
             $human[] = $humanPosoBase[$k].' '.$humanPosoTraine[$k];
           }
         }
-        $this->_prescriptionInterpretee['human'] = implode('<br>', $human);
+        $this->_prescriptionInterpretee['human'] = str_replace('  ', ' ', implode('<br>', $human));
 
         // la voie d'administration utilisée (txt humain)
         $this->_prescriptionInterpretee['voieUtilisee'] = ucfirst($this->_voieUtilisee);
@@ -307,12 +330,37 @@ class msLapPrescription extends msLAP
         // la poso Max par prise toutes lignes confondues
         $this->_prescriptionInterpretee['posoMaxParPriseMax']=max(array_column($this->_lignesPosologiques,'posoMaxParPrise'));
 
+        // la poso Min par prise toutes lignes confondues (avec retrait 0 !)
+        $this->_prescriptionInterpretee['posoMinParPriseMin']=min(array_filter(array_column($this->_lignesPosologiques,'posoMinParPrise')));
+
         // durée totale de la prescription
         $dureeTotale = $this->_dureeTotalePrescription();
         $this->_prescriptionInterpretee['dureeTotaleHuman']=$dureeTotale['dureeTotaleHuman'];
         $this->_prescriptionInterpretee['dureeTotaleMachine']=$dureeTotale['dureeTotaleMachine'];
+
+        // controle secabilité
+        $this->_controleSecabilite();
       }
 
+    }
+
+    private function _controleSecabilite() {
+      //si sécabilité inexistante
+      if($this->_divisibleEn == -1 and $this->_prescriptionInterpretee['posoMinParPriseMin'] < 1) {
+        $this->_prescriptionInterpretee['alerteSecabilite'] = true;
+      }
+      // unité utilisée : ucd
+      elseif($this->_uniteUtiliseeOrigine == 'ucd') {
+        if($this->_prescriptionInterpretee['posoMinParPriseMin'] < ( 1 / $this->_divisibleEn)) {
+          $this->_prescriptionInterpretee['alerteSecabilite'] = true;
+        }
+      }
+      // unité utilisée : unite_prescription
+      elseif($this->_uniteUtiliseeOrigine == 'unite_prescription') {
+        if($this->_prescriptionInterpretee['posoMinParPriseMin'] < $this->_unitesConversion['dose_fractionnee']) {
+          $this->_prescriptionInterpretee['alerteSecabilite'] = true;
+        }
+      }
     }
 
     public function getPrescriptionInterpreteeJSON() {
@@ -361,6 +409,7 @@ class msLapPrescription extends msLAP
         $m['doseMidiMath'] = $math->evaluate(str_replace(",", ".", $m['doseMidi']));
         $m['doseSoirMath'] = $math->evaluate(str_replace(",", ".", $m['doseSoir']));
         $m['doseCoucherMath'] = $math->evaluate(str_replace(",", ".", $m['doseCoucher']));
+        $m['lesDoses'] = array($m['doseMatinMath'], $m['doseMidiMath'], $m['doseSoirMath'], $m['doseCoucherMath'], '0');
 
         // durée
         $dureeHuman=$this->_dureeAbrevEnMots($m['dureeNumeric'], $m['dureeUnite']);
@@ -395,7 +444,8 @@ class msLapPrescription extends msLAP
         $tab['duree'] = $m['dureeNumeric'];
         $tab['dureeUnite'] = $m['dureeUnite'];
         $tab['posoJournaliere'] = $m['doseMatinMath'] + $m['doseMidiMath'] + $m['doseSoirMath'] + $m['doseCoucherMath'];
-        $tab['posoMaxParPrise'] = max($m['doseMatinMath'], $m['doseMidiMath'], $m['doseSoirMath'], $m['doseCoucherMath']);
+        $tab['posoMaxParPrise'] = max($m['lesDoses']);
+        $tab['posoMinParPrise'] = min(array_filter($m['lesDoses']));
         $tab['humanPosoBase'] = $human;
         $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
         $tab['humanPosoTraine'] = $m['traine'];
@@ -447,6 +497,7 @@ class msLapPrescription extends msLAP
         $tab['dureeUnite'] = $m['dureeUnite'];
         $tab['posoJournaliere'] = $m['doseMath'] * $m['multipleDoseMath'];
         $tab['posoMaxParPrise'] = $m['doseMath'];
+        $tab['posoMinParPrise'] = $m['doseMath'];
         $tab['humanPosoBase'] = $human;
         $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
         $tab['humanPosoTraine'] = $m['traine'];
@@ -524,7 +575,8 @@ class msLapPrescription extends msLAP
         'gélule' => array('s'=>'gélule', 'p'=>'gélules'),
         'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes'),
         'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
-        'pulverisation(s)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
+        'pulverisation(s)' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),
+        'puverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),
         'RECIPIENT(S) UNIDOSE(S)' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses'),
         'SACHET(S)' => array('s'=>'sachet', 'p'=>'sachets'),
         'SUPPOSITOIRE' => array('s'=>'suppositoire', 'p'=>'suppositoires'),

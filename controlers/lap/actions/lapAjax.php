@@ -39,7 +39,11 @@ $acceptedModes=array(
     'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
     'lapInstallPrescription', //installer la prescription dans la modal
     'lapAnalyseFrappePrescription', //analyse de la prescription frappée
-    'lapMakeLigneOrdonnance' //généré une ligne d'ordonnance 
+    'lapMakeLigneOrdonnance', //généré une ligne d'ordonnance
+    'lapOrdoLiveSave', //sauver l'ordonnance courante à chaque modif
+    'lapOrdoLiveRestore', //restaurer l'ordonnance courante
+    'lapGetPosologies', //obtenir les posologies pour la fenêtre de prescription
+    'lapGetFichesPosos' //obtenir les fiches posos à partir de leur code 
 );
 
 if (!in_array($m, $acceptedModes)) {

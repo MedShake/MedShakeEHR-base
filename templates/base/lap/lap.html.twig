@@ -85,11 +85,6 @@
     {# Colonne de droite #}
     <div class="col-md-10">
 
-      <div class="row" style="margin-top : 10px; margin-bottom: 15px">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRecherche">Nouvelle prescription</button>
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRecherche">Saisir traitement</button>
-      </div>
-
       {# Onglets #}
       <ul class="nav nav-tabs gras" role="tablist">
         <li class="active" role="presentation">
@@ -103,11 +98,42 @@
       <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
         {# Onglet Ordonnance #}
         <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
-          <div id="conteneurOrdonnance"></div>
+          <div class="row bottom-space">
+            <div class="col-md-6">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRecherche"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nouvelle prescription</button>
+            </div>
+            <div class="col-md-6 text-right">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="#" class="ordoLiveRestore"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Défaire la dernière action</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#" class="removeAllLignesPrescription"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Supprimer tout</a></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+          <div class="row">
+            <div id="conteneurOrdonnance" class="col-md-12">
+              <div class="alert alert-danger gras" role="alert">Prescriptions ALD</div>
+              <div id="conteneurPrescriptionsALD" style="min-height:15px;" class="connectedOrdoZones ald"></div>
+              <div class="alert alert-success gras" role="alert">Prescriptions standards</div>
+              <div id="conteneurPrescriptionsG" style="min-height:15px;" class="connectedOrdoZones"></div>
+            </div>
+          </div>
         </div>
 
         {# Onglet Traitement en cours #}
-        <div role="tabpanel" class="tab-pane" id="tttencoursTab"></div>
+        <div role="tabpanel" class="tab-pane" id="tttencoursTab">
+          <div class="row bottom-space">
+            <div class="col-md-12">
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRecherche">Saisir traitement</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

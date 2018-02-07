@@ -445,6 +445,8 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
             $rd=[];
             if ($data=$the->get_the_spe_txt($txt, $monovir)) {
                 $rd=$this->_prepareData($data);
+                // natural sorting => confié maintenant à jquey stupid table
+                //msTools::array_natsort_by('sp_nom', $rd);
                 if (!empty($rd)) {
                     $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                     $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
@@ -506,6 +508,76 @@ public function attacherPrixMedic(&$tabMedic, $col)
             }
         }
     }
+}
+
+public function getFichePosologies($codesFiche) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $rd=[];
+  if ($data=$the->get_the_poso_text($codesFiche)) {
+      $rd=$this->_prepareData($data);
+  }
+  return $rd;
+}
+
+
+public function getIndicationsPosologies($codeSpe, $codesTerrain='') {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $rd=[];
+  if ($data=$the->get_the_poso($codeSpe, $codesTerrain)) {
+      $rd=$this->_prepareData($data);
+
+      $tabVoies=[];
+      $cleindication=-1;
+      //tt primaire des données
+      foreach($rd as $t) {
+        if($t['typ']==0 or $t['typ']=='' ) {
+          $fichesPoso[$t['nofic']]['ficheID']=$t['nofic'];
+        } elseif($t['typ']==1) {
+          if(!in_array($t['info_01'], $tabVoies)) $tabVoies[]=$t['info_01'];
+          $cleVoie=array_search($t['info_01'], $tabVoies);
+          $fichesPoso[$t['nofic']]['voies'][$cleVoie]=$t['info_01'];
+        } elseif($t['typ']==2) {
+          $fichesPoso[$t['nofic']]['terrains'][$t['valeur_01']][$t['valeur_02']]=$t['info_01'];
+        } elseif($t['typ']==3) {
+          //if(!empty($t['info_01'])) {
+            $cleindication++;
+            $fichesPoso[$t['nofic']]['indications'][$cleindication]=$t['info_01'];
+          //}
+        } elseif($t['typ']==4) {
+          $fichesPoso[$t['nofic']]['indications'][$cleindication].= ' '.$t['info_01'];
+        } elseif($t['typ']==5) {
+          $fichesPoso[$t['nofic']]['references'][]=$t['info_01'];
+        }
+      }
+      // mise en ligne des terrains
+      foreach($fichesPoso as $idfiche=>$val) {
+        foreach($val['terrains'] as $k=>$v) {
+          $fichesPoso[$idfiche]['terrains'][$k] = implode(' ', $v);
+        }
+      }
+
+      foreach($fichesPoso as $idfiche=>$val) {
+        foreach($val['terrains'] as $terrain) {
+          foreach($val['voies'] as $voie) {
+              foreach($val['indications'] as $indication) {
+                $tab[$terrain.' - VOIE '.$voie][$indication][]=$idfiche;
+                ksort($tab[$terrain.' - VOIE '.$voie]);
+              }
+          }
+
+        }
+      }
+      ksort($tab);
+      return $tab;
+  }
 }
 
 /**
