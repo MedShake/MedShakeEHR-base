@@ -108,8 +108,10 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         $peopleType=array('pro');
     } elseif($_POST['porp']=='today') {
         $peopleType=array('pro', 'patient', 'externe');
-    } else {
+    } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient']){
         $peopleType=array('pro','patient');
+    } else {
+        $peopleType=array('patient');
     }
 
     $p['page']['sqlString']=$sql='select

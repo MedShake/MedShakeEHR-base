@@ -574,6 +574,9 @@ function sendFormToReglementDiv(el) {
     data: {
       objetID: objetID,
       patientID: $('#identitePatient').attr("data-patientID"),
+      reglementMod: el.attr('data-reglementMod'),
+      reglementForm: el.attr('data-reglementForm'),
+      porteur: el.attr('data-porteur'),
       parentID: '',
     },
     dataType: "html",

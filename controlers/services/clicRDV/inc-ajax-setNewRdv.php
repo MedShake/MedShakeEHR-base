@@ -26,11 +26,11 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$clicrdv=new clicRDV();
+$clicrdv=new msClicRDV();
 $clicrdv->setUserID($match['params']['userID']);
 
 if ($_POST['eventID']>0) {
     $clicrdv->modEvent($event);
 } else {
-    $clicrdv->setEvent($event);
+    $clicrdv->sendEvent($event);
 }

@@ -173,6 +173,54 @@
 	{% endif %}
 {% endmacro %}
 
+{# selectMultiple #}
+{% macro selectMultiple(v) %}
+
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'before' or v.label.position == 'around' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
+		{% if v.label.position == 'before' %}
+			</label>
+		{% endif %}
+	{% endif %}
+  <input type="hidden" name="{{ v.select.name }}[]" value=""></input>
+	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
+	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
+	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
+	{% if v.select.name %} name="{{ v.select.name }}[]" {% endif %}
+	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
+	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
+	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
+	{{ v.select.add }} multiple>
+	{% for key,value in v.select.values %}
+		<option
+		{% if key in v.select.valueDefaut %} selected="selected" {% endif %}
+		value="{{ key|e('html_attr') }}">{{ value|e }}
+		</option>
+	{% endfor %}
+	</select>
+
+	{# si un label existe #}
+	{% if v.label.label != '' %}
+		{% if v.label.position == 'after' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
+			>{{ v.label.label|e }}
+		{% endif %}
+
+	    {% if v.label.position == 'after' or v.label.position == 'around' %}
+	    	</label>
+	    {% endif %}
+	{% endif %}
+{% endmacro %}
+
 
 
 {# select avec optgroup #}

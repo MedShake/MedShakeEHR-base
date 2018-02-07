@@ -87,6 +87,7 @@ if ($externe and !$internePatient) {
         $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
         $p['page']['porp']="externe";
         include '../controlers/rechercher/patients.php';
+        $match['target']='';
         return;
     }
 }

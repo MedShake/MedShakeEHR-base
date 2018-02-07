@@ -157,6 +157,10 @@ smsSeuilCreditsAlerte: '150'
 smsTpoa: 'Dr ....'
 
 #######################################
+## Permettre aux praticiens d'être patients (si false, il faudra leur créer une fiche patient)
+PraticienPeutEtrePatient: true
+
+#######################################
 ## Templates affichage écran
 templatesFolder: '/home/EHR/templates/'
 

@@ -21,12 +21,25 @@
  */
 
 /**
- * Agenda : déplacer un rdv de l'agenda clicRDV
+ * enregistrement des paramètres d'agenda utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$clicrdv=new msClicRDV();
-$clicrdv->setUserID($match['params']['userID']);
-$clicrdv->modEvent($event);
+$preparams=array();
 
+foreach ($_POST as $k=>$v) {
+    preg_match('/(desc|back|border|duree|key)_(.*)/', $k, $matches);
+    if ($matches[2]) {
+        $preparams[$matches[2]][$matches[1]]=$v;
+    }
+}
+foreach ($preparams as $k=>$v) {
+    if ($v['key']) {
+        $params["'[".$v['key']."]'"]=array('descriptif'=>$v['desc'], 'backgroundColor'=>$v['back'], 'borderColor'=>$v['border'], 'duree'=>$v['duree']);
+    }
+}
+
+file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+
+msTools::redirRoute('userParameters');

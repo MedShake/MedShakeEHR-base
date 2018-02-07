@@ -63,4 +63,4 @@ if ($changeMdp) {
     msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
 }
 
-msTools::redirRoute('/');
+msTools::redirRoute('userParameters');

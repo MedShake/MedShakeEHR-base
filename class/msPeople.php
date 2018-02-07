@@ -409,8 +409,14 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname', 'csAtcdStrucDeclaration']);
+        $data = new msData();
+        $porteursOrdoIds=msSQL::sql2tabSimple("SELECT dt.id AS id FROM data_types AS dt
+              LEFT JOIN data_cat AS dc ON dt.cat=dc.id
+              WHERE dc.name='porteursOrdo'");
+        $porteursReglementIds=msSQL::sql2tabSimple("SELECT dt.id AS id FROM data_types AS dt
+              LEFT JOIN data_cat AS dc ON dt.cat=dc.id
+              WHERE dc.name='porteursReglement'");
+        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration']);
 
         if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
@@ -424,7 +430,11 @@ class msPeople
         left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')  or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
+        where (t.groupe in ('typeCS', 'courrier')
+        or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
+        or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
+        or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
+        or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
         group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
         order by p.creationDate desc")) {
               foreach ($data as $v) {
@@ -445,8 +455,14 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'ordoPorteur', 'reglePorteur', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration']);
+        $data = new msData();
+        $porteursOrdoIds=msSQL::sql2tabSimple("SELECT dt.id AS id FROM data_types AS dt
+              LEFT JOIN data_cat AS dc ON dt.cat=dc.id
+              WHERE dc.name='porteursOrdo'");
+        $porteursReglementIds=msSQL::sql2tabSimple("SELECT dt.id AS id FROM data_types AS dt
+              LEFT JOIN data_cat AS dc ON dt.cat=dc.id
+              WHERE dc.name='porteursReglement'");
+        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration']);
 
         return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
@@ -460,7 +476,12 @@ class msPeople
         left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
         left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
         left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier') or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."') or (t.groupe = 'ordo' and  t.id='".$name2typeID['ordoPorteur']."')   or (t.groupe = 'reglement' and  t.id='".$name2typeID['reglePorteur']."') or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')) and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE() and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
+        where (t.groupe in ('typeCS', 'courrier')
+          or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
+          or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
+          or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
+          or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
+        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE() and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
         group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
         order by p.creationDate desc");
     }

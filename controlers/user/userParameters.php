@@ -39,6 +39,34 @@ $p['page']['formPassword']=$formPassword->getForm();
 $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
 
 
+/************
+* Agenda
+************/
+//paramètres de l'agenda
+if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml');
+} else {
+  $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
+                            'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Mardi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Mercredi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Jeudi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Vendredi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
+                            'Samedi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'12:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'12:00'),
+                            'Dimanche'=>array('worked'=> false, 'visible'=>false, 'minTime'=>'09:00', 'maxTime'=>'12:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'12:00')
+                          );
+}
+
+/************
+* consultations
+************/
+// types de rendez-vous
+if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml')) {
+    $consults=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml');
+    foreach ($consults as $k=>$v) {
+        $p['page']['consultations'][str_replace('[','',str_replace(']','',$k))]=$v;
+    }
+}
 
 
 /************
@@ -57,9 +85,14 @@ if ($p['page']['useClicRDV']) {
     $formClicRdv=new msForm();
     $formClicRdv->setFormIDbyName($p['page']['formIN']='baseUserParametersClicRdv');
 
+    $options=array();
+    $options['p_clicRdvConsultId']=array();
+    foreach ($consults as $k=>$v) {
+      $options['p_clicRdvConsultId'][$k]=$v['descriptif'].' (MedShakeEHR)';
+    }
+
     if(isset($p['config']['clicRdvUserId'])) {
         $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
-        $options=array();
         if (!empty($p['config']['clicRdvPassword'])) {
             $preValues['p_clicRdvPassword']='********';
             if(!empty($p['config']['clicRdvGroupId'])) {
@@ -69,18 +102,14 @@ if ($p['page']['useClicRDV']) {
             if(!empty($p['config']['clicRdvCalId'])) {
                 $preValues['p_clicRdvCalId']=$p['config']['clicRdvCalId'];
                 $options['p_clicRdvCalId']=array('0'=> explode(':',$p['config']['clicRdvCalId'])[1]);
-                $options['p_clicRdvConsultId']=array();
-                foreach ($consults as $k=>$v) {
-                  $options['p_clicRdvConsultId'][]=$v['descriptif'].' (MedShakeEHR)';
-                }
             }
             if (isset($p['config']['clicRdvConsultId']) and $p['config']['clicRdvConsultId']!='') {
                 $p['page']['clicRdvConsultsRel']=json_encode(json_decode($p['config']['clicRdvConsultId'])[1]);
             }
         }
         $formClicRdv->setPrevalues($preValues);
-        $formClicRdv->setOptionsForSelect($options);
     }
+    $formClicRdv->setOptionsForSelect($options);
     $p['page']['formClicRdv']=$formClicRdv->getForm();
     $formClicRdv->addSubmitToForm($p['page']['formClicRdv'], $class='btn-primary insertBefore');
 
