@@ -251,7 +251,7 @@ class msAgenda
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
           where a.userid='".$this->_userID."' and a.statut in ('".implode("','", $statut)."') and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
-          group by a.id, bn.value, n.value, p.value")) {
+          group by a.id, bn.value, n.value, p.value order by a.start asc")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
               }
