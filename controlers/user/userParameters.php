@@ -39,12 +39,18 @@ $p['page']['formPassword']=$formPassword->getForm();
 $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
 
 
+$p['page']['hasAgenda']=false;
+$people= new msPeople();
+if (!array_key_exists($p['user']['id'], $people->getUsersListForService('administratifPeutAvoirAgenda'))) {
+    return;
+}
+$p['page']['hasAgenda']=true;
 /************
 * Agenda
 ************/
 //paramètres de l'agenda
-if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml')) {
-  $p['page']['agenda']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml');
+if(is_file('../configAgenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad('../configAgenda'.$p['user']['id'].'.yml');
 } else {
   $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
                             'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
@@ -61,8 +67,8 @@ if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p[
 * consultations
 ************/
 // types de rendez-vous
-if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml')) {
-    $consults=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$p['user']['id'].'.yml');
+if(is_file('../config/configTypesRdv'.$p['user']['id'].'.yml')) {
+    $consults=Spyc::YAMLLoad('../config/configTypesRdv'.$p['user']['id'].'.yml');
     foreach ($consults as $k=>$v) {
         $p['page']['consultations'][str_replace('[','',str_replace(']','',$k))]=$v;
     }

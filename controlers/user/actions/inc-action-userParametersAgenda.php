@@ -26,6 +26,9 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+//construction du répertoire
+msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurations/');
+
 $params=array('Lundi'=>array(), 'Mardi'=>array(), 'Mercredi'=>array(), 'Jeudi'=>array(), 'Vendredi'=>array(), 'Samedi'=>array(), 'Dimanche'=>array());
 $js=array();
 $js[]="var businessHours = [\n";
@@ -80,7 +83,7 @@ $js[]="var maxTime = '".$params['maxTime'].":00';\n";
 $params['slotDuration']=$_POST['slotDuration'];
 $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
 
-file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+file_put_contents('../config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);
 
 msTools::redirRoute('userParameters');

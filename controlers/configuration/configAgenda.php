@@ -49,13 +49,13 @@
        $p['page']['selectUser']=$match['params']['userID'];
 
        //paramètres de l'agenda
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.yml')) {
-         $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.yml');
+       if(is_file('../config/configAgenda'.$match['params']['userID'].'.yml')) {
+         $p['page']['configAgenda']=file_get_contents('../config/configAgenda'.$match['params']['userID'].'.yml');
        }
 
        // types de rendez-vous
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml')) {
-         $p['page']['typeRdv']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml');
+       if(is_file('../config/configTypesRdv'.$match['params']['userID'].'.yml')) {
+         $p['page']['typeRdv']=file_get_contents('../config/configTypesRdv'.$match['params']['userID'].'.yml');
        }
 
      }
