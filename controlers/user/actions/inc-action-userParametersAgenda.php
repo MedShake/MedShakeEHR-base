@@ -39,7 +39,7 @@ foreach($params as $k=>$v) {
     $js[]="    end: '".$_POST['maxTime_'.$k].":00',\n";
     $js[]="  },\n";
     if ($_POST['visible_'.$k]!=true) {
-        $hiddenDays[$day]=$day;
+        $hiddenDays[]=$day;
     }
     $day++;
     $day%=7;
@@ -57,7 +57,7 @@ $day=1;
 foreach($params as $k=>$v) {
     $params[$k]['pauseStart']=$_POST['pauseStart_'.$k];
     $params[$k]['pauseEnd']=$_POST['pauseEnd_'.$k];
-    if ($_POST['pauseStart_'.$k] != $_POST['pauseStop_'.$k] and !array_key_exists($k, $hiddenDays)) {
+    if ($_POST['pauseStart_'.$k] != $_POST['pauseStop_'.$k] and !in_array($k, $hiddenDays)) {
         $js[]="      {\n";
         $js[]="        start: '".$_POST['pauseStart_'.$k].":00',\n";
         $js[]="        end: '".$_POST['pauseEnd_'.$k].":00',\n";

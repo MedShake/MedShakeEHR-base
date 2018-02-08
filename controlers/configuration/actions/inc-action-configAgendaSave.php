@@ -24,6 +24,7 @@
  * Config > action : sauver la configuration d'un agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 //utilisateurs pouvant avoir un agenda
@@ -33,13 +34,67 @@ $autorisedUsers=$agendaUsers->getUsersListForService('administratifPeutAvoirAgen
 //construction du répertoire
 msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurations/');
 
-if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers))) {
-  $configAgenda=str_replace('#URL#', "urlBase + '/agenda/".$_POST['userID']."/ajax/getEvents/'", $_POST['configAgenda']);  
-  file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $configAgenda);
-  file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
 
-  if(empty($_POST['configAgenda'])) unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
-  if(empty($_POST['configTypesRdv'])) unlink($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$_POST['userID'].'.yml');
+if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers))) {
+    file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
+
+    if(empty($_POST['configTypesRdv']))
+        unlink($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$_POST['userID'].'.yml');
+    if(empty($_POST['configAgenda'])) {
+        unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.yml');
+        unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
+    } else {
+        file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
+        $params=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.yml');
+  
+        $js=array();
+        $js[]="var businessHours = [\n";
+        $hiddenDays=array();
+        $d=1;
+        foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
+            $js[]="  {\n";
+            $js[]="    dow: [".$d."],\n";
+            $js[]="    start: '".$params[$day]['minTime'].":00',\n";
+            $js[]="    end: '".$params[$day]['maxTime'].":00',\n";
+            $js[]="  },\n";
+            if (!$params[$day]['visible']) {
+                $hiddenDays[]=$d;
+            }
+            $d++;
+            $d%=7;
+        }
+        $js[]="];\n";
+
+        $js[]="var hiddenDays = [".implode(', ', $hiddenDays)."];\n";
+
+        $js[]="var eventSources = [{\n";
+        $js[]="    url: urlBase + '/agenda/".$_POST['userID']."/ajax/getEvents/'\n";
+        $js[]="  },\n";
+        $js[]="  {\n";
+        $js[]="    events:[\n";
+        $d=1;
+        foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
+            if ($params[$day]['pauseStart'] != $params[$day]['pauseStop'] and !in_array($d, $hiddenDays)) {
+                $js[]="      {\n";
+                $js[]="        start: '".$params[$day]['pauseStart'].":00',\n";
+                $js[]="        end: '".$params[$day]['pauseEnd'].":00',\n";
+                $js[]="        dow: [".$d."],\n";
+                $js[]="        rendering: 'background',\n";
+                $js[]="        className: 'fc-nonbusiness'\n";
+                $js[]="      },\n";
+            }
+            $d++;
+            $d%=7;
+        }
+        $js[]="    ]\n";
+        $js[]="  }\n";
+        $js[]="];\n";
+
+        $js[]="var minTime = '".$params['minTime'].":00';\n";
+        $js[]="var maxTime = '".$params['maxTime'].":00';\n";
+        $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
+        file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
+    }
 }
 
 msTools::redirection('/configuration/agenda/'.$_POST['userID'].'/');
