@@ -69,7 +69,11 @@ if(is_file('../configAgenda'.$p['user']['id'].'.yml')) {
 // types de rendez-vous
 if(is_file('../config/configTypesRdv'.$p['user']['id'].'.yml')) {
     $consults=Spyc::YAMLLoad('../config/configTypesRdv'.$p['user']['id'].'.yml');
+    $usedTypes=msSQL::sql2tabSimple("SELECT DISTINCT(type) FROM agenda");
     foreach ($consults as $k=>$v) {
+        if (in_array($k, $usedTypes)) {
+            $v['readonly']=true;
+        }
         $p['page']['consultations'][str_replace('[','',str_replace(']','',$k))]=$v;
     }
 }

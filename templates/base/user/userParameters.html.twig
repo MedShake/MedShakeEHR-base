@@ -209,12 +209,14 @@
                 {% for k,v in page.consultations %}
                 <tr>
                   <td>
-                    <a class="delConsult" href="javascript:void(0)">
-                      <span class="glyphicon glyphicon-minus"></span>
-                    </a>
+                    {% if v.readonly is defined == false %}
+                      <a class="delConsult" href="javascript:void(0)">
+                        <span class="glyphicon glyphicon-minus"></span>
+                      </a>
+                    {% endif %}
                   </td>
                   <td>
-                    <input class="form-control" name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off"></input>
+                    <input class="form-control" {% if v.readonly %}readonly{% endif %} name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off"></input>
                   </td>
                   <td>
                     <input class="form-control" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off"></input>
