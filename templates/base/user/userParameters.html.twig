@@ -46,7 +46,7 @@
     .consult td:nth-of-type(3) {width:300px}
     .consult td:nth-of-type(4) {width:120px}
     .consult td:nth-of-type(5) {width:120px}
-    .consult td:nth-of-type(6) {width:60px}
+    .consult td:nth-of-type(6) {width:80px}
   </style>
 {% endblock %}
 
@@ -201,7 +201,7 @@
                 <th>Descriptif</th>
                 <th>Couleur d'arrière plan</th>
                 <th>Couleur de bordure</th>
-                <th>Durée</th>
+                <th>Durée (min)</th>
               </tr>
               {% for k,v in page.consultations %}
               <tr>
@@ -211,19 +211,25 @@
                   </a>
                 </td>
                 <td>
-                  <input class="form-control" name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off">
+                  <input class="form-control" name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off"></input>
                 </td>
                 <td>
-                  <input class="form-control" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off">
+                  <input class="form-control" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off"></input>
                 </td>
                 <td>
-                  <input class="form-control colorpicker" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off">
+                  <div class="input-group colorpicker">
+                    <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off"></input>
+                    <span class="input-group-addon"><i style="background-color:{{ v.backgroundColor }}"></i></span>
+                  </div>
                 </td>
                 <td>
-                  <input class="form-control colorpicker" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off">
+                  <div class="input-group colorpicker">
+                    <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off"></input>
+                    <span class="input-group-addon"><i style="background-color:{{ v.backgroundColor }}"></i></span>
+                  </div>
                 </td>
                 <td>
-                  <input class="form-control" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off">
+                  <input class="form-control" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off"></input>
                 </td>
               </tr>
               {% endfor %}

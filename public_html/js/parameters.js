@@ -44,6 +44,10 @@ $(document).ready(function() {
       $('.colorpicker').colorpicker();
     });
 
+  $("body").on("dp.change", "colorpicker", function(){
+      $(this).children("i").css("background-color", $(this).children("input").val());
+  });
+
   $("body").on("click", ".addConsult", function(e){
       e.preventDefault();
       var id=(Math.random()*100000)>>0;
@@ -61,18 +65,23 @@ $(document).ready(function() {
                   <input class="form-control" name="desc_new'+id+'" type="text" placeholder="ex: consultation classique" value="" autocomplete="off">\
                 </td>\
                 <td>\
-                  <input class="form-control colorpicker" name="back_new'+id+'" type="text" value="" placeholder="ex: #dc874a" autocomplete="off">\
+                  <div class="input-group colorpicker cpnew">\
+                    <input class="form-control" name="back_new'+id+'" type="text" value="#2196f3" placeholder="ex: #2196f3" autocomplete="off">\
+                    <span class="input-group-addon"><i style="background-color:#2196f3"></i></span>\
+                  </div>\
                 </td>\
                 <td>\
-                  <input class="form-control colorpicker" name="border_new'+id+'" type="text" value="" placeholder="ex: #dc874a" autocomplete="off">\
+                  <div class="input-group colorpicker cpnew">\
+                    <input class="form-control" name="border_new'+id+'" type="text" value="#1e88e5" placeholder="ex: #1e88e5" autocomplete="off">\
+                    <span class="input-group-addon"><i style="background-color:#1e88e5"></i></span>\
+                  </div>\
                 </td>\
                 <td>\
                   <input class="form-control" name="duree_new'+id+'" type="text" value="" placeholder="ex: 20" autocomplete="off">\
                 </td>\
               </tr>\
       ');
-      $('.colorpicker[name=back_new'+id+']').colorpicker();
-      $('.colorpicker[name=border_new'+id+']').colorpicker();
+      $('.colorpicker.cpnew').removeClass('cpnew').colorpicker();
   });
 
   //pour clicRDV

@@ -24,6 +24,7 @@
  * Config : gérer les paramètres des agendas
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -48,8 +49,8 @@
        $p['page']['selectUser']=$match['params']['userID'];
 
        //paramètres de l'agenda
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
-         $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.yml')) {
+         $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.yml');
        }
 
        // types de rendez-vous

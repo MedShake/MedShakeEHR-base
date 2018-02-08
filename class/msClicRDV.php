@@ -294,6 +294,7 @@ class msClicRDV
             return false;
         }
         if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
+            echo "Lock actif\n";
             return false;
         }
         //acquisition du lock
@@ -315,6 +316,7 @@ class msClicRDV
             $searchString.='&conditions[4][field]=updated_at&conditions[4][op]=%3E%3D&conditions[4][value]='.str_replace(' ', '%20', $lastupdate);
         }
         if (($res=$this->_sendCurl('GET', 'vevents', $this->_groupID, $searchString)) === false) {
+            echo "Erreur de réception des données depuis clicRDV\n";
             return false;
         }
         $res=json_decode($res, true);
