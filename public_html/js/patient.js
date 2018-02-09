@@ -449,7 +449,8 @@ function sendFormToCsDiv(el) {
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
-      $(window).on("beforeunload", preventDataLoss);
+      if (el.attr('data-mode')!='copy')
+        $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
       });
