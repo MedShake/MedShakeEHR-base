@@ -67,7 +67,7 @@ if ($validation === false) {
             $in = substr($k, $pos+1);
         }
         if (isset($in)) {
-            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($in)))) {
+            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($v)))) {
                 $patient->createNewObjetByTypeName($in, $v, $supportID);
             }
         }
