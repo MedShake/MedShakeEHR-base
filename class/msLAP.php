@@ -96,7 +96,7 @@ class msLAP
      }
 
  /**
-  * Effectuer tous les tests de controle patients
+  * Obtenir les données administratives patient
   * @return array tableau de résultats des tests
   */
      public function getPatientAdminData()
@@ -509,7 +509,11 @@ public function attacherPrixMedic(&$tabMedic, $col)
         }
     }
 }
-
+/**
+ * Obtenir les fiches posologies
+ * @param  string $codesFiche code(s) des fiches
+ * @return array             fiches
+ */
 public function getFichePosologies($codesFiche) {
   if (isset($this->_the)) {
       $the=$this->_the;
@@ -523,7 +527,12 @@ public function getFichePosologies($codesFiche) {
   return $rd;
 }
 
-
+/**
+ * Obtenir les terrains / voie / id des fiches posologiques
+ * @param  string $codeSpe      code spécialité
+ * @param  string $codesTerrain codes terrain
+ * @return array               tableau terrains + voie > indications
+ */
 public function getIndicationsPosologies($codeSpe, $codesTerrain='') {
   if (isset($this->_the)) {
       $the=$this->_the;

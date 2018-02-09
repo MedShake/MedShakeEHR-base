@@ -48,19 +48,19 @@ class msTheriaquePG {
       if($m2=pg_query($this->_client, "FETCH ALL FROM ".$cursorName[0].";")) {
         $arr = pg_fetch_all($m2);
         pg_query($this->_client,"END;");
-        return $arr;
+        return msTools::utf8_converter($arr);
       } else return false;
     } else return false;
   }
 
   /// infos administratives
   public function get_the_infos() {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_infos('')"));
+    return $this->get_data_from_pg("get_the_infos('')");
   }
 
   /// specialités
   public function get_the_spe_txt($libprod, $monovir) {
-    return msTools::utf8_converter($this->get_data_from_pg('get_the_spe_txt(\''.$libprod.'\', '.$monovir.')'));
+    return $this->get_data_from_pg('get_the_spe_txt(\''.$libprod.'\', '.$monovir.')');
   }
 
   public function get_the_specialite($codeid,$vartyp,$monovir) {
@@ -72,100 +72,102 @@ class msTheriaquePG {
     foreach($codes as $code) {
       $arr=$this->get_data_from_pg('get_the_specialite(\''.$code.'\','.$vartyp.','.$monovir.')');
     }
-    return msTools::utf8_converter($arr);
+    return $arr;
   }
 
   public function get_the_unite($codeid, $typid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_unite('$codeid', $typid)"));
+    $codeid=(string) $codeid;
+    return $this->get_data_from_pg("get_the_unite('$codeid',$typid)");
   }
 
   public function get_the_secabilite($codeid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_secabilite($codeid)"));
+    return $this->get_data_from_pg("get_the_secabilite($codeid)");
   }
 
   public function get_the_voie_spe($codeid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_voie_spe($codeid)"));
+    return $this->get_data_from_pg("get_the_voie_spe($codeid)");
   }
 
   public function get_the_gen_spe($codeid, $vartyp) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_gen_spe($codeid, $vartyp)"));
+    return $this->get_data_from_pg("get_the_gen_spe($codeid, $vartyp)");
   }
 
-  //Psosologie
+  //Posologie
   public function get_the_poso($idspe, $lstter) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_poso($idspe, $lstter)"));
+    if(empty($lstter)) $lstter='NULL';
+    return $this->get_data_from_pg("get_the_poso($idspe, $lstter)");
   }
   public function get_the_det_poso_spe($code, $typ) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_det_poso_spe($code, $typ)"));
+    return $this->get_data_from_pg("get_the_det_poso_spe($code, '$typ')");
   }
   public function get_the_poso_text($lstidpos) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_poso_text($lstidpos)"));
+    return $this->get_data_from_pg("get_the_poso_text('$lstidpos')");
   }
 
   /// Présentations
   public function get_the_presentation_v2($codeid,$typid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_presentation_v2('$codeid',$typid)"));
+    return $this->get_data_from_pg("get_the_presentation_v2('$codeid',$typid)");
   }
 
   public function get_the_pre_rbt($codecip,$vartype) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_pre_rbt('$codecip',$vartype)"));
+    return $this->get_data_from_pg("get_the_pre_rbt('$codecip',$vartype)");
   }
 
   public function get_the_desc_pres($codeid,$typid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_desc_pres($codeid,$typid)"));
+    return $this->get_data_from_pg("get_the_desc_pres($codeid,$typid)");
   }
 
   /// Produits
   public function get_the_pdt_txt($libtxt,$monovir) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_pdt_txt('$libtxt',$monovir)"));
+    return $this->get_data_from_pg("get_the_pdt_txt('$libtxt',$monovir)");
   }
 
   /// DCI
   public function get_the_denomination_commune($typid, $var, $dc) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_denomination_commune($typid, '$var', $dc)"));
+    return $this->get_data_from_pg("get_the_denomination_commune($typid, '$var', $dc)");
   }
 
   /// Substance
   public function get_the_sub_txt($libtxt,$vartype) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_sub_txt('$libtxt',$vartype)"));
+    return $this->get_data_from_pg("get_the_sub_txt('$libtxt',$vartype)");
   }
 
   /// CIM 10
   public function get_the_cim_10($typ,$search) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_cim_10($typ,'$search')"));
+    return $this->get_data_from_pg("get_the_cim_10($typ,'$search')");
   }
 
   public function get_the_cdf_to_cim10($cc_cs,$argu, $typ) {
-      return msTools::utf8_converter($this->get_data_from_pg("get_the_cdf_to_cim10($cc_cs,$argu, $typ)"));
+      return $this->get_data_from_pg("get_the_cdf_to_cim10($cc_cs,$argu, $typ)");
   }
 
   /// Allergies
   public function get_the_allergie($typ,$libcod) {
-      return msTools::utf8_converter($this->get_data_from_pg("get_the_allergie($typ,'$libcod')"));
+      return $this->get_data_from_pg("get_the_allergie($typ,'$libcod')");
   }
 
   /// Terrains
   public function get_the_terrain($libtxt,$typ) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_terrain($libtxt,$typ"));
+    return $this->get_data_from_pg("get_the_terrain($libtxt,$typ");
   }
 
   //classe ATC
   public function get_the_atc_id($codeid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_atc_id('$codeid')"));
+    return $this->get_data_from_pg("get_the_atc_id('$codeid')");
   }
 
   //medic virtuel père
   public function get_the_med_vir_pere($type, $var, $statut) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_med_vir_pere($type, '$var', $statut)"));
+    return $this->get_data_from_pg("get_the_med_vir_pere($type, '$var', $statut)");
   }
 
   // Prix
   public function get_the_prix_unit_est($list_code, $typid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_prix_unit_est('$list_code', $typid)"));
+    return $this->get_data_from_pg("get_the_prix_unit_est('$list_code', $typid)");
   }
 
   // Sécurité sociale prestations
   public function get_the_prestation($codeid, $typid) {
-    return msTools::utf8_converter($this->get_data_from_pg("get_the_prestation('$codeid', $typid)"));
+    return $this->get_data_from_pg("get_the_prestation('$codeid', $typid)");
   }
 }

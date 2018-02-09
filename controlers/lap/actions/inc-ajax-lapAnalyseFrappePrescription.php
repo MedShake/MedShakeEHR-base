@@ -25,19 +25,23 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
+//print_r($_POST);
 header('Content-Type: application/json');
-$lappres=new msLapPrescription;
-$lappres->setTxtPrescription($_POST['txtPrescription']);
-$lappres->setSpeThe($_POST['medicData']['speThe']);
-$lappres->setPresThe($_POST['medicData']['presThe']);
-$lappres->setNomSpe($_POST['medicData']['nomSpe']);
-$lappres->setNomDC($_POST['medicData']['nomDC']);
-$lappres->setUniteUtilisee($_POST['uniteUtilisee']);
-$lappres->setUniteUtiliseeOrigine($_POST['uniteUtiliseeOrigine']);
-$lappres->setUnitesConversion($_POST['medicData']['unitesConversion']);
-$lappres->setVoieUtilisee($_POST['voieUtilisee']);
-$lappres->setDivisibleEn($_POST['medicData']['divisibleEn']);
-$lappres->setMedicVirtuel($_POST['medicData']['medicVirtuel']);
-$lappres->setPrescriptibleEnDC($_POST['medicData']['prescriptibleEnDC']);
-$lappres->interpreterPrescription();
-$lappres->getPrescriptionInterpreteeJSON();
+if (count($_POST['ligneData']['medics']) == 1) {
+    $lappres=new msLapPrescription;
+    $lappres->setTxtPrescription($_POST['ligneData']['medics'][0]['prescriptionMachinePoso']);
+    $lappres->setSpeThe($_POST['ligneData']['medics'][0]['speThe']);
+    $lappres->setPresThe($_POST['ligneData']['medics'][0]['presThe']);
+    $lappres->setNomSpe($_POST['ligneData']['medics'][0]['nomSpe']);
+    $lappres->setNomDC($_POST['ligneData']['medics'][0]['nomDC']);
+    $lappres->setUniteUtilisee($_POST['ligneData']['medics'][0]['uniteUtilisee']);
+    $lappres->setUniteUtiliseeOrigine($_POST['ligneData']['medics'][0]['uniteUtiliseeOrigine']);
+    $lappres->setUnitesConversion($_POST['ligneData']['medics'][0]['unitesConversion']);
+    $lappres->setVoieUtilisee($_POST['ligneData']['medics'][0]['voieUtilisee']);
+    $lappres->setDivisibleEn($_POST['ligneData']['medics'][0]['divisibleEn']);
+    $lappres->setMedicVirtuel($_POST['ligneData']['medics'][0]['medicVirtuel']);
+    $lappres->setPrescriptibleEnDC($_POST['ligneData']['medics'][0]['prescriptibleEnDC']);
+    $lappres->interpreterPrescription();
+    echo $lappres->getPrescriptionInterpreteeJSON();
+}

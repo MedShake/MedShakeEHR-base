@@ -41,10 +41,10 @@
           <li role="presentation" class="active">
             <a id="recherchermedicTab" href="#recherchermedic" aria-controls="home" role="tab" data-toggle="tab">Rechercher</a>
           </li>
-          <li role="presentation" class="disabled">
+          <li role="presentation" style="display: none;">
             <a id="prescriremedicTab" href="#prescriremedic" aria-controls="profile" role="tab" data-toggle="tab">Prescrire</a>
           </li>
-          <li role="presentation" class="disabled" style="display: none;">
+          <li role="presentation" style="display: none;">
             <a id="posologiesmedicTab" href="#posologiesmedic" aria-controls="profile" role="tab" data-toggle="tab">Posologies</a>
           </li>
         </ul>
@@ -108,7 +108,7 @@
                     <select id="voieUtilisee" class="form-control input-sm"></select>
                   </div>
                   <div class="form-group">
-                    <button type="button" class="btn btn-info btn-xs voirPosologies">Indications & posologies</button>
+                    <button type="button" class="btn btn-info btn-xs voirPosologies"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Indications & posologies</button>
                   </div>
                 </div>
               </div>
@@ -120,23 +120,35 @@
                 <div id="prescriptionHumanRecap"></div>
                 <div id="prescriptionHumanPoso"></div>
               </div>
-
-              <div class="checkbox-inline">
-                <label>
-                  <input id="prescriptionAldCheckbox" value="ald" type="checkbox" name="ald" value="">
-                  ALD
-                </label>
-              </div>
-              <div class="checkbox-inline">
-                <label>
-                  <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
-                  TT chronique
-                </label>
+              <div class="form-inline" style="margin-bottom : 10px;">
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionAldCheckbox" value="ald" type="checkbox" name="ald" value="">
+                    ALD
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
+                    TT chronique
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionNpsCheckbox" type="checkbox" name="chro" value="">
+                    Non substituable
+                  </label>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="prescriptionNpsMotif" placeholder="motif pour non substituable" style="display: none;">
+                </div>
               </div>
               <div class="form-group">
                 <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
               </div>
-              <button type="button" class="btn btn-primary sendToOrdonnance" disabled="disabled">Ajouter à l'ordonnance</button>
+              <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
+              <button type="button" class="btn btn-primary sendModifToOrdonnance">Modifier la prescription</button>
+              <button type="button" class="btn btn-primary addToLigneOnOrdonnance">Ajouter à la ligne de prescription</button>
             </form>
           </div>
 
