@@ -24,14 +24,16 @@
  * Compta : la page générale de compta
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
 $template="compta";
 
 // sortie des typeID dont on va avoir besoin
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'reglePorteur', 'birthname']);
+$data = new msData();
+$porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+$name2typeID = $data->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
 //gestion des plages
 if (!isset($_POST['beginPeriode'])) {
@@ -104,7 +106,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       where
       pd.id in (
         select pd1.id from objets_data as pd1
-        where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+        where pd1.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
       )
   union
       select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
@@ -121,7 +123,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       where
       pd.instance in (
         select pd2.id from objets_data as pd2
-        where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+        where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
       )
   order by creationDate asc
   ")) {

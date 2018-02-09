@@ -24,6 +24,7 @@
  * Patient > ajax : obtenir les détails d'une ligne de l'historique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 if (is_numeric($_POST['objetID'])) {
@@ -54,7 +55,7 @@ if (is_numeric($_POST['objetID'])) {
         $data = new msObjet();
 
         $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID'], 'name');
-        $p['page']['acteFacture']=msSQL::sqlUnique("select * from actes where id='".$p['page']['datareg']['reglePorteur']['parentTypeID']."'");
+        $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$_POST['objetID']."')");
     } elseif ($data['groupe']=="mail") {
         $template='inc-ajax-detMail';
         $data = new msObjet();
