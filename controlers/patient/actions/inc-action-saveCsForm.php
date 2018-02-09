@@ -30,8 +30,13 @@
 $formIN=$_POST['formIN'];
 
 $dontIgnoreEmpty=true;
-if (isset($match['params']['ignoreEmpty']) and isset($_POST['mode']) and $_POST['mode']=='create') {
+if (isset($match['params']['ignoreEmpty'])) {
     $dontIgnoreEmpty = false;
+    if (isset($_POST['objetID'])) {
+        $prevData=msSQL::sql2tabKey("SELECT dt.name AS name FROM objets_data as od LEFT JOIN data_types AS dt
+            ON od.typeID=dt.id and od.outdated='' and od.deleted=''
+            WHERE od.instance='".$_POST['objetID']."'", "name", "name");
+    }
 }
 
 //definition formulaire de travail
@@ -67,7 +72,7 @@ if ($validation === false) {
             $in = substr($k, $pos+1);
         }
         if (isset($in)) {
-            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($v)))) {
+            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($v)) or array_key_exists($in, $prevData))) {
                 $patient->createNewObjetByTypeName($in, $v, $supportID);
             }
         }
