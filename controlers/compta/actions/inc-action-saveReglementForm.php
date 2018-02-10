@@ -24,6 +24,7 @@
  * Compta > action : sauver un réglement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 
@@ -34,24 +35,14 @@ if (count($_POST)>0) {
 
     $supportID = $_POST['objetID'];
 
-    //cheque
-    if (!isset($_POST['regleCheque'])) {
-        $_POST['regleCheque']='';
+    foreach (['regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleIdentiteCheque'] as $param) {
+        if (!isset($_POST[$param])) {
+          $_POST[$param]='';
+        }
     }
 
-    //cb
-    if (!isset($_POST['regleCB'])) {
-        $_POST['regleCB']='';
-    }
-
-    //espèces
-    if (!isset($_POST['regleEspeces'])) {
-        $_POST['regleEspeces']='';
-    }
-
-    if (!isset($_POST['regleIdentiteCheque'])) {
-        $_POST['regleIdentiteCheque']='';
-    }
+    $important=array('id'=>$supportID, 'important'=>($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']?'y':'n');
+    msSQL::sqlInsert('objets_data', $important);
     
     if (($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) <= $_POST['apayer']) {
         $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque']+$_POST['dejaCheque'], $supportID);
