@@ -27,6 +27,9 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
+if ($_POST['module']!='base') {
+    return;
+}
 
 if (count($_POST)>0) {
     $patient = new msObjet();

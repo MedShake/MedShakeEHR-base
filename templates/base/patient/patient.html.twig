@@ -85,7 +85,9 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                      <a id="linkAddNewOrdo" href="#">Nouvelle prescription</a>
+                    {% for k,v in page.formOrdo %}
+                      <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {%endif %}Nouvelle prescription</a>
+                    {% endfor %}
                   </li>
                 </ul>
             </div>
@@ -132,7 +134,7 @@
                 <ul class="dropdown-menu">
                   <li>
                     {% for k,v in page.formReglement %}
-                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-reglementMod="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {%endif %}Nouveau règlement</a>
+                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {%endif %}Nouveau règlement</a>
                     {% endfor %}
                   </li>
                 </ul>

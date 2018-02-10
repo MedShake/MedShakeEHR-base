@@ -44,4 +44,5 @@ $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
 
 $p['page']['formReglement']['reglePorteur']=array('module'=>'base', 'form'=>'baseReglement');
+$p['page']['formOrdo']['ordoPorteur']=array('module'=>'base', 'form'=>'');
 

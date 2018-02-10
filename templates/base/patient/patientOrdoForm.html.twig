@@ -54,7 +54,8 @@
     </div>
 
     <form id="ordoComposer" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/saveOrdoForm/" target="_blank" method="post" class="">
-
+        <input type="hidden" name="porteur" value="{{ page.porteurOrdo.porteur }}"></input>
+        <input type="hidden" name="module" value="{{ page.porteurOrdo.module }}"></input>
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
