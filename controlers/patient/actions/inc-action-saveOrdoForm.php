@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base') {
+if ($_POST['module']!='base' and !isset($delegate)) {
     return;
 }
 if (count($_POST)>2) {
