@@ -53,6 +53,14 @@
          $p['page']['configAgenda']=file_get_contents('../config/configAgenda'.$match['params']['userID'].'.yml');
        }
 
+       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
+         $p['page']['configAgendaJs']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+       }
+
+       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
+         $p['page']['configAgendaJs']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
+       }
+
        // types de rendez-vous
        if(is_file('../config/configTypesRdv'.$match['params']['userID'].'.yml')) {
          $p['page']['typeRdv']=file_get_contents('../config/configTypesRdv'.$match['params']['userID'].'.yml');

@@ -66,7 +66,7 @@
 
 {% if page.selectUser > 0 %}
 <div class="row">
-	<form class="col-md-6"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAgendaSave/">
+	<form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAgendaSave/">
 
 		{{ f.input ({
 			'input' : {
@@ -77,38 +77,81 @@
 		}) }}
 
 
-		<div class="form-group">
-		{{ f.textarea ({
-			'textarea' : {
-				'name' : 'configAgenda',
-				'placeholder' : 'entrer ici du yaml',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.configAgenda,
-				'add' : 'rows="20" style="font-family:monospace;"'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Paramétrage des plages horaires (yaml)'
-			}
-		}) }}
+    <div class="col-md-12">
+      <div class="col-md-6">
+		    <div class="form-group">
+		    {{ f.textarea ({
+			    'textarea' : {
+				    'name' : 'configAgenda',
+				    'placeholder' : 'entrer ici du yaml',
+				    'class' : 'form-control',
+				    'autocomplete' : 'off',
+				    'value' : page.configAgenda,
+				    'add' : 'rows="20" style="font-family:monospace;"'
+			    },
+			    'label' : {
+				    'position' : 'before',
+				    'label' : "Paramétrage d'affichage de l'agenda (yaml)"
+			    }
+		    }) }}
+		    </div>
+      </div>
+
+      <div class="col-md-6">
+		    {{ f.textarea ({
+			    'textarea' : {
+				    'name' : 'configAgendaJs',
+				    'class' : 'form-control',
+            'readonly' : 'readonly',
+				    'value' : page.configAgendaJs,
+				    'add' : 'rows="20" style="font-family:monospace;"'
+			    },
+			    'label' : {
+				    'position' : 'before',
+				    'label' : "Code JS résultant (altérable par l'utilisateur)"
+			    }
+		    }) }}
+      </div>
 		</div>
 
-    <div class="form-group">
-		{{ f.textarea ({
-			'textarea' : {
-				'name' : 'configTypesRdv',
-				'placeholder' : 'entrer ici du yaml',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.typeRdv,
-				'add' : 'rows="20" style="font-family:monospace;"'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Paramétrage des types de rendez-vous (yaml)'
-			}
-		}) }}
+    <div class="col-md-12">
+      <div class="col-md-6">
+		    {{ f.textarea ({
+			    'textarea' : {
+				    'name' : 'configAgendaAd',
+				    'placeholder' : 'entrer ici du JS',
+				    'class' : 'form-control',
+				    'autocomplete' : 'off',
+				    'value' : page.configAgendaAd,
+				    'add' : 'rows="10" style="font-family:monospace;"'
+			    },
+			    'label' : {
+				    'position' : 'before',
+				    'label' : "Code JS additionnel appelé par le getScriptOnce (inaltérable par l'utilisateur)"
+			    }
+		    }) }}
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <div class="form-group">
+		    {{ f.textarea ({
+			    'textarea' : {
+				    'name' : 'configTypesRdv',
+				    'placeholder' : 'entrer ici du yaml',
+				    'class' : 'form-control',
+				    'autocomplete' : 'off',
+				    'value' : page.typeRdv,
+				    'add' : 'rows="20" style="font-family:monospace;"'
+			    },
+			    'label' : {
+				    'position' : 'before',
+				    'label' : 'Paramétrage des types de rendez-vous (yaml)'
+			    }
+		    }) }}
+		    </div>
+		  </div>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Valider</button>
