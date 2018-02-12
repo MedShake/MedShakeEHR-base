@@ -92,7 +92,7 @@ if (isset($_POST['prat'])) {
 }
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
@@ -109,7 +109,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
         where pd1.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
       )
   union
-      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module, 
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
