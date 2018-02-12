@@ -98,7 +98,6 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="var minTime = '".$params['minTime'].":00';\n";
         $js[]="var maxTime = '".$params['maxTime'].":00';\n";
         $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
-        $js[]="$.getScriptOnce(urlBase + 'agendasConfigurations/configAgenda".$_POST['userID']."_ad.js');\n";
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
     }
 }
