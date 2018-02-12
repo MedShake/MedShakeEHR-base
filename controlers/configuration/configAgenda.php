@@ -36,7 +36,7 @@
 
      //config défaut
      if (!isset($match['params']['userID'])) {
-       $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+       $p['page']['configDefaut']=$p['configDefaut'];
      }
 
      //utilisateurs pouvant avoir un agenda

@@ -36,20 +36,27 @@ foreach ($_POST as $k=>$v) {
 }
 
 exec("crontab -l", $cronFileLines);
-$newCronFileLines=array();
+
+$gotbegin=false;
+$gotend=false;
 foreach ($cronFileLines as $line) {
-    if (!preg_match('/([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f \.\.\/cron\/(.*)\.php/', trim($line))) {
+    if (!$gotbegin and strpos($line, '#MedShake')===0) {
+        $gotbegin=true;
+    } elseif (!$gotend and strpos($line,'#/MedShake')===0) {
+        $gotend=true;
+    } elseif (!$gotbegin or $gotend) {
         $newCronFileLines[]=$line;
-        continue;
     }
 }
 
+$newCronFileLines[]='#MedShake (Ne pas modifier ou supprimer ce commentaire!)';
 foreach ($crons as $k=>$cron) {
     if (!isset($cron['a']) or $cron['a'] == 'false') {
         continue;
     }
-    $newCronFileLines[]=$cron['m'].' '.$cron['h'].' '.$cron['M'].' '.$cron['dom'].' '.$cron['dow'].' cd '.$p['config']['webDirectory'].' && php -f ../cron/'.$k.'.php';
+    $newCronFileLines[]=$cron['m'].' '.$cron['h'].' '.$cron['M'].' '.$cron['dom'].' '.$cron['dow'].' cd '.$p['config']['homeDirectory'].' && php -f cron/'.$k.'.php';
 }
+$newCronFileLines[]='#/MedShake (Ne pas modifier ou supprimer ce commentaire!)';
 
 $file=tempnam(sys_get_temp_dir(), 'ct_');
 file_put_contents($file, implode("\n", $newCronFileLines)."\n");

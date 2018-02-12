@@ -24,6 +24,7 @@
  * Config : gérer les templates de production de PDF
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -34,7 +35,7 @@
      $debug='';
 
      //config défaut
-     $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+     $p['page']['configDefaut']=$p['configDefaut'];
 
 
      //utilisateurs ayant un repertoire de templates spécifique

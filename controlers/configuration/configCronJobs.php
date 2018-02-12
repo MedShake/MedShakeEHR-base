@@ -48,8 +48,16 @@ if (!is_array($installedCrons)) {
     return;
 }
 
+$gotbegin=false;
 foreach($installedCrons as $line) {
-    if (!preg_match('/([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f \.\.\/cron\/(.*)\.php/', trim($line), $matches)) {
+    if (!$gotbegin and strpos($line, '#MedShake')===0) {
+        $gotbegin=true;
+    } elseif (!$gotbegin) {
+        continue;
+    } elseif(strpos($line, '#/MedShake')===0) {
+        break;
+    }
+    if (!preg_match('/([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f cron\/(.*)\.php/', trim($line), $matches)) {
         continue;
     }
     if (array_key_exists($matches[7], $p['page']['availableCrons'])) {

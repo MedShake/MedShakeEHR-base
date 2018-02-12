@@ -28,6 +28,8 @@
 # Chaque paramètre peut être surchargé de façon spécifique pour chaque
 # utilisateur (voir la zone de configuration)
 #
+# Les chemins peuvent être définis relativement au chemin d'installation ainsi : '#HOMEPATH#chemin/vers/cible/'
+# ou en absolu : '/chemin/vers/cible/'
 #######################################
 
 #######################################
@@ -35,11 +37,10 @@
 protocol: 'http://'
 host: 'ehr.local'
 urlHostSuffixe: ''
-homeDirectory: '/home/EHR/'
-webDirectory: '/home/EHR/public_html/'
-stockageLocation: '/home/EHR/stockage/'
-backupLocation: '/home/EHR/backups/'
-workingDirectory: '/home/EHR/public_html/workingDirectory/'
+webDirectory: '#HOMEPATH#public_html/'
+stockageLocation: '#HOMEPATH#stockage/'
+backupLocation: '#HOMEPATH#backups/'
+workingDirectory: '#HOMEPATH#public_html/workingDirectory/'
 cookieDomain: 'ehr.local'
 cookieDuration: 31104000
 fingerprint: 'dfsdjh54ezaz5'
@@ -66,7 +67,7 @@ administratifComptaPeutVoirRecettesDe: ''
 ##
 
 # répertoire par défaut
-templatesPdfFolder: '/home/EHR/templates/models4print/'
+templatesPdfFolder: '#HOMEPATH#templates/models4print/'
 
 # modèle par defaut
 templateDefautPage: 'base-page-headAndFoot.html.twig'
@@ -96,14 +97,14 @@ smtpDefautSujet: 'Document vous concernant'
 #######################################
 ## apicrypt
 
-apicryptCheminInbox: '/home/EHR/public_html/inbox/'
-apicryptCheminArchivesInbox: '/home/EHR/public_html/inboxArchives/'
+apicryptCheminInbox: '#HOMEPATH#public_html/inbox/'
+apicryptCheminArchivesInbox: '#HOMEPATH#public_html/inboxArchives/'
 apicryptInboxMailForUserID: '0'
 
-apicryptCheminFichierNC: '/home/EHR/public_html/workingDirectory/NC/'
-apicryptCheminFichierC: '/home/EHR/public_html/workingDirectory/C/'
-apicryptCheminVersClefs: '/home/EHR/apicrypt/'
-apicryptCheminVersBinaires: '/home/EHR/apicrypt/bin/'
+apicryptCheminFichierNC: '#HOMEPATH#public_html/workingDirectory/NC/'
+apicryptCheminFichierC: '#HOMEPATH#public_html/workingDirectory/C/'
+apicryptCheminVersClefs: '#HOMEPATH#apicrypt/'
+apicryptCheminVersBinaires: '#HOMEPATH#apicrypt/bin/'
 apicryptUtilisateur: 'prenom.NOM'
 apicryptAdresse: 'prenom.NOM@medicalXX.apicrypt.org'
 apicryptSmtpHost: 'smtp.intermedic.org'
@@ -124,8 +125,8 @@ ecofaxPass: 'password'
 ## dicom
 dicomHost: '192.168.xxx.xxx'
 dicomPrefixIdPatient: '1.100.100'
-dicomWorkListDirectory: '/home/EHR/public_html/workingDirectory/'
-dicomWorkingDirectory: '/home/EHR/public_html/workingDirectory/'
+dicomWorkListDirectory: '#HOMEPATH#public_html/workingDirectory/'
+dicomWorkingDirectory: '#HOMEPATH#public_html/workingDirectory/'
 dicomAutoSendPatient2Echo: 'false'
 dicomDiscoverNewTags: 'true'
 
@@ -150,13 +151,13 @@ agendaNumberForPatientsOfTheDay: 0
 
 #######################################
 ## Rappels RDV par mail
-mailRappelLogCampaignDirectory: '/home/EHR/public_html/mailsRappelRdvArchives/'
+mailRappelLogCampaignDirectory: '#HOMEPATH#public_html/mailsRappelRdvArchives/'
 mailRappelDaysBeforeRDV: '3'
 
 #######################################
 ## SMS (cf /servicesTiers/sms/ )
 smsProvider: ''
-smsLogCampaignDirectory: '/home/EHR/public_html/smsArchives/'
+smsLogCampaignDirectory: '#HOMEPATH#public_html/smsArchives/'
 smsDaysBeforeRDV: '3'
 smsCreditsFile: 'creditsSMS.txt'
 smsSeuilCreditsAlerte: '150'
@@ -168,7 +169,7 @@ PraticienPeutEtrePatient: true
 
 #######################################
 ## Templates affichage écran
-templatesFolder: '/home/EHR/templates/'
+templatesFolder: '#HOMEPATH#templates/'
 
 
 #######################################

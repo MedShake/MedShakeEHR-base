@@ -23,40 +23,44 @@
 /**
  * Upgrade de la base en version 2.3.1 vers 3.0.0
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- ini_set('display_errors', 1);
- setlocale(LC_ALL, "fr_FR.UTF-8");
- session_start();
+ini_set('display_errors', 1);
+setlocale(LC_ALL, "fr_FR.UTF-8");
+session_start();
 
- /////////// Composer class auto-upload
- require '../vendor/autoload.php';
+$homepath=getenv("MEDSHAKEPATH");
+$homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
- /////////// Class medshakeEHR auto-upload
- spl_autoload_register(function ($class) {
-     include '../class/' . $class . '.php';
- });
+/////////// Composer class auto-upload
+require $homepath.'vendor/autoload.php';
+
+/////////// Class medshakeEHR auto-upload
+spl_autoload_register(function ($class) {
+    include $homepath.'class/' . $class . '.php';
+});
 
 
- /////////// Config loader
- $p['config']=Spyc::YAMLLoad('../config/config.yml');
+/////////// Config loader
+require $homepath.'config/config.php';
 
- /////////// SQL connexion
- $mysqli=msSQL::sqlConnect();
+/////////// SQL connexion
+$mysqli=msSQL::sqlConnect();
 
 // conversion des Formulaires
 
 if($forms=msSQL::sql2tabKey("select id, yamlStructure, dataset from forms", 'id')) {
-  foreach($forms as $id=>$d) {
-    $obform=new msForm();
-    $newyaml=$obform->cleanForm($d['yamlStructure'],$d['dataset']);
+    foreach($forms as $id=>$d) {
+        $obform=new msForm();
+        $newyaml=$obform->cleanForm($d['yamlStructure'],$d['dataset']);
 
-    if(msSQL::sqlQuery("update forms set yamlStructure='".addslashes($newyaml)."' where id='".$id."'")) {
-      echo $id." : ok\n";
-    } else {
-      echo $id." : PROBLEME !\n";
+        if(msSQL::sqlQuery("update forms set yamlStructure='".addslashes($newyaml)."' where id='".$id."'")) {
+            echo $id." : ok\n";
+        } else {
+            echo $id." : PROBLEME !\n";
+        }
+
     }
-
-  }
 
 }

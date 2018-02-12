@@ -24,6 +24,7 @@
  * Config : editer un template de production de PDF
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -37,7 +38,7 @@
      $fichier=urldecode($match['params']['fichier']);
 
      //config défaut
-     $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+     $p['page']['configDefaut']=$p['configDefaut'];
 
      //utilisateurs ayant un repertoire de templates spécifique
      $specificUsers= new msPeople();

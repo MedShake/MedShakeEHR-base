@@ -46,17 +46,19 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-/////////// Composer class auto-upload
-require '../vendor/autoload.php';
+$homepath=getcwd().'/';
+
+////////// Composer class auto-upload
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    include $homepath.'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
+require $homepath.'config/config.php';
 
 /// enregistre le fichier sous le nom déterminé en config 
 if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {

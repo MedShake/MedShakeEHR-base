@@ -24,6 +24,7 @@
  * Config : gérer les paramètres de configuration spécifiques à un utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -51,7 +52,7 @@
        }
      }
 
-     $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+     $p['page']['configDefaut']=$p['configDefaut'];
 
      // liste des catégories
      if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='user' order by label", 'id', 'label'));
