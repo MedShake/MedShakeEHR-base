@@ -39,7 +39,7 @@ if (count($_POST['acteID'])>0) {
     if (!isset($_POST['regleSituationPatient'])) {
       $_POST['regleSituationPatient']='A';
     }
-    foreach (['regleTarifCejour', 'regleDepaCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture', 'regleIdentiteCheque'] as $param) {
+    foreach (['regleTarifCejour', 'regleDepaCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
         if (!isset($_POST[$param])) {
           $_POST[$param]='';
         }
@@ -51,15 +51,15 @@ if (count($_POST['acteID'])>0) {
         $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID']);
     }
 
-    $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'];
-    $apayer= $_POST['regleTarifCejour'] + $_POST['regleDepaCejour'];
-    if ($paye < $apayer) {
-        $important=array('id'=>$supportID, 'important'=>'y');
-        msSQL::sqlInsert('objets_data', $important);
-    }
+    $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
+    $apayer= $_POST['regleTarifCejour'] + $_POST['regleDepaCejour'] + '0';
+    $important=array('id'=>$supportID, 'important'=>$paye < $apayer?'y':'n');
+    msSQL::sqlInsert('objets_data', $important);
 
-    foreach (['regleSituationPatient', 'regleTarifCejour', 'regleDepaCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture', 'regleIdentiteCheque'] as $param) {
-        $patient->createNewObjetByTypeName($param, $_POST[$param], $supportID);
+    foreach ($_POST as $param=>$value) {
+        if (!in_array($param, ['module', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
+            $patient->createNewObjetByTypeName($param, $value, $supportID);
+        }
     }
 
     //titre

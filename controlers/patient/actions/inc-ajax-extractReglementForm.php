@@ -40,12 +40,14 @@ $template="patientReglementForm";
 if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
     $reglementForm=$_POST['reglementForm'];
     $porteur=$_POST['porteur'];
+    $userID=$p['user']['id'];
 } else {
-    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur FROM data_types as dt 
+    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt 
       LEFT JOIN objets_data as od ON dt.id=od.typeID 
       WHERE od.id='".$_POST['objetID']."' limit 1");
     $reglementForm=$res[0]['form'];
     $porteur=$res[0]['porteur'];
+    $userID=$res[0]['userID'];
 }
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
@@ -55,7 +57,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
   from actes as a
   left join actes_cat as c on c.id=a.cat
-  where a.toID in ('0','".$p['user']['id']."') and c.module='".$_POST['module']."'
+  where a.toID in ('0','".$userID."') and c.module='".$_POST['module']."'
   group by a.id
   order by c.displayOrder, c.label asc, a.label asc")) {
     foreach ($tabTypes as $k=>$v) {
