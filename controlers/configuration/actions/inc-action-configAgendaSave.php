@@ -79,7 +79,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="    events:[\n";
         $d=1;
         foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
-            if ($params[$day]['pauseStart'] != $params[$day]['pauseStop'] and !in_array($d, $hiddenDays)) {
+            if ($params[$day]['pauseStart'] != $params[$day]['pauseEnd'] and !in_array($d, $hiddenDays)) {
                 $js[]="      {\n";
                 $js[]="        start: '".$params[$day]['pauseStart'].":00',\n";
                 $js[]="        end: '".$params[$day]['pauseEnd'].":00',\n";
