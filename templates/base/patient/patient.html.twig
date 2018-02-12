@@ -89,9 +89,11 @@
                       <a href="/lap/{{ page.patient.id }}/" target="_blank">Prescription médicamenteuse (LAP)</a>
                     </li>
                   {% endif %}
-                  <li>
-                    <a id="linkAddNewOrdo" href="#">{% if config.LapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
-                  </li>
+                  {% for k,v in page.formOrdo %}
+                    <li>
+                        <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}{% if config.LapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
+                    </li>
+                  {% endfor %}
                 </ul>
             </div>
 
@@ -135,11 +137,11 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li>
-                    {% for k,v in page.formReglement %}
-                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-reglementMod="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {%endif %}Nouveau règlement</a>
-                    {% endfor %}
-                  </li>
+                  {% for k,v in page.formReglement %}
+                    <li>
+                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {% endif %}Nouveau règlement</a>
+                    </li>
+                  {% endfor %}
                 </ul>
             </div>
 

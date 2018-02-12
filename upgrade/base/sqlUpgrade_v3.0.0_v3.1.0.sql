@@ -61,6 +61,7 @@ SET @medshakeid=(SELECT `id` from `people` WHERE `name`='medshake');
 ALTER TABLE `agenda` ADD `externid` int UNSIGNED DEFAULT NULL AFTER `id`;
 ALTER TABLE `agenda` ADD `lastModified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `dateAdd`;
 ALTER TABLE `agenda` ADD KEY `externid` (`externid`);
+ALTER TABLE `agenda` ADD KEY `typeEtUserid` (`type`,`userid`);
 
 --data_cat
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES

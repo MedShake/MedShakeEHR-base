@@ -24,6 +24,7 @@
  * Compta : les réglements du jour
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -31,8 +32,9 @@ $debug='';
 $template="comptaToday";
 
 // sortie des typeID dont on va avoir besoin
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname', 'reglePorteur']);
+$data = new msData();
+$porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+$name2typeID = $data->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
 //liste praticiens autorisé
 $pratIdAutorises[]=$p['user']['id'];
@@ -61,7 +63,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
   left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
   where pd.id in (
     select pd1.id from objets_data as pd1
-    where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) = CURDATE() and pd1.deleted='' and pd1.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
+    where pd1.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd1.creationDate) = CURDATE() and pd1.deleted='' and pd1.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
 
   union
 
@@ -78,7 +80,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
   left join objets_data as bn on bn.toID=pd.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
   where pd.instance in (
     select pd2.id from objets_data as pd2
-    where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
+    where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
 
   order by creationDate asc
   ")) {

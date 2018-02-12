@@ -18,6 +18,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Les termes et conditions de la présente licence GPL v3 ne s’appliquent pas aux composants APICRYPT, fournis par la société APICEM SARL, APICEM Développement ou l’association APICEM, qui restent la propriété exclusive desdites entités. Le code source des composants APICRYPT ne saurait être distribué dans le cadre de la licence du logiciel MedShakeEHR.
+ * La réutilisation du code source du logiciel MedShakeEHR à quelques fins que ce soit nécessitera pour le responsable de développements de prendre contact avec la société APICEM SARL afin de procéder à l’établissement d’un contrat de partenariat ainsi qu’à des tests de validité de l’intégration des composants APICRYPT.
+ * Le logiciel issu de cette réutilisation ne peut en effet prétendre être « compatible APICRYPT » sans avoir effectué ces démarches préalables et la société APICEM SARL ne saurait être tenue responsable d’éventuels problèmes de réceptions, de traitements ou d’envois de messages au travers de ce logiciel. 
+ *
  */
 
 /**

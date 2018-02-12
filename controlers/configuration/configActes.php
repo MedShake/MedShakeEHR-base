@@ -79,7 +79,8 @@
      $p['page']['catList']=msSQL::sql2tabKey("select id, concat(label, ' (module ',module, ')') as label from actes_cat order by label", 'id', 'label');
 
      //utilisation de chaque facture type
-     $typeID= msData::getTypeIDFromName('reglePorteur');
-     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID = $typeID group by parentTypeID", 'parentTypeID', 'nb');
+     $data=new msData();
+     $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') group by parentTypeID", 'parentTypeID', 'nb');
 
  }

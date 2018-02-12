@@ -449,7 +449,8 @@ function sendFormToCsDiv(el) {
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
-      $(window).on("beforeunload", preventDataLoss);
+      if (el.attr('data-mode')!='copy')
+        $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
       });
@@ -500,19 +501,17 @@ function sendFormToCourrierDiv(el) {
 
 //envoyer le form new Ordo dans le div Ordo
 function sendFormToOrdoDiv(el) {
-  if (el.hasClass('editOrdo')) {
-    objetID = el.closest('tr').attr('data-objetID');
-  } else {
-    objetID = null;
-  }
 
   $.ajax({
     url: urlBase + '/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
-      objetID: objetID,
+      objetID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       parentID: '',
+      ordoForm: el.attr('data-ordoForm'),
+      porteur: el.hasClass('editOrdo') ? el.closest('tr').attr('data-porteur') : el.attr('data-porteur'),
+      module: el.hasClass('editOrdo') ? el.closest('tr').attr('data-module') : el.attr('data-module')
     },
     dataType: "html",
     success: function(data) {
@@ -562,21 +561,15 @@ function sendFormToMailDiv(el) {
 
 //envoyer le form new Reglement dans le div Reglement
 function sendFormToReglementDiv(el) {
-  if (el.hasClass('editReglement')) {
-    objetID = el.closest('tr').attr('data-objetID');
-  } else {
-    objetID = null;
-  }
-
   $.ajax({
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
-      objetID: objetID,
+      objetID: el.hasClass('editReglement') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
-      reglementMod: el.attr('data-reglementMod'),
       reglementForm: el.attr('data-reglementForm'),
       porteur: el.attr('data-porteur'),
+      module: el.hasClass('editReglement') ? el.closest('tr').attr('data-module') : el.attr('data-module'),
       parentID: '',
     },
     dataType: "html",

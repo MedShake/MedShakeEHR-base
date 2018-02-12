@@ -277,7 +277,9 @@ ALTER TABLE `agenda`
   ADD PRIMARY KEY (`id`),
   ADD KEY `patientid` (`patientid`),
   ADD KEY `externid` (`externid`),
-  ADD KEY `userid` (`userid`);
+  ADD KEY `userid` (`userid`),
+  ADD KEY `typeEtUserid` (`type`,`userid`);
+
 
 ALTER TABLE `agenda_changelog`
   ADD PRIMARY KEY (`id`),
