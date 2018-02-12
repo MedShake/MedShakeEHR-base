@@ -82,7 +82,6 @@ $params['maxTime']=$_POST['maxTime'];
 $js[]="var maxTime = '".$params['maxTime'].":00';\n";
 $params['slotDuration']=$_POST['slotDuration'];
 $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
-$js[]="$.getScriptOnce(urlBase + 'agendasConfigurations/configAgenda".$p['user']['id']."_ad.js');\n";
 
 file_put_contents('../config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);

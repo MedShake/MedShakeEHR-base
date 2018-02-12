@@ -36,6 +36,9 @@ if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['use
 //paramètres de l'agenda
 if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
   $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+  if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgenda'].=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
+  }
 }
 
 // types de rendez-vous
