@@ -68,7 +68,7 @@ if ($p['config']['host']=='') {
 $mysqli=msSQL::sqlConnect();
 
 /////////// Validators loader
-require '../fonctions/validators.php';
+require $p['config']['homeDirectory'].'fonctions/validators.php';
 
 /////////// Router
 $router = new AltoRouter();
@@ -85,7 +85,7 @@ if ($state=='maintenance') {
 //si la base n'est pas installée du tout, alors on le fait
 } elseif (!$state and !count(msSQL::sql2tabSimple("SHOW TABLES"))) {
     exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/base/sqlInstall.sql');
-    $modules=scandir('../upgrade/');
+    $modules=scandir($p['config']['homeDirectory'].'upgrade/');
     foreach ($modules as $module) {
         if ($module!='.' and $module!='..') {
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/'.$module.'/sqlInstall.sql');
@@ -96,8 +96,8 @@ if ($state=='maintenance') {
 ///////// user
 if (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
-    if (is_file('../config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
-        $p['config']=array_merge($p['config'], Spyc::YAMLLoad('../config/config-'.$p['user']['module'].'.yml'));
+    if (is_file($p['config']['homeDirectory'].'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
+        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($p['config']['homeDirectory'].'config/config-'.$p['user']['module'].'.yml'));
     }
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
@@ -117,15 +117,15 @@ if (isset($_COOKIE['userName'])) {
 }
 
 ///////// Controler
-if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-    include '../controlers/'.$match['target'].'.php';
+if ($match and is_file($p['config']['homeDirectory'].'controlers/'.$match['target'].'.php')) {
+    include $p['config']['homeDirectory'].'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include $p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-} elseif ($match and is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-    include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif ($match and is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+    include $p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 

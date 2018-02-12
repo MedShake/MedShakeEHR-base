@@ -40,6 +40,6 @@ foreach ($preparams as $k=>$v) {
     }
 }
 
-file_put_contents('../config/configTypesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+file_put_contents($p['config']['homeDirectory'].'config/configTypesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 
 msTools::redirRoute('userParameters');

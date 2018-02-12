@@ -62,22 +62,22 @@ if ($validation === false) {
         if (msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1")) {
             $modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
 
-            $availableInstalls=scandir('../upgrade/');
+            $availableInstalls=scandir($p['config']['homeDirectory'].'upgrade/');
             $installFiles=[];
             //on fait la liste des installations à réaliser
             foreach ($availableInstalls as $module) {
                 if ($module!='.' and $module!='..' and !array_key_exists($module, $modules)) {
-                    $installFiles[]=glob('../upgrade/'.$module.'/sqlInstall.sql');
+                    $installFiles[]=glob($p['config']['homeDirectory'].'upgrade/'.$module.'/sqlInstall.sql');
                 }
             }
             //on fait la liste des patches à appliquer        
             $moduleUpdateFiles=[];
             foreach ($modules as $module) {
-                $installed=file_get_contents('../versionMedShakeEHR-'.$module['name'].'.txt');
+                $installed=file_get_contents($p['config']['homeDirectory'].'versionMedShakeEHR-'.$module['name'].'.txt');
                 if (trim($installed," \t\n\r\0\x0B") == trim($module['version'])) {
                   continue;
                 }
-                $updateFiles=glob('../upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
+                $updateFiles=glob($p['config']['homeDirectory'].'upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
                 foreach ($updateFiles as $k=>$file) {
                     if (preg_match('/sqlUpgrade_(.+)_(.+)/', $file, $matches) and $matches[1] >= $module['version']) {
                         $moduleUpdateFiles[$module['name']][]=$updateFiles[$k];
