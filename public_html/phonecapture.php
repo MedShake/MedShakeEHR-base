@@ -57,7 +57,7 @@
  $mysqli=msSQL::sqlConnect();
 
  /////////// Validators loader
- require '../fonctions/validators.php';
+ require $p['config']['homeDirectory'].'fonctions/validators.php';
 
  /////////// Router
  $router = new AltoRouter();
@@ -78,12 +78,12 @@
  }
 
  ///////// Controler else -> 404
- if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-     include '../controlers/'.$match['target'].'.php';
+ if ($match and is_file($p['config']['homeDirectory'].'controlers/'.$match['target'].'.php')) {
+     include $p['config']['homeDirectory'].'controlers/'.$match['target'].'.php';
 
      // complément lié au module installé
-     if (is_file('../controlers/module/'.$match['target'].'.php')) {
-         include '../controlers/module/'.$match['target'].'.php';
+     if (is_file($p['config']['homeDirectory'].'controlers/module/'.$match['target'].'.php')) {
+         include $p['config']['homeDirectory'].'controlers/module/'.$match['target'].'.php';
      }
  } else {
      //$template='problem';

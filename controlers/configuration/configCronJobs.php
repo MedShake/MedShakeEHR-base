@@ -34,14 +34,14 @@ if (stristr(PHP_OS, 'WIN')) {
 }
 $p['page']['availableCrons']=array();
 
-$crons=scandir('../cron/');
+$crons=scandir($p['config']['homeDirectory'].'cron/');
 if (!$crons or count($crons)==2) {
     return;
 }
 $crons=array_splice($crons, 2);
 
 foreach ($crons as $cron) {
-    include '../cron/'.$cron;
+    include $p['config']['homeDirectory'].'cron/'.$cron;
 }
 exec("crontab -l", $installedCrons);
 if (!is_array($installedCrons)) {

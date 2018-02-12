@@ -60,7 +60,7 @@ $day=1;
 foreach($params as $k=>$v) {
     $params[$k]['pauseStart']=$_POST['pauseStart_'.$k];
     $params[$k]['pauseEnd']=$_POST['pauseEnd_'.$k];
-    if ($_POST['pauseStart_'.$k] != $_POST['pauseStop_'.$k] and !in_array($k, $hiddenDays)) {
+    if ($_POST['pauseStart_'.$k] != $_POST['pauseEnd_'.$k] and !in_array($day, $hiddenDays)) {
         $js[]="      {\n";
         $js[]="        start: '".$_POST['pauseStart_'.$k].":00',\n";
         $js[]="        end: '".$_POST['pauseEnd_'.$k].":00',\n";
@@ -83,7 +83,7 @@ $js[]="var maxTime = '".$params['maxTime'].":00';\n";
 $params['slotDuration']=$_POST['slotDuration'];
 $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
 
-file_put_contents('../config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);
 
 msTools::redirRoute('userParameters');

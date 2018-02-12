@@ -86,7 +86,7 @@ if ($externe and !$internePatient) {
         //sinon, on affiche la page de recherche patient
         $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
         $p['page']['porp']="externe";
-        include '../controlers/rechercher/patients.php';
+        include $p['config']['homeDirectory'].'controlers/rechercher/patients.php';
         $match['target']='';
         return;
     }

@@ -50,7 +50,7 @@ $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as pren
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
   CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
   WHEN n.value != '' THEN n.value
   ELSE bn.value
@@ -67,7 +67,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
 
   union
 
-  select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+  select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
   CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
   WHEN n.value != '' THEN n.value
   ELSE bn.value

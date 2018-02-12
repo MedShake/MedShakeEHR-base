@@ -49,8 +49,8 @@ $p['page']['hasAgenda']=true;
 * Agenda
 ************/
 //paramètres de l'agenda
-if(is_file('../configAgenda'.$p['user']['id'].'.yml')) {
-  $p['page']['agenda']=Spyc::YAMLLoad('../configAgenda'.$p['user']['id'].'.yml');
+if(is_file($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml');
 } else {
   $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
                             'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
@@ -67,8 +67,8 @@ if(is_file('../configAgenda'.$p['user']['id'].'.yml')) {
 * consultations
 ************/
 // types de rendez-vous
-if(is_file('../config/configTypesRdv'.$p['user']['id'].'.yml')) {
-    $consults=Spyc::YAMLLoad('../config/configTypesRdv'.$p['user']['id'].'.yml');
+if(is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$p['user']['id'].'.yml')) {
+    $consults=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$p['user']['id'].'.yml');
     $usedTypes=msSQL::sql2tabSimple("SELECT DISTINCT(type) FROM agenda");
     foreach ($consults as $k=>$v) {
         if (in_array($k, $usedTypes)) {
