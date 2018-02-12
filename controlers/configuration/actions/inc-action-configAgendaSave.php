@@ -40,6 +40,11 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
 
     if(empty($_POST['configTypesRdv']))
         unlink('../config/configTypesRdv'.$_POST['userID'].'.yml');
+    if(empty($_POST['configAgendaAd'])) {
+        unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js');
+    } else {
+        file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js', $_POST['configAgendaAd']);
+    }
     if(empty($_POST['configAgenda'])) {
         unlink('../config/configAgenda'.$_POST['userID'].'.yml');
         unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
@@ -93,6 +98,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="var minTime = '".$params['minTime'].":00';\n";
         $js[]="var maxTime = '".$params['maxTime'].":00';\n";
         $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
+        $js[]="$.getScriptOnce(urlBase + 'agendasConfigurations/configAgenda".$_POST['userID']."_ad.js');\n";
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
     }
 }

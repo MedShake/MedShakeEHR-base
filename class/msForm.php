@@ -627,7 +627,12 @@ class msForm
                       if (in_array('required', $bloc)) {
                           $type['required']='required';
                       }
-
+                      $type['class']='';
+                      foreach ($bloc as $h) {
+                          if (preg_match('/class=(.+)/', $h, $match)) {
+                              $type['class'].=' '.$match[1];
+                          }
+                      }
                     //traitement spécifique au select
                     if ($type['formType']=="select") {
 
