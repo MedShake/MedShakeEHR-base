@@ -36,21 +36,21 @@ msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurati
 
 
 if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers))) {
-    file_put_contents('../config/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
+    file_put_contents($p['config']['homeDirectory'].'config/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
 
     if(empty($_POST['configTypesRdv']))
-        unlink('../config/configTypesRdv'.$_POST['userID'].'.yml');
+        unlink($p['config']['homeDirectory'].'config/configTypesRdv'.$_POST['userID'].'.yml');
     if(empty($_POST['configAgendaAd'])) {
         unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js');
     } else {
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js', $_POST['configAgendaAd']);
     }
     if(empty($_POST['configAgenda'])) {
-        unlink('../config/configAgenda'.$_POST['userID'].'.yml');
+        unlink($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
         unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
     } else {
-        file_put_contents('../config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
-        $params=Spyc::YAMLLoad('../config/configAgenda'.$_POST['userID'].'.yml');
+        file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
+        $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
   
         $js=array();
         $js[]="var businessHours = [\n";
