@@ -53,6 +53,10 @@ sqlPass: 'password'
 sqlVarPassword: '4fd45sf78s8'
 
 #######################################
+## Permettre aux praticiens d'être patients (si false, il faudra leur créer une fiche patient)
+PraticienPeutEtrePatient: true
+
+#######################################
 ## administratif
 administratifSecteurHonoraires: 1
 administratifPeutAvoirFacturesTypes: 'false'
@@ -155,10 +159,6 @@ smsDaysBeforeRDV: '3'
 smsCreditsFile: 'creditsSMS.txt'
 smsSeuilCreditsAlerte: '150'
 smsTpoa: 'Dr ....'
-
-#######################################
-## Permettre aux praticiens d'être patients (si false, il faudra leur créer une fiche patient)
-PraticienPeutEtrePatient: true
 
 #######################################
 ## Templates affichage écran

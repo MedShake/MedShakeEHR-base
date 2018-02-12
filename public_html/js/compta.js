@@ -76,6 +76,7 @@ $(document).ready(function() {
   $("#periodeQuickSelectID").on("change", function(e) {
     e.preventDefault();
     choix = $('#periodeQuickSelectID option:selected').val();
+    $('input[type=impayes]').val('');
     if (choix == 'today') {
       $('#beginPeriodeID').val(moment().format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().format('DD/MM/gggg'));
@@ -94,6 +95,9 @@ $(document).ready(function() {
     } else if (choix == 'lastweek') {
       $('#beginPeriodeID').val(moment().subtract(1, 'weeks').startOf('week').format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().subtract(1, 'weeks').endOf('week').format('DD/MM/gggg'));
+    } else if (choix == 'impayes') {
+      $('#endPeriodeID').val(moment().format('DD/MM/gggg'));
+      $('input[name=impayes]').val("true");
     }
     $('form#periodeForm').submit();
   });

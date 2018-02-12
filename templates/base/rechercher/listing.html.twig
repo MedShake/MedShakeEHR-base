@@ -49,13 +49,15 @@
           <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% endif %}" data-url="/{{ porpurl }}/{{ patientID }}/">
         {% endif %}
           <td>
-            <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientID }}/">
-              {% if page['outputType'][patientID]['type']=='externe' or page.porp == 'externe' %}
-                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-              {% elseif page.porp != 'pro' or config.PraticienPeutEtrePatient %}
-                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-             {% endif %}
-            </a>
+            {% if page.porp != 'pro' or config.PraticienPeutEtrePatient == "true" %}
+              <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientID }}/">
+                {% if page['outputType'][patientID]['type']=='externe' or page.porp == 'externe' %}
+                  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                {% elseif page.porp != 'pro' %}
+                  <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+               {% endif %}
+              </a>
+            {% endif %}
           </td>
 
           {% for k, p in tab %}
