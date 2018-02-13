@@ -78,6 +78,16 @@ $(document).ready(function() {
     $('#modalRecherche').modal('toggle');
   });
 
+  //Saisir un traitement en cours
+  $("button.saisirTTenCours").on("click", function(e) {
+    modeActionModal = 'saisirTTenCours';
+    ligneCouranteIndex = '';
+    zoneOrdoAction = '';
+    prepareModalPrescription();
+    cleanModalRecherche();
+    $('#modalRecherche').modal('toggle');
+  });
+
 
   // Ordonner par drag & drop l'ordonnance
   $("#conteneurPrescriptionsALD, #conteneurPrescriptionsG").sortable({
@@ -126,9 +136,9 @@ $(document).ready(function() {
     ligneCouranteIndex = $(this).parents('div.lignePrescription').index();
     indexMedic = '0';
     if ($(this).parents('div.lignePrescription').hasClass('ald')) {
-      zone = ordoMedicsALD;
+      var zone = 'ordoMedicsALD';
     } else {
-      zone = ordoMedicsG;
+      var zone = 'ordoMedicsG';
     }
     editPrescription(zone, ligneCouranteIndex);
     console.log("Editer medic unique ligne prescription : STOP");
@@ -142,9 +152,9 @@ $(document).ready(function() {
     indexMedic = $(this).parents('table.tablePrescripMultiMedic tr').index();
     console.log("index ligne prescription : " + ligneCouranteIndex + " index medic : " + indexMedic);
     if ($(this).parents('div.lignePrescription').hasClass('ald')) {
-      zone = ordoMedicsALD;
+      var zone = 'ordoMedicsALD';
     } else {
-      zone = ordoMedicsG;
+      var zone = 'ordoMedicsG';
     }
     editPrescription(zone, ligneCouranteIndex);
     console.log("Editer medic multiple ligne prescription : STOP");
@@ -356,13 +366,13 @@ function makeLigneOrdo(data) {
       retour += '        <span class="label label-default">chronique</span>';
     }
     retour += '      </div>';
-    retour += '      <div>' + data.medics[0].voieUtilisee;
+    retour += '      <div>' + data.ligneData.voieUtilisee;
     if (data.medics[0].posoFrappeeNbDelignesPosologiques > 1) {
       retour += '          -';
-      retour += '          ' + data.medics[0].dureeTotaleHuman;
+      retour += '          ' + nl2br(data.ligneData.dureeTotaleHuman);
     }
     retour += '      </div>';
-    retour += '      <div>' + data.medics[0].posoHumanComplete + '</div>';
+    retour += '      <div>' + data.medics[0].posoHumanComplete + ' <small>(' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPrise + ')</small></div>';
     retour += '    </div>';
 
     retour += '    <div class="col-md-4">';
@@ -414,7 +424,7 @@ function makeLigneOrdo(data) {
     retour += '">';
     retour += '  <div class="row" style="margin-bottom: 12px">';
     retour += '    <div class="col-md-7 gras text-capitalize">';
-    retour += '      ' + data.medics[0].voieUtilisee + ' - ' + data.medics[0].dureeTotaleHuman + ' : ';
+    retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman + ' <small class="nongras">(' + data.ligneData.dateDebutPrise + '-' + data.ligneData.dateFinPrise + ')</small>';
     retour += '    </div>';
     retour += '    <div class="col-md-4"></div>';
     retour += '    <div class="col-md-1 text-right">';
@@ -466,7 +476,7 @@ function makeLigneOrdo(data) {
         retour += '<span class = "label label-default" > chronique < /span>';
       }
       retour += '    </div>';
-      retour += '    <div>' + medic.posoHumanComplete + '</div>';
+      retour += '    <div>' + medic.posoHumanBase + '</div>';
       retour += '  </td>';
 
       retour += '  <td class="col-md-4">';

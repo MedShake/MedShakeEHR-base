@@ -27,9 +27,15 @@
 
 /**
  * médicament en cours de manipulation
- * @type {Array}
+ * @type {object}
  */
 var medicData;
+
+/**
+ * ligne en cours de manipulation
+ * @type {object}
+ */
+var ligneData = {};
 
 /**
  * index de ligne de prescription en cours de manipulation
@@ -107,6 +113,11 @@ $(document).ready(function() {
     $('#txtRechercheMedic').focus();
   });
 
+  //Reset quand la modal disparait pour ne pas trainer
+  $('#modalRecherche').on('hide.bs.modal', function(event) {
+    resetObjets();
+  });
+
   // frappe de prescription et détection de prescription correcte
   $('#lapFrappePrescription').typeWatch({
     wait: 500,
@@ -116,6 +127,18 @@ $(document).ready(function() {
     callback: function() {
       matchAndGo();
     }
+  });
+
+  //changement date début prescription
+  $("#beginPeriodeIDB").on("dp.change", function(e) {
+    var debut = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
+    $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
+  });
+  // passer à aujourd'hui au dblclick
+  $("#beginPeriodeID").on("dblclick", function(e) {
+    var debut = moment(new Date());
+    $('#beginPeriodeID').val(debut.format('DD/MM/YYYY'));
+    $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
   });
 
   // changement sur le menu unité
@@ -220,18 +243,19 @@ function catchCurrentPrescriptionData() {
   medicData['motifNPS'] = $('#prescriptionNpsMotif').val();
   medicData['uniteUtilisee'] = $('#uniteUtilisee option:selected').text();
   medicData['uniteUtiliseeOrigine'] = $('#uniteUtilisee option:selected').attr('name');
-  medicData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
-  medicData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
   medicData['prescriptionMotif'] = $('#prescriptionMotif').val();
 
-
   // infos sur la ligne
-  ligneData = {};
+  //ligneData = {};
   if ($('#prescriptionAldCheckbox').is(':checked')) ligneData['isALD'] = "true";
   else ligneData['isALD'] = "false";
   if ($('#prescriptionChroCheckbox').is(':checked')) ligneData['isChronique'] = "true";
   else ligneData['isChronique'] = "false"
-  ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').attr('name');
+
+  ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
+  ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
+  ligneData['dateDebutPrise'] = $('#beginPeriodeID').val();
+  ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
 
   ligne = {
     medics: [medicData],
@@ -260,6 +284,9 @@ function sendToOrdonnance() {
   // sauvegarde
   ordoLiveSave();
 
+  //reset objets
+  resetObjets();
+
 }
 
 /**
@@ -268,7 +295,7 @@ function sendToOrdonnance() {
  */
 function sendToLigneOrdonnance() {
   //attraper les infos sur la prescription courante
-  ligne = catchCurrentPrescriptionData();
+  var ligne = catchCurrentPrescriptionData();
 
   // mode addToLigne
   if (modeActionModal == 'addToLigne') {
@@ -284,13 +311,20 @@ function sendToLigneOrdonnance() {
 
   // mode edit
   else if (modeActionModal == 'edit') {
+
     if (ligne.ligneData.isALD == "true") {
       ordoMedicsALD[ligneCouranteIndex]['medics'].splice(indexMedic, 1, ligne.medics.splice(0, 1)[0]);
-      if (indexMedic == 0) ordoMedicsALD[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
+      // if (indexMedic == 0) {
+      //   ordoMedicsALD[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
+      //   console.log('ALD Edition ligne : ' + ligneCouranteIndex + ' -  medic : ' + indexMedic);
+      // }
       construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
     } else {
       ordoMedicsG[ligneCouranteIndex]['medics'].splice(indexMedic, 1, ligne.medics.splice(0, 1)[0]);
-      if (indexMedic == 0) ordoMedicsG[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
+      if (indexMedic == 0) {
+        ordoMedicsG[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
+        console.log('G Edition ligne : ' + ligneCouranteIndex + ' -  medic : ' + indexMedic);
+      }
       construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
     }
   }
@@ -298,13 +332,8 @@ function sendToLigneOrdonnance() {
   // sauvegarde
   ordoLiveSave();
 
-  // reset des var
-  modeActionModal = '';
-  indexMedic = '';
-  ligneCouranteIndex = '';
-  medicData = [];
-  zoneOrdoAction = '';
-
+  //reset objets
+  resetObjets();
 }
 
 /**
@@ -469,6 +498,7 @@ function cleanModalRechercherOngletPrescrire() {
   $("#prescriptionHumanMedicName").html('');
   $("#prescriptionHumanRecap").html('');
   $("#prescriptionHumanPoso").html('');
+  $('.prescriptionChampsDuree input').val('');
   $("#uniteUtilisee").html('');
   $("#voieUtilisee").html('');
   $('#prescriptionAldCheckbox').prop('checked', false);
@@ -476,6 +506,7 @@ function cleanModalRechercherOngletPrescrire() {
   $('#prescriptionNpsCheckbox').prop('checked', false);
   $("#prescriptionNpsMotif").val('');
   $("#prescriptionAldCheckbox, #prescriptionChroCheckbox, #voieUtilisee").removeAttr('disabled');
+  $('#beginPeriodeID, #endPeriodeID').val('');
 }
 
 
@@ -567,31 +598,47 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
 }
 
 function prepareModalPrescription() {
+  //onglets
+  $('#recherchermedicTab').parent('li').hide();
+  $('#prescriremedicTab').parent('li').hide();
+
+  //boutons de fin d'action dans modal
+  $('#modalRecherche button.sendToOrdonnance').hide();
+  $('#modalRecherche button.sendModifToOrdonnance').hide();
+  $('#modalRecherche button.addToLigneOnOrdonnance').hide();
+  $('#modalRecherche button.addToTTenCours').hide();
+
+  //divers
+  $('#prescriptionAlertMultimedic').hide();
+  $('.prescriptionChampsDuree').show();
+
   if (modeActionModal == 'new') {
     $('#recherchermedicTab').parent('li').show();
-    $('#prescriremedicTab').parent('li').hide();
     $('#recherchermedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Nouvelle prescription');
     $('#modalRecherche button.sendToOrdonnance').show();
-    $('#modalRecherche button.sendModifToOrdonnance').hide();
-    $('#modalRecherche button.addToLigneOnOrdonnance').hide();
   } else if (modeActionModal == 'edit') {
-    $('#recherchermedicTab').parent('li').hide();
+    if (indexMedic > 0) {
+      $('#prescriptionAlertMultimedic').show();
+      //$('.prescriptionChampsDuree').hide();
+      $("#prescriptionChroCheckbox, #voieUtilisee").attr('disabled', 'disabled');
+    }
     $('#prescriremedicTab').parent('li').show();
     $('#prescriremedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Edition de la prescription');
-    $('#modalRecherche button.sendToOrdonnance').hide();
     $('#modalRecherche button.sendModifToOrdonnance').show();
-    $('#modalRecherche button.addToLigneOnOrdonnance').hide();
     $("#prescriptionAldCheckbox").attr('disabled', 'disabled');
   } else if (modeActionModal == 'addToLigne') {
+    $('#prescriptionAlertMultimedic').show();
     $('#recherchermedicTab').parent('li').show();
-    $('#prescriremedicTab').parent('li').hide();
     $('#recherchermedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Ajout à la ligne de prescription');
-    $('#modalRecherche button.sendToOrdonnance').hide();
-    $('#modalRecherche button.sendModifToOrdonnance').hide();
     $('#modalRecherche button.addToLigneOnOrdonnance').show();
+  } else if (modeActionModal == 'saisirTTenCours') {
+    $('#recherchermedicTab').parent('li').show();
+    $('#recherchermedicTab').tab('show');
+    $('#modalRecherche h4.modal-title').html('Saisir traitement en cours');
+    $('#modalRecherche button.addToTTenCours').show();
   }
 }
 
@@ -607,8 +654,13 @@ function editPrescription(ordoZone, index) {
   modeActionModal = 'edit';
 
   // mise en place des données
-  medicData = ordoZone[index]['medics'][indexMedic];
-  var dataLigne = ordoZone[index]['ligneData'];
+  if(ordoZone=='ordoMedicsALD') {
+    medicData = ordoMedicsALD[index]['medics'][indexMedic];
+    ligneData = ordoMedicsALD[index]['ligneData'];
+  } else {
+    medicData = ordoMedicsG[index]['medics'][indexMedic];
+    ligneData = ordoMedicsG[index]['ligneData'];
+  }
 
   // ménage préalable au cas ou et changements esthétiques
   cleanModalRechercherOngletPrescrire();
@@ -622,13 +674,18 @@ function editPrescription(ordoZone, index) {
 
   // voies d'administration
   $.each(medicData['voiesPossibles'], function(index, value) {
-    if (medicData.voieUtiliseeCode == value['codevoie']) {
+    if (ligneData.voieUtiliseeCode == value['codevoie']) {
       selectedCodeVoie = ' selected="selected" ';
     } else {
       selectedCodeVoie = '';
     }
     $('#voieUtilisee').append('<option name="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
   });
+
+  // date début et fin de prise
+  if (ligneData['dureeTotaleMachineJours'] > 0) {
+    $('#beginPeriodeID').val(ligneData['dateDebutPrise']);
+  }
 
   // unités possibles
   $.each(medicData['unitesPossibles'], function(index, value) {
@@ -641,8 +698,8 @@ function editPrescription(ordoZone, index) {
   });
 
   //cases à cocher
-  if (dataLigne.isALD == "true") $("#prescriptionAldCheckbox").prop("checked", true);
-  if (dataLigne.isChronique == "true") $("#prescriptionChroCheckbox").prop("checked", true);
+  if (ligneData.isALD == "true") $("#prescriptionAldCheckbox").prop("checked", true);
+  if (ligneData.isChronique == "true") $("#prescriptionChroCheckbox").prop("checked", true);
   if (medicData.isNPS == "true") $("#prescriptionNpsCheckbox").prop("checked", true);
 
   //motif de nps
@@ -680,15 +737,21 @@ function matchAndGo() {
       },
       dataType: "json",
       success: function(data) {
+
+        // remonté dans ligneData
+        ligneData['dureeTotaleHuman'] = data['dureeTotaleHuman'];
+        ligneData['dureeTotaleMachine'] = data['dureeTotaleMachine'];
+        ligneData['dureeTotaleMachineJours'] = data['dureeTotaleMachineJours'];
+
+
         // remonté dans medicData
         medicData['posoFrappeeNbDelignes'] = data['posoFrappeeNbDelignes'];
         medicData['posoFrappeeNbDelignesPosologiques'] = data['posoFrappeeNbDelignesPosologiques'];
         medicData['posoHumanComplete'] = data['posoHumanComplete'];
+        medicData['posoHumanBase'] = data['posoHumanBase'];
         medicData['posoJournaliereMax'] = data['posoJournaliereMax'];
         medicData['posoMaxParPrise'] = data['posoMaxParPriseMax'];
         medicData['posoMinParPrise'] = data['posoMinParPriseMin'];
-        medicData['dureeTotaleHuman'] = data['dureeTotaleHuman'];
-        medicData['dureeTotaleMachine'] = data['dureeTotaleMachine'];
         medicData['versionInterpreteur'] = data['versionInterpreteur'];
 
         // actions visuelle
@@ -705,6 +768,23 @@ function matchAndGo() {
         } else {
           $("#prescriptionAlertSecabilite").hide();
         }
+        //mise à jour dates début / fin
+        if (data['dureeTotaleMachineJours'] > 0) {
+          var startDefaut = moment(new Date()).add(1, 'days');
+          if ($('#beginPeriodeID').val() == '') {
+            var currentStart = startDefaut;
+          } else {
+            var currentStart = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
+          }
+          if (currentStart.format('DD/MM/YYYY') != startDefaut.format('DD/MM/YYYY')) {
+            var start = currentStart;
+          } else {
+            var start = startDefaut;
+          }
+          $('#beginPeriodeID').val(start.format('DD/MM/YYYY'));
+          $('#endPeriodeID').val(start.add(data['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
+        }
+
         console.log(medicData);
         console.log("Analyse coté serveur de lap rescription frappée : STOP");
       },
@@ -743,4 +823,13 @@ function matchLigne(index, ligne) {
   //   return true;
   // }
   return false;
+}
+
+function resetObjets() {
+  medicData = {};
+  ligneData = {};
+  ligneCouranteIndex = '';
+  indexMedic = '';
+  zoneOrdoAction = '';
+  modeActionModal = 'new';
 }
