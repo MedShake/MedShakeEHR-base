@@ -24,10 +24,11 @@
  * Config > action : sauver un template PDF dans un fichier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //config défaut
- $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+ $p['page']['configDefaut']=$p['configDefaut'];
 
  //utilisateurs ayant un repertoire de templates spécifique
  $specificUsers= new msPeople();

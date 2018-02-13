@@ -24,6 +24,7 @@
  * Configuration > ajax : suppression d'une clef apicrypt
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 //accès par admin uniquement
@@ -36,7 +37,7 @@ if (!isset($_POST['file'])) {
 }
 
 //config défaut
-$p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+$p['page']['configDefaut']=$p['configDefaut'];
 
 //utilisateurs ayant un repertoire de clefs spécifiques
 $apicryptUsers= new msPeople();

@@ -39,17 +39,19 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
+$homepath=getcwd().'/';
+
 /////////// Composer class auto-upload
-require '../vendor/autoload.php';
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    include $homepath.'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
+require $homepath.'config/config.php';
 
 $today=date('Y-m-d');
 exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql');

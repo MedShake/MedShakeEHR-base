@@ -30,33 +30,34 @@
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
+$homepath=getenv("MEDSHAKEPATH");
+$homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
+
 /////////// Petites vérifications de l'installation
-if (!is_dir("../vendor")) {
+if (!is_dir($homepath."vendor")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
 if (!is_dir("bower_components")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
 }
-if (!is_file('../config/config.yml')) {
+if (!is_file($homepath.'config/config.yml')) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez créer le fichier config/config.yml");
 }
 
 session_start();
 
 /////////// Composer class auto-upload
-require '../vendor/autoload.php';
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file('../class/' . $class . '.php')) {
-        include '../class/' . $class . '.php';
+    if (is_file(getenv("MEDSHAKEPATH").'/class/' . $class . '.php')) {
+        include getenv("MEDSHAKEPATH").'/class/' . $class . '.php';
     }
 });
 
-
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
-$p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
+require $homepath.'config/config.php';
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
@@ -68,11 +69,11 @@ if ($p['config']['host']=='') {
 $mysqli=msSQL::sqlConnect();
 
 /////////// Validators loader
-require $p['config']['homeDirectory'].'fonctions/validators.php';
+require $homepath.'fonctions/validators.php';
 
 /////////// Router
 $router = new AltoRouter();
-$routes=Spyc::YAMLLoad('../config/routes.yml');
+$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
 $router->addRoutes($routes);
 $router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
@@ -84,11 +85,11 @@ if ($state=='maintenance') {
     msTools::redirection('/maintenance.html');
 //si la base n'est pas installée du tout, alors on le fait
 } elseif (!$state and !count(msSQL::sql2tabSimple("SHOW TABLES"))) {
-    exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/base/sqlInstall.sql');
-    $modules=scandir($p['config']['homeDirectory'].'upgrade/');
+    exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/base/sqlInstall.sql');
+    $modules=scandir($homepath.'upgrade/');
     foreach ($modules as $module) {
         if ($module!='.' and $module!='..') {
-            exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < ../upgrade/'.$module.'/sqlInstall.sql');
+            exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/'.$module.'/sqlInstall.sql');
         }
     }
 }
@@ -96,8 +97,8 @@ if ($state=='maintenance') {
 ///////// user
 if (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
-    if (is_file($p['config']['homeDirectory'].'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
-        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($p['config']['homeDirectory'].'config/config-'.$p['user']['module'].'.yml'));
+    if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
+        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
     }
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
@@ -117,15 +118,15 @@ if (isset($_COOKIE['userName'])) {
 }
 
 ///////// Controler
-if ($match and is_file($p['config']['homeDirectory'].'controlers/'.$match['target'].'.php')) {
-    include $p['config']['homeDirectory'].'controlers/'.$match['target'].'.php';
+if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+    include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-        include $p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    if (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-} elseif ($match and is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-    include $p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+    include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 
