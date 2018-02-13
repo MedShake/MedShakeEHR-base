@@ -58,7 +58,8 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-require $homepath.'config/config.php';
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']['homeDirectory']=$homepath;
 
 /// enregistre le fichier sous le nom déterminé en config 
 if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
