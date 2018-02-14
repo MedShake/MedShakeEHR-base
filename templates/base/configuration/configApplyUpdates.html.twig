@@ -20,15 +20,14 @@
  #/
 
 /##
- # Template > firstLogin
+ # Template > configApplyUpdates
  #
  # @author fr33z00 <https://github.com/fr33z00>
- # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : Creation admin{% endblock %}
+{% block title %}MedShakeEHR : Mise à jour{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -36,12 +35,20 @@
 
 {% block body %}
 
-<h3>MedshakeEHR est désormais fonctionnel</h3>
-<p style="margin-top:50px;margin-bottom:50px">Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration qui autorisent à configurer le logiciel et créer des utilisateurs.</p>
-{# validation error display bloc #}
-{{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
+<h3>Appliquer les installations dans la base</h3>
+<p style="margin-top:50px;margin-bottom:50px">Vous avez installé des mises à jour. Nous allons procéder aux modifications de la base de données.</p>
 
-{# form display #}
-{{ f.formbuilder(page.form , page.formIN , session) }}
+{# validation error display bloc #}
+{{ f.errorFormDiv( session['form']['applyUpdates']['validationErrorsMsg'] ) }}
+
+<form	action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configApplyUpdates/" method="post" style="margin-top:50px;">
+  <input name="formIN" value="applyUpdates" type="hidden"/>
+  <div class="row">
+    <div class="col-md-4">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/"><button type="button" class="btn btn-default">Annuler</button></a>
+      <input type="submit" title="Appliquer" value="Appliquer" class="btn btn-primary" />
+    </div>
+  </div>
+</form>
 
 {% endblock %}

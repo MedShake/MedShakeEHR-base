@@ -55,6 +55,8 @@ spl_autoload_register(function ($class) {
 $template='';
 if (!is_file($homepath.'config/config.yml')) {
     if ($_SERVER['REQUEST_METHOD']=='GET') {
+        $template="bienvenue";
+    }elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
         $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
@@ -82,181 +84,93 @@ if (!is_file($homepath.'config/config.yml')) {
             }
         }
 
-        $conf="#\n"
-             ."# This file is part of MedShakeEHR.\n"
-             ."#\n"
-             ."# Copyright (c) 2017\n"
-             ."# Bertrand Boutillier <b.boutillier@gmail.com>\n"
-             ."# http://www.medshake.net\n"
-             ."#\n"
-             ."# MedShakeEHR is free software: you can redistribute it and/or modify\n"
-             ."# it under the terms of the GNU General Public License as published by\n"
-             ."# the Free Software Foundation, either version 3 of the License, or\n"
-             ."# any later version.\n"
-             ."#\n"
-             ."# MedShakeEHR is distributed in the hope that it will be useful,\n"
-             ."# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-             ."# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-             ."# GNU General Public License for more details.\n"
-             ."#\n"
-             ."# You should have received a copy of the GNU General Public License\n"
-             ."# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.\n"
-             ."#\n"
-             ."#\n"
-             ."#######################################\n"
-             ."#\n"
-             ."# Configuration générale de MedShakeEHR au format yaml\n"
-             ."#\n"
-             ."# Chaque paramètre peut être surchargé de façon spécifique pour chaque\n"
-             ."# utilisateur (voir la zone de configuration)\n"
-             ."#\n"
-             ."#######################################\n"
-             ."\n"
-             ."#######################################\n"
-             ."##  general config\n"
-             ."protocol: 'http".($_SERVER['HTTPS']?"s":"")."://'\n"
-             ."host: '".$_SERVER['SERVER_NAME'].($_SERVER['SERVER_PORT']!="80"?":".$_SERVER['SERVER_PORT']:"")."'\n"
-             ."urlHostSuffixe: '".substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'],"/install.php"))."'\n"
-             ."webDirectory: '".getcwd()."/'\n"
-             ."stockageLocation: '".$_POST['stockageLocation']."'\n"
-             ."backupLocation: '".$_POST['backupLocation']."'\n"
-             ."workingDirectory: '".getcwd()."/workingDirectory/'\n"
-             ."cookieDomain: '".$_SERVER['SERVER_NAME']."'\n"
-             ."cookieDuration: 31104000\n"
-             ."fingerprint: '".$_POST['fingerprint']."'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## sql access\n"
-             ."sqlServeur: '".$_POST['sqlServeur']."'\n"
-             ."sqlBase: '".$_POST['sqlBase']."'\n"
-             ."sqlUser: '".$_POST['sqlUser']."'\n"
-             ."sqlPass: '".$_POST['sqlPass']."'\n"
-             ."sqlVarPassword: '".$_POST['sqlVarPassword']."'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## Permettre aux praticiens d'être patients (si false, il faudra leur créer une fiche patient)\n"
-             ."PraticienPeutEtrePatient: true\n"
-             ."\n"
-             ."#######################################\n"
-             ."## administratif\n"
-             ."administratifSecteurHonoraires: 1\n"
-             ."administratifPeutAvoirFacturesTypes: 'false'\n"
-             ."administratifPeutAvoirPrescriptionsTypes: 'false'\n"
-             ."administratifPeutAvoirAgenda: 'false'\n"
-             ."administratifPeutAvoirRecettes: 'true'\n"
-             ."administratifComptaPeutVoirRecettesDe: ''\n"
-             ."\n"
-             ."#######################################\n"
-             ."## templates impression\n"
-             ."##\n"
-             ."\n"
-             ."# répertoire par défaut\n"
-             ."templatesPdfFolder: '".$homepath."templates/models4print/'\n"
-             ."\n"
-             ."# modèle par defaut\n"
-             ."templateDefautPage: 'base-page-headAndFoot.html.twig'\n"
-             ."# ordonnance\n"
-             ."templateOrdoHeadAndFoot: 'base-page-headAndFoot.html.twig'\n"
-             ."templateOrdoBody: 'ordonnanceBody.html.twig'\n"
-             ."templateOrdoALD: 'ordonnanceALD.html.twig'\n"
-             ."# compte rendu\n"
-             ."templateCrHeadAndFoot: 'base-page-headAndNoFoot.html.twig'\n"
-             ."# courrier et certificat\n"
-             ."templateCourrierHeadAndFoot: 'base-page-headAndNoFoot.html.twig'\n"
-             ."\n"
-             ."\n"
-             ."#######################################\n"
-             ."## smtp\n"
-             ."smtpTracking: ''\n"
-             ."smtpFrom: 'user@domain.net'\n"
-             ."smtpFromName: ''\n"
-             ."smtpHost: 'smtp.net'\n"
-             ."smtpPort: 587\n"
-             ."smtpSecureType: 'tls'\n"
-             ."smtpOptions: 'off'\n"
-             ."smtpUsername: 'smtpuserlogin'\n"
-             ."smtpPassword: 'smtppassword'\n"
-             ."smtpDefautSujet: 'Document vous concernant'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## apicrypt\n"
-             ."\n"
-             ."apicryptCheminInbox: '".getcwd()."/inbox/'\n"
-             ."apicryptCheminArchivesInbox: '".getcwd()."/inboxArchives/'\n"
-             ."apicryptInboxMailForUserID: '0'\n"
-             ."\n"
-             ."apicryptCheminFichierNC: '".getcwd()."/workingDirectory/NC/'\n"
-             ."apicryptCheminFichierC: '".getcwd()."/workingDirectory/C/'\n"
-             ."apicryptCheminVersClefs: '".$homepath."apicrypt/'\n"
-             ."apicryptCheminVersBinaires: '".$homepath."apicrypt/bin/'\n"
-             ."apicryptUtilisateur: 'prenom.NOM'\n"
-             ."apicryptAdresse: 'prenom.NOM@medicalXX.apicrypt.org'\n"
-             ."apicryptSmtpHost: 'smtp.intermedic.org'\n"
-             ."apicryptSmtpPort: '25'\n"
-             ."apicryptPopHost: 'pop.intermedic.org'\n"
-             ."apicryptPopPort: '110'\n"
-             ."apicryptPopUser: 'prenom.NOM'\n"
-             ."apicryptPopPass: 'passwordapicrypt'\n"
-             ."apicryptDefautSujet: 'Document concernant votre patient'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## fax en ligne\n"
-             ."faxService: 'ecofaxOVH'\n"
-             ."ecofaxMyNumber: '0900000000'\n"
-             ."ecofaxPass: 'password'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## dicom\n"
-             ."dicomHost: '192.168.xxx.xxx'\n"
-             ."dicomPrefixIdPatient: '1.100.100'\n"
-             ."dicomWorkListDirectory: '".getcwd()."/workingDirectory/'\n"
-             ."dicomWorkingDirectory: '".getcwd()."/workingDirectory/'\n"
-             ."dicomAutoSendPatient2Echo: 'false'\n"
-             ."dicomDiscoverNewTags: 'true'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## PhoneCapture\n"
-             ."phonecaptureFingerprint: 'phonecapture'\n"
-             ."phonecaptureCookieDuration: 31104000\n"
-             ."phonecaptureResolutionWidth: 1920\n"
-             ."phonecaptureResolutionHeight: 1080\n"
-             ."\n"
-             ."#######################################\n"
-             ."## agenda\n"
-             ."\n"
-             ."agendaService: ''\n"
-             ."## si agendaService est actif, alors agendaDistantLink doit être mis à ''\n"
-             ."agendaDistantLink: 'http://monagenda.agenda.abc'\n"
-             ."agendaDistantPatientsOfTheDay: 'http://monagenda.agenda.abc/patientsOfTheDay.json'\n"
-             ."agendaLocalPatientsOfTheDay: 'patientsOfTheDay.json'\n"
-             ."agendaNumberForPatientsOfTheDay: 0\n"
-             ."\n"
-             ."\n"
-             ."\n"
-             ."#######################################\n"
-             ."## Rappels RDV par mail\n"
-             ."mailRappelLogCampaignDirectory: '".getcwd()."/mailsRappelRdvArchives/'\n"
-             ."mailRappelDaysBeforeRDV: '3'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## SMS (cf /servicesTiers/sms/ )\n"
-             ."smsProvider: ''\n"
-             ."smsLogCampaignDirectory: '".getcwd()."/smsArchives/'\n"
-             ."smsDaysBeforeRDV: '3'\n"
-             ."smsCreditsFile: 'creditsSMS.txt'\n"
-             ."smsSeuilCreditsAlerte: '150'\n"
-             ."smsTpoa: 'Dr ....'\n"
-             ."\n"
-             ."#######################################\n"
-             ."## Templates affichage écran\n"
-             ."templatesFolder: '".$homepath."templates/'\n"
-             ."\n"
-             ."\n"
-             ."#######################################\n"
-             ."## Twig configuration\n"
-             ."twigEnvironnementCache: false #'/tmp/templates_cache/'\n"
-             ."twigEnvironnementAutoescape: false";
-        if(file_put_contents($homepath.'config/config.yml', $conf)===false) {
+        $conf=array(
+          'protocol'=>'http'.($_SERVER['HTTPS']?'s':'').'://',
+          'host'=>$_SERVER['SERVER_NAME'].(in_array($_SERVER['SERVER_PORT'],['80','443'])?'':':'.$_SERVER['SERVER_PORT']),
+          'urlHostSuffixe'=>substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'],'/install.php')),
+          'webDirectory'=>getcwd().'/',
+          'stockageLocation'=>$_POST['stockageLocation'],
+          'backupLocation'=>$_POST['backupLocation'],
+          'workingDirectory'=>getcwd().'/workingDirectory/',
+          'cookieDomain'=>$_SERVER['SERVER_NAME'],
+          'cookieDuration'=>31104000,
+          'fingerprint'=>$_POST['fingerprint'],
+          'sqlServeur'=>$_POST['sqlServeur'],
+          'sqlBase'=>$_POST['sqlBase'],
+          'sqlUser'=>$_POST['sqlUser'],
+          'sqlPass'=>$_POST['sqlPass'],
+          'sqlVarPassword'=>$_POST['sqlVarPassword'],
+          'PraticienPeutEtrePatient'=>true,
+          'administratifSecteurHonoraires'=>1,
+          'administratifPeutAvoirFacturesTypes'=>'false',
+          'administratifPeutAvoirPrescriptionsTypes'=>'false',
+          'administratifPeutAvoirAgenda'=>'false',
+          'administratifPeutAvoirRecettes'=>'true',
+          'administratifComptaPeutVoirRecettesDe'=>'',
+          'templatesPdfFolder'=>$homepath.'templates/models4print/',
+          'templateDefautPage'=>'base-page-headAndFoot.html.twig',
+          'templateOrdoHeadAndFoot'=>'base-page-headAndFoot.html.twig',
+          'templateOrdoBody'=>'ordonnanceBody.html.twig',
+          'templateOrdoALD'=>'ordonnanceALD.html.twig',
+          'templateCrHeadAndFoot'=>'base-page-headAndNoFoot.html.twig',
+          'templateCourrierHeadAndFoot'=>'base-page-headAndNoFoot.html.twig',
+          'smtpTracking'=>'',
+          'smtpFrom'=>'user@domain.net',
+          'smtpFromName'=>'',
+          'smtpHost'=>'smtp.net',
+          'smtpPort'=>587,
+          'smtpSecureType'=>'tls',
+          'smtpOptions'=>'off',
+          'smtpUsername'=>'smtpuserlogin',
+          'smtpPassword'=>'smtppassword',
+          'smtpDefautSujet'=>'Document vous concernant',
+          'apicryptCheminInbox'=>getcwd().'/inbox/',
+          'apicryptCheminArchivesInbox'=>getcwd().'/inboxArchives/',
+          'apicryptInboxMailForUserID'=>'0',
+          'apicryptCheminFichierNC'=>getcwd().'/workingDirectory/NC/',
+          'apicryptCheminFichierC'=>getcwd().'/workingDirectory/C/',
+          'apicryptCheminVersClefs'=>$homepath.'apicrypt/',
+          'apicryptCheminVersBinaires'=>$homepath.'apicrypt/bin/',
+          'apicryptUtilisateur'=>'prenom.NOM',
+          'apicryptAdresse'=>'prenom.NOM@medicalXX.apicrypt.org',
+          'apicryptSmtpHost'=>'smtp.intermedic.org',
+          'apicryptSmtpPort'=>'25',
+          'apicryptPopHost'=>'pop.intermedic.org',
+          'apicryptPopPort'=>'110',
+          'apicryptPopUser'=>'prenom.NOM',
+          'apicryptPopPass'=>'passwordapicrypt',
+          'apicryptDefautSujet'=>'Document concernant votre patient',
+          'faxService'=>'ecofaxOVH',
+          'ecofaxMyNumber'=>'0900000000',
+          'ecofaxPass'=>'password',
+          'dicomHost'=>'192.168.xxx.xxx',
+          'dicomPrefixIdPatient'=>'1.100.100',
+          'dicomWorkListDirectory'=>getcwd().'/workingDirectory/',
+          'dicomWorkingDirectory'=>getcwd().'/workingDirectory/',
+          'dicomAutoSendPatient2Echo'=>'false',
+          'dicomDiscoverNewTags'=>'true',
+          'phonecaptureFingerprint'=>'phonecapture',
+          'phonecaptureCookieDuration'=>31104000,
+          'phonecaptureResolutionWidth'=>1920,
+          'phonecaptureResolutionHeight'=>1080,
+          'agendaService'=>'',
+          'agendaDistantLink'=>'http://monagenda.agenda.abc',
+          'agendaDistantPatientsOfTheDay'=>'http://monagenda.agenda.abc/patientsOfTheDay.json',
+          'agendaLocalPatientsOfTheDay'=>'patientsOfTheDay.json',
+          'agendaNumberForPatientsOfTheDay'=>0,
+          'mailRappelLogCampaignDirectory'=>getcwd().'/mailsRappelRdvArchives/',
+          'mailRappelDaysBeforeRDV'=>'3',
+          'smsProvider'=>'',
+          'smsLogCampaignDirectory'=>getcwd().'/smsArchives/',
+          'smsDaysBeforeRDV'=>'3',
+          'smsCreditsFile'=>'creditsSMS.txt',
+          'smsSeuilCreditsAlerte'=>'150',
+          'smsTpoa'=>'Dr ....',
+          'templatesFolder'=>$homepath.'templates/',
+          'twigEnvironnementCache'=>false,
+          'twigEnvironnementAutoescape'=>false
+        );
+        if(file_put_contents($homepath.'config/config.yml', Spyc::YAMLDump($conf, false, 0, true))===false) {
             die("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que www-data a les droits d'écriture sur le dossier ".$homepath."config/");
         }
 
@@ -348,15 +262,28 @@ if($template!=''): ?>
 
     <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
 <?php
-if ($template=='configForm') :
+if ($template=='bienvenue') :
+?>
+      <h1>Bienvenue dans MedShakeEHR!</h1>
+      <p style="margin-top:50px">Avant de pouvoir utiliser MedShakeEHR, nous devons procéder à quelques étapes.</p>
+      <form	action="/install.php" method="post" style="margin-top:50px;">
+        <input name="bienvenue" type="hidden"/>
+        <div class="row">
+          <div class="col-md-4">
+            <input type="submit" title="Suivant" value="Suivant" class="btn btn-primary" />
+	        </div>
+        </div>
+      </form>
+<?php
+elseif ($template=='configForm') :
 ?>
       <h2>Configuration rapide</h2>
-      <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.<br>Vous le retrouverez sous le nom <strong><?php $homepath ?>/config/config.yml</strong> et pourrez y configurer plus en détail les préférences globales.</p>
+      <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.</p>
       <form	action="/install.php" 		method="post">
         <input name="configForm" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
-            <h2>Paramètres généraux</h2>
+            <h3>Paramètres généraux</h3>
             <div class="form-group">
               <label class="control-label">Chemin du dossier de stockage</label>
               <input name="stockageLocation" type="text" class="form-control" autocomplete="off" required="required"
@@ -370,9 +297,9 @@ if ($template=='configForm') :
             <div class="form-group">
               <label class="control-label">Empreinte de sécurité pour les sessions (chaîne aléatoire)</label>
               <input name="fingerprint" type="text" class="form-control" autocomplete="off" required="required"
-              value="<?= str_replace('=','',base64_encode(random_bytes(8))) ?>"/>
+              value="<?= preg_replace('#[=/|+]#','',base64_encode(random_bytes(8))) ?>"/>
             </div>
-            <h2>Paramètres de la base de données</h2>
+            <h3>Paramètres de la base de données</h3>
             <div class="form-group">
               <label class="control-label">Serveur SQL</label>
               <input name="sqlServeur" type="text" class="form-control" autocomplete="off" required="required"
@@ -406,33 +333,31 @@ if ($template=='configForm') :
             <div class="form-group">
               <label class="control-label">Empreinte de sécurité pour les mots de passe de la base (chaîne aléatoire)</label>
               <input name="sqlVarPassword" type="text" class="form-control" autocomplete="off" required="required"
-              value="<?= str_replace('=','',base64_encode(random_bytes(8))) ?>"/>
+              value="<?= preg_replace('#[=/|+]#','',base64_encode(random_bytes(8))) ?>"/>
             </div>
             <input type="submit" title="Valider" value="Valider" class="btn btn-primary" />
 	        </div>
         </div>
       </form>
-    </div>
-  </body>
-</html>
 <?php
 else :
 ?>
       <h2>Installation de la base de données</h2>
-      <p>Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
-      <form	action="/install.php" 		method="post">
+      <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
+      <form	action="/install.php" method="post" style="margin-top:50px;">
         <input name="baseInstall" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
-            <input type="submit" title="Valider" value="Valider" class="btn btn-primary" />
+            <input type="submit" title="Suivant" value="Suivant" class="btn btn-primary" />
 	        </div>
         </div>
       </form>
-      </div>
-
-</body>
-</html>
 <?php
 endif;
+?>
+    </div>
+  </body>
+</html>
+<?php
 endif;
 
