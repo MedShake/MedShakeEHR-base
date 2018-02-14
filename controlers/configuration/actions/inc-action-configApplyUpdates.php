@@ -90,5 +90,5 @@ if (isset($output) and is_array($output)) {
         msTools::redirRoute('configUpdates');
     }
 }
-
+unset($_SESSION['form'][$formIN]);
 msTools::redirection('/patients/');
