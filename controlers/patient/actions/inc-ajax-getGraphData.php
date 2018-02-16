@@ -63,7 +63,7 @@ foreach ($data as $k=>$d) {
             } else {
                 $data[$k]=array('poids'=>array('value'=>$mesureAnt['poids'], 'reel'=>false),
                                 'taille'=>array('value'=>$mesureAnt['taille'], 'reel'=>false),
-                                'imc'=>round($mesureAnt['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1),
+                                'imc'=>array('value'=>round($mesureAnt['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1),'reel'=>false),
                                 'date'=>$d['date'], 'mesure'=>false);
             }
         } elseif (!isset($mesureAnt) or !array_key_exists('poids', $mesureAnt)) {
