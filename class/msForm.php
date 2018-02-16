@@ -629,7 +629,7 @@ class msForm
                       }
                       $type['class']='';
                       foreach ($bloc as $h) {
-                          if (preg_match('/class=(.+)/', $h, $match)) {
+                          if (preg_match('/^class=(.+)/', $h, $match)) {
                               $type['class'].=' '.$match[1];
                           }
                       }

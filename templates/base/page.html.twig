@@ -238,7 +238,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
+                                  {% if config.PraticienPeutEtrePatient %}
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
+                                  {% else %}
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
+                                  {% endif %}
                                 </li>
                                 <li>
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>

@@ -31,7 +31,7 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getenv("MEDSHAKEPATH");
+$homepath=getenv("MEDSHAKEEHRPATH");
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
 /////////// Composer class auto-upload
@@ -46,13 +46,14 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-require $homepath.'config/config.php';
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
+$p['config']['homeDirectory']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();

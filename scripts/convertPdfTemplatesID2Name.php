@@ -33,7 +33,7 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getenv("MEDSHAKEPATH");
+$homepath=getenv("MEDSHAKEEHRPATH");
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
 /////////// Composer class auto-upload

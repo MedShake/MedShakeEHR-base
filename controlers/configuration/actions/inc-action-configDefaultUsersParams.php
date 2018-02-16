@@ -21,18 +21,29 @@
  */
 
 /**
- * Config : lit le fichier de config et l'interprète
+ * Config > action : enregistrer les paramètres par défaut des utilisateurs
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
-$p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
-foreach ($p['config'] as $k=>$v) {
-    if (strpos($v, '#HOMEPATH#')!==false) {
-        $p['config'][$k]=str_replace('#HOMEPATH#', $homepath, $v);
+$booleans=array(
+          'PraticienPeutEtrePatient', 
+          'twigEnvironnementAutoescape',
+          'twigEnvironnementCache'
+          );
+
+foreach ($p['configDefaut'] as $param=>$v) {
+    if (array_key_exists($param, $_POST)) {
+      if (in_array($param, $booleans)) {
+          if ($_POST[$param]==='true') {
+              $_POST[$param]=true;
+          } elseif ($_POST[$param]==='false') {
+              $_POST[$param]=false;
+          }
+      }
+      $p['configDefaut'][$param]=$_POST[$param];
     }
 }
-$p['configDefaut']=$p['config'];
+file_put_contents($p['config']['homeDirectory'].'config/config.yml', Spyc::YAMLDump($p['configDefaut'], false, 0, true));
 
+msTools::redirRoute('configDefaultParams');

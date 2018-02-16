@@ -276,6 +276,51 @@ $(document).ready(function() {
     }
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  // gestion des historiques et courbes de poids/taille/imc 
+
+  $(".graph-print").on("click", function(){
+  });
+
+  $(".duplicate").parent().on("click", function(){
+    setPeopleData($('input[name=p_poids]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_poids]').attr("data-typeID"), 'input[name=p_poids]', '0');
+  });
+  $(".duplicate").parent().attr("title", "Reporter un poids identique");
+  $(".graph").parent().attr("title", "Voir l'historique");
+
+  //modal Courbes de poids/taille/IMC
+  $(".graph").parent().on("click", function(){
+    $(".histo-suppr").remove();
+    $.ajax({
+      url: urlBase+'/patient/ajax/getGraphData/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID")
+      },
+      dataType: "html",
+      success: function(data) {
+        if (data == 'ok')
+            return;
+        data = JSON.parse(data);
+        for (var i in data)
+          if (i!='bornes')
+            $(".histo").append('\
+              <tr class="histo-suppr">\
+                <td style="text-align:center">' + (i < 3*365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
+                <td style="text-align:center">' + moment(data[i].date, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY") + '</td>\
+                <td style="text-align:center;color:' + (data[i].poids.reel ? 'black' : 'grey') + '">' + data[i].poids.value + '</td>\
+                <td style="text-align:center;color:' + (data[i].taille.reel ? 'black' : 'grey') + '">' + data[i].taille.value + '</td>\
+                <td style="text-align:center;color:' + (data[i].imc.reel ? 'black' : 'grey') + '">' + data[i].imc.value + '</td>\
+              </tr>');
+        drawGraph(data);
+        $('#viewGraph').modal('show');
+      },
+      error: function() {
+      }
+    });
+  });
+
+
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
   $(' .trLigneExamen td:nth-child(3), a.showDetDoc').on('click', function(e) {
     showObjetDet($(this));
@@ -713,4 +758,176 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
       alert('Problème, rechargez la page !');
     }
   });
+}
+
+function drawGraph(data) {
+  var canvas;
+  var ctx;
+  var Xmax=parseInt(data.bornes.Xmax);
+  $(".graph-tab-taille").show();
+  if (Xmax<3*365.25) {
+    canvas = $(".graph-poids").get(0);
+    ctx = canvas.getContext("2d");
+    drawGraphPoidsNourisson(data, ctx);
+    canvas = $(".graph-taille").get(0);
+    ctx = canvas.getContext("2d");
+    drawGraphTailleNourisson(data, ctx);
+    canvas = $(".graph-imc").get(0);
+    ctx = canvas.getContext("2d");
+    if ($('#identitePatient').attr("data-genre")=="F")
+      drawGraphIMCFille(data, ctx);
+    else
+      drawGraphIMCGarcon(data, ctx);
+  } else if (Xmax<18*365.25) {
+    if ($('#identitePatient').attr("data-genre")=="F") {
+      canvas = $(".graph-poids").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphPoidsFille(data, ctx);
+      canvas = $(".graph-taille").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphTailleFille(data, ctx);
+      canvas = $(".graph-imc").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphIMCFille(data, ctx);
+    }
+    else {
+      canvas = $(".graph-poids").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphPoidsGarcon(data, ctx);
+      canvas = $(".graph-taille").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphTailleGarcon(data, ctx);
+      canvas = $(".graph-imc").get(0);
+      ctx = canvas.getContext("2d");
+      drawGraphIMCGarcon(data, ctx);
+    }
+  } else {
+    $(".graph-tab-taille").hide();
+    canvas = $(".graph-poids").get(0);
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'poids', ctx, canvas);
+    canvas = $(".graph-imc").get(0);
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'imc', ctx, canvas);
+  }
+}
+
+function drawGraphPoidsNourisson(data, ctx) {
+  $(".graph-poids")
+  .attr("width", "610")
+  .attr("height", "790")
+  .css("background-image", "url(/img/poids_nourissons.svg)")
+  .css("background-size", "cover");
+  drawDots(18, 567/(3*365.25), 756/22, 0, 22, ctx, 'poids', data);
+}
+function drawGraphTailleNourisson(data, ctx) {
+  $(".graph-taille")
+  .attr("width", "614")
+  .attr("height", "532")
+  .css("background-image", "url(/img/taille_nourissons.svg)")
+  .css("background-size", "cover");
+  drawDots(22, 567/(3*365.25), 500/85, 0, 115, ctx, 'taille', data);
+}
+function drawGraphPoidsGarcon(data, ctx) {
+  $(".graph-poids")
+  .attr("width", "596")
+  .attr("height", "615")
+  .css("background-image", "url(/img/poids_garcons.svg)")
+  .css("background-size", "cover");
+  drawDots(16, 567/(18*365.25), 596/110, 0, 110, ctx, 'poids', data);
+}
+function drawGraphTailleGarcon(data, ctx) {
+  $(".graph-taille")
+  .attr("width", "602")
+  .attr("height", "831")
+  .css("background-image", "url(/img/taille_garcons.svg)")
+  .css("background-size", "cover");
+  drawDots(22, 567/(18*365.25), 812/150, 0, 200, ctx, 'taille', data);
+}
+function drawGraphIMCGarcon(data, ctx) {
+  $(".graph-imc")
+  .attr("width", "622")
+  .attr("height", "861")
+  .css("background-image", "url(/img/IMC_garcons.svg)")
+  .css("background-size", "cover");
+  drawDots(31, 567/(18*365.25), 843/25, 0, 35, ctx, 'imc', data);
+}
+function drawGraphPoidsFille(data, ctx) {
+  $(".graph-poids")
+  .attr("width", "608")
+  .attr("height", "614")
+  .css("background-image", "url(/img/poids_filles.svg)")
+  .css("background-size", "cover");
+  drawDots(19, 567/(18*365.25), 596/110, 0, 110, ctx, 'poids', data);
+}
+function drawGraphTailleFille(data, ctx) {
+  $(".graph-taille")
+  .attr("width", "611")
+  .attr("height", "831")
+  .css("background-image", "url(/img/taille_filles.svg)")
+  .css("background-size", "cover");
+  drawDots(23, 567/(18*365.25), 812/150, 0, 200, ctx, 'taille', data);
+}
+function drawGraphIMCFille(data, ctx) {
+  $(".graph-imc")
+  .attr("width", "619")
+  .attr("height", "861")
+  .css("background-image", "url(/img/IMC_filles.svg)")
+  .css("background-size", "cover");
+  drawDots(29, 567/(18*365.25), 843/25, 0, 35, ctx, 'imc', data);
+}
+
+function drawGraphGeneral(data, sel, ctx, canvas) {
+  $(".graph-"+sel).css("background", "none");
+  var Xmin = Math.floor(parseInt(data.bornes.Xmin) / 365.25);
+  var Xmax = Math.ceil(parseInt(data.bornes.Xmax) / 365.25);
+  var Ymin = (sel == 'poids' ? 5 : 1) * (Math.floor(parseFloat(data.bornes.Ymin[sel]) / (sel == 'poids' ? 5 : 1)) - 1);
+  var Ymax = (sel == 'poids' ? 5 : 1) * (Math.ceil(parseFloat(data.bornes.Ymax[sel]) / (sel == 'poids' ? 5 : 1)) + 1);
+  var marge = 22;
+  var scaleX = (canvas.width - marge) / (Xmax - Xmin);
+  var scaleY = (canvas.height - marge) / (Ymax - Ymin);
+  canvas.width=canvas.width; //effacement du canvas
+  ctx.strokeStyle = "#a9c0a6";
+  ctx.fillStyle = "#8b5ba5";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  //dessin des graduations X
+  for (var i = Xmin; i < Xmax; i++) {
+    ctx.moveTo((i - Xmin) * scaleX + marge, 0);
+    ctx.lineTo((i - Xmin) * scaleX + marge, canvas.height - marge + 2);
+    ctx.fillText(i, i + marge - 20, canvas.height - marge + 10);
+  }
+  ctx.moveTo((Xmax - Xmin) * scaleX + marge, 0);
+  ctx.lineTo((Xmax - Xmin) * scaleX + marge, canvas.height - marge + 2);
+  //détermination de la précision des graduations Y
+  var inc = sel == 'poids' ? 5 : 1;
+  //dessin des graduations Y
+  for (var i = Ymin; i < Ymax; i+=inc) {
+    ctx.moveTo(marge-3, (Ymax - i) * scaleY);
+    ctx.lineTo(canvas.width, (Ymax - i) * scaleY);
+    ctx.fillText(i, 2, (Ymax - i) * scaleY);
+  }
+  ctx.moveTo(marge - 3, 0);
+  ctx.lineTo(canvas.width, 0);
+  ctx.stroke();
+  //unités
+  ctx.fillText(sel == 'poids' ? 'kg' : "kg/m²", 0, 10);
+  ctx.fillText("ans", canvas.width - 20, canvas.height - marge + 10);
+  drawDots(marge, scaleX / 365.25, scaleY, Xmin*365.25, Ymax, ctx, sel, data);
+}
+
+function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
+  var rayon = 3;
+  for (var i in data) {
+    if (i == 'bornes')
+      continue;
+    var Xpos = margeX + (parseInt(i) - Xmin) * scaleX;
+    var Ypos = (Ymax - data[i][sel].value) * scaleY;
+    ctx.fillStyle = data[i][sel].reel ? "green" : "grey";
+    ctx.beginPath();
+    ctx.moveTo(rayon + Xpos, Ypos);
+    ctx.arc(Xpos, Ypos, rayon, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
 }

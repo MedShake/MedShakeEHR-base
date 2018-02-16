@@ -35,7 +35,7 @@ if (stristr(PHP_OS, 'WIN')) {
 $p['page']['availableCrons']=array();
 
 $crons=scandir($p['config']['homeDirectory'].'cron/');
-if (!$crons or count($crons)==2) {
+if (!$crons or !is_array($crons) or count($crons)==2) {
     return;
 }
 $crons=array_splice($crons, 2);
@@ -48,20 +48,12 @@ if (!is_array($installedCrons)) {
     return;
 }
 
-$gotbegin=false;
 foreach($installedCrons as $line) {
-    if (!$gotbegin and strpos($line, '#MedShake')===0) {
-        $gotbegin=true;
-    } elseif (!$gotbegin) {
-        continue;
-    } elseif(strpos($line, '#/MedShake')===0) {
-        break;
-    }
-    if (!preg_match('/([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd (.*) php -f cron\/(.*)\.php/', trim($line), $matches)) {
+    if (!preg_match('#([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd '.$p['config']['homeDirectory'].' && php -f cron\/(.*)\.php#', trim($line), $matches)) {
         continue;
     }
-    if (array_key_exists($matches[7], $p['page']['availableCrons'])) {
-        $p['page']['availableCrons'][$matches[7]]['values']=array('m'=>$matches[1],'h'=>$matches[2],'M'=>$matches[3],'dom'=>$matches[4],'dow'=>$matches[5]);
+    if (array_key_exists($matches[6], $p['page']['availableCrons'])) {
+        $p['page']['availableCrons'][$matches[6]]['values']=array('m'=>$matches[1],'h'=>$matches[2],'M'=>$matches[3],'dom'=>$matches[4],'dow'=>$matches[5]);
     }
 }
 

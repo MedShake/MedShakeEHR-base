@@ -35,7 +35,9 @@ $acceptedModes=array(
     'configFormEdit', // Edition du formulaire
     'configUserCreate', //Créer un user
     'configCronJobs', //Configurer les crons
+    'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
     'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
+    'configApplyUpdates', // Appliquer les updates
     'configAgendaSave', // sauvegarder config agenda
     'configTemplatePDFSave' // sauvegarder un template PDF
 );
@@ -57,9 +59,17 @@ elseif ($m=='configUserCreate') {
 elseif ($m=='configCronJobs') {
     include('inc-action-configCronJobs.php');
 }
+// Enregistrer la config par défaut des utilisateurs
+elseif ($m=='configDefaultUsersParams') {
+    include('inc-action-configDefaultUsersParams.php');
+}
 // Attribuer une config spécifique à un utilisateur
 elseif ($m=='configSpecificUserParam') {
     include('inc-action-configSpecificUserParam.php');
+}
+// appliquer les updates
+elseif ($m=='configApplyUpdates') {
+    include('inc-action-configApplyUpdates.php');
 }
 // sauvegarder config agenda
 elseif ($m=='configAgendaSave') {

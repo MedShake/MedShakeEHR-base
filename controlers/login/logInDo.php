@@ -59,7 +59,7 @@ if ($validation === false) {
         $user-> doLogin();
         unset($_SESSION['form'][$formIN]);
 
-        if (msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1")) {
+        if (msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1")=='admin') {
             $modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
 
             $availableInstalls=scandir($p['config']['homeDirectory'].'upgrade/');
@@ -86,28 +86,7 @@ if ($validation === false) {
             }
             //s'il y a des patches à appliquer
             if (count($installFiles) or count($moduleUpdateFiles)) {
-                msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
-                //on fait une sauvegarde de la base
-                exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d H:i:s').'-avant update.sql');
-                //puis on applique les patches en commençant par ceux de base s'il y en a
-                if (array_key_exists($moduleUpdateFiles, 'base')) {
-                    foreach ($moduleUpdateFiles['base'] as $file) {
-                        exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$file);
-                    }
-                    unset($moduleUpdateFiles['base']);
-                }
-                foreach ($moduleUpdateFiles as $k=>$module) {
-                    foreach ($module as $file) {
-                        exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$file);
-                    }
-                }
-                //enfin, on installe les nouveaux modules
-                foreach ($installFiles as $k=>$module) {
-                    foreach ($module as $file) {
-                        exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$file);
-                    }
-                }
-                msSQL::sqlQuery("UPDATE system SET value='normal' WHERE name='state' and groupe='system'");
+                msTools::redirRoute('configUpdates');
             }
         }
         msTools::redirection('/patients/');
