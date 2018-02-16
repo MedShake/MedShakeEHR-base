@@ -41,6 +41,7 @@ $acceptedModes=array(
     'uploadNewDoc', // Uploader un document dans dossier patient
     'getLigneOrdo', // Obtenir les infos sur une ligne type d'ordonnnace
     'getReglementData', // Obtenir les infos sur un acte pour le réglement
+    'getGraphData', //Obtenir l'historique de poids et taille du patient
     'ObjetDet', // obtenir le détail sur un objet (sa version imprimée)
     'prepareEcho', //préparer l'échographe
     'catchLastDicomSrData', //attraper les dernière mesures DICOM pour un patient
@@ -98,6 +99,11 @@ elseif ($m=='getLigneOrdo' and is_numeric($_POST['ligneID'])) {
 //obtenir les data sur un règlement
 } elseif ($m=='getReglementData' and is_numeric($_POST['acteID'])) {
     include('inc-ajax-getReglementData.php');
+}
+
+//Obtenir l'historique de poids et taille du patient
+elseif ($m=='getGraphData' and is_numeric($_POST['patientID'])) {
+    include('inc-ajax-getGraphData.php');
 }
 
 // marquer une ligne de l'historique comme effacée
