@@ -284,9 +284,10 @@ $(document).ready(function() {
 
   $(".duplicate").parent().on("click", function(){
     setPeopleData($('input[name=p_poids]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_poids]').attr("data-typeID"), 'input[name=p_poids]', '0');
+    setPeopleData($('input[name=p_taillePatient]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_taillePatient]').attr("data-typeID"), 'input[name=p_taillePatient]', '0');
   });
-  $(".duplicate").parent().attr("title", "Reporter un poids identique");
-  $(".graph").parent().attr("title", "Voir l'historique");
+  $(".duplicate").parent().attr("title", "Reporter une mesure identique").css("cursor","pointer");
+  $(".graph").parent().attr("title", "Voir l'historique").css("cursor","pointer");
 
   //modal Courbes de poids/taille/IMC
   $(".graph").parent().on("click", function(){
@@ -762,7 +763,6 @@ function drawGraph(data) {
   var canvas;
   var ctx;
   var Xmax=parseInt(data.bornes.Xmax);
-  $(".graph-tab-taille").show();
   if (Xmax<3*365.25) {
     canvas = $(".graph-poids").get(0);
     ctx = canvas.getContext("2d");
@@ -800,10 +800,12 @@ function drawGraph(data) {
       drawGraphIMCGarcon(data, ctx);
     }
   } else {
-    $(".graph-tab-taille").hide();
     canvas = $(".graph-poids").get(0);
     ctx = canvas.getContext("2d");
     drawGraphGeneral(data, 'poids', ctx, canvas);
+    canvas = $(".graph-taille").get(0);
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'taille', ctx, canvas);
     canvas = $(".graph-imc").get(0);
     ctx = canvas.getContext("2d");
     drawGraphGeneral(data, 'imc', ctx, canvas);
@@ -879,8 +881,8 @@ function drawGraphGeneral(data, sel, ctx, canvas) {
   $(".graph-"+sel).css("background", "none");
   var Xmin = Math.floor(parseInt(data.bornes.Xmin) / 365.25);
   var Xmax = Math.ceil(parseInt(data.bornes.Xmax) / 365.25);
-  var Ymin = (sel == 'poids' ? 5 : 1) * (Math.floor(parseFloat(data.bornes.Ymin[sel]) / (sel == 'poids' ? 5 : 1)) - 1);
-  var Ymax = (sel == 'poids' ? 5 : 1) * (Math.ceil(parseFloat(data.bornes.Ymax[sel]) / (sel == 'poids' ? 5 : 1)) + 1);
+  var Ymin = (sel == 'imc' ? 1 : 5) * (Math.floor(parseFloat(data.bornes.Ymin[sel]) / (sel == 'imc' ? 1 : 5)) - 1);
+  var Ymax = (sel == 'imc' ? 1 : 5) * (Math.ceil(parseFloat(data.bornes.Ymax[sel]) / (sel == 'imc' ? 1 : 5)) + 1);
   var marge = 22;
   var scaleX = (canvas.width - marge) / (Xmax - Xmin);
   var scaleY = (canvas.height - marge) / (Ymax - Ymin);
@@ -890,27 +892,27 @@ function drawGraphGeneral(data, sel, ctx, canvas) {
   ctx.lineWidth = 1;
   ctx.beginPath();
   //dessin des graduations X
-  for (var i = Xmin; i < Xmax; i++) {
+  var inc = (Xmax - Xmin) < 2 ? 0.25 : (Xmax - Xmin) < 4 ? 0.5 : 1;
+  for (var i = Xmin; i < Xmax; i+=inc) {
     ctx.moveTo((i - Xmin) * scaleX + marge, 0);
     ctx.lineTo((i - Xmin) * scaleX + marge, canvas.height - marge + 2);
-    ctx.fillText(i, i + marge - 20, canvas.height - marge + 10);
+    ctx.fillText(i % 1 ? '+' + (12 * (i%1)) + 'mois' : i , (i - Xmin) * scaleX + marge - (i % 1 ? 20 : 5), canvas.height - 5);
   }
-  ctx.moveTo((Xmax - Xmin) * scaleX + marge, 0);
-  ctx.lineTo((Xmax - Xmin) * scaleX + marge, canvas.height - marge + 2);
+  ctx.moveTo(canvas.width - 1, 0);
+  ctx.lineTo(canvas.width - 1, canvas.height - marge + 2);
+  ctx.fillText("ans", canvas.width - 20, canvas.height - 5);
   //détermination de la précision des graduations Y
-  var inc = sel == 'poids' ? 5 : 1;
+  inc = sel == 'poids' ? 5 : 1;
   //dessin des graduations Y
   for (var i = Ymin; i < Ymax; i+=inc) {
-    ctx.moveTo(marge-3, (Ymax - i) * scaleY);
-    ctx.lineTo(canvas.width, (Ymax - i) * scaleY);
-    ctx.fillText(i, 2, (Ymax - i) * scaleY);
+    ctx.moveTo(marge-3, (Ymax - i) * scaleY + 1);
+    ctx.lineTo(canvas.width, (Ymax - i) * scaleY + 1);
+    ctx.fillText(i, 2, (Ymax - i) * scaleY + 5);
   }
   ctx.moveTo(marge - 3, 0);
   ctx.lineTo(canvas.width, 0);
+  ctx.fillText(sel == 'poids' ? 'kg' : sel == 'taille' ? "cm" : "kg/m²", 0, 10);
   ctx.stroke();
-  //unités
-  ctx.fillText(sel == 'poids' ? 'kg' : "kg/m²", 0, 10);
-  ctx.fillText("ans", canvas.width - 20, canvas.height - marge + 10);
   drawDots(marge, scaleX / 365.25, scaleY, Xmin*365.25, Ymax, ctx, sel, data);
 }
 
