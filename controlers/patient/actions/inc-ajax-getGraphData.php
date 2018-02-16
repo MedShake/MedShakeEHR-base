@@ -34,7 +34,7 @@ $naissance=DateTime::createFromFormat('d/m/Y', $patientData['birthdate']);
 $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
   FROM objets_data AS od LEFT JOIN data_types AS dt
   ON od.typeID=dt.id AND od.toID='".$_POST['patientID']."' and deleted=''
-  WHERE dt.groupe='medical'
+  WHERE dt.groupe='medical' AND od.instance='0'
   ORDER BY od.registerDate ASC");
 
 header('Content-Type: application/json');
@@ -58,12 +58,14 @@ $Imax=0;
 foreach ($data as $k=>$d) {
     if (!array_key_exists('poids', $d)) {
         if (!array_key_exists('taillePatient', $d)) {
-            if (!isset($mesureAnt) or !isset($mesureAnt['poids'])) {
+            if (!isset($mesureAnt) or !isset($mesureAnt['poids']) or !isset($mesureAnt['taille'])) {
                 unset($data[$k]);
             } else {
                 $data[$k]=array('value'=>round($mesureAnt['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1), 'date'=>$d['date'], 'mesure'=>false);
             }
-        } else {
+        } elseif (!isset($mesureAnt) or !isset($mesureAnt['poids'])) {
+            unset($data[$k]);
+        }else {
             $imc=round($mesureAnt['poids']*10000/($d['taillePatient']*$d['taillePatient']), 1);
             $data[$k]=array('poids'=>array('value'=>$mesureAnt['poids'], 'reel'=>false),
                             'taille'=>array('value'=>$d['taillePatient'], 'reel'=>true),
@@ -76,7 +78,7 @@ foreach ($data as $k=>$d) {
         }
     } else {
         if (!array_key_exists('taillePatient', $d)) {
-            if (!isset($mesureAnt['taille'])) {
+            if (!isset($mesureAnt) or !isset($mesureAnt['taille'])) {
                 unset($data[$k]);
             } else {
                 $imc=round($d['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1);
