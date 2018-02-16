@@ -27,7 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-class msLapPrescription extends msLAP
+class msLapPrescription extends msLap
 {
   private $_txtPrescription;
   private $_speThe;
@@ -208,6 +208,9 @@ class msLapPrescription extends msLAP
  */
     public function lapInstallPrescription() {
 
+      //data légales Thériaque
+      $dataTheriaque=$this->getTheriaqueInfos();
+
       //spécialité
       $dataSpe=$this->getSpecialiteByCode($this->_speThe,1,3);
       $this->_nomSpe = $dataSpe[0]['sp_nom'];
@@ -289,7 +292,13 @@ class msLapPrescription extends msLAP
         'nomUtileFinal' => $this->determineNomUtileFinal(),
         'voiesPossibles'=>$dataSpeVoiesAdmin,
         'prescriptibleEnDC'=>$this->_prescriptibleEnDC,
-        'codeATC'=>$dataSpe[0]['sp_catc_code_fk']
+        'codeATC'=>$dataSpe[0]['sp_catc_code_fk'],
+        'codeCIS'=>$dataSpe[0]['sp_nl'],
+        'codeCIP7'=>$this->_presThe,
+        'codeCIP13'=>$dataPres[0]['pre_ean_ref'],
+        'codeUCD'=>$dataSpe[0]['sp_cipucd'],
+        'codeUCD13'=>$dataSpe[0]['sp_cipucd13'],
+        'TheriaqueVersion'=>$dataTheriaque[0]['vers'].' '.$dataTheriaque[0]['date_ext']
       );
 
 
@@ -327,8 +336,10 @@ class msLapPrescription extends msLAP
           } else {
             $human[] = $humanPosoBase[$k].' '.$humanPosoTraine[$k];
           }
+          $humanBase[] = $humanPosoBase[$k];
         }
         $this->_prescriptionInterpretee['posoHumanComplete'] = trim(str_replace('  ', ' ', implode("\n", $human)));
+        $this->_prescriptionInterpretee['posoHumanBase'] = trim(str_replace('  ', ' ', implode("\n", $humanBase)));
 
         // la voie d'administration utilisée (txt humain)
         $this->_prescriptionInterpretee['voieUtilisee'] = ucfirst($this->_voieUtilisee);
@@ -348,6 +359,7 @@ class msLapPrescription extends msLAP
         $dureeTotale = $this->_dureeTotalePrescription();
         $this->_prescriptionInterpretee['dureeTotaleHuman']=$dureeTotale['dureeTotaleHuman'];
         $this->_prescriptionInterpretee['dureeTotaleMachine']=$dureeTotale['dureeTotaleMachine'];
+        $this->_prescriptionInterpretee['dureeTotaleMachineJours']=$dureeTotale['dureeTotaleMachineJours'];
 
         // controle secabilité
         $this->_controleSecabilite();
@@ -391,8 +403,8 @@ class msLapPrescription extends msLAP
  * @return string nom retenu
  */
     private function determineNomUtileFinal() {
-      if($this->_prescriptibleEnDC != 1) return $this->_nomSpe;
-      if($this->_medicVirtuel == 1) {
+      if($this->_prescriptibleEnDC != '1') return $this->_nomSpe;
+      if($this->_medicVirtuel == '1') {
         return $this->_nomDC;
       } else {
         return $this->_nomDC.' ('.$this->_nomSpe.')';
@@ -704,6 +716,7 @@ class msLapPrescription extends msLAP
 
       $retour['dureeTotaleHuman']=implode(' ',array_reverse($dureeTotaleHuman));
       $retour['dureeTotaleMachine']= $duree;
+      $retour['dureeTotaleMachineJours']= $duree['j'] + ($duree['s'] * 7) + ($duree['m'] * 28);
       return $retour;
     }
 

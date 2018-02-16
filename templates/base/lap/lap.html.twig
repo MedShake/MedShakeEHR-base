@@ -34,10 +34,12 @@
 {% endblock %}
 
 {% block head %}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/mathjs/dist/math.min.js"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-stupid-table/stupidtable.min.js"></script>
 
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js"></script>
 
 {% endblock %}
@@ -88,10 +90,16 @@
       {# Onglets #}
       <ul class="nav nav-tabs gras" role="tablist">
         <li class="active" role="presentation">
-          <a href="#ordonnanceTab" aria-controls="profile" role="tab" data-toggle="tab">Ordonnance</a>
+          <a id="ordonnanceTabL" href="#ordonnanceTab" aria-controls="profile" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
         </li>
         <li role="presentation">
-          <a href="#tttencoursTab" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a>
+          <a id="tttencoursTabL" href="#tttencoursTab" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a>
+        </li>
+        <li role="presentation">
+          <a id="ordohistoriqueTabL" href="#ordohistoriqueTab" aria-controls="messages" role="tab" data-toggle="tab">Historique des ordonnances</a>
+        </li>
+        <li role="presentation">
+          <a id="tthistoriqueTabL" href="#tthistoriqueTab" aria-controls="messages" role="tab" data-toggle="tab">Historique des traitements</a>
         </li>
       </ul>
 
@@ -99,30 +107,76 @@
         {# Onglet Ordonnance #}
         <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
           <div class="row bottom-space">
-            <div class="col-md-6">
-              <button type="button" class="btn btn-primary nouvellePrescription"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nouvelle prescription</button>
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimer</button>
+            <div class="col-md-4">
+              <button type="button" class="btn btn-primary nouvellePrescription">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Nouvelle prescription</button>
+
+              <div class="btn-group">
+                <button type="button" class="btn btn-default">
+                  <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                  Imprimer et sauvegarder</button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="#">
+                      <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                      Imprimer et sauvegarder</a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                      Imprimer avec options et sauvegarder</a>
+                  </li>
+                  <li>
+                    <a href="#" class="saveOrdo">
+                      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                      Sauvegarder uniquement</a>
+                  </li>
+                </ul>
+              </div>
+
             </div>
-            <div class="col-md-6 text-right">
+            <div class="col-md-6 form-horizontal">
+              <div class="form-group">
+                <label for="ordoName" class="col-md-3 control-label">Nom de l'ordonnance</label>
+                <div class="col-md-9">
+                  <input type="text" id="ordoName" class="form-control" value="Ordonnance"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 text-right">
               <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+                  <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                  <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li><a href="#" class="removeAllLignesPrescription"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Supprimer tout</a></li>
+                  <li>
+                    <a href="#" class="removeAllLignesPrescription">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      Supprimer tout</a>
+                  </li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="#" class="ordoLiveRestore"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Récupération d'urgence</a></li>
+                  <li>
+                    <a href="#" class="ordoLiveRestore">
+                      <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                      Récupération d'urgence</a>
+                  </li>
                 </ul>
               </div>
 
             </div>
           </div>
           <div class="row">
-            <div id="conteneurOrdonnance" class="col-md-12">
+            <div id="conteneurOrdonnanceCourante" class="col-md-12">
               <div class="alert alert-danger gras" role="alert">Prescriptions ALD</div>
-              <div id="conteneurPrescriptionsALD" style="min-height:15px;" class="connectedOrdoZones ald"></div>
+              <div style="min-height:15px;" class="connectedOrdoZones ald conteneurPrescriptionsALD"></div>
               <div class="alert alert-success gras" role="alert">Prescriptions standards</div>
-              <div id="conteneurPrescriptionsG" style="min-height:15px;" class="connectedOrdoZones"></div>
+              <div style="min-height:15px;" class="connectedOrdoZones conteneurPrescriptionsG"></div>
             </div>
           </div>
         </div>
@@ -131,20 +185,46 @@
         <div role="tabpanel" class="tab-pane" id="tttencoursTab">
           <div class="row bottom-space">
             <div class="col-md-12">
-              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalRecherche">Saisir traitement</button>
+              <div class="form-group">
+                <button type="button" class="btn btn-primary saisirTTenCours">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  Saisir un traitement en cours</button>
+                <button type="button" class="btn btn-default">
+                  <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                  Imprimer</button>
+              </div>
+              <div class="alert alert-info gras" role="alert">Traitements chroniques
+                <small>(Traitements en cours ou présumé en cours de par la nature chronique)</small>
+              </div>
+              <div id="traitementEnCoursChronique"></div>
+
+              <div class="alert alert-warning gras" role="alert">Traitements ponctuels</div>
+              <div id="traitementEnCoursPonctuel"></div>
             </div>
           </div>
         </div>
+
+        {# Onglet historique des ordonnances #}
+        <div role="tabpanel" class="tab-pane" id="ordohistoriqueTab">
+          <div class="row bottom-space">
+            <div class="col-md-12">
+              <div id="historiqueOrdos"></div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
+</div>
+    {# modal recherche de médicament #}
+    {% include 'inc-lapModalRechercher.html.twig' %}
 
-  </div>
+    {# modal voir ordonnance #}
+    {% include 'inc-lapModalVoirOrdonnance.html.twig' %}
 
-  {# modal recherche de médicament #}
-  {% include 'inc-lapModalRechercher.html.twig' %}
+    {# modal spécifier date d'arrêt effective #}
+    {% include 'inc-lapModalMedicDateArretEffective.html.twig' %}
 
-  {# modal ajout de médicament #}
-  {# include 'inc-lapModalAddMedic.html.twig' #}
-
-{% endblock %}
+  {% endblock %}

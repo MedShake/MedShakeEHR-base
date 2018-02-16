@@ -21,27 +21,11 @@
  */
 
 /**
- * Login : page de login
+ * LAP : ajax > obtenir l'ordonnance
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $template="lap";
-
- if($p['config']['LapOnOff'] != 'on') die("Le LAP n'est pas activé");
-
- $p['page']['patient']['id']=$match['params']['patient'];
- $patient=new msPeople();
- $patient->setToID($match['params']['patient']);
-
- $lapPatient=new msLapPatient;
- $lapPatient->setToID($match['params']['patient']);
- $p['page']['patientAdminData']=$lapPatient->getPatientAdminData();
- $p['page']['patientBasicPhysio']=$lapPatient->getPatientBasicPhysioDataControle();
- $p['page']['patientAllergies']=$patient->getAllergies('allergies');
- $p['page']['patientALD']=$patient->getALD();
- $listeChampsAtcd=array('atcdObs','atcdPersoGyneco','atcdMedicChir');
- foreach($listeChampsAtcd as $v) {
-   $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
- }
+$lap=new msLapOrdo();
+$lap->setOrdonnanceID($_POST['ordonnanceID']);
+echo json_encode($lap->getOrdonnance());

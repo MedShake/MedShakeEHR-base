@@ -31,7 +31,7 @@
  $patient=new msPeople();
  $patient->setToID($_POST['patientID']);
 
- $lap=new msLAP;
+ $lap=new msLapPatient;
  $lap->setToID($_POST['patientID']);
  $p['page']['patientAdminData']=$lap->getPatientAdminData();
  $p['page']['patientBasicPhysio']=$lap->getPatientBasicPhysioDataControle();

@@ -63,6 +63,71 @@ var modeActionModal = 'new';
 
 $(document).ready(function() {
 
+  //Nouvelle prescription
+  $("button.nouvellePrescription").on("click", function(e) {
+    modeActionModal = 'new';
+    resetObjets();
+    prepareModalPrescription();
+    cleanModalRecherche();
+    $('#modalRecherche').modal('toggle');
+  });
+
+
+
+
+
+  // Editer un médicament d'une ligne de prescription
+  $("#conteneurOrdonnanceCourante").on("click", 'button.editLignePrescription', function(e) {
+    console.log("Editer medic unique ligne prescription : START");
+    modeActionModal = 'edit';
+    ligneCouranteIndex = $(this).parents('div.lignePrescription').index();
+    indexMedic = '0';
+    if ($(this).parents('div.lignePrescription').hasClass('ald')) {
+      var zone = 'ordoMedicsALD';
+    } else {
+      var zone = 'ordoMedicsG';
+    }
+    editPrescription(zone, ligneCouranteIndex);
+    console.log("Editer medic unique ligne prescription : STOP");
+  });
+
+  // Editer un médicament d'une ligne de prescription où ils sont multiples
+  $("#conteneurOrdonnanceCourante").on("click", 'button.editMedicLignePrescription', function(e) {
+    console.log("Editer medic multiple ligne prescription : START");
+    modeActionModal = 'edit';
+    ligneCouranteIndex = $(this).parents('div.lignePrescription').index();
+    indexMedic = $(this).parents('table.tablePrescripMultiMedic tr').index();
+    console.log("index ligne prescription : " + ligneCouranteIndex + " index medic : " + indexMedic);
+    if ($(this).parents('div.lignePrescription').hasClass('ald')) {
+      var zone = 'ordoMedicsALD';
+    } else {
+      var zone = 'ordoMedicsG';
+    }
+    editPrescription(zone, ligneCouranteIndex);
+    console.log("Editer medic multiple ligne prescription : STOP");
+  });
+
+
+
+  // ajouter un médicament à une ligne de prescription
+  $("#conteneurOrdonnanceCourante").on("click", "a.addToLigne", function(e) {
+    console.log('Installation ajout d\'un médic dans ligne de prescription : START');
+    e.preventDefault();
+    modeActionModal = 'addToLigne';
+    cleanModalRecherche();
+    prepareModalPrescription();
+    ligneCouranteIndex = $(this).parents('div.lignePrescription').index();
+    if ($(this).parents('div.connectedOrdoZones').hasClass('ald')) {
+      zoneOrdoAction = 'ALD';
+    } else {
+      zoneOrdoAction = 'G';
+    }
+
+    $('#modalRecherche').modal('show');
+    console.log('Installation ajout de medic sur la ligne ' + ligneCouranteIndex + ' en zone ' + zoneOrdoAction);
+    console.log('Installation ajout d\'un médic dans ligne de prescription : STOP');
+  });
+
   // Lancer la recherche de médicament par validation avec enter
   $("#txtRechercheMedic").keypress(function(event) {
     keycode = event.keyCode || event.which;
@@ -244,6 +309,7 @@ function catchCurrentPrescriptionData() {
   medicData['uniteUtilisee'] = $('#uniteUtilisee option:selected').text();
   medicData['uniteUtiliseeOrigine'] = $('#uniteUtilisee option:selected').attr('name');
   medicData['prescriptionMotif'] = $('#prescriptionMotif').val();
+  medicData['prescripteurInitialTT'] = $('#prescripteurInitialTT').val();
 
   // infos sur la ligne
   //ligneData = {};
@@ -302,10 +368,10 @@ function sendToLigneOrdonnance() {
     // envoyer dans le bon tableau en fonction ALD / NON ALD et construire
     if (ligne.ligneData.isALD == "true") {
       ordoMedicsALD[ligneCouranteIndex]['medics'].push(ligne.medics[0]);
-      construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
+      construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
     } else {
       ordoMedicsG[ligneCouranteIndex]['medics'].push(ligne.medics[0]);
-      construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
+      construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
     }
   }
 
@@ -314,18 +380,18 @@ function sendToLigneOrdonnance() {
 
     if (ligne.ligneData.isALD == "true") {
       ordoMedicsALD[ligneCouranteIndex]['medics'].splice(indexMedic, 1, ligne.medics.splice(0, 1)[0]);
-      // if (indexMedic == 0) {
-      //   ordoMedicsALD[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
-      //   console.log('ALD Edition ligne : ' + ligneCouranteIndex + ' -  medic : ' + indexMedic);
-      // }
-      construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
+      if (indexMedic == 0) {
+        ordoMedicsALD[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
+        console.log('ALD Edition ligne : ' + ligneCouranteIndex + ' -  medic : ' + indexMedic);
+      }
+      construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
     } else {
       ordoMedicsG[ligneCouranteIndex]['medics'].splice(indexMedic, 1, ligne.medics.splice(0, 1)[0]);
       if (indexMedic == 0) {
         ordoMedicsG[ligneCouranteIndex]['ligneData'] = ligne.ligneData;
         console.log('G Edition ligne : ' + ligneCouranteIndex + ' -  medic : ' + indexMedic);
       }
-      construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
+      construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
     }
   }
 
@@ -422,52 +488,6 @@ function getFichesPosos(codesFiches, destination) {
 }
 
 /**
- * Obtenir le HTML d'une ligne d'ordonnance
- * @param  {Boolean} isALD     true si c'est une ligne ald
- * @param  {object}  medicData datas sur le médic
- * @return {string}
- */
-function construireHtmlLigneOrdonnance(ligne, methode, destination) {
-  console.log('Génération html d\'une ligne de prescription : START');
-  var zoneDestination;
-  if (ligne.ligneData.isALD == "true") {
-    zoneDestination = $('#conteneurPrescriptionsALD');
-  } else {
-    zoneDestination = $('#conteneurPrescriptionsG');
-  }
-
-  nouvelleLigneOrdo = makeLigneOrdo(ligne);
-  if (methode == 'append') {
-    zoneDestination.append(nouvelleLigneOrdo);
-  } else if (methode == 'replace') {
-    destination.replaceWith(nouvelleLigneOrdo);
-    $("#conteneurPrescriptionsALD, #conteneurPrescriptionsG").sortable('refresh')
-  }
-
-
-  // $.ajax({
-  //   url: urlBase + '/lap/ajax/lapMakeLigneOrdonnance/',
-  //   type: 'post',
-  //   data: {
-  //     ligne: ligne
-  //   },
-  //   dataType: "html",
-  //   success: function(nouvelleLigneOrdo) {
-  //     if (methode == 'append') {
-  //       zoneDestination.append(nouvelleLigneOrdo);
-  //     } else if (methode == 'replace') {
-  //       destination.replaceWith(nouvelleLigneOrdo);
-  //       $("#conteneurPrescriptionsALD, #conteneurPrescriptionsG").sortable('refresh')
-  //     }
-  //
-  //   },
-  //   error: function() {
-  //     console.log('Génération html d\'une ligne de prescription : PROBLEME');
-  //   }
-  // });
-}
-
-/**
  * Nettoyage complet du modal de prescription
  * @return {void}
  */
@@ -507,6 +527,7 @@ function cleanModalRechercherOngletPrescrire() {
   $("#prescriptionNpsMotif").val('');
   $("#prescriptionAldCheckbox, #prescriptionChroCheckbox, #voieUtilisee").removeAttr('disabled');
   $('#beginPeriodeID, #endPeriodeID').val('');
+  $('#prescripteurInitialTT').val('');
 }
 
 
@@ -518,8 +539,6 @@ function cleanModalRechercherOngletPrescrire() {
  * @return {void}
  */
 function lapInstallPrescription(speThe, presThe, txtPrescription) {
-  //$('#lapFrappePrescription').attr('data-speThe', speThe);
-  //$('#lapFrappePrescription').attr('data-presThe', presThe);
 
   console.log("Installation d'une nouvelle prescription d'un médic dans la modal : START");
 
@@ -608,9 +627,11 @@ function prepareModalPrescription() {
   $('#modalRecherche button.addToLigneOnOrdonnance').hide();
   $('#modalRecherche button.addToTTenCours').hide();
 
+
   //divers
   $('#prescriptionAlertMultimedic').hide();
-  $('.prescriptionChampsDuree').show();
+  $('.prescriptionChampsDuree, .prescriptionChampsEnd').show();
+  $('#prescripteurInitialTT').parent('div.form-group').hide();
 
   if (modeActionModal == 'new') {
     $('#recherchermedicTab').parent('li').show();
@@ -620,7 +641,7 @@ function prepareModalPrescription() {
   } else if (modeActionModal == 'edit') {
     if (indexMedic > 0) {
       $('#prescriptionAlertMultimedic').show();
-      //$('.prescriptionChampsDuree').hide();
+      $('.prescriptionChampsDuree').hide();
       $("#prescriptionChroCheckbox, #voieUtilisee").attr('disabled', 'disabled');
     }
     $('#prescriremedicTab').parent('li').show();
@@ -639,6 +660,8 @@ function prepareModalPrescription() {
     $('#recherchermedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Saisir traitement en cours');
     $('#modalRecherche button.addToTTenCours').show();
+    $('#prescripteurInitialTT').parent('div.form-group').show();
+
   }
 }
 
@@ -655,11 +678,11 @@ function editPrescription(ordoZone, index) {
 
   // mise en place des données
   if(ordoZone=='ordoMedicsALD') {
-    medicData = ordoMedicsALD[index]['medics'][indexMedic];
-    ligneData = ordoMedicsALD[index]['ligneData'];
+    medicData = JSON.parse(JSON.stringify(ordoMedicsALD[index]['medics'][indexMedic]));
+    ligneData = JSON.parse(JSON.stringify(ordoMedicsALD[index]['ligneData']));
   } else {
-    medicData = ordoMedicsG[index]['medics'][indexMedic];
-    ligneData = ordoMedicsG[index]['ligneData'];
+    medicData = JSON.parse(JSON.stringify(ordoMedicsG[index]['medics'][indexMedic]));
+    ligneData = JSON.parse(JSON.stringify(ordoMedicsG[index]['ligneData']));
   }
 
   // ménage préalable au cas ou et changements esthétiques

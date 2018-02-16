@@ -6,6 +6,10 @@
 	font-weight: bold;
 }
 
+.nongras {
+	font-weight: normal;
+}
+
 .underlined {
 	text-decoration: underline;
 }

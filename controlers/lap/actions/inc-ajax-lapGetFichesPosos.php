@@ -27,5 +27,5 @@
  */
 $debug='';
 $template="inc-lapModalRechercherGetFichesPosos";
-$lap=new msLAP;
+$lap=new msLap;
 $p['page']['fiches']=$lap->getFichePosologies($_POST['codesFiches']);

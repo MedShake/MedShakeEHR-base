@@ -1,0 +1,55 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : historique des ordonnances
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<table class="table table-hover">
+  <thead>
+    <th></th>
+    <th>Date</th>
+    <th>Prescripteur</th>
+    <th>Titre de l'ordonnance</th>
+  </thead>
+  <tbody>
+    {% for annee, v in page.ordos %}
+      <tr>
+        <td colspan="4" class="bg-primary gras">{{ annee }}</td>
+      </tr>
+      {% for ordo in v %}
+        <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
+          <td>
+            <button class="btn btn-default btn-xs" title="Voir">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+          </td>
+          <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
+          <td>{{ ordo.prenom }}
+            {{ ordo.nom }}</td>
+          <td>{{ ordo.titre }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>

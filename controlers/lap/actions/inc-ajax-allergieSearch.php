@@ -27,6 +27,6 @@
  */
 
 $template="inc-allergieSearchTableResults";
-$lap=new msLAP;
+$lap=new msLap;
 $p['page']['allergieCode']=$lap->getAllergieFromKeywords(str_replace(' ', '%',$_POST['term']));
 $p['page']['parentID']=$_POST['parentid'];

@@ -27,5 +27,5 @@
  */
 $debug='';
 $template="inc-lapModalRechercherGetPosologies";
-$lap=new msLAP;
+$lap=new msLap;
 $p['page']['posos']=$lap->getIndicationsPosologies($_POST['codeSpe'], '');

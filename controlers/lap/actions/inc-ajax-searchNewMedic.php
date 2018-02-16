@@ -29,7 +29,7 @@ $debug='';
 $template='inc-lapSearchMedicTableResults';
 
 
-$lap=new msLAP;
+$lap=new msLap;
 
 if($_POST['typeRecherche'] == 'dci' ) {
   $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '1');

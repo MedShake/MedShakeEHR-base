@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > lap : onglet de recherche
+ # Template > lap : modal de recherche et prescription
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #
@@ -94,6 +94,7 @@
           {# Onglet Prescrire #}
           <div role="tabpanel" class="tab-pane" id="prescriremedic">
             <form>
+              <div id="prescriptionAlertMultimedic" class="alert alert-info" role="alert" style="display: none;">Quand plusieurs médicaments sont dans la même ligne de prescription, c'est le 1er qui gouverne durée et voie d'administration</div>
               <div class="row">
                 <div class="col-md-9">
                   <div class="form-group">
@@ -108,54 +109,87 @@
                     <select id="voieUtilisee" class="form-control input-sm"></select>
                   </div>
                   <div class="form-group">
-                    <button type="button" class="btn btn-info btn-xs voirPosologies"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Indications & posologies</button>
+                    <button type="button" class="btn btn-info btn-xs voirPosologies">
+                      <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                      Indications & posologies</button>
                   </div>
                 </div>
               </div>
+              <div class="row bottom-space">
 
-              <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
-
-              <div class="jumbotron" id="prescriptionHuman">
-                <div id="prescriptionHumanMedicName" class="gras"></div>
-                <div id="prescriptionHumanRecap"></div>
-                <div id="prescriptionHumanPoso"></div>
+                <div class="form-group col-md-3 prescriptionChampsDuree">
+                  <label class="control-label" for="beginPeriodeID">Première prise
+                  </label>
+                  <div id="beginPeriodeIDB" class="input-group date datepick">
+                    <input type="text" id="beginPeriodeID" name="beginPeriode" class="form-control input-sm" autocomplete="off"/>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-3 prescriptionChampsDuree prescriptionChampsEnd">
+                  <label class="control-label" for="beginPeriodeID">Dernière prise
+                  </label>
+                  <div id="endPeriodeIDB" class="input-group date datepick">
+                    <input disabled="disabled" readonly="readonly" type="text" id="endPeriodeID" name="endPeriode" class="form-control input-sm" autocomplete="off"/>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="control-label" for="prescripteurInitialTT">Prescripteur
+                  </label>
+                  <input type="text" id="prescripteurInitialTT" class="form-control input-sm" autocomplete="off"/>
+                </span>
               </div>
-              <div class="form-inline" style="margin-bottom : 10px;">
-                <div class="checkbox-inline">
-                  <label>
-                    <input id="prescriptionAldCheckbox" value="ald" type="checkbox" name="ald" value="">
-                    ALD
-                  </label>
-                </div>
-                <div class="checkbox-inline">
-                  <label>
-                    <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
-                    TT chronique
-                  </label>
-                </div>
-                <div class="checkbox-inline">
-                  <label>
-                    <input id="prescriptionNpsCheckbox" type="checkbox" name="chro" value="">
-                    Non substituable
-                  </label>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" id="prescriptionNpsMotif" placeholder="motif pour non substituable" style="display: none;">
-                </div>
+
+            </div>
+
+            <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
+
+            <div class="jumbotron" id="prescriptionHuman">
+              <div id="prescriptionHumanMedicName" class="gras"></div>
+              <div id="prescriptionHumanRecap"></div>
+              <div id="prescriptionHumanPoso"></div>
+            </div>
+            <div class="form-inline" style="margin-bottom : 10px;">
+              <div class="checkbox-inline">
+                <label>
+                  <input id="prescriptionAldCheckbox" value="" type="checkbox" name="ald">
+                  ALD
+                </label>
+              </div>
+              <div class="checkbox-inline">
+                <label>
+                  <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
+                  TT chronique
+                </label>
+              </div>
+              <div class="checkbox-inline">
+                <label>
+                  <input id="prescriptionNpsCheckbox" type="checkbox" name="chro" value="">
+                  Non substituable
+                </label>
               </div>
               <div class="form-group">
-                <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
+                <input type="text" class="form-control" id="prescriptionNpsMotif" placeholder="motif pour non substituable" style="display: none;">
               </div>
-              <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
-              <button type="button" class="btn btn-primary sendModifToOrdonnance">Modifier la prescription</button>
-              <button type="button" class="btn btn-primary addToLigneOnOrdonnance">Ajouter à la ligne de prescription</button>
-            </form>
-          </div>
-
-          {# Posologies #}
-          <div role="tabpanel" class="tab-pane" id="posologiesmedic">
-
-          </div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
+            <button type="button" class="btn btn-primary sendModifToOrdonnance">Modifier la prescription</button>
+            <button type="button" class="btn btn-primary addToLigneOnOrdonnance">Ajouter à la ligne de prescription</button>
+            <button type="button" class="btn btn-primary addToTTenCours">Ajouter au traitement en cours</button>
+          </form>
         </div>
+
+        {# Posologies #}
+        <div role="tabpanel" class="tab-pane" id="posologiesmedic"></div>
       </div>
     </div>
+  </div>
+</div>
+</div>

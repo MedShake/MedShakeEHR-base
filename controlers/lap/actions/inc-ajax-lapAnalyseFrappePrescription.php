@@ -38,7 +38,7 @@ if (count($_POST['ligneData']['medics']) == 1) {
     $lappres->setUniteUtilisee($_POST['ligneData']['medics'][0]['uniteUtilisee']);
     $lappres->setUniteUtiliseeOrigine($_POST['ligneData']['medics'][0]['uniteUtiliseeOrigine']);
     $lappres->setUnitesConversion($_POST['ligneData']['medics'][0]['unitesConversion']);
-    $lappres->setVoieUtilisee($_POST['ligneData']['medics'][0]['voieUtilisee']);
+    $lappres->setVoieUtilisee($_POST['ligneData']['ligneData']['voieUtilisee']);
     $lappres->setDivisibleEn($_POST['ligneData']['medics'][0]['divisibleEn']);
     $lappres->setMedicVirtuel($_POST['ligneData']['medics'][0]['medicVirtuel']);
     $lappres->setPrescriptibleEnDC($_POST['ligneData']['medics'][0]['prescriptibleEnDC']);

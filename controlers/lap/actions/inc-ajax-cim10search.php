@@ -28,7 +28,7 @@
 
 $template='inc-cim10searchTableResults';
 
-$lap=new msLAP;
+$lap=new msLap;
 $rd=[];
 $data=$lap->getCIM10fromKeywords(str_replace(' ', '%',$_POST['term']));
 if (is_array($data)) {

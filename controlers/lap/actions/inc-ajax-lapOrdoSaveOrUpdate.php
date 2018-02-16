@@ -21,27 +21,39 @@
  */
 
 /**
- * Login : page de login
+ * LAP : ajax > sauver une ordonnance
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $template="lap";
+$ordo = new msObjet();
+$ordo->setFromID($p['user']['id']);
+$ordo->setToID($_POST['patientID']);
 
- if($p['config']['LapOnOff'] != 'on') die("Le LAP n'est pas activé");
+//print_r($_POST);
 
- $p['page']['patient']['id']=$match['params']['patient'];
- $patient=new msPeople();
- $patient->setToID($match['params']['patient']);
+//die;
 
- $lapPatient=new msLapPatient;
- $lapPatient->setToID($match['params']['patient']);
- $p['page']['patientAdminData']=$lapPatient->getPatientAdminData();
- $p['page']['patientBasicPhysio']=$lapPatient->getPatientBasicPhysioDataControle();
- $p['page']['patientAllergies']=$patient->getAllergies('allergies');
- $p['page']['patientALD']=$patient->getALD();
- $listeChampsAtcd=array('atcdObs','atcdPersoGyneco','atcdMedicChir');
- foreach($listeChampsAtcd as $v) {
-   $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
- }
+
+// Créer porteur ordonnance
+$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', '');
+// enregistrer nom de l'ordo.
+$ordo->setTitleObjet($ordoID, $_POST['ordoName']);
+
+$lap = new msLapOrdo();
+$lap->setToID($_POST['patientID']);
+$lap->setOrdonnanceID($ordoID);
+
+// Création des lignes ALD
+if(!empty($_POST['ordo']['ordoMedicsALD'])) {
+  foreach($_POST['ordo']['ordoMedicsALD'] as $ligneALD) {
+    $lap->saveLignePrescription($ligneALD);
+  }
+}
+
+// Création des lignes générales
+if(!empty($_POST['ordo']['ordoMedicsG'])) {
+  foreach($_POST['ordo']['ordoMedicsG'] as $ligneG) {
+    $lap->saveLignePrescription($ligneG);
+  }
+}

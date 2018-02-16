@@ -21,27 +21,10 @@
  */
 
 /**
- * Login : page de login
+ * LAP : ajax > sauver l'ajout d'un traitement en cours ou faire un update
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-
- $debug='';
- $template="lap";
-
- if($p['config']['LapOnOff'] != 'on') die("Le LAP n'est pas activé");
-
- $p['page']['patient']['id']=$match['params']['patient'];
- $patient=new msPeople();
- $patient->setToID($match['params']['patient']);
-
- $lapPatient=new msLapPatient;
- $lapPatient->setToID($match['params']['patient']);
- $p['page']['patientAdminData']=$lapPatient->getPatientAdminData();
- $p['page']['patientBasicPhysio']=$lapPatient->getPatientBasicPhysioDataControle();
- $p['page']['patientAllergies']=$patient->getAllergies('allergies');
- $p['page']['patientALD']=$patient->getALD();
- $listeChampsAtcd=array('atcdObs','atcdPersoGyneco','atcdMedicChir');
- foreach($listeChampsAtcd as $v) {
-   $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
- }
+ $lap = new msLapOrdo();
+ $lap->setToID($_POST['patientID']);
+ $lap->saveLignePrescription($_POST['ligne']);
