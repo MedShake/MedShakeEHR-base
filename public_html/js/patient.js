@@ -381,12 +381,10 @@ $(document).ready(function() {
       url: $(this).parents("form").attr("action"),
       type: 'post',
       data: $(this).parents("form").serialize(),
-      dataType: "json",
+      dataType: "html",
       success: function(data) {
-        if (data=='ok') {
-          getHistorique();
-          getHistoriqueToday();
-        }
+        $("#historique .trLigneExamen").before(data);
+        $("#historiqueToday tbody").prepend(data);
       },
       error: function() {
         $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
@@ -957,36 +955,4 @@ function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
     ctx.fill();
   }
 
-}
-
-function getHistorique() {
-  $.ajax({
-    url: urlBase + '/patient/ajax/getHistorique/',
-    type: 'post',
-    data: {
-      patientID: $('#identitePatient').attr("data-patientID"),
-    },
-    dataType: "html",
-    success: function(data) {
-      $("#historique").html(data);
-    },
-    error: function() {
-    }
-  });
-}
-
-function getHistoriqueToday() {
-  $.ajax({
-    url: urlBase + '/patient/ajax/getHistoriqueToday/',
-    type: 'post',
-    data: {
-      patientID: $('#identitePatient').attr("data-patientID"),
-    },
-    dataType: "html",
-    success: function(data) {
-      $("#historiqueToday").html(data);
-    },
-    error: function() {
-    }
-  });
 }

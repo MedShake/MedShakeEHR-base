@@ -76,8 +76,14 @@ if (count($_POST)>2) {
 
     $pdf->makePDF();
     $pdf->savePDF();
-    header('Content-Type: application/json');
-    echo json_encode("ok");
+
+    $debug='';
+    //template
+    $template="pht-ligne-ordo";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
+
 } else {
     echo 'Ordonnance vide !';
 }

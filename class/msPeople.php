@@ -345,7 +345,7 @@ class msPeople
  * Historique des actes du jour pour un individu
  * @return array Array multi.
  */
-    public function getToday()
+    public function getToday($limit='')
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
@@ -375,7 +375,7 @@ class msPeople
           or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
         and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE()
         group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
-        order by p.creationDate desc");
+        order by p.creationDate desc ".$limit);
     }
 
 /**

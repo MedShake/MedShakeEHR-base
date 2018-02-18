@@ -82,6 +82,10 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     
-    header('Content-Type: application/json');
-    echo json_encode("ok");
+    $debug='';
+    //template
+    $template="pht-ligne-typecs";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
 }

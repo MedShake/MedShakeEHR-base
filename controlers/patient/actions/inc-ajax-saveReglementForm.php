@@ -68,8 +68,13 @@ if (count($_POST['acteID'])>0) {
     $codes = implode(' + ', array_keys($codes));
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    header('Content-Type: application/json');
-    echo json_encode("ok");
+    $debug='';
+    //template
+    $template="pht-ligne-reglement";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
+
 } else {
     echo 'Formulaire vide !';
 }

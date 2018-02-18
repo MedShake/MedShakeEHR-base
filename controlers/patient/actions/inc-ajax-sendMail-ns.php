@@ -100,6 +100,10 @@ if (!$mail->send()) {
         $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
     }
 
-    header('Content-Type: application/json');
-    echo json_encode("ok");
+    $debug='';
+    //template
+    $template="pht-ligne-mail";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
 }
