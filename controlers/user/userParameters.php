@@ -41,7 +41,8 @@ $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary i
 
 $p['page']['hasAgenda']=false;
 $people= new msPeople();
-if (!array_key_exists($p['user']['id'], $people->getUsersListForService('administratifPeutAvoirAgenda'))) {
+$usersWithAgenda=$people->getUsersListForService('administratifPeutAvoirAgenda');
+if (!is_array($usersWithAgenda) or !array_key_exists($p['user']['id'], $usersWithAgenda)) {
     return;
 }
 $p['page']['hasAgenda']=true;
