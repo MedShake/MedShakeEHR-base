@@ -32,6 +32,8 @@ $booleans=array(
           'twigEnvironnementCache'
           );
 
+unset($p['configDefaut']['homeDirectory']);
+
 foreach ($p['configDefaut'] as $param=>$v) {
     if (array_key_exists($param, $_POST)) {
       if (in_array($param, $booleans)) {
@@ -46,4 +48,4 @@ foreach ($p['configDefaut'] as $param=>$v) {
 }
 file_put_contents($p['config']['homeDirectory'].'config/config.yml', Spyc::YAMLDump($p['configDefaut'], false, 0, true));
 
-msTools::redirRoute('configDefaultParams');
+echo json_encode(array('ok'));

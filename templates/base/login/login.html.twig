@@ -34,6 +34,18 @@
   <style>
     .form-signer {text-align:center;-webkit-box-align:center;-ms-flex-align:center;-ms-flex-pack:center;align-items:center;-webkit-box-pack:center;justify-content:center;}
     .form-signin {width:100%;max-width:330px;margin:0 auto;}
+    .form-img {animation:shake 2s normal 1s infinite; margin-top:100px;}
+    @keyframes shake {
+      from {margin-left:0}
+      1% {margin-left:-2px}
+      3% {margin-left:4px}
+      5% {margin-left:-6px}
+      7% {margin-left:6px}
+      9% {margin-left:-4px}
+      11% {margin-left:2px}
+      12% {margin-left:0}
+      to {margin-left:0}
+    }
   </style>
 {% endblock %}
 
@@ -43,7 +55,7 @@
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
   <div class="form-signer">
-    <img style="margin-top:100px" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo.svg" width=128 height=128/>
+    <img class="form-img" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo.svg" width=128 height=128/>
     {# form display #}
     <div class="row">
       <h3>Identifiez vous</h3>

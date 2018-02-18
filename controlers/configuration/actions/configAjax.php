@@ -41,6 +41,7 @@ $acceptedModes=array(
     'configChangePassword', // Change le mot de passe d'un utilisateur
     'configGiveAdmin', // Toggle droit d'admin
     'configRevokeUser', // Supprimer un utilisateur
+    'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
     'configPrescriptionCreate', //Création d'une prescription type
     'configPrescriptionsCatCreate', //Création d'une cat de prescription type
     'configActesCreate', //Création d'un acte
@@ -84,6 +85,11 @@ elseif ($m=='configGiveAdmin') {
 // Révoquer un utilisateur
 elseif ($m=='configRevokeUser') {
     include('inc-ajax-configRevokeUser.php');
+}
+
+// Enregistrer la config par défaut des utilisateurs
+elseif ($m=='configDefaultUsersParams') {
+    include('inc-ajax-configDefaultUsersParams.php');
 }
 
 // Création d'une cat pour données

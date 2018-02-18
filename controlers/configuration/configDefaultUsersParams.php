@@ -32,24 +32,124 @@ if (!msUser::checkUserIsAdmin()) {
 } else {
     $debug='';
     $template='configDefaultUsersParams';
+    $p['page']['params']=array(
+      'MedShakeEHR'=>array(
+        'Serveur'=>array(
+          'protocol'=>$p['configDefaut']['protocol'],
+          'host'=>$p['configDefaut']['host'],
+          'urlHostSuffixe'=>$p['configDefaut']['urlHostSuffixe'],
+          'webDirectory'=>$p['configDefaut']['webDirectory'],
+          'stockageLocation'=>$p['configDefaut']['stockageLocation'],
+          'backupLocation'=>$p['configDefaut']['backupLocation'],
+          'workingDirectory'=>$p['configDefaut']['workingDirectory'],
+          'cookieDomain'=>$p['configDefaut']['cookieDomain'],
+          'cookieDuration'=>$p['configDefaut']['cookieDuration'],
+          'fingerprint'=>$p['configDefaut']['fingerprint'],
+        ),
+        'Serveur MySQL'=>array( 
+          'sqlServeur'=>$p['configDefaut']['sqlServeur'],
+          'sqlBase'=>$p['configDefaut']['sqlBase'],
+          'sqlUser'=>$p['configDefaut']['sqlUser'],
+          'sqlPass'=>$p['configDefaut']['sqlPass'],
+          'sqlVarPassword'=>$p['configDefaut']['sqlVarPassword'],
+        ),
+        'Options'=>array(
+          'PraticienPeutEtrePatient'=>$p['configDefaut']['PraticienPeutEtrePatient']?'true':'false',
+          'administratifSecteurHonoraires'=>$p['configDefaut']['administratifSecteurHonoraires'],
+          'administratifPeutAvoirFacturesTypes'=>$p['configDefaut']['administratifPeutAvoirFacturesTypes'],
+          'administratifPeutAvoirPrescriptionsTypes'=>$p['configDefaut']['administratifPeutAvoirPrescriptionsTypes'],
+          'administratifPeutAvoirAgenda'=>$p['configDefaut']['administratifPeutAvoirAgenda'],
+          'administratifPeutAvoirRecettes'=>$p['configDefaut']['administratifPeutAvoirRecettes'],
+          'administratifComptaPeutVoirRecettesDe'=>$p['configDefaut']['administratifComptaPeutVoirRecettesDe'],
+        ),
+        'Modèles de documents'=>array(
+          'templatesPdfFolder'=>$p['configDefaut']['templatesPdfFolder'],
+          'templateDefautPage'=>$p['configDefaut']['templateDefautPage'],
+          'templateOrdoHeadAndFoot'=>$p['configDefaut']['templateOrdoHeadAndFoot'],
+          'templateOrdoBody'=>$p['configDefaut']['templateOrdoBody'],
+          'templateOrdoALD'=>$p['configDefaut']['templateOrdoALD'],
+          'templateCrHeadAndFoot'=>$p['configDefaut']['templateCrHeadAndFoot'],
+          'templateCourrierHeadAndFoot'=>$p['configDefaut']['templateCourrierHeadAndFoot'],
+         ),
+         'Phonecapture'=>array(
+          'phonecaptureFingerprint'=>$p['configDefaut']['phonecaptureFingerprint'],
+          'phonecaptureCookieDuration'=>$p['configDefaut']['phonecaptureCookieDuration'],
+          'phonecaptureResolutionWidth'=>$p['configDefaut']['phonecaptureResolutionWidth'],
+          'phonecaptureResolutionHeight'=>$p['configDefaut']['phonecaptureResolutionHeight'],
+        ),
+        'Service d\'affichage'=>array(
+          'templatesFolder'=>$p['configDefaut']['templatesFolder'],
+          'twigEnvironnementCache'=>$p['configDefaut']['twigEnvironnementCache']?:'false',
+          'twigEnvironnementAutoescape'=>$p['configDefaut']['twigEnvironnementAutoescape']?:'false',
+        ),
+      ),
+      'Services tiers'=>array(
+        'Mail'=>array(
+          'smtpTracking'=>$p['configDefaut']['smtpTracking'],
+          'smtpFrom'=>$p['configDefaut']['smtpFrom'],
+          'smtpFromName'=>$p['configDefaut']['smtpFromName'],
+          'smtpHost'=>$p['configDefaut']['smtpHost'],
+          'smtpPort'=>$p['configDefaut']['smtpPort'],
+          'smtpSecureType'=>$p['configDefaut']['smtpSecureType'],
+          'smtpOptions'=>$p['configDefaut']['smtpOptions'],
+          'smtpUsername'=>$p['configDefaut']['smtpUsername'],
+          'smtpPassword'=>$p['configDefaut']['smtpPassword'],
+          'smtpDefautSujet'=>$p['configDefaut']['smtpDefautSujet'],
+          ),
+        'ApiCrypt'=>array(
+          'apicryptCheminInbox'=>$p['configDefaut']['apicryptCheminInbox'],
+          'apicryptCheminArchivesInbox'=>$p['configDefaut']['apicryptCheminArchivesInbox'],
+          'apicryptInboxMailForUserID'=>$p['configDefaut']['apicryptInboxMailForUserID'],
+          'apicryptCheminFichierNC'=>$p['configDefaut']['apicryptCheminFichierNC'],
+          'apicryptCheminFichierC'=>$p['configDefaut']['apicryptCheminFichierC'],
+          'apicryptCheminVersClefs'=>$p['configDefaut']['apicryptCheminVersClefs'],
+          'apicryptCheminVersBinaires'=>$p['configDefaut']['apicryptCheminVersBinaires'],
+          'apicryptUtilisateur'=>$p['configDefaut']['apicryptUtilisateur'],
+          'apicryptAdresse'=>$p['configDefaut']['apicryptAdresse'],
+          'apicryptSmtpHost'=>$p['configDefaut']['apicryptSmtpHost'],
+          'apicryptSmtpPort'=>$p['configDefaut']['apicryptSmtpPort'],
+          'apicryptPopHost'=>$p['configDefaut']['apicryptPopHost'],
+          'apicryptPopPort'=>$p['configDefaut']['apicryptPopPort'],
+          'apicryptPopUser'=>$p['configDefaut']['apicryptPopUser'],
+          'apicryptPopPass'=>$p['configDefaut']['apicryptPopPass'],
+          'apicryptDefautSujet'=>$p['configDefaut']['apicryptDefautSujet'],
+        ),
+        'Fax'=>array(
+          'faxService'=>$p['configDefaut']['faxService'],
+          'ecofaxMyNumber'=>$p['configDefaut']['ecofaxMyNumber'],
+          'ecofaxPass'=>$p['configDefaut']['ecofaxPass'],
+        ),
+        'DICOM'=>array(
+          'dicomHost'=>$p['configDefaut']['dicomHost'],
+          'dicomPrefixIdPatient'=>$p['configDefaut']['dicomPrefixIdPatient'],
+          'dicomWorkListDirectory'=>$p['configDefaut']['dicomWorkListDirectory'],
+          'dicomWorkingDirectory'=>$p['configDefaut']['dicomWorkingDirectory'],
+          'dicomAutoSendPatient2Echo'=>$p['configDefaut']['dicomAutoSendPatient2Echo'],
+          'dicomDiscoverNewTags'=>$p['configDefaut']['dicomDiscoverNewTags'],
+        ),
+        'Agenda'=>array(
+          'agendaService'=>$p['configDefaut']['agendaService'],
+          'agendaDistantLink'=>$p['configDefaut']['agendaDistantLink'],
+          'agendaDistantPatientsOfTheDay'=>$p['configDefaut']['agendaDistantPatientsOfTheDay'],
+          'agendaLocalPatientsOfTheDay'=>$p['configDefaut']['agendaLocalPatientsOfTheDay'],
+          'agendaNumberForPatientsOfTheDay'=>$p['configDefaut']['agendaNumberForPatientsOfTheDay'],
+        ),
+        'Rappels mail'=>array(
+          'mailRappelLogCampaignDirectory'=>$p['configDefaut']['mailRappelLogCampaignDirectory'],
+          'mailRappelDaysBeforeRDV'=>$p['configDefaut']['mailRappelDaysBeforeRDV'],
+        ),
+        'SMS'=>array(
+          'smsProvider'=>$p['configDefaut']['smsProvider'],
+          'smsLogCampaignDirectory'=>$p['configDefaut']['smsLogCampaignDirectory'],
+          'smsDaysBeforeRDV'=>$p['configDefaut']['smsDaysBeforeRDV'],
+          'smsCreditsFile'=>$p['configDefaut']['smsCreditsFile'],
+          'smsSeuilCreditsAlerte'=>$p['configDefaut']['smsSeuilCreditsAlerte'],
+          'smsTpoa'=>$p['configDefaut']['smsTpoa'],
+        )
+      )
+    );
 
-    $titres=array(
-      'protocol'=>'Service Web',
-      'sqlServeur'=>'Service MySQL',
-      'PraticienPeutEtrePatient'=>"Permettre aux praticiens d'être patients",
-      'administratifSecteurHonoraires'=>'administratif',
-      'templatesPdfFolder'=>"Modèles de documents",
-      'smtpTracking'=>'Serveur SMTP (Mail)',
-      'apicryptCheminInbox'=>'Apicrypt',
-      'faxService'=>'Fax en ligne',
-      'dicomHost'=>'Dicom',
-      'phonecaptureFingerprint'=>'PhoneCapture',
-      'agendaService'=>'Agenda',
-      'mailRappelLogCampaignDirectory'=>'Rappels RDV par mail',
-      'smsProvider'=>'Rappels SMS (cf /servicesTiers/sms/ )',
-      'templatesFolder'=>"Gestionnaire d'affichage"
-      );
-    $commentaires=array(
+    $p['page']['commentaires']=array(
       'PraticienPeutEtrePatient'=>'si false, il faudra créer une fiche patient pour le praticien',
       'templatesPdfFolder'=>'dossier par défaut',
       'templateDefautPage'=>'modèle par defaut',
@@ -61,16 +161,4 @@ if (!msUser::checkUserIsAdmin()) {
       'agendaDistantLink'=>'si agendaService est actif, alors agendaDistantLink doit être vide',
       'twigEnvironnementCache'=>"false ou chemin (ex: /tmp/templates_cache/)"
     );
-    unset($p['configDefaut']['homeDirectory']);
-    foreach($p['configDefaut'] as $k=>$v) {
-        if (array_key_exists($k, $titres)) {
-            $p['page']['params'][]=array('type'=>'titre', 'value'=>$titres[$k]);
-        }
-        if ($v === true) {
-            $v='true';
-        } elseif ($v===false) {
-            $v='false';
-        }
-        $p['page']['params'][]=array('type'=>'param', 'name'=>$k, 'value'=>$v, 'commentaire'=>array_key_exists($k, $commentaires)?$commentaires[$k]:'');
-    }
 }

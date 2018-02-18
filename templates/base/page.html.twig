@@ -46,6 +46,11 @@
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
+        <style>
+          .submit-success {position:fixed;background-color:#8dfc9e; padding:2px;text-align:center;width:100%;top:0;z-index:1}
+          .submit-error {position:fixed;background-color:#ff6d6d; padding:2px;text-align:center;width:100%;top:0;z-index:1}
+        </style>
+
         {# js #}
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -66,7 +71,14 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="submit-success">
+          <span class="glyphicon glyphicon-info-sign"></span> Données enregistrées avec succès
+        </div>
+        <div class="submit-error">
+          <span class="glyphicon glyphicon-warning-sign"></span> Une erreur s'est produite lors de l'enregistrement des données
+        </div>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" style="z-index:100">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
