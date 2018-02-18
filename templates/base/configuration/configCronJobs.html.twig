@@ -53,7 +53,7 @@
 
   <h1>Liste des tâches planifiées</h1>
 
-  <form id="formCrons" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configCronJobs/" method="post">
+  <form id="formCrons" class="ajaxForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configCronJobs/" method="post">
     <table class="table table-hover table-striped">
       <thead>
         <tr>

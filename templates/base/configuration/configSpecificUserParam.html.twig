@@ -61,7 +61,7 @@
     {{ page.userData.1 }}
   {% endif %}</h1>
 
-  <form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configSpecificUserParam/">
+  <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
 
 
 {% for k,v in page.userParams %}
