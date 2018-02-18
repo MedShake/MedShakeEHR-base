@@ -212,7 +212,7 @@ $(document).ready(function() {
 
   //sélectionner un groupe dans l'historique
 
-  $("#historiqueTypeSelect button").on("click", function(e) {
+  $("body").on("click", "#historiqueTypeSelect button", function(e) {
     e.preventDefault();
     groupe = $(this).attr('data-groupe');
     //boutons
@@ -323,7 +323,7 @@ $(document).ready(function() {
 
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $(' .trLigneExamen td:nth-child(3), a.showDetDoc').on('click', function(e) {
+  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
     showObjetDet($(this));
     e.preventDefault();
   });
@@ -367,6 +367,33 @@ $(document).ready(function() {
     e.preventDefault();
     $('#formNewCreationDate').submit();
   });
+
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Envoyer les formulaires et recharger l'historique
+
+  //enregistrement de forms en ajax
+  $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
+    e.preventDefault();
+    $(window).unbind("beforeunload");
+    $(this).closest(".toclear").html("");
+    $.ajax({
+      url: $(this).parents("form").attr("action"),
+      type: 'post',
+      data: $(this).parents("form").serialize(),
+      dataType: "json",
+      success: function(data) {
+        if (data=='ok') {
+          getHistorique();
+          getHistoriqueToday();
+        }
+      },
+      error: function() {
+        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      }
+    });
+  });
+
 
 });
 
@@ -930,4 +957,36 @@ function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
     ctx.fill();
   }
 
+}
+
+function getHistorique() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/getHistorique/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#historique").html(data);
+    },
+    error: function() {
+    }
+  });
+}
+
+function getHistoriqueToday() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/getHistoriqueToday/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#historiqueToday").html(data);
+    },
+    error: function() {
+    }
+  });
 }

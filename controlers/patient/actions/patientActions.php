@@ -31,11 +31,7 @@
 $m=$match['params']['m'];
 
 $acceptedModes=array(
-    'saveCsForm', // sauver le formulaire de consultation
-    'sendMail', // envoyer un mail
-    'saveOrdoForm', // sauver une ordonnance
-    'saveReglementForm', // sauver une ordonnance
-    'changeObjetCreationDate' // changer le creationDate d'un objet
+    'saveOrdoForm' // sauver une ordonnance
 );
 
 if (!in_array($m, $acceptedModes)) {

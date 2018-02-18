@@ -48,7 +48,14 @@ $acceptedModes=array(
     'listPatientDicomStudies', // lister les studies dicom du patient
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm', // Extraire l'éditeur de courrier
-    'refreshHeaderPatientAdminData' // Mettre à jour les données administratives patient en tête de dossier
+    'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
+    'saveCsForm', // sauver le formulaire de consultation
+    'sendMail', // envoyer un mail
+    'saveOrdoForm', // sauver une ordonnance
+    'saveReglementForm', // sauver une ordonnance
+    'changeObjetCreationDate', // changer le creationDate d'un objet
+    'getHistorique', // Obtenir l'historique complet
+    'getHistoriqueToday'// Obtenir l'historique du jour
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -144,4 +151,39 @@ elseif ($m=='extractCourrierForm') {
 // Mettre à jour les données administratives patient en tête de dossier
 elseif ($m=='refreshHeaderPatientAdminData') {
     include('inc-ajax-refreshHeaderPatientAdminData.php');
+}
+
+// sauver le formulaire de consultation
+elseif ($m=='saveCsForm') {
+    include('inc-ajax-saveCsForm.php');
+}
+
+// envoyer un mail
+elseif ($m=='sendMail') {
+    include('inc-ajax-sendMail.php');
+}
+
+// sauver une ordonnance
+elseif ($m=='saveOrdoForm') {
+    include('inc-ajax-saveOrdoForm.php');
+}
+
+// sauver un règlement
+elseif ($m=='saveReglementForm') {
+    include('inc-ajax-saveReglementForm.php');
+}
+
+ // changer le creationDate d'un objet
+elseif ($m=='changeObjetCreationDate') {
+    include('inc-ajax-changeObjetCreationDate.php');
+}
+
+// Obtenir l'historique
+elseif ($m=='getHistorique') {
+    include('inc-ajax-getHistorique.php');
+}
+
+// Obtenir l'historique du jour
+elseif ($m=='getHistoriqueToday') {
+    include('inc-ajax-getHistoriqueToday.php');
 }

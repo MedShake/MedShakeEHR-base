@@ -55,4 +55,4 @@ file_put_contents($file, implode("\n", $newCronFileLines)."\n");
 exec('/usr/bin/crontab '.$file);
 unlink($file);
 
-msTools::redirection('/configuration/');
+echo json_encode("ok");

@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,28 +21,22 @@
  */
 
 /**
- * Config > action : éditer un formulaire
+ * Patient > ajax : extraire l'éditeur de courrier
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$form=new msForm();
-$form->setFormID($_POST['id']);
-$formdata=$form->getFormFromDb();
-$cleanForm=$form->cleanForm($_POST['yamlStructure'],$formdata['global']['dataset']);
 
-$data=array(
-    'id'=>$_POST['id'],
-    'module'=>$_POST['module'],
-    'internalName'=>$_POST['internalName'],
-    'name'=>$_POST['name'],
-    'description'=>$_POST['description'],
-    'cat'=>$_POST['cat'],
-    'yamlStructure'=>$cleanForm,
-    'formAction'=>$_POST['formAction'],
-    'printModel'=>$_POST['printModel']
-);
+$debug='';
 
-msSQL::sqlInsert('forms', $data);
+//template
+$template="patientHistoriqueMedical";
 
-echo json_encode("ok");
+//le patient
+$patient = new msPeople();
+$patient->setToID($_POST['patientID']);
+$p['page']['patient']['id']=$_POST['patientID'];
+
+//historique complet des consultation du patient
+$p['page']['patient']['historique']=$patient->getHistorique();
+

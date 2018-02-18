@@ -54,4 +54,4 @@ if (is_array($_POST)) {
         }
     }
 }
-msTools::redirection('/configuration/user-param/'.$userID.'/');
+echo json_encode("ok");
