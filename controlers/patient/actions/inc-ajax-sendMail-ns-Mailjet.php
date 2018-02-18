@@ -110,7 +110,8 @@ if (curl_errno($ch)) {
           $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
       }
 
-            msTools::redirection('/patient/'.$_POST['patientID'].'/');
+            header('Content-Type: application/json');
+            echo json_encode("ok");
         } else {
             echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
         }

@@ -68,7 +68,8 @@ if (count($_POST['acteID'])>0) {
     $codes = implode(' + ', array_keys($codes));
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+    header('Content-Type: application/json');
+    echo json_encode("ok");
 } else {
     echo 'Formulaire vide !';
 }

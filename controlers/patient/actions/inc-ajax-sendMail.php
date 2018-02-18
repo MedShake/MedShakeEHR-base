@@ -56,6 +56,8 @@
 // Inclusion après vérification
 if (is_file($fileToInclude)) {
     include($fileToInclude);
+    header('Content-Type: application/json');
+    echo json_encode("ok");
 } else {
     echo 'Pas d\'action correspondante';
 }

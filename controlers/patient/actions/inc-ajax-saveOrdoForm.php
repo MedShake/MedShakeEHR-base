@@ -67,8 +67,6 @@ if (count($_POST)>2) {
             }
         }
     }
-
-
     $pdf= new msPDF();
 
     $pdf->setFromID($p['user']['id']);
@@ -78,7 +76,8 @@ if (count($_POST)>2) {
 
     $pdf->makePDF();
     $pdf->savePDF();
-    $pdf->showPDF();
+    header('Content-Type: application/json');
+    echo json_encode("ok");
 } else {
     echo 'Ordonnance vide !';
 }

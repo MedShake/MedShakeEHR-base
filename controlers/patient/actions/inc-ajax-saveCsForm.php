@@ -81,5 +81,7 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formIN]);
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+    
+    header('Content-Type: application/json');
+    echo json_encode("ok");
 }

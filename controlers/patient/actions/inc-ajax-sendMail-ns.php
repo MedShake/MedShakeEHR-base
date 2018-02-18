@@ -100,5 +100,6 @@ if (!$mail->send()) {
         $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
     }
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+    header('Content-Type: application/json');
+    echo json_encode("ok");
 }
