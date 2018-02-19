@@ -50,7 +50,7 @@ if (!scriptsList) {
     reglement: "reglement.js"
   };
 }
- 
+
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau mail
-  $(".newMail").on("click", function(e) {
+  $('body').on("click", ".newMail", function(e) {
     e.preventDefault();
     if ($('#newMail').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de mail en cours ?')) {
@@ -254,7 +254,7 @@ $(document).ready(function() {
     $('#alternatTitreModal #titreActu').val(titreActu);
     $('#alternatTitreModal #objetID').val(objetID);
   })
-  $('.trLigneExamen td').on('dblclick', function() {
+  $('body').on('dblclick', '.trLigneExamen td', function() {
     $('#alternatTitreModal').modal('show');
     titreActu = $(this).closest('tr').attr('data-alternatTitre');
     objetID = $(this).closest('tr').attr('data-objetID');
@@ -277,7 +277,7 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  // gestion des historiques et courbes de poids/taille/imc 
+  // gestion des historiques et courbes de poids/taille/imc
 
   $(".graph-print").on("click", function(){
   });
