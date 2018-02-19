@@ -375,7 +375,7 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
-      retour += '<button class="btn btn-default btn-xs editLignePrescription" title="Renouveller">';
+      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
       retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';

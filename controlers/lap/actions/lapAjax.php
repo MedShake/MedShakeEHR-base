@@ -48,7 +48,8 @@ $acceptedModes=array(
     'lapTTenCoursGet', //obtenir le tt en cours
     'lapOrdoSaveOrUpdate', // sauver ordonnnace
     'lapOrdoHistoriqueGet', // historique des ordonnnaces
-    'lapOrdoGet', // obtenir l'ordonnnace 
+    'lapOrdoGet', // obtenir l'ordonnnace
+    'lapSaveDateEffectiveArretTT'
 );
 
 if (!in_array($m, $acceptedModes)) {

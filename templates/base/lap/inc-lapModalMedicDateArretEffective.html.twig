@@ -35,11 +35,11 @@
         <h4 class="modal-title gras">Specifier la date d'arrêt effective d'un traitement</h4>
       </div>
       <div class="modal-body">
-          <input name="objetID" type="hidden" value=""/>
-          <div class="form-group">
-            <label for="datepickHisto">Ce traitement a été stoppé le</label>
-            <div class="input-group date  col-md-6" id="datepickHisto">
-              <input name="newCreationDate" type="text" class="form-control"/>
+          <input name="ligneID" type="hidden" value=""/>
+          <div class="form-group form-horizontal">
+            <label class="col-md-6 control-label" for="">Ce traitement a été stoppé le</label>
+            <div class="input-group date col-md-4 datepick">
+              <input name="dateEffectiveDeFin" type="text" class="form-control"/>
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
@@ -49,7 +49,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
+        <button type="button" class="btn btn-primary marquerArretEffectifGo">Valider</button>
       </div>
     </div>
   </div>

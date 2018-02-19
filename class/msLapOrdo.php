@@ -162,7 +162,7 @@ class msLapOrdo extends msLap
           left join objets_data as chro on chro.instance=lp.id and chro.typeID='".$name2typeID['lapLignePrescriptionIsChronique']."'
           left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
           where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and chro.value='true'
-          and (STR_TO_DATE(dfe.value, '%d/%m/%Y') >= CURDATE() or dfe.value is null)
+          and (STR_TO_DATE(dfe.value, '%d/%m/%Y') > CURDATE() or dfe.value is null)
           ")) {
             foreach ($lignesPresTTchro as $l) {
                 $ligne['TTChroniques'][$l['id']]['ligneData']=json_decode($l['value'], true);
@@ -184,7 +184,7 @@ class msLapOrdo extends msLap
           where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and lp.id not in (".implode(',', array_column($lignesPresTTchro, 'id')).")
           and STR_TO_DATE(dd.value, '%d/%m/%Y') <= CURDATE()
           and STR_TO_DATE(df.value, '%d/%m/%Y') >= CURDATE()
-          and (STR_TO_DATE(dfe.value, '%d/%m/%Y') >= CURDATE() or dfe.value is null)
+          and (STR_TO_DATE(dfe.value, '%d/%m/%Y') > CURDATE() or dfe.value is null)
 
           ")) {
             foreach ($lignesPresTTponct as $l) {
