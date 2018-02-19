@@ -37,7 +37,9 @@ $(document).ready(function() {
     maxFiles: 1,
     onUploadSuccess: function(id, data) {
       $(".progress-bar").css('width', '0%');
-      location.reload();
+      $(this).closest(".toclear").html("");
+      getHistorique();
+      getHistoriqueToday();
     },
     onUploadProgress: function(id, percent) {
       $(".progress-bar").css('width', percent + '%');

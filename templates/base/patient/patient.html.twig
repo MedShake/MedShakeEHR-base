@@ -225,7 +225,7 @@
 
               {# historique du jour #}
               <div id="historiqueToday">
-                {% if page.patient.today %}{% include 'patientHistoriqueToday.html.twig' %}{% endif %}
+                {% include 'patientHistoriqueToday.html.twig' %}
               </div>
 
               {# Div d'insertion de nouveau reglement #}
@@ -248,7 +248,7 @@
 
               {# Historique complet #}
               <div id="historique">
-                {% if page.patient.historique %}{% include 'patientHistoriqueMedical.html.twig' %}{% endif %}
+                {% include 'patientHistoriqueMedical.html.twig' %}
               </div>
             </div>
           </div>

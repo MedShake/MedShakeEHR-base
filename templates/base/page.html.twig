@@ -47,8 +47,10 @@
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
         <style>
-          .submit-success {position:fixed;background-color:#8dfc9e; padding:2px;text-align:center;width:100%;top:0;z-index:1}
-          .submit-error {position:fixed;background-color:#ff6d6d; padding:2px;text-align:center;width:100%;top:0;z-index:1}
+          .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
+          .submit-success {background-color:#8dfc9e;top:0}
+          .submit-warning {background-color:#fcde8d;top:0}
+          .submit-error {background-color:#ff6d6d;top:0}
         </style>
 
         {# js #}
@@ -71,11 +73,14 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <div class="submit-success">
+        <div class="submit-type submit-success">
           <span class="glyphicon glyphicon-info-sign"></span> Données enregistrées avec succès
         </div>
-        <div class="submit-error">
-          <span class="glyphicon glyphicon-warning-sign"></span> Une erreur s'est produite lors de l'enregistrement des données
+        <div class="submit-type submit-warning">
+          <span class="glyphicon glyphicon-warning-sign"></span> <span id="warningmessage"></span>
+        </div>
+        <div class="submit-type submit-error">
+          <span class="glyphicon glyphicon-warning-sign"></span> <span id="errormessage">Une erreur s'est produite lors de l'enregistrement des données</span>
         </div>
 
         <nav class="navbar navbar-inverse navbar-fixed-top" style="z-index:100">

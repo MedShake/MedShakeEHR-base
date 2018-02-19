@@ -239,7 +239,7 @@ $(document).ready(function() {
   });
 
   //supprimer une ligne de l'historique
-  $("a.suppCs").on("click", function(e) {
+  $("body").on("click", "a.suppCs", function(e) {
     e.preventDefault();
     if (confirm('Confirmez-vous la demande de suppression ?')) {
       suppCs($(this));
@@ -365,7 +365,27 @@ $(document).ready(function() {
 
   $("body").on("click", ".modalCreationDateClose", function(e) {
     e.preventDefault();
-    $('#formNewCreationDate').submit();
+    $.ajax({
+      url: $("#formNewCreationDate").attr("action"),
+      type: 'post',
+      data: $("#formNewCreationDate").serialize(),
+      dataType: "html",
+      success: function(data) {
+        if (data.indexOf("Erreur:")==0) {
+            $("#errormessage").html(data);
+            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        } else if (data.indexOf("Avertissement:")==0) {
+            $("#warningmessage").html(data);
+            $(".submit-warning").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-warning").animate({top:"0"},300)}), 4000)});
+        } else {
+          getHistorique();
+          getHistoriqueToday();
+        }
+      },
+      error: function() {
+        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      }
+    });
   });
 
 
@@ -374,23 +394,39 @@ $(document).ready(function() {
 
   //enregistrement de forms en ajax
   $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
+    if ($(this).closest("form").attr("action").indexOf('/actions/')>=0) {
+      return;
+    };
     e.preventDefault();
     $(window).unbind("beforeunload");
     $(this).closest(".toclear").html("");
     $.ajax({
-      url: $(this).parents("form").attr("action"),
+      url: $(this).closest("form").attr("action"),
       type: 'post',
-      data: $(this).parents("form").serialize(),
+      data: $(this).closest("form").serialize(),
       dataType: "html",
       success: function(data) {
-        if ($("#historique .trLigneExamen").length)
-          $("#historique .trLigneExamen").before(data);
-        else
-          getHistorique();
-        if ($("#historiqueToday .trLigneExamen").length)
-          $("#historiqueToday .trLigneExamen").before(data);
-        else
-          getHistoriqueToday();
+        if (data.substr(0,7) == "Erreur:") {
+            $("#errormessage").html(data);
+            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        } else if (data.substr(0,14) == "Avertissement:") {
+            $("#warningmessage").html(data);
+            $(".submit-warning").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-warning").animate({top:"0"},300)}), 4000)});
+        } else {
+          var $tr = $("#historique .anneeHistorique");
+          if ($tr.length) {
+            if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
+              $($tr[0]).after(data);
+            else
+              ($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+          } else
+            getHistorique();
+          $tr = $("#historiqueToday .trLigneExamen");
+          if ($tr.length)
+            $($tr[0]).before(data);
+          else
+            getHistoriqueToday();
+        }
       },
       error: function() {
         $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
@@ -680,9 +716,11 @@ function suppCs(el) {
     data: {
       objetID: objetID
     },
-    dataType: "html",
+    dataType: "json",
     success: function() {
       $('.tr' + objetID).remove();
+      getHistorique();
+      getHistoriqueToday();
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -797,13 +835,13 @@ function drawGraph(data) {
   var ctx;
   var Xmax=parseInt(data.bornes.Xmax);
   if (Xmax<3*365.25) {
-    canvas = $(".graph-poids").get(0);
+    canvas = $(".graph-poids")[0];
     ctx = canvas.getContext("2d");
     drawGraphPoidsNourisson(data, ctx);
-    canvas = $(".graph-taille").get(0);
+    canvas = $(".graph-taille")[0];
     ctx = canvas.getContext("2d");
     drawGraphTailleNourisson(data, ctx);
-    canvas = $(".graph-imc").get(0);
+    canvas = $(".graph-imc")[0];
     ctx = canvas.getContext("2d");
     if ($('#identitePatient').attr("data-genre")=="F")
       drawGraphIMCFille(data, ctx);
@@ -811,35 +849,35 @@ function drawGraph(data) {
       drawGraphIMCGarcon(data, ctx);
   } else if (Xmax<18*365.25) {
     if ($('#identitePatient').attr("data-genre")=="F") {
-      canvas = $(".graph-poids").get(0);
+      canvas = $(".graph-poids")[0];
       ctx = canvas.getContext("2d");
       drawGraphPoidsFille(data, ctx);
-      canvas = $(".graph-taille").get(0);
+      canvas = $(".graph-taille")[0];
       ctx = canvas.getContext("2d");
       drawGraphTailleFille(data, ctx);
-      canvas = $(".graph-imc").get(0);
+      canvas = $(".graph-imc")[0];
       ctx = canvas.getContext("2d");
       drawGraphIMCFille(data, ctx);
     }
     else {
-      canvas = $(".graph-poids").get(0);
+      canvas = $(".graph-poids")[0];
       ctx = canvas.getContext("2d");
       drawGraphPoidsGarcon(data, ctx);
-      canvas = $(".graph-taille").get(0);
+      canvas = $(".graph-taille")[0];
       ctx = canvas.getContext("2d");
       drawGraphTailleGarcon(data, ctx);
-      canvas = $(".graph-imc").get(0);
+      canvas = $(".graph-imc")[0];
       ctx = canvas.getContext("2d");
       drawGraphIMCGarcon(data, ctx);
     }
   } else {
-    canvas = $(".graph-poids").get(0);
+    canvas = $(".graph-poids")[0];
     ctx = canvas.getContext("2d");
     drawGraphGeneral(data, 'poids', ctx, canvas);
-    canvas = $(".graph-taille").get(0);
+    canvas = $(".graph-taille")[0];
     ctx = canvas.getContext("2d");
     drawGraphGeneral(data, 'taille', ctx, canvas);
-    canvas = $(".graph-imc").get(0);
+    canvas = $(".graph-imc")[0];
     ctx = canvas.getContext("2d");
     drawGraphGeneral(data, 'imc', ctx, canvas);
   }

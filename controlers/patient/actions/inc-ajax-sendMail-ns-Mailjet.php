@@ -82,40 +82,34 @@ if (curl_errno($ch)) {
     if (isset($result['Sent'][0]['MessageID'])) {
         if (is_numeric($result['Sent'][0]['MessageID'])) {
 
-      //logs
-      $patient = new msObjet();
-            $patient->setFromID($p['user']['id']);
-            $patient->setToID($_POST['patientID']);
+            //logs
+            $patient = new msObjet();
+                  $patient->setFromID($p['user']['id']);
+                  $patient->setToID($_POST['patientID']);
 
-      //support (avec PJ ou sans)
-      if (isset($_POST['objetID'])) {
-          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
-      } else {
-          $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
-      }
+            //support (avec PJ ou sans)
+            if (isset($_POST['objetID'])) {
+                $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
+            } else {
+                $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
+            }
 
-      //trackingID
-      $patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], $supportID);
+            //trackingID
+            $patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], $supportID);
 
-      //from
-      $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
-      //to
-      $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
-      //sujet
-      $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
-      //message
-      $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
-      //pj ID
-      if (isset($_POST['objetID'])) {
-          $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
-      }
+            //from
+            $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
+            //to
+            $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
+            //sujet
+            $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
+            //message
+            $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
+            //pj ID
+            if (isset($_POST['objetID'])) {
+                $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
+            }
 
-          $debug='';
-          //template
-          $template="pht-ligne-mail";
-          $patient=new msPeople();
-          $patient->setToID($_POST['patientID']);
-          $p['cs']=$patient->getToday("limit 1")[0];
         } else {
             echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
         }

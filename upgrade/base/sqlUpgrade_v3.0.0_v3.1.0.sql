@@ -115,11 +115,19 @@ INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`
 ('formATCD', 'Formulaires d\'antécédents', 'Formulaires pour construire les antécédents', 'user', 1, '2018-01-01 00:00:00'),
 ('formSynthese', 'Formulaires de synthèse', 'Formulaires pour construire les synthèses', 'user', 1, '2018-01-01 00:00:00');
 
+ALTER TABLE `forms` CHANGE `formAction` `formAction` varchar(255) DEFAULT '/patient/ajax/saveCsForm/';
+
 SET @catID=(SELECT `id` FROM `forms_cat` WHERE `name`='formSynthese');
 UPDATE `forms` SET `cat`=@catID WHERE `internalName`='baseSynthese';
 
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('base', 'baseUserParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersClicRdv', 5, 'public', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL);
+
+UPDATE `forms` SET `formAction`='/patient/ajax/sendMail/' WHERE `internalName` in ('baseSendMail', 'baseSendMailApicrypt', 'baseFax');
+
+UPDATE `forms` SET `formAction`='/patient/ajax/saveReglementForm/' WHERE `internalName`='baseReglement';
+
+UPDATE `forms` SET `formAction`='/patient/ajax/saveCsForm/' WHERE `internalName`='baseConsult';
 
 UPDATE `forms` SET `yamlStructureDefaut` = 'col1:\r\n    head: "Nom de naissance"\r\n    bloc:\r\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\ncol2:\r\n    head: "Nom d\'usage"\r\n    bloc:\r\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n\r\ncol3:\r\n    head: "Prénom"\r\n    bloc:\r\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol4:\r\n    head: "Date de naissance" \r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\ncol5:\r\n    head: "Tel" \r\n    blocseparator: " - "\r\n    bloc: \r\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\ncol6:\r\n    head: "Email"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol7:\r\n    head: "Ville"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville'
 WHERE `internalName`='baseListingPatients';

@@ -116,11 +116,4 @@ if (!$mail->send()) {
     //pj ID
     if (isset($_POST['objetID'])) $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
 
-
-    $debug='';
-    //template
-    $template="pht-ligne-mail";
-    $patient=new msPeople();
-    $patient->setToID($_POST['patientID'];
-    $p['cs']=$patient->getToday("limit 1")[0];
 }
