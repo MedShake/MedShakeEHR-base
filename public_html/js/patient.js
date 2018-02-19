@@ -155,7 +155,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouvelle ordo
-  $("#linkAddNewOrdo, .editOrdo").on("click", function(e) {
+  $('body').on("click", "#linkAddNewOrdo, .editOrdo", function(e) {
     e.preventDefault();
     if ($('#newOrdo').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone d\'ordonnance en cours ?')) {
@@ -187,7 +187,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau reglement
-  $("#linkAddNewReglement, .editReglement").on("click", function(e) {
+  $('body').on("click", "#linkAddNewReglement, .editReglement", function(e) {
     e.preventDefault();
     if ($('#newReglement').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
@@ -233,7 +233,7 @@ $(document).ready(function() {
   });
 
   //toogle importance d'une ligne
-  $("a.toogleImportant").on("click", function(e) {
+  $('body').on("click", "a.toogleImportant", function(e) {
     e.preventDefault();
     toogleImportant($(this));
   });
