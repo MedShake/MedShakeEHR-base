@@ -43,10 +43,10 @@
     <li>
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-    <li class="active">Paramètres utilisateurs par défaut</li>
+    <li class="active">Paramètres globaux</li>
   </ol>
 
-  <h1>Paramètres utilisateurs par défaut</h1>
+  <h1>Paramètres  globaux</h1>
 
   {# navigation principale #}
   <ul style="padding-top:10px" class="nav nav-tabs">
@@ -87,7 +87,8 @@
                       <tr>
                         <th class="col-md-2">Paramètre</th>
                         <th class="col-md-4">Valeur</th>
-                        <th class="col-md-4">Commentaire</th>
+                        <th class="col-md-1">Type</th>
+                        <th class="col-md-5">Note</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -95,19 +96,35 @@
                         <tr>
                           <td>{{ param_name }}</td>
                           <td>
+                            {% if param_value.type=='password' %}
+                              <div class="row">
+                                <div class="col-md-11" style="margin-right:0">
+                            {% endif %}
                             {{ f.input ({
                               'input' : {
-                                'type' : 'text',
+                                'type' : param_value.type,
                                 'name' : param_name,
                                 'id' : param_name ~ 'ID',
-                                'placeholder' : param_value,
+                                'placeholder' : param_value.value,
                                 'class' : 'form-control',
-                                'value' : param_value,
-                                'autocomplete' : 'off'
+                                'value' : param_value.value,
+                                'autocomplete' : 'off',
+                                'readonly' : param_value.readonly|default('')
                               }
                             }) }}
+                            {% if param_value.type=='password' %}
+                                </div>
+                                <div class="col-md-1" style="margin-left:0;padding-left:0">
+                                  <a role="button" style="margin-top:5px;padding-left:0" class="col-md-2 view-password" href="javascript:void(0)" onmousedown="$('#{{ param_name ~ 'ID' }}').attr('type', 'text')" onmouseup="$('#{{ param_name ~ 'ID' }}').attr('type', 'password')">
+                                    <span style="padding-left:0" class="glyphicon glyphicon-eye-open"></span>
+                                  </a>
+                                </div>
+                              </div>
+                            {% endif %}
+
                           </td>
-                          <td>{% if param_name in page.commentaires|keys %}{{ page.commentaires[param_name] }}{% endif %}</td>
+                          <td>{{ param_value.typeText }}</td>
+                          <td>{{ param_value.com|default('') }}</td>
                         </tr>
                       {% endfor %}
                     </tbody>

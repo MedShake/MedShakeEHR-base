@@ -345,7 +345,6 @@ $(document).ready(function() {
     });
   });
 
-
 });
 
 function ajaxModalFormSave(form, modal) {
