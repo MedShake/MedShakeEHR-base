@@ -32,13 +32,8 @@ header('Content-Type: application/json');
 $m=$match['params']['m'];
 
 $acceptedModes=array(
-    'configFormEdit', // Edition du formulaire
     'configUserCreate', //Créer un user
-    'configCronJobs', //Configurer les crons
-    'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
-    'configSpecificUserParam', //Attribuer une config spécifique à un utilisateur
     'configApplyUpdates', // Appliquer les updates
-    'configAgendaSave', // sauvegarder config agenda
     'configTemplatePDFSave' // sauvegarder un template PDF
 );
 
@@ -47,33 +42,13 @@ if (!in_array($m, $acceptedModes)) {
 }
 
 
-// Edition du formulaire
-if ($m=='configFormEdit') {
-    include('inc-action-configFormEdit.php');
-}
 // Attribuer un password à un user
-elseif ($m=='configUserCreate') {
+if ($m=='configUserCreate') {
     include('inc-action-configUserCreate.php');
-}
-// Configurer les crons
-elseif ($m=='configCronJobs') {
-    include('inc-action-configCronJobs.php');
-}
-// Enregistrer la config par défaut des utilisateurs
-elseif ($m=='configDefaultUsersParams') {
-    include('inc-action-configDefaultUsersParams.php');
-}
-// Attribuer une config spécifique à un utilisateur
-elseif ($m=='configSpecificUserParam') {
-    include('inc-action-configSpecificUserParam.php');
 }
 // appliquer les updates
 elseif ($m=='configApplyUpdates') {
     include('inc-action-configApplyUpdates.php');
-}
-// sauvegarder config agenda
-elseif ($m=='configAgendaSave') {
-    include('inc-action-configAgendaSave.php');
 }
 // sauvegarder un template PDF
 elseif ($m=='configTemplatePDFSave') {

@@ -21,14 +21,16 @@
  */
 
 /**
- * Patient > action : envoyer un mail (smtp standard)
+ * Patient > action : envoyer un mail pour ecofax OVH
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$detsinataireFAX=trim(str_replace(' ','',$_POST['mailToEcofaxNumber'])).'@ecofax.fr';
+
 $mail = new PHPMailer\PHPMailer\PHPMailer;
 $mail->CharSet = 'UTF-8';
-//$mail->SMTPDebug = 4;
+//$mail->SMTPDebug = 3;
 $mail->isSMTP();
 $mail->Host = $p['config']['smtpHost'];
 $mail->SMTPAuth = true;
@@ -57,15 +59,15 @@ if (isset($_POST['objetID'])) {
 
 
 $mail->isHTML(false);
-$mail->Subject = $_POST['mailSujet'];
+$mail->Subject = $p['config']['ecofaxMyNumber'];
 
-$mail->setFrom($_POST['mailFrom'], $_POST['mailFromName']);
-$mail->addAddress($_POST['mailTo']);
+$mail->setFrom($p['config']['smtpFrom'], 'Dr Thomas');
+$mail->addAddress($detsinataireFAX);
 
 if (is_file($sourceFile)) {
     $mail->addAttachment($sourceFile, "document.".$ext);
 }
-$mail->Body    =  nl2br($_POST['mailBody']);
+$mail->Body    =  'password : '.$p['config']['ecofaxPass'];
 $mail->AltBody = $mail->Body;
 
 
@@ -88,17 +90,22 @@ if (!$mail->send()) {
     }
 
     //from
-    $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
+    $patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], $supportID);
     //to
-    $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
-    //sujet
-    $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
-    //message
-    $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
+    $patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, $supportID);
+    //numero destinataire
+    $patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], $supportID);
+    //numero destinataire
+    $patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], $supportID);
     //pj ID
     if (isset($_POST['objetID'])) {
         $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
     }
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+    $debug='';
+    //template
+    $template="pht-ligne-mail";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID'];
+    $p['cs']=$patient->getToday("limit 1")[0];
 }

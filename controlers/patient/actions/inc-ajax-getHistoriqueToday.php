@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,21 +21,22 @@
  */
 
 /**
- * Patient : les actions avec reload de page
+ * Patient > ajax : extraire l'éditeur de courrier
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
 
-//$debug='';
-$m=$match['params']['m'];
+$debug='';
 
-$acceptedModes=array(
-    'saveOrdoForm' // sauver une ordonnance
-);
+//template
+$template="patientHistoriqueToday";
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-} else {
-    include('inc-action-'.$m.'.php');
-}
+//le patient
+$patient = new msPeople();
+$patient->setToID($_POST['patientID']);
+$p['page']['patient']['id']=$_POST['patientID'];
+
+//historique complet des consultation du patient
+$p['page']['patient']['today']=$patient->getToday();
+

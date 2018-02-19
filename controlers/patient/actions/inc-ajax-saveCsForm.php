@@ -81,5 +81,11 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formIN]);
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+    
+    $debug='';
+    //template
+    $template="pht-ligne-typecs";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
 }

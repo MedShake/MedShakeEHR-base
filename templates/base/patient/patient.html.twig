@@ -220,32 +220,36 @@
             {# colonne principale #}
             <div class="col-md-9" style="padding-left : 35px">
 
-                {# Div d'import de nouveau doc #}
-                <div id="newDoc" class="row">{% include 'importDocForm.html.twig' %}</div>
+              {# Div d'import de nouveau doc #}
+              <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
 
-                {# historique du jour #}
+              {# historique du jour #}
+              <div id="historiqueToday">
                 {% if page.patient.today %}{% include 'patientHistoriqueToday.html.twig' %}{% endif %}
+              </div>
 
-                {# Div d'insertion de nouveau reglement #}
-                <div id="newReglement" class="row"></div>
+              {# Div d'insertion de nouveau reglement #}
+              <div id="newReglement" class="row toclear"></div>
 
-                {# Div d'insertion de nouveau courrier #}
-                <div id="newCourrier" class="row"></div>
+              {# Div d'insertion de nouveau courrier #}
+              <div id="newCourrier" class="row toclear"></div>
 
-                {# Div d'insertion de nouvelle ordonance #}
-                <div id="newOrdo" class="row"></div>
+              {# Div d'insertion de nouvelle ordonance #}
+              <div id="newOrdo" class="row toclear"></div>
 
-                {# Div d'insertion de nouvelle consultation #}
-                <div id="nouvelleCs" class="row checkboxFixValue"></div>
+              {# Div d'insertion de nouvelle consultation #}
+              <div id="nouvelleCs" class="row toclear checkboxFixValue"></div>
 
-                {# Div d'insertion de nouveau mail  #}
-                <div id="newMail" class="row"></div>
+              {# Div d'insertion de nouveau mail  #}
+              <div id="newMail" class="row toclear"></div>
 
               {# Synthèse patient #}
               {% include 'patientSynthese.html.twig' %}
 
               {# Historique complet #}
-              {% if page.patient.historique %}{% include 'patientHistoriqueMedical.html.twig' %}{% endif %}
+              <div id="historique">
+                {% if page.patient.historique %}{% include 'patientHistoriqueMedical.html.twig' %}{% endif %}
+              </div>
             </div>
           </div>
 

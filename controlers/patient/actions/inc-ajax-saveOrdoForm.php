@@ -67,7 +67,6 @@ if (count($_POST)>2) {
             }
         }
     }
-
     $pdf= new msPDF();
 
     $pdf->setFromID($p['user']['id']);
@@ -77,7 +76,14 @@ if (count($_POST)>2) {
 
     $pdf->makePDF();
     $pdf->savePDF();
-    $pdf->showPDF();
+
+    $debug='';
+    //template
+    $template="pht-ligne-ordo";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
+
 } else {
     echo 'Ordonnance vide !';
 }

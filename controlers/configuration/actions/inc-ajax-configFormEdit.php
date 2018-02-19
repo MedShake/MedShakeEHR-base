@@ -44,4 +44,5 @@ $data=array(
 );
 
 msSQL::sqlInsert('forms', $data);
-msTools::redirection('/configuration/forms/edit/'.$_POST['id'].'/');
+
+echo json_encode("ok");

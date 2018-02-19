@@ -34,7 +34,7 @@ $naissance=DateTime::createFromFormat('d/m/Y', $patientData['birthdate']);
 $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
   FROM objets_data AS od LEFT JOIN data_types AS dt
   ON od.typeID=dt.id AND od.toID='".$_POST['patientID']."' and deleted=''
-  WHERE dt.groupe='medical'
+  WHERE dt.groupe='medical' AND od.instance='0'
   ORDER BY od.registerDate ASC");
 
 header('Content-Type: application/json');
@@ -58,16 +58,23 @@ $Imax=0;
 foreach ($data as $k=>$d) {
     if (!array_key_exists('poids', $d)) {
         if (!array_key_exists('taillePatient', $d)) {
-            if (!isset($mesureAnt) or !isset($mesureAnt['poids'])) {
+            if (!isset($mesureAnt) or !array_key_exists('poids', $mesureAnt) or !array_key_exists('taille', $mesureAnt)) {
                 unset($data[$k]);
             } else {
-                $data[$k]=array('value'=>round($mesureAnt['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1), 'date'=>$d['date'], 'mesure'=>false);
+                $data[$k]=array('poids'=>array('value'=>$mesureAnt['poids'], 'reel'=>false),
+                                'taille'=>array('value'=>$mesureAnt['taille'], 'reel'=>false),
+                                'imc'=>array('value'=>round($mesureAnt['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1),'reel'=>false),
+                                'date'=>$d['date'], 'mesure'=>false);
             }
-        } else {
+        } elseif (!isset($mesureAnt) or !array_key_exists('poids', $mesureAnt)) {
+            $mesureAnt['taille']=$d['taillePatient'];
+            unset($data[$k]);
+        }else {
             $imc=round($mesureAnt['poids']*10000/($d['taillePatient']*$d['taillePatient']), 1);
             $data[$k]=array('poids'=>array('value'=>$mesureAnt['poids'], 'reel'=>false),
                             'taille'=>array('value'=>$d['taillePatient'], 'reel'=>true),
-                            'imc'=>array('value'=>$imc, 'reel'=>false), 'date'=>$d['date']);
+                            'imc'=>array('value'=>$imc, 'reel'=>false),
+                            'date'=>$d['date']);
             $mesureAnt['taille']=$d['taillePatient'];
             $Tmin=$d['taillePatient']<$Tmin?$d['taillePatient']:$Tmin;
             $Tmax=$d['taillePatient']>$Tmax?$d['taillePatient']:$Tmax;
@@ -76,13 +83,14 @@ foreach ($data as $k=>$d) {
         }
     } else {
         if (!array_key_exists('taillePatient', $d)) {
-            if (!isset($mesureAnt['taille'])) {
+            if (!isset($mesureAnt) or !array_key_exists('taille', $mesureAnt)) {
                 unset($data[$k]);
             } else {
                 $imc=round($d['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1);
                 $data[$k]=array('poids'=>array('value'=>$d['poids'], 'reel'=>true),
                                 'taille'=>array('value'=>$mesureAnt['taille'], 'reel'=>false),
-                                'imc'=>array('value'=>$imc, 'reel'=>true), 'date'=>$d['date']);
+                                'imc'=>array('value'=>$imc, 'reel'=>true),
+                                'date'=>$d['date']);
                 $Pmin=$d['poids']<$Pmin?$d['poids']:$Pmin;
                 $Pmax=$d['poids']>$Pmax?$d['poids']:$Pmax;
                 $Imin=$imc<$Imin?$imc:$Imin;
@@ -92,7 +100,8 @@ foreach ($data as $k=>$d) {
             $imc=round($d['poids']*10000/($d['taillePatient']*$d['taillePatient']), 1);
             $data[$k]=array('poids'=>array('value'=>$d['poids'], 'reel'=>true),
                             'taille'=>array('value'=>$d['taillePatient'], 'reel'=>true),
-                            'imc'=>array('value'=>$imc, 'reel'=>true), 'date'=>$d['date']);
+                            'imc'=>array('value'=>$imc, 'reel'=>true),
+                            'date'=>$d['date']);
             $mesureAnt=array('poids'=>$d['poids'], 'taille'=>$d['taillePatient']);
             $Tmin=$d['taillePatient']<$Tmin?$d['taillePatient']:$Tmin;
             $Tmax=$d['taillePatient']>$Tmax?$d['taillePatient']:$Tmax;

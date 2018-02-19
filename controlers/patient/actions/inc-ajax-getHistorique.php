@@ -21,29 +21,22 @@
  */
 
 /**
- * Config > action : enregistrer les paramètres par défaut des utilisateurs
+ * Patient > ajax : extraire l'éditeur de courrier
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$booleans=array(
-          'PraticienPeutEtrePatient', 
-          'twigEnvironnementAutoescape',
-          'twigEnvironnementCache'
-          );
 
-foreach ($p['configDefaut'] as $param=>$v) {
-    if (array_key_exists($param, $_POST)) {
-      if (in_array($param, $booleans)) {
-          if ($_POST[$param]==='true') {
-              $_POST[$param]=true;
-          } elseif ($_POST[$param]==='false') {
-              $_POST[$param]=false;
-          }
-      }
-      $p['configDefaut'][$param]=$_POST[$param];
-    }
-}
-file_put_contents($p['config']['homeDirectory'].'config/config.yml', Spyc::YAMLDump($p['configDefaut'], false, 0, true));
+$debug='';
 
-msTools::redirRoute('configDefaultParams');
+//template
+$template="patientHistoriqueMedical";
+
+//le patient
+$patient = new msPeople();
+$patient->setToID($_POST['patientID']);
+$p['page']['patient']['id']=$_POST['patientID'];
+
+//historique complet des consultation du patient
+$p['page']['patient']['historique']=$patient->getHistorique();
+

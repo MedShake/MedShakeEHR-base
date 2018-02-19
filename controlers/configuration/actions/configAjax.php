@@ -49,7 +49,12 @@ $acceptedModes=array(
     'configTagDicomCreate', //Associer tag dicom et typeID
     'configUploadFichierZoneConfig', //Downloader une clef apicrypt
     'configDeleteApicryptClef', //Delete d'une clef apicrypt
-    'configTemplatePDFDelete' //Delete d'un template
+    'configTemplatePDFDelete', //Delete d'un template
+    'configAgendaSave', // sauvegarder config agenda
+    'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
+    'configFormEdit', // Edition du formulaire
+    'configCronJobs', //Configurer les crons
+    'configSpecificUserParam' // Attribuer une config spécifique à un utilisateur
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -84,6 +89,16 @@ elseif ($m=='configGiveAdmin') {
 // Révoquer un utilisateur
 elseif ($m=='configRevokeUser') {
     include('inc-ajax-configRevokeUser.php');
+}
+
+// sauvegarder config agenda
+elseif ($m=='configAgendaSave') {
+    include('inc-ajax-configAgendaSave.php');
+}
+
+// Enregistrer la config par défaut des utilisateurs
+elseif ($m=='configDefaultUsersParams') {
+    include('inc-ajax-configDefaultUsersParams.php');
 }
 
 // Création d'une cat pour données
@@ -149,6 +164,21 @@ elseif ($m=='configDeleteApicryptClef') {
 // Delete d'un template PDF
 elseif ($m=='configTemplatePDFDelete') {
     include('inc-ajax-configTemplatePDFDelete.php');
+}
+
+// Edition du formulaire
+elseif ($m=='configFormEdit') {
+    include('inc-ajax-configFormEdit.php');
+}
+
+// Configurer les crons
+elseif ($m=='configCronJobs') {
+    include('inc-ajax-configCronJobs.php');
+}
+
+// Attribuer une config spécifique à un utilisateur
+elseif ($m=='configSpecificUserParam') {
+    include('inc-ajax-configSpecificUserParam.php');
 }
 
 die();

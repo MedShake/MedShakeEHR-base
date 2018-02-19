@@ -42,7 +42,8 @@ if (is_array($_POST)) {
             $v=implode(',', $v);
         }
         if (is_numeric($typeID) and is_numeric($userID) and 
-          ((!is_array($prevData) and $v) or (!array_key_exists($typeID, $prevData) and $v) or (array_key_exists($typeID, $prevData) and $v!=$prevData[$typeID]['Value']))) {
+          ((!is_array($prevData) and $v) or (!array_key_exists($typeID, $prevData) and $v) or
+          (is_array($prevData) and array_key_exists($typeID, $prevData) and $v!=$prevData[$typeID]['Value']))) {
             $objet = new msObjet();
             $objet->setFromID($p['user']['id']);
             $objet->setToID($userID);
@@ -53,4 +54,4 @@ if (is_array($_POST)) {
         }
     }
 }
-msTools::redirection('/configuration/user-param/'.$userID.'/');
+echo json_encode("ok");

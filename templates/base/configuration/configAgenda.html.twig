@@ -71,16 +71,16 @@
         <h2>Gestion de la grille horaire</h2>
       </div>
     </div>
-    <div class="row">
-      <form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAgendaSave/">
+    <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configAgendaSave/">
 
-        {{ f.input ({
-            'input' : {
-            'type' : 'hidden',
-            'name' : 'userID',
-            'value' : page.selectUser
-        			},
-        		}) }}
+      {{ f.input ({
+          'input' : {
+          'type' : 'hidden',
+          'name' : 'userID',
+          'value' : page.selectUser
+      			},
+      		}) }}
+      <div class="row">
 
         <div class="col-md-4 form-group">
           {{ f.textarea ({
@@ -90,7 +90,7 @@
       				    'class' : 'form-control',
       				    'autocomplete' : 'off',
       				    'value' : page.configAgenda,
-      				    'add' : 'rows="20" style="font-family:monospace;"'
+      				    'add' : 'rows="32" style="font-family:monospace;"'
       			    },
       			    'label' : {
       				    'position' : 'before',
@@ -101,41 +101,37 @@
 
         <div class="col-md-8 form-group">
           {{ f.textarea ({
-			    'textarea' : {
-				    'name' : 'configAgendaJs',
-				    'class' : 'form-control',
-            'readonly' : 'readonly',
-				    'value' : page.configAgendaJs,
-				    'add' : 'rows="20" style="font-family:monospace;"'
-			    },
-			    'label' : {
-				    'position' : 'before',
-				    'label' : "Code JS résultant (altérable par l'utilisateur dans ses paramètres personnels)"
-			    }
-		    }) }}
+			      'textarea' : {
+				      'name' : 'configAgendaJs',
+				      'class' : 'form-control',
+              'readonly' : 'readonly',
+				      'value' : page.configAgendaJs,
+				      'add' : 'rows="20" style="font-family:monospace;"'
+			      },
+			      'label' : {
+				      'position' : 'before',
+				      'label' : "Code JS résultant (altérable par l'utilisateur dans ses paramètres personnels)"
+			      }
+  		    }) }}
+          <div style="margin-top:24px">
+            {{ f.textarea ({
+			        'textarea' : {
+				        'name' : 'configAgendaAd',
+				        'placeholder' : 'code javascript complémentaire',
+				        'class' : 'form-control',
+				        'autocomplete' : 'off',
+				        'value' : page.configAgendaAd,
+				        'add' : 'rows="8" style="font-family:monospace;"'
+			        },
+			        'label' : {
+				        'position' : 'before',
+				        'label' : "Code JS additionnel (inaltérable par l'utilisateur)"
+			        }
+		        }) }}
+          </div>
         </div>
       </div>
 
-      <div class="row">
-
-        <div class="col-md-6 form-group">
-          {{ f.textarea ({
-			    'textarea' : {
-				    'name' : 'configAgendaAd',
-				    'placeholder' : 'code javascript complémentaire appelé par la fonction getScriptOnce du script utilisateur généré automatiquement',
-				    'class' : 'form-control',
-				    'autocomplete' : 'off',
-				    'value' : page.configAgendaAd,
-				    'add' : 'rows="10" style="font-family:monospace;"'
-			    },
-			    'label' : {
-				    'position' : 'before',
-				    'label' : "Code JS additionnel (inaltérable par l'utilisateur)"
-			    }
-		    }) }}
-        </div>
-
-      </div>
       <div class="row">
         <div class="col-md-12">
           <h2>Gestion des types de consultations</h2>
@@ -163,9 +159,9 @@
       <div class="row">
         <div class="col-md-12">
           <button type="submit" class="btn btn-primary">Valider</button>
-        </form>
+        </div>
       </div>
-    </div>
+    </form>
   {% else %}
     <table class="table table-hover">
       <thead>

@@ -56,6 +56,13 @@
 // Inclusion après vérification
 if (is_file($fileToInclude)) {
     include($fileToInclude);
+
+    $debug='';
+    //template
+    $template="pht-ligne-mail";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
 } else {
-    echo 'Pas d\'action correspondante';
+    die('Pas d\'action correspondante');
 }

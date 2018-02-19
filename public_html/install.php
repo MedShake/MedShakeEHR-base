@@ -235,7 +235,7 @@ if($template!=''): ?>
     <script defer src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script defer src="/js/general.js"></script>
     <script defer src="/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
-    <script defer src="/bower_components/uploader/src/dmuploader.min.js"></script>
+    <script defer src="/bower_components/uploader/dist/js/jquery.dm-uploader.min.js"></script>
     <script defer="defer" src="/bower_components/kjua/dist/kjua.min.js"></script>
   </head>
 
@@ -360,4 +360,3 @@ endif;
 </html>
 <?php
 endif;
-

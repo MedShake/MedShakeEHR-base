@@ -48,7 +48,14 @@ $acceptedModes=array(
     'listPatientDicomStudies', // lister les studies dicom du patient
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm', // Extraire l'éditeur de courrier
-    'refreshHeaderPatientAdminData' // Mettre à jour les données administratives patient en tête de dossier
+    'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
+    'saveCsForm', // sauver le formulaire de consultation
+    'sendMail', // envoyer un mail
+    'saveOrdoForm', // sauver une ordonnance
+    'saveReglementForm', // sauver une ordonnance
+    'changeObjetCreationDate', // changer le creationDate d'un objet
+    'getHistorique', // Obtenir l'historique complet
+    'getHistoriqueToday'// Obtenir l'historique du jour
 );
 
 if (!in_array($m, $acceptedModes)) {

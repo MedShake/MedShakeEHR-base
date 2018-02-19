@@ -110,7 +110,12 @@ if (curl_errno($ch)) {
           $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
       }
 
-            msTools::redirection('/patient/'.$_POST['patientID'].'/');
+          $debug='';
+          //template
+          $template="pht-ligne-mail";
+          $patient=new msPeople();
+          $patient->setToID($_POST['patientID']);
+          $p['cs']=$patient->getToday("limit 1")[0];
         } else {
             echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
         }

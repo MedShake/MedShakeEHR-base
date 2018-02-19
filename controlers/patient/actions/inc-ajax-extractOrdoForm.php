@@ -40,15 +40,17 @@ $template="patientOrdoForm";
 if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
     $ordoForm=$_POST['ordoForm'];
     $porteur=$_POST['porteur'];
+    $module=$_POST['module'];
 } else {
     $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur FROM data_types as dt 
       LEFT JOIN objets_data as od ON dt.id=od.typeID 
       WHERE od.id='".$_POST['objetID']."' limit 1");
     $ordoForm=$res[0]['form'];
     $porteur=$res[0]['porteur'];
+    $module=$res[0]['module'];
 }
 
-$p['page']['ordoForm'][$porteur]=array('module'=>$_POST['module'], $ordoForm);
+$p['page']['ordo']=array('module'=>$module, 'porteur'=>$porteur);
 
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];

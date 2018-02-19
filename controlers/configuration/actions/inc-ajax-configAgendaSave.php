@@ -41,13 +41,19 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
     if(empty($_POST['configTypesRdv']))
         unlink($p['config']['homeDirectory'].'config/configTypesRdv'.$_POST['userID'].'.yml');
     if(empty($_POST['configAgendaAd'])) {
-        unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js');
+        if (is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js')) {
+            unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js');
+        }
     } else {
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js', $_POST['configAgendaAd']);
     }
     if(empty($_POST['configAgenda'])) {
-        unlink($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
-        unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
+        if (is_file($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml')) {
+            unlink($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
+        }
+        if (is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js')) {
+            unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
+        }
     } else {
         file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
         $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
@@ -101,5 +107,4 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
     }
 }
-
-msTools::redirection('/configuration/agenda/'.$_POST['userID'].'/');
+echo json_encode("ok");

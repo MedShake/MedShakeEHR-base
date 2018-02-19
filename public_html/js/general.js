@@ -168,6 +168,23 @@ $(document).ready(function() {
     }
   });
 
+  //enregistrement de forms en ajax
+  $('body').on('click', ".ajaxForm input[type=submit],button[type=submit]", function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: $(this).parents("form").attr("action"),
+      type: 'post',
+      data: $(this).parents("form").serialize(),
+      dataType: "json",
+      success: function(data) {
+        $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+      },
+      error: function() {
+        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      }
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
