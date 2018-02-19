@@ -41,6 +41,9 @@ if (!is_dir($homepath."vendor")) {
 if (!is_dir("bower_components")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
 }
+if (!is_writable($homepath."config")) {
+  die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
+}
 
 /////////// Composer class auto-upload
 require $homepath.'vendor/autoload.php';
