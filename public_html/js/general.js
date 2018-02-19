@@ -169,7 +169,7 @@ $(document).ready(function() {
   });
 
   //enregistrement de forms en ajax
-  $('body').on('click', ".ajaxForm input[type=submit],button[type=submit]", function(e) {
+  $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
     $.ajax({
       url: $(this).parents("form").attr("action"),
