@@ -77,12 +77,12 @@ if (!is_file($homepath.'config/config.yml')) {
             die("Echec lors de l'attribution des droits sur la base de données MySQL");
         }
         if (!is_dir($_POST['backupLocation'])) {
-            if ( mkdir($_POST['backupLocation'], 0660, true)===false) {
+            if ( mkdir($_POST['backupLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['backupLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
         if (!is_dir($_POST['stockageLocation'])) {
-            if ( mkdir($_POST['stockageLocation'], 0660, true)===false) {
+            if ( mkdir($_POST['stockageLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['stockageLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
