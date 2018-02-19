@@ -53,7 +53,7 @@
         {% endfor %}
     </div>
 
-    <form id="ordoComposer" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/ajax/saveOrdoForm/" target="_blank" method="post" class="">
+    <form id="ordoComposer" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/saveOrdoForm/" target="_blank" method="post" class="">
         <input type="hidden" name="porteur" value="{{ page.ordo.porteur }}"></input>
         <input type="hidden" name="module" value="{{ page.ordo.module }}"></input>
         <div class="row">

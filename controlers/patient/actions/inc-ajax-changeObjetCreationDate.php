@@ -24,16 +24,15 @@
  * Patient > action : changer la création date d'un élément de l'historique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
-
-echo 'ok';
 
 if (isset($_POST['objetID']) and isset($_POST['newCreationDate'])) {
     if (!is_numeric($_POST['objetID'])) {
-        die("L'objet indiqué n'est pas valide");
+        die("Erreur:L'objet indiqué n'est pas valide");
     }
     if (!msTools::validateDate($_POST['newCreationDate'], 'Y-m-d H:i:s')) {
-        die("La date indiquée n'est pas valide");
+        die("Erreur:La date indiquée n'est pas valide");
     }
 
     $objet=new msObjet();
@@ -41,8 +40,7 @@ if (isset($_POST['objetID']) and isset($_POST['newCreationDate'])) {
     $objet->setCreationDate($_POST['newCreationDate']);
     $objet->changeCreationDate();
 
-
-    msTools::redirection('/patient/'.$match['params']['patientID'].'/#lh'.$_POST['objetID']);
+    echo('ReloadHistorique');
 } else {
-    msTools::redirection('/patient/'.$match['params']['patientID'].'/');
+  echo('Avertissement: aucun élément modifié');
 }

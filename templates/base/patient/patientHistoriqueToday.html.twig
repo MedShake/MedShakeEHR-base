@@ -18,35 +18,35 @@
  # You should have received a copy of the GNU General Public License
  # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
  #/
-
 /##
  # Template > patient : historique medical du jour      
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
-
 {% import "macroForm.html.twig" as f %}
-<div class="row">
-    <div class="panel panel-default historiqueToday">
-        <div class="panel-heading gras">Aujourd'hui</div>
+{% if page.patient.today %}
+  <div class="row">
+      <div class="panel panel-default historiqueToday">
+          <div class="panel-heading gras">Aujourd'hui</div>
 
-        <table class="table table-hover" data-zone="historiqueToday">
-            <thead>
-                <tr>
-                    <th class="col-md-1">Heure</th>
-                    <th class="col-md-2">Actions</th>
-                    <th class="col-md-5">Acte</th>
-                    <th class="col-md-3">Auteur</th>
-                    <th class="col-md-1"></th>
-                </tr>
-            </thead>
-            <tbody>
+          <table class="table table-hover" data-zone="historiqueToday">
+              <thead>
+                  <tr>
+                      <th class="col-md-1">Heure</th>
+                      <th class="col-md-2">Actions</th>
+                      <th class="col-md-5">Acte</th>
+                      <th class="col-md-3">Auteur</th>
+                      <th class="col-md-1"></th>
+                  </tr>
+              </thead>
+              <tbody>
 
-                {% for cs in page.patient.today %}
-                  {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
-                {% endfor %}
+                  {% for cs in page.patient.today %}
+                    {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+                  {% endfor %}
 
-            </tbody>
-        </table>
-    </div>
-</div>
+              </tbody>
+          </table>
+      </div>
+  </div>
+{% endif %}

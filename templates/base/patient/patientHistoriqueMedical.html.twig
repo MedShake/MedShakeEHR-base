@@ -18,15 +18,14 @@
  # You should have received a copy of the GNU General Public License
  # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
  #/
-
 /##
  # Template > patient : historique medical
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
-
 {% import "macroForm.html.twig" as f %}
-<div class="row">
+{% if page.patient.historique %}
+  <div class="row">
     <div class="panel panel-default historiqueMedicalComplet">
         <div class="panel-heading gras">Historique complet</div>
 
@@ -63,4 +62,5 @@
             </tbody>
         </table>
     </div>
-</div>
+  </div>
+{% endif %}

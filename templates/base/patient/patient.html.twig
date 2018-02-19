@@ -215,7 +215,7 @@
 
               {# historique du jour #}
               <div id="historiqueToday">
-                {% if page.patient.today %}{% include 'patientHistoriqueToday.html.twig' %}{% endif %}
+                {% include 'patientHistoriqueToday.html.twig' %}
               </div>
 
               {# Div d'insertion de nouveau reglement #}
@@ -238,7 +238,7 @@
 
               {# Historique complet #}
               <div id="historique">
-                {% if page.patient.historique %}{% include 'patientHistoriqueMedical.html.twig' %}{% endif %}
+                {% include 'patientHistoriqueMedical.html.twig' %}
               </div>
             </div>
           </div>
@@ -384,7 +384,7 @@
             <div class="modal-body">
               <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
               <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
-              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/changeObjetCreationDate/{{ page.patient.id }}/" method="post">
+              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/ajax/changeObjetCreationDate/" method="post">
                 <input name="objetID" type="hidden" value="" />
                 <div class="form-group">
                     <label for="datepickHisto">Modifier la date d'effet pour le</label>
