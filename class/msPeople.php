@@ -391,8 +391,18 @@ class msPeople
         $typeID=msData::getTypeIDFromName('birthdate');
 
         if ($birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1")) {
-            $age = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
-            return $age;
+            $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
+            $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
+            $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
+            if ($annees>=3) {
+              return $annees.' ans';
+            } elseif (($annees*12+$mois)>=3){
+              return ($annees*12+$mois).' mois';
+            } elseif (((30*$mois+$jours)/7)>=2){
+              return round((30*$mois+$jours)/7).' semaines';
+            } else {
+              return $jours.' jours';
+            }
         } else {
             return false;
         }
