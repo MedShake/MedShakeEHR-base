@@ -324,8 +324,8 @@ $(document).ready(function() {
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
   $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
-    showObjetDet($(this));
     e.preventDefault();
+    showObjetDet($(this));
   });
 
   //fermeture modal data admin patient
@@ -788,6 +788,8 @@ function showObjetDet(element) {
   destination = $("." + zone + " .detObjet" + objetID);
 
   if (destination.length == 0) {
+    ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+    destination = $("." + zone + " .detObjet" + objetID);
 
     $.ajax({
       url: urlBase + '/patient/ajax/ObjetDet/',
@@ -797,9 +799,10 @@ function showObjetDet(element) {
       },
       dataType: "html",
       success: function(data) {
-        ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent">' + data + '</tr>');
+        destination.html(data);
       },
       error: function() {
+        destination.remove();
         alert('Problème, rechargez la page !');
       }
     });
