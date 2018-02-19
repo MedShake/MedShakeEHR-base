@@ -246,162 +246,18 @@
     </div>
 
     {# modal courbes de poids/taille/IMC #}
-    <div id="viewGraph" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title gras graph-titre"></h4>
-          </div>
-          <div class="modal-body graph-body">
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active">
-                <a href="#sl" aria-controls="sl" role="tab" data-toggle="tab">Liste</a>
-              </li>
-              <li role="presentation">
-                <a href="#sp" aria-controls="sp" role="tab" data-toggle="tab">Poids</a>
-              </li>
-              <li role="presentation">
-                <a href="#st" aria-controls="st" role="tab" data-toggle="tab">Taille</a>
-              </li>
-              <li role="presentation">
-                <a href="#si" aria-controls="si" role="tab" data-toggle="tab">IMC</a>
-              </li>
-            </ul>
-            <div class="tab-content">
-
-              <div role="tabpanel" class="tab-pane active" id="sl">
-                <table class="table histo">
-                  <tr class="histo-head">
-                    <th style="text-align:center">Age</th>
-                    <th style="text-align:center">Mesuré le</th>
-                    <th style="text-align:center">Poids (kg)</th>
-                    <th style="text-align:center">Taille (cm)</th>
-                    <th style="text-align:center">IMC (kg/m&sup2;)</th>
-                  </tr>
-                </table>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sp" style="padding-top:10px">
-                <canvas class="graph-poids" width="800" height="400"></canvas>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="st" style="padding-top:10px">
-                <canvas class="graph-taille" width="800" height="400"></canvas>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="si" style="padding-top:10px">
-                <canvas class="graph-imc" width="800" height="400"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default graph-print">Imprimer</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    {% include 'inc-patientModal-GraphsIMC.html.twig' %}
 
     {# modal changer nom consultation ou doc #}
-    <div class="modal fade" id="alternatTitreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-      aria-hidden="true">&times;</span></button>
+    {% include 'inc-patientModal-changerTitre.html.twig' %}
 
-            <h4 class="modal-title" id="exampleModalLabel">Compléter le titre</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="titreActu" class="control-label">Complément :</label>
-                <input type="text" class="form-control" id="titreActu">
-                <input type="hidden" id="objetID" value="" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-primary" id="alternatTitreModalSubmit">Modifier</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    {# modal rapatrier mesures examen particulier #}
+    {% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
 
-     {# modal rapatrier mesures examen particulier #}
-     <div class="modal fade" id="listeDicomStudiesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-       <div class="modal-dialog" role="document">
-         <div class="modal-content">
-           <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-       aria-hidden="true">&times;</span></button>
+    {# modal éditer infos adminsitratives du patient #}
+    {% include 'inc-patientModal-editAdminData.html.twig' %}
 
-             <h4 class="modal-title">Choisir un examen</h4>
-           </div>
-           <div class="modal-body">
-             <form>
-               <div class="form-group">
-                 <label for="titreActu" class="control-label">Liste des études DICOM trouvées :</label>
-                 <select class="form-control" id="listeDicomStudies"></select>
-
-               </div>
-             </form>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-             <button type="button" class="btn btn-primary" id="listeDicomStudiesSubmit">Rapatrier</button>
-           </div>
-         </div>
-       </div>
-     </div>
-
-      {# modal éditer infos adminsitratives du patient #}
-      <div id="editAdmin" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Edition des informations administratives du patient</h4>
-            </div>
-            <div class="modal-body changeObserv">
-              {{ f.formbuilder(page.formEditAdmin , 'baseNewPatient' , session) }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# modal changer la date d'une ligne d'historique #}
-      <div id="modalCreationDate" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
-            </div>
-            <div class="modal-body">
-              <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
-              <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
-              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/ajax/changeObjetCreationDate/" method="post">
-                <input name="objetID" type="hidden" value="" />
-                <div class="form-group">
-                    <label for="datepickHisto">Modifier la date d'effet pour le</label>
-                    <div class="input-group date  col-md-6" id="datepickHisto">
-                        <input name="newCreationDate" type="text" class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-              <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    {# modal changer la date d'une ligne d'historique #}
+    {% include 'inc-patientModal-changerDateEffet.html.twig' %}
+    
 {% endblock %}
