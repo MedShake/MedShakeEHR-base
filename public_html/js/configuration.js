@@ -350,7 +350,7 @@ $(document).ready(function() {
     extFilter: ["zip"],
     maxFiles: 1,
     allowedTypes: "application/zip",
-    type: 'json',
+    dataType: 'html',
     onUploadSuccess: function() {
       console.log('fichier envoyé');
     },
@@ -365,21 +365,22 @@ $(document).ready(function() {
       alert("Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
     },
     onBeforeUpload: function(id) {
-      if (!confirm("Confirmez l'envoi du fichier"))
+      if (!confirm("Confirmez l'installation du fichier"))
         $(this).dmUploader("cancel", id);
     },
     onUploadSuccess: function(id, data) {
         if (data.indexOf("Erreur:")==0) {
             $("#errormessage").html(data);
             $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
-        } else if (data.indexOf("Ok")==0) {
+        } else if (data.indexOf("ok")==0) {
           alert("La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
         } else {
           alert("La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data(0,-2));
         }
     },
     onUploadError: function(id, xhr, status, errorThrown) {
-      console.log("erreur lors de l'envoi :" + errorThrown);
+      $("#errormessage").html(errorThrown);
+      $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
     }
   });
 
