@@ -283,8 +283,8 @@ $(document).ready(function() {
   });
 
   $(".duplicate").parent().on("click", function(){
-    setPeopleData($('input[name=p_poids]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_poids]').attr("data-typeID"), 'input[name=p_poids]', '0');
-    setPeopleData($('input[name=p_taillePatient]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_taillePatient]').attr("data-typeID"), 'input[name=p_taillePatient]', '0');
+    var $input = $(this).closest(".input-group").children('input');
+    setPeopleData($input.val(), $('#identitePatient').attr("data-patientID"), $input.attr("data-typeID"), $input, '0');
   });
   $(".duplicate").parent().attr("title", "Reporter une mesure identique").css("cursor","pointer");
   $(".graph").parent().attr("title", "Voir l'historique").css("cursor","pointer");
