@@ -1,6 +1,3 @@
-
-ALTER TABLE `objets_data` ADD `deletedByID` INT NULL DEFAULT NULL AFTER `deleted`;
-
 --people
 ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
 ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
