@@ -85,5 +85,5 @@ if (count($_POST)>2) {
     $p['cs']=$patient->getToday("limit 1")[0];
 
 } else {
-    echo 'Ordonnance vide !';
+    die('Avertissement: Ordonnance vide !');
 }

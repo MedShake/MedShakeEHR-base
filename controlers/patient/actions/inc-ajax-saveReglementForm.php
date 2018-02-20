@@ -76,5 +76,5 @@ if (count($_POST['acteID'])>0) {
     $p['cs']=$patient->getToday("limit 1")[0];
 
 } else {
-    echo json_encode('Formulaire vide !');
+    die('Avertissement: Formulaire vide !');
 }

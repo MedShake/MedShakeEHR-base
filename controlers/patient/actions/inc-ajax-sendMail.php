@@ -65,5 +65,5 @@ if (is_file($fileToInclude)) {
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getToday("limit 1")[0];
 } else {
-    die(json_encode('Pas d\'action correspondante'));
+    die('Avertissement: Pas d\'action correspondante'));
 }
