@@ -372,8 +372,10 @@ $(document).ready(function() {
         if (data.indexOf("Erreur:")==0) {
             $("#errormessage").html(data);
             $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        } else if (data.indexOf("Ok")==0 {
+          alert("La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
         } else {
-            $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+          alert("La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data(0,-2));
         }
     },
     onUploadError: function(id, xhr, status, errorThrown) {
