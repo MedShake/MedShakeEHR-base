@@ -32,47 +32,60 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
   <style>
-    .uploader {min-height:100vh}
-    .mask {display:none;background-color:#000;opacity:0;position:fixed;z-index:10;width:100vw;height:100vh}
+    .uploader {
+      min-height: 100vh;
+    }
+    .mask {
+      display: none;
+      background-color: #000;
+      opacity: 0;
+      position: fixed;
+      z-index: 10;
+      width: 100vw;
+      height: 100vh;
+    }
   </style>
 {% endblock %}
 
 {% block bodyTagAdd %}class="uploader"{% endblock %}
 {% block body %}
-    <div class="mask">
-    </div>
-    <ol class="breadcrumb">
-      <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
-      </li>
-      <li>
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
-      </li>
-      <li class="active">
-        Modules
-      </li>
-    </ol>
+  <div class="mask"></div>
+  <ol class="breadcrumb">
+    <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+    <li class="active">
+      Modules
+    </li>
+  </ol>
 
-    <h1>Modules installés</h1>
-    <div class="row">
-      <div class="col-md-6">
-        <table class="table table-striped table-hover">
+  <h1>Modules installés</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table table-striped table-hover">
+        <thead>
           <tr>
             <th>Nom</th>
             <th>Version</th>
           </tr>
+        </thead>
+        <tbody>
           {% for m in page.modules %}
             <tr>
               <td>{{ m.name }}</td>
               <td>{{ m.version }}</td>
             </tr>
           {% endfor %}
-        </table>
-      </div>
+        </tbody>
+      </table>
     </div>
-    <h1>Installer un nouveau module ou une mise à jour</h1>
-    <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.<p>
-    <input type="hidden"></input>
-{% endblock %}
+  </div>
+  <h1>Installer un nouveau module ou une mise à jour</h1>
+  <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.<p>
+      <input type="hidden"></input>
+    {% endblock %}
