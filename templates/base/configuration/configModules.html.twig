@@ -1,0 +1,79 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : modules
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @author fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : modules{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <style>
+    .uploader {min-height:100vh}
+    .mask {display:none;background-color:#000;opacity:0;position:fixed;z-index:10;width:100vw;height:100vh}
+  </style>
+{% endblock %}
+
+{% block bodyTagAdd %}class="uploader"{% endblock %}
+{% block body %}
+    <div class="mask">
+    </div>
+    <ol class="breadcrumb">
+      <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+      </li>
+      <li>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+      </li>
+      <li class="active">
+        Modules
+      </li>
+    </ol>
+
+    <h1>Modules installés</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-striped table-hover">
+          <tr>
+            <th>Nom</th>
+            <th>Version</th>
+          </tr>
+          {% for m in page.modules %}
+            <tr>
+              <td>{{ m.name }}</td>
+              <td>{{ m.version }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <h1>Installer un nouveau module ou une mise à jour</h1>
+    <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.<p>
+    <p>Il faudra ensuite vous reloguer avec un compte administrateur (l'actuel, par exemple) pour que les changements soient complètement appliqués.<p>
+    <input type="hidden"></input>
+{% endblock %}

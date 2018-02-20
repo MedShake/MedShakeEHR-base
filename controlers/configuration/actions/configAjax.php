@@ -54,9 +54,9 @@ $acceptedModes=array(
     'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
     'configFormEdit', // Edition du formulaire
     'configCronJobs', //Configurer les crons
+    'configInstallModule', // Installer un module
     'configSpecificUserParam' // Attribuer une config spécifique à un utilisateur
 );
-
 if (!in_array($m, $acceptedModes)) {
     die;
 }
@@ -174,6 +174,11 @@ elseif ($m=='configFormEdit') {
 // Configurer les crons
 elseif ($m=='configCronJobs') {
     include('inc-ajax-configCronJobs.php');
+}
+
+// Installer un module
+elseif ($m=='configInstallModule') {
+    include('inc-ajax-configInstallModule.php');
 }
 
 // Attribuer une config spécifique à un utilisateur
