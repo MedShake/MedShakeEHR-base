@@ -60,24 +60,3 @@ CREATE TABLE `system` (
 ALTER TABLE `system` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `module` (`module`);
 ALTER TABLE `system` MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 INSERT INTO `system` (`id`,`module`,`version`) VALUES (1, 'base', 'v3.0.0');
-
-ALTER TABLE `system`
-  MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `people` ADD `module` varchar(20) DEFAULT NULL after `rank`;
-ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','deleted') NOT NULL DEFAULT 'patient';
-
-INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('user', 'clicRdvUserId', 'identifiant', 'identifiant clicRDV', 'email@address.com', '', '', 'text', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1),
-('user', 'clicRdvPassword', 'Mot de passe', 'Mot de passe clicRDV', 'Mot de passe', '', '', 'password', '', 'base', 0, 0, '2017-03-10 23:49:02', 3600, 1);
-
-INSERT INTO `form_basic_types` (`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-('actualPassword', 'Mot de passe de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel', '', '', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
-('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
-('module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
-
-DELETE FROM `forms` WHERE internalName='baseReglementSimple';
-INSERT INTO `forms` (`internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
-('firstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc: \r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', NULL),
-('base', 'userParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/configuration/', 5, 'public', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword', 'global:\n  noFormsTags: true\nstructure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword', NULL);
-

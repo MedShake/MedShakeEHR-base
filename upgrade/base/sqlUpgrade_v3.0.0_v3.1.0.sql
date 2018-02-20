@@ -1,3 +1,4 @@
+
 --people
 ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
 ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
@@ -28,6 +29,7 @@ ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','l
 UPDATE `data_types` SET `fromID`='1' WHERE `fromID`='0';
 UPDATE `data_types` SET `module`='base' WHERE `name`in ('baseSynthese', 'csBaseGroup');
 UPDATE `data_types` SET `label` = 'agendaForPatientsOfTheDay', `description` = 'permet d\'indiquer l\'agenda à utiliser pour la liste patients du jour pour cet utilisateur', `formType` = 'select', `formValues` = '' WHERE `name` = 'agendaNumberForPatientsOfTheDay';
+
 
 set @cat=(SELECT `id` FROM `data_cat` WHERE `name`='ordoItems');
 UPDATE `data_types` SET cat=@cat WHERE name in ('ordoTypeImpression', 'ordoLigneOrdo', 'ordoLigneOrdoALDouPas');
@@ -61,7 +63,12 @@ UPDATE `data_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 UPDATE `forms_cat` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
 --forms
+ALTER TABLE `forms` ADD UNIQUE(`internalName`);
 DELETE FROM `forms` WHERE `internalName`='basePasswordChange';
+DELETE FROM `forms` WHERE internalName='baseReglementSimple';
+
+INSERT INTO `forms` (`module`,`internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
+('base','baseFirstLogin', 'Premier utilisateur', 'Création premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', 5, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', 'structure:\r\n row1:\r\n  col1: \r\n    head: "Mot de passe de l\'utilisateur 1"\r\n    size: 3\r\n    bloc: \r\n      - userid,readonly \r\n      - password,required\r\n      - verifPassword,required\r\n      - submit', NULL);
 
 INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
 ('formATCD', 'Formulaires d\'antécédents', 'Formulaires pour construire les antécédents', 'user', 1, '2018-01-01 00:00:00'),
@@ -72,9 +79,6 @@ ALTER TABLE `forms` CHANGE `formAction` `formAction` varchar(255) DEFAULT '/pati
 SET @catID=(SELECT `id` FROM `forms_cat` WHERE `name`='formSynthese');
 UPDATE `forms` SET `cat`=@catID WHERE `internalName`='baseSynthese';
 
-INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
-('base', 'baseUserParameters', 'Paramètres utilisateur', 'Paramètres utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersClicRdv', 5, 'public', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', 'global:\n  structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL);
-
 UPDATE `forms` SET `formAction`='/patient/ajax/sendMail/' WHERE `internalName` in ('baseSendMail', 'baseSendMailApicrypt', 'baseFax');
 
 UPDATE `forms` SET `formAction`='/patient/ajax/saveReglementForm/' WHERE `internalName`='baseReglement';
@@ -84,7 +88,6 @@ UPDATE `forms` SET `formAction`='/patient/ajax/saveCsForm/' WHERE `internalName`
 UPDATE `forms` SET `yamlStructureDefaut` = 'col1:\r\n    head: "Nom de naissance"\r\n    bloc:\r\n        - birthname,text-uppercase,gras            		#1    Nom de naissance\ncol2:\r\n    head: "Nom d\'usage"\r\n    bloc:\r\n        - lastname,text-uppercase,gras             		#2    Nom d usage\n\r\ncol3:\r\n    head: "Prénom"\r\n    bloc:\r\n        - firstname,text-capitalize,gras           		#3    Prénom\ncol4:\r\n    head: "Date de naissance" \r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\ncol5:\r\n    head: "Tel" \r\n    blocseparator: " - "\r\n    bloc: \r\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\ncol6:\r\n    head: "Email"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol7:\r\n    head: "Ville"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville'
 WHERE `internalName`='baseListingPatients';
 
-UPDATE `forms` SET `internalName`='baseFirstLogin' WHERE `internalName`='firstLogin';
 
 UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider', `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    head: "Premier utilisateur 1"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\n      - moduleSelect                               		#7    Module\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit                                     		#3    Valider' WHERE `internalName`='baseFirstLogin';
 
@@ -96,6 +99,14 @@ UPDATE `forms` SET `yamlStructure`='global:\r\n  formClass: \'form-signin\' \r\n
 UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleSituationPatient,class=regleSituationPatient                      		#197  Situation du patient\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleTarifCejour,readonly,plus={€},class=regleTarifCejour       		#198  Tarif SS\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleDepaCejour,plus={€},class=regleDepaCejour                 		#199  Dépassement\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleFacture,readonly,plus={€},class=regleFacture           		#196  Facturé\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleCB,plus={€},class=regleCB                         		#194  CB\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleCheque,plus={€},class=regleCheque                     		#193  Chèque\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleEspeces,plus={€},class=regleEspeces                    		#195  Espèces\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleTiersPayeur,plus={€},class=regleTiersPayeur                		#200  Tiers\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - regleIdentiteCheque,class=regleIdentiteCheque                        		#205  Identité payeur', `yamlStructureDefaut`='structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleSituationPatient,class=regleSituationPatient                      		#197  Situation du patient\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleTarifCejour,readonly,plus={€},class=regleTarifCejour       		#198  Tarif SS\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleDepaCejour,plus={€},class=regleDepaCejour                 		#199  Dépassement\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleFacture,readonly,plus={€},class=regleFacture           		#196  Facturé\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleCB,plus={€},class=regleCB                         		#194  CB\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleCheque,plus={€},class=regleCheque                     		#193  Chèque\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleEspeces,plus={€},class=regleEspeces                    		#195  Espèces\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleTiersPayeur,plus={€},class=regleTiersPayeur                		#200  Tiers\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - regleIdentiteCheque,class=regleIdentiteCheque                        		#205  Identité payeur' WHERE `internalName`='baseReglement';
 
 --forms_basic_types
+update `form_basic_types` set creationDate='2018-01-01 00:00:00', deleteDate='2018-01-01 00:00:00' where id in(1,2,3);
+ALTER TABLE `form_basic_types` ADD UNIQUE(`name`);
+DELETE FROM `form_basic_types` WHERE `name` in ('moduleSelect');
+INSERT IGNORE INTO  `form_basic_types` (`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
+('actualPassword', 'Mot de passe de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel', '', '', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
+('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
+('module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00');
+
 UPDATE `form_basic_types` SET `name`='username', `description`='identifiant utilisateur', `validationRules`='required', `validationErrorMsg`='L\'identifiant utilisateur est manquant' WHERE `name`='userid';
 UPDATE `form_basic_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
@@ -103,6 +114,7 @@ UPDATE `form_basic_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 ALTER TABLE `objets_data` ADD `deletedByID` int(11) DEFAULT NULL after `deleted`;
 
 --system
+ALTER TABLE `system` MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `system` CHANGE `module` `name` VARCHAR(30) NOT NULL;
 ALTER TABLE `system` ADD UNIQUE KEY `name` (`name`);
 ALTER TABLE `system` ADD `groupe` enum('system', 'module', 'cron', 'lock') DEFAULT 'system' after `name`;
