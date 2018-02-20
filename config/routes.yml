@@ -155,6 +155,9 @@ configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
 # configuration apply updates
 configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configApplyUpdates']
 
+# configuration modules
+configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
+
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
