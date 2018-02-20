@@ -337,7 +337,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-          window.location.reload();
+          $ru.closest("tr").remove();
       },
       error: function() {
         alert('Problème, rechargez la page !');

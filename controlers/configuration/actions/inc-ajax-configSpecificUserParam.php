@@ -42,13 +42,13 @@ if (is_array($_POST)) {
             $v=implode(',', $v);
         }
         if (is_numeric($typeID) and is_numeric($userID) and 
-          ((!is_array($prevData) and $v) or (!array_key_exists($typeID, $prevData) and $v) or
+          (($v and (!is_array($prevData) or !array_key_exists($typeID, $prevData))) or
           (is_array($prevData) and array_key_exists($typeID, $prevData) and $v!=$prevData[$typeID]['Value']))) {
             $objet = new msObjet();
             $objet->setFromID($p['user']['id']);
             $objet->setToID($userID);
             $id=$objet->createNewObjet($typeID, $v);
-            if (array_key_exists($typeID, $prevData) and $prevData[$typeID]['type']=="password" and $v) {
+            if (is_array($prevData) and array_key_exists($typeID, $prevData) and $prevData[$typeID]['type']=="password" and $v) {
                 msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$v."',@password)) WHERE id='".$prevData[$typeID]['Id']."' limit 1");
             }
         }
