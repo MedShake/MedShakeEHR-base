@@ -21,7 +21,7 @@
  */
 
 /**
- * Config : créer un utilisateur
+ * Config : installer un module
  *
  * @author fr33z00 <https://github.com/fr33z00
  */
@@ -38,7 +38,7 @@ if ($zip->open($fichier['tmp_name'])) {
         if ($zip->extractTo($p['config']['homeDirectory'])) {
             $zip->close();
             die("ok");
-        } else
+        }
         $zip->close();
         die("Erreur: une erreur est survenue durant la décompression du fichier");
     }
