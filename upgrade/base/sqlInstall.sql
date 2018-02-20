@@ -311,6 +311,7 @@ ALTER TABLE `forms_cat`
 
 ALTER TABLE `form_basic_types`
   ADD PRIMARY KEY (`id`);
+  ADD UNIQUE KEY `name` (`name`);
 
 ALTER TABLE `hprim`
   ADD UNIQUE KEY `id` (`id`);
