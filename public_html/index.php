@@ -129,19 +129,17 @@ if (isset($template)) {
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
-      if (isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
-          if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-              $events = new msAgenda();
-              $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-              $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-          }
+      if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+        $events = new msAgenda();
+        $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
       }
-      if(!isset($p['page']['patientsOfTheDay']) and $p['config']['administratifPeutAvoirAgenda']=='true') {
+      elseif($p['config']['administratifPeutAvoirAgenda']=='true') {
         $events = new msAgenda();
         $events->set_userID($p['user']['id']);
         $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
       }
-      if (!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
+      elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
           $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
       }
     }
