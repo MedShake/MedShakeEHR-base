@@ -310,7 +310,7 @@ ALTER TABLE `forms_cat`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `form_basic_types`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 ALTER TABLE `hprim`
