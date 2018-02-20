@@ -34,8 +34,8 @@
 
  if ($data=msSQL::sql2tab("select p.id, d8.value as ddn,
  CASE
-  WHEN d2.value != '' and d1.Value != '' THEN concat(d2.value, ' (', d1.value ,') ', d3.value)
-  WHEN d2.value != '' and d1.Value = '' THEN concat(d2.value, ' ', d3.value)
+  WHEN d2.value != '' and d1.value != '' THEN concat(d2.value, ' (', d1.value ,') ', d3.value)
+  WHEN d2.value != '' THEN concat(d2.value, ' ', d3.value)
   ELSE concat(d1.value, ' ', d3.value) END as identite
  from people as p
  left join objets_data as d1 on d1.toID=p.id and d1.typeID='".$name2typeID['birthname']."' and d1.outdated='' and d1.deleted=''

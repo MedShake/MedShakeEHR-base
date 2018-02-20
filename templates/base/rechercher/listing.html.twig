@@ -53,7 +53,7 @@
               <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientID }}/">
                 {% if page['outputType'][patientID]['type']=='externe' or page.porp == 'externe' %}
                   <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-                {% elseif page.porp != 'pro' %}
+                {% else %}
                   <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                {% endif %}
               </a>
@@ -91,7 +91,7 @@
                   {% if config.smtpTracking %}
                     <li role="separator" class="divider"></li>
                     <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientID }}/" >Historique des mails envoyés</a></li>
-                  {% endif %}  
+                  {% endif %}
                   <li role="separator" class="divider"></li>
                   <li><a class="markDeleted" data-patientID="{{ patientID }}" href="#">Supprimer ce dossier</a></li>
                 </ul>
