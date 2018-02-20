@@ -141,12 +141,12 @@ configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configF
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique
+configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configuration/configDefaultParams']
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
 configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
-configDefaultParams: ['GET', '/configuration/users-params/', 'configuration/configDefaultUsersParams']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
 # configuration crons

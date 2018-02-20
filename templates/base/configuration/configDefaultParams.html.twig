@@ -23,6 +23,7 @@
  # Template > Config : paramètres de configuration s'appliquant par défaut à tous les utilisteurs
  #
  # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% extends "page.html.twig" %}
@@ -58,10 +59,10 @@
       {% set k=1 %}
     {% endfor %}
   </ul>
-  
+
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
 
-    
+
     <div class="col-md-12">
       <div class="tab-content" >
         {% set k=0 %}

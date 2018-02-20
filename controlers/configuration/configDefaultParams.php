@@ -24,6 +24,7 @@
  * Config : gérer les paramètres de configuration par défaut des utilisateurs
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com> 
  */
 
 //admin uniquement
@@ -31,7 +32,7 @@ if (!msUser::checkUserIsAdmin()) {
     $template="forbidden";
 } else {
     $debug='';
-    $template='configDefaultUsersParams';
+    $template='configDefaultParams';
     $p['page']['params']=array(
       'MedShakeEHR'=>array(
         'Serveur'=>array(
@@ -89,7 +90,7 @@ if (!msUser::checkUserIsAdmin()) {
           'smtpFrom'=>array('value'=>$p['configDefaut']['smtpFrom'],'type'=>'text','typeText'=>'string'),
           'smtpFromName'=>array('value'=>$p['configDefaut']['smtpFromName'],'type'=>'text','typeText'=>'string'),
           'smtpHost'=>array('value'=>$p['configDefaut']['smtpHost'],'type'=>'text','typeText'=>'string'),
-          'smtpPort'=>array('value'=>$p['configDefaut']['smtpPort'],'type'=>'text','typeText'=>'string'),
+          'smtpPort'=>array('value'=>$p['configDefaut']['smtpPort'],'type'=>'text','typeText'=>'number'),
           'smtpSecureType'=>array('value'=>$p['configDefaut']['smtpSecureType'],'type'=>'text','typeText'=>'string'),
           'smtpOptions'=>array('value'=>$p['configDefaut']['smtpOptions'],'type'=>'text','typeText'=>'string'),
           'smtpUsername'=>array('value'=>$p['configDefaut']['smtpUsername'],'type'=>'text','typeText'=>'string'),
@@ -99,7 +100,7 @@ if (!msUser::checkUserIsAdmin()) {
         'Apicrypt'=>array(
           'apicryptCheminInbox'=>array('value'=>$p['configDefaut']['apicryptCheminInbox'],'type'=>'text','typeText'=>'string'),
           'apicryptCheminArchivesInbox'=>array('value'=>$p['configDefaut']['apicryptCheminArchivesInbox'],'type'=>'text','typeText'=>'string'),
-          'apicryptInboxMailForUserID'=>array('value'=>$p['configDefaut']['apicryptInboxMailForUserID'],'type'=>'text','typeText'=>'string'),
+          'apicryptInboxMailForUserID'=>array('value'=>$p['configDefaut']['apicryptInboxMailForUserID'],'type'=>'text','typeText'=>'number'),
           'apicryptCheminFichierNC'=>array('value'=>$p['configDefaut']['apicryptCheminFichierNC'],'type'=>'text','typeText'=>'string'),
           'apicryptCheminFichierC'=>array('value'=>$p['configDefaut']['apicryptCheminFichierC'],'type'=>'text','typeText'=>'string'),
           'apicryptCheminVersClefs'=>array('value'=>$p['configDefaut']['apicryptCheminVersClefs'],'type'=>'text','typeText'=>'string'),
@@ -107,9 +108,9 @@ if (!msUser::checkUserIsAdmin()) {
           'apicryptUtilisateur'=>array('value'=>$p['configDefaut']['apicryptUtilisateur'],'type'=>'text','typeText'=>'string'),
           'apicryptAdresse'=>array('value'=>$p['configDefaut']['apicryptAdresse'],'type'=>'text','typeText'=>'string'),
           'apicryptSmtpHost'=>array('value'=>$p['configDefaut']['apicryptSmtpHost'],'type'=>'text','typeText'=>'string'),
-          'apicryptSmtpPort'=>array('value'=>$p['configDefaut']['apicryptSmtpPort'],'type'=>'text','typeText'=>'string'),
+          'apicryptSmtpPort'=>array('value'=>$p['configDefaut']['apicryptSmtpPort'],'type'=>'text','typeText'=>'number'),
           'apicryptPopHost'=>array('value'=>$p['configDefaut']['apicryptPopHost'],'type'=>'text','typeText'=>'string'),
-          'apicryptPopPort'=>array('value'=>$p['configDefaut']['apicryptPopPort'],'type'=>'text','typeText'=>'string'),
+          'apicryptPopPort'=>array('value'=>$p['configDefaut']['apicryptPopPort'],'type'=>'text','typeText'=>'number'),
           'apicryptPopUser'=>array('value'=>$p['configDefaut']['apicryptPopUser'],'type'=>'text','typeText'=>'string'),
           'apicryptPopPass'=>array('value'=>$p['configDefaut']['apicryptPopPass'],'type'=>'password','typeText'=>'string'),
           'apicryptDefautSujet'=>array('value'=>$p['configDefaut']['apicryptDefautSujet'],'type'=>'text','typeText'=>'string'),
@@ -124,19 +125,19 @@ if (!msUser::checkUserIsAdmin()) {
           'dicomPrefixIdPatient'=>array('value'=>$p['configDefaut']['dicomPrefixIdPatient'],'type'=>'text','typeText'=>'string'),
           'dicomWorkListDirectory'=>array('value'=>$p['configDefaut']['dicomWorkListDirectory'],'type'=>'text','typeText'=>'string'),
           'dicomWorkingDirectory'=>array('value'=>$p['configDefaut']['dicomWorkingDirectory'],'type'=>'text','typeText'=>'string'),
-          'dicomAutoSendPatient2Echo'=>array('value'=>$p['configDefaut']['dicomAutoSendPatient2Echo'],'type'=>'text','typeText'=>'string'),
-          'dicomDiscoverNewTags'=>array('value'=>$p['configDefaut']['dicomDiscoverNewTags'],'type'=>'text','typeText'=>'string'),
+          'dicomAutoSendPatient2Echo'=>array('value'=>$p['configDefaut']['dicomAutoSendPatient2Echo'],'type'=>'text','typeText'=>'boolean'),
+          'dicomDiscoverNewTags'=>array('value'=>$p['configDefaut']['dicomDiscoverNewTags'],'type'=>'text','typeText'=>'boolean'),
         ),
         'Agenda'=>array(
           'agendaService'=>array('value'=>$p['configDefaut']['agendaService'],'type'=>'text','typeText'=>'string','com'=>'clicRDV ou vide'),
           'agendaDistantLink'=>array('value'=>$p['configDefaut']['agendaDistantLink'],'type'=>'text','typeText'=>'string','com'=>'si agendaService est configuré, alors agendaDistantLink doit être vide'),
           'agendaDistantPatientsOfTheDay'=>array('value'=>$p['configDefaut']['agendaDistantPatientsOfTheDay'],'type'=>'text','typeText'=>'string'),
           'agendaLocalPatientsOfTheDay'=>array('value'=>$p['configDefaut']['agendaLocalPatientsOfTheDay'],'type'=>'text','typeText'=>'string'),
-          'agendaNumberForPatientsOfTheDay'=>array('value'=>$p['configDefaut']['agendaNumberForPatientsOfTheDay'],'type'=>'text','typeText'=>'string'),
+          'agendaNumberForPatientsOfTheDay'=>array('value'=>$p['configDefaut']['agendaNumberForPatientsOfTheDay'],'type'=>'text','typeText'=>'number'),
         ),
         'Rappels mail'=>array(
           'mailRappelLogCampaignDirectory'=>array('value'=>$p['configDefaut']['mailRappelLogCampaignDirectory'],'type'=>'text','typeText'=>'string'),
-          'mailRappelDaysBeforeRDV'=>array('value'=>$p['configDefaut']['mailRappelDaysBeforeRDV'],'type'=>'text','typeText'=>'string'),
+          'mailRappelDaysBeforeRDV'=>array('value'=>$p['configDefaut']['mailRappelDaysBeforeRDV'],'type'=>'text','typeText'=>'number'),
         ),
         'SMS'=>array(
           'smsProvider'=>array('value'=>$p['configDefaut']['smsProvider'],'type'=>'text','typeText'=>'string'),
@@ -148,4 +149,6 @@ if (!msUser::checkUserIsAdmin()) {
         )
       )
     );
+
+    ksort($p['page']['params']['Services tiers']);
 }
