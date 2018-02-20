@@ -63,8 +63,7 @@
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
 
 
-    <div class="col-md-12">
-      <div class="tab-content" >
+      <div class="tab-content">
         {% set k=0 %}
         {% for section_name,section_array in page.params %}
           <div id="{{ section_name|replace({' ':'_'}) }}" role="tabpanel" class="tab-pane{% if k==0 %} active{% endif %}">
@@ -149,7 +148,7 @@
           }
         }) }}
       </div>
-    </div>
+
 
   </form>
 
