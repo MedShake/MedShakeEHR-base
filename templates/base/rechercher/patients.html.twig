@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : 
+{% block title %}MedShakeEHR :
 {% if page.porp in ['patient', 'today'] %}
 recherche patient
 {% elseif page.porp == 'pro' %}
@@ -147,8 +147,9 @@ associer patient
 
 </div>
 
-
-<div id="listing" data-porp="{{ page.porp }}" class="row col-md-12" style="margin-top : 40px;">
+<div class="row">
+	<div id="listing" data-porp="{{ page.porp }}" class="col-md-12" style="margin-top : 40px;">
+	</div>
 </div>
 
 {% if page.porp == 'externe' %}
