@@ -109,3 +109,4 @@ ALTER TABLE `system` ADD `groupe` enum('system', 'module', 'cron', 'lock') DEFAU
 ALTER TABLE `system` CHANGE `version` `value` text DEFAULT NULL;
 
 UPDATE `system` SET `groupe`='module' WHERE `name`='base';
+UPDATE `system` SET `value`='v3.1.0' WHERE `name`='base';
