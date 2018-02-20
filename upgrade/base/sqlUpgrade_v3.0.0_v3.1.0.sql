@@ -3,7 +3,7 @@ ALTER TABLE `people` ADD `name` varchar(30) DEFAULT NULL after `id`;
 ALTER TABLE `people` ADD UNIQUE KEY `name` (`name`);
 ALTER TABLE `people` CHANGE `type` `type` enum('patient','pro','externe','service', 'deleted') NOT NULL DEFAULT 'patient';
 
-UPDATE `people` SET `name`=CONCAT('MedShake',`id`) WHERE name='' and `pass`!='';
+UPDATE `people` SET `name`=`id` WHERE `name` is null and `pass`!='';
 INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
 ('medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
 ('clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
@@ -109,3 +109,4 @@ ALTER TABLE `system` ADD `groupe` enum('system', 'module', 'cron', 'lock') DEFAU
 ALTER TABLE `system` CHANGE `version` `value` text DEFAULT NULL;
 
 UPDATE `system` SET `groupe`='module' WHERE `name`='base';
+UPDATE `system` SET `value`='v3.1.0' WHERE `name`='base';

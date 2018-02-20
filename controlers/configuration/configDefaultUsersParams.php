@@ -46,7 +46,7 @@ if (!msUser::checkUserIsAdmin()) {
           'cookieDuration'=>array('value'=>$p['configDefaut']['cookieDuration'],'type'=>'text','typeText'=>'number'),
           'fingerprint'=>array('value'=>$p['configDefaut']['fingerprint'],'type'=>'text','readonly'=>true,'typeText'=>'string'),
         ),
-        'Serveur MySQL'=>array( 
+        'Serveur MySQL'=>array(
           'sqlServeur'=>array('value'=>$p['configDefaut']['sqlServeur'],'type'=>'text','typeText'=>'string'),
           'sqlBase'=>array('value'=>$p['configDefaut']['sqlBase'],'type'=>'text','typeText'=>'string'),
           'sqlUser'=>array('value'=>$p['configDefaut']['sqlUser'],'type'=>'text','typeText'=>'string'),
@@ -96,7 +96,7 @@ if (!msUser::checkUserIsAdmin()) {
           'smtpPassword'=>array('value'=>$p['configDefaut']['smtpPassword'],'type'=>'password','typeText'=>'string'),
           'smtpDefautSujet'=>array('value'=>$p['configDefaut']['smtpDefautSujet'],'type'=>'text','typeText'=>'string'),
           ),
-        'ApiCrypt'=>array(
+        'Apicrypt'=>array(
           'apicryptCheminInbox'=>array('value'=>$p['configDefaut']['apicryptCheminInbox'],'type'=>'text','typeText'=>'string'),
           'apicryptCheminArchivesInbox'=>array('value'=>$p['configDefaut']['apicryptCheminArchivesInbox'],'type'=>'text','typeText'=>'string'),
           'apicryptInboxMailForUserID'=>array('value'=>$p['configDefaut']['apicryptInboxMailForUserID'],'type'=>'text','typeText'=>'string'),
