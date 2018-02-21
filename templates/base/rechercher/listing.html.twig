@@ -46,7 +46,7 @@
         {% if page.porp == 'externe' %}
           <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
         {% else %}
-          <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% endif %}" data-url="/{{ porpurl }}/{{ patientID }}/">
+          <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% elseif page['outputType'][patientID]['type'] == 'dcd' %} active dcd{% endif %}" data-url="/{{ porpurl }}/{{ patientID }}/">
         {% endif %}
           <td>
             {% if page.porp != 'pro' or config.PraticienPeutEtrePatient == "true" %}

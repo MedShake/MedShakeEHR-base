@@ -78,6 +78,9 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         $leftjoin[]='left join objets_data as d'.$type.' on d'.$type.'.toID=p.id and d'.$type.'.typeID='.$type.' and d'.$type.'.outdated=\'\'';
     }
 
+    //date de dc
+    $leftjoin[]='left join objets_data as dcd on dcd.toID=p.id and dcd.typeID='.msData::getTypeIDFromName('deathdate').' and dcd.outdated=\'\' and dcd.deleted=\'\'';
+
     $where=null;
     if ($_POST['porp']=='today') {
         $agenda=new msAgenda();
@@ -118,7 +121,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     CASE WHEN d2.value !="" THEN d2.value
     WHEN d1.value !="" THEN d1.value
     ELSE "(inconnu)"
-    END as nomtri,
+    END as nomtri, dcd.value as deathdate,
     p.type, p.id as peopleID, '.implode(', ', $select).' from people as p '.implode(' ', $leftjoin). ' where p.type in ("'.implode('", "', $peopleType).'") '.$where.' order by trim(nomtri), c3  limit 50';
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
@@ -155,7 +158,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
             $row[$k]=array();
             foreach ($v as $l=>$w) {
                 if (empty($w)) {
-                    $row[$k][$modele[$l]][]='';
+                    if(isset($modele[$l])) $row[$k][$modele[$l]][]='';
                 } elseif (isset($modele[$l])) {
                     if (isset($classadd[$l])) {
                         $row[$k][$modele[$l]][]='<span class="'.$classadd[$l].'">'.$w.'</span>';
@@ -164,6 +167,11 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
                     }
                 }
             }
+            // patient dcd
+            if(trim($v['deathdate']) !=='') {
+              $data[$v['peopleID']]['type'] = 'dcd';
+            }
+
         }
 
         foreach ($row as $patientID=>$v) {
