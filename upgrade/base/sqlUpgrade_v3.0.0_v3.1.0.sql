@@ -29,7 +29,7 @@ ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','l
 UPDATE `data_types` SET `fromID`='1' WHERE `fromID`='0';
 UPDATE `data_types` SET `module`='base' WHERE `name`in ('baseSynthese', 'csBaseGroup');
 UPDATE `data_types` SET `label` = 'agendaForPatientsOfTheDay', `description` = 'permet d\'indiquer l\'agenda à utiliser pour la liste patients du jour pour cet utilisateur', `formType` = 'select', `formValues` = '' WHERE `name` = 'agendaNumberForPatientsOfTheDay';
-
+UPDATE `data_types` SET formValues='baseReglement' WHERE name='reglePorteur';
 
 set @cat=(SELECT `id` FROM `data_cat` WHERE `name`='ordoItems');
 UPDATE `data_types` SET cat=@cat WHERE name in ('ordoTypeImpression', 'ordoLigneOrdo', 'ordoLigneOrdoALDouPas');
