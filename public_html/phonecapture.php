@@ -39,8 +39,8 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file($homepath.'class/' . $class . '.php')) {
-       include $homepath.'class/' . $class . '.php';
+    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
+        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
     }
 });
 
