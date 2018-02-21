@@ -438,7 +438,9 @@ $(document).ready(function() {
       data: $(this).closest("form").serialize(),
       dataType: "html",
       success: function(data) {
-        if (data.substr(0, 7) == "Erreur:") {
+        if (data !='')
+          return;
+        else if (data.substr(0, 7) == "Erreur:") {
           $("#errormessage").html(data);
           $(".submit-error").animate({
             top: "50px"

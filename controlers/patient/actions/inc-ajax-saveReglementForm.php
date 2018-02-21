@@ -68,12 +68,14 @@ if (count($_POST['acteID'])>0) {
     $codes = implode(' + ', array_keys($codes));
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    $debug='';
-    //template
-    $template="pht-ligne-reglement";
-    $patient=new msPeople();
-    $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
+        $debug='';
+        //template
+        $template="pht-ligne-reglement";
+        $patient=new msPeople();
+        $patient->setToID($_POST['patientID']);
+        $p['cs']=$patient->getToday("limit 1")[0];
+    }
 
 } else {
     die('Avertissement: Formulaire vide !');

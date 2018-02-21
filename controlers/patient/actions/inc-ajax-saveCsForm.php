@@ -82,10 +82,12 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     
-    $debug='';
-    //template
-    $template="pht-ligne-typecs";
-    $patient=new msPeople();
-    $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
+        $debug='';
+        //template
+        $template="pht-ligne-typecs";
+        $patient=new msPeople();
+        $patient->setToID($_POST['patientID']);
+        $p['cs']=$patient->getToday("limit 1")[0];
+    }
 }
