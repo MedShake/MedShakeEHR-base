@@ -43,7 +43,7 @@
         {# birthdate #}
         {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
         -
-        {% if page['patient']['administrativeDatas']['deathdate'] %}
+        {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
           {# date décès #}
           {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
         {% else %}
