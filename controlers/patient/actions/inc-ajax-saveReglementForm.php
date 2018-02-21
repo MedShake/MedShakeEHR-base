@@ -68,7 +68,7 @@ if (count($_POST['acteID'])>0) {
     $codes = implode(' + ', array_keys($codes));
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
+    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
         $debug='';
         //template
         $template="pht-ligne-reglement";

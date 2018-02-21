@@ -82,7 +82,7 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     
-    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
+    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
         $debug='';
         //template
         $template="pht-ligne-typecs";
