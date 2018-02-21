@@ -38,8 +38,8 @@ $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 if (!is_dir($homepath."vendor")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
-if (!is_dir("bower_components")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
+if (!is_dir("thirdparty")) {
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier".getcwd());
 }
 if (!is_writable($homepath."config")) {
   die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
@@ -226,20 +226,20 @@ if($template!=''): ?>
       MedShakeEHR : Installation</title>
     <meta name="Description" content=""/>
 
-    <link type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link type="text/css" href="/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
     <link type="text/css" href="/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
     <link type="text/css" href="/css/general.css" rel="stylesheet"/>
 
-    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script defer src="/bower_components/moment/min/moment.min.js"></script>
-    <script defer src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script defer src="/thirdparty/moment/moment/min/moment.min.js"></script>
+    <script defer src="/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script defer src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script defer src="/js/general.js"></script>
-    <script defer src="/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
-    <script defer src="/bower_components/uploader/dist/js/jquery.dm-uploader.min.js"></script>
-    <script defer="defer" src="/bower_components/kjua/dist/kjua.min.js"></script>
+    <script defer src="/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
+    <script defer src="/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
+    <script defer="defer" src="/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
   </head>
 
   <body>
