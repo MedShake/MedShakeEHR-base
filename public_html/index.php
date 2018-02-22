@@ -69,10 +69,6 @@ $mysqli=msSQL::sqlConnect();
 if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
     msTools::redirection('/install.php');
 }
-if ('maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
-    msTools::redirection('/maintenance.html');
-}
-
 /////////// Validators loader
 require $homepath.'fonctions/validators.php';
 
@@ -93,6 +89,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     }
 } elseif (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
+    if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+        msTools::redirection('/maintenance.html');
+    }
     if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
         $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
     }
