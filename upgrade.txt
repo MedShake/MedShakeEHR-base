@@ -1,6 +1,15 @@
 Instructions pour l'upgrade
 
 ==============================
+3.0.0 --> 3.1.0
+==============================
+
+Préambule : faire une sauvegarde complète de l'installation : dossiers et base de données.
+
+1) Remplacer l’ensemble des fichiers de votre version actuelle par la nouvelle version. Débuter par la base de MedShakeEHR, terminer par les modules.
+2) S'identifier dans le logiciel avec un compte administrateur et accepter l'application des modifications
+
+==============================
 2.3.x --> 3.0.0
 ==============================
 
