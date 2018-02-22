@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 chdir($dossier);
                 //telechargement de composer
                 file_put_contents("composer.phar", fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
-                chmod("composer.phar", 0776);
+                chmod("composer.phar", 0774);
                 exec('COMPOSER_HOME="/tmp/" php composer.phar install 2>&1', $ret);
                 json_encode($ret);
                 //exécution de composer pour la partie JS
@@ -82,6 +82,9 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
                 if(strpos(strtolower($ret), 'error')===false) {
                     unlink($dossierweb.'/self-installer.php');
+                    $htaccess="SetEnv MEDSHAKEEHRPATH ".$dossier."\n";
+                    $htaccess.=file_get_contents($dossierweb."/.htaccess");
+                    file_put_contents($dossierweb."/.htaccess", $htaccess);
                     //lancement de la partie configuration
                     header('Location: '.str_replace('base-', '',$_SERVER['REQUEST_URI']));
                     die();
@@ -112,6 +115,11 @@ if($template!=''): ?>
   <style>
     .btn {color:#fff;background-color:#286090;border-color:#204d74;padding:6px 12px;cursor:pointer}
   </style>
+  <script>
+    window.addEventListener("beforeclose", function(){
+        alert("Si vous quittez cette page, l'installation ne sera pas fonctionnelle!");
+    }, false);
+  </script>
   <body>
 
 <?php
