@@ -25,6 +25,7 @@ UPDATE `data_cat` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 UPDATE `data_cat` SET `name`='porteursOrdo' WHERE `name`='poteursOrdo';
 
 -- data_types
+UPDATE `data_types` set formType='text' where formType not in ('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset');
 ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '';
 UPDATE `data_types` SET `fromID`='1' WHERE `fromID`='0';
 UPDATE `data_types` SET `module`='base' WHERE `name`in ('baseSynthese', 'csBaseGroup');
