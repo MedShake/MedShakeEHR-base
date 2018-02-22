@@ -26,6 +26,7 @@
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
+$webpath=str_replace('install.php','',$_SERVER['REQUEST_URI']);
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
@@ -177,7 +178,7 @@ if (!is_file($homepath.'config/config.yml')) {
             die("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que www-data a les droits d'écriture sur le dossier ".$homepath."config/");
         }
 
-        header('Location: /install.php');
+        header('Location: '.$_SERVER['REQUEST_URI']);
         die();
     }
 } else {
@@ -226,20 +227,20 @@ if($template!=''): ?>
       MedShakeEHR : Installation</title>
     <meta name="Description" content=""/>
 
-    <link type="text/css" href="/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/css/general.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/css/general.css" rel="stylesheet"/>
 
-    <script type="text/javascript" src="/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script defer src="/thirdparty/moment/moment/min/moment.min.js"></script>
-    <script defer src="/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script defer src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-    <script defer src="/js/general.js"></script>
-    <script defer src="/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
-    <script defer src="/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
-    <script defer="defer" src="/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
+    <script type="text/javascript" src="<?=$webpath?>/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/moment/moment/min/moment.min.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script defer src="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script defer src="<?=$webpath?>/js/general.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
+    <script defer="defer" src="<?=$webpath?>/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
   </head>
 
   <body>
@@ -269,7 +270,7 @@ if ($template=='bienvenue') :
 ?>
       <h1>Bienvenue dans MedShakeEHR!</h1>
       <p style="margin-top:50px">Avant de pouvoir utiliser MedShakeEHR, nous devons procéder à quelques étapes.</p>
-      <form	action="/install.php" method="post" style="margin-top:50px;">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="bienvenue" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -282,7 +283,7 @@ elseif ($template=='configForm') :
 ?>
       <h2>Configuration rapide</h2>
       <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.</p>
-      <form	action="/install.php" 		method="post">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" 		method="post">
         <input name="configForm" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -347,7 +348,7 @@ else :
 ?>
       <h2>Installation de la base de données</h2>
       <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
-      <form	action="/install.php" method="post" style="margin-top:50px;">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="baseInstall" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
