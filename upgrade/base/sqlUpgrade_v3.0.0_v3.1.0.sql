@@ -25,7 +25,7 @@ UPDATE `data_cat` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 UPDATE `data_cat` SET `name`='porteursOrdo' WHERE `name`='poteursOrdo';
 
 -- data_types
-ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','lcc','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '';
+ALTER TABLE `data_types` CHANGE  `formType` `formType` enum('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '';
 UPDATE `data_types` SET `fromID`='1' WHERE `fromID`='0';
 UPDATE `data_types` SET `module`='base' WHERE `name`in ('baseSynthese', 'csBaseGroup');
 UPDATE `data_types` SET `label` = 'agendaForPatientsOfTheDay', `description` = 'permet d\'indiquer l\'agenda à utiliser pour la liste patients du jour pour cet utilisateur', `formType` = 'select', `formValues` = '' WHERE `name` = 'agendaNumberForPatientsOfTheDay';
