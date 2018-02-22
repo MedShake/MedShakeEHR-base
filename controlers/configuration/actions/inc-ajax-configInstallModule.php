@@ -34,10 +34,10 @@ if ($mimetype!='application/zip') {
     die("Erreur: Le fichier n'est pas un fichier zip");
 }
 if (!is_writable($p['config']['webDirectory'])) {
-    die("Erreur: www-data n'a pas les droits d'écriture sur le dossier ".$p['config']['webDirectory']));
+    die("Erreur: www-data n'a pas les droits d'écriture sur le dossier ".$p['config']['webDirectory']);
 }
 if (!is_writable($p['config']['homeDirectory'])) {
-    die("Erreur: www-data n'a pas les droits d'écriture sur le dossier ".$p['config']['homeDirectory']));
+    die("Erreur: www-data n'a pas les droits d'écriture sur le dossier ".$p['config']['homeDirectory']);
 }
 $zip = new ZipArchive;
 if ($zip->open($fichier['tmp_name'])) {
@@ -45,10 +45,10 @@ if ($zip->open($fichier['tmp_name'])) {
         msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
         if ($zip->extractTo($p['config']['homeDirectory'])) {
             $zip->close();
-            if ($p['config']['webDirectory']!=$p['config']['homeDirectory'].'/public_html') {
+            if ($p['config']['webDirectory']!=$p['config']['homeDirectory'].'public_html/') {
                 foreach (scandir($p['config']['homeDirectory'].'/public_html') as $f) {
                     if ($f !='.' and $f !='..') {
-                        rename($p['config']['homeDirectory'].'/public_html/'.$f, $p['config']['webDirectory'].$f);
+                        rename($p['config']['homeDirectory'].'public_html/'.$f, $p['config']['webDirectory'].$f);
                     }
                 }
                 rmdir($p['config']['homeDirectory'].'/public_html');
