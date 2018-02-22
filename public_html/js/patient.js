@@ -23,11 +23,11 @@
  * Fonctions JS pour le dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
- ////////////////////////////////////////////////////////////////////////
- ///////// Définition des variables par défaut
+////////////////////////////////////////////////////////////////////////
+///////// Définition des variables par défaut
 
 if (!scrollDestination) {
   var scrollDestination = {
@@ -50,7 +50,7 @@ if (!scriptsList) {
     reglement: "reglement.js"
   };
 }
- 
+
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ $(document).ready(function() {
   ///////// Observations déclenchement actions d'injections dans la page
 
   //bouton de nouvelle consultation
-  $("button.newCS, a.newCS").on("click", function(e) {
+  $("body").on("click", "button.newCS, a.newCS", function(e) {
     e.preventDefault();
     if ($('#nouvelleCs').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la consultation en cours ?')) {
@@ -155,7 +155,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouvelle ordo
-  $("#linkAddNewOrdo, .editOrdo").on("click", function(e) {
+  $('body').on("click", "#linkAddNewOrdo, .editOrdo", function(e) {
     e.preventDefault();
     if ($('#newOrdo').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone d\'ordonnance en cours ?')) {
@@ -175,7 +175,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau mail
-  $(".newMail").on("click", function(e) {
+  $('body').on("click", ".newMail", function(e) {
     e.preventDefault();
     if ($('#newMail').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de mail en cours ?')) {
@@ -187,7 +187,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau reglement
-  $("#linkAddNewReglement, .editReglement").on("click", function(e) {
+  $('body').on("click", "#linkAddNewReglement, .editReglement", function(e) {
     e.preventDefault();
     if ($('#newReglement').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
@@ -212,7 +212,7 @@ $(document).ready(function() {
 
   //sélectionner un groupe dans l'historique
 
-  $("#historiqueTypeSelect button").on("click", function(e) {
+  $("body").on("click", "#historiqueTypeSelect button", function(e) {
     e.preventDefault();
     groupe = $(this).attr('data-groupe');
     //boutons
@@ -233,13 +233,13 @@ $(document).ready(function() {
   });
 
   //toogle importance d'une ligne
-  $("a.toogleImportant").on("click", function(e) {
+  $('body').on("click", "a.toogleImportant", function(e) {
     e.preventDefault();
     toogleImportant($(this));
   });
 
   //supprimer une ligne de l'historique
-  $("a.suppCs").on("click", function(e) {
+  $("body").on("click", "a.suppCs", function(e) {
     e.preventDefault();
     if (confirm('Confirmez-vous la demande de suppression ?')) {
       suppCs($(this));
@@ -254,7 +254,7 @@ $(document).ready(function() {
     $('#alternatTitreModal #titreActu').val(titreActu);
     $('#alternatTitreModal #objetID').val(objetID);
   })
-  $('.trLigneExamen td').on('dblclick', function() {
+  $('body').on('dblclick', '.trLigneExamen td', function() {
     $('#alternatTitreModal').modal('show');
     titreActu = $(this).closest('tr').attr('data-alternatTitre');
     objetID = $(this).closest('tr').attr('data-objetID');
@@ -276,10 +276,64 @@ $(document).ready(function() {
     }
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  // gestion des historiques et courbes de poids/taille/imc
+
+  $(".graph-print").on("click", function() {});
+
+  $(".duplicate").parent().on("click", function() {
+    var $input = $(this).closest(".input-group").children('input');
+    setPeopleData($input.val(), $('#identitePatient').attr("data-patientID"), $input.attr("data-typeID"), $input, '0');
+  });
+  $(".duplicate").parent().attr("title", "Reporter une mesure identique").css("cursor", "pointer");
+  $(".graph").parent().attr("title", "Voir l'historique").css("cursor", "pointer");
+
+  //stupide table pour classer tableau de la modal
+  $("table.histo").stupidtable();
+  $("table.histo").on("aftertablesort", function(event, data) {
+    th = $(this).find("th");
+    th.find(".arrow").remove();
+    dir = $.fn.stupidtable.dir;
+    arrow = data.direction === dir.ASC ? "glyphicon-chevron-up" : "glyphicon-chevron-down";
+    th.eq(data.column).append(' <span class="arrow glyphicon ' + arrow + '"></span>');
+  });
+
+  //modal Courbes de poids/taille/IMC
+  $(".graph").parent().on("click", function() {
+    $(".histo-suppr").remove();
+    $.ajax({
+      url: urlBase + '/patient/ajax/getGraphData/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID")
+      },
+      dataType: "html",
+      success: function(data) {
+        if (data == 'ok')
+          return;
+        data = JSON.parse(data);
+        for (var i in data)
+          if (i != 'bornes')
+            $("table.histo tbody").append('\
+              <tr class="histo-suppr">\
+                <td data-sort-value="' + i + '" style="text-align:center">' + (i < 3 * 365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
+                <td style="text-align:center">' + moment(data[i].date, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY") + '</td>\
+                <td style="text-align:center;color:' + (data[i].poids.reel ? 'black' : 'grey') + '">' + data[i].poids.value + '</td>\
+                <td style="text-align:center;color:' + (data[i].taille.reel ? 'black' : 'grey') + '">' + data[i].taille.value + '</td>\
+                <td style="text-align:center;color:' + (data[i].imc.reel ? 'black' : 'grey') + '">' + data[i].imc.value + '</td>\
+              </tr>');
+        drawGraph(data);
+        $('#viewGraph').modal('show');
+      },
+      error: function() {}
+    });
+  });
+
+
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $(' .trLigneExamen td:nth-child(3), a.showDetDoc').on('click', function(e) {
-    showObjetDet($(this));
+  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
     e.preventDefault();
+    showObjetDet($(this));
   });
 
   //fermeture modal data admin patient
@@ -319,8 +373,125 @@ $(document).ready(function() {
 
   $("body").on("click", ".modalCreationDateClose", function(e) {
     e.preventDefault();
-    $('#formNewCreationDate').submit();
+    $.ajax({
+      url: $("#formNewCreationDate").attr("action"),
+      type: 'post',
+      data: $("#formNewCreationDate").serialize(),
+      dataType: "html",
+      success: function(data) {
+        if (data.indexOf("Erreur:") == 0) {
+          $("#errormessage").html(data);
+          $(".submit-error").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-error").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else if (data.indexOf("Avertissement:") == 0) {
+          $("#warningmessage").html(data);
+          $(".submit-warning").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-warning").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else {
+          getHistorique();
+          getHistoriqueToday();
+        }
+      },
+      error: function() {
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
+      }
+    });
   });
+
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Envoyer les formulaires et recharger l'historique
+
+  //enregistrement de forms en ajax
+  $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
+    if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
+      return;
+    };
+    e.preventDefault();
+    $(window).unbind("beforeunload");
+    $(this).closest(".toclear").html("");
+    $.ajax({
+      url: $(this).closest("form").attr("action"),
+      type: 'post',
+      data: $(this).closest("form").serialize(),
+      dataType: "html",
+      success: function(data) {
+        if (!data.length)
+          return;
+        else if (data.substr(0, 7) == "Erreur:") {
+          $("#errormessage").html(data);
+          $(".submit-error").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-error").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else if (data.substr(0, 14) == "Avertissement:") {
+          $("#warningmessage").html(data);
+          $(".submit-warning").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-warning").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else {
+          var $tr = $("#historique .anneeHistorique");
+          if ($tr.length) {
+            if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
+              $($tr[0]).after(data);
+            else
+              ($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+          } else
+            getHistorique();
+          $tr = $("#historiqueToday .trLigneExamen");
+          if ($tr.length)
+            $($tr[0]).before(data);
+          else
+            getHistoriqueToday();
+        }
+      },
+      error: function() {
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
+      }
+    });
+  });
+
 
 });
 
@@ -431,6 +602,9 @@ function addDicomSRInfo2CurrentForm(data) {
 
 //envoyer le form de CS dans le div CS
 function sendFormToCsDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCsForm/',
     type: 'post',
@@ -449,7 +623,8 @@ function sendFormToCsDiv(el) {
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
-      $(window).on("beforeunload", preventDataLoss);
+      if (el.attr('data-mode') != 'copy')
+        $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
       });
@@ -468,6 +643,9 @@ function preventDataLoss(e) {
 
 //envoyer le form de Courrier dans le div newCourrier
 function sendFormToCourrierDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCourrierForm/',
     type: 'post',
@@ -500,19 +678,19 @@ function sendFormToCourrierDiv(el) {
 
 //envoyer le form new Ordo dans le div Ordo
 function sendFormToOrdoDiv(el) {
-  if (el.hasClass('editOrdo')) {
-    objetID = el.closest('tr').attr('data-objetID');
-  } else {
-    objetID = null;
-  }
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editOrdo')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
 
   $.ajax({
     url: urlBase + '/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
-      objetID: objetID,
+      objetID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       parentID: '',
+      ordoForm: el.attr('data-ordoForm'),
+      porteur: el.hasClass('editOrdo') ? el.closest('tr').attr('data-porteur') : el.attr('data-porteur'),
+      module: el.hasClass('editOrdo') ? el.closest('tr').attr('data-module') : el.attr('data-module')
     },
     dataType: "html",
     success: function(data) {
@@ -535,6 +713,9 @@ function sendFormToOrdoDiv(el) {
 
 //envoyer le form newMail dans le div newMail
 function sendFormToMailDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractMailForm/',
     type: 'post',
@@ -562,18 +743,18 @@ function sendFormToMailDiv(el) {
 
 //envoyer le form new Reglement dans le div Reglement
 function sendFormToReglementDiv(el) {
-  if (el.hasClass('editReglement')) {
-    objetID = el.closest('tr').attr('data-objetID');
-  } else {
-    objetID = null;
-  }
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editReglement')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
 
   $.ajax({
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
-      objetID: objetID,
+      objetID: el.hasClass('editReglement') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
+      reglementForm: el.attr('data-reglementForm'),
+      porteur: el.attr('data-porteur'),
+      module: el.hasClass('editReglement') ? el.closest('tr').attr('data-module') : el.attr('data-module'),
       parentID: '',
     },
     dataType: "html",
@@ -605,9 +786,11 @@ function suppCs(el) {
     data: {
       objetID: objetID
     },
-    dataType: "html",
+    dataType: "json",
     success: function() {
       $('.tr' + objetID).remove();
+      getHistorique();
+      getHistoriqueToday();
     },
     error: function() {
       alert('Problème, rechargez la page !');
@@ -677,6 +860,8 @@ function showObjetDet(element) {
   destination = $("." + zone + " .detObjet" + objetID);
 
   if (destination.length == 0) {
+    ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+    destination = $("." + zone + " .detObjet" + objetID);
 
     $.ajax({
       url: urlBase + '/patient/ajax/ObjetDet/',
@@ -686,9 +871,10 @@ function showObjetDet(element) {
       },
       dataType: "html",
       success: function(data) {
-        ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent">' + data + '</tr>');
+        destination.html(data);
       },
       error: function() {
+        destination.remove();
         alert('Problème, rechargez la page !');
       }
     });
@@ -702,7 +888,7 @@ function showObjetDet(element) {
 // rafraichier le header du dossier patient (infos administratives)
 function ajaxModalPatientAdminCloseAndRefreshHeader() {
   $.ajax({
-    url: urlBase+'/patient/ajax/refreshHeaderPatientAdminData/',
+    url: urlBase + '/patient/ajax/refreshHeaderPatientAdminData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID")
@@ -714,5 +900,214 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
     error: function() {
       alert('Problème, rechargez la page !');
     }
+  });
+}
+
+function drawGraph(data) {
+  var canvas;
+  var ctx;
+  var Xmax = parseInt(data.bornes.Xmax);
+  if (Xmax < 3 * 365.25) {
+    canvas = $(".graph-poids")[0];
+    ctx = canvas.getContext("2d");
+    drawGraphPoidsNourisson(data, ctx);
+    canvas = $(".graph-taille")[0];
+    ctx = canvas.getContext("2d");
+    drawGraphTailleNourisson(data, ctx);
+    canvas = $(".graph-imc")[0];
+    ctx = canvas.getContext("2d");
+    if ($('#identitePatient').attr("data-genre") == "F")
+      drawGraphIMCFille(data, ctx);
+    else
+      drawGraphIMCGarcon(data, ctx);
+  } else if (Xmax < 18 * 365.25) {
+    if ($('#identitePatient').attr("data-genre") == "F") {
+      canvas = $(".graph-poids")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphPoidsFille(data, ctx);
+      canvas = $(".graph-taille")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphTailleFille(data, ctx);
+      canvas = $(".graph-imc")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphIMCFille(data, ctx);
+    } else {
+      canvas = $(".graph-poids")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphPoidsGarcon(data, ctx);
+      canvas = $(".graph-taille")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphTailleGarcon(data, ctx);
+      canvas = $(".graph-imc")[0];
+      ctx = canvas.getContext("2d");
+      drawGraphIMCGarcon(data, ctx);
+    }
+  } else {
+    canvas = $(".graph-poids")[0];
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'poids', ctx, canvas);
+    canvas = $(".graph-taille")[0];
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'taille', ctx, canvas);
+    canvas = $(".graph-imc")[0];
+    ctx = canvas.getContext("2d");
+    drawGraphGeneral(data, 'imc', ctx, canvas);
+  }
+}
+
+function drawGraphPoidsNourisson(data, ctx) {
+  $(".graph-poids")
+    .attr("width", "610")
+    .attr("height", "790")
+    .css("background-image", "url(/img/poids_nourissons.svg)")
+    .css("background-size", "cover");
+  drawDots(18, 567 / (3 * 365.25), 756 / 22, 0, 22, ctx, 'poids', data);
+}
+
+function drawGraphTailleNourisson(data, ctx) {
+  $(".graph-taille")
+    .attr("width", "614")
+    .attr("height", "532")
+    .css("background-image", "url(/img/taille_nourissons.svg)")
+    .css("background-size", "cover");
+  drawDots(22, 567 / (3 * 365.25), 500 / 85, 0, 115, ctx, 'taille', data);
+}
+
+function drawGraphPoidsGarcon(data, ctx) {
+  $(".graph-poids")
+    .attr("width", "596")
+    .attr("height", "615")
+    .css("background-image", "url(/img/poids_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(16, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
+}
+
+function drawGraphTailleGarcon(data, ctx) {
+  $(".graph-taille")
+    .attr("width", "602")
+    .attr("height", "831")
+    .css("background-image", "url(/img/taille_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(22, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
+}
+
+function drawGraphIMCGarcon(data, ctx) {
+  $(".graph-imc")
+    .attr("width", "622")
+    .attr("height", "861")
+    .css("background-image", "url(/img/IMC_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(31, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
+}
+
+function drawGraphPoidsFille(data, ctx) {
+  $(".graph-poids")
+    .attr("width", "608")
+    .attr("height", "614")
+    .css("background-image", "url(/img/poids_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(19, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
+}
+
+function drawGraphTailleFille(data, ctx) {
+  $(".graph-taille")
+    .attr("width", "611")
+    .attr("height", "831")
+    .css("background-image", "url(/img/taille_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(23, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
+}
+
+function drawGraphIMCFille(data, ctx) {
+  $(".graph-imc")
+    .attr("width", "619")
+    .attr("height", "861")
+    .css("background-image", "url(/img/IMC_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(29, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
+}
+
+function drawGraphGeneral(data, sel, ctx, canvas) {
+  $(".graph-" + sel).css("background", "none");
+  var Xmin = Math.floor(parseInt(data.bornes.Xmin) / 365.25);
+  var Xmax = Math.ceil(parseInt(data.bornes.Xmax) / 365.25);
+  var Ymin = (sel == 'imc' ? 1 : 5) * (Math.floor(parseFloat(data.bornes.Ymin[sel]) / (sel == 'imc' ? 1 : 5)) - 1);
+  var Ymax = (sel == 'imc' ? 1 : 5) * (Math.ceil(parseFloat(data.bornes.Ymax[sel]) / (sel == 'imc' ? 1 : 5)) + 1);
+  var marge = 22;
+  var scaleX = (canvas.width - marge) / (Xmax - Xmin);
+  var scaleY = (canvas.height - marge) / (Ymax - Ymin);
+  canvas.width = canvas.width; //effacement du canvas
+  ctx.strokeStyle = "#a9c0a6";
+  ctx.fillStyle = "#8b5ba5";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  //dessin des graduations X
+  var inc = (Xmax - Xmin) < 2 ? 0.25 : (Xmax - Xmin) < 4 ? 0.5 : 1;
+  for (var i = Xmin; i < Xmax; i += inc) {
+    ctx.moveTo((i - Xmin) * scaleX + marge, 0);
+    ctx.lineTo((i - Xmin) * scaleX + marge, canvas.height - marge + 2);
+    ctx.fillText(i % 1 ? '+' + (12 * (i % 1)) + 'mois' : i, (i - Xmin) * scaleX + marge - (i % 1 ? 20 : 5), canvas.height - 5);
+  }
+  ctx.moveTo(canvas.width - 1, 0);
+  ctx.lineTo(canvas.width - 1, canvas.height - marge + 2);
+  ctx.fillText("ans", canvas.width - 20, canvas.height - 5);
+  //détermination de la précision des graduations Y
+  inc = sel == 'poids' ? 5 : 1;
+  //dessin des graduations Y
+  for (var i = Ymin; i < Ymax; i += inc) {
+    ctx.moveTo(marge - 3, (Ymax - i) * scaleY + 1);
+    ctx.lineTo(canvas.width, (Ymax - i) * scaleY + 1);
+    ctx.fillText(i, 2, (Ymax - i) * scaleY + 5);
+  }
+  ctx.moveTo(marge - 3, 0);
+  ctx.lineTo(canvas.width, 0);
+  ctx.fillText(sel == 'poids' ? 'kg' : sel == 'taille' ? "cm" : "kg/m²", 0, 10);
+  ctx.stroke();
+  drawDots(marge, scaleX / 365.25, scaleY, Xmin * 365.25, Ymax, ctx, sel, data);
+}
+
+function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
+  var rayon = 3;
+  for (var i in data) {
+    if (i == 'bornes')
+      continue;
+    var Xpos = margeX + (parseInt(i) - Xmin) * scaleX;
+    var Ypos = (Ymax - data[i][sel].value) * scaleY;
+    ctx.fillStyle = data[i][sel].reel ? "green" : "grey";
+    ctx.beginPath();
+    ctx.moveTo(rayon + Xpos, Ypos);
+    ctx.arc(Xpos, Ypos, rayon, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+}
+
+function getHistorique() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/getHistorique/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#historique").html(data);
+    },
+    error: function() {}
+  });
+}
+
+function getHistoriqueToday() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/getHistoriqueToday/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#historiqueToday").html(data);
+    },
+    error: function() {}
   });
 }

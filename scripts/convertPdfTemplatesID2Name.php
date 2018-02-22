@@ -25,40 +25,41 @@
  * PARAMETRAGE DU DIRECTORY INDISPENSABE => $directory ci-dessous 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
-$directory = '/home/EHR/templates/models4print';
+ini_set('display_errors', 1);
+setlocale(LC_ALL, "fr_FR.UTF-8");
+session_start();
+
+$homepath=getenv("MEDSHAKEEHRPATH");
+$homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
+
+/////////// Composer class auto-upload
+require $homepath.'vendor/autoload.php';
+
+/////////// Class medshakeEHR auto-upload
+spl_autoload_register(function ($class) {
+     include $homepath.'class/' . $class . '.php';
+});
 
 
+/////////// Config loader
+require $homepath.'config/config.php';
 
- ini_set('display_errors', 1);
- setlocale(LC_ALL, "fr_FR.UTF-8");
- session_start();
-
- /////////// Composer class auto-upload
- require '../vendor/autoload.php';
-
- /////////// Class medshakeEHR auto-upload
- spl_autoload_register(function ($class) {
-     include '../class/' . $class . '.php';
- });
+/////////// SQL connexion
+$mysqli=msSQL::sqlConnect();
 
 
- /////////// Config loader
- $p['config']=Spyc::YAMLLoad('../config/config.yml');
-
- /////////// SQL connexion
- $mysqli=msSQL::sqlConnect();
-
-
+$directory = $p['config']['templatesPdfFolder'];
 
 $scanned_directory = array_diff(scandir($directory), array('..', '.'));
 
 $masque='# tag\.(val|pct)*([0-9]+)#i';
 
 foreach ($scanned_directory as $file) {
-    $file=$directory.'/'.$file;
+    $file=$directory.$file;
     $contenu=file_get_contents($file);
 
     if (preg_match_all($masque, $contenu, $m)) {

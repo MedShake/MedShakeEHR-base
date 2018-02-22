@@ -24,7 +24,7 @@
  * Agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
@@ -36,21 +36,13 @@ if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['use
 //paramètres de l'agenda
 if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
   $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+  if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgenda'].=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
+  }
 }
 
 // types de rendez-vous
-if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml')) {
-  $p['page']['typeRdv']=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml');
-} else {
-  $p['page']['typeRdv']=array(
-    '[C]'=> array(
-      'descriptif'=>'Consultation',
-      'backgroundColor'=>'#2196f3',
-      'borderColor'=>'#1e88e5',
-      'duree'=>15
-    )
-  );
-}
+$p['page']['typeRdv']=msAgenda::getRdvTypes($match['params']['userID']);
 
 //formulaire prise rdv
 $formPriseRdv = new msForm();
@@ -72,3 +64,4 @@ $p['page']['formNewPatient']['addHidden']=array(
 );
 //modifier action pour url ajax
 $p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
+

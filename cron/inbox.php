@@ -30,6 +30,7 @@
  * Cf infra
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 /// A CONFIGURER IMPERATIVEMENT SI MULTIPLE UTILISATEURS SUR LA MEME INSTALLATION
@@ -37,23 +38,34 @@
 $mailForUserID=0;
 ///
 
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['inbox']=array(
+        'task' => 'Mail',
+        'defaults' => array('m'=>'0,5,10,15,20,25,30,35,40,45,50,55','h'=>'8-20','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Relève des mails');
+    return;
+}
 
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
+$homepath=getcwd().'/';
+
 /////////// Composer class auto-upload
-require '../vendor/autoload.php';
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    include $homepath.'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']['homeDirectory']=$homepath;
 
 
 /////////// SQL connexion

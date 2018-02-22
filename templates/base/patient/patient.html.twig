@@ -23,7 +23,7 @@
  # Template > patient : dossier patient
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -41,8 +41,9 @@
     </script>
 
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/tinymce.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/tinymce/jquery.tinymce.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/tinymce.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/jquery.tinymce.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js"></script>
 
     {# JS général du dossier patient #}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
@@ -70,7 +71,7 @@
         {% if page.patient.dossierType =="deleted" %}
         <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
         {% endif %}
-        <div class="row" id="identitePatient" data-patientID="{{ page.patient.id }}">
+        <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.14 }}" data-patientID="{{ page.patient.id }}">
 
             {% include('inc-ajax-patientAdminData.html.twig') %}
 
@@ -84,9 +85,11 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li>
-                      <a id="linkAddNewOrdo" href="#">Nouvelle prescription</a>
-                  </li>
+                  {% for k,v in page.formOrdo %}
+                    <li>
+                        <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}Nouvelle prescription</a>
+                    </li>
+                  {% endfor %}
                 </ul>
             </div>
 
@@ -130,9 +133,11 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li>
-                      <a id="linkAddNewReglement" href="#">Nouveau règlement</a>
-                  </li>
+                  {% for k,v in page.formReglement %}
+                    <li>
+                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {% endif %}Nouveau règlement</a>
+                    </li>
+                  {% endfor %}
                 </ul>
             </div>
 
@@ -206,138 +211,54 @@
             {# colonne principale #}
             <div class="col-md-9" style="padding-left : 35px">
 
-                {# Div d'import de nouveau doc #}
-                <div id="newDoc" class="row">{% include 'importDocForm.html.twig' %}</div>
+              {# Div d'import de nouveau doc #}
+              <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
 
-                {# historique du jour #}
-                {% if page.patient.today %}{% include 'patientHistoriqueToday.html.twig' %}{% endif %}
+              {# historique du jour #}
+              <div id="historiqueToday">
+                {% include 'patientHistoriqueToday.html.twig' %}
+              </div>
 
-                {# Div d'insertion de nouveau reglement #}
-                <div id="newReglement" class="row"></div>
+              {# Div d'insertion de nouveau reglement #}
+              <div id="newReglement" class="row toclear"></div>
 
-                {# Div d'insertion de nouveau courrier #}
-                <div id="newCourrier" class="row"></div>
+              {# Div d'insertion de nouveau courrier #}
+              <div id="newCourrier" class="row toclear"></div>
 
-                {# Div d'insertion de nouvelle ordonance #}
-                <div id="newOrdo" class="row"></div>
+              {# Div d'insertion de nouvelle ordonance #}
+              <div id="newOrdo" class="row toclear"></div>
 
-                {# Div d'insertion de nouvelle consultation #}
-                <div id="nouvelleCs" class="row checkboxFixValue"></div>
+              {# Div d'insertion de nouvelle consultation #}
+              <div id="nouvelleCs" class="row toclear checkboxFixValue"></div>
 
-                {# Div d'insertion de nouveau mail  #}
-                <div id="newMail" class="row"></div>
+              {# Div d'insertion de nouveau mail  #}
+              <div id="newMail" class="row toclear"></div>
 
               {# Synthèse patient #}
               {% include 'patientSynthese.html.twig' %}
 
               {# Historique complet #}
-              {% if page.patient.historique %}{% include 'patientHistoriqueMedical.html.twig' %}{% endif %}
+              <div id="historique">
+                {% include 'patientHistoriqueMedical.html.twig' %}
+              </div>
             </div>
           </div>
 
     </div>
 
+    {# modal courbes de poids/taille/IMC #}
+    {% include 'inc-patientModal-GraphsIMC.html.twig' %}
+
     {# modal changer nom consultation ou doc #}
-    <div class="modal fade" id="alternatTitreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-      aria-hidden="true">&times;</span></button>
+    {% include 'inc-patientModal-changerTitre.html.twig' %}
 
-            <h4 class="modal-title" id="exampleModalLabel">Compléter le titre</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="titreActu" class="control-label">Complément :</label>
-                <input type="text" class="form-control" id="titreActu">
-                <input type="hidden" id="objetID" value="" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-primary" id="alternatTitreModalSubmit">Modifier</button>
-           </div>
-         </div>
-       </div>
-     </div>
+    {# modal rapatrier mesures examen particulier #}
+    {% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
 
-     {# modal rapatrier mesures examen particulier #}
-     <div class="modal fade" id="listeDicomStudiesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-       <div class="modal-dialog" role="document">
-         <div class="modal-content">
-           <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-       aria-hidden="true">&times;</span></button>
+    {# modal éditer infos adminsitratives du patient #}
+    {% include 'inc-patientModal-editAdminData.html.twig' %}
 
-             <h4 class="modal-title">Choisir un examen</h4>
-           </div>
-           <div class="modal-body">
-             <form>
-               <div class="form-group">
-                 <label for="titreActu" class="control-label">Liste des études DICOM trouvées :</label>
-                 <select class="form-control" id="listeDicomStudies"></select>
+    {# modal changer la date d'une ligne d'historique #}
+    {% include 'inc-patientModal-changerDateEffet.html.twig' %}
 
-               </div>
-             </form>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-             <button type="button" class="btn btn-primary" id="listeDicomStudiesSubmit">Rapatrier</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# modal éditer infos adminsitratives du patient #}
-      <div id="editAdmin" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Edition des informations administratives du patient</h4>
-            </div>
-            <div class="modal-body changeObserv">
-              {{ f.formbuilder(page.formEditAdmin , 'baseNewPatient' , session) }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# modal changer la date d'une ligne d'historique #}
-      <div id="modalCreationDate" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
-            </div>
-            <div class="modal-body">
-              <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
-              <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
-              <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/changeObjetCreationDate/{{ page.patient.id }}/" method="post">
-                <input name="objetID" type="hidden" value="" />
-                <div class="form-group">
-                    <label for="datepickHisto">Modifier la date d'effet pour le</label>
-                    <div class="input-group date  col-md-6" id="datepickHisto">
-                        <input name="newCreationDate" type="text" class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-              <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
-            </div>
-          </div>
-        </div>
-      </div>
 {% endblock %}

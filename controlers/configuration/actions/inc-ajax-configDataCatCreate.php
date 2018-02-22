@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 //check & validate datas
 $gump=new GUMP();
 $_POST = $gump->sanitize($_POST);

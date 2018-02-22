@@ -24,105 +24,107 @@
  * Pivot central des pages non loguées
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
- ini_set('display_errors', 1);
- setlocale(LC_ALL, "fr_FR.UTF-8");
- session_start();
+ini_set('display_errors', 1);
+setlocale(LC_ALL, "fr_FR.UTF-8");
+session_start();
+
+$homepath=getenv("MEDSHAKEEHRPATH");
+$homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
+
+/////////// Composer class auto-upload
+require $homepath.'vendor/autoload.php';
+
+/////////// Class medshakeEHR auto-upload
+spl_autoload_register(function ($class) {
+    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
+        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    }
+});
 
 
- /////////// Composer class auto-upload
- require '../vendor/autoload.php';
+/////////// Config loader
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 
- /////////// Class medshakeEHR auto-upload
- spl_autoload_register(function ($class) {
-     if (is_file('../class/' . $class . '.php')) {
-         include '../class/' . $class . '.php';
-     }
- });
+/////////// correction pour host non présent (IP qui change)
+if ($p['config']['host']=='') {
+    $p['config']['host']=$_SERVER['SERVER_ADDR'];
+    $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
+}
+$p['config']['homeDirectory']=$homepath;
 
+/////////// SQL connexion
+$mysqli=msSQL::sqlConnect();
 
- /////////// Config loader
- $p['config']=Spyc::YAMLLoad('../config/config.yml');
- $p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
+/////////// Validators loader
+require $homepath.'fonctions/validators.php';
 
- /////////// correction pour host non présent (IP qui change)
- if ($p['config']['host']=='') {
-     $p['config']['host']=$_SERVER['SERVER_ADDR'];
-     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
- }
+/////////// Router
+$router = new AltoRouter();
+$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
+$router->addRoutes($routes);
+$router->setBasePath($p['config']['urlHostSuffixe']);
+$match = $router->match();
 
- /////////// SQL connexion
- $mysqli=msSQL::sqlConnect();
+///////// user
+if (isset($_COOKIE['userIdPc'])) {
+    $p['user']=msUser::userIdentificationPhonecapture();
+    if (isset($p['user']['id'])) {
+        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+    }
+    } else {
+    $p['user']=null;
+    $p['user']['id']=null;
+}
 
- /////////// Validators loader
- require '../fonctions/validators.php';
+///////// Controler else -> 404
+if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+    include $homepath.'controlers/'.$match['target'].'.php';
 
- /////////// Router
- $router = new AltoRouter();
- $routes=Spyc::YAMLLoad('../config/routes.yml');
- $router->addRoutes($routes);
- $router->setBasePath($p['config']['urlHostSuffixe']);
- $match = $router->match();
+    // complément lié au module installé
+    if (is_file($homepath.'controlers/module/'.$match['target'].'.php')) {
+        include $homepath.'controlers/module/'.$match['target'].'.php';
+    }
+} else {
+    //$template='problem';
+}
 
- ///////// user
- if (isset($_COOKIE['userIdPc'])) {
-     $p['user']=msUser::userIdentificationPhonecapture();
-     if (isset($p['user']['id'])) {
-         msUser::applySpecificConfig($p['config'], $p['user']['id']);
-     }
- } else {
-     $p['user']=null;
-     $p['user']['id']=null;
- }
+//////// View if defined
+if (isset($template)) {
+    if (isset($_SESSION)) {
+        $p['session']=$_SESSION;
+    }
 
- ///////// Controler else -> 404
- if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-     include '../controlers/'.$match['target'].'.php';
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
+    header("Pragma: no-cache");
 
-     // complément lié au module installé
-     if (is_file('../controlers/module/'.$match['target'].'.php')) {
-         include '../controlers/module/'.$match['target'].'.php';
-     }
- } else {
-     //$template='problem';
- }
+    //générer et sortir le html
+    $getHtml = new msGetHtml();
+    $getHtml->set_template($template);
+    echo $getHtml->genererHtml();
+}
 
- //////// View if defined
- if (isset($template)) {
-     if (isset($_SESSION)) {
-         $p['session']=$_SESSION;
-     }
+//////// Debug
+if (!isset($debug)) {
+    $debug=null;
+}
 
-     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-     header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
-     header("Pragma: no-cache");
-
-     //générer et sortir le html
-     $getHtml = new msGetHtml();
-     $getHtml->set_template($template);
-     echo $getHtml->genererHtml();
- }
-
- //////// Debug
- if (!isset($debug)) {
-     $debug=null;
- }
-
- if ($debug=='y' and $p['user']['id']=='1') {
-     echo '<pre style="margin-top : 50px;">';
-     //echo '$p[\'config\'] :';
-     //print_r($p['config']);
-     echo '$p[\'page\'] :';
-     print_r($p['page']);
-     echo '$p[\'user\'] :';
-     print_r($p['user']);
-     echo '$MATCH :';
-     print_r($match);
-     echo '$_COOKIE :';
-     print_r($_COOKIE);
-     echo '$_SESSION :';
-     print_r($_SESSION);
- }
+if ($debug=='y' and $p['user']['id']=='1') {
+    echo '<pre style="margin-top : 50px;">';
+    //echo '$p[\'config\'] :';
+    //print_r($p['config']);
+    echo '$p[\'page\'] :';
+    print_r($p['page']);
+    echo '$p[\'user\'] :';
+    print_r($p['user']);
+    echo '$MATCH :';
+    print_r($match);
+    echo '$_COOKIE :';
+    print_r($_COOKIE);
+    echo '$_SESSION :';
+    print_r($_SESSION);
+}

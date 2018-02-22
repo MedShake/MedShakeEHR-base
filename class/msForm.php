@@ -55,6 +55,11 @@ class msForm
      */
     private $_prevalues;
     /**
+     * @var array valeurs des <option> à injecter dans les selects du form en lieu de celles par défaut
+     * array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
+     */
+    private $_optionsForSelect;
+    /**
      * @var int Le numéro d'instance du questionnaire
      */
     private $_instance=0;
@@ -62,7 +67,10 @@ class msForm
      * @var string Le type de nomage des champs du formulaire (byID / byName)
      */
     private $_typeForNameInForm='byID';
-
+    /**
+     * @var array log des row et col du form pour pouvoir mettre une preValue après coup
+     */
+    private $_log;
 
 /**
  * Définir le numéro du formulaire
@@ -157,12 +165,37 @@ class msForm
     }
 /**
  * Définir les valeurs de remplissage par défaut du formulaire
- * @param array $v Array des valeur par défaut
+ * @param array $v Array des valeurs par défaut
  */
     public function setPrevalues($v)
     {
         if (is_array($v)) {
             return $this->_prevalues = $v;
+        } elseif(!empty($v)) {
+            throw new Exception('Var is not an array');
+        }
+    }
+/**
+ * Définir des valeurs de remplissage du formulaire après sa création
+ * @param array $form formulaire
+ * @param array($name=>$value) $table array des noms et valeurs à remplir
+ */
+    public function setPrevaluesAfterwards(&$form, $table)
+    {
+        foreach ($table as $name=>$value) {
+            if (array_key_exists($name, $this->_log)) {
+                $form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value']['preValue']=$value;
+            }
+        }
+    }
+/**
+ * Remplacer les valeurs de remplissage des selects du form par défaut
+ * @param array $v Array des valeurs array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
+ */
+    public function setOptionsForSelect($v)
+    {
+        if (is_array($v)) {
+            return $this->_optionsForSelect = $v;
         } elseif(!empty($v)) {
             throw new Exception('Var is not an array');
         }
@@ -408,7 +441,14 @@ class msForm
                         if (in_array('required', $bloc)) {
                             $r['validation'][$type['name']][]='required';
                         }
-                        $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                        //forcage des <option>
+                        if(isset($this->_optionsForSelect[$type['name']])) {
+                            $type['formValues']=$this->_optionsForSelect[$type['name']];
+                        }
+                        // ou valeur par défaut du type
+                        else {
+                            $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                        }
                         if (!empty($type['formValues'])) {
                             $r['validation'][$type['name']][]='contains_list,'.implode(';', array_keys($type['formValues']));
                         }
@@ -536,6 +576,7 @@ class msForm
     private function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
     {
         if (is_array($blocs)) {
+            $r['structure'][$rowNumber][$colNumber]['elements']=array();
             foreach ($blocs as $k=>$v) {
 
                 //template
@@ -564,92 +605,100 @@ class msForm
                         $type['name']='p_'.$type['name'];
                     }
 
-                  //valeur par défaut si présente
-                  if (isset($this->_prevalues[$type['id']])) {
-                      $type['preValue']=$this->_prevalues[$type['id']];
-                  } elseif (isset($this->_prevalues[$type['name']])) {
-                      $type['preValue']=$this->_prevalues[$type['name']];
-                  } else {
-                      $type['preValue']='noPreValue';
-                  }
-
-                  //traitement des flags communs
-                  if (in_array('nolabel', $bloc)) {
-                      unset($type['label']);
-                  }
-                    if (in_array('disabled', $bloc)) {
-                        $type['disabled']='disabled';
-                    }
-                    if (in_array('readonly', $bloc)) {
-                        $type['readonly']='readonly';
-                    }
-                    if (in_array('required', $bloc)) {
-                        $type['required']='required';
+                    //valeur par défaut si présente
+                    if (isset($this->_prevalues[$type['id']])) {
+                        $type['preValue']=$this->_prevalues[$type['id']];
+                    } elseif (isset($this->_prevalues[$type['name']])) {
+                        $type['preValue']=$this->_prevalues[$type['name']];
+                    } else {
+                        $type['preValue']='noPreValue';
                     }
 
-                  //traitement spécifique au select
-                  if ($type['formType']=="select") {
-                      $type['formValues']=Spyc::YAMLLoad($type['formValues']);
-                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
-
-                  //traitement spécifique au textarea
-                  } elseif ($type['formType']=="textarea") {
+                    //traitement des flags communs
+                    if (in_array('nolabel', $bloc)) {
+                        unset($type['label']);
+                    }
+                      if (in_array('disabled', $bloc)) {
+                          $type['disabled']='disabled';
+                      }
+                      if (in_array('readonly', $bloc)) {
+                          $type['readonly']='readonly';
+                      }
+                      if (in_array('required', $bloc)) {
+                          $type['required']='required';
+                      }
+                      $type['class']='';
                       foreach ($bloc as $h) {
-                          if (preg_match('#rows=([0-9]+)#i', $h, $match)) {
-                              $type['rows']=$match[1];
+                          if (preg_match('/^class=(.+)/', $h, $match)) {
+                              $type['class'].=' '.$match[1];
                           }
                       }
-                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                    //traitement spécifique au select
+                    if ($type['formType']=="select") {
 
-                  //traitement spécifique au submit
-                  } elseif ($type['formType']=="submit") {
-                      if (isset($bloc[1])) {
-                          $type['label']=$bloc[1];
-                      } else {
-                          $type['label']="Go";
-                      }
-                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                        //forcage des <option> du type
+                        if(isset($this->_optionsForSelect[$type['name']])) {
+                          $type['formValues']=$this->_optionsForSelect[$type['name']];
+                        }
+                        // sinon valeur du type
+                        else {
+                          $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+                        }
 
-                  //traitement spécifique au number
-                  } elseif ($type['formType']=="number") {
-                      foreach ($bloc as $h) {
-                          if (preg_match('#max=([0-9]+)#i', $h, $match)) {
-                              $type['max']=$match[1];
-                          } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
-                              $type['min']=$match[1];
-                          } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
-                              $type['step']=$match[1];
-                          }
-                      }
+                    //traitement spécifique au textarea
+                    } elseif ($type['formType']=="textarea") {
+                        foreach ($bloc as $h) {
+                            if (preg_match('#rows=([0-9]+)#i', $h, $match)) {
+                                $type['rows']=$match[1];
+                            }
+                        }
 
-                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
+                    //traitement spécifique au submit
+                    } elseif ($type['formType']=="submit") {
+                        if (isset($bloc[1])) {
+                            $type['label']=$bloc[1];
+                        } else {
+                            $type['label']="Go";
+                        }
+                    //traitement spécifique au number
+                    } elseif ($type['formType']=="number") {
+                        foreach ($bloc as $h) {
+                            if (preg_match('#max=([0-9]+)#i', $h, $match)) {
+                                $type['max']=$match[1];
+                            } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
+                                $type['min']=$match[1];
+                            } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
+                                $type['step']=$match[1];
+                            }
+                        }
 
-                  //traitement spécifique aux autres input
-                  } else {
-                      if (in_array('autocomplete', $bloc)) {
-                          $type['autocompleteclass']=' jqautocomplete';
+                    //traitement spécifique aux autres input
+                    } else {
+                        if (in_array('autocomplete', $bloc)) {
+                            $type['autocompleteclass']=' jqautocomplete';
 
-                          foreach ($bloc as $h) {
-                              if (preg_match('#data-acTypeID=([0-9]+:{0,1})+#i', $h)) {
-                                  $type['dataAcTypeID']=$h;
-                              }
-                          }
-                          if (!isset($type['dataAcTypeID'])) {
-                              $type['dataAcTypeID']='data-acTypeID='.$type['id'];
-                          }
-                      }
+                            foreach ($bloc as $h) {
+                                if (preg_match('#data-acTypeID=([0-9]+:{0,1})+#i', $h)) {
+                                    $type['dataAcTypeID']=$h;
+                                }
+                            }
+                            if (!isset($type['dataAcTypeID'])) {
+                                $type['dataAcTypeID']='data-acTypeID='.$type['id'];
+                            }
+                        }
 
-                      foreach ($bloc as $h) {
-                          if (preg_match('#plus={(.*)}#i', $h, $match)) {
-                              $type['plus']=$match[1];
-                          }
-                          if (preg_match('#plusg={(.*)}#i', $h, $match)) {
-                              $type['plusg']=$match[1];
-                          }
-                      }
+                        foreach ($bloc as $h) {
+                            if (preg_match('#plus={(.*)}#i', $h, $match)) {
+                                $type['plus']=$match[1];
+                            }
+                            if (preg_match('#plusg={(.*)}#i', $h, $match)) {
+                                $type['plusg']=$match[1];
+                            }
+                        }
 
-                      $r['structure'][$rowNumber][$colNumber]['elements'][]=array('type'=>'form', 'value'=>$type);
-                  }
+                    }
+                    $idx=array_push($r['structure'][$rowNumber][$colNumber]['elements'], array('type'=>'form', 'value'=>$type));
+                    $this->_log[$type['internalName']]=[$rowNumber, $colNumber, $idx-1];
                 }
             }
         }

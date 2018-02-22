@@ -24,6 +24,7 @@
  * Patient > action : envoyer un mail
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  // Apicrypt
@@ -56,6 +57,14 @@
 // Inclusion après vérification
 if (is_file($fileToInclude)) {
     include($fileToInclude);
+
+    // Pour évolution ajax future
+    // $debug='';
+    // //template
+    // $template="pht-ligne-mail";
+    // $patient=new msPeople();
+    // $patient->setToID($_POST['patientID']);
+    // $p['cs']=$patient->getToday("limit 1")[0];
 } else {
-    echo 'Pas d\'action correspondante';
+    die('Erreur: Pas d\'action correspondante');
 }

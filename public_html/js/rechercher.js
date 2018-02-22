@@ -23,7 +23,7 @@
  * Fonctions JS pour la recherche patients / pros
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -124,7 +124,46 @@ $(document).ready(function() {
     });
   });
 
+  $('body').on("click", ".extAsPatient", function(e){
+    e.preventDefault();
+    var externID = $('.extToNew').attr("data-externid");
+    var patientID = $(this).attr("data-patientid");
+    $.ajax({
+      url: urlBase+'/people/ajax/setExternAsPatient/',
+      type: 'post',
+      data: {
+        externID: externID,
+        patientID: patientID
+      },
+      dataType: "json",
+      success: function(data) {
+        window.location=urlBase+'/patient/'+externID+'/';
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
 
+  $('.extToNew').on("click", function(e){
+    e.preventDefault();
+    var externID = $(this).attr("data-externid");
+    $.ajax({
+      url: urlBase+'/people/ajax/setExternAsNewPatient/',
+      type: 'post',
+      data: {
+        externID: externID
+      },
+      dataType: "json",
+      success: function(data) {
+        window.location=urlBase+'/patient/edit/'+externID+'/';
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+    
+  });
 
 });
 

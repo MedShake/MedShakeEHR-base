@@ -23,7 +23,7 @@
  # Template > dicom : voir toutes les datas (images + SR) d'une etude dicom
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -32,9 +32,9 @@
 
 {% block head %}
     {{ parent() }}
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
 
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js"></script>
 
     <style>
@@ -80,7 +80,6 @@
                 -
                 {# birthdate #}
                 {{ page['patient']['administrativeDatas']['8']['age']|e }}
-                an{% if page['patient']['administrativeDatas']['8']['age'] > 0 %}s{% endif %}
                 {# age #}
 
             </small>

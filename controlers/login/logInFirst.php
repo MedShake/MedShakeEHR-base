@@ -24,19 +24,13 @@
  * Login : page de login
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @edited Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $debug='';
 $template="firstLogin";
 
 $form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='firstLogin');
-
-//forçage de l'ID à 1 et liste des modules
-$form->setPrevalues(array(
-  '1'=>'1',
-  '7'=>msSQL::sql2tabKey("SELECT module FROM system order by module='base', module", "module", "module")
-));
+$form->setFormIDbyName($p['page']['formIN']='baseFirstLogin');
 
 $p['page']['form']=$form->getForm();

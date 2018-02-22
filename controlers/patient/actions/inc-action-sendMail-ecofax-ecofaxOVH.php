@@ -55,13 +55,15 @@ if (isset($_POST['objetID'])) {
     $doc->setObjetID($_POST['objetID']);
     $sourceFile=$doc->getPathToDoc();
     $ext=$doc->getFileExtOfDoc();
+} else {
+  $sourceFile='';
 }
 
 
 $mail->isHTML(false);
 $mail->Subject = $p['config']['ecofaxMyNumber'];
 
-$mail->setFrom($p['config']['smtpFrom'], 'Dr Thomas');
+$mail->setFrom($p['config']['smtpFrom']);
 $mail->addAddress($detsinataireFAX);
 
 if (is_file($sourceFile)) {

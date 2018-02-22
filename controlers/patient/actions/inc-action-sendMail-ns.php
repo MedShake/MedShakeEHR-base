@@ -53,13 +53,15 @@ if (isset($_POST['objetID'])) {
     $doc->setObjetID($_POST['objetID']);
     $sourceFile=$doc->getPathToDoc();
     $ext=$doc->getFileExtOfDoc();
+} else {
+    $sourceFile='';
 }
 
 
 $mail->isHTML(false);
 $mail->Subject = $_POST['mailSujet'];
 
-$mail->setFrom($_POST['mailFrom'], $_POST['mailFromName']);
+$mail->setFrom($_POST['mailFrom'], $p['config']['smtpFromName']);
 $mail->addAddress($_POST['mailTo']);
 
 if (is_file($sourceFile)) {

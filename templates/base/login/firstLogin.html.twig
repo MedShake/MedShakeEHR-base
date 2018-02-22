@@ -23,12 +23,12 @@
  # Template > firstLogin
  #
  # @author fr33z00 <https://github.com/fr33z00>
- # @edited Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : Bienvenue{% endblock %}
+{% block title %}MedShakeEHR : Creation admin{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -36,10 +36,8 @@
 
 {% block body %}
 
-<h1>Bienvenue!</h1>
-<p>MedshakeEHR est désormais fonctionnel.<p>
-<p>Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration, afin de vous permettre de créer d'autres utilisateurs, de régler leurs paramètres, ainsi que de configurer le logiciel.</p>
-<p>Notez bien que ce premier utilisateur aura pour ID la valeur 1. Cet ID vous sera demandé les prochaines fois que vous voudrez vous identifier.</p>
+<h3>MedshakeEHR est désormais fonctionnel</h3>
+<p style="margin-top:50px;margin-bottom:50px">Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration qui autorisent à configurer le logiciel et créer des utilisateurs.</p>
 {# validation error display bloc #}
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 

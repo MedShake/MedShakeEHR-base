@@ -23,7 +23,7 @@
  # Template > Config : catégories des formulaires
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -42,7 +42,7 @@
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
   <li>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
 	<li class="active">
 			Catégories formulaires
@@ -55,8 +55,8 @@
 
 	{# Nav tabs #}
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation"><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/" aria-controls="types" role="tab" >Formulaires</a></li>
 		<li role="presentation" class="active"><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/" aria-controls="categories" role="tab">Catégories</a></li>
+		<li role="presentation"><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/" aria-controls="types" role="tab" >Formulaires</a></li>
 	</ul>
 
   {# Tab panes #}
@@ -85,7 +85,7 @@
 			<tr>
 				<td>{{ k }}</td>
 				<td>{{ v.label }}</td>
-				<td>{% if v.enfants > 0 %}{{ v.enfants }}{% endif %}</td>
+				<td>{% if v.enfants > 0 %}<a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.name }}/"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a> {{ v.enfants }}{% endif %}</td>
 				<td>{{ v.description }}</td>
 				<td>
 					<button type="button" class="btn btn-default btn-xs edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="forms_cat" data-form="formModalNewCat" data-modal="modalNewCat">

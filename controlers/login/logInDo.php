@@ -24,7 +24,7 @@
  * Login : loguer ou renvoyer
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -45,7 +45,7 @@ if ($validation === false) {
 
     //check login
     $user = new msUser();
-    if (!$user->checkLogin($_POST['p_userid'], $_POST['p_password'])) {
+    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
         $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
         if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
@@ -58,7 +58,12 @@ if ($validation === false) {
     if ($validation != false) {
         $user-> doLogin();
         unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/patients/');
+
+    if ('admin'==msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1") and
+        'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+        msTools::redirRoute('configUpdates');
+    }
+    msTools::redirection('/patients/');
     } else {
         $form->savePostValues2Session();
         msTools::redirRoute('userLogIn');

@@ -23,7 +23,7 @@
  # Template > page web racine
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
 <!DOCTYPE html>
@@ -40,21 +40,28 @@
         <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
         {# css #}
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
+        <style>
+          .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
+          .submit-success {background-color:#8dfc9e;top:0}
+          .submit-warning {background-color:#fcde8d;top:0}
+          .submit-error {background-color:#ff6d6d;top:0}
+        </style>
+
         {# js #}
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/moment/min/moment.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/uploader/src/dmuploader.min.js"></script>
-        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/kjua/dist/kjua.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
+        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
         <script>
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
           var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
@@ -65,7 +72,17 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="submit-type submit-success">
+          <span class="glyphicon glyphicon-info-sign"></span> Données enregistrées avec succès
+        </div>
+        <div class="submit-type submit-warning">
+          <span class="glyphicon glyphicon-warning-sign"></span> <span id="warningmessage"></span>
+        </div>
+        <div class="submit-type submit-error">
+          <span class="glyphicon glyphicon-warning-sign"></span> <span id="errormessage">Une erreur s'est produite lors de l'enregistrement des données</span>
+        </div>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" style="z-index:100">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
@@ -85,7 +102,7 @@
                         <li>
                             <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
                         </li>
-                      {% elseif page.agendaUsers|length == 1 %}
+                      {% elseif page.agendaUsers|length == 1 and user.id in page.agendaUsers|keys %}
                         {% for k,v in page.agendaUsers %}
                           <li>
                               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
@@ -97,11 +114,19 @@
                               <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                              {% for k,v in page.agendaUsers %}
+                            {% if user.id in page.agendaUsers|keys %}
                               <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
                               </li>
-                              {% endfor %}
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
+                            {% for k,v in page.agendaUsers %}
+                              {% if k != user.id %}
+                                <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                                </li>
+                              {% endif %}
+                            {% endfor %}
                           </ul>
                         </li>
                       {% endif %}
@@ -120,6 +145,9 @@
                               {% if page.patientsOfTheDay %}
                                 <li role="separator" class="divider"></li>
                                 <li class="dropdown-header">Patients du jour</li>
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
+                                </li>
                                 {% for v in page.patientsOfTheDay %}
                                 <li>
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
@@ -225,7 +253,14 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
+                                  {% if config.PraticienPeutEtrePatient %}
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
+                                  {% else %}
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
+                                  {% endif %}
+                                </li>
+                                <li>
+                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>
                                 </li>
                                 <li>
                                     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer PhoneCapture</a>

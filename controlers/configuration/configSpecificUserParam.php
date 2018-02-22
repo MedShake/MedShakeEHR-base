@@ -24,6 +24,7 @@
  * Config : gérer les paramètres de configuration spécifiques à un utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -41,11 +42,20 @@
 
      if($data=$data->getPeopleDataFromDataTypeGroupe('user', ['dt.*', 'od.value as userVal'])) {
        foreach($data as $v) {
+         if (array_key_exists('name', $v) and ($v['name'] =='agendaNumberForPatientsOfTheDay' or $v['name'] == 'administratifComptaPeutVoirRecettesDe')) {
+             $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
+             if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
+                 $v['formValues']=array_merge(array('0'=>''), $v['formValues']);
+             }
+             if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
+                 $v['userVal']=explode(',', $v['userVal']);
+             }
+         }
          $p['page']['userParams'][$v['cat']][]=$v;
        }
      }
 
-     $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+     $p['page']['configDefaut']=$p['configDefaut'];
 
      // liste des catégories
      if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='user' order by label", 'id', 'label'));

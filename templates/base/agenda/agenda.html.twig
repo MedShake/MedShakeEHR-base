@@ -23,7 +23,7 @@
  # Template > Agenda
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -32,12 +32,12 @@
 
 {% block head %}
     {{ parent() }}
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
+    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
 
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/fullcalendar.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/fullcalendar/dist/locale/fr.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
+    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
     <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
 
     <style>
@@ -73,6 +73,7 @@
     var maxTime;
     var businessHours;
     var slotDuration;
+    var slotLabelInterval;
     var eventSources;
     {{ page.configAgenda }}
     </script>

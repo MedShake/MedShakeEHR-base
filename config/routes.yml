@@ -45,8 +45,8 @@ agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
 agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
 
 #chercher patients / pros
-patientsAjax: ['GET|POST', '/[patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
-patients: ['GET', '/[patient|pro:porp]s/', 'rechercher/patients']
+patientsAjax: ['GET|POST', '/[today|patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/patientsAjax']
+patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 
 #créer / éditer patient/pros
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
@@ -64,6 +64,7 @@ proView: ['GET', '/pro/[i:proID]/', 'people/proView']
 
 #dossier patient
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
+patientActionsIgnoreEmpty: ['GET|POST', '/patient/actions/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientActions']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
 patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
 
@@ -92,7 +93,6 @@ showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
 
 #compta
-comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
 comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
 comptaToday: ['GET|POST', '/compta/aujourdhui/', 'compta/today']
 compta: ['GET|POST', '/compta/', 'compta/compta']
@@ -134,23 +134,34 @@ configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'config
 configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[i:userID]?/', 'configuration/configTemplatesPDFEdit']
 
 # Configuration forms
-configForms: ['GET', '/configuration/forms/', 'configuration/configForms']
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
 configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
+configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configForms']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique
+configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configuration/configDefaultParams']
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
 configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
-configUpdatePassword: ['GET', '/configuration/configUpdatePassword/', 'configuration/configUpdatePassword']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
+# configuration crons
+configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
+
+# configuration apply updates
+configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configApplyUpdates']
+
+# configuration modules
+configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
+
 # User
+userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
+userParameters: ['GET', '/user/userParameters/', 'user/userParameters']
 userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhoneCaptureAccess']
 
 #public

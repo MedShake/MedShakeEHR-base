@@ -24,7 +24,7 @@
  * Config : remerciements
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $template='configCredits';
@@ -67,6 +67,11 @@ $p['page']['thanks'][
   'Bootstrap 3 Datepicker v4']=array(
   'description'=>'Datepicker for Bootstrap',
   'url'=>'http://eonasdan.github.io/bootstrap-datetimepicker/'
+);
+$p['page']['thanks'][
+  'Bootstrap 3 colorpicker v3']=array(
+  'description'=>'colorpicker for Bootstrap',
+  'url'=>'https://farbelous.github.io/bootstrap-colorpicker/'
 );
 $p['page']['thanks'][
   'Moment.js']=array(
@@ -122,6 +127,31 @@ $p['page']['thanks'][
   'jQuery contextMenu']=array(
   'description'=>'jQuery contextMenu plugin & polyfill',
   'url'=>'https://github.com/swisnl/jQuery-contextMenu'
+);
+$p['page']['thanks'][
+  'panzoom']=array(
+  'description'=>'A jQuery plugin for panning and zooming elements',
+  'url'=>'https://github.com/timmywil/jquery.panzoom/'
+);
+$p['page']['thanks'][
+  'jquery-mousewheel']=array(
+  'description'=>'A jQuery plugin that adds cross-browser mouse wheel support',
+  'url'=>'https://github.com/jquery/jquery-mousewheel/'
+);
+$p['page']['thanks'][
+  'Mocha']=array(
+  'description'=>'Mocha test framework',
+  'url'=>'https://visionmedia.github.io/mocha/'
+);
+$p['page']['thanks'][
+  'URLCrypt']=array(
+  'description'=>'PHP library to securely encode and decode short pieces of arbitrary binary data in URLs',
+  'url'=>'https://github.com/atrapalo/URLcrypt'
+);
+$p['page']['thanks'][
+  'Stupid jQuery Table Sort']=array(
+  'description'=>'This is a stupid jQuery table sorting plugin',
+  'url'=>'https://github.com/joequery/Stupid-Table-Plugin'
 );
 
 

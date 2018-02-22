@@ -24,7 +24,7 @@
  * Patient : la page du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 // liste des formulaires fixes au 1er affichage dossier patient pour JS
@@ -42,3 +42,7 @@ $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 
 $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
+
+$p['page']['formReglement']['reglePorteur']=array('module'=>'base', 'form'=>'baseReglement');
+$p['page']['formOrdo']['ordoPorteur']=array('module'=>'base', 'form'=>'');
+

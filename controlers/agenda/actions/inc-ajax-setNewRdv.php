@@ -26,17 +26,26 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$event = new msAgenda();
-if($_POST['eventID']>0) $event->set_eventID($_POST['eventID']);
-$event->set_userID($match['params']['userID']);
-$event->set_patientID($_POST['patientID']);
-$event->set_fromID($p['user']['id']);
-$event->setStartDate($_POST['start']);
-$event->setEndDate($_POST['end']);
-$event->set_motif($_POST['motif']);
-$event->set_type($_POST['type']);
-$dataEvent=$event->addOrUpdateRdv();
+$agenda = new msAgenda();
+if ($_POST['eventID']>0) {
+    $agenda->set_eventID($_POST['eventID']);
+}
+$agenda->set_userID($match['params']['userID']);
+$agenda->set_patientID($_POST['patientID']);
+$agenda->set_fromID($p['user']['id']);
+$agenda->setStartDate($_POST['start']);
+$agenda->setEndDate($_POST['end']);
+$agenda->set_motif($_POST['motif']);
+$agenda->set_type($_POST['type']);
+$event=$agenda->addOrUpdateRdv();
 
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
+    if (is_file($hook)) {
+        include($hook);
+    }
+}
 
 header('Content-Type: application/json');
-echo json_encode($dataEvent);
+echo json_encode($event);

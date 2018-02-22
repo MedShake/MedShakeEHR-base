@@ -23,7 +23,7 @@
  # Template > Config : sommaire de configuration
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -40,68 +40,69 @@
 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-      <a href="#users" aria-controls="users" role="tab" data-toggle="tab">Gestion des utilisateurs</a>
-    </li>
-    <li role="presentation">
-      <a href="#rc" aria-controls="rc" role="tab" data-toggle="tab">Paramétrage courant</a>
+      <a href="#cc" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
     </li>
 
     <li role="presentation">
-      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramétrage avancé</a>
+      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
     </li>
     <li role="presentation">
-      <a href="#licence" aria-controls="licence" role="tab" data-toggle="tab">Licence</a>
+      <a href="#ap" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
     </li>
   </ul>
 
   <div class="tab-content">
 
-    <div role="tabpanel" class="tab-pane" id="rc">
-
-      <h2>Paramétrage courant</h2>
+    <div role="tabpanel" class="tab-pane active" id="cc">
+      <h2>Configuration générale</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions type</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configuration-globale/">Paramètres globaux
+          </a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/">Actes et tarifs</a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Paramétrage des agendas</a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Gestion des clefs Apicrypt</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/modules/">Modules</a>
         </li>
       </ul>
 
-    </div>
-
-    <div role="tabpanel" class="tab-pane active" id="users">
       <h2>Utilisateurs</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Liste des utilisateurs et options
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options
           </a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configUpdatePassword/">Assigner un mot de passe (créer un utilisateur)
-          </a>
-        </li>
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/user/">Paramètres utilisateur</a>
         </li>
       </ul>
+
+      <h2>Paramètres courants</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions types</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/">Actes et tarifs</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Agendas</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Clefs Apicrypt</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
+        </li>
+      </ul>
+
     </div>
 
     <div role="tabpanel" class="tab-pane" id="ca">
 
-      <h2>Formulaires et templates</h2>
+      <h2>Formulaires et modèles</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Edition des formulaires</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/">Edition des formulaires</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Gestion des templates d'impression de PDF</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Gestion des modèles de rapports</a>
         </li>
       </ul>
 
@@ -112,44 +113,46 @@
         </li>
       </ul>
 
-      <h2>Modèles des données</h2>
+      <h2>Données</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/admin/">Données administratives</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/user/">Utilisateurs</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/">Données médicales</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/admin/">Administratives</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/typecs/">Types de consultations</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/">Médicales</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/courrier/">Courriers et certificats</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/typecs/">Consultations</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/mail/">Mail</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/courrier/">Courriers et certificats</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/doc/">Documents importés</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/mail/">Mail</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/ordo/">Ordonnances</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/doc/">Documents importés</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/reglement/">Règlement</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/ordo/">Ordonnances</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/relation/">Données relation</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/reglement/">Règlements</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/dicom/">Dicom</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/relation/">Relations</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/dicom/">Dicom</a>
         </li>
       </ul>
-
       <h2>Vérifications techniques</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs généraux
           </a>
         </li>
         <li class="list-group-item">
@@ -161,15 +164,15 @@
           </a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">Effacer les données de session
-          </a>
+          Données de session
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" class="btn btn-default btn-xs" role="button" target="_blank">Supprimer</a>
         </li>
       </ul>
 
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="licence">
-      <h2>Licence</h2>
+    <div role="tabpanel" class="tab-pane" id="ap">
+      <h2>Licence et crédits</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>

@@ -233,8 +233,10 @@ class msData
         }
 
         $action = "tbs_".msData::getNameFromTypeID($this->_typeID);
-        $moduleClass="msMod".ucfirst($p['user']['module'])."DataSave";
-        if (method_exists($moduleClass, $action)) {
+        if (isset($p['user'])) {
+            $moduleClass="msMod".ucfirst($p['user']['module'])."DataSave";
+        }
+        if (isset($moduleClass) and method_exists($moduleClass, $action)) {
             $data = new $moduleClass;
             return $data->$action($this->_value);
         } elseif (method_exists('msModBaseDataSave', $action)) {

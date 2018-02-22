@@ -23,7 +23,7 @@
  * JS général
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 $(document).ready(function() {
 
@@ -168,6 +168,23 @@ $(document).ready(function() {
     }
   });
 
+  //enregistrement de forms en ajax
+  $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: $(this).parents("form").attr("action"),
+      type: 'post',
+      data: $(this).parents("form").serialize(),
+      dataType: "json",
+      success: function(data) {
+        $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+      },
+      error: function() {
+        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      }
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
@@ -266,6 +283,33 @@ function setPeopleData(value, patientID, typeID, source, instance) {
         value: value,
         patientID: patientID,
         typeID: typeID,
+        instance: instance
+      },
+      dataType: "json",
+      success: function(data) {
+        el = $(source);
+        el.css("background", "#efffe8");
+        el.delay(700).queue(function() {
+          $(this).css("background","").dequeue();
+        });
+      },
+      error: function() {
+        //alert('Problème, rechargez la page !');
+      }
+    });
+  }
+}
+
+//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée 
+function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
+  if (patientID && typeName && source) {
+    $.ajax({
+      url: urlBase + '/ajax/setPeopleDataByTypeName/',
+      type: 'post',
+      data: {
+        value: value,
+        patientID: patientID,
+        typeName: typeName,
         instance: instance
       },
       dataType: "json",

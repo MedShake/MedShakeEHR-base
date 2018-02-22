@@ -24,23 +24,36 @@
  * Cron : rappels mails (smtp)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['rappelsMails']=array(
+        'task' => 'Mails rappel',
+        'defaults' => array('m'=>'0','h'=>'19','M'=>'*','dom'=>'*','dow'=>'0,1,2,3,4,5'),
+        'description' => 'Envoi des mails de rappel');
+    return;
+}
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
+$homepath=getcwd().'/';
+
 /////////// Composer class auto-upload
-require '../vendor/autoload.php';
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    include $homepath.'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']['homeDirectory']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();

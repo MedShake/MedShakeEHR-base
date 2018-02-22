@@ -23,19 +23,19 @@
  # Template > logs : log des actions sur l'agenda
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : logs agenda{% endblock %}
+{% block title %}MedShakeEHR : logs agendas{% endblock %}
 
 {% block head %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
-<h1>Logs Agenda
+<h1>Logs Agendas
 {% if page.agendaID > 0 %}#{{ page.agendaID }}{% endif %}
 {% if page.eventID > 0 %} - Rdv #{{ page.eventID }}{% endif %}
 </h1>

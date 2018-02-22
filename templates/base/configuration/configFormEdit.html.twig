@@ -23,7 +23,7 @@
  # Template > Config : édition d'un formulaire
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -42,7 +42,7 @@
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
   <li>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramétrage avancé</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
   <li>
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
@@ -110,7 +110,7 @@
 
 
 
-	<form id="formParamsEdit" class="col-md-7"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configFormEdit/">
+	<form id="formParamsEdit" class="col-md-7 ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
     <button type="submit" class="btn btn-primary pull-right" style="margin-top : 25px">Enregistrer</button>
 	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
 

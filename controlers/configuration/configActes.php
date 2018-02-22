@@ -65,7 +65,7 @@
 					left join actes_cat as c on c.id=a.cat
           where ".implode(' and ', $where)."
 					group by a.id
-					order by c.displayOrder, c.label asc, a.label asc")) {
+					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
              $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
@@ -79,7 +79,8 @@
      $p['page']['catList']=msSQL::sql2tabKey("select id, concat(label, ' (module ',module, ')') as label from actes_cat order by label", 'id', 'label');
 
      //utilisation de chaque facture type
-     $typeID= msData::getTypeIDFromName('reglePorteur');
-     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID = $typeID group by parentTypeID", 'parentTypeID', 'nb');
+     $data=new msData();
+     $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') group by parentTypeID", 'parentTypeID', 'nb');
 
  }

@@ -30,23 +30,36 @@
  * Le tableau json doit être pré trier asc.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+// pour le configurateur de cron
+if (isset($p)) {
+    $p['page']['availableCrons']['patientsOfTheDay']=array(
+        'task' => 'Patients du jour',
+        'defaults' => array('m'=>'0','h'=>'8','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
+        'description' => 'Enregistre la liste des patients du jour.');
+    return;
+}
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-/////////// Composer class auto-upload
-require '../vendor/autoload.php';
+$homepath=getcwd().'/';
+
+////////// Composer class auto-upload
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    include '../class/' . $class . '.php';
+    include $homepath.'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']['homeDirectory']=$homepath;
 
 /// enregistre le fichier sous le nom déterminé en config 
 if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {

@@ -24,13 +24,33 @@
  * Patient > ajax : obtenir le formulaire de règlement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
 
+//si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
+if ($_POST['module']!='base' and !isset($delegate)) {
+    return;
+}
+
 //template
 $template="patientReglementForm";
 
+if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
+    $reglementForm=$_POST['reglementForm'];
+    $porteur=$_POST['porteur'];
+    $userID=$p['user']['id'];
+    $module=" and c.module='".$p['user']['module']."'";
+} else {
+    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
+      LEFT JOIN objets_data as od ON dt.id=od.typeID
+      WHERE od.id='".$_POST['objetID']."' limit 1");
+    $reglementForm=$res[0]['form'];
+    $porteur=$res[0]['porteur'];
+    $userID=$res[0]['userID'];
+    $module='';
+}
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
 
@@ -39,7 +59,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
   from actes as a
   left join actes_cat as c on c.id=a.cat
-  where a.toID in ('0','".$p['user']['id']."') and c.module='".$p['user']['module']."'
+  where a.toID in ('0','".$userID."') ".$module. "
   group by a.id
   order by c.displayOrder, c.label asc, a.label asc")) {
     foreach ($tabTypes as $k=>$v) {
@@ -61,10 +81,8 @@ if (isset($_POST['objetID'])) {
 } else {
     $p['page']['formActes']['prevalue']=null;
 }
-$idReglement=msSQL::sqlUniqueChamp("select id from forms where internalName='".$p['user']['module']."Reglement' limit 1 ");
-$moduleReglement=is_numeric($idReglement)?$p['user']['module'].'Reglement':'baseReglement';
 $form = new msForm();
-$form->setFormIDbyName($moduleReglement);
+$form->setFormIDbyName($reglementForm);
 $form->setTypeForNameInForm('byName');
 if (isset($_POST['objetID'])) {
     $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));
@@ -74,6 +92,8 @@ $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
+  'porteur'=>$porteur,
+  'module'=>$_POST['module'],
   'patientID'=>$_POST['patientID'],
   'acteID'=>$p['page']['formActes']['prevalue'],
 );

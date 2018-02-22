@@ -1,0 +1,155 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : paramètres de configuration s'appliquant par défaut à tous les utilisteurs
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+    <li class="active">Paramètres globaux</li>
+  </ol>
+
+  <h1>Paramètres  globaux</h1>
+
+  {# navigation principale #}
+  <ul style="padding-top:10px" class="nav nav-tabs">
+    {% set k=0 %}
+    {% for section_name,section_array in page.params %}
+      <li {% if k==0 %}class="active"{% endif %} role="presentation">
+        <a href="#{{ section_name|replace({' ':'_'}) }}" aria-controls="{{ section_name }}" role="tab" data-toggle="tab">{{ section_name }}</a>
+      </li>
+      {% set k=1 %}
+    {% endfor %}
+  </ul>
+
+  <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
+
+
+      <div class="tab-content">
+        {% set k=0 %}
+        {% for section_name,section_array in page.params %}
+          <div id="{{ section_name|replace({' ':'_'}) }}" role="tabpanel" class="tab-pane{% if k==0 %} active{% endif %}">
+            {# sous navigation #}
+            <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
+              {% set k1=0 %}
+              {% for subsection_name,subsection_array in section_array %}
+                <li {% if k1==0 %}class="active"{% endif %} role="presentation">
+                  <a href="#{{ subsection_name|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ subsection_name }}" role="tab" data-toggle="tab">{{ subsection_name }}</a>
+                </li>
+                {% set k1=1 %}
+              {% endfor %}
+            </ul>
+            <div class="tab-content col-md-10" >
+              {% set k1=0 %}
+              {% for subsection_name,subsection_array in section_array %}
+                <div id="{{ subsection_name|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if k1==0 %} active{% endif %}">
+                  <h3>{{ subsection_name }}</h3>
+                  <table class="table table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th class="col-md-2">Paramètre</th>
+                        <th class="col-md-4">Valeur</th>
+                        <th class="col-md-1">Type</th>
+                        <th class="col-md-5">Note</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for param_name,param_value in subsection_array %}
+                        <tr>
+                          <td>{{ param_name }}</td>
+                          <td>
+                            {% if param_value.type=='password' %}
+                              <div class="row">
+                                <div class="col-md-11" style="margin-right:0">
+                            {% endif %}
+                            {{ f.input ({
+                              'input' : {
+                                'type' : param_value.type,
+                                'name' : param_name,
+                                'id' : param_name ~ 'ID',
+                                'placeholder' : param_value.value,
+                                'class' : 'form-control',
+                                'value' : param_value.value,
+                                'autocomplete' : 'off',
+                                'readonly' : param_value.readonly|default('')
+                              }
+                            }) }}
+                            {% if param_value.type=='password' %}
+                                </div>
+                                <div class="col-md-1" style="margin-left:0;padding-left:0">
+                                  <a role="button" style="margin-top:5px;padding-left:0" class="col-md-2 view-password" href="javascript:void(0)" onmousedown="$('#{{ param_name ~ 'ID' }}').attr('type', 'text')" onmouseup="$('#{{ param_name ~ 'ID' }}').attr('type', 'password')">
+                                    <span style="padding-left:0" class="glyphicon glyphicon-eye-open"></span>
+                                  </a>
+                                </div>
+                              </div>
+                            {% endif %}
+
+                          </td>
+                          <td>{{ param_value.typeText }}</td>
+                          <td>{{ param_value.com|default('') }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% set k1=1 %}
+              {% endfor %}
+            </div>
+          </div>
+          {% set k=1 %}
+        {% endfor %}
+      </div>
+
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
+        {{ f.input ({
+          'input' : {
+            'type' : 'submit',
+            'value' : 'Enregistrer',
+            'class' : 'btn btn-primary'
+          }
+        }) }}
+      </div>
+
+
+  </form>
+
+{% endblock %}

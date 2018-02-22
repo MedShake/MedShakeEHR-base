@@ -24,14 +24,16 @@
  * Compta : la page générale de compta
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
 $template="compta";
 
 // sortie des typeID dont on va avoir besoin
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'reglePorteur', 'birthname']);
+$data = new msData();
+$porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+$name2typeID = $data->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
 //gestion des plages
 if (!isset($_POST['beginPeriode'])) {
@@ -44,9 +46,15 @@ if (!isset($_POST['endPeriode'])) {
 } else {
     $endPeriode= DateTime::createFromFormat('d/m/Y', $_POST['endPeriode']);
 }
+if (isset($_POST['impayes']) and $_POST['impayes']=='true') {
+    $beginPeriode=DateTime::createFromFormat('d/m/Y', "01/01/1970");
+    $impayes=true;
+} else {
+    $impayes=false;
+}
 
 
-$p['page']['periode']['begin']=$beginPeriode->format("d/m/Y") ;
+$p['page']['periode']['begin']=$impayes?'':$beginPeriode->format("d/m/Y") ;
 $p['page']['periode']['end']=$endPeriode->format("d/m/Y") ;
 if (isset($_POST['periodeQuickSelect'])) {
     $p['page']['periode']['quick']=$_POST['periodeQuickSelect'];
@@ -59,7 +67,8 @@ $p['page']['periode']['quickOptions']=array(
 "thisweek"=>"Cette semaine",
 "lastweek"=>"Semaine dernière",
 "thismonth"=>"Ce mois",
-"lastmonth"=>"Mois dernier");
+"lastmonth"=>"Mois dernier",
+"impayes"=>"Impayés");
 
 
 //liste praticiens autorisés
@@ -90,7 +99,7 @@ if (isset($_POST['prat'])) {
 }
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
@@ -104,10 +113,11 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       where
       pd.id in (
         select pd1.id from objets_data as pd1
-        where pd1.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+        where pd1.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd1.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd1.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd1.deleted='' and pd1.fromID in ('".implode("','", $p['page']['pratsSelect'])."')"
+      .($impayes?"and important='y'":"")."
       )
   union
-      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module, 
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
@@ -121,7 +131,8 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       where
       pd.instance in (
         select pd2.id from objets_data as pd2
-        where pd2.typeID = '".$name2typeID['reglePorteur']."'  and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')
+        where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')"
+      .($impayes?"and important='y'":"")."
       )
   order by creationDate asc
   ")) {
@@ -146,6 +157,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
         $tabReg[$k]['dejaPaye']=$v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'];
+        $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
 
         $tabTot['regleCheque']=$tabTot['regleCheque']+$v['regleCheque'];
         $tabTot['regleCB']=$tabTot['regleCB']+$v['regleCB'];

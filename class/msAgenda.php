@@ -24,6 +24,7 @@
  * Gestion de l'agenda et des rendez-vous
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msAgenda
@@ -33,6 +34,12 @@ class msAgenda
     * @var int
     */
     private $_eventID;
+
+    /**
+    * Extern ID
+    * @var int
+    */
+    private $_externID;
 
     /**
     * User ID ( agenda de l'utilisateur n° )
@@ -130,6 +137,16 @@ class msAgenda
     }
 
     /**
+    * Set externID
+    * @param int $_externID externID
+    */
+    public function set_externID($_externID)
+    {
+        $this->_externID = $_externID;
+        return $this;
+    }
+
+    /**
     * Set userID (= n° du calendrier)
     * @param int $_userID N° commun user/calendrier
     */
@@ -161,7 +178,7 @@ class msAgenda
 
     /**
     * Ajouter ou update un rendez-vous en fonction de la présente ou non
-    * de l'envetID
+    * de l'eventID
     */
     public function addOrUpdateRdv()
     {
@@ -199,6 +216,10 @@ class msAgenda
             $data['fromID']=$this->_fromID;
         }
 
+        if (isset($this->_externID)) {
+            $data['externid']=$this->_externID;
+        }
+
         if($this->_eventID = msSQL::sqlInsert('agenda', $data)) {
           return $this->getEventByID();
         }
@@ -208,7 +229,7 @@ class msAgenda
     * Obtenir les rendez-vous sur une plage calendaire déterminée
     * @return array tableau des rendez-vous
     */
-      public function getEvents()
+      public function getEvents($statut=['actif'])
       {
           if (!isset($this->_startDate)) {
               throw new Exception('StartDate n\'est pas définie');
@@ -224,13 +245,13 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.lastModified, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
-          where a.userid='".$this->_userID."' and a.statut='actif' and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
-          group by a.id, bn.value, n.value, p.value")) {
+          where a.userid='".$this->_userID."' and a.statut in ('".implode("','", $statut)."') and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
+          group by a.id, bn.value, n.value, p.value order by a.start asc")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
               }
@@ -265,7 +286,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -286,8 +307,8 @@ class msAgenda
       {
           global $p;
           if (!isset($this->_tabTypeRdv)) {
-              if (is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$this->_userID.'.yml')) {
-                  $this->_tabTypeRdv=Spyc::YAMLLoad($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$this->_userID.'.yml');
+              if (is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$this->_userID.'.yml')) {
+                  $this->_tabTypeRdv=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$this->_userID.'.yml');
               } else {
                   $this->_tabTypeRdv=array(
                 '[C]'=> array(
@@ -323,7 +344,11 @@ class msAgenda
               'className'=>'fc-nonbusiness',
               'motif'=>'',
               'type'=>$e['type'],
+              'statut'=>$e['statut'],
+              'lastModified'=>$e['lastModified'],
+              'fromID'=>$e['fromID'],
               'patientid'=>$e['patientid'],
+              'externid'=>$e['externid']
               );
           }
           else
@@ -341,7 +366,11 @@ class msAgenda
               'className'=>$class,
               'motif'=>$e['motif'],
               'type'=>$e['type'],
+              'statut'=>$e['statut'],
+              'fromID'=>$e['fromID'],
+              'lastModified'=>$e['lastModified'],
               'patientid'=>$e['patientid'],
+              'externid'=>$e['externid'],
               'absent'=>$e['absente']
               );
           }
@@ -368,6 +397,31 @@ class msAgenda
             'id'=>$this->_eventID,
             'userid'=>$this->_userID,
             'statut'=>'deleted'
+          );
+          msSQL::sqlInsert('agenda', $data);
+
+
+      }
+
+    /**
+    * remettre un rendez-vous
+    * @return void
+    */
+      public function undelEvent()
+      {
+          if (!isset($this->_eventID)) {
+              throw new Exception('EventID n\'est pas défini');
+          }
+          if (!isset($this->_userID)) {
+              throw new Exception('UserID n\'est pas défini');
+          }
+
+          $this->_addToLog('undelete');
+
+          $data=array(
+            'id'=>$this->_eventID,
+            'userid'=>$this->_userID,
+            'statut'=>'actif'
           );
           msSQL::sqlInsert('agenda', $data);
 
@@ -476,6 +530,23 @@ class msAgenda
         }
         return $tab;
       }
+    }
+
+    public function getRdvTypes($userID) {
+        global $p;
+        if(is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml')) {
+          return Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml');
+        } else {
+          return array(
+            '[C]'=> array(
+              'descriptif'=>'Consultation',
+              'backgroundColor'=>'#2196f3',
+              'borderColor'=>'#1e88e5',
+              'duree'=>15
+            )
+          );
+        }
+
     }
 
     private function _addToLog($action) {

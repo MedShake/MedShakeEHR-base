@@ -23,7 +23,7 @@
  * Js pour le module upload document du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
@@ -37,7 +37,9 @@ $(document).ready(function() {
     maxFiles: 1,
     onUploadSuccess: function(id, data) {
       $(".progress-bar").css('width', '0%');
-      location.reload();
+      $(this).closest(".toclear").html("");
+      getHistorique();
+      getHistoriqueToday();
     },
     onUploadProgress: function(id, percent) {
       $(".progress-bar").css('width', percent + '%');

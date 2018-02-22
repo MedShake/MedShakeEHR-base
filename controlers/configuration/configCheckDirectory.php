@@ -30,7 +30,7 @@
  if (!msUser::checkUserIsAdmin()) {
      $template="forbidden";
  } else {
-     $template="configChekDirectory";
+     $template="configCheckDirectory";
      $debug='';
 
       //repertoire de stockage
@@ -107,4 +107,16 @@
           $p['page']['check']['templatesPdfFolder']['is_dir']=false;
           $p['page']['check']['templatesPdfFolder']['is_writable']=false;
       }
- }
+ 
+      //repertoire de backup
+      if (is_dir($p['config']['backupLocation'])) {
+          $p['page']['check']['backupLocation']['is_dir']=true;
+          if (is_writable($p['config']['backupLocation'])) {
+              $p['page']['check']['backupLocation']['is_writable']=true;
+          }
+      } else {
+          $p['page']['check']['backupLocation']['is_dir']=false;
+          $p['page']['check']['backupLocation']['is_writable']=false;
+      }
+
+}

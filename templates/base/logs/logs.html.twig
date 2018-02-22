@@ -23,7 +23,7 @@
  # Template > logs : log général
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -74,7 +74,7 @@
                             <td>{{ v.value|e }}</td>
 
                             <td>{{ v.outdated }}</td>
-                            <td>{{ v.deleted }}</td>
+                            <td>{{ v.deleted }}{% if v.deletedByID > 0 %} #{{ v.deletedByID }}{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -23,34 +23,35 @@
  * Js pour le formulaire d'antécédents (colonne latérale dossier patient)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
 
   //calcul IMC
-  if ($('#id_imc_id').length > 0) {
+  if ($('input[name=p_imc]').length > 0) {
 
-    imc = imcCalc($('#id_poids_id').val(), $('#id_taillePatient_id').val());
+    imc = imcCalc($('input[name=p_poids]').val(), $('input[name=p_taillePatient]').val());
     if (imc > 0) {
-      $('#id_imc_id').val(imc);
+      $('input[name=p_imc]').val(imc);
     }
 
-    $("#id_poids_id , #id_taillePatient_id").on("keyup", function() {
-      poids = $('#id_poids_id').val();
-      taille = $('#id_taillePatient_id').val();
+    $("input[name=p_poids] , input[name=p_taillePatient]").on("keyup", function() {
+      poids = $('input[name=p_poids]').val();
+      taille = $('input[name=p_taillePatient]').val();
       imc = imcCalc(poids, taille);
-      $('#id_imc_id').val(imc);
+      $('input[name=p_imc]').val(imc);
       patientID = $('#identitePatient').attr("data-patientID");
-      setPeopleData(imc, patientID, '43', '#id_imc_id', '0');
+      setPeopleDataByTypeName(imc, patientID, 'imc', 'input[name=p_imc]', '0');
 
     });
   }
 
   //ajutement auto des textarea en hauteur
-  $("#formName_baseATCD textarea").each(function(index) {
-    $(this).css("overflow", "hidden");
-    auto_grow(this);
+  $("#formName_baseATCD textarea").each(function(index, element) {
+    $(element).css("overflow", "hidden");
+    if (element.offsetParent && element.value!='')
+      auto_grow(element);
   });
 
   $("#formName_baseATCD textarea").on("keyup", function() {

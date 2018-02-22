@@ -23,7 +23,7 @@
  # Template > people : voir les infos sur un pro
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -96,7 +96,7 @@
             </div>
       </div>
 
-
+    {% if config.PraticienPeutEtrePatient %}
       <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading gras">Informations personnelles</div>
@@ -122,6 +122,7 @@
             </div>
 
       </div>
+    {% endif %}
 </div>
 
 {% if page.patientsConnus %}

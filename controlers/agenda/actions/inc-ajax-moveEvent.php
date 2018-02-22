@@ -26,14 +26,22 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$event = new msAgenda();
-$event->set_fromID($p['user']['id']);
-$event->set_userID($match['params']['userID']);
-$event->set_eventID($_POST['eventid']);
-$event->setStartDate($_POST['start']);
-$event->setEndDate($_POST['end']);
-$event->moveEvent();
+$agenda = new msAgenda();
+$agenda->set_fromID($p['user']['id']);
+$agenda->set_userID($match['params']['userID']);
+$agenda->set_eventID($_POST['eventid']);
+$agenda->setStartDate($_POST['start']);
+$agenda->setEndDate($_POST['end']);
+$agenda->moveEvent();
 
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-moveEvent.php';
+    if (is_file($hook)) {
+        $event=$agenda->getEventByID($_POST['eventid']);
+        include($hook);
+    }
+}
 
 header('Content-Type: application/json');
 echo json_encode(array("status"=>"ok"));

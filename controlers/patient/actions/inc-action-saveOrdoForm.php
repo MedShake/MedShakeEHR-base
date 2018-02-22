@@ -24,8 +24,12 @@
  * Patient > action : sauver une ordonnance
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
+if ($_POST['module']!='base' and !isset($delegate)) {
+    return;
+}
 if (count($_POST)>2) {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
@@ -63,7 +67,6 @@ if (count($_POST)>2) {
             }
         }
     }
-
 
     $pdf= new msPDF();
 

@@ -24,6 +24,7 @@
  * Config : gérer les paramètres des agendas
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -35,7 +36,7 @@
 
      //config défaut
      if (!isset($match['params']['userID'])) {
-       $p['page']['configDefaut']=Spyc::YAMLLoad('../config/config.yml');
+       $p['page']['configDefaut']=$p['configDefaut'];
      }
 
      //utilisateurs pouvant avoir un agenda
@@ -48,13 +49,21 @@
        $p['page']['selectUser']=$match['params']['userID'];
 
        //paramètres de l'agenda
+       if(is_file($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml')) {
+         $p['page']['configAgenda']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml');
+       }
+
        if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
-         $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+         $p['page']['configAgendaJs']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+       }
+
+       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
+         $p['page']['configAgendaAd']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
        }
 
        // types de rendez-vous
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml')) {
-         $p['page']['typeRdv']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configTypesRdv'.$match['params']['userID'].'.yml');
+       if(is_file($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml')) {
+         $p['page']['typeRdv']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml');
        }
 
      }

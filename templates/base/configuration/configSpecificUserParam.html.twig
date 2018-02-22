@@ -23,7 +23,7 @@
  # Template > Config : paramètres de configuration spécifiques aux utilisteurs
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @edited fr33z00 <https://github.com/fr33z00>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -42,10 +42,10 @@
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
     <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#users">Gestion des utilisateurs</a>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
     <li>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Liste des utilisateurs</a>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options</a>
     </li>
     <li class="active">Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
       {{ page.userData.2 }}
@@ -55,13 +55,13 @@
     </li>
   </ol>
 
-  <h1>Paramètres spécifiques à l'utilisateur {{ page.userData.3 }} {% if page.userData.2 %}
+  <h1>Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
     {{ page.userData.2 }}
   {% else %}
     {{ page.userData.1 }}
-  {% endif %} <small>#{{ page.userID }}</small></h1>
+  {% endif %}</h1>
 
-  <form method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configSpecificUserParam/">
+  <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
 
 
 {% for k,v in page.userParams %}
@@ -82,18 +82,45 @@
     <td>{{ w.name }}</td>
     <td>{{ page['configDefaut'][w.name] }}</td>
     <td>
-
-      {{ f.input ({
-        'input' : {
-          'type' : w.formType,
-          'name' : 'p_' ~ w.id,
-          'id' : w.name ~ 'ID',
-          'placeholder' : w.placeholder,
-          'class' : 'form-control',
-          'value' : w.userVal,
-          'autocomplete' : 'off'
-        }
-      }) }}
+      {% if w.name == 'agendaNumberForPatientsOfTheDay' %}
+        {{ f.select ({
+          'select' : {
+            'type' : w.formType,
+            'name' : 'p_' ~ w.id,
+            'id' : w.name ~ 'ID',
+            'placeholder' : w.placeholder,
+            'class' : 'form-control',
+            'values' : w.formValues,
+            'valueDefaut' : w.userVal,
+            'autocomplete' : 'off'
+          }
+        }) }}
+      {% elseif w.name == 'administratifComptaPeutVoirRecettesDe' %}
+        {{ f.selectMultiple ({
+          'select' : {
+            'type' : w.formType,
+            'name' : 'p_' ~ w.id,
+            'id' : w.name ~ 'ID',
+            'placeholder' : w.placeholder,
+            'class' : 'form-control',
+            'values' : w.formValues,
+            'valueDefaut' : w.userVal,
+            'autocomplete' : 'off'
+          }
+        }) }}
+      {% else %}
+        {{ f.input ({
+          'input' : {
+            'type' : w.formType,
+            'name' : 'p_' ~ w.id,
+            'id' : w.name ~ 'ID',
+            'placeholder' : w.placeholder,
+            'class' : 'form-control',
+            'value' : w.userVal,
+            'autocomplete' : 'off'
+          }
+        }) }}
+      {% endif %}
 
 
     </td>

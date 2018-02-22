@@ -24,90 +24,96 @@
  * Pivot central des pages loguées
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
-/////////// Petites vérifications de l'installation
-if (!is_dir("../vendor")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
+
+if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
+    die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer 'SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR' dans votre .htaccess ou la configuration du serveur");
 }
-if (!is_dir("bower_components")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
-}
-if (!is_file('../config/config.yml')) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez créer le fichier config/config.yml");
-}
+$homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
 session_start();
 
 /////////// Composer class auto-upload
-require '../vendor/autoload.php';
+require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file('../class/' . $class . '.php')) {
-        include '../class/' . $class . '.php';
+    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
+        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
     }
 });
 
-
+/////////// Vérification de l'état d'installation
+if (!is_file($homepath.'config/config.yml')) {
+    msTools::redirection('/install.php');
+}
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad('../config/config.yml');
-$p['config']['relativePathForInbox']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
-
+$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
+$p['config']['homeDirectory']=$homepath;
+$p['configDefaut']=$p['config'];
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+/////////// Vérification de l'état de la base
+if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
+    msTools::redirection('/install.php');
+}
 /////////// Validators loader
-require '../fonctions/validators.php';
+require $homepath.'fonctions/validators.php';
 
 /////////// Router
 $router = new AltoRouter();
-$routes=Spyc::YAMLLoad('../config/routes.yml');
+$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
 $router->addRoutes($routes);
 $router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
 
-
 ///////// user
-if (isset($_COOKIE['userId'])) {
+$p['user']=null;
+$p['user']['id']=null;
+$p['user']['module']='base';
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name!=''") == "0") {
+    if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
+        msTools::redirRoute('userLogInFirst');
+    }
+} elseif (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
+    if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+        msTools::redirection('/maintenance.html');
+    }
+    if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
+        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
+    }
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
 } else {
-    $p['user']=null;
-    $p['user']['id']=null;
-    $p['user']['module']='base';
-    if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people") == "0") {
-        if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
-            msTools::redirRoute('userLogInFirst');
-        }
-    }
-    elseif ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
         msTools::redirRoute('userLogIn');
     }
 }
 
 ///////// Controler
-if ($match and is_file('../controlers/'.$match['target'].'.php')) {
-    include '../controlers/'.$match['target'].'.php';
+if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+    include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
-    if (is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-        include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    if (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+        include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-} elseif ($match and is_file('../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-    include '../controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
+    include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 
@@ -118,20 +124,23 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-        //inbox number of messages
+      //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
-      if (isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
-          if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-              $events = new msAgenda();
-              $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-              $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-          }
+      if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+        $events = new msAgenda();
+        $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
       }
-        if (!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
-            $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-        }
+      elseif($p['config']['administratifPeutAvoirAgenda']=='true') {
+        $events = new msAgenda();
+        $events->set_userID($p['user']['id']);
+        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      }
+      elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
+          $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      }
     }
 
     // crédits SMS

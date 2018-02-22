@@ -23,19 +23,16 @@
  * Fonctions JS pour les pages de configuration
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://www.github.com/fr33z00>
+ * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
 $(document).ready(function() {
 
-  if (document.URL.indexOf("#cr") >= 0) {
+  if (document.URL.indexOf("#ca") >= 0) {
     $($("ul.nav-tabs li")[1]).children("a")[0].click();
   }
-  else if (document.URL.indexOf("#ca") >= 0) {
+  else if (document.URL.indexOf("#ap") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
-  }
-  else if (document.URL.indexOf("#licence") >= 0) {
-    $($("ul.nav-tabs li")[3]).children("a")[0].click();
   }
 
   // extract by primary key
@@ -262,6 +259,129 @@ $(document).ready(function() {
   $("#formParamsEdit textarea").on("keyup, focus", function() {
     $(this).css("overflow", "hidden");
     auto_grow(this);
+  });
+  
+  //droits admin dans la page liste des utilisateurs
+  $(".changeAdmin").on("click", function(e){
+    e.preventDefault();
+    var $ca = $(this);
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configGiveAdmin/",
+      type: 'post',
+      data: {
+        id: $ca.attr('data-userid')
+      },
+      dataType: "json",
+      success: function(data) {
+        $ca.children(".glyphicon-unchecked").removeClass("glyphicon-unchecked").addClass("glyphicon-checked");
+        $ca.children(".glyphicon-check").removeClass("glyphicon-check").addClass("glyphicon-unchecked");
+        $ca.children(".glyphicon-checked").removeClass("glyphicon-checked").addClass("glyphicon-check");
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  //choix du module utilisateur dans la page liste des utilisateurs
+  $(".changeModule").on("change", function(){
+    var $cm = $(this);
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configChangeModule/",
+      type: 'post',
+      data: {
+        id: $cm.attr('data-userid'),
+        module: $cm.val()
+      },
+      dataType: "json",
+      success: function(data) {
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  //changement de mot de passe d'un utilisateur dans la page liste des utilisateurs
+  $(".changePassword").on("click", function(e){
+    e.preventDefault();
+    var $cp = $(this);
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configChangePassword/",
+      type: 'post',
+      data: {
+        id: $cp.attr('data-userid'),
+        password: $("input[data-userid="+$cp.attr('data-userid')+"]").val()
+      },
+      dataType: "json",
+      success: function(data) {
+        alert('le mot de passe de l\'utilisateur "'+ $cp.attr('data-name') + '" a été changé avec succès');
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  //Révoquer un utilisateur dans la page liste des utilisateurs
+  $(".revokeUser").on("click", function(e){
+    e.preventDefault();
+    var $ru = $(this);
+    if (!confirm('Etes vous sûr de vouloir supprimer l\'utilisateur "'+$ru.attr('data-name')+'" ?'))
+      return;
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configRevokeUser/",
+      type: 'post',
+      data: {
+        id: $ru.attr('data-userid')
+      },
+      dataType: "json",
+      success: function(data) {
+          $ru.closest("tr").remove();
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  $("body.uploader").dmUploader({
+    url: urlBase + '/configuration/ajax/configInstallModule/',
+    extFilter: ["zip"],
+    maxFiles: 1,
+    allowedTypes: "application/zip",
+    dataType: 'html',
+    onUploadSuccess: function() {
+      console.log('fichier envoyé');
+    },
+    onDragEnter: function(){
+      $(".mask").css("display", "block");
+      $(".mask").animate({opacity: 0.4}, 500);
+    },
+    onDragLeave: function(){
+      $(".mask").animate({opacity: 0}, 500, "linear", function(){$(".mask").css("display", "none")});
+    },
+    onFileTypeError: function(){
+      alert("Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
+    },
+    onBeforeUpload: function(id) {
+      if (!confirm("Confirmez l'installation du fichier"))
+        $(this).dmUploader("cancel", id);
+    },
+    onUploadSuccess: function(id, data) {
+        if (data.indexOf("Erreur:")==0) {
+            $("#errormessage").html(data);
+            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        } else if (data.toLowerCase().indexOf("ok")==0) {
+          alert("La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+        } else {
+          alert("La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+        }
+    },
+    onUploadError: function(id, xhr, status, errorThrown) {
+      $("#errormessage").html(errorThrown);
+      $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+    }
   });
 
 });

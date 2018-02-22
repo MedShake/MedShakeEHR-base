@@ -26,11 +26,20 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $event = new msAgenda();
- $event->set_fromID($p['user']['id']);
- $event->set_userID($match['params']['userID']);
- $event->set_eventID($_POST['eventid']);
- $event->delEvent();
+$agenda = new msAgenda();
+$agenda->set_fromID($p['user']['id']);
+$agenda->set_userID($match['params']['userID']);
+$agenda->set_eventID($_POST['eventid']);
+$agenda->delEvent();
+
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
+    if (is_file($hook)) {
+        $event=$agenda->getEventByID($_POST['eventid']);
+        include($hook);
+   }
+}
 
 header('Content-Type: application/json');
 echo json_encode(array("status"=>"ok"));

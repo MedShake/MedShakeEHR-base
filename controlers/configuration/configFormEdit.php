@@ -24,7 +24,7 @@
  * Config : édition d'un formulaire
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @edited fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement
@@ -57,6 +57,6 @@
             }
         }
         //liste des modules
-        $p['page']['modules']=msSQL::sql2tabKey("SELECT module FROM system order by module", "module", "module");
+        $p['page']['modules']=msSQL::sql2tabKey("SELECT name AS module FROM system WHERE groupe='module' order by name", "module", "module");
     }
  }

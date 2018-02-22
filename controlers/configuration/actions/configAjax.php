@@ -37,6 +37,10 @@ $acceptedModes=array(
     'configExtractByPrimaryKey', // Effacer dans une table par l'intermédiaire de la primary key
     'configFormsCatCreate', // Création d'une cat pour les forms
     'configFormCreate', // Création d'un form
+    'configChangeModule', // Change le module d'un utilisateur
+    'configChangePassword', // Change le mot de passe d'un utilisateur
+    'configGiveAdmin', // Toggle droit d'admin
+    'configRevokeUser', // Supprimer un utilisateur
     'configPrescriptionCreate', //Création d'une prescription type
     'configPrescriptionsCatCreate', //Création d'une cat de prescription type
     'configActesCreate', //Création d'un acte
@@ -45,9 +49,14 @@ $acceptedModes=array(
     'configTagDicomCreate', //Associer tag dicom et typeID
     'configUploadFichierZoneConfig', //Downloader une clef apicrypt
     'configDeleteApicryptClef', //Delete d'une clef apicrypt
-    'configTemplatePDFDelete' //Delete d'un template
+    'configTemplatePDFDelete', //Delete d'un template
+    'configAgendaSave', // sauvegarder config agenda
+    'configDefaultUsersParams', //Enregistrer la config par défaut des utilisateurs
+    'configFormEdit', // Edition du formulaire
+    'configCronJobs', //Configurer les crons
+    'configInstallModule', // Installer un module
+    'configSpecificUserParam' // Attribuer une config spécifique à un utilisateur
 );
-
 if (!in_array($m, $acceptedModes)) {
     die;
 }
@@ -60,6 +69,36 @@ if ($m=='configFormsCatCreate') {
 // Création d'un form
 elseif ($m=='configFormCreate') {
     include('inc-ajax-configFormCreate.php');
+}
+
+// Changer le module d'un utilisateur
+elseif ($m=='configChangeModule') {
+    include('inc-ajax-configChangeModule.php');
+}
+
+// Changer le mot de passe d'un utilisateur
+elseif ($m=='configChangePassword') {
+    include('inc-ajax-configChangePassword.php');
+}
+
+// Donner / retirer droit d'admin à un utilisateur
+elseif ($m=='configGiveAdmin') {
+    include('inc-ajax-configGiveAdmin.php');
+}
+
+// Révoquer un utilisateur
+elseif ($m=='configRevokeUser') {
+    include('inc-ajax-configRevokeUser.php');
+}
+
+// sauvegarder config agenda
+elseif ($m=='configAgendaSave') {
+    include('inc-ajax-configAgendaSave.php');
+}
+
+// Enregistrer la config par défaut des utilisateurs
+elseif ($m=='configDefaultUsersParams') {
+    include('inc-ajax-configDefaultUsersParams.php');
 }
 
 // Création d'une cat pour données
@@ -125,6 +164,26 @@ elseif ($m=='configDeleteApicryptClef') {
 // Delete d'un template PDF
 elseif ($m=='configTemplatePDFDelete') {
     include('inc-ajax-configTemplatePDFDelete.php');
+}
+
+// Edition du formulaire
+elseif ($m=='configFormEdit') {
+    include('inc-ajax-configFormEdit.php');
+}
+
+// Configurer les crons
+elseif ($m=='configCronJobs') {
+    include('inc-ajax-configCronJobs.php');
+}
+
+// Installer un module
+elseif ($m=='configInstallModule') {
+    include('inc-ajax-configInstallModule.php');
+}
+
+// Attribuer une config spécifique à un utilisateur
+elseif ($m=='configSpecificUserParam') {
+    include('inc-ajax-configSpecificUserParam.php');
 }
 
 die();

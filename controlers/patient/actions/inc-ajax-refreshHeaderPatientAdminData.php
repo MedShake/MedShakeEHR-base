@@ -33,7 +33,7 @@ $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();

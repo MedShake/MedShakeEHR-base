@@ -24,6 +24,7 @@
  * Patient > ajax : obtenir le formulaire de consultation demandé
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -54,6 +55,7 @@ $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],
   'parentID'=>$_POST['parentID'],
   'csID'=>$_POST['csID'],
+  'mode'=>$_POST['mode']
 );
 if (isset($_POST['objetID'])) {
     $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];
