@@ -86,8 +86,6 @@ ALTER TABLE `forms` CHANGE `formAction` `formAction` varchar(255) DEFAULT '/pati
 SET @catID=(SELECT `id` FROM `forms_cat` WHERE `name`='formSynthese');
 UPDATE `forms` SET `cat`=@catID WHERE `internalName`='baseSynthese';
 
-UPDATE `forms` SET `formAction`='/patient/ajax/sendMail/' WHERE `internalName` in ('baseSendMail', 'baseSendMailApicrypt', 'baseFax');
-
 UPDATE `forms` SET `formAction`='/patient/ajax/saveReglementForm/' WHERE `internalName`='baseReglement';
 
 UPDATE `forms` SET `formAction`='/patient/ajax/saveCsForm/' WHERE `internalName`='baseConsult';

@@ -31,7 +31,8 @@
 $m=$match['params']['m'];
 
 $acceptedModes=array(
-    'saveOrdoForm' // sauver une ordonnance
+    'saveOrdoForm', // sauver une ordonnance
+    'sendMail' // envoyer un mail
 );
 
 if (!in_array($m, $acceptedModes)) {

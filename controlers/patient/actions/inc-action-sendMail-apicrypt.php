@@ -43,6 +43,8 @@ if (isset($_POST['objetID'])) {
     $doc->setObjetID($_POST['objetID']);
     $sourceFile=$doc->getPathToDoc();
     $ext=$doc->getFileExtOfDoc();
+} else {
+  $sourceFile='';
 }
 
 $mail->isHTML(false);
@@ -116,4 +118,5 @@ if (!$mail->send()) {
     //pj ID
     if (isset($_POST['objetID'])) $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
 
+    msTools::redirection('/patient/'.$_POST['patientID'].'/');
 }
