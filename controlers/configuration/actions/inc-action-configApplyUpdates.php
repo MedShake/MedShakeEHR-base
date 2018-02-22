@@ -79,6 +79,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
         }
     }
+} elseif (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
     msSQL::sqlQuery("UPDATE system SET value='normal' WHERE name='state' and groupe='system'");
 }
 
