@@ -602,6 +602,9 @@ function addDicomSRInfo2CurrentForm(data) {
 
 //envoyer le form de CS dans le div CS
 function sendFormToCsDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCsForm/',
     type: 'post',
@@ -640,6 +643,9 @@ function preventDataLoss(e) {
 
 //envoyer le form de Courrier dans le div newCourrier
 function sendFormToCourrierDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCourrierForm/',
     type: 'post',
@@ -672,6 +678,8 @@ function sendFormToCourrierDiv(el) {
 
 //envoyer le form new Ordo dans le div Ordo
 function sendFormToOrdoDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editOrdo')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
 
   $.ajax({
     url: urlBase + '/patient/ajax/extractOrdoForm/',
@@ -705,6 +713,9 @@ function sendFormToOrdoDiv(el) {
 
 //envoyer le form newMail dans le div newMail
 function sendFormToMailDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractMailForm/',
     type: 'post',
@@ -732,6 +743,9 @@ function sendFormToMailDiv(el) {
 
 //envoyer le form new Reglement dans le div Reglement
 function sendFormToReglementDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editReglement')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
