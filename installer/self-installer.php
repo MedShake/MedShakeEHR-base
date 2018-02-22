@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 //exécution de composer pour la partie JS
                 chdir($dossierweb);
                 exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
-                if(strpos(str_tolower($ret), 'error')===false) {
+                if(strpos(strtolower($ret), 'error')===false) {
                     unlink($dossierweb.'/self-installer.php');
                     //lancement de la partie configuration
                     header('Location: '.str_replace('base-', '',$_SERVER['REQUEST_URI']));
@@ -109,7 +109,9 @@ if($template!=''): ?>
       MedShakeEHR : Pre-installation</title>
     <meta name="Description" content=""/>
   </head>
-
+  <style>
+    .btn {color:#fff;background-color:#286090;border-color:#204d74;padding:6px 12px;cursor:pointer}
+  </style>
   <body>
 
 <?php
@@ -123,7 +125,7 @@ if ($template=='bienvenue') :
       <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="bienvenue" type="hidden"/>
         <input name="destination" type="text" style="border:solid 1px #ccc"/>
-        <a href="#"><button type="submit" onclick="this.style.visible='false'">Suivant</button></a>
+        <button type="submit" class="btn" onclick="this.style.visibility='hidden'">Suivant</button>
         </div>
       </form>
 <?php
@@ -131,13 +133,13 @@ elseif ($template=='erreur-inconnue') :
 ?>
       <h1>Erreur!</h1>
       <p style="margin-top:50px;">Une erreur s'est produite durant l'installation. Voici les messages :</p>
-      <p><?= ?></p>
+      <p><?=$ret?></p>
 <?php
 else :
 ?>
       <h1>Erreur!</h1>
       <p style="margin-top:50px;">Le dossier <?=$dossier?> n'est pas accéssible en écriture. Veuillez corriger le problème puis cliquer sur suivant.</p>
-      <a href=<?=$_SERVER['REQUEST_URI']?>><button>Suivant</button></a>
+      <a href=<?=$_SERVER['REQUEST_URI']?>><button class="btn">Suivant</button></a>
 <?php
 endif;
 ?>
