@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 $form=new msForm();
 $form->setFormID($_POST['id']);
 $formdata=$form->getFormFromDb();

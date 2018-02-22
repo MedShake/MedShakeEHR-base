@@ -25,6 +25,9 @@
  *
  * @author fr33z00 <https://github.com/fr33z00
  */
+
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 $formIN=$_POST['formIN'];
 unset($_SESSION['form'][$formIN]);
@@ -39,7 +42,7 @@ foreach ($availableInstalls as $module) {
         $installFiles[]=glob($p['config']['homeDirectory'].'upgrade/'.$module.'/sqlInstall.sql');
     }
 }
-//on fait la liste des patches à appliquer        
+//on fait la liste des patches à appliquer
 $moduleUpdateFiles=[];
 foreach ($modules as $module) {
     $installed=file_get_contents($p['config']['homeDirectory'].'versionMedShakeEHR-'.$module['name'].'.txt');

@@ -26,6 +26,8 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
 if ($mimetype!='application/zip') {
@@ -46,4 +48,3 @@ if ($zip->open($fichier['tmp_name'])) {
     die("Erreur: Le fichier n'est pas un fichier MedShakeEHR");
 }
 die("Erreur: le fichier n'a pas pu être ouvert pour une raison inconnue");
-

@@ -26,9 +26,10 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 if(!is_numeric($_POST['id']) or !isset($_POST['password'])) die;
 
 msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['password']."',@password) WHERE id='".$_POST['id']."'");
 
 echo json_encode(array('ok'));
-

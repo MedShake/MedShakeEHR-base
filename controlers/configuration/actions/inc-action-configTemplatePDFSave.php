@@ -27,6 +27,8 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
  //config défaut
  $p['page']['configDefaut']=$p['configDefaut'];
 

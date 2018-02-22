@@ -26,10 +26,11 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 if (!isset($_POST['id']) or !isset($_POST['module'])) {
     die;
 }
 msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'module'=>$_POST['module']));
 
 echo json_encode(array('ok'));
-

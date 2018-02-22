@@ -21,11 +21,13 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Config : donner les droits administrateur à un utilisateur 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
+
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 if(!is_numeric($_POST['id'])) die;
 $actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_POST['id']."' limit 1");
@@ -37,4 +39,3 @@ if( $actualRank == 'admin') {
 }
 
 echo json_encode(array('ok'));
-

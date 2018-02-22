@@ -27,6 +27,8 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 //utilisateurs pouvant avoir un agenda
 $agendaUsers= new msPeople();
 $autorisedUsers=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
@@ -57,7 +59,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
     } else {
         file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
         $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
-  
+
         $js=array();
         $js[]="var businessHours = [\n";
         $hiddenDays=array();
