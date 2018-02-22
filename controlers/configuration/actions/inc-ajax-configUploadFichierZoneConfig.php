@@ -27,7 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if (!msUser::checkUserIsAdmin()) {die;}
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
 
 $fichier=$_FILES['file'];
 if(!isset($_POST['destination'])) die;

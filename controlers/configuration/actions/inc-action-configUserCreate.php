@@ -26,6 +26,8 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
     $module=isset($_POST['p_module'])?$_POST['p_module']:'base';
     $user=$p['user']['id']?:1;

@@ -50,7 +50,6 @@ $acceptedModes=array(
     'extractCourrierForm', // Extraire l'éditeur de courrier
     'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
     'saveCsForm', // sauver le formulaire de consultation
-    'sendMail', // envoyer un mail
     'saveOrdoForm', // sauver une ordonnance
     'saveReglementForm', // sauver une ordonnance
     'changeObjetCreationDate', // changer le creationDate d'un objet

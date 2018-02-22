@@ -26,8 +26,10 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 $booleans=array(
-          'PraticienPeutEtrePatient', 
+          'PraticienPeutEtrePatient',
           'twigEnvironnementAutoescape',
           'twigEnvironnementCache'
           );

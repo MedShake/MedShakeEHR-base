@@ -27,11 +27,13 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 $userID=$_POST['userID'];
 unset($_POST['userID']);
 
-$prevData=msSQL::sql2tabKey("SELECT od.typeID AS k, dt.formType AS type, od.id AS Id, od.value AS Value 
-		    FROM objets_data AS od 
+$prevData=msSQL::sql2tabKey("SELECT od.typeID AS k, dt.formType AS type, od.id AS Id, od.value AS Value
+		    FROM objets_data AS od
         LEFT JOIN data_types AS dt ON od.typeID=dt.id and od.toID='".$userID."' and od.outdated='' and od.deleted=''
         where dt.groupe='user'", "k");
 if (is_array($_POST)) {
@@ -41,7 +43,7 @@ if (is_array($_POST)) {
         if (is_array($v)) {
             $v=implode(',', $v);
         }
-        if (is_numeric($typeID) and is_numeric($userID) and 
+        if (is_numeric($typeID) and is_numeric($userID) and
           (($v and (!is_array($prevData) or !array_key_exists($typeID, $prevData))) or
           (is_array($prevData) and array_key_exists($typeID, $prevData) and $v!=$prevData[$typeID]['Value']))) {
             $objet = new msObjet();

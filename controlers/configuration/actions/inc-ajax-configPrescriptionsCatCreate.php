@@ -21,10 +21,12 @@
  */
 
 /**
- * Config > ajax : créer une catégorie de prescriptions types 
+ * Config > ajax : créer une catégorie de prescriptions types
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
 
 //check & validate datas
 $gump=new GUMP();
