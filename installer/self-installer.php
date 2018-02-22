@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 chdir($dossierweb);
                 exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
                 if(strpos(str_tolower($ret), 'error')===false) {
-                    unlink($dossierweb.'/base-install.php');
+                    unlink($dossierweb.'/self-installer.php');
                     //lancement de la partie configuration
                     header('Location: '.str_replace('base-', '',$_SERVER['REQUEST_URI']));
                     die();
