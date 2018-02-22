@@ -21,26 +21,17 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * Requêtes AJAX > enregistrement des données patient par nom du type de donnée 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
-header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData', // Enregistrer des données patient
-    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée 
-    'mailTracking' // Retourner les infos de tracking d'un mail
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-} else {
-    include('inc-ajax-'.$m.'.php');
-}
+ $patient = new msObjet();
+ $patient->setFromID($p['user']['id']);
+ $patient->setToID($_POST['patientID']);
+ if ($patient->createNewObjetByTypeName($_POST['typeName'], $_POST['value'], $_POST['instance']) > 0) {
+     $return['status']='ok';
+     echo json_encode($return);
+ } else {
+     header('HTTP/1.1 401 Unauthorized');
+ }
