@@ -46,12 +46,8 @@ if ($zip->open($fichier['tmp_name'])) {
         if ($zip->extractTo($p['config']['homeDirectory'])) {
             $zip->close();
             if ($p['config']['webDirectory']!=$p['config']['homeDirectory'].'public_html/') {
-                foreach (scandir($p['config']['homeDirectory'].'/public_html') as $f) {
-                    if ($f !='.' and $f !='..') {
-                        rename($p['config']['homeDirectory'].'public_html/'.$f, $p['config']['webDirectory'].$f);
-                    }
-                }
-                rmdir($p['config']['homeDirectory'].'/public_html');
+                exec('cp -r '.$p['config']['homeDirectory'].'public_html/* '.$p['config']['webDirectory']);
+                exec('rm -rf '.$p['config']['homeDirectory'].'public_html/');
             }
             die("ok");
         }
