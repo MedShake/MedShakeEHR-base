@@ -335,7 +335,7 @@
 {% endmacro %}
 
 {# formBuilder #}
-{% macro formbuilder(t , formIN, prevalue ) %}
+{% macro formbuilder(t , formIN, prevalue, config ) %}
 	{% import _self as f %}
 
 	{% if t.global.noFormTags is not defined %}
