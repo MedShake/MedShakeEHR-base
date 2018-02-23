@@ -35,6 +35,10 @@ UPDATE `data_types` SET formValues='baseReglement' WHERE name='reglePorteur';
 set @cat=(SELECT `id` FROM `data_cat` WHERE `name`='ordoItems');
 UPDATE `data_types` SET cat=@cat WHERE name in ('ordoTypeImpression', 'ordoLigneOrdo', 'ordoLigneOrdoALDouPas');
 
+UPDATE `data_types` SET `placeholder`='nom reçu à la naissance', `label`='Nom de naissance', `description`='Nom reçu à la naissance', `validationErrorMsg`='Le nom de naissance est indispensable et ne doit pas contenir de caractères interdits' WHERE name='birthname';
+
+UPDATE `data_types` SET `placeholder`='Nom marital ou utilisé au quotidien', `label`='Nom d\'usage', `description`='Nom marital ou utilisé au quotidien', `validationErrorMsg`='Le nom d\'usage ne doit pas contenir de caractères interdits' WHERE name='lastname';
+
 SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='catParamsUsersAdmin');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('user', 'agendaService', 'Service d\'agenda externe', 'Service d\'agenda externe', 'nom du service', '', '', 'text', '', 'base', @cat, 1, '2018-01-01 00:00:00', 3600, 2);
@@ -105,6 +109,10 @@ UPDATE `forms` SET `yamlStructure`='structure:\r\n row1:\r\n  col1: \r\n    size
 
 UPDATE `forms` SET `yamlStructure`='structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - birthname,required,autocomplete,data-acTypeID=2:1 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=2:1  		#2    Nom d usage\n        - firstname,required,autocomplete,data-acTypeID=3:22:230:235:241 		#3    Prénom\n        - birthdate                                		#8    Date de naissance\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    Numéro\n        - street,autocomplete,data-acTypeID=11:55  		#11   Rue\n        - postalCodePerso                          		#13   Code postal\n        - city,autocomplete,data-acTypeID=12:56    		#12   Ville\n        - deathdate                                		#508  Date de décès\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=5                             		#21   Notes', `yamlStructureDefaut`='structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\r\n        - birthname,required,autocomplete,data-acTypeID=2:1 		#1    Nom de naissance\r\n        - lastname,autocomplete,data-acTypeID=2:1  		#2    Nom d usage\r\n        - firstname,required,autocomplete,data-acTypeID=3:22:230:235:241 		#3    Prénom\r\n        - birthdate                                		#8    Date de naissance\r\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\r\n        - mobilePhone                              		#7    Téléphone mobile\r\n        - homePhone                                		#10   Téléphone domicile\r\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    Numéro\r\n        - street,autocomplete,data-acTypeID=11:55  		#11   Rue\r\n        - postalCodePerso                          		#13   Code postal\r\n        - city,autocomplete,data-acTypeID=12:56    		#12   Ville\r\n        - deathdate                                		#508  Date de décès\r\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=5                             		#21   Notes' WHERE `internalName`='baseNewPatient';
 
+SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
+INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
+('base', 'baseUserParametersClicRdv', 'Paramètres utilisateur clicRDV', 'Paramètres utilisateur clicRDV', 'data_types', 'admin', 'post', '/user/actions/userParametersClicRdv/', @catID, 'public', 'structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', 'structure:\n row1:\n  col1: \n    head: "Compte clicRDV"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL);
+
 -- forms_basic_types
 update `form_basic_types` set creationDate='2018-01-01 00:00:00', deleteDate='2018-01-01 00:00:00' where id in(1,2,3);
 ALTER TABLE `form_basic_types` ADD UNIQUE(`name`);
@@ -121,6 +129,11 @@ UPDATE `form_basic_types` SET `fromID`=@medshakeid WHERE `fromID` in ('0','1');
 
 -- objets_data
 ALTER TABLE `objets_data` ADD `deletedByID` int(11) DEFAULT NULL after `deleted`;
+
+UPDATE `objets_data` as od2 left join objets_data as od1 
+on od1.toID=od2.toID
+set od2.typeID=1
+WHERE ((od1.value='M' and od1.typeID=14) or (od1.value>'2000-01-01 00:00:00' and od1.typeID=8)) and od2.typeID=2;
 
 -- system
 ALTER TABLE `system` MODIFY `id` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
