@@ -46,9 +46,9 @@ if ($validation === false) {
     //check login
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-        unset($_SESSION['form'][$formIN]);
-        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
-        if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
+//        unset($_SESSION['form'][$formIN]);
+        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant ou le mot de passe est incorrect';
+        if (!is_array($_SESSION['form'][$formIN]['validationErrorsMsg']) or !in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
