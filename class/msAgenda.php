@@ -325,6 +325,22 @@ class msAgenda
               $textColor=$this->_tabTypeRdv[$e['type']]['textColor'];
           } else {
               $textColor='#fff';
+              if (isset($this->_tabTypeRdv[$e['type']]['backgroundColor'])) {
+                  $bc=substr($this->_tabTypeRdv[$e['type']]['backgroundColor'], 1);
+                  if (strlen($bc)==6) {
+                      $bc=intval(hexdec($bc));
+                      $luma=(($bc>>16) + 2*(($bc>>8)&0xff) + ($bc&0xff))>>2;
+                      if ($luma > 127) {
+                          $textColor='#000';
+                      }
+                  } elseif (strlen($bc)==3) {
+                      $bc=intval(hexdec($bc));
+                      $luma=(($bc>>8) + 2*(($bc>>4)&0xf) + ($bc&0xf))>>2;
+                      if ($luma > 15) {
+                          $textColor='#000';
+                      }
+                  }
+              }
           }
 
           if ($e['absente']=='oui') {
@@ -532,7 +548,7 @@ class msAgenda
       }
     }
 
-    public function getRdvTypes($userID) {
+    public static function getRdvTypes($userID) {
         global $p;
         if(is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml')) {
           return Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml');
