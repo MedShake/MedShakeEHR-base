@@ -63,8 +63,8 @@ peopleRelations: ['GET', '/patient/relations/[i:patient]/', 'people/peopleRelati
 proView: ['GET', '/pro/[i:proID]/', 'people/proView']
 
 #dossier patient
+patientAjaxIgnoreEmpty: ['GET|POST', '/patient/ajax/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientAjax']
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
-patientActionsIgnoreEmpty: ['GET|POST', '/patient/actions/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientActions']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
 patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
 

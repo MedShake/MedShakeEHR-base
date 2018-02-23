@@ -70,6 +70,9 @@ $(document).ready(function() {
     boutonsHeaderCenter = 'bloquer dossier,deplacer,cloner,honorer,supprimer';
   }
 
+  if (!eventTextColor) {
+    eventTextColor = '#fff';
+  }
 
   if (!eventSources) {
     eventSources = [{
@@ -111,6 +114,11 @@ $(document).ready(function() {
       lastMonth: {
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
+        }
+      },
+      synchronize: {
+        click: function(){
+          synchronizeEvents();
         }
       },
       dossier: {
@@ -183,6 +191,7 @@ $(document).ready(function() {
       nextMonth: 'glyphicon-chevron-right',
       prev: 'glyphicon-menu-left',
       next: 'glyphicon-menu-right',
+      synchronize: 'glyphicon-refresh',
       dossier: 'glyphicon-folder-open',
       deplacer: 'glyphicon-transfer',
       bloquer: 'glyphicon-ban-circle',
@@ -191,7 +200,7 @@ $(document).ready(function() {
       honorer: 'glyphicon-alert',
     },
     header: {
-      left: 'lastMonth,prev,next,nextMonth today',
+      left: 'lastMonth,prev,synchronize,next,nextMonth today',
       center: boutonsHeaderCenter,
       right: 'title'
     },
@@ -209,6 +218,7 @@ $(document).ready(function() {
     businessHours: businessHours,
     slotEventOverlap: false,
     contentHeight: 'auto',
+    eventTextColor: eventTextColor,
     eventSources: eventSources,
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
@@ -491,6 +501,28 @@ function setRdv() {
     error: function() {
       alert('Il y a un problème. Il faut recharger la page.');
       clean();
+    },
+  });
+}
+
+// synchroniser les agendas externes et internes
+function synchronizeEvents() {
+  $(".fc-synchronize-button").attr("disabled","");
+  $.ajax({
+    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/synchronizeEvents/',
+    type: "post",
+    data: {
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#calendar').fullCalendar('refetchEvents');
+      clean();
+      $(".fc-synchronize-button").removeAttr("disabled");
+    },
+    error: function() {
+      alert('Il y a un problème. Il faut recharger la page.');
+      clean();
+      $(".fc-synchronize-button").removeAttr("disabled");
     },
   });
 }

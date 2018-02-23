@@ -37,6 +37,7 @@ $acceptedModes=array(
     'searchPatient', //chercher patient
     'getPatientAdminData', //obetnir les data patient
     'setNewRdv', // ajouter ou updater un rdv
+    'synchronizeEvents', // synchroniser les événements (internes et externes)
     'setEventPasVenu', // marquer rendez-vous non honoré / honoré
     'getHistoriquePatient', // obtenir l'historique de rendez-vous d'un patient
 );
@@ -65,6 +66,10 @@ elseif ($m=='searchPatient') {
 // Obtenir les data patient
 elseif ($m=='getPatientAdminData') {
     include('inc-ajax-getPatientAdminData.php');
+}
+// Ajouter ou updater un rdv
+elseif ($m=='synchronizeEvents') {
+    include('inc-ajax-synchronizeEvents.php');
 }
 // Ajouter ou updater un rdv
 elseif ($m=='setNewRdv') {

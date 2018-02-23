@@ -65,13 +65,14 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $hiddenDays=array();
         $d=1;
         foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
-            $js[]="  {\n";
-            $js[]="    dow: [".$d."],\n";
-            $js[]="    start: '".$params[$day]['minTime'].":00',\n";
-            $js[]="    end: '".$params[$day]['maxTime'].":00',\n";
-            $js[]="  },\n";
             if (!$params[$day]['visible']) {
                 $hiddenDays[]=$d;
+            } elseif ($params[$day]['worked']) {
+                $js[]="  {\n";
+                $js[]="    dow: [".$d."],\n";
+                $js[]="    start: '".$params[$day]['minTime'].":00',\n";
+                $js[]="    end: '".$params[$day]['maxTime'].":00',\n";
+                $js[]="  },\n";
             }
             $d++;
             $d%=7;
