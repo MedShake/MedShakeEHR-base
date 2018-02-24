@@ -63,18 +63,23 @@
       th.fc-day-header a {
         color : black;
       }
-
+      {% if (config.agendaService in ['clicRDV'])==false %}
+        .fc-synchronize-button {display:none !important}
+      {% endif %}
     </style>
 
     <script>
     var boutonsHeaderCenter;
     var hiddenDays;
+    var firstDay;
     var minTime;
     var maxTime;
     var businessHours;
     var slotDuration;
     var slotLabelInterval;
+    var eventTextColor;
     var eventSources;
+    var viewRender;
     {{ page.configAgenda }}
     </script>
 

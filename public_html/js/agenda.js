@@ -53,6 +53,9 @@ $(document).ready(function() {
   if (!maxTime) {
     maxTime = '20:45:00';
   }
+  if (firstDay == undefined) {
+    firstDay = moment().day();
+  }
   if (!slotDuration) {
     slotDuration = '00:15:00';
   }
@@ -67,15 +70,15 @@ $(document).ready(function() {
     }];
   }
   if (!boutonsHeaderCenter) {
-    boutonsHeaderCenter = 'bloquer dossier,deplacer,cloner,honorer,supprimer';
+    var boutonsHeaderCenter = 'bloquer dossier,deplacer,cloner,honorer,supprimer';
   }
 
   if (!eventTextColor) {
-    eventTextColor = '#fff';
+    var eventTextColor = '#fff';
   }
 
   if (!eventSources) {
-    eventSources = [{
+    var eventSources = [{
         url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
       },
       {
@@ -206,6 +209,7 @@ $(document).ready(function() {
     },
     minTime: minTime,
     maxTime: maxTime,
+    firstDay: firstDay,
     slotDuration: slotDuration,
     weekNumbers: true,
     allDaySlot: false,
@@ -220,6 +224,7 @@ $(document).ready(function() {
     contentHeight: 'auto',
     eventTextColor: eventTextColor,
     eventSources: eventSources,
+    viewRender: viewRender,
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background' && popstop == 0) {
@@ -302,6 +307,7 @@ $(document).ready(function() {
 
   $(".fc-lastMonth-button").attr("title", "Mois précédent");
   $(".fc-prev-button").attr("title", "Semaine précédente");
+  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
   $(".fc-next-button").attr("title", "Semaine suivante");
   $(".fc-nextMonth-button").attr("title", "Mois suivant");
   $(".fc-deplacer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
