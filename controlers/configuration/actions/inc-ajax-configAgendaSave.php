@@ -61,7 +61,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
 
         $js=array();
-        $js[]="var businessHours = [\n";
+        $js[]="businessHours = [\n";
         $hiddenDays=array();
         $d=1;
         foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
@@ -79,9 +79,9 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         }
         $js[]="];\n";
 
-        $js[]="var hiddenDays = [".implode(', ', $hiddenDays)."];\n";
+        $js[]="hiddenDays = [".implode(', ', $hiddenDays)."];\n";
 
-        $js[]="var eventSources = [{\n";
+        $js[]="eventSources = [{\n";
         $js[]="    url: urlBase + '/agenda/".$_POST['userID']."/ajax/getEvents/'\n";
         $js[]="  },\n";
         $js[]="  {\n";
@@ -104,9 +104,9 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="  }\n";
         $js[]="];\n";
 
-        $js[]="var minTime = '".$params['minTime'].":00';\n";
-        $js[]="var maxTime = '".$params['maxTime'].":00';\n";
-        $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
+        $js[]="minTime = '".$params['minTime'].":00';\n";
+        $js[]="maxTime = '".$params['maxTime'].":00';\n";
+        $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
     }
 }

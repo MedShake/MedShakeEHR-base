@@ -31,7 +31,7 @@ msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurati
 
 $params=array('Lundi'=>array(), 'Mardi'=>array(), 'Mercredi'=>array(), 'Jeudi'=>array(), 'Vendredi'=>array(), 'Samedi'=>array(), 'Dimanche'=>array());
 $js=array();
-$js[]="var businessHours = [\n";
+$js[]="businessHours = [\n";
 $hiddenDays=[];
 $day=1;
 foreach($params as $k=>$v) {
@@ -49,9 +49,9 @@ foreach($params as $k=>$v) {
 }
 $js[]="];\n";
 
-$js[]="var hiddenDays = [".implode(', ', $hiddenDays)."];\n";
+$js[]="hiddenDays = [".implode(', ', $hiddenDays)."];\n";
 
-$js[]="var eventSources = [{\n";
+$js[]="eventSources = [{\n";
 $js[]="    url: urlBase + '/agenda/".$p['user']['id']."/ajax/getEvents/'\n";
 $js[]="  },\n";
 $js[]="  {\n";
@@ -77,11 +77,11 @@ $js[]="  }\n";
 $js[]="];\n";
 
 $params['minTime']=$_POST['minTime'];
-$js[]="var minTime = '".$params['minTime'].":00';\n";
+$js[]="minTime = '".$params['minTime'].":00';\n";
 $params['maxTime']=$_POST['maxTime'];
-$js[]="var maxTime = '".$params['maxTime'].":00';\n";
+$js[]="maxTime = '".$params['maxTime'].":00';\n";
 $params['slotDuration']=$_POST['slotDuration'];
-$js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
+$js[]="slotDuration = '".$params['slotDuration'].":00';\n";
 
 file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);
