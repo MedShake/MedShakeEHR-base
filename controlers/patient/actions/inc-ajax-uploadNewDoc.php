@@ -34,7 +34,7 @@ $acceptedtypes=array(
     'text/plain'=>'txt',
     'image/png'=>'png',
     'image/jpeg'=>'jpg'
-    )
+    );
 if (array_key_exists($mimetype, $acceptedtypes)) {
     $ext=$acceptedtypes[$mimetype];
 
