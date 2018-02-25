@@ -123,9 +123,11 @@
                     <li>
                         <a id="linkAddNewDoc" href="#">Ajouter un document au dossier</a>
                     </li>
-                    <li>
-                        <a class="prepareReceptionDoc" href="#">Ajouter des documents au dossier via phonecapture</a>
-                    </li>
+                    {% if config.dicomHost=='' %}
+                      <li>
+                          <a class="prepareReceptionDoc" href="#">Ajouter des documents au dossier via phonecapture</a>
+                      </li>
+                    {% endif %}
                 </ul>
             </div>
 
@@ -143,29 +145,33 @@
                 </ul>
             </div>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    DICOM
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                      <a href="#" class="catchLastDicomSrData">Récupérer dernières mesures</a>
-                  </li>
-                  <li>
-                      <a href="#" class="catchOthersDicomSrData">Récupérer mesures antérieures</a>
-                  </li>
-                  <li role="separator" class="divider"></li>
-                  <li>
-                      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/" target="_blank">Voir tous les examens du patient</a>
-                  </li>
-                  <li role="separator" class="divider"></li>
-                  <li>
-                      <a href="#" class="prepareEcho">Envoyer patient à échographe</a>
-                  </li>
-                </ul>
-            </div>
-
+            {% if config.dicomHost!='' %}
+              <div class="btn-group">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      DICOM
+                      <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                        <a href="#" class="catchLastDicomSrData">Récupérer dernières mesures</a>
+                    </li>
+                    <li>
+                        <a href="#" class="catchOthersDicomSrData">Récupérer mesures antérieures</a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/" target="_blank">Voir tous les examens du patient</a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="#" class="prepareEcho">Envoyer patient à échographe</a>
+                    </li>
+                    <li>
+                        <a href="#" class="prepareReceptionDoc dicom">Envoyer patient à phonecapture</a>
+                    </li>
+                  </ul>
+              </div>
+            {% endif %}
 
         </div>
 

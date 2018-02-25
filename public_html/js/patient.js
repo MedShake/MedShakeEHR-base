@@ -130,8 +130,11 @@ $(document).ready(function() {
   // prépare la réception de documents par phonecapture
   $("a.prepareReceptionDoc").on("click", function(e) {
     e.preventDefault();
+    if ($(this).hasClass('dicom'))
+    url: urlBase + '/patient/ajax/prepareEcho/',
+
     $.ajax({
-      url: urlBase + '/patient/ajax/prepareReceptionDoc/',
+      url: urlBase + '/patient/ajax/' + ($(this).hasClass('dicom') ? 'prepareEcho/' : 'prepareReceptionDoc/'),
       type: 'post',
       data: {
         patientID: $('#identitePatient').attr("data-patientID"),

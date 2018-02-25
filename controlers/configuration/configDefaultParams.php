@@ -121,7 +121,7 @@ if (!msUser::checkUserIsAdmin()) {
           'ecofaxPass'=>array('value'=>$p['configDefaut']['ecofaxPass'],'type'=>'password','typeText'=>'string'),
         ),
         'DICOM'=>array(
-          'dicomHost'=>array('value'=>$p['configDefaut']['dicomHost'],'type'=>'text','typeText'=>'string'),
+          'dicomHost'=>array('value'=>$p['configDefaut']['dicomHost'],'type'=>'text','typeText'=>'string', 'com'=>'adresse du serveur DICOM'),
           'dicomPrefixIdPatient'=>array('value'=>$p['configDefaut']['dicomPrefixIdPatient'],'type'=>'text','typeText'=>'string'),
           'dicomWorkListDirectory'=>array('value'=>$p['configDefaut']['dicomWorkListDirectory'],'type'=>'text','typeText'=>'string'),
           'dicomWorkingDirectory'=>array('value'=>$p['configDefaut']['dicomWorkingDirectory'],'type'=>'text','typeText'=>'string'),

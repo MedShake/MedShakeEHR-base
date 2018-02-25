@@ -147,7 +147,7 @@ if (!is_file($homepath.'config/config.yml')) {
           'faxService'=>'ecofaxOVH',
           'ecofaxMyNumber'=>'0900000000',
           'ecofaxPass'=>'password',
-          'dicomHost'=>'192.168.xxx.xxx',
+          'dicomHost'=>'',
           'dicomPrefixIdPatient'=>'1.100.100',
           'dicomWorkListDirectory'=>getcwd().'/workingDirectory/',
           'dicomWorkingDirectory'=>getcwd().'/workingDirectory/',
