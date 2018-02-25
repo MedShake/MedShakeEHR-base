@@ -44,6 +44,7 @@ $acceptedModes=array(
     'getGraphData', //Obtenir l'historique de poids et taille du patient
     'ObjetDet', // obtenir le détail sur un objet (sa version imprimée)
     'prepareEcho', //préparer l'échographe
+    'prepareReceptionDoc', //préparer la réception de doc via phonecapture
     'catchLastDicomSrData', //attraper les dernière mesures DICOM pour un patient
     'listPatientDicomStudies', // lister les studies dicom du patient
     'extractMailModele', // Extraire le modele de mail
@@ -125,6 +126,11 @@ elseif ($m=='ObjetDet' and is_numeric($_POST['objetID'])) {
 // préparer l'échographe
 elseif ($m=='prepareEcho' and is_numeric($_POST['patientID'])) {
     include('inc-ajax-prepareEcho.php');
+}
+
+// préparer la réception de doc par phonecapture
+elseif ($m=='prepareReceptionDoc' and is_numeric($_POST['patientID'])) {
+    include('inc-ajax-prepareReceptionDoc.php');
 }
 
 // attraper les dernières data SR de l'échographe pour un patient

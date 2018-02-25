@@ -127,6 +127,31 @@ $(document).ready(function() {
   })
 
   ////////////////////////////////////////////////////////////////////////
+  // prépare la réception de documents par phonecapture
+  $("a.prepareReceptionDoc").on("click", function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: urlBase + '/patient/ajax/prepareReceptionDoc/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+      },
+      dataType: "html",
+      success: function(data) {
+          $("#patientPhonecapture").modal('show');
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  $("#patientPhonecapture button").on("click", function(){
+    getHistorique();
+    getHistoriqueToday();
+  });
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Observations déclenchement actions d'injections dans la page
 
   //bouton de nouvelle consultation

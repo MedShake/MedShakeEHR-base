@@ -74,7 +74,8 @@ if (isset($_COOKIE['userIdPc'])) {
     if (isset($p['user']['id'])) {
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
-    } else {
+    $p['user']['module']='phonecapture';
+} else {
     $p['user']=null;
     $p['user']['id']=null;
 }

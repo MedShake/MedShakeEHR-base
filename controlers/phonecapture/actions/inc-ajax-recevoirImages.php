@@ -56,41 +56,63 @@ if ($type !== false) {
       fclose($image);
     }
 
-    // compléter les data
-    $p['page']['StudyInstanceUID']='1.7.12.9.3.11.'.$p['page']['prat']['pratID'].'.'.$p['page']['patient']['dicomPatientID'].'.'.date('Ymd');
-    $p['page']['SeriesInstanceUID']='1.7.12.9.3.11.'.$p['page']['prat']['pratID'].'.'.$p['page']['patient']['dicomPatientID'].'.'.date('Ymd').'.'.date('d');
+    if ($p['page']['saveAs']=='doc') {
+        $patient = new msObjet();
+        $patient->setFromID($p['page']['prat']['pratID']);
+        $patient->setToID($p['page']['patient']['id']);
 
-    // déterminer le numéro de l'instance
-    $orthancSeriesID = $p['page']['patient']['dicomPatientID'].'|'.$p['page']['StudyInstanceUID'].'|'.$p['page']['SeriesInstanceUID'];
-    $dicom = new msDicom();
-    $dicom->setDcSerieID($dicom->constructIdOrthanc($orthancSeriesID));
-    $p['page']['instanceNumber']= $dicom->getNumberInstancesInSeries() + 1;
+        $supportID=$patient->createNewObjetByTypeName('docPorteur', '');
+
+        //nom original
+        $patient->createNewObjetByTypeName('docOriginalName', 'phonecapture_'.(date('d-m-Y_H:i:s')).'.jpg', $supportID);
+        //type
+        $patient->createNewObjetByTypeName('docType', 'jpg', $supportID);
+
+        //folder
+        $folder=msStockage::getFolder($supportID);
+
+        //creation folder si besoin
+        msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
+
+        $destination_file= $p['config']['stockageLocation']. $folder.'/'.$supportID.'.jpg';
+        rename($jpegFile, $destination_file);
+    } elseif ($p['page']['saveAs']=='dicom') {
+
+        // compléter les data
+        $p['page']['StudyInstanceUID']='1.7.12.9.3.11.'.$p['page']['prat']['pratID'].'.'.$p['page']['patient']['dicomPatientID'].'.'.date('Ymd');
+        $p['page']['SeriesInstanceUID']='1.7.12.9.3.11.'.$p['page']['prat']['pratID'].'.'.$p['page']['patient']['dicomPatientID'].'.'.date('Ymd').'.'.date('d');
+
+        // déterminer le numéro de l'instance
+        $orthancSeriesID = $p['page']['patient']['dicomPatientID'].'|'.$p['page']['StudyInstanceUID'].'|'.$p['page']['SeriesInstanceUID'];
+        $dicom = new msDicom();
+        $dicom->setDcSerieID($dicom->constructIdOrthanc($orthancSeriesID));
+        $p['page']['instanceNumber']= $dicom->getNumberInstancesInSeries() + 1;
 
 
-    //générer le texte du template
-    $getHtml = new msGetHtml();
-    $getHtml->set_template('dicomCreateDCM');
-    $fichierDicomTXT = $getHtml->genererHtml();
-    $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
+        //générer le texte du template
+        $getHtml = new msGetHtml();
+        $getHtml->set_template('dicomCreateDCM');
+        $fichierDicomTXT = $getHtml->genererHtml();
+        $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 
-    //définition fichiers et chemins
-    $templateForDCM=$p['config']['workingDirectory'].$p['user']['id'].'/dicomCreateDCM.txt';
-    $dcmBaseFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomCreateDCM.dcm";
-    $dcmFinalFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomInstanceDCM.dcm";
+        //définition fichiers et chemins
+        $templateForDCM=$p['config']['workingDirectory'].$p['user']['id'].'/dicomCreateDCM.txt';
+        $dcmBaseFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomCreateDCM.dcm";
+        $dcmFinalFile=$p['config']['workingDirectory'].$p['user']['id']."/dicomInstanceDCM.dcm";
 
-    //créer le fichier de template
-    file_put_contents($templateForDCM, $fichierDicomTXT);
-    // transformer le template en DCM
-    exec("dump2dcm ".$templateForDCM." ".$dcmBaseFile);
-    // injecter le jpeg dans le DCM
-    exec("img2dcm ".$jpegFile." ".$dcmFinalFile." -df " . $dcmBaseFile . " -stf " . $dcmBaseFile . " -sef " . $dcmBaseFile);
-    // transférer à Orthanc
-    exec("storescu -aec ORTHANC ".$p['config']['dicomHost']." 4242 ".$dcmFinalFile."  --propose-jpeg8");
+        //créer le fichier de template
+        file_put_contents($templateForDCM, $fichierDicomTXT);
+        // transformer le template en DCM
+        exec("dump2dcm ".$templateForDCM." ".$dcmBaseFile);
+        // injecter le jpeg dans le DCM
+        exec("img2dcm ".$jpegFile." ".$dcmFinalFile." -df " . $dcmBaseFile . " -stf " . $dcmBaseFile . " -sef " . $dcmBaseFile);
+        // transférer à Orthanc
+        exec("storescu -aec ORTHANC ".$p['config']['dicomHost']." 4242 ".$dcmFinalFile."  --propose-jpeg8");
 
-    @unlink($jpegFile);
-    @unlink($templateForDCM);
-    @unlink($dcmBaseFile);
-    @unlink($dcmFinalFile);
-
+        @unlink($jpegFile);
+        @unlink($templateForDCM);
+        @unlink($dcmBaseFile);
+        @unlink($dcmFinalFile);
+    }
     echo json_encode(array('status'=>'ok'));
 }

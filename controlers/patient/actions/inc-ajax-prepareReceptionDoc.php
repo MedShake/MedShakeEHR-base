@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,14 +21,12 @@
  */
 
 /**
- * Patient > ajax : générer le fichier DICOM worklist pour Orthanc
+ * Patient > ajax : générer le fichier DICOM worklist pour phonecapture
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author fr33z00 <https://github.com/fr33z00>
  */
 
 if(!is_numeric($_POST['patientID'])) die;
-
-$template="dicomWL";
 
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
@@ -40,28 +38,16 @@ $patient->setToID($_POST['patientID']);
 $p['page']['patient']=$patient->getSimpleAdminDatas();
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
-if(isset($p['page']['patient'][8])) $p['page']['patient']['dicomBirthdate']=msTools::readableDate2Reverse($p['page']['patient'][8]);
 
 //inclusion si présence dans module installé du fichier sépcifique
-if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php')) {
-    include($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php');
+if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php')) {
+    include($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php');
 }
-
-//générer et sortir html
-$getHtml = new msGetHtml();
-$getHtml->set_template($template);
-$fichierDicomTXT = $getHtml->genererHtml();
-$fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 
 // Vérification répertoire de travail
 msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
 
 //data patient pour phonecapture
-$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient'], 'saveAs'=>'dicom'));
+$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient'], 'saveAs'=>'doc'));
 file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
-
-//wl dicom
-file_put_contents($p['config']['workingDirectory'].'workList.txt', $fichierDicomTXT);
-exec("dump2dcm ".$p['config']['workingDirectory']."workList.txt ".$p['config']['dicomWorkListDirectory']."workList.wl");
-unlink($p['config']['workingDirectory'].'workList.txt');
 die();

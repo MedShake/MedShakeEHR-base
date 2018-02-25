@@ -123,6 +123,9 @@
                     <li>
                         <a id="linkAddNewDoc" href="#">Ajouter un document au dossier</a>
                     </li>
+                    <li>
+                        <a class="prepareReceptionDoc" href="#">Ajouter un document au dossier via phonecapture</a>
+                    </li>
                 </ul>
             </div>
 
@@ -259,5 +262,8 @@
 
     {# modal changer la date d'une ligne d'historique #}
     {% include 'inc-patientModal-changerDateEffet.html.twig' %}
+
+    {# modal phonecapture #}
+    {% include 'inc-patientModal-phonecapture.html.twig' %}
 
 {% endblock %}

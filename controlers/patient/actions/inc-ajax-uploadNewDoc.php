@@ -24,17 +24,20 @@
  * Patient > ajax : upload par drag&drop d'un nouveau document dans le dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
-if ($mimetype=='application/pdf') {
-    $ext='pdf';
-} elseif ($mimetype=='text/plain') {
-    $ext='txt';
-}
+$acceptedtypes=array(
+    'application/pdf'=>'pdf',
+    'text/plain'=>'txt',
+    'image/png'=>'png',
+    'image/jpeg'=>'jpg'
+    )
+if (array_key_exists($mimetype, $acceptedtypes)) {
+    $ext=$acceptedtypes[$mimetype];
 
-if (isset($ext)) {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
     $patient->setToID($_POST['patientID']);
