@@ -30,7 +30,7 @@
 
     {% if page.pj.href %}
         <p>
-            <a class="btn btn-info" href="{{ page.pj.href }}" role="button" target="_blank">
+            <a class="btn btn-info" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" role="button" target="_blank">
                 <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 VOIR FICHIER
                 {{ page.pj.html }} ({{ page.pj.filesize }})</a>
