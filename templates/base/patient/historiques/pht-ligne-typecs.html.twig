@@ -52,30 +52,40 @@
       </a>
 
       {# send #}
-      <div class="btn-group">
-        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-          <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer en clair</a>
-          </li>
-          <li>
-            <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMailApicrypt" data-mailtype="apicrypt">Envoyer en apicrypt</a>
-          </li>
-          <li role="separator" class="divider"></li>
-          <li>
-            <a class="newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
-          </li>
-          {% if cs.sendMail > 0 %}
-            <li role="separator" class="divider"></li>
+      {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
+            <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            {% if config.smtpHost %}
             <li>
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
+              <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer en clair</a>
             </li>
-          {% endif %}
-        </ul>
-      </div>
+            {% endif %}
+            {% if config.apicryptSmtpHost %}
+              <li>
+                <a class="newMail" href="#" data-objetID="{{ cs.id }}" data-formtocall="baseSendMailApicrypt" data-mailtype="apicrypt">Envoyer en apicrypt</a>
+              </li>
+            {% endif %}
+            {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
+              <li role="separator" class="divider"></li>
+            {% endif %}
+            {% if config.faxService %}
+              <li>
+                <a class="newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
+              </li>
+            {% endif %}
+            {% if cs.sendMail > 0 %}
+              <li role="separator" class="divider"></li>
+              <li>
+                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      {% endif %}
     {% endif %}
     {% if cs.sendMail > 0 %}
       <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">

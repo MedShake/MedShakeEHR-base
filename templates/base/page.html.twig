@@ -188,13 +188,15 @@
                               </li>
                           </ul>
                       </li>
-                      <li>
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
-                              {% if page.inbox.numberOfMsg > 0 %}
-                                  <span class="badge">{{ page.inbox.numberOfMsg }}</span>
-                              {% endif %}
-                          </a>
-                      </li>
+                      {% if config.apicryptPopHost!='' %}
+                        <li>
+                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
+                                {% if page.inbox.numberOfMsg > 0 %}
+                                    <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                      {% endif %}
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="dropdown">
@@ -226,9 +228,11 @@
                               <li role="separator" class="divider"></li>
                             {% endif %}
                             <li class="dropdown-header">Patients</li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
-                            </li>
+                            {% if config.smtpHost or config.apicryptSmtpHost %}
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
+                              </li>
+                            {% endif %}
                             <li>
                                 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
                             </li>

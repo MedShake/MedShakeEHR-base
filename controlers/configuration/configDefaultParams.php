@@ -116,7 +116,7 @@ if (!msUser::checkUserIsAdmin()) {
           'apicryptDefautSujet'=>array('value'=>$p['configDefaut']['apicryptDefautSujet'],'type'=>'text','typeText'=>'string'),
         ),
         'Fax'=>array(
-          'faxService'=>array('value'=>$p['configDefaut']['faxService'],'type'=>'text','typeText'=>'string'),
+          'faxService'=>array('value'=>$p['configDefaut']['faxService'],'type'=>'text','typeText'=>'string', 'com'=>'ex: ecofaxOVH'),
           'ecofaxMyNumber'=>array('value'=>$p['configDefaut']['ecofaxMyNumber'],'type'=>'text','typeText'=>'string'),
           'ecofaxPass'=>array('value'=>$p['configDefaut']['ecofaxPass'],'type'=>'password','typeText'=>'string'),
         ),
