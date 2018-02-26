@@ -133,6 +133,7 @@ class msClicRDV
             return(array(array(), array()));
         }
         $ret[1]=array_flip($ret[0]);
+        return $ret;
     }
 
     /*  envoyer un événement vers clicRDV
@@ -204,11 +205,11 @@ class msClicRDV
                 $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
             if (array_key_exists('personalEmail', $patientData))
                 $ficheClic['fiche']['email']=$patientData['personalEmail'];
-            if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+            if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('id', $res)) {
                 $obj=new msObjet();
                 $obj->setToID($event['patientid']);
                 $obj->setFromID($clicRDVservice);
-                $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
+                $obj->createNewObjetByTypeName('clicRdvPatientId', $res['id']);
             } else {
                 msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
                 return "Erreur lors de la création d'une fiche";
@@ -405,11 +406,11 @@ class msClicRDV
                     $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
                 if (array_key_exists('personalEmail', $patientData))
                     $ficheClic['fiche']['email']=$patientData['personalEmail'];
-                if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+                if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('id', $res)) {
                     $obj->setToID($vlocal['patientid']);
                     $obj->setFromID($clicRDVservice);
-                    $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
-                    $patients[0][$vlocal['patientid']]=$res['records'][0]['id'];
+                    $obj->createNewObjetByTypeName('clicRdvPatientId', $res['id']);
+                    $patients[0][$vlocal['patientid']]=$res['id'];
                 } else {
                     msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
                     return "Erreur lors de la création d'une fiche";
