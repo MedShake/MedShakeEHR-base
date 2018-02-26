@@ -84,7 +84,11 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     $where=null;
     if ($_POST['porp']=='today') {
         $agenda=new msAgenda();
-        $agenda->set_userID($p['user']['id']);
+        if ($p['config']['agendaNumberForPatientsOfTheDay']) {
+            $agenda->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+        } else {
+            $agenda->set_userID($p['user']['id']);
+        }
         $todays=$agenda->getPatientsOfTheDay();
         if (count($todays)) {
             $where.=" and p.id in ('".implode("', '", array_column($todays, 'id'))."') ";
