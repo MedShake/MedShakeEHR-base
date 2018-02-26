@@ -28,5 +28,9 @@
 
 $clicrdv=new msClicRDV();
 $clicrdv->setUserID($match['params']['userID']);
-$clicrdv->delEvent($event);
-
+$ret=$clicrdv->delEvent($event);
+if ($ret===false) {
+    die(json_encode(array("status"=>"l'opération n'a pas pu être effectuée")));
+} elseif ($ret!==true) {
+    die(json_encode(array("status"=>$ret)));
+}

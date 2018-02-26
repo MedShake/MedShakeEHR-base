@@ -24,9 +24,15 @@
  * Agenda : synchroniser les événements clicRDV et internes
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $clicrdv=new msClicRDV();
 $clicrdv->setUserID($match['params']['userID']);
-$clicrdv->syncEvents();
+$ret=$clicrdv->syncEvents();
 
+if ($ret===false) {
+    die(json_encode(array("status"=>"l'opération n'a pas pu être effectuée")));
+} elseif ($ret!==true) {
+    die(json_encode(array("status"=>$ret)));
+}

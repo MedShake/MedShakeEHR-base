@@ -67,7 +67,10 @@ if(isset($p['config']['agendaService'])) {
     $clicrdv=new msClicRDV();
     foreach($clicUsers as $userid=>$value) {
         $clicrdv->setUserID($userid);
-        $clicrdv->syncEvents();
+        $ret=$clicrdv->syncEvents();
+        if ($ret!==false and $ret!==true) {
+            echo $ret."\n";
+        }
     }
   }
 }

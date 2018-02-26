@@ -30,7 +30,13 @@ $clicrdv=new msClicRDV();
 $clicrdv->setUserID($match['params']['userID']);
 
 if ($_POST['eventID']>0) {
-    $clicrdv->modEvent($event);
+    $ret=$clicrdv->modEvent($event);
 } else {
-    $clicrdv->sendEvent($event);
+    $ret=$clicrdv->sendEvent($event);
+}
+
+if ($ret===false) {
+    die(json_encode(array("status"=>"l'opération n'a pas pu être effectuée")));
+} elseif ($ret!==true) {
+    die(json_encode(array("status"=>$ret)));
 }

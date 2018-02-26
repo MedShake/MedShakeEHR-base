@@ -24,6 +24,7 @@
  * Agenda : déplacer un rdv de l'agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $agenda = new msAgenda();
@@ -34,6 +35,7 @@ $agenda->setStartDate($_POST['start']);
 $agenda->setEndDate($_POST['end']);
 $agenda->moveEvent();
 
+header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
     $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-moveEvent.php';
@@ -43,5 +45,4 @@ if (isset($p['config']['agendaService'])) {
     }
 }
 
-header('Content-Type: application/json');
 echo json_encode(array("status"=>"ok"));
