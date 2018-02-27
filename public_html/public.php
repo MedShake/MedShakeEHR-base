@@ -31,7 +31,10 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getenv("MEDSHAKEEHRPATH");
+if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
+    $homepath=file_get_contents("MEDSHAKEEHRPATH");
+    $homepath=trim(str_replace("\n", '', $homepath));
+}
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
 /////////// Composer class auto-upload
@@ -39,8 +42,9 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
-        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    global $homepath;
+    if (is_file($homepath.'/class/' . $class . '.php')) {
+        include $homepath.'/class/' . $class . '.php';
     }
 });
 

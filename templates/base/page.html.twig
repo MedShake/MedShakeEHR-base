@@ -46,6 +46,7 @@
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
         <style>
+          #top-navbar {max-height:calc(100vh - 100px) !important}
           .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
           .submit-success {background-color:#8dfc9e;top:0}
           .submit-warning {background-color:#fcde8d;top:0}
@@ -95,7 +96,7 @@
                     <a href="" class="navbar-brand">MedShakeEHR</a>
                 </div>
 
-                <div class="collapse navbar-collapse" id="top-navbar" style="max-height:calc(100vh-100px) !important">
+                <div class="collapse navbar-collapse" id="top-navbar">
                 {% if user.id > 0 %}
 
                   <ul class="nav navbar-nav">

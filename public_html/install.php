@@ -31,7 +31,10 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
 if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
-    die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer 'SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR' dans votre .htaccess ou la configuration du serveur");
+    if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
+        die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
+    }
+    $homepath=trim(str_replace("\n", '', $homepath));
 }
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
@@ -40,7 +43,7 @@ if (!is_dir($homepath."vendor")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
 if (!is_dir("thirdparty")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier".getcwd());
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier ".getcwd());
 }
 if (!is_writable($homepath."config")) {
   die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
@@ -51,8 +54,9 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
-        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    global $homepath;
+    if (is_file($homepath.'/class/' . $class . '.php')) {
+        include $homepath.'/class/' . $class . '.php';
     }
 });
 

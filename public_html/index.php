@@ -32,7 +32,10 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 
 
 if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
-    die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer 'SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR' dans votre .htaccess ou la configuration du serveur");
+    if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
+        die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
+    }
+    $homepath=trim(str_replace("\n", '', $homepath));
 }
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
@@ -43,8 +46,9 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
-        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    global $homepath;
+    if (is_file($homepath.'class/' . $class . '.php')) {
+        include $homepath.'class/' . $class . '.php';
     }
 });
 

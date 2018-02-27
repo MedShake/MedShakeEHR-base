@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
         } elseif (!is_writable($_POST['destination'])) {
             $template='erreur-droits';
         } else {
+            file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
             $dossier.=(strlen($dossier)-1)!='/' ? '/' : '';
             //récupération de la dernière version release
             $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
