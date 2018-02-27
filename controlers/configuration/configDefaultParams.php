@@ -56,6 +56,7 @@ if (!msUser::checkUserIsAdmin()) {
         ),
         'Options'=>array(
           'PraticienPeutEtrePatient'=>array('value'=>$p['configDefaut']['PraticienPeutEtrePatient']?'true':'false','type'=>'text','typeText'=>'boolean','com'=>'si false, il faudra créer une fiche patient pour le praticien'),
+          'VoirRouletteObstetricale'=>array('value'=>$p['configDefaut']['VoirRouletteObstetricale']?'true':'false','type'=>'text','typeText'=>'boolean'),
           'administratifSecteurHonoraires'=>array('value'=>$p['configDefaut']['administratifSecteurHonoraires'],'type'=>'text','typeText'=>'1 ou 2'),
           'administratifPeutAvoirFacturesTypes'=>array('value'=>$p['configDefaut']['administratifPeutAvoirFacturesTypes'],'type'=>'text','typeText'=>'boolean'),
           'administratifPeutAvoirPrescriptionsTypes'=>array('value'=>$p['configDefaut']['administratifPeutAvoirPrescriptionsTypes'],'type'=>'text','typeText'=>'boolean'),

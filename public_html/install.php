@@ -105,6 +105,7 @@ if (!is_file($homepath.'config/config.yml')) {
           'sqlPass'=>$_POST['sqlPass'],
           'sqlVarPassword'=>$_POST['sqlVarPassword'],
           'PraticienPeutEtrePatient'=>true,
+          'VoirRouletteObstetricale'=>true,
           'administratifSecteurHonoraires'=>1,
           'administratifPeutAvoirFacturesTypes'=>'false',
           'administratifPeutAvoirPrescriptionsTypes'=>'false',

@@ -204,12 +204,13 @@
 
                         <ul class="dropdown-menu">
 
-                            <li class="dropdown-header">Outils</li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-
+                            {% if config.VoirRouletteObstetricale=='true' %}
+                              <li class="dropdown-header">Outils</li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                              </li>
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                               <li class="dropdown-header">Historique rappels RDV</li>
 
