@@ -34,6 +34,13 @@ $booleans=array(
           'twigEnvironnementCache'
           );
 
+$modules=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+foreach ($modules as $module) {
+    if (is_file($p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/actions/inc-ajax-configDefaultUsersParams.php')) {
+        include $p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/actions/inc-ajax-configDefaultUsersParams.php';
+    }
+}
+
 unset($p['configDefaut']['homeDirectory']);
 
 foreach ($p['configDefaut'] as $param=>$v) {
@@ -48,6 +55,7 @@ foreach ($p['configDefaut'] as $param=>$v) {
       $p['configDefaut'][$param]=$_POST[$param];
     }
 }
+
 file_put_contents($p['config']['homeDirectory'].'config/config.yml', Spyc::YAMLDump($p['configDefaut'], false, 0, true));
 
 echo json_encode(array('ok'));

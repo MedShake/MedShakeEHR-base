@@ -152,4 +152,12 @@ if (!msUser::checkUserIsAdmin()) {
     );
 
     ksort($p['page']['params']['Services tiers']);
+
+    $modules=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+    foreach ($modules as $module) {
+        if ($module != $p['user']['module'] and 
+          is_file($p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/configDefaultParams.php')) {
+            include $p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/configDefaultParams.php';
+        }
+    }
 }
