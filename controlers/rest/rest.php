@@ -34,6 +34,13 @@ if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$us
 $userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
 
 $method=$_SERVER['REQUEST_METHOD'];
+parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $parameters);
+
+if (($method=='POST' or $method=='PUT') and (!array_key_exists('timestamp', $parameters) or $parameters['timestamp'] < date_sub(new Datetime(), new Dateinterval("PT0H15M0S"))->format("Y-m-d H:i:s"))) {
+    header('HTTP/1.1 401 Unauthorized');
+    die;
+}
+
 
 switch ($match['params']['m']) {
     case 'getPatientInfo': // obtenir les infos sur le patient dans la workList

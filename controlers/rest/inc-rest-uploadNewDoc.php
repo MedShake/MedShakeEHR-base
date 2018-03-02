@@ -26,14 +26,13 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $fileparameters);
 
-if (!isset($fileparameters) or !is_array($fileparameters) or !array_key_exists('filename', $fileparameters)) {
+if (!is_array($parameters) or !array_key_exists('filename', $parameters)) {
     header('HTTP/1.1 400 Bad Request');
     die;
 }
-$filename=basename(rawurldecode($fileparameters['filename']));
-$titre=array_key_exists('title', $fileparameters)?rawurldecode($fileparameters['title']):$filename;
+$filename=basename($parameters['filename']);
+$titre=array_key_exists('title', $parameters)?$parameters['title']:$filename;
 
 $fichier=tempnam($p['config']['workingDirectory'], "file");
 file_put_contents($fichier, file_get_contents("php://input"));
