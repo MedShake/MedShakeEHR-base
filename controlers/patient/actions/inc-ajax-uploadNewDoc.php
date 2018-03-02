@@ -58,7 +58,8 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
     //type
     $patient->createNewObjetByTypeName('docType', $ext, $supportID);
-
+    //titre
+    $patient->setTitleObjet($supportID, $fichier['name']);
     //folder
     $folder=msStockage::getFolder($supportID);
 
