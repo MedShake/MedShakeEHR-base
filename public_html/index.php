@@ -103,7 +103,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
 } else {
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirRoute('userLogIn');
     }
 }
