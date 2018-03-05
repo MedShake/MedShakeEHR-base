@@ -26,6 +26,8 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
     $module=isset($_POST['p_module'])?$_POST['p_module']:'base';
     $user=$p['user']['id']?:1;
@@ -41,6 +43,18 @@ if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
     msSQL::sqlInsert('people', $data);
     msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
     $id=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='".$_POST['p_username']."'");
-    msTools::redirection('/pro/edit/'.$id.'/');
+
+    $obj = new msObjet();
+    $obj->setFromID($p['user']['id']);
+    $obj->setToID($id);
+    if (isset($_POST['p_firstname'])) {
+        $obj->createNewObjetByTypeName('firstname', $_POST['p_firstname']);
+    }
+    if (isset($_POST['p_birthname'])) {
+        $obj->createNewObjetByTypeName('birthname', $_POST['p_birthname']);
+    }
+    if (isset($_POST['p_lastname'])) {
+        $obj->createNewObjetByTypeName('lastname', $_POST['p_lastname']);
+    }
 }
 msTools::redirection('/configuration/users/');

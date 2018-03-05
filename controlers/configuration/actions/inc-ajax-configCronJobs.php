@@ -25,6 +25,9 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
+
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 $crons=array();
 foreach ($_POST as $k=>$v) {
     if (preg_match('/p_(a|m|h|M|dom|dow)+(.*)/', $k, $matches)) {

@@ -32,7 +32,10 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 
 
 if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
-    die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer 'SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR' dans votre .htaccess ou la configuration du serveur");
+    if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
+        die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
+    }
+    $homepath=trim(str_replace("\n", '', $homepath));
 }
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
@@ -43,8 +46,9 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
-        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    global $homepath;
+    if (is_file($homepath.'class/' . $class . '.php')) {
+        include $homepath.'class/' . $class . '.php';
     }
 });
 
@@ -69,10 +73,6 @@ $mysqli=msSQL::sqlConnect();
 if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
     msTools::redirection('/install.php');
 }
-if ('maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
-    msTools::redirection('/maintenance.html');
-}
-
 /////////// Validators loader
 require $homepath.'fonctions/validators.php';
 
@@ -93,6 +93,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     }
 } elseif (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
+    if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+        msTools::redirection('/maintenance.html');
+    }
     if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
         $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
     }
@@ -100,7 +103,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msUser::applySpecificConfig($p['config'], $p['user']['id']);
     }
 } else {
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo') {
+    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirRoute('userLogIn');
     }
 }
@@ -125,20 +128,23 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-        //inbox number of messages
+      //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
-      if (isset($p['config']['agendaNumberForPatientsOfTheDay'])) {
-          if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-              $events = new msAgenda();
-              $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-              $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-          }
+      if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+        $events = new msAgenda();
+        $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
       }
-        if (!isset($p['page']['patientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
-            $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-        }
+      elseif($p['config']['administratifPeutAvoirAgenda']=='true') {
+        $events = new msAgenda();
+        $events->set_userID($p['user']['id']);
+        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      }
+      elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
+          $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      }
     }
 
     // crédits SMS

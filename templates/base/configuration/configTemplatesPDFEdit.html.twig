@@ -33,9 +33,9 @@
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
-<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/lib/codemirror.css">
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/lib/codemirror.js"></script>
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/codemirror/mode/twig/twig.js"></script>
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.css">
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.js"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/mode/twig/twig.js"></script>
 
 {% endblock %}
 

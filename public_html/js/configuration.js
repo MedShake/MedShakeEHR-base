@@ -337,7 +337,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-          window.location.reload();
+          $ru.closest("tr").remove();
       },
       error: function() {
         alert('Problème, rechargez la page !');
@@ -345,6 +345,44 @@ $(document).ready(function() {
     });
   });
 
+  $("body.uploader").dmUploader({
+    url: urlBase + '/configuration/ajax/configInstallModule/',
+    extFilter: ["zip"],
+    maxFiles: 1,
+    allowedTypes: "application/zip",
+    dataType: 'html',
+    onUploadSuccess: function() {
+      console.log('fichier envoyé');
+    },
+    onDragEnter: function(){
+      $(".mask").css("display", "block");
+      $(".mask").animate({opacity: 0.4}, 500);
+    },
+    onDragLeave: function(){
+      $(".mask").animate({opacity: 0}, 500, "linear", function(){$(".mask").css("display", "none")});
+    },
+    onFileTypeError: function(){
+      alert("Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
+    },
+    onBeforeUpload: function(id) {
+      if (!confirm("Confirmez l'installation du fichier"))
+        $(this).dmUploader("cancel", id);
+    },
+    onUploadSuccess: function(id, data) {
+        if (data.indexOf("Erreur:")==0) {
+            $("#errormessage").html(data);
+            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        } else if (data.toLowerCase().indexOf("ok")==0) {
+          alert("La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+        } else {
+          alert("La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+        }
+    },
+    onUploadError: function(id, xhr, status, errorThrown) {
+      $("#errormessage").html(errorThrown);
+      $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+    }
+  });
 
 });
 

@@ -57,7 +57,7 @@ $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
 
 //data patient pour phonecapture
-$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient']));
+$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient'], 'saveAs'=>'dicom'));
 file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
 
 //wl dicom

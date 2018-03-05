@@ -36,17 +36,17 @@
         <title>
             {% block title %}{% endblock %}
         </title>
-        <link rel="shortcut icon" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo_inv.svg"/>
         <meta name="Description" content="{% block metaDescription %}{% endblock %}"/>
         <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
         {# css #}
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
         <style>
+          #top-navbar {max-height:calc(100vh - 100px) !important}
           .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
           .submit-success {background-color:#8dfc9e;top:0}
           .submit-warning {background-color:#fcde8d;top:0}
@@ -54,15 +54,16 @@
         </style>
 
         {# js #}
-        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/moment/min/moment.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/uploader/dist/js/jquery.dm-uploader.min.js"></script>
-        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/kjua/dist/kjua.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
+        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js"></script>
         <script>
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
           var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
@@ -190,13 +191,15 @@
                               </li>
                           </ul>
                       </li>
-                      <li>
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
-                              {% if page.inbox.numberOfMsg > 0 %}
-                                  <span class="badge">{{ page.inbox.numberOfMsg }}</span>
-                              {% endif %}
-                          </a>
-                      </li>
+                      {% if config.apicryptPopHost!='' %}
+                        <li>
+                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ config.relativePathForInbox }}">Boite de réception
+                                {% if page.inbox.numberOfMsg > 0 %}
+                                    <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                      {% endif %}
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="dropdown">
@@ -204,15 +207,13 @@
 
                         <ul class="dropdown-menu">
 
-                            <li class="dropdown-header">Outils</li>
-                            <li>
-                              <a href="" data-toggle="modal" data-target="#accesPhoneCapture">Accès PhoneCapture</a>
-                            </li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-
+                            {% if config.VoirRouletteObstetricale=='true' %}
+                              <li class="dropdown-header">Outils</li>
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                              </li>
+                              <li role="separator" class="divider"></li>
+                            {% endif %}
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                               <li class="dropdown-header">Historique rappels RDV</li>
 
@@ -231,9 +232,11 @@
                               <li role="separator" class="divider"></li>
                             {% endif %}
                             <li class="dropdown-header">Patients</li>
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
-                            </li>
+                            {% if config.smtpHost or config.apicryptSmtpHost %}
+                              <li>
+                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
+                              </li>
+                            {% endif %}
                             <li>
                                 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
                             </li>

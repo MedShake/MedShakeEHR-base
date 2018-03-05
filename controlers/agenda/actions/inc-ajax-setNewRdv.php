@@ -24,6 +24,7 @@
  * Agenda : ajouter / éditer un rdv dans l'agenda
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $agenda = new msAgenda();
@@ -39,6 +40,7 @@ $agenda->set_motif($_POST['motif']);
 $agenda->set_type($_POST['type']);
 $event=$agenda->addOrUpdateRdv();
 
+header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
     $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
@@ -46,6 +48,4 @@ if (isset($p['config']['agendaService'])) {
         include($hook);
     }
 }
-
-header('Content-Type: application/json');
 echo json_encode($event);

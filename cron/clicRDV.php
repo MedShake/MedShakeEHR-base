@@ -46,6 +46,7 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
+    global $homepath;
     include $homepath.'class/' . $class . '.php';
 });
 
@@ -67,7 +68,10 @@ if(isset($p['config']['agendaService'])) {
     $clicrdv=new msClicRDV();
     foreach($clicUsers as $userid=>$value) {
         $clicrdv->setUserID($userid);
-        $clicrdv->syncEvents();
+        $ret=$clicrdv->syncEvents();
+        if ($ret!==false and $ret!==true) {
+            echo $ret."\n";
+        }
     }
   }
 }

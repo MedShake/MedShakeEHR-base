@@ -54,12 +54,19 @@
   <div class="tab-content">
 
     <div role="tabpanel" class="tab-pane active" id="cc">
-      <h2>Utilisateurs</h2>
+      <h2>Configuration générale</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users-params/">Paramètres utilisateurs par défaut
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configuration-globale/">Paramètres globaux
           </a>
         </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/modules/">Modules</a>
+        </li>
+      </ul>
+
+      <h2>Utilisateurs</h2>
+      <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options
           </a>

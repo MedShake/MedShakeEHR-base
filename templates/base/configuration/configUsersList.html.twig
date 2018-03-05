@@ -115,21 +115,49 @@
         </div>
         <div class="modal-body">
           <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
-            <div class="form-group">
-                <label for="p_username">Identifiant</label>
-                <input class="form-control" name="p_username" type="text" value=""></input>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_username">Identifiant (*)</label>
+                    <input class="form-control" name="p_username" required type="text" value=""></input>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_password">Mot de passe (*)</label>
+                    <input class="form-control" name="p_password" required type="password" value=""></input>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_module">Module</label>
+                    <select class="form-control" name="p_module">
+                      {% for mi,mv in page.modules %}
+                        <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-                <label for="p_password">Mot de passe</label>
-                <input class="form-control" name="p_password" type="password" value=""></input>
-            </div>
-            <div class="form-group">
-                <label for="p_module">Module</label>
-                <select class="form-control" name="p_module">
-                  {% for mi,mv in page.modules %}
-                    <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
-                  {% endfor %}
-                </select>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_birthname">Nom de naissance</label>
+                    <input class="form-control" name="p_birthname" type="text" value=""></input>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_lastname">Nom d'usage</label>
+                    <input class="form-control" name="p_lastname" type="text" value=""></input>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label for="p_firstname">Prénom (*)</label>
+                    <input class="form-control" name="p_firstname" required type="text" value=""></input>
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
@@ -140,4 +168,6 @@
       </div>
     </div>
   </div>
+
+
 {% endblock %}

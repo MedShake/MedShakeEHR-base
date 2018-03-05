@@ -169,7 +169,7 @@ $(document).ready(function() {
   });
 
   //enregistrement de forms en ajax
-  $('body').on('click', ".ajaxForm input[type=submit],button[type=submit]", function(e) {
+  $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
     $.ajax({
       url: $(this).parents("form").attr("action"),
@@ -304,6 +304,34 @@ function setPeopleData(value, patientID, typeID, source, instance) {
 function nl2br (str, is_xhtml) {
     var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+}
+
+//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée
+function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
+  if (patientID && typeName && source) {
+    $.ajax({
+      url: urlBase + '/ajax/setPeopleDataByTypeName/',
+      type: 'post',
+      data: {
+        value: value,
+        patientID: patientID,
+        typeName: typeName,
+        instance: instance
+      },
+      dataType: "json",
+      success: function(data) {
+        el = $(source);
+        el.css("background", "#efffe8");
+        el.delay(700).queue(function() {
+          $(this).css("background","").dequeue();
+        });
+      },
+      error: function() {
+        //alert('Problème, rechargez la page !');
+      }
+    });
+  }
+}
 }
 
 ////////////////////////////////////////////////////////////////////////

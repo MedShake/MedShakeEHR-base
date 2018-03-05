@@ -44,8 +44,10 @@
        foreach($data as $v) {
          if (array_key_exists('name', $v) and ($v['name'] =='agendaNumberForPatientsOfTheDay' or $v['name'] == 'administratifComptaPeutVoirRecettesDe')) {
              $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
+             unset($v['formValues'][$p['page']['userID']]);
              if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
-                 $v['formValues']=array_merge(array('0'=>''), $v['formValues']);
+                 $v['formValues']['0']='';
+                 ksort($v['formValues']);
              }
              if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
                  $v['userVal']=explode(',', $v['userVal']);

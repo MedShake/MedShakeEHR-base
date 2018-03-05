@@ -428,39 +428,6 @@
 								}) }}
 								</div>
 
-							{% elseif el.value.formType == "lcc" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
-								{{ f.input ({
-									'input' : {
-										'type' : 'text',
-										'name' : el.value.name,
-										'id' : 'id_' ~ el.value.internalName ~ '_id',
-										'placeholder' : el.value.placeholder,
-										'class' : 'form-control' ~ el.value.autocompleteclass ~ el.value.class,
-										'value' : el.value.preValue,
-										'defaut' : el.value.formValues,
-										'required' : el.value.required,
-										'disabled' : el.value.disabled,
-										'readonly' : el.value.readonly,
-										'datatypeid' : el.value.id,
-										'autocomplete' : 'off',
-										'dataAcTypeID' : el.value.dataAcTypeID,
-										'min' : el.value.min,
-										'max' : el.value.max,
-										'step' : el.value.step,
-										'before' : '<div class="input-group">',
-										'after' : '<span class="input-group-btn" id="id_' ~ el.value.name ~ '_idAddOn"><button id="id_' ~ el.value.internalName ~ '_idButton" class="btn btn-default" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button></span></div>',
-										'internalName' : el.value.internalName
-									},
-									'label' : {
-										'position' : 'before',
-										'label' : el.value.label,
-										'class' : 'control-label'
-									}
-								}) }}
-								</div>
-
-
 							{% elseif el.value.formType == "textarea" %}
 								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
 								{{ f.textarea ({

@@ -38,7 +38,7 @@
      </title>
 
      {# css #}
-     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
      <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
      <style>
@@ -71,9 +71,9 @@
 
 
      {# js #}
-     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/jquery/dist/jquery.min.js"></script>
-     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bower_components/moment/min/moment.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js"></script>
      <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js"></script>
 
      <script>
@@ -98,8 +98,8 @@
    <div class="row" style="margin-bottom : 5px;">
      <div class="col-xs-12">
        <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-refresh"></i></button>
-     Praticien : {{ page.data.prat.2 }} {{ page.data.prat.3 }} /
-     Patient : <strong>{{ page.data.patient.2 }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+     Praticien : {{ page.data.prat.2|default(page.data.prat.1) }} {{ page.data.prat.3 }} /
+     Patient : <strong>{{ page.data.patient.2|default(page.data.patient.1) }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
      </div>
    </div>
    <div class="row">

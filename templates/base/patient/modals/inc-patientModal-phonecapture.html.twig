@@ -1,0 +1,51 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : message phonecapture
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ #
+#}
+
+<div class="modal fade" id="patientPhonecapture" tabindex="-1" role="dialog" aria-labelledby="">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+        <h4 class="modal-title">Phonecapture</h4>
+      </div>
+        <div class="modal-body text-center">
+          <div>Scannez le QR code ci-dessous depuis votre téléphone.<br>
+                Une fois que vous avez terminé d'envoyer des images, fermez cette fenêtre.
+          </div>
+          <span id="QRcodeAccesPhoneCapture"></span><br>
+          {{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/<br>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer un nouveau périphérique</a>
+        </div>
+        <div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Terminé</button>
+      </div>
+    </div>
+  </div>
+</div>

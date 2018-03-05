@@ -136,7 +136,7 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        if($datas=msSQL::sql2tab("select d.id, d.typeID, d.value, t.label , tt.label as parentLabel, d.parentTypeID, d.creationDate
+        if($datas=msSQL::sql2tab("select d.id, d.typeID, d.value, t.name, t.label , tt.label as parentLabel, d.parentTypeID, d.creationDate
   			from objets_data as d
   			left join data_types as t on d.typeID=t.id
   			left join data_types as tt on d.parentTypeID=tt.id
@@ -145,6 +145,7 @@ class msPeople
 
           foreach ($datas as $v) {
               $tab[$v['typeID']]=$v;
+              $tab[$v['name']]=$v;
           }
           return $tab;
         }
@@ -496,8 +497,18 @@ class msPeople
         $typeID=msData::getTypeIDFromName('birthdate');
 
         if ($birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1")) {
-            $age = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
-            return $age;
+            $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
+            $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
+            $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
+            if ($annees>=3) {
+              return $annees.' ans';
+            } elseif (($annees*12+$mois)>=3){
+              return ($annees*12+$mois).' mois';
+            } elseif (((30*$mois+$jours)/7)>=2){
+              return round((30*$mois+$jours)/7).' semaines';
+            } else {
+              return $jours.' jours';
+            }
         } else {
             return false;
         }

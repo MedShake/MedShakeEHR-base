@@ -46,7 +46,7 @@ if ($externe=$patient->isExterne() and
     }
 
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
 
 //cas où le patient est externe et sans relation connue
 if ($externe and !$internePatient) {
@@ -81,7 +81,7 @@ if ($externe and !$internePatient) {
         $obj->createNewObjetByTypeName('relationExternePatient', $internePatient);
         $patient->setToID($internePatient);
         $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-        $p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+        $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
     } else {
         //sinon, on affiche la page de recherche patient
         $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();

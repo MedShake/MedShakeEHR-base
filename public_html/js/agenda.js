@@ -53,6 +53,9 @@ $(document).ready(function() {
   if (!maxTime) {
     maxTime = '20:45:00';
   }
+  if (firstDay == undefined) {
+    firstDay = moment().day();
+  }
   if (!slotDuration) {
     slotDuration = '00:15:00';
   }
@@ -67,12 +70,15 @@ $(document).ready(function() {
     }];
   }
   if (!boutonsHeaderCenter) {
-    boutonsHeaderCenter = 'bloquer dossier,deplacer,cloner,honorer,supprimer';
+    var boutonsHeaderCenter = 'bloquer dossier,deplacer,cloner,honorer,supprimer';
   }
 
+  if (!eventTextColor) {
+    var eventTextColor = '#fff';
+  }
 
   if (!eventSources) {
-    eventSources = [{
+    var eventSources = [{
         url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
       },
       {
@@ -111,6 +117,11 @@ $(document).ready(function() {
       lastMonth: {
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
+        }
+      },
+      synchronize: {
+        click: function(){
+          synchronizeEvents();
         }
       },
       dossier: {
@@ -183,6 +194,7 @@ $(document).ready(function() {
       nextMonth: 'glyphicon-chevron-right',
       prev: 'glyphicon-menu-left',
       next: 'glyphicon-menu-right',
+      synchronize: 'glyphicon-refresh',
       dossier: 'glyphicon-folder-open',
       deplacer: 'glyphicon-transfer',
       bloquer: 'glyphicon-ban-circle',
@@ -191,12 +203,13 @@ $(document).ready(function() {
       honorer: 'glyphicon-alert',
     },
     header: {
-      left: 'lastMonth,prev,next,nextMonth today',
+      left: 'lastMonth,prev,synchronize,next,nextMonth today',
       center: boutonsHeaderCenter,
       right: 'title'
     },
     minTime: minTime,
     maxTime: maxTime,
+    firstDay: firstDay,
     slotDuration: slotDuration,
     weekNumbers: true,
     allDaySlot: false,
@@ -209,7 +222,9 @@ $(document).ready(function() {
     businessHours: businessHours,
     slotEventOverlap: false,
     contentHeight: 'auto',
+    eventTextColor: eventTextColor,
     eventSources: eventSources,
+    viewRender: viewRender,
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background' && popstop == 0) {
@@ -292,6 +307,7 @@ $(document).ready(function() {
 
   $(".fc-lastMonth-button").attr("title", "Mois précédent");
   $(".fc-prev-button").attr("title", "Semaine précédente");
+  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
   $(".fc-next-button").attr("title", "Semaine suivante");
   $(".fc-nextMonth-button").attr("title", "Mois suivant");
   $(".fc-deplacer-button").attr("title", "Déplacer un événement\n\nSelectionnez d'abord l'événement à déplacer,\npuis son nouvel emplacement");
@@ -491,6 +507,28 @@ function setRdv() {
     error: function() {
       alert('Il y a un problème. Il faut recharger la page.');
       clean();
+    },
+  });
+}
+
+// synchroniser les agendas externes et internes
+function synchronizeEvents() {
+  $(".fc-synchronize-button").attr("disabled","");
+  $.ajax({
+    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/synchronizeEvents/',
+    type: "post",
+    data: {
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#calendar').fullCalendar('refetchEvents');
+      clean();
+      $(".fc-synchronize-button").removeAttr("disabled");
+    },
+    error: function() {
+      alert('Il y a un problème. Il faut recharger la page.');
+      clean();
+      $(".fc-synchronize-button").removeAttr("disabled");
     },
   });
 }

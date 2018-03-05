@@ -46,9 +46,9 @@ if ($validation === false) {
     //check login
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-        unset($_SESSION['form'][$formIN]);
-        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant';
-        if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
+//        unset($_SESSION['form'][$formIN]);
+        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant ou le mot de passe est incorrect';
+        if (!is_array($_SESSION['form'][$formIN]['validationErrorsMsg']) or !in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
@@ -59,37 +59,11 @@ if ($validation === false) {
         $user-> doLogin();
         unset($_SESSION['form'][$formIN]);
 
-        if (msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1")=='admin') {
-            $modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
-
-            $availableInstalls=scandir($p['config']['homeDirectory'].'upgrade/');
-            $installFiles=[];
-            //on fait la liste des installations à réaliser
-            foreach ($availableInstalls as $module) {
-                if ($module!='.' and $module!='..' and !array_key_exists($module, $modules)) {
-                    $installFiles[]=glob($p['config']['homeDirectory'].'upgrade/'.$module.'/sqlInstall.sql');
-                }
-            }
-            //on fait la liste des patches à appliquer        
-            $moduleUpdateFiles=[];
-            foreach ($modules as $module) {
-                $installed=file_get_contents($p['config']['homeDirectory'].'versionMedShakeEHR-'.$module['name'].'.txt');
-                if (trim($installed," \t\n\r\0\x0B") == trim($module['version'])) {
-                  continue;
-                }
-                $updateFiles=glob($p['config']['homeDirectory'].'upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
-                foreach ($updateFiles as $k=>$file) {
-                    if (preg_match('/sqlUpgrade_(.+)_(.+)/', $file, $matches) and $matches[1] >= $module['version']) {
-                        $moduleUpdateFiles[$module['name']][]=$updateFiles[$k];
-                    }
-                }
-            }
-            //s'il y a des patches à appliquer
-            if (count($installFiles) or count($moduleUpdateFiles)) {
-                msTools::redirRoute('configUpdates');
-            }
-        }
-        msTools::redirection('/patients/');
+    if ('admin'==msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1") and
+        'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+        msTools::redirRoute('configUpdates');
+    }
+    msTools::redirection('/patients/');
     } else {
         $form->savePostValues2Session();
         msTools::redirRoute('userLogIn');

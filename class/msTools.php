@@ -36,15 +36,10 @@ class msTools
  * @param  string $rights  droits
  * @return void
  */
-  public static function checkAndBuildTargetDir($dirName, $rights='0777')
+  public static function checkAndBuildTargetDir($dirName, $rights=0777)
   {
-      $dirs = explode('/', $dirName);
-      $dir='';
-      foreach ($dirs as $part) {
-          $dir.=$part.'/';
-          if (!is_dir($dir) && strlen($dir)>0) {
-              mkdir($dir);
-          }
+      if (!is_dir($dirName)) {
+          mkdir($dirName,$rights, true);
       }
   }
 

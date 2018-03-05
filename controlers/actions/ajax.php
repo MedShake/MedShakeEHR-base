@@ -35,27 +35,12 @@ $acceptedModes=array(
     'getAutocompleteFormValues', // Autocomplete des forms
     'getAutocompleteLinkType', // Autocomplete plus évolué
     'setPeopleData', // Enregistrer des données patient
+    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée 
     'mailTracking' // Retourner les infos de tracking d'un mail
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
-}
-
-
-// Autocomplete des forms - version simple
-if ($m=='getAutocompleteFormValues') {
-    include('inc-ajax-getAutocompleteFormValues.php');
-}
-// Autocomplete des forms - version complexe
-elseif ($m=='getAutocompleteLinkType') {
-    include('inc-ajax-getAutocompleteLinkType.php');
-}
-// Enregistrer des données patient
-elseif ($m=='setPeopleData') {
-    include('inc-ajax-setPeopleData.php');
-}
-// Retourner les infos de tracking d'un mail
-elseif ($m=='mailTracking') {
-    include('inc-ajax-mailTracking.php');
+} else {
+    include('inc-ajax-'.$m.'.php');
 }

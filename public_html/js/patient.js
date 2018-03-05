@@ -26,8 +26,8 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
- ////////////////////////////////////////////////////////////////////////
- ///////// Définition des variables par défaut
+////////////////////////////////////////////////////////////////////////
+///////// Définition des variables par défaut
 
 if (!scrollDestination) {
   var scrollDestination = {
@@ -127,10 +127,38 @@ $(document).ready(function() {
   })
 
   ////////////////////////////////////////////////////////////////////////
+  // prépare la réception de documents par phonecapture
+  $("a.prepareReceptionDoc").on("click", function(e) {
+    e.preventDefault();
+    if ($(this).hasClass('dicom'))
+    url: urlBase + '/patient/ajax/prepareEcho/',
+
+    $.ajax({
+      url: urlBase + '/patient/ajax/' + ($(this).hasClass('dicom') ? 'prepareEcho/' : 'prepareReceptionDoc/'),
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+      },
+      dataType: "html",
+      success: function(data) {
+          $("#patientPhonecapture").modal('show');
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  $("#patientPhonecapture button").on("click", function(){
+    getHistorique();
+    getHistoriqueToday();
+  });
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Observations déclenchement actions d'injections dans la page
 
   //bouton de nouvelle consultation
-  $("button.newCS, a.newCS").on("click", function(e) {
+  $("body").on("click", "button.newCS, a.newCS", function(e) {
     e.preventDefault();
     if ($('#nouvelleCs').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la consultation en cours ?')) {
@@ -155,7 +183,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouvelle ordo
-  $("#linkAddNewOrdo, .editOrdo").on("click", function(e) {
+  $('body').on("click", "#linkAddNewOrdo, .editOrdo", function(e) {
     e.preventDefault();
     if ($('#newOrdo').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone d\'ordonnance en cours ?')) {
@@ -175,7 +203,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau mail
-  $(".newMail").on("click", function(e) {
+  $('body').on("click", ".newMail", function(e) {
     e.preventDefault();
     if ($('#newMail').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de mail en cours ?')) {
@@ -187,7 +215,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau reglement
-  $("#linkAddNewReglement, .editReglement").on("click", function(e) {
+  $('body').on("click", "#linkAddNewReglement, .editReglement", function(e) {
     e.preventDefault();
     if ($('#newReglement').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
@@ -233,7 +261,7 @@ $(document).ready(function() {
   });
 
   //toogle importance d'une ligne
-  $("a.toogleImportant").on("click", function(e) {
+  $('body').on("click", "a.toogleImportant", function(e) {
     e.preventDefault();
     toogleImportant($(this));
   });
@@ -254,7 +282,7 @@ $(document).ready(function() {
     $('#alternatTitreModal #titreActu').val(titreActu);
     $('#alternatTitreModal #objetID').val(objetID);
   })
-  $('.trLigneExamen td').on('dblclick', function() {
+  $('body').on('dblclick', '.trLigneExamen td', function() {
     $('#alternatTitreModal').modal('show');
     titreActu = $(this).closest('tr').attr('data-alternatTitre');
     objetID = $(this).closest('tr').attr('data-objetID');
@@ -277,23 +305,32 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  // gestion des historiques et courbes de poids/taille/imc 
+  // gestion des historiques et courbes de poids/taille/imc
 
-  $(".graph-print").on("click", function(){
-  });
+  $(".graph-print").on("click", function() {});
 
-  $(".duplicate").parent().on("click", function(){
-    setPeopleData($('input[name=p_poids]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_poids]').attr("data-typeID"), 'input[name=p_poids]', '0');
-    setPeopleData($('input[name=p_taillePatient]').val(), $('#identitePatient').attr("data-patientID"), $('input[name=p_taillePatient]').attr("data-typeID"), 'input[name=p_taillePatient]', '0');
+  $(".duplicate").parent().on("click", function() {
+    var $input = $(this).closest(".input-group").children('input');
+    setPeopleData($input.val(), $('#identitePatient').attr("data-patientID"), $input.attr("data-typeID"), $input, '0');
   });
-  $(".duplicate").parent().attr("title", "Reporter une mesure identique").css("cursor","pointer");
-  $(".graph").parent().attr("title", "Voir l'historique").css("cursor","pointer");
+  $(".duplicate").parent().attr("title", "Reporter une mesure identique").css("cursor", "pointer");
+  $(".graph").parent().attr("title", "Voir l'historique").css("cursor", "pointer");
+
+  //stupide table pour classer tableau de la modal
+  $("table.histo").stupidtable();
+  $("table.histo").on("aftertablesort", function(event, data) {
+    th = $(this).find("th");
+    th.find(".arrow").remove();
+    dir = $.fn.stupidtable.dir;
+    arrow = data.direction === dir.ASC ? "glyphicon-chevron-up" : "glyphicon-chevron-down";
+    th.eq(data.column).append(' <span class="arrow glyphicon ' + arrow + '"></span>');
+  });
 
   //modal Courbes de poids/taille/IMC
-  $(".graph").parent().on("click", function(){
+  $(".graph").parent().on("click", function() {
     $(".histo-suppr").remove();
     $.ajax({
-      url: urlBase+'/patient/ajax/getGraphData/',
+      url: urlBase + '/patient/ajax/getGraphData/',
       type: 'post',
       data: {
         patientID: $('#identitePatient').attr("data-patientID")
@@ -301,13 +338,13 @@ $(document).ready(function() {
       dataType: "html",
       success: function(data) {
         if (data == 'ok')
-            return;
+          return;
         data = JSON.parse(data);
         for (var i in data)
-          if (i!='bornes')
-            $(".histo").append('\
+          if (i != 'bornes')
+            $("table.histo tbody").append('\
               <tr class="histo-suppr">\
-                <td style="text-align:center">' + (i < 3*365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
+                <td data-sort-value="' + i + '" style="text-align:center">' + (i < 3 * 365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
                 <td style="text-align:center">' + moment(data[i].date, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY") + '</td>\
                 <td style="text-align:center;color:' + (data[i].poids.reel ? 'black' : 'grey') + '">' + data[i].poids.value + '</td>\
                 <td style="text-align:center;color:' + (data[i].taille.reel ? 'black' : 'grey') + '">' + data[i].taille.value + '</td>\
@@ -316,16 +353,15 @@ $(document).ready(function() {
         drawGraph(data);
         $('#viewGraph').modal('show');
       },
-      error: function() {
-      }
+      error: function() {}
     });
   });
 
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
   $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
-    showObjetDet($(this));
     e.preventDefault();
+    showObjetDet($(this));
   });
 
   //fermeture modal data admin patient
@@ -371,19 +407,43 @@ $(document).ready(function() {
       data: $("#formNewCreationDate").serialize(),
       dataType: "html",
       success: function(data) {
-        if (data.indexOf("Erreur:")==0) {
-            $("#errormessage").html(data);
-            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
-        } else if (data.indexOf("Avertissement:")==0) {
-            $("#warningmessage").html(data);
-            $(".submit-warning").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-warning").animate({top:"0"},300)}), 4000)});
+        if (data.indexOf("Erreur:") == 0) {
+          $("#errormessage").html(data);
+          $(".submit-error").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-error").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else if (data.indexOf("Avertissement:") == 0) {
+          $("#warningmessage").html(data);
+          $(".submit-warning").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-warning").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
         } else {
           getHistorique();
           getHistoriqueToday();
         }
       },
       error: function() {
-        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
       }
     });
   });
@@ -394,7 +454,7 @@ $(document).ready(function() {
 
   //enregistrement de forms en ajax
   $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
-    if ($(this).closest("form").attr("action").indexOf('/actions/')>=0) {
+    if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };
     e.preventDefault();
@@ -406,12 +466,30 @@ $(document).ready(function() {
       data: $(this).closest("form").serialize(),
       dataType: "html",
       success: function(data) {
-        if (data.substr(0,7) == "Erreur:") {
-            $("#errormessage").html(data);
-            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
-        } else if (data.substr(0,14) == "Avertissement:") {
-            $("#warningmessage").html(data);
-            $(".submit-warning").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-warning").animate({top:"0"},300)}), 4000)});
+        if (!data.length)
+          return;
+        else if (data.substr(0, 7) == "Erreur:") {
+          $("#errormessage").html(data);
+          $(".submit-error").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-error").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
+        } else if (data.substr(0, 14) == "Avertissement:") {
+          $("#warningmessage").html(data);
+          $(".submit-warning").animate({
+            top: "50px"
+          }, 300, "easeInOutCubic", function() {
+            setTimeout((function() {
+              $(".submit-warning").animate({
+                top: "0"
+              }, 300)
+            }), 4000)
+          });
         } else {
           var $tr = $("#historique .anneeHistorique");
           if ($tr.length) {
@@ -429,7 +507,15 @@ $(document).ready(function() {
         }
       },
       error: function() {
-        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
       }
     });
   });
@@ -544,6 +630,9 @@ function addDicomSRInfo2CurrentForm(data) {
 
 //envoyer le form de CS dans le div CS
 function sendFormToCsDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCsForm/',
     type: 'post',
@@ -562,7 +651,7 @@ function sendFormToCsDiv(el) {
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
-      if (el.attr('data-mode')!='copy')
+      if (el.attr('data-mode') != 'copy')
         $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -582,6 +671,9 @@ function preventDataLoss(e) {
 
 //envoyer le form de Courrier dans le div newCourrier
 function sendFormToCourrierDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCourrierForm/',
     type: 'post',
@@ -614,6 +706,8 @@ function sendFormToCourrierDiv(el) {
 
 //envoyer le form new Ordo dans le div Ordo
 function sendFormToOrdoDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editOrdo')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
 
   $.ajax({
     url: urlBase + '/patient/ajax/extractOrdoForm/',
@@ -647,6 +741,9 @@ function sendFormToOrdoDiv(el) {
 
 //envoyer le form newMail dans le div newMail
 function sendFormToMailDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractMailForm/',
     type: 'post',
@@ -674,6 +771,9 @@ function sendFormToMailDiv(el) {
 
 //envoyer le form new Reglement dans le div Reglement
 function sendFormToReglementDiv(el) {
+  //destruction préventive lignes de détails historiques
+  if (el.hasClass('editReglement')) $('tr.detObjet' + el.closest('tr').attr('data-objetID')).remove();
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
@@ -790,6 +890,8 @@ function showObjetDet(element) {
   destination = $("." + zone + " .detObjet" + objetID);
 
   if (destination.length == 0) {
+    ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+    destination = $("." + zone + " .detObjet" + objetID);
 
     $.ajax({
       url: urlBase + '/patient/ajax/ObjetDet/',
@@ -799,9 +901,10 @@ function showObjetDet(element) {
       },
       dataType: "html",
       success: function(data) {
-        ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent">' + data + '</tr>');
+        destination.html(data);
       },
       error: function() {
+        destination.remove();
         alert('Problème, rechargez la page !');
       }
     });
@@ -815,7 +918,7 @@ function showObjetDet(element) {
 // rafraichier le header du dossier patient (infos administratives)
 function ajaxModalPatientAdminCloseAndRefreshHeader() {
   $.ajax({
-    url: urlBase+'/patient/ajax/refreshHeaderPatientAdminData/',
+    url: urlBase + '/patient/ajax/refreshHeaderPatientAdminData/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID")
@@ -833,8 +936,8 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
 function drawGraph(data) {
   var canvas;
   var ctx;
-  var Xmax=parseInt(data.bornes.Xmax);
-  if (Xmax<3*365.25) {
+  var Xmax = parseInt(data.bornes.Xmax);
+  if (Xmax < 3 * 365.25) {
     canvas = $(".graph-poids")[0];
     ctx = canvas.getContext("2d");
     drawGraphPoidsNourisson(data, ctx);
@@ -843,12 +946,12 @@ function drawGraph(data) {
     drawGraphTailleNourisson(data, ctx);
     canvas = $(".graph-imc")[0];
     ctx = canvas.getContext("2d");
-    if ($('#identitePatient').attr("data-genre")=="F")
+    if ($('#identitePatient').attr("data-genre") == "F")
       drawGraphIMCFille(data, ctx);
     else
       drawGraphIMCGarcon(data, ctx);
-  } else if (Xmax<18*365.25) {
-    if ($('#identitePatient').attr("data-genre")=="F") {
+  } else if (Xmax < 18 * 365.25) {
+    if ($('#identitePatient').attr("data-genre") == "F") {
       canvas = $(".graph-poids")[0];
       ctx = canvas.getContext("2d");
       drawGraphPoidsFille(data, ctx);
@@ -858,8 +961,7 @@ function drawGraph(data) {
       canvas = $(".graph-imc")[0];
       ctx = canvas.getContext("2d");
       drawGraphIMCFille(data, ctx);
-    }
-    else {
+    } else {
       canvas = $(".graph-poids")[0];
       ctx = canvas.getContext("2d");
       drawGraphPoidsGarcon(data, ctx);
@@ -885,71 +987,78 @@ function drawGraph(data) {
 
 function drawGraphPoidsNourisson(data, ctx) {
   $(".graph-poids")
-  .attr("width", "610")
-  .attr("height", "790")
-  .css("background-image", "url(/img/poids_nourissons.svg)")
-  .css("background-size", "cover");
-  drawDots(18, 567/(3*365.25), 756/22, 0, 22, ctx, 'poids', data);
+    .attr("width", "610")
+    .attr("height", "790")
+    .css("background-image", "url(/img/poids_nourissons.svg)")
+    .css("background-size", "cover");
+  drawDots(18, 567 / (3 * 365.25), 756 / 22, 0, 22, ctx, 'poids', data);
 }
+
 function drawGraphTailleNourisson(data, ctx) {
   $(".graph-taille")
-  .attr("width", "614")
-  .attr("height", "532")
-  .css("background-image", "url(/img/taille_nourissons.svg)")
-  .css("background-size", "cover");
-  drawDots(22, 567/(3*365.25), 500/85, 0, 115, ctx, 'taille', data);
+    .attr("width", "614")
+    .attr("height", "532")
+    .css("background-image", "url(/img/taille_nourissons.svg)")
+    .css("background-size", "cover");
+  drawDots(22, 567 / (3 * 365.25), 500 / 85, 0, 115, ctx, 'taille', data);
 }
+
 function drawGraphPoidsGarcon(data, ctx) {
   $(".graph-poids")
-  .attr("width", "596")
-  .attr("height", "615")
-  .css("background-image", "url(/img/poids_garcons.svg)")
-  .css("background-size", "cover");
-  drawDots(16, 567/(18*365.25), 596/110, 0, 110, ctx, 'poids', data);
+    .attr("width", "596")
+    .attr("height", "615")
+    .css("background-image", "url(/img/poids_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(16, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
 }
+
 function drawGraphTailleGarcon(data, ctx) {
   $(".graph-taille")
-  .attr("width", "602")
-  .attr("height", "831")
-  .css("background-image", "url(/img/taille_garcons.svg)")
-  .css("background-size", "cover");
-  drawDots(22, 567/(18*365.25), 812/150, 0, 200, ctx, 'taille', data);
+    .attr("width", "602")
+    .attr("height", "831")
+    .css("background-image", "url(/img/taille_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(22, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
 }
+
 function drawGraphIMCGarcon(data, ctx) {
   $(".graph-imc")
-  .attr("width", "622")
-  .attr("height", "861")
-  .css("background-image", "url(/img/IMC_garcons.svg)")
-  .css("background-size", "cover");
-  drawDots(31, 567/(18*365.25), 843/25, 0, 35, ctx, 'imc', data);
+    .attr("width", "622")
+    .attr("height", "861")
+    .css("background-image", "url(/img/IMC_garcons.svg)")
+    .css("background-size", "cover");
+  drawDots(31, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
 }
+
 function drawGraphPoidsFille(data, ctx) {
   $(".graph-poids")
-  .attr("width", "608")
-  .attr("height", "614")
-  .css("background-image", "url(/img/poids_filles.svg)")
-  .css("background-size", "cover");
-  drawDots(19, 567/(18*365.25), 596/110, 0, 110, ctx, 'poids', data);
+    .attr("width", "608")
+    .attr("height", "614")
+    .css("background-image", "url(/img/poids_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(19, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
 }
+
 function drawGraphTailleFille(data, ctx) {
   $(".graph-taille")
-  .attr("width", "611")
-  .attr("height", "831")
-  .css("background-image", "url(/img/taille_filles.svg)")
-  .css("background-size", "cover");
-  drawDots(23, 567/(18*365.25), 812/150, 0, 200, ctx, 'taille', data);
+    .attr("width", "611")
+    .attr("height", "831")
+    .css("background-image", "url(/img/taille_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(23, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
 }
+
 function drawGraphIMCFille(data, ctx) {
   $(".graph-imc")
-  .attr("width", "619")
-  .attr("height", "861")
-  .css("background-image", "url(/img/IMC_filles.svg)")
-  .css("background-size", "cover");
-  drawDots(29, 567/(18*365.25), 843/25, 0, 35, ctx, 'imc', data);
+    .attr("width", "619")
+    .attr("height", "861")
+    .css("background-image", "url(/img/IMC_filles.svg)")
+    .css("background-size", "cover");
+  drawDots(29, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
 }
 
 function drawGraphGeneral(data, sel, ctx, canvas) {
-  $(".graph-"+sel).css("background", "none");
+  $(".graph-" + sel).css("background", "none");
   var Xmin = Math.floor(parseInt(data.bornes.Xmin) / 365.25);
   var Xmax = Math.ceil(parseInt(data.bornes.Xmax) / 365.25);
   var Ymin = (sel == 'imc' ? 1 : 5) * (Math.floor(parseFloat(data.bornes.Ymin[sel]) / (sel == 'imc' ? 1 : 5)) - 1);
@@ -957,17 +1066,17 @@ function drawGraphGeneral(data, sel, ctx, canvas) {
   var marge = 22;
   var scaleX = (canvas.width - marge) / (Xmax - Xmin);
   var scaleY = (canvas.height - marge) / (Ymax - Ymin);
-  canvas.width=canvas.width; //effacement du canvas
+  canvas.width = canvas.width; //effacement du canvas
   ctx.strokeStyle = "#a9c0a6";
   ctx.fillStyle = "#8b5ba5";
   ctx.lineWidth = 1;
   ctx.beginPath();
   //dessin des graduations X
   var inc = (Xmax - Xmin) < 2 ? 0.25 : (Xmax - Xmin) < 4 ? 0.5 : 1;
-  for (var i = Xmin; i < Xmax; i+=inc) {
+  for (var i = Xmin; i < Xmax; i += inc) {
     ctx.moveTo((i - Xmin) * scaleX + marge, 0);
     ctx.lineTo((i - Xmin) * scaleX + marge, canvas.height - marge + 2);
-    ctx.fillText(i % 1 ? '+' + (12 * (i%1)) + 'mois' : i , (i - Xmin) * scaleX + marge - (i % 1 ? 20 : 5), canvas.height - 5);
+    ctx.fillText(i % 1 ? '+' + (12 * (i % 1)) + 'mois' : i, (i - Xmin) * scaleX + marge - (i % 1 ? 20 : 5), canvas.height - 5);
   }
   ctx.moveTo(canvas.width - 1, 0);
   ctx.lineTo(canvas.width - 1, canvas.height - marge + 2);
@@ -975,8 +1084,8 @@ function drawGraphGeneral(data, sel, ctx, canvas) {
   //détermination de la précision des graduations Y
   inc = sel == 'poids' ? 5 : 1;
   //dessin des graduations Y
-  for (var i = Ymin; i < Ymax; i+=inc) {
-    ctx.moveTo(marge-3, (Ymax - i) * scaleY + 1);
+  for (var i = Ymin; i < Ymax; i += inc) {
+    ctx.moveTo(marge - 3, (Ymax - i) * scaleY + 1);
     ctx.lineTo(canvas.width, (Ymax - i) * scaleY + 1);
     ctx.fillText(i, 2, (Ymax - i) * scaleY + 5);
   }
@@ -984,7 +1093,7 @@ function drawGraphGeneral(data, sel, ctx, canvas) {
   ctx.lineTo(canvas.width, 0);
   ctx.fillText(sel == 'poids' ? 'kg' : sel == 'taille' ? "cm" : "kg/m²", 0, 10);
   ctx.stroke();
-  drawDots(marge, scaleX / 365.25, scaleY, Xmin*365.25, Ymax, ctx, sel, data);
+  drawDots(marge, scaleX / 365.25, scaleY, Xmin * 365.25, Ymax, ctx, sel, data);
 }
 
 function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
@@ -1014,8 +1123,7 @@ function getHistorique() {
     success: function(data) {
       $("#historique").html(data);
     },
-    error: function() {
-    }
+    error: function() {}
   });
 }
 
@@ -1030,7 +1138,6 @@ function getHistoriqueToday() {
     success: function(data) {
       $("#historiqueToday").html(data);
     },
-    error: function() {
-    }
+    error: function() {}
   });
 }

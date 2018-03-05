@@ -26,6 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
 
 $acceptedTables=array(
     'data_cat',
@@ -80,7 +81,7 @@ if ($table=='data_cat') {
 } elseif ($table=='dicomTags') {
 
     $do=true;
-    
+
 } elseif ($table=='actes_base') {
   $code=msSQL::sqlUniqueChamp("select code from actes_base where id = '".$id."' limit 1 ");
   if (msSQL::sqlUniqueChamp("select count(id) from actes where details like '%$code:%'")==0) {

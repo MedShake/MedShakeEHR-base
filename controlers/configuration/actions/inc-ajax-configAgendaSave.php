@@ -27,6 +27,8 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+
 //utilisateurs pouvant avoir un agenda
 $agendaUsers= new msPeople();
 $autorisedUsers=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
@@ -57,28 +59,29 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
     } else {
         file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
         $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
-  
+
         $js=array();
-        $js[]="var businessHours = [\n";
+        $js[]="businessHours = [\n";
         $hiddenDays=array();
         $d=1;
         foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
-            $js[]="  {\n";
-            $js[]="    dow: [".$d."],\n";
-            $js[]="    start: '".$params[$day]['minTime'].":00',\n";
-            $js[]="    end: '".$params[$day]['maxTime'].":00',\n";
-            $js[]="  },\n";
             if (!$params[$day]['visible']) {
                 $hiddenDays[]=$d;
+            } elseif ($params[$day]['worked']) {
+                $js[]="  {\n";
+                $js[]="    dow: [".$d."],\n";
+                $js[]="    start: '".$params[$day]['minTime'].":00',\n";
+                $js[]="    end: '".$params[$day]['maxTime'].":00',\n";
+                $js[]="  },\n";
             }
             $d++;
             $d%=7;
         }
         $js[]="];\n";
 
-        $js[]="var hiddenDays = [".implode(', ', $hiddenDays)."];\n";
+        $js[]="hiddenDays = [".implode(', ', $hiddenDays)."];\n";
 
-        $js[]="var eventSources = [{\n";
+        $js[]="eventSources = [{\n";
         $js[]="    url: urlBase + '/agenda/".$_POST['userID']."/ajax/getEvents/'\n";
         $js[]="  },\n";
         $js[]="  {\n";
@@ -101,9 +104,9 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="  }\n";
         $js[]="];\n";
 
-        $js[]="var minTime = '".$params['minTime'].":00';\n";
-        $js[]="var maxTime = '".$params['maxTime'].":00';\n";
-        $js[]="var slotDuration = '".$params['slotDuration'].":00';\n";
+        $js[]="minTime = '".$params['minTime'].":00';\n";
+        $js[]="maxTime = '".$params['maxTime'].":00';\n";
+        $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
         file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
     }
 }

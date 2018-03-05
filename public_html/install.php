@@ -21,16 +21,20 @@
  */
 
 /**
- * Pivot central des pages loguées
+ * Installateur sur base préinstallée
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
+$webpath=str_replace('install.php','',$_SERVER['REQUEST_URI']);
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
 if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
-    die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer 'SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR' dans votre .htaccess ou la configuration du serveur");
+    if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
+        die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
+    }
+    $homepath=trim(str_replace("\n", '', $homepath));
 }
 $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 
@@ -38,8 +42,11 @@ $homepath.=$homepath[strlen($homepath)-1]=='/'?'':'/';
 if (!is_dir($homepath."vendor")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
-if (!is_dir("bower_components")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer BOWER (<a href='https://bower.io'>https://bower.io</a>)<br>Tapez ensuite <code>bower update --save</code> en ligne de commande dans le répertoire /public_html de MedShakeEHR.");
+if (!is_dir("thirdparty")) {
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier ".getcwd());
+}
+if (!is_writable($homepath."config")) {
+  die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
 }
 
 /////////// Composer class auto-upload
@@ -47,8 +54,9 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    if (is_file(getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php')) {
-        include getenv("MEDSHAKEEHRPATH").'/class/' . $class . '.php';
+    global $homepath;
+    if (is_file($homepath.'/class/' . $class . '.php')) {
+        include $homepath.'/class/' . $class . '.php';
     }
 });
 
@@ -74,12 +82,12 @@ if (!is_file($homepath.'config/config.yml')) {
             die("Echec lors de l'attribution des droits sur la base de données MySQL");
         }
         if (!is_dir($_POST['backupLocation'])) {
-            if ( mkdir($_POST['backupLocation'], 0660, true)===false) {
+            if ( mkdir($_POST['backupLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['backupLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
         if (!is_dir($_POST['stockageLocation'])) {
-            if ( mkdir($_POST['stockageLocation'], 0660, true)===false) {
+            if ( mkdir($_POST['stockageLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['stockageLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
@@ -101,10 +109,11 @@ if (!is_file($homepath.'config/config.yml')) {
           'sqlPass'=>$_POST['sqlPass'],
           'sqlVarPassword'=>$_POST['sqlVarPassword'],
           'PraticienPeutEtrePatient'=>true,
+          'VoirRouletteObstetricale'=>true,
           'administratifSecteurHonoraires'=>1,
           'administratifPeutAvoirFacturesTypes'=>'false',
           'administratifPeutAvoirPrescriptionsTypes'=>'false',
-          'administratifPeutAvoirAgenda'=>'false',
+          'administratifPeutAvoirAgenda'=>'true',
           'administratifPeutAvoirRecettes'=>'true',
           'administratifComptaPeutVoirRecettesDe'=>'',
           'templatesPdfFolder'=>$homepath.'templates/models4print/',
@@ -117,7 +126,7 @@ if (!is_file($homepath.'config/config.yml')) {
           'smtpTracking'=>'',
           'smtpFrom'=>'user@domain.net',
           'smtpFromName'=>'',
-          'smtpHost'=>'smtp.net',
+          'smtpHost'=>'',
           'smtpPort'=>587,
           'smtpSecureType'=>'tls',
           'smtpOptions'=>'off',
@@ -133,17 +142,17 @@ if (!is_file($homepath.'config/config.yml')) {
           'apicryptCheminVersBinaires'=>$homepath.'apicrypt/bin/',
           'apicryptUtilisateur'=>'prenom.NOM',
           'apicryptAdresse'=>'prenom.NOM@medicalXX.apicrypt.org',
-          'apicryptSmtpHost'=>'smtp.intermedic.org',
+          'apicryptSmtpHost'=>'',
           'apicryptSmtpPort'=>'25',
-          'apicryptPopHost'=>'pop.intermedic.org',
+          'apicryptPopHost'=>'',
           'apicryptPopPort'=>'110',
           'apicryptPopUser'=>'prenom.NOM',
           'apicryptPopPass'=>'passwordapicrypt',
           'apicryptDefautSujet'=>'Document concernant votre patient',
-          'faxService'=>'ecofaxOVH',
+          'faxService'=>'',
           'ecofaxMyNumber'=>'0900000000',
           'ecofaxPass'=>'password',
-          'dicomHost'=>'192.168.xxx.xxx',
+          'dicomHost'=>'',
           'dicomPrefixIdPatient'=>'1.100.100',
           'dicomWorkListDirectory'=>getcwd().'/workingDirectory/',
           'dicomWorkingDirectory'=>getcwd().'/workingDirectory/',
@@ -154,8 +163,8 @@ if (!is_file($homepath.'config/config.yml')) {
           'phonecaptureResolutionWidth'=>1920,
           'phonecaptureResolutionHeight'=>1080,
           'agendaService'=>'',
-          'agendaDistantLink'=>'http://monagenda.agenda.abc',
-          'agendaDistantPatientsOfTheDay'=>'http://monagenda.agenda.abc/patientsOfTheDay.json',
+          'agendaDistantLink'=>'',
+          'agendaDistantPatientsOfTheDay'=>'',
           'agendaLocalPatientsOfTheDay'=>'patientsOfTheDay.json',
           'agendaNumberForPatientsOfTheDay'=>0,
           'mailRappelLogCampaignDirectory'=>getcwd().'/mailsRappelRdvArchives/',
@@ -174,7 +183,7 @@ if (!is_file($homepath.'config/config.yml')) {
             die("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que www-data a les droits d'écriture sur le dossier ".$homepath."config/");
         }
 
-        header('Location: /install.php');
+        header('Location: '.$_SERVER['REQUEST_URI']);
         die();
     }
 } else {
@@ -223,20 +232,20 @@ if($template!=''): ?>
       MedShakeEHR : Installation</title>
     <meta name="Description" content=""/>
 
-    <link type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-    <link type="text/css" href="/css/general.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/css/general.css" rel="stylesheet"/>
 
-    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script defer src="/bower_components/moment/min/moment.min.js"></script>
-    <script defer src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script defer src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-    <script defer src="/js/general.js"></script>
-    <script defer src="/bower_components/jquery-typewatch/jquery.typewatch.js"></script>
-    <script defer src="/bower_components/uploader/dist/js/jquery.dm-uploader.min.js"></script>
-    <script defer="defer" src="/bower_components/kjua/dist/kjua.min.js"></script>
+    <script type="text/javascript" src="<?=$webpath?>/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/moment/moment/min/moment.min.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script defer src="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script defer src="<?=$webpath?>/js/general.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
+    <script defer src="<?=$webpath?>/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
+    <script defer="defer" src="<?=$webpath?>/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
   </head>
 
   <body>
@@ -266,7 +275,7 @@ if ($template=='bienvenue') :
 ?>
       <h1>Bienvenue dans MedShakeEHR!</h1>
       <p style="margin-top:50px">Avant de pouvoir utiliser MedShakeEHR, nous devons procéder à quelques étapes.</p>
-      <form	action="/install.php" method="post" style="margin-top:50px;">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="bienvenue" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -279,7 +288,7 @@ elseif ($template=='configForm') :
 ?>
       <h2>Configuration rapide</h2>
       <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.</p>
-      <form	action="/install.php" 		method="post">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" 		method="post">
         <input name="configForm" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -344,7 +353,7 @@ else :
 ?>
       <h2>Installation de la base de données</h2>
       <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
-      <form	action="/install.php" method="post" style="margin-top:50px;">
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="baseInstall" type="hidden"/>
         <div class="row">
           <div class="col-md-4">

@@ -67,8 +67,13 @@ foreach ($data as $k=>$d) {
                                 'date'=>$d['date'], 'mesure'=>false);
             }
         } elseif (!isset($mesureAnt) or !array_key_exists('poids', $mesureAnt)) {
+            $data[$k]=array('poids'=>array('value'=>'', 'reel'=>false),
+                            'taille'=>array('value'=>$d['taillePatient'], 'reel'=>true),
+                            'imc'=>array('value'=>'','reel'=>false),
+                            'date'=>$d['date'], 'mesure'=>false);
             $mesureAnt['taille']=$d['taillePatient'];
-            unset($data[$k]);
+            $Tmin=$d['taillePatient']<$Tmin?$d['taillePatient']:$Tmin;
+            $Tmax=$d['taillePatient']>$Tmax?$d['taillePatient']:$Tmax;
         }else {
             $imc=round($mesureAnt['poids']*10000/($d['taillePatient']*$d['taillePatient']), 1);
             $data[$k]=array('poids'=>array('value'=>$mesureAnt['poids'], 'reel'=>false),
@@ -84,7 +89,13 @@ foreach ($data as $k=>$d) {
     } else {
         if (!array_key_exists('taillePatient', $d)) {
             if (!isset($mesureAnt) or !array_key_exists('taille', $mesureAnt)) {
-                unset($data[$k]);
+                $data[$k]=array('poids'=>array('value'=>$d['poids'], 'reel'=>true),
+                                'taille'=>array('value'=>'', 'reel'=>false),
+                                'imc'=>array('value'=>'','reel'=>false),
+                                'date'=>$d['date'], 'mesure'=>false);
+                $mesureAnt['poids']=$d['poids'];
+                $Pmin=$d['poids']<$Pmin?$d['poids']:$Pmin;
+                $Pmax=$d['poids']>$Pmax?$d['poids']:$Pmax;
             } else {
                 $imc=round($d['poids']*10000/($mesureAnt['taille']*$mesureAnt['taille']), 1);
                 $data[$k]=array('poids'=>array('value'=>$d['poids'], 'reel'=>true),

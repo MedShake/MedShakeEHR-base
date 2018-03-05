@@ -47,6 +47,7 @@ require $homepath.'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
+    global $homepath;
     include $homepath.'class/' . $class . '.php';
 });
 

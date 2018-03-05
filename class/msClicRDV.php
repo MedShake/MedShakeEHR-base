@@ -133,6 +133,7 @@ class msClicRDV
             return(array(array(), array()));
         }
         $ret[1]=array_flip($ret[0]);
+        return $ret;
     }
 
     /*  envoyer un événement vers clicRDV
@@ -204,13 +205,14 @@ class msClicRDV
                 $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
             if (array_key_exists('personalEmail', $patientData))
                 $ficheClic['fiche']['email']=$patientData['personalEmail'];
-            if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+            if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('id', $res)) {
                 $obj=new msObjet();
                 $obj->setToID($event['patientid']);
                 $obj->setFromID($clicRDVservice);
-                $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
+                $obj->createNewObjetByTypeName('clicRdvPatientId', $res['id']);
             } else {
-                die("Erreur lors de la création d'une fiche\n");
+                msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+                return "Erreur lors de la création d'une fiche";
             }
         }
         //envoi de l'événement et récupération de la réponse
@@ -218,9 +220,11 @@ class msClicRDV
             //enregistrement de son ID externe dans la base et dans les événements
             msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$event['id']."'");
         } else {
-            die("Erreur lors de la création d'un événement\n");
+            msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+            return "Erreur lors de la création d'un événement";
         }
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+        return true;
     }
 
     /*  modifier un événement sur clicRDV
@@ -255,6 +259,7 @@ class msClicRDV
         );
         $this->_sendCurl('PUT', 'vevents/'.$event['externid'], $this->_groupID, '', json_encode($eventClic));
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+        return true;
     }
 
     /*  supprimer un événement sur clicRDV
@@ -286,6 +291,7 @@ class msClicRDV
         );
         $this->_sendCurl('PUT', 'vevents/'.$event['externid'], $this->_groupID, '', json_encode($eventClic));
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+        return true;
     }
 
     public function syncEvents() {
@@ -294,7 +300,6 @@ class msClicRDV
             return false;
         }
         if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
-            echo "Lock actif\n";
             return false;
         }
         //acquisition du lock
@@ -316,8 +321,8 @@ class msClicRDV
             $searchString.='&conditions[4][field]=updated_at&conditions[4][op]=%3E%3D&conditions[4][value]='.str_replace(' ', '%20', $lastupdate);
         }
         if (($res=$this->_sendCurl('GET', 'vevents', $this->_groupID, $searchString)) === false) {
-            echo "Erreur de réception des données depuis clicRDV\n";
-            return false;
+            msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+            return "Erreur de réception des données depuis clicRDV";
         }
         $res=json_decode($res, true);
         $rdvClic=array();
@@ -401,14 +406,14 @@ class msClicRDV
                     $ficheClic['fiche']['firstphone']=$patientData['mobilePhone'];
                 if (array_key_exists('personalEmail', $patientData))
                     $ficheClic['fiche']['email']=$patientData['personalEmail'];
-                if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('records', $res)) {
+                if ($res=json_decode($this->_sendCurl('POST', 'fiches', $this->_groupID, '', json_encode($ficheClic)), true) and array_key_exists('id', $res)) {
                     $obj->setToID($vlocal['patientid']);
                     $obj->setFromID($clicRDVservice);
-                    $obj->createNewObjetByTypeName('clicRdvPatientId', $res['records'][0]['id']);
-                    $patients[0][$vlocal['patientid']]=$res['records'][0]['id'];
+                    $obj->createNewObjetByTypeName('clicRdvPatientId', $res['id']);
+                    $patients[0][$vlocal['patientid']]=$res['id'];
                 } else {
                     msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
-                    die("Erreur lors de la création d'une fiche\n");
+                    return "Erreur lors de la création d'une fiche";
                 }
             }
             //envoi de l'événement et récupération de la réponse
@@ -419,7 +424,7 @@ class msClicRDV
                 $knownEvents[$evtc['id']]=$k;
             } else {
                 msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
-                die("Erreur lors de la création d'un événement\n");
+                return "Erreur lors de la création d'un événement";
             }
         }
 
@@ -462,7 +467,7 @@ class msClicRDV
                     }
                 } else {
                     msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
-                    die("Erreur lors de la récupération d'une fiche\n");
+                    return "Erreur lors de la récupération d'une fiche";
                 }
                 //on crée l'événement
                 $agenda->set_eventID(null);
@@ -510,6 +515,7 @@ class msClicRDV
         }
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'cron', 'value'=>$startdate));
         msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
+        return true;
     }
 
 }

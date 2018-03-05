@@ -35,6 +35,9 @@ userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 userLogInFirst: ['GET', '/login/logInFirst/', 'login/logInFirst']
 userLogInFirstDo: ['POST', '/login/logInFirstDo/', 'login/logInFirstDo']
 
+#RESTful interface
+restGeneral: ['GET|POST|PUT|DELETE', '/rest/[a:m]/', 'rest/rest']
+
 #Ajax general
 ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
@@ -67,8 +70,8 @@ lapAjax: ['GET|POST', '/lap/ajax/[a:m]/', 'lap/actions/lapAjax']
 lap: ['GET|POST', '/lap/[i:patient]/', 'lap/lap']
 
 #dossier patient
+patientAjaxIgnoreEmpty: ['GET|POST', '/patient/ajax/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientAjax']
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
-patientActionsIgnoreEmpty: ['GET|POST', '/patient/actions/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientActions']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
 patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
 
@@ -145,12 +148,12 @@ configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configF
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
 
 # configuration technique
+configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configuration/configDefaultParams']
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
 configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
-configDefaultParams: ['GET', '/configuration/users-params/', 'configuration/configDefaultUsersParams']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
 
 # configuration crons
@@ -158,6 +161,9 @@ configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
 
 # configuration apply updates
 configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configApplyUpdates']
+
+# configuration modules
+configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
 
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
