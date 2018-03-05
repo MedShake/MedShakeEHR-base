@@ -32,12 +32,12 @@ $p['page']['listeForms']=array('baseATCD','baseSynthese');
 
 $form_baseATCD = new msForm();
 $form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
-$form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
+$form_baseATCD->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 
 $form_baseSynthese = new msForm();
 $form_baseSynthese->setFormIDbyName($p['page']['formName_baseSynthese']='baseSynthese');
-$form_baseSynthese->getPrevaluesForPatient($match['params']['patient']);
+$form_baseSynthese->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 
 $typeCs_csBase = new msData;
