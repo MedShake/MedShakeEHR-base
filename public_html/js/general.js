@@ -332,7 +332,6 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
     });
   }
 }
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions tierces
