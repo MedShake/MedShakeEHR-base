@@ -128,15 +128,15 @@ class msStockage
 
 /**
  * Obtenir la taille d'un fichier
- * @param  int $decimals nombre de décimal souhaitées
+ * @param  int $decimals nombre de décimales souhaitées
  * @return string           taille du fichier
  */
-public function getFileSize($decimals = 2) {
-  $bytes=filesize($this->getPathToDoc());
-  $sz = 'BKMGTP';
-  $factor = floor((strlen($bytes) - 1) / 3);
-  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor] . 'o';
-}
+    public function getFileSize($decimals = 2) {
+      $bytes=filesize($this->getPathToDoc());
+      $sz = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po'];
+      $factor = floor((strlen($bytes) - 1) / 3);
+      return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+    }
 
 /**
  * test si un doc existe à partir de objetID
