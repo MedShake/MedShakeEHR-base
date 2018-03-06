@@ -29,12 +29,33 @@
 <td colspan="4">
 
     {% if page.pj.href %}
+      {% if page.pj.detail or page.pj.view %}
+        <div class="panel panel-default">
+          <table class="table table-striped table-hover">
+            <tbody>
+              <tr>
+                <td>{{ page.pj.view }}{{ page.pj.detail|nl2br }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="btn btn-info" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" role="button" target="_blank">
+                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                      VOIR FICHIER
+                      {{ page.pj.html }} ({{ page.pj.filesize }})</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      {% else %}
         <p>
+
             <a class="btn btn-info" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" role="button" target="_blank">
                 <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 VOIR FICHIER
                 {{ page.pj.html }} ({{ page.pj.filesize }})</a>
         </p>
+      {% endif %}
     {% endif %}
 
     {% if page.bioHprim %}
