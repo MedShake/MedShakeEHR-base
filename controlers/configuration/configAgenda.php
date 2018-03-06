@@ -49,21 +49,21 @@
        $p['page']['selectUser']=$match['params']['userID'];
 
        //paramètres de l'agenda
-       if(is_file($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml')) {
-         $p['page']['configAgenda']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml');
+       if(is_file($p['configDefaut']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'.yml')) {
+         $p['page']['configAgenda']=file_get_contents($p['configDefaut']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'.yml');
        }
 
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
-         $p['page']['configAgendaJs']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
+       if(is_file($p['config']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
+         $p['page']['configAgendaJs']=file_get_contents($p['config']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'.js');
        }
 
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
-         $p['page']['configAgendaAd']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
+       if(is_file($p['config']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
+         $p['page']['configAgendaAd']=file_get_contents($p['config']['homeDirectory'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
        }
 
        // types de rendez-vous
-       if(is_file($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml')) {
-         $p['page']['typeRdv']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml');
+       if(is_file($p['configDefaut']['homeDirectory'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml')) {
+         $p['page']['typeRdv']=file_get_contents($p['configDefaut']['homeDirectory'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml');
        }
 
      }

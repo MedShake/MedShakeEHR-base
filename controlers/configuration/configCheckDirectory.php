@@ -88,14 +88,14 @@
           $p['page']['check']['apicryptCheminFichierC']['is_writable']=false;
       }
       //repertoire agenda
-      if (is_dir($p['config']['webDirectory'].'agendasConfigurations/')) {
-          $p['page']['check']['agendasConfigurations']['is_dir']=true;
-          if (is_writable($p['config']['webDirectory'].'agendasConfigurations/')) {
-              $p['page']['check']['agendasConfigurations']['is_writable']=true;
+      if (is_dir($p['config']['homeDirectory'].'config/agendas/')) {
+          $p['page']['check']['agendas']['is_dir']=true;
+          if (is_writable($p['config']['homeDirectory'].'config/agendas/')) {
+              $p['page']['check']['agendas']['is_writable']=true;
           }
       } else {
-          $p['page']['check']['agendasConfigurations']['is_dir']=false;
-          $p['page']['check']['agendasConfigurations']['is_writable']=false;
+          $p['page']['check']['agendas']['is_dir']=false;
+          $p['page']['check']['agendas']['is_writable']=false;
       }
       //repertoire templates PDF
       if (is_dir($p['config']['templatesPdfFolder'])) {
