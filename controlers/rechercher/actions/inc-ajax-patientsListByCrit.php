@@ -115,6 +115,10 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         $peopleType=array('pro');
     } elseif($_POST['porp']=='today') {
         $peopleType=array('pro', 'patient', 'externe');
+        $p['page']['extToInt']=msSQL::sql2tabKey("SELECT od.toID, od.value 
+              FROM objets_data AS od left join data_types AS dt
+              ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
+              WHERE dt.name='relationExternePatient' and od.toID in ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
     } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient']){
         $peopleType=array('pro','patient');
     } else {

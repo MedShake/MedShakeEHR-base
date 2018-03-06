@@ -137,7 +137,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        window.location=urlBase+'/patient/'+externID+'/';
+        window.location=urlBase+'/patient/'+patientID+'/';
       },
       error: function() {
         alert('Problème, rechargez la page !');

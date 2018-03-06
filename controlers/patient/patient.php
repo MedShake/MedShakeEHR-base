@@ -99,7 +99,7 @@ $formpatient->setPrevalues($patient->getSimpleAdminDatas());
 $p['page']['formEditAdmin']=$formpatient->getForm();
 
 //type du dossier
-$p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['patient']."' limit 1");
+$p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");
 
 //historique du jour des consultation du patient
 $p['page']['patient']['today']=$patient->getToday();
