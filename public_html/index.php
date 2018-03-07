@@ -116,10 +116,14 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     if (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
         include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
+    // si c'est l'interface RESTful qui était visée et qu'on est ici, c'est que l'instruction n'est pas supportée  
+    if ($match['target']=='rest/rest') {
+        header('HTTP/1.1 404 Not Found');
+        die;
+    }
 } elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
     include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
-
 
 //////// View if defined
 if (isset($template)) {
