@@ -87,12 +87,13 @@ $(document).ready(function() {
     showClear: true
 
   });
-  $("#nouvelleCs").delegate('div.datepick', "focusin click", function() {
+  $("#nouvelleCs").on("focusin click", 'div.datepick', function() {
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: 'years',
       format: 'L'
     });
+    $(this).data("DateTimePicker").show();
   });
 
   // age affiché en label de l'input date de naissance
