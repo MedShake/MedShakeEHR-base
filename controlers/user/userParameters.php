@@ -68,8 +68,8 @@ if(is_file($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].
 * consultations
 ************/
 // types de rendez-vous
-if(is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$p['user']['id'].'.yml')) {
-    $consults=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$p['user']['id'].'.yml');
+if(is_file($p['config']['homeDirectory'].'config/agendas/typesRdv'.$p['user']['id'].'.yml')) {
+    $consults=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/agendas/typesRdv'.$p['user']['id'].'.yml');
     $usedTypes=msSQL::sql2tabSimple("SELECT DISTINCT(type) FROM agenda");
     foreach ($consults as $k=>$v) {
         if (is_array($usedTypes) and in_array($k, $usedTypes)) {
