@@ -108,7 +108,7 @@ $p['page']['patient']['today']=$patient->getToday();
 $p['page']['patient']['historique']=$patient->getHistorique();
 
 //les ALD du patient
-if($p['config']['LapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}
+if($p['config']['lapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}
 
 //les certificats
 $certificats=new msData();
