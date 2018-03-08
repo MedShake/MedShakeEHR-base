@@ -34,9 +34,9 @@
       <tbody>
         {% for atcdId, atc in atcd.atcd %}
           <tr class="tr{{ atcdId }} active">
-            <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}" style="cursor: pointer">
+            <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}lap" style="cursor: pointer">
               {{ atc.atcdStrucCIM10Label.value }}
-              <div id="atcdDet{{ atcdId }}" class="collapse">
+              <div id="atcdDet{{ atcdId }}lap" class="collapse">
                 <table class="table table-condensed small" style="margin-top:8px;">
                   <tr>
                     <td>Code CIM 10</td>

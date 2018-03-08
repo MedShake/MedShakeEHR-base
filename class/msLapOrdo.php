@@ -47,11 +47,23 @@ class msLapOrdo extends msLap
         }
     }
 
+/**
+ * Obtenir les datas de l'ordonnance
+ * @return array data ordonnance
+ */
     public function getOrdonnance() {
       if(!isset($this->_ordonnanceID)) throw new Exception('OrdonnanceID is not defined');
 
       $data = new msData();
-      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament']);
+      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lastname','firstname','birthname']);
+
+      $tab['ordoData']=msSQL::sqlUnique("select o.*, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom, p.value as prenom
+      from objets_data as o
+      left join objets_data as n on n.toID=o.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+      left join objets_data as p on p.toID=o.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+      left join objets_data as bn on bn.toID=o.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      where o.id='".$this->_ordonnanceID."'
+      group by  o.id, n.id, p.id, bn.id order by o.id desc");
 
       //extraction des lignes de prescrition
       if($lignes = msSQL::sql2tabKey("select * from objets_data where instance='".$this->_ordonnanceID."' and typeID='".$name2typeID['lapLignePrescription']."' order by id", 'id')) {
@@ -174,6 +186,9 @@ class msLapOrdo extends msLap
                     $ligne['TTChroniques'][$m['instance']]['medics'][]=json_decode($m['value'], true);
                 }
             }
+            $whereExclu="and lp.id not in (".implode(',', array_column($lignesPresTTchro, 'id')).")";
+        } else {
+          $whereExclu="";
         }
 
         if ($lignesPresTTponct=msSQL::sql2tab("select lp.id, lp.value
@@ -181,11 +196,10 @@ class msLapOrdo extends msLap
           left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
           left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
           left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
-          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and lp.id not in (".implode(',', array_column($lignesPresTTchro, 'id')).")
+          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' ".$whereExclu."
           and STR_TO_DATE(dd.value, '%d/%m/%Y') <= CURDATE()
           and STR_TO_DATE(df.value, '%d/%m/%Y') >= CURDATE()
           and (STR_TO_DATE(dfe.value, '%d/%m/%Y') > CURDATE() or dfe.value is null)
-
           ")) {
             foreach ($lignesPresTTponct as $l) {
                 $ligne['TTPonctuels'][$l['id']]['ligneData']=json_decode($l['value'], true);
@@ -199,9 +213,95 @@ class msLapOrdo extends msLap
             }
         }
 
-        $ligne['TTPonctuels']=array_values($ligne['TTPonctuels']);
-        $ligne['TTChroniques']=array_values($ligne['TTChroniques']);
+        if(isset($ligne['TTPonctuels'])) $ligne['TTPonctuels']=array_values($ligne['TTPonctuels']);
+        if(isset($ligne['TTChroniques'])) $ligne['TTChroniques']=array_values($ligne['TTChroniques']);
 
         return $ligne;
     }
+
+    public function getHistoriqueAnneesDistinctes() {
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFin', 'lapLignePrescriptionDatePriseFinEffective']);
+
+      $tabretour=[date('Y')];
+      if ($lignesPres=msSQL::sql2tab("select YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) as dd, YEAR(STR_TO_DATE(df.value, '%d/%m/%Y')) as df, YEAR(STR_TO_DATE(dfe.value, '%d/%m/%Y')) as dfe
+        from objets_data as lp
+        left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
+        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
+        left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
+        where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted=''
+        ")) {
+
+          foreach($lignesPres as $v) {
+            if(!in_array($v['dd'],$tabretour) and !empty($v['dd'])) $tabretour[]=$v['dd'];
+            if(!in_array($v['df'],$tabretour) and !empty($v['df'])) $tabretour[]=$v['df'];
+            if(!in_array($v['dfe'],$tabretour) and !empty($v['dfe'])) $tabretour[]=$v['dfe'];
+          }
+
+        }
+        rsort($tabretour);
+        return $tabretour;
+    }
+
+/**
+ * Obtenir l'historique des traitement pour une année donnée
+ * @param  int $year année
+ * @return array       tableau d'historique
+ */
+    public function getHistoriqueTT($year) {
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFin', 'lapLignePrescriptionDatePriseFinEffective']);
+
+      $final=[];
+      if ($lignesPres=msSQL::sql2tabKey("select lp.id, lp.value, dfe.value as dfe, lp.instance as ordonnanceID
+        from objets_data as lp
+        left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
+        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
+        left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
+        where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted=''
+        and (YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) = '".$year."'
+        or YEAR(STR_TO_DATE(df.value, '%d/%m/%Y')) = '".$year."'
+        or YEAR(STR_TO_DATE(dfe.value, '%d/%m/%Y')) = '".$year."')
+        ", 'id')) {
+
+          if ($lignesMedics=msSQL::sql2tab("select id, value, instance from objets_data where typeID='".$name2typeID['lapLigneMedicament']."' and instance in (".implode(',', array_column($lignesPres, 'id')).") and outdated='' and deleted='' ")) {
+            foreach($lignesMedics as $medic) {
+              $medics[$medic['instance']][$medic['id']]=$medic;
+              $medics[$medic['instance']][$medic['id']]['value']=json_decode($medic['value'],true);
+              $medics[$medic['instance']][$medic['id']]['ligneData']=json_decode($lignesPres[$medic['instance']]['value'],true);
+              $medics[$medic['instance']][$medic['id']]['ordonnanceID']=$lignesPres[$medic['instance']]['ordonnanceID'];
+            }
+          }
+          foreach($lignesPres as $lp) {
+            $lp['value']=json_decode($lp['value'],true);
+
+            //start
+            $dd=explode('/',$lp['value']['dateDebutPrise']);
+            if(isset($final[$dd[1]][$dd[0]]['start'])) {
+              $final[$dd[1]][$dd[0]]['start']=$final[$dd[1]][$dd[0]]['start']+$medics[$lp['id']];
+            } else {
+              $final[$dd[1]][$dd[0]]['start']=$medics[$lp['id']];
+            }
+
+            //final
+            if($lp['dfe'] != '' ) $df=explode('/',$lp['dfe']); else $df=explode('/',$lp['value']['dateFinPrise']);
+            if(isset($final[$df[1]][$df[0]]['stop'])) {
+              $final[$df[1]][$df[0]]['stop']=$final[$df[1]][$df[0]]['stop']+$medics[$lp['id']];
+            } else {
+              $final[$df[1]][$df[0]]['stop']=$medics[$lp['id']];
+            }
+          }
+          krsort($final);
+          foreach($final as $mois=>$data) {
+            krsort($final[$mois]);
+          }
+          foreach($final as $mois=>$data) {
+            $final[strftime('%B', mktime(0, 0, 0, $mois, 1, 2018))]=$data;
+            unset($final[$mois]);
+          }
+        }
+        return $final;
+    }
+
+
 }

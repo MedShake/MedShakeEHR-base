@@ -70,7 +70,7 @@
         {% if page.patient.dossierType =="deleted" %}
         <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
         {% endif %}
-        <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.14 }}" data-patientID="{{ page.patient.id }}">
+        <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode }}" data-patientID="{{ page.patient.id }}">
 
             {% include('inc-ajax-patientAdminData.html.twig') %}
 
@@ -84,14 +84,14 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  {% if config.LapOnOff == 'on' %}
+                  {% if config.lapOnOff == 'on' %}
                     <li>
                       <a href="/lap/{{ page.patient.id }}/" target="_blank">Prescription médicamenteuse (LAP)</a>
                     </li>
                   {% endif %}
                   {% for k,v in page.formOrdo %}
                     <li>
-                        <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}{% if config.LapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
+                        <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}{% if config.lapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
                     </li>
                   {% endfor %}
                 </ul>
@@ -191,7 +191,7 @@
               <li role="presentation" title="Liens familiaux">
                 <a href="#panelLiensFamiliaux" data-toggle="tab"><span class="glyphicon glyphicon glyphicon-link" aria-hidden="true"></span></a></a>
               </li>
-              {% if config.LapOnOff == 'on' %}
+              {% if config.lapOnOff == 'on' %}
               <li role="presentation" title="Autres actions">
                 <a href="#panelOptions" data-toggle="tab"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></a></a>
               </li>
@@ -201,7 +201,7 @@
             <div class="tab-content">
 
               {# Formulaire ajout ALD #}
-              {% if config.LapOnOff == 'on' %}
+              {% if config.lapOnOff == 'on' %}
               <div role="tabpanel" class="tab-pane" id="panelOptions">
                 <button class="btn btn-info btn-block newCS" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter une ALD</button>
               </div>

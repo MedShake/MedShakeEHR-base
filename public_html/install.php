@@ -26,11 +26,11 @@
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
-$webpath=str_replace('install.php','',$_SERVER['REQUEST_URI']);
+$webpath=str_replace('install.php', '', $_SERVER['REQUEST_URI']);
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
-if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
+if (($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
     if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
         die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
     }
@@ -46,7 +46,7 @@ if (!is_dir("thirdparty")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier ".getcwd());
 }
 if (!is_writable($homepath."config")) {
-  die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
+    die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
 }
 
 /////////// Composer class auto-upload
@@ -64,7 +64,7 @@ $template='';
 if (!is_file($homepath.'config/config.yml')) {
     if ($_SERVER['REQUEST_METHOD']=='GET') {
         $template="bienvenue";
-    }elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
+    } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
         $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
@@ -82,20 +82,20 @@ if (!is_file($homepath.'config/config.yml')) {
             die("Echec lors de l'attribution des droits sur la base de données MySQL");
         }
         if (!is_dir($_POST['backupLocation'])) {
-            if ( mkdir($_POST['backupLocation'], 0770, true)===false) {
+            if (mkdir($_POST['backupLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['backupLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
         if (!is_dir($_POST['stockageLocation'])) {
-            if ( mkdir($_POST['stockageLocation'], 0770, true)===false) {
+            if (mkdir($_POST['stockageLocation'], 0770, true)===false) {
                 die("Echec lors de la création du dossier ".$_POST['stockageLocation']."<br>Vérifiez que www-data a les droits d'écriture vers ce chemin.");
             }
         }
 
         $conf=array(
           'protocol'=>'http'.($_SERVER['HTTPS']?'s':'').'://',
-          'host'=>$_SERVER['SERVER_NAME'].(in_array($_SERVER['SERVER_PORT'],['80','443'])?'':':'.$_SERVER['SERVER_PORT']),
-          'urlHostSuffixe'=>substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'],'/install.php')),
+          'host'=>$_SERVER['SERVER_NAME'].(in_array($_SERVER['SERVER_PORT'], ['80','443'])?'':':'.$_SERVER['SERVER_PORT']),
+          'urlHostSuffixe'=>substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '/install.php')),
           'webDirectory'=>getcwd().'/',
           'stockageLocation'=>$_POST['stockageLocation'],
           'backupLocation'=>$_POST['backupLocation'],
@@ -177,9 +177,20 @@ if (!is_file($homepath.'config/config.yml')) {
           'smsTpoa'=>'Dr ....',
           'templatesFolder'=>$homepath.'templates/',
           'twigEnvironnementCache'=>false,
-          'twigEnvironnementAutoescape'=>false
+          'twigEnvironnementAutoescape'=>false,
+          'lapOnOff'=>'',
+          'lapActiverAtcdStrucSur'=>'',
+          'lapActiverAllergiesStrucSur'=>'',
+          'lapAtcdStrucPersoPourAnalyse'=>'',
+          'lapAllergiesStrucPersoPourAnalyse'=>'',
+          'theriaqueMode'=>'',
+          'theriaqueWsURL'=>'',
+          'theriaqueShowMedicHospi'=>'',
+          'theriaqueShowMedicNonComer'=>'',
+          'lapAlertPatientTermeGrossesseSup46'=>true,
+          'lapAlertPatientAllaitementSup3Ans'=>true
         );
-        if(file_put_contents($homepath.'config/config.yml', Spyc::YAMLDump($conf, false, 0, true))===false) {
+        if (file_put_contents($homepath.'config/config.yml', Spyc::YAMLDump($conf, false, 0, true))===false) {
             die("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que www-data a les droits d'écriture sur le dossier ".$homepath."config/");
         }
 
@@ -220,7 +231,7 @@ if (!is_file($homepath.'config/config.yml')) {
     }
 }
 
-if($template!=''): ?>
+if ($template!=''): ?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -306,7 +317,7 @@ elseif ($template=='configForm') :
             <div class="form-group">
               <label class="control-label">Empreinte de sécurité pour les sessions (chaîne aléatoire)</label>
               <input name="fingerprint" type="text" class="form-control" autocomplete="off" required="required"
-              value="<?= preg_replace('#[=/|+]#','',base64_encode(random_bytes(8))) ?>"/>
+              value="<?= preg_replace('#[=/|+]#', '', base64_encode(random_bytes(8))) ?>"/>
             </div>
             <h3>Paramètres de la base de données</h3>
             <div class="form-group">
@@ -342,7 +353,7 @@ elseif ($template=='configForm') :
             <div class="form-group">
               <label class="control-label">Empreinte de sécurité pour les mots de passe de la base (chaîne aléatoire)</label>
               <input name="sqlVarPassword" type="text" class="form-control" autocomplete="off" required="required"
-              value="<?= preg_replace('#[=/|+]#','',base64_encode(random_bytes(8))) ?>"/>
+              value="<?= preg_replace('#[=/|+]#', '', base64_encode(random_bytes(8))) ?>"/>
             </div>
             <input type="submit" title="Valider" value="Valider" class="btn btn-primary" />
 	        </div>

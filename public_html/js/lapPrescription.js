@@ -72,10 +72,6 @@ $(document).ready(function() {
     $('#modalRecherche').modal('toggle');
   });
 
-
-
-
-
   // Editer un médicament d'une ligne de prescription
   $("#conteneurOrdonnanceCourante").on("click", 'button.editLignePrescription', function(e) {
     console.log("Editer medic unique ligne prescription : START");
@@ -107,8 +103,6 @@ $(document).ready(function() {
     console.log("Editer medic multiple ligne prescription : STOP");
   });
 
-
-
   // ajouter un médicament à une ligne de prescription
   $("#conteneurOrdonnanceCourante").on("click", "a.addToLigne", function(e) {
     console.log('Installation ajout d\'un médic dans ligne de prescription : START');
@@ -136,7 +130,7 @@ $(document).ready(function() {
     }
   });
 
-  // Relancer la recherche médic quand on change le groupe de recherche (généréique, spé ...)
+  // Relancer la recherche médic quand on change le groupe de recherche (générique, spé ...)
   $('#typeRechercheMedic, #retourRechercheMedic').on("change", function(e) {
     term = $('#txtRechercheMedic').val();
     elSel = $('#typeRechercheMedic').val();
@@ -199,9 +193,9 @@ $(document).ready(function() {
     var debut = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
     $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
   });
-  // passer à aujourd'hui au dblclick
+  // passer à demain au dblclick
   $("#beginPeriodeID").on("dblclick", function(e) {
-    var debut = moment(new Date());
+    var debut = moment(new Date()).add(1, 'days');
     $('#beginPeriodeID').val(debut.format('DD/MM/YYYY'));
     $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
   });
@@ -793,7 +787,7 @@ function matchAndGo() {
         }
         //mise à jour dates début / fin
         if (data['dureeTotaleMachineJours'] > 0) {
-          var startDefaut = moment(new Date()).add(1, 'days');
+          var startDefaut = moment(new Date());
           if ($('#beginPeriodeID').val() == '') {
             var currentStart = startDefaut;
           } else {

@@ -87,12 +87,13 @@ $(document).ready(function() {
     showClear: true
 
   });
-  $("#nouvelleCs").delegate('div.datepick', "focusin click", function() {
+  $("#nouvelleCs").on("focusin click", 'div.datepick', function() {
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: 'years',
       format: 'L'
     });
+    $(this).data("DateTimePicker").show();
   });
 
   // age affiché en label de l'input date de naissance
@@ -105,10 +106,10 @@ $(document).ready(function() {
   // autocomplete simple
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
+      source: urlBase + '/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //autocomplete pour la liaison code postal - > ville
@@ -139,7 +140,7 @@ $(document).ready(function() {
 
       }
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //prévention du form submit sur la touche enter
@@ -177,10 +178,26 @@ $(document).ready(function() {
       data: $(this).parents("form").serialize(),
       dataType: "json",
       success: function(data) {
-        $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+        $(".submit-success").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-success").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
       },
       error: function() {
-        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
       }
     });
   });
@@ -290,7 +307,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
         el = $(source);
         el.css("background", "#efffe8");
         el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
+          $(this).css("background", "").dequeue();
         });
       },
       error: function() {
@@ -301,9 +318,9 @@ function setPeopleData(value, patientID, typeID, source, instance) {
 }
 
 // équivalent de nl2br php
-function nl2br (str, is_xhtml) {
-    var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
-    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+function nl2br(str, is_xhtml) {
+  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 }
 
 //fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée
@@ -323,7 +340,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
         el = $(source);
         el.css("background", "#efffe8");
         el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
+          $(this).css("background", "").dequeue();
         });
       },
       error: function() {
@@ -332,6 +349,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
     });
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions tierces

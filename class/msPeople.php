@@ -333,73 +333,116 @@ class msPeople
 
     }
 
-    /**
-     * Obtenir les atcd structurés enregistrées pour le patient
-     * @param  string $parentTypeName   typeName du parent porter de l'ATCD
-     * @return array array des ALD
-     */
-        public function getAtcdStruc($parentTypeName)
-        {
-          if (!is_numeric($this->_toID)) {
-              throw new Exception('ToID is not numeric');
-          }
-
-          $msdata = new msData();
-          $name2typeID = $msdata->getTypeIDsFromName(['csAtcdStrucDeclaration', 'firstname', 'lastname', 'birthname',$parentTypeName]);
-
-          if(isset($name2typeID[$parentTypeName])) {
-            $rd['parentLabel']=$msdata->getLabelFromTypeID([$name2typeID[$parentTypeName]]);
-            $rd['parentLabel']=$rd['parentLabel'][$name2typeID[$parentTypeName]];
-          }
-
-          if(!isset($name2typeID[$parentTypeName])) return false;
-
-          if($csAldID=msSQL::sql2tabKey("select p.id, n1.value as prenom, CASE WHEN n2.value != '' THEN n2.value ELSE bn.value END as nom
-          from objets_data as p
-          left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-          left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-          left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-          where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAtcdStrucDeclaration']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id')) {
-            foreach($csAldID as $id=>$v) {
-                $ald=new msObjet;
-                $rd['atcd'][$id]=$ald->getObjetAndSons($id, 'name');
-                $rd['atcd'][$id]['fromName']=$v['prenom'].' '.$v['nom'];
-            }
-
-          }
-          $rd['parentTypeID']=$name2typeID[$parentTypeName];
-          $rd['parentTypeName']=$parentTypeName;
-          return $rd;
-        }
-
-  /**
-   * Obtenir les allergies structurées enregistrées pour le patient
-   * @param  string $parentTypeName   typeName du parent porter des allergies
-   * @return array array des ALD
-   */
-      public function getAllergies($parentTypeName)
-      {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['allergieCodeTheriaque', 'allergieLibelleTheriaque', 'firstname', 'lastname', 'birthname', $parentTypeName]);
-
-        if(!isset($name2typeID[$parentTypeName])) return false;
-
-        $rd['allergiesData']=msSQL::sql2tabKey("select p.*, CASE WHEN n2.value != '' THEN concat(n1.value, ' ',n2.value) ELSE concat(n1.value, ' ', bn.value) END as fromName, p1.value as libelle
-        from objets_data as p
-        left join objets_data as p1 on p1.instance=p.id and p1.typeID='".$name2typeID['allergieLibelleTheriaque']."' and p1.outdated='' and p1.deleted=''
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['allergieCodeTheriaque']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id');
-
-        $rd['parentTypeID']=$name2typeID[$parentTypeName];
-        $rd['parentTypeName']=$parentTypeName;
-        return $rd;
+/**
+ * Obtenir les atcd structurés enregistrées pour le patient
+ * @param  string $parentTypeName   typeName du parent porter de l'ATCD
+ * @return array array des ALD
+ */
+    public function getAtcdStruc($parentTypeName)
+    {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
       }
+
+      $msdata = new msData();
+      $name2typeID = $msdata->getTypeIDsFromName(['csAtcdStrucDeclaration', 'firstname', 'lastname', 'birthname',$parentTypeName]);
+
+      if(isset($name2typeID[$parentTypeName])) {
+        $rd['parentLabel']=$msdata->getLabelFromTypeID([$name2typeID[$parentTypeName]]);
+        $rd['parentLabel']=$rd['parentLabel'][$name2typeID[$parentTypeName]];
+      }
+
+      if(!isset($name2typeID[$parentTypeName])) return false;
+
+      if($csAldID=msSQL::sql2tabKey("select p.id, n1.value as prenom, CASE WHEN n2.value != '' THEN n2.value ELSE bn.value END as nom
+      from objets_data as p
+      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAtcdStrucDeclaration']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id')) {
+        foreach($csAldID as $id=>$v) {
+            $ald=new msObjet;
+            $rd['atcd'][$id]=$ald->getObjetAndSons($id, 'name');
+            $rd['atcd'][$id]['fromName']=$v['prenom'].' '.$v['nom'];
+        }
+
+      }
+      $rd['parentTypeID']=$name2typeID[$parentTypeName];
+      $rd['parentTypeName']=$parentTypeName;
+      return $rd;
+    }
+
+/**
+ * Obtenir tous les codes PERSO (!) CIM10 actifs d'un patient.
+ * @return array tableau de codes CIM10
+ */
+    public function getAtcdAndAldCim10Codes () {
+      global $p;
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+      $msdata = new msData();
+      $name2typeID = $msdata->getTypeIDsFromName(['atcdStrucCIM10', 'aldCIM10']);
+      $parentsAutorises = $msdata->getTypeIDsFromName(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']));
+
+      return msSQL::sql2tabSimple("select o.value
+      from objets_data as o
+      left join objets_data as p on p.id=o.instance
+      where o.toID='".$this->_toID."' and o.typeID in ('".$name2typeID['atcdStrucCIM10']."', '".$name2typeID['aldCIM10']."') and o.deleted='' and o.outdated='' and pp.instance in ('".implode("','", $parentsAutorises)."')
+      group by o.id
+      ");
+
+    }
+
+/**
+ * Obtenir les allergies structurées enregistrées pour le patient
+ * @param  string $parentTypeName   typeName du parent porter des allergies
+ * @return array array des ALD
+ */
+    public function getAllergies($parentTypeName)
+    {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['allergieCodeTheriaque', 'allergieLibelleTheriaque', 'firstname', 'lastname', 'birthname', $parentTypeName]);
+
+      if(!isset($name2typeID[$parentTypeName])) return false;
+
+      $rd['allergiesData']=msSQL::sql2tabKey("select p.*, CASE WHEN n2.value != '' THEN concat(n1.value, ' ',n2.value) ELSE concat(n1.value, ' ', bn.value) END as fromName, p1.value as libelle
+      from objets_data as p
+      left join objets_data as p1 on p1.instance=p.id and p1.typeID='".$name2typeID['allergieLibelleTheriaque']."' and p1.outdated='' and p1.deleted=''
+      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['allergieCodeTheriaque']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id');
+
+      $rd['parentTypeID']=$name2typeID[$parentTypeName];
+      $rd['parentTypeName']=$parentTypeName;
+      return $rd;
+    }
+
+/**
+ * Obtenir les codes allergies structurées enregistrées pour le patient
+ * @param  string $parentTypeName   typeName du parent porteur des allergies
+ * @return array array des ALD
+ */
+    public function getAllergiesCodes($parentTypeName)
+    {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['allergieCodeTheriaque', $parentTypeName]);
+      if(!isset($name2typeID[$parentTypeName])) return false;
+      $rd=[];
+      $rd=msSQL::sql2sql2tabSimple("select p.value
+      from objets_data as p
+      where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['allergieCodeTheriaque']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ");
+
+      return $rd;
+    }
 
 /**
  * Historique complet des actes pour un individu

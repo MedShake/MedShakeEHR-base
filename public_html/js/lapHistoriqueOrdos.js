@@ -36,9 +36,35 @@ $(document).ready(function() {
   });
 
   // Obtenir l'ordo
-  $('#ordohistoriqueTab').on("click", '.voirOrdonnance', function(e) {
+  $('body').on("click", '.voirOrdonnance', function(e) {
     var ordonnanceID = $(this).attr("data-ordonnanceID");
     getOrdonnance(ordonnanceID);
+  });
+
+  // Renouveller une ligne de l'ordo visualisée
+  $('#modalVoirOrdonnance').on("click", 'button.renouvLignePrescription', function(e) {
+    var ligneIndex = $(this).parents('div.lignePrescription').index();
+    if ($(this).parents('div.lignePrescription').hasClass('ald')) {
+      var zone = ordoMedicsALD;
+      var ligneAinjecter = ordonnanceVisu['ordoMedicsALD'][ligneIndex];
+    } else {
+      var zone = ordoMedicsG;
+      var ligneAinjecter = ordonnanceVisu['ordoMedicsG'][ligneIndex];
+    }
+
+    ligneAinjecter=cleanLignePrescriptionAvantRenouv(ligneAinjecter);
+
+    console.log(ligneAinjecter);
+    zone.push(ligneAinjecter);
+    construireHtmlLigneOrdonnance(ligneAinjecter, 'append', '', '#conteneurOrdonnanceCourante');
+
+    // sauvegarde
+    ordoLiveSave();
+
+    //reset objets
+    resetObjets();
+
+    flashLignePrescription($(this).parents('div.lignePrescription'));
   });
 
 });
@@ -60,6 +86,8 @@ function getOrdonnance(ordonnanceID) {
       ordonnanceVisu = data;
       $('#conteneurOrdonnanceVisu div.conteneurPrescriptionsALD , #conteneurOrdonnanceVisu div.conteneurPrescriptionsG').html('')
       construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], '#conteneurOrdonnanceVisu');
+      var dateOrdo = moment(data.ordoData.creationDate, "YYYY-MM-DD HH:mm:ss");
+      $('#modalVoirOrdonnance h4.modal-title').html("Ordonnance du " +  dateOrdo.format("DD/MM/YYYY HH:mm") + " - Prescripteur : " + data.ordoData.prenom + " " + data.ordoData.nom );
       $('#modalVoirOrdonnance').modal('show');
       console.log(ordonnanceVisu);
       console.log("Obtenir ordonnance : OK");

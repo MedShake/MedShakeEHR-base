@@ -60,7 +60,7 @@ peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit'
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
 # relations
-peopleRelations: ['GET', '/patient/relations/[i:patient]/', 'people/peopleRelations']
+peopleRelations: ['GET|POST', '/patient/relations/[i:patient]/', 'people/peopleRelations']
 
 # pro : voir fiche praticien
 proView: ['GET', '/pro/[i:proID]/', 'people/proView']
@@ -73,11 +73,12 @@ lap: ['GET|POST', '/lap/[i:patient]/', 'lap/lap']
 patientAjaxIgnoreEmpty: ['GET|POST', '/patient/ajax/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientAjax']
 patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
 patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
+patientTabs: ['GET|POST', '/patient/[i:patientID]/tab/[a:tab]/', 'patient/patientTabs']
 patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
 
 #dicom
 dicomActions: ['GET|POST', '/dicom/actions/[a:m]/', 'dicom/actions/dicomActions']
-dcViewPatient: ['GET', '/dicom/[i:patientID]/', 'dicom/viewPatient']
+dcViewPatient: ['GET|POST', '/dicom/[i:patientID]/', 'dicom/viewPatient']
 dcViewStudy: ['GET', '/dicom/[i:patientID]/study/[:dcStudyID]/', 'dicom/viewStudy']
 
 #logs
@@ -92,7 +93,7 @@ historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'lo
 logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
 
 #pdf
-makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo:printType]/[i:examen]/', 'print/pdfMake']
+makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP:printType]/[i:examen]/', 'print/pdfMake']
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 

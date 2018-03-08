@@ -39,7 +39,7 @@
     <div class="container-fluid">
 
         <div class="row">
-            <table class="table table-hover">
+            <table class="table table-hover" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th class="">#</th>
@@ -51,7 +51,7 @@
                         <th class="">parent</th>
                         <th class="col-md-2">type data</th>
                         <th class="">titre</th>
-                        <th class="col-md-6">valeur</th>
+                        <th class="col-md-4">valeur</th>
                         <th class="">outdated</th>
                         <th class="">deleted</th>
                     </tr>
@@ -71,7 +71,7 @@
                                 <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/{{ v.typeID }}/{{ v.instance }}/">#{{ v.typeID }}</a>
                                 {{ v.label|e }}</td>
                             <td>{{ v.titre|e }}</td>
-                            <td>{{ v.value|e }}</td>
+                            <td style="word-wrap: break-word;">{{ v.value|e }}</td>
 
                             <td>{{ v.outdated }}</td>
                             <td>{{ v.deleted }}{% if v.deletedByID > 0 %} #{{ v.deletedByID }}{% endif %}</td>

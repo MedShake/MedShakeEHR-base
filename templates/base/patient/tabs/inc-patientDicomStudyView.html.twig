@@ -1,0 +1,123 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dicom : voir toutes les datas (images + SR) d'une etude dicom
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+<div class="row" style="margin-bottom : 20px;margin-top : 5px;">
+  <div class="col-md-12">
+    <button class="btn btn-default btn-sm tabDicomRefresh"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Retour à la liste</button>
+  </div>
+</div>
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">Images de l'étude</div>
+  <div class="panel-body imagesList">
+    <button type="button" data-status="unchecked" class="btn btn-default btn-sm selectAll">Tout sélectionner / déselectionner</button>
+    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
+      <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
+      <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
+      {% for instance, frames in page.imagesPath %}
+        {% for frame, imagepath in frames %}
+          <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
+            <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off">
+            {% if frame == 0 and frames | length > 1 %}
+
+              <span class="voirframes" data-frames="frames{{ instance }}">
+                {{ frames|length }}
+                images - voir / masquer
+              </span>
+            {% endif %}
+          </span>
+        {% endfor %}
+      {% endfor %}
+      <span class="imageDc" style="text-align : right; vertical-align: bottom;">
+        <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary">Générer un ZIP</button>
+        <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary">Générer un PDF</button>
+      </span>
+    </form>
+  </div>
+</div>
+
+{# Data SR via XML #}
+{% if page.studyDcDataSRFull %}
+  <div class="panel panel-default">
+
+    <div class="panel-heading">Tags DICOM SR (XML)</div>
+    <div class="panel-body">
+      <p>Mesures remontées dans cette études</p>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+        <th>Tag</th>
+        <th>Foetus</th>
+        <th>Nom</th>
+        <th>Valeur</th>
+        <th>Précision</th>
+        <th>Unité</th>
+      </thead>
+      <tbody>
+        {% for k, v in page.studyDcDataSRFull %}
+          {% for l, w in v.NumericValue %}
+            <tr>
+              {% if loop.index0 == 0 %}
+                <td>{{ k }}</td>
+                <td>{{ v.FoetusID }}</td>
+                <td>{{ v.CodeMeaning }}
+                  {% if v.structure %}
+                    <small>({{ v.structure|join(' > ') }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ w }}</td>
+                <td>
+                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                    <small>
+                      ({{ l }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ v.MeasurementUnits }}</td>
+              {% else %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ w }}</td>
+                <td>
+                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                    <small>
+                      ({{ l }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ v.MeasurementUnits }}</td>
+              {% endif %}
+
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

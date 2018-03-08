@@ -26,7 +26,7 @@
  #
 #}
 
-<label for="atcdTableauAllergieStruc">Données physiologiques</label>
+<label>Données physiologiques</label>
 <table class="table table-condensed table-hover table-bordered">
   {# poids #}
   {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
@@ -103,5 +103,74 @@
       </td>
     </tr>
   {% endif %}
-
 </table>
+
+
+{% if page.patientBasicPhysio.grossesse.statut != 'notConcerned' %}
+  <label>Grossesse</label>
+  <table class="table table-condensed table-hover table-bordered">
+
+    {% if page.patientBasicPhysio.grossesse.statut == 'missingValue' %}
+      <tr class="danger">
+        <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Grossesse : information manquante !</td>
+      </tr>
+    {% elseif page.patientBasicPhysio.grossesse.statut == 'termeDepasse46SA' %}
+      <tr class="danger">
+        <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
+          <span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Terme > 46SA !
+          <div id="grosssesseDet" class="collapse">
+          <table class="table table-condensed small" style="margin-top:8px;">
+            <tr>
+              <td>DDR</td>
+              <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
+            </tr>
+            <tr>
+              <td>DDG</td>
+              <td>{{ page.patientBasicPhysio.grossesse.ddg }}</td>
+            </tr>
+            <tr>
+              <td>Auteur</td>
+              <td>{{ page.patientBasicPhysio.grossesse.from }}</td>
+            </tr>
+            <tr>
+              <td>Ajout le</td>
+              <td>{{ page.patientBasicPhysio.grossesse.date }}</td>
+            </tr>
+          </table>
+        </div>
+        </td>
+      </tr>
+    {% elseif page.patientBasicPhysio.grossesse.statut == 'absenceGrossesse' %}
+    <tr class="active">
+      <td>Pas de grossesse connue</td>
+    </tr>
+    {% elseif page.patientBasicPhysio.grossesse.statut == 'grossesseEnCours' %}
+    <tr class="info">
+      <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
+        Terme : {{ page.patientBasicPhysio.grossesse.terme }}
+        <div id="grosssesseDet" class="collapse">
+          <table class="table table-condensed small" style="margin-top:8px;">
+            <tr>
+              <td>DDR</td>
+              <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
+            </tr>
+            <tr>
+              <td>DDG</td>
+              <td>{{ page.patientBasicPhysio.grossesse.ddg }}</td>
+            </tr>
+            <tr>
+              <td>Auteur</td>
+              <td>{{ page.patientBasicPhysio.grossesse.from }}</td>
+            </tr>
+            <tr>
+              <td>Ajout le</td>
+              <td>{{ page.patientBasicPhysio.grossesse.date }}</td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+    {% endif %}
+
+  </table>
+{% endif %}

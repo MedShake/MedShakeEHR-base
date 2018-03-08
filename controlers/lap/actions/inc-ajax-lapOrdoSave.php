@@ -30,11 +30,6 @@ $ordo = new msObjet();
 $ordo->setFromID($p['user']['id']);
 $ordo->setToID($_POST['patientID']);
 
-//print_r($_POST);
-
-//die;
-
-
 // Créer porteur ordonnance
 $ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', '');
 // enregistrer nom de l'ordo.
@@ -57,3 +52,5 @@ if(!empty($_POST['ordo']['ordoMedicsG'])) {
     $lap->saveLignePrescription($ligneG);
   }
 }
+
+echo json_encode(array('ordoID'=>$ordoID));

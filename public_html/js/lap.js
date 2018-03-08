@@ -28,25 +28,22 @@
 
 $(document).ready(function() {
 
-
-  // Refresh des data patient au retour sur la page LAP.
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState == 'visible') {
-      $.ajax({
-        url: urlBase + '/lap/ajax/lapPatientLateralDataRefresh/',
-        type: 'post',
-        data: {
-          patientID: $('#identitePatient').attr("data-patientID")
-        },
-        dataType: "html",
-        success: function(data) {
-          $('#patientLateralData').html(data);
-        },
-        error: function() {
-          alert('Problème, rechargez la page !');
-        }
-      });
-    }
+  // rafraichir données physio quand on revient
+  $('#ongletLAP').on("show.bs.tab", function() {
+    $.ajax({
+      url: urlBase + '/lap/ajax/lapPatientLateralDataRefresh/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID")
+      },
+      dataType: "html",
+      success: function(data) {
+        $('#patientLateralData').html(data);
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
   });
 
 });

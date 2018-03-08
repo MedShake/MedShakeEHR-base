@@ -48,9 +48,11 @@ if (isset($match['params']['instance'])) {
 
 $p['page']['logs']=msSQL::sql2tab("select pd.* , f.value as prescripteur, t.label, t.groupe
 from objets_data as pd
-left join objets_data as f on f.toID=pd.fromID and f.typeID='".msData::getTypeIDFromName('firstname')."'
+left join objets_data as f on f.toID=pd.fromID and f.typeID='".msData::getTypeIDFromName('firstname')."' and f.deleted='' and f.outdated=''
 left join data_types as t on t.id=pd.typeID
-where 1 $patientSel $typeSel $instance order by id desc limit 2000");
+where 1 $patientSel $typeSel $instance
+group by pd.id,t.id, f.id
+order by id desc limit 2000");
 
 if (isset($match['params']['patient'])) {
     $p['page']['patientID']=$match['params']['patient'];

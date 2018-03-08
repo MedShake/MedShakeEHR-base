@@ -46,8 +46,9 @@ $acceptedModes=array(
     'lapGetFichesPosos', //obtenir les fiches posos à partir de leur code
     'lapTTenCoursSaveOrUpdateLigne', // sauver / updater une ligne de TT en cours
     'lapTTenCoursGet', //obtenir le tt en cours
-    'lapOrdoSaveOrUpdate', // sauver ordonnnace
+    'lapOrdoSave', // sauver ordonnnace
     'lapOrdoHistoriqueGet', // historique des ordonnnaces
+    'lapOrdoHistoriqueTTGet', // historique des tt
     'lapOrdoGet', // obtenir l'ordonnnace
     'lapSaveDateEffectiveArretTT'
 );

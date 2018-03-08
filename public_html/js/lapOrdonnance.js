@@ -144,8 +144,15 @@ $(document).ready(function() {
     ordoLiveRestore();
   });
 
+  // Ordo : print and save
+  $("a.printAndSaveOrdo, button.printAndSaveOrdo").on("click", function(e) {
+    e.preventDefault();
+    saveOrdo(true);
+    cleanOrdonnance();
+  });
+
   // Ordo : sauvegarder
-  $("a.saveOrdo").on("click", function(e) {
+  $("a.saveOrdo, button.saveOrdo").on("click", function(e) {
     e.preventDefault();
     saveOrdo();
     cleanOrdonnance();
@@ -157,13 +164,19 @@ $(document).ready(function() {
  * Sauver l'ordonnance en cours
  * @return {[type]} [description]
  */
-function saveOrdo() {
+function saveOrdo(view) {
   var ordo = {
     ordoMedicsG: ordoMedicsG,
     ordoMedicsALD: ordoMedicsALD,
   };
+
+  if (ordo.ordoMedicsG.length < 1 && ordo.ordoMedicsALD.length < 1) {
+    if (!confirm("L'ordonnance courante est vide, souhaitez-vous poursuivre ?")) {
+      return;
+    }
+  }
   $.ajax({
-    url: urlBase + '/lap/ajax/lapOrdoSaveOrUpdate/',
+    url: urlBase + '/lap/ajax/lapOrdoSave/',
     type: 'post',
     data: {
       ordo: ordo,
@@ -171,13 +184,17 @@ function saveOrdo() {
       ordoName: $('#ordoName').val(),
     },
     dataType: "json",
-    success: function() {
-      console.log("Sauvegarde ordonnannce : OK");
+    success: function(data) {
+      if (view == true) {
+        window.open('/showpdf/' + data['ordoID'] + '/', '_blank');
+      }
+      console.log("Sauvegarde ordonnance : OK");
     },
     error: function() {
-      console.log("Sauvegarde ordonnannce : PROBLEME");
+      console.log("Sauvegarde ordonnance : PROBLEME");
     }
   });
+
 }
 
 /**
@@ -304,6 +321,7 @@ function construireOrdonnance(tabMedicsG, tabMedicsALD, parentdestination) {
 function construireHtmlLigneOrdonnance(ligne, methode, destination, parentdestination, mode) {
   console.log('Génération html d\'une ligne de prescription : START');
   if (!parentdestination) var parentdestination = '';
+  if (parentdestination == '#conteneurOrdonnanceVisu') mode = 'voirOrdonnance';
   var zoneDestination;
   if (ligne.ligneData.isALD == "true") {
     zoneDestination = $(parentdestination + ' div.conteneurPrescriptionsALD');
@@ -332,7 +350,7 @@ function makeLigneOrdo(data, mode) {
     retour = '<div class="well well-sm ui-sortable-handle lignePrescription';
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '" ';
-    if(  mode == 'TTenCours' ) {
+    if (mode == 'TTenCours') {
       retour += ' data-ligneID="' + data.ligneData.id + '"';
     }
     retour += ' >';
@@ -387,8 +405,14 @@ function makeLigneOrdo(data, mode) {
       retour += '  </ul>';
       retour += '</div>';
 
-      //Actions pour mode ordonnance
-    } else {
+    }
+    // voir ordo
+    else if (mode == 'voirOrdonnance') {
+      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+    }
+    //Actions pour mode ordonnance
+    else {
       retour += '    <button class="btn btn-default btn-xs editLignePrescription">';
       retour += '      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
 
@@ -437,6 +461,13 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {}
+
+    // voir ordo
+    else if (mode == 'voirOrdonnance') {
+      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+    }
+
     //Actions pour mode ordonnance
     else {
       retour += '      <div class="btn-group">';
@@ -510,6 +541,9 @@ function makeLigneOrdo(data, mode) {
         retour += '    <button class="btn btn-default btn-xs editLignePrescription" title="Renouveller">';
         retour += '    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>';
       }
+      // voir ordo
+      else if (mode == 'voirOrdonnance') {
+      }  
       //Actions pour mode ordonnance
       else {
         retour += '  <button class="btn btn-default btn-xs editMedicLignePrescription">';

@@ -37,7 +37,7 @@ $form_baseATCD->getPrevaluesForPatient($match['params']['patient']);
 $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 
 // si LAP activé : allergie et atcd structurés
-if($p['config']['LapOnOff'] == 'on') {
+if($p['config']['lapOnOff'] == 'on') {
 
     // gestion atcd structurés
     $listeChampsAtcd=array('atcdMedicChir');
@@ -73,4 +73,3 @@ $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', ar
 
 $p['page']['formReglement']['reglePorteur']=array('module'=>'base', 'form'=>'baseReglement');
 $p['page']['formOrdo']['ordoPorteur']=array('module'=>'base', 'form'=>'');
-

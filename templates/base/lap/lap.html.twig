@@ -40,6 +40,7 @@
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js"></script>
 
 {% endblock %}
@@ -53,7 +54,7 @@
     {# lastname & birthname #}
     {% if page.patientAdminData.birthname and page.patientAdminData.lastname %}
       {{ page.patientAdminData.lastname|e }}
-      (né{% if page.patientAdminData['14'] == 'F' %}e{% endif %}
+      (né{% if page.patientAdminData.administrativeGenderCode == 'F' %}e{% endif %}
       {{ page.patientAdminData.birthname|e }})
       {# birthname only #}
     {% elseif page.patientAdminData.birthname %}
@@ -113,7 +114,7 @@
                 Nouvelle prescription</button>
 
               <div class="btn-group">
-                <button type="button" class="btn btn-default">
+                <button type="button" class="btn btn-default printAndSaveOrdo">
                   <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                   Imprimer et sauvegarder</button>
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,7 +123,7 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <a href="#">
+                    <a href="#" class="printAndSaveOrdo">
                       <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                       Imprimer et sauvegarder</a>
                   </li>
@@ -204,11 +205,21 @@
           </div>
         </div>
 
-        {# Onglet historique des ordonnances #}
+        {# Onglet historique des ordo #}
         <div role="tabpanel" class="tab-pane" id="ordohistoriqueTab">
           <div class="row bottom-space">
             <div class="col-md-12">
               <div id="historiqueOrdos"></div>
+            </div>
+          </div>
+
+        </div>
+
+        {# Onglet historique des traitements #}
+        <div role="tabpanel" class="tab-pane" id="tthistoriqueTab">
+          <div class="row bottom-space">
+            <div class="col-md-12">
+              <div id="historiqueTT"></div>
             </div>
           </div>
 

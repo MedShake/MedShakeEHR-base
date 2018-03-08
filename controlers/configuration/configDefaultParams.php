@@ -24,7 +24,7 @@
  * Config : gérer les paramètres de configuration par défaut des utilisateurs
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib Bertrand Boutillier <b.boutillier@gmail.com> 
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 //admin uniquement
@@ -147,6 +147,20 @@ if (!msUser::checkUserIsAdmin()) {
           'smsCreditsFile'=>array('value'=>$p['configDefaut']['smsCreditsFile'],'type'=>'text','typeText'=>'string'),
           'smsSeuilCreditsAlerte'=>array('value'=>$p['configDefaut']['smsSeuilCreditsAlerte'],'type'=>'text','typeText'=>'number'),
           'smsTpoa'=>array('value'=>$p['configDefaut']['smsTpoa'],'type'=>'text','typeText'=>'string'),
+        ),
+        'LAP'=>array(
+          'lapOnOff'=> array('value'=>$p['configDefaut']['lapOnOff'],'type'=>'text','typeText'=>'string'),
+          'lapActiverAtcdStrucSur'=> array('value'=>$p['configDefaut']['lapActiverAtcdStrucSur'],'type'=>'text','typeText'=>'string'),
+          'lapActiverAllergiesStrucSur'=> array('value'=>$p['configDefaut']['lapActiverAllergiesStrucSur'],'type'=>'text','typeText'=>'string'),
+          'lapAtcdStrucPersoPourAnalyse'=> array('value'=>$p['configDefaut']['lapAtcdStrucPersoPourAnalyse'],'type'=>'text','typeText'=>'string'),
+          'lapAllergiesStrucPersoPourAnalyse'=> array('value'=>$p['configDefaut']['lapAllergiesStrucPersoPourAnalyse'],'type'=>'text','typeText'=>'string'),
+          'theriaqueMode'=> array('value'=>$p['configDefaut']['theriaqueMode'],'type'=>'text','typeText'=>'string'),
+          'theriaqueWsURL'=> array('value'=>$p['configDefaut']['theriaqueWsURL'],'type'=>'text','typeText'=>'string'),
+          'theriaqueShowMedicHospi'=> array('value'=>$p['configDefaut']['theriaqueShowMedicHospi'],'type'=>'text','typeText'=>'string'),
+          'theriaqueShowMedicNonComer'=> array('value'=>$p['configDefaut']['theriaqueShowMedicNonComer'],'type'=>'text','typeText'=>'string'),
+          'lapAlertPatientTermeGrossesseSup46'=>array('value'=>$p['configDefaut']['lapAlertPatientTermeGrossesseSup46'],'type'=>'boolean','readonly'=>true,'typeText'=>'boolean'),
+          'lapAlertPatientAllaitementSup3Ans'=>array('value'=>$p['configDefaut']['lapAlertPatientAllaitementSup3Ans'],'type'=>'boolean','readonly'=>true,'typeText'=>'boolean'),
+
         )
       )
     );
@@ -155,7 +169,7 @@ if (!msUser::checkUserIsAdmin()) {
 
     $modules=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
     foreach ($modules as $module) {
-        if ($module != $p['user']['module'] and 
+        if ($module != $p['user']['module'] and
           is_file($p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/configDefaultParams.php')) {
             include $p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/configDefaultParams.php';
         }

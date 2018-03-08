@@ -53,6 +53,7 @@ $(document).ready(function() {
     catchCurrentPrescriptionData();
     saveLigneTTenCours(0);
     cleanModalRecherche();
+    refreshTTenCours();
     $('#modalRecherche').modal('toggle');
   });
 
@@ -127,8 +128,8 @@ function flashLignePrescription(el) {
  */
 function cleanLignePrescriptionAvantRenouv(ligne) {
   //ajuster nouvelles dates
-  ligne.ligneData.dateDebutPrise = moment(new Date()).add(1, 'days').format('DD/MM/YYYY');
-  ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours, 'days').format('DD/MM/YYYY');
+  ligne.ligneData.dateDebutPrise = moment(new Date()).format('DD/MM/YYYY');
+  ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours-1, 'days').format('DD/MM/YYYY');
   //retirer éventuels prescripteurs initiaux
   $.each(ligne.medics, function(index, l) {
     ligne.medics[index].prescripteurInitialTT='';

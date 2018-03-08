@@ -158,7 +158,9 @@ class msPDF
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
         $this->_fromID=$data['fromID'];
         $this->_toID=$data['toID'];
-        if ($data['groupe']=="courrier") {
+        if($data['name'] == 'lapOrdonnance') {
+            $this->_type="ordoLAP";
+        } elseif ($data['groupe']=="courrier") {
             $this->_body=msTools::unbbcodifier($data['value']);
             $this->_type="courrier";
             $this->_modeleID=$data['typeID'];
@@ -302,7 +304,99 @@ class msPDF
             elseif ($this->_type=='ordo') {
                 $this->_makeBodyForOrdo();
             }
+            //si c'est une ordo LAP
+            elseif ($this->_type=='ordoLAP') {
+                $this->_makeBodyForOrdoLAP();
+            }
         }
+    }
+
+/**
+ * Construire le corps du PDF pour une ordonnance
+ * @return void
+ */
+    private function _makeBodyForOrdoLAP()
+    {
+      global $p;
+
+      // sortir les infos patient
+      $courrier = new msCourrier();
+      $courrier->setObjetID($this->_objetID);
+      $p['page']['courrier']=$courrier->getOrdoData();
+
+      // sortir data ordonnance
+      $ordo = new msLapOrdo;
+      $ordo->setOrdonnanceID($this->_objetID);
+      $tabOrdo=$ordo->getOrdonnance();
+      $modePrint='standard';
+
+      if(isset($tabOrdo['ordoMedicsALD'])) {
+        $modePrint='ald';
+        foreach($tabOrdo['ordoMedicsALD'] as $k=>$l) {
+          if(count($l['medics']) > 1) {
+            $p['page']['courrier']['medoc']['ald'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
+            foreach($l['medics'] as $km=>$m) {
+              $p['page']['courrier']['medoc']['ald'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
+              if($m['isNPS'] == 'true') {
+                $p['page']['courrier']['medoc']['ald'][$k].= ' [non substituable';
+                if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
+                $p['page']['courrier']['medoc']['ald'][$k].= ']';
+              }
+              $p['page']['courrier']['medoc']['ald'][$k].= "\n".$m['posoHumanComplete']."\n";
+            }
+          } else {
+            $m=$l['medics'][0];
+            $p['page']['courrier']['medoc']['ald'][$k]=$m['nomUtileFinal'];
+            $p['page']['courrier']['medoc']['ald'][$k].=" - ".$l['ligneData']['voieUtilisee'];
+            if($m['isNPS'] == 'true') {
+              $p['page']['courrier']['medoc']['ald'][$k].= ' - [non substituable';
+              if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
+              $p['page']['courrier']['medoc']['ald'][$k].= ']';
+            }
+            $p['page']['courrier']['medoc']['ald'][$k].= "\n".$m['posoHumanComplete']."\n";
+          }
+        }
+      }
+
+      if(isset($tabOrdo['ordoMedicsG'])) {
+        foreach($tabOrdo['ordoMedicsG'] as $k=>$l) {
+          if(count($l['medics']) > 1) {
+            $p['page']['courrier']['medoc']['standard'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
+            foreach($l['medics'] as $km=>$m) {
+              $p['page']['courrier']['medoc']['standard'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
+              if($m['isNPS'] == 'true') {
+                $p['page']['courrier']['medoc']['standard'][$k].= ' [non substituable';
+                if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
+                $p['page']['courrier']['medoc']['standard'][$k].= ']';
+              }
+              $p['page']['courrier']['medoc']['standard'][$k].= "\n".$m['posoHumanComplete']."\n";
+            }
+          } else {
+            $m=$l['medics'][0];
+            $p['page']['courrier']['medoc']['standard'][$k]=$m['nomUtileFinal'];
+            $p['page']['courrier']['medoc']['standard'][$k].=" - ".$l['ligneData']['voieUtilisee'];
+            if($m['isNPS'] == 'true') {
+              $p['page']['courrier']['medoc']['standard'][$k].= ' - [non substituable';
+              if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
+              $p['page']['courrier']['medoc']['standard'][$k].= ']';
+            }
+            $p['page']['courrier']['medoc']['standard'][$k].= "\n".$m['posoHumanComplete']."\n";
+          }
+        }
+      }
+
+      //si on sort en mode ald alors on va annuler les header et footer standard
+      if ($modePrint=='ald') {
+          $this->_pageHeader=$this->_pageFooter='';
+          $p['page']['courrier']['printModel']=$p['config']['templateOrdoALD'];
+      } else {
+          $this->_pageHeader= $this->makeWithTwig($p['config']['templateOrdoHeadAndFoot']);
+          $p['page']['courrier']['printModel']=$p['config']['templateOrdoBody'];
+      }
+
+      //on génère le body avec twig
+      $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+
     }
 
 /**
@@ -364,7 +458,7 @@ class msPDF
     }
 
 /**
- * Construire le coprs du PDF pour un compte rendu
+ * Construire le corps du PDF pour un compte rendu
  * @return void
  */
     private function _makeBodyForCr()

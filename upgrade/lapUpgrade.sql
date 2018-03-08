@@ -6,7 +6,14 @@ INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromI
 ('medical', 'aldCat', 'ALD', 'paramètres pour la gestion des ALD', 'base', 1, '2018-01-19 10:29:09'),
 ('medical', 'catAtcdStruc', 'ATCD structurés', 'données pour antécédents structurés', 'base', 1, '2018-01-22 12:45:18'),
 ('typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', 1, '2018-01-22 20:31:57'),
-('relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-23 10:21:09');
+('relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-23 10:21:09'),
+('user', 'lapUserParamCat', 'LAP', 'paramètres pour les réglages utilisateur dans le LAP', 'base', 1, '2018-03-07 21:03:15');
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapUserParamCat');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('user', 'lapAlertPatientTermeGrossesseSup46', '', 'lapAlertPatientTermeGrossesseSup46', 'alerte pour terme de grossesse supérieur à 46SA', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-07 21:04:34', 3600, 1),
+('user', 'lapAlertPatientAllaitementSup3Ans', '', 'lapAlertPatientAllaitementSup3Ans', 'alerte pour allaitement supérieur à 3 ans', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-07 21:05:06', 3600, 1);
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='aldCat');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

@@ -646,6 +646,7 @@ class msLapPrescription extends msLap
         'GELULE' => array('s'=>'gélule', 'p'=>'gélules'),
         'gélule' => array('s'=>'gélule', 'p'=>'gélules'),
         'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes'),
+        'goutte' => array('s'=>'goutte', 'p'=>'gouttes'),
         'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
         'pulverisation(s)' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),
         'puverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),

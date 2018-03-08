@@ -54,6 +54,65 @@ if (!scriptsList) {
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
+  ///////// Observations pour saut entre tabs
+
+  // 1er chargement tab LAP
+  $('#ongletLAP').on("show.bs.tab", function() {
+    if ($('#tabLAP').html() == '') {
+      var url = $('#tabLAP').attr('data-rootUrl');
+      loadTabPatient(url, 'tabLAP');
+    }
+  });
+
+  // 1er chargement tab dicom
+  $('#ongletDicom').on("show.bs.tab", function() {
+    if ($('#tabDicom').html() == '') {
+      var url = $('#tabDicom').attr('data-rootUrl');
+      loadTabPatient(url, 'tabDicom');
+    }
+  });
+
+  // refresh tab dicom
+  $('body').on("click", "button.tabDicomRefresh", function() {
+    var url = $('#tabDicom').attr('data-rootUrl');
+    loadTabPatient(url, 'tabDicom');
+  });
+
+  // 1er chargement tab relations patient
+  $('#ongletLiensPatient').on("show.bs.tab", function() {
+    $.getScriptOnce(urlBase + "/js/relations.js");
+    if ($('#tabLiensPatient').html() == '') {
+      var url = $('#tabLiensPatient').attr('data-rootUrl');
+      loadTabPatient(url, 'tabLiensPatient');
+    }
+  });
+
+  $('#tabDicom').on("click", "#listeExamens tr.viewStudy", function() {
+    $.getScriptOnce(urlBase + "/js/dicom.js");
+    var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
+    var param = {'dcStudyID': $(this).attr('data-study')};
+    loadTabPatient(url, 'tabDicom', param);
+  });
+
+  function loadTabPatient(url, tab, param) {
+    $.ajax({
+      url: urlBase + url,
+      type: 'post',
+      data: {
+        tab: tab,
+        param: param
+      },
+      dataType: "html",
+      success: function(data) {
+        $('#' + tab).html(data);
+      },
+      error: function() {
+        alert("Problème, rechargez la page !");
+      }
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
   $(".changeObserv input:not(.datepic), .changeObserv textarea").typeWatch({
     wait: 1000,
@@ -99,7 +158,7 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations DICOM
-  $("a.prepareEcho").on("click", function(e) {
+  $('body').on("click", "a.prepareEcho, button.prepareEcho", function(e) {
     e.preventDefault();
     prepareEcho();
   });
@@ -131,25 +190,25 @@ $(document).ready(function() {
   $("a.prepareReceptionDoc").on("click", function(e) {
     e.preventDefault();
     if ($(this).hasClass('dicom'))
-    url: urlBase + '/patient/ajax/prepareEcho/',
+      url: urlBase + '/patient/ajax/prepareEcho/',
 
-    $.ajax({
-      url: urlBase + '/patient/ajax/' + ($(this).hasClass('dicom') ? 'prepareEcho/' : 'prepareReceptionDoc/'),
-      type: 'post',
-      data: {
-        patientID: $('#identitePatient').attr("data-patientID"),
-      },
-      dataType: "html",
-      success: function(data) {
+      $.ajax({
+        url: urlBase + '/patient/ajax/' + ($(this).hasClass('dicom') ? 'prepareEcho/' : 'prepareReceptionDoc/'),
+        type: 'post',
+        data: {
+          patientID: $('#identitePatient').attr("data-patientID"),
+        },
+        dataType: "html",
+        success: function(data) {
           $("#patientPhonecapture").modal('show');
-      },
-      error: function() {
-        alert('Problème, rechargez la page !');
-      }
-    });
+        },
+        error: function() {
+          alert('Problème, rechargez la page !');
+        }
+      });
   });
 
-  $("#patientPhonecapture button").on("click", function(){
+  $("#patientPhonecapture button").on("click", function() {
     getHistorique();
     getHistoriqueToday();
   });
@@ -370,10 +429,24 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// Voir les notes sur le patient
+  ///////// Observations diverses dont celles concernant la partie identité patient
+
+  //Voir les notes sur le patient
   $('body').on("click", "#voirNotesPatient", function(e) {
     e.preventDefault();
     $('#notesPatient').toggle();
+  });
+
+  //Editer relation patient
+  $('body').on("click", "button.editerRelationsPatient", function(e) {
+    e.preventDefault();
+    $('#ongletLiensPatient').tab('show');
+  });
+
+  //Ouvrir le LAP
+  $('body').on("click", ".openLAP", function(e) {
+    e.preventDefault();
+    $('#ongletLAP').tab('show');
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -453,7 +526,7 @@ $(document).ready(function() {
   ///////// Envoyer les formulaires et recharger l'historique
 
   //enregistrement de forms en ajax
-  $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
+  $('body').on('click', "#tabDossierMedical form input[type=submit], #tabDossierMedical button[type=submit]", function(e) {
     if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };

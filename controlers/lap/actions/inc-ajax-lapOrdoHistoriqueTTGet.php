@@ -21,24 +21,15 @@
  */
 
 /**
- * LAP : ajax > rafraichier la colonne laterale du LAP (patient data)
+ * LAP : ajax > historique des tt
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-lapPatientLateralData";
-
-$patient=new msPeople();
-$patient->setToID($_POST['patientID']);
-
-$lap=new msLapPatient;
+$debug='';
+$template="inc-lapOrdosHistoriqueTTGet";
+$lap=new msLapOrdo();
 $lap->setToID($_POST['patientID']);
-$p['page']['patientAdminData']=$lap->getPatientAdminData();
-$p['page']['patientBasicPhysio']=$lap->getPatientBasicPhysioDataControle();
-$p['page']['patientAllergies']=$patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
-$p['page']['patientALD']=$patient->getALD();
-if(!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
- foreach(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
-   $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
- }
-}
+$p['page']['histoTTannee']=$_POST['year'];
+$p['page']['histoTTannees']=$lap->getHistoriqueAnneesDistinctes();
+$p['page']['histoTT']=$lap->getHistoriqueTT($p['page']['histoTTannee']);

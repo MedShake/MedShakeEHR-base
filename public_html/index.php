@@ -30,8 +30,7 @@
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
-
-if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
+if (($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
     if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
         die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
     }
@@ -110,39 +109,43 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
 
 ///////// Controler
 if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+
     include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
     if (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
         include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
+
+
+
 } elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
     include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
 }
 
 
+
 //////// View if defined
 if (isset($template)) {
+
     if (isset($_SESSION)) {
         $p['session']=$_SESSION;
     }
 
     if (isset($p['user']['id'])) {
-      //inbox number of messages
+        //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
       if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-        $events = new msAgenda();
-        $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      }
-      elseif($p['config']['administratifPeutAvoirAgenda']=='true') {
-        $events = new msAgenda();
-        $events->set_userID($p['user']['id']);
-        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      }
-      elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
+          $events = new msAgenda();
+          $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      } elseif ($p['config']['administratifPeutAvoirAgenda']=='true') {
+          $events = new msAgenda();
+          $events->set_userID($p['user']['id']);
+          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      } elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
           $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
       }
     }
@@ -163,8 +166,8 @@ if (isset($template)) {
     //générer et sortir le html
     $getHtml = new msGetHtml();
     $getHtml->set_template($template);
-    if(isset($forceAllTemplates)) {
-      $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'],'/'));
+    if (isset($forceAllTemplates)) {
+        $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'], '/'));
     }
     echo $getHtml->genererHtml();
 }
@@ -176,7 +179,7 @@ if (!isset($debug)) {
 
 //and $p['user']['id']=='1'
 
-if ($debug=='y' and $p['user']['id']=='1') {
+if ($debug=='y' and $p['user']['id']=='3') {
     echo '<pre style="margin-top : 50px;">';
     //echo '$p[\'config\'] :';
     //print_r($p['config']);
