@@ -33,8 +33,7 @@ if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur")
  $p['page']['configDefaut']=$p['configDefaut'];
 
  //utilisateurs ayant un repertoire de templates spécifique
- $specificUsers= new msPeople();
- $p['page']['templatesDirUsers']=$specificUsers->getUsersWithSpecificParam('templatesPdfFolder');
+ $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
  // si user
  if (is_numeric($_POST['userID'])) {
