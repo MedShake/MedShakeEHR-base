@@ -35,15 +35,23 @@ if (is_numeric($_POST['objetID'])) {
     if ($data['groupe']=="doc") {
         $template='inc-ajax-detDoc';
 
-        $pdf = new msStockage();
-        $pdf->setObjetID($_POST['objetID']);
+        $doc = new msStockage();
+        $doc->setObjetID($_POST['objetID']);
 
-        if ($pdf->testDocExist()) {
-            $p['page']['pj']['href']=$pdf->getWebPathToDoc();
-            $p['page']['pj']['html']=strtoupper($pdf->getFileExtOfDoc());
-            $p['page']['pj']['filesize']= $pdf->getFileSize(0);
+        if ($doc->testDocExist()) {
+            $p['page']['pj']['href']=$doc->getWebPathToDoc();
+            $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
+            $p['page']['pj']['filesize']= $doc->getFileSize(0);
+
+            if (array_key_exists($p['page']['pj']['html'], array('JPG'=>true, 'PNG'=>true))) {
+                $p['page']['pj']['view']='<img style="max-width:100%;max-height:200px" src="'.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/'.$doc->getWebPathToDoc().'"/>';
+            } elseif ($p['page']['pj']['html']=='TXT') {
+                $fn=$doc->getPathToDoc();
+                $fsz=filesize($fn);
+                $f=fopen($fn, 'r');
+                $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
+            } 
         }
-
         if (!empty($data['value'])) {
             //hprim
             $p['page']['bioHprim'] = msHprim::parseSourceHprim($data['value']);

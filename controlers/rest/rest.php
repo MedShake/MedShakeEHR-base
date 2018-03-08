@@ -57,8 +57,5 @@ switch ($match['params']['m']) {
         }
         include 'inc-rest-uploadNewDoc.php';
         break;
-    default: 
-        header('HTTP/1.1 404 Not Found');
-        die;
 }
 
