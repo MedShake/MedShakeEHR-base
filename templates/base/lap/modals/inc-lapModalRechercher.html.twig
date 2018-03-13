@@ -52,40 +52,41 @@
 
           {# Onglet Rechercher #}
           <div role="tabpanel" class="tab-pane active" id="recherchermedic">
-            <form id="rechercheMedic">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="txtRechercheMedic">Rechercher</label>
-                  <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="nom de médicament ou de substance, code ..."/>
-                  <span id="txtRechercheMedicHB" class="help-block">Taper ici le texte de votre recherche</span>
+            <div class="row">
+              <form id="rechercheMedic">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="txtRechercheMedic">Rechercher</label>
+                    <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="nom de médicament ou de substance, code ..."/>
+                    <span id="txtRechercheMedicHB" class="help-block">Taper ici le texte de votre recherche</span>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="typeRechercheMedic">Dans</label>
-                  <select id="typeRechercheMedic" class="form-control" autocomplete="off">
-                    <option value="dci">Médicaments virtuels (DCI)</option>
-                    <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
-                    <option value="spe">Spécialités commerciales</option>
-                    <option value="suba">Substances actives</option>
-                    <option value="atc">Code ATC</option>
-                  </select>
-                  <span id="typeRechercheMedicHB" class="help-block">Lieu de recherche du texte indiqué</span>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="typeRechercheMedic">Dans</label>
+                    <select id="typeRechercheMedic" class="form-control" autocomplete="off">
+                      <option value="dci">Médicaments virtuels (DCI)</option>
+                      <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="spe">Spécialités commerciales</option>
+                      <option value="suba">Substances actives</option>
+                      <option value="atc">Code ATC</option>
+                    </select>
+                    <span id="typeRechercheMedicHB" class="help-block">Lieu de recherche du texte indiqué</span>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
-                  <label for="typeRechercheMedic">Montrer</label>
-                  <select id="retourRechercheMedic" class="form-control" autocomplete="off">
-                    <option value="1">Médicaments virtuels (DCI)</option>
-                    <option value="3">Médicaments virtuels + Spécialités commerciales</option>
-                    <option value="0">Spécialités commerciales</option>
-                  </select>
-                  <span id="retourRechercheMedicHB" class="help-block">Médicaments retournés</span>
+                <div class="col-md-4">
+                  <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
+                    <label for="typeRechercheMedic">Montrer</label>
+                    <select id="retourRechercheMedic" class="form-control" autocomplete="off">
+                      <option value="1">Médicaments virtuels (DCI)</option>
+                      <option value="3">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="0">Spécialités commerciales</option>
+                    </select>
+                    <span id="retourRechercheMedicHB" class="help-block">Médicaments retournés</span>
+                  </div>
                 </div>
-              </div>
-            </form>
-
+              </form>
+            </div>
             <div class="row">
               <div id="rechercheResultats"></div>
             </div>
@@ -93,6 +94,7 @@
 
           {# Onglet Prescrire #}
           <div role="tabpanel" class="tab-pane" id="prescriremedic">
+
             <form>
               <div id="prescriptionAlertMultimedic" class="alert alert-info" role="alert" style="display: none;">Quand plusieurs médicaments sont dans la même ligne de prescription, c'est le 1er qui gouverne durée et voie d'administration</div>
               <div class="row">
@@ -116,7 +118,6 @@
                 </div>
               </div>
               <div class="row bottom-space">
-
                 <div class="form-group col-md-3 prescriptionChampsDuree">
                   <label class="control-label" for="beginPeriodeID">Première prise
                   </label>
@@ -126,6 +127,18 @@
                       <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                   </div>
+                </div>
+                <div class="form-group col-md-3 prescriptionChampsDuree">
+                  <label class="control-label" for="beginPeriodeID">Renouveller
+                  </label>
+                  <select id="nbRenouvellements" class="form-control" autocomplete="off">
+                    <option selected="selected" value="0">ne pas renouveller</option>
+                    <option value="1">renouveller 1 fois</option>
+                    <option value="2">renouveller 2 fois</option>
+                    <option value="3">renouveller 3 fois</option>
+                    <option value="4">renouveller 4 fois</option>
+                    <option value="5">renouveller 5 fois</option>
+                  </select>
                 </div>
                 <div class="form-group col-md-3 prescriptionChampsDuree prescriptionChampsEnd">
                   <label class="control-label" for="beginPeriodeID">Dernière prise
@@ -137,59 +150,64 @@
                     </span>
                   </div>
                 </div>
+
+              </div>
+              <div class="row">
                 <div class="form-group col-md-6">
                   <label class="control-label" for="prescripteurInitialTT">Prescripteur
                   </label>
                   <input type="text" id="prescripteurInitialTT" class="form-control input-sm" autocomplete="off"/>
-                </span>
+                </div>
               </div>
 
-            </div>
+              <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
 
-            <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
+              <div class="jumbotron" id="prescriptionHuman">
+                <div class="container-fluid">
+                  <div id="prescriptionHumanMedicName" class="gras"></div>
+                  <div id="prescriptionHumanRecap"></div>
+                  <div id="prescriptionHumanPoso"></div>
+                </div>
 
-            <div class="jumbotron" id="prescriptionHuman">
-              <div id="prescriptionHumanMedicName" class="gras"></div>
-              <div id="prescriptionHumanRecap"></div>
-              <div id="prescriptionHumanPoso"></div>
-            </div>
-            <div class="form-inline" style="margin-bottom : 10px;">
-              <div class="checkbox-inline">
-                <label>
-                  <input id="prescriptionAldCheckbox" value="" type="checkbox" name="ald">
-                  ALD
-                </label>
               </div>
-              <div class="checkbox-inline">
-                <label>
-                  <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
-                  TT chronique
-                </label>
-              </div>
-              <div class="checkbox-inline">
-                <label>
-                  <input id="prescriptionNpsCheckbox" type="checkbox" name="chro" value="">
-                  Non substituable
-                </label>
+              <div class="form-inline" style="margin-bottom : 10px;">
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionAldCheckbox" value="" type="checkbox" name="ald">
+                    ALD
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionChroCheckbox" type="checkbox" name="chro" value="">
+                    TT chronique
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input id="prescriptionNpsCheckbox" type="checkbox" name="chro" value="">
+                    Non substituable
+                  </label>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="prescriptionNpsMotif" placeholder="motif pour non substituable" style="display: none;">
+                </div>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="prescriptionNpsMotif" placeholder="motif pour non substituable" style="display: none;">
+                <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
               </div>
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" rows="1" id="prescriptionMotif" autocomplete="off" placeholder="motif de prescription (non imprimé)"></textarea>
-            </div>
-            <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
-            <button type="button" class="btn btn-primary sendModifToOrdonnance">Modifier la prescription</button>
-            <button type="button" class="btn btn-primary addToLigneOnOrdonnance">Ajouter à la ligne de prescription</button>
-            <button type="button" class="btn btn-primary addToTTenCours">Ajouter au traitement en cours</button>
-          </form>
-        </div>
+              <button type="button" class="btn btn-primary sendToOrdonnance">Ajouter à l'ordonnance</button>
+              <button type="button" class="btn btn-primary sendModifToOrdonnance">Modifier la prescription</button>
+              <button type="button" class="btn btn-primary addToLigneOnOrdonnance">Ajouter à la ligne de prescription</button>
+              <button type="button" class="btn btn-primary addToTTenCours">Ajouter au traitement en cours</button>
+            </form>
 
-        {# Posologies #}
-        <div role="tabpanel" class="tab-pane" id="posologiesmedic"></div>
+          </div>
+
+          {# Posologies #}
+          <div role="tabpanel" class="tab-pane" id="posologiesmedic"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

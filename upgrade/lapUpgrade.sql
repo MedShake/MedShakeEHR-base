@@ -1,3 +1,6 @@
+-- !!! prévoir aussi update formulaire atcd
+
+
 INSERT INTO `forms` ( `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
 ('base', 'aldDeclaration', 'Déclaration d\'ALD', 'formulaire d\'enregistrement d\'une ALD', 'data_types', 'medical', 'post', '/patient/actions/saveCsForm/', 4, 'public', 'structure:\r\n  row1:\r\n    head: Enregistrement d\'une prise en charge en ALD\r\n    col1:\r\n     size: 12\r\n     bloc:\r\n       - aldNumber                                 		#878  ALD\n  row2:\r\n    col1:\r\n     size: 4\r\n     bloc:\r\n       - aldDateDebutPriseEnCharge                 		#879  Début de prise en charge\n    col2:\r\n      size: 4\r\n      bloc:\r\n       - aldDateFinPriseEnCharge                   		#880  Fin de prise en charge\n  row3:\r\n    col1:\r\n     size: 2\r\n     bloc:\r\n       - aldCIM10,plus={<i class="glyphicon glyphicon-search"></i>} 		#881  Code CIM10 associé\n    col2:\r\n     size: 10\r\n     bloc:\r\n       - aldCIM10label,readonly                    		#883  Label CIM10 associé', NULL, ''),
 ('base', 'atcdStrucDeclaration', 'Déclaration d\'atcd structuré', 'ajout d\'antécédents structuré et codé CIM 10', 'data_types', 'medical', 'post', '/patient/actions/saveCsForm/', 4, 'public', 'structure: \r\n  row1:\r\n   head : Ajout d\'un antécédent à partir de la classification CIM 10\r\n   col1: \r\n     size: 2\r\n     bloc:\r\n       - atcdStrucCIM10,plus={<i class="glyphicon glyphicon-search"></i>} 		#884  Code CIM 10\n   col2: \r\n     size: 10\r\n     bloc:\r\n       - atcdStrucCIM10Label,readonly              		#885  Label CIM 10\n  row2:\r\n    head: "Début"                  		\r\n    col1: \r\n     size: 1\r\n     bloc:\r\n       - atcdStrucDateDebutJour                    		#886  Jour\n    col2: \r\n     size: 2\r\n     bloc:\r\n       - atcdStrucDateDebutMois                    		#888  Mois\n    col3: \r\n     size: 2\r\n     bloc:\r\n       - atcdStrucDateDebutAnnee,min=1910,step=1   		#890  Année\n  row3:\r\n    head: "Fin"\r\n    col1: \r\n     size: 1\r\n     bloc:\r\n       - atcdStrucDateFinJour                      		#887  Jour\n    col2: \r\n     size: 2\r\n     bloc:\r\n       - atcdStrucDateFinMois                      		#889  Mois\n    col3: \r\n     size: 2\r\n     bloc:\r\n       - atcdStrucDateFinAnnee,min=1910,step=1     		#891  Année\n  row4:\r\n    head: "Notes"\r\n    col1: \r\n     size: 12\r\n     bloc:\r\n       - atcdStrucNotes,nolabel                    		#893  Notes', NULL, '');
@@ -8,6 +11,17 @@ INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromI
 ('typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', 1, '2018-01-22 20:31:57'),
 ('relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-23 10:21:09'),
 ('user', 'lapUserParamCat', 'LAP', 'paramètres pour les réglages utilisateur dans le LAP', 'base', 1, '2018-03-07 21:03:15');
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='dataBio');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('medical', 'clairanceCreatinine', 'ml/min', 'Clairance créatinine', 'clairance de la créatinine', '', '', 'text', '', 'base', 31, 1, '2018-03-08 12:42:12', 3600, 1);
+
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='atcd');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('medical', 'allaitementActuel', '', 'Allaitement', 'allaitement actuel', '', '', 'text', '', 'base', @catID, 1, '2018-03-08 10:46:16', 3600, 1),
+('medical', 'insuffisanceHepatique', '', 'Insuffisance hépatique', 'degré d\'insuffisance hépatique', '', '', 'select', '\'z\': "?"\n\'n\': "Pas d\'insuffisance hépatique connue"\n\'1\': \'Légère\'\n\'2\': \'Modérée\'\n\'3\': \'Sévère\'', 'base', 29, 3, '2018-03-08 13:19:28', 3600, 1);
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapUserParamCat');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -67,7 +81,9 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ( 'ordo', 'lapLignePrescriptionDatePriseFin', '', 'Date de fin de prise', 'date de fin de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:17:12', 3600, 1),
 ( 'ordo', 'lapLignePrescriptionDatePriseDebut', '', 'Date de début de prise', 'date de début de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:16:43', 3600, 1),
 ( 'ordo', 'lapLignePrescriptionIsChronique', '', 'isChronique', 'ligne TT chronique ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:04:02', 3600, 1),
-( 'ordo', 'lapLignePrescriptionIsALD', '', 'isALD', 'ligne ALD ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:01:13', 3600, 1),
+( 'ordo', 'lapLignePrescriptionIsALD', '', 'isALD', 'ligne ALD ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:01:13', 3600, 1);
+('ordo', 'lapLignePrescriptionDatePriseFinAvecRenouv', '', 'Date de fin de prise renouvellements inclus', 'date de fin de prise renouvellements inclus', '', '', '', '', 'base', @catID, 1, '2018-03-09 12:21:46', 3600, 1);
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatPorteurs');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

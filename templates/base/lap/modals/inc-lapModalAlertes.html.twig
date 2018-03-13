@@ -20,35 +20,25 @@
  #/
 
 /##
- # Template > patient : changer date d'effet d'un élément de l'historique
+ # Template > patient : modal d'alerte
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #
 #}
 
-<div id="modalDateFinEffective" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+<div id="modalLapAlerte" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title gras">Specifier la date d'arrêt effective d'un traitement</h4>
+        <h4 class="modal-title gras">Alerte !</h4>
       </div>
       <div class="modal-body">
-          <input name="ligneID" type="hidden" value=""/>
-          <div class="form-group form-horizontal">
-            <label class="col-md-6 control-label" for="">Ce traitement a été stoppé le</label>
-            <div class="input-group date col-md-4 datepick">
-              <input name="dateEffectiveDeFin" type="text" class="form-control"/>
-              <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </span>
-            </div>
-          </div>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary marquerArretEffectifGo">Valider</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">C'est noté !</button>
       </div>
     </div>
   </div>

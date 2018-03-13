@@ -119,6 +119,7 @@ class msLapOrdo extends msLap
             // infos sur la ligne
             $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseDebut', $ligne['ligneData']['dateDebutPrise'], $ligneID);
             $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFin', $ligne['ligneData']['dateFinPrise'], $ligneID);
+            $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFinAvecRenouv', $ligne['ligneData']['dateFinPriseAvecRenouv'], $ligneID);
             $lap->createNewObjetByTypeName('lapLignePrescriptionDureeJours', $ligne['ligneData']['dureeTotaleMachineJours'], $ligneID);
             $lap->createNewObjetByTypeName('lapLignePrescriptionIsALD', $ligne['ligneData']['isALD'], $ligneID);
             $lap->createNewObjetByTypeName('lapLignePrescriptionIsChronique', $ligne['ligneData']['isChronique'], $ligneID);
@@ -167,7 +168,7 @@ class msLapOrdo extends msLap
         }
 
         $data = new msData();
-        $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFin', 'lapLignePrescriptionDatePriseFinEffective']);
+        $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective']);
 
         if ($lignesPresTTchro=msSQL::sql2tab("select lp.id, lp.value
           from objets_data as lp
@@ -194,7 +195,7 @@ class msLapOrdo extends msLap
         if ($lignesPresTTponct=msSQL::sql2tab("select lp.id, lp.value
           from objets_data as lp
           left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
-          left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
+          left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinAvecRenouv']."'
           left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
           where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' ".$whereExclu."
           and STR_TO_DATE(dd.value, '%d/%m/%Y') <= CURDATE()
@@ -219,15 +220,19 @@ class msLapOrdo extends msLap
         return $ligne;
     }
 
+/**
+ * Obtenir les années distinctes pour lesquelles il y a eu presciption interne ou par tiers
+ * @return array tableau des années
+ */
     public function getHistoriqueAnneesDistinctes() {
       $data = new msData();
-      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFin', 'lapLignePrescriptionDatePriseFinEffective']);
+      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective']);
 
       $tabretour=[date('Y')];
       if ($lignesPres=msSQL::sql2tab("select YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) as dd, YEAR(STR_TO_DATE(df.value, '%d/%m/%Y')) as df, YEAR(STR_TO_DATE(dfe.value, '%d/%m/%Y')) as dfe
         from objets_data as lp
         left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
-        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
+        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinAvecRenouv']."'
         left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
         where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted=''
         ")) {
@@ -250,13 +255,13 @@ class msLapOrdo extends msLap
  */
     public function getHistoriqueTT($year) {
       $data = new msData();
-      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFin', 'lapLignePrescriptionDatePriseFinEffective']);
+      $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective']);
 
       $final=[];
       if ($lignesPres=msSQL::sql2tabKey("select lp.id, lp.value, dfe.value as dfe, lp.instance as ordonnanceID
         from objets_data as lp
         left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
-        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFin']."'
+        left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinAvecRenouv']."'
         left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
         where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted=''
         and (YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) = '".$year."'
@@ -302,6 +307,7 @@ class msLapOrdo extends msLap
         }
         return $final;
     }
+
 
 
 }

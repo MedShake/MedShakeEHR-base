@@ -51,8 +51,8 @@
 
       <div class="row">
             <div class="btn-group  pull-right" role="group" aria-label="...">
-              <a type="button" {% if page.nextStart < 0 %}disabled="disabled"{% endif %} class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/"> <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Suivants</a>
-              <a type="button" class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">Précédents  <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a>
+              <a {% if page.nextStart < 0 %}disabled="disabled"{% endif %} class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/"> <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Suivants</a>
+              <a class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">Précédents  <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a>
             </div>
       </div>
 

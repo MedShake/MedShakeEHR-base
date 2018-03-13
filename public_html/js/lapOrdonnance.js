@@ -49,6 +49,11 @@ var srcIdx;
 
 $(document).ready(function() {
 
+  //Analyser l'ordonnance (avec tt en cours)
+  $("button.analyserPrescription").on("click", function(e) {
+    analyserPrescription();
+  });
+
   // Ordonner par drag & drop l'ordonnance
   $("#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD, #conteneurOrdonnanceCourante div.conteneurPrescriptionsG").sortable({
     connectWith: ".connectedOrdoZones",
@@ -158,7 +163,77 @@ $(document).ready(function() {
     cleanOrdonnance();
   });
 
+  //Analyser l'ordonnance : voir datas brutes passées à Thériaque
+  $("a.lapOrdoAnalyseResBrut").on("click", function(e) {
+    e.preventDefault();
+    lapOrdoAnalyseResBrut();
+  });
+
 });
+
+function analyserPrescription() {
+
+  var ordo = {
+    ordoMedicsG: ordoMedicsG,
+    ordoMedicsALD: ordoMedicsALD,
+  };
+
+  if (ordo.ordoMedicsG.length < 1 && ordo.ordoMedicsALD.length < 1) {
+    if (!confirm("L'ordonnance courante est vide, souhaitez-vous poursuivre ?")) {
+      return;
+    }
+  }
+
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapOrdoAnalyse/',
+    type: 'post',
+    data: {
+      ordo: ordo,
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "json",
+    success: function(data) {
+      console.log("Analyse ordonnance : OK");
+      $('#modalLapAlerte div.modal-body').html(data['html']);
+      $('#modalLapAlerte').modal('show')
+    },
+    error: function() {
+      console.log("Analyse ordonnance : PROBLEME");
+    }
+  });
+}
+
+function lapOrdoAnalyseResBrut() {
+
+  var ordo = {
+    ordoMedicsG: ordoMedicsG,
+    ordoMedicsALD: ordoMedicsALD,
+  };
+
+  if (ordo.ordoMedicsG.length < 1 && ordo.ordoMedicsALD.length < 1) {
+    if (!confirm("L'ordonnance courante est vide, souhaitez-vous poursuivre ?")) {
+      return;
+    }
+  }
+
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapOrdoAnalyseResBrut/',
+    type: 'post',
+    data: {
+      ordo: ordo,
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#modalLapAlerte div.modal-body').html(data);
+      $('#modalLapAlerte').modal('show')
+    },
+    error: function() {
+
+    }
+  });
+}
+
 
 /**
  * Sauver l'ordonnance en cours
@@ -375,8 +450,12 @@ function makeLigneOrdo(data, mode) {
       retour += '          -';
       retour += '          ' + nl2br(data.ligneData.dureeTotaleHuman);
     }
+    if (data.ligneData.nbRenouvellements > 0) {
+      retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
+    }
+    retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
     retour += '      </div>';
-    retour += '      <div>' + data.medics[0].posoHumanComplete + ' <small>(' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPrise + ')</small></div>';
+    retour += '      <div>' + nl2br(data.medics[0].posoHumanComplete) + '</div>';
     retour += '    </div>';
 
     retour += '    <div class="col-md-4">';
@@ -454,7 +533,11 @@ function makeLigneOrdo(data, mode) {
     retour += '">';
     retour += '  <div class="row" style="margin-bottom: 12px">';
     retour += '    <div class="col-md-7 gras text-capitalize">';
-    retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman + ' <small class="nongras">(' + data.ligneData.dateDebutPrise + '-' + data.ligneData.dateFinPrise + ')</small>';
+    retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
+    if (data.ligneData.nbRenouvellements > 0) {
+      retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
+    }
+    retour += ' - <small class="nongras">' + data.ligneData.dateDebutPrise + '-' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
     retour += '    </div>';
     retour += '    <div class="col-md-4"></div>';
     retour += '    <div class="col-md-1 text-right">';
@@ -517,7 +600,7 @@ function makeLigneOrdo(data, mode) {
         retour += '        <span class="label label-danger">ald</span>';
       }
       if (data.ligneData.isChronique == 'true') {
-        retour += '<span class = "label label-default" > chronique < /span>';
+        retour += ' <span class = "label label-default" >chronique</span>';
       }
       retour += '    </div>';
       retour += '    <div>' + medic.posoHumanBase + '</div>';
@@ -542,8 +625,7 @@ function makeLigneOrdo(data, mode) {
         retour += '    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>';
       }
       // voir ordo
-      else if (mode == 'voirOrdonnance') {
-      }  
+      else if (mode == 'voirOrdonnance') {}
       //Actions pour mode ordonnance
       else {
         retour += '  <button class="btn btn-default btn-xs editMedicLignePrescription">';

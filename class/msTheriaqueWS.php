@@ -156,4 +156,10 @@ class msTheriaqueWS {
   public function get_the_prestation($codeid, $typid) {
     return $this->_client->get_the_prestation($codeid, $typid);
   }
+
+  //Analyse ordonnance
+  public function get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction) {
+    return $this->_client->get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction);
+  }
+
 }

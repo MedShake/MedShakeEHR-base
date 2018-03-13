@@ -210,6 +210,11 @@ $(document).ready(function() {
     matchAndGo();
   });
 
+  // changement sur le menu nb renouvellements
+  $('#nbRenouvellements').on("change", function(e) {
+    matchAndGo();
+  });
+
   // bouton voir indications et posologies
   $('#modalRecherche').on("click", "button.voirPosologies", function(e) {
     e.preventDefault();
@@ -311,11 +316,12 @@ function catchCurrentPrescriptionData() {
   else ligneData['isALD'] = "false";
   if ($('#prescriptionChroCheckbox').is(':checked')) ligneData['isChronique'] = "true";
   else ligneData['isChronique'] = "false"
-
+  ligneData['nbRenouvellements'] = parseInt($('#nbRenouvellements option:selected').val());
   ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
   ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
   ligneData['dateDebutPrise'] = $('#beginPeriodeID').val();
   ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
+  ligneData['dateFinPriseAvecRenouv'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY');
 
   ligne = {
     medics: [medicData],
@@ -403,7 +409,7 @@ function sendToLigneOrdonnance() {
  */
 function sendMedicRecherche(term) {
   cleanModalRechercherOngletPosologies();
-  cleanModalRechercherOngletPrescrire();
+  //cleanModalRechercherOngletPrescrire();
   $.ajax({
     url: urlBase + '/lap/ajax/searchNewMedic/',
     type: 'post',
@@ -519,9 +525,10 @@ function cleanModalRechercherOngletPrescrire() {
   $('#prescriptionChroCheckbox').prop('checked', false);
   $('#prescriptionNpsCheckbox').prop('checked', false);
   $("#prescriptionNpsMotif").val('');
-  $("#prescriptionAldCheckbox, #prescriptionChroCheckbox, #voieUtilisee").removeAttr('disabled');
+  $("#prescriptionAldCheckbox, #prescriptionChroCheckbox, #voieUtilisee, #nbRenouvellements").removeAttr('disabled');
   $('#beginPeriodeID, #endPeriodeID').val('');
   $('#prescripteurInitialTT').val('');
+  $('#nbRenouvellements option[value="0"]').prop('selected', true);
 }
 
 
@@ -552,7 +559,7 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
       medicData = data;
 
       // ménage préalable au cas ou ...
-      cleanModalRechercherOngletPrescrire();
+      // cleanModalRechercherOngletPrescrire();
       cleanModalRechercherOngletPosologies();
 
       // si contexte d'ajout de médicament à une ligne
@@ -649,13 +656,13 @@ function prepareModalPrescription() {
     $('#recherchermedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Ajout à la ligne de prescription');
     $('#modalRecherche button.addToLigneOnOrdonnance').show();
+    $('.prescriptionChampsDuree').hide();
   } else if (modeActionModal == 'saisirTTenCours') {
     $('#recherchermedicTab').parent('li').show();
     $('#recherchermedicTab').tab('show');
     $('#modalRecherche h4.modal-title').html('Saisir traitement en cours');
     $('#modalRecherche button.addToTTenCours').show();
     $('#prescripteurInitialTT').parent('div.form-group').show();
-
   }
 }
 
@@ -671,7 +678,7 @@ function editPrescription(ordoZone, index) {
   modeActionModal = 'edit';
 
   // mise en place des données
-  if(ordoZone=='ordoMedicsALD') {
+  if (ordoZone == 'ordoMedicsALD') {
     medicData = JSON.parse(JSON.stringify(ordoMedicsALD[index]['medics'][indexMedic]));
     ligneData = JSON.parse(JSON.stringify(ordoMedicsALD[index]['ligneData']));
   } else {
@@ -698,6 +705,9 @@ function editPrescription(ordoZone, index) {
     }
     $('#voieUtilisee').append('<option name="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
   });
+
+  //nb renouvellements
+  $('#nbRenouvellements option[value="' + ligneData['nbRenouvellements'] + '"]').prop('selected', true);
 
   // date début et fin de prise
   if (ligneData['dureeTotaleMachineJours'] > 0) {
@@ -759,6 +769,8 @@ function matchAndGo() {
         ligneData['dureeTotaleHuman'] = data['dureeTotaleHuman'];
         ligneData['dureeTotaleMachine'] = data['dureeTotaleMachine'];
         ligneData['dureeTotaleMachineJours'] = data['dureeTotaleMachineJours'];
+        ligneData['dureeTotaleMachineJoursAvecRenouv'] = data['dureeTotaleMachineJoursAvecRenouv'];
+        ligneData['nbRenouvellements'] = data['nbRenouvellements'];
 
 
         // remonté dans medicData
@@ -766,10 +778,19 @@ function matchAndGo() {
         medicData['posoFrappeeNbDelignesPosologiques'] = data['posoFrappeeNbDelignesPosologiques'];
         medicData['posoHumanComplete'] = data['posoHumanComplete'];
         medicData['posoHumanBase'] = data['posoHumanBase'];
+        medicData['posoHumanCompleteTab'] = data['posoHumanCompleteTab'];
         medicData['posoJournaliereMax'] = data['posoJournaliereMax'];
         medicData['posoMaxParPrise'] = data['posoMaxParPriseMax'];
         medicData['posoMinParPrise'] = data['posoMinParPriseMin'];
         medicData['versionInterpreteur'] = data['versionInterpreteur'];
+
+        medicData['regEx'] = data['regEx'];
+        medicData['typePosoTheriaque'] = data['typePosoTheriaque'];
+        medicData['posoDosesSuccessives'] = data['posoDosesSuccessives'];
+        medicData['posoDureesSuccessives'] = data['posoDureesSuccessives'];
+        medicData['posoDureesUnitesSuccessives'] = data['posoDureesUnitesSuccessives'];
+        medicData['nbPrisesParUniteTemps'] = data['nbPrisesParUniteTemps'];
+        medicData['posoJours'] = data['posoJours'];
 
         // actions visuelle
         $('#prescriptionHumanMedicName').html(medicData.nomUtileFinal);
@@ -779,6 +800,7 @@ function matchAndGo() {
         $('#prescriptionHumanPoso').html(nl2br(data['posoHumanComplete']));
         $('#prescriptionHumanRecap').html(data['voieUtilisee']);
         if (data['posoFrappeeNbDelignes'] > 1) $('#prescriptionHumanRecap').append(' - Durée totale : ' + data['dureeTotaleHuman']);
+        if (data['nbRenouvellements'] > 0) $('#prescriptionHumanRecap').append(' - À renouveller ' + data['nbRenouvellements'] + ' fois');
         if (data['posoFrappeeNbDelignes'] > 0) $("button.sendToOrdonnance").removeAttr('disabled');
         if (data['alerteSecabilite'] == true) {
           $("#prescriptionAlertSecabilite").show();
@@ -799,7 +821,7 @@ function matchAndGo() {
             var start = startDefaut;
           }
           $('#beginPeriodeID').val(start.format('DD/MM/YYYY'));
-          $('#endPeriodeID').val(start.add(data['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
+          $('#endPeriodeID').val(start.add((data['dureeTotaleMachineJoursAvecRenouv'] - 1), 'days').format('DD/MM/YYYY'));
         }
 
         console.log(medicData);

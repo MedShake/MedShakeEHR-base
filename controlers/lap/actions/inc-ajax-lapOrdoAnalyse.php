@@ -21,23 +21,28 @@
  */
 
 /**
- * Patient : les actions avec reload de page
+ * LAP : ajax > analyser ordonnance et traitement en cours
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+//print_r($_POST);
 
-//$debug='';
-$m=$match['params']['m'];
+// sortie de l'objet patient
+$lapPatient=new msLapPatient;
+$lapPatient->setToID($_POST['patientID']);
 
-$acceptedModes=array(
-    'saveCsForm', // sauver une consultation
-    'saveOrdoForm', // sauver une ordonnance
-    'sendMail' // envoyer un mail
+//sortie de l'analyse Thériaque pour l'ordo courante
+$lapOrdo= new msLapAnalysePres;
+$lapOrdo->setToID($_POST['patientID']);
+$lapOrdo->setObjetPatient($lapPatient->getPatientObjetTheriaque());
+$lapOrdo->setOrdonnanceContenu($_POST['ordo']);
+$lapOrdo->getObjetsFromOrdo();
+$lapOrdo->getObjetsFromTTenCours();
+$lapOrdo->getAnalyseTheriaque();
+
+$retour=array(
+  'html'=>$lapOrdo->getHtmlAnalysesResults(),
+  'correspondanceLignes'=>$lapOrdo->getCorrespondanceLignes(),
 );
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-} else {
-    include('inc-action-'.$m.'.php');
-}
+echo json_encode($retour);

@@ -42,6 +42,8 @@ if (count($_POST['ligneData']['medics']) == 1) {
     $lappres->setDivisibleEn($_POST['ligneData']['medics'][0]['divisibleEn']);
     $lappres->setMedicVirtuel($_POST['ligneData']['medics'][0]['medicVirtuel']);
     $lappres->setPrescriptibleEnDC($_POST['ligneData']['medics'][0]['prescriptibleEnDC']);
+    $lappres->setNbRenouvellement($_POST['ligneData']['ligneData']['nbRenouvellements']);
+
     $lappres->interpreterPrescription();
     echo $lappres->getPrescriptionInterpreteeJSON();
 }

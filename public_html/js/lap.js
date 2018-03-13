@@ -30,20 +30,35 @@ $(document).ready(function() {
 
   // rafraichir données physio quand on revient
   $('#ongletLAP').on("show.bs.tab", function() {
-    $.ajax({
-      url: urlBase + '/lap/ajax/lapPatientLateralDataRefresh/',
-      type: 'post',
-      data: {
-        patientID: $('#identitePatient').attr("data-patientID")
-      },
-      dataType: "html",
-      success: function(data) {
-        $('#patientLateralData').html(data);
-      },
-      error: function() {
-        alert('Problème, rechargez la page !');
-      }
-    });
+    lapRefreshLateralPatientData();
+  });
+
+
+  $('#tabLAP').on("click", ".allaitementStart", function() {
+    setPeopleDataByTypeName(true, $('#identitePatient').attr("data-patientID"), 'allaitementActuel', '#allaitementDet', 0);
+    lapRefreshLateralPatientData();
+  });
+
+  $('#tabLAP').on("click", ".allaitementStop", function() {
+    setPeopleDataByTypeName(false, $('#identitePatient').attr("data-patientID"), 'allaitementActuel', '#allaitementDet', 0);
+    lapRefreshLateralPatientData();
   });
 
 });
+
+function lapRefreshLateralPatientData() {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapPatientLateralDataRefresh/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID")
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#patientLateralData').html(data);
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+    }
+  });
+}

@@ -161,5 +161,9 @@ class msModBaseDataSave
       {
           return $this->formatDecimalNumber($value);
       }
+      public function tbs_clairanceCreatinine($value)
+      {
+          return $this->formatDecimalNumber($value);
+      }
 
 }

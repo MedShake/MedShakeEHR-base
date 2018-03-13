@@ -67,34 +67,37 @@ class msLapPatient extends msLap
         $tab['type_date_gross']=1;
         $tab['allaitement']=0;
         if( $tab['sexe'] == 'F') {
-         $grossesse=$data->_checkGrossesse();
+         $grossesse=$this->_checkGrossesse();
          if($grossesse['statut'] == 'grossesseEnCours') {
            $tab['grossesse']=1;
            $tab['date_grossesse']=$grossesse['ddg'];
            $tab['type_date_gross']=1;
          }
-
-         $grossesse=$data->_checkAllaitement();
-         if($grossesse['statut'] == 'allatementEnCours') {
+         if($data->getLastObjetValueByTypeName('allaitementActuel') == 'true') {
            $tab['allaitement']=1;
+         } else {
+           $tab['allaitement']=0;
          }
         }
 
         $tab['age_procreer']='';
 
-        $tab['clairance']='';
-        $tab['insufhepat']='';
+        $tab['clairance']=$data->getLastObjetValueByTypeName('clairanceCreatinine');
+        $tab['insufhepat']=$data->getLastObjetValueByTypeName('insuffisanceHepatique');
+        if(!is_numeric($tab['insufhepat'])) $tab['insufhepat']=0;
 
         $tab['etatpatho']='';
 
-
-        $tab['etatpatho_cim']='';
-
+        $etatpatho_cim=$patient->getAtcdAndAldCim10Codes();
+        if(!empty($etatpatho_cim)) $tab['etatpatho_cim']=implode(",",$etatpatho_cim); else $tab['etatpatho_cim']='';
 
         //allergies
         if(!empty(trim($p['config']['lapAllergiesStrucPersoPourAnalyse']))) {
-          $tab['hypersensibilite']=implode(',', $patient->getAllergiesCodes($p['config']['lapAllergiesStrucPersoPourAnalyse']));
+          $hypersensibilite=$patient->getAllergiesCodes($p['config']['lapAllergiesStrucPersoPourAnalyse']);
+          if(!empty($hypersensibilite)) $tab['hypersensibilite']=implode(',', $hypersensibilite); else $tab['hypersensibilite']='';
         }
+
+        return $tab;
      }
 
 /**
@@ -111,6 +114,7 @@ class msLapPatient extends msLap
           $data['clairanceCreatinine']=$this->_checkClairanceCreatinine();
           $data['allaitement']=$this->_checkAllaitement();
           $data['grossesse']=$this->_checkGrossesse();
+          $data['statutHepatique']=$this->_checkStatutHepatique();
 
           return $data;
       }
@@ -204,18 +208,54 @@ private function _checkTaillePatient()
          }
 
          $rd=array(
-        'statut'=>$statut,
-        'date'=>$data['updateDate'],
-        'from'=>$data['prenom'].' '.$data['nom'],
-        'fromID'=>$data['fromID'],
-        'value'=>$data['value']
-      );
+          'statut'=>$statut,
+          'date'=>$data['updateDate'],
+          'from'=>$data['prenom'].' '.$data['nom'],
+          'fromID'=>$data['fromID'],
+          'value'=>$data['value']
+        );
 
          return $rd;
      } else {
          return $rd=array('statut'=>'missingValue');
      }
  }
+
+ /**
+  * Sortir et vérifier le statut hépatique
+  * @return array array sur infos statit hépatique
+  */
+  private function _checkStatutHepatique()
+  {
+      $data=new msObjet;
+      $data->setToID($this->_toID);
+      $statut='statutHepatiqueInconnu';
+      if ($data=$data->getLastObjetByTypeName('insuffisanceHepatique')) {
+          if ($data['value'] == 'z') {
+              $statut='statutHepatiqueInconnu';
+          } elseif ($data['value'] == 'n') {
+              $statut='statutHepatiqueOk';
+          } elseif ($data['value'] == '1') {
+              $statut='statutHepatiqueIhl';
+          } elseif ($data['value'] == '2') {
+              $statut='statutHepatiqueIhm';
+          } elseif ($data['value'] == '3') {
+              $statut='statutHepatiqueIhs';
+          }
+
+          $rd=array(
+           'statut'=>$statut,
+           'date'=>$data['updateDate'],
+           'from'=>$data['prenom'].' '.$data['nom'],
+           'fromID'=>$data['fromID'],
+           'value'=>$data['value']
+         );
+
+          return $rd;
+      } else {
+          return $rd=array('statut'=>'missingValue');
+      }
+  }
 
 /**
 * Sortir et vérifier allaitement patient
@@ -228,6 +268,29 @@ private function _checkAllaitement()
     } else {
         $data=new msObjet;
         $data->setToID($this->_toID);
+        $data->getLastObjetByTypeName('allaitementActuel');
+        if ($data=$data->getLastObjetByTypeName('allaitementActuel')) {
+          if($data['value']=='true') {
+            $rd['statut']='allaitementEnCours';
+
+            // correction statut si déclaré depuis + 3ans
+            $now = new DateTime();
+            $date = new DateTime($data['creationDate']);
+            $date->add(new DateInterval('P3Y'));
+            if($date < $now) $rd['statut']='alerteAllaitementLong';
+
+          } else {
+            $rd['statut']='absenceAllaitement';
+          }
+          $rd['date']=$data['creationDate'];
+          $rd['from']=$data['prenom'].' '.$data['nom'];
+          $rd['fromID']=$data['fromID'];
+          $rd['basedOn']='value';
+        } else {
+          $rd['statut']='absenceAllaitement';
+          $rd['basedOn']='missingValue';
+        }
+        return $rd;
     }
 }
 

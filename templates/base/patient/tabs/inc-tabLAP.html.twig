@@ -52,13 +52,17 @@
     </ul>
 
     <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
+
       {# Onglet Ordonnance #}
       <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
         <div class="row bottom-space">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <button type="button" class="btn btn-primary nouvellePrescription">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
+            <button type="button" class="btn btn-danger analyserPrescription">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Analyser</button>
 
             <div class="btn-group">
               <button type="button" class="btn btn-default printAndSaveOrdo">
@@ -88,10 +92,10 @@
             </div>
 
           </div>
-          <div class="col-md-6 form-horizontal">
+          <div class="col-md-5 form-horizontal">
             <div class="form-group">
-              <label for="ordoName" class="col-md-3 control-label">Nom de l'ordonnance</label>
-              <div class="col-md-9">
+              <label for="ordoName" class="col-md-4 control-label">Nom de l'ordonnance</label>
+              <div class="col-md-8">
                 <input type="text" id="ordoName" class="form-control" value="Ordonnance"/>
               </div>
             </div>
@@ -113,6 +117,10 @@
                   <a href="#" class="ordoLiveRestore">
                     <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                     Récupération d'urgence</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                  <a href="#" class="lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
                 </li>
               </ul>
             </div>

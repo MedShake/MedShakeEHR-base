@@ -21,7 +21,7 @@
  */
 
 /**
- * LAP : les requête ajax
+ * LAP : les requêtes ajax
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -50,7 +50,9 @@ $acceptedModes=array(
     'lapOrdoHistoriqueGet', // historique des ordonnnaces
     'lapOrdoHistoriqueTTGet', // historique des tt
     'lapOrdoGet', // obtenir l'ordonnnace
-    'lapSaveDateEffectiveArretTT'
+    'lapSaveDateEffectiveArretTT',
+    'lapOrdoAnalyse', // analyser l'ordo
+    'lapOrdoAnalyseResBrut' // voir données brutes pré analyse
 );
 
 if (!in_array($m, $acceptedModes)) {

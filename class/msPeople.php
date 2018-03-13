@@ -382,15 +382,23 @@ class msPeople
           throw new Exception('ToID is not numeric');
       }
       $msdata = new msData();
-      $name2typeID = $msdata->getTypeIDsFromName(['atcdStrucCIM10', 'aldCIM10']);
+      $name2typeID = $msdata->getTypeIDsFromName(['atcdStrucCIM10', 'aldCIM10','csAldDeclaration']);
       $parentsAutorises = $msdata->getTypeIDsFromName(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']));
 
-      return msSQL::sql2tabSimple("select o.value
-      from objets_data as o
-      left join objets_data as p on p.id=o.instance
-      where o.toID='".$this->_toID."' and o.typeID in ('".$name2typeID['atcdStrucCIM10']."', '".$name2typeID['aldCIM10']."') and o.deleted='' and o.outdated='' and pp.instance in ('".implode("','", $parentsAutorises)."')
-      group by o.id
-      ");
+      if(!empty($parentsAutorises)) {
+        return msSQL::sql2tabSimple("select o.value
+        from objets_data as o
+        left join objets_data as p on p.id=o.instance
+        where o.toID='".$this->_toID."' and
+          ((o.typeID ='".$name2typeID['atcdStrucCIM10']."'and p.instance in ('".implode("','", $parentsAutorises)."'))
+          or
+          (o.typeID = '".$name2typeID['aldCIM10']."' and p.typeID= '".$name2typeID['csAldDeclaration']."'))
+          and o.deleted='' and o.outdated=''
+        group by o.id
+        ");
+      } else {
+        return [];
+      }
 
     }
 
@@ -437,7 +445,7 @@ class msPeople
       $name2typeID = $name2typeID->getTypeIDsFromName(['allergieCodeTheriaque', $parentTypeName]);
       if(!isset($name2typeID[$parentTypeName])) return false;
       $rd=[];
-      $rd=msSQL::sql2sql2tabSimple("select p.value
+      $rd=msSQL::sql2tabSimple("select p.value
       from objets_data as p
       where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['allergieCodeTheriaque']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ");
 
