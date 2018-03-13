@@ -40,8 +40,7 @@
      }
 
      //utilisateurs ayant un repertoire de clefs spécifiques
-     $apicryptUsers= new msPeople();
-     $p['page']['apicryptClefsUsers']=$apicryptUsers->getUsersWithSpecificParam('apicryptCheminVersClefs');
+     $p['page']['apicryptClefsUsers']=msPeople::getUsersWithSpecificParam('apicryptCheminVersClefs');
 
      // si user
      if (isset($match['params']['userID'])) {
