@@ -184,7 +184,7 @@
                               </li>
                           </ul>
                       </li>
-                      {% if config.apicryptPopHost!='' %}
+                      {% if config.apicryptPopHost %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">Boite de réception
                                 {% if page.inbox.numberOfMsg > 0 %}
@@ -200,7 +200,7 @@
 
                         <ul class="bg-dark dropdown-menu">
 
-                            {% if config.VoirRouletteObstetricale=='true' %}
+                            {% if config.VoirRouletteObstetricale == 'true' %}
                               <li class="dropdown-header">Outils</li>
                               <li class="bg-dark dropdown-item">
                                   <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>

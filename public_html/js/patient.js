@@ -88,13 +88,7 @@ $(document).ready(function() {
   });
 
   $('input.jqautocomplete').on("autocompletechange", function(event, ui) {
-    patientID = $('#identitePatient').attr("data-patientID");
-    typeID = $(this).attr("data-typeID");
-    value = $(this).val();
-    source = $(this);
-    instance = $(this).closest("form").attr("data-instance");
-    setPeopleData(value, patientID, typeID, source, instance);
-
+    $(this).trigger("paste");
   });
 
   ////////////////////////////////////////////////////////////////////////
