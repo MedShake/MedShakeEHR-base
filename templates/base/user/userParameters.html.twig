@@ -59,12 +59,12 @@
 
   {# form display #}
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active">
-      <a href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
+    <li role="presentation" class="nav-item">
+      <a class="nav-link active" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
     </li>
     {% if page.hasAgenda %}
-      <li role="presentation">
-        <a href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
       </li>
     {% endif %}
   </ul>
@@ -82,7 +82,7 @@
 
         {# sous navigation pour l'onglet Agenda #}
 
-          <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
+          <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
             <li class="active" role="presentation">
               <a href="#pa" aria-controls="pa" role="tab" data-toggle="tab">Horaires</a>
             </li>
@@ -112,8 +112,8 @@
                     <td class="time">
                       <div class="md-col-1 input-group date">
                           <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off"></input>
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-time"></span>
+                          <span class="input-group-append">
+                              <span class="far fa-clock"></span>
                           </span>
                       </div>
                     </td>
@@ -125,8 +125,8 @@
                     <td class="time">
                       <div class="md-col-1 input-group date">
                           <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off"></input>
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-time"></span>
+                          <span class="input-group-append">
+                              <span class="far fa-clock"></span>
                           </span>
                       </div>
                     </td>
@@ -138,15 +138,15 @@
                     <td class="time">
                       <div class="md-col-1 input-group date">
                           <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off"></input>
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-time"></span>
+                          <span class="input-group-append">
+                              <span class="far fa-clock"></span>
                           </span>
                       </div>
                     </td>
                   </tr>
                 </table>
                 <div class="row">
-                  <table class="table table-hover">
+                  <table class="table table-sm mb-0 table-hover ">
                     <tr>
                         <th>Jour</th>
                         <th>Visible</th>
@@ -160,40 +160,40 @@
                       <tr>
                         <td>{{ i }}</td>
                         <td>
-                          <input class="form-control" name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off"></input>
+                          <input class="form-control" name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}check-square{% endif %} autocomplete="off"></input>
                         </td>
                         <td>
-                          <input class="form-control" name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input autocomplete="off">
+                          <input class="form-control" name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}check-square{% endif %}></input autocomplete="off">
                         </td>
                         <td>
                           <div class='input-group date'>
                             <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off"></input>
-                              <span class="input-group-addon">
-                                  <span class="glyphicon glyphicon-time"></span>
+                              <span class="input-group-append">
+                                  <span class="far fa-clock"></span>
                               </span>
                           </div>
                         </td>
                         <td>
                           <div class='input-group date'>
                             <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off"></input>
-                              <span class="input-group-addon">
-                                  <span class="glyphicon glyphicon-time"></span>
+                              <span class="input-group-append">
+                                  <span class="far fa-clock"></span>
                               </span>
                           </div>
                         </td>
                         <td>
                           <div class='input-group date'>
                             <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off"></input>
-                              <span class="input-group-addon">
-                                  <span class="glyphicon glyphicon-time"></span>
+                              <span class="input-group-append">
+                                  <span class="far fa-clock"></span>
                               </span>
                           </div>
                         </td>
                         <td>
                           <div class='input-group date'>
                             <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off"></input>
-                              <span class="input-group-addon">
-                                  <span class="glyphicon glyphicon-time"></span>
+                              <span class="input-group-append">
+                                  <span class="far fa-clock"></span>
                               </span>
                           </div>
                         </td>
@@ -212,7 +212,7 @@
               <form id="formName_ConfConsults" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/userParametersConsultations/">
                 <div class="col-md-12">
                   <div class="row">
-                    <table class="table table-hover consult">
+                    <table class="table table-sm mb-0 table-hover  consult">
                       <tr>
                         <th></th>
                         <th>Code</th>
@@ -226,7 +226,7 @@
                         <td>
                           {% if v.readonly is defined == false %}
                             <a class="delConsult" href="javascript:void(0)">
-                              <span class="glyphicon glyphicon-minus"></span>
+                              <span class="fa fa-minus"></span>
                             </a>
                           {% endif %}
                         </td>
@@ -239,13 +239,13 @@
                         <td>
                           <div class="input-group colorpicker">
                             <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off"></input>
-                            <span class="input-group-addon"><i style="background-color:{{ v.backgroundColor }}"></i></span>
+                            <span class="input-group-append"><i style="background-color:{{ v.backgroundColor }}"></i></span>
                           </div>
                         </td>
                         <td>
                           <div class="input-group colorpicker">
                             <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off"></input>
-                            <span class="input-group-addon"><i style="background-color:{{ v.backgroundColor }}"></i></span>
+                            <span class="input-group-append"><i style="background-color:{{ v.backgroundColor }}"></i></span>
                           </div>
                         </td>
                         <td>
@@ -256,7 +256,7 @@
                       <tr class="adder">
                         <td>
                           <a class="addConsult" href="javascript:void(0)">
-                            <span class="glyphicon glyphicon-plus"></span>
+                            <span class="fa fa-plus"></span>
                           </a>
                         </td>
                         <td></td>

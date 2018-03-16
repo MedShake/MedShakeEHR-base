@@ -38,16 +38,16 @@
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options</a>
     </li>
-    <li class="active">Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
+    <li class="breadcrumb-item active">Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
       {{ page.userData.2 }}
     {% else %}
       {{ page.userData.1 }}
@@ -62,26 +62,24 @@
   {% endif %}</h1>
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
-
-    <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
-      {% for k,v in page.userParams %}
-        <li {% if loop.first %}class="active"{% endif %} role="presentation">
-          <a href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ page['catList'][k] }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-
-    <div class="tab-content col-md-10" >
+    <div class="row">
+      <ul class="nav nav-pills flex-column col-md-2">
+        {% for k,v in page.userParams %}
+          <li class="nav-item" role="presentation">
+            <a class="nav-link{% if loop.first %} active{% endif %}" href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ page['catList'][k] }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="col-md-10 tab-content">
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
-          <h2>{{ page['catList'][k] }}</h2>
-          <table class="table table-hover table-striped checkboxFixValue">
+          <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
             <thead>
               <tr>
-                <th class="col-md-3">Paramètre</th>
-                <th class="col-md-2">Valeur défaut</th>
-                <th class="col-md-2">Valeur utilisateur</th>
-                <th class="col-md-5">Description</th>
+                <th>Paramètre</th>
+                <th>Valeur défaut</th>
+                <th>Valeur utilisateur</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
@@ -155,7 +153,7 @@
         </div>
       {% endfor %}
     </div>
-
+    </div>
 
   </form>
 

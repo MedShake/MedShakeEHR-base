@@ -59,7 +59,7 @@
     {% if page.eventID is not defined %}
 
         <div class="row">
-            <table class="table table-hover">
+            <table class="table table-sm mb-0 table-hover ">
                 <thead>
                     <tr>
                         <th class="">date action</th>
@@ -117,12 +117,12 @@
       {% for k,v in page.rdv %}
 
         {% if k == 0 %}
-          <div class="panel panel-default">
-            <div class="panel-heading gras">Donné actuel du rendez-vous</div>
-            <div class="panel-body">
+          <div class="card col-md-12">
+            <div class="card-header py-0 gras">Donné actuel du rendez-vous</div>
+            <div class="card-body">
               <p>Données actuelles présente dans l'agenda</p>
             </div>
-            <table class="table table-hover">
+            <table class="table table-sm mb-0 table-hover ">
                 <tr class="{% if v.statut == 'actif' %}success{% else %}danger{% endif %}">
                   <td class="col-md-4">Statut</td>
                   <td>
@@ -165,8 +165,8 @@
           </div>
         {% else %}
 
-          <div class="panel panel-default">
-            <div class="panel-heading gras">{% if v.operation is not defined %}
+          <div class="card col-md-12">
+            <div class="card-header py-0 gras">{% if v.operation is not defined %}
               Nouveau
             {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
               Marquage patient absent
@@ -181,10 +181,10 @@
             {% else %}
               {{ v.operation }}
             {% endif %}</div>
-            <div class="panel-body">
+            <div class="card-body">
               <p>Données sur l'action effectuée</p>
             </div>
-            <table class="table table-hover">
+            <table class="table table-sm mb-0 table-hover ">
                 <tr>
                   <td>Effectuée le</td>
                   <td colspan="2">{{ v.date }}</td>

@@ -55,7 +55,7 @@ $(document).ready(function() {
               <tr>\
                 <td>\
                   <a class="delConsult" href="javascript:void(0)">\
-                    <span class="glyphicon glyphicon-minus"></span>\
+                    <span class="fa fa-minus"></span>\
                   </a>\
                 </td>\
                 <td>\

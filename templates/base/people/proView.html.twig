@@ -59,15 +59,17 @@
   <div class="row">
 
       <div class="col-md-6">
-            <div class="panel panel-primary">
-              <div class="panel-heading gras">Informations professionnelles</div>
-              <div class="panel-body">
+            <div class="card panel-primary">
+              <div class="card-header py-0 gras">Informations professionnelles</div>
+              <div class="card-body">
                 <p>Informations professionnelles sur ce praticien
-                  <a class="btn btn-default pull-right" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/" role="button">Editer infos pros</a>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
+                    <button class="btn btn-default float-right m-1" role="button">Editer infos pros</button>
+                  </a>
                 </p>
               </div>
 
-              <table class="table table-hover">
+              <table class="table table-sm mb-0 table-hover ">
                 {% if page.proData.249 or page.proData.250 %}<tr><td>
                   {% if  page.proData.249 %}{{ page.proDataLabel.249 }}{% endif %}
                   {% if page.proData.249 and page.proData.250 %} - {% endif %}
@@ -92,20 +94,23 @@
                 {% if page.proData.443 %}<tr><td>{{ page.proDataLabel.443 }}<td><td>{{ page.proData.443|nl2br }}</td></tr>{% endif %} {# notes pros #}
               </table>
 
-              <div class="panel-footer">&nbsp;</div>
+              <div class="card-footer">&nbsp;</div>
             </div>
       </div>
 
     {% if config.PraticienPeutEtrePatient %}
       <div class="col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading gras">Informations personnelles</div>
-              <div class="panel-body">
+            <div class="card col-md-12">
+              <div class="card-header py-0 gras">Informations personnelles</div>
+              <div class="card-body">
                 <p>Informations personnelles sur ce praticien
-                <a class="btn btn-default pull-right" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/" role="button">Editer infos persos</a></p>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
+                    <button class="btn btn-default float-right m-1" role="button">Editer infos persos</button>
+                  </a>
+                </p>
               </div>
 
-              <table class="table table-hover">
+              <table class="table table-sm mb-0 table-hover ">
                 {% if page.proData.8 %}<tr><td>{{ page.proDataLabel.8 }}<td><td>{{ page.proData.8 }}</td></tr>{% endif %} {# ddn #}
                 {% if page.proData.9 or page.proData.11 or page.proData.13 or page.proData.12 %}<tr><td>Adresse personnelle<td><td>
                   {% if  page.proData.9 %}{{ page.proData.9 }} {% endif %}
@@ -118,7 +123,7 @@
                 {% if page.proData.4 %}<tr><td>{{ page.proDataLabel.4 }}<td><td>{{ page.proData.4 }}</td></tr>{% endif %} {# email perso #}
                 {% if page.proData.21 %}<tr><td>{{ page.proDataLabel.21 }}<td><td>{{ page.proData.21|nl2br }}</td></tr>{% endif %} {# notes perso #}
               </table>
-              <div class="panel-footer">&nbsp;</div>
+              <div class="card-footer">&nbsp;</div>
             </div>
 
       </div>
@@ -129,18 +134,18 @@
 <div class="row">
 
     <div class="col-md-6">
-          <div class="panel panel-default">
-            <div class="panel-heading gras">Patients connus</div>
-            <div class="panel-body">
+          <div class="card col-md-12">
+            <div class="card-header py-0 gras">Patients connus</div>
+            <div class="card-body">
               <p>Patients reliés à ce praticien.
 
               </p>
             </div>
 
-            <table class="table table-striped table-hover">
+            <table class="table table-sm mb-0 table-striped table-hover">
       				<thead>
       					<tr>
-      						<th class="col-md-1"></th>
+      						<th></th>
       						<th class="col-md-10">Identité</th>
       					</tr>
       				</thead>
@@ -148,8 +153,8 @@
                 {% for v in page.patientsConnus %}
                 <tr>
                   <td>
-                    <a title="Accès au dossier" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a>
-                    <a title="Éditer les relations du patient" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+                    <a title="Accès au dossier" class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
+                    <a title="Éditer les relations du patient" class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
                   </td>
                   <td>{{ v.nom }} {{ v.prenom }}</td>
 
@@ -159,7 +164,7 @@
 
       			</table>
 
-            <div class="panel-footer">&nbsp;</div>
+            <div class="card-footer">&nbsp;</div>
           </div>
     </div>
 </div>

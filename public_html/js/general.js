@@ -80,18 +80,42 @@ $(document).ready(function() {
   ///////// Obesrvations générales pour formulaires
 
   //// datepicker bootstrap
-  $('.datepick').datetimepicker({
-    locale: 'fr',
-    viewMode: 'years',
-    format: 'L',
-    showClear: true
-
-  });
-  $("#nouvelleCs").on("focusin click", 'div.datepick', function() {
+  $("body").on("click", 'div.datepick', function() {
     $(this).datetimepicker({
       locale: 'fr',
-      viewMode: 'years',
-      format: 'L'
+      viewMode: $(this).hasClass("pick-years")?'years':'days',
+      format: 'L',
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-crosshairs',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+      } 
+    });
+    $(this).data("DateTimePicker").toggle();
+  });
+  $("body").on("focusin", 'div.datepick input', function(e) {
+    e.stopImmediatePropagation();
+    $(this).closest("div.datepick").datetimepicker({
+      locale: 'fr',
+      viewMode: $(this).closest("div.datepick").hasClass("pick-years")?'years':'days',
+      format: 'L',
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-crosshairs',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+      }
     });
     $(this).data("DateTimePicker").show();
   });

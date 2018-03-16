@@ -273,9 +273,9 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        $ca.children(".glyphicon-unchecked").removeClass("glyphicon-unchecked").addClass("glyphicon-checked");
-        $ca.children(".glyphicon-check").removeClass("glyphicon-check").addClass("glyphicon-unchecked");
-        $ca.children(".glyphicon-checked").removeClass("glyphicon-checked").addClass("glyphicon-check");
+        $ca.children(".fa-square").removeClass("fa-square").addClass("check-square");
+        $ca.children(".fa-check-square").removeClass("fa-check-square").addClass("fa-square");
+        $ca.children(".check-square").removeClass("check-square").addClass("fa-check-square");
       },
       error: function() {
         alert('Problème, rechargez la page !');

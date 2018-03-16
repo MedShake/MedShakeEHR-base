@@ -31,31 +31,31 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title gras graph-titre"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body graph-body">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-            <a href="#sl" aria-controls="sl" role="tab" data-toggle="tab">Historique</a>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link active" href="#sl" aria-controls="sl" role="tab" data-toggle="tab">Historique</a>
           </li>
-          <li role="presentation">
-            <a href="#sp" aria-controls="sp" role="tab" data-toggle="tab">Poids</a>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link" href="#sp" aria-controls="sp" role="tab" data-toggle="tab">Poids</a>
           </li>
-          <li role="presentation">
-            <a href="#st" aria-controls="st" role="tab" data-toggle="tab">Taille</a>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link" href="#st" aria-controls="st" role="tab" data-toggle="tab">Taille</a>
           </li>
-          <li role="presentation">
-            <a href="#si" aria-controls="si" role="tab" data-toggle="tab">IMC</a>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link" href="#si" aria-controls="si" role="tab" data-toggle="tab">IMC</a>
           </li>
         </ul>
         <div class="tab-content">
 
           <div role="tabpanel" class="tab-pane active" id="sl" style="margin-top: 8px">
-            <table class="table table-striped table-hover histo">
+            <table class="table table-sm mb-0 table-striped table-hover histo">
               <thead>
                 <tr class="histo-head">
-                  <th style="text-align:center; cursor: pointer" data-sort="int">Age <span class="arrow glyphicon glyphicon-chevron-up"></span></th>
+                  <th style="text-align:center; cursor: pointer" data-sort="int">Age <span class="arrow fa fa-chevron-up"></span></th>
                   <th style="text-align:center">Mesuré le</th>
                   <th style="text-align:center; cursor: pointer" data-sort="int">Poids (kg)</th>
                   <th style="text-align:center; cursor: pointer" data-sort="int">Taille (cm)</th>

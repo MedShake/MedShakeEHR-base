@@ -44,7 +44,7 @@
 
       {% if page.tabRegNC %}
         <h2>Paiements à recevoir</h2>
-        <table class="table table-hover table-striped">
+        <table class="table table-sm mb-0 table-hover table-striped">
           <thead>
             <tr>
               <th>Patiente</th>
@@ -60,8 +60,10 @@
             {% for obj, reg in page.tabRegNC %}
               <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                 <td>
-                  <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" role="button">
-                    <span class="glyphicon glyphicon-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
+                    <button class="btn btn-default btn-sm" role="button">
+                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                    </button>
                   </a>
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}
@@ -75,8 +77,8 @@
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
                 </td>
                 <td>
-                  <button type="button" class="btn btn-default  btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                  <button type="button" class="btn btn-default  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                    <span class="fa fa-question-circle" aria-hidden="true"></span>
                   </button>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
                     <strong>{{ reg.regleFacture|e }}€</strong>
@@ -90,7 +92,7 @@
                 <td>{{ reg.dejaPaye|e }}€</td>
                 <td>{{ reg.resteAPaye }}€</td>
                 <td>
-                  <a class="btn btn-danger btn-xs editReglement pull-right" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                  <a class="btn btn-danger btn-sm editReglement float-right m-1" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                     Saisir règlement
                   </a>
 
@@ -104,7 +106,7 @@
 
       {% if page.tabRegC %}
         <h2>Paiements terminés</h2>
-        <table class="table table-hover table-striped">
+        <table class="table table-sm mb-0 table-hover  table-striped">
           <thead>
             <tr>
               <th>Patiente</th>
@@ -119,8 +121,10 @@
             {% for reg in page.tabRegC %}
               <tr>
                 <td>
-                  <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" role="button" target="_blank">
-                    <span class="glyphicon glyphicon-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
+                    <button class="btn btn-default btn-sm" role="button">
+                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                    </button>
                   </a>
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}
@@ -134,8 +138,8 @@
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
                 </td>
                 <td>
-                  <button type="button" class="btn btn-default  btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                  <button type="button" class="btn btn-default  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                    <span class="fa fa-question-circle" aria-hidden="true"></span>
                   </button>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
                   {% else %}
@@ -187,7 +191,7 @@
                   </label>
                   <div class="input-group">
                     <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
-                    <span class="input-group-addon" id="id_regleCheque_idAddOn">€</span>
+                    <span class="input-group-append" id="id_regleCheque_idAddOn">€</span>
                   </div>
                 </div>
               </div>
@@ -197,7 +201,7 @@
                   </label>
                   <div class="input-group">
                     <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
-                    <span class="input-group-addon" id="id_regleCB_idAddOn">€</span>
+                    <span class="input-group-append" id="id_regleCB_idAddOn">€</span>
                   </div>
                 </div>
               </div>
@@ -207,7 +211,7 @@
                   </label>
                   <div class="input-group">
                     <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
-                    <span class="input-group-addon" id="id_regleEspeces_idAddOn">€</span>
+                    <span class="input-group-append" id="id_regleEspeces_idAddOn">€</span>
                   </div>
                 </div>
               </div>

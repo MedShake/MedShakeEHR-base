@@ -106,7 +106,7 @@ $(document).ready(function() {
 
     defaultView: 'agendaWeek',
     locale: 'fr',
-    themeSystem: 'bootstrap3',
+    themeSystem: 'bootstrap4',
     hiddenDays: hiddenDays,
     customButtons: {
       nextMonth: {
@@ -114,7 +114,7 @@ $(document).ready(function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
         }
       },
-      lastMonth: {
+      prevMonth: {
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
         }
@@ -189,21 +189,20 @@ $(document).ready(function() {
         },
       },
     },
-    bootstrapGlyphicons: {
-      lastMonth: 'glyphicon-chevron-left',
-      nextMonth: 'glyphicon-chevron-right',
-      prev: 'glyphicon-menu-left',
-      next: 'glyphicon-menu-right',
-      synchronize: 'glyphicon-refresh',
-      dossier: 'glyphicon-folder-open',
-      deplacer: 'glyphicon-transfer',
-      bloquer: 'glyphicon-ban-circle',
-      cloner: 'glyphicon-duplicate',
-      supprimer: 'glyphicon-remove',
-      honorer: 'glyphicon-alert',
+    bootstrapFontAwesome: {
+      prev: 'fa-angle-left',
+      next: 'fa-angle-right',
+      prevMonth: 'fa-angle-double-left',
+      nextMonth: 'fa-angle-double-right',
+      dossier: 'fa-folder-open',
+      deplacer: 'fa-exchange-alt',
+      bloquer: 'fa-ban',
+      cloner: 'fa-clone',
+      supprimer: 'fa-times',
+      honorer: 'fa-exclamation-triangle',
     },
     header: {
-      left: 'lastMonth,prev,synchronize,next,nextMonth today',
+      left: 'prevMonth,prev,synchronize,next,nextMonth today',
       center: boutonsHeaderCenter,
       right: 'title'
     },
@@ -305,7 +304,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Définition des titles boutons agenda
 
-  $(".fc-lastMonth-button").attr("title", "Mois précédent");
+  $(".fc-prevMonth-button").attr("title", "Mois précédent");
   $(".fc-prev-button").attr("title", "Semaine précédente");
   $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
   $(".fc-next-button").attr("title", "Semaine suivante");
@@ -602,7 +601,7 @@ function getHistoriquePatient(patientID) {
         if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
         if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
         chaine = chaine + '">';
-        chaine = chaine + '<button type="button" class="btn btn-default btn-xs moveToDate" data-date="' + dat['dateiso'] + '"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+        chaine = chaine + '<button type="button" class="btn btn-default btn-xs moveToDate" data-date="' + dat['dateiso'] + '"><span class="fa fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
         chaine = chaine + dat['start'] + ' : ' + dat['type'];
         if (dat['statut'] == 'deleted') chaine = chaine + ' <small>[annulé]</small>';
         if (dat['absente'] == 'oui') chaine = chaine + ' <small>[non honoré]</small>';
@@ -646,7 +645,7 @@ function getEventData4Edit(eventClicked) {
 function formatRdvData4Display(start, end) {
   duree = end.diff(start, 'minutes');
   $('.dateHeureDisplay').removeClass('bg-danger');
-  $('.dateHeureDisplay').html('<button class="btn btn btn-success donothing"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> ' + start.format('DD/MM à HH:mm') + '</button> <button class="btn btn-default donothing"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> ' + duree + "mn</button>");
+  $('.dateHeureDisplay').html('<button class="btn btn btn-success donothing"><span class="fa fa-calendar" aria-hidden="true"></span> ' + start.format('DD/MM à HH:mm') + '</button> <button class="btn btn-default donothing"><span class="far fa-clock" aria-hidden="true"></span> ' + duree + "mn</button>");
 
   $('#eventStartID').val(start.format('YYYY-MM-DD HH:mm:SS'));
   $('#eventEndID').val(end.format('YYYY-MM-DD HH:mm:SS'));

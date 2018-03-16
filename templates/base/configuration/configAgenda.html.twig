@@ -38,13 +38,13 @@
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-    <li class="active">
+    <li class="breadcrumb-item active">
       Agendas
     </li>
   </ol>
@@ -53,12 +53,12 @@
 
   {# Nav tabs #}
   <ul class="nav nav-tabs bottom-space" role="tablist">
-    <li role="presentation" {% if page.selectUser < 1 %} class="active" {% endif %}>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
+    <li role="presentation" class="nav-item">
+      <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
     {% for id, user in page.agendaUsers %}
-      <li role="presentation" {% if page.selectUser == id %} class="active" {% endif %}>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/{{ id }}/" aria-controls="prescriptions" role="tab">Agenda :
+      <li role="presentation" class="nav-item">
+        <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/{{ id }}/" aria-controls="prescriptions" role="tab">Agenda :
           {{ user }}</a>
       </li>
     {% endfor %}
@@ -163,7 +163,7 @@
       </div>
     </form>
   {% else %}
-    <table class="table table-hover">
+    <table class="table table-sm mb-0 table-hover ">
       <thead>
         <th>Paramètre</th>
         <th>Valeur</th>

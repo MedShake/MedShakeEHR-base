@@ -39,15 +39,15 @@
   <h1>Configuration</h1>
 
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active">
-      <a href="#cc" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
+    <li role="presentation" class="nav-item">
+      <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
     </li>
 
-    <li role="presentation">
-      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
+    <li role="presentation" class="nav-item">
+      <a href="#ca" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
     </li>
-    <li role="presentation">
-      <a href="#ap" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
+    <li role="presentation" class="nav-item">
+      <a href="#ap" class="nav-link" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
     </li>
   </ul>
 
@@ -165,7 +165,9 @@
         </li>
         <li class="list-group-item">
           Données de session
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" class="btn btn-default btn-xs" role="button" target="_blank">Supprimer</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
+            <button class="btn btn-default px-1 py-0" role="button">Supprimer</button>
+          </a>
         </li>
       </ul>
 

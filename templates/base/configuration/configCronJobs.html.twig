@@ -40,13 +40,13 @@
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-		<li class="active">
+		<li class="breadcrumb-item active">
 				Tâches planifiées
 		</li>
   </ol>
@@ -54,7 +54,7 @@
   <h1>Liste des tâches planifiées</h1>
 
   <form id="formCrons" class="ajaxForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configCronJobs/" method="post">
-    <table class="table table-hover table-striped">
+    <table class="table table-sm mb-0 table-hover  table-striped">
       <thead>
         <tr>
           <th>Nom</th>

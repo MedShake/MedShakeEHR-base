@@ -26,8 +26,9 @@
 {% import "macroForm.html.twig" as f %}
 {% if page.patient.historique %}
   <div class="row">
-    <div class="panel panel-default historiqueMedicalComplet">
-        <div class="panel-heading gras">Historique complet</div>
+    <div class="col-md-12 px-0 historiqueMedicalComplet">
+      <div class="card">
+        <div class="card-header py-0 gras">Historique complet</div>
 
 
         <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
@@ -41,13 +42,13 @@
         </div>
 
 
-        <table class="table table-hover" data-zone="historiqueMedicalComplet">
+        <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th class="col-md-2">Actions</th>
-                    <th class="col-md-5">Acte</th>
-                    <th class="col-md-3">Auteur</th>
+                    <th>Actions</th>
+                    <th>Acte</th>
+                    <th>Auteur</th>
                     <th></th>
                 </tr>
             </thead>
@@ -61,6 +62,7 @@
 
             </tbody>
         </table>
+      </div>
     </div>
   </div>
 {% endif %}

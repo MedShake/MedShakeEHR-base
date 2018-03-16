@@ -66,6 +66,32 @@
       {% if (config.agendaService in ['clicRDV'])==false %}
         .fc-synchronize-button {display:none !important}
       {% endif %}
+
+      #calendar .fc-prevMonth-button,
+      #calendar .fc-prev-button,
+      #calendar .fc-next-button,
+      #calendar .fc-nextMonth-button,
+      #calendar .fc-today-button,
+      #calendar .fc-bloquer-button,
+      #calendar .fc-dossier-button,
+      #calendar .fc-deplacer-button,
+      #calendar .fc-cloner-button,
+      #calendar .fc-honorer-button,
+      #calendar .fc-supprimer-button
+        {background-color:#e6eaef;border:none;color:#212529;height:38px}
+
+      #calendar .fc-prevMonth-button:hover,
+      #calendar .fc-prev-button:hover,
+      #calendar .fc-next-button:hover,
+      #calendar .fc-nextMonth-button:hover,
+      #calendar .fc-today-button:hover,
+      #calendar .fc-bloquer-button:hover,
+      #calendar .fc-dossier-button:hover,
+      #calendar .fc-deplacer-button:hover,
+      #calendar .fc-cloner-button:hover,
+      #calendar .fc-honorer-button:hover,
+      #calendar .fc-supprimer-button:hover
+        {background-color:#fff}
     </style>
 
     <script>
@@ -91,8 +117,8 @@
   <ul class="nav nav-tabs bottom-space" >
 
     {% for k,v in page.agendaUsers %}
-      <li role="presentation" {% if k == page.userID %}class="active"{% endif %}>
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+      <li role="presentation" class="nav-item">
+          <a class="nav-link{% if k == page.userID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
       </li>
     {% endfor %}
   </ul>
@@ -145,29 +171,29 @@
 
         <div class="btn-group">
           <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="disabled">
-            Autres actions <span class="caret"></span>
+            Autres actions
           </button>
           <ul class="dropdown-menu">
 
-            <li><a id="buttonMark" href="#">Non honoré</a></li>
-            <li><a id="buttonClone" href="#">Cloner</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a id="buttonRemove" href="#">Supprimer</a></li>
+            <li><a class="dropdown-item" id="buttonMark" href="#">Non honoré</a></li>
+            <li><a class="dropdown-item" id="buttonClone" href="#">Cloner</a></li>
+            <li role="separator" class="dropdown-divider"></li>
+            <li><a class="dropdown-item" id="buttonRemove" href="#">Supprimer</a></li>
           </ul>
         </div>
 
-        <button id="buttonCancel" disabled="disabled" class="btn btn-default  pull-right" type="submit">Abandonner</button>
+        <button id="buttonCancel" disabled="disabled" class="btn btn-default  float-right m-1" type="submit">Abandonner</button>
 
       </div>
     </form>
 
-    <div id="historiquePatient" class="panel panel-default" style="display: none;">
-      <div class="panel-heading gras">
-        <div id="HistoriqueRdvResume" class="btn-group pull-right" role="group">
-          <button title="total" type="button" disabled="disabled" class="btn btn-xs btn-default donothing gras">0</button>
-          <button title="honorés" type="button" disabled="disabled" class="btn btn-xs btn-success donothing gras">0</button>
-          <button title="annulés" type="button" disabled="disabled" class="btn btn-xs btn-warning donothing gras">0</button>
-          <button title="patient absent" type="button" disabled="disabled" class="btn btn-xs btn-danger donothing gras">0</button>
+    <div id="historiquePatient" class="card col-md-12 my-3" style="display: none;">
+      <div class="card-header py-0 gras">
+        <div id="HistoriqueRdvResume" class="btn-group float-right m-1" role="group">
+          <button title="total" type="button" disabled="disabled" class="btn btn-sm btn-default donothing gras">0</button>
+          <button title="honorés" type="button" disabled="disabled" class="btn btn-sm btn-success donothing gras">0</button>
+          <button title="annulés" type="button" disabled="disabled" class="btn btn-sm btn-warning donothing gras">0</button>
+          <button title="patient absent" type="button" disabled="disabled" class="btn btn-sm btn-danger donothing gras">0</button>
         </div>
         Derniers rendez-vous
       </div>

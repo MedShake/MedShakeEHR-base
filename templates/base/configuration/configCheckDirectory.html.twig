@@ -35,13 +35,13 @@
 {% block body %}
 
     <ol class="breadcrumb">
-      <li>
+      <li class="breadcrumb-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
       </li>
-      <li>
+      <li class="breadcrumb-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
       </li>
-	    <li class="active">
+	    <li class="breadcrumb-item active">
 			    Vérifications des répertoires de stockage 
 	    </li>
     </ol>
@@ -54,18 +54,18 @@
 
         <div class="col-md-12">
 
-            <table class="table table-bordered">
+            <table class="table table-sm mb-0 table-bordered">
                 <tr>
-                    <th class="col-md-2">
+                    <th>
                         Répertoire
                     </th>
-                    <th class="col-md-6">
+                    <th>
                         Chemin
                     </th>
-                    <th class="col-md-2">
+                    <th>
                         Existe
                     </th>
-                    <th class="col-md-2">
+                    <th>
                         Est accessible en écriture
                     </th>
                 </tr>

@@ -38,13 +38,13 @@
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-    <li class="active">Paramètres globaux</li>
+    <li class="breadcrumb-item active">Paramètres globaux</li>
   </ol>
 
   <h1>Paramètres  globaux</h1>
@@ -52,10 +52,9 @@
   {# navigation principale #}
   <ul style="padding-top:10px" class="nav nav-tabs">
     {% for section_name,section_array in page.params %}
-      <li {% if loop.first %}class="active"{% endif %} role="presentation">
-        <a href="#{{ section_name|replace({' ':'_'}) }}" aria-controls="{{ section_name }}" role="tab" data-toggle="tab">{{ section_name }}</a>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ section_name|replace({' ':'_'}) }}" aria-controls="{{ section_name }}" role="tab" data-toggle="tab">{{ section_name }}</a>
       </li>
-      {% set k=1 %}
     {% endfor %}
   </ul>
 
@@ -65,11 +64,12 @@
       <div class="tab-content">
         {% for section_name,section_array in page.params %}
           <div id="{{ section_name|replace({' ':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
+            <div class="row">
             {# sous navigation #}
-            <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
+            <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
               {% for subsection_name,subsection_array in section_array %}
-                <li {% if loop.first %}class="active"{% endif %} role="presentation">
-                  <a href="#{{ subsection_name|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ subsection_name }}" role="tab" data-toggle="tab">{{ subsection_name }}</a>
+                <li class="nav-item role="presentation">
+                  <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ subsection_name|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ subsection_name }}" role="tab" data-toggle="tab">{{ subsection_name }}</a>
                 </li>
               {% endfor %}
             </ul>
@@ -77,13 +77,13 @@
               {% for subsection_name,subsection_array in section_array %}
                 <div id="{{ subsection_name|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
                   <h3>{{ subsection_name }}</h3>
-                  <table class="table table-hover table-striped">
+                  <table class="table table-sm mb-0 table-hover  table-striped">
                     <thead>
                       <tr>
-                        <th class="col-md-2">Paramètre</th>
-                        <th class="col-md-4">Valeur</th>
-                        <th class="col-md-1">Type</th>
-                        <th class="col-md-5">Note</th>
+                        <th>Paramètre</th>
+                        <th>Valeur</th>
+                        <th>Type</th>
+                        <th>Note</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -111,7 +111,7 @@
                                 </div>
                                 <div class="col-md-1" style="margin-left:0;padding-left:0">
                                   <a role="button" style="margin-top:5px;padding-left:0" class="col-md-2 view-password" href="javascript:void(0)" onmousedown="$('#{{ param_name ~ 'ID' }}').attr('type', 'text')" onmouseup="$('#{{ param_name ~ 'ID' }}').attr('type', 'password')">
-                                    <span style="padding-left:0" class="glyphicon glyphicon-eye-open"></span>
+                                    <span style="padding-left:0" class="fa fa-eye"></span>
                                   </a>
                                 </div>
                               </div>
@@ -126,22 +126,23 @@
                   </table>
                 </div>
               {% endfor %}
-            </div>
+              </div>
+            </div>            
           </div>
         {% endfor %}
       </div>
-
-      <div class="col-md-2"></div>
-      <div class="col-md-10">
-        {{ f.input ({
-          'input' : {
-            'type' : 'submit',
-            'value' : 'Enregistrer',
-            'class' : 'btn btn-primary'
-          }
-        }) }}
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+          {{ f.input ({
+            'input' : {
+              'type' : 'submit',
+              'value' : 'Enregistrer',
+              'class' : 'btn btn-primary'
+            }
+          }) }}
+        </div>
       </div>
-
 
   </form>
 

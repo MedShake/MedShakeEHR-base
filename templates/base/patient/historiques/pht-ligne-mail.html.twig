@@ -30,13 +30,17 @@
     <td>{{ cs.creationTime }}</td>
     <td>
         {# voir #}
-        <a class="btn btn-default btn-xs showDetDoc" href="#" role="button" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="Voir"></span></a>
+        <a href="#" target="_blank" class="showDetDoc">
+          <button class="btn btn-default btn-sm" role="button">
+            <span class="fa fa-eye" aria-hidden="true" title="Voir"></span>
+          </button>
+        </a>
 
     </td>
     <td>
         <span class="icoImportant{{ cs.id }}">
             {% if cs.important == 'y' %}
-                <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+                <span class="fa fa-flash" aria-hidden="true"></span>
             {% endif %}
         </span>
         {{ cs.label }}
@@ -54,27 +58,26 @@
 
         {# option #}
         <div class="btn-group">
-            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-                <span class="caret"></span>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-wrench" aria-hidden="true"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
                 <li>
-                    <a href="#" class="toogleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
+                    <a href="#" class="dropdown-item toogleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
                         {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
                     </a>
                 </li>
                 <li>
-                    <a data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
+                    <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
                 </li>
-                  <li role="separator" class="divider"></li>
+                  <li role="separator" class="dropdown-divider"></li>
                 <li class="disabled">
-                    <a href="#">#{{ cs.id }}</a>
+                    <a class="dropdown-item" href="#">#{{ cs.id }}</a>
                 </li>
                 {% if cs.sendMail > 0 %}
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="dropdown-divider"></li>
                 <li>
-                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
+                    <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
                 </li>
                 {% endif %}
             </ul>

@@ -38,7 +38,7 @@
 {% block body %}
   <h1>Liste des dossiers supprimés</h1>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-sm mb-0 table-hover  table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -55,8 +55,10 @@
         <tr>
           <td>{{ v.id }}</td>
           <td>
-            <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
-              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
+              <button class="btn btn-default btn-sm" role="button">
+                <span class="fa fa-folder-open" aria-hidden="true"></span>
+              </button>
             </a>
             {{ v.identiteDossier|e }}
           </td>
@@ -67,10 +69,10 @@
           <td>
 
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-wrench" aria-hidden="true"></span> 
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
-                <li><a class="unmarkDeleted" data-patientID="{{ v.id }}" href="#">Réactiver ce dossier</a></li>
+                <li><a class="dropdown-item unmarkDeleted" data-patientID="{{ v.id }}" href="#">Réactiver ce dossier</a></li>
               </ul>
             </div>
 

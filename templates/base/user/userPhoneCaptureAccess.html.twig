@@ -47,11 +47,11 @@
       <div class="col-md-6">
 
         <div class="row">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title gras">Principe d'activation de PhoneCapture sur un périphérique mobile</h3>
+          <div class="card col-md-12">
+            <div class="card-header py-0">
+              <h3 class="card-title gras">Principe d'activation de PhoneCapture sur un périphérique mobile</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <p>PhoneCapture de MedShakeEHR permet de capturer des photos directement dans le dossier ouvert à l'écran avec un périphérique mobile doté d'un navigateur récent.</p>
               <p>Les images enregistrées le sont au format DICOM, le standard de l'imagerie médicale. C'est pourquoi le serveur DICOM libre et open source
                 <a href="https://www.orthanc-server.com/">Orthanc</a>
@@ -63,14 +63,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title gras">Révoquer vos périphériques mobiles actuellement autorisés</h3>
+          <div class="card col-md-12">
+            <div class="card-header py-0">
+              <h3 class="card-title gras">Révoquer vos périphériques mobiles actuellement autorisés</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <p>En cas de disparition d'un de vos périphériques ou pour tout autre besoin, vous pouvez révoquer l'autorisation en cours. Si vous effectuez cette action, il faudra identifier à nouveau chaque périphérique avec un nouveau code flash.</p>
               <p>
-                <a class="btn btn-danger confirmBefore" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/changeUserPhoneCaptureFingerprint/">Révoquer mes périphériques PhoneCapture</a>
+                <a class="confimBefore" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/actions/changeUserPhoneCaptureFingerprint/">
+                  <button class="btn btn-danger">Révoquer mes périphériques PhoneCapture</button>
+                </a>
               </p>
             </div>
           </div>
@@ -78,8 +80,8 @@
       </div>
       <div class="col-md-6">
 
-        <div class="panel panel-default">
-          <div class="panel-body text-center">
+        <div class="card col-md-12">
+          <div class="card-body text-center">
             <span id="QRcode"></span><br>
             {{ page.urlDestination }}
           </div>

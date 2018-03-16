@@ -38,22 +38,22 @@
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-		<li class="active">
+		<li  class="breadcrumb-item active">
 				Utilisateurs et options
 		</li>
   </ol>
 
   <h1>Liste des utilisateurs</h1>
 
-  <a href="javascript:void(0)" class="btn btn-primary pull-right newUser" data-toggle="modal" data-target="#modalUserCreation" role="button" style="margin-bottom:10px">Nouvel utilisateur</a>
+  <a href="javascript:void(0)" class="btn btn-primary float-right m-1 newUser" data-toggle="modal" data-target="#modalUserCreation" role="button" style="margin-bottom:10px">Nouvel utilisateur</a>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-sm mb-0 table-hover  table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -81,24 +81,33 @@
          </td>
           <td>
             <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
-              <span class="glyphicon glyphicon-{% if v.rank =='' %}unchecked{% else %}check{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
+              <span class="far fa-{% if v.rank =='' %}square{% else %}check-square{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
             </a>
           </td>
           <td>
-            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Paramètres spécifiques</a>
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/">
+              <button class="btn btn-default btn-sm">
+                <span class="fa fa-wrench" aria-hidden="true"></span>
+                Paramètres spécifiques
+              </button>
+            </a>
           </td>
           <td>
             {% if v.id!=page.userid %}
               <input style="border:1px solid #ccc;border-radius:4px" type="password" title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value=""></input>
-              <a class="btn btn-default btn-xs" href="javascript:void(0)">
-                <span class="glyphicon glyphicon-ok changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Valider le nouveau mot de passe"></span>
+              <a href="#">
+                <button class="btn btn-default btn-sm">
+                  <span class="far fa-arrow-alt-circle-down changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Valider le nouveau mot de passe"></span>
+                </button>
               </a>
             {% endif %}
           </td>
           <td>
             {% if v.id!=page.userid %}
-              <a class="btn btn-default btn-xs" href="javascript:void(0)">
-                <span class="glyphicon glyphicon-remove revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)"></span>
+              <a href="#">
+                <button class="btn btn-default btn-sm">
+                  <span class="fa fa-times revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)"></span>
+                </button>
               </a>
             {% endif %}
           </td>

@@ -42,29 +42,39 @@
 
       <div class="row bottom-space">
         <ul class="nav nav-tabs">
-          <li role="presentation" {% if page.expediteurID ==  0 %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/0/">Expéditeurs : tous</a></li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link{% if page.expediteurID ==  0 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/0/">Expéditeurs : tous</a>
+          </li>
           {% for k,v in page.expediteurs %}
-          <li role="presentation" {% if k == page.expediteurID %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ k }}/">{{ v }}</a></li>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link{% if k == page.expediteurID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ k }}/">{{ v }}</a>
+          </li>
           {% endfor %}
         </ul>
       </div>
 
       <div class="row">
-            <div class="btn-group  pull-right" role="group" aria-label="...">
-              <a type="button" {% if page.nextStart < 0 %}disabled="disabled"{% endif %} class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/"> <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Suivants</a>
-              <a type="button" class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">Précédents  <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a>
+        <div class="col-md-12">
+            <div class="btn-group float-right m-1" role="group" aria-label="...">
+              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
+                <button class="btn btn-default m-1" {% if page.nextStart < 0 %}disabled="disabled"{% endif %}> <span class="fa fa-chevron-left" aria-hidden="true"></span> Plus récents</button>
+              </a>
+              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
+                <button class="btn btn-default m-1">Plus anciens <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
+              </a>
             </div>
+        </div>
       </div>
 
         <div class="row">
-            <table class="table table-hover">
+            <table class="table table-sm mb-0 table-hover ">
                 <thead>
                     <tr>
-                        <th class="col-md-2">Date</th>
-                        <th class="col-md-2">De</th>
-                        <th class="col-md-2">A</th>
-                        <th class="col-md-3">Concernant</th>
-                        <th class="col-md-3">Sujet</th>
+                        <th>Date</th>
+                        <th>De</th>
+                        <th>A</th>
+                        <th>Concernant</th>
+                        <th>Sujet</th>
 
                     </tr>
                 </thead>
@@ -76,9 +86,12 @@
                             <td>{{ page['expediteurs'][v.fromID] }}<br>
                             <small>{{ v.from }}</small></td>
                             <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
-                            <td> <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
-                              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                            </a>
+                            <td> 
+                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
+                                <button class="btn btn-default btn-sm" role="button">
+                                  <span class="fa fa-folder-open" aria-hidden="true"></span>
+                                </button>
+                              </a>
                               {{ v.patient.3 }}
                               {% if v.patient.1 and v.patient.2 %}
                                 {{ v.patient.2|e }} ({{ v.patient.1|e }})

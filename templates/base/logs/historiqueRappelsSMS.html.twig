@@ -43,19 +43,34 @@
 
     <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline bottom-space">
 
-      <a class="btn btn-default btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/" role="button">
-        <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-        Jour précédent</a>
-      <a class="btn btn-default btn-default{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/" role="button">Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})</a>
-      <a class="btn btn-default btn-default{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/" role="button">Jour suivant <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/">
+        <button class="btn btn-default btn-default" role="button">
+          <span class="fa fa-step-backward" aria-hidden="true"></span>
+          Jour précédent
+        </button>
+      </a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/">
+        <button class="btn btn-default btn-default{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button">
+          Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
+        </button>
+      </a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/">
+        <button class="btn btn-default btn-default{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button">
+          Jour suivant 
+          <span class="fa fa-step-forward" aria-hidden="true"></span>
+        </button>
       </a>
 
-      <a class="btn btn-default btn-default{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" role="button" style="margin-right: 20px">Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/">
+        <button class="btn btn-default btn-default{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" style="margin-right: 20px">
+          Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
+        </button>
+      </a>
 
       <div id="dateSel" class="input-group date datepick" >
         <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
-        <span class="input-group-addon">
-          <span class="glyphicon glyphicon-calendar"></span>
+        <span class="input-group-append">
+          <span class="fa fa-calendar"></span>
         </span>
       </div>
       <button type="submit" class="btn btn-default">Chercher</button>
@@ -65,11 +80,11 @@
 
     <div class="row">
       <div class="col-md-6">
-        <div class="panel panel-default">
+        <div class="card col-md-12">
 
-          <div class="panel-heading gras">
+          <div class="card-header py-0 gras">
             Campagne du {{ page.dates.emission|date("d/m/Y") }}
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-default btn-xs pull-right">Voir rappels mail</a>
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-default btn-sm float-right m-1">Voir rappels mail</a>
           </div>
 
           <ul class="list-group">
@@ -93,23 +108,23 @@
 
       <div class="col-md-6">
 
-        <div class="panel panel-default">
+        <div class="card col-md-12">
 
-          <div class="panel-heading gras">SMS envoyés
+          <div class="card-header py-0 gras">SMS envoyés
           </div>
 
-          <table class="table table-hover table-striped">
+          <table class="table table-sm mb-0 table-hover  table-striped">
             <thead>
               <tr>
-                <th class="col-md-1">RDV</th>
-                <th class="col-md-2">Identité</th>
-                <th class="col-md-2">N°</th>
-                <th class="col-md-3">
+                <th>RDV</th>
+                <th>Identité</th>
+                <th>N°</th>
+                <th>
                   <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
                     Statut
                     <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
                     <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
-                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Mettre à jour</button>
+                    <button type="submit" class="btn btn-default btn-sm"><span class="fa fa-refresh" aria-hidden="true"></span> Mettre à jour</button>
                   </form>
                 </th>
               </tr>

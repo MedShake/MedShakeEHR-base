@@ -322,8 +322,8 @@ $(document).ready(function() {
     th = $(this).find("th");
     th.find(".arrow").remove();
     dir = $.fn.stupidtable.dir;
-    arrow = data.direction === dir.ASC ? "glyphicon-chevron-up" : "glyphicon-chevron-down";
-    th.eq(data.column).append(' <span class="arrow glyphicon ' + arrow + '"></span>');
+    arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
+    th.eq(data.column).append(' <span class="arrow fa ' + arrow + '"></span>');
   });
 
   //modal Courbes de poids/taille/IMC
@@ -843,7 +843,7 @@ function toogleImportant(el) {
       if (importanceActu == 'n') {
         el.html('N\'est plus important');
         el.attr('data-importanceActu', 'y');
-        $('.icoImportant' + objetID).html('<span class="glyphicon glyphicon-flash" aria-hidden="true"></span>');
+        $('.icoImportant' + objetID).html('<span class="fa fa-flash" aria-hidden="true"></span>');
       }
       if (importanceActu == 'y') {
         $('.icoImportant' + objetID).html('');

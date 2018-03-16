@@ -38,13 +38,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
   </li>
-  <li class="active">
+  <li class="breadcrumb-item active">
 	    Clefs Apicrypt
   </li>
 </ol>
@@ -54,13 +54,13 @@
 
 {# Nav tabs #}
 <ul class="nav nav-tabs bottom-space" role="tablist">
-    <li role="presentation" {% if page.selectUser < 1 %}class="active"{% endif %}>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/" aria-controls="categories" role="tab">Configuration générale</a>
+    <li role="presentation" class="nav-item">
+        <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
     {% for id, user in page.apicryptClefsUsers %}
       {% if user.paramValue is not empty %}
-      <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/{{ id }}/" aria-controls="prescriptions" role="tab">{{ user.identite }}</a>
+      <li role="presentation" class="nav-item">
+          <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/{{ id }}/" aria-controls="prescriptions" role="tab">{{ user.identite }}</a>
       </li>
       {% endif %}
     {% endfor %}
@@ -73,16 +73,16 @@
 
   <table class="table">
       <tr>
-          <th class="col-md-2">
+          <th>
               Paramètre
           </th>
-          <th class="col-md-6">
+          <th>
               Chemin + répertoire "Clefs" final
           </th>
-          <th class="col-md-2">
+          <th>
               Est accessible en lecture
           </th>
-          <th class="col-md-2">
+          <th>
               Est accessible en écriture
           </th>
       </tr>
@@ -104,15 +104,15 @@
     {% if page.listeClefs|length < 1 %}
       <div class="alert alert-danger" role="alert">Aucune clef Apicrypt n'est chargée pour cet utilisateur.</div>
     {% else %}
-      <table class="table table-hover">
+      <table class="table table-sm mb-0 table-hover ">
           <tr>
-              <th class="col-md-2">
+              <th>
                   Fichier
               </th>
-              <th class="col-md-6">
+              <th>
                   Chemin complet
               </th>
-              <th class="col-md-2">
+              <th>
                   Gérer
               </th>
           </tr>
@@ -121,7 +121,7 @@
                   <td>{{ v.file }}</td>
                   <td>{{ page.repertoireClefs }}{{ v.file }}</td>
                   <td>
-                    <a href="#" data-file="{{ v.file }}" data-user="{{ page.selectUser }}" class="delApicryptClef btn btn-default btn-xs">supprimer</a>
+                    <a href="#" data-file="{{ v.file }}" data-user="{{ page.selectUser }}" class="delApicryptClef btn btn-default btn-sm">supprimer</a>
                   </td>
               </tr>
           {% endfor %}

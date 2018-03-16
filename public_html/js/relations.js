@@ -177,7 +177,22 @@ function getRelationsPatientPatientsTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPatients').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPatients').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/patient/' + value.patientID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.patientID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPatients').append('\
+          <tr>\
+            <td>\
+             <a href="' + urlBase + '/patient/' + value.patientID + '/">\
+               <button class="btn btn-default btn-sm" role="button">\
+                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
+               </button>\
+             </a>\
+            </td>\
+            <td>' + value.prenom + ' ' + value.nom + '</td>\
+            <td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>\
+              <button class="btn btn-default btn-sm removeRelationPatient" style="cursor:pointer" role="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+              </button>\
+            </td>\
+          </tr>');
       });
 
     },
@@ -200,7 +215,21 @@ function getRelationsPatientPraticiensTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPrat').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPrat').append('\
+          <tr>\
+            <td>\
+              <a href="' + urlBase + '/pro/' + value.pratID + '/">\
+                <button class="btn btn-default btn-sm" role="button">\
+                  <span class="fa fa-folder-open" aria-hidden="true"></span>\
+                </button>\
+              </a>\
+            </td>\
+            <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>\
+              <button class="btn btn-default btn-sm removeRelationPatient" style="cursor:pointer" role="button" data-peopleID="' + value.pratID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+              </button>\
+            </td>\
+          </tr>');
       });
 
     },

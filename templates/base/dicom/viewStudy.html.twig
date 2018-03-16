@@ -106,10 +106,10 @@
                 {{ page.studyDcDataRapro.creationDate|date('d/m/Y H:i') }}</p>
         {% endif %}
 
-        <div class="panel panel-default">
+        <div class="card col-md-12">
 
-            <div class="panel-heading">Images de l'étude</div>
-            <div class="panel-body imagesList">
+            <div class="card-header py-0">Images de l'étude</div>
+            <div class="card-body imagesList">
               <button type="button" data-status="unchecked" class="btn btn-default btn-sm selectAll">Tout sélectionner / déselectionner</button>
                 <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
                     <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
@@ -138,13 +138,13 @@
 
         {# DEPRECATED #}
         {% if page.studyDcDataSR %}
-            <div class="panel panel-default">
+            <div class="card col-md-12">
 
-                <div class="panel-heading">Tags DICOM SR</div>
-                <div class="panel-body">
+                <div class="card-header py-0">Tags DICOM SR</div>
+                <div class="card-body">
                     <p>Mesures remontées dans cette études</p>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-sm mb-0 table-striped table-hover">
                     <thead>
                         <th>Tag</th>
                         <th>Nom</th>
@@ -172,13 +172,13 @@
 
         {# Data SR via XML #}
         {% if page.studyDcDataSRFull %}
-            <div class="panel panel-default">
+            <div class="card col-md-12">
 
-                <div class="panel-heading">Tags DICOM SR (XML)</div>
-                <div class="panel-body">
+                <div class="card-header py-0">Tags DICOM SR (XML)</div>
+                <div class="card-body">
                     <p>Mesures remontées dans cette études</p>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-sm mb-0 table-striped table-hover">
                     <thead>
                         <th>Tag</th>
                         <th>Foetus</th>

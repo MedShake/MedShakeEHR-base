@@ -82,10 +82,10 @@
 
             <div class="col-md-10">
 
-                <div class="panel panel-default">
+                <div class="card col-md-12">
 
-                    <div class="panel-heading">Examens du patient</div>
-                    <div class="panel-body">
+                    <div class="card-header py-0">Examens du patient</div>
+                    <div class="card-body">
                         {% if page.studiesDcData %}
                             <p>Liste des examens du patient trouvés sur le serveur DICOM</p>
                         {% else %}
@@ -93,7 +93,7 @@
                         {% endif %}
                     </div>
                     {% if page.studiesDcData %}
-                        <table id="listeExamens" class="table table-striped table-hover">
+                        <table id="listeExamens" class="table table-sm mb-0 table-striped table-hover">
                             <thead>
                                 <th></th>
                                 <th>Date</th>
@@ -105,8 +105,10 @@
                                 {% for v in page.studiesDcData %}
                                   <tr>
                                     <td>
-                                        <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/" role="button">
-                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/">
+                                          <button class="btn btn-default btn-sm" role="button">
+                                            <span class="fa fa-eye" aria-hidden="true"></span>
+                                          </button>
                                         </a>
                                     </td>
                                     <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>

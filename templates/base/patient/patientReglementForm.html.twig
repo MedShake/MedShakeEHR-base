@@ -26,7 +26,7 @@
  #}
 
 {% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
     <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -60,10 +60,10 @@
         {% endfor %}
     </div>
 
-    <div id="detFacturation" class="panel panel-default" style="display: none;">
-      <div class="panel-heading">Détails par acte dans le règlement sélectionné</div>
+    <div id="detFacturation" class="card col-md-12" style="display: none;">
+      <div class="card-header py-0">Détails par acte dans le règlement sélectionné</div>
 
-      <table class="table table-condensed">
+      <table class="table table-sm mb-0 table-condensed">
         <thead>
           <th>acte</th>
           <th>%</th>

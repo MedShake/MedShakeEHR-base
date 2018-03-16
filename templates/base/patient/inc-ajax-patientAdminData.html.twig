@@ -52,16 +52,18 @@
         {% endif %}
 
         {% if page['patient']['administrativeDatas']['notes']['value'] %}
-          <button id="voirNotesPatient" type="button" class="btn btn-default btn-xs" title="Voir les notes">
-              <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+          <button id="voirNotesPatient" type="button" class="btn btn-default btn-sm" title="Voir les notes">
+              <span class="fa fa-comment" aria-hidden="true"></span>
           </button>
         {% endif %}
 
-        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
 
         {% if page.correspondants is empty %}
-        <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
-            <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
+          <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
+            <span class="fa fa-link" aria-hidden="true"></span>
+          </button>
         </a>
         {% endif %}
     </small>
@@ -70,14 +72,14 @@
     {# email #}
     {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
       <div class="btn-group">
-        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }} <span class="caret"></span>
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }} 
         </button>
 
         <ul class="dropdown-menu">
-          <li><a class="newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
+          <li><a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
           {% if config.smtpTracking %}
-            <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
+            <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
           {% endif %}
         </ul>
       </div>
@@ -100,11 +102,15 @@
 
     {% if page.correspondants %}
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
+      <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
+        <span class="fa fa-link" aria-hidden="true"></span>
+      </button>
     </a>
     {% for v in page.correspondants %}
-      <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">{% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/">
+        <button class="btn btn-default btn-sm" role="button" title="">{% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}</button>
+      </a>
     {% endfor %}
     {% endif %}
 </div>

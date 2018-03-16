@@ -41,21 +41,21 @@
 
 {% block body %}
 <ol class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des modèles</a>
   </li>
   {% if page.selectUser > 0 %}
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {% if page.fichier.proprio.2 %}{{ page.fichier.proprio.2 }}{% else %}{{ page.fichier.proprio.1 }}{% endif %}</a>
     </li>
   {% endif %}
-  <li class="active">
+  <li class="breadcrumb-item active">
     Édition
   </li>
 </ol>

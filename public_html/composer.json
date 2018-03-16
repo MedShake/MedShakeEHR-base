@@ -6,6 +6,18 @@
         {
             "type": "package",
             "package": {
+                "name": "FortAwesome/Font-Awesome",
+                "version": "5.0.8",
+                "source": {
+                    "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                    "type": "git",
+                    "reference": "5.0.8"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "dennyferra/TypeWatch",
                 "version": "3.0.0",
                 "source": {
@@ -150,7 +162,8 @@
     ],
 
     "require": {
-        "twbs/bootstrap": "^3.3",
+        "FortAwesome/Font-Awesome": "^5.0.8",
+        "twbs/bootstrap": "^4.0",
         "eonasdan/bootstrap-datetimepicker": "^4.17.43",
         "moment/moment": "^2.17.1",
         "dimsemenov/magnific-popup": "^1.1.0",

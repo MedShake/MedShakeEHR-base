@@ -38,18 +38,22 @@
 {% block body %}
 <h1>Historique d'envoi par mail</h1>
 <p>
-<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/" role="button">Retour dossier patient</a>
+<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/">
+  <button class="btn btn-default btn-primary" role="button">
+    Retour dossier patient
+  </button>
+</a>
 </p>
     <div class="container-fluid">
         <div class="row">
-            <table class="table table-hover ">
+            <table class="table table-sm mb-0 table-hover  ">
                 <thead>
                     <tr>
-                        <th class="col-md-1">Date</th>
-                        <th class="col-md-2">De</th>
-                        <th class="col-md-2">A</th>
-                        <th class="col-md-3">Sujet</th>
-                        <th class="col-md-4">Message</th>
+                        <th>Date</th>
+                        <th>De</th>
+                        <th>A</th>
+                        <th>Sujet</th>
+                        <th>Message</th>
                     </tr>
                 </thead>
                 <tbody>
