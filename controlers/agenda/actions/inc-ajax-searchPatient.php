@@ -24,6 +24,7 @@
  * Agenda : chercher patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  $name2typeID = new msData();
@@ -42,7 +43,7 @@
  left join objets_data as d2 on d2.toID=p.id and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
  left join objets_data as d8 on d8.toID=p.id and d8.typeID='".$name2typeID['birthdate']."' and d8.outdated='' and d8.deleted=''
  left join objets_data as d3 on d3.toID=p.id and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
- where concat(d2.value, ' ', d3.value) like '%".$term."%' or concat(d1.value, ' ', d3.value) like '%".$term."%'
+ where (concat(d2.value, ' ', d3.value) like '%".$term."%' or concat(d1.value, ' ', d3.value) like '%".$term."%') and p.type in ('pro', 'patient')
  group by p.id, d1.value, d2.value, d3.value, d8.value
  order by identite limit 20")) {
 
