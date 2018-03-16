@@ -191,13 +191,21 @@ $(document).ready(function() {
   //changement date début prescription
   $("#beginPeriodeIDB").on("dp.change", function(e) {
     var debut = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
-    $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
+    if(ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
+      $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY'));
+    } else {
+      $('#endPeriodeID').val(debut.format('DD/MM/YYYY'));
+    }
   });
   // passer à demain au dblclick
   $("#beginPeriodeID").on("dblclick", function(e) {
     var debut = moment(new Date()).add(1, 'days');
     $('#beginPeriodeID').val(debut.format('DD/MM/YYYY'));
-    $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY'));
+    if(ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
+      $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY'));
+    } else {
+      $('#endPeriodeID').val(debut.format('DD/MM/YYYY'));
+    }
   });
 
   // changement sur le menu unité
@@ -320,8 +328,16 @@ function catchCurrentPrescriptionData() {
   ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
   ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
   ligneData['dateDebutPrise'] = $('#beginPeriodeID').val();
-  ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
-  ligneData['dateFinPriseAvecRenouv'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY');
+  if(ligneData['dureeTotaleMachineJours']>0) {
+    ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
+  } else {
+    ligneData['dateFinPrise'] = $('#beginPeriodeID').val();
+  }
+  if(ligneData['dureeTotaleMachineJoursAvecRenouv']>0) {
+    ligneData['dateFinPriseAvecRenouv'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY');
+  } else {
+    ligneData['dateFinPrise'] = $('#beginPeriodeID').val();
+  }
 
   ligne = {
     medics: [medicData],
@@ -710,9 +726,8 @@ function editPrescription(ordoZone, index) {
   $('#nbRenouvellements option[value="' + ligneData['nbRenouvellements'] + '"]').prop('selected', true);
 
   // date début et fin de prise
-  if (ligneData['dureeTotaleMachineJours'] > 0) {
-    $('#beginPeriodeID').val(ligneData['dateDebutPrise']);
-  }
+  $('#beginPeriodeID').val(ligneData['dateDebutPrise']);
+
 
   // unités possibles
   $.each(medicData['unitesPossibles'], function(index, value) {
@@ -785,11 +800,12 @@ function matchAndGo() {
         medicData['versionInterpreteur'] = data['versionInterpreteur'];
 
         medicData['regEx'] = data['regEx'];
-        medicData['typePosoTheriaque'] = data['typePosoTheriaque'];
+        medicData['posoTheriaqueMode'] = data['posoTheriaqueMode'];
         medicData['posoDosesSuccessives'] = data['posoDosesSuccessives'];
         medicData['posoDureesSuccessives'] = data['posoDureesSuccessives'];
         medicData['posoDureesUnitesSuccessives'] = data['posoDureesUnitesSuccessives'];
         medicData['nbPrisesParUniteTemps'] = data['nbPrisesParUniteTemps'];
+        medicData['nbPrisesParUniteTempsUnite'] = data['nbPrisesParUniteTempsUnite'];
         medicData['posoJours'] = data['posoJours'];
 
         // actions visuelle
@@ -807,23 +823,28 @@ function matchAndGo() {
         } else {
           $("#prescriptionAlertSecabilite").hide();
         }
+
         //mise à jour dates début / fin
-        if (data['dureeTotaleMachineJours'] > 0) {
-          var startDefaut = moment(new Date());
-          if ($('#beginPeriodeID').val() == '') {
-            var currentStart = startDefaut;
-          } else {
-            var currentStart = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
-          }
-          if (currentStart.format('DD/MM/YYYY') != startDefaut.format('DD/MM/YYYY')) {
-            var start = currentStart;
-          } else {
-            var start = startDefaut;
-          }
-          $('#beginPeriodeID').val(start.format('DD/MM/YYYY'));
+        var startDefaut = moment(new Date());
+        if ($('#beginPeriodeID').val() == '') {
+          var currentStart = startDefaut;
+        } else {
+          var currentStart = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
+        }
+        if (currentStart.format('DD/MM/YYYY') != startDefaut.format('DD/MM/YYYY')) {
+          var start = currentStart;
+        } else {
+          var start = startDefaut;
+        }
+        $('#beginPeriodeID').val(start.format('DD/MM/YYYY'));
+
+        if (data['dureeTotaleMachineJoursAvecRenouv'] > 0) {
           $('#endPeriodeID').val(start.add((data['dureeTotaleMachineJoursAvecRenouv'] - 1), 'days').format('DD/MM/YYYY'));
+        } else {
+          $('#endPeriodeID').val(start.add(data['dureeTotaleMachine']['h'] , 'hours').format('DD/MM/YYYY'));
         }
 
+        console.log(ligneData);
         console.log(medicData);
         console.log("Analyse coté serveur de lap rescription frappée : STOP");
       },

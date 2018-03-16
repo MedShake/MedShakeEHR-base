@@ -21,24 +21,17 @@
  */
 
 /**
- * Config : gérer les catégories de prescriptions types
+ * Patient > ajax : générer le header du dossier patient (infos administratives)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$template="inc-patientLatCol";
 
+//le patient
+$patient = new msPeople();
+$patient->setToID($_POST['patientID']);
+$p['page']['patient']['id']=$_POST['patientID'];
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configPrescriptionsCat";
-     $debug='';
-
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
-			from prescriptions_cat as c
-			left join prescriptions as p on c.id=p.cat
-      where c.type='nonlap'
-			group by c.id
-			order by c.label asc", 'id');
- }
+//les ALD du patient
+if($p['config']['lapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}

@@ -30,11 +30,6 @@ var ordonnanceVisu = {};
 
 $(document).ready(function() {
 
-  // Historique ordo
-  $('#ordohistoriqueTabL').on("show.bs.tab", function() {
-    getHistoriqueOrdos();
-  });
-
   // Obtenir l'ordo
   $('body').on("click", '.voirOrdonnance', function(e) {
     var ordonnanceID = $(this).attr("data-ordonnanceID");
@@ -42,7 +37,8 @@ $(document).ready(function() {
   });
 
   // Renouveller une ligne de l'ordo visualisée
-  $('#modalVoirOrdonnance').on("click", 'button.renouvLignePrescription', function(e) {
+  $('body').on("click", 'button.renouvLignePrescription', function(e) {
+
     var ligneIndex = $(this).parents('div.lignePrescription').index();
     if ($(this).parents('div.lignePrescription').hasClass('ald')) {
       var zone = ordoMedicsALD;
@@ -52,11 +48,11 @@ $(document).ready(function() {
       var ligneAinjecter = ordonnanceVisu['ordoMedicsG'][ligneIndex];
     }
 
-    ligneAinjecter=cleanLignePrescriptionAvantRenouv(ligneAinjecter);
+    ligneAinjecter = cleanLignePrescriptionAvantRenouv(ligneAinjecter);
 
     console.log(ligneAinjecter);
     zone.push(ligneAinjecter);
-    construireHtmlLigneOrdonnance(ligneAinjecter, 'append', '', '#conteneurOrdonnanceCourante');
+    construireHtmlLigneOrdonnance(ligneAinjecter, 'append', '', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
 
     // sauvegarde
     ordoLiveSave();
@@ -74,7 +70,8 @@ $(document).ready(function() {
  * @param  {int} ordonnanceID ordonnance
  * @return {[type]}              [description]
  */
-function getOrdonnance(ordonnanceID) {
+function getOrdonnance(ordonnanceID, destination) {
+  if(!destination) var destination = 'modal';
   $.ajax({
     url: urlBase + '/lap/ajax/lapOrdoGet/',
     type: 'post',
@@ -84,11 +81,15 @@ function getOrdonnance(ordonnanceID) {
     dataType: "json",
     success: function(data) {
       ordonnanceVisu = data;
-      $('#conteneurOrdonnanceVisu div.conteneurPrescriptionsALD , #conteneurOrdonnanceVisu div.conteneurPrescriptionsG').html('')
-      construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], '#conteneurOrdonnanceVisu');
-      var dateOrdo = moment(data.ordoData.creationDate, "YYYY-MM-DD HH:mm:ss");
-      $('#modalVoirOrdonnance h4.modal-title').html("Ordonnance du " +  dateOrdo.format("DD/MM/YYYY HH:mm") + " - Prescripteur : " + data.ordoData.prenom + " " + data.ordoData.nom );
-      $('#modalVoirOrdonnance').modal('show');
+      if(destination == 'modal') {
+        $('#conteneurOrdonnanceVisu div.conteneurPrescriptionsALD , #conteneurOrdonnanceVisu div.conteneurPrescriptionsG').html('')
+        construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], '#conteneurOrdonnanceVisu');
+        var dateOrdo = moment(data.ordoData.creationDate, "YYYY-MM-DD HH:mm:ss");
+        $('#modalVoirOrdonnance h4.modal-title').html("Ordonnance du " + dateOrdo.format("DD/MM/YYYY HH:mm") + " - Prescripteur : " + data.ordoData.prenom + " " + data.ordoData.nom);
+        $('#modalVoirOrdonnance').modal('show');
+      } else {
+        construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], destination);
+      }
       console.log(ordonnanceVisu);
       console.log("Obtenir ordonnance : OK");
     },
@@ -117,6 +118,24 @@ function getHistoriqueOrdos() {
     },
     error: function() {
       console.log("Historique des ordonnances : PROBLEME");
+    }
+  });
+}
+
+function getPresPre() {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapPresPreGet/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $('#listePresPre').html(data);
+      console.log("Liste des prescriptions préétablies : OK");
+    },
+    error: function() {
+      console.log("Liste des prescriptions préétablies : PROBLEME");
     }
   });
 }

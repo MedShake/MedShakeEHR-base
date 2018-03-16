@@ -1,0 +1,55 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : historique des tt
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  {% for id, cat in page.cat %}
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
+        <h4 class="panel-title">
+          {{ cat.label }}
+          <span class="badge pull-right">{{ cat.enfants }}</span>
+        </h4>
+      </div>
+      <div id="collapse{{ id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+        <div class="panel-body">
+          <p>{{ cat.description }}
+            <button class="btn btn-default btn-xs pull-right" title="Éditer cette catégorie"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+            {% if cat.enfants == 0 %}
+                <button class="btn btn-default btn-xs pull-right" title="Supprimer cette catégorie"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            {% endif %}
+          </p>
+        </div>
+        <div class="list-group">
+          {% for k, pres in page['pres'][id] %}
+            <button type="button" class="list-group-item">{{ pres.label }}</button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

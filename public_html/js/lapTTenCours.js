@@ -34,10 +34,6 @@ var TTenCours = {};
 
 $(document).ready(function() {
 
-  $('#tttencoursTabL').on("show.bs.tab", function() {
-    refreshTTenCours();
-  });
-
   //Saisir un traitement en cours
   $("button.saisirTTenCours").on("click", function(e) {
     modeActionModal = 'saisirTTenCours';
@@ -101,7 +97,7 @@ $(document).ready(function() {
 
     console.log(ligneAinjecter);
     zone.push(ligneAinjecter);
-    construireHtmlLigneOrdonnance(ligneAinjecter, 'append');
+    construireHtmlLigneOrdonnance(ligneAinjecter, 'append','', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
 
     // sauvegarde
     ordoLiveSave();

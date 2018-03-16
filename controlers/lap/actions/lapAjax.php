@@ -52,7 +52,8 @@ $acceptedModes=array(
     'lapOrdoGet', // obtenir l'ordonnnace
     'lapSaveDateEffectiveArretTT',
     'lapOrdoAnalyse', // analyser l'ordo
-    'lapOrdoAnalyseResBrut' // voir données brutes pré analyse
+    'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
+    'lapPresPreGet' // obtenir les prescriptions préétablies
 );
 
 if (!in_array($m, $acceptedModes)) {

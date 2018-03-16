@@ -21,24 +21,13 @@
  */
 
 /**
- * Config : gérer les catégories de prescriptions types
+ * LAP : ajax > obtenir les prescriptions préétablies
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-
-
-
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configPrescriptionsCat";
-     $debug='';
-
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
-			from prescriptions_cat as c
-			left join prescriptions as p on c.id=p.cat
-      where c.type='nonlap'
-			group by c.id
-			order by c.label asc", 'id');
- }
+$debug='';
+$template='inc-lapPresPreGet';
+$lapOrdo = new msLapOrdo;
+$lapOrdo->setFromID($p['user']['id']);
+$p['page']['cat']=$lapOrdo->getCatPresPre();
+$p['page']['pres']=$lapOrdo->getPresPre();

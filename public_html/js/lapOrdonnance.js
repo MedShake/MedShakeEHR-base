@@ -46,6 +46,11 @@ var srcTab;
  */
 var srcIdx;
 
+/**
+ * Comportement de la fonction makeLigneOrdo
+ * @type {String}
+ */
+var voirOrdonnanceMode;
 
 $(document).ready(function() {
 
@@ -142,6 +147,55 @@ $(document).ready(function() {
       ordoLiveSave();
     }
   });
+
+  // convertire une ligne en DCI
+  $("#conteneurOrdonnanceCourante").on("click", "a.convertDci", function(e) {
+      e.preventDefault();
+    console.log(ordoMedicsALD);
+    console.log(ordoMedicsG);
+
+    ligneCouranteIndex = $(this).parents('div.lignePrescription').index();
+    if ($(this).parents('div.connectedOrdoZones').hasClass('ald')) {
+      zoneOrdoAction = ordoMedicsALD;
+    } else {
+      zoneOrdoAction = ordoMedicsG;
+    }
+
+    $.each(zoneOrdoAction[ligneCouranteIndex]['medics'], function(medicIndex, medic) {
+      convertMedicDCI(zoneOrdoAction, ligneCouranteIndex, medicIndex);
+    });
+    console.log(ordoMedicsALD);
+    console.log(ordoMedicsG);
+  });
+
+  // convertire l'ordo en DCI
+  $("#ordonnanceTab").on("click", "a.convertAllDci", function(e) {
+    e.preventDefault();
+
+    $.each(ordoMedicsALD, function(ligneIndex, ligneData) {
+      $.each(ordoMedicsALD[ligneIndex]['medics'], function(medicIndex, medic) {
+        convertMedicDCI(ordoMedicsALD, ligneIndex, medicIndex);
+      });
+    });
+    $.each(ordoMedicsG, function(ligneIndex, ligneData) {
+      $.each(ordoMedicsG[ligneIndex]['medics'], function(medicIndex, medic) {
+        convertMedicDCI(ordoMedicsG, ligneIndex, medicIndex);
+      });
+    });
+    console.log(ordoMedicsALD);
+    console.log(ordoMedicsG);
+  });
+
+  function convertMedicDCI(zoneOrdo, ligneCouranteIndex, medicIndex) {
+    if (zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['prescriptibleEnDC'] == 1) {
+      zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomUtileFinal'] = zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomDC'];
+      if (zoneOrdo[ligneCouranteIndex]['ligneData']['isALD'] == "true") {
+        construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
+      } else {
+        construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
+      }
+    }
+  }
 
   // Ordo live : restaurer la version sauvegardée (undo)
   $("a.ordoLiveRestore").on("click", function(e) {
@@ -396,7 +450,8 @@ function construireOrdonnance(tabMedicsG, tabMedicsALD, parentdestination) {
 function construireHtmlLigneOrdonnance(ligne, methode, destination, parentdestination, mode) {
   console.log('Génération html d\'une ligne de prescription : START');
   if (!parentdestination) var parentdestination = '';
-  if (parentdestination == '#conteneurOrdonnanceVisu') mode = 'voirOrdonnance';
+  if(!mode) mode = voirOrdonnanceMode;
+
   var zoneDestination;
   if (ligne.ligneData.isALD == "true") {
     zoneDestination = $(parentdestination + ' div.conteneurPrescriptionsALD');
@@ -453,7 +508,11 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
     }
-    retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+    if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
+      retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+    } else {
+      retour += ' <small> - le ' + data.ligneData.dateDebutPrise + '</small>';
+    }
     retour += '      </div>';
     retour += '      <div>' + nl2br(data.medics[0].posoHumanComplete) + '</div>';
     retour += '    </div>';
@@ -491,7 +550,7 @@ function makeLigneOrdo(data, mode) {
       retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
     }
     //Actions pour mode ordonnance
-    else {
+    else if (mode == 'editionOrdonnance') {
       retour += '    <button class="btn btn-default btn-xs editLignePrescription">';
       retour += '      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
 
@@ -507,10 +566,10 @@ function makeLigneOrdo(data, mode) {
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
       retour += '        </li>';
 
-      if (data.medics[0].prescriptibleEnDC == '1') {
+      if (data.medics[0].prescriptibleEnDC == '1' && data.medics[0].nomDC != data.medics[0].nomUtileFinal) {
         retour += '          <li role="separator" class="divider"></li>';
         retour += '          <li>';
-        retour += '            <a href="#" class="">';
+        retour += '            <a href="#" class="convertDci">';
         retour += '              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
         retour += '              Convertir en DCI</a>';
         retour += '          </li>';
@@ -537,7 +596,11 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
     }
-    retour += ' - <small class="nongras">' + data.ligneData.dateDebutPrise + '-' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+    if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
+      retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+    } else {
+      retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
+    }
     retour += '    </div>';
     retour += '    <div class="col-md-4"></div>';
     retour += '    <div class="col-md-1 text-right">';
@@ -552,7 +615,7 @@ function makeLigneOrdo(data, mode) {
     }
 
     //Actions pour mode ordonnance
-    else {
+    else if (mode == 'editionOrdonnance') {
       retour += '      <div class="btn-group">';
       retour += '        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
       retour += '          <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>';
@@ -568,7 +631,7 @@ function makeLigneOrdo(data, mode) {
       if (data.medics[0].prescriptibleEnDC == '1') {
         retour += '            <li role="separator" class="divider"></li>';
         retour += '            <li>';
-        retour += '              <a href="#" class="">';
+        retour += '              <a href="#" class="convertDci">';
         retour += '                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
         retour += '                Convertir en DCI</a>';
         retour += '            </li>';
@@ -627,7 +690,7 @@ function makeLigneOrdo(data, mode) {
       // voir ordo
       else if (mode == 'voirOrdonnance') {}
       //Actions pour mode ordonnance
-      else {
+      else if (mode == 'editionOrdonnance') {
         retour += '  <button class="btn btn-default btn-xs editMedicLignePrescription">';
         retour += '    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
 

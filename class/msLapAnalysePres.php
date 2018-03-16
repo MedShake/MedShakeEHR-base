@@ -147,6 +147,8 @@ class msLapAnalysePres extends msLap
      */
     private $_alertesIncompatibilites;
 
+    private $_alertesDopageEtConducteur;
+
 /**
  * Set the value of patient objet
  * @param mixed _ordonnanceContenu
@@ -231,6 +233,7 @@ class msLapAnalysePres extends msLap
         'agrossesse'=> $this->getAlertesGrossesse(),
         'ainteractions'=> $this->getAlertesInteractions(),
         'aincompatibilites'=> $this->getAlertesIncompatibilites(),
+        'adopageconduc'=>$this->getAlertesDopageEtConducteur(),
         'corLi'=>$this->_correspondanceLignes,
         'ordo'=>$this->_ordonnanceContenu
       );
@@ -432,6 +435,50 @@ class msLapAnalysePres extends msLap
 
       }
       return $this->_alertesIncompatibilites=$tab;
+    }
+
+/**
+ * Obtenir les alertes dopage et conducteur
+ * @return array tableau
+ */
+    public function getAlertesDopageEtConducteur() {
+      $zones=[];
+      if(isset($this->_ordonnanceContenu)) {
+        array_push($zones, 'ordoMedicsALD','ordoMedicsG');
+      }
+      if(isset($this->_ttENCoursContenu)) {
+        array_push($zones, 'TTPonctuels','TTChroniques');
+      }
+      if(!empty($zones)) {
+        foreach($zones as $zone) {
+          if($zone == 'ordoMedicsALD' or $zone == 'ordoMedicsG') $tabZone=@$this->_ordonnanceContenu[$zone];
+          elseif($zone == 'TTPonctuels' or $zone == 'TTChroniques') $tabZone=@$this->_ttEnCoursContenu[$zone];
+          if(!empty($tabZone)) {
+            foreach($tabZone as $ligneIndex=>$ligneData) {
+              foreach($ligneData['medics'] as $medic) {
+                if($medic['conducteur']['reco'] == '1') {
+                  $tab['aconducteur'][$medic['conducteur']['niveau']][]=array(
+                    'zone'=>$zone,
+                    'medicNameUtile'=>$medic['nomUtileFinal'],
+                    'conduc'=>$medic['conducteur']
+                  );
+                }
+
+                if($medic['dopage'] > 0) {
+                  $tab['adopage'][$medic['dopage']][]=array(
+                    'zone'=>$zone,
+                    'medicNameUtile'=>$medic['nomUtileFinal'],
+                    'dopageNiveau'=>$medic['dopage']
+                  );
+                }
+
+              }
+            }
+          }
+        }
+        if(isset($tab['aconducteur'])) krsort($tab['aconducteur']);
+        return $this->_alertesDopageEtConducteur = $tab;
+      }
     }
 
 /**
@@ -638,25 +685,68 @@ class msLapAnalysePres extends msLap
 
           $this->_objetPrescription[]=$pres;
           $indexPosologie=1;
-          foreach($m['posoDosesSuccessives'][$this->_indexMedicPosoPresOrdo] as $k=>$dose) {
+
+          //en fonction du mode Thériaque
+          // mode 0 : autant de tab que de prise
+          if($m['posoTheriaqueMode'][$this->_indexMedicPosoPresOrdo] == 0 ) {
+            foreach($m['posoDosesSuccessives'][$this->_indexMedicPosoPresOrdo] as $k=>$dose) {
+              if($dose != '0') {
+                $poso=[];
+                $poso['posologie']=$indexPosologie;
+                $poso['indiceligneprescription']=$this->_indexAbsoluLignePresOrdo;
+                $poso['typeposo']=0;
+                //$poso['valduree']='';
+                //$poso['idduree']='';
+                $poso['quantiteunite']=str_replace('.',',',$dose);
+                $idunite = $this->_convertUniteUtiliOrigine2IdUnite($m['uniteUtiliseeOrigine']);
+                $poso['idunite']=$m['unitesConversion'][$idunite];
+                //$poso['valrepetition']='';
+                //$poso['typerepetition']='';
+                //$poso['nb_elements']='';
+                //$poso['surface_element']='';
+
+                $this->_objetPosoPres[]=$poso;
+                $indexPosologie++;
+              }
+            }
+          }
+          // mode 1 : 1 tab
+          else {
+            $dose = $m['posoDosesSuccessives'][0][0];
+            $duree = $m['posoDureesSuccessives'][0];
+            $dureeUnite = $m['posoDureesUnitesSuccessives'][0];
+            $freq = $m['nbPrisesParUniteTemps'][0];
+            $freqUnite = $m['nbPrisesParUniteTempsUnite'][0];
             if($dose != '0') {
               $poso=[];
               $poso['posologie']=$indexPosologie;
               $poso['indiceligneprescription']=$this->_indexAbsoluLignePresOrdo;
-              $poso['typeposo']=0;
-              //$poso['valduree']='';
-              //$poso['idduree']='';
+              $poso['typeposo']=1;
+
+              if($dureeUnite == 'h' or $dureeUnite == 'i') {
+                $poso['valduree']=$duree;
+                if($dureeUnite == 'h') {
+                  $poso['idduree']=1;
+                } elseif($dureeUnite == 'i') {
+                  $poso['idduree']=2;
+                }
+              }
               $poso['quantiteunite']=str_replace('.',',',$dose);
               $idunite = $this->_convertUniteUtiliOrigine2IdUnite($m['uniteUtiliseeOrigine']);
               $poso['idunite']=$m['unitesConversion'][$idunite];
-              //$poso['valrepetition']='';
-              //$poso['typerepetition']='';
+              $poso['valrepetition'] = $freq;
+              if($freqUnite == 'j') {
+                $poso['typerepetition']=0;
+              } elseif($freqUnite == 'h') {
+                $poso['typerepetition']=1;
+              } elseif($freqUnite == 'i') {
+                $poso['typerepetition']=2;
+              }
               //$poso['nb_elements']='';
               //$poso['surface_element']='';
 
               $this->_objetPosoPres[]=$poso;
               $indexPosologie++;
-
             }
           }
         }
@@ -673,6 +763,7 @@ class msLapAnalysePres extends msLap
     private function _formatDateTimeAddString($duree, $unite) {
       if($unite=='m') return 'P'.($duree * 28 - 1).'D';
       if($unite=='j') return 'P'.$duree.'D';
+      if($unite=='h') return 'PT'.$duree.'H';
       return false;
     }
 

@@ -251,6 +251,11 @@ class msLapPrescription extends msLap
       //$dataGenerique=$this->getGenerique($this->_speThe, 4);
       //$this->_nomDC = $dataGenerique[0]['gsp_nom'];
 
+      //dopage
+      $dataDopage=$this->getDopage($this->_speThe, 0);
+      //conducteur
+      $dataConducteur=$this->getConducteur($this->_speThe, 0);
+
       //sécabilité
       $dataSpeSecabilite=$this->getSpeSecabiliteByCode($this->_speThe);
       if(!empty($dataSpeSecabilite[0]['coeff'])) {
@@ -313,7 +318,13 @@ class msLapPrescription extends msLap
         'codeCIP13'=>$dataPres[0]['pre_ean_ref'],
         'codeUCD'=>$dataSpe[0]['sp_cipucd'],
         'codeUCD13'=>$dataSpe[0]['sp_cipucd13'],
-        'TheriaqueVersion'=>$dataTheriaque[0]['vers'].' '.$dataTheriaque[0]['date_ext']
+        'TheriaqueVersion'=>$dataTheriaque[0]['vers'].' '.$dataTheriaque[0]['date_ext'],
+        'conducteur'=>array(
+          'reco'=>$dataConducteur[0]['reco'],
+          'niveau'=>$dataConducteur[0]['niv'],
+          'libelle_niv'=>$dataConducteur[0]['libelle_niv']
+        ),
+        'dopage'=>$dataDopage[0]['niveau']
       );
 
 
@@ -341,12 +352,16 @@ class msLapPrescription extends msLap
         $this->_prescriptionInterpretee['posoFrappeeNbDelignesPosologiques']=count($this->_lignesPosologiques);
         $this->_prescriptionInterpretee['regEx']=array_column($this->_lignesPosologiques,'regEx','indexLigne');
 
+        // mode Theriaque à adopter pour chaque ligne posologique
+        $this->_prescriptionInterpretee['posoTheriaqueMode']=array_column($this->_lignesPosologiques,'posoTheriaqueMode','indexLigne');
+
         // données des lignes pour analyse lap
         $this->_prescriptionInterpretee['posoDosesSuccessives']=array_column($this->_lignesPosologiques,'posoDosesSuccessives','indexLigne');
         $this->_prescriptionInterpretee['posoDureesSuccessives']=array_column($this->_lignesPosologiques,'duree','indexLigne');
         $this->_prescriptionInterpretee['posoDureesUnitesSuccessives']=array_column($this->_lignesPosologiques,'dureeUnite','indexLigne');
         $this->_prescriptionInterpretee['posoJours']=array_column($this->_lignesPosologiques,'posoJours','indexLigne');
         $this->_prescriptionInterpretee['nbPrisesParUniteTemps']=array_column($this->_lignesPosologiques,'nbPrisesParUniteTemps','indexLigne');
+        $this->_prescriptionInterpretee['nbPrisesParUniteTempsUnite']=array_column($this->_lignesPosologiques,'nbPrisesParUniteTempsUnite','indexLigne');
 
         // le texte posologique humain
         $humanPosoBase = array_column($this->_lignesPosologiques,'humanPosoBase');
@@ -519,8 +534,10 @@ class msLapPrescription extends msLap
         $tab['prefixeLigne'] = $m['prefixeLigne'];
         $tab['duree'] = $m['dureeNumeric'];
         $tab['dureeUnite'] = $m['dureeUnite'];
+        $tab['posoTheriaqueMode'] = 0;
         $tab['posoJournaliere'] = (float)$m['doseMatinMath'] + (float)$m['doseMidiMath'] + (float)$m['doseSoirMath'] + (float)$m['doseCoucherMath'];
         $tab['posoDosesSuccessives'] = array($m['doseMatinMath'], $m['doseMidiMath'], $m['doseSoirMath'], $m['doseCoucherMath']);
+        $tab['nbPrisesParUniteTempsUnite'] ='';
         $tab['posoJours'] = $m['joursSemaine'];
         $tab['posoMaxParPrise'] = (float)max($m['lesDoses']);
         $tab['posoMinParPrise'] = (float)@min(array_filter($m['lesDoses']));
@@ -568,7 +585,7 @@ class msLapPrescription extends msLap
           $human = 'arrêt ';
           $tab['nbPrisesParUniteTemps']=0;
         } else {
-          $human = $m['dose'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMath']) . ' '.$m['multipleDose'].' fois par '.$this->_dureeAbrevEnMots($m['multipleDose'], $m['multipleUnite']).' ';
+          $human = $m['dose'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMath']) . ' '.$m['multipleDose'].' fois par '.$this->_dureeAbrevEnMots(1, $m['multipleUnite']).' ';
           $tab['nbPrisesParUniteTemps']=$m['multipleDoseMath'];
         }
 
@@ -582,7 +599,9 @@ class msLapPrescription extends msLap
         $tab['duree'] = $m['dureeNumeric'];
         $tab['dureeUnite'] = $m['dureeUnite'];
         $tab['posoJournaliere'] = (float)$m['doseMath'] * $m['multipleDoseMath'];
+        $tab['posoTheriaqueMode'] = 1;
         $tab['posoDosesSuccessives'] = array($m['doseMath']);
+        $tab['nbPrisesParUniteTempsUnite'] = $m['multipleUnite'];
         $tab['posoJours'] = $m['joursSemaine'];
         $tab['posoMaxParPrise'] = (float)$m['doseMath'];
         $tab['posoMinParPrise'] = (float)$m['doseMath'];
@@ -675,6 +694,7 @@ class msLapPrescription extends msLap
         'COMPRIME(S)' => array('s'=>'comprimé', 'p'=>'comprimés'),
         'comprimé' => array('s'=>'comprimé', 'p'=>'comprimés'),
         'comprime' => array('s'=>'comprimé', 'p'=>'comprimés'),
+        'DOSE(S)' => array('s'=>'dose', 'p'=>'doses'),
         'EMPLATRE(S)' => array('s'=>'emplâtre', 'p'=>'emplâtres'),
         'GELULE' => array('s'=>'gélule', 'p'=>'gélules'),
         'gélule' => array('s'=>'gélule', 'p'=>'gélules'),
@@ -751,7 +771,11 @@ class msLapPrescription extends msLap
       $retour['dureeTotaleHuman']=implode(' ',array_reverse($dureeTotaleHuman));
       $retour['dureeTotaleMachine']= $duree;
       $retour['dureeTotaleMachineJours']= $duree['j'] + ($duree['s'] * 7) + ($duree['m'] * 28);
-      $retour['dureeTotaleMachineJoursAvecRenouv']=$retour['dureeTotaleMachineJours']*($this->_nbRenouvellements + 1);
+      if($retour['dureeTotaleMachineJours'] > 0) {
+        $retour['dureeTotaleMachineJoursAvecRenouv']=$retour['dureeTotaleMachineJours']*($this->_nbRenouvellements + 1);
+      } else {
+        $retour['dureeTotaleMachineJoursAvecRenouv']=$this->_nbRenouvellements + 1;
+      }
       return $retour;
     }
 

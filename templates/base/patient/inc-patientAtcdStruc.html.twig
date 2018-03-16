@@ -41,6 +41,10 @@
                   <td>Code CIM 10</td>
                   <td>{{ atc.atcdStrucCIM10.value }}</td>
                 </tr>
+                <tr>
+                  <td>LAP</td>
+                  <td>{% if atc.atcdStrucCIM10InLap.value == 'o' %}pris en compte{% else %}non pris en compte{% endif %}</td>
+                </tr>
                 {% if atc.atcdStrucDateDebutAnnee.value %}
                   <tr>
                     <td>Début</td>

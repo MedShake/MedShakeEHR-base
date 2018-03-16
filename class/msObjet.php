@@ -211,7 +211,6 @@ public function getToID()
           foreach($tab as $sid) {
             $this->setDeletedObjetAndSons($sid);
           }
-          return false;
         }
 
         return true;

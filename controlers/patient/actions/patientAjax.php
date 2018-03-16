@@ -50,6 +50,7 @@ $acceptedModes=array(
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm', // Extraire l'éditeur de courrier
     'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
+    'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
     'saveCsForm', // sauver le formulaire de consultation
     'saveOrdoForm', // sauver une ordonnance
     'saveReglementForm', // sauver une ordonnance
@@ -58,9 +59,6 @@ $acceptedModes=array(
     'getHistoriqueToday'// Obtenir l'historique du jour
 );
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
 
 //inclusion
 if(is_file($p['config']['homeDirectory'].'controlers/patient/actions/inc-ajax-'.$m.'.php')) {

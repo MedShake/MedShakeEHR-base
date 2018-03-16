@@ -29,7 +29,6 @@
 <div class="row">
   {# Colonne de gauche : données physio #}
   <div id="patientLateralData" class="col-md-2">
-    {% include('inc-lapPatientLateralData.html.twig') %}
   </div>
 
   {# Colonne de droite #}
@@ -48,6 +47,9 @@
       </li>
       <li role="presentation">
         <a id="tthistoriqueTabL" href="#tthistoriqueTab" aria-controls="messages" role="tab" data-toggle="tab">Historique des traitements</a>
+      </li>
+      <li role="presentation">
+        <a id="prescriptionspreTabL" href="#prescriptionspreTab" aria-controls="messages" role="tab" data-toggle="tab">Prescriptions préétablies</a>
       </li>
     </ul>
 
@@ -94,9 +96,9 @@
           </div>
           <div class="col-md-5 form-horizontal">
             <div class="form-group">
-              <label for="ordoName" class="col-md-4 control-label">Nom de l'ordonnance</label>
+              <label for="ordoName" class="col-md-4 control-label">Titre de l'ordonnance</label>
               <div class="col-md-8">
-                <input type="text" id="ordoName" class="form-control" value="Ordonnance"/>
+                <input type="text" id="ordoName" class="form-control" value=""/>
               </div>
             </div>
           </div>
@@ -107,6 +109,10 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a href="#" class="convertAllDci"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Convertir l'ordonnance en DCI</a>
+                </li>
+                <li role="separator" class="divider"></li>
                 <li>
                   <a href="#" class="removeAllLignesPrescription">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -180,13 +186,20 @@
 
       </div>
 
+      {# Onglet prescriptions préétablies #}
+      <div role="tabpanel" class="tab-pane" id="prescriptionspreTab">
+        <div class="row bottom-space">
+          <div class="col-md-3">
+            <div id="listePresPre"></div>
+          </div>
+          <div class="col-md-9">
+            <div id="voirPresPre"></div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
-
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js"></script>
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js"></script>
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js"></script>
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js"></script>
-  <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js"></script>
+</div>

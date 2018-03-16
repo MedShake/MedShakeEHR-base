@@ -50,7 +50,7 @@ if (is_numeric($_POST['objetID'])) {
                 $fsz=filesize($fn);
                 $f=fopen($fn, 'r');
                 $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
-            } 
+            }
         }
         if (!empty($data['value'])) {
             //hprim

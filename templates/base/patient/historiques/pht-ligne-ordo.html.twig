@@ -26,7 +26,7 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<tr class="tr{{ cs.id }} trLigneExamen" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}" data-module="{{ cs.module }}">
+<tr class="tr{{ cs.id }} trLigneExamen" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}" data-module="{{ cs.module|e('html_attr') }}" data-typeName="{{ cs.name|e('html_attr') }}">
   <td>{{ cs.creationTime }}</td>
   <td>
     {# edit #}
@@ -92,7 +92,11 @@
         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
       {% endif %}
     </span>
-    {{ cs.label }}
+    {% if cs.name == 'lapOrdonnance' %}
+      Ordonnance LAP
+    {% else %}
+      {{ cs.label }}
+    {% endif %}
     <span class="alternatTitre{{ cs.id }}">
       {% if cs.titre %}
         :

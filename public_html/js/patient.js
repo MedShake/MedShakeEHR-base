@@ -56,13 +56,6 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
 
-  // 1er chargement tab LAP
-  $('#ongletLAP').on("show.bs.tab", function() {
-    if ($('#tabLAP').html() == '') {
-      var url = $('#tabLAP').attr('data-rootUrl');
-      loadTabPatient(url, 'tabLAP');
-    }
-  });
 
   // 1er chargement tab dicom
   $('#ongletDicom').on("show.bs.tab", function() {
@@ -90,7 +83,9 @@ $(document).ready(function() {
   $('#tabDicom').on("click", "#listeExamens tr.viewStudy", function() {
     $.getScriptOnce(urlBase + "/js/dicom.js");
     var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
-    var param = {'dcStudyID': $(this).attr('data-study')};
+    var param = {
+      'dcStudyID': $(this).attr('data-study')
+    };
     loadTabPatient(url, 'tabDicom', param);
   });
 
@@ -146,14 +141,8 @@ $(document).ready(function() {
     setPeopleData(value, patientID, typeID, source, instance);
   });
 
-  $('input.jqautocomplete').on("autocompletechange", function(event, ui) {
-    patientID = $('#identitePatient').attr("data-patientID");
-    typeID = $(this).attr("data-typeID");
-    value = $(this).val();
-    source = $(this);
-    instance = $(this).closest("form").attr("data-instance");
-    setPeopleData(value, patientID, typeID, source, instance);
-
+  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
+     $(this).trigger("paste");
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -363,6 +352,12 @@ $(document).ready(function() {
     }
   });
 
+  //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
+  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
+    e.preventDefault();
+    showObjetDet($(this));
+  });
+
   ////////////////////////////////////////////////////////////////////////
   // gestion des historiques et courbes de poids/taille/imc
 
@@ -417,16 +412,7 @@ $(document).ready(function() {
   });
 
 
-  //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
-    e.preventDefault();
-    showObjetDet($(this));
-  });
 
-  //fermeture modal data admin patient
-  $("button.modalAdminClose").on("click", function(e) {
-    ajaxModalPatientAdminCloseAndRefreshHeader();
-  });
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations diverses dont celles concernant la partie identité patient
@@ -441,6 +427,11 @@ $(document).ready(function() {
   $('body').on("click", "button.editerRelationsPatient", function(e) {
     e.preventDefault();
     $('#ongletLiensPatient').tab('show');
+  });
+
+  //fermeture modal data admin patient
+  $("button.modalAdminClose").on("click", function(e) {
+    ajaxModalPatientAdminCloseAndRefreshHeader();
   });
 
   //Ouvrir le LAP
@@ -533,13 +524,18 @@ $(document).ready(function() {
     e.preventDefault();
     $(window).unbind("beforeunload");
     $(this).closest(".toclear").html("");
+    var form = $(this).closest("form");
     $.ajax({
-      url: $(this).closest("form").attr("action"),
+      url: form.attr("action"),
       type: 'post',
-      data: $(this).closest("form").serialize(),
+      data: form.serialize(),
       dataType: "html",
       success: function(data) {
-        if (!data.length)
+        // on recharge la colonne lat
+        getLatCol();
+
+        // on agit sur historiques
+        if (!data.length || form.hasClass('ignoreReturn'))
           return;
         else if (data.substr(0, 7) == "Erreur:") {
           $("#errormessage").html(data);
@@ -963,25 +959,31 @@ function showObjetDet(element) {
   destination = $("." + zone + " .detObjet" + objetID);
 
   if (destination.length == 0) {
-    ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
-    destination = $("." + zone + " .detObjet" + objetID);
 
-    $.ajax({
-      url: urlBase + '/patient/ajax/ObjetDet/',
-      type: 'post',
-      data: {
-        objetID: objetID,
-      },
-      dataType: "html",
-      success: function(data) {
-        destination.html(data);
-      },
-      error: function() {
-        destination.remove();
-        alert('Problème, rechargez la page !');
-      }
-    });
+    if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4"><div class="alert alert-danger gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-success gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      voirOrdonnanceMode='voirOrdonnance';
+      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID);
+    } else {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+      destination = $("." + zone + " .detObjet" + objetID);
 
+      $.ajax({
+        url: urlBase + '/patient/ajax/ObjetDet/',
+        type: 'post',
+        data: {
+          objetID: objetID,
+        },
+        dataType: "html",
+        success: function(data) {
+          destination.html(data);
+        },
+        error: function() {
+          destination.remove();
+          alert('Problème, rechargez la page !');
+        }
+      });
+    }
   } else {
     destination.toggle();
   }
@@ -1210,6 +1212,22 @@ function getHistoriqueToday() {
     dataType: "html",
     success: function(data) {
       $("#historiqueToday").html(data);
+    },
+    error: function() {}
+  });
+}
+
+
+function getLatCol() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/refreshLatColPatientAtcdData/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#patientLatCol").html(data);
     },
     error: function() {}
   });

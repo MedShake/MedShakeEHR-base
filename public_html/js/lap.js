@@ -28,17 +28,55 @@
 
 $(document).ready(function() {
 
-  // rafraichir données physio quand on revient
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations pour saut entre tabs
+
+  // Onglet général LAP
   $('#ongletLAP').on("show.bs.tab", function() {
     lapRefreshLateralPatientData();
+    voirOrdonnanceMode='';
+  });
+
+  // Onglet nouvelle ordonnance
+  $('#ordonnanceTabL').on("show.bs.tab", function() {
+    voirOrdonnanceMode='editionOrdonnance';
+  });
+
+  // Onglet TT en cours
+  $('#tttencoursTabL').on("show.bs.tab", function() {
+    refreshTTenCours();
+    voirOrdonnanceMode='TTenCours';
+  });
+
+  // Onglet Historique ordo
+  $('#ordohistoriqueTabL').on("show.bs.tab", function() {
+    getHistoriqueOrdos();
+    voirOrdonnanceMode='voirOrdonnance';
+  });
+
+  // Onglet historique traitement
+  $('#tthistoriqueTabL').on("show.bs.tab", function() {
+    getHistoriqueTT(year);
+  });
+
+  // Afficher prescriptions préétablies
+  $('#prescriptionspreTabL').on("show.bs.tab", function() {
+    if ($('#listePresPre').html() == '') {
+      //getPresPre();
+    }
+    getPresPre();
+    voirOrdonnanceMode='voirOrdonnance';
   });
 
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations état allaitement
+
+  // switcher ON OFF l'état d'allaitement
   $('#tabLAP').on("click", ".allaitementStart", function() {
     setPeopleDataByTypeName(true, $('#identitePatient').attr("data-patientID"), 'allaitementActuel', '#allaitementDet', 0);
     lapRefreshLateralPatientData();
   });
-
   $('#tabLAP').on("click", ".allaitementStop", function() {
     setPeopleDataByTypeName(false, $('#identitePatient').attr("data-patientID"), 'allaitementActuel', '#allaitementDet', 0);
     lapRefreshLateralPatientData();
@@ -46,6 +84,10 @@ $(document).ready(function() {
 
 });
 
+/**
+ * Rafraichier la colonne latérale du LAP
+ * @return {void}
+ */
 function lapRefreshLateralPatientData() {
   $.ajax({
     url: urlBase + '/lap/ajax/lapPatientLateralDataRefresh/',

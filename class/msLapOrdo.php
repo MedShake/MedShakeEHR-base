@@ -69,11 +69,14 @@ class msLapOrdo extends msLap
       if($lignes = msSQL::sql2tabKey("select * from objets_data where instance='".$this->_ordonnanceID."' and typeID='".$name2typeID['lapLignePrescription']."' order by id", 'id')) {
         foreach($lignes as $k=>$l) {
           $lignes[$k]['ligneData']=json_decode($l['value'], true);
+          $lignes[$k]['ligneData']['objetID']=$k;
         }
         //extraction des medicaments
         if($medicaments = msSQL::sql2tab("select * from objets_data where instance in (".implode(',', array_column($lignes,'id')).") and typeID='".$name2typeID['lapLigneMedicament']."' order by id")) {
           foreach($medicaments as $k=>$m) {
-            $lignes[$m['instance']]['medics'][]=json_decode($m['value'],true);
+            $medic=json_decode($m['value'],true);
+            $medic['objetID']=$m['id'];
+            $lignes[$m['instance']]['medics'][]=$medic;
           }
         }
 
@@ -124,6 +127,12 @@ class msLapOrdo extends msLap
             $lap->createNewObjetByTypeName('lapLignePrescriptionIsALD', $ligne['ligneData']['isALD'], $ligneID);
             $lap->createNewObjetByTypeName('lapLignePrescriptionIsChronique', $ligne['ligneData']['isChronique'], $ligneID);
 
+            // on note la ligne qui a servi pour le renouv
+            if(isset($ligne['ligneData']['objetID'])) {
+              if($ligne['ligneData']['objetID']>0) {
+                  $lap->createNewObjetByTypeName('lapLignePrescriptionRenouvelle', $ligne['ligneData']['objetID'], $ligneID);
+              }
+            }
 
       // Médicaments
       foreach ($ligne['medics'] as $k=>$m) {
@@ -166,25 +175,31 @@ class msLapOrdo extends msLap
         if (!isset($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
-
+        $ligne=[];
         $data = new msData();
-        $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective']);
+        $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective', 'lapLignePrescriptionRenouvelle']);
+
 
         if ($lignesPresTTchro=msSQL::sql2tab("select lp.id, lp.value
           from objets_data as lp
           left join objets_data as chro on chro.instance=lp.id and chro.typeID='".$name2typeID['lapLignePrescriptionIsChronique']."'
           left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
-          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and chro.value='true'
+
+          left join objets_data as re on re.value=lp.id and re.typeID='".$name2typeID['lapLignePrescriptionRenouvelle']."'
+
+          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and chro.value='true' and re.value is null
           and (STR_TO_DATE(dfe.value, '%d/%m/%Y') > CURDATE() or dfe.value is null)
           ")) {
             foreach ($lignesPresTTchro as $l) {
                 $ligne['TTChroniques'][$l['id']]['ligneData']=json_decode($l['value'], true);
-                $ligne['TTChroniques'][$l['id']]['ligneData']['id']=$l['id'];
+                $ligne['TTChroniques'][$l['id']]['ligneData']['objetID']=$l['id'];
             }
 
             if ($lignesMedicsTTchro=msSQL::sql2tab("select id, value, instance from objets_data where typeID='".$name2typeID['lapLigneMedicament']."' and instance in (".implode(',', array_column($lignesPresTTchro, 'id')).") and outdated='' and deleted='' ")) {
                 foreach ($lignesMedicsTTchro as $m) {
-                    $ligne['TTChroniques'][$m['instance']]['medics'][]=json_decode($m['value'], true);
+                    $medic=json_decode($m['value'], true);
+                    $medic['objetID']=$m['id'];
+                    $ligne['TTChroniques'][$m['instance']]['medics'][]=$medic;
                 }
             }
             $whereExclu="and lp.id not in (".implode(',', array_column($lignesPresTTchro, 'id')).")";
@@ -197,19 +212,24 @@ class msLapOrdo extends msLap
           left join objets_data as dd on dd.instance=lp.id and dd.typeID='".$name2typeID['lapLignePrescriptionDatePriseDebut']."'
           left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinAvecRenouv']."'
           left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
-          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' ".$whereExclu."
+
+          left join objets_data as re on re.value=lp.id and re.typeID='".$name2typeID['lapLignePrescriptionRenouvelle']."'
+
+          where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted='' and re.value is null ".$whereExclu."
           and STR_TO_DATE(dd.value, '%d/%m/%Y') <= CURDATE()
           and STR_TO_DATE(df.value, '%d/%m/%Y') >= CURDATE()
           and (STR_TO_DATE(dfe.value, '%d/%m/%Y') > CURDATE() or dfe.value is null)
           ")) {
             foreach ($lignesPresTTponct as $l) {
                 $ligne['TTPonctuels'][$l['id']]['ligneData']=json_decode($l['value'], true);
-                $ligne['TTPonctuels'][$l['id']]['ligneData']['id']=$l['id'];
+                $ligne['TTPonctuels'][$l['id']]['ligneData']['objetID']=$l['id'];
             }
 
             if ($lignesMedicsTTponct=msSQL::sql2tab("select id, value, instance from objets_data where typeID='".$name2typeID['lapLigneMedicament']."' and instance in (".implode(',', array_column($lignesPresTTponct, 'id')).") and outdated='' and deleted='' ")) {
                 foreach ($lignesMedicsTTponct as $m) {
-                    $ligne['TTPonctuels'][$m['instance']]['medics'][]=json_decode($m['value'], true);
+                    $medic=json_decode($m['value'], true);
+                    $medic['objetID']=$m['id'];
+                    $ligne['TTPonctuels'][$m['instance']]['medics'][]=$medic;
                 }
             }
         }
@@ -249,7 +269,7 @@ class msLapOrdo extends msLap
     }
 
 /**
- * Obtenir l'historique des traitement pour une année donnée
+ * Obtenir l'historique des traitements pour une année donnée
  * @param  int $year année
  * @return array       tableau d'historique
  */
@@ -308,6 +328,36 @@ class msLapOrdo extends msLap
         return $final;
     }
 
+/**
+ * Obtenir les catégories de rangement des prescriptions préétablies
+ * @return array tableau par catID
+ */
+    public function getCatPresPre() {
+      return msSQL::sql2tabKey("select c.*, count(p.id) as enfants
+ 			from prescriptions_cat as c
+ 			left join prescriptions as p on c.id=p.cat
+       where c.type='lap' and c.fromID = '".$this->_fromID."'
+ 			group by c.id
+ 			order by c.displayOrder asc, c.label", 'id');
+    }
 
+/**
+ * Obtenir les prescriptions préétablies par cat
+ * @return array tableau par ctaID
+ */
+    public function getPresPre() {
+      $tab=[];
+      if($data=msSQL::sql2tab("select p.*
+        from prescriptions as p
+        left join prescriptions_cat as c on c.id=p.cat
+        where p.fromID = '".$this->_fromID."' and c.type='lap'
+        group by p.id
+        order by c.label asc, p.label asc")) {
+        foreach ($data as $v) {
+            $tab[$v['cat']][]=$v;
+        }
+      }
+      return $tab;
+    }
 
 }

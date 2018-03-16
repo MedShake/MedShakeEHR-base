@@ -62,7 +62,7 @@
      if ($tabTypes=msSQL::sql2tab("select p.* , c.name as catName, c.label as catLabel
 					from prescriptions as p
 					left join prescriptions_cat as c on c.id=p.cat
-          where ".implode(' and ', $where)."
+          where ".implode(' and ', $where)." and c.type='nonlap'
 					group by p.id
 					order by c.label asc, p.label asc")) {
          foreach ($tabTypes as $v) {
@@ -71,5 +71,5 @@
      }
 
 
-     $p['page']['catList']=msSQL::sql2tabKey("select id, label from prescriptions_cat order by label", 'id', 'label');
+     $p['page']['catList']=msSQL::sql2tabKey("select id, label from prescriptions_cat where type='nonlap' order by label", 'id', 'label');
  }

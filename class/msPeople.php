@@ -373,8 +373,8 @@ class msPeople
     }
 
 /**
- * Obtenir tous les codes PERSO (!) CIM10 actifs d'un patient.
- * @return array tableau de codes CIM10
+ * Obtenir tous les codes PERSO et ACTIFS (!) CIM10  d'un patient pour le LAP.
+ * @return array tableau de codes CIM10 perso actifs
  */
     public function getAtcdAndAldCim10Codes () {
       global $p;
@@ -382,15 +382,16 @@ class msPeople
           throw new Exception('ToID is not numeric');
       }
       $msdata = new msData();
-      $name2typeID = $msdata->getTypeIDsFromName(['atcdStrucCIM10', 'aldCIM10','csAldDeclaration']);
+      $name2typeID = $msdata->getTypeIDsFromName(['atcdStrucCIM10', 'aldCIM10','csAldDeclaration', 'atcdStrucCIM10InLap']);
       $parentsAutorises = $msdata->getTypeIDsFromName(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']));
 
       if(!empty($parentsAutorises)) {
         return msSQL::sql2tabSimple("select o.value
         from objets_data as o
         left join objets_data as p on p.id=o.instance
+        left join objets_data as ac on ac.instance=o.instance and ac.typeID='".$name2typeID['atcdStrucCIM10InLap']."'
         where o.toID='".$this->_toID."' and
-          ((o.typeID ='".$name2typeID['atcdStrucCIM10']."'and p.instance in ('".implode("','", $parentsAutorises)."'))
+          ((o.typeID ='".$name2typeID['atcdStrucCIM10']."' and p.instance in ('".implode("','", $parentsAutorises)."') and ac.value != 'n')
           or
           (o.typeID = '".$name2typeID['aldCIM10']."' and p.typeID= '".$name2typeID['csAldDeclaration']."'))
           and o.deleted='' and o.outdated=''
@@ -467,7 +468,7 @@ class msPeople
         $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
         $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
 
-        if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.module as module, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+        if ($data = msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
         from objets_data as p
         left join data_types as t on p.typeID=t.id
@@ -512,7 +513,7 @@ class msPeople
         $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
         $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
 
-        return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.groupe, t.label, t.module as module, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+        return msSQL::sql2tab("select p.id, p.fromID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime,  p.updateDate, t.id as typeCS, t.name, t.groupe, t.label, t.module as module, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
         CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
         from objets_data as p
         left join data_types as t on p.typeID=t.id

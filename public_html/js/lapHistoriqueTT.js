@@ -30,11 +30,6 @@ var year = moment(new Date()).format('YYYY');
 
 $(document).ready(function() {
 
-  // Afficher historique
-  $('#tthistoriqueTabL').on("show.bs.tab", function() {
-    getHistoriqueTT(year);
-  });
-
   $('#tthistoriqueTab').on("change", "#selectHistoTTAnnee", function() {
     year = $("#selectHistoTTAnnee option:selected").text();
     getHistoriqueTT(year);

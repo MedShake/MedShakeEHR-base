@@ -22,7 +22,7 @@
 
 /**
  *
- * LAP : basiques pour la sortie d'infos de Thériaque 
+ * LAP : basiques pour la sortie d'infos de Thériaque
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -387,6 +387,34 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                 }
             }
         }
+    }
+
+    public function getDopage($codeid, $typid) {
+      if (isset($this->_the)) {
+          $the=$this->_the;
+      } else {
+          $this->_the=$the=new $this->_classTheriaque;
+      }
+      if ($data=$the->get_the_dopage($codeid, $typid)) {
+          $rd=$this->_prepareData($data);
+          if (!empty($rd)) {
+              return $rd;
+          }
+      }
+    }
+
+    public function getConducteur($codeid, $typid) {
+      if (isset($this->_the)) {
+          $the=$this->_the;
+      } else {
+          $this->_the=$the=new $this->_classTheriaque;
+      }
+      if ($data=$the->get_the_conducteur($codeid, $typid)) {
+          $rd=$this->_prepareData($data);
+          if (!empty($rd)) {
+              return $rd;
+          }
+      }
     }
 
 /**

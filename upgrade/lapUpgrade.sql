@@ -1,4 +1,4 @@
--- !!! prévoir aussi update formulaire atcd
+-- !!! prévoir aussi update formulaire atcd et atcd struc
 
 
 INSERT INTO `forms` ( `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
@@ -26,7 +26,10 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapUserParamCat');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('user', 'lapAlertPatientTermeGrossesseSup46', '', 'lapAlertPatientTermeGrossesseSup46', 'alerte pour terme de grossesse supérieur à 46SA', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-07 21:04:34', 3600, 1),
-('user', 'lapAlertPatientAllaitementSup3Ans', '', 'lapAlertPatientAllaitementSup3Ans', 'alerte pour allaitement supérieur à 3 ans', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-07 21:05:06', 3600, 1);
+('user', 'lapAlertPatientAllaitementSup3Ans', '', 'lapAlertPatientAllaitementSup3Ans', 'alerte pour allaitement supérieur à 3 ans', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-07 21:05:06', 3600, 1),
+('user', 'theriaqueShowMedicHospi', '', 'theriaqueShowMedicHospi', 'montrer les médicaments hospitaliers', '', '', 'select', '\'oui\': \'oui\'\n\'non\': \'non\'', 'base', @catID, 1, '2018-03-14 16:14:10', 3600, 1),
+('user', 'theriaqueShowMedicNonComer', '', 'theriaqueShowMedicNonComer', 'montrer les médicaments non commercialisés', '', '', 'select', '\'oui\': \'oui\'\n\'non\': \'non\'', 'base', @catID, 1, '2018-03-14 16:14:04', 3600, 1);
+
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='aldCat');
@@ -47,7 +50,9 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ('medical', 'atcdStrucDateFinMois', '', 'Mois', 'mois de fin de l\'atcd', '', '', 'select', '\'0\' : \'non précisé\'\n\'1\' : \'janvier\'\n\'2\' : \'février\'\n\'3\' : \'mars\'\n\'4\' : \'avril\'\n\'5\' : \'mai\'\n\'6\' : \'juin\'\n\'7\' : \'juillet\'\n\'8\' : \'août\'\n\'9\' : \'septembre\'\n\'10\' : \'octobre\'\n\'11\' : \'novembre\'\n\'12\' : \'décembre\'', 'base', @catID, 1, '2018-01-22 13:33:22', 3600, 0),
 ('medical', 'atcdStrucDateDebutAnnee', '', 'Année', 'année de début de l\'atcd', '', '', 'number', '', 'base', @catID, 1, '2018-01-22 13:32:41', 3600, 0),
 ('medical', 'atcdStrucDateFinAnnee', '', 'Année', 'année de fin de l\'atcd', '', '', 'number', '', 'base', @catID, 1, '2018-01-22 13:32:47', 3600, 0),
-('medical', 'atcdStrucNotes', 'notes concernant cet antécédents', 'Notes', 'notes concernant l\'atcd', '', '', 'textarea', '', 'base', @catID, 1, '2018-01-22 13:33:28', 3600, 0);
+('medical', 'atcdStrucNotes', 'notes concernant cet antécédents', 'Notes', 'notes concernant l\'atcd', '', '', 'textarea', '', 'base', @catID, 1, '2018-01-22 13:33:28', 3600, 0),
+('medical', 'atcdStrucCIM10InLap', '', 'A prendre en compte dans le LAP', 'prise en compte ou non dans le LAP', '', '', 'select', '\'o\': \'oui\'\n\'n\': \'non\'', 'base',  @catID, 1, '2018-03-14 11:30:46', 3600, 1);
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catTypeCsATCD');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -82,7 +87,9 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ( 'ordo', 'lapLignePrescriptionDatePriseDebut', '', 'Date de début de prise', 'date de début de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:16:43', 3600, 1),
 ( 'ordo', 'lapLignePrescriptionIsChronique', '', 'isChronique', 'ligne TT chronique ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:04:02', 3600, 1),
 ( 'ordo', 'lapLignePrescriptionIsALD', '', 'isALD', 'ligne ALD ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:01:13', 3600, 1);
-('ordo', 'lapLignePrescriptionDatePriseFinAvecRenouv', '', 'Date de fin de prise renouvellements inclus', 'date de fin de prise renouvellements inclus', '', '', '', '', 'base', @catID, 1, '2018-03-09 12:21:46', 3600, 1);
+('ordo', 'lapLignePrescriptionDatePriseFinAvecRenouv', '', 'Date de fin de prise renouvellements inclus', 'date de fin de prise renouvellements inclus', '', '', '', '', 'base', @catID, 1, '2018-03-09 12:21:46', 3600, 1),
+('ordo', 'lapLignePrescriptionRenouvelle', '', 'ID de la ligne qui est renouvelée par cette ligne', 'ID de la ligne qui est renouvelée par cette ligne', '', '', '', '', 'base', @catID, 1, '2018-03-15 19:58:49', 3600, 1);
+
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatPorteurs');
@@ -90,3 +97,11 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ( 'ordo', 'lapLigneMedicament', '', 'Médicament', 'médicament LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:56:17', 3600, 1),
 ( 'ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:55:32', 3600, 1),
 ( 'ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:54:31', 3600, 1);
+
+
+-- Updates
+
+UPDATE `prescriptions_cat` set `type`='user';
+ALTER TABLE `prescriptions_cat` CHANGE `type` `type` ENUM('nonlap','lap','user') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'nonlap';
+UPDATE `prescriptions_cat` set `type`='nonlap';
+ALTER TABLE `prescriptions_cat` CHANGE `type` `type` ENUM('nonlap','lap') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'nonlap';

@@ -162,4 +162,14 @@ class msTheriaqueWS {
     return $this->_client->get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction);
   }
 
+  // informations dopage
+  public function get_the_dopage($codeid, $typid) {
+    return $this->_client->get_the_dopage($codeid, $typid);
+  }
+
+  // informations conducteur
+  public function get_the_conducteur($codeid, $typid) {
+    return $this->_client->get_the_conducteur($codeid, $typid);
+  }
+
 }
