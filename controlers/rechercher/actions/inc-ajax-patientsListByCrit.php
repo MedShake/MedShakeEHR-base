@@ -97,11 +97,13 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         }
     }
     if (!empty($_POST['d2'])) {
-        $where.=" and ((d2.value like '".msSQL::cleanVar($_POST['d2'])."%' and d2.outdated='') or (d1.value like '".msSQL::cleanVar($_POST['d2'])."%' and d1.outdated='') ) ";
+        $term=msSQL::cleanVar($_POST['d2']);
+        $where.=" and ((concat(d2.value, ' ', d3.value) like '%".$term."%' and d2.outdated='' and d3.outdated='')
+                    or (concat(d1.value, ' ', d3.value) like '%".$term."%' and d1.outdated='' and d3.outdated='')
+                    or (concat(d3.value, ' ', d2.value) like '%".$term."%' and d2.outdated='' and d3.outdated='')
+                    or (concat(d3.value, ' ', d1.value) like '%".$term."%' and d1.outdated='' and d3.outdated='')) ";
     }
-    if (!empty($_POST['d3'])) {
-        $where.=" and d3.value like '".msSQL::cleanVar($_POST['d3'])."%' and d3.outdated='' ";
-    }
+
     if (is_numeric($_POST['autreCrit']) and !empty($_POST['autreCritVal'])) {
         $where.=" and d".msSQL::cleanVar($_POST['autreCrit']).".value like '".msSQL::cleanVar($_POST['autreCritVal'])."%'";
         if(!in_array($_POST['autreCrit'], $listeTypes)) {

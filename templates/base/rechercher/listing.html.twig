@@ -35,7 +35,11 @@
       <tr>
         <th></th>
         {% for th in page.outputTableHead %}
-          {{ th }}
+          {% if loop.first %}
+            <th>Identité</th>
+          {% elseif loop.index > 3 %}
+            {{ th }}
+          {% endif %}
         {% endfor %}
         <th></th>
       </tr>
@@ -63,8 +67,13 @@
             {% endif %}
           </td>
 
+          {% set PatientName=tab[1]?(tab[0]?tab[1] ~ ' ' ~ tab[2] ~ ' (né-e ' ~ tab[0] ~ ')': tab[1] ~ ' ' ~ tab[2]):tab[0] ~ ' ' ~ tab[2] %} 
           {% for k, p in tab %}
-            <td>{{ p }}</td>
+            {% if loop.first %}
+              <td>{{ PatientName }}</td>
+            {% elseif loop.index>3 %}
+              <td>{{ p }}</td>
+            {% endif %}
           {% endfor %}
 
           <td>
