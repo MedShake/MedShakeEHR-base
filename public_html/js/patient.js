@@ -490,7 +490,7 @@ $(document).ready(function() {
             if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
               $($tr[0]).after(data);
             else
-              ($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+              $($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
           } else
             getHistorique();
           $tr = $("#historiqueToday .trLigneExamen");
