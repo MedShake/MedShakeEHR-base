@@ -66,7 +66,7 @@ $(document).ready(function() {
     }];
   }
   if (!boutonsHeaderCenter) {
-    var boutonsHeaderCenter = 'fermer';
+    var boutonsHeaderCenter = '';
   }
 
   if (!eventTextColor) {
@@ -120,16 +120,6 @@ $(document).ready(function() {
           synchronizeEvents();
         }
       },
-      fermer: {
-        click: function() {
-          $(".fc-fermer-button").prop("disabled",true);
-          $(".fc-fermer-button").attr("title", "Fermer une période\nSelectionnez d'abord une période");
-          closePeriod();
-          selected_action = undefined;
-          selected_event = undefined;
-          selected_period = undefined;
-        },
-      },
     },
     bootstrapFontAwesome: {
       prevMonth: 'fa-angle-double-left',
@@ -137,7 +127,6 @@ $(document).ready(function() {
       synchronize: 'fa-sync-alt',
       next: 'fa-angle-right',
       nextMonth: 'fa-angle-double-right',
-      fermer: 'fa-lock',
     },
     header: {
       left: 'prevMonth,prev,synchronize,next,nextMonth today',
@@ -149,11 +138,12 @@ $(document).ready(function() {
     firstDay: firstDay,
     slotDuration: slotDuration,
     weekNumbers: true,
+    weekNumberTitle: 'S.',
     allDaySlot: false,
     allDayText: '-',
     longPressDelay: 300,
     selectable: true,
-    unselectCancel: '.fc-fermer-button,.fc-deplacer-button,.fc-cloner-button',
+    unselectCancel: '.fc-deplacer-button,.fc-cloner-button',
     slotLabelFormat: 'H:mm',
     slotLabelInterval: slotLabelInterval,
     nowIndicator: true,
@@ -286,8 +276,6 @@ $(document).ready(function() {
         $("#duree").html(" " + duree + "mn");
         selected_period.end = moment(start).add(duree, 'm');
         $("#type").val($("#type option")[0].value);
-        $(".fc-fermer-button").prop("disabled",false);
-        $(".fc-fermer-button").attr("title", "Fermer la période");
         $('#creerNouveau').modal('show');
         $("#patientSearch").show();
         $(".modal-title").html("Nouveau rendez-vous");
@@ -301,14 +289,14 @@ $(document).ready(function() {
         $('#datepicker input').val(start.format('DD/MM/YYYY à HH:mm'));
       }
       else {
-        $(".fc-fermer-button").prop("disabled",false);
-        $(".fc-fermer-button").attr("title", "Fermer la période");
+        if (confirm("Souhaitez-vous fermer cette période ?")) {
+          closePeriod();
+          selected_period = undefined;
+        }
       }
     },
     unselect: function(jsEvent, view) {
       jsEvent.stopImmediatePropagation();
-      $(".fc-fermer-button").prop("disabled",true);
-      $(".fc-fermer-button").attr("title", "Fermer une période\nSelectionnez d'abord une période");
       $(".fc-event").popover('hide');
     },
     navLinks: true,
@@ -341,8 +329,6 @@ $(document).ready(function() {
   $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
   $(".fc-next-button").attr("title", "Semaine suivante");
   $(".fc-nextMonth-button").attr("title", "Mois suivant");
-  $(".fc-fermer-button").attr("title", "Fermer une période\n\nSelectionnez d'abord une période");
-  $(".fc-fermer-button").prop("disabled",true);
   $(".fc-body").addClass("cursor-cell");
   ////////////////////////////////////////////////////////////////////////
   ///////// observations boutons popover
@@ -519,8 +505,6 @@ $(document).ready(function() {
 
   $("#buttonCreer").on("click", function(e) {
     $('#creerNouveau').modal('hide');
-    $(".fc-fermer-button").prop("disabled",true);
-    $(".fc-fermer-button").attr("title", "Fermer une période\nSelectionnez d'abord une période");
     setEvent();
     selected_patient = undefined;
     selected_action = undefined;
