@@ -149,7 +149,8 @@ $(document).ready(function() {
       if ($('#id_clicRdvUserId_id').val() != '' && $('#id_clicRdvPassword').val() != '')
         updateGroupList();
       else
-        alert("Entrez d'abord les identifiants clicRDV");
+        alert_popup("error", "Entrez d'abord les identifiants clicRDV");
+
     }
   });
 
@@ -197,7 +198,8 @@ function updateGroupList() {
       }
     },
     error: function() {
-      alert('Erreur de connection au compte clicRDV. Vérifiez vos identifiants et votre connection');
+      alert_popup("error", 'Erreur de connection au compte clicRDV. Vérifiez vos identifiants et votre connection');
+
     }
   });
 
@@ -222,7 +224,8 @@ function updateCalList() {
       }
     },
     error: function() {
-      alert('Une érreur inconnue s\'est produite, impossible de récupérer les agendas sur clicRDV...');
+      alert_popup("error", 'Une érreur inconnue s\'est produite, impossible de récupérer les agendas sur clicRDV...');
+
     }
   });
 }
@@ -245,7 +248,8 @@ function updateConsultList() {
       }
     },
     error: function() {
-      alert('Une érreur inconnue s\'est produite, impossible de récupérer les types de consultations sur clicRDV...');
+      alert_popup("error", 'Une érreur inconnue s\'est produite, impossible de récupérer les types de consultations sur clicRDV...');
+
     }
   });
 }

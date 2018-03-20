@@ -68,11 +68,13 @@ $(document).ready(function() {
           getRelationsPatientPatientsTab();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("error", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le patient n'est pas correctement sélectionné");
+      alert_popup("error", "Le patient n'est pas correctement sélectionné");
+
     }
 
   });
@@ -115,11 +117,13 @@ $(document).ready(function() {
           getRelationsPatientPraticiensTab();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("error", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le praticien n'est pas correctement sélectionné");
+      alert_popup("error", "Le praticien n'est pas correctement sélectionné");
+
     }
 
   });
@@ -143,11 +147,13 @@ $(document).ready(function() {
           getRelationsPatientPatientsTab();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("error", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le praticien n'est pas correctement sélectionné");
+      alert_popup("error", "Le praticien n'est pas correctement sélectionné");
+
     }
 
   });
@@ -197,7 +203,8 @@ function getRelationsPatientPatientsTab() {
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -234,7 +241,8 @@ function getRelationsPatientPraticiensTab() {
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -270,7 +278,8 @@ function ajaxModalFormSave(form, modal) {
       }
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }

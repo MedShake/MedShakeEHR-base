@@ -57,7 +57,8 @@ $(document).ready(function() {
         }, 1000);
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -89,7 +90,8 @@ $(document).ready(function() {
 
           },
           error: function() {
-            alert('Problème, rechargez la page !');
+            alert_popup("error", 'Problème, rechargez la page !');
+
           }
         });
       }
@@ -119,7 +121,8 @@ $(document).ready(function() {
         };
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -140,7 +143,8 @@ $(document).ready(function() {
         window.location=urlBase+'/patient/'+patientID+'/';
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -159,7 +163,8 @@ $(document).ready(function() {
         window.location=urlBase+'/patient/edit/'+externID+'/';
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
     
@@ -185,7 +190,8 @@ function updateListingPatients() {
       $('#listing').html(data);
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 

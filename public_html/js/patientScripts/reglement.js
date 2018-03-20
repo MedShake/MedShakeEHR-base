@@ -112,7 +112,8 @@ function searchAndInsertActeData(selecteur) {
       calcResteDu();
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 

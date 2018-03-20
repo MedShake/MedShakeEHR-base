@@ -156,12 +156,14 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
           if (data['status'] == 'badDicomPatientID') {
-            alert("L'image n'a pas été enregistrée car le dossier ouvert sur l'ordinateur a changé entre temps. L'interface va être mise à jour.");
+            alert_popup("error", "L'image n'a pas été enregistrée car le dossier ouvert sur l'ordinateur a changé entre temps. L'interface va être mise à jour.");
+
             location.reload();
           }
         },
         error: function() {
-          alert('Un problème est survenu.');
+          alert_popup("error", 'Un problème est survenu.');
+
           location.reload();
         },
       });

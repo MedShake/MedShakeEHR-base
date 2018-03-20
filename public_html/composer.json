@@ -6,6 +6,18 @@
         {
             "type": "package",
             "package": {
+                "name": "FezVrasta/popper.js",
+                "version": "v1.14.1",
+                "source": {
+                    "url": "https://github.com/FezVrasta/popper.js.git",
+                    "type": "git",
+                    "reference": "v1.14.1"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "FortAwesome/Font-Awesome",
                 "version": "5.0.8",
                 "source": {
@@ -162,6 +174,7 @@
     ],
 
     "require": {
+        "FezVrasta/popper.js": "^v1.14.1",
         "FortAwesome/Font-Awesome": "^5.0.8",
         "twbs/bootstrap": "^4.0",
         "eonasdan/bootstrap-datetimepicker": "^4.17.43",

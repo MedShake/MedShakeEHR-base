@@ -81,12 +81,15 @@ $(document).ready(function() {
 
   //// datepicker bootstrap
   $("body").on("click", 'div.datepick', function() {
+    var $div=$(this).closest("div.datepick");
+    var viewMode = $div.hasClass("pick-years")?'years':($div.hasClass("pick-months")?'months':'days');
+    viewMode = $div.find("input").hasClass("pick-years")?'years':($div.find("input").hasClass("pick-months")?'months':viewMode);
     $(this).datetimepicker({
       locale: 'fr',
-      viewMode: $(this).hasClass("pick-years")?'years':'days',
+      viewMode: viewMode,
       format: 'L',
       icons: {
-        time: 'fa fa-clock-o',
+        time: 'far fa-clock',
         date: 'fa fa-calendar',
         up: 'fa fa-chevron-up',
         down: 'fa fa-chevron-down',
@@ -97,27 +100,7 @@ $(document).ready(function() {
         close: 'fa fa-times'
       } 
     });
-    $(this).data("DateTimePicker").toggle();
-  });
-  $("body").on("focusin", 'div.datepick input', function(e) {
-    e.stopImmediatePropagation();
-    $(this).closest("div.datepick").datetimepicker({
-      locale: 'fr',
-      viewMode: $(this).closest("div.datepick").hasClass("pick-years")?'years':'days',
-      format: 'L',
-      icons: {
-        time: 'fa fa-clock-o',
-        date: 'fa fa-calendar',
-        up: 'fa fa-chevron-up',
-        down: 'fa fa-chevron-down',
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-crosshairs',
-        clear: 'fa fa-trash',
-        close: 'fa fa-times'
-      }
-    });
-    $(this).data("DateTimePicker").show();
+    $div.data("DateTimePicker").toggle();
   });
 
   // age affiché en label de l'input date de naissance
@@ -202,10 +185,10 @@ $(document).ready(function() {
       data: $(this).parents("form").serialize(),
       dataType: "json",
       success: function(data) {
-        $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+        alert_popup("success", "Opération validée");
       },
       error: function() {
-        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        alert_popup("error", "Une erreur s'est produite durant l'opération");
       }
     });
   });
@@ -319,7 +302,8 @@ function setPeopleData(value, patientID, typeID, source, instance) {
         });
       },
       error: function() {
-        //alert('Problème, rechargez la page !');
+        //alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   }
@@ -346,12 +330,27 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
         });
       },
       error: function() {
-        //alert('Problème, rechargez la page !');
+        //alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   }
 }
 
+// affichage de messages d'alerte
+function alert_popup(severity, message) {
+  var titre = {info: 'Note:', success: 'Succès:', warning: 'Message:', error: 'Erreur:'}
+  $("#alert_section").append('\
+    <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto" role="alert">\
+      <strong>' + titre[severity] + ' </strong>' + message +
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+        <span aria-hidden="true">&times;</span>\
+      </button>\
+    </div>');
+  if (severity == 'info' || severity == 'success') {
+    setTimeout((function(){$('.alert-to-remove').remove()}),4000);
+  }
+}
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions tierces
 

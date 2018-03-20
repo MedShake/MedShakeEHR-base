@@ -67,31 +67,41 @@
         .fc-synchronize-button {display:none !important}
       {% endif %}
 
+      .ui-autocomplete{z-index:2000}
+
       #calendar .fc-prevMonth-button,
       #calendar .fc-prev-button,
+      #calendar .fc-synchronize-button,
       #calendar .fc-next-button,
       #calendar .fc-nextMonth-button,
       #calendar .fc-today-button,
-      #calendar .fc-bloquer-button,
+      #calendar .fc-fermer-button,
       #calendar .fc-dossier-button,
+      #calendar .fc-editer-button,
       #calendar .fc-deplacer-button,
       #calendar .fc-cloner-button,
       #calendar .fc-honorer-button,
       #calendar .fc-supprimer-button
         {background-color:#e6eaef;border:none;color:#212529;height:38px}
 
-      #calendar .fc-prevMonth-button:hover,
-      #calendar .fc-prev-button:hover,
-      #calendar .fc-next-button:hover,
-      #calendar .fc-nextMonth-button:hover,
-      #calendar .fc-today-button:hover,
-      #calendar .fc-bloquer-button:hover,
-      #calendar .fc-dossier-button:hover,
-      #calendar .fc-deplacer-button:hover,
-      #calendar .fc-cloner-button:hover,
-      #calendar .fc-honorer-button:hover,
-      #calendar .fc-supprimer-button:hover
+      .fc-prevMonth-button:hover,
+      .fc-prev-button:hover,
+      .fc-synchronize-button:hover,
+      .fc-next-button:hover,
+      .fc-nextMonth-button:hover,
+      .fc-today-button:hover,
+      .fc-fermer-button:hover,
+      .fc-dossier-button:hover,
+      .fc-editer-button:hover,
+      .fc-deplacer-button:hover,
+      .fc-cloner-button:hover,
+      .fc-honorer-button:hover,
+      .fc-supprimer-button:hover
         {background-color:#fff}
+
+      .cursor-move {cursor:move}
+      .cursor-copy {cursor:copy}
+      .cursor-cell {cursor:cell}
     </style>
 
     <script>
@@ -124,107 +134,99 @@
   </ul>
 {% endif %}
 
-<div class="row">
-  <div class="col-md-3">
-
-    <form id="formRdv">
-      <div class="row">
-        <div class="form-group col-md-8">
-          <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off">
-        </div>
-        <div class="form-group col-md-3">
-          <button title="total" type="button" data-toggle="modal" data-target="#creerNouveau" class="btn btn-default">Créer patient</button>
-        </div>
-      </div>
-      <input id="eventID" type="hidden" name="eventid" value="" autocomplete="off"/>
-      <input id="userID" type="hidden" name="userid" value="{{ page.userID }}" autocomplete="off"/>
-      <input id="patientID" type="hidden" name="patientid" value="" autocomplete="off"/>
-      <input id="eventStartID" type="hidden" name="eventStart" value="" autocomplete="off"/>
-      <input id="eventEndID" type="hidden" name="eventEnd" value="" autocomplete="off"/>
-      <div class="well">
-        <h3 id="titreRdv" style="margin-top : 0">Nouveau rendez-vous</h3>
-        {{ f.formbuilder(page.formPriseRdv , page.formIN , valFormLat ) }}
-
-        <div class="form-group">
-          <label for="type">Type de rendez-vous</label>
-          <select id="type" class="form-control" autocomplete="off">
-            {% for k, v in page.typeRdv if k != '[off]' %}
-              <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}">{{ v.duree }}' :
-                {{ v.descriptif }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Date et heure sélectionnées</label>
-          <div>
-            <p class="form-control-static dateHeureDisplay bg-danger" style="padding-left : 2px;">Selectionner sur l'agenda</p>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="motif">Motif</label>
-          <textarea id="motif" class="form-control" rows="3" autocomplete="off"></textarea>
-        </div>
-
-        <button id="buttonPrincipal" disabled="disabled" class="btn btn-primary" type="submit">Créer</button>
-
-        <div class="btn-group">
-          <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="disabled">
-            Autres actions
-          </button>
-          <ul class="dropdown-menu">
-
-            <li><a class="dropdown-item" id="buttonMark" href="#">Non honoré</a></li>
-            <li><a class="dropdown-item" id="buttonClone" href="#">Cloner</a></li>
-            <li role="separator" class="dropdown-divider"></li>
-            <li><a class="dropdown-item" id="buttonRemove" href="#">Supprimer</a></li>
-          </ul>
-        </div>
-
-        <button id="buttonCancel" disabled="disabled" class="btn btn-default  float-right m-1" type="submit">Abandonner</button>
-
-      </div>
-    </form>
-
-    <div id="historiquePatient" class="card col-md-12 my-3" style="display: none;">
-      <div class="card-header py-0 gras">
-        <div id="HistoriqueRdvResume" class="btn-group float-right m-1" role="group">
-          <button title="total" type="button" disabled="disabled" class="btn btn-sm btn-default donothing gras">0</button>
-          <button title="honorés" type="button" disabled="disabled" class="btn btn-sm btn-success donothing gras">0</button>
-          <button title="annulés" type="button" disabled="disabled" class="btn btn-sm btn-warning donothing gras">0</button>
-          <button title="patient absent" type="button" disabled="disabled" class="btn btn-sm btn-danger donothing gras">0</button>
-        </div>
-        Derniers rendez-vous
-      </div>
-      <ul class="list-group"></ul>
-    </div>
-  </div>
-  <div class="col-md-9">
-    <div id="calendar" data-userID="{{ page.userID }}"></div>
-  </div>
-</div>
+<div id="calendar" data-userID="{{ page.userID }}"></div>
 
 
-{# modal créer un nouveau patient #}
+{# modal rdv/nouveau patient #}
 <div id="creerNouveau" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title gras">Création d'un nouveau patient</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-danger" role="alert" style="display : none;">
-            Merci de considérer les informations suivantes et de corriger les champs concernés :
-            <ul></ul>
+      <form id="formRdv">
+        <div class="modal-header">
+          <h4 class="modal-title gras"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
-        {{ f.formbuilder(page.formNewPatient , 'baseNewPatient' , session) }}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-primary modal-save" data-modal="creerNouveau" data-form="formName_baseNewPatient">Créer</button>
-      </div>
+        <div class="modal-body">
+          <div class="alert alert-danger" role="alert" style="display : none;">
+              Merci de considérer les informations suivantes et de corriger les champs concernés :
+              <ul></ul>
+          </div>
+          <div class="row">
+            <div class="col-md-6 border-right">
+              <h3>Patient</h3>
+              <div id="patientSearch" class="input-group mx-0 mb-3">
+                <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off">
+                <div class="input-group-append">
+                  <button id="newPatient" type="button" class="btn btn-outline-secondary">Créer patient</button>
+                </div>
+              </div>
+              <div id="patientInfo">
+                {{ f.formbuilder(page.formNewPatient , 'baseNewPatient', session) }}
+              </div>
+            </div>
+            <div class="col-md-6">
+
+                <h3>Rendez-vous</h3>
+                <div class="well">
+                  <div class="form-group">
+                    <div id="datepicker" class="input-group mx-0 mb-3">
+                      <input class="form-control"></input>
+                      <div class="input-group-append">
+                        <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-2">
+                    <div class="input-group mx-0">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
+                      </div>
+                      <select id="type" class="form-control custom-select" name="type" autocomplete="off">
+                        {% for k, v in page.typeRdv if k != '[off]' %}
+                          <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
+                            {{ v.descriptif }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea id="motif" class="form-control mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
+                  </div>
+                </div>
+
+              <div id="historiquePatient" class="card col-md-12 my-3 p-0" style="display: none;">
+                <div class="card-header py-0 gras">
+                  <div id="HistoriqueRdvResume" class="btn-group float-right m-1" role="group">
+                    <button title="total" type="button" disabled="disabled" class="btn btn-sm btn-default donothing gras">0</button>
+                    <button title="honorés" type="button" disabled="disabled" class="btn btn-sm btn-success donothing gras">0</button>
+                    <button title="annulés" type="button" disabled="disabled" class="btn btn-sm btn-warning donothing gras">0</button>
+                    <button title="patient absent" type="button" disabled="disabled" class="btn btn-sm btn-danger donothing gras">0</button>
+                  </div>
+                  Derniers rendez-vous
+                </div>
+                <ul class="list-group list-sm"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="buttonCreer" class="btn btn-primary" type="button" data-dismiss="modal">Créer</button>
+          <button id="buttonModifier" class="btn btn-primary" type="button" data-dismiss="modal">Modifier</button>
+          <div class="dropdown">
+            <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Autres actions
+            </button>
+            <div class="dropdown-menu" aria-labelledby="buttonAutresActions">
+              <a class="dropdown-item" id="buttonMark" href="#">Non honoré</a>
+              <a class="dropdown-item" id="buttonClone" href="#">Cloner</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" id="buttonRemove" href="#">Supprimer</a>
+            </div>
+          </div>
+          <button id="buttonCancel" class="btn btn-default float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -97,7 +97,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         }
     }
     if (!empty($_POST['d2'])) {
-        $term=msSQL::cleanVar($_POST['d2']);
+        $term=preg_replace('/  +/', ' ', msSQL::cleanVar($_POST['d2']));
         $where.=" and ((concat(d2.value, ' ', d3.value) like '%".$term."%' and d2.outdated='' and d3.outdated='')
                     or (concat(d1.value, ' ', d3.value) like '%".$term."%' and d1.outdated='' and d3.outdated='')
                     or (concat(d3.value, ' ', d2.value) like '%".$term."%' and d2.outdated='' and d3.outdated='')

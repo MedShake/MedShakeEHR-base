@@ -138,7 +138,8 @@ $(document).ready(function() {
           $("#patientPhonecapture").modal('show');
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -490,7 +491,7 @@ $(document).ready(function() {
             if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
               $($tr[0]).after(data);
             else
-              ($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+              $($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
           } else
             getHistorique();
           $tr = $("#historiqueToday .trLigneExamen");
@@ -540,7 +541,8 @@ function listePatientDicomStudies() {
       $('#listeDicomStudiesModal').modal('show');
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -558,7 +560,8 @@ function prepareEcho() {
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -578,7 +581,8 @@ function catchLastDicomSrData() {
       }
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -600,7 +604,8 @@ function catchOtherDicomSrData() {
       $('#listeDicomStudiesModal').modal('toggle');
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -653,7 +658,8 @@ function sendFormToCsDiv(el) {
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -693,7 +699,8 @@ function sendFormToCourrierDiv(el) {
       });
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -728,7 +735,8 @@ function sendFormToOrdoDiv(el) {
       });
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -758,7 +766,8 @@ function sendFormToMailDiv(el) {
       });
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -790,7 +799,8 @@ function sendFormToReglementDiv(el) {
       });
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -815,7 +825,8 @@ function suppCs(el) {
       getHistoriqueToday();
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -846,7 +857,8 @@ function toogleImportant(el) {
       }
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -869,7 +881,8 @@ function modalAlternateTitreChange() {
       $('#alternatTitreModal').modal('toggle');
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -897,7 +910,8 @@ function showObjetDet(element) {
       },
       error: function() {
         destination.remove();
-        alert('Problème, rechargez la page !');
+        alert_popup("error", 'Problème, rechargez la page !');
+
       }
     });
 
@@ -920,7 +934,8 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
       $('#identitePatient').html(data);
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("error", 'Problème, rechargez la page !');
+
     }
   });
 }

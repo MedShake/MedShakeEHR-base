@@ -48,15 +48,12 @@
 
         <style>
           #top-navbar {max-height:calc(100vh - 100px) !important}
-          .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
-          .submit-success {background-color:#8dfc9e;top:0}
-          .submit-warning {background-color:#fcde8d;top:0}
-          .submit-error {background-color:#ff6d6d;top:0}
         </style>
 
         {# js #}
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FezVrasta/popper.js/dist/umd/popper.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/HubSpot/tether/dist/js/tether.min.js"></script>
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
@@ -76,14 +73,10 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <div class="submit-type submit-success">
-          <span class="fa fa-info-circle"></span> Données enregistrées avec succès
-        </div>
-        <div class="submit-type submit-warning">
-          <span class="fa fa-exclamation-triangle"></span> <span id="warningmessage"></span>
-        </div>
-        <div class="submit-type submit-error">
-          <span class="fa fa-exclamation-triangle"></span> <span id="errormessage">Une erreur s'est produite lors de l'enregistrement des données</span>
+        <div class="container-fluid">
+          <div class="row fixed-top" style="z-index:20000">
+            <div id="alert_section" class="col-md-auto mx-auto"></div>
+          </div>
         </div>
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="z-index:100">
