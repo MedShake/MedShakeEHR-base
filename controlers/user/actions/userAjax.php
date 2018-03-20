@@ -33,7 +33,10 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'updateGroups', // Récupérer la liste des groupes de clicRDV
     'updateCals', // Récupérer la liste des agendas d'un groupe de clicRDV
-    'updateConsults' // Récupérer la liste des types de consultation d'un agenda de clicRDV
+    'updateConsults', // Récupérer la liste des types de consultation d'un agenda de clicRDV
+    'userParametersAgenda', // changer les paramètres d'agenda
+    'userParametersConsultations', // changer les paramètres de consultations
+    'userParametersClicRdv', // changer les paramètres clicRDV
 );
 
 if (!in_array($m, $acceptedModes)) {
@@ -48,5 +51,11 @@ if ($m=='updateGroups') {
     include('inc-ajax-updateCals.php');
 } elseif ($m=='updateConsults') {
     include('inc-ajax-updateConsults.php');
+} elseif ($m=='userParametersAgenda') {
+    include('inc-ajax-userParametersAgenda.php');
+} elseif ($m=='userParametersConsultations') {
+    include('inc-ajax-userParametersConsultations.php');
+} elseif ($m=='userParametersClicRdv') {
+    include('inc-ajax-userParametersClicRdv.php');
 }
 

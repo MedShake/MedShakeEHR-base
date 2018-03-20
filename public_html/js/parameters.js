@@ -32,24 +32,48 @@ $(document).ready(function() {
 
   //pour agenda
   $('.date').datetimepicker({
-      format: 'HH:mm'
+      format: 'HH:mm',
+      icons: {
+        time: 'far fa-clock',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-crosshairs',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+      } 
+  });
+  $('.date').on("click", function() {
+    $(this).data("DateTimePicker").toggle();
   });
 
   //pour les consultations
+
+  $('body').on("click", ".colorpicker", function(e){
+    e.stopPropagation();
+    $(".colorpicker").each(function(idx,el){if ($(this).data('colorpicker')) $(this).data('colorpicker').destroy()});
+    $(this).colorpicker();
+    $(this).data('colorpicker').show();
+  });
+
+  $('body').on("click", function(e){
+    $(".colorpicker").each(function(idx,el){if ($(this).data('colorpicker')) $(this).data('colorpicker').destroy()});
+  });
+
+  $('body').on('change', ".colorpicker input", function(e){
+    $(this).parent().find("i").css("background-color", $(this).parent().find("input").val());
+  });
+
   $("body").on("click", ".delConsult", function(e){
       e.preventDefault();
       $(this).parent().parent().remove();
   });
-    $(function () {
-      $('.colorpicker').colorpicker();
-    });
-
-  $("body").on("dp.change", "colorpicker", function(){
-      $(this).children("i").css("background-color", $(this).children("input").val());
-  });
 
   $("body").on("click", ".addConsult", function(e){
       e.preventDefault();
+      e.stopPropagation();
       var id=(Math.random()*100000)>>0;
       $(".adder").before('\
               <tr>\
@@ -65,15 +89,15 @@ $(document).ready(function() {
                   <input class="form-control" name="desc_new'+id+'" type="text" placeholder="ex: consultation classique" value="" autocomplete="off">\
                 </td>\
                 <td>\
-                  <div class="input-group colorpicker cpnew">\
+                  <div class="input-group colorpicker cpnew" data-toggle="false">\
                     <input class="form-control" name="back_new'+id+'" type="text" value="#2196f3" placeholder="ex: #2196f3" autocomplete="off">\
-                    <span class="input-group-addon"><i style="background-color:#2196f3"></i></span>\
+                    <div class="input-group-append"><span class="input-group-text"><i style="width:16px;height:16px;background-color:#2196f3"></i></span></div>\
                   </div>\
                 </td>\
                 <td>\
-                  <div class="input-group colorpicker cpnew">\
+                  <div class="input-group colorpicker cpnew" data-toggle="false">\
                     <input class="form-control" name="border_new'+id+'" type="text" value="#1e88e5" placeholder="ex: #1e88e5" autocomplete="off">\
-                    <span class="input-group-addon"><i style="background-color:#1e88e5"></i></span>\
+                    <div class="input-group-append"><span class="input-group-text"><i style="width:16px;height:16px;background-color:#1e88e5"></i></span></div>\
                   </div>\
                 </td>\
                 <td>\

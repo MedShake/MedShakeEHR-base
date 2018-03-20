@@ -35,13 +35,18 @@ $js[]="businessHours = [\n";
 $hiddenDays=[];
 $day=1;
 foreach($params as $k=>$v) {
-    $params[$k]=array('worked'=>$_POST['workOn_'.$k], 'visible'=>$_POST['visible_'.$k], 'minTime'=> $_POST['minTime_'.$k], 'maxTime'=> $_POST['maxTime_'.$k]);
+    $params[$k]=array(
+      'worked'=>isset($_POST['workOn_'.$k])?$_POST['workOn_'.$k]:'false',
+      'visible'=>isset($_POST['visible_'.$k])?$_POST['visible_'.$k]:'false',
+      'minTime'=> $_POST['minTime_'.$k],
+      'maxTime'=> $_POST['maxTime_'.$k],
+    );
     $js[]="  {\n";
     $js[]="    dow: [".$day."],\n";
     $js[]="    start: '".$_POST['minTime_'.$k].":00',\n";
     $js[]="    end: '".$_POST['maxTime_'.$k].":00',\n";
     $js[]="  },\n";
-    if ($_POST['visible_'.$k]!=true) {
+    if (!isset($_POST['visible_'.$k]) or $_POST['visible_'.$k]!=true) {
         $hiddenDays[]=$day;
     }
     $day++;
@@ -86,4 +91,5 @@ $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
 file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$p['user']['id'].'.js', $js);
 
-msTools::redirRoute('userParameters');
+header('Content-Type: application/json');
+echo json_encode(array('status'=>'success'));
