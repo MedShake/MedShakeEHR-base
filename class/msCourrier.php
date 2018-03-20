@@ -191,8 +191,8 @@ class msCourrier
         }
 
         $objetModule=new msData();
-        $objetModule=$objetModule->getDataType($this->_modeleID, ['validationRules','name']);
-        $tabRetour['module']=$objetModule['validationRules'];
+        $objetModule=$objetModule->getDataType($this->_modeleID, ['module','name']);
+        $tabRetour['module']=$objetModule['module'];
         $tabRetour['modeleName']=$objetModule['name'];
 
 
