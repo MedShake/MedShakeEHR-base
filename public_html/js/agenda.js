@@ -322,8 +322,15 @@ $(document).ready(function() {
     }
   })
 
+  $("body").on("click", function(e){
+    $(".fc-event").popover('hide');
+    $(".fc-bg.selected").removeClass("selected");
+  });
+
   $("#calendar").on("click", function(e){
-    e.stopPropagation();
+    e.stopImmediatePropagation();
+    $(".fc-event").popover('hide');
+    $(".fc-bg.selected").removeClass("selected");
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -465,6 +472,11 @@ $(document).ready(function() {
     }
   });
 
+  $("body").on("click", function(e){
+    if ($("#datepicker").data("DateTimePicker"))
+      $("#datepicker").data("DateTimePicker").hide();
+  });
+
   $("#buttonAutresActions").on("click", function(e) {
     e.stopImmediatePropagation();
     e.preventDefault();
@@ -566,10 +578,6 @@ $(document).ready(function() {
   });
 
   $("body").on("click", function(e){
-    $(".fc-event").popover('hide');
-    $(".fc-bg.selected").removeClass("selected");
-    if ($("#datepicker").data("DateTimePicker"))
-      $("#datepicker").data("DateTimePicker").hide();
     if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0} || $(e.target).hasClass('ui-menu-item-wrapper')) {
       e.stopPropagation();
       return;
