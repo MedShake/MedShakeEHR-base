@@ -55,6 +55,14 @@
     {% endfor %}
 
     <style>
+
+       @media screen and (orientation:portrait) {
+         #landscape{display: none;}
+        }
+       @media screen and (orientation:landscape) {
+         #portrait{display: none;}
+        }
+
         #newDoc{
           display: none;
         }
@@ -65,7 +73,12 @@
 
 {% block body %}
 
-    <div class="container-fluid">
+    <div id="portrait" class="container" style="padding-top: 40px;">
+      <div class="jumbotron col-md-12" role="alert"><p>Placez votre écran en mode paysage!</p></div>
+    </div>
+
+    <div id="landscape">
+     <div class="container-fluid">
         {% if page.patient.dossierType =="deleted" %}
         <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
         {% endif %}
@@ -177,14 +190,13 @@
               </div>
               {# Liens familiaux #}
               {% if page.liensFamiliaux %}
-
-              <div class="col-md-12">
-                <div class="card">
+              <div class="col-md-12 p-0">
+                <div class="card mb-3">
                   <div class="card-header py-0 gras">Liens familiaux <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
                     <button class="btn btn-default btn-sm float-right m-1" role="button" title="Édition des relations"><span class="fa fa-link" aria-hidden="true"></span></button></a>
                   </div>
 
-                  <table class="table table-sm mb-0 table-striped table-condensed table-hover small">
+                  <table class="table table-sm mb-0 table-striped table-condensed table-hover small mb-0">
                     <thead>
                       <tr>
                         <th></th>
@@ -221,7 +233,7 @@
               <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
 
               {# historique du jour #}
-              <div id="historiqueToday">
+              <div id="historiqueToday" class="row">
                 {% include 'patientHistoriqueToday.html.twig' %}
               </div>
 
@@ -244,12 +256,13 @@
               {% include 'patientSynthese.html.twig' %}
 
               {# Historique complet #}
-              <div id="historique">
+              <div id="historique" class="row">
                 {% include 'patientHistoriqueMedical.html.twig' %}
               </div>
             </div>
           </div>
 
+      </div>
     </div>
 
     {# modal courbes de poids/taille/IMC #}

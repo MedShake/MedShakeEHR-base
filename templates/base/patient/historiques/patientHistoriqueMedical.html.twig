@@ -25,44 +25,46 @@
  #}
 {% import "macroForm.html.twig" as f %}
 {% if page.patient.historique %}
-  <div class="row">
-    <div class="col-md-12 px-0 historiqueMedicalComplet">
-      <div class="card">
-        <div class="card-header py-0 gras">Historique complet</div>
+  <div class="col-md-12 px-0 historiqueMedicalComplet">
+    <div class="card">
+      <div class="card-header py-0 gras">Historique complet</div>
 
 
-        <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
+      <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
           <button type="button" data-groupe="tous" class="btn btn-default active">Tous</button>
-          <button type="button" data-groupe="typecs" class="btn btn-default">Consultations</button>
-          <button type="button" data-groupe="ordo" class="btn btn-default">Ordonnances</button>
+          <button type="button" data-groupe="typecs" class="btn btn-default d-none d-lg-block">Consultations</button>
+          <button type="button" data-groupe="typecs" class="btn btn-default d-lg-none">Consults</button>
+          <button type="button" data-groupe="ordo" class="btn btn-default d-none d-lg-block">Ordonnances</button>
+          <button type="button" data-groupe="ordo" class="btn btn-default d-lg-none">Ordos</button>
           <button type="button" data-groupe="courrier" class="btn btn-default">Courriers</button>
-          <button type="button" data-groupe="doc" class="btn btn-default">Documents reçus</button>
-          <button type="button" data-groupe="docinterne" class="btn btn-default">Documents créés</button>
+          <button type="button" data-groupe="doc" class="btn btn-default d-none d-lg-block">Documents reçus</button>
+          <button type="button" data-groupe="doc" class="btn btn-default d-lg-none">Docs reçus</button>
+          <button type="button" data-groupe="docinterne" class="btn btn-default d-none d-lg-block">Documents créés</button>
+          <button type="button" data-groupe="docinterne" class="btn btn-default d-lg-none">Documents créés</button>
           <button type="button" data-groupe="reglement" class="btn btn-default">Règlements</button>
-        </div>
-
-
-        <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Actions</th>
-                    <th>Acte</th>
-                    <th>Auteur</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-              {% for k,c in page.patient.historique %}
-                <tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>{{ k }}</strong></td></tr>
-                {% for cs in c %}
-                  {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
-                {% endfor %}
-              {% endfor %}
-
-            </tbody>
-        </table>
       </div>
+
+
+      <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
+          <thead>
+              <tr>
+                  <th>Date</th>
+                  <th>Actions</th>
+                  <th>Acte</th>
+                  <th>Auteur</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for k,c in page.patient.historique %}
+              <tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+              {% for cs in c %}
+                {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+              {% endfor %}
+            {% endfor %}
+
+          </tbody>
+      </table>
     </div>
   </div>
 {% endif %}

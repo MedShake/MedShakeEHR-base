@@ -103,7 +103,8 @@
     </span>
 
   </td>
-  <td>{{ cs.prenom|e }} {{ cs.nom|e }}</td>
+  <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
+  <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>
   <td>
 
     {# option #}

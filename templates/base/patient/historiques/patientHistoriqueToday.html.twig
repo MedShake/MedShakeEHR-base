@@ -25,28 +25,26 @@
  #}
 {% import "macroForm.html.twig" as f %}
 {% if page.patient.today %}
-  <div class="row">
-      <div class="card col-md-12 historiqueToday">
-          <div class="card-header py-0 gras">Aujourd'hui</div>
+    <div class="card col-md-12 historiqueToday">
+        <div class="card-header py-0 gras">Aujourd'hui</div>
 
-          <table class="table table-sm mb-0 table-hover " data-zone="historiqueToday">
-              <thead>
-                  <tr>
-                      <th>Heure</th>
-                      <th>Actions</th>
-                      <th>Acte</th>
-                      <th>Auteur</th>
-                      <th></th>
-                  </tr>
-              </thead>
-              <tbody>
+        <table class="table table-sm mb-0 table-hover " data-zone="historiqueToday">
+            <thead>
+                <tr>
+                    <th>Heure</th>
+                    <th>Actions</th>
+                    <th>Acte</th>
+                    <th>Auteur</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
 
-                  {% for cs in page.patient.today %}
-                    {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
-                  {% endfor %}
+                {% for cs in page.patient.today %}
+                  {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+                {% endfor %}
 
-              </tbody>
-          </table>
-      </div>
-  </div>
+            </tbody>
+        </table>
+    </div>
 {% endif %}
