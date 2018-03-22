@@ -103,11 +103,10 @@ $(document).ready(function() {
   });
 
   //copier le bon montant d'un clic
-  $('body').on("dblclick", "#newReglement input", function(e) {
-    objetID = parseInt($("#newReglement input[name='objetID']").val());
-    montant = $("#ligne" + objetID).attr("data-montant");
+  $('body').on("dblclick", "#modalReglement input", function(e) {
+    montant = $("input[name=apayer]").val();
     $(this).val(montant);
+    $(this).trigger("keyup");
   });
 
 });
-
