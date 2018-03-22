@@ -42,10 +42,9 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     } else {
         $dossier=$_POST['destination'];
         if (!is_dir($_POST['destination'])) {
-            if (mkdir($_POST['destination'], 0770, true)===false) {
-                $template='erreur-droits';
-            }
-        } elseif (!is_writable($_POST['destination'])) {
+            mkdir($_POST['destination'], 0774, true);
+        } 
+        if (!is_dir($_POST['destination']) or !is_writable($_POST['destination'])) {
             $template='erreur-droits';
         } else {
             file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
@@ -74,12 +73,16 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 }
                 rmdir($dossierdezip.'/public_html');
                 //deplacement du reste vers la destination
-                rename($dossierdezip, $dossier);
+                foreach (scandir($dossierdezip) as $f) {
+                    if ($f !='.' and $f !='..') {
+                        rename($dossierdezip.'/'.$f, $dossier.$f);
+                    }
+                }
                 chdir($dossier);
                 //telechargement de composer
                 file_put_contents("composer.phar", fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
                 chmod("composer.phar", 0774);
-                exec('COMPOSER_HOME="/tmp/" php composer.phar install 2>&1', $ret);
+                exec('COMPOSER_HOME="/tmp/" php ./composer.phar install 2>&1', $ret);
                 json_encode($ret);
                 //exécution de composer pour la partie JS
                 chdir($dossierweb);
