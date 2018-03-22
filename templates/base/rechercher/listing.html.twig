@@ -29,19 +29,19 @@
 {% set porpurl= page.porp in ['patient', 'today'] ? 'patient' : 'pro' %}
 
 {% if page.outputTableHead %}
-  <table class="table table-sm mb-0 table-hover ">
+  <table class="table table-sm mb-0 table-hover">
     <caption></caption>
     <thead>
       <tr>
-        <th></th>
+        <th class="d-none d-sm-table-cell"></th>
         {% for th in page.outputTableHead %}
           {% if loop.first %}
-            <th>Identité</th>
-          {% elseif loop.index > 4 %}
-            {{ th }}
+            <th class="d-table-cell">{{ th }}</th>
+          {% else %}
+            <th class="d-none d-lg-table-cell">{{ th }}</th>
           {% endif %}
         {% endfor %}
-        <th></th>
+        <th class="d-table-cell"></th>
       </tr>
     </thead>
     <tbody>
@@ -53,7 +53,7 @@
           {% set patientIDmod = page['outputType'][patientID]['type']=='externe' and patientID in page.extToInt|keys ? page.extToInt[patientID] : patientID %}
           <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% elseif page['outputType'][patientID]['type'] == 'dcd' %} active dcd{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/">
         {% endif %}
-          <td>
+          <td class="d-none d-sm-table-cell">
             {% if page.porp != 'pro' or config.PraticienPeutEtrePatient == "true" %}
               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/">
                 <button class="btn btn-default btn-sm" role="button">
@@ -67,31 +67,30 @@
             {% endif %}
           </td>
 
-          {% set PatientName=tab[1]?(tab[0]?tab[1] ~ ' ' ~ tab[2] ~ ' (né' ~ (tab[3]=='F'?'e ':' ') ~ tab[0] ~ ')': tab[1] ~ ' ' ~ tab[2]):tab[0] ~ ' ' ~ tab[2] %} 
           {% for k, p in tab %}
             {% if loop.first %}
-              <td>{{ PatientName }}</td>
-            {% elseif loop.index>4 %}
-              <td>{{ p }}</td>
+              <td class="d-table-cell">{{ p }}</td>
+            {% else %}
+              <td class="d-none d-lg-table-cell">{{ p }}</td>
             {% endif %}
           {% endfor %}
 
-          <td>
+          <td class="d-table-cell">
 
             {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
+              <a class="d-none d-sm-inline" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
                 <button class="btn btn-default btn-sm" role="button" title="Édition des données administratives">
                   <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                 </button>
               </a>
               {% if page.porp != 'pro' %}
-                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">
+                <a class="d-none d-sm-inline" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">
                   <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
                     <span class="fa fa-link" aria-hidden="true"></span>
                   </button>
                 </a>
 
-                <a class="sendSign" href="#">
+                <a class="sendSign d-none d-sm-inline" href="#">
                   <button class="btn btn-default btn-sm" data-patientID="{{ patientIDmod }}" role="button" title="Faire signer consentement">
                     <span class="fa fa-edit" aria-hidden="true"></span>
                   </button>
@@ -102,7 +101,8 @@
                   <span class="fa fa-wrench" aria-hidden="true"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">Éditer</a>
+                  <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">Éditer</a>
+                  <a class=" dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">Relations</a>
                   {% if page['outputType'][patientID]['type'] != 'pro' %}
                     <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Ajouter à la liste Praticiens</a>
                   {% else %}
