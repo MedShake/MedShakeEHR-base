@@ -42,8 +42,7 @@ if (!isset($_POST['file'])) {
 $p['page']['configDefaut']=$p['configDefaut'];
 
 //utilisateurs ayant un repertoire de temmplate spécifique
-$specificUsers= new msPeople();
-$p['page']['specificDirTemplatesUsers']=$specificUsers->getUsersWithSpecificParam('templatesPdfFolder');
+$p['page']['specificDirTemplatesUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
 // détermination du répertoire
 if (isset($p['page']['specificDirTemplatesUsers'][$_POST['userID']])) {

@@ -278,7 +278,7 @@ class msPeople
    * @param  string $param param spécifique
    * @return array          tableau
    */
-    public function getUsersWithSpecificParam($param)
+    public static function getUsersWithSpecificParam($param)
     {
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName([$param, 'firstname', 'lastname', 'birthname']);

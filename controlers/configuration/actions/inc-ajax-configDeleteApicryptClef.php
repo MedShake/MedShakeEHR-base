@@ -42,8 +42,7 @@ if (!isset($_POST['file'])) {
 $p['page']['configDefaut']=$p['configDefaut'];
 
 //utilisateurs ayant un repertoire de clefs spécifiques
-$apicryptUsers= new msPeople();
-$p['page']['apicryptClefsUsers']=$apicryptUsers->getUsersWithSpecificParam('apicryptCheminVersClefs');
+$p['page']['apicryptClefsUsers']=msPeople::getUsersWithSpecificParam('apicryptCheminVersClefs');
 
 // détermination du répertoire
 if (isset($p['page']['apicryptClefsUsers'][$_POST['userID']])) {
