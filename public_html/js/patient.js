@@ -177,7 +177,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouvelle ordo
-  $('body').on("click", "#linkAddNewOrdo, .editOrdo", function(e) {
+  $('body').on("click", ".addNewOrdo, .editOrdo", function(e) {
     e.preventDefault();
     if ($('#newOrdo').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone d\'ordonnance en cours ?')) {
@@ -209,7 +209,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau reglement
-  $('body').on("click", "#linkAddNewReglement, .editReglement", function(e) {
+  $('body').on("click", ".addNewReglement, .editReglement", function(e) {
     e.preventDefault();
     if ($('#newReglement').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la zone de règlement en cours ?')) {
@@ -224,7 +224,7 @@ $(document).ready(function() {
   ///////// Observations fermeture actions non terminées
 
   //close button zone newCS
-  $('body').on("click", "#cleanNewCS", function(e) {
+  $('body').on("click", "#cleanNewCS, .addNewCS", function(e) {
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });

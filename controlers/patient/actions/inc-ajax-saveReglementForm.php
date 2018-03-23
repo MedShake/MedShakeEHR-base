@@ -21,14 +21,20 @@
  */
 
 /**
- * Patient > action : sauver un règlement
+ * Patient > ajax : sauver un règlement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if ($_POST['reglementForm']!='baseReglement') {
+      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
 }
 
 if (count($_POST['acteID'])>0) {
@@ -57,7 +63,7 @@ if (count($_POST['acteID'])>0) {
     msSQL::sqlInsert('objets_data', $important);
 
     foreach ($_POST as $param=>$value) {
-        if (!in_array($param, ['module', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
+        if (!in_array($param, ['module', 'reglementForm', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
             $patient->createNewObjetByTypeName($param, $value, $supportID);
         }
     }

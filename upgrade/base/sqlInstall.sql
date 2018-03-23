@@ -402,11 +402,11 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (183, 'doc', 'docType', '', 'Type du document', 'type du document importé', '', '', 'text', '', 'base', 42, 1, '2018-01-01 00:00:00', 3600, 1),
 (184, 'doc', 'docPorteur', '', 'Document', 'porteur pour nouveau document importé', '', '', '', '', 'base', 43, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (185, 'doc', 'docOriginalName', '', 'Nom original', 'nom original du document', '', '', '', '', 'base', 42, 1, '2018-01-01 00:00:00', 3600, 1),
-(186, 'ordo', 'ordoPorteur', '', 'Ordonnance', 'porteur ordonnance', '', '', '', '', 'base', 44, 1, '2018-01-01 00:00:00', 3600, 1),
+(186, 'ordo', 'ordoPorteur', '', 'Ordonnance', 'Ordonnance simple', '', '', '', '', 'base', 44, 1, '2018-01-01 00:00:00', 3600, 1),
 (189, 'ordo', 'ordoTypeImpression', '', 'Type ordonnance impression', 'type d\'ordonnance pour impression', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
 (190, 'ordo', 'ordoLigneOrdo', '', 'Ligne d\'ordonnance', 'porteur pour une ligne d\'ordo', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
 (191, 'ordo', 'ordoLigneOrdoALDouPas', '', 'Ligne d\'ordonnance : ald', '1 si ald', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
-(192, 'reglement', 'reglePorteur', '', 'Règlement', '', '', '', '', 'baseReglement', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
+(192, 'reglement', 'reglePorteur', '', 'Règlement', 'Règlement secteurs 1 et 2', '', '', '', 'baseReglement', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (193, 'reglement', 'regleCheque', '', 'Chèque', 'montant versé en chèque', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (194, 'reglement', 'regleCB', '', 'CB', 'montant versé en CB', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (195, 'reglement', 'regleEspeces', '', 'Espèces', 'montant versé en espèce', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
@@ -510,4 +510,4 @@ INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `re
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v3.1.0');
+ (2, 'base', 'module', 'v3.1.1');
