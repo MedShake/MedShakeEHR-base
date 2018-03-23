@@ -45,9 +45,9 @@
         {% for medic in page.medicListeSpe %}
           {% for pres in medic.presentations %}
 
-              <tr>
+              <tr class="sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" style="cursor: pointer">
                 <td>
-                  <button type="button" class="btn btn-primary btn-xs sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}">
+                  <button type="button" class="btn btn-primary btn-xs" >
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </td>

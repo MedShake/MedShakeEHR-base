@@ -53,6 +53,7 @@
         {# age #}
         {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
       {% endif %}
+       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% else %}&#9794;{% endif %}
 
       {% if page['patient']['administrativeDatas']['notes']['value'] %}
         <button id="voirNotesPatient" type="button" class="btn btn-default btn-xs" title="Voir les notes">

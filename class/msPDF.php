@@ -529,4 +529,34 @@ class msPDF
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
         return $twigPDF->render($template, $p);
     }
+
+/**
+ * Obtenir un duplicata du pdf
+ * @return void
+ */
+    public function getDuplicata() {
+      global $p;
+
+      $pdf = new msStockage;
+      $pdf->setObjetID($this->_objetID);
+      if (!$pdf->testDocExist()) {
+        $this->makePDFfromObjetID();
+        $this->savePDF();
+      }
+      $original = $pdf->getPathToDoc();
+
+      msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
+      $tempfile=$p['config']['workingDirectory'].$p['user']['id'].'/'.time().'.pdf';
+      $watermark=$p['config']['homeDirectory'].'templates/duplicata.pdf';
+      system("pdftk $original background $watermark output $tempfile dont_ask", $errcode);
+      if (!$errcode && $ih=fopen($tempfile, 'r')) {
+          header('Content-Type: application/pdf');
+          fpassthru($ih);
+          fclose($ih);
+      } else {
+          echo "Problème de génération du duplicata";
+      }
+      unlink($tempfile);
+    }
+
 }

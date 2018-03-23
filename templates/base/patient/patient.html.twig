@@ -20,269 +20,110 @@
  #/
 
 /##
- # Template > patient : dossier patient
+ # Template > patient : en-tête du dossier patient (données administratives)
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-{% extends "page.html.twig" %}
-{% import "macroForm.html.twig" as f %}
-{% block title %}{{ page['patient']['administrativeDatas']['3']['value']|e }}
-    {% if page['patient']['administrativeDatas']['2']['value'] %}{{ page['patient']['administrativeDatas']['2']['value']|e }}
-    {% else %}{{ page['patient']['administrativeDatas']['1']['value']|e }}{% endif %}
-    : dossier patient - MedShakeEHR
-{% endblock %}
+<div class="col-md-12">
+  <h1>
+    {# firstname #}
+    {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
 
-{% block head %}
-    <script>
-      {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
-      var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
-    </script>
+    {# lastname & birthname #}
+    {% if page['patient']['administrativeDatas']['birthname']['value'] and page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+      (né{% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}e{% endif %}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }})
+      {# birthname only #}
+    {% elseif page['patient']['administrativeDatas']['birthname']['value'] %}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
+      {# lastname only #}
+    {% elseif page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+    {% endif %}
+    <small>
+      {# birthdate #}
+      {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+      -
+      {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
+        {# date décès #}
+        {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
+      {% else %}
+        {# age #}
+        {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+      {% endif %}
+       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% else %}&#9794;{% endif %}
 
-    {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/tinymce.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/jquery.tinymce.min.js"></script>
+      {% if page['patient']['administrativeDatas']['notes']['value'] %}
+        <button id="voirNotesPatient" type="button" class="btn btn-default btn-xs" title="Voir les notes">
+          <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+        </button>
+      {% endif %}
 
-    {# JS général du dossier patient #}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
+      <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives">
+        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
 
-    {# JS commun au formulaire de consultation du module #}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonBase.js"></script>
+      {% if page.correspondants is empty %}
+        <button class="btn btn-default btn-xs editerRelationsPatient" role="button" title="Édition des relations">
+          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        </button>
+      {% endif %}
+    </small>
+  </h1>
+  <div style="margin-bottom : 8px;">
+    {# email #}
+    {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }}
+          <span class="caret"></span>
+        </button>
 
-    {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
-    {% for i in page.listeForms %}
-      <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js"></script>
-    {% endfor %}
+        <ul class="dropdown-menu">
+          <li>
+            <a class="newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a>
+          </li>
+          {% if config.smtpTracking %}
+            <li>
+              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/">Historique des mails envoyés</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
 
-    <style>
-        #newDoc{
-          display: none;
-        }
+      -
 
-    </style>
+    {% endif %}
 
-{% endblock %}
+    {# tel #}
+    {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
+    {% if page['patient']['administrativeDatas']['homePhone']['value'] and page['patient']['administrativeDatas']['mobilePhone']['value'] %}
+      /
+    {% endif %}
+    {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
+    -
+    {# adresse #}
+    {{ page['patient']['administrativeDatas']['streetNumber']['value']|e }}
+    {{ page['patient']['administrativeDatas']['street']['value']|e }}
+    {{ page['patient']['administrativeDatas']['postalCodePerso']['value']|e }}
+    {{ page['patient']['administrativeDatas']['city']['value']|e }}
 
-{% block body %}
+    {% if page.correspondants %}
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="btn btn-default btn-xs editerRelationsPatient" role="button" title="Édition des relations">
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      </button>
+      {% for v in page.correspondants %}
+        <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+          {% if v.titre %}{{ v.titre }}
+          {% endif %}{{ v.prenom }}
+          {{ v.nom }}</a>
+      {% endfor %}
+    {% endif %}
+  </div>
 
-    <div class="container-fluid">
-        {% if page.patient.dossierType =="deleted" %}
-        <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
-        {% endif %}
-        <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode.value }}" data-patientID="{{ page.patient.id }}">
-
-            {% include('inc-ajax-patientAdminData.html.twig') %}
-
-        </div>
-
-        <div class="row">
-
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Ordonnance
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  {% if config.lapOnOff == 'on' %}
-                    <li>
-                      <a href="/lap/{{ page.patient.id }}/" target="_blank">Prescription médicamenteuse (LAP)</a>
-                    </li>
-                  {% endif %}
-                  {% for k,v in page.formOrdo %}
-                    <li>
-                        <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}{% if config.lapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
-                    </li>
-                  {% endfor %}
-                </ul>
-            </div>
-
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Courriers &amp; Certificats
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-header">Certificats</li>
-                    {% for v in page.modelesCertif %}
-                        <li>
-                            <a class="newCourrier" data-modeleID="{{ v.id }}" href="#">{{ v.label }}</a>
-                        </li>
-                    {% endfor %}
-                    <li role="separator" class="divider"></li>
-                    <li class="dropdown-header">Courriers</li>
-                    {% for v in page.modelesCourrier %}
-                        <li>
-                            <a class="newCourrier" data-modeleID="{{ v.id }}" href="#">{{ v.label }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Document
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a id="linkAddNewDoc" href="#">Ajouter un document au dossier</a>
-                    </li>
-                    {% if config.dicomHost=='' %}
-                      <li>
-                          <a class="prepareReceptionDoc" href="#">Ajouter des documents au dossier via phonecapture</a>
-                      </li>
-                    {% endif %}
-                </ul>
-            </div>
-
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled="disabled"{% endif %}>
-                    Règlement
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  {% for k,v in page.formReglement %}
-                    <li>
-                      <a id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {% endif %}Nouveau règlement</a>
-                    </li>
-                  {% endfor %}
-                </ul>
-            </div>
-
-            {% if config.dicomHost!='' %}
-              <div class="btn-group">
-                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      DICOM
-                      <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                        <a href="#" class="catchLastDicomSrData">Récupérer dernières mesures</a>
-                    </li>
-                    <li>
-                        <a href="#" class="catchOthersDicomSrData">Récupérer mesures antérieures</a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/" target="_blank">Voir tous les examens du patient</a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a href="#" class="prepareEcho">Envoyer patient à échographe</a>
-                    </li>
-                    <li>
-                        <a href="#" class="prepareReceptionDoc dicom">Envoyer patient à phonecapture</a>
-                    </li>
-                  </ul>
-              </div>
-            {% endif %}
-
-        </div>
-
-        <div class="row" style="margin-top : 40px;">
-          <div class="col-md-3">
-
-            {# Onglets colonne latérale #}
-            <ul class="nav nav-tabs" style="margin-bottom : 12px;">
-              <li role="presentation" class="active" data-toggle="tab" title="Panneau principal">
-                <a href="#panelATCD" data-toggle="tab"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
-              </li>
-              <li role="presentation" title="Liens familiaux">
-                <a href="#panelLiensFamiliaux" data-toggle="tab"><span class="glyphicon glyphicon glyphicon-link" aria-hidden="true"></span></a></a>
-              </li>
-              {% if config.lapOnOff == 'on' %}
-              <li role="presentation" title="Autres actions">
-                <a href="#panelOptions" data-toggle="tab"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></a></a>
-              </li>
-              {% endif %}
-            </ul>
-
-            <div class="tab-content">
-
-              {# Formulaire ajout ALD #}
-              {% if config.lapOnOff == 'on' %}
-              <div role="tabpanel" class="tab-pane" id="panelOptions">
-                <button class="btn btn-info btn-block newCS" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter une ALD</button>
-              </div>
-              {% endif %}
-
-              {# Formulaire latéral des ATCD #}
-              <div role="tabpanel" class="tab-pane active" id="panelATCD">
-                {% if page.patient.ALD %}
-                  {% include 'inc-patientAldStruc.html.twig' %}
-                {% endif %}
-                <div id="latForm" class="changeObserv">
-                  {{ f.formbuilder(page.formData_baseATCD , page.formName_baseATCD , valFormLat ) }}
-                </div>
-              </div>
-
-              {# Liens familiaux #}
-              <div role="tabpanel" class="tab-pane" id="panelLiensFamiliaux">
-                {% if page.liensFamiliaux %}
-                  {% include 'inc-patientLiensFamiliaux.html.twig' %}
-                {% endif %}
-              </div>
-            </div>
-          </div>
-
-            {# colonne principale #}
-            <div class="col-md-9" style="padding-left : 35px">
-
-              {# Div d'import de nouveau doc #}
-              <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
-
-              {# historique du jour #}
-              <div id="historiqueToday">
-                {% include 'patientHistoriqueToday.html.twig' %}
-              </div>
-
-              {# Div d'insertion de nouveau reglement #}
-              <div id="newReglement" class="row toclear"></div>
-
-              {# Div d'insertion de nouveau courrier #}
-              <div id="newCourrier" class="row toclear"></div>
-
-              {# Div d'insertion de nouvelle ordonance #}
-              <div id="newOrdo" class="row toclear"></div>
-
-              {# Div d'insertion de nouvelle consultation #}
-              <div id="nouvelleCs" class="row toclear checkboxFixValue"></div>
-
-              {# Div d'insertion de nouveau mail  #}
-              <div id="newMail" class="row toclear"></div>
-
-              {# Synthèse patient #}
-              {% include 'patientSynthese.html.twig' %}
-
-              {# Historique complet #}
-              <div id="historique">
-                {% include 'patientHistoriqueMedical.html.twig' %}
-              </div>
-            </div>
-          </div>
-
-    </div>
-
-    {# modal courbes de poids/taille/IMC #}
-    {% include 'inc-patientModal-GraphsIMC.html.twig' %}
-
-    {# modal changer nom consultation ou doc #}
-    {% include 'inc-patientModal-changerTitre.html.twig' %}
-
-    {# modal rapatrier mesures examen particulier #}
-    {% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
-
-    {# modal éditer infos adminsitratives du patient #}
-    {% include 'inc-patientModal-editAdminData.html.twig' %}
-
-    {# modal changer la date d'une ligne d'historique #}
-    {% include 'inc-patientModal-changerDateEffet.html.twig' %}
-
-    {# modal phonecapture #}
-    {% include 'inc-patientModal-phonecapture.html.twig' %}
-
-    {# recherche CIM10 #}
-    {% include 'inc-patientModal-searchCIM10.html.twig' %}
-
-{% endblock %}
+  <div id="notesPatient" class="well" style="display: none;">
+    {{ page['patient']['administrativeDatas']['notes']['value']|e|nl2br }}
+  </div>
+</div>

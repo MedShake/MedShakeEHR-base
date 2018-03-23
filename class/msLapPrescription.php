@@ -614,6 +614,45 @@ class msLapPrescription extends msLap
         return $this->_lignesTraitees[$indexLigne] = $tab;
     }
 
+    /**
+     * Traiter la regEx 2 de la version 1 de l'interpréteur
+     * @param  int $indexLigne index de la ligne traitée
+     * @param  array $m          match retour de la regex
+     * @return array             données sur la ligne
+     */
+        private function _traiterLigneRegEx2V1($indexLigne, $m) {
+            $human='';
+
+            $m['dureeNumeric'] = @$m[2];
+            $m['dureeUnite'] = @$m[3];
+
+            // durée
+            $dureeHuman=$this->_dureeAbrevEnMots($m['dureeNumeric'], $m['dureeUnite']);
+
+
+            // tableau de retour
+            $tab['indexLigne'] = $indexLigne;
+            $tab['typeLigne'] = 'posologienc';
+            $tab['prefixeLigne'] = '';
+            $tab['duree'] = $m['dureeNumeric'];
+            $tab['dureeUnite'] = $m['dureeUnite'];
+            $tab['nbPrisesParUniteTemps']=0;
+            $tab['posoJournaliere'] = 0;
+            $tab['posoTheriaqueMode'] = 1;
+            $tab['posoDosesSuccessives'] = 0;
+            $tab['nbPrisesParUniteTempsUnite'] = 0;
+            $tab['posoJours'] = '';
+            $tab['posoMaxParPrise'] = 0;
+            $tab['posoMinParPrise'] = 0;
+            $tab['humanPosoBase'] = 'posologie inconnue';
+            $tab['humanPosoDuree'] = ' - ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
+            $tab['humanPosoTraine'] = '';
+            $tab['regEx']='2';
+
+            $this->_lignesPosologiques[] = $tab;
+            return $this->_lignesTraitees[$indexLigne] = $tab;
+        }
+
 /**
  * Obtenir mot en fonction abréviation de durée
  * @param  int $nb    nombre
@@ -674,8 +713,8 @@ class msLapPrescription extends msLap
       // 1 6xh|j|s|m 6h|j|s|m jp|ji
       $regEx[1][1] = "/^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(h|j|s|m))?(.*)/i";
 
-      // 1 mms 6j|s|m jp|ji texte de traine
-      $regEx[1][2] = "/^(?:et |puis )?([0-9\/,\.]+) ([a-z]{1})([a-z]{1})([a-z]{1}) ([0-9]+)(j|s|m){1}\s?(jp|ji)?(.*)/i";
+      // posologie inconnue
+      $regEx[1][2] = "/^(nc|\?) (?:([0-9]+)(j|s|m))/i";
 
       return $regEx[$this->_versionInterpreteur];
 

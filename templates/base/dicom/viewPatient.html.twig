@@ -53,15 +53,15 @@
 
         <h1>Examens de
           {# firstname #}
-          {{ page['patient']['administrativeDatas']['3']['value']|e }}
+          {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
           {# name #}
-          {% if page['patient']['administrativeDatas']['2']['value'] %}
-              {{ page['patient']['administrativeDatas']['2']['value']|e }}
-              {% if page['patient']['administrativeDatas']['1']['value'] %}
-                  ({{ page['patient']['administrativeDatas']['1']['value']|e }})
+          {% if page['patient']['administrativeDatas']['lastname']['value'] %}
+              {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+              {% if page['patient']['administrativeDatas']['birthname']['value'] %}
+                  ({{ page['patient']['administrativeDatas']['birthname']['value']|e }})
               {% endif %}
           {% else %}
-            {{ page['patient']['administrativeDatas']['1']['value']|e }}
+            {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
           {% endif %}
             <small>
                 {{ page['patient']['administrativeDatas']['8']['value']|e }}
@@ -74,8 +74,8 @@
         </h1>
 
         <ol class="breadcrumb">
-            <li class="active">{{ page['patient']['administrativeDatas']['3']['value']|e }}
-                {{ page['patient']['administrativeDatas']['2']['value']|e }}</li>
+            <li class="active">{{ page['patient']['administrativeDatas']['firstname']['value']|e }}
+                {{ page['patient']['administrativeDatas']['lastname']['value']|e }}</li>
         </ol>
 
         <div class="row">

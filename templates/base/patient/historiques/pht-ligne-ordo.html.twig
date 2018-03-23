@@ -114,6 +114,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/duplicata/{{ cs.id }}/">Imprimer un duplicata</a></li>
         <li>
           <a href="#" class="toogleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
             {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}

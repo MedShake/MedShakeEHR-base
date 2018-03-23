@@ -229,4 +229,7 @@ function construireTTenCours() {
 
     });
   }
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
 }

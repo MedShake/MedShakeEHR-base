@@ -21,31 +21,12 @@
  */
 
 /**
- * LAP : ajax > analyser ordonnance et traitement en cours
+ * LAP : ajax > obtenir les effets indésirables du traitement en cours
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//print_r($_POST);
-
-// sortie de l'objet patient
-$lapPatient=new msLapPatient;
-$lapPatient->setToID($_POST['patientID']);
-
-//sortie de l'analyse Thériaque pour l'ordo courante
-$lapOrdo= new msLapAnalysePres;
-$lapOrdo->setToID($_POST['patientID']);
-$lapOrdo->setObjetPatient($lapPatient->getPatientObjetTheriaque());
-$lapOrdo->setPatientPhysioControleData($lapPatient->getPatientBasicPhysioDataControle());
-if(isset($_POST['ordo'])) {
-  $lapOrdo->setOrdonnanceContenu($_POST['ordo']);
-  $lapOrdo->getObjetsFromOrdo();
-}
-$lapOrdo->getObjetsFromTTenCours();
-$lapOrdo->getAnalyseTheriaque();
-
-$retour=array(
-  'html'=>$lapOrdo->getHtmlAnalysesResults(),
-  'correspondanceLignes'=>$lapOrdo->getCorrespondanceLignes(),
-);
-echo json_encode($retour);
+ // select TT chronique actif
+$lap = new msLapOrdo();
+$lap->setToID($_POST['patientID']);
+$ttEnCours=$lap->getTTenCours();

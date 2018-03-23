@@ -33,10 +33,12 @@
     <tr class="danger">
       <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Poids : valeur manquante !</td>
     </tr>
-  {% elseif page.patientBasicPhysio.poids.statut == 'ok' %}
-    <tr class="active">
+  {% elseif page.patientBasicPhysio.poids.statut == 'ok' or page.patientBasicPhysio.poids.statut == 'oldValue' %}
+    <tr class="{% if page.patientBasicPhysio.poids.statut == "oldValue" %}danger{% else %}active{% endif %}">
       <td data-toggle="collapse" data-target="#physioPoidsDet" style="cursor: pointer">
+        {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>{% endif %}
         Poids : {{ page.patientBasicPhysio.poids.value }} kg
+        {% if page.patientBasicPhysio.poids.statut == "oldValue" %} - poids à actualiser !{% endif %}
         <div id="physioPoidsDet" class="collapse">
           <table class="table table-condensed small" style="margin-top:8px;">
             <tr>
@@ -79,7 +81,7 @@
   {% endif %}
 
   {# clairance #}
-  {% if page.patientBasicPhysio.clairanceCreatinine.statut == 'missingValue' %}
+  {% if page.patientBasicPhysio.clairanceCreatinine.statut == 'incorectValue' %}
     <tr class="danger">
       <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
     </tr>
@@ -150,7 +152,7 @@
         <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Grossesse : information manquante !</td>
       </tr>
     {% elseif page.patientBasicPhysio.grossesse.statut == 'termeDepasse46SA' %}
-      <tr class="danger">
+      <tr class="danger alerteMsg" data-alertemsg="Le terme de grossesse est supérieur à 46 semaines d'aménorrhée.">
         <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
           <span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Terme > 46SA !
           <div id="grosssesseDet" class="collapse">
@@ -215,12 +217,12 @@
   <table class="table table-condensed table-hover table-bordered">
 
     <tr class="{% if page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
-      danger
+      danger">
       {% elseif page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
-      danger
+      danger alerteMsg" data-alertemsg="L'état d'allaitement dure depuis plus de 3 ans.">
       {% else %}
-      active
-      {% endif %}">
+      active">
+      {% endif %}
       <td data-toggle="collapse" data-target="#allaitementDet" style="cursor: pointer">
         {% if page.patientBasicPhysio.allaitement.statut == 'absenceAllaitement' %}
           Non allaitante actuellement

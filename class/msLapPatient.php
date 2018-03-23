@@ -55,7 +55,7 @@ class msLapPatient extends msLap
 
         $data=new msObjet;
         $data->setToID($this->_toID);
-        $tab['birthdate']=$data->getLastObjetValueByTypeName('birthdate');
+        $tab['datenaissance']=$data->getLastObjetValueByTypeName('birthdate');
         $tab['sexe']=$data->getLastObjetValueByTypeName('administrativeGenderCode');
         $tab['taille']=$data->getLastObjetValueByTypeName('taillePatient');
         $tab['poids']=$data->getLastObjetValueByTypeName('poids');
@@ -64,14 +64,14 @@ class msLapPatient extends msLap
         // grossesse et allaitement
         $tab['grossesse']=0;
         $tab['date_grossesse']='';
-        $tab['type_date_gross']=1;
+        $tab['typ_date_gross']=1;
         $tab['allaitement']=0;
         if( $tab['sexe'] == 'F') {
          $grossesse=$this->_checkGrossesse();
          if($grossesse['statut'] == 'grossesseEnCours') {
            $tab['grossesse']=1;
            $tab['date_grossesse']=$grossesse['ddg'];
-           $tab['type_date_gross']=1;
+           $tab['typ_date_gross']=1;
          }
          if($data->getLastObjetValueByTypeName('allaitementActuel') == 'true') {
            $tab['allaitement']=1;
@@ -89,12 +89,12 @@ class msLapPatient extends msLap
         $tab['etatpatho']='';
 
         $etatpatho_cim=$patient->getAtcdAndAldCim10Codes();
-        if(!empty($etatpatho_cim)) $tab['etatpatho_cim']=implode(",",$etatpatho_cim); else $tab['etatpatho_cim']='';
+        if(!empty($etatpatho_cim)) $tab['etatpatho_cim']=implode(", ",$etatpatho_cim); else $tab['etatpatho_cim']='';
 
         //allergies
         if(!empty(trim($p['config']['lapAllergiesStrucPersoPourAnalyse']))) {
           $hypersensibilite=$patient->getAllergiesCodes($p['config']['lapAllergiesStrucPersoPourAnalyse']);
-          if(!empty($hypersensibilite)) $tab['hypersensibilite']=implode(',', $hypersensibilite); else $tab['hypersensibilite']='';
+          if(!empty($hypersensibilite)) $tab['hypersensibilite']=implode(', ', $hypersensibilite); else $tab['hypersensibilite']='';
         }
 
         return $tab;

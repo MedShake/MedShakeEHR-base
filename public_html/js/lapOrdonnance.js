@@ -481,11 +481,11 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '" ';
     if (mode == 'TTenCours') {
-      retour += ' data-ligneID="' + data.ligneData.id + '"';
+      retour += ' data-ligneID="' + data.ligneData.objetID + '"';
     }
     retour += ' >';
     retour += '  <div class="row">';
-    retour += '    <div class="col-md-7">';
+    retour += '    <div class="col-md-10">';
     retour += '      <div><strong>';
     retour += '        ' + data.medics[0].nomUtileFinal + '</strong>';
     if (data.medics[0].isNPS == 'true') {
@@ -499,6 +499,15 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.isChronique == 'true') {
       retour += '        <span class="label label-default">chronique</span>';
     }
+
+    if (data.medics[0].prescripteurInitialTT) {
+      retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>';
+    }
+
+    if (data.medics[0].prescriptionMotif) {
+      retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></a>';
+    }
+
     retour += '      </div>';
     retour += '      <div>' + data.ligneData.voieUtilisee;
     if (data.medics[0].posoFrappeeNbDelignesPosologiques > 1) {
@@ -516,18 +525,7 @@ function makeLigneOrdo(data, mode) {
     retour += '      </div>';
     retour += '      <div>' + nl2br(data.medics[0].posoHumanComplete) + '</div>';
     retour += '    </div>';
-
-    retour += '    <div class="col-md-4">';
-    if (data.medics[0].prescripteurInitialTT) {
-      retour += '        <div class="small">Prescripteur :';
-      retour += '          ' + data.medics[0].prescripteurInitialTT + '</div>';
-    }
-    if (data.medics[0].prescriptionMotif) {
-      retour += '        <div class="small">Motif de prescription :<br>';
-      retour += '          ' + nl2br(data.medics[0].prescriptionMotif) + '</div>';
-    }
-    retour += '  </div>';
-    retour += '  <div class="col-md-1 text-right">';
+    retour += '  <div class="col-md-2 text-right">';
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
@@ -540,6 +538,14 @@ function makeLigneOrdo(data, mode) {
       retour += '  <ul class="dropdown-menu dropdown-menu-right">';
       retour += '    <li><a href="#" class="marquerArretEffectifCeJour">Arrêt effectif ce jour</a></li>';
       retour += '    <li><a href="#"  class="marquerArretEffectif">Arrết effectif à date antérieure</a></li>';
+      retour += '  </ul>';
+      retour += '</div>';
+
+      retour += ' <div class="btn-group">';
+      retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
+      retour += '  </button>';
+      retour += '  <ul class="dropdown-menu dropdown-menu-right">';
+      retour += '    <li><a href="#" data-speThe="' + data.medics[0].speThe + '" class="marquerArretEffectifCeJour">Effets indésirables</a></li>';
       retour += '  </ul>';
       retour += '</div>';
 
@@ -591,7 +597,7 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '">';
     retour += '  <div class="row" style="margin-bottom: 12px">';
-    retour += '    <div class="col-md-7 gras text-capitalize">';
+    retour += '    <div class="col-md-11 gras">';
     retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
@@ -602,11 +608,23 @@ function makeLigneOrdo(data, mode) {
       retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
     }
     retour += '    </div>';
-    retour += '    <div class="col-md-4"></div>';
     retour += '    <div class="col-md-1 text-right">';
 
     //Actions pour mode TT en cours
-    if (mode == 'TTenCours') {}
+    if (mode == 'TTenCours') {
+      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+
+      retour += '<div class="btn-group">';
+      retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <span class="caret"></span>';
+      retour += '  </button>';
+      retour += '  <ul class="dropdown-menu dropdown-menu-right">';
+      retour += '    <li><a href="#" class="marquerArretEffectifCeJour">Arrêt effectif ce jour</a></li>';
+      retour += '    <li><a href="#"  class="marquerArretEffectif">Arrết effectif à date antérieure</a></li>';
+      retour += '  </ul>';
+      retour += '</div>';
+
+    }
 
     // voir ordo
     else if (mode == 'voirOrdonnance') {
@@ -651,7 +669,7 @@ function makeLigneOrdo(data, mode) {
     $.each(data.medics, function(index, medic) {
 
       retour += '        <tr>';
-      retour += '          <td class="col-md-6">';
+      retour += '          <td class="col-md-11">';
       retour += '            <div>';
       retour += '              ' + i++ + ' - <strong>' + medic.nomUtileFinal + '</strong>';
       if (medic.isNPS == 'true') {
@@ -665,27 +683,32 @@ function makeLigneOrdo(data, mode) {
       if (data.ligneData.isChronique == 'true') {
         retour += ' <span class = "label label-default" >chronique</span>';
       }
+
+      if (medic.prescripteurInitialTT) {
+        retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>';
+      }
+
+      if (medic.prescriptionMotif.length > 0) {
+        retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></a>';
+      }
+
       retour += '    </div>';
       retour += '    <div>' + medic.posoHumanBase + '</div>';
       retour += '  </td>';
 
-      retour += '  <td class="col-md-4">';
-      if (medic.prescripteurInitialTT) {
-        retour += '        <div class="small">Prescripteur :';
-        retour += '          ' + data.medics[0].prescripteurInitialTT + '</div>';
-      }
-      if (medic.prescriptionMotif.length > 0) {
-        retour += '<div class="small">Motif de prescription :<br>';
-        retour += nl2br(medic.prescriptionMotif) + '</div>';
-      }
-      retour += '</td>';
 
-      retour += '<td class="col-md-2">';
+
+      retour += '<td class="col-md-2 text-right">';
 
       //Actions pour mode TT en cours
       if (mode == 'TTenCours') {
-        retour += '    <button class="btn btn-default btn-xs editLignePrescription" title="Renouveller">';
-        retour += '    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>';
+        retour += ' <div class="btn-group">';
+        retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
+        retour += '  </button>';
+        retour += '  <ul class="dropdown-menu dropdown-menu-right">';
+        retour += '    <li><a href="#" data-speThe="' + medic.speThe + '" class="marquerArretEffectifCeJour">Effets indésirables</a></li>';
+        retour += '  </ul>';
+        retour += '</div>';
       }
       // voir ordo
       else if (mode == 'voirOrdonnance') {}

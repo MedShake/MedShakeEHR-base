@@ -40,6 +40,10 @@ class msCourrier
  */
     private $_modeleID;
 /**
+ * @var int $_modele du document concerné
+ */
+    private $_modele;
+/**
  * @var int $_patientID du document concerné
  */
     private $_patientID;
@@ -69,6 +73,17 @@ class msCourrier
     }
 
 /**
+ * Définir le modeleID par le nom du modèle
+ * @param int $data modeleID du document concerné
+ */
+    public function setModeleIDByName($name)
+    {
+        $id = msData::getTypeIDFromName($name);
+        $this->_modele = $name;
+        return $this->_modeleID = $id;
+    }
+
+/**
  * Définir le patientID
  * @param int $data patientID du document concerné
  */
@@ -84,6 +99,19 @@ class msCourrier
     public function setModule($data)
     {
         return $this->_module = $data;
+    }
+
+/**
+ * Obtenir le modele ID
+ * @return int modeleID
+ */
+    public function getModeleID() {
+
+      if (!isset($this->_modeleID)) {
+          throw new Exception('ModelID is not defined');
+      }
+
+      return $this->_modeleID;
     }
 
 /**
@@ -191,8 +219,8 @@ class msCourrier
         }
 
         $objetModule=new msData();
-        $objetModule=$objetModule->getDataType($this->_modeleID, ['validationRules','name']);
-        $tabRetour['module']=$objetModule['validationRules'];
+        $objetModule=$objetModule->getDataType($this->_modeleID, ['module','name']);
+        $tabRetour['module']=$objetModule['module'];
         $tabRetour['modeleName']=$objetModule['name'];
 
 

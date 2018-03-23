@@ -30,7 +30,7 @@
   <td>{{ cs.creationTime }}</td>
   <td>
     {# edit #}
-    <a class="btn btn-default btn-xs newCourrier" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}" href="#" role="button">
+    <a class="btn btn-default btn-xs newCourrier" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}" href="#" role="button">
       {% if cs.iconeType == 'update' %}
         <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="Editer"></span>
       {% else %}
@@ -109,6 +109,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">
+          <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/duplicata/{{ cs.id }}/">Imprimer un duplicata</a></li>
           <li>
             <a href="#" class="toogleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
               {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}

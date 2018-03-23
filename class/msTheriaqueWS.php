@@ -159,7 +159,26 @@ class msTheriaqueWS {
 
   //Analyse ordonnance
   public function get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction) {
-    return $this->_client->get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction);
+    $brut = $this->_client->get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction);
+
+    // on formate le retour
+    $brut = msTools::objectToArray($brut);
+    foreach($brut as $k=>$v) {
+      foreach($v as $kk=>$d) {
+        if(isset($d['indiceligneprescription']) or isset($d['indiceligneprescription_1'])) {
+            $tab[$k][0]=$d;
+        } else {
+            $tab[$k]=$d;
+        }
+      }
+    }
+
+    // retourner les data d'analyse
+    return array(
+      'brut'=>$brut,
+      'formate'=>$tab
+    );
+
   }
 
   // informations dopage
@@ -170,6 +189,21 @@ class msTheriaqueWS {
   // informations conducteur
   public function get_the_conducteur($codeid, $typid) {
     return $this->_client->get_the_conducteur($codeid, $typid);
+  }
+
+  //effets indésirables (fiches)
+  public function get_the_effind_spe($codeid, $typid) {
+    return $this->_client->get_the_effind_spe($codeid, $typid);
+  }
+
+  //effets indésirables (infos gen dont fqc codée)
+  public function get_the_effind_id($codeind) {
+    return $this->_client->get_the_effind_id($codeind);
+  }
+
+  //effets indésirables (détails)
+  public function get_the_det_effind($codeid, $typid) {
+    return $this->_client->get_the_det_effind($codeid, $typid);
   }
 
 }

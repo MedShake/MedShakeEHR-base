@@ -26,6 +26,35 @@
  #
 #}
 
+{% if apatient.poids.statut != 'ok' or apatient.taillePatient.statut != 'ok' or apatient.clairanceCreatinine.statut != 'ok' %}
+  <h3>Données physiologiques patient</h3>
+  <table class="table table-hover">
+    <tbody>
+      {% if apatient.poids.statut != 'ok' %}
+      <tr class="danger">
+        <td>
+          <strong>Poids</strong> : vérifiez et corrigez si possible le poids. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+      {% if apatient.taillePatient.statut != 'ok' %}
+      <tr class="danger">
+        <td>
+          <strong>Taille</strong> : renseignez si possible la taille. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+      {% if apatient.clairanceCreatinine.statut != 'ok' %}
+      <tr class="danger">
+        <td>
+          <strong>Clairance créatinine</strong> : renseignez si possible la clairance de la créatinine. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endif %}
+
 {% if aallergies %}
   <h3>Allergies et hypersensibilités</h3>
   <table class="table table-hover">

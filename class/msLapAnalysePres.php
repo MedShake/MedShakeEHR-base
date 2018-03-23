@@ -35,6 +35,7 @@ class msLapAnalysePres extends msLap
      * @var array
      */
     private $_objetPatient;
+    private $_patientPhysioControleData;
     /**
      * Contenu de l'ordonnance courante
      * @var array
@@ -159,6 +160,11 @@ class msLapAnalysePres extends msLap
         $this->_objetPatient = $_objetPatient;
         return $this->_objetPatient;
     }
+    public function setPatientPhysioControleData($_patientPhysioControleData)
+    {
+        $this->_patientPhysioControleData = $_patientPhysioControleData;
+        return $this->_patientPhysioControleData;
+    }
 
 /**
  * Set the value of Ordonnance Contenu
@@ -234,6 +240,7 @@ class msLapAnalysePres extends msLap
         'ainteractions'=> $this->getAlertesInteractions(),
         'aincompatibilites'=> $this->getAlertesIncompatibilites(),
         'adopageconduc'=>$this->getAlertesDopageEtConducteur(),
+        'apatient'=>$this->_patientPhysioControleData,
         'corLi'=>$this->_correspondanceLignes,
         'ordo'=>$this->_ordonnanceContenu
       );
@@ -266,6 +273,12 @@ class msLapAnalysePres extends msLap
       $lapTTenCours->setToID($this->_toID);
       $this->_ttEnCoursContenu=$lapTTenCours->getTTenCours();
 
+      //si ordo vide, on génère des dates bornes sur 1 mois
+      if(!isset($this->_dateBorneDebutOrdo)) {
+        $this->_dateBorneDebutOrdo = new DateTime();
+        $this->_dateBorneFinOrdo = $this->_dateBorneDebutOrdo->add(new DateInterval('P27D'));
+      }
+
       $zones=array('TTPonctuels','TTChroniques');
       foreach($zones as $zone) {
         if(isset($this->_ttEnCoursContenu[$zone])) {
@@ -292,23 +305,10 @@ class msLapAnalysePres extends msLap
           $this->_the=$the=new $this->_classTheriaque;
       }
 
-      $brut = $the->get_analyse_ordonnance($this->_objetPatient, $this->_objetPrescription, $this->_objetPosoPres, '', '', '');
+      $data = $the->get_analyse_ordonnance($this->_objetPatient, $this->_objetPrescription, $this->_objetPosoPres, '', '', '');
 
-      $this->_analyseResults = $brut;
-
-      // on formate le retour
-      $brut = msTools::objectToArray($brut);
-      foreach($brut as $k=>$v) {
-        foreach($v as $kk=>$d) {
-          if(isset($d['indiceligneprescription']) or isset($d['indiceligneprescription_1'])) {
-              $tab[$k][0]=$d;
-          } else {
-              $tab[$k]=$d;
-          }
-        }
-      }
-
-      $this->_analyseResultsReformate = $tab;
+      $this->_analyseResults = $data['brut'];
+      $this->_analyseResultsReformate =  $data['formate'];
 
 
     }
@@ -443,6 +443,7 @@ class msLapAnalysePres extends msLap
  */
     public function getAlertesDopageEtConducteur() {
       $zones=[];
+      $tab=[];
       if(isset($this->_ordonnanceContenu)) {
         array_push($zones, 'ordoMedicsALD','ordoMedicsG');
       }
@@ -673,7 +674,7 @@ class msLapAnalysePres extends msLap
           $dateFin=$this->_dateDepart->add(new DateInterval($this->_formatDateTimeAddString($duree, $unite)));
           $pres['datefin']=$dateFin->format('d/m/Y');
           // nouvelle date de départ
-          $this->_dateDepart=$dateFin->add(new DateInterval($this->_formatDateTimeAddString(1, 'j')));
+          $this->_dateDepart=$dateFin->add(new DateInterval($this->_formatDateTimeAddString(2, 'j')));
 
           // code identifiant produit
           $pres['idprod']=$m['speThe'];
@@ -762,7 +763,7 @@ class msLapAnalysePres extends msLap
  */
     private function _formatDateTimeAddString($duree, $unite) {
       if($unite=='m') return 'P'.($duree * 28 - 1).'D';
-      if($unite=='j') return 'P'.$duree.'D';
+      if($unite=='j') return 'P'.($duree-1).'D';
       if($unite=='h') return 'PT'.$duree.'H';
       return false;
     }

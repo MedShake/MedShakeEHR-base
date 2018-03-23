@@ -56,6 +56,12 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
 
+  // rafraichir historique au retour dossier med
+  $('#ongletDossierMedical').on("show.bs.tab", function() {
+    getHistoriqueToday();
+    getHistorique();
+  });
+
 
   // 1er chargement tab dicom
   $('#ongletDicom').on("show.bs.tab", function() {
@@ -65,10 +71,19 @@ $(document).ready(function() {
     }
   });
 
-  // refresh tab dicom
+  // refresh tabs dicom
   $('body').on("click", "button.tabDicomRefresh", function() {
     var url = $('#tabDicom').attr('data-rootUrl');
     loadTabPatient(url, 'tabDicom');
+  });
+
+  $('#tabDicom').on("click", "#listeExamens tr.viewStudy", function() {
+    $.getScriptOnce(urlBase + "/js/dicom.js");
+    var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
+    var param = {
+      'dcStudyID': $(this).attr('data-study')
+    };
+    loadTabPatient(url, 'tabDicom', param);
   });
 
   // 1er chargement tab relations patient
@@ -80,14 +95,6 @@ $(document).ready(function() {
     }
   });
 
-  $('#tabDicom').on("click", "#listeExamens tr.viewStudy", function() {
-    $.getScriptOnce(urlBase + "/js/dicom.js");
-    var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
-    var param = {
-      'dcStudyID': $(this).attr('data-study')
-    };
-    loadTabPatient(url, 'tabDicom', param);
-  });
 
   function loadTabPatient(url, tab, param) {
     $.ajax({
@@ -218,8 +225,9 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau courrier
-  $("a.newCourrier").on("click", function(e) {
+  $('body').on("click", ".newCourrier", function(e) {
     e.preventDefault();
+    $('#ongletDossierMedical').tab('show');
     if ($('#newCourrier').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu du courrier en cours ?')) {
         $("#editeurCourrier").tinymce().remove();
@@ -565,7 +573,7 @@ $(document).ready(function() {
             if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
               $($tr[0]).after(data);
             else
-              ($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+              $($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
           } else
             getHistorique();
           $tr = $("#historiqueToday .trLigneExamen");
@@ -749,7 +757,7 @@ function sendFormToCourrierDiv(el) {
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
-      modeleID: el.attr('data-modeleID'),
+      modele: el.attr('data-modele'),
     },
     dataType: "html",
     success: function(data) {

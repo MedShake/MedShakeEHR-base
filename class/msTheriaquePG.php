@@ -170,4 +170,101 @@ class msTheriaquePG {
   public function get_the_prestation($codeid, $typid) {
     return $this->get_data_from_pg("get_the_prestation('$codeid', $typid)");
   }
+
+  //Analyse ordonnance
+  public function get_analyse_ordonnance($patient, $prescription, $posologie, $typeAlerteSortie, $natureAlerteCipemg, $niveauGraviteInteraction) {
+
+    global $p;
+
+    $id_analyse = $p['user']['id'].rand(1000,9999);
+
+    // data patient
+    $patient['id_analyse']=$id_analyse;
+    $patient=$this->_prepareArrayForQuery($patient);
+    $queryPatient = "insert into patient (".implode(", ", array_keys($patient)).") values (".implode(", ", $patient).");";
+    pg_query($this->_client, $queryPatient);
+
+    //data prescriptions
+    if(!empty($prescription)) {
+      foreach($prescription as $pres) {
+        $pres['id_analyse']=$id_analyse;
+        $pres=$this->_prepareArrayForQuery($pres);
+        $queryPres = "insert into prescriptions (".implode(", ", array_keys($pres)).") values (".implode(", ", $pres).");";
+        pg_query($this->_client, $queryPres);
+      }
+    }
+    //data poso
+    if(!empty($posologie)) {
+      foreach($posologie as $poso) {
+        $poso['id_analyse']=$id_analyse;
+        $poso=$this->_prepareArrayForQuery($poso);
+        $queryPoso = "insert into posologies (".implode(", ", array_keys($poso)).") values (".implode(", ", $poso).");";
+        pg_query($this->_client, $queryPoso);
+      }
+    }
+
+    //obtenir les analyses
+    $data = $this->get_data_from_pg("get_analyse_ordonnance($id_analyse, '$typeAlerteSortie', '$natureAlerteCipemg', '$niveauGraviteInteraction')");
+
+    // vider les tables
+    pg_query($this->_client, "delete from patient where id_analyse='".$id_analyse."'");
+    pg_query($this->_client, "delete from prescriptions where id_analyse='".$id_analyse."'");
+    pg_query($this->_client, "delete from posologies where id_analyse='".$id_analyse."'");
+
+    // on reformate facon webservice
+    if(!empty($data)) {
+      foreach($data as $v) {
+        if($v['id_type_alerte'] == 'Q') {
+            if(!isset($v['indiceligneprescription_1'])) $v['indiceligneprescription_1']=$v['indiceligneprescription'];
+            $retour['alertes_incompatibilite'][]=$v;
+        } elseif($v['id_type_alerte'] == 'P') {
+            $retour['alertes_redondance'][]=$v;
+        } elseif($v['id_type_alerte'] == 'O') {
+            if(!isset($v['indiceligneprescription_1'])) $v['indiceligneprescription_1']=$v['indiceligneprescription'];
+            $retour['alertes_interaction'][]=$v;
+        } elseif($v['id_type_alerte'] == 'M' or $v['id_type_alerte'] == 'N') {
+            $retour['alertes_posologie'][]=$v;
+        } elseif($v['id_type_alerte'] == 'L' or $v['id_type_alerte'] == 'K' or $v['id_type_alerte'] == 'D' or $v['id_type_alerte'] == 'C' or $v['id_type_alerte'] == 'B' or $v['id_type_alerte'] == 'A') {
+            $retour['alertes_cipemg'][]=$v;
+        } elseif($v['id_type_alerte'] == 'H' or $v['id_type_alerte'] == 'J' or $v['id_type_alerte'] == 'I' or $v['id_type_alerte'] == 'F') {
+            $retour['alertes_grossesse'][]=$v;
+        }
+      }
+    }
+
+    // retourner les data d'analyse
+    return array(
+      'brut'=>$data,
+      'formate'=>$retour
+    );
+  }
+
+  // informations dopage
+  public function get_the_dopage($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_dopage('$codeid', $typid)");
+  }
+
+  // informations conducteur
+  public function get_the_conducteur($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_conducteur('$codeid', $typid)");
+  }
+
+  /**
+   * Ajuster les array patients / prescription / poso avant génération d'insert
+   * @param  array $tab array
+   * @return array      array ajusté
+   */
+  private function _prepareArrayForQuery($tab) {
+    $tab=array_map(function($value) {
+      return trim($value) === "" ? 'NULL' : $value;
+    }, $tab);
+    foreach($tab as $k=>$v) {
+      if(@$v[0].@$v[1] == '0,') $v=str_replace(',', '.', $v);
+      if(is_numeric($v)) {$tab[$k]=$v;}
+      elseif($v == 'NULL') {$tab[$k]=$v;}
+      else {$tab[$k]="'".$v."'";}
+    }
+    return $tab;
+  }
+
 }

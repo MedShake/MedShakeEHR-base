@@ -163,7 +163,7 @@ $(document).ready(function() {
 
 
   // envoyer médicament à la zone de prescription
-  $('#modalRecherche').on("click", "button.sendToPrescription", function(e) {
+  $('#modalRecherche').on("click", ".sendToPrescription", function(e) {
     lapInstallPrescription($(this).attr('data-speThe'), $(this).attr('data-presThe'), $('#lapFrappePrescription').val());
   });
 
@@ -870,18 +870,17 @@ function matchLigne(index, ligne) {
   regExp[0] = /^(et|puis)?\s*([0-9\/,\.+]+) ([0-9\/,\.+]+) ([0-9\/,\.+]+)(?: ([0-9\/,\.+]+))?(?: ([lmMjvsdip]*))? (?:([0-9]+)(j|s|m))?(.*)/i;
   // 1 6xh|j|s|m 6h|j|s|m jp|ji
   regExp[1] = /^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(h|j|s|m))?(.*)/i;
-  // 1 mms 6j|s|m jp|ji texte de traine
-  regExp[2] = /^(?:et |puis )?([0-9\/,\.]+) ([a-z]{1})([a-z]{1})([a-z]{1}) ([0-9]+)(j|s|m){1}\s?(jp|ji)?(.*)/i;
+  // posologie inconnue
+  regExp[2] = /^(nc|\?) (?:([0-9]+)(j|s|m))/i;
 
 
   if (m = regExp[0].exec(ligne)) {
     return true;
   } else if (m = regExp[1].exec(ligne)) {
     return true;
+  } else if (m = regExp[2].exec(ligne)) {
+     return true;
   }
-  // else if (m = regExp[2].exec(ligne)) {
-  //   return true;
-  // }
   return false;
 }
 

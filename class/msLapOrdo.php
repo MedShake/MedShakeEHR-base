@@ -302,18 +302,22 @@ class msLapOrdo extends msLap
 
             //start
             $dd=explode('/',$lp['value']['dateDebutPrise']);
-            if(isset($final[$dd[1]][$dd[0]]['start'])) {
-              $final[$dd[1]][$dd[0]]['start']=$final[$dd[1]][$dd[0]]['start']+$medics[$lp['id']];
-            } else {
-              $final[$dd[1]][$dd[0]]['start']=$medics[$lp['id']];
+            if(isset($medics[$lp['id']])) {
+              if(isset($final[$dd[1]][$dd[0]]['start'])) {
+                $final[$dd[1]][$dd[0]]['start']=$final[$dd[1]][$dd[0]]['start']+$medics[$lp['id']];
+              } else {
+                $final[$dd[1]][$dd[0]]['start']=$medics[$lp['id']];
+              }
             }
 
             //final
             if($lp['dfe'] != '' ) $df=explode('/',$lp['dfe']); else $df=explode('/',$lp['value']['dateFinPrise']);
-            if(isset($final[$df[1]][$df[0]]['stop'])) {
-              $final[$df[1]][$df[0]]['stop']=$final[$df[1]][$df[0]]['stop']+$medics[$lp['id']];
-            } else {
-              $final[$df[1]][$df[0]]['stop']=$medics[$lp['id']];
+            if(isset($medics[$lp['id']])) {
+              if(isset($final[$df[1]][$df[0]]['stop'])) {
+                $final[$df[1]][$df[0]]['stop']=$final[$df[1]][$df[0]]['stop']+$medics[$lp['id']];
+              } else {
+                $final[$df[1]][$df[0]]['stop']=$medics[$lp['id']];
+              }
             }
           }
           krsort($final);

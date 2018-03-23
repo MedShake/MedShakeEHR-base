@@ -25,6 +25,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+var alerteGrossesseSup46EtAllaitSup3Deja = ''
 
 $(document).ready(function() {
 
@@ -34,24 +35,27 @@ $(document).ready(function() {
   // Onglet général LAP
   $('#ongletLAP').on("show.bs.tab", function() {
     lapRefreshLateralPatientData();
-    voirOrdonnanceMode='';
+    if (alerteGrossesseSup46EtAllaitSup3Deja != 'oui') {
+      setTimeout(checkGrossesseSup46EtAllaitSup3,'500');
+    }
+    voirOrdonnanceMode = '';
   });
 
   // Onglet nouvelle ordonnance
   $('#ordonnanceTabL').on("show.bs.tab", function() {
-    voirOrdonnanceMode='editionOrdonnance';
+    voirOrdonnanceMode = 'editionOrdonnance';
   });
 
   // Onglet TT en cours
   $('#tttencoursTabL').on("show.bs.tab", function() {
     refreshTTenCours();
-    voirOrdonnanceMode='TTenCours';
+    voirOrdonnanceMode = 'TTenCours';
   });
 
   // Onglet Historique ordo
   $('#ordohistoriqueTabL').on("show.bs.tab", function() {
     getHistoriqueOrdos();
-    voirOrdonnanceMode='voirOrdonnance';
+    voirOrdonnanceMode = 'voirOrdonnance';
   });
 
   // Onglet historique traitement
@@ -65,7 +69,7 @@ $(document).ready(function() {
       //getPresPre();
     }
     getPresPre();
-    voirOrdonnanceMode='voirOrdonnance';
+    voirOrdonnanceMode = 'voirOrdonnance';
   });
 
 
@@ -103,4 +107,18 @@ function lapRefreshLateralPatientData() {
       alert('Problème, rechargez la page !');
     }
   });
+}
+
+function checkGrossesseSup46EtAllaitSup3() {
+  console.log('ok');
+  var msg = '';
+  $('#patientLateralData tr.alerteMsg').each(function() {
+    msg = msg + '<br>- ' + $(this).attr('data-alertemsg');
+  });
+  if (msg.length > 10) {
+    msg = "Veuillez noter les informations suivantes : " + msg;
+    $('#modalLapAlerte div.modal-body').html(msg);
+    $('#modalLapAlerte').modal('show');
+    alerteGrossesseSup46EtAllaitSup3Deja = 'oui'
+  }
 }
