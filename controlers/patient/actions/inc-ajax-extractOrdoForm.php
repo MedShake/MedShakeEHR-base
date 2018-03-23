@@ -30,8 +30,14 @@
 $debug='';
 
 //si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if ($_POST['ordoForm']!='') {
+      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
 }
 
 //template

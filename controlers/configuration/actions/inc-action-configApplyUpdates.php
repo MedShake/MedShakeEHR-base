@@ -34,10 +34,9 @@ if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur")
  * @param  string $prefix préfixe pour le pre ou post update
  * @return void
  */
-function includePhp($file, $prefix) {
-  if($prefix == 'pre_' or $prefix == 'post_' ) {
-    $file=str_replace('sqlUpgrade_v', $prefix.'sqlUpgrade_v', $file);
-    $file=str_replace('.sql', $prefix.'.php', $file);
+function includePhp($file, $suffixe) {
+  if($suffixe == '_pre' or $suffixe == '_post' ) {
+    $file=str_replace('.sql', $suffixe.'.php', $file);
     if(is_file($file)) include($file);
   }
 }
@@ -78,25 +77,25 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     //puis on applique les patches en commençant par ceux de base s'il y en a
     if (array_key_exists($moduleUpdateFiles, 'base')) {
         foreach ($moduleUpdateFiles['base'] as $file) {
-            includePhp($file, 'pre_');
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
-            includePhp($file, 'post_');
+            includePhp($file, '_post');
         }
         unset($moduleUpdateFiles['base']);
     }
     foreach ($moduleUpdateFiles as $k=>$module) {
         foreach ($module as $file) {
-            includePhp($file, 'pre_');
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
-            includePhp($file, 'post_');
+            includePhp($file, '_post');
         }
     }
     //enfin, on installe les nouveaux modules
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
-            includePhp($file, 'pre_');
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
-            includePhp($file, 'post_');
+            includePhp($file, '_post');
         }
     }
 }

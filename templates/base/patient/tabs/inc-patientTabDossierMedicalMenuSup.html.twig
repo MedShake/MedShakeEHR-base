@@ -29,24 +29,23 @@
  <div class="row" style="margin-bottom : 20px;margin-top : 5px;">
    <div class="col-md-12">
 
-     <div class="btn-group">
+   {% if page.formOrdo|length > 1 %}
+       <div class="btn-group">
          <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
              Ordonnance
              <span class="caret"></span>
          </button>
          <ul class="dropdown-menu">
-           {% if config.lapOnOff == 'on' %}
+           {% for v in page.formOrdo %}
              <li>
-               <a href="/lap/{{ page.patient.id }}/" target="_blank">Prescription médicamenteuse (LAP)</a>
-             </li>
-           {% endif %}
-           {% for k,v in page.formOrdo %}
-             <li>
-                 <a id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}{% if config.lapOnOff == 'on' %}Autres prescriptions{% else %}Nouvelle prescription{% endif %}</a>
+                 <a class="addNewOrdo" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-ordoForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
              </li>
            {% endfor %}
          </ul>
-     </div>
+       </div>
+     {% else %}
+       <a class="addNewOrdo btn btn-primary btn-sm" type="button" title="{{ page.formOrdo[0]['description'] }}" data-porteur="{{ page.formOrdo[0]['id'] }}" data-module="{{ page.formOrdo[0]['module'] }}" data-ordoForm="{{ page.formOrdo[0]['formValues'] }}" href="#">{{ page.formOrdo[0]['label'] }}</a>
+     {% endif %}
 
      <div class="btn-group">
          <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,19 +69,23 @@
          </ul>
      </div>
 
-     <div class="btn-group">
-         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled="disabled"{% endif %}>
-             Règlement
-             <span class="caret"></span>
-         </button>
-         <ul class="dropdown-menu">
-           {% for k,v in page.formReglement %}
-             <li>
-               <a id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {% endif %}Nouveau règlement</a>
-             </li>
-           {% endfor %}
-         </ul>
-     </div>
+     {% if page.formReglement|length > 1 %}
+       <div class="btn-group">
+           <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled="disabled"{% endif %}>
+               Règlement
+               <span class="caret"></span>
+           </button>
+           <ul class="dropdown-menu">
+             {% for v in page.formReglement %}
+               <li>
+                 <a class="addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
+               </li>
+             {% endfor %}
+           </ul>
+       </div>
+     {% else %}
+       <a class="addNewReglement btn btn-primary btn-sm" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">{{ page.formReglement[0]['label'] }}</a>
+     {% endif %}
 
      <div class="btn-group">
          <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
