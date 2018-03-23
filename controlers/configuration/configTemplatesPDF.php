@@ -39,8 +39,7 @@
 
 
      //utilisateurs ayant un repertoire de templates spécifique
-     $specificUsers= new msPeople();
-     $p['page']['templatesDirUsers']=$specificUsers->getUsersWithSpecificParam('templatesPdfFolder');
+     $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
      // si user
      if (isset($match['params']['userID'])) {

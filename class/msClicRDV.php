@@ -326,7 +326,7 @@ class msClicRDV
         }
         $res=json_decode($res, true);
         $rdvClic=array();
-        if (array_key_exists('records', $res)) {
+        if (is_array($res) and array_key_exists('records', $res)) {
             $rdvClic=$res['records'];
         }
         $obj=new msObjet();
