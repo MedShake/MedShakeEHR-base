@@ -1,6 +1,8 @@
 **Les informations ci-dessous sont une rapide introduction purement technique !
 Consultez [www.logiciel-cabinet-medical.fr](http://www.logiciel-cabinet-medical.fr/) pour toutes les informations sur le logiciel MedShakeEHR !**
 
+Un [groupe de discussion](https://groups.google.com/forum/#!forum/medshakeehr) est disponible pour les questions techniques.
+
 # MedShakeEHR-base
 Base pour MedShakeEHR, logiciel modulaire, universel, open source pour les praticiens santé.
 
