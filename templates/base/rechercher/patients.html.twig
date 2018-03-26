@@ -120,9 +120,9 @@ associer patient
   <div class="col-12 col-lg-2">
 
   {% if page.porp in ['patient', 'today'] %}
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" class="btn btn-primary float-right my-lg-1" role="button">Nouveau patient</a>
+    <a class="btn btn-primary float-right my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
   {% elseif page.porp == 'pro' %}
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" class="btn btn-primary float-right my-lg-1" role="button">Nouveau praticien</a>
+    <a class="btn btn-primary float-right my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
   {% endif %}
   </div>
 </div>
@@ -134,7 +134,7 @@ associer patient
 
 {% if page.porp == 'externe' %}
 <div>
-  <a href="javascript:void(0)" class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button">Créer nouveau patient</a>
+  <a class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button" href="javascript:void(0)">Créer nouveau patient</a>
 </div>
 {% endif %}
 

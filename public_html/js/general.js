@@ -188,7 +188,7 @@ $(document).ready(function() {
         alert_popup("success", "Opération validée");
       },
       error: function() {
-        alert_popup("error", "Une erreur s'est produite durant l'opération");
+        alert_popup("danger", "Une erreur s'est produite durant l'opération");
       }
     });
   });
@@ -302,7 +302,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
         });
       },
       error: function() {
-        //alert_popup("error", 'Problème, rechargez la page !');
+        //alert_popup("danger", 'Problème, rechargez la page !');
 
       }
     });
@@ -330,7 +330,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
         });
       },
       error: function() {
-        //alert_popup("error", 'Problème, rechargez la page !');
+        //alert_popup("danger", 'Problème, rechargez la page !');
 
       }
     });
@@ -339,7 +339,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
 
 // affichage de messages d'alerte
 function alert_popup(severity, message) {
-  var titre = {info: 'Note:', success: 'Succès:', warning: 'Message:', error: 'Erreur:'}
+  var titre = {info: 'Note: ', success: 'Succès: ', warning: 'Message: ', danger: 'Erreur: '}
   $("#alert_section").append('\
     <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto" role="alert">\
       <strong>' + titre[severity] + ' </strong>' + message +
