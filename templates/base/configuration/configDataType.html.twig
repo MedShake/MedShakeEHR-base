@@ -122,10 +122,8 @@
 
 			{% for k,v in page.tabTypes %}
 				<h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }} <small>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ page.groupe }}/{{ v.0.cat }}/">
-                                    <button class="btn btn-default btn-sm">
-                                      <span class="fa fa-search" aria-hidden="true"></span>
-                                    </button>
+                                  <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ page.groupe }}/{{ v.0.cat }}/">
+                                    <span class="fa fa-search" aria-hidden="true"></span>
                                   </a>
                                 </small></h2>
 				<table class="table table-sm mb-0 table-hover ">
@@ -160,7 +158,7 @@
 						<button type="button" class="btn btn-default btn-sm duplicate" aria-label="Editer" data-id="{{ w.id }}" data-table="data_types" data-form="formModalNewType" data-modal="modalNewType">
 						<span class="fa fa-copy" aria-hidden="true"></span>
 						</button>
-						<button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %}disabled="disabled"{% endif %} data-id="{{ w.id }}" data-table="data_types">
+						<button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %}disabled{% endif %} data-id="{{ w.id }}" data-table="data_types">
 						<span class="fa fa-times" aria-hidden="true"></span>
 						</button>
 					</td>

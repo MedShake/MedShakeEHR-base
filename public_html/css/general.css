@@ -90,9 +90,22 @@ h2 {margin-top:0.25em;margin-bottom:0.5em}
 label {margin-left:0.5rem;margin-right:0.5rem}
 .btn-group {margin:0}
 .input-group {margin:0.25em}
+.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:#fff;border-color:#bbb}
+.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
+a {color:#337ab7}
+a.btn {color:#000;}
+.btn.btn-sm {min-width:34px;height:31px}
+.btn-group > .btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {border-right:none}
+:not(.input-group-append):not(.input-group-prepend) > .btn:not(.btn-sm) {border-radius:2px}
+.btn.btn-primary {color:#fff;background-color:#337ab7;border-color:#2e6da4;}
+.btn.btn-primary:hover {background-color:#286090;border-color:#204d74}
+.bg-primary {color:#fff;background-color:#337ab7 !important;}
+.btn-warning {background-color:#f0ad4e;border-color:#eea236}
+.btn-warning:hover {background-color:#ec971f;border-color:#d58512}
 input::placeholder {font-size:14px !important}
 .card {line-height:32px}
 .card-header {line-height:36px}
 .list-group {line-height:16px}
 .nav .dropdown-item a {padding:0}
 .nav .dropdown-divider{margin-bottom:0.25rem}
+.nav-pills .nav-link.active {background-color:#337ab7;}

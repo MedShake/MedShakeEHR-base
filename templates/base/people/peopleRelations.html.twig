@@ -51,17 +51,13 @@ Relations du patient       {{ page.patient.3 }}
 
 
 <p>
-<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
-  <button class="btn btn-primary" role="button">
-    <span class="fa fa-folder-open" aria-hidden="true"></span>
-    Dossier patient
-  </button>
+<a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
+  <span class="fa fa-folder-open" aria-hidden="true"></span>
+  Dossier patient
 </a>
-<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.patient.id }}/">
-  <button class="btn btn-default" role="button">
-    <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-    Editer infos administratives
-  </button>
+<a class="btn btn-default" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.patient.id }}/">
+  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+  Editer infos administratives
 </a>
 </p>
 

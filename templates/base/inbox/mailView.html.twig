@@ -110,10 +110,8 @@
                             <small>{{ v.180|e }}</small>
                         </td>
                         <td>
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
-                              <button class="btn btn-default btn-sm" role="button">
-                                <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                              </button>
+                            <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
+                              <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                             </a>
                         </td>
 
@@ -177,11 +175,9 @@
       <div class="card-header py-0 gras">Pièces jointes</div>
       <div class="card-body">
           {% for pj in page.mail.pjSerializeName %}
-              <a href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
-                <button class="btn btn-info" role="button">
-                  <span class="fa fa-file" aria-hidden="true"></span>
-                  {{ pj }}
-                </button>
+              <a class="btn btn-info" role="button" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
+                <span class="fa fa-file" aria-hidden="true"></span>
+                {{ pj }}
               </a>
           {% endfor %}
       </div>

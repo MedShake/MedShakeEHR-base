@@ -3,6 +3,19 @@
       "vendor-dir":"thirdparty"
     },
     "repositories": [
+
+        {
+            "type": "package",
+            "package": {
+                "name": "mattbryson/TouchSwipe-Jquery-Plugin",
+                "version": "1.6.18",
+                "source": {
+                    "url": "https://github.com/mattbryson/TouchSwipe-Jquery-Plugin.git",
+                    "type": "git",
+                    "reference": "1.6.18"
+                }
+            }
+        },
         {
             "type": "package",
             "package": {
@@ -174,6 +187,7 @@
     ],
 
     "require": {
+        "mattbryson/TouchSwipe-Jquery-Plugin": "^1.6.18",
         "FezVrasta/popper.js": "^v1.14.1",
         "FortAwesome/Font-Awesome": "^5.0.8",
         "twbs/bootstrap": "^4.0",

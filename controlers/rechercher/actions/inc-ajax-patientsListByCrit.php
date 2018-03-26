@@ -101,7 +101,7 @@ foreach ($listeTypes as $k=>$v) {
 if(!in_array($_POST['autreCrit'], $listeTypes)) {
     $viewSelect.=" ,GROUP_CONCAT(CASE WHEN od.typeID='".$_POST['autreCrit']."' then od.value END) AS autreCrit";
 }
-$viewSelect.=",GROUP_CONCAT(CASE WHEN od.typeID='".$IdentiteTypes['birthname']."' then p.type END) AS type
+$viewSelect.=",GROUP_CONCAT(CASE WHEN od.typeID='".$IdentiteTypes['firstname']."' then p.type END) AS type
         FROM objets_data as od
         LEFT JOIN people as p ON od.toID=p.id
         WHERE  od.outdated='' and od.deleted=''

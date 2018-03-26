@@ -66,7 +66,9 @@
 
       <div class="col-md-12 px-0 mb-4">
         <div class="card">
-          <div class="card-header py-0 gras">Calendrier général <a href="#" id="calComplet" class="btn btn-primary btn-sm float-right m-1 py-0 mt-2">Calendrier complet</a></div>
+          <div class="card-header py-0 gras">Calendrier général
+            <button id="calComplet" class="btn btn-primary btn-sm float-right m-1 py-0 mt-2" type="button">Calendrier complet</button>
+          </div>
           <div class="card-body">
             <p id="tdjPanel" class="alert alert-success">Terme ce <span class="TDJ">&nbsp;</span> : <span class="TDJRes gras">&nbsp;</span></p>
           </div>
@@ -100,7 +102,9 @@
 
       <div class="col-md-12 px-0">
         <div class="card">
-          <div class="card-header py-0 gras">Calendrier en mois révolus <a href="#" id="calMensuComplet" class="btn btn-primary btn-sm float-right m-1 py-0 mt-2">Voir le calendrier</a></div>
+          <div class="card-header py-0 gras">Calendrier en mois révolus
+            <button id="calMensuComplet" class="btn btn-primary btn-sm float-right m-1 py-0 mt-2">Voir le calendrier</button>
+          </div>
           <div class="card-body">
           </div>
           <table class="table table-sm mb-0 table-hover ">
@@ -126,7 +130,7 @@
 
             <form>
               <div class="form-group ">
-              <select class="form-control" id="calculSpeID" name="calculSpe" disabled="disabled" autocomplete="off" >
+              <select class="form-control" id="calculSpeID" name="calculSpe" disabled autocomplete="off" >
             <option value="rien"></option>
             <optgroup label="Congé maternité">
               <option value="G1">Grossesse simple (6s - T - 10S)</option>

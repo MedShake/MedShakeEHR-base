@@ -26,7 +26,20 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+
+/**
+ * Inclure les scripts php éventuels liés au dump
+ * @param  string $file   chemin + fichier
+ * @param  string $prefix préfixe pour le pre ou post update
+ * @return void
+ */
+function includePhp($file, $suffixe) {
+  if($suffixe == '_pre' or $suffixe == '_post' ) {
+    $file=str_replace('.sql', $suffixe.'.php', $file);
+    if(is_file($file)) include($file);
+  }
+}
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 $formIN=$_POST['formIN'];
@@ -64,19 +77,25 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     //puis on applique les patches en commençant par ceux de base s'il y en a
     if (array_key_exists($moduleUpdateFiles, 'base')) {
         foreach ($moduleUpdateFiles['base'] as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
         unset($moduleUpdateFiles['base']);
     }
     foreach ($moduleUpdateFiles as $k=>$module) {
         foreach ($module as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
     }
     //enfin, on installe les nouveaux modules
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
     }
 }

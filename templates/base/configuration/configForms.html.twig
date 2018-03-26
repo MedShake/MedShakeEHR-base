@@ -93,15 +93,11 @@
             <td>{{ w.name }}</td>
             <td>{{ w.description }}</td>
             <td>
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
-                <button class="btn btn-default btn-sm" role="button">
-                  <span class="fa fa-eye" aria-hidden="true"></span>
-                </button>
+              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+                <span class="fa fa-eye" aria-hidden="true"></span>
               </a>
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-                <button class="btn btn-default btn-sm" role="button">
-                  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-                </button>
+              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+                <span class="fa fa-pencil-alt" aria-hidden="true"></span>
               </a>
 
 					  </td>

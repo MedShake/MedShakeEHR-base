@@ -38,7 +38,7 @@ $(document).ready(function() {
 
   $(".saveSignature").on("click", function(e) {
    if( $("#signature").jSignature('getData', 'native').length == 0) {
-      alert_popup("error", 'Merci de signer avant de valider !');
+      alert_popup("danger", 'Merci de signer avant de valider !');
 
    } else {
       signatureSvg = $("#signature").jSignature("getData", "svg");
@@ -54,7 +54,7 @@ $(document).ready(function() {
           window.location.href = urlBase+'/public/signer/merci/';
         },
         error: function() {
-          alert_popup("error", 'Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
 
         }
       });

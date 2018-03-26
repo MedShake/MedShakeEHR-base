@@ -59,19 +59,15 @@ $p['config']['homeDirectory']=$homepath;
 $mysqli=msSQL::sqlConnect();
 
 
-if(isset($p['config']['agendaService'])) {
-  if ($p['config']['agendaService'] == 'clicRDV') {
-    $clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
-    if (!is_array($clicUsers)) {
-        return;
+$clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
+if (!is_array($clicUsers)) {
+    return;
+}
+$clicrdv=new msClicRDV();
+foreach($clicUsers as $userid=>$value) {
+    $clicrdv->setUserID($userid);
+    $ret=$clicrdv->syncEvents();
+    if ($ret!==false and $ret!==true) {
+        echo $ret."\n";
     }
-    $clicrdv=new msClicRDV();
-    foreach($clicUsers as $userid=>$value) {
-        $clicrdv->setUserID($userid);
-        $ret=$clicrdv->syncEvents();
-        if ($ret!==false and $ret!==true) {
-            echo $ret."\n";
-        }
-    }
-  }
 }

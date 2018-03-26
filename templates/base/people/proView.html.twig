@@ -63,8 +63,8 @@
               <div class="card-header py-0 gras">Informations professionnelles</div>
               <div class="card-body">
                 <p>Informations professionnelles sur ce praticien
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
-                    <button class="btn btn-default float-right m-1" role="button">Editer infos pros</button>
+                  <a class="btn btn-default float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
+                    Editer infos pros
                   </a>
                 </p>
               </div>
@@ -100,12 +100,12 @@
 
     {% if config.PraticienPeutEtrePatient %}
       <div class="col-md-6">
-            <div class="card col-md-12">
+            <div class="card panel-primary">
               <div class="card-header py-0 gras">Informations personnelles</div>
               <div class="card-body">
                 <p>Informations personnelles sur ce praticien
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
-                    <button class="btn btn-default float-right m-1" role="button">Editer infos persos</button>
+                  <a class="btn btn-default float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
+                    Editer infos persos
                   </a>
                 </p>
               </div>

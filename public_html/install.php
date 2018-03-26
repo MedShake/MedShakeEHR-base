@@ -26,7 +26,7 @@
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
 
-$webpath=str_replace('install.php','',$_SERVER['REQUEST_URI']);
+$webpath=str_replace('/install.php','',$_SERVER['REQUEST_URI']);
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 

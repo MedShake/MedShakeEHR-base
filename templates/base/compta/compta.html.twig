@@ -112,7 +112,7 @@
                 <button type="submit" class="btn btn-default m-2">Chercher</button>
 
                 <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control ml-1" autocomplete="off" />
-                  <option>Selection rapide</option>
+                  <option value="today">Selection rapide</option>
                   {% for k,v in page.periode.quickOptions %}
                     <option {% if page.periode.quick == k %}selected="selected"{% endif %} value="{{ k }}">{{ v }}</option>
                     {% endfor %}
@@ -191,7 +191,7 @@
                             <td>
                                 {% if reg.regleFacture - reg.dejaPaye > 0 %}
                                 {% set apayer = reg.regleFacture - reg.dejaPaye %}
-                                  <a class="btn btn-danger btn-sm editReglement float-right m-1" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                                  <a class="btn btn-danger btn-sm editReglement float-right m-1" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }} }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                                     Saisir règlement
                                   </a>
                                 {% endif %}

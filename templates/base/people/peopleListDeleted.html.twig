@@ -55,10 +55,8 @@
         <tr>
           <td>{{ v.id }}</td>
           <td>
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
-              <button class="btn btn-default btn-sm" role="button">
-                <span class="fa fa-folder-open" aria-hidden="true"></span>
-              </button>
+            <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
+              <span class="fa fa-folder-open" aria-hidden="true"></span>
             </a>
             {{ v.identiteDossier|e }}
           </td>

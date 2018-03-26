@@ -51,22 +51,22 @@
           {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
         {% endif %}
 
-        {% if page['patient']['administrativeDatas']['notes']['value'] %}
-          <button id="voirNotesPatient" type="button" class="btn btn-default btn-sm" title="Voir les notes">
-              <span class="fa fa-comment" aria-hidden="true"></span>
-          </button>
-        {% endif %}
+        <div class="btn-group">
+          {% if page['patient']['administrativeDatas']['notes']['value'] %}
+            <button id="voirNotesPatient" type="button" class="btn btn-default btn-sm" title="Voir les notes">
+                <span class="fa fa-comment" aria-hidden="true"></span>
+            </button>
+          {% endif %}
 
-        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
 
-        {% if page.correspondants is empty %}
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
-          <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
+          {% if page.correspondants is empty %}
+          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
             <span class="fa fa-link" aria-hidden="true"></span>
-          </button>
-        </a>
-        {% endif %}
-    </small>
+          </a>
+          {% endif %}
+        </div> 
+   </small>
 </h1>
 <div style="margin-bottom : 8px;">
     {# email #}
@@ -102,14 +102,12 @@
 
     {% if page.correspondants %}
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
-      <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
-        <span class="fa fa-link" aria-hidden="true"></span>
-      </button>
+    <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+      <span class="fa fa-link" aria-hidden="true"></span>
     </a>
     {% for v in page.correspondants %}
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/">
-        <button class="btn btn-default btn-sm" role="button" title="">{% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}</button>
+      <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+        {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
       </a>
     {% endfor %}
     {% endif %}

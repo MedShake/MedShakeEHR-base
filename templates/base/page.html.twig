@@ -104,7 +104,7 @@
                         {% endfor %}
                       {% elseif page.agendaUsers %}
                         <li class="bg-dark dropdown">
-                          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">Agenda
                           </a>
                           <ul class="bg-dark dropdown-menu">
                             {% if user.id in page.agendaUsers|keys %}
@@ -124,7 +124,7 @@
                         </li>
                       {% endif %}
                       <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patients
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">Patients
                           </a>
                           <ul class="bg-dark dropdown-menu">
                               <li class="bg-dark dropdown-item">
@@ -150,7 +150,7 @@
                           </ul>
                       </li>
                       <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Praticiens
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" aria-haspopup="true" aria-expanded="false">Praticiens
                           </a>
                           <ul class="bg-dark dropdown-menu">
                               <li class="bg-dark dropdown-item">
@@ -162,7 +162,7 @@
                           </ul>
                       </li>
                       <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comptabilité
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" aria-haspopup="true" aria-expanded="false">Comptabilité
                           </a>
                           <ul class="bg-dark dropdown-menu">
                               <li class="bg-dark dropdown-item">
@@ -189,7 +189,7 @@
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="dropdown">
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %}</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %}</a>
 
                         <ul class="bg-dark dropdown-menu">
 
@@ -239,7 +239,7 @@
 
                     <ul class="nav navbar-nav ml-md-auto">
                         <li class="dropdown">
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
                                 {{ user.nom }}
                             </a>
                             <ul class="bg-dark dropdown-menu dropdown-menu-right">

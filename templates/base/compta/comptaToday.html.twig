@@ -60,10 +60,8 @@
             {% for obj, reg in page.tabRegNC %}
               <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                 <td>
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
-                    <button class="btn btn-default btn-sm" role="button">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                    </button>
+                  <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
+                    <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}
@@ -92,9 +90,9 @@
                 <td>{{ reg.dejaPaye|e }}€</td>
                 <td>{{ reg.resteAPaye }}€</td>
                 <td>
-                  <a class="btn btn-danger btn-sm editReglement float-right m-1" href="#" role="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                  <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                     Saisir règlement
-                  </a>
+                  </button>
 
                 </td>
               </tr>
@@ -121,10 +119,8 @@
             {% for reg in page.tabRegC %}
               <tr>
                 <td>
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
-                    <button class="btn btn-default btn-sm" role="button">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                    </button>
+                  <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
+                    <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}
                   {{ reg.nom|e }}

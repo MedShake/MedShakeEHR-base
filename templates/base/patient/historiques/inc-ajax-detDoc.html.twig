@@ -38,12 +38,10 @@
               </tr>
               <tr>
                 <td>
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-                    <button class="btn btn-info" role="button">
-                      <span class="fa fa-file" aria-hidden="true"></span>
-                      VOIR FICHIER
-                      {{ page.pj.html }} ({{ page.pj.filesize }})
-                    </button>
+                  <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
+                    <span class="fa fa-file" aria-hidden="true"></span>
+                    VOIR FICHIER
+                    {{ page.pj.html }} ({{ page.pj.filesize }})
                   </a>
                 </td>
               </tr>
@@ -53,12 +51,10 @@
       {% else %}
         <p>
 
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-              <button class="btn btn-info" role="button">
-                <span class="fa fa-file" aria-hidden="true"></span>
-                VOIR FICHIER
-                {{ page.pj.html }} ({{ page.pj.filesize }})
-              </button>
+            <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
+              <span class="fa fa-file" aria-hidden="true"></span>
+              VOIR FICHIER
+              {{ page.pj.html }} ({{ page.pj.filesize }})
             </a>
         </p>
       {% endif %}

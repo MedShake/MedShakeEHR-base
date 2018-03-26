@@ -87,10 +87,8 @@
 				<td>{{ v.label }}</td>
 				<td>
                                   {% if v.enfants > 0 %}
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.name }}/">
-                                      <button class="btn btn-default btn-sm">
-                                        <span class="fa fa-search-plus" aria-hidden="true"></span>
-                                      </button>
+                                    <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.name }}/">
+                                      <span class="fa fa-search-plus" aria-hidden="true"></span>
                                     </a>
                                     {{ v.enfants }}
                                   {% endif %}
@@ -101,7 +99,7 @@
 					<span class="fa fa-pencil-alt" aria-hidden="true"></span>
 					</button>
 
-					<button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled="disabled"{% endif %} data-id="{{ k }}" data-table="forms_cat">
+					<button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled{% endif %} data-id="{{ k }}" data-table="forms_cat">
 					<span class="fa fa-times" aria-hidden="true"></span>
 					</button>
 				</td>

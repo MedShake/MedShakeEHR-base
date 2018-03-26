@@ -109,10 +109,8 @@
 
                                         <td class="texteadroite">
                                             {% if w.type == 'CCAM' %}
-                                            <a href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}">
-                                              <button class="btn btn-default btn-sm" target="CCAM" title="Voir sur le site de la CCAM">
-                                                <span class="fa fa-eye" aria-hidden="true"></span>
-                                              </button>
+                                            <a class="btn btn-default btn-sm" role="button" href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}" target="CCAM" title="Voir sur le site de la CCAM">
+                                              <span class="fa fa-eye" aria-hidden="true"></span>
                                             </a>
                                             {% endif %}
 
@@ -120,7 +118,7 @@
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
 
-                                            <button type="button" {% if w.nbUtilisation > 0 %} disabled="disabled"{% endif %} class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled="disabled" {% endif %} data-id="{{ w.id }}" data-table="actes_base">
+                                            <button type="button" {% if w.nbUtilisation > 0 %} disabled{% endif %} class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes_base">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>
                                         </td>

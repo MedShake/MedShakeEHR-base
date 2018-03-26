@@ -136,14 +136,14 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}" class="btn btn-default btn-sm">
+                    <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
                       {% if page.templatesDirAutorisationEcriture == false %}
                         <span class="fa fa-eye" aria-hidden="true"></span>
                       {% else %}
                         <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                       {% endif %}
                     </a>
-                    <a href="#" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}" class="delTemplatePDF btn btn-default btn-sm"><span class="fa fa-times" aria-hidden="true"></span></a>
+                    <button class="delTemplatePDF btn btn-default btn-sm" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fa fa-times" aria-hidden="true"></span></button>
                   </td>
               </tr>
             {% endif %}

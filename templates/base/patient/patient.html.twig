@@ -90,18 +90,22 @@
 
         <div class="row">
 
-            <div class="btn-group m-1">
+            {% if page.formOrdo|length > 1 %}
+              <div class="btn-group m-1">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Ordonnance
+                    Ordonnances
                 </button>
                 <ul class="dropdown-menu">
-                  {% for k,v in page.formOrdo %}
+                  {% for v in page.formOrdo %}
                     <li>
-                        <a class="dropdown-item" id="linkAddNewOrdo" data-porteur="{{ k }}" data-module="{{ v.module }}" data-ordoForm="{{ v.form }}" href="#">{% if page.formOrdo|length > 1 %} {{ v.module }} : {% endif %}Nouvelle prescription</a>
+                        <a class="dropdown-item addNewOrdo" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-ordoForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
                     </li>
                   {% endfor %}
                 </ul>
-            </div>
+              </div>
+            {% else %}
+              <a class="addNewOrdo btn btn-primary" type="button" title="{{ page.formOrdo[0]['description'] }}" data-porteur="{{ page.formOrdo[0]['id'] }}" data-module="{{ page.formOrdo[0]['module'] }}" data-ordoForm="{{ page.formOrdo[0]['formValues'] }}" href="#">{{ page.formOrdo[0]['label'] }}</a>
+            {% endif %}
 
             <div class="btn-group m-1">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -140,18 +144,22 @@
                 </ul>
             </div>
 
-            <div class="btn-group m-1">
+            {% if page.formReglement|length > 1 %}
+              <div class="btn-group m-1">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled="disabled"{% endif %}>
-                    Règlement
+                    Règlements
                 </button>
                 <ul class="dropdown-menu">
-                  {% for k,v in page.formReglement %}
+                  {% for v in page.formReglement %}
                     <li>
-                      <a class="dropdown-item" id="linkAddNewReglement" data-porteur="{{ k }}" data-module="{{ v.module }}" data-reglementForm="{{ v.form }}" href="#">{% if page.formReglement|length > 1 %} {{ v.module }} : {% endif %}Nouveau règlement</a>
+                      <a class="dropdown-item addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
                     </li>
                   {% endfor %}
                 </ul>
-            </div>
+              </div>
+            {% else %}
+              <a class="addNewReglement btn btn-primary" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">{{ page.formReglement[0]['label'] }}</a>
+            {% endif %}
 
             {% if config.dicomHost!='' %}
               <div class="btn-group m-1">

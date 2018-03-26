@@ -55,14 +55,12 @@
         {% endif %}
           <td class="d-none d-sm-table-cell">
             {% if page.porp != 'pro' or config.PraticienPeutEtrePatient == "true" %}
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/">
-                <button class="btn btn-default btn-sm" role="button">
-                  {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod==patientID) or page.porp == 'externe' %}
-                    <span class="fa fa-paperclip" aria-hidden="true"></span>
-                  {% else %}
-                    <span class="fa fa-folder-open" aria-hidden="true"></span>
-                  {% endif %}
-                </button>
+              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/">
+                {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod==patientID) or page.porp == 'externe' %}
+                  <span class="fa fa-paperclip" aria-hidden="true"></span>
+                {% else %}
+                  <span class="fa fa-folder-open" aria-hidden="true"></span>
+                {% endif %}
               </a>
             {% endif %}
           </td>
@@ -76,49 +74,44 @@
           {% endfor %}
 
           <td class="d-table-cell">
-
-            {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
-              <a class="d-none d-sm-inline" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
-                <button class="btn btn-default btn-sm" role="button" title="Édition des données administratives">
+            <div class="btn-group">
+              {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
+                <a class="btn btn-default btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
                   <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-                </button>
-              </a>
-              {% if page.porp != 'pro' %}
-                <a class="d-none d-sm-inline" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">
-                  <button class="btn btn-default btn-sm" role="button" title="Édition des relations">
-                    <span class="fa fa-link" aria-hidden="true"></span>
-                  </button>
                 </a>
+                {% if page.porp != 'pro' %}
+                  <a class="btn btn-default btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
+                    <span class="fa fa-link" aria-hidden="true"></span>
+                  </a>
 
-                <a class="sendSign d-none d-sm-inline" href="#">
-                  <button class="btn btn-default btn-sm" data-patientID="{{ patientIDmod }}" role="button" title="Faire signer consentement">
+                  <button class="btn btn-default btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
                     <span class="fa fa-edit" aria-hidden="true"></span>
                   </button>
-                </a>
-              {% endif %}
-              <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="fa fa-wrench" aria-hidden="true"></span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">Éditer</a>
-                  <a class=" dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">Relations</a>
-                  {% if page['outputType'][patientID]['type'] != 'pro' %}
-                    <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Ajouter à la liste Praticiens</a>
-                  {% else %}
-                    <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Retirer de la liste Praticiens</a>
-                  {% endif %}
-                  <div role="separator" class="dropdown-divider"></div>
-                  <a class="dropdown-item sendSign" data-patientID="{{ patientIDmod }}" href="#">Faire signer consentement</a>
-                  {% if config.smtpTracking %}
+                {% endif %}
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-wrench" aria-hidden="true"></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">Éditer</a>
+                    <a class=" dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">Relations</a>
+                    {% if page['outputType'][patientID]['type'] != 'pro' %}
+                      <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Ajouter à la liste Praticiens</a>
+                    {% else %}
+                      <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Retirer de la liste Praticiens</a>
+                    {% endif %}
                     <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientIDmod }}/" >Historique des mails envoyés</a>
-                  {% endif %}
-                  <div role="separator" class="dropdown-divider"></div>
-                  <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">Supprimer ce dossier</a>
+                    <a class="dropdown-item sendSign" data-patientID="{{ patientIDmod }}" href="#">Faire signer consentement</a>
+                    {% if config.smtpTracking %}
+                      <div role="separator" class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientIDmod }}/" >Historique des mails envoyés</a>
+                    {% endif %}
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">Supprimer ce dossier</a>
+                  </div>
                 </div>
-              </div>
-            {% endif %}
+              {% endif %}
+            </div>
           </td>
         </tr>
       {% endfor %}

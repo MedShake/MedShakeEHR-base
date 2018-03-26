@@ -29,28 +29,34 @@
 
 $debug='';
 
-//si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if (!isset($delegate)) {
+  if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
+      $reglementForm=$_POST['reglementForm'];
+      $porteur=$_POST['porteur'];
+      $userID=$p['user']['id'];
+  } else {
+      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
+        LEFT JOIN objets_data as od ON dt.id=od.typeID
+        WHERE od.id='".$_POST['objetID']."' limit 1");
+      $reglementForm=$res[0]['form'];
+      $porteur=$res[0]['porteur'];
+      $userID=$res[0]['userID'];
+  }
+  //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
+  if ($reglementForm!='baseReglement') {
+      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractReglementForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
+  }
 }
 
 //template
 $template="patientReglementForm";
 
-if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
-    $reglementForm=$_POST['reglementForm'];
-    $porteur=$_POST['porteur'];
-    $userID=$p['user']['id'];
-    $module=" and c.module='".$p['user']['module']."'";
-} else {
-    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
-      LEFT JOIN objets_data as od ON dt.id=od.typeID
-      WHERE od.id='".$_POST['objetID']."' limit 1");
-    $reglementForm=$res[0]['form'];
-    $porteur=$res[0]['porteur'];
-    $userID=$res[0]['userID'];
-    $module='';
-}
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
 
@@ -59,7 +65,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
   from actes as a
   left join actes_cat as c on c.id=a.cat
-  where a.toID in ('0','".$userID."') ".$module. "
+  where a.toID in ('0','".$userID."') and c.module='".$_POST['module']."'
   group by a.id
   order by c.displayOrder, c.label asc, a.label asc")) {
     foreach ($tabTypes as $k=>$v) {
@@ -93,6 +99,7 @@ $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
   'porteur'=>$porteur,
+  'reglementForm'=>$reglementForm,
   'module'=>$_POST['module'],
   'patientID'=>$_POST['patientID'],
   'acteID'=>$p['page']['formActes']['prevalue'],

@@ -105,10 +105,8 @@
                                 {% for v in page.studiesDcData %}
                                   <tr>
                                     <td>
-                                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/">
-                                          <button class="btn btn-default btn-sm" role="button">
-                                            <span class="fa fa-eye" aria-hidden="true"></span>
-                                          </button>
+                                        <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/">
+                                          <span class="fa fa-eye" aria-hidden="true"></span>
                                         </a>
                                     </td>
                                     <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>

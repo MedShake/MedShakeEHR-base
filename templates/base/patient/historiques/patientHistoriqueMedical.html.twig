@@ -22,6 +22,7 @@
  # Template > patient : historique medical
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
 {% if page.patient.historique %}
@@ -33,15 +34,15 @@
       <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
           <button type="button" data-groupe="tous" class="btn btn-default active">Tous</button>
           <button type="button" data-groupe="typecs" class="btn btn-default d-none d-lg-block">Consultations</button>
-          <button type="button" data-groupe="typecs" class="btn btn-default d-lg-none">Consults</button>
+          <button type="button" data-groupe="typecs" class="btn btn-default d-none d-sm-inline-block d-lg-none">Consults</button>
           <button type="button" data-groupe="ordo" class="btn btn-default d-none d-lg-block">Ordonnances</button>
-          <button type="button" data-groupe="ordo" class="btn btn-default d-lg-none">Ordos</button>
-          <button type="button" data-groupe="courrier" class="btn btn-default">Courriers</button>
+          <button type="button" data-groupe="ordo" class="btn btn-default d-none d-sm-inline-block d-lg-none">Ordos</button>
+          <button type="button" data-groupe="courrier" class="btn btn-default d-none d-sm-inline-block">Courriers</button>
           <button type="button" data-groupe="doc" class="btn btn-default d-none d-lg-block">Documents reçus</button>
-          <button type="button" data-groupe="doc" class="btn btn-default d-lg-none">Docs reçus</button>
+          <button type="button" data-groupe="doc" class="btn btn-default d-none d-sm-inline-block d-lg-none">Docs reçus</button>
           <button type="button" data-groupe="docinterne" class="btn btn-default d-none d-lg-block">Documents créés</button>
-          <button type="button" data-groupe="docinterne" class="btn btn-default d-lg-none">Documents créés</button>
-          <button type="button" data-groupe="reglement" class="btn btn-default">Règlements</button>
+          <button type="button" data-groupe="docinterne" class="btn btn-default d-none d-sm-inline-block d-lg-none">Docs créés</button>
+          <button type="button" data-groupe="reglement" class="btn btn-default d-none d-sm-inline-block">Règlements</button>
       </div>
 
 
@@ -52,12 +53,11 @@
                   <th>Actions</th>
                   <th>Acte</th>
                   <th>Auteur</th>
-                  <th></th>
               </tr>
           </thead>
           <tbody>
             {% for k,c in page.patient.historique %}
-              <tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+              <tr class="anneeHistorique"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
               {% for cs in c %}
                 {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
               {% endfor %}

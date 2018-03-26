@@ -43,28 +43,20 @@
 
     <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline bottom-space">
 
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/">
-        <button class="btn btn-default btn-default" role="button">
-          <span class="fa fa-step-backward" aria-hidden="true"></span>
-          Jour précédent
-        </button>
+      <a class="btn btn-default btn-default" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/">
+        <span class="fa fa-step-backward" aria-hidden="true"></span>
+        Jour précédent
       </a>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/">
-        <button class="btn btn-default btn-default{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button">
-          Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
-        </button>
+      <a class="btn btn-default btn-default{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/">
+        Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
       </a>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/">
-        <button class="btn btn-default btn-default{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button">
-          Jour suivant 
-          <span class="fa fa-step-forward" aria-hidden="true"></span>
-        </button>
+      <a class="btn btn-default btn-default{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/">
+        Jour suivant 
+        <span class="fa fa-step-forward" aria-hidden="true"></span>
       </a>
 
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/">
-        <button class="btn btn-default btn-default{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" style="margin-right: 20px">
-          Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
-        </button>
+      <a class="btn btn-default btn-default{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
+        Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
       </a>
 
       <div id="dateSel" class="input-group date datepick" >
