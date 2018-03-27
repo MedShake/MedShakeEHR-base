@@ -22,28 +22,31 @@
  # Template > patient : historique medical du jour      
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
 {% if page.patient.today %}
-    <div class="card col-md-12 historiqueToday">
+    <div class="card col-md-12 px-0 mb-4 historiqueToday">
         <div class="card-header py-0 gras">Aujourd'hui</div>
 
-        <table class="table table-sm mb-0 table-hover " data-zone="historiqueToday">
-            <thead>
-                <tr>
-                    <th>Heure</th>
-                    <th>Actions</th>
-                    <th>Acte</th>
-                    <th>Auteur</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="mx-1">
+            <table class="table table-sm mb-0 table-hover " data-zone="historiqueToday">
+                <thead>
+                    <tr>
+                        <th>Heure</th>
+                        <th>Actions</th>
+                        <th>Acte</th>
+                        <th>Auteur</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                {% for cs in page.patient.today %}
-                  {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
-                {% endfor %}
+                    {% for cs in page.patient.today %}
+                      {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+                    {% endfor %}
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endif %}

@@ -94,8 +94,10 @@ label {margin-left:0.5rem;margin-right:0.5rem}
 .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
 a {color:#337ab7}
 a.btn {color:#000;}
-.btn.btn-sm {min-width:34px;height:31px}
+.btn.btn-sm {min-width:34px;height:31px;padding-top:5px}
+.btn .fa,.btn .far {font-size:1rem}
 .btn-group > .btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {border-right:none}
+.btn-group > .btn.active {box-shadow:0 0 0 .2rem rgba(0,123,255,.25)}
 :not(.input-group-append):not(.input-group-prepend) > .btn:not(.btn-sm) {border-radius:2px}
 .btn.btn-primary {color:#fff;background-color:#337ab7;border-color:#2e6da4;}
 .btn.btn-primary:hover {background-color:#286090;border-color:#204d74}
@@ -109,3 +111,4 @@ input::placeholder {font-size:14px !important}
 .nav .dropdown-item a {padding:0}
 .nav .dropdown-divider{margin-bottom:0.25rem}
 .nav-pills .nav-link.active {background-color:#337ab7;}
+

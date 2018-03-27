@@ -53,7 +53,7 @@
 
   <button class="btn btn-primary float-right m-1 newUser" type="button" data-toggle="modal" data-target="#modalUserCreation" style="margin-bottom:10px">Nouvel utilisateur</button>
 
-  <table class="table table-sm mb-0 table-hover  table-striped">
+  <table class="table table-sm mb-0 table-hover text-center table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -61,7 +61,7 @@
         <th>Identité</th>
         <th>Module</th>
         <th>Administrateur</th>
-        <th>Réglages</th>
+        <th>Paramètres spécifiques</th>
         <th>Mot de passe</th>
         <th>Révoquer</th>
       </tr>
@@ -87,15 +87,16 @@
           <td>
             <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/">
               <span class="fa fa-wrench" aria-hidden="true"></span>
-              Paramètres spécifiques
             </a>
           </td>
           <td>
             {% if v.id!=page.userid %}
-              <input style="border:1px solid #ccc;border-radius:4px" type="password" title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value=""></input>
-              <button class="btn btn-default btn-sm" type="button">
-                <span class="far fa-arrow-alt-circle-down changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Valider le nouveau mot de passe"></span>
-              </button>
+              <div class="input-group my-0 input-group-sm">
+                <input title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value="" class="form-control" type="password"/>
+                <div class="input-group-append changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                  <span aria-hidden="true" title="Valider le nouveau mot de passe" class="far fa-arrow-alt-circle-down input-group-text"></span>
+                </div>
+              </div>
             {% endif %}
           </td>
           <td>
@@ -111,7 +112,7 @@
   </table>
 
   <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title gras">Nouvel utilisateur</h4>
@@ -134,7 +135,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                     <label for="p_module">Module</label>
-                    <select class="form-control" name="p_module">
+                    <select class="form-control custom-select" name="p_module">
                       {% for mi,mv in page.modules %}
                         <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
                       {% endfor %} 

@@ -98,7 +98,7 @@
                   <div class="form-group">
                       <label class="control-label" for="endPeriodeID">Praticien
                       </label>
-                      <select name="prat" class="form-control">
+                      <select name="prat" class="form-control custom-select">
                           {% for prat in page.pratsAuto %}
                             <option value="{{ prat.id }}" {% if prat.id in page.pratsSelect %}selected="selected"{% endif %}
                             >{{ prat.prenom }} {{ prat.nom }}</option>
@@ -111,7 +111,7 @@
 
                 <button type="submit" class="btn btn-default m-2">Chercher</button>
 
-                <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control ml-1" autocomplete="off" />
+                <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control custom-select ml-1" autocomplete="off" />
                   <option value="today">Selection rapide</option>
                   {% for k,v in page.periode.quickOptions %}
                     <option {% if page.periode.quick == k %}selected="selected"{% endif %} value="{{ k }}">{{ v }}</option>
@@ -123,7 +123,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table id="recettes" class="table table-sm mb-0 table-hover  table-striped ">
+            <table id="recettes" class="table table-sm mb-0 table-hover table-striped ">
                 <thead>
                     <tr>
                         <th></th>
@@ -199,7 +199,7 @@
                             <td class="text-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fa fa-wrench" aria-hidden="true"></span>
+                                        <span class="fa fa-align-justify" aria-hidden="true"></span>
                                         
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">

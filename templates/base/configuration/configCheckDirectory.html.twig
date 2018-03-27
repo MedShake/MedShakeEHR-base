@@ -74,8 +74,8 @@
                         <td>{{ k }}</td>
                         <td>{{ config[k] }}
                         </td>
-                        <td class="{% if v.is_dir == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
-                        <td class="{% if v.is_writable == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+                        <td class="{% if v.is_dir == 1 %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
+                        <td class="{% if v.is_writable == 1 %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
                     </tr>
                 {% endfor %}
             </table>

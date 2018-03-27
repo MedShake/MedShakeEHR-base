@@ -179,6 +179,17 @@ $(document).ready(function() {
   //enregistrement de forms en ajax
   $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
+    var stop=false;
+    $(this).closest("form").find('input[required],textarea[required]').each(function(idx, el) {
+      if (el.value==''){
+        glow('danger', $(el));
+        stop=true;
+      }
+    });
+    if (stop) {
+      alert_popup("warning", "Certains champs requis n'ont pas été remplis.");
+      return;
+    }
     $.ajax({
       url: $(this).parents("form").attr("action"),
       type: 'post',
@@ -281,6 +292,15 @@ function auto_grow(element) {
   $(element).height(Math.max(16*(parseInt($(element).attr('rows')) || 1), element.scrollHeight));
 }
 
+function glow(type, $el) {
+  var colors={success:"#efffe8", danger:"#f8d7da"};
+  $el.css("background", colors[type]);
+  $el.delay(700).queue(function() {
+    $(this).css("background","").dequeue();
+  });
+
+}
+
 //fonction pour la sauvegarde automatique de champ de formulaire
 function setPeopleData(value, patientID, typeID, source, instance) {
   if (patientID && typeID && source) {
@@ -295,11 +315,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       },
       dataType: "json",
       success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
-        });
+        glow('success', $(source));
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');
@@ -323,11 +339,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
       },
       dataType: "json",
       success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
-        });
+        glow('success', $(source));
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');

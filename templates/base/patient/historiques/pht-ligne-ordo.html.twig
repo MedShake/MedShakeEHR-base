@@ -38,7 +38,7 @@
         {% if cs.iconeType == 'update' %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
         {% else %}
-          <span class="fa fa-share" aria-hidden="true" title="Dupliquer"></span>
+          <span class="far fa-clone" aria-hidden="true" title="Dupliquer"></span>
         {% endif %}
       </button>
 
@@ -90,7 +90,7 @@
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="fa fa-bars" aria-hidden="true"></span>
+          <span class="fa fa-align-justify" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">
           <li class="d-inline-block d-lg-none">
@@ -164,7 +164,7 @@
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ page.patient.id }}/ordo/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
           </li>
           <li>
-            <a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/" target="_blank">Tags utilisables dans templates</a>
           </li>
           <li role="separator" class="dropdown-divider"></li>
           <li>

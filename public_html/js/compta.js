@@ -51,15 +51,14 @@ $(document).ready(function() {
       filled[idx] = $(el).val()!="";
     });
     $("input[type=submit]").removeClass("disabled");
-    $(".checkAmount").parent().removeClass('has-error');
-    $(".checkAmount").parent().removeClass('has-success');
     $(".checkAmount").each(function(idx,el){
       if (total > $("input[name=apayer]").val() && filled[idx]) {
-        $(el).parent().addClass('has-error');
+        glow('danger', $(el));
         $("input[type=submit]").addClass("disabled");
       }
       else if (total==$("input[name=apayer]").val() && filled[idx])
-        $(el).parent().addClass('has-success');
+        glow('success', $(el));
+
     });
   });
 

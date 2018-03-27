@@ -104,7 +104,7 @@
 
       {% if page.tabRegC %}
         <h2>Paiements terminés</h2>
-        <table class="table table-sm mb-0 table-hover  table-striped">
+        <table class="table table-sm mb-0 table-hover table-striped">
           <thead>
             <tr>
               <th>Patiente</th>
@@ -187,7 +187,9 @@
                   </label>
                   <div class="input-group">
                     <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
-                    <span class="input-group-append" id="id_regleCheque_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -197,7 +199,9 @@
                   </label>
                   <div class="input-group">
                     <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
-                    <span class="input-group-append" id="id_regleCB_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -207,7 +211,9 @@
                   </label>
                   <div class="input-group">
                     <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
-                    <span class="input-group-append" id="id_regleEspeces_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
                     </label>
-                    <select class="form-control selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
+                    <select class="form-control custom-select selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}" {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}>{{ val.optionmenu }}</option>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label class="control-label" for="p_189ID">Modèle impression
                     </label>
-                    <select class="form-control" name="ordoTypeImpression" data-typeid="189" autocomplete="off">
+                    <select class="form-control custom-select" name="ordoTypeImpression" data-typeid="189" autocomplete="off">
 
                         <option value="standard">standard</option>
                         <option value="ald"{% if page.courrier.modeprint == 'ald' %} selected="selected"{% endif %}>ALD</option>

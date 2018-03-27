@@ -80,6 +80,15 @@ function searchAndInsertActeData(selecteur) {
   id = selecteur.attr('id');
   acteID = $('#' + id + ' option:selected').val();
 
+  if (acteID == '') {
+    resetModesReglement();
+    $('#detFacturation').hide();
+    $('.regleFacture').val('');
+    $('.regleTarifCejour').val('');
+    $('.regleDepaCejour').val('');
+    return;
+  }
+
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
 

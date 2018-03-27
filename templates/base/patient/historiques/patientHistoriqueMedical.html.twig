@@ -31,40 +31,57 @@
       <div class="card-header py-0 gras">Historique complet</div>
 
 
-      <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
-          <button type="button" data-groupe="tous" class="btn btn-default active">Tous</button>
-          <button type="button" data-groupe="typecs" class="btn btn-default d-none d-lg-block">Consultations</button>
-          <button type="button" data-groupe="typecs" class="btn btn-default d-none d-sm-inline-block d-lg-none">Consults</button>
-          <button type="button" data-groupe="ordo" class="btn btn-default d-none d-lg-block">Ordonnances</button>
-          <button type="button" data-groupe="ordo" class="btn btn-default d-none d-sm-inline-block d-lg-none">Ordos</button>
-          <button type="button" data-groupe="courrier" class="btn btn-default d-none d-sm-inline-block">Courriers</button>
-          <button type="button" data-groupe="doc" class="btn btn-default d-none d-lg-block">Documents reçus</button>
-          <button type="button" data-groupe="doc" class="btn btn-default d-none d-sm-inline-block d-lg-none">Docs reçus</button>
-          <button type="button" data-groupe="docinterne" class="btn btn-default d-none d-lg-block">Documents créés</button>
-          <button type="button" data-groupe="docinterne" class="btn btn-default d-none d-sm-inline-block d-lg-none">Docs créés</button>
-          <button type="button" data-groupe="reglement" class="btn btn-default d-none d-sm-inline-block">Règlements</button>
+      <div id="historiqueTypeSelect" style="margin : 10px 5px">
+        <select class="custom-select d-block d-sm-none d-md-block d-lg-none">
+          <option data-groupe="tous" selected>Tous</option>
+          <option data-groupe="typecs">Consultations</option>
+          <option data-groupe="ordo">Ordonnances</option>
+          <option data-groupe="courrier">Courriers</option>
+          <option data-groupe="doc">Documents reçus</option>
+          <option data-groupe="docinterne">Documents créés</option>
+          <option data-groupe="reglement">Règlements</option>
+        </select>
+        <div class="btn-group btn-group-sm d-none d-sm-block d-md-none d-lg-block d-xl-none" role="group" aria-label="...">
+          <button type="button" data-groupe="tous" class="btn btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-sm">Consults
+          </button><button type="button" data-groupe="ordo" class="btn btn-sm">Ordos
+          </button><button type="button" data-groupe="courrier" class="btn btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-sm">Docs reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-sm">Docs créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-sm">Règlements</button>
+        </div>
+        <div class="btn-group btn-group-sm d-none d-xl-block" role="group" aria-label="...">
+          <button type="button" data-groupe="tous" class="btn btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-sm">Consultations
+          </button><button type="button" data-groupe="ordo" class="btn btn-sm">Ordonnances
+          </button><button type="button" data-groupe="courrier" class="btn btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-sm">Documents reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-sm">Documents créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-sm">Règlements</button>
+        </div>
       </div>
 
-
-      <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
-          <thead>
-              <tr>
-                  <th>Date</th>
-                  <th>Actions</th>
-                  <th>Acte</th>
-                  <th>Auteur</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for k,c in page.patient.historique %}
-              <tr class="anneeHistorique"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
-              {% for cs in c %}
-                {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+      <div class="mx-1">
+        <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Actions</th>
+                    <th>Acte</th>
+                    <th>Auteur</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for k,c in page.patient.historique %}
+                <tr class="anneeHistorique"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+                {% for cs in c %}
+                  {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+                {% endfor %}
               {% endfor %}
-            {% endfor %}
 
-          </tbody>
-      </table>
+            </tbody>
+        </table>
+      </div>
     </div>
   </div>
 {% endif %}

@@ -49,13 +49,16 @@
 	  {% if v.input.before %}
 	  	{{ v.input.before }}
 			{% if v.input.plusg %}
-				<span class="input-group-append" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
+        <div class="input-group-prepend">
+  				<span class="input-group-text" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
+        </div>
 			{% endif %}
 		{% elseif v.input.plus or v.input.plusg %}
 			<div class="input-group mx-0">
-
 				{% if v.input.plusg %}
-					<span class="input-group-append" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
+          <div class="input-group-prepend">
+  					<span class="input-group-text" id="{{v.input.id}}AddOnG">{{ v.input.plusg }}</span>
+          </div>
 				{% endif %}
 
 		{% endif %}
@@ -82,9 +85,9 @@
     {% if v.input.pattern %} pattern="{{ v.input.pattern }}" {% endif %}
     {% if v.input.autocomplete %} autocomplete="{{ v.input.autocomplete }}" {% endif %}
 		{% if v.input.dataAcTypeID %} {{ v.input.dataAcTypeID }} {% endif %}
-		{% if v.input.disabled %} disabled="{{ v.input.disabled }}" {% endif %}
-		{% if v.input.readonly %} readonly="{{ v.input.readonly }}" {% endif %}
-    {% if v.input.required == 'required' %} required="required" {% endif %}
+		{% if v.input.disabled %} disabled {% endif %}
+		{% if v.input.readonly %} readonly {% endif %}
+    {% if v.input.required == 'required' %} required {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
     {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
@@ -94,7 +97,9 @@
     {% if v.input.after %}
     	{{ v.input.after }}
 		{% elseif v.input.plus %}
-			<span class="input-group-append" id="{{v.input.id}}AddOn">{{ v.input.plus }}</span>
+      <div class="input-group-append">
+  			<span class="input-group-text" id="{{v.input.id}}AddOn">{{ v.input.plus }}</span>
+      </div>
 		{% endif %}
 
 		{% if v.input.before %}

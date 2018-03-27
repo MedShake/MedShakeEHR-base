@@ -222,7 +222,7 @@ function updateGroupList() {
       }
     },
     error: function() {
-      alert_popup("danger", 'Erreur de connection au compte clicRDV. Vérifiez vos identifiants et votre connection');
+      alert_popup("danger", 'Erreur de connexion au compte clicRDV. Vérifiez vos identifiants et votre connexion internet');
 
     }
   });
