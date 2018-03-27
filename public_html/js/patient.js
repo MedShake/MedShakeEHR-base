@@ -783,6 +783,11 @@ function sendFormToReglementDiv(el) {
     success: function(data) {
       $('#newReglement').html(data);
       $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      if (el.hasClass('editReglement')) {
+        //reinjection pour édition
+        $(".regleTarifCejour").attr('data-tarifdefaut', $(".regleTarifCejour").val());
+        $(".regleDepaCejour").attr('data-tarifdefaut',$(".regleDepaCejour").val());
+      }
       scrollTo(scrollDestination.newReglement, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
