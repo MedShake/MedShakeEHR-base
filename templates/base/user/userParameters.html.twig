@@ -160,10 +160,10 @@
                       <tr>
                         <td>{{ i }}</td>
                         <td>
-                          <input class="form-control" name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off"></input>
+                          <input name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off"></input>
                         </td>
                         <td>
-                          <input class="form-control" name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input autocomplete="off">
+                          <input name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input autocomplete="off">
                         </td>
                         <td>
                           <div class='input-group date'>

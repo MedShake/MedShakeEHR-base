@@ -27,9 +27,16 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if ($_POST['ordoForm']!='') {
+      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-action-saveOrdoForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
 }
+
 if (count($_POST)>2) {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);

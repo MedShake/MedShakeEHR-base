@@ -29,34 +29,35 @@
 
 $debug='';
 
-//si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-if ($_POST['ordoForm']!='') {
-      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
-      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
-          include $hook;
-      }
-      if (!isset($delegate)) {
-          return;
-      }
+if (!isset($delegate)) {
+  if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
+      $ordoForm=$_POST['ordoForm'];
+      $porteur=$_POST['porteur'];
+      $module=$_POST['module'];
+  } else {
+      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur FROM data_types as dt 
+        LEFT JOIN objets_data as od ON dt.id=od.typeID 
+        WHERE od.id='".$_POST['objetID']."' limit 1");
+      $ordoForm=$res[0]['form'];
+      $porteur=$res[0]['porteur'];
+      $module=$res[0]['module'];
+  }
+  //si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
+  if ($ordoForm!='') {
+        $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
+        if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+            include $hook;
+        }
+        if (!isset($delegate)) {
+            return;
+        }
+  }
 }
 
 //template
 $template="patientOrdoForm";
 
-if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
-    $ordoForm=$_POST['ordoForm'];
-    $porteur=$_POST['porteur'];
-    $module=$_POST['module'];
-} else {
-    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur FROM data_types as dt 
-      LEFT JOIN objets_data as od ON dt.id=od.typeID 
-      WHERE od.id='".$_POST['objetID']."' limit 1");
-    $ordoForm=$res[0]['form'];
-    $porteur=$res[0]['porteur'];
-    $module=$res[0]['module'];
-}
-
-$p['page']['ordo']=array('module'=>$module, 'porteur'=>$porteur);
+$p['page']['ordo']=array('module'=>$module, 'ordoForm'=>$ordoForm, 'porteur'=>$porteur);
 
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];

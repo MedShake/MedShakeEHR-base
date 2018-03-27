@@ -60,6 +60,13 @@
 
 		{% endif %}
 
+		{# corection de class si checkbox #}
+		{% if v.input.type == 'checkbox' %}
+			{% set inputclass = v.input.class|replace({'form-control' : ''}) %}
+		{% else %}
+			{% set inputclass = v.input.class %}
+		{% endif %}
+
 		{# input #}
     <input type="{{ v.input.type }}" title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"
 		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
@@ -68,7 +75,7 @@
 		{% elseif v.input.value == 'noPreValue' and  v.input.defaut != '' %} value="{{ v.input.defaut|e('html_attr') }}"
 		{% endif %}
     {% if v.input.placeholder %} placeholder="{{ v.input.placeholder|e('html_attr') }}" {% endif %}
-		{% if v.input.class %} class="{{ v.input.class }}{% if v.input.error %} inputErreur{% endif %}" {% endif %}
+		{% if v.input.class %} class="{{ inputclass }}{% if v.input.error %} inputErreur{% endif %}" {% endif %}
     {% if v.input.min or v.input.min == '0' %} min="{{ v.input.min }}" {% endif %}
     {% if v.input.max or v.input.max == '0' %} max="{{ v.input.max }}" {% endif %}
     {% if v.input.step or v.input.step == '0' %} step="{{ v.input.step }}" {% endif %}

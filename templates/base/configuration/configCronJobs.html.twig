@@ -74,14 +74,14 @@
           </tr>
           <tr>
             {% if v.values %}
-              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value="true" checked></input></td>
+              <td class="checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="true" checked></input></td>
               <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.values.m }}"></input></td>
               <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.values.h }}"></input></td>
               <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.values.M }}"></input></td>
               <td><input class="form-control" type="text" name="p_dom{{ k }}" value="{{ v.values.dom }}"></input></td>
               <td><input class="form-control" type="text" name="p_dow{{ k }}" value="{{ v.values.dow }}"></input></td>
             {% else %}
-              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value=""></input></td>
+              <td class="checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value=""></input></td>
               <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.defaults.m }}"></input></td>
               <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.defaults.h }}"></input></td>
               <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.defaults.M }}"></input></td>
