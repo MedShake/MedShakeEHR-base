@@ -101,19 +101,19 @@ $(document).ready(function() {
       if (phase == 'move') {
         if (direction == 'left')
           $('.atcd').css('right', distance);
-        else
+        else if (direction == 'right')
           $('.dossier').css('left', distance);
       }
       else if (phase == 'cancel') {
-        $('.atcd').css('right', 0);
-        $('.dossier').css('left', 0);
+        $('.atcd').animate({right: 0}, 400);
+        $('.dossier').animate({left: 0}, 400);
       }
       else if (phase == 'end') {
         if (direction == 'left') {
           $('.atcd').css('right', 0).hide();
           $('.dossier').css('left', 0).show();
         }
-        else {
+        else if (direction == 'right')
           $('.atcd').css('right', 0).show();
           $('.dossier').css('left', 0).hide();
         }
