@@ -101,15 +101,16 @@
     {{ page['patient']['administrativeDatas']['city']['value']|e }}
 
     {% if page.correspondants %}
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
-      <span class="fa fa-link" aria-hidden="true"></span>
-    </a>
-    {% for v in page.correspondants %}
-      <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
-        {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
-      </a>
-    {% endfor %}
+      <div class="btn-group ml-4">
+        <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+          <span class="fa fa-link" aria-hidden="true"></span>
+        </a>
+        {% for v in page.correspondants %}
+          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+            {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
+          </a>
+        {% endfor %}
+      </div>
     {% endif %}
 </div>
 

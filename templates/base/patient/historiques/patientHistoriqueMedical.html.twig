@@ -25,8 +25,8 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
-{% if page.patient.historique %}
-  <div class="col-md-12 px-0 historiqueMedicalComplet">
+
+  <div class="col-md-12 px-0 historiqueMedicalComplet"{% if page.patient.historique|length == 0 %} style="display: none"{% endif %}>
     <div class="card">
       <div class="card-header py-0 gras">Historique complet</div>
 
@@ -64,7 +64,7 @@
       <div class="mx-1">
         <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
             <thead>
-                <tr>
+                <tr class="histoHead">
                     <th>Date</th>
                     <th>Actions</th>
                     <th>Acte</th>
@@ -73,7 +73,7 @@
             </thead>
             <tbody>
               {% for k,c in page.patient.historique %}
-                <tr class="anneeHistorique"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+                <tr class="anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
                 {% for cs in c %}
                   {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
                 {% endfor %}
@@ -84,4 +84,4 @@
       </div>
     </div>
   </div>
-{% endif %}
+

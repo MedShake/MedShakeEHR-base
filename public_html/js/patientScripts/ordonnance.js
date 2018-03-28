@@ -36,6 +36,9 @@ $(document).ready(function() {
 
   //supprimer ligne ordo
   $('#newOrdo').on("click", "button.cleanLigneOrdo", function(e) {
+    name = $(this).parent().find("textarea").attr('name');
+    newinput = '<input name="'+ name + '" type="hidden" value="" >';
+    $(this).parents('form').prepend(newinput);
     $(this).closest('div.ligneOrdo').remove();
   });
 
@@ -51,7 +54,7 @@ $(document).ready(function() {
     }, 1000);
   });
 
-  //supprimer ligne ordo
+  //autogrow sur la ligne d'ordo
   $('#newOrdo').on("keyup", "textarea", function(e) {
     autoGrowOrdo(this);
   });
