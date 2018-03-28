@@ -510,4 +510,4 @@ INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `re
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v3.1.0');
+ (2, 'base', 'module', 'v3.1.1');
