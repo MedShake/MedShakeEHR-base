@@ -301,7 +301,7 @@ public function getPresentations(&$rd, $colCode, $typCode)
                     continue;
                 }
 
-                $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt_ville($presV['pre_ean_ref'], 2);
+                $rd[$k]['presentations'][$presK]['rbtVille']=$this->_get_the_pre_rbt($presV['pre_ean_ref'], 2)['rbtVille'];
             }
         }
 
@@ -338,7 +338,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
  * @param  int $typCode type du code (1 CIP7, 2 CIP13)
  * @return string          % de rbt
  */
-    private function _get_the_pre_rbt_ville($code, $typCode)
+    private function _get_the_pre_rbt($code, $typCode)
     {
         if (empty($code)) {
             return false;
@@ -357,17 +357,21 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                 }
             }
             if (!empty($data)) {
+                $tab['rbtVille'] = '';
                 $ou=array_column($data, 'type');
                 if (isset($data[array_search('1', $ou)]['info_1'])) {
-                    return $data[array_search('1', $ou)]['info_1'];
+                    $tab['rbtVille'] = $data[array_search('1', $ou)]['info_1'];
                 }
+
+                return $tab;
             }
             return false;
         }
     }
 
+
 /**
- * Obtenir des substances
+ * Obtenir des substances par mot clé.
  * @param  string $txt mot clé de recherche
  * @return array      tableau de retour
  */
@@ -389,6 +393,50 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         }
     }
 
+/**
+ * Obtenir des substances par code spécialité.
+ * @param  int $codeid code spé
+ * @param  int $typeid infos à retourner
+ * @return array         array des substances
+ */
+    public function getSubstancesBySpe($codeid, $typeid)
+    {
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
+        }
+        $rd=[];
+        if ($data=$the->get_the_sub_spe($codeid,$typeid)) {
+            $rd=$this->_prepareData($data);
+            if (!empty($rd)) {
+                return $rd;
+            }
+        }
+      }
+
+/**
+ * Obtenir un tableau récapitulatif simplifié des substances actives
+ * @param  int $codeSpe code spécialité
+ * @return array           array code -> label
+ */
+    public function getSubtancesActivesTab($codeSpe) {
+      if($data = $this->getSubstancesBySpe($codeSpe, 2)) {
+        foreach($data as $k=>$v) {
+          if(substr($v['typsubst'], -1) == 'A') {
+            $tab[$v['codesubst']] = $v['libsubst'];
+          }
+        }
+        return $tab;
+      }
+    }
+
+/**
+ * Obtenir les informations dopage
+ * @param  int $codeid code
+ * @param  int $typid  type du code
+ * @return array         array des infos dopage
+ */
     public function getDopage($codeid, $typid) {
       if (isset($this->_the)) {
           $the=$this->_the;
@@ -403,6 +451,12 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
       }
     }
 
+/**
+ * Obtenir les infos de conduite
+ * @param  int $codeid code
+ * @param  int $typid  type du code
+ * @return array         array des infos conducteur
+ */
     public function getConducteur($codeid, $typid) {
       if (isset($this->_the)) {
           $the=$this->_the;
@@ -433,23 +487,42 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
             } else {
                 $this->_the=$the=new $this->_classTheriaque;
             }
-            if ($subsTab=$this->getSubstances($txt, $type)) {
-                if ($p['config']['theriaqueMode'] == 'WS') {
-                    $colonne = 'code_sq_pk';
-                } elseif ($p['config']['theriaqueMode'] == 'PG') {
-                    $colonne = 'sac_code_sq_pk';
-                }
 
+            if ($p['config']['theriaqueMode'] == 'WS') {
+                $colonne = 'code_sq_pk';
+            } elseif ($p['config']['theriaqueMode'] == 'PG') {
+                $colonne = 'sac_code_sq_pk';
+            }
+
+            $subsTab=[];
+            $substances = explode('+',$txt);
+            if(!empty($substances)) {
+              foreach($substances as $k=>$substance) {
+                $subsTab=$this->getSubstances(trim($substance), $type);
+                if(empty($subsTab)) continue;
                 $subs=implode(",", array_column($subsTab, $colonne));
-                if ($data=$the->get_the_specialite_multi_codeid($subs, 7, $monovir)) {
-                    $rd=$this->_prepareData($data);
-                    if (!empty($rd)) {
-                        $this->getPresentations($rd, 'sp_code_sq_pk', 1);
-                        $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
-                    }
-                    $rd['substances']=$subsTab;
-                    return $rd;
+                $tabSpe=$the->get_the_specialite_multi_codeid($subs, 7, $monovir);
+                if(!empty($tabSpe)) {
+                  $tabSpe=$this->_prepareData($tabSpe);
+                  $tabSpes[$k]=array_column($tabSpe, 'sp_code_sq_pk');
                 }
+              }
+            }
+            if(!empty($tabSpes)) {
+              if(count($tabSpes)>1) {
+                $intersectionTab = call_user_func_array('array_intersect', $tabSpes);
+              } else {
+                $intersectionTab=$tabSpes[0];
+              }
+              if ($data=$the->get_the_specialite_multi_codeid(implode(",", $intersectionTab), 1, $monovir)) {
+                  $rd=$this->_prepareData($data);
+                  if (!empty($rd)) {
+                      $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+                      $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                  }
+                  $rd['substances']=$subsTab;
+                  return $rd;
+              }
             }
         }
     }
@@ -774,6 +847,17 @@ private function _get_the_prestation($codesTheriaqueListe, $typCode)
         }
     }
 
+public function getEffetsIndesirables($codeSpe, $typeEI) {
+  if (isset($this->_the)) {
+      $the=$this->_the;
+  } else {
+      $this->_the=$the=new $this->_classTheriaque;
+  }
+  $rd=[];
+  if ($data=$the->get_the_effind_spe($codeSpe, $typeEI)) {
+      return $this->_prepareData($data);
+  }
+}
 
 
 /**

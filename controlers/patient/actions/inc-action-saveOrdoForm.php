@@ -27,9 +27,17 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
-}
+ if (isset($_POST['ordoForm']) and $_POST['ordoForm']!='') {
+       $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-action-saveOrdoForm.php';
+       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+           include $hook;
+       }
+       if (!isset($delegate)) {
+           return;
+       }
+ }
+
+
 if (count($_POST)>2) {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
@@ -42,6 +50,19 @@ if (count($_POST)>2) {
         $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
     }
 
+    // pour plus de clarté
+    if(isset($_POST['objetID']) and $supportID == $_POST['objetID']) {
+      $modeAction = 'edition';
+    } else {
+      $modeAction = 'renouv';
+    }
+
+    //par précaution on supprime le pdf antérieur
+    if($modeAction == 'edition') {
+      $doc= new msStockage();
+      $doc->setObjetID($supportID);
+      $doc->deleteDoc();
+    }
 
     //type d'impression modeprintObjetID
     if (isset($_POST['modeprintObjetID'])) {
@@ -57,10 +78,16 @@ if (count($_POST)>2) {
             } else {
                 $postObjetId='0';
             }
-            $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
 
+            if(!empty(trim($v))) {
+              $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
+            }
             if ($postObjetId>0) {
-                msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
+                if($v=='' and $modeAction == 'edition') {
+                  $patient->setDeletedObjetAndSons($postObjetId);
+                } else {
+                  msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
+                }
             }
             if (isset($_POST[$k.'CB'])) {
                 $patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k.'CB'], $id);

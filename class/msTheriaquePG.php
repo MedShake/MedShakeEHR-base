@@ -132,6 +132,11 @@ class msTheriaquePG {
     return $this->get_data_from_pg("get_the_sub_txt('$libtxt',$vartype)");
   }
 
+  /// Substance par code spé
+  public function get_the_sub_spe($codeid,$typeid) {
+    return $this->get_data_from_pg("get_the_sub_spe($codeid,$typeid)");
+  }
+
   /// CIM 10
   public function get_the_cim_10($typ,$search) {
     return $this->get_data_from_pg("get_the_cim_10($typ,'$search')");
@@ -248,6 +253,22 @@ class msTheriaquePG {
   public function get_the_conducteur($codeid, $typid) {
     return $this->get_data_from_pg("get_the_conducteur('$codeid', $typid)");
   }
+
+  //effets indésirables (fiches)
+  public function get_the_effind_spe($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_effind_spe($codeid, $typid)");
+  }
+
+  //effets indésirables (infos gen dont fqc codée)
+  public function get_the_effind_id($codeind) {
+    return $this->get_data_from_pg("get_the_effind_id($codeind)");
+  }
+
+  //effets indésirables (détails)
+  public function get_the_det_effind($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_det_effind($codeid, $typid)");
+  }
+
 
   /**
    * Ajuster les array patients / prescription / poso avant génération d'insert

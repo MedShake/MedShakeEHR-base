@@ -48,6 +48,10 @@ class msLapPrescription extends msLap
   private $_prescriptibleEnDC;
   private $_prescriptionInterpretee;
   private $_nbRenouvellements;
+  private $_tauxrbt;
+  private $_prixucd;
+  private $_datePremierePrise;
+
 
 /**
  * Définir le texte frappé
@@ -218,6 +222,133 @@ class msLapPrescription extends msLap
     }
 
 /**
+ * Définir le taux de remboursement
+ * @param string $taux taux rbt
+ * @return string taux rbt
+ */
+    public function setTauxRbt($taux)
+    {
+      return $this->_tauxrbt = $taux;
+    }
+
+/**
+ * Définir le prix par ucd
+ * @param float $prix prix par ucd
+ * @return float prix par ucd
+ */
+    public function setPrixUcd($prix)
+    {
+      return $this->_prixucd = $prix;
+    }
+
+/**
+ * Définir la date de 1ere prise
+ * @param string $date date au format d/m/Y
+ * @return string date
+ */
+    public function setDatePremierePrise($date)
+    {
+      return $this->_datePremierePrise = $date;
+    }
+
+/**
+ * Obtenir les infos de prise en charge ALD
+ * @param  string $code   code CIP de la présentation
+ * @param  int $typCode type du code (1 CIP7, 2 CIP13)
+ * @return string          % de rbt
+ */
+    private function _get_the_ald_info($code, $typCode)
+    {
+        if (empty($code)) {
+            return false;
+        }
+        if (isset($this->_the)) {
+            $the=$this->_the;
+        } else {
+            $this->_the=$the=new $this->_classTheriaque;
+        }
+        $rd=[];
+        if ($data=$the->get_the_pre_rbt($code, $typCode)) {
+            if (is_object($data)) {
+                $data=msTools::objectToArray($data);
+                if (isset($data['item'])) {
+                    $data=$data['item'];
+                }
+            }
+            if (!empty($data)) {
+              $aldTab=[];
+                foreach($data as $k=>$v) {
+                  if($v['type']=='3') {
+                    $analyse = $this->_analyseAldTheriaque($v['info_1']);
+
+                    if(!empty($analyse)) {
+                      $aldTab=$aldTab+$analyse;
+                    }
+                  }
+                }
+                return $aldTab;
+            }
+            return false;
+        }
+    }
+
+    private function _analyseAldTheriaque($ligne) {
+              // 1: "Accident vasculaire cérébral invalidant"
+              // 2: "Insuffisances médullaires et autres cytopénies chroniques"
+              // 3: "Artériopathies chroniques avec manifestations ischémiques"
+              // 4: "Bilharziose compliquée"
+              // 5: "Insuffisance cardiaque grave, troubles du rythme graves, cardiopathies valvulaires graves, cardiopathies  congénitales graves"
+              // 6: "Maladies chroniques actives du foie et cirrhoses"
+              // 7: "Déficit immunitaire primitif grave nécessitant un traitement prolongé, infection par le virus de 9: l'immuno-déficience humaine (VIH)"
+              // 8: "Diabète de type 1 et diabète de type 2"
+              // 9: "Formes graves des affections neurologiques et musculaires (dont myopathie), épilepsie grave"
+              // 10: "Hémoglobinopathies, hémolyses, chroniques constitutionnelles et acquises sévères"
+              // 11: "Hémophilies et affections constitutionnelles de l'hémostase graves"
+              // 12: "Maladie coronaire"
+              // 13: "Insuffisance respiratoire chronique grave"
+              // 14: "Maladie d'Alzheimer et autres démences"
+              // 15: "Maladie de Parkinson"
+              // 16: "Maladies métaboliques héréditaires nécessitant un traitement prolongé spécialisé"
+              // 17: "Mucoviscidose"
+              // 18: "Néphropathie chronique grave et syndrome néphrotique primitif"
+              // 19: "Paraplégie"
+              // 20: "Vascularites, lupus érythémateux systémique, sclérodermie systémique"
+              // 21: "Polyarthrite rhumatoïde évolutive"
+              // 22: "Affections psychiatriques de longue durée"
+              // 23: "Rectocolite hémorragique et maladie de Crohn évolutives"
+              // 24: "Sclérose en plaques"
+              // 25: "Scoliose idiopathique structurale évolutive (dont l'angle est égal ou supérieur à 25 degrés) jusqu'à maturation rachidienne"
+              // 26: "Spondylarthrite grave"
+              // 27: "Suites de transplantation d'organe"
+              // 28: "Tuberculose active, lèpre"
+              // 29: "Tumeur maligne, affection maligne du tissu lymphatique ou hématopoïétique"
+              // 31: "Affection hors liste"
+              // 32: "Etat polypathologique"
+
+
+              $tab=[];
+              if(strpos($ligne, 'SANS RAPPORT')) $rapport='n'; else $rapport='o';
+
+              if(strpos($ligne, 'MALADIE CORONAIRE')) {
+                $tab[12]=$rapport;
+              }
+              elseif(strpos($ligne, 'INS RESP C GRAVE')) {
+                $tab[13]=$rapport;
+              }
+              elseif(strpos($ligne, 'DIABETE')) {
+                $tab[8]=$rapport;
+              }
+              elseif(strpos($ligne, 'ARTERIOPATHIES')) {
+                $tab[3]=$rapport;
+              }
+              elseif(strpos($ligne, 'CARDIOPATHIES')) {
+                $tab[5]=$rapport;
+              }
+
+              return $tab;
+    }
+
+/**
  * Retourner toutes les datas utiles à la fenêtre de prescription
  * @return array tableau des données utiles à la prescription
  */
@@ -242,10 +373,16 @@ class msLapPrescription extends msLap
       // voies d'administration possibles
       $dataSpeVoiesAdmin=$this->getVoiesAdministration($this->_speThe);
 
+      // condition ald
+      $dataAld=$this->_get_the_ald_info($this->_presThe, 1);
+
       //recherche DC
       $dataGenerique=$this->getDC(2, $dataSpe[0]['sp_gsp_code_fk'], 1);
       $this->_nomDC = $dataGenerique[0]['libelle'];
       $this->_prescriptibleEnDC = $dataGenerique[0]['prescription_dc'];
+
+      // substances actives
+      $dataSubActives = $this->getSubtancesActivesTab($this->_speThe);
 
       //recherche du générique
       //$dataGenerique=$this->getGenerique($this->_speThe, 4);
@@ -324,7 +461,11 @@ class msLapPrescription extends msLap
           'niveau'=>$dataConducteur[0]['niv'],
           'libelle_niv'=>$dataConducteur[0]['libelle_niv']
         ),
-        'dopage'=>$dataDopage[0]['niveau']
+        'dopage'=>$dataDopage[0]['niveau'],
+        'substancesActives'=>$dataSubActives,
+        'prixucd'=>$this->_prixucd,
+        'tauxrbt'=>$this->_tauxrbt,
+        'ald'=>$dataAld
       );
 
 
@@ -370,13 +511,13 @@ class msLapPrescription extends msLap
         $humanPosoTraine = array_column($this->_lignesPosologiques,'humanPosoTraine');
         foreach($humanPosoBase as $k=>$v) {
           if($posoDuree[$k] > 0) {
-            $human[] = $humanPosoBase[$k].' '.$humanPosoDuree[$k].' '.$humanPosoTraine[$k];
+            $human[] = trim(str_replace('  ', ' ', $humanPosoBase[$k].' '.$humanPosoDuree[$k].' '.$humanPosoTraine[$k]));
           } else {
-            $human[] = $humanPosoBase[$k].' '.$humanPosoTraine[$k];
+            $human[] = trim(str_replace('  ', ' ', $humanPosoBase[$k].' '.$humanPosoTraine[$k]));
           }
           $humanBase[] = $humanPosoBase[$k];
         }
-        $this->_prescriptionInterpretee['posoHumanComplete'] = trim(str_replace('  ', ' ', implode("\n", $human)));
+        //$this->_prescriptionInterpretee['posoHumanComplete'] = trim(str_replace('  ', ' ', implode("\n", $human)));
         $this->_prescriptionInterpretee['posoHumanCompleteTab'] = $human;
         $this->_prescriptionInterpretee['posoHumanBase'] = trim(str_replace('  ', ' ', implode("\n", $humanBase)));
 
@@ -384,26 +525,29 @@ class msLapPrescription extends msLap
         $this->_prescriptionInterpretee['voieUtilisee'] = ucfirst($this->_voieUtilisee);
 
         // la poso journalière max toutes lignes confondues
-        $this->_prescriptionInterpretee['posoJournaliereMax']=(float)max(array_column($this->_lignesPosologiques,'posoJournaliere'));
+        //$this->_prescriptionInterpretee['posoJournaliereMax']=(float)max(array_column($this->_lignesPosologiques,'posoJournaliere'));
 
         // la poso Max par prise toutes lignes confondues
-        $this->_prescriptionInterpretee['posoMaxParPriseMax']=(float)max(array_column($this->_lignesPosologiques,'posoMaxParPrise'));
+        //$this->_prescriptionInterpretee['posoMaxParPriseMax']=(float)max(array_column($this->_lignesPosologiques,'posoMaxParPrise'));
 
         // la poso Min par prise toutes lignes confondues (avec retrait 0 !)
         $this->_prescriptionInterpretee['posoMinParPriseMin']=(float)@min(array_filter(array_column($this->_lignesPosologiques,'posoMinParPrise')));
 
-        //print_r($this->_lignesPosologiques);
 
         // durée totale de la prescription
         $dureeTotale = $this->_dureeTotalePrescription();
         $this->_prescriptionInterpretee['dureeTotaleHuman']=$dureeTotale['dureeTotaleHuman'];
         $this->_prescriptionInterpretee['dureeTotaleMachine']=$dureeTotale['dureeTotaleMachine'];
         $this->_prescriptionInterpretee['dureeTotaleMachineJours']=$dureeTotale['dureeTotaleMachineJours'];
+        $this->_prescriptionInterpretee['dureeTotaleMachineMinutes']=$dureeTotale['dureeTotaleMachineMinutes'];
         $this->_prescriptionInterpretee['dureeTotaleMachineJoursAvecRenouv']=$dureeTotale['dureeTotaleMachineJoursAvecRenouv'];
         $this->_prescriptionInterpretee['nbRenouvellements']=$this->_nbRenouvellements;
 
         // controle secabilité
         $this->_controleSecabilite();
+
+        // total prescrit en unité
+        $this->_calcTotalUnitesPrescrites();
 
       }
 
@@ -535,11 +679,11 @@ class msLapPrescription extends msLap
         $tab['duree'] = $m['dureeNumeric'];
         $tab['dureeUnite'] = $m['dureeUnite'];
         $tab['posoTheriaqueMode'] = 0;
-        $tab['posoJournaliere'] = (float)$m['doseMatinMath'] + (float)$m['doseMidiMath'] + (float)$m['doseSoirMath'] + (float)$m['doseCoucherMath'];
+
         $tab['posoDosesSuccessives'] = array($m['doseMatinMath'], $m['doseMidiMath'], $m['doseSoirMath'], $m['doseCoucherMath']);
         $tab['nbPrisesParUniteTempsUnite'] ='';
         $tab['posoJours'] = $m['joursSemaine'];
-        $tab['posoMaxParPrise'] = (float)max($m['lesDoses']);
+        //$tab['posoMaxParPrise'] = (float)max($m['lesDoses']);
         $tab['posoMinParPrise'] = (float)@min(array_filter($m['lesDoses']));
         $tab['humanPosoBase'] = $human;
         $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
@@ -598,12 +742,12 @@ class msLapPrescription extends msLap
         $tab['prefixeLigne'] = $m['prefixeLigne'];
         $tab['duree'] = $m['dureeNumeric'];
         $tab['dureeUnite'] = $m['dureeUnite'];
-        $tab['posoJournaliere'] = (float)$m['doseMath'] * $m['multipleDoseMath'];
+        //$tab['posoJournaliere'] = (float)$m['doseMath'] * $m['multipleDoseMath'];
         $tab['posoTheriaqueMode'] = 1;
         $tab['posoDosesSuccessives'] = array($m['doseMath']);
         $tab['nbPrisesParUniteTempsUnite'] = $m['multipleUnite'];
         $tab['posoJours'] = $m['joursSemaine'];
-        $tab['posoMaxParPrise'] = (float)$m['doseMath'];
+        //$tab['posoMaxParPrise'] = (float)$m['doseMath'];
         $tab['posoMinParPrise'] = (float)$m['doseMath'];
         $tab['humanPosoBase'] = $human;
         $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
@@ -637,13 +781,14 @@ class msLapPrescription extends msLap
             $tab['duree'] = $m['dureeNumeric'];
             $tab['dureeUnite'] = $m['dureeUnite'];
             $tab['nbPrisesParUniteTemps']=0;
-            $tab['posoJournaliere'] = 0;
+            //$tab['posoJournaliere'] = 0;
             $tab['posoTheriaqueMode'] = 1;
             $tab['posoDosesSuccessives'] = 0;
             $tab['nbPrisesParUniteTempsUnite'] = 0;
             $tab['posoJours'] = '';
-            $tab['posoMaxParPrise'] = 0;
+            //$tab['posoMaxParPrise'] = 0;
             $tab['posoMinParPrise'] = 0;
+            $tab['posoTotal'] = 0;
             $tab['humanPosoBase'] = 'posologie inconnue';
             $tab['humanPosoDuree'] = ' - ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
             $tab['humanPosoTraine'] = '';
@@ -652,6 +797,194 @@ class msLapPrescription extends msLap
             $this->_lignesPosologiques[] = $tab;
             return $this->_lignesTraitees[$indexLigne] = $tab;
         }
+
+/**
+ * Traiter la regEx 3 de la version 1 de l'interpréteur
+ * @param  int $indexLigne index de la ligne traitée
+ * @param  array $m          match retour de la regex
+ * @return array             données sur la ligne
+ */
+    private function _traiterLigneRegEx3V1($indexLigne, $m) {
+        $human='';
+        $math = new Webit\Util\EvalMath\EvalMath;
+
+        //print_r($m);
+        $m['prefixeLigne'] = $m[1];
+        $m['dose'] = str_replace(".", ",", $m[2]);
+        $m['multipleDose'] = $m[3];
+        $m['multipleUnite'] = $m[4];
+        $m['joursSemaine'] = @$m[5];
+        $m['dureeNumeric'] = @$m[6];
+        $m['dureeUnite'] = @$m[7];
+        $m['traine'] = trim(@$m[8]);
+
+
+        //conversion virgule en point
+        $m['doseMath'] = $math->evaluate(str_replace(",", ".", $m['dose']));
+        $m['multipleDoseMath'] = $math->evaluate(str_replace(",", ".", $m['multipleDose']));
+
+        // durée
+        $dureeHuman=$this->_dureeAbrevEnMots($m['dureeNumeric'], $m['dureeUnite']);
+
+        // cas de posologie nulle => arrêt pendant x jour
+        if($m['doseMath'] == 0) {
+          $human = 'arrêt ';
+          $tab['nbPrisesParUniteTemps']=0;
+        } else {
+          if($m['multipleUnite'] == 'j' or $m['multipleUnite']=='m') {
+            $liaison = 'tous les';
+          } else {
+            $liaison = 'toutes les';
+          }
+
+          $human = $m['dose'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMath']) . ' '. $liaison.' ';
+          if($m['multipleDose']>1) $human .= $m['multipleDose'];
+          $human .=' '.$this->_uniteTempsAccordee($m['multipleUnite'], 10);
+          $tab['nbPrisesParUniteTemps']=$m['multipleDoseMath'];
+        }
+
+        if ($m['joursSemaine']) $human .= ' '.$this->_days($m['joursSemaine']);
+        if ($m['prefixeLigne']) $human = $m['prefixeLigne'] . ' ' . $human;
+
+        // tableau de retour
+        $tab['indexLigne'] = $indexLigne;
+        $tab['typeLigne'] = 'posologie';
+        $tab['prefixeLigne'] = $m['prefixeLigne'];
+        $tab['duree'] = $m['dureeNumeric'];
+        $tab['dureeUnite'] = $m['dureeUnite'];
+        //$tab['posoJournaliere'] = '';
+        $tab['posoTheriaqueMode'] = 1;
+        $tab['posoDosesSuccessives'] = array($m['doseMath']);
+        $tab['nbPrisesParUniteTempsUnite'] = $m['multipleUnite'];
+        $tab['posoJours'] = $m['joursSemaine'];
+        //$tab['posoMaxParPrise'] = (float)$m['doseMath'];
+        $tab['posoMinParPrise'] = (float)$m['doseMath'];
+        $tab['humanPosoBase'] = $human;
+        $tab['humanPosoDuree'] = 'pendant ' . $m['dureeNumeric'] . ' ' . $dureeHuman;
+        $tab['humanPosoTraine'] = $m['traine'];
+        $tab['regEx']='3';
+
+        $this->_lignesPosologiques[] = $tab;
+        return $this->_lignesTraitees[$indexLigne] = $tab;
+    }
+
+
+    private function _calcTotalUnitesPrescrites() {
+      $total=[];
+      foreach($this->_lignesTraitees as $k=>$l) {
+
+        //correction de la durée si absente : on prend la durée totale
+        if(empty($l['duree'])) {
+            $l['duree']=$this->_prescriptionInterpretee['dureeTotaleMachineMinutes'];
+            $l['dureeUnite'] = 'i';
+        }
+
+        if($l['regEx']=='0') {
+          $posoJournaliere = (float)$l['posoDosesSuccessives'][0] + (float)$l['posoDosesSuccessives'][1] + (float)$l['posoDosesSuccessives'][2] + (float)$l['posoDosesSuccessives'][3];
+          if(!empty($l['posoJours'])) {
+            $nbReelJours=$this->_calculerNbReelDeJours($l['duree'], $l['dureeUnite'],$l['posoJours']);
+          } else {
+            $nbReelJours=$this->_convertToMinutes($l['duree'], $l['dureeUnite']) / (60 * 24);
+          }
+          $total[$k] = $posoJournaliere * $nbReelJours;
+        }
+
+        elseif($l['regEx']=='1') {
+          $fqcMinutes = $this->_convertToMinutes(1, $l['nbPrisesParUniteTempsUnite']) / $l['nbPrisesParUniteTemps'];
+
+          if(!empty($l['posoJours'])) {
+            $dureeMinutes = $this->_calculerNbReelDeJours($l['duree'], $l['dureeUnite'],$l['posoJours']) * 60 * 24;
+          } else {
+            $dureeMinutes = $this->_convertToMinutes($l['duree'], $l['dureeUnite']);
+          }
+          $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
+        }
+
+        elseif($l['regEx']=='3') {
+          $fqcMinutes = $this->_convertToMinutes($l['nbPrisesParUniteTemps'], $l['nbPrisesParUniteTempsUnite']);
+          if(!empty($l['posoJours'])) {
+            $dureeMinutes = $this->_calculerNbReelDeJours($l['duree'], $l['dureeUnite'],$l['posoJours']) * 60 * 24;
+          } else {
+            $dureeMinutes = $this->_convertToMinutes($l['duree'], $l['dureeUnite']);
+          }
+          $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
+        }
+      }
+
+      $this->_prescriptionInterpretee['totalUnitesPrescrites'] = array_sum($total);
+    }
+
+/**
+ * Convertir une durée en minutes
+ * @param  [type] $nb   [description]
+ * @param  [type] $unit [description]
+ * @return [type]       [description]
+ */
+    private function _convertToMinutes($nb, $unit) {
+      if($unit=='i') return $nb;
+      elseif($unit=='h') return $nb*60;
+      elseif($unit=='j') return $nb*60*24;
+      elseif($unit=='s') return $nb*60*24*7;
+      elseif($unit=='m') return $nb*60*24*7*4;
+    }
+
+/**
+ * Calculer le nombre de jour réel entre 2 dates quand précision jour de la semaine ou pairs / impaires
+ * @param  int $dureeNumeric durée
+ * @param  string $dureeUnite   unité de durée sur 1 lettre
+ * @param  string $joursSemaine les jours sur 1 lettre, concaténés
+ * @return int                le nombre de jour
+ */
+private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine) {
+
+  $debut = DateTime::createFromFormat('d/m/Y H:i:s', $this->_datePremierePrise.' 00:00:00');
+  $minutesAjoutees = $this->_convertToMinutes($dureeNumeric, $dureeUnite) - 1;
+  $fin = DateTime::createFromFormat('d/m/Y H:i:s', $this->_datePremierePrise.' 00:00:00');
+  $fin = $fin->add(new DateInterval('PT' . $minutesAjoutees . 'M'));
+
+  if (strstr($joursSemaine, 'i') != FALSE or strstr($joursSemaine, 'p') != FALSE) {
+    $p=0;
+    $i=0;
+    $all_days = new DatePeriod($debut, new DateInterval('P1D'), $fin);
+    foreach ($all_days as $day) {
+        $d = (int)$day->format('d');
+        if($d % 2 == 0) $p++; else $i++;
+    }
+    if (strstr($joursSemaine, 'i') != FALSE) $count[]=$i;
+    if (strstr($joursSemaine, 'p') != FALSE) $count[]=$p;
+    return array_sum($count);
+
+  } else {
+    if (strstr($joursSemaine, 'l') != FALSE) $count[]=$this->_dayCount($debut,$fin,1);
+    if (strstr($joursSemaine, 'm') != FALSE) $count[]=$this->_dayCount($debut,$fin,2);
+    if (strstr($joursSemaine, 'M') != FALSE) $count[]=$this->_dayCount($debut,$fin,3);
+    if (strstr($joursSemaine, 'j') != FALSE) $count[]=$this->_dayCount($debut,$fin,4);
+    if (strstr($joursSemaine, 'v') != FALSE) $count[]=$this->_dayCount($debut,$fin,5);
+    if (strstr($joursSemaine, 's') != FALSE) $count[]=$this->_dayCount($debut,$fin,6);
+    if (strstr($joursSemaine, 'd') != FALSE) $count[]=$this->_dayCount($debut,$fin,7);
+
+    return array_sum($count);
+  }
+}
+
+/**
+ * Compter le nombre de jour pour un jour de semaine particulier entre 2 dates
+ * @param  string  $from date de début au format datetime
+ * @param  string  $to   date de fin au format datetime
+ * @param  integer $day  jour de la semaine
+ * @return int     nombre de jour
+ */
+    private function _dayCount($from, $to, $day) {
+
+        $wF = $from->format('w');
+        $wT = $to->format('w');
+        if ($wF < $wT)       $isExtraDay = $day >= $wF && $day <= $wT;
+        else if ($wF == $wT) $isExtraDay = $wF == $day;
+        else                 $isExtraDay = $day >= $wF || $day <= $wT;
+
+        return floor($from->diff($to)->days / 7) + $isExtraDay;
+    }
+
 
 /**
  * Obtenir mot en fonction abréviation de durée
@@ -711,12 +1044,37 @@ class msLapPrescription extends msLap
       $regEx[1][0] = "/^(et|puis)?\s*([0-9\/,\.+]+) ([0-9\/,\.+]+) ([0-9\/,\.+]+)(?: ([0-9\/,\.+]+))?(?: ([lmMjvsdip]*))? (?:([0-9]+)(j|s|m))?(.*)/i";
 
       // 1 6xh|j|s|m 6h|j|s|m jp|ji
-      $regEx[1][1] = "/^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(h|j|s|m))?(.*)/i";
+      $regEx[1][1] = "/^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(i|h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(i|h|j|s|m))?(.*)/i";
 
       // posologie inconnue
       $regEx[1][2] = "/^(nc|\?) (?:([0-9]+)(j|s|m))/i";
 
+      // 1 6xh|j|s|m 6h|j|s|m jp|ji
+      $regEx[1][3] = "/^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)(i|h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(i|h|j|s|m))?(.*)/i";
+
       return $regEx[$this->_versionInterpreteur];
+
+    }
+
+/**
+ * Accorder unités de temps
+ * @param  string $abrev mot à accorder
+ * @param  int $nb    nombre
+ * @return string        mot accordé
+ */
+    private function _uniteTempsAccordee($abrev, $nb) {
+      $f=array(
+        'i' => array('s'=>'minute', 'p'=>'minutes'),
+        'h' => array('s'=>'heure', 'p'=>'heures'),
+        'j' => array('s'=>'jour', 'p'=>'jours'),
+        's' => array('s'=>'semaine', 'p'=>'semaines'),
+        'm' => array('s'=>'mois', 'p'=>'mois'),
+      );
+      if(key_exists($abrev,$f)) {
+        if($nb>1) return $f[$abrev]['p'];
+        else return $f[$abrev]['s'];
+      }
+      return strtolower($abrev);
 
     }
 
@@ -806,6 +1164,12 @@ class msLapPrescription extends msLap
         if($nouvelleDureeJours>1) $nouvelleDureeJours=$nouvelleDureeJours.' jours'; else $nouvelleDureeJours=$nouvelleDureeJours.' jour';
         $dureeTotaleHuman=array($nouvelleDureeJours);
       }
+
+      $retour['dureeTotaleMachineMinutes']= $duree['i']
+        + ($duree['h'] * 60 )
+        + ($duree['j'] * 60 * 24 )
+        + ($duree['s'] * 60 * 24 * 7)
+        + ($duree['m'] * 60 * 24 * 28);
 
       $retour['dureeTotaleHuman']=implode(' ',array_reverse($dureeTotaleHuman));
       $retour['dureeTotaleMachine']= $duree;

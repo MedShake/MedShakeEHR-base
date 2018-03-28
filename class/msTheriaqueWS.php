@@ -118,6 +118,11 @@ class msTheriaqueWS {
     return $this->_client->get_the_sub_txt($libtxt,$vartype);
   }
 
+  /// Substance par code spé
+  public function get_the_sub_spe($codeid,$typeid) {
+    return $this->_client->get_the_sub_spe($codeid,$typeid);
+  }
+
   /// CIM 10
   public function get_the_cim_10($typ,$search) {
     return $this->_client->get_the_cim_10($typ,$search);

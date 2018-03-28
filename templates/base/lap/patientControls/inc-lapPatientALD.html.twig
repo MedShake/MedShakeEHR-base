@@ -32,7 +32,7 @@
     <tbody>
       {% for aldId, ald in page.patientALD %}
         <tr class="tr{{ aldId }} {% if ald.aldCIM10.value %}active"{% else %}danger" title="Pas de code CIM10 lié !"{% endif %}>
-          <td data-toggle="collapse" data-target="#aldDet{{ aldId }}lap" style="cursor: pointer">
+          <td data-aldnumber="{{ ald.aldNumber.value }}" data-toggle="collapse" data-target="#aldDet{{ aldId }}lap" style="cursor: pointer">
             {% if ald.aldCIM10.value is empty %}<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {% endif %}
             {{ ald.aldLabel }}
 

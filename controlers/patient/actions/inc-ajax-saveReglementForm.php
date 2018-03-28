@@ -52,9 +52,9 @@ if (count($_POST['acteID'])>0) {
     }
     //support
     if ($_POST['objetID']!=='') {
-        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
+        $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID']);
+        $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID']);
     }
 
     $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';

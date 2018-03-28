@@ -52,6 +52,12 @@ var srcIdx;
  */
 var voirOrdonnanceMode;
 
+/**
+ * Evite la seconde analyse avant impression
+ * @type {String}
+ */
+var ordoDejaAnalysee;
+
 $(document).ready(function() {
 
   //Analyser l'ordonnance (avec tt en cours)
@@ -114,6 +120,7 @@ $(document).ready(function() {
     console.log(ordoMedicsG);
     console.log('Destruction de ligne de prescription : STOP');
     ordoLiveSave();
+    afficherCoutOrdo();
 
   });
 
@@ -136,6 +143,7 @@ $(document).ready(function() {
     console.log(ordoMedicsG);
     console.log('Destruction d\'un médic dans ligne de prescription : STOP');
     ordoLiveSave();
+    afficherCoutOrdo();
 
   });
 
@@ -145,12 +153,13 @@ $(document).ready(function() {
       e.preventDefault();
       cleanOrdonnance();
       ordoLiveSave();
+      afficherCoutOrdo();
     }
   });
 
   // convertire une ligne en DCI
   $("#conteneurOrdonnanceCourante").on("click", "a.convertDci", function(e) {
-      e.preventDefault();
+    e.preventDefault();
     console.log(ordoMedicsALD);
     console.log(ordoMedicsG);
 
@@ -186,17 +195,6 @@ $(document).ready(function() {
     console.log(ordoMedicsG);
   });
 
-  function convertMedicDCI(zoneOrdo, ligneCouranteIndex, medicIndex) {
-    if (zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['prescriptibleEnDC'] == 1) {
-      zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomUtileFinal'] = zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomDC'];
-      if (zoneOrdo[ligneCouranteIndex]['ligneData']['isALD'] == "true") {
-        construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
-      } else {
-        construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
-      }
-    }
-  }
-
   // Ordo live : restaurer la version sauvegardée (undo)
   $("a.ordoLiveRestore").on("click", function(e) {
     e.preventDefault();
@@ -207,7 +205,6 @@ $(document).ready(function() {
   $("a.printAndSaveOrdo, button.printAndSaveOrdo").on("click", function(e) {
     e.preventDefault();
     saveOrdo(true);
-    cleanOrdonnance();
   });
 
   // Ordo : sauvegarder
@@ -225,6 +222,28 @@ $(document).ready(function() {
 
 });
 
+/**
+ * Convertir une ligne en DCI
+ * @param  {object} zoneOrdo           objet de la zone (ALD / G)
+ * @param  {int} ligneCouranteIndex index de la ligne courante
+ * @param  {int} medicIndex         index du medic de la ligne courante
+ * @return {void}
+ */
+function convertMedicDCI(zoneOrdo, ligneCouranteIndex, medicIndex) {
+  if (zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['prescriptibleEnDC'] == 1) {
+    zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomUtileFinal'] = zoneOrdo[ligneCouranteIndex]['medics'][medicIndex]['nomDC'];
+    if (zoneOrdo[ligneCouranteIndex]['ligneData']['isALD'] == "true") {
+      construireHtmlLigneOrdonnance(ordoMedicsALD[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsALD div.lignePrescription').eq(ligneCouranteIndex));
+    } else {
+      construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
+    }
+  }
+}
+
+/**
+ * Analyser les prescriptions (ordo courante + tt en cours)
+ * @return {void}
+ */
 function analyserPrescription() {
 
   var ordo = {
@@ -249,7 +268,10 @@ function analyserPrescription() {
     success: function(data) {
       console.log("Analyse ordonnance : OK");
       $('#modalLapAlerte div.modal-body').html(data['html']);
+      $('#modAlerteImprimer, #modAlerteModifier').show();
+      $('#modAlerteFermer').hide();
       $('#modalLapAlerte').modal('show')
+      ordoDejaAnalysee = true;
     },
     error: function() {
       console.log("Analyse ordonnance : PROBLEME");
@@ -257,6 +279,10 @@ function analyserPrescription() {
   });
 }
 
+/**
+ * Analyser l'ordo et tt en cours et renvoyer le résultat brut
+ * @return {void}
+ */
 function lapOrdoAnalyseResBrut() {
 
   var ordo = {
@@ -291,9 +317,16 @@ function lapOrdoAnalyseResBrut() {
 
 /**
  * Sauver l'ordonnance en cours
- * @return {[type]} [description]
+ * @return {void}
  */
 function saveOrdo(view) {
+
+  // on impose l'analyse avant si non faite
+  if (ordoDejaAnalysee != true) {
+    analyserPrescription();
+    return;
+  }
+
   var ordo = {
     ordoMedicsG: ordoMedicsG,
     ordoMedicsALD: ordoMedicsALD,
@@ -318,6 +351,8 @@ function saveOrdo(view) {
         window.open('/showpdf/' + data['ordoID'] + '/', '_blank');
       }
       console.log("Sauvegarde ordonnance : OK");
+      cleanOrdonnance();
+      ordoDejaAnalysee = false;
     },
     error: function() {
       console.log("Sauvegarde ordonnance : PROBLEME");
@@ -336,10 +371,13 @@ function saveOrdo(view) {
  */
 function moveLignePrescription(tabDepart, tabArrivee, indexDepart, indexArrivee) {
   tabArrivee.splice(indexArrivee, 0, tabDepart.splice(indexDepart, 1)[0]);
+
+  // on réimpose l'analyse avant impression
+  ordoDejaAnalysee = false;
 }
 
 /**
- * Ordonnance vierge
+ * Rendre vierge l'ordonnance
  * @return {void}
  */
 function cleanOrdonnance() {
@@ -403,6 +441,7 @@ function ordoLiveRestore() {
           }
           construireOrdonnance(data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
         }
+        afficherCoutOrdo();
         console.log("Restoration automatique ordonnance : OK");
 
       } else if (data['statut'] == 'nofile') {
@@ -450,7 +489,7 @@ function construireOrdonnance(tabMedicsG, tabMedicsALD, parentdestination) {
 function construireHtmlLigneOrdonnance(ligne, methode, destination, parentdestination, mode) {
   console.log('Génération html d\'une ligne de prescription : START');
   if (!parentdestination) var parentdestination = '';
-  if(!mode) mode = voirOrdonnanceMode;
+  if (!mode) mode = voirOrdonnanceMode;
 
   var zoneDestination;
   if (ligne.ligneData.isALD == "true") {
@@ -469,14 +508,83 @@ function construireHtmlLigneOrdonnance(ligne, methode, destination, parentdestin
 }
 
 /**
+ * Calculer le coût total des prescriptions de l'ordonnance
+ * @return {float} coût total
+ */
+function calculerCoutOrdo() {
+  prixTotal = 0;
+  $('a.coutMedic').each(function(index) {
+    prix = $(this).attr('data-cout');
+    prixTotal = parseFloat(prixTotal) + parseFloat(prix);
+  });
+  return prixTotal;
+}
+
+function afficherCoutOrdo() {
+  cout = calculerCoutOrdo();
+  if(cout > 0) {
+    $('div.coutOrdo').html('Coût des prescriptions : ' + cout.toFixed(2).replace(".", ",") + ' €');
+  } else {
+    $('div.coutOrdo').html('');
+  }
+}
+
+/**
+ * Calculer le coût de la prescription de ce médicament (hors renouv)
+ * @param  {int} totalUnitesPrescrites nombre d'unités prescrites
+ * @param  {string} uniteUtiliseeOrigine  unité utilisée
+ * @param  {float} prixucd               prix par ucd
+ * @param  {array} unitesConversion      tableau de conversion
+ * @return {string}                       prix arrondi à 2 décimales + euro ou nc
+ */
+function calculerCoutMedic(totalUnitesPrescrites, uniteUtiliseeOrigine, prixucd, unitesConversion) {
+  var prix;
+  prixucd = parseFloat(prixucd);
+  if (prixucd > 0) {
+    if (uniteUtiliseeOrigine == 'ucd') {
+      prix = prixucd * totalUnitesPrescrites;
+    } else if (uniteUtiliseeOrigine == 'unite_prescription') {
+      prix = (totalUnitesPrescrites / unitesConversion['nb_up']) * prixucd;
+    } else if (uniteUtiliseeOrigine == 'unite_prise') {
+      prix = (totalUnitesPrescrites / unitesConversion['nb_ups']) * prixucd;
+    } else if (uniteUtiliseeOrigine == 'ua') {
+      prix = (totalUnitesPrescrites / unitesConversion['nb_ua']) * prixucd;
+    }
+    return {
+      texte: prix.toFixed(2).replace(".", ",") + ' €',
+      math: prix.toFixed(2)
+    };
+  } else {
+    return {
+      texte: 'n.c.',
+      math: 0
+    };
+  }
+}
+
+function testIfAldOk(tabList) {
+  for (var k in tabList){
+      if (tabList.hasOwnProperty(k)) {
+           if(tabList[k] == 'o' && $.inArray(k,aldActivesListe) ) {
+             return true;
+           }
+      }
+  }
+  return false;
+}
+
+/**
  * Construire ligne ordonnance
  * @param  {object} data      data de la ligne de prescription
  * @param  {String} [mode=''] [description]
  * @return {[type]}           [description]
  */
 function makeLigneOrdo(data, mode) {
-  console.log(data);
+  console.log('mode : ' + mode);
   if (data.medics.length == 1) {
+
+    coutMedic = calculerCoutMedic(data.medics[0]['totalUnitesPrescrites'], data.medics[0]['uniteUtiliseeOrigine'], data.medics[0]['prixucd'], data.medics[0]['unitesConversion']);
+
     retour = '<div class="well well-sm ui-sortable-handle lignePrescription';
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '" ';
@@ -498,6 +606,11 @@ function makeLigneOrdo(data, mode) {
     }
     if (data.ligneData.isChronique == 'true') {
       retour += '        <span class="label label-default">chronique</span>';
+    }
+    if(testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance') {
+      retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+    } else if (mode == 'editionOrdonnance') {
+      retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
     if (data.medics[0].prescripteurInitialTT) {
@@ -523,7 +636,10 @@ function makeLigneOrdo(data, mode) {
       retour += ' <small> - le ' + data.ligneData.dateDebutPrise + '</small>';
     }
     retour += '      </div>';
-    retour += '      <div>' + nl2br(data.medics[0].posoHumanComplete) + '</div>';
+    retour += '      <div>' + data.medics[0].posoHumanCompleteTab.join('<br>') + '</div>';
+    if (data.ligneData.consignesPrescription) {
+      retour += '      <div class="small">' + nl2br(data.ligneData.consignesPrescription) + '</div>';
+    }
     retour += '    </div>';
     retour += '  <div class="col-md-2 text-right">';
 
@@ -545,7 +661,7 @@ function makeLigneOrdo(data, mode) {
       retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
       retour += '  </button>';
       retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '    <li><a href="#" data-speThe="' + data.medics[0].speThe + '" class="marquerArretEffectifCeJour">Effets indésirables</a></li>';
+      retour += '    <li><a href="#" data-speThe="' + data.medics[0].speThe + '" class="effetsIndesirables">Effets indésirables</a></li>';
       retour += '  </ul>';
       retour += '</div>';
 
@@ -559,6 +675,27 @@ function makeLigneOrdo(data, mode) {
     else if (mode == 'editionOrdonnance') {
       retour += '    <button class="btn btn-default btn-xs editLignePrescription">';
       retour += '      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
+
+
+      retour += '    <div class="btn-group">';
+      retour += '      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+      retour += '        <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>';
+      retour += '        <span class="caret"></span>';
+      retour += '      </button>';
+      retour += '      <ul class="dropdown-menu dropdown-menu-right">';
+      retour += '        <li class="disabled">';
+      retour += '          <a href="#" class="coutMedic" data-cout="' + coutMedic.math + '">Coût estimé : ';
+      retour += coutMedic.texte;
+      retour += '           </a>';
+      retour += '        </li>';
+      retour += '        <li class="disabled">';
+      retour += '          <a href="#">Taux remboursement : ';
+      retour += data.medics[0]['tauxrbt'];
+      retour += '           </a>';
+      retour += '        </li>';
+      retour += '      </ul>';
+      retour += '    </div>';
+
 
       retour += '    <div class="btn-group">';
       retour += '      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
@@ -595,7 +732,11 @@ function makeLigneOrdo(data, mode) {
 
     retour = '<div class="well well-sm lignePrescription';
     if (data.ligneData.isALD == 'true') retour += ' ald ';
-    retour += '">';
+    retour += '"';
+    if (mode == 'TTenCours') {
+      retour += ' data-ligneID="' + data.ligneData.objetID + '"';
+    }
+    retour += '>';
     retour += '  <div class="row" style="margin-bottom: 12px">';
     retour += '    <div class="col-md-11 gras">';
     retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
@@ -706,7 +847,7 @@ function makeLigneOrdo(data, mode) {
         retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
         retour += '  </button>';
         retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-        retour += '    <li><a href="#" data-speThe="' + medic.speThe + '" class="marquerArretEffectifCeJour">Effets indésirables</a></li>';
+        retour += '    <li><a href="#" data-speThe="' + medic.speThe + '" class="effetsIndesirables">Effets indésirables</a></li>';
         retour += '  </ul>';
         retour += '</div>';
       }
@@ -727,7 +868,9 @@ function makeLigneOrdo(data, mode) {
     });
     retour += '</tbody>';
     retour += '</table>';
-
+    if (data.ligneData.consignesPrescription) {
+      retour += '<div class="small">' + nl2br(data.ligneData.consignesPrescription) + '</div>';
+    }
     retour += '</div>';
     retour += '</div>';
   }

@@ -53,7 +53,8 @@ $acceptedModes=array(
     'lapSaveDateEffectiveArretTT',
     'lapOrdoAnalyse', // analyser l'ordo
     'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
-    'lapPresPreGet' // obtenir les prescriptions préétablies
+    'lapPresPreGet', // obtenir les prescriptions préétablies
+    'lapVoirEffetsIndesirables' // voir effets indésirable d'un medic
 );
 
 if (!in_array($m, $acceptedModes)) {

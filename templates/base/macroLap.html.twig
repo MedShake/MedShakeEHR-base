@@ -77,7 +77,7 @@
         {% if m.motifNPS != '' %} : {{ m.motifNPS }}
         {% endif %}]
       {% endif %}
-      <br>{{ m.posoHumanComplete }}
+      <br>{{ m.posoHumanCompleteTab|join('<br>') }}
     </li>
   {% endif %}
 

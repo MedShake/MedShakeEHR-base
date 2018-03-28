@@ -66,7 +66,7 @@
                       <strong>{{ medic.value.nomUtileFinal }}</strong>
                       <small>
                         :
-                        {{ medic.value.posoHumanComplete }}</small>
+                        {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
                       {% if medic.ligneData.isALD == 'true' %}
                         <span class="label label-danger">ald</span>{% endif %}
                       {% if medic.ligneData.isChronique == 'true' %}
@@ -91,7 +91,7 @@
                         <strong>{{ medic.value.nomUtileFinal }}</strong>
                         <small>
                           :
-                          {{ medic.value.posoHumanComplete }}</small>
+                          {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
                         {% if medic.ligneData.isALD == 'true' %}
                           <span class="label label-danger">ald</span>{% endif %}
                         {% if medic.ligneData.isChronique == 'true' %}

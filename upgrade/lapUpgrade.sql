@@ -78,6 +78,8 @@ INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description
 ( 'ordo', 'lapMedicamentPresentationCodeTheriaque', '', 'Code Thériaque de la présentation', 'code Thériaque de la présentation (a priori le CIP7)', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:31:52', 3600, 1),
 ( 'ordo', 'lapMedicamentSpecialiteCodeTheriaque', '', 'Code Thériaque de la spécialité', 'code Thériaque de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:46', 3600, 1),
 ( 'ordo', 'lapMedicamentSpecialiteNom', '', 'Nom de la spécialité', 'nom de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:01', 3600, 1),
+('ordo', 'lapMedicamentCodeSubstanceActive', '', 'Code substance active du médicament', 'code substance active du médicament', '', '', '', '', 'base', @catID, 1, '2018-03-27 13:27:11', 3600, 1);
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatLignePrescription');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

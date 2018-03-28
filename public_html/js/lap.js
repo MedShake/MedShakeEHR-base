@@ -25,7 +25,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-var alerteGrossesseSup46EtAllaitSup3Deja = ''
+var alerteGrossesseSup46EtAllaitSup3Deja = '';
+var aldActivesListe = [];
 
 $(document).ready(function() {
 
@@ -36,9 +37,10 @@ $(document).ready(function() {
   $('#ongletLAP').on("show.bs.tab", function() {
     lapRefreshLateralPatientData();
     if (alerteGrossesseSup46EtAllaitSup3Deja != 'oui') {
-      setTimeout(checkGrossesseSup46EtAllaitSup3,'500');
+      setTimeout(checkGrossesseSup46EtAllaitSup3, '500');
     }
-    voirOrdonnanceMode = '';
+    voirOrdonnanceMode = 'editionOrdonnance';
+    setTimeout(getAldActivesListe, '500');
   });
 
   // Onglet nouvelle ordonnance
@@ -86,6 +88,15 @@ $(document).ready(function() {
     lapRefreshLateralPatientData();
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations infos medic
+
+  $('#tabLAP').on("click", ".effetsIndesirables", function(e) {
+    e.preventDefault();
+    var codeSpe = $(this).attr('data-speThe');
+    lapVoirEffetsIndesirables(codeSpe);
+  });
+
 });
 
 /**
@@ -109,6 +120,21 @@ function lapRefreshLateralPatientData() {
   });
 }
 
+/**
+ * Constituer le tableau des n° d'ALD actives pour le patient
+ * @return {void}
+ */
+function getAldActivesListe() {
+  $.each($('td[data-aldnumber]'), function(index, item) {
+    aldActivesListe.push($(item).attr('data-aldNumber'));
+  });
+  console.log(aldActivesListe);
+}
+
+/**
+ * Générer les alertes grossesse > 46 sa et allaitement > 3 ans
+ * @return {void}
+ */
 function checkGrossesseSup46EtAllaitSup3() {
   console.log('ok');
   var msg = '';
@@ -118,7 +144,35 @@ function checkGrossesseSup46EtAllaitSup3() {
   if (msg.length > 10) {
     msg = "Veuillez noter les informations suivantes : " + msg;
     $('#modalLapAlerte div.modal-body').html(msg);
+    $('#modAlerteImprimer, #modAlerteModifier').hide();
+    $('#modAlerteFermer').show();
     $('#modalLapAlerte').modal('show');
     alerteGrossesseSup46EtAllaitSup3Deja = 'oui'
   }
+}
+
+/**
+ * Voir la modal avec effets indésirables
+ * @param  {int} codeSpe code spécialité
+ * @return {void}
+ */
+function lapVoirEffetsIndesirables(codeSpe) {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapVoirEffetsIndesirables/',
+    type: 'post',
+    data: {
+      codeSpe: codeSpe
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#modalLapInfosMedic h4.modal-title').html(data['titreModal']);
+      $('#modalLapInfosMedic div.modal-body').html(data['html']);
+      $('#modalLapInfosMedic').modal('show');
+    },
+    error: function() {
+      alert('Problème, rechargez la page !');
+
+      $('#modalLapAlerte').modal('show');
+    }
+  });
 }

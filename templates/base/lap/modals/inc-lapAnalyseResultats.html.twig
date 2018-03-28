@@ -230,7 +230,7 @@
         {% endif %}
 
       {% endfor %}
-      {% for alerte in alertes['2'] %}
+      {% for keyLigne, alerte in alertes['2'] %}
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
@@ -249,7 +249,7 @@
         {% endif %}
 
       {% endfor %}
-      {% for alerte in alertes['3'] %}
+      {% for keyLigne, alerte in alertes['3'] %}
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
@@ -268,11 +268,11 @@
         {% endif %}
       {% endfor %}
 
-      {% for alerte in alertes['4'] %}
+      {% for keyLigne, alerte in alertes['4'] %}
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
-              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-target="#texte{{ keyTerrain }}e{{ keyLigne }}">
+              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ee{{ keyLigne }}">
                 <span class="glyphicon glyphicon-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
@@ -281,7 +281,7 @@
           </td>
         </tr>
         {% if alerte.texte %}
-          <tr id="texte{{ keyTerrain }}e{{ keyLigne }}" class="collapse">
+          <tr id="texte{{ keyTerrain }}ee{{ keyLigne }}" class="collapse">
             <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
           </tr>
         {% endif %}

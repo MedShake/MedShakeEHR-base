@@ -164,7 +164,13 @@ $(document).ready(function() {
 
   // envoyer médicament à la zone de prescription
   $('#modalRecherche').on("click", ".sendToPrescription", function(e) {
-    lapInstallPrescription($(this).attr('data-speThe'), $(this).attr('data-presThe'), $('#lapFrappePrescription').val());
+    var tab = {
+      speThe: $(this).attr('data-speThe'),
+      presThe: $(this).attr('data-presThe'),
+      tauxrbt: $(this).attr('data-tauxrbt'),
+      prixucd: $(this).attr('data_prixucd'),
+    };
+    lapInstallPrescription(tab);
   });
 
   // focus sur le champ de recherche
@@ -257,6 +263,17 @@ $(document).ready(function() {
     }
   });
 
+  // consignes : mise à jour à la frappe
+  $('#lapConsignesPrescription').typeWatch({
+    wait: 1000,
+    highlight: false,
+    allowSubmit: true,
+    captureLength: 3,
+    callback: function() {
+      $("#prescriptionHumanConsignes").html(nl2br($('#lapConsignesPrescription').val()));
+    }
+  });
+
   // envoyer prescription à l'ordonnance
   $('#modalRecherche').on("click", "button.sendToOrdonnance", function(e) {
     console.log("Envoyer prescription à ordonnance : START");
@@ -320,6 +337,7 @@ function catchCurrentPrescriptionData() {
 
   // infos sur la ligne
   //ligneData = {};
+  ligneData['consignesPrescription'] = $('#lapConsignesPrescription').val();
   if ($('#prescriptionAldCheckbox').is(':checked')) ligneData['isALD'] = "true";
   else ligneData['isALD'] = "false";
   if ($('#prescriptionChroCheckbox').is(':checked')) ligneData['isChronique'] = "true";
@@ -369,6 +387,11 @@ function sendToOrdonnance() {
   //reset objets
   resetObjets();
 
+  // on réimpose l'analyse avant impression
+  ordoDejaAnalysee = false;
+
+  // on met à jour le coût ordonnance
+  afficherCoutOrdo();
 }
 
 /**
@@ -416,6 +439,12 @@ function sendToLigneOrdonnance() {
 
   //reset objets
   resetObjets();
+
+  // on réimpose l'analyse avant impression
+  ordoDejaAnalysee = false;
+
+  // on met à jour le coût ordonnance
+  afficherCoutOrdo();
 }
 
 /**
@@ -545,6 +574,7 @@ function cleanModalRechercherOngletPrescrire() {
   $('#beginPeriodeID, #endPeriodeID').val('');
   $('#prescripteurInitialTT').val('');
   $('#nbRenouvellements option[value="0"]').prop('selected', true);
+  $('#lapConsignesPrescription, #prescriptionHumanConsignes').show();
 }
 
 
@@ -555,7 +585,7 @@ function cleanModalRechercherOngletPrescrire() {
  * @param  {string} txtPrescription texte de prescription
  * @return {void}
  */
-function lapInstallPrescription(speThe, presThe, txtPrescription) {
+function lapInstallPrescription(tab) {
 
   console.log("Installation d'une nouvelle prescription d'un médic dans la modal : START");
 
@@ -563,9 +593,10 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
     url: urlBase + '/lap/ajax/lapInstallPrescription/',
     type: 'post',
     data: {
-      txtPrescription: txtPrescription,
-      speThe: speThe,
-      presThe: presThe,
+      speThe: tab.speThe,
+      presThe: tab.presThe,
+      tauxrbt: tab.tauxrbt,
+      prixucd: tab.prixucd,
       ligneCouranteIndex: ligneCouranteIndex
     },
     dataType: "json",
@@ -575,7 +606,7 @@ function lapInstallPrescription(speThe, presThe, txtPrescription) {
       medicData = data;
 
       // ménage préalable au cas ou ...
-      // cleanModalRechercherOngletPrescrire();
+      cleanModalRechercherOngletPrescrire();
       cleanModalRechercherOngletPosologies();
 
       // si contexte d'ajout de médicament à une ligne
@@ -660,6 +691,7 @@ function prepareModalPrescription() {
       $('#prescriptionAlertMultimedic').show();
       $('.prescriptionChampsDuree').hide();
       $("#prescriptionChroCheckbox, #voieUtilisee").attr('disabled', 'disabled');
+      $('#lapConsignesPrescription, #prescriptionHumanConsignes').hide();
     }
     $('#prescriremedicTab').parent('li').show();
     $('#prescriremedicTab').tab('show');
@@ -708,6 +740,10 @@ function editPrescription(ordoZone, index) {
 
   //placer la prescription
   $('#lapFrappePrescription').val(medicData.prescriptionMachinePoso);
+
+  //placer les consignes
+  $('#lapConsignesPrescription').val(ligneData.consignesPrescription);
+  $("#prescriptionHumanConsignes").html(nl2br($('#lapConsignesPrescription').val()));
 
   //placer le motif de presciption
   $('#prescriptionMotif').val(medicData.prescriptionMotif);
@@ -791,11 +827,11 @@ function matchAndGo() {
         // remonté dans medicData
         medicData['posoFrappeeNbDelignes'] = data['posoFrappeeNbDelignes'];
         medicData['posoFrappeeNbDelignesPosologiques'] = data['posoFrappeeNbDelignesPosologiques'];
-        medicData['posoHumanComplete'] = data['posoHumanComplete'];
+        //medicData['posoHumanComplete'] = data['posoHumanComplete'];
         medicData['posoHumanBase'] = data['posoHumanBase'];
         medicData['posoHumanCompleteTab'] = data['posoHumanCompleteTab'];
-        medicData['posoJournaliereMax'] = data['posoJournaliereMax'];
-        medicData['posoMaxParPrise'] = data['posoMaxParPriseMax'];
+        //medicData['posoJournaliereMax'] = data['posoJournaliereMax'];
+        //medicData['posoMaxParPrise'] = data['posoMaxParPriseMax'];
         medicData['posoMinParPrise'] = data['posoMinParPriseMin'];
         medicData['versionInterpreteur'] = data['versionInterpreteur'];
 
@@ -807,13 +843,14 @@ function matchAndGo() {
         medicData['nbPrisesParUniteTemps'] = data['nbPrisesParUniteTemps'];
         medicData['nbPrisesParUniteTempsUnite'] = data['nbPrisesParUniteTempsUnite'];
         medicData['posoJours'] = data['posoJours'];
+        medicData['totalUnitesPrescrites'] = data['totalUnitesPrescrites'];
 
         // actions visuelle
         $('#prescriptionHumanMedicName').html(medicData.nomUtileFinal);
         if (medicData.motifNPS) insertMotif = ' - ' + medicData.motifNPS;
         else insertMotif = '';
         if (medicData.isNPS == 'true') $('#prescriptionHumanMedicName').append(' [non substituable' + insertMotif + ']');
-        $('#prescriptionHumanPoso').html(nl2br(data['posoHumanComplete']));
+        $('#prescriptionHumanPoso').html(data['posoHumanCompleteTab'].join('<br>'));
         $('#prescriptionHumanRecap').html(data['voieUtilisee']);
         if (data['posoFrappeeNbDelignes'] > 1) $('#prescriptionHumanRecap').append(' - Durée totale : ' + data['dureeTotaleHuman']);
         if (data['nbRenouvellements'] > 0) $('#prescriptionHumanRecap').append(' - À renouveller ' + data['nbRenouvellements'] + ' fois');
@@ -869,16 +906,19 @@ function matchLigne(index, ligne) {
   // 1-1-1 6j|s|m jp|ji texte de traine
   regExp[0] = /^(et|puis)?\s*([0-9\/,\.+]+) ([0-9\/,\.+]+) ([0-9\/,\.+]+)(?: ([0-9\/,\.+]+))?(?: ([lmMjvsdip]*))? (?:([0-9]+)(j|s|m))?(.*)/i;
   // 1 6xh|j|s|m 6h|j|s|m jp|ji
-  regExp[1] = /^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(h|j|s|m))?(.*)/i;
+  regExp[1] = /^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)x(i|h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(i|h|j|s|m))?(.*)/i;
   // posologie inconnue
   regExp[2] = /^(nc|\?) (?:([0-9]+)(j|s|m))/i;
-
+  // x truc toutes les c durée pedant durée
+  regExp[3] = /^(et|puis)?\s*([0-9\/,\.]+) ([0-9]+)(i|h|j|s|m){1}(?: ([lmMjvsdip]*))? (?:([0-9]+)(i|h|j|s|m))?(.*)/i;
 
   if (m = regExp[0].exec(ligne)) {
     return true;
   } else if (m = regExp[1].exec(ligne)) {
     return true;
   } else if (m = regExp[2].exec(ligne)) {
+     return true;
+  } else if (m = regExp[3].exec(ligne)) {
      return true;
   }
   return false;

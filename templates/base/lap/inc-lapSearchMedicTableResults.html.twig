@@ -45,14 +45,14 @@
         {% for medic in page.medicListeSpe %}
           {% for pres in medic.presentations %}
 
-              <tr class="sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" style="cursor: pointer">
+              <tr class="sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
                 <td>
                   <button type="button" class="btn btn-primary btn-xs" >
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </td>
                 <td>
-                  {{ medic.sp_nom }}
+                  {{ medic.sp_nom|trim('§') }}
                   {% if pres.pre_adm %}
                     -
                     {{ pres.pre_adm }}

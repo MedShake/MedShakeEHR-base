@@ -21,34 +21,27 @@
  */
 
 /**
- * Print : fabriquer le PDF, le sauver et l'afficher
+ * LAP : ajax > voir effets indésirables d'un medic
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+$debug='';
+//$template='inc-lapSearchMedicTableResults';
 
-$pdf= new msPDF();
+$lap = new msLap;
+$p['page']['spe']=$lap->getSpecialiteByCode($_POST['codeSpe'], 1, 3)[0];
+$p['page']['eiCli']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],1),'texteffet');
+$p['page']['eiParaCli']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],2),'texteffet');
+$p['page']['eiCliSd']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],3),'texteffet');
+$p['page']['eiParaCliSd']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],4),'texteffet');
 
-$pdf->setFromID($p['user']['id']);
-$pdf->setToID($match['params']['patient']);
-$pdf->setType($match['params']['printType']);
+sort($p['page']['eiCli']);
 
-if (isset($_POST['lapPrintExigences'])) {
-    $pdf->setLapPrintExigences($_POST['lapPrintExigences']);
-}
+$html = new msGetHtml;
+$html->set_template('inc-lapInfosMedicEI');
+$html = $html->genererHtmlString($p);
 
-if (isset($_POST['courrierBody'])) {
-    $pdf->setBodyFromPost($_POST['courrierBody']);
-}
-if (isset($match['params']['modele'])) {
-    $pdf->setModeleID($match['params']['modele']);
-}
-if (isset($match['params']['instance'])) {
-    $pdf->setInstanceID($match['params']['instance']);
-}
-if (isset($match['params']['examen'])) {
-    $pdf->setObjetID($match['params']['examen']);
-}
-
-$pdf->makePDF();
-$pdf->savePDF();
-$pdf->showPDF();
+echo json_encode(array(
+  'html'=>$html,
+  'titreModal'=>$p['page']['spe']['sp_nomlong']
+));

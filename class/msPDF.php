@@ -54,6 +54,8 @@ class msPDF
     private $_pageHeader;
     /** @var string footer du pdf */
     private $_pageFooter;
+    /** @var string lap : exigences spécifiques */
+    private $_lapPrintExigences;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -134,6 +136,15 @@ class msPDF
     public function setPageFooter($v)
     {
         return $this->_pageFooter = $v;
+    }
+
+/**
+ * Définir des exigences pour l'impression via LAP.
+ * @param string $v HTML du footer
+ */
+    public function setLapPrintExigences($v)
+    {
+        return $this->_lapPrintExigences = $v;
     }
 
 /**
@@ -342,7 +353,10 @@ class msPDF
                 if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
                 $p['page']['courrier']['medoc']['ald'][$k].= ']';
               }
-              $p['page']['courrier']['medoc']['ald'][$k].= "\n".$m['posoHumanComplete']."\n";
+              $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            }
+            if(!empty(trim($l['ligneData']['consignesPrescription']))) {
+              $p['page']['courrier']['medoc']['ald'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
@@ -353,7 +367,10 @@ class msPDF
               if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
               $p['page']['courrier']['medoc']['ald'][$k].= ']';
             }
-            $p['page']['courrier']['medoc']['ald'][$k].= "\n".$m['posoHumanComplete']."\n";
+            $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            if(!empty(trim($l['ligneData']['consignesPrescription']))) {
+              $p['page']['courrier']['medoc']['ald'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+            }
           }
         }
       }
@@ -369,7 +386,10 @@ class msPDF
                 if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
                 $p['page']['courrier']['medoc']['standard'][$k].= ']';
               }
-              $p['page']['courrier']['medoc']['standard'][$k].= "\n".$m['posoHumanComplete']."\n";
+              $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            }
+            if(!empty(trim($l['ligneData']['consignesPrescription']))) {
+              $p['page']['courrier']['medoc']['standard'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
@@ -380,7 +400,10 @@ class msPDF
               if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
               $p['page']['courrier']['medoc']['standard'][$k].= ']';
             }
-            $p['page']['courrier']['medoc']['standard'][$k].= "\n".$m['posoHumanComplete']."\n";
+            $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            if(!empty(trim($l['ligneData']['consignesPrescription']))) {
+              $p['page']['courrier']['medoc']['standard'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+            }
           }
         }
       }
@@ -518,6 +541,10 @@ class msPDF
     public function makeWithTwig($template)
     {
         global $p;
+
+        if(isset($this->_lapPrintExigences)) {
+          $p['page']['lapPrintExigences']=$this->_lapPrintExigences;
+        }
 
         // les variables d'environnement twig
         if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;

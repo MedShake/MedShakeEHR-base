@@ -51,7 +51,7 @@
             {{ page.ligne.medics.0.dureeTotaleHuman }}
           {% endif %}
         </div>
-        <div>{{ page.ligne.medics.0.posoHumanComplete }}</div>
+        <div>{{ page.ligne.medics.0.posoHumanCompleteTab|join('<br>') }}</div>
       </div>
 
       <div class="col-md-4">
@@ -162,7 +162,7 @@
                   <span class="label label-default">chronique</span>
                 {% endif %}
               </div>
-              <div>{{ medic.posoHumanComplete }}</div>
+              <div>{{ medic.posoHumanCompleteTab|join('<br>') }}</div>
             </td>
 
             <td class="col-md-4">

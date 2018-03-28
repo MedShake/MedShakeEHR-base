@@ -27,7 +27,8 @@
  */
 header('Content-Type: application/json');
 $lappres=new msLapPrescription;
-$lappres->setTxtPrescription($_POST['txtPrescription']);
 $lappres->setSpeThe($_POST['speThe']);
 $lappres->setPresThe($_POST['presThe']);
+$lappres->setTauxRbt($_POST['tauxrbt']);
+$lappres->setPrixUcd($_POST['prixucd']);
 echo json_encode($lappres->lapInstallPrescription());
