@@ -26,9 +26,15 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+header('Content-Type: application/json');
+
 $patient=new msPeople();
 $patient->setToID($_POST['patientID']);
 $patientData=$patient->getSimpleAdminDatasByName();
+
+if ($patientData['birthdate']=='') {
+    exit("Erreur: La date de naissance du patient n'est pas renseignée.");
+}
 $naissance=DateTime::createFromFormat('d/m/Y', $patientData['birthdate']);
 
 $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
@@ -37,7 +43,6 @@ $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
   WHERE dt.groupe='medical' AND od.instance='0'
   ORDER BY od.registerDate ASC");
 
-header('Content-Type: application/json');
 
 if (!is_array($dataBrutes)) {
     exit("ok");

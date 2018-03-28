@@ -90,8 +90,8 @@ h2 {margin-top:0.25em;margin-bottom:0.5em}
 label {margin-left:0.5rem;margin-right:0.5rem}
 .btn-group {margin:0}
 .input-group {margin:0.25em}
-.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:#fff;border-color:#bbb}
-.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
+.btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:#fff;border-color:#bbb}
+.btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
 a {color:#337ab7}
 a.btn {color:#000;}
 .btn.btn-sm {min-width:34px;height:31px;padding-top:5px}

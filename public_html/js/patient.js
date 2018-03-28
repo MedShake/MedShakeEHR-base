@@ -400,6 +400,8 @@ $(document).ready(function() {
       success: function(data) {
         if (data == 'ok')
           return;
+        else if (data.substr(0,7)=='Erreur:')
+          return alert_popup('danger', data.substr(8));
         data = JSON.parse(data);
         for (var i in data)
           if (i != 'bornes')
@@ -441,11 +443,26 @@ $(document).ready(function() {
   ///////// Changer la date de création d'une ligne d'historique
 
   // datepicker bootstrap
-  $('#datepickHisto').datetimepicker({
-    locale: 'fr',
-    format: 'Y-MM-DD HH:mm:ss',
-    sideBySide: true
-  });
+    $('#datepickHisto')
+      .on("click", function(){
+        $(this).data("DateTimePicker").toggle();
+      })
+      .datetimepicker({
+        locale: 'fr',
+        format: 'Y-MM-DD HH:mm:ss',
+        sideBySide: true,
+        icons: {
+          time: 'far fa-clock',
+          date: 'fa fa-calendar',
+          up: 'fa fa-chevron-up',
+          down: 'fa fa-chevron-down',
+          previous: 'fa fa-chevron-left',
+          next: 'fa fa-chevron-right',
+          today: 'fa fa-crosshairs',
+          clear: 'fa fa-trash',
+          close: 'fa fa-times'
+        } 
+      });
 
   $("body").on("click", ".changeCreationDate", function(e) {
     e.preventDefault();

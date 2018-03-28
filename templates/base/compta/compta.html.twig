@@ -191,7 +191,7 @@
                             <td>
                                 {% if reg.regleFacture - reg.dejaPaye > 0 %}
                                 {% set apayer = reg.regleFacture - reg.dejaPaye %}
-                                  <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }} }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                                  <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                                     Saisir règlement
                                   </button>
                                 {% endif %}
@@ -271,47 +271,53 @@
 		        <input title=" / " name="page" value="compta" type="hidden">
 		        <input title=" / " name="formIN" value="" type="hidden">
 		        <input title=" / " name="patientID" value="" type="hidden">
-		        <input title=" / " name="objetID" value="" type="hidden">
 		        <input title=" / " name="module" value="" type="hidden">
 		        <input title=" / " name="porteur" value="" type="hidden">
+		        <input title=" / " name="objetID" value="" type="hidden">
 		        <input title=" / " name="apayer" value="" type="hidden">
 		        <input title=" / " name="dejaCheque" value="" type="hidden">
 		        <input title=" / " name="dejaCB" value="" type="hidden">
 		        <input title=" / " name="dejaEspeces" value="" type="hidden">
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label" for="id_regleCheque_id">Chèque
                   </label>
                   <div class="input-group">
                     <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
-                    <span class="input-group-append" id="id_regleCheque_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label" for="id_regleCB_id">CB
                   </label>
                   <div class="input-group">
                     <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
-                    <span class="input-group-append" id="id_regleCB_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label" for="id_regleEspeces_id">Espèces
                   </label>
                   <div class="input-group">
                     <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
-                    <span class="input-group-append" id="id_regleEspeces_idAddOn">€</span>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-md-12">
                 <div class="form-group">
                   <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
                   </label>

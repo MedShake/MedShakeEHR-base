@@ -82,8 +82,8 @@ $(document).ready(function() {
   //// datepicker bootstrap
   $("body").on("click", 'div.datepick', function() {
     var $div=$(this).closest("div.datepick");
-    var viewMode = $div.hasClass("pick-years")?'years':($div.hasClass("pick-months")?'months':'days');
-    viewMode = $div.find("input").hasClass("pick-years")?'years':($div.find("input").hasClass("pick-months")?'months':viewMode);
+    var viewMode = $div.hasClass("pick-year")?'years':($div.hasClass("pick-month")?'months':'days');
+    viewMode = $div.find("input").hasClass("pick-year")?'years':($div.find("input").hasClass("pick-month")?'months':viewMode);
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: viewMode,
