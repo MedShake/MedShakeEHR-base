@@ -34,6 +34,7 @@ if (!isset($delegate)) {
       $reglementForm=$_POST['reglementForm'];
       $porteur=$_POST['porteur'];
       $userID=$p['user']['id'];
+      $module=$_POST['module'];
   } else {
       $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
         LEFT JOIN objets_data as od ON dt.id=od.typeID
@@ -41,11 +42,12 @@ if (!isset($delegate)) {
       $reglementForm=$res[0]['form'];
       $porteur=$res[0]['porteur'];
       $userID=$res[0]['userID'];
+      $module=$res[0]['module'];
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if ($reglementForm!='baseReglement') {
-      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractReglementForm.php';
-      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
+      if ($module!='' and $module!='base' and is_file($hook)) {
           include $hook;
       }
       if (!isset($delegate)) {
@@ -65,7 +67,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
   from actes as a
   left join actes_cat as c on c.id=a.cat
-  where a.toID in ('0','".$userID."') and c.module='".$_POST['module']."'
+  where a.toID in ('0','".$userID."') and c.module='".$module."'
   group by a.id
   order by c.displayOrder, c.label asc, a.label asc")) {
     foreach ($tabTypes as $k=>$v) {
@@ -100,7 +102,7 @@ $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 $p['page']['form']['addHidden']=array(
   'porteur'=>$porteur,
   'reglementForm'=>$reglementForm,
-  'module'=>$_POST['module'],
+  'module'=>$module,
   'patientID'=>$_POST['patientID'],
   'acteID'=>$p['page']['formActes']['prevalue'],
 );
