@@ -179,7 +179,8 @@ $(document).ready(function() {
   //enregistrement de forms en ajax
   $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
-    var stop=false;
+    var reload = $(this).closest("form").hasClass('reload');
+    var stop = false;
     $(this).closest("form").find('input[required],textarea[required]').each(function(idx, el) {
       if (el.value==''){
         glow('danger', $(el));
@@ -196,12 +197,22 @@ $(document).ready(function() {
       data: $(this).parents("form").serialize(),
       dataType: "json",
       success: function(data) {
-        alert_popup("success", "Opération validée");
+        if (reload)
+          window.location.reload();
+        else
+          alert_popup("success", "Opération validée");
       },
       error: function() {
         alert_popup("danger", "Une erreur s'est produite durant l'opération");
       }
     });
+  });
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// page SpecificUserParam
+  $('select[name=paramCat]').on('click', function(){
+    $('.paramselect').hide();
+    $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
   });
 
   ////////////////////////////////////////////////////////////////////////

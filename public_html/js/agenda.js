@@ -293,10 +293,13 @@ $(document).ready(function() {
           closePeriod();
           selected_period = undefined;
         }
+        else
+          $('#calendar').fullCalendar('unselect');
       }
     },
     unselect: function(jsEvent, view) {
-      jsEvent.stopImmediatePropagation();
+      if (jsEvent)
+        jsEvent.stopImmediatePropagation();
       $(".fc-event").popover('hide');
     },
     navLinks: true,

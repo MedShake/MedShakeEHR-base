@@ -96,11 +96,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
         msTools::redirection('/maintenance.html');
     }
-    if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
-        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
-    }
     if (isset($p['user']['id'])) {
-        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+//        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        msConfiguration::getAllParametersForUser($p['user']);
     }
 } else {
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {

@@ -138,6 +138,7 @@ class msUser
  * @param  int   $userID userID
  * @return void
  */
+/*
     public static function applySpecificConfig(&$config, $userID)
     {
         $data = new msPeople();
@@ -152,7 +153,7 @@ class msUser
             }
         }
     }
-
+*/
 /**
  * Vérifier le login utilisateur
  * @param  int $userID userID

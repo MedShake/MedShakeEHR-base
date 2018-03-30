@@ -332,6 +332,11 @@ $(document).ready(function() {
     });
   });
 
+  //forcer le rechargement de la page sur modif du yaml agenda
+  $(".reload-on-mod").on("keyup", function(){
+    $(this).closest("form").addClass('reload');
+  });
+
   //Révoquer un utilisateur dans la page liste des utilisateurs
   $(".revokeUser").on("click", function(e){
     e.preventDefault();

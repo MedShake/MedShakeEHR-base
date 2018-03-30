@@ -27,38 +27,41 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $debug='';
-     $template='configSpecificUserParam';
-     $data = new msPeople();
-     $data->setToID($match['params']['userID']);
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+    $template="forbidden";
+    return;
+}
+$debug='';
+$template='configSpecificUserParam';
 
-     $p['page']['userID']=$match['params']['userID'];
+$p['page']['userID']=$match['params']['userID'];
+$prat=new msPeople();
+$prat->setToID($p['page']['userID']);
+$p['page']['userData']=$prat->getSimpleAdminDatas();
+$module=$prat->getModule();
 
-     $p['page']['userData']=$data->getSimpleAdminDatas();
+if($data=msConfiguration::getUserParamatersForUser($p['page']['userID'])) {
+    foreach($data as $k=>$v) {
+        if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
+            $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
+            unset($v['formValues'][$p['page']['userID']]);
+            if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
+                $v['formValues']['0']='';
+                ksort($v['formValues']);
+            }
+                if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
+                $v['value']=explode(',', $v['value']);
+            }
+        } elseif ($v['type']=='password') {
+            $v['value']=str_repeat('*',strlen($v['value']));
+        }
+        $p['page']['userParams'][$v['cat']][]=$v;
+    }
+}
 
-     if($data=$data->getPeopleDataFromDataTypeGroupe('user', ['dt.*', 'od.value as userVal'])) {
-       foreach($data as $v) {
-         if (array_key_exists('name', $v) and ($v['name'] =='agendaNumberForPatientsOfTheDay' or $v['name'] == 'administratifComptaPeutVoirRecettesDe')) {
-             $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
-             unset($v['formValues'][$p['page']['userID']]);
-             if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
-                 $v['formValues']['0']='';
-                 ksort($v['formValues']);
-             }
-             if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
-                 $v['userVal']=explode(',', $v['userVal']);
-             }
-         }
-         $p['page']['userParams'][$v['cat']][]=$v;
-       }
-     }
+$p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
+$p['page']['availableCats']=array_unique(array_column($p['page']['availableParams'], 'cat'));
 
-     $p['page']['configDefaut']=$p['configDefaut'];
+$p['page']['configDefaut']=$p['configDefaut'];
 
-     // liste des catégories
-     if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='user' order by label", 'id', 'label'));
- }

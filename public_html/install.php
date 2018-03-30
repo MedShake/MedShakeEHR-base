@@ -27,6 +27,7 @@
  */
 
 $webpath=str_replace('/install.php','',$_SERVER['REQUEST_URI']);
+$webdir=getcwd();
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
@@ -43,7 +44,7 @@ if (!is_dir($homepath."vendor")) {
     die("L'installation de MedShakeEHR ne semble pas complète, veuillez installer COMPOSER (<a href='https://getcomposer.org'>https://getcomposer.org</a>)<br>Tapez ensuite <code>composer update</code> en ligne de commande dans le répertoire d'installation de MedShakeEHR.");
 }
 if (!is_dir("thirdparty")) {
-    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier ".getcwd());
+    die("L'installation de MedShakeEHR ne semble pas complète, veuillez lancer <code>composer.phar install</code> dans le dossier ".$webdir);
 }
 if (!is_writable($homepath."config")) {
   die("Le répertoire ".$homepath."config n'est pas accessible en écriture pour le script d'installation. Corrigez ce problème avant de continuer.");
@@ -96,10 +97,10 @@ if (!is_file($homepath.'config/config.yml')) {
           'protocol'=>'http'.($_SERVER['HTTPS']?'s':'').'://',
           'host'=>$_SERVER['SERVER_NAME'].(in_array($_SERVER['SERVER_PORT'],['80','443'])?'':':'.$_SERVER['SERVER_PORT']),
           'urlHostSuffixe'=>substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'],'/install.php')),
-          'webDirectory'=>getcwd().'/',
+          'webDirectory'=>$webdir.'/',
           'stockageLocation'=>$_POST['stockageLocation'],
           'backupLocation'=>$_POST['backupLocation'],
-          'workingDirectory'=>getcwd().'/workingDirectory/',
+          'workingDirectory'=>$webdir.'/workingDirectory/',
           'cookieDomain'=>$_SERVER['SERVER_NAME'],
           'cookieDuration'=>31104000,
           'fingerprint'=>$_POST['fingerprint'],
@@ -108,73 +109,6 @@ if (!is_file($homepath.'config/config.yml')) {
           'sqlUser'=>$_POST['sqlUser'],
           'sqlPass'=>$_POST['sqlPass'],
           'sqlVarPassword'=>$_POST['sqlVarPassword'],
-          'PraticienPeutEtrePatient'=>true,
-          'VoirRouletteObstetricale'=>true,
-          'administratifSecteurHonoraires'=>1,
-          'administratifPeutAvoirFacturesTypes'=>'false',
-          'administratifPeutAvoirPrescriptionsTypes'=>'false',
-          'administratifPeutAvoirAgenda'=>'true',
-          'administratifPeutAvoirRecettes'=>'true',
-          'administratifComptaPeutVoirRecettesDe'=>'',
-          'templatesPdfFolder'=>$homepath.'templates/models4print/',
-          'templateDefautPage'=>'base-page-headAndFoot.html.twig',
-          'templateOrdoHeadAndFoot'=>'base-page-headAndFoot.html.twig',
-          'templateOrdoBody'=>'ordonnanceBody.html.twig',
-          'templateOrdoALD'=>'ordonnanceALD.html.twig',
-          'templateCrHeadAndFoot'=>'base-page-headAndNoFoot.html.twig',
-          'templateCourrierHeadAndFoot'=>'base-page-headAndNoFoot.html.twig',
-          'smtpTracking'=>'',
-          'smtpFrom'=>'user@domain.net',
-          'smtpFromName'=>'',
-          'smtpHost'=>'',
-          'smtpPort'=>587,
-          'smtpSecureType'=>'tls',
-          'smtpOptions'=>'off',
-          'smtpUsername'=>'smtpuserlogin',
-          'smtpPassword'=>'smtppassword',
-          'smtpDefautSujet'=>'Document vous concernant',
-          'apicryptCheminInbox'=>getcwd().'/inbox/',
-          'apicryptCheminArchivesInbox'=>getcwd().'/inboxArchives/',
-          'apicryptInboxMailForUserID'=>'0',
-          'apicryptCheminFichierNC'=>getcwd().'/workingDirectory/NC/',
-          'apicryptCheminFichierC'=>getcwd().'/workingDirectory/C/',
-          'apicryptCheminVersClefs'=>$homepath.'apicrypt/',
-          'apicryptCheminVersBinaires'=>$homepath.'apicrypt/bin/',
-          'apicryptUtilisateur'=>'prenom.NOM',
-          'apicryptAdresse'=>'prenom.NOM@medicalXX.apicrypt.org',
-          'apicryptSmtpHost'=>'',
-          'apicryptSmtpPort'=>'25',
-          'apicryptPopHost'=>'',
-          'apicryptPopPort'=>'110',
-          'apicryptPopUser'=>'prenom.NOM',
-          'apicryptPopPass'=>'passwordapicrypt',
-          'apicryptDefautSujet'=>'Document concernant votre patient',
-          'faxService'=>'',
-          'ecofaxMyNumber'=>'0900000000',
-          'ecofaxPass'=>'password',
-          'dicomHost'=>'',
-          'dicomPrefixIdPatient'=>'1.100.100',
-          'dicomWorkListDirectory'=>getcwd().'/workingDirectory/',
-          'dicomWorkingDirectory'=>getcwd().'/workingDirectory/',
-          'dicomAutoSendPatient2Echo'=>'false',
-          'dicomDiscoverNewTags'=>'true',
-          'phonecaptureFingerprint'=>'phonecapture',
-          'phonecaptureCookieDuration'=>31104000,
-          'phonecaptureResolutionWidth'=>1920,
-          'phonecaptureResolutionHeight'=>1080,
-          'agendaService'=>'',
-          'agendaDistantLink'=>'',
-          'agendaDistantPatientsOfTheDay'=>'',
-          'agendaLocalPatientsOfTheDay'=>'patientsOfTheDay.json',
-          'agendaNumberForPatientsOfTheDay'=>0,
-          'mailRappelLogCampaignDirectory'=>getcwd().'/mailsRappelRdvArchives/',
-          'mailRappelDaysBeforeRDV'=>'3',
-          'smsProvider'=>'',
-          'smsLogCampaignDirectory'=>getcwd().'/smsArchives/',
-          'smsDaysBeforeRDV'=>'3',
-          'smsCreditsFile'=>'creditsSMS.txt',
-          'smsSeuilCreditsAlerte'=>'150',
-          'smsTpoa'=>'Dr ....',
           'templatesFolder'=>$homepath.'templates/',
           'twigEnvironnementCache'=>false,
           'twigEnvironnementAutoescape'=>false
@@ -209,12 +143,27 @@ if (!is_file($homepath.'config/config.yml')) {
 
         if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/base/sqlInstall.sql');
+            msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
+            ('mailRappelLogCampaignDirectory', 'default', '".$webdir."'/mailsRappelRdvArchives/'),
+            ('smsLogCampaignDirectory', 'default', '".$webdir."/smsArchives/'),
+            ('apicryptCheminInbox', 'default', '".$webdir."/inbox/'),
+            ('apicryptCheminArchivesInbox', 'default', '".$webdir."/inboxArchives/'),
+            ('apicryptCheminFichierNC', 'default', '".$webdir."/workingDirectory/NC/'),
+            ('apicryptCheminFichierC', 'default', '".$webdir."/workingDirectory/C/'),
+            ('apicryptCheminVersClefs', 'default', '".$homepath."apicrypt/'),
+            ('apicryptCheminVersBinaires', 'default', '".$homepath."apicrypt/bin/'),
+            ('dicomWorkListDirectory', 'default', '".$webdir."/workingDirectory/'),
+            ('dicomWorkingDirectory', 'default', '".$webdir."/workingDirectory/'),
+            ('templatesPdfFolder', 'default', '".$homepath."templates/models4print/')
+            ON DUPLICATE KEY UPDATE value=VALUES(value)");
+
             $modules=scandir($homepath.'upgrade/');
             foreach ($modules as $module) {
                 if ($module!='.' and $module!='..') {
                     exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/'.$module.'/sqlInstall.sql');
                 }
             }
+
             msTools::redirRoute('firstLogin');
         }
     }

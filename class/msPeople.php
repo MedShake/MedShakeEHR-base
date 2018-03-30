@@ -126,6 +126,20 @@ class msPeople
         }
         return msSQL::sqlUniqueChamp("SELECT type='externe' FROM people WHERE id='".$this->_toID."' limit 1")==1;
     }
+
+/**
+ * Obtenir le module pour un user
+ * @return value module
+ */
+    public function getModule() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        return msSQL::sqlUniqueChamp("SELECT module FROM people WHERE id='".$this->_toID."' limit 1");
+    }
+
+
+
 /**
  * Obtenir les données administratives d'un individu (version complète)
  * @return array Array avec en clef le typeID

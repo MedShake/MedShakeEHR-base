@@ -47,9 +47,9 @@
         <table class="table table-sm mb-0 table-hover table-striped" style="min-width:870px">
           <thead>
             <tr>
-              <th>Patiente</th>
+              <th>Patient</th>
               {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
-              <th>CMU / TP ?</th>
+              {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
               <th>Montant des actes</th>
               <th>Déjà réglé</th>
               <th>Reste à régler</th>
@@ -71,9 +71,13 @@
                     {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
                   </td>
                 {% endif %}
-                <td>
-                  {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
-                </td>
+                {% if page.secteur %}
+                  <td>
+                    {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
+                  </td>
+                {% else %}
+                  <td style="width:0"></td>
+                {% endif %}
                 <td>
                   <button type="button" class="btn btn-default  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
                     <span class="fa fa-question-circle" aria-hidden="true"></span>
@@ -109,7 +113,7 @@
             <tr>
               <th>Patiente</th>
               {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
-              <th>CMU / TP ?</th>
+              {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
               <th>Montant à régler</th>
               <th>Payé</th>
               <th>Mode</th>

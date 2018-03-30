@@ -97,6 +97,7 @@ fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendTo
 
 #compta
 comptaActions: ['POST', '/compta/actions/[a:m]/', 'compta/actions/comptaActions']
+comptaAjax: ['POST', '/compta/ajax/[a:m]/', 'compta/actions/comptaAjax']
 comptaToday: ['GET|POST', '/compta/aujourdhui/', 'compta/today']
 compta: ['GET|POST', '/compta/', 'compta/compta']
 comptaMemoTarif: ['GET', '/compta/memo-tarifs/[i:user]?/', 'compta/comptaMemoTarifs']

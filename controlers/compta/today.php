@@ -49,6 +49,8 @@ $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as pren
  left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
+$p['page']['secteur']=msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='administratifSecteurHonoraires' AND level='default'");
+
 //sortir les reglements du jour
 if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
   CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')

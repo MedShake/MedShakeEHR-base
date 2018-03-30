@@ -62,94 +62,89 @@
   {% endif %}</h1>
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
+    <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
     <div class="row">
       <ul class="nav nav-pills flex-column col-md-2">
         {% for k,v in page.userParams %}
           <li class="nav-item" role="presentation">
-            <a class="nav-link{% if loop.first %} active{% endif %}" href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ page['catList'][k] }}</a>
+            <a class="nav-link{% if loop.first %} active{% endif %}" href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ k }}</a>
           </li>
         {% endfor %}
       </ul>
       <div class="col-md-10 tab-content">
       {% for k,v in page.userParams %}
-        <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
-          <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
-            <thead>
-              <tr>
-                <th>Paramètre</th>
-                <th>Valeur défaut</th>
-                <th>Valeur utilisateur</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for w in v %}
+        <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
+          <div class="col-12">
+            <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>
+          </div>
+          <div class="col-12 mt-4">
+            <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
+              <thead>
                 <tr>
-                  <td>{{ w.name }}</td>
-                  <td>{{ page['configDefaut'][w.name] }}</td>
-                  <td>
-                    {% if w.name == 'agendaNumberForPatientsOfTheDay' %}
-                      {{ f.select ({
-                        'select' : {
-                          'type' : w.formType,
-                          'name' : 'p_' ~ w.id,
-                          'id' : w.name ~ 'ID',
-                          'placeholder' : w.placeholder,
-                          'class' : 'form-control',
-                          'values' : w.formValues,
-                          'valueDefaut' : w.userVal,
-                          'autocomplete' : 'off'
-                        }
-                      }) }}
-                    {% elseif w.name == 'administratifComptaPeutVoirRecettesDe' %}
-                      {{ f.selectMultiple ({
-                        'select' : {
-                          'type' : w.formType,
-                          'name' : 'p_' ~ w.id,
-                          'id' : w.name ~ 'ID',
-                          'placeholder' : w.placeholder,
-                          'class' : 'form-control',
-                          'values' : w.formValues,
-                          'valueDefaut' : w.userVal,
-                          'autocomplete' : 'off'
-                        }
-                      }) }}
-                    {% else %}
-                      {{ f.input ({
-                        'input' : {
-                          'type' : w.formType,
-                          'name' : 'p_' ~ w.id,
-                          'id' : w.name ~ 'ID',
-                          'placeholder' : w.placeholder,
-                          'class' : 'form-control',
-                          'value' : w.userVal,
-                          'autocomplete' : 'off'
-                        }
-                      }) }}
-                    {% endif %}
-                  </td>
-                  <td>{{ w.description }}</td>
+                  <th>Paramètre</th>
+                  <th>Valeur défaut</th>
+                  <th>Valeur utilisateur</th>
+                  <th>Description</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for w in v %}
+                  <tr>
+                    <td>{{ w.name }}</td>
+                    <td>{{ w.default }}</td>
+                    <td{% if w.type=='checkbox' %} class="d-flex justify-content-center"{% endif %}>
+                      {% if w.name == 'agendaNumberForPatientsOfTheDay' %}
+                        {{ f.select ({
+                          'select' : {
+                            'name' : w.name,
+                            'id' : w.name ~ 'ID',
+                            'placeholder' : w.placeholder,
+                            'class' : 'form-control',
+                            'values' : w.formValues,
+                            'valueDefaut' : w.value,
+                            'autocomplete' : 'off'
+                          }
+                        }) }}
+                      {% elseif w.name == 'administratifComptaPeutVoirRecettesDe' %}
+                        {{ f.selectMultiple ({
+                          'select' : {
+                            'name' : w.name,
+                            'id' : w.name ~ 'ID',
+                            'placeholder' : w.placeholder,
+                            'class' : 'form-control',
+                            'values' : w.formValues,
+                            'valueDefaut' : w.value,
+                            'autocomplete' : 'off'
+                          }
+                        }) }}
+                      {% else %}
+                        {{ f.input ({
+                          'input' : {
+                            'type' : w.type,
+                            'name' : w.name,
+                            'id' : w.name ~ 'ID',
+                            'placeholder' : w.placeholder,
+                            'class' : 'form-control form-control-sm',
+                            'value' : w.value,
+                            'autocomplete' : 'off'
+                          }
+                        }) }}
+                      {% endif %}
+                    </td>
+                    <td>{{ w.description }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
 
-          {{ f.input ({
-            'input' : {
-              'type' : 'hidden',
-              'name' : 'userID',
-              'value' : page.userID
-            }
-          }) }}
-
-          {{ f.input ({
-            'input' : {
-              'type' : 'submit',
-              'value' : 'Enregistrer',
-              'class' : 'btn btn-primary'
-            }
-          }) }}
-
+            {{ f.input ({
+              'input' : {
+                'type' : 'submit',
+                'value' : 'Enregistrer',
+                'class' : 'btn btn-primary mt-3'
+              }
+            }) }}
+          </div>
         </div>
       {% endfor %}
     </div>
@@ -157,4 +152,55 @@
 
   </form>
 
+  {# modal d'ajout de paramètres #}
+  <div id="modalAddParam" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title gras">Nouveau paramètre</h4>
+        </div>
+        <div class="modal-body">
+          <form id="formNewParam" class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserParamCreate/" method="post">
+            <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="paramCat">Catégorie</label>
+                  <select id="paramCat" class="custom-select" name="paramCat" autocomplete="off">
+                    {% for v in page.availableCats %}
+                      <option value="{{ v }}"{% if loop.first %} selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label>Paramètre</label>
+                {% for cat in page.availableCats %}
+                  <select class="custom-select paramselect" name="paramNameInCat{{ cat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
+                    {% set first = true %}
+                    {% for p in page.availableParams %}
+                      {% if p.cat == cat %}
+                        <option value="{{ p.name }}"{% if first %}selected{% endif %}>{{ p.name }}</option>
+                        {% set first = false %}
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-12">
+                <label>Valeur</label>
+                <input class="form-control" type="text" name="paramValue" autocomplete="off"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button type="submit" class="btn btn-primary">Valider</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
