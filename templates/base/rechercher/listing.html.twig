@@ -55,7 +55,7 @@
         {% endif %}
           <td class="d-none d-sm-table-cell">
             {% if page.porp != 'pro' or config.PraticienPeutEtrePatient == "true" %}
-              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/">
+              <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/">
                 {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod==patientID) or page.porp == 'externe' %}
                   <span class="fa fa-paperclip" aria-hidden="true"></span>
                 {% else %}
@@ -73,23 +73,23 @@
             {% endif %}
           {% endfor %}
 
-          <td class="d-table-cell">
+          <td class="d-table-cell d-flex justify-content-end">
             <div class="btn-group">
               {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
-                <a class="btn btn-default btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
+                <a class="btn  btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
                   <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                 </a>
                 {% if page.porp != 'pro' %}
-                  <a class="btn btn-default btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
+                  <a class="btn  btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
                     <span class="fa fa-link" aria-hidden="true"></span>
                   </a>
 
-                  <button class="btn btn-default btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
+                  <button class="btn  btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
                     <span class="fa fa-edit" aria-hidden="true"></span>
                   </button>
                 {% endif %}
                 <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">

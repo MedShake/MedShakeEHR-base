@@ -46,46 +46,18 @@ $objet = new msObjet();
 $objet->setFromID($p['user']['id']);
 $objet->setToID($p['user']['id']);
 
+header('Content-Type: application/json');
 
-if (!empty($_POST['p_clicRdvUserId']) and $_POST['p_clicRdvPassword']!='********') {
-    $clicRDV = new msClicRDV();
-    $clicRDV->setUserPwd($_POST['p_clicRdvUserId'], $_POST['p_clicRdvPassword']);
-    if (empty($_POST['p_clicRdvPassword'])) {
-        unset($_SESSION['form'][$formIN]);
-        $changeMdp=false;
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe clicRDV est vide.';
-        msTools::redirRoute('userParameters');
-    } elseif ($clicRDV->getGroups()===false) {
-        unset($_SESSION['form'][$formIN]);
-        $changeMdp=false;
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Une erreur est survenue durant la tentative d\'accès à clicRDV. Vérifiez vos identifiants.';
-        msTools::redirRoute('userParameters');
-    } else {
-        $setCRDV=true;
-    }
-} else{
-    if ($data=$objet->getLastObjetByTypeName('clicRdvUserId')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
-    }
-    if ($data=$objet->getLastObjetByTypeName('clicRdvPassword')) {
-        msSQL::sqlQuery("UPDATE objets_data SET deleted='y', deletedByID='".$p['user']['id']."' where id='".$data['id']."'");
-    }
+msConfiguration::setUserParameterValue('clicRdvUserId', $_POST['p_clicRdvUserId'], $p['user']['id']);
+if (empty($p['config']['clicRdvPassword']) or $_POST['p_clicRdvPassword']!=str_repeat('*',strlen(msConfiguration::getParameterValue('clicRdvPassword', array('id'=>$p['user']['id'], 'module'=>''))))) {
+    msConfiguration::setUserParameterValue('clicRdvPassword', $_POST['p_clicRdvPassword'], $p['user']['id']);
 }
-
-
-if ($setCRDV) {
-    $objet->createNewObjetByTypeName('clicRdvUserId', $_POST['p_clicRdvUserId']);
-    $passID=$objet->createNewObjetByTypeName('clicRdvPassword', $_POST['p_clicRdvPassword']);
-    msSQL::sqlQuery("UPDATE objets_data set value=HEX(AES_ENCRYPT('".$_POST['p_clicRdvPassword']."',@password)) WHERE id='".$passID."' limit 1");
-}
-
 if (!empty($_POST['p_clicRdvGroupId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvGroupId']) {
-    $objet->createNewObjetByTypeName('clicRdvGroupId', $_POST['p_clicRdvGroupId']);
+    msConfiguration::setUserParameterValue('clicRdvGroupId', $_POST['p_clicRdvGroupId'], $p['user']['id']);
 }
 if (!empty($_POST['p_clicRdvCalId']) and $_POST['p_clicRdvGroupId']!=$p['config']['clicRdvCalId']) {
-    $objet->createNewObjetByTypeName('clicRdvCalId', $_POST['p_clicRdvCalId']);
+    msConfiguration::setUserParameterValue('clicRdvCalId', $_POST['p_clicRdvCalId'], $p['user']['id']);
 }
-
 
 $consult = array();
 for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
@@ -95,7 +67,7 @@ for ($i=0; !empty($_POST['p_clicRdvConsultId'.$i]); $i++) {
 }
 
 if (!empty($consult)) {
-    $objet->createNewObjetByTypeName('clicRdvConsultId', json_encode($consult));
+    msConfiguration::setUserParameterValue('clicRdvConsultId', json_encode($consult), $p['user']['id']);
 }
 
 header('Content-Type: application/json');

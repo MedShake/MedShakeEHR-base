@@ -66,7 +66,7 @@
        <td colspan="6" class="gras">
          {{ k }}&nbsp;&nbsp;&nbsp;&nbsp;{{ v.0.dicomCodeMeaning }}
        </td>
-       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-default btn-sm float-right m-1 reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
+       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn  btn-sm float-right m-1 reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
         <span class="fa fa-plus" aria-hidden="true"></span>
         </button></td>
       </tr>
@@ -92,12 +92,14 @@
         </td>
 
         <td>
-          <button type="button" class="btn btn-default btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ t.id }}" data-table="dicomTags" data-form="formModalNewType" data-modal="modalNewType">
-          <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" data-id="{{ t.id }}" data-table="dicomTags">
-          <span class="fa fa-times" aria-hidden="true"></span>
-          </button>
+          <div class="btn-group">
+            <button type="button" class="btn  btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ t.id }}" data-table="dicomTags" data-form="formModalNewType" data-modal="modalNewType">
+            <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn  btn-sm delete-by-prim-key" aria-label="Supprimer" data-id="{{ t.id }}" data-table="dicomTags">
+            <span class="fa fa-times" aria-hidden="true"></span>
+            </button>
+          </div>
         </td>
 
 
@@ -214,7 +216,7 @@
    			</form>
          </div>
          <div class="modal-footer">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+           <button type="button" class="btn " data-dismiss="modal">Fermer</button>
            <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
          </div>
        </div>

@@ -121,7 +121,9 @@
                   <td>{{ v.file }}</td>
                   <td>{{ page.repertoireClefs }}{{ v.file }}</td>
                   <td>
-                    <button class="delApicryptClef btn btn-default btn-sm" type="button" data-file="{{ v.file }}" data-user="{{ page.selectUser }}">supprimer</a>
+                    <div class="btn-group">
+                      <button class="delApicryptClef btn btn-sm" type="button" data-file="{{ v.file }}" data-user="{{ page.selectUser }}">supprimer</a>
+                    </div>
                   </td>
               </tr>
           {% endfor %}

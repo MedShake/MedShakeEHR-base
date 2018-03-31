@@ -66,7 +66,7 @@ spl_autoload_register(function ($class) {
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 
 /////////// SQL connexion
@@ -81,7 +81,7 @@ if ($mailForUserID > 0) {
 /////////// Relever le compte pop3
 
 $pop = new msPop3();
-if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPass'], 'INBOX', false)) {
+if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPasswordword'], 'INBOX', false)) {
     $liste=$pop->pop3_list($connection);
 
     if (count($liste)>0) {

@@ -110,19 +110,18 @@
 		<div role="tabpanel" class="tab-pane active" id="categories">
 
 			<p></p>
-			<button type="button" class="btn btn-primary float-right m-1 reset-modal" data-toggle="modal" data-target="#modalNewCat">
+			<button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewCat">
 			Nouvelle catégorie
 			</button>
 
 			<table class="table table-sm mb-0 table-hover ">
-			<caption>Catégories de type de données</caption>
 			<thead>
 			<tr>
 				<th>#</th>
 				<th>Label</th>
 				<th>Enfants</th>
 				<th>Description</th>
-				<th>Actions</th>
+				<th></th>
 			</tr>
 			</thead><tbody>
 			{% for k,v in page.tabCat %}
@@ -131,21 +130,25 @@
 				<td>{{ v.label }}</td>
 				<td>
                                   {% if v.enfants > 0 %}
-                                  <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ v.groupe }}/{{ k }}/">
-                                      <span class="fa fa-search-plus" aria-hidden="true"></span>
-                                    </a>
+                                  <div class="btn-group">
+                                    <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ v.groupe }}/{{ k }}/">
+                                        <span class="fa fa-search-plus" aria-hidden="true"></span>
+                                      </a>
+                                    </div>
                                     {{ v.enfants }}
                                   {% endif %}
                                 </td>
 				<td>{{ v.description }}</td>
-				<td>
-					<button type="button" class="btn btn-default btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="data_cat" data-form="formModalNewCat" data-modal="modalNewCat">
-					<span class="fa fa-pencil-alt" aria-hidden="true"></span>
-					</button>
+				<td class="d-flex justify-content-end">
+          <div class="btn-group">
+					  <button type="button" class="btn  btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="data_cat" data-form="formModalNewCat" data-modal="modalNewCat">
+					  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+					  </button>
 
-					<button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled{% endif %} data-id="{{ k }}" data-table="data_cat">
-					<span class="fa fa-times" aria-hidden="true"></span>
-					</button>
+					  <button type="button" class="btn  btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled{% endif %} data-id="{{ k }}" data-table="data_cat">
+					  <span class="fa fa-times" aria-hidden="true"></span>
+					  </button>
+          </div>
 				</td>
 			</tr>
 			{% endfor %}
@@ -227,7 +230,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+				<button type="button" class="btn " data-dismiss="modal">Fermer</button>
 				<button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button>
 			</div>
 		</div>

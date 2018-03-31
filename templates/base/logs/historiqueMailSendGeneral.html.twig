@@ -56,11 +56,11 @@
       <div class="row">
         <div class="col-md-12">
             <div class="btn-group float-right m-1" role="group" aria-label="...">
-              <a class="btn btn-default m-1" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
+              <a class="btn  m-1" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
                 <span class="fa fa-chevron-left" aria-hidden="true"></span>
                 Plus récents
               </a>
-              <a class="btn btn-default m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
+              <a class="btn  m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
                 Plus anciens
                 <span class="fa fa-chevron-right" aria-hidden="true"></span>
               </a>
@@ -89,9 +89,11 @@
                             <small>{{ v.from }}</small></td>
                             <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
                             <td> 
-                              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
-                                <span class="fa fa-folder-open" aria-hidden="true"></span>
-                              </a>
+                              <div class="btn-group">
+                                <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
+                                  <span class="fa fa-folder-open" aria-hidden="true"></span>
+                                </a>
+                              </div>
                               {{ v.patient.3 }}
                               {% if v.patient.1 and v.patient.2 %}
                                 {{ v.patient.2|e }} ({{ v.patient.1|e }})

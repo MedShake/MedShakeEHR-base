@@ -34,10 +34,10 @@ $template="agenda";
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
 //paramètres de l'agenda
-if(is_file($p['config']['homeDirectory'].'config/agendas/'.$match['params']['userID'].'.js')) {
-  $p['page']['configAgenda']=file_get_contents($p['config']['homeDirectory'].'config/agendas/'.$match['params']['userID'].'.js');
-  if(is_file($p['config']['homeDirectory'].'config/agendas/'.$match['params']['userID'].'_ad.js')) {
-    $p['page']['configAgenda'].=file_get_contents($p['config']['homeDirectory'].'config/agendas/'.$match['params']['userID'].'_ad.js');
+if(is_file($p['homepath'].'config/agendas/'.$match['params']['userID'].'.js')) {
+  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/'.$match['params']['userID'].'.js');
+  if(is_file($p['homepath'].'config/agendas/'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/'.$match['params']['userID'].'_ad.js');
   }
 }
 

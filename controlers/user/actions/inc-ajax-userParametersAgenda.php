@@ -27,7 +27,7 @@
  */
 
 //construction du répertoire
-msTools::checkAndBuildTargetDir($p['config']['homeDirectory'].'config/agendas/');
+msTools::checkAndBuildTargetDir($p['homepath'].'config/agendas/');
 
 $params=array('Lundi'=>array(), 'Mardi'=>array(), 'Mercredi'=>array(), 'Jeudi'=>array(), 'Vendredi'=>array(), 'Samedi'=>array(), 'Dimanche'=>array());
 $js=array();
@@ -88,8 +88,8 @@ $js[]="maxTime = '".$params['maxTime'].":00';\n";
 $params['slotDuration']=$_POST['slotDuration'];
 $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
 
-file_put_contents($p['config']['homeDirectory'].'config/agendas/agenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
-file_put_contents($p['config']['homeDirectory'].'config/agendas/agenda'.$p['user']['id'].'.js', $js);
+file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.js', $js);
 
 header('Content-Type: application/json');
 echo json_encode(array('status'=>'success'));

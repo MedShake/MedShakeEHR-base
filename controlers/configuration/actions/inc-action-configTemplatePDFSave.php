@@ -29,28 +29,25 @@
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
 
- //config défaut
- $p['page']['configDefaut']=$p['configDefaut'];
+//utilisateurs ayant un repertoire de templates spécifique
+$p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
- //utilisateurs ayant un repertoire de templates spécifique
- $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
+$user=array('id'=>$_POST['userID'], 'module'=>'');
+$directory=msConfiguration::getParameterValue('templatesPdfFolder', $user);  
 
- // si user
- if (is_numeric($_POST['userID'])) {
-     msUser::applySpecificConfig($p['page']['configDefaut'], $_POST['userID']);
-     $p['page']['repertoireTemplatesPDF']=$p['page']['templatesDirUsers'][$_POST['userID']]['paramValue'];
-     $gotoSaveOnly='/configuration/templates-pdf/edit/'.$_POST['fichier'].'/'.$_POST['userID'].'/';
-     $gotoSaveAndEnd='/configuration/templates-pdf/'.$_POST['userID'].'/';
- } else {
-     $p['page']['repertoireTemplatesPDF']=$p['page']['configDefaut']['templatesPdfFolder'];
-     $gotoSaveOnly='/configuration/templates-pdf/edit/'.$_POST['fichier'].'/';
-     $gotoSaveAndEnd='/configuration/templates-pdf/';
- }
+// si user
+if (is_numeric($_POST['userID'])) {
+    $gotoSaveOnly='/configuration/templates-pdf/edit/'.$_POST['fichier'].'/'.$_POST['userID'].'/';
+    $gotoSaveAndEnd='/configuration/templates-pdf/'.$_POST['userID'].'/';
+} else {
+    $gotoSaveOnly='/configuration/templates-pdf/edit/'.$_POST['fichier'].'/';
+    $gotoSaveAndEnd='/configuration/templates-pdf/';
+}
 
 //construction du répertoire si besoin
-msTools::checkAndBuildTargetDir($p['page']['repertoireTemplatesPDF']);
+msTools::checkAndBuildTargetDir($directory);
 
-file_put_contents($p['page']['repertoireTemplatesPDF'].$_POST['fichier'], $_POST['code']);
+file_put_contents($directory.$_POST['fichier'], $_POST['code']);
 
 if (isset($_POST['saveAndEnd'])) {
     $goto=$gotoSaveAndEnd;

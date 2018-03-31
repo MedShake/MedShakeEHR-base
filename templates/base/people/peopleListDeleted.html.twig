@@ -55,7 +55,7 @@
         <tr>
           <td>{{ v.id }}</td>
           <td>
-            <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
+            <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
               <span class="fa fa-folder-open" aria-hidden="true"></span>
             </a>
             {{ v.identiteDossier|e }}
@@ -64,14 +64,11 @@
           <td>{{ v.identiteUser|e }}</td>
           <td>{{ v.dateDeleted|e }}</td>
           <td>{{ v.motif|e }}</td>
-          <td>
-
+          <td class="d-flex justify-content-end">
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-wrench" aria-hidden="true"></span> 
+              <button type="button" class="btn btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
+                <span class="fa fa-undo-alt" aria-hidden="true"></span> 
               </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a class="dropdown-item unmarkDeleted" data-patientID="{{ v.id }}" href="#">Réactiver ce dossier</a></li>
-              </ul>
             </div>
 
           </td>

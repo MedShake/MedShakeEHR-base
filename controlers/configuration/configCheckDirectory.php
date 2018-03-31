@@ -88,9 +88,10 @@
           $p['page']['check']['apicryptCheminFichierC']['is_writable']=false;
       }
       //repertoire agenda
-      if (is_dir($p['config']['homeDirectory'].'config/agendas/')) {
+      $p['config']['agendas']=$p['homepath'].'config/agendas/';
+      if (is_dir($p['homepath'].'config/agendas/')) {
           $p['page']['check']['agendas']['is_dir']=true;
-          if (is_writable($p['config']['homeDirectory'].'config/agendas/')) {
+          if (is_writable($p['homepath'].'config/agendas/')) {
               $p['page']['check']['agendas']['is_writable']=true;
           }
       } else {

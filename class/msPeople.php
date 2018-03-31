@@ -296,11 +296,10 @@ class msPeople
     {
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName([$param, 'firstname', 'lastname', 'birthname']);
-        if(!isset($name2typeID[$param])) $name2typeID[$param]='';
 
-        if ($data=msSQL::sql2tab("select p.id, dt.value, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
+        if ($data=msSQL::sql2tab("select p.id, c.value, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
           from people as p
-          join objets_data as dt on dt.toID=p.id and dt.typeID='".$name2typeID[$param]."'
+          join configuration as c on c.toID=p.id and c.name='".$param."'
           left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
           left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
           left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''

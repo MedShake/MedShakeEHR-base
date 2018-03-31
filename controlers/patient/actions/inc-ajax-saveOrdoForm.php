@@ -28,7 +28,7 @@
  */
 
 if ($_POST['ordoForm']!='') {
-      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveOrdoForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveOrdoForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
       }

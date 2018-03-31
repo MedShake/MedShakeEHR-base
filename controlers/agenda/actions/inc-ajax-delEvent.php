@@ -36,7 +36,7 @@ $agenda->delEvent();
 header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
-    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
+    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
     if (is_file($hook)) {
         $event=$agenda->getEventByID($_POST['eventid']);
         include($hook);

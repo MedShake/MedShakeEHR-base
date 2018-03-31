@@ -40,7 +40,7 @@ foreach ($preparams as $k=>$v) {
     }
 }
 
-file_put_contents($p['config']['homeDirectory'].'config/agendas/typesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+file_put_contents($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
 
 header('Content-Type: application/json');
 echo json_encode(array('status'=>'success'));

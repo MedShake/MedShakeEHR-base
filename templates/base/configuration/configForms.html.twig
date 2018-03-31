@@ -66,7 +66,7 @@
 		<div role="tabpanel" class="tab-pane active" id="types">
 
 			<p></p>
-			<button type="button" class="btn btn-primary float-right m-1 reset-modal" data-toggle="modal" data-target="#modalNewType">
+			<button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewType">
 			Nouveau formulaire
 			</button>
 
@@ -81,7 +81,7 @@
             <th>Nom interne</th>
 					  <th>Label</th>
 					  <th>Description</th>
-					  <th>Actions</th>
+					  <th></th>
 				  </tr>
 				  </thead>
 				  <tbody>
@@ -92,14 +92,15 @@
             <td>{{ w.internalName }}</td>
             <td>{{ w.name }}</td>
             <td>{{ w.description }}</td>
-            <td>
-              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
-                <span class="fa fa-eye" aria-hidden="true"></span>
-              </a>
-              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-                <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-              </a>
-
+            <td class="d-flex justify-content-end">
+              <div class="btn-group">
+                <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+                  <span class="fa fa-eye" aria-hidden="true"></span>
+                </a>
+                <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+                  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                </a>
+              </div>
 					  </td>
 					  </tr>
 				  {% endfor %}
@@ -216,7 +217,7 @@
 			</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn " data-dismiss="modal">Fermer</button>
         <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
       </div>
     </div>

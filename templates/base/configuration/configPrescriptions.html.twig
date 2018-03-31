@@ -73,13 +73,13 @@
                 <div role="tabpanel" class="tab-pane active" id="prescriptions">
 
                     <p></p>
-                    <button type="button" class="btn btn-primary float-right m-1 reset-modal" data-toggle="modal" data-target="#modalNewCat">
+                    <button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewCat">
                         Nouvelle prescription
                     </button>
 
                     {% for k, v in page.tabTypes %}
                         <h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }} <small>
-                          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/{{ page.selectUser }}/{{ v.0.cat }}/">
+                          <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/{{ page.selectUser }}/{{ v.0.cat }}/">
                             <span class="fa fa-search" aria-hidden="true"></span>
                           </a>
                         </small></h2>
@@ -89,7 +89,7 @@
                                     <th>#</th>
                                     <th>Label</th>
                                     <th>Texte</th>
-                                    <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,12 +98,12 @@
                                         <td>{{ w.id }}</td>
                                         <td>{{ w.label }}</td>
                                         <td>{{ w.description }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-default btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
+                                        <td class="d-flex content-justify-end">
+                                            <button type="button" class="btn  btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
 
-                                            <button type="button" class="btn btn-default btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
+                                            <button type="button" class="btn  btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>
                                         </td>
@@ -153,7 +153,7 @@
                         </form>
                       </div>
                       <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn " data-dismiss="modal">Fermer</button>
                             <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button>
                       </div>
                     </div>

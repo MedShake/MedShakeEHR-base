@@ -34,14 +34,14 @@ if (stristr(PHP_OS, 'WIN')) {
 }
 $p['page']['availableCrons']=array();
 
-$crons=scandir($p['config']['homeDirectory'].'cron/');
+$crons=scandir($p['homepath'].'cron/');
 if (!$crons or !is_array($crons) or count($crons)==2) {
     return;
 }
 $crons=array_splice($crons, 2);
 
 foreach ($crons as $cron) {
-    include $p['config']['homeDirectory'].'cron/'.$cron;
+    include $p['homepath'].'cron/'.$cron;
 }
 exec("crontab -l", $installedCrons);
 if (!is_array($installedCrons)) {
@@ -49,7 +49,7 @@ if (!is_array($installedCrons)) {
 }
 
 foreach($installedCrons as $line) {
-    if (!preg_match('#([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd '.$p['config']['homeDirectory'].' && php -f cron\/(.*)\.php#', trim($line), $matches)) {
+    if (!preg_match('#([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) ([-*,0-9]+) cd '.$p['homepath'].' && php -f cron\/(.*)\.php#', trim($line), $matches)) {
         continue;
     }
     if (array_key_exists($matches[6], $p['page']['availableCrons'])) {

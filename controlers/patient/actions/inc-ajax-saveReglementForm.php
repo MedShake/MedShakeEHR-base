@@ -28,7 +28,7 @@
  */
 
 if ($_POST['reglementForm']!='baseReglement') {
-      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
       }

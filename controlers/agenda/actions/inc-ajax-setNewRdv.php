@@ -69,7 +69,7 @@ $event=$agenda->addOrUpdateRdv();
 header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
-    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
+    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
     if (is_file($hook)) {
         include($hook);
     }

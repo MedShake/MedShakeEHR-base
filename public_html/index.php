@@ -63,8 +63,7 @@ if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
-$p['config']['homeDirectory']=$homepath;
-$p['configDefaut']=$p['config'];
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
@@ -98,7 +97,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     }
     if (isset($p['user']['id'])) {
 //        msUser::applySpecificConfig($p['config'], $p['user']['id']);
-        msConfiguration::getAllParametersForUser($p['user']);
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
 } else {
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {

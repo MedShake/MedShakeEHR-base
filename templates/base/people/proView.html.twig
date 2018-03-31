@@ -153,8 +153,8 @@
                 {% for v in page.patientsConnus %}
                 <tr>
                   <td>
-                    <a title="Accès au dossier" class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
-                    <a title="Éditer les relations du patient" class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
+                    <a title="Accès au dossier" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
+                    <a title="Éditer les relations du patient" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
                   </td>
                   <td>{{ v.nom }} {{ v.prenom }}</td>
 

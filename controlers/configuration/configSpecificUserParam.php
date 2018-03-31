@@ -41,7 +41,7 @@ $prat->setToID($p['page']['userID']);
 $p['page']['userData']=$prat->getSimpleAdminDatas();
 $module=$prat->getModule();
 
-if($data=msConfiguration::getUserParamatersForUser($p['page']['userID'])) {
+if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
     foreach($data as $k=>$v) {
         if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
             $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
@@ -62,6 +62,3 @@ if($data=msConfiguration::getUserParamatersForUser($p['page']['userID'])) {
 
 $p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
 $p['page']['availableCats']=array_unique(array_column($p['page']['availableParams'], 'cat'));
-
-$p['page']['configDefaut']=$p['configDefaut'];
-

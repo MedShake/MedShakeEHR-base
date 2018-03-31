@@ -191,7 +191,7 @@
               <div class="card mb-3">
                 <div class="card-header py-0 gras">
                   Liens familiaux
-                  <a class="btn btn-default btn-sm float-right m-1" role="button" title="Édition des relations"
+                  <a class="btn  btn-sm float-right m-1" role="button" title="Édition des relations"
                     href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
                     <span class="fa fa-link" aria-hidden="true"></span>
                   </a>
@@ -210,7 +210,7 @@
                     {% for v in page.liensFamiliaux %}
                       <tr>
                         <td>
-                          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"  target="_blank">
+                          <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"  target="_blank">
                             <span class="fa fa-folder-open" aria-hidden="true"></span>
                           </a>
                         </td>

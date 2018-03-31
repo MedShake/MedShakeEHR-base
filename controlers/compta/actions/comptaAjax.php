@@ -41,5 +41,5 @@ if (!in_array($m, $acceptedModes)) {
 
 // enregistrer un réglement
 if ($m=='getTableData') {
-    include ($p['config']['homeDirectory'].'controlers/compta/compta.php');
+    include ($p['homepath'].'controlers/compta/compta.php');
 }

@@ -63,7 +63,7 @@
         <th>#</th>
         <th>Module</th>
         <th>Nom</th>
-        <th>Actions</th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -73,14 +73,15 @@
         <td>{{ w.module }}</td>
         <td>{{ w.name }}</td>
 
-        <td>
-          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
-            <span class="fa fa-eye" aria-hidden="true"></span>
-          </a>
-          <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-            <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-          </a>
-
+        <td class="d-flex justify-content-end">
+          <div class="btn-group">
+            <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+              <span class="fa fa-eye" aria-hidden="true"></span>
+            </a>
+            <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+              <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+            </a>
+          </div>
         </td>
         </tr>
       {% endfor %}

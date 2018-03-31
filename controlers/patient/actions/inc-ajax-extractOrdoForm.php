@@ -46,7 +46,7 @@ if (!isset($delegate)) {
   }
   //si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if ($ordoForm!='') {
-        $hook=$p['config']['homeDirectory'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
+        $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
         if ($module!='' and $module!='base' and is_file($hook)) {
             include $hook;
         }

@@ -63,6 +63,9 @@
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/modules/">Modules</a>
         </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
+        </li>
       </ul>
 
       <h2>Utilisateurs</h2>
@@ -76,19 +79,16 @@
       <h2>Paramètres courants</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions types</a>
-        </li>
-        <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/">Actes et tarifs</a>
         </li>
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Agendas</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Clefs Apicrypt</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions types</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Clefs Apicrypt</a>
         </li>
       </ul>
 
@@ -165,7 +165,7 @@
         </li>
         <li class="list-group-item">
           Données de session
-          <a class="btn btn-default px-1 py-0" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
+          <a class="btn btn-outline-secondary px-1 py-0 ml-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
             Supprimer
           </a>
         </li>

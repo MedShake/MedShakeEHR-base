@@ -46,7 +46,7 @@ if (!isset($delegate)) {
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if ($reglementForm!='baseReglement') {
-      $hook=$p['config']['homeDirectory'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
       if ($module!='' and $module!='base' and is_file($hook)) {
           include $hook;
       }

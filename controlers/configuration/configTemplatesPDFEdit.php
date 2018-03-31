@@ -29,47 +29,44 @@
 
 
  //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configTemplatesPDFEdit";
-     $debug='';
+if (!msUser::checkUserIsAdmin()) {
+    $template="forbidden";
+    return; 
+}
 
-     $fichier=urldecode($match['params']['fichier']);
+$template="configTemplatesPDFEdit";
+$debug='';
 
-     //config défaut
-     $p['page']['configDefaut']=$p['configDefaut'];
+$fichier=urldecode($match['params']['fichier']);
 
-     //utilisateurs ayant un repertoire de templates spécifique
-     $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
+//utilisateurs ayant un repertoire de templates spécifique
+$p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
-     // si user
-     if (isset($match['params']['userID'])) {
-         $p['page']['selectUser']=$match['params']['userID'];
-         msUser::applySpecificConfig($p['page']['configDefaut'], $p['page']['selectUser']);
-         $p['page']['repertoireTemplatesPDF']=$p['page']['templatesDirUsers'][$match['params']['userID']]['paramValue'];
+// si user
+if (isset($match['params']['userID'])) {
+    $user=array('id'=>$match['params']['userID'], 'module'=>'');
+    $directory=msConfiguration::getParameterValue('repertoireTemplatesPDF', $user);
 
-         $proprio = new msPeople();
-         $proprio->setToID($match['params']['userID']);
-         $p['page']['fichier']['proprio']=$proprio->getSimpleAdminDatas();
-     } else {
-         $p['page']['repertoireTemplatesPDF']=$p['page']['configDefaut']['templatesPdfFolder'];
-     }
+    $proprio = new msPeople();
+    $proprio->setToID($match['params']['userID']);
+    $p['page']['fichier']['proprio']=$proprio->getSimpleAdminDatas();
+} else {
+    $directory=msConfiguration::getParameterValue('repertoireTemplatesPDF');
+}
 
-     //vérification fichier existe
-     if (!is_file($p['page']['repertoireTemplatesPDF'].$fichier)) {
-         die("Ce fichier n'existe pas");
-     } else {
+//vérification fichier existe
+if (!is_file($directory.$fichier)) {
+    die("Ce fichier n'existe pas");
+} else {
 
-         //test autorisation d'écriture du dossier template
-         if (is_writable($p['page']['repertoireTemplatesPDF'])) {
-             $p['page']['templatesDirAutorisationEcriture'] = true;
-         } else {
-             $p['page']['templatesDirAutorisationEcriture'] = false;
-         }
+    //test autorisation d'écriture du dossier template
+    if (is_writable($directory)) {
+        $p['page']['templatesDirAutorisationEcriture'] = true;
+    } else {
+        $p['page']['templatesDirAutorisationEcriture'] = false;
+    }
 
-         $p['page']['fichier']['name']=$fichier;
-         $p['page']['fichier']['chemin']=$p['page']['repertoireTemplatesPDF'];
-         $p['page']['fichier']['code']= file_get_contents($p['page']['repertoireTemplatesPDF'].$fichier);
-     }
- }
+    $p['page']['fichier']['name']=$fichier;
+    $p['page']['fichier']['chemin']=$directory;
+    $p['page']['fichier']['code']= file_get_contents($directory.$fichier);
+}

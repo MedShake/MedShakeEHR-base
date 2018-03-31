@@ -96,10 +96,12 @@
                                         <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
                                         <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
                                         <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">
-                                            <button type="button" class="btn btn-default btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
+                                        <td class="d-flex justify-content-end">
+                                          <div class="btn-group">
+                                            <button type="button" class="btn  btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
                                                 <span class="fa fa-search-plus" aria-hidden="true"></span>
                                             </button>
+                                          </div>
                                         </td>
                                     </tr>
                                     {% for key,det in w.details %}

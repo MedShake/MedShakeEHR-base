@@ -53,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();

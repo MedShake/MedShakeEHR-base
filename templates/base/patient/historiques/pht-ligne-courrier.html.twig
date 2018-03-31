@@ -34,7 +34,7 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-default btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}">
+      <button class="btn  btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}">
         {% if cs.iconeType == 'update' %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
         {% else %}
@@ -43,14 +43,14 @@
       </button>
 
         {# print #}
-        <a class="btn btn-default btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
+        <a class="btn  btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
           <span class="fa fa-print" aria-hidden="true" title="Imprimer"></span>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
-            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
+            <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
               <span class="fa fa-paper-plane" aria-hidden="true"></span>
               
             </button>
@@ -83,13 +83,13 @@
           </div>
         {% endif %}
         {% if cs.sendMail > 0 %}
-          <a class="btn btn-default btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
+          <a class="btn  btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
             <span class="fa fa-envelope" aria-hidden="true"></span>
           </a>
         {% endif %}
         {# option #}
         <div class="btn-group">
-          <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
             
           </button>
@@ -104,7 +104,7 @@
               </a>
             </li>
             <li class="d-inline-block d-lg-none">
-              <a class="btn btn-default btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">Imprimer</a>
+              <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">Imprimer</a>
             </li>
             {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
               {% if config.smtpHost %}

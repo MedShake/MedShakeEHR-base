@@ -265,6 +265,17 @@ $(document).ready(function() {
     $(this).css("overflow", "hidden");
     auto_grow(this);
   });
+
+  // voir les mots de passe dans les paramètres par défaut
+  $(".viewPassword").removeClass('viewPassword').parent()
+    .css('cursor', 'pointer')
+    .addClass('viewPassword')
+    .on("mousedown", function(){
+      $(this).closest('.input-group').find('input').attr('type','text');
+    })
+    .on("mouseup", function(){
+      $(this).closest('.input-group').find('input').attr('type','password');
+    });
   
   //droits admin dans la page liste des utilisateurs
   $(".changeAdmin").on("click", function(e){

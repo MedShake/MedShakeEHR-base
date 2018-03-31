@@ -50,8 +50,8 @@ $p['page']['hasAgenda']=true;
 * Agenda
 ************/
 //paramètres de l'agenda
-if(is_file($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml')) {
-  $p['page']['agenda']=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].'.yml');
+if(is_file($p['homepath'].'config/configAgenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad($p['homepath'].'config/configAgenda'.$p['user']['id'].'.yml');
 } else {
   $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
                             'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),
@@ -68,8 +68,8 @@ if(is_file($p['config']['homeDirectory'].'config/configAgenda'.$p['user']['id'].
 * consultations
 ************/
 // types de rendez-vous
-if(is_file($p['config']['homeDirectory'].'config/agendas/typesRdv'.$p['user']['id'].'.yml')) {
-    $consults=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/agendas/typesRdv'.$p['user']['id'].'.yml');
+if(is_file($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml')) {
+    $consults=Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml');
     $usedTypes=msSQL::sql2tabSimple("SELECT DISTINCT(type) FROM agenda");
     foreach ($consults as $k=>$v) {
         if (is_array($usedTypes) and in_array($k, $usedTypes)) {
@@ -105,7 +105,7 @@ if ($p['page']['useClicRDV']) {
     if(isset($p['config']['clicRdvUserId'])) {
         $preValues=array('p_clicRdvUserId' => $p['config']['clicRdvUserId']);
         if (!empty($p['config']['clicRdvPassword'])) {
-            $preValues['p_clicRdvPassword']='********';
+            $preValues['p_clicRdvPassword']=str_repeat('*',strlen(msConfiguration::getParameterValue('clicRdvPassword', array('id'=>$p['user']['id'], 'module'=>''))));
             if(!empty($p['config']['clicRdvGroupId'])) {
                 $preValues['p_clicRdvGroupId']=$p['config']['clicRdvGroupId'];
                 $options['p_clicRdvGroupId']=array('0'=> explode(':',$p['config']['clicRdvGroupId'])[1]);

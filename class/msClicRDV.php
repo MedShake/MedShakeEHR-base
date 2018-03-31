@@ -70,15 +70,8 @@ class msClicRDV
 
     public function setUserPwd($user='', $pwd='') {
         if (!$user or !$pwd) {
-            $user=msSQL::sqlUniqueChamp("SELECT od.value 
-              FROM objets_data AS od left join data_types as dt
-              ON od.typeID=dt.id AND od.toID='".$this->_userID."' AND od.outdated='' AND od.deleted=''
-              WHERE dt.name='clicRdvUserId'");
-
-            $pwd=msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(od.value),@password), CHAR) 
-              FROM objets_data AS od left join data_types as dt
-              ON od.typeID=dt.id AND od.toID='".$this->_userID."' AND od.outdated='' AND od.deleted=''
-              WHERE dt.name='clicRdvPassword'");
+            $user=msConfiguration::getParameterValue('clicRdvUserId', array('id'=>$this->_userID, 'module'=>''));
+            $pwd=msConfiguration::getParameterValue('clicRdvPassword', array('id'=>$this->_userID, 'module'=>''));
         }
         $this->_userpwd = $user.':'.$pwd;
 

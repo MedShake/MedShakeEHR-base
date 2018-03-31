@@ -127,7 +127,7 @@ class msUser
     public static function cleanBadAuth()
     {
         global $match, $p;
-        include $p['config']['homeDirectory'].'controlers/login/logOutDo.php';
+        include $p['homepath'].'controlers/login/logOutDo.php';
         return false;
     }
 

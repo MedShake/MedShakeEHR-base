@@ -162,6 +162,8 @@ $(document).ready(function() {
     if ($('#id_clicRdvUserId_id').val() == '' || $('#id_clicRdvPassword_id').val() == '') {
       $('#id_clicRdvGroupId_id').hide();
       $('label[for="id_clicRdvGroupId_id"]').hide();
+      $('#id_clicRdvCalId_id').hide();
+      $('label[for="id_clicRdvCalId_id"]').hide();
       $('.consults').remove();
     }
   });
@@ -244,7 +246,7 @@ function updateCalList() {
       $('#id_clicRdvCalId_id').empty();
       $('#id_clicRdvCalId_id').append('<option value="empty"> </option>');
       for (var i in data.records) {
-        $('#id_clicRdvCalId_id').append('<option value="' + data.records[i].id + ':' + data.records[i].name + '">' + data.records[i].name + '</option>');
+        $('#id_clicRdvCalId_id').append('<option value="' + data.records[i].id + ':' + (data.records[i].name || data.records[i].publicname) + '">' + (data.records[i].name || data.records[i].publicname) + '</option>');
       }
     },
     error: function() {
