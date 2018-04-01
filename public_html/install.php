@@ -67,19 +67,10 @@ if (!is_file($homepath.'config/config.yml')) {
     }elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
-        $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
+        $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlUser'], $_POST['sqlPass'], $_POST['sqlBase']);
         $mysqli->set_charset("utf8");
         if (mysqli_connect_errno()) {
-            die("Echec de connexion à la base de données.\nVérifiez l'utilisateur et le mot de passe root");
-        }
-        if ($mysqli->query("CREATE USER IF NOT EXISTS '".$_POST['sqlUser']."'@'localhost' IDENTIFIED BY '".$_POST['sqlPass']."'")===false) {
-            die("Echec lors de la création de l'utilisateur MySQL");
-        }
-        if ($mysqli->query("CREATE DATABASE IF NOT EXISTS ".$_POST['sqlBase']." CHARACTER SET = 'utf8'")===false) {
-            die('Echec lors de la création de la base de données MySQL');
-        }
-        if ($mysqli->query("GRANT ALL PRIVILEGES ON ".$_POST['sqlBase'].".* TO '".$_POST['sqlUser']."'@'localhost'")===false) {
-            die("Echec lors de l'attribution des droits sur la base de données MySQL");
+            die("Echec de connexion à la base de données.\nVérifiez le nom d'utilisateur et le mot de passe");
         }
         if (!is_dir($_POST['backupLocation'])) {
             if ( mkdir($_POST['backupLocation'], 0770, true)===false) {
@@ -315,27 +306,17 @@ elseif ($template=='configForm') :
               value="localhost"/>
             </div>
             <div class="form-group">
-              <label class="control-label">Nom utilisateur root MySQL (ne sera pas enregistré)</label>
-              <input name="sqlRootId" type="text" class="form-control" autocomplete="off" required="required"
-              value="root"/>
-            </div>
-            <div class="form-group">
-              <label class="control-label">Mot de passe utilisateur root MySQL (ne sera pas enregistré)</label>
-              <input name="sqlRootPwd" type="password" class="form-control" autocomplete="off" required="required"
-              value=""/>
-            </div>
-            <div class="form-group">
-              <label class="control-label">Nom de la base à créer</label>
+              <label class="control-label">Nom de la base de données</label>
               <input name="sqlBase" type="text" class="form-control" autocomplete="off" required="required"
               value="medshakeehr"/>
             </div>
             <div class="form-group">
-              <label class="control-label">Nom d'utilisateur de la base à créer</label>
+              <label class="control-label">Nom d'utilisateur</label>
               <input name="sqlUser" type="text" class="form-control" autocomplete="off" required="required"
               value=""/>
             </div>
             <div class="form-group">
-              <label class="control-label">Mot de passe de l'utilisateur à créer</label>
+              <label class="control-label">Mot de passe de l'utilisateur</label>
               <input name="sqlPass" type="text" class="form-control" autocomplete="off" required="required"
               value=""/>
             </div>
