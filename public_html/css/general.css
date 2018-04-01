@@ -93,8 +93,8 @@ label {margin-left:0.5rem;margin-right:0.5rem}
 .btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:#fff;border-color:#bbb}
 .btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
 a {color:#337ab7}
-.btn-group >.btn {color:#484848;}
-.btn-group >.btn:hover {color:#282828;}
+.btn {color:#484848;}
+.btn:hover {color:#181818;}
 .btn.btn-sm {min-width:36px;height:31px;padding-top:5px}
 .btn .fa,.btn .far {font-size:1rem}
 .btn-group > .btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {border-right:none}
@@ -105,6 +105,7 @@ a {color:#337ab7}
 .bg-primary {color:#fff;background-color:#337ab7 !important;}
 .btn-warning {background-color:#f0ad4e;border-color:#eea236}
 .btn-warning:hover {background-color:#ec971f;border-color:#d58512}
+.btn-danger,.btn-danger:hover,.btn-success,.btn-success:hover,.btn-outline-secondary:hover {color:#fff}
 input::placeholder {font-size:14px !important}
 .card {line-height:32px}
 .card-header {line-height:36px}

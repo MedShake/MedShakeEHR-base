@@ -44,19 +44,19 @@
 
     <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline bottom-space">
 
-      <a class="btn   m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
+      <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
         <span class="fa fa-chevron-left" aria-hidden="true"></span>
         Jour précédent
       </a>
-      <a class="btn   m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/">
+      <a class="btn  btn-outline-secondary m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/">
         Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
       </a>
-      <a class="btn   m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/">
+      <a class="btn  btn-outline-secondary m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/">
         Jour suivant 
         <span class="fa fa-chevron-right" aria-hidden="true"></span>
       </a>
 
-      <a class="btn   m-1{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
+      <a class="btn btn-outline-secondary m-1{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
         Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
       </a>
 

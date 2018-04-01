@@ -76,12 +76,12 @@
                                 <tr>
                                     <th>Code</th>
                                     <th>Label</th>
-                                    {% if config.administratifSecteurHonoraires == '' %}
-                                      <th class="texteadroite">Tarif</th>
-                                    {% else %}
+                                    {% if page.secteurs[k] != '' %}
                                       <th class="texteadroite">Tarif&nbsp;SS</th>
                                       <th class="texteadroite">Dépassement</th>
                                       <th class="texteadroite">Total</th>
+                                    {% else %}
+                                      <th class="texteadroite">Tarif</th>
                                     {% endif %}
                                     <th></th>
 
@@ -97,7 +97,7 @@
                                         <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
 
                                         <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
-                                        {% if config.administratifSecteurHonoraires =! '' %}
+                                        {% if page.secteurs[k] != '' %}
                                           <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
                                           <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
                                         {% endif %}
@@ -112,15 +112,9 @@
                                     {% for key,det in w.details %}
                                       <tr class="active small details details{{ w.id }}" >
                                         <td></td>
-                                        <td>{{ key }} {% if config.administratifSecteurHonoraires != '' %} ({{ det.pourcents }}%){% endif %}</td>
-                                        <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
-                                        <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
-                                        {% if config.administratifSecteurHonoraires == '' %}
-                                          <td>{{ key }}</td>
+                                        <td>{{ key }}{% if page.secteurs[k] != '' %} ({{ det.pourcents }}%){% endif %}</td>
                                           <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
-                                        {% else %}
-                                          <td>{{ key }} ({{ det.pourcents }}%)</td>
-                                          <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        {% if page.secteurs[k] != '' %}
                                           <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
                                           <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
                                         {% endif %}

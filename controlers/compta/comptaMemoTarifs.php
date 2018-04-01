@@ -24,6 +24,7 @@
  * Compta : mémo tarifs consultation
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -51,7 +52,7 @@
  }
 
 
- if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel
+ if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
 			from actes as a
 			left join actes_cat as c on c.id=a.cat
       where ".implode(' and ', $where)."
@@ -59,12 +60,13 @@
 			order by c.displayOrder, c.label asc, a.label asc")) {
      foreach ($tabTypes as $v) {
          $reglement = new msReglement();
-         $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+         $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>'', 'module'=>$v['catModule']));
+         $reglement->set_secteurTarifaire($secteur);
          $reglement->set_factureTypeID($v['id']);
          $reglement->set_factureTypeData($v);
+         $p['page']['secteurs'][$v['catName']]=$secteur;
          $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
      }
  }
-
  // liste des catégories
  $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat order by label", 'id', 'label');
