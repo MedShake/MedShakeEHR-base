@@ -45,13 +45,13 @@ $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPd
 // si user
 if (isset($match['params']['userID'])) {
     $user=array('id'=>$match['params']['userID'], 'module'=>'');
-    $directory=msConfiguration::getParameterValue('repertoireTemplatesPDF', $user);
+    $directory=msConfiguration::getParameterValue('templatesPdfFolder', $user);
 
     $proprio = new msPeople();
     $proprio->setToID($match['params']['userID']);
     $p['page']['fichier']['proprio']=$proprio->getSimpleAdminDatas();
 } else {
-    $directory=msConfiguration::getParameterValue('repertoireTemplatesPDF');
+    $directory=msConfiguration::getParameterValue('templatesPdfFolder');
 }
 
 //vérification fichier existe

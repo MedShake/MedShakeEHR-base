@@ -83,25 +83,25 @@ $(document).ready(function() {
                   </a>\
                 </td>\
                 <td>\
-                  <input class="form-control" name="key_new'+id+'" placeholder="ex: C1" type="text" value="" autocomplete="off">\
+                  <input class="form-control form-control-sm" name="key_new'+id+'" placeholder="ex: C1" type="text" value="" autocomplete="off">\
                 </td>\
                 <td>\
-                  <input class="form-control" name="desc_new'+id+'" type="text" placeholder="ex: consultation classique" value="" autocomplete="off">\
+                  <input class="form-control form-control-sm" name="desc_new'+id+'" type="text" placeholder="ex: consultation classique" value="" autocomplete="off">\
                 </td>\
                 <td>\
-                  <div class="input-group colorpicker cpnew" data-toggle="false">\
+                  <div class="input-group input-group-sm colorpicker cpnew" data-toggle="false">\
                     <input class="form-control" name="back_new'+id+'" type="text" value="#2196f3" placeholder="ex: #2196f3" autocomplete="off">\
                     <div class="input-group-append"><span class="input-group-text"><i style="width:16px;height:16px;background-color:#2196f3"></i></span></div>\
                   </div>\
                 </td>\
                 <td>\
-                  <div class="input-group colorpicker cpnew" data-toggle="false">\
+                  <div class="input-group input-group-sm colorpicker cpnew" data-toggle="false">\
                     <input class="form-control" name="border_new'+id+'" type="text" value="#1e88e5" placeholder="ex: #1e88e5" autocomplete="off">\
                     <div class="input-group-append"><span class="input-group-text"><i style="width:16px;height:16px;background-color:#1e88e5"></i></span></div>\
                   </div>\
                 </td>\
                 <td>\
-                  <input class="form-control" name="duree_new'+id+'" type="text" value="" placeholder="ex: 20" autocomplete="off">\
+                  <input class="form-control form-control-sm" name="duree_new'+id+'" type="text" value="" placeholder="ex: 20" autocomplete="off">\
                 </td>\
               </tr>\
       ');

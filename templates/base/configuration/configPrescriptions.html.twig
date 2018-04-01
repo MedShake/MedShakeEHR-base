@@ -98,7 +98,8 @@
                                         <td>{{ w.id }}</td>
                                         <td>{{ w.label }}</td>
                                         <td>{{ w.description }}</td>
-                                        <td class="d-flex content-justify-end">
+                                        <td class="d-flex justify-content-end">
+                                          <div class="btn-group">
                                             <button type="button" class="btn  btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
@@ -106,6 +107,7 @@
                                             <button type="button" class="btn  btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>
+                                          </div>
                                         </td>
                                     </tr>
                                 {% endfor %}

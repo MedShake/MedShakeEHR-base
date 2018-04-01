@@ -27,3 +27,9 @@ if (is_file($p['homepath'].'config/config.yml'))
     rename($p['homepath'].'config/config.yml', $p['homepath'].'config/config.yml.bak');
 file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($conf, false, 0, true));
 
+chdir($p['config']['webDirectory']);
+if (!is_file($p['homepath'].'composer.phar')) {
+    file_put_contents($p['homepath'].'composer.phar', fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
+}
+exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
+

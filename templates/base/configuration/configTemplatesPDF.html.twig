@@ -96,8 +96,8 @@
           <tr>
               <td>templatesPdfFolder</td>
               <td>{{ page.repertoireTemplatesPDF }}</td>
-              <td class="{% if page.templatesDirAutorisationLecture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
-              <td class="{% if page.templatesDirAutorisationEcriture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+              <td class="bg-{% if page.templatesDirAutorisationLecture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+              <td class="bg-{% if page.templatesDirAutorisationEcriture == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
           </tr>
 
   </table>
@@ -135,7 +135,7 @@
                     </ul>
                     {% endif %}
                   </td>
-                  <td>
+                  <td class="d-flex justify-content-end">
                     <div class="btn-group">
                       <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
                         {% if page.templatesDirAutorisationEcriture == false %}
