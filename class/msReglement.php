@@ -25,6 +25,7 @@
  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msReglement
@@ -61,12 +62,12 @@ class msReglement
     }
 
 /**
- * Set secteur tarifaire (1 ou 2)
+ * Set secteur tarifaire (vide, 1 ou 2)
  * @param int $_secteurTarifaire secteur identifié par un int
  */
     public function set_secteurTarifaire($_secteurTarifaire)
     {
-      $this->_secteurTarifaire = $_secteurTarifaire;
+      $this->_secteurTarifaire = $_secteurTarifaire !=''?:2;
       return $this;
     }
 
@@ -123,21 +124,37 @@ public function getCalculateFactureTypeData() {
   $data['tarif']=0;
   $data['depassement']=0;
   foreach($data['details'] as $key=>$val) {
-
+    if (!is_array($val)) {
+        $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');
+    }
     //sur l'acte
-    if(isset($val['pourcents'])) $data['details'][$key]['tarif'] = round(($dataTarifs[$key]*$val['pourcents']/100), 2);
-    if(isset($val['depassement'])) $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement']; else $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
-
+    if(isset($val['pourcents'])) {
+        $data['details'][$key]['tarif'] = round(($dataTarifs[$key]*$val['pourcents']/100), 2);
+    } else {
+        $data['details'][$key]['tarif'] = $dataTarifs[$key];
+    }
+    if(isset($val['depassement'])) {
+        $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
+    } else {
+         $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
+    }
     $data['details'][$key]['tarif'] = number_format($data['details'][$key]['tarif'], 2,'.','');
     $data['details'][$key]['total'] = number_format($data['details'][$key]['total'], 2,'.','');
 
     //sur la facturation totale
-    if(isset($data['details'][$key]['tarif'])) $data['tarif']=$data['tarif']+$data['details'][$key]['tarif'];
-    if(isset($val['depassement']))  $data['depassement']=$data['depassement']+$val['depassement'];
-
+    if(isset($data['details'][$key]['tarif'])) {
+        $data['tarif']=$data['tarif']+$data['details'][$key]['tarif'];
+    }
+    if(isset($val['depassement'])) {
+        $data['depassement']=$data['depassement']+$val['depassement'];
+    }
 
   }
-  if(isset($data['depassement'])) $data['total']=$data['tarif'] + $data['depassement']; else $data['total']=$data['tarif'];
+  if(isset($data['depassement'])) {
+      $data['total']=$data['tarif'] + $data['depassement'];
+  } else {
+      $data['total']=$data['tarif'];
+  }
 
   $data['total']=number_format($data['total'],2,'.','');
   $data['tarif']=number_format($data['tarif'],2,'.','');

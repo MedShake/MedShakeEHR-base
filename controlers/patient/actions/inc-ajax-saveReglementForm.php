@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['reglementForm']!='baseReglement') {
+if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementSS'])) {
       $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
@@ -45,7 +45,7 @@ if (count($_POST['acteID'])>0) {
     if (!isset($_POST['regleSituationPatient'])) {
       $_POST['regleSituationPatient']='A';
     }
-    foreach (['regleTarifCejour', 'regleDepaCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
+    foreach (['regleTarifSSCejour', 'regleTarifLibreCejour', 'regleDepaCejour', 'regleModulCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
         if (!isset($_POST[$param])) {
           $_POST[$param]='';
         }
@@ -58,9 +58,17 @@ if (count($_POST['acteID'])>0) {
     }
 
     $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
-    $apayer= $_POST['regleTarifCejour'] + $_POST['regleDepaCejour'] + '0';
+    $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
     $important=array('id'=>$supportID, 'important'=>$paye < $apayer?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
+
+    if ($_POST['regleTarifSSCejour']!='' or $_POST['regleDepaCejour']!='') {
+         unset($_POST['regleTarifLibreCejour']);
+         unset($_POST['regleModulCejour']);
+    } elseif ($_POST['regleTarifLibreCejour']!='' or $_POST['regleModulCejour']!='') {
+         unset($_POST['regleTarifSSCejour']);
+         unset($_POST['regleDepaCejour']);
+    }
 
     foreach ($_POST as $param=>$value) {
         if (!in_array($param, ['module', 'reglementForm', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {

@@ -54,7 +54,7 @@
       </li>
     </ol>
 
-    <h1>Gestion des actes élémentaires NGAP / CCAM</h1>
+    <h1>Gestion des actes élémentaires</h1>
     <div>
         <div>
 
@@ -64,7 +64,7 @@
                     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/" aria-controls="categories" role="tab">Catégories</a>
                 </li>
                 <li role="presentation" class="nav-item">
-                  <a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/" aria-controls="prescriptions" role="tab">Actes NGAP / CCAM</a>
+                  <a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/" aria-controls="prescriptions" role="tab">Actes</a>
                 </li>
 
                 <li role="presentation" class="nav-item">
@@ -92,7 +92,7 @@
                                     <th>Utilisation</th>
                                     <th>Type</th>
                                     <th class="texteadroite">Tarif S1</th>
-                                    <th class="texteadroite">Tarif S2</th>
+                                    <th class="texteadroite">Tarif S2 ou Libre</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -163,7 +163,7 @@
                             </div>
 
                             <div class="form-group">
-                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'NGAP' : 'NGAP', 'CCAM' : 'CCAM'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
+                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'Libre' : 'Libre', 'NGAP' : 'NGAP', 'CCAM' : 'CCAM'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
                             </div>
 
                             <div class="form-group">
@@ -171,7 +171,7 @@
                             </div>
 
                             <div class="form-group">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2', } }) }}
+                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2 ou libre', } }) }}
                             </div>
 
                           </form>

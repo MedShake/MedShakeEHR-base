@@ -37,10 +37,8 @@ class msClicRDV
         if (!isset($this->_userpwd) or !$this->_userpwd) {
             $this->setUserPwd();
         }
-        $sb_baseurl='https://sandbox.clicrdv.com/api/v1/';
-        $sb_api_key='?apikey=ee0ab7224b97430fbd7dc5a55a7bac40&format=json';
         $baseurl='https://www.clicrdv.com/api/v1/';
-        $api_key='?apikey=2cb3ec1ad2744d8993529c1961d501ae&format=json';
+        $api_key='?apikey='.msConfiguration::getParameterValue('clicRdvApiKey').'&format=json';
         $group= $groupID ? 'groups/'.$groupID.'/' : '';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseurl.$group.$req.$api_key.$params);

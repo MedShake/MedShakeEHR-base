@@ -76,10 +76,13 @@
                                 <tr>
                                     <th>Code</th>
                                     <th>Label</th>
-
-                                    <th class="texteadroite">Tarif&nbsp;SS</th>
-                                    <th class="texteadroite">Dépassement</th>
-                                    <th class="texteadroite">Total</th>
+                                    {% if config.administratifSecteurHonoraires == '' %}
+                                      <th class="texteadroite">Tarif</th>
+                                    {% else %}
+                                      <th class="texteadroite">Tarif&nbsp;SS</th>
+                                      <th class="texteadroite">Dépassement</th>
+                                      <th class="texteadroite">Total</th>
+                                    {% endif %}
                                     <th></th>
 
                                 </tr>
@@ -94,8 +97,10 @@
                                         <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
 
                                         <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+                                        {% if config.administratifSecteurHonoraires =! '' %}
+                                          <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
+                                          <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+                                        {% endif %}
                                         <td class="d-flex justify-content-end">
                                           <div class="btn-group">
                                             <button type="button" class="btn  btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
@@ -107,11 +112,18 @@
                                     {% for key,det in w.details %}
                                       <tr class="active small details details{{ w.id }}" >
                                         <td></td>
-                                        <td>{{ key }}  ({{ det.pourcents }}%)</td>
-
+                                        <td>{{ key }} {% if config.administratifSecteurHonoraires != '' %} ({{ det.pourcents }}%){% endif %}</td>
                                         <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
                                         <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
-                                        <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        {% if config.administratifSecteurHonoraires == '' %}
+                                          <td>{{ key }}</td>
+                                          <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        {% else %}
+                                          <td>{{ key }} ({{ det.pourcents }}%)</td>
+                                          <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                          <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
+                                          <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        {% endif %}
                                         <td colspan="2"></td>
                                       </tr>
                                     {% endfor %}

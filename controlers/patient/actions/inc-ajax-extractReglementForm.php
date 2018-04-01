@@ -45,7 +45,7 @@ if (!isset($delegate)) {
       $module=$res[0]['module'];
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-  if ($reglementForm!='baseReglement') {
+  if (!in_array($reglementForm, ['baseReglementLibre', 'baseReglementSS'])) {
       $hook=$p['homepath'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
       if ($module!='' and $module!='base' and is_file($hook)) {
           include $hook;
@@ -62,6 +62,7 @@ $template="patientReglementForm";
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
 
+$p['page']['depacement']=$reglementForm=='baseReglementSS';
 
 //pour menu de choix de l'acte, par catégories
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel

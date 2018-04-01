@@ -68,9 +68,11 @@
 					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
-             $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+             $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>'', 'module'=>$v['catModule']));
+             $reglement->set_secteurTarifaire($secteur);
              $reglement->set_factureTypeID($v['id']);
              $reglement->set_factureTypeData($v);
+             $p['page']['secteurs'][$v['catName']]=$secteur;
              $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
          }
      }

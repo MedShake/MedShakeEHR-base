@@ -51,6 +51,7 @@ $(document).ready(function() {
   //observer le changement sur dépassement
   $("#newReglement").on("change, keyup", ".regleDepaCejour", function(e) {
     e.preventDefault();
+    $(this).val($(this).val().replace(' ',''));
     calcResteDu();
   });
 
@@ -89,9 +90,11 @@ function searchAndInsertActeData(selecteur) {
     return;
   }
 
+  var pourcents=$('.pourcents').length;
+
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
-
+  
   $.ajax({
     url: urlBase+'/patient/ajax/getReglementData/',
     type: 'post',
@@ -112,7 +115,7 @@ function searchAndInsertActeData(selecteur) {
 
       $('#detFacturation tbody').html('');
       $.each(data['details'], function( index, value ) {
-        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + value['pourcents'] + "</td><td>" + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
+        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + (pourcents ? (value['pourcents'] + "</td><td>") : '') + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
 
       });
       $('#detFacturation').show();
