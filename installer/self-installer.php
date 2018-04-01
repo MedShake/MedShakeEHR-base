@@ -95,7 +95,11 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 //exécution de composer pour la partie JS
                 chdir($dossierweb);
                 exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
-                if(strpos(strtolower($ret), 'error')===false) {
+                //Vérifie l'absence d'erreur dans le log Composer
+                $errormatches = array_filter($ret, function ($haystack){
+					if( strpos(strtolower($haystack), 'error') === false) {return false;} else {return true;}
+				});
+                if(empty($errormatches)) {
                     unlink($dossierweb.'/self-installer.php');
                     $htaccess="SetEnv MEDSHAKEEHRPATH ".$dossier."\n";
                     $htaccess.=file_get_contents($dossierweb."/.htaccess");
