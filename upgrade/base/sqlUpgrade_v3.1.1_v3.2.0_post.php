@@ -28,8 +28,14 @@ if (is_file($p['homepath'].'config/config.yml'))
 file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($conf, false, 0, true));
 
 chdir($p['config']['webDirectory']);
-if (!is_file($p['homepath'].'composer.phar')) {
+if (exec('COMPOSER_HOME="/tmp/" composer.phar -V', $ret) and strpos($ret, 'Composer version')!==false) {
+    exec('COMPOSER_HOME="/tmp/" composer.phar update 2>&1', $ret);
+} elseif (is_file($p['homepath'].'composer.phar')) {
+   exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
+} else {
     file_put_contents($p['homepath'].'composer.phar', fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
+    if (is_file($p['homepath'].'composer.phar'))
+        exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
 }
-exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
-
+if(strpos($ret, 'Error')!==false) 
+  die($ret);

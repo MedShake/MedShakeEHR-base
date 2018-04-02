@@ -94,12 +94,14 @@
                   <ul class="nav navbar-nav">
                       {% if config.agendaDistantLink %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                            <a class="d-none d-lg-block nav-link" href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                            <a class="d-lg-none nav-link" href="{{ config.agendaDistantLink }}">Agenda</a>
                         </li>
                       {% elseif page.agendaUsers|length == 1 and user.id in page.agendaUsers|keys %}
                         {% for k,v in page.agendaUsers %}
                           <li nav-item">
-                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                              <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                              <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">Agenda</a>
                           </li>
                         {% endfor %}
                       {% elseif page.agendaUsers %}
@@ -109,14 +111,16 @@
                           <ul class="bg-dark dropdown-menu">
                             {% if user.id in page.agendaUsers|keys %}
                               <li class="bg-dark dropdown-item">
-                                <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
+                                <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
+                                <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/">{{ page.agendaUsers[user.id] }}</a>
                               </li>
                               <li role="separator" class="dropdown-divider"></li>
                             {% endif %}
                             {% for k,v in page.agendaUsers %}
                               {% if k != user.id %}
                                 <li class="bg-dark dropdown-item">
-                                  <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+                                  <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+                                  <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
                                 </li>
                               {% endif %}
                             {% endfor %}
@@ -196,7 +200,8 @@
                             {% if config.VoirRouletteObstetricale == 'true' %}
                               <li class="dropdown-header">Outils</li>
                               <li class="bg-dark dropdown-item">
-                                  <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                                  <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                                  <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/">Roulette obstétricale</a>
                               </li>
                               <li role="separator" class="dropdown-divider"></li>
                             {% endif %}

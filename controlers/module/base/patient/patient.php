@@ -47,7 +47,11 @@ $data=new msData;
 $reglements=$data->getDataTypesFromCatName('porteursReglement', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($reglements as $v) {
     if ($v['module']=='base') {
-        $p['page']['formReglement'][]=$v;
+        if (($v['formValues']=='baseReglementLibre' and $p['config']['administratifSecteurHonoraires']=='') or
+          ($v['formValues']=='baseReglementSS' and $p['config']['administratifSecteurHonoraires']!='') or
+          ($v['formValues']!='baseReglementLibre' and $v['formValues']!='baseReglementSS')) {
+            $p['page']['formReglement'][]=$v;
+        }
     }
 }
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));

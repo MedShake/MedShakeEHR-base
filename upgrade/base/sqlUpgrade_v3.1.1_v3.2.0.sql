@@ -1,3 +1,6 @@
+
+ALTER TABLE `system` DROP KEY `name`, ADD UNIQUE KEY `nameGroupe` (`name`, `groupe`);
+
 ALTER TABLE `actes_base` CHANGE `type` `type` enum('NGAP','CCAM', 'Libre') NOT NULL DEFAULT 'CCAM';
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='porteursReglement');

@@ -131,6 +131,7 @@ $(document).ready(function() {
   //retirer une relation patient <-> praticien/patient
   $('body').on("click", ".removeRelationPatient", function(e) {
     e.preventDefault();
+    e.stopPropagation();
     ID2 = $(this).attr('data-peopleID');
     ID1 = $('#identitePatient').attr("data-patientID");
     if (ID1 > 0 && ID2 > 0) {
@@ -169,6 +170,10 @@ $(document).ready(function() {
 
   });
 
+  $('body').on('click', '.voirDossier', function(){
+    window.location = $(this).find('a.btn').attr('href');
+  });
+
 });
 
 function getRelationsPatientPatientsTab() {
@@ -184,19 +189,19 @@ function getRelationsPatientPatientsTab() {
       $('#bodyTabRelationPatientPatients').html('');
       $.each(data, function(index, value) {
         $('#bodyTabRelationPatientPatients').append('\
-          <tr>\
+          <tr class="voirDossier" style="cursor:pointer">\
             <td>\
-             <a href="' + urlBase + '/patient/' + value.patientID + '/">\
-               <button class="btn btn-default btn-sm" role="button">\
-                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
-               </button>\
-             </a>\
+              <a class="btn btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
+                <span class="fa fa-folder-open" aria-hidden="true"></span>\
+              </a>\
             </td>\
             <td>' + value.prenom + ' ' + value.nom + '</td>\
             <td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td>\
             <td>\
-              <button class="btn btn-default btn-sm removeRelationPatient" style="cursor:pointer" role="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
-              </button>\
+              <div class="btn-group">\
+                <button class="btn btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+                </button>\
+              </div>\
             </td>\
           </tr>');
       });
@@ -223,18 +228,19 @@ function getRelationsPatientPraticiensTab() {
       $('#bodyTabRelationPatientPrat').html('');
       $.each(data, function(index, value) {
         $('#bodyTabRelationPatientPrat').append('\
-          <tr>\
+          <tr class="voirDossier" style="cursor:pointer">\
             <td>\
-              <a href="' + urlBase + '/pro/' + value.pratID + '/">\
-                <button class="btn btn-default btn-sm" role="button">\
-                  <span class="fa fa-folder-open" aria-hidden="true"></span>\
-                </button>\
+              <a class="btn btn-default btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
+                <span class="fa fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
             <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td>\
             <td>\
-              <button class="btn btn-default btn-sm removeRelationPatient" style="cursor:pointer" role="button" data-peopleID="' + value.pratID + '"><span class="fa fa-times" aria-hidden="true"></span>\
-              </button>\
+              <div class="btn-group">\
+                <button class="btn btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
+                  <span class="fa fa-times" aria-hidden="true"></span>\
+                </button>\
+              </div>\
             </td>\
           </tr>');
       });

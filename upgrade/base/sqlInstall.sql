@@ -293,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `system` (
   `name` varchar(30) DEFAULT NULL,
   `groupe` enum('system', 'module', 'cron', 'lock') DEFAULT 'system',
   `value` text DEFAULT NULL,
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `nameGroupe` (`name`, `groupe`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `configuration` (
