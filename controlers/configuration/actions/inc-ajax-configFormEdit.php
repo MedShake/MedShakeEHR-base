@@ -24,6 +24,7 @@
  * Config > action : éditer un formulaire
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 

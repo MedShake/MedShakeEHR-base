@@ -23,6 +23,7 @@
  # Template > patient : formulaire d'envoi de mail
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
@@ -43,7 +44,7 @@
             {{ page.doc.label|e }}
             {{ page.doc.titre|e }}
             <small>(Taille : {{ page.doc.filesize|e }})</small>
-            <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" target="_blank" title="Voir">
+            <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" target="_blank" title="Voir">
               <span class="fa fa-eye" aria-hidden="true"></span> Voir
             </a>
 

@@ -24,6 +24,7 @@
  * Config : gérer les données du modèle de données
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //admin uniquement

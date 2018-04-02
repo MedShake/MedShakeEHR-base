@@ -24,6 +24,7 @@
  * Patient > ajax : générer le fichier DICOM worklist pour Orthanc
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 if(!is_numeric($_POST['patientID'])) die;

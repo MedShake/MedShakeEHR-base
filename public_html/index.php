@@ -96,7 +96,6 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msTools::redirection('/maintenance.html');
     }
     if (isset($p['user']['id'])) {
-//        msUser::applySpecificConfig($p['config'], $p['user']['id']);
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
 } else {

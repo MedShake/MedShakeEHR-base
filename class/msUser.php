@@ -24,6 +24,7 @@
  * Gestion des utilisateurs de l'EHR
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msUser
@@ -132,28 +133,6 @@ class msUser
     }
 
 
-/**
- * surcharger la config yaml avec les paramètres perso de l'utilisateur
- * @param  array $config Tableau porteur de la configuration
- * @param  int   $userID userID
- * @return void
- */
-/*
-    public static function applySpecificConfig(&$config, $userID)
-    {
-        $data = new msPeople();
-        $data->setToID($userID);
-        $params = $data->getPeopleDataFromDataTypeGroupe('user', ['dt.name', 'od.value as userVal']);
-
-        if (count($params) > 0) {
-            foreach ($params as $param) {
-                if ($param['userVal'] != null) {
-                    $config[$param['name']]=$param['userVal'];
-                }
-            }
-        }
-    }
-*/
 /**
  * Vérifier le login utilisateur
  * @param  int $userID userID
