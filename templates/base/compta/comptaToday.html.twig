@@ -60,7 +60,7 @@
             {% for obj, reg in page.tabRegNC %}
               <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                 <td>
-                  <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
+                  <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
                     <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}
@@ -79,7 +79,7 @@
                   <td style="width:0"></td>
                 {% endif %}
                 <td>
-                  <button type="button" class="btn   btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                  <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
                     <span class="fa fa-question-circle" aria-hidden="true"></span>
                   </button>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
@@ -123,7 +123,7 @@
             {% for reg in page.tabRegC %}
               <tr>
                 <td>
-                  <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
+                  <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
                     <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}
@@ -138,7 +138,7 @@
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
                 </td>
                 <td>
-                  <button type="button" class="btn   btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                  <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
                     <span class="fa fa-question-circle" aria-hidden="true"></span>
                   </button>
                   {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
@@ -232,7 +232,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn " data-dismiss="modal">Annuler</button>
+              <button type="button" class="btn" data-dismiss="modal">Annuler</button>
               <input type="submit" class="btn btn-primary"></input>
             </div>
       	  </form>

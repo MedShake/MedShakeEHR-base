@@ -61,7 +61,7 @@
                   <td>#{{ loop.index }}</td>
                   <td>
                       {{ reg.creationDate|date("d/m/Y H:i") }}
-                      {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn  btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
+                      {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
                         <span class="far fa-clock" aria-hidden="true"></span>
                       </button>{% endif %}
                   </td>
@@ -72,7 +72,7 @@
                           {{ reg.regleIdentiteCheque|e }}){% endif %}
                   </td>
                   <td class="text-right">
-                      <button type="button" class="btn   btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                      <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
                           <span class="fa fa-question-circle" aria-hidden="true"></span>
                       </button>
                   </td>
@@ -118,7 +118,7 @@
                   </td>
                   <td class="text-right">
                       <div class="btn-group">
-                          <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
                               
                           </button>

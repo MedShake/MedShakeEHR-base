@@ -94,7 +94,7 @@
                           {{ v.0.catLabel }}
                           <small>
                             (module {{ v.0.catModule }})
-                            <a class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/{{ page.selectUser }}/{{ v.0.cat }}/">
+                            <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/{{ page.selectUser }}/{{ v.0.cat }}/">
                               <span class="fa fa-search" aria-hidden="true"></span>
                             </a>
                           </small>
@@ -142,7 +142,7 @@
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
 
-                                            <button type="button" {% if page['utilisationParFacture'][w.id] > 0 %} disabled {% endif %} class="btn  btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes">
+                                            <button type="button" {% if page['utilisationParFacture'][w.id] > 0 %} disabled {% endif %} class="btn btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>
 
@@ -230,5 +230,5 @@
 
                           </form>
                         </div>
-                        <div class="modal-footer"> <button type="button" class="btn " data-dismiss="modal">Fermer</button> <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button> </div> </div>
+                        <div class="modal-footer"> <button type="button" class="btn" data-dismiss="modal">Fermer</button> <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button> </div> </div>
                                 </div> </div> {% endblock %}

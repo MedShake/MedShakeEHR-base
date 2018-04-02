@@ -30,14 +30,14 @@
   <td>
      <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
      <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
-     {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn  btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
+     {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
        <span class="far fa-clock" aria-hidden="true"></span>
      </button>{% endif %}
   </td>
   <td>
     <div class="btn-group">
       {# view / edit #}
-      <button type="button" class="btn  btn-sm newCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}">
+      <button type="button" class="btn btn-sm newCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}">
 
         {% if cs.iconeType == 'update' %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
@@ -49,14 +49,14 @@
       {# print #}
       {% if cs.printModel %}
 
-        <a class="btn  btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
+        <a class="btn btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
           <span class="fa fa-print" aria-hidden="true" title="Imprimer"></span>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
-            <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
+            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
               <span class="fa fa-paper-plane" aria-hidden="true"></span>
             </button>
             <ul class="dropdown-menu">
@@ -89,20 +89,20 @@
         {% endif %}
       {% endif %}
       {% if cs.sendMail > 0 %}
-        <a class="btn  btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
+        <a class="btn btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
           <span class="fa fa-envelope" aria-hidden="true"></span>
         </a>
       {% endif %}
 
       {% if cs.dicomStudy %}
-        <a class="btn  btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ cs.dicomStudy }}/" target="_blank">
+        <a class="btn btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ cs.dicomStudy }}/" target="_blank">
           <span class="far fa-picture" aria-hidden="true"></span>
         </a>
       {% endif %}
 
       {# option #}
       <div class="btn-group">
-        <button type="button" class="btn  btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
