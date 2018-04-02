@@ -72,6 +72,8 @@ class msConfiguration
           $userParams=array();
         if (!is_array($moduleParams))
           $moduleParams=array();
+        if (!is_array($defaultParams))
+          $defaultParams=array();
         return array_replace($defaultParams, $moduleParams, $userParams);
     }
 

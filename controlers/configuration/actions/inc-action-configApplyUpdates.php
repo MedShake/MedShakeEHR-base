@@ -35,6 +35,7 @@ if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur")
  * @return void
  */
 function includePhp($file, $suffixe) {
+  global $p;
   if($suffixe == '_pre' or $suffixe == '_post' ) {
     $file=str_replace('.sql', $suffixe.'.php', $file);
     if(is_file($file)) include($file);
@@ -75,7 +76,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     //on fait une sauvegarde de la base
     exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql');
     //puis on applique les patches en commençant par ceux de base s'il y en a
-    if (array_key_exists($moduleUpdateFiles, 'base')) {
+    if (array_key_exists('base', $moduleUpdateFiles)) {
         foreach ($moduleUpdateFiles['base'] as $file) {
             includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
@@ -93,6 +94,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     //enfin, on installe les nouveaux modules
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
+            echo $file;
             includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
             includePhp($file, '_post');

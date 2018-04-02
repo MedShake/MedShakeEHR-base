@@ -1,4 +1,5 @@
 <?php
+$initialDir=getcwd();
 
 msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
   ('mailRappelLogCampaignDirectory', 'default', '".$p['config']['mailRappelLogCampaignDirectory']."'),
@@ -27,15 +28,13 @@ if (is_file($p['homepath'].'config/config.yml'))
     rename($p['homepath'].'config/config.yml', $p['homepath'].'config/config.yml.bak');
 file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($conf, false, 0, true));
 
-chdir($p['config']['webDirectory']);
+$pathToComposer='php '.$p['homepath'].'composer.phar';
 if (exec('COMPOSER_HOME="/tmp/" composer.phar -V', $ret) and strpos($ret, 'Composer version')!==false) {
-    exec('COMPOSER_HOME="/tmp/" composer.phar update 2>&1', $ret);
-} elseif (is_file($p['homepath'].'composer.phar')) {
-   exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
-} else {
+    $pathToComposer='composer.phar';
+} elseif (!is_file($pathToComposer)) {
     file_put_contents($p['homepath'].'composer.phar', fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
-    if (is_file($p['homepath'].'composer.phar'))
-        exec('COMPOSER_HOME="/tmp/" php '.$p['homepath'].'composer.phar update 2>&1', $ret);
 }
-if(strpos($ret, 'Error')!==false) 
-  die($ret);
+chdir($p['config']['webDirectory']);
+exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
+chdir($initialDir);
+
