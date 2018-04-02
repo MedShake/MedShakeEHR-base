@@ -26,7 +26,7 @@
  #}
 {% import "macroForm.html.twig" as f %}
 
-    <div class="card col-md-12 px-0 mb-4 historiqueToday"{% if page.patient.today %} style="display:none"{% endif %}>
+    <div class="card col-md-12 px-0 mb-4 historiqueToday"{% if page.patient.today|length == 0 %} style="display:none"{% endif %}>
         <div class="card-header py-0 gras">Aujourd'hui</div>
 
         <div class="mx-1">
