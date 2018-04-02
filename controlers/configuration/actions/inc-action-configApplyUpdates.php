@@ -73,7 +73,7 @@ foreach ($modules as $module) {
 if (count($installFiles) or count($moduleUpdateFiles)) {
     msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
     //on fait une sauvegarde de la base
-    exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d H:i:s').'-avant update.sql');
+    exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql');
     //puis on applique les patches en commençant par ceux de base s'il y en a
     if (array_key_exists($moduleUpdateFiles, 'base')) {
         foreach ($moduleUpdateFiles['base'] as $file) {

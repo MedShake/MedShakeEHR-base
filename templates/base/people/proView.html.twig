@@ -96,10 +96,47 @@
 
               <div class="card-footer">&nbsp;</div>
             </div>
+            {% if page.patientsConnus %}
+              <div class="card mt-4 px-0 col-md-12">
+                <div class="card-header py-0 gras">Patients connus</div>
+                <div class="card-body">
+                  <p>Patients reliés à ce praticien</p>
+                </div>
+
+                <table class="table table-sm mb-0 table-striped table-hover">
+          				<thead>
+          					<tr>
+          						<th></th>
+          						<th class="col-md-10">Identité</th>
+          						<th></th>
+          					</tr>
+          				</thead>
+          				<tbody>
+                    {% for v in page.patientsConnus %}
+                    <tr style="cursor:pointer" onclick="window.location=$(this).find('a').attr('href');">
+                      <td>
+                        <a title="Afficher le dossier" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
+                      </td>
+                      <td>{{ v.nom }} {{ v.prenom }}</td>
+                      <td class="d-flex justify-content-right">
+                        <div class="btn-group">
+                          <a title="Éditer les relations du patient" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
+                        </div>
+                      </td>
+
+                    </tr>
+                    {% endfor %}
+          				</tbody>
+
+          			</table>
+
+                <div class="card-footer">&nbsp;</div>
+              </div>
+            {% endif %}
       </div>
 
     {% if config.PraticienPeutEtrePatient %}
-      <div class="col-md-6">
+      <div class="col-md-6 mt-4 mt-md-0">
             <div class="card panel-primary">
               <div class="card-header py-0 gras">Informations personnelles</div>
               <div class="card-body">
@@ -129,46 +166,6 @@
       </div>
     {% endif %}
 </div>
-
-{% if page.patientsConnus %}
-<div class="row">
-
-    <div class="col-md-6">
-          <div class="card col-md-12">
-            <div class="card-header py-0 gras">Patients connus</div>
-            <div class="card-body">
-              <p>Patients reliés à ce praticien.
-
-              </p>
-            </div>
-
-            <table class="table table-sm mb-0 table-striped table-hover">
-      				<thead>
-      					<tr>
-      						<th></th>
-      						<th class="col-md-10">Identité</th>
-      					</tr>
-      				</thead>
-      				<tbody>
-                {% for v in page.patientsConnus %}
-                <tr>
-                  <td>
-                    <a title="Accès au dossier" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
-                    <a title="Éditer les relations du patient" class="btn  btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
-                  </td>
-                  <td>{{ v.nom }} {{ v.prenom }}</td>
-
-                </tr>
-                {% endfor %}
-      				</tbody>
-
-      			</table>
-
-            <div class="card-footer">&nbsp;</div>
-          </div>
-    </div>
-</div>
-{% endif %}
 
 </div>
 {% endblock %}

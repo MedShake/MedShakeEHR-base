@@ -146,16 +146,17 @@ if (isset($template)) {
       elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
           $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
       }
+
+      // crédits SMS
+      if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
+          $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
+      }
+
+      //utilisateurs pouvant avoir un agenda
+      $agendaUsers= new msPeople();
+      $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
     }
 
-    // crédits SMS
-    if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
-        $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
-    }
-
-    //utilisateurs pouvant avoir un agenda
-    $agendaUsers= new msPeople();
-    $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
