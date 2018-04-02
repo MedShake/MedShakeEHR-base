@@ -327,11 +327,12 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Définition des titles boutons agenda
 
-  $(".fc-prevMonth-button").attr("title", "Mois précédent");
-  $(".fc-prev-button").attr("title", "Semaine précédente");
-  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
-  $(".fc-next-button").attr("title", "Semaine suivante");
-  $(".fc-nextMonth-button").attr("title", "Mois suivant");
+  $(".fc-prevMonth-button").attr("title", "Mois précédent").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-prev-button").attr("title", "Semaine précédente").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-next-button").attr("title", "Semaine suivante").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-nextMonth-button").attr("title", "Mois suivant").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-left").addClass("pt-2");
   $(".fc-body").addClass("cursor-cell");
   ////////////////////////////////////////////////////////////////////////
   ///////// observations boutons popover
