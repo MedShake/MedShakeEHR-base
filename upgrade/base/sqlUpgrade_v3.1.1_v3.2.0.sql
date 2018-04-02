@@ -14,6 +14,15 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 UPDATE `data_types` SET `name`='regleTarifSSCejour' WHERE `name`='regleTarifCejour';
 UPDATE `data_types` SET `name`='reglePorteurSS', `label`='Règlement conventionné', `placeholder`='Règlement conventionné', `formValues`='baseReglementSS' WHERE `name`='reglePorteur';
+UPDATE `data_types` SET `placeholder`='type et nom de la voie', `label`='Voie', `description`='Adresse perso : voie' WHERE `name`='street';
+UPDATE `data_types` SET `placeholder`='n° dans la voie', `label`='n°', `description`='Adresse perso : n° dans la voie' WHERE `name`='streetNumber';
+UPDATE `data_types` SET `description`='Adresse pro : n° dans la voie' WHERE `name`='numAdressePro';
+UPDATE `data_types` SET `placeholder`='mobile: 0x xx xx xx xx' WHERE  `name`='mobilePhone';
+UPDATE `data_types` SET `placeholder`='fixe: 0x xx xx xx xx' WHERE  `name`='homePhone';
+UPDATE `data_types` SET `placeholder`='naissance: dd/mm/YYYY' WHERE  `name`='birthdate';
+UPDATE `data_types` SET `placeholder`='décès: dd/mm/YYYY' WHERE  `name`='deathdate';
+UPDATE `data_types` SET `placeholder`='nom marital ou d\'usage' WHERE  `name`='lastname';
+UPDATE `data_types` SET `placeholder`='nom' WHERE  `name`='birthname';
 
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES

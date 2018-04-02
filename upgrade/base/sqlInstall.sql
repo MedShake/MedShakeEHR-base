@@ -364,17 +364,17 @@ INSERT IGNORE INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `
 
 INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 (0, 'admin', 'submit', '', '', '', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 3600, 1),
-(1, 'admin', 'birthname', 'nom reçu à la naissance', 'Nom de naissance', 'Nom reçu à la naissance', 'identite', 'Le nom de naissance est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
-(2, 'admin', 'lastname', 'nom utilisé au quotidien', 'Nom d\'usage', 'Nom utilisé au quotidien', 'identite', 'Le nom d\'usage ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
+(1, 'admin', 'birthname', 'nom', 'Nom de naissance', 'Nom reçu à la naissance', 'identite', 'Le nom de naissance est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
+(2, 'admin', 'lastname', 'nom marital ou d\'usage', 'Nom d\'usage', 'Nom utilisé au quotidien', 'identite', 'Le nom d\'usage ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (3, 'admin', 'firstname', 'prénom', 'Prénom', 'Prénom figurant sur la pièce d\'identité', 'identite', 'Le prénom est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (4, 'admin', 'personalEmail', 'email@domain.ext', 'Email personnelle', 'Adresse email personnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
 (5, 'admin', 'profesionnalEmail', 'email@domain.ext', 'Email professionnelle', 'Adresse email professionnelle', 'valid_email', 'L\'adresse email n\'est pas correcte. Elle doit être de la forme email@domain.net', 'email', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
 (6, 'admin', 'twitterAccount', '', 'Twitter', 'Compte twitter', 'twitterAccount', '', 'text', '', 'base', 3, 1, '2018-01-01 00:00:00', 3600, 1),
-(7, 'admin', 'mobilePhone', '06 xx xx xx xx', 'Téléphone mobile', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile est incorrect', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
-(8, 'admin', 'birthdate', 'dd/mm/YYYY', 'Date de naissance', 'Date de naissance au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de naissance indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
-(9, 'admin', 'streetNumber', 'numéro dans la rue', 'Numéro', 'Adresse perso : numéro dans la rue', '', 'Le numéro de rue est incorrect', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
+(7, 'admin', 'mobilePhone', 'mobile: 0x xx xx xx xx', 'Téléphone mobile', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile est incorrect', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
+(8, 'admin', 'birthdate', 'naissance: dd/mm/YYYY', 'Date de naissance', 'Date de naissance au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de naissance indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
+(9, 'admin', 'streetNumber', 'n° dans la voie', 'Numéro', 'Adresse perso : n° dans la voie', '', 'Le numéro de voie est incorrect', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
 (10, 'admin', 'homePhone', '0x xx xx xx xx', 'Téléphone domicile', 'Téléphone du domicile de la forme 0x xx xx xx xx', 'phone', 'Le numéro de téléphone du domicile n\'est pas correct', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
-(11, 'admin', 'street', 'rue', 'Rue', 'Adresse perso : rue', '', '', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
+(11, 'admin', 'street', 'type et nom de la voie', 'Voie', 'Adresse perso : voie', '', '', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
 (12, 'admin', 'city', 'ville', 'Ville', 'Adresse perso : ville', '', '', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
 (13, 'admin', 'postalCodePerso', 'code postal', 'Code postal', 'Adresse perso : code postal', '', 'Le code postal n\'est pas correct', 'text', '', 'base', 2, 1, '2018-01-01 00:00:00', 3600, 1),
 (14, 'admin', 'administrativeGenderCode', '', 'Sexe', 'Sexe', '', '', 'select', 'F: \'Femme\'\nM: \'Homme\'\nU: \'Inconnu\'', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -393,7 +393,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (43, 'medical', 'imc', 'imc', 'IMC', 'IMC (autocalcule)', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (51, 'admin', 'titre', 'Dr, Pr ...', 'Titre', 'Titre du pro de santé', '', '', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (53, 'admin', 'codePostalPro', 'code postal', 'Code postal', 'Adresse pro : code postal', 'alpha_space', 'Le code postal n\'est pas conforme', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
-(54, 'admin', 'numAdressePro', 'n°', 'Numéro', 'Adresse pro : numéro dans la rue', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
+(54, 'admin', 'numAdressePro', 'n°', 'Numéro', 'Adresse pro : n° dans la voie', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
 (55, 'admin', 'rueAdressePro', 'rue', 'Rue', 'Adresse pro : rue', '', '', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
 (56, 'admin', 'villeAdressePro', 'ville', 'Ville', 'Adresse pro : ville', '', '', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
 (57, 'admin', 'telPro', 'téléphone professionnel', 'Téléphone professionnel', 'Téléphone pro.', 'phone', '', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -473,7 +473,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (513, 'admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', 26, 1, '2018-01-01 00:00:00', 3600, 1),
 (514, 'relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', 63, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (515, 'user', 'administratifComptaPeutVoirRecettesDe', '', 'administratifComptaPeutVoirRecettesDe', 'permet à l\'utilisateur sélectionné de voir les recettes des praticiens choisis', '', '', 'text', '', 'base', 64, 1, '2018-01-01 00:00:00', 3600, 1),
-(516, 'admin', 'deathdate', 'dd/mm/YYYY', 'Date de décès', 'Date de décès au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de décès indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2018-02-21 10:09:29', 3600, 1);
+(516, 'admin', 'deathdate', 'décès: dd/mm/YYYY', 'Date de décès', 'Date de décès au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de décès indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2018-02-21 10:09:29', 3600, 1);
 
 
 INSERT IGNORE INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES
