@@ -92,7 +92,7 @@
     <script>
     var boutonsHeaderCenter;
     var hiddenDays;
-    var firstDay;
+    var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};
     var minTime;
     var maxTime;
     var businessHours;

@@ -249,11 +249,7 @@
                             </a>
                             <ul class="bg-dark dropdown-menu dropdown-menu-right">
                                 <li class="bg-dark dropdown-item">
-                                  {% if config.PraticienPeutEtrePatient %}
-                                    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
-                                  {% else %}
-                                    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
-                                  {% endif %}
+                                  <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
                                 </li>
                                 <li class="bg-dark dropdown-item">
                                     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>

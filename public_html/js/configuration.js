@@ -277,6 +277,27 @@ $(document).ready(function() {
       $(this).closest('.input-group').find('input').attr('type','password');
     });
   
+  //Suppression d'un paramètre dans la page paramètres spécifiques
+  $('body').on('click', '.removeParam', function(){
+    var $tr = $(this).closest('tr');
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configUserParamDelete/",
+      type: 'post',
+      data: {
+        userID: $('input[name=userID]').val(),
+        paramName: $tr.attr('data-name')
+      },
+      dataType: "json",
+      success: function(data) {
+        $tr.remove();
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+
+      }
+    });
+  });
+
   //droits admin dans la page liste des utilisateurs
   $(".changeAdmin").on("click", function(e){
     e.preventDefault();

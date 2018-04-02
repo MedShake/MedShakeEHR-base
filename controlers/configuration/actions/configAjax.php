@@ -56,7 +56,8 @@ $acceptedModes=array(
     'configCronJobs', //Configurer les crons
     'configInstallModule', // Installer un module
     'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
-    'configUserParamCreate' // Créer un paramètre dans la configuration spécifique à un utilisateur
+    'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
+    'configUserParamDelete' // Supprimer un paramètre dans la configuration spécifique à un utilisateur
 );
 if (!in_array($m, $acceptedModes)) {
     die;
@@ -187,9 +188,14 @@ elseif ($m=='configSpecificUserParam') {
     include('inc-ajax-configSpecificUserParam.php');
 }
 
-// Attribuer une config spécifique à un utilisateur
+// Créer un paramètre dans la configuration spécifique à un utilisateur
 elseif ($m=='configUserParamCreate') {
     include('inc-ajax-configUserParamCreate.php');
+}
+
+// Supprimer un paramètre dans la configuration spécifique à un utilisateur
+elseif ($m=='configUserParamDelete') {
+    include('inc-ajax-configUserParamDelete.php');
 }
 
 die();

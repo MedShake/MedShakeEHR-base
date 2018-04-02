@@ -85,11 +85,12 @@
                   <th>Valeur défaut</th>
                   <th>Valeur utilisateur</th>
                   <th>Description</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {% for w in v %}
-                  <tr>
+                  <tr data-name="{{ w.name }}">
                     <td>{{ w.name }}</td>
                     <td>{{ w.default }}</td>
                     <td{% if w.type=='checkbox' %} class="d-flex justify-content-center"{% endif %}>
@@ -132,6 +133,12 @@
                       {% endif %}
                     </td>
                     <td>{{ w.description }}</td>
+                    <td class="d-flex justify-content-end">
+                      <div class="btn-group">
+                        <button class="btn btn-sm removeParam" type="button">
+                          <span class="fa fa-times"></span>
+                        </button>
+                      </div>
                   </tr>
                 {% endfor %}
               </tbody>

@@ -584,6 +584,7 @@ INSERT INTO `configuration`(`name`, `service`, `cat`, `level`, `type`, `descript
 ('phonecaptureResolutionWidth', 'propre', 'Phonecapture', 'default', 'nombre', '', '1920'),
 ('phonecaptureResolutionHeight', 'propre', 'Phonecapture', 'default', 'nombre', '', '1080'),
 ('agendaService', 'propre', 'Agenda', 'default', 'vide/clicRDV', '', ''),
+('agendaPremierJour', 'propre', 'Agenda', 'default', 'vide/nombre', 'vide pour roulant, 0 pour dimanche, 1 pour lundi, etc...', '1'),
 ('agendaDistantLink', 'tiers', 'Agenda', 'default', 'url', 'si agendaService est configuré, alors agendaDistantLink doit être vide', ''),
 ('agendaDistantPatientsOfTheDay', 'tiers', 'Agenda', 'default', 'url', '', ''),
 ('agendaLocalPatientsOfTheDay', 'propre', 'Agenda', 'default', 'fichier', '', 'patientsOfTheDay.json'),
