@@ -112,4 +112,4 @@ input::placeholder {font-size:14px !important}
 .list-group {line-height:16px}
 .nav .dropdown-item a {padding:0}
 .nav .dropdown-divider{margin-bottom:0.25rem}
-.nav-pills .nav-link.active {background-color:#337ab7;}
+.nav-pills .nav-link.active .dropdown-item:active {background-color:#337ab7;}
