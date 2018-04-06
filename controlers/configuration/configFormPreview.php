@@ -21,7 +21,7 @@
  */
 
 /**
- * Config : apperçu des formulaires
+ * Config : aperçu des formulaires
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
