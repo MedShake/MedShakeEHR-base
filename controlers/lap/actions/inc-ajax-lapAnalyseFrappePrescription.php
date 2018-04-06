@@ -44,6 +44,7 @@ if (count($_POST['ligneData']['medics']) == 1) {
     $lappres->setPrescriptibleEnDC($_POST['ligneData']['medics'][0]['prescriptibleEnDC']);
     $lappres->setNbRenouvellement($_POST['ligneData']['ligneData']['nbRenouvellements']);
     $lappres->setDatePremierePrise($_POST['ligneData']['ligneData']['dateDebutPrise']);
+    $lappres->setStupefiant($_POST['ligneData']['medics'][0]['stup']);
 
     $lappres->interpreterPrescription();
     echo $lappres->getPrescriptionInterpreteeJSON();

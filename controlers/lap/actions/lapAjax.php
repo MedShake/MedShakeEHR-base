@@ -54,7 +54,8 @@ $acceptedModes=array(
     'lapOrdoAnalyse', // analyser l'ordo
     'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
     'lapPresPreGet', // obtenir les prescriptions préétablies
-    'lapVoirEffetsIndesirables' // voir effets indésirable d'un medic
+    'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
+    'lapMonographieSection' // sortir une section de monographie
 );
 
 if (!in_array($m, $acceptedModes)) {

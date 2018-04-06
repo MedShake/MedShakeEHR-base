@@ -67,7 +67,7 @@ proView: ['GET', '/pro/[i:proID]/', 'people/proView']
 
 # lap
 lapAjax: ['GET|POST', '/lap/ajax/[a:m]/', 'lap/actions/lapAjax']
-lap: ['GET|POST', '/lap/[i:patient]/', 'lap/lap']
+lapMonographie: ['GET|POST', '/lap/monographie/[i:spe]/[a:section]?/', 'lap/lapMonographie']
 
 #dossier patient
 patientAjaxIgnoreEmpty: ['GET|POST', '/patient/ajax/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientAjax']

@@ -522,7 +522,7 @@ function calculerCoutOrdo() {
 
 function afficherCoutOrdo() {
   cout = calculerCoutOrdo();
-  if(cout > 0) {
+  if (cout > 0) {
     $('div.coutOrdo').html('Coût des prescriptions : ' + cout.toFixed(2).replace(".", ",") + ' €');
   } else {
     $('div.coutOrdo').html('');
@@ -562,13 +562,19 @@ function calculerCoutMedic(totalUnitesPrescrites, uniteUtiliseeOrigine, prixucd,
   }
 }
 
+/**
+ * Tester si un médicament entre dans la prise en charge ALD pour les ALD du patient
+ * @param  {array} tabList liste des ALD num => o/n
+ * @return {boolean}         true / false
+ */
 function testIfAldOk(tabList) {
-  for (var k in tabList){
-      if (tabList.hasOwnProperty(k)) {
-           if(tabList[k] == 'o' && $.inArray(k,aldActivesListe) ) {
-             return true;
-           }
+  if (aldActivesListe.length < 1) return false;
+  for (var k in tabList) {
+    if (tabList.hasOwnProperty(k)) {
+      if (tabList[k] == 'o' && $.inArray(k, aldActivesListe) > 0) {
+        return true;
       }
+    }
   }
   return false;
 }
@@ -607,9 +613,9 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.isChronique == 'true') {
       retour += '        <span class="label label-default">chronique</span>';
     }
-    if(testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance') {
+    if (testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
       retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
-    } else if (mode == 'editionOrdonnance') {
+    } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
       retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
@@ -823,6 +829,12 @@ function makeLigneOrdo(data, mode) {
       }
       if (data.ligneData.isChronique == 'true') {
         retour += ' <span class = "label label-default" >chronique</span>';
+      }
+
+      if (testIfAldOk(medic.ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+        retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+      } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+        retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
       }
 
       if (medic.prescripteurInitialTT) {

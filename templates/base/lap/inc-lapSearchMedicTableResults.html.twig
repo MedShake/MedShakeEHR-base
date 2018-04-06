@@ -57,6 +57,9 @@
                     -
                     {{ pres.pre_adm }}
                   {% endif %}
+                  {% if pres.reservhop != 'NON' %}
+                    <span class="label label-warning" title="Ce médicament est à prescription restreinte, consultez la monographie pour les détails"><span class="glyphicon glyphicon-warning-sign"></span></span>
+                  {% endif %}
                 </td>
                 <td>
                   {% if pres.pre_nat %}
