@@ -67,14 +67,14 @@
       <table class="table table-sm mb-0 table-condensed">
         <thead>
           <th>acte</th>
-          {% if page.depacement %}
+          {% if page.secteur != '' %}
             <th class="pourcents">%</th>
           {% endif %}
           <th>tarif</th>
-          {% if page.depacement %}
-            <th>depassement</th>
-          {% else %}
+          {% if page.secteur == '' %}
             <th>modulation</th>
+          {% else %}
+            <th>depassement</th>
           {% endif %}
           <th>total</th>
         </thead>

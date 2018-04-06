@@ -90,7 +90,7 @@ function searchAndInsertActeData(selecteur) {
     return;
   }
 
-  var pourcents=$('.pourcents').length;
+  var pourcents = $('.pourcents').length;
 
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
@@ -100,6 +100,7 @@ function searchAndInsertActeData(selecteur) {
     type: 'post',
     data: {
       acteID: acteID,
+      reglementForm: $('#newReglement input[name=reglementForm]').val(),
     },
     dataType: "json",
     success: function(data) {

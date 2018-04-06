@@ -32,11 +32,11 @@
             "type": "package",
             "package": {
                 "name": "FortAwesome/Font-Awesome",
-                "version": "5.0.8",
+                "version": "5.0.9",
                 "source": {
                     "url": "https://github.com/FortAwesome/Font-Awesome.git",
                     "type": "git",
-                    "reference": "5.0.8"
+                    "reference": "5.0.9"
                 }
             }
         },
@@ -189,7 +189,7 @@
     "require": {
         "mattbryson/TouchSwipe-Jquery-Plugin": "^1.6.18",
         "FezVrasta/popper.js": "^v1.14.1",
-        "FortAwesome/Font-Awesome": "^5.0.8",
+        "FortAwesome/Font-Awesome": "^5.0.9",
         "twbs/bootstrap": "^4.0",
         "eonasdan/bootstrap-datetimepicker": "^4.17.43",
         "moment/moment": "^2.17.1",

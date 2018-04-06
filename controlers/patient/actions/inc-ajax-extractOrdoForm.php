@@ -33,7 +33,7 @@ if (!isset($delegate)) {
   if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
       $ordoForm=$_POST['ordoForm'];
       $porteur=$_POST['porteur'];
-      $userID=$p['user']['id'];
+      $userID=$_POST['asUserID']?:$p['user']['id'];
       $module=$_POST['module'];
   } else {
       $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt 
@@ -59,7 +59,7 @@ if (!isset($delegate)) {
 //template
 $template="patientOrdoForm";
 
-$p['page']['ordo']=array('module'=>$module, 'ordoForm'=>$ordoForm, 'porteur'=>$porteur);
+$p['page']['ordo']=array('module'=>$module, 'ordoForm'=>$ordoForm, 'porteur'=>$porteur, 'asUserID'=>$_POST['asUserID']);
 
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];

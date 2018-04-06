@@ -62,11 +62,8 @@ if (is_numeric($_POST['objetID'])) {
         $template='inc-ajax-detReglement';
         $data = new msObjet();
         $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID'], 'name');
-        $user['id']=current($p['page']['datareg'])['toID'];
-        $people=new msPeople();
-        $people->setToID($user['id']);
-        $user['module']=$people->getModule();
-        $p['page']['secteurHonoraires']=msConfiguration::getParameterValue('administratifSecteurHonoraires', $user);
+        $p['page']['secteurHonoraires']='baseReglementSS'==msSQL::sqlUniqueChamp("SELECT dt.formValues AS form FROM data_types as dt
+        LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$_POST['objetID']."' limit 1") ? '1' : '';
         $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$_POST['objetID']."')");
     } elseif ($data['groupe']=="mail") {
         $template='inc-ajax-detMail';

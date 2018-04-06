@@ -90,7 +90,7 @@ h2 {margin-top:0.25em;margin-bottom:0.5em}
 label {margin-left:0.5rem;margin-right:0.5rem;margin-bottom:0.25rem;font-size:14px}
 .btn-group {margin:0}
 .input-group {margin:0.25em}
-.btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:#fff;border-color:#bbb}
+.btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {background-color:rgba(255,255,255,0.7);border-color:#bbb}
 .btn-group > .btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {background-color:#ddd}
 a {color:#337ab7}
 .btn {color:#484848;}
@@ -100,11 +100,11 @@ a {color:#337ab7}
 .btn-group > .btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {border-right:none}
 .btn-group > .btn.active {box-shadow:0 0 0 .2rem rgba(0,123,255,.25)}
 :not(.input-group-append):not(.input-group-prepend) > .btn:not(.btn-sm) {border-radius:2px}
-.btn.btn-primary {color:#fff;background-color:#337ab7;border-color:#2e6da4;}
-.btn.btn-primary:hover {background-color:#286090;border-color:#204d74}
+.btn.btn-primary, .btn-primary.dropdown-toggle {color:#fff;background-color:#337ab7;border-color:#2e6da4;}
+.btn.btn-primary:hover, .btn-primary:active, .btn-primary.dropdown-toggle:active, .show > .btn-primary.dropdown-toggle, .btn-primary.dropdown-toggle:focus {background-color:#286090 !important;border-color:#204d74}
 .bg-primary {color:#fff;background-color:#337ab7 !important;}
 .btn-warning {background-color:#f0ad4e;border-color:#eea236}
-.btn-warning:hover {background-color:#ec971f;border-color:#d58512}
+.btn-warning:hover,.btn-warning:active, .btn-warning:focus {background-color:#ec971f !important;border-color:#d58512}
 .btn-danger,.btn-danger:hover,.btn-success,.btn-success:hover,.btn-outline-secondary:hover {color:#fff}
 input::placeholder {font-size:14px !important}
 .card {line-height:32px}
@@ -112,4 +112,4 @@ input::placeholder {font-size:14px !important}
 .list-group {line-height:16px}
 .nav .dropdown-item a {padding:0}
 .nav .dropdown-divider{margin-bottom:0.25rem}
-.nav-pills .nav-link.active, .dropdown-item:active, .dropdown-toggle:active, .show > .btn-primary.dropdown-toggle {background-color:#337ab7 !important;}
+.nav-pills .nav-link.active, :not(.navbar-nav) .dropdown-item:active {background-color:#337ab7;}

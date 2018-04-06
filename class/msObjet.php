@@ -39,9 +39,13 @@ class msObjet
      */
     public $_toID;
     /**
-     * @var int ID de l'utilisateur qui enregistre l'objet
+     * @var int ID de l'utilisateur propriétaire de l'objet
      */
     private $_fromID;
+    /**
+     * @var int ID de l'utilisateur qui enregistre l'objet si différent du propriétaire
+     */
+    private $_byID;
     /**
      * @var string jeu de données
      */
@@ -97,7 +101,7 @@ public function getToID()
 }
 
 /**
- * Définir le user qui enregistre l'objet
+ * Définir le propriétaire de l'objet
  * @param [type] $v [description]
  * @return int fromID
  */
@@ -107,6 +111,20 @@ public function getToID()
             return $this->_fromID = $v;
         } else {
             throw new Exception('FromID is not numeric');
+        }
+    }
+
+/**
+ * Définir le user qui enregistre l'objet quand différent du propriétaire
+ * @param [type] $v [description]
+ * @return int fromID
+ */
+    public function setByID($v)
+    {
+        if (is_numeric($v)) {
+            return $this->_byID = $v;
+        } else {
+            throw new Exception('byID is not numeric');
         }
     }
 
@@ -272,6 +290,9 @@ public function getToID()
         'instance'=> $parentID,
         'value' => $value
       );
+      if (isset($this->_byID)) {
+          $pd['byID']=$this->_byID;
+      }
 
       //si creationDate est fixée
       if (isset($this->_creationDate)) {

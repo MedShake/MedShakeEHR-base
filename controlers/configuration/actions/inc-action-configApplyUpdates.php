@@ -115,4 +115,4 @@ if (isset($output) and is_array($output)) {
     }
 }
 unset($_SESSION['form'][$formIN]);
-msTools::redirection('/patients/');
+msTools::redirRoute('configModules');

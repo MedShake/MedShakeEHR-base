@@ -217,7 +217,7 @@ $(document).ready(function() {
   ///////// Observations déclenchement actions d'injections dans la page
 
   //bouton de nouvelle consultation
-  $("body").on("click", ".newCS", function(e) {
+  $("body").on("click", ".addNewCS, .editCS", function(e) {
     e.preventDefault();
     if ($('#nouvelleCs').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la consultation en cours ?')) {
@@ -289,7 +289,7 @@ $(document).ready(function() {
   ///////// Observations fermeture actions non terminées
 
   //close button zone newCS
-  $('body').on("click", "#cleanNewCS, .addNewCS", function(e) {
+  $('body').on("click", "#cleanNewCS", function(e) {
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });
@@ -341,7 +341,7 @@ $(document).ready(function() {
     $('#alternatTitreModal #titreActu').val(titreActu);
     $('#alternatTitreModal #objetID').val(objetID);
   })
-  $('body').on('dblclick', '.trLigneExamen td', function() {
+  $('body').on('dblclick', '.trLigneExamen td:nth-child(4)', function() {
     $('#alternatTitreModal').modal('show');
     titreActu = $(this).closest('tr').attr('data-alternatTitre');
     objetID = $(this).closest('tr').attr('data-objetID');
@@ -418,9 +418,18 @@ $(document).ready(function() {
     });
   });
 
+  $("body").on('click', '.btn-group', function(e){
+    if ($(this).parent().prop('tagName')=="TD") {
+      e.stopPropagation();
+      $(e.target).closest('.btn-group').children('.dropdown-menu').toggle();
+    }
+  });
+  $("body").on('click', function(){
+    $('tr .dropdown-menu').hide();
+  });
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $("body").on('click', '.trLigneExamen td:nth-child(3), .showDetDoc', function(e) {
+  $("body").on('click', '.trLigneExamen, .showDetDoc', function(e) {
     e.preventDefault();
     showObjetDet($(this));
   });
@@ -462,17 +471,15 @@ $(document).ready(function() {
         } 
       });
 
+  $('body').on('dblclick', '.trLigneExamen td:nth-child(2)', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    changeCreationDate($(this));
+  });
   $("body").on("click", ".changeCreationDate", function(e) {
     e.preventDefault();
-    objetID = $(this).closest('tr').attr('data-objetID');
-    registerDate = $(this).closest('tr').attr('data-registerDate');
-    creationDate = $(this).closest('tr').attr('data-creationDate');
-
-    $("#modalCreationDate input[name='objetID']").val(objetID);
-    $("#modalRegisterDateDisplay").html(registerDate);
-    $("#modalCreationDateDisplay").html(creationDate);
-    $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
-    $("#modalCreationDate").modal('show');
+    e.stopPropagation();
+    changeCreationDate($(this));
   });
 
   $("body").on("click", ".modalCreationDateClose", function(e) {
@@ -695,7 +702,7 @@ function sendFormToCsDiv(el) {
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données
-      if (el.attr('data-mode') != 'copy')
+      if (el.attr('data-mode') != 'view')
         $(window).on("beforeunload", preventDataLoss);
       $('form').submit(function() {
         $(window).unbind("beforeunload");
@@ -759,6 +766,7 @@ function sendFormToOrdoDiv(el) {
     url: urlBase + '/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
+      asUserID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-asuserid') : null,
       objetID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       parentID: '',
@@ -826,6 +834,7 @@ function sendFormToReglementDiv(el) {
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
+      asUserID: el.attr('data-asUserID'),
       objetID: el.hasClass('editReglement') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       reglementForm: el.attr('data-reglementForm'),
@@ -898,10 +907,10 @@ function toogleImportant(el) {
       if (importanceActu == 'n') {
         el.html('N\'est plus important');
         el.attr('data-importanceActu', 'y');
-        $('.icoImportant' + objetID).html('<span class="fa fa-flash" aria-hidden="true"></span>');
+        el.closest('tr').addClass(el.closest('tr').hasClass('trReglement')?'table-danger':'table-info');
       }
       if (importanceActu == 'y') {
-        $('.icoImportant' + objetID).html('');
+        el.closest('tr').removeClass('table-info').removeClass('table-danger');
         el.html('Rendre important');
         el.attr('data-importanceActu', 'n');
       }
@@ -937,8 +946,30 @@ function modalAlternateTitreChange() {
   });
 }
 
+function changeCreationDate($el) {
+  var objetID = $el.closest('tr').attr('data-objetID');
+  var registerDate = $el.closest('tr').attr('data-registerDate');
+  var creationDate = $el.closest('tr').attr('data-creationDate');
+
+  $("#modalCreationDate input[name='objetID']").val(objetID);
+  $("#modalRegisterDateDisplay").html(registerDate);
+  $("#modalCreationDateDisplay").html(creationDate);
+  $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
+  $("#modalCreationDate").modal('show');
+}
+
 // voir le détail d'une ligne d'historique
-function showObjetDet(element) {
+var objDetTimer;
+function showObjetDet(element, timed) {
+  if (objDetTimer == undefined) {
+    objDetTimer = setTimeout(showObjetDet, 200, element, true);
+    return;
+  }
+  clearTimeout(objDetTimer);
+  objDetTimer = undefined;
+  if (timed == undefined) {
+    return;
+  }
   zone = element.closest('table').attr('data-zone');
   objetID = element.closest('tr').attr('data-objetID');
   ligne = element.closest('tr');

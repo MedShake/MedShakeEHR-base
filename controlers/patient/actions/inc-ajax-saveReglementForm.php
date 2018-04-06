@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementSS'])) {
+if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
       $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
@@ -39,8 +39,11 @@ if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementSS']
 
 if (count($_POST['acteID'])>0) {
     $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
+    $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
     $patient->setToID($_POST['patientID']);
+    if ($_POST['asUserID']) {
+        $patient->setByID($p['user']['id']);
+    }
 
     if (!isset($_POST['regleSituationPatient'])) {
       $_POST['regleSituationPatient']='A';
@@ -71,7 +74,7 @@ if (count($_POST['acteID'])>0) {
     }
 
     foreach ($_POST as $param=>$value) {
-        if (!in_array($param, ['module', 'reglementForm', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
+        if (!in_array($param, ['module', 'asUserID', 'reglementForm', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
             $patient->createNewObjetByTypeName($param, $value, $supportID);
         }
     }

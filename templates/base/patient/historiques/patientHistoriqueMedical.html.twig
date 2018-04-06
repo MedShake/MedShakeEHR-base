@@ -65,6 +65,7 @@
         <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
             <thead>
                 <tr class="histoHead">
+                    <th></th>
                     <th>Date</th>
                     <th>Actions</th>
                     <th>Acte</th>
@@ -73,7 +74,7 @@
             </thead>
             <tbody>
               {% for k,c in page.patient.historique %}
-                <tr class="anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}"><td colspan="4" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+                <tr class="anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}"><td colspan="5" class="bg-primary"><strong>{{ k }}</strong></td></tr>
                 {% for cs in c %}
                   {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
                 {% endfor %}

@@ -33,7 +33,7 @@ if (!isset($delegate)) {
   if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
       $reglementForm=$_POST['reglementForm'];
       $porteur=$_POST['porteur'];
-      $userID=$p['user']['id'];
+      $userID=is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id'];
       $module=$_POST['module'];
   } else {
       $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
@@ -45,7 +45,7 @@ if (!isset($delegate)) {
       $module=$res[0]['module'];
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-  if (!in_array($reglementForm, ['baseReglementLibre', 'baseReglementSS'])) {
+  if (!in_array($reglementForm, ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
       $hook=$p['homepath'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
       if ($module!='' and $module!='base' and is_file($hook)) {
           include $hook;
@@ -62,7 +62,7 @@ $template="patientReglementForm";
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
 
-$p['page']['depacement']=$reglementForm=='baseReglementSS';
+$p['page']['secteur']=$reglementForm=='baseReglementS1'?'1':($reglementForm=='baseReglementS2'?'2':'');
 
 //pour menu de choix de l'acte, par catégories
 if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
@@ -104,6 +104,7 @@ $p['page']['form']['addHidden']=array(
   'porteur'=>$porteur,
   'reglementForm'=>$reglementForm,
   'module'=>$module,
+  'asUserID'=>$_POST['asUserID'],
   'patientID'=>$_POST['patientID'],
   'acteID'=>$p['page']['formActes']['prevalue'],
 );

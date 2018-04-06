@@ -46,12 +46,11 @@ $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', ar
 $data=new msData;
 $reglements=$data->getDataTypesFromCatName('porteursReglement', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($reglements as $v) {
-    if ($v['module']=='base') {
-        if (($v['formValues']=='baseReglementLibre' and $p['config']['administratifSecteurHonoraires']=='') or
-          ($v['formValues']=='baseReglementSS' and $p['config']['administratifSecteurHonoraires']!='') or
-          ($v['formValues']!='baseReglementLibre' and $v['formValues']!='baseReglementSS')) {
-            $p['page']['formReglement'][]=$v;
-        }
+    if ($v['module']=='base' and (
+       ($v['formValues']=='baseReglementLibre' and $p['config']['administratifSecteurHonoraires']=='') or
+       ($v['formValues']=='baseReglementS1' and $p['config']['administratifSecteurHonoraires']=='1') or
+       ($v['formValues']=='baseReglementS2' and $p['config']['administratifSecteurHonoraires']=='2'))) {
+        $p['page']['formReglement'][]=$v;
     }
 }
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));

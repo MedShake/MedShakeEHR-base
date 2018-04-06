@@ -26,7 +26,12 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<tr class="tr{{ cs.id }} trLigneExamen collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
+<tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
+  <td title="Ordonnance">
+    <a class="btn" role="button" href="javascript:void()">
+      <span class="fa fa-pills" aria-hidden="true"></span>
+    </a>
+  </td>
   <td>
    <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
    <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
@@ -35,7 +40,7 @@
     <div class="btn-group">
       {# edit #}
       <button class="btn btn-sm editOrdo d-none d-lg-inline-block" type="button">
-        {% if cs.iconeType == 'update' %}
+        {% if cs.iconeType == 'update' and cs.fromID == user.id %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
         {% else %}
           <span class="far fa-clone" aria-hidden="true" title="Dupliquer"></span>
@@ -95,7 +100,7 @@
         <ul class="dropdown-menu dropdown-menu-right">
           <li class="d-inline-block d-lg-none">
             <a class="dropdown-item editOrdo">
-              {% if cs.iconeType == 'update' %}
+              {% if cs.iconeType == 'update' and cs.fromID == user.id %}
                 Editer
               {% else %}
                 Dupliquer
@@ -131,25 +136,27 @@
               </li>
             {% endif %}
           {% endif %}
+          <li class="d-inline-block d-lg-none">
           {% if cs.sendMail > 0 %}
-            <li class="d-inline-block d-lg-none">
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Envoyer</a>
             </li>
           {% endif %}
-          <li class="dropdown-divider d-inline-block d-lg-none"></li>
-          <li>
-            <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-              {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
-          </li>
-          <li role="separator" class="dropdown-divider"></li>
-          <li class="disabled">
-            <a class="dropdown-item" href="#">#{{ cs.id }}</a>
-          </li>
-          <li role="separator" class="dropdown-divider"></li>
+          {% if cs.fromID == user.id %}
+            <li class="dropdown-divider d-inline-block d-lg-none"></li>
+            <li>
+              <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
+                {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
+            </li>
+            <li role="separator" class="dropdown-divider"></li>
+            <li class="disabled">
+              <a class="dropdown-item" href="#">#{{ cs.id }}</a>
+            </li>
+            <li role="separator" class="dropdown-divider"></li>
+          {% endif %}
           {% if cs.sendMail > 0 %}
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
@@ -166,27 +173,19 @@
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/" target="_blank">Tags utilisables dans templates</a>
           </li>
-          <li role="separator" class="dropdown-divider"></li>
-          <li>
-            <a class="dropdown-item" href="#" class="suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
-          </li>
+          {% if cs.fromID == user.id %}
+            <li role="separator" class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item suppCs" href="#" data-objetID="{{ cs.id }}">Supprimer</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
   </td>
   <td>
-    <span class="icoImportant{{ cs.id }}">
-      {% if cs.important == 'y' %}
-        <span class="fa fa-flash" aria-hidden="true"></span>
-      {% endif %}
-    </span>
-    {{ cs.label }}
-    <span class="alternatTitre{{ cs.id }}">
-      {% if cs.titre %}
-        :
-        {{ cs.titre|e }}{% endif %}
-    </span>
-
+    <span class="d-none d-lg-inline">{{ cs.label }}{% if cs.titre %} : {% endif %}</span>
+    <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
   </td>
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
   <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>

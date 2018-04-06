@@ -39,8 +39,11 @@ if ($_POST['ordoForm']!='') {
 
 if (count($_POST)>2) {
     $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
+    $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
     $patient->setToID($_POST['patientID']);
+    if ($_POST['asUserID']) {
+        $patient->setByID($p['user']['id']);
+    }
 
     //support
     if (isset($_POST['objetID'])) {
