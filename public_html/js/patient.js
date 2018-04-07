@@ -297,6 +297,17 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations spécifiques aux lignes de l'historique  (dont modal)
 
+  // contraction d'une année
+
+  $("body").on("click", ".anneeHistorique", function(){
+    setTimeout((function($el){
+      if($el.hasClass('collapsed'))
+        $el.find('.fa-minus-square').hide()&&$el.find('.fa-plus-square').show();
+      else
+        $el.find('.fa-minus-square').show()&&$el.find('.fa-plus-square').hide()
+      }), 200, $(this));
+  });
+
   //sélectionner un groupe dans l'historique
 
   $("body").on("click change", "#historiqueTypeSelect button, #historiqueTypeSelect option", function(e) {
@@ -547,7 +558,7 @@ $(document).ready(function() {
           if ($tr.length && $($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
             $($tr[0]).after(data);
           else {
-            $('#historique .histoHead').after('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '" onclick="$(this).find(\'.far\').toggle()">\
+            $('#historique .histoHead').after('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
                 <span class="far fa-plus-square" style="display:none"></span>\
