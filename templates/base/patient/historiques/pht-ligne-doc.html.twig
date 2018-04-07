@@ -62,7 +62,7 @@
               </li>
             {% endif %}
             {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-              <li role="separator" class="dropdown-divider"></li>
+              <li role="separator" class="dropdown-divider m-0"></li>
             {% endif %}
             {% if config.faxService %}
               <li>
@@ -70,7 +70,7 @@
               </li>
             {% endif %}
             {% if cs.sendMail > 0 %}
-              <li role="separator" class="dropdown-divider"></li>
+              <li role="separator" class="dropdown-divider m-0"></li>
               <li>
                 <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
               </li>
@@ -89,6 +89,9 @@
           <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">
+          <li>
+            <span class="dropdown-header py-0"><i>#{{ cs.id }} Document</i></span>
+          </li>
           <li class="d-inline-block d-lg-none">
             <a class="dropdown-item showDetDoc" href="#" target="_blank">Voir</a>
           </li>              
@@ -104,7 +107,7 @@
               </li>
             {% endif %}
             {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-              <li class="dropdown-divider d-inline-block d-lg-none"></li>
+              <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
             {% endif %}
             {% if config.faxService %}
               <li class="d-inline-block d-lg-none">
@@ -112,7 +115,7 @@
               </li>
             {% endif %}
             {% if cs.sendMail > 0 %}
-              <li class="dropdown-divider d-inline-block d-lg-none"></li>
+              <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
               <li class="d-inline-block d-lg-none">
                 <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
               </li>
@@ -123,29 +126,25 @@
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Envoyer</a>
             </li>              
           {% endif %}
-          <li class="dropdown-divider d-inline-block d-lg-none"></li>
+          <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
           {% if cs.fromID == user.id %}
             <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
+                {% if cs.important == 'n' %}Rendre important{% else %}Rendre non important{% endif %}
               </a>
             </li>
             <li>
               <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
             </li>
-            <li role="separator" class="dropdown-divider"></li>
+            <li role="separator" class="dropdown-divider m-0"></li>
           {% endif %}
-          <li class="disabled">
-            <a class="dropdown-item" href="#">#{{ cs.id }}</a>
-          </li>
           {% if cs.sendMail > 0 %}
-            <li role="separator" class="dropdown-divider"></li>
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
             </li>
           {% endif %}
           {% if cs.fromID == user.id %}
-            <li role="separator" class="dropdown-divider"></li>
+            <li role="separator" class="dropdown-divider m-0"></li>
             <li>
               <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
             </li>

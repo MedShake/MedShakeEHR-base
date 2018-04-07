@@ -48,26 +48,25 @@
               <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
           </button>
           <ul class="dropdown-menu">
+            <li>
+              <span class="dropdown-header py-0"><i>#{{ cs.id }} Mail</i></span>
+            </li>
             <li class="d-inline-block d-lg-none">
               <a class="dropdown-item showDetDoc" href="#" target="_blank">Voir</a>
             </li>
-            <li class="dropdown-divider d-inline-block d-lg-none"></li>
+            <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
             {% if cs.fromID == user.id %}
               <li>
                   <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                      {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
+                      {% if cs.important == 'n' %}Rendre important{% else %}Rendre non important{% endif %}
                   </a>
               </li>
               <li>
                   <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
               </li>
-              <li role="separator" class="dropdown-divider"></li>
+              <li role="separator" class="dropdown-divider m-0"></li>
             {% endif %}
-            <li class="disabled">
-                <a class="dropdown-item" href="#">#{{ cs.id }}</a>
-            </li>
             {% if cs.sendMail > 0 %}
-              <li role="separator" class="dropdown-divider"></li>
               <li>
                   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
               </li>

@@ -76,7 +76,7 @@
                 </li>
               {% endif %}
               {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-                <li role="separator" class="dropdown-divider"></li>
+                <li role="separator" class="dropdown-divider m-0"></li>
               {% endif %}
               {% if config.faxService %}
                 <li>
@@ -84,7 +84,7 @@
                 </li>
               {% endif %}
               {% if cs.sendMail > 0 %}
-                <li role="separator" class="dropdown-divider"></li>
+                <li role="separator" class="dropdown-divider m-0"></li>
                 <li>
                   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
                 </li>
@@ -111,6 +111,9 @@
           <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
+            <li>
+              <span class="dropdown-header py-0"><i>#{{ cs.id }} Consultation</i></span>
+            </li>
           <li class="d-block d-lg-none">
             {% if cs.iconeType == 'update' and cs.fromID == user.id %}
               <a class="dropdown-item editCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update">Editer</a>
@@ -134,7 +137,7 @@
                 </li>
               {% endif %}
               {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-                <li role="separator"  class="dropdown-divider d-block d-lg-none"></li>
+                <li role="separator"  class="dropdown-divider m-0 d-block d-lg-none"></li>
               {% endif %}
               {% if config.faxService %}
                 <li class="d-block d-lg-none">
@@ -142,7 +145,7 @@
                 </li>
               {% endif %}
               {% if cs.sendMail > 0 %}
-                <li role="separator" class="dropdown-divider d-block d-lg-none"></li>
+                <li role="separator" class="dropdown-divider m-0 d-block d-lg-none"></li>
                 <li class="d-block d-lg-none">
                   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
                 </li>
@@ -154,7 +157,7 @@
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ cs.dicomStudy }}/" target="_blank">Voir images DICOM</a>
             </li>
           {% endif %}
-          <li class="dropdown-divider d-block d-lg-none"></li>
+          <li class="dropdown-divider m-0 d-block d-lg-none"></li>
           {% if cs.fromID == user.id %}
             <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
@@ -170,18 +173,14 @@
             <li>
               <a href="#" class="dropdown-item changeCreationDate">Modifier la date</a>
             </li>
-            <li role="separator" class="dropdown-divider"></li>
-            <li class="disabled">
-              <a class="dropdown-item" href="#">#{{ cs.id }}</a>
-            </li>
-            <li role="separator" class="dropdown-divider"></li>
+            <li role="separator" class="dropdown-divider m-0"></li>
           {% endif %}
           {% if cs.sendMail > 0 %}
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
             </li>
           {% endif %}
-          <li class="dropdown-divider d-inline-block d-lg-none"></li>
+          <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
@@ -192,13 +191,13 @@
             <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
           </li>
           {% if cs.fromID == user.id %}
-            <li role="separator" class="dropdown-divider"></li>
+            <li role="separator" class="dropdown-divider m-0"></li>
             <li>
               <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
             </li>
           {% endif %}
           {% if cs.dicomStudy %}
-            <li role="separator" class="dropdown-divider"></li>
+            <li role="separator" class="dropdown-divider m-0"></li>
             <li class="disabled">
               <a class="dropdown-item" href="#">Dicom study ID :
                 {{ cs.dicomStudy }}</a>

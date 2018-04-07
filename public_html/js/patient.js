@@ -474,7 +474,8 @@ $(document).ready(function() {
   $('body').on('dblclick', '.trLigneExamen td:nth-child(2)', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    changeCreationDate($(this));
+    if ($(this).closest('tr').attr('data-creationdate'))
+      changeCreationDate($(this));
   });
   $("body").on("click", ".changeCreationDate", function(e) {
     e.preventDefault();
@@ -766,7 +767,7 @@ function sendFormToOrdoDiv(el) {
     url: urlBase + '/patient/ajax/extractOrdoForm/',
     type: 'post',
     data: {
-      asUserID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-asuserid') : null,
+      asUserID: el.hasClass('editOrdo') && el.closest('tr').attr('data-asuserid') != undefined ? el.closest('tr').attr('data-asuserid') : null,
       objetID: el.hasClass('editOrdo') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       parentID: '',
@@ -834,7 +835,7 @@ function sendFormToReglementDiv(el) {
     url: urlBase + '/patient/ajax/extractReglementForm/',
     type: 'post',
     data: {
-      asUserID: el.attr('data-asUserID'),
+      asUserID: el.attr('data-asuserid') != undefined ? el.attr('data-asUserID') : null,
       objetID: el.hasClass('editReglement') ? el.closest('tr').attr('data-objetID') : null,
       patientID: $('#identitePatient').attr("data-patientID"),
       reglementForm: el.attr('data-reglementForm'),

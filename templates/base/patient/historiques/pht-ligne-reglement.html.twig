@@ -55,7 +55,9 @@
             <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
-
+          <li>
+            <span class="dropdown-header py-0"><i>#{{ cs.id }} Règlement</i></span>
+          </li>
           <li class="d-block d-lg-none">
            {% if cs.iconeType == 'update' %}
              <a class="dropdown-item editReglement">Editer</a>
@@ -63,10 +65,10 @@
              <a class="dropdown-item editReglement">Dupliquer</a>
            {% endif %}
           </li>
-          <li class="dropdown-divider d-block d-lg-none"></li>
+          <li class="dropdown-divider m-0 d-block d-lg-none"></li>
           <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                  {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
+                  {% if cs.important == 'n' %}Rendre important{% else %}Rendre non important{% endif %}
               </a>
           </li>
           <li>
@@ -75,11 +77,7 @@
           <li>
               <a href="#" class="dropdown-item changeCreationDate">Modifier la date</a>
           </li>
-          <li role="separator" class="dropdown-divider"></li>
-          <li class="disabled">
-              <a class="dropdown-item" href="#">#{{ cs.id }}</a>
-          </li>
-          <li role="separator" class="dropdown-divider"></li>
+          <li role="separator" class="dropdown-divider m-0"></li>
           <li>
               <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
           </li>
