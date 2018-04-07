@@ -544,13 +544,16 @@ $(document).ready(function() {
         alert_popup("warning", data);
         } else {
           var $tr = $("#historique .anneeHistorique");
-          if ($tr.length) {
-            if ($($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
-              $($tr[0]).after(data);
-            else
-              $($tr[0]).before('<tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
-          } else {
-            $('#historique .histoHead').after('<tr class="anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '"><td colspan="5" class="bg-primary"><strong>' + moment().format("YYYY") + '</strong></td></tr>' + data);
+          if ($tr.length && $($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
+            $($tr[0]).after(data);
+          else {
+            $('#historique .histoHead').after('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '" onclick="$(this).find(\'.far\').toggle()">\
+              <td class="pl-3">\
+                <span class="far fa-minus-square"></span>\
+                <span class="far fa-plus-square" style="display:none"></span>\
+              </td>\
+              <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
+            </tr>' + data);
             refreshHistorique();
           }
           $tr = $("#historiqueToday .trLigneExamen");
@@ -1208,12 +1211,17 @@ function refreshHistorique() {
     $('.historiqueMedicalComplet').hide();
     return;
   }
-  $('.historiqueMedicalComplet').show();
-  $('.historiqueMedicalComplet .anneeHistorique').each(function(idx,el) {
-    if (!idx)
-      $('trLigneExamen[data-annee=' + $(el).attr('data-annee') + ']').show();
-    else
-      $('trLigneExamen[data-annee=' + $(el).attr('data-annee') + ']').hide();
+  $('.historiqueMedicalComplet').show().find('.anneeHistorique').each(function(idx,el) {
+    if (!idx) {
+      $(el).find('.fa-minus-square').show();
+      $(el).find('.fa-plus-square').hide();
+      $($(el).attr('data-target')).collapse('show');
+    }
+    else {
+      $(el).find('.fa-minus-square').hide();
+      $(el).find('.fa-plus-square').show();
+      $($(el).attr('data-target')).collapse('hide');
+    }
   });
 }
 
