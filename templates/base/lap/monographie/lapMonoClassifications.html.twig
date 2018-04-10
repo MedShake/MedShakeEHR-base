@@ -43,6 +43,16 @@
 {% endfor %}
 </ul>
 
+{% if page.classifications.ddd is not empty %}
+<h4 class="text-uppercase">Dose journalière usuelle DDD (source Thériaque d'après l'OMS) :</h4>
+
+<ul>
+{% for ddd in page.classifications.ddd %}
+  <li>Voie : {{ ddd.nomvoie }} - {{ ddd.dosage }} {{ ddd.nomunite }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
 <h4 class="text-uppercase">Classe(s) EphMRA (d'après le CLub Inerpharmaceutique) :</h4>
 
 <ul>

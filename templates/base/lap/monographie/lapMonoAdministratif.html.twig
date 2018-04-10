@@ -30,55 +30,55 @@
 {% if page.administratif.presdel is not empty %}
   <table class="table table-hover">
     <tbody>
-      <tr>
+      <tr {% if page.administratif.presdel.rh == "OUI" %}class="warning"{% endif %}>
         <td>Réserve hospitalière</td>
         <td>{{ page.administratif.presdel.rh }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.ph == "OUI" %}class="warning"{% endif %}>
         <td>Prescription hospitalière</td>
         <td>{{ page.administratif.presdel.ph }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.puh == "OUI" %}class="warning"{% endif %}>
         <td>Prescription initiale hospitalière</td>
         <td>{{ page.administratif.presdel.puh }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.sp == "OUI" %}class="warning"{% endif %}>
         <td>Surveillance particulière</td>
         <td>{{ page.administratif.presdel.sp }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.ps == "OUI" %}class="warning"{% endif %}>
         <td>Prescription spécialiste</td>
         <td>{{ page.administratif.presdel.ps }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.t2a == "OUI" %}class="warning"{% endif %}>
         <td>Facturation hors GHS</td>
         <td>{{ page.administratif.presdel.t2a }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.orphelin == "OUI" %}class="warning"{% endif %}>
         <td>Médicament orphelin</td>
         <td>{{ page.administratif.presdel.orphelin }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.orph_cref == "OUI" %}class="warning"{% endif %}>
         <td>Médicament orphelin avec centre de référence</td>
         <td>{{ page.administratif.presdel.orph_cref }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.sage_f == "OUI" %}class="warning"{% endif %}>
         <td>Prescription par sage-femme</td>
         <td>{{ page.administratif.presdel.sage_f }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.r_ide == "OUI" %}class="warning"{% endif %}>
         <td>Renouvellement par IDE</td>
         <td>{{ page.administratif.presdel.r_ide }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.podo == "OUI" %}class="warning"{% endif %}>
         <td>Prescription par pédicure</td>
         <td>{{ page.administratif.presdel.podo }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.atu == "OUI" %}class="warning"{% endif %}>
         <td>Autorisation temporaire d’utilisation</td>
         <td>{{ page.administratif.presdel.atu }}</td>
       </tr>
-      <tr>
+      <tr {% if page.administratif.presdel.prep_h == "OUI" %}class="warning"{% endif %}>
         <td>Préparation hospitalière</td>
         <td>{{ page.administratif.presdel.prep_h }}</td>
       </tr>

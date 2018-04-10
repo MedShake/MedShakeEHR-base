@@ -45,32 +45,34 @@
         {% for medic in page.medicListeSpe %}
           {% for pres in medic.presentations %}
 
-              <tr class="sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
+              <tr data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
                 <td>
-                  <button type="button" class="btn btn-primary btn-xs" >
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                  </button>
+                  <a  href="/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank" class="btn btn-default btn-xs" >
+                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                  </a>
                 </td>
-                <td>
+                <td class="sendToPrescription">
                   {{ medic.sp_nom|trim('§') }}
-                  {% if pres.pre_adm %}
-                    -
-                    {{ pres.pre_adm }}
+                  {% if medic.statutDelivrance.rh == 'OUI' or medic.statutDelivrance.ph == 'OUI' or  medic.statutDelivrance.puh == 'OUI' or medic.statutDelivrance.sp == 'OUI' or medic.statutDelivrance.ps == 'OUI' or medic.statutDelivrance.prep_h == 'OUI' or medic.statutDelivrance.atu == 'OUI' %}
+                    <span class="label label-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="glyphicon glyphicon-warning-sign"></span></span>
                   {% endif %}
                   {% if pres.reservhop != 'NON' %}
-                    <span class="label label-warning" title="Ce médicament est à prescription restreinte, consultez la monographie pour les détails"><span class="glyphicon glyphicon-warning-sign"></span></span>
+                    <span class="label label-primary" title="Ce médicament est à prescription hospitalière, consultez la monographie pour les détails">H</span>
+                  {% endif %}
+                  {% if pres.pre_adm %}
+                    <br><span class="small">{{ pres.pre_adm }}</span>
                   {% endif %}
                 </td>
-                <td>
+                <td class="sendToPrescription">
                   {% if pres.pre_nat %}
                     <span class="label label-default">{{ pres.pre_nat }}</span>{% endif %}
                 </td>
-                <td data-sort-value="{{ medic.prixEstim|number_format(5, '.', '') }}">
+                <td data-sort-value="{{ medic.prixEstim|number_format(5, '.', '') }}" class="sendToPrescription">
                   {% if medic.prixEstim %}
                     <span class="label label-default" title="{{ medic.prixEstim }}€">{{ medic.prixEstim|number_format(2, ',', ' ') }}€</span>
                   {% endif %}
                 </td>
-                <td>
+                <td class="sendToPrescription">
                   {% if pres.rbtVille not in ['0 %'] %}
                     <span class="label label-default">{{ pres.rbtVille }}</span>{% endif %}
                 </td>

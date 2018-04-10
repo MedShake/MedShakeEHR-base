@@ -165,10 +165,10 @@ $(document).ready(function() {
   // envoyer médicament à la zone de prescription
   $('#modalRecherche').on("click", ".sendToPrescription", function(e) {
     var tab = {
-      speThe: $(this).attr('data-speThe'),
-      presThe: $(this).attr('data-presThe'),
-      tauxrbt: $(this).attr('data-tauxrbt'),
-      prixucd: $(this).attr('data_prixucd'),
+      speThe: $(this).parent('tr').attr('data-speThe'),
+      presThe: $(this).parent('tr').attr('data-presThe'),
+      tauxrbt: $(this).parent('tr').attr('data-tauxrbt'),
+      prixucd: $(this).parent('tr').attr('data_prixucd'),
     };
     lapInstallPrescription(tab);
   });
@@ -236,11 +236,6 @@ $(document).ready(function() {
     $('#posologiesmedicTab').parent('li').show();
     $('#posologiesmedicTab').tab('show');
   });
-  $('#modalRecherche').on('show.bs.collapse', 'div.fichearecevoir .collapse', function() {
-    fichesPosos = $(this).attr('data-fiches');
-    destination = $(this).children('div.panel-body');
-    if (fichesPosos && destination.html() == '') getFichesPosos(fichesPosos, destination);
-  })
 
   // checkbox Ne pas substituer
   $('#modalRecherche').on("click", "#prescriptionNpsCheckbox", function(e) {
@@ -501,30 +496,6 @@ function getPosologies(codeSpe) {
     success: function(posologies) {
       $('#posologiesmedic').html(posologies);
       console.log('OK : obtenir posologies');
-    },
-    error: function() {
-      console.log('PROBLEM : obtenir posologies');
-    }
-  });
-}
-
-/**
- * Obtenir les fiches posologiques
- * @param  {string} codesFiches codes de(s) fiche(s) séparé(s) par virgule
- * @param  {object} destination objet jquery de destination pour l'affichage
- * @return {void}
- */
-function getFichesPosos(codesFiches, destination) {
-  $.ajax({
-    url: urlBase + '/lap/ajax/lapGetFichesPosos/',
-    type: 'post',
-    data: {
-      codesFiches: codesFiches,
-    },
-    dataType: "html",
-    success: function(posologies) {
-      destination.html(posologies);
-      console.log('OK : obtenir fiches posologies');
     },
     error: function() {
       console.log('PROBLEM : obtenir posologies');

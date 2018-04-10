@@ -33,7 +33,7 @@
       <h4 class="text-uppercase">Avis de la Commission de la Transparence de la HAS :</h4>
       <ul>
       {% for choix in page.recommandations.choix.1 %}
-        <li>{{ choix.date_texte }} - SMR : {{ choix.precision1 }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/1/">{{ choix.date_texte }} - SMR : {{ choix.precision1 }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -42,7 +42,7 @@
       <h4 class="text-uppercase">Fiche(s) de transparence ANSM :</h4>
       <ul>
       {% for choix in page.recommandations.choix.2 %}
-        <li>{{ choix.date_texte }} - {{ choix.titre }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/2/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -51,7 +51,7 @@
       <h4 class="text-uppercase">Recommandations et protocoles thérapeutiques ansm, HAS, INCa :</h4>
       <ul>
       {% for choix in page.recommandations.choix.3 %}
-        <li>{{ choix.date_texte }} - {{ choix.titre }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/3/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -60,7 +60,7 @@
       <h4 class="text-uppercase">Rapport(s) public d'évaluation AFSSAPS(RAPPE) et EMEA (EPAR) :</h4>
       <ul>
       {% for choix in page.recommandations.choix.4 %}
-        <li>{{ choix.date_texte }} - {{ choix.titre }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/4/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -69,7 +69,7 @@
       <h4 class="text-uppercase">Conseils patients :</h4>
       <ul>
       {% for choix in page.recommandations.choix.5 %}
-        <li>{{ choix.titre }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/5/">{{ choix.titre }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -78,7 +78,7 @@
       <h4 class="text-uppercase">Fiches d’information thérapeutique :</h4>
       <ul>
       {% for choix in page.recommandations.choix.6 %}
-        <li>{{ choix.precision1 }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/6/">{{ choix.precision1 }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}
@@ -87,7 +87,7 @@
       <h4 class="text-uppercase">Références Médicales Opposables :</h4>
       <ul>
       {% for choix in page.recommandations.choix.7 %}
-        <li>{{ choix.date_texte }} - {{ choix.titre }}</li>
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/7/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
       {% endfor %}
       </ul>
     {% endif %}

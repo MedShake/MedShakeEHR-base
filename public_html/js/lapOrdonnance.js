@@ -715,6 +715,12 @@ function makeLigneOrdo(data, mode) {
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
       retour += '        </li>';
 
+      retour += '        <li>';
+      retour += '          <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank" >';
+      retour += '            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>';
+      retour += '            Monographie</a>';
+      retour += '        </li>';
+
       if (data.medics[0].prescriptibleEnDC == '1' && data.medics[0].nomDC != data.medics[0].nomUtileFinal) {
         retour += '          <li role="separator" class="divider"></li>';
         retour += '          <li>';

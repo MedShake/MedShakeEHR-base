@@ -148,6 +148,7 @@ class msLap
           }
                 if (!empty($rd)) {
                     $this->attacherPrixMedic($rd, 'code');
+                    $this->getStatutDelivrance($rd, 'code');
                 }
                 return $rd;
             }
@@ -455,6 +456,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                   if (!empty($rd)) {
                       $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                       $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                      $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
                   }
                   $rd['substances']=$subsTab;
                   return $rd;
@@ -480,6 +482,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                 if (!empty($rd)) {
                     $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                     $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
                 }
                 return $rd;
             }
@@ -501,6 +504,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                 if (!empty($rd)) {
                     $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                     $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
                 }
                 return $rd;
             }
@@ -529,6 +533,19 @@ public function attacherPrixMedic(&$tabMedic, $col)
         }
     }
 }
+
+private function getStatutDelivrance(&$tabMedic, $col) {
+  if (is_array($tabMedic)) {
+    foreach($tabMedic as $k=>$v) {
+      $data=$this->_the->get_the_presdel($v[$col],0);
+      if(!empty($data)) {
+        $data = $this->_prepareData($data);
+        $tabMedic[$k]['statutDelivrance'] = $data[0];
+      }
+    }
+  }
+}
+
 /**
  * Obtenir les fiches posologies
  * @param  string $codesFiche code(s) des fiches
@@ -744,12 +761,15 @@ public function getEffetsIndesirables($codeSpe, $typeEI) {
     protected function _prepareData($data)
     {
         $rd=[];
+        if (empty((array) $data)) return $rd;
         if (is_object($data)) {
             $data=msTools::objectToArray($data);
             if (isset($data['item']['0'])) {
                 $rd=$data['item'];
             } elseif (isset($data['item'])) {
                 $rd[0]=$data['item'];
+            } else {
+                $rd[0]=$data;
             }
         } else {
             $rd=$data;

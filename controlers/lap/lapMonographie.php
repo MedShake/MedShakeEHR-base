@@ -27,7 +27,7 @@
  */
 
 
-$debug='y';
+$debug='';
 $template="lapMonographie";
 
 if($p['config']['lapOnOff'] != 'on') die("Le LAP n'est pas activé");
@@ -35,7 +35,5 @@ if($p['config']['lapOnOff'] != 'on') die("Le LAP n'est pas activé");
 $mono=new msLapMonographie();
 $mono->setSpe($match['params']['spe']);
 $p['page']['spe']=$match['params']['spe'];
-if(isset($match['params']['section'])) $p['page']['section']=$match['params']['section']; else $p['page']['section']='composition';
+if(isset($match['params']['section'])) $p['page']['section']=$match['params']['section']; else $p['page']['section']='administratif';
 $p['page']['speData']=$mono->getSpeData();
-
-  $p['page']['interactions']=$mono->getMonoInteractionsMedicamenteuses();

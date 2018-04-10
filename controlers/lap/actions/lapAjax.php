@@ -43,7 +43,6 @@ $acceptedModes=array(
     'lapOrdoLiveSave', //sauver l'ordonnance courante à chaque modif
     'lapOrdoLiveRestore', //restaurer l'ordonnance courante
     'lapGetPosologies', //obtenir les posologies pour la fenêtre de prescription
-    'lapGetFichesPosos', //obtenir les fiches posos à partir de leur code
     'lapTTenCoursSaveOrUpdateLigne', // sauver / updater une ligne de TT en cours
     'lapTTenCoursGet', //obtenir le tt en cours
     'lapOrdoSave', // sauver ordonnnace

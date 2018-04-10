@@ -51,13 +51,16 @@
 {% endblock %}
 
 {% block body %}
-  <h1 style="margin-bottom : 1em;">{{ page.speData.sp_nom }}<br><small>{{ page.speData.sp_nomlong }}</small></h1>
+  <h1 style="margin-bottom : 1em;">{{ page.speData.sp_nom|trim('§') }}<br><small>{{ page.speData.sp_nomlong }}</small></h1>
 
   <div class="row">
     <div class="col-md-2">
       <ul class="nav nav-pills nav-stacked" role="tablist">
         <li role="presentation" {% if page.section == 'administratif' %} class="active"{% endif %}>
           <a href="#administratif" role="tab" aria-controls="administratif" data-toggle="pill">Renseignements administratifs</a>
+        </li>
+        <li role="mvgeneriques" {% if page.section == 'mvgeneriques' %} class="active"{% endif %}>
+          <a href="#mvgeneriques" role="tab" aria-controls="mvgeneriques" data-toggle="pill">Médicaments virtuels / Génériques</a>
         </li>
         <li role="presentation" {% if page.section == 'formesPharma' %} class="active"{% endif %}>
           <a href="#formesPharma" role="tab" aria-controls="formes pharmaceutiques" data-toggle="pill">Forme(s) pharmaceutique(s)</a>
@@ -101,12 +104,22 @@
         <li role="modeAdministration" {% if page.section == 'modeAdministration' %} class="active"{% endif %}>
           <a href="#modeAdministration" role="tab" data-toggle="pill">Mode d’administration<br>Manipulation / Incompatibilités</a>
         </li>
+        <li role="grossesse" {% if page.section == 'grossesse' %} class="active"{% endif %}>
+          <a href="#grossesse" role="tab" data-toggle="pill">Grossesse / Allaitement</a>
+        </li>
+        <li role="effetsindesirables" {% if page.section == 'effetsindesirables' %} class="active"{% endif %}>
+          <a href="#effetsindesirables" role="tab" data-toggle="pill">Effets indesirables</a>
+        </li>
+        <li role="conduite" {% if page.section == 'conduite' %} class="active"{% endif %}>
+          <a href="#conduite" role="tab" data-toggle="pill">Conduite de véhicules</a>
+        </li>
       </ul>
     </div>
 
     <div class="col-md-10">
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane{% if page.section == 'administratif' %} active{% endif %}" id="administratif">Chargement ...</div>
+        <div role="tabpanel" class="tab-pane{% if page.section == 'mvgeneriques' %} active{% endif %}" id="mvgeneriques">Chargement ...</div>
         <div role="tabpanel" class="tab-pane{% if page.section == 'formesPharma' %} active{% endif %}" id="formesPharma">Chargement ...</div>
         <div role="tabpanel" class="tab-pane{% if page.section == 'composition' %} active{% endif %}" id="composition">Chargement ...</div>
         <div role="tabpanel" class="tab-pane{% if page.section == 'classifications' %} active{% endif %}" id="classifications">Chargement ...</div>
@@ -121,6 +134,9 @@
         <div role="tabpanel" class="tab-pane{% if page.section == 'interactions' %} active{% endif %}" id="interactions">Chargement ...</div>
         <div role="tabpanel" class="tab-pane{% if page.section == 'posologies' %} active{% endif %}" id="posologies">Chargement ...</div>
         <div role="tabpanel" class="tab-pane{% if page.section == 'modeAdministration' %} active{% endif %}" id="modeAdministration">Chargement ...</div>
+        <div role="tabpanel" class="tab-pane{% if page.section == 'grossesse' %} active{% endif %}" id="grossesse">Chargement ...</div>
+        <div role="tabpanel" class="tab-pane{% if page.section == 'effetsindesirables' %} active{% endif %}" id="effetsindesirables">Chargement ...</div>
+        <div role="tabpanel" class="tab-pane{% if page.section == 'conduite' %} active{% endif %}" id="conduite">Chargement ...</div>
       </div>
     </div>
   </div>

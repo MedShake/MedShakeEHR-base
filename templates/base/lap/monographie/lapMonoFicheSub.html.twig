@@ -20,13 +20,9 @@
  #/
 
 /##
- # Template > lap : rapatrier les fiches posologies
+ # LAP > monographie sur base Thériaque : fiche substance
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- #
-#}
-{% if page.fiches|length > 1 %}<strong>{{ page.fiches|length }} fiches posologiques trouvées</strong>{% endif %}
-{% for fiche in page.fiches %}
-{% if page.fiches|length > 1 %}<hr>{% endif %}
-{{ fiche.texte|nl2br }}
-{% endfor %}
+ #}
+
+<h1>{{ page.sub.subId.sac_nom }}</h1>

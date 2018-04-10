@@ -25,14 +25,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-var sections = ['administratif', 'formesPharma', 'composition', 'classifications', 'pharmacologie', 'recommandations', 'presentations', 'indications', 'posologies', 'modeAdministration', 'nonindications', 'contreindications', 'noncontreindications', 'mgpe', 'interactions'];
+var sections = ['administratif', 'formesPharma', 'composition', 'classifications', 'pharmacologie', 'recommandations', 'presentations', 'indications', 'posologies', 'modeAdministration', 'nonindications', 'contreindications', 'noncontreindications', 'mgpe', 'interactions', 'grossesse', 'effetsindesirables', 'conduite', 'mvgeneriques'];
 
-//var sections = ['nonindications'];
+//var sections = ['conduite'];
 
 $(document).ready(function() {
-
+  chargerSectionMonographie(section);
   $.each(sections, function(index, value) {
-    chargerSectionMonographie(value);
+    if(value != section) chargerSectionMonographie(value);
   });
 
 });

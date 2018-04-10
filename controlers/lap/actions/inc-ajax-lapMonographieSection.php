@@ -30,7 +30,7 @@ $debug='';
 
 $mono=new msLapMonographie();
 $mono->setSpe($_POST['spe']);
-
+$p['page']['spe']=$_POST['spe'];
 
 if($_POST['section'] == 'administratif') {
   $p['page']['speData']=$mono->getSpeData();
@@ -80,6 +80,20 @@ elseif($_POST['section'] == 'posologies') {
 }
 elseif($_POST['section'] == 'modeAdministration') {
   $p['page']['modeAdministration']=$mono->getMonoModeAdministration();
+}
+elseif($_POST['section'] == 'grossesse') {
+  $p['page']['grossesse']=$mono->getMonoGrossesse();
+  $p['page']['allaitement']=$mono->getMonoAlaitementEtFemmeAgePocreer();
+}
+elseif($_POST['section'] == 'effetsindesirables') {
+  $p['page']['effetsindesirables']=$mono->getMonoEffetsIndesirables();
+}
+elseif($_POST['section'] == 'conduite') {
+  $p['page']['conduite']=$mono->getMonoConduite();
+}
+elseif($_POST['section'] == 'mvgeneriques') {
+  $p['page']['mvPere']=$mono->getMonoMedicamentVirtuelTheriaque();
+  $p['page']['gen']=$mono->getMonoGeneriques();
 }
 
 $html = new msGetHtml;

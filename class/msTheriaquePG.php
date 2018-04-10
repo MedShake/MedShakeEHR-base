@@ -125,6 +125,14 @@ class msTheriaquePG {
     return $this->get_data_from_pg("get_the_sub_txt('$libtxt',$vartype)");
   }
 
+  public function get_the_sub_id($codeid,$vartype) {
+    return $this->get_data_from_pg("get_the_sub_id($codeid,$vartype)");
+  }
+
+  public function get_the_exp_id($codeid) {
+    return $this->get_data_from_pg("get_the_exp_id($codeid)");
+  }
+
   public function get_the_sub_spe($codeid,$typeid) {
     return $this->get_data_from_pg("get_the_sub_spe($codeid,$typeid)");
   }
@@ -135,6 +143,14 @@ class msTheriaquePG {
 
   public function get_the_sub_teneur_spe($codeid) {
     return $this->get_data_from_pg("get_the_sub_teneur_spe($codeid)");
+  }
+
+  public function get_the_det_exp($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_det_exp($codeid, $typid)");
+  }
+
+  public function get_the_det_subact($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_det_subact($codeid, $typid)");
   }
 
   /////////////////////////////////////////////////////
@@ -154,6 +170,10 @@ class msTheriaquePG {
 
   public function get_the_smr_spe($codeid, $codespe) {
     return $this->get_data_from_pg("get_the_smr_spe($codeid, $codespe)");
+  }
+
+  public function get_the_atr_spe($codefic) {
+    return $this->get_data_from_pg("get_the_atr_spe($codefic)");
   }
 
   /////////////////////////////////////////////////////
@@ -178,6 +198,10 @@ class msTheriaquePG {
     return $this->get_data_from_pg("get_the_atc_id('$codeid')");
   }
 
+  public function get_the_atc_ddd($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_atc_ddd('$codeid', $typid)");
+  }
+
   /////////////////////////////////////////////////////
   ////// 10 classes pharmaco-thérapeutiques
 
@@ -194,6 +218,10 @@ class msTheriaquePG {
 
   public function get_the_atr_compl($codeav) {
     return $this->get_data_from_pg("get_the_atr_compl($codeav)");
+  }
+
+  public function get_the_doc_spe($codefic, $vartyp) {
+    return $this->get_data_from_pg("get_the_doc_spe($codefic, $vartyp)");
   }
 
   /////////////////////////////////////////////////////
@@ -299,7 +327,7 @@ class msTheriaquePG {
   }
 
   public function get_the_fpro_spe($codeid, $typid, $codefic) {
-    return $this->get_data_from_pg(">get_the_fpro_spe($codeid, $typid, $codefic)");
+    return $this->get_data_from_pg("get_the_fpro_spe($codeid, $typid, $codefic)");
   }
 
   /////////////////////////////////////////////////////
@@ -326,6 +354,14 @@ class msTheriaquePG {
 
   public function get_the_det_effind($codeid, $typid) {
     return $this->get_data_from_pg("get_the_det_effind($codeid, $typid)");
+  }
+
+  public function get_the_det_effind_sd($codeid, $typid) {
+    return $this->get_data_from_pg("get_the_det_effind_sd('$codeid', $typid)");
+  }
+
+  public function get_the_ref_effind($codeind, $codespe, $typ) {
+    return $this->get_data_from_pg("get_the_ref_effind($codeind, $codespe, '$typ')");
   }
 
   public function get_the_effind_id($codeid) {
@@ -355,7 +391,7 @@ class msTheriaquePG {
   }
 
   public function get_the_det_fco($idfco) {
-    return $this->get_data_from_pg("get_the_fco_id_by_spe($idfco)");
+    return $this->get_data_from_pg("get_the_det_fco('$idfco')");
   }
 
   /////////////////////////////////////////////////////
