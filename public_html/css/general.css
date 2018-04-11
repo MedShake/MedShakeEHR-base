@@ -95,7 +95,7 @@ label {margin-left:0.5rem;margin-right:0.5rem;margin-bottom:0.25rem;font-size:14
 a {color:#337ab7}
 .btn {color:#484848;}
 .btn:hover {color:#181818;}
-.btn.btn-sm {min-width:36px;height:31px;padding-top:5px}
+.btn.btn-sm {min-width:36px;height:31px;padding-top:5px;margin:0}
 .btn .fa,.btn .far {font-size:1rem}
 .btn-group > .btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {border-right:none}
 .btn-group > .btn.active {box-shadow:0 0 0 .2rem rgba(0,123,255,.25)}
