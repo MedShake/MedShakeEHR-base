@@ -28,7 +28,7 @@
 
  <tr id="lh{{ cs.id }}" class="tr{{ cs.id }}{% if cs.important == 'y' %} table-info{% endif %} trLigneExamen collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Consultation">
-    <a class="btn" role="button" href="javascript:void()">
+    <a class="btn btn-sm" role="button" href="javascript:void()">
       <span class="fa fa-stethoscope" aria-hidden="true"></span>
     </a>
   </td>
