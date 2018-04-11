@@ -554,26 +554,23 @@ $(document).ready(function() {
         } else if (data.substr(0, 14) == "Avertissement:") {
         alert_popup("warning", data);
         } else {
-          var $tr = $("#historique .anneeHistorique");
-          if ($tr.length && $($tr[0]).children("td").html().substr(8, 4) == moment().format("YYYY"))
-            $($tr[0]).after(data);
+          var $tr = $("#historique .anneeHistorique:nth-child(1)");
+          if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY"))
+            $tr.after(data);
           else {
-            $('#historique .histoHead').after('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
+            $('#historique tbody').prepend('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
                 <span class="far fa-plus-square" style="display:none"></span>\
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
             </tr>' + data);
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(moment().format("DD/MM/YYYY"));
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(moment().format("DD/MM"));
             refreshHistorique();
           }
-          $tr = $("#historiqueToday .trLigneExamen");
-          if ($tr.length)
-            $($tr[0]).before(data);
-          else {
-            $('#historiqueToday .histoHead').after(data);
-            refreshHistoriqueToday();
-          }
+          $('#historiqueToday tbody').prepend(data);
+          refreshHistoriqueToday();
         }
       },
       error: function() {
