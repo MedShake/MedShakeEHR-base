@@ -46,6 +46,11 @@ class msLap
     protected $_the;
     protected $_classTheriaque;
 
+/**
+ * liste des codes spécialité trouvés
+ * @var array
+ */
+    protected $_listeCodeSpeTrouve=[];
 
  /**
   * Constructeur : choix du fonctionnement
@@ -93,6 +98,13 @@ class msLap
          }
      }
 
+/**
+ * Obtenir la liste des codes spécialité trouvés pendant la recherche
+ * @return array tableau des codes
+ */
+     public function getListeCodeSpeTrouve() {
+       return $this->_listeCodeSpeTrouve;
+     }
 
 /**
  * Obtenir les infos légales de la base Thériaque utilisée
@@ -170,6 +182,20 @@ public function getSpecialiteByCode($codeid, $vartyp, $monovir)
 }
 
 /**
+ * Obtenir des spécialités à partir d'une lite de codes
+ * @param  string $codeid  codes des spe
+ * @param  int $vartyp  code nature de recherche
+ * @param  int $monovir code monovir (0 : classique, 1 virtuelle, 3 sans filtre)
+ * @return array          tableau des spés
+ */
+public function getSpecialitesByCodes($codeid, $vartyp, $monovir)
+{
+    $data=$this->_the->get_the_specialite_multi_codeid($codeid, $vartyp, $monovir);
+    $data=$this->_prepareData($data);
+    return $data;
+}
+
+/**
  * Informations sur la sécabilité
  * @param  string $codeid code spécialité
  * @return array         tableau sécabilité
@@ -236,13 +262,17 @@ public function getVoiesAdministration($codeid)
  * Obtenir les présentation d'une spécialité
  * @param  array $rd      tableau des médicaments
  * @param  string $colCode colonne du tableau où trouver le code theriaque
- * @param  string $typCode type du code passé (0 code thériaque cf doc)
+ * @param  string $typCode type du code passé (1 code thériaque cf doc)
  * @return array          tableau d'entrée modifié
  */
 public function getPresentations(&$rd, $colCode, $typCode)
 {
     global $p;
     foreach ($rd as $k=>$v) {
+
+        //liste des codes spé traités
+        if(!in_array($v[$colCode], $this->_listeCodeSpeTrouve)) $this->_listeCodeSpeTrouve[]=$v[$colCode];
+
         $rd[$k]['presentations']=$this->_get_the_presentation($v[$colCode], $typCode);
         if (!empty($rd[$k]['presentations'])) {
             foreach ($rd[$k]['presentations'] as $presK=>$presV) {
@@ -424,45 +454,57 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
     {
         global $p;
         if (strlen($txt)>=3) {
-
-            if ($p['config']['theriaqueMode'] == 'WS') {
-                $colonne = 'code_sq_pk';
-            } elseif ($p['config']['theriaqueMode'] == 'PG') {
-                $colonne = 'sac_code_sq_pk';
-            }
-
-            $subsTab=[];
-            $substances = explode('+',$txt);
-            if(!empty($substances)) {
-              foreach($substances as $k=>$substance) {
-                $subsTab=$this->getSubstances(trim($substance), $type);
-                if(empty($subsTab)) continue;
-                $subs=implode(",", array_column($subsTab, $colonne));
-                $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
-                if(!empty($tabSpe)) {
-                  $tabSpe=$this->_prepareData($tabSpe);
-                  $tabSpes[$k]=array_column($tabSpe, 'sp_code_sq_pk');
+          $subsTab=[];
+          if($intersectionTab=$this->getCodesSpesListBySub ($txt, $type, $monovir)) {
+            if ($data=$this->_the->get_the_specialite_multi_codeid(implode(",", $intersectionTab), 1, $monovir)) {
+                $rd=$this->_prepareData($data);
+                if (!empty($rd)) {
+                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
                 }
-              }
+                $rd['substances']=$subsTab;
+                return $rd;
             }
-            if(!empty($tabSpes)) {
-              if(count($tabSpes)>1) {
-                $intersectionTab = call_user_func_array('array_intersect', $tabSpes);
-              } else {
-                $intersectionTab=$tabSpes[0];
-              }
-              if ($data=$this->_the->get_the_specialite_multi_codeid(implode(",", $intersectionTab), 1, $monovir)) {
-                  $rd=$this->_prepareData($data);
-                  if (!empty($rd)) {
-                      $this->getPresentations($rd, 'sp_code_sq_pk', 1);
-                      $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
-                      $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
-                  }
-                  $rd['substances']=$subsTab;
-                  return $rd;
-              }
-            }
+          }
         }
+    }
+
+    public function getCodesSpesListBySub ($txt, $type, $monovir) {
+      if (strlen($txt)>=3) {
+        global $p;
+          if ($p['config']['theriaqueMode'] == 'WS') {
+              $colonne = 'code_sq_pk';
+          } elseif ($p['config']['theriaqueMode'] == 'PG') {
+              $colonne = 'sac_code_sq_pk';
+          }
+
+
+          $substances = explode('+',$txt);
+          if(!empty($substances)) {
+            foreach($substances as $k=>$substance) {
+              $subsTab=$this->getSubstances(trim($substance), $type);
+
+              if(empty($subsTab)) continue;
+              $subs=implode(",", array_column($subsTab, $colonne));
+              $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
+              if(!empty($tabSpe)) {
+                $tabSpe=$this->_prepareData($tabSpe);
+                $tabSpes[$k]=array_column($tabSpe, 'sp_code_sq_pk');
+              }
+            }
+          }
+          if(!empty($tabSpes)) {
+            if(count($tabSpes)>1) {
+              $intersectionTab = call_user_func_array('array_intersect', $tabSpes);
+            } else {
+              $intersectionTab=$tabSpes[0];
+            }
+            return $intersectionTab;
+          }
+          return false;
+        }
+        return false;
     }
 
 /**
@@ -510,6 +552,22 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
             }
         }
     }
+
+public function getResultatsDet($listeCodes) {
+    if($spe=$this->getSpecialitesByCodes($listeCodes,1,3)) {
+      foreach($spe as $k=>$v) {
+        $spe[$k]['suba']=$this->_prepareData($this->_the->get_the_sub_spe($v['sp_code_sq_pk'], 2));
+        $spe[$k]['sube']=$this->_prepareData($this->_the->get_the_sub_spe($v['sp_code_sq_pk'], 1));
+      }
+
+      if (!empty($spe)) {
+          $this->getPresentations($spe, 'sp_code_sq_pk', 1);
+          $this->attacherPrixMedic($spe, 'sp_code_sq_pk');
+          $this->getStatutDelivrance($spe, 'sp_code_sq_pk');
+      }
+    }
+    return $spe;
+}
 
 /**
  * Attacher le prix par UCD de chaque médic à son tableau

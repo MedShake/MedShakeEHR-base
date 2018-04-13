@@ -64,7 +64,7 @@ var modeActionModal = 'new';
 $(document).ready(function() {
 
   //Nouvelle prescription
-  $("button.nouvellePrescription").on("click", function(e) {
+  $('body').on("click", "button.nouvellePrescription", function(e) {
     modeActionModal = 'new';
     resetObjets();
     prepareModalPrescription();
@@ -161,6 +161,45 @@ $(document).ready(function() {
     //console.log("The column index: " + data.column);
   });
 
+  // approfondir la recherche
+  $('#modalRecherche').on("click", ".approRecherche", function(e) {
+    $.ajax({
+      url: urlBase + '/lap/ajax/searchNewMedicDetails/',
+      type: 'post',
+      data: {
+        codesSpe: $(this).attr('data-codesSpe'),
+      },
+      dataType: "json",
+      success: function(data) {
+        $('#modalRecherche').modal('toggle');
+        $('#resultsDetaTabL').parent('li').show();
+        $('#resultsDetaTab').html(data['html']);
+        $('#resultsDetaTabL').tab('show');
+        var tableMedics = $("#tabDetMedicaments").stupidtable({
+          "alphanum": function(a, b) {
+            return a.localeCompare(b, undefined, {
+              numeric: true,
+              sensitivity: 'base'
+            })
+          }
+        });
+      },
+      error: function() {
+        alert('Problème, rechargez la page !');
+      }
+    });
+  });
+
+  // Trier le tableau de recherche détailléedes médics en cliquant sur les headers de colonne
+  $('body').on("aftertablesort", "#tabDetMedicaments", function(event, data) {
+    th = $(this).find("th");
+    th.find(".arrow").remove();
+    dir = $.fn.stupidtable.dir;
+    arrow = data.direction === dir.ASC ? "glyphicon-chevron-up" : "glyphicon-chevron-down";
+    th.eq(data.column).append(' <span class="arrow glyphicon ' + arrow + '"></span>');
+    //console.log("The sorting direction: " + data.direction);
+    //console.log("The column index: " + data.column);
+  });
 
   // envoyer médicament à la zone de prescription
   $('#modalRecherche').on("click", ".sendToPrescription", function(e) {
@@ -376,6 +415,18 @@ function sendToOrdonnance() {
   }
   construireHtmlLigneOrdonnance(ligne, 'append');
 
+  // SAMS
+  if(ligne['medics'][0]['sams'].length > 0) {
+    $.each(ligne['medics'][0]['sams'], function(samIndex, sam) {
+      // sams dans l'ordo
+      if($.inArray(sam, samsInOrdo) == -1) samsInOrdo.push(sam);
+      //sams qui doivent générer une alerte
+      if($.inArray(sam, samsToAlert) == -1 && $.inArray(sam, samsAlertViewed) == -1 ) samsToAlert.push(sam);
+    });
+    testSamsAndDisplay();
+
+  }
+
   // sauvegarde
   ordoLiveSave();
 
@@ -407,6 +458,10 @@ function sendToLigneOrdonnance() {
       ordoMedicsG[ligneCouranteIndex]['medics'].push(ligne.medics[0]);
       construireHtmlLigneOrdonnance(ordoMedicsG[ligneCouranteIndex], 'replace', $('#conteneurOrdonnanceCourante div.conteneurPrescriptionsG div.lignePrescription').eq(ligneCouranteIndex));
     }
+
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
   }
 
   // mode edit
@@ -449,7 +504,11 @@ function sendToLigneOrdonnance() {
  */
 function sendMedicRecherche(term) {
   cleanModalRechercherOngletPosologies();
-  //cleanModalRechercherOngletPrescrire();
+
+  //vider la recherche détaillée précéente
+  $('#resultsDetaTabL').parent('li').hide();
+  $('#resultsDetaTab').html('');
+
   $.ajax({
     url: urlBase + '/lap/ajax/searchNewMedic/',
     type: 'post',

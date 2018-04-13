@@ -32,6 +32,7 @@
 var TTenCours = {};
 
 
+
 $(document).ready(function() {
 
   //Saisir un traitement en cours
@@ -99,23 +100,20 @@ $(document).ready(function() {
     zone.push(ligneAinjecter);
     construireHtmlLigneOrdonnance(ligneAinjecter, 'append','', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
 
+    // SAMS
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
+
     // sauvegarde
     ordoLiveSave();
 
     //reset objets
     resetObjets();
 
-    flashLignePrescription($(this).parents('div.lignePrescription'));
+    flashBackgroundElement($(this).parents('div.lignePrescription'));
   });
 
 });
-
-function flashLignePrescription(el) {
-  el.css("background", "#efffe8");
-  el.delay(700).queue(function() {
-    $(this).css("background","").dequeue();
-  });
-}
 
 /**
  * Nettoyer une ligne qui va être réinjecter en renouvellement dans l'ordo courante
@@ -214,11 +212,24 @@ function refreshTTenCours() {
   });
 }
 
+/**
+ * Construction HTML du traitement en cours
+ * @return {void}
+ */
 function construireTTenCours() {
   if (!$.isEmptyObject(TTenCours.TTChroniques)) {
     $('#traitementEnCoursChronique').html('');
     $.each(TTenCours.TTChroniques, function(index, ligne) {
       $('#traitementEnCoursChronique').append(makeLigneOrdo(ligne, 'TTenCours'));
+
+      //SAMs
+      $.each(TTenCours.TTChroniques[index]['medics'], function(medicIndex, medic) {
+        if (medic['sams'].length > 0) {
+          $.each(medic['sams'], function(samIndex, sam) {
+            if ($.inArray(sam, samsInTTenCours) == -1) samsInTTenCours.push(sam);
+          });
+        }
+      });
 
     });
   }
@@ -227,9 +238,21 @@ function construireTTenCours() {
     $.each(TTenCours.TTPonctuels, function(index, ligne) {
       $('#traitementEnCoursPonctuel').append(makeLigneOrdo(ligne, 'TTenCours'));
 
+      //SAMs
+      $.each(TTenCours.TTPonctuels[index]['medics'], function(medicIndex, medic) {
+        if (medic['sams'].length > 0) {
+          $.each(medic['sams'], function(samIndex, sam) {
+            if ($.inArray(sam, samsInTTenCours) == -1) samsInTTenCours.push(sam);
+          });
+        }
+      });
+
     });
   }
   $(function () {
     $('[data-toggle="popover"]').popover()
   })
+
+  refreshTheSamsZone('ttencours', samsInTTenCours);
+  testSamsAndDisplay();
 }

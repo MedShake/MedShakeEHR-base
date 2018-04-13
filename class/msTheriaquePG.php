@@ -37,7 +37,7 @@ class msTheriaquePG {
   {
     global $p;
     $this->_client = pg_pconnect("dbname=theriaque user=theriaque password=theriaque");
-    pg_query($this->_client, "set search_path to theriaque, public;");
+    @pg_query($this->_client, "set search_path to theriaque, public;");
     return $this->_client;
   }
 
@@ -73,8 +73,10 @@ class msTheriaquePG {
 
   public function get_the_specialite_multi_codeid($codeid,$vartyp,$monovir) {
     $codes=explode(',',$codeid);
+    $arr=[];
     foreach($codes as $code) {
-      $arr=$this->get_data_from_pg('get_the_specialite(\''.$code.'\','.$vartyp.','.$monovir.')');
+      $data=$this->get_data_from_pg('get_the_specialite(\''.$code.'\','.$vartyp.','.$monovir.')');
+      if(isset($data[0])) $arr=array_merge($arr, $data);
     }
     return $arr;
   }

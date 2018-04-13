@@ -497,9 +497,11 @@ class msLapMonographie extends msLap
     $effindSpe[4]=$this->_prepareData($this->_the->get_the_effind_spe($this->_spe, 4));
 
     for ($i = 1; $i <= 2; $i++) {
-      foreach($effindSpe[$i] as $k=>$v) {
-        $effind[$v['codeeffind']][$i][]=$v['texteffet'];
-        sort($effind[$v['codeeffind']][$i]);
+      if(is_array($effindSpe[$i])) {
+        foreach($effindSpe[$i] as $k=>$v) {
+          $effind[$v['codeeffind']][$i][]=$v['texteffet'];
+          sort($effind[$v['codeeffind']][$i]);
+        }
       }
     }
 

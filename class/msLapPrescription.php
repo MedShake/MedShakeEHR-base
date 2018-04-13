@@ -461,6 +461,9 @@ class msLapPrescription extends msLap
       //   $this->_forme='';
       // }
 
+      // SAM
+      $sams=$this->getSamList4Spe($this->_speThe);
+
       $tab = array(
         'speThe'=>$this->_speThe,
         'presThe'=> $this->_presThe,
@@ -491,7 +494,8 @@ class msLapPrescription extends msLap
         'tauxrbt'=>$this->_tauxrbt,
         'ald'=>$dataAld,
         'stup'=>$infosDispensation['stupefiant'],
-        'reservHopital'=>$reservHopital
+        'reservHopital'=>$reservHopital,
+        'sams'=>$sams
       );
 
 
@@ -620,6 +624,28 @@ class msLapPrescription extends msLap
         return $this->_nomDC;
       } else {
         return $this->_nomDC.' ('.$this->_nomSpe.')';
+      }
+    }
+
+/**
+ * Obtenir les sams concernés par le code spécialité
+ * @param  int $code code spécialité
+ * @return array       arrax des SAM
+ */
+    public function getSamList4Spe($code) {
+      global $p;
+      if(is_file($p['config']['homeDirectory'].'ressources/SAM/samSpeCorrespondances')) {
+        $filecontent = file_get_contents($p['config']['homeDirectory'].'ressources/SAM/samSpeCorrespondances');
+        $tabCorrespondance = unserialize($filecontent);
+        $rd=[];
+        foreach($tabCorrespondance as $sam=>$codesArray) {
+          if(in_array($code, $codesArray)) {
+            $rd[]=$sam;
+          }
+        }
+        return $rd;
+      } else {
+        throw new Exception('Le fichier de correspondance SAM <=> spécialité est introuvable');
       }
     }
 

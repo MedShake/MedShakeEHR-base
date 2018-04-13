@@ -122,6 +122,10 @@ $(document).ready(function() {
     ordoLiveSave();
     afficherCoutOrdo();
 
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
+
   });
 
   // Détruire un médicament dans ligne d'ordonnance
@@ -144,6 +148,10 @@ $(document).ready(function() {
     console.log('Destruction d\'un médic dans ligne de prescription : STOP');
     ordoLiveSave();
     afficherCoutOrdo();
+
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
 
   });
 
@@ -383,6 +391,9 @@ function moveLignePrescription(tabDepart, tabArrivee, indexDepart, indexArrivee)
 function cleanOrdonnance() {
   ordoMedicsALD = [];
   ordoMedicsG = [];
+  samsInOrdo = [];
+  samsInSamsZone = [];
+  testSamsAndDisplay();
   $('#conteneurOrdonnanceCourante div.lignePrescription').remove();
 }
 
@@ -441,7 +452,13 @@ function ordoLiveRestore() {
           }
           construireOrdonnance(data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
         }
+        // Cout ordo
         afficherCoutOrdo();
+        //SAMS : mise à jour
+        getDifferentsSamFromOrdo();
+        testSamsAndDisplay();
+        samsToAlert=samsInOrdo;
+        testSamsAndAlert();
         console.log("Restoration automatique ordonnance : OK");
 
       } else if (data['statut'] == 'nofile') {

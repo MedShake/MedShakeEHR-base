@@ -54,13 +54,17 @@ $(document).ready(function() {
     zone.push(ligneAinjecter);
     construireHtmlLigneOrdonnance(ligneAinjecter, 'append', '', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
 
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
+
     // sauvegarde
     ordoLiveSave();
 
     //reset objets
     resetObjets();
 
-    flashLignePrescription($(this).parents('div.lignePrescription'));
+    flashBackgroundElement($(this).parents('div.lignePrescription'));
   });
 
 });

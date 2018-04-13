@@ -298,8 +298,8 @@ public function getToID()
 
           // création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
           // pas de marquage des versions précédentes comme outdated
-          // but : générer des versions sucessives toutes visibles à partir du moment ou la durée de vie
-          // (temps autorisé d'édition) est dépassé ou que l'auteur n'est pas le même.
+          // but : générer des versions sucessives toutes visibles à partir du moment où la durée de vie
+          // (temps autorisé d'édition) est dépassée ou que l'auteur n'est pas le même.
 
           //recup le titre
           if (is_numeric($objetID)) {
@@ -307,11 +307,11 @@ public function getToID()
           }
 
           //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
-          if ($precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
+          if ($precedent=msSQL::sqlUnique("select id, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
           from objets_data
           where id = '".$objetID."' and deleted = ''
           order by id desc limit 1")) {
-              if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
+              if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
                   $pd['id']=$precedent['id'];
                   $pd['updateDate'] = date("Y/m/d H:i:s");
               }
@@ -368,7 +368,7 @@ public function getToID()
           // but : enregistrement susccessif complet des modifications concernées
 
           //on regarde le précédent du même parent
-          $precedent=msSQL::sqlUnique("select id, UNIX_TIMESTAMP(DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND)) as expirationtimestamp, fromID
+          $precedent=msSQL::sqlUnique("select id, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
           from objets_data
           where typeID='".$typeID."'
           and toID = '".$this->_toID."'
@@ -378,7 +378,7 @@ public function getToID()
 
           //on update si ...
           if (isset($precedent['id'])) {
-              if ($precedent['expirationtimestamp']>time() and $precedent['fromID']==$this->_fromID) {
+              if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
                   $pd['id']=$precedent['id'];
                   $pd['updateDate'] = date("Y/m/d H:i:s");
               }

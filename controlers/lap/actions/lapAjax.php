@@ -36,6 +36,7 @@ $acceptedModes=array(
     'allergieAdd', // ajouter allergies à un dossier patient
     'allergieDel', // retirer allergies à un dossier patient
     'searchNewMedic', // checher un médicament
+    'searchNewMedicDetails', // approfondir la recherche
     'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
     'lapInstallPrescription', //installer la prescription dans la modal
     'lapAnalyseFrappePrescription', //analyse de la prescription frappée
@@ -54,7 +55,10 @@ $acceptedModes=array(
     'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
     'lapPresPreGet', // obtenir les prescriptions préétablies
     'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
-    'lapMonographieSection' // sortir une section de monographie
+    'lapMonographieSection', // sortir une section de monographie
+    'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
+    'lapSamAlerteForNew', // produire une alerte SAM
+    'lapSamSaveSamComment' // sauver le commentaire patient sur le SAM
 );
 
 if (!in_array($m, $acceptedModes)) {
