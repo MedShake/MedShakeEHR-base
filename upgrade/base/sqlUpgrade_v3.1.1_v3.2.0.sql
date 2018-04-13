@@ -53,20 +53,21 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 ('base', 'baseModalNewPatient', 'Formulaire nouveau patient pour modal', 'formulaire d\'enregistrement d\'un nouveau patient dans fenêtre modale', 'data_types', 'admin', 'post', '', 1, 'public', 'structure:\r\n  row1:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - administrativeGenderCode,nolabel      		#14   Sexe\r\n  row2:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - birthname,required,nolabel,autocomplete,data-acTypeID=2:1 #1    Nom de naissance\r\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - lastname,nolabel,autocomplete,data-acTypeID=2:1  		#2    Nom d usage\r\n  row3:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - firstname,nolabel,required,autocomplete,data-acTypeID=3:22:230:235:241 		#3    Prénom\r\n        - birthdate,nolabel,required,class=pick-year                   		#8    Date de naissance\r\n        - personalEmail,nolabel                            		#4    Email personnelle\r\n  row4:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone,nolabel                              		#7    Téléphone mobile\r\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - homePhone,nolabel                                		#10   Téléphone domicile\r\n\r\n  row5:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 4\r\n      bloc: \r\n        - streetNumber,nolabel                             		#9    Numéro\r\n        - postalCodePerso,nolabel                          		#13   Code postal\r\n    col2:\r\n      size: 8\r\n      bloc: \r\n        - street,nolabel,autocomplete,data-acTypeID=11:55  		#11   Rue\r\n        - city,nolabel,autocomplete,data-acTypeID=12:56    		#12   Ville\r\n  row6:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,nolabel,rows=5                             		#21   Notes', 'structure:\r\n  row1:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - administrativeGenderCode,nolabel      		#14   Sexe\r\n  row2:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - birthname,required,nolabel,autocomplete,data-acTypeID=2:1 #1    Nom de naissance\r\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - lastname,nolabel,autocomplete,data-acTypeID=2:1  		#2    Nom d usage\r\n  row3:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - firstname,nolabel,required,autocomplete,data-acTypeID=3:22:230:235:241 		#3    Prénom\r\n        - birthdate,nolabel,class=pick-year                   		#8    Date de naissance\r\n        - personalEmail,nolabel                            		#4    Email personnelle\r\n  row4:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone,nolabel                              		#7    Téléphone mobile\r\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - homePhone,nolabel                                		#10   Téléphone domicile\r\n\r\n  row5:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 4\r\n      bloc: \r\n        - streetNumber,nolabel                             		#9    Numéro\r\n        - postalCodePerso,nolabel                          		#13   Code postal\r\n    col2:\r\n      size: 8\r\n      bloc: \r\n        - street,nolabel,autocomplete,data-acTypeID=11:55  		#11   Rue\r\n        - city,nolabel,autocomplete,data-acTypeID=12:56    		#12   Ville\r\n  row6:\r\n    class: \'input-group-sm my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,nolabel,rows=5                             		#21   Notes', '');
 
 UPDATE `system` SET `value`='v3.2.0' WHERE `name`='base' and `groupe`='module';
+INSERT IGNORE INTO `system` (`name`, `groupe`,`value`) VALUES
+('state', 'system', 'normal');
 
 CREATE TABLE IF NOT EXISTS `configuration` (
   `id` smallint(4) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `level` enum('default', 'module', 'user') DEFAULT 'default',
   `service` enum('propre', 'tiers') DEFAULT 'propre',
-  `toID` int(11) UNSIGNED DEFAULT NULL,
-  `module` varchar(20) DEFAULT NULL,
+  `toID` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `module` varchar(20) NOT NULL DEFAULT '',
   `cat` varchar(30) DEFAULT NULL,
   `type` varchar(30) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `value` text DEFAULT NULL,
-  UNIQUE KEY `nameLevel` (`name`,`level`),
-  KEY `toIDmodule` (`toID`, `module`)
+  UNIQUE KEY `nameLevel` (`name`,`level`,'module','toID')
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `configuration`(`name`, `service`, `cat`, `level`, `type`, `description`, `value`) VALUES

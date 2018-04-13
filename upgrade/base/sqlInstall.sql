@@ -302,14 +302,13 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   `name` varchar(60) NOT NULL,
   `level` enum('default', 'module', 'user') DEFAULT 'default',
   `service` enum('propre', 'tiers') DEFAULT 'propre',
-  `toID` int(11) UNSIGNED DEFAULT NULL,
-  `module` varchar(20) DEFAULT NULL,
+  `toID` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `module` varchar(20) NOT NULL DEFAULT '',
   `cat` varchar(30) DEFAULT NULL,
   `type` varchar(30) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `value` text DEFAULT NULL,
-  UNIQUE KEY `nameLevel` (`name`,`level`),
-  KEY `toIDmodule` (`toID`, `module`)
+  UNIQUE KEY `nameLevel` (`name`,`level`,'module','toID')
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
