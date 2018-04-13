@@ -72,11 +72,11 @@
         {% endfor %}
       </ul>
       <div class="col-md-10 tab-content">
+        <div class="col-12">
+          <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>
+        </div>
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
-          <div class="col-12">
-            <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>
-          </div>
           <div class="col-12 mt-4">
             <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
               <thead>
