@@ -18,15 +18,21 @@ msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
 $conf=array();
 foreach(['protocol', 'host', 'urlHostSuffixe', 'webDirectory', 'stockageLocation', 'backupLocation', 
   'workingDirectory', 'cookieDomain', 'cookieDuration', 'fingerprint', 'sqlServeur', 'sqlBase', 'sqlUser', 'sqlPass', 
-  'sqlVarPassword', 'templatesFolder', 'twigEnvironnementCache', 'twigEnvironnementAutoescape',
-'mailRappelLogCampaignDirectory', 'smsLogCampaignDirectory', 'apicryptCheminInbox', 'apicryptCheminArchivesInbox', 
-'apicryptCheminFichierNC', 'apicryptCheminFichierC', 'apicryptCheminVersClefs', 'apicryptCheminVersBinaires',
-'dicomWorkListDirectory', 'dicomWorkingDirectory', 'templatesPdfFolder'] as $k) {
+  'sqlVarPassword', 'templatesFolder', 'twigEnvironnementCache', 'twigEnvironnementAutoescape'] as $k) {
     $conf[$k]=$p['config'][$k];
 };
 if (is_file($p['homepath'].'config/config.yml'))
     rename($p['homepath'].'config/config.yml', $p['homepath'].'config/config.yml.bak');
 file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($conf, false, 0, true));
+
+$agendaFiles=glob($p['webDirectory'].'/agendasConfigurations/configAgenda*.js');
+foreach($agendaFiles as $file) {
+    rename($file, str_replace($p['webDirectory'].'/agendasConfigurations/configAgenda', $p['homepath'].'config/agendas/agenda', $file);
+}
+$rdvFiles=glob($p['homepath'].'/config/configTypesRdv*.yml');
+foreach($agendaFiles as $file) {
+    rename($file, str_replace($p['homepath'].'/config/configTypesRdv', $p['homepath'].'config/agendas/typesRdv', $file);
+}
 
 $pathToComposer='php '.$p['homepath'].'composer.phar';
 if (exec('COMPOSER_HOME="/tmp/" composer.phar -V', $ret) and strpos($ret, 'Composer version')!==false) {

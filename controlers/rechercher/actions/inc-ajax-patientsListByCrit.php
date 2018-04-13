@@ -50,7 +50,8 @@ $form=Spyc::YAMLLoad($form);
 
 $p['page']['outputTableHead']=array();
 $p['page']['outputTableHead'][0]='Identité';
-$IdentiteTypes=msData::getTypeIDsFromName(['birthname','lastname','firstname','administrativeGenderCode','deathdate']);
+$msdata = new msData();
+$IdentiteTypes=$msdata->getTypeIDsFromName(['birthname','lastname','firstname','administrativeGenderCode','deathdate']);
 $separator[0]=' ';
 $modele['Identité']=0;
 $classadd['Identité']='gras';
