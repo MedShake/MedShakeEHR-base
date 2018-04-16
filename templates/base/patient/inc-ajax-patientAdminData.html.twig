@@ -26,31 +26,35 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<h1>
+<div class="col-md-12">
+  <h1>
     {# firstname #}
     {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
 
     {# lastname & birthname #}
     {% if page['patient']['administrativeDatas']['birthname']['value'] and page['patient']['administrativeDatas']['lastname']['value'] %}
-        {{ page['patient']['administrativeDatas']['lastname']['value']|e }} (né{% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] =='F' %}e{% endif %} {{ page['patient']['administrativeDatas']['birthname']['value']|e }})
-    {# birthname only #}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+      (né{% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}e{% endif %}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }})
+      {# birthname only #}
     {% elseif page['patient']['administrativeDatas']['birthname']['value'] %}
-        {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
-    {# lastname only #}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
+      {# lastname only #}
     {% elseif page['patient']['administrativeDatas']['lastname']['value'] %}
-        {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
     {% endif %}
     <small>
-        {# birthdate #}
-        {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
-        -
-        {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
-          {# date décès #}
-          {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
-        {% else %}
-          {# age #}
-          {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
-        {% endif %}
+      {# birthdate #}
+      {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+      -
+      {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
+        {# date décès #}
+        {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
+      {% else %}
+        {# age #}
+        {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+      {% endif %}
+       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% else %}&#9794;{% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
@@ -85,16 +89,17 @@
         </ul>
       </div>
 
-       -
+      -
 
     {% endif %}
 
-
     {# tel #}
     {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
-    {% if page['patient']['administrativeDatas']['homePhone']['value'] and page['patient']['administrativeDatas']['mobilePhone']['value'] %} / {% endif %}
+    {% if page['patient']['administrativeDatas']['homePhone']['value'] and page['patient']['administrativeDatas']['mobilePhone']['value'] %}
+      /
+    {% endif %}
     {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
-     -
+    -
     {# adresse #}
     {{ page['patient']['administrativeDatas']['streetNumber']['value']|e }}
     {{ page['patient']['administrativeDatas']['street']['value']|e }}
@@ -113,7 +118,7 @@
         {% endfor %}
       </div>
     {% endif %}
-</div>
+  </div>
 
 <div id="notesPatient" class="card p-1 my-2" style="display: none;">
   {{ page['patient']['administrativeDatas']['notes']['value']|e|nl2br }}

@@ -67,14 +67,32 @@
         <a class="nav-link" href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
       </li>
     {% endif %}
+    {% if config.lapOnOff == 'on' %}
+      <li role="presentation">
+        <a href="#plap" aria-controls="plap" role="tab" data-toggle="tab">LAP</a>
+      </li>
+    {% endif %}
   </ul>
 
   <div class="tab-content" style="padding-top:10px">
 
     {# formulaire mot de passe MedShake #}
     <div role="tabpanel" class="tab-pane active" id="pmdp" >
+      <h3>Modification du mot de passe</h3>
       {{ f.formbuilder(page.formPassword , page.formIN , session) }}
     </div>
+
+    {# LAP #}
+    {% if config.lapOnOff == 'on' %}
+      <div role="tabpanel" class="tab-pane" id="plap">
+        <h3>Préférences pour le LAP</h3>
+        <div class="alert alert-danger" role="alert">
+          <h4>Attention !</h4>
+          <p>Toute modification sur cette page entraine un fonctionnement du LAP à un niveau de performance inférieur à celui pour lequel il a été certifié.</p>
+          <p><button class="btn btn-danger">J'ai compris et je continue</button> <a class="btn btn-default" href="#" role="button">Je ne souhaite pas poursuivre</a></p>
+        </div>
+      </div>
+    {% endif %}
 
     {# formulaire Agenda MedShake #}
     {% if page.hasAgenda %}

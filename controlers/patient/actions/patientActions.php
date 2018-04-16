@@ -32,6 +32,7 @@
 $m=$match['params']['m'];
 
 $acceptedModes=array(
+    'saveCsForm', // sauver une consultation
     'saveOrdoForm', // sauver une ordonnance
     'sendMail' // envoyer un mail
 );

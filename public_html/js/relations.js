@@ -115,6 +115,7 @@ $(document).ready(function() {
         dataType: "html",
         success: function(data) {
           getRelationsPatientPraticiensTab();
+          ajaxModalPatientAdminCloseAndRefreshHeader();
         },
         error: function() {
           alert_popup("danger", 'Problème, rechargez la page !');
@@ -146,6 +147,7 @@ $(document).ready(function() {
         success: function(data) {
           getRelationsPatientPraticiensTab();
           getRelationsPatientPatientsTab();
+          ajaxModalPatientAdminCloseAndRefreshHeader();
         },
         error: function() {
           alert_popup("danger", 'Problème, rechargez la page !');
@@ -159,11 +161,8 @@ $(document).ready(function() {
 
   });
 
-  getRelationsPatientPraticiensTab();
-  getRelationsPatientPatientsTab();
-
   //ajax save form in modal
-  $("button.modal-save").on("click", function(e) {
+  $('body').on("click", "#newPro button.modal-save", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
     ajaxModalFormSave(form, modal);
@@ -173,6 +172,9 @@ $(document).ready(function() {
   $('body').on('click', '.voirDossier', function(){
     window.location = $(this).find('a.btn').attr('href');
   });
+
+  setTimeout(getRelationsPatientPraticiensTab, 500);
+  setTimeout(getRelationsPatientPatientsTab, 500); 
 
 });
 

@@ -107,11 +107,14 @@ $p['page']['patient']['today']=$patient->getToday();
 //historique complet des consultation du patient
 $p['page']['patient']['historique']=$patient->getHistorique();
 
+//les ALD du patient
+if($p['config']['lapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}
+
 //les certificats
 $certificats=new msData();
 $certificats->setModules(['base', $p['user']['module']]);
 
-if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
   foreach($p['page']['modelesCertif'] as $k=>$v) {
     if(isset($v['onlyfor'])) {
       $p['page']['modelesCertif'][$k]['onlyfor']=explode(',', $v['onlyfor']);
@@ -134,7 +137,7 @@ if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModeles
   }
 }
 //les courriers
-if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
+if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
   foreach($p['page']['modelesCourrier'] as $k=>$v) {
     if(isset($v['onlyfor'])) {
       $p['page']['modelesCourrier'][$k]['onlyfor']=explode(',', $v['onlyfor']);

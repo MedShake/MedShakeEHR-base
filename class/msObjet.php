@@ -224,9 +224,16 @@ public function getToID()
         if (!is_numeric($this->_fromID)) {
             throw new Exception('FromID is not numeric');
         }
-        return msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where id='".$id."' or instance='".$id."' ");
-    }
+        msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where id='".$id."' ");
 
+        if($tab=msSQL::sql2tabSimple("select id from objets_data where instance='".$id."'")) {
+          foreach($tab as $sid) {
+            $this->setDeletedObjetAndSons($sid);
+          }
+        }
+
+        return true;
+    }
 
 /**
  * Créer ou mettre à jour un objet par son nom
@@ -486,5 +493,42 @@ public function getToID()
 
         return false;
       }
+
+/**
+* Obtenir la valeur du dernier objet d'un type particulier pour un patient particulier
+* @param  string $name nom du type de l'objet
+* @param  string $instance int de l'instance de l'objet
+* @return array tableau avec information sur l'objet
+*/
+    public function getLastObjetValueByTypeName($name, $instance=false) {
+      if (!isset($this->_toID)) {
+          throw new Exception('toID is not defined');
+      }
+
+      if(is_numeric($instance)) {
+        $where = " and pd.instance='".$instance."'";
+      } else {
+        $where = null;
+      }
+
+      $name2typeID=new msData;
+
+      if($name2typeID=$name2typeID->getTypeIDsFromName([$name])) {
+        if(isset($name2typeID[$name])) {
+          if($data=msSQL::sqlUniqueChamp("select pd.value
+          from objets_data as pd
+          where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated='' $where
+          order by updateDate desc
+          limit 1")) {
+            return $data;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+      return false;
+    }
 
 }

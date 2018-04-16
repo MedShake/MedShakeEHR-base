@@ -83,7 +83,6 @@ if (count($_POST)>2) {
             if(!empty(trim($v))) {
               $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
             }
-
             if ($postObjetId>0) {
                 if($v=='' and $modeAction == 'edition') {
                   $patient->setDeletedObjetAndSons($postObjetId);

@@ -55,6 +55,67 @@ $(document).ready(function() {
   refreshHistorique();
   refreshHistoriqueToday();
   ////////////////////////////////////////////////////////////////////////
+  ///////// Observations pour saut entre tabs
+
+  // rafraichir historique au retour dossier med
+  $('#ongletDossierMedical').on("show.bs.tab", function() {
+    getHistoriqueToday();
+    getHistorique();
+  });
+
+
+  // 1er chargement tab dicom
+  $('#ongletDicom').on("show.bs.tab", function() {
+    if ($('#tabDicom').html() == '') {
+      var url = $('#tabDicom').attr('data-rootUrl');
+      loadTabPatient(url, 'tabDicom');
+    }
+  });
+
+  // refresh tabs dicom
+  $('body').on("click", "button.tabDicomRefresh", function() {
+    var url = $('#tabDicom').attr('data-rootUrl');
+    loadTabPatient(url, 'tabDicom');
+  });
+
+  $('#tabDicom').on("click", "#listeExamens tr.viewStudy", function() {
+    $.getScriptOnce(urlBase + "/js/dicom.js");
+    var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
+    var param = {
+      'dcStudyID': $(this).attr('data-study')
+    };
+    loadTabPatient(url, 'tabDicom', param);
+  });
+
+  // 1er chargement tab relations patient
+  $('#ongletLiensPatient').on("show.bs.tab", function() {
+    $.getScriptOnce(urlBase + "/js/relations.js");
+    if ($('#tabLiensPatient').html() == '') {
+      var url = $('#tabLiensPatient').attr('data-rootUrl');
+      loadTabPatient(url, 'tabLiensPatient');
+    }
+  });
+
+
+  function loadTabPatient(url, tab, param) {
+    $.ajax({
+      url: urlBase + url,
+      type: 'post',
+      data: {
+        tab: tab,
+        param: param
+      },
+      dataType: "html",
+      success: function(data) {
+        $('#' + tab).html(data);
+      },
+      error: function() {
+        alert("Problème, rechargez la page !");
+      }
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
   $(".changeObserv input:not(.datepic), .changeObserv textarea").typeWatch({
     wait: 1000,
@@ -88,8 +149,8 @@ $(document).ready(function() {
     setPeopleData(value, patientID, typeID, source, instance);
   });
 
-  $('input.jqautocomplete').on("autocompletechange", function(event, ui) {
-    $(this).trigger("paste");
+  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
+     $(this).trigger("paste");
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -160,7 +221,7 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations DICOM
-  $(".prepareEcho").on("click", function(e) {
+  $("body").on("click", ".prepareEcho", function(e) {
     e.preventDefault();
     prepareEcho();
   });
@@ -208,7 +269,7 @@ $(document).ready(function() {
     });
   });
 
-  $("#patientPhonecapture button").on("click", function(){
+  $("#patientPhonecapture button").on("click", function() {
     getHistorique();
     getHistoriqueToday();
   });
@@ -229,8 +290,9 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau courrier
-  $(".newCourrier").on("click", function(e) {
+  $("body").on("click", ".newCourrier", function(e) {
     e.preventDefault();
+    $('#ongletDossierMedical').tab('show');
     if ($('#newCourrier').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu du courrier en cours ?')) {
         $("#editeurCourrier").tinymce().remove();
@@ -289,7 +351,7 @@ $(document).ready(function() {
   ///////// Observations fermeture actions non terminées
 
   //close button zone newCS
-  $('body').on("click", "#cleanNewCS", function(e) {
+  $('body').on("click", "#cleanNewCS, .addNewCS", function(e) {
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });
@@ -374,6 +436,12 @@ $(document).ready(function() {
     }
   });
 
+  //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
+  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
+    e.preventDefault();
+    showObjetDet($(this));
+  });
+
   ////////////////////////////////////////////////////////////////////////
   // gestion des historiques et courbes de poids/taille/imc
 
@@ -439,10 +507,19 @@ $(document).ready(function() {
     $('tr .dropdown-menu').hide();
   });
 
-  //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $("body").on('click', '.trLigneExamen, .showDetDoc', function(e) {
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations diverses dont celles concernant la partie identité patient
+
+  //Voir les notes sur le patient
+  $('body').on("click", "#voirNotesPatient", function(e) {
     e.preventDefault();
-    showObjetDet($(this));
+    $('#notesPatient').toggle();
+  });
+
+  //Editer relation patient
+  $('body').on("click", "button.editerRelationsPatient", function(e) {
+    e.preventDefault();
+    $('#ongletLiensPatient').tab('show');
   });
 
   //fermeture modal data admin patient
@@ -450,11 +527,10 @@ $(document).ready(function() {
     ajaxModalPatientAdminCloseAndRefreshHeader();
   });
 
-  ////////////////////////////////////////////////////////////////////////
-  ///////// Voir les notes sur le patient
-  $('body').on("click", "#voirNotesPatient", function(e) {
+  //Ouvrir le LAP
+  $('body').on("click", ".openLAP", function(e) {
     e.preventDefault();
-    $('#notesPatient').toggle();
+    $('#ongletLAP').tab('show');
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -523,7 +599,7 @@ $(document).ready(function() {
   ///////// Envoyer les formulaires et recharger l'historique
 
   //enregistrement de forms en ajax
-  $('body').on('click', "form input[type=submit],button[type=submit]", function(e) {
+  $('body').on('click', "#tabDossierMedical form input[type=submit], #tabDossierMedical button[type=submit]", function(e) {
     if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };
@@ -541,13 +617,18 @@ $(document).ready(function() {
     }
     $(window).unbind("beforeunload");
     $(this).closest(".toclear").html("");
+    var form = $(this).closest("form");
     $.ajax({
-      url: $(this).closest("form").attr("action"),
+      url: form.attr("action"),
       type: 'post',
-      data: $(this).closest("form").serialize(),
+      data: form.serialize(),
       dataType: "html",
       success: function(data) {
-        if (!data.length)
+        // on recharge la colonne lat
+        getLatCol();
+
+        // on agit sur historiques
+        if (!data.length || form.hasClass('ignoreReturn'))
           return;
         else if (data.substr(0, 7) == "Erreur:") {
         alert_popup("danger", data);
@@ -744,7 +825,7 @@ function sendFormToCourrierDiv(el) {
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
-      modeleID: el.attr('data-modeleID'),
+      modele: el.attr('data-modele'),
     },
     dataType: "html",
     success: function(data) {
@@ -876,6 +957,8 @@ function sendFormToReglementDiv(el) {
   });
 }
 
+
+
 ////////////////////////////////////////////////////////////////////////
 /////////Fonctions spécifiques aux lignes de l'historique  (dont modal)
 
@@ -988,26 +1071,30 @@ function showObjetDet(element, timed) {
   destination = $("." + zone + " .detObjet" + objetID);
 
   if (destination.length == 0) {
-    ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
-    destination = $("." + zone + " .detObjet" + objetID);
+    if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4"><div class="alert alert-danger gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-success gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      voirOrdonnanceMode='voirOrdonnance';
+      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID);
+    } else {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+      destination = $("." + zone + " .detObjet" + objetID);
 
-    $.ajax({
-      url: urlBase + '/patient/ajax/ObjetDet/',
-      type: 'post',
-      data: {
-        objetID: objetID,
-      },
-      dataType: "html",
-      success: function(data) {
-        destination.html(data);
-      },
-      error: function() {
-        destination.remove();
-        alert_popup("danger", 'Problème, rechargez la page !');
-
-      }
-    });
-
+      $.ajax({
+        url: urlBase + '/patient/ajax/ObjetDet/',
+        type: 'post',
+        data: {
+          objetID: objetID,
+        },
+        dataType: "html",
+        success: function(data) {
+          destination.html(data);
+        },
+        error: function() {
+          destination.remove();
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
   } else {
     destination.toggle();
   }
@@ -1267,6 +1354,22 @@ function getHistoriqueToday() {
     success: function(data) {
       $("#historiqueToday").html(data);
       refreshHistoriqueToday();
+    },
+    error: function() {}
+  });
+}
+
+
+function getLatCol() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/refreshLatColPatientAtcdData/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID"),
+    },
+    dataType: "html",
+    success: function(data) {
+      $("#patientLatCol").html(data);
     },
     error: function() {}
   });

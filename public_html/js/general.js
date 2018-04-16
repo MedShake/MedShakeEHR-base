@@ -113,10 +113,10 @@ $(document).ready(function() {
   // autocomplete simple
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
+      source: urlBase + '/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //autocomplete pour la liaison code postal - > ville
@@ -147,7 +147,7 @@ $(document).ready(function() {
 
       }
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //prévention du form submit sur la touche enter
@@ -309,7 +309,6 @@ function glow(type, $el) {
   $el.delay(700).queue(function() {
     $(this).css("background","").dequeue();
   });
-
 }
 
 //fonction pour la sauvegarde automatique de champ de formulaire
@@ -336,7 +335,13 @@ function setPeopleData(value, patientID, typeID, source, instance) {
   }
 }
 
-//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée 
+// équivalent de nl2br php
+function nl2br(str, is_xhtml) {
+  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+}
+
+//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée
 function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
   if (patientID && typeName && source) {
     $.ajax({

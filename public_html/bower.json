@@ -1,0 +1,40 @@
+{
+  "name": "medshakeehr",
+  "description": "MedShakeEHR",
+  "main": "",
+  "authors": [
+    "Bertrand Boutillier"
+  ],
+  "license": "GNU GPL",
+  "homepage": "http://www.medshake.net",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.43",
+    "moment": "^2.17.1",
+    "magnific-popup": "https://github.com/dimsemenov/Magnific-Popup.git#^1.1.0",
+    "jquery-typewatch": "^3.0.0",
+    "tinymce": "^4.5.7",
+    "jquery": "^3.2.1",
+    "uploader": "https://github.com/danielm/uploader.git",
+    "jSignature": "^2.1.1",
+    "fullcalendar": "^3.4.0",
+    "jQuery-contextMenu": "^2.5.0",
+    "codemirror": "^5.31.0",
+    "kjua": "https://github.com/lrsjng/kjua.git#^0.1.2",
+    "chai": "~1.9.0",
+    "jquery-mousewheel": "~3.1.9",
+    "mocha": "~1.17.1",
+    "panzoom": "https://github.com/fr33z00/jquery.panzoom.git#v3.2.2+1Touch",
+    "bootstrap-colorpicker": "https://github.com/farbelous/bootstrap-colorpicker.git#2.5.0",
+    "jquery-stupid-table": "^1.1.3"
+
+  }
+}

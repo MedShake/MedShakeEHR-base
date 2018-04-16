@@ -51,6 +51,7 @@ $acceptedModes=array(
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm', // Extraire l'éditeur de courrier
     'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
+    'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
     'saveCsForm', // sauver le formulaire de consultation
     'saveOrdoForm', // sauver une ordonnance
     'saveReglementForm', // sauver une ordonnance
@@ -59,29 +60,10 @@ $acceptedModes=array(
     'getHistoriqueToday'// Obtenir l'historique du jour
 );
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
 
-
-// Extraire un form et lancer nouvelle Cs
-if ($m=='extractCsForm') {
-    include('inc-ajax-extractCsForm.php');
-}
-
-// Extraire un form et lancer nouveau Règlement
-elseif ($m=='extractReglementForm' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-extractReglementForm.php');
-}
-
-// Extraire un form et lancer nouvelle Ordo
-elseif ($m=='extractOrdoForm' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-extractOrdoForm.php');
-}
-
-// Extraire le form de mail et le lancer dans le div
-elseif ($m=='extractMailForm') {
-    include('inc-ajax-extractMailForm.php');
+//inclusion
+if(is_file($p['config']['homeDirectory'].'controlers/patient/actions/inc-ajax-'.$m.'.php')) {
+   include('inc-ajax-'.$m.'.php');
 }
 
 //ajouter un complément au titre d'une ligne de l'historique

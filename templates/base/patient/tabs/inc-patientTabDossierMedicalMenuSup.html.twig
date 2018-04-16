@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > patient : boutons d'actions du dossier patient
+ # Template > patient : menu supérieur du dossier patient
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
@@ -126,5 +126,8 @@
       </div>
     {% endif %}
 
-</div>
+    {% if page.patient.ALD is empty %}
+      <button class="btn btn-primary m-1 newCS" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create">Saisir une ALD</button>
+    {% endif %}
 
+</div>

@@ -75,7 +75,7 @@
              <select class="changeModule" data-userid="{{ v.id }}">
               {% for mi,mv in page.modules %}
                 <option value="{{ mv }}" {% if mv==v.module %}selected{% endif %}>{{ mv }}</option>
-              {% endfor %} 
+              {% endfor %}
             </select>
          </td>
           <td>
@@ -137,7 +137,7 @@
                     <select class="form-control custom-select" name="p_module">
                       {% for mi,mv in page.modules %}
                         <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
-                      {% endfor %} 
+                      {% endfor %}
                     </select>
                 </div>
               </div>

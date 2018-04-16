@@ -27,7 +27,11 @@
  */
 
 //construction du répertoire
+<<<<<<< HEAD:controlers/user/actions/inc-ajax-userParametersAgenda.php
 msTools::checkAndBuildTargetDir($p['homepath'].'config/agendas/');
+=======
+msTools::checkAndBuildTargetDir($p['config']['homeDirectory'].'config/agendas/');
+>>>>>>> origin/mergeLapDev:controlers/user/actions/inc-action-userParametersAgenda.php
 
 $params=array('Lundi'=>array(), 'Mardi'=>array(), 'Mercredi'=>array(), 'Jeudi'=>array(), 'Vendredi'=>array(), 'Samedi'=>array(), 'Dimanche'=>array());
 $js=array();

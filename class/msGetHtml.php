@@ -121,6 +121,43 @@ class msGetHtml
       return $twig->render($this->_template.'.html.twig', $p);
   }
 
+  /**
+   * Générer le HTML et le retourner mais avec variable injectée
+   * @return string HTML générer par le moteur de template
+   */
+    public function genererHtmlString($var)
+    {
+        global $p;
+
+        if (!isset($this->_template)) {
+            throw new Exception('Template is not defined');
+        }
+
+        if (!isset($this->_templatesDirectories)) {
+            $this->_construcDefaultTemplatesDirectories();
+        }
+
+        // les variables d'environnement twig
+        if (isset($p['config']['twigEnvironnementCache'])) {
+            $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
+        } else {
+            $twigEnvironment['cache']=false;
+        }
+        if (isset($p['config']['twigEnvironnementAutoescape'])) {
+            $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
+        } else {
+            $twigEnvironment['autoescape']=false;
+        }
+
+        // Lancer Twig
+        $loader = new Twig_Loader_Filesystem($this->_templatesDirectories);
+        $twig = new Twig_Environment($loader, $twigEnvironment);
+        $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+
+        return $twig->render($this->_template.'.html.twig', $var);
+    }
+
 /**
  * Construire les répertoires par défaut à interroger pour obtenir le template
  * @return array Tableau des répertoires

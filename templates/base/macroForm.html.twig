@@ -63,7 +63,7 @@
 
 		{% endif %}
 
-		{# corection de class si checkbox #}
+		{# correction de class si checkbox #}
 		{% if v.input.type == 'checkbox' %}
 			{% set inputclass = v.input.class|replace({'form-control' : ''}) %}
 		{% else %}
@@ -143,6 +143,9 @@
 		{% endif %}
 	{% endif %}
 
+	{% if v.select.before %}
+		{{ v.select.before }}
+	{% endif %}
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	class="custom-select{% if v.select.class %} {{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}{% endif %}"
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -248,6 +251,9 @@
 		{% endif %}
 	{% endif %}
 
+	{% if v.select.before %}
+		{{ v.select.before }}
+	{% endif %}
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -299,6 +305,10 @@
 		{% if v.label.position == 'before' %}
 			</label>
 		{% endif %}
+	{% endif %}
+
+	{% if v.textarea.before %}
+		{{ v.textarea.before }}
 	{% endif %}
 
 	<textarea title="{{ v.textarea.internalName }} / {{ v.textarea.datatypeid }}"
@@ -420,6 +430,7 @@
 										'plus' : el.value.plus,
 										'plusg' : el.value.plusg,
 										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',
@@ -444,7 +455,8 @@
 										'placeholder' : el.value.placeholder,
 										'readonly' : el.value.readonly,
 										'rows' : el.value.rows,
-										'internalName' : el.value.internalName
+										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',
@@ -467,7 +479,8 @@
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
-										'internalName' : el.value.internalName
+										'internalName' : el.value.internalName,
+										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
 										'position' : 'before',

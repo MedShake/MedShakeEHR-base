@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > patient : Panneau latéral d'antécédents du dossier patient
+ # Template > patient :  colonne latérale du Dossier médical
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
@@ -28,6 +28,9 @@
 
 {% import "macroForm.html.twig" as f %}
 
+{% if page.patient.ALD %}
+  {% include 'inc-patientAldStruc.html.twig' %}
+{% endif %}
 <div id="latForm" class="changeObserv">
     {{ f.formbuilder(page.formData_baseATCD , page.formName_baseATCD , valFormLat ) }}
 </div>
@@ -71,4 +74,3 @@
   </div>
 </div>
 {% endif %}
-

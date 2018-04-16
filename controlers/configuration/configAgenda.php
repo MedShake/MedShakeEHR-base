@@ -66,4 +66,3 @@ if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_a
 if(is_file($p['homepath'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml')) {
     $p['page']['typeRdv']=file_get_contents($p['homepath'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml');
 }
-

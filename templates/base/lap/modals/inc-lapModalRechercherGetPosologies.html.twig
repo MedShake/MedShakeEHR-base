@@ -1,0 +1,64 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : rapatrier posologies dans la modal de prescritpion
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+{% for terrain,indications in page.posos %}
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
+      <h5 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+          {{ terrain }}
+        </a>
+      </h5>
+    </div>
+    <div id="collapse{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ loop.index }}">
+      <div class="panel-body">
+
+        <div class="panel-group" id="accordionsub{{ loop.index }}" role="tablist" aria-multiselectable="true">
+        {% for indication,fiches in indications %}
+        <div class="panel panel-default fichearecevoir">
+          <div class="panel-heading" role="tab" id="headingb{{ loop.parent.loop.index }}{{ loop.index }}">
+            <div class="panel-title small">
+              <a role="button" class="showFichesPosos" data-toggle="collapse" data-parent="#accordionsub{{ loop.parent.loop.index }}" href="#collapseb{{ loop.parent.loop.index }}{{ loop.index }}" aria-expanded="true" aria-controls="collapseb{{ loop.parent.loop.index }}{{ loop.index }}">
+                {{ indication }}
+              </a>
+            </div>
+          </div>
+          <div id="collapseb{{ loop.parent.loop.index }}{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingb{{ loop.parent.loop.index }}{{ loop.index }}" data-fiches="{{ fiches|join(',') }}">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>

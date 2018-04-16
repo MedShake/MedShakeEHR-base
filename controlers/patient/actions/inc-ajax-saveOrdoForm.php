@@ -52,7 +52,7 @@ if (count($_POST)>2) {
         $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
     }
 
-    // pour plus de clarté
+    // pour plus de clarté  ...
     if(isset($_POST['objetID']) and $supportID == $_POST['objetID']) {
       $modeAction = 'edition';
     } else {
@@ -80,8 +80,9 @@ if (count($_POST)>2) {
             } else {
                 $postObjetId='0';
             }
+
             if(!empty(trim($v))) {
-              $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
+                $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
             }
 
             if ($postObjetId>0) {

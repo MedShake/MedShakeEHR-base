@@ -32,6 +32,10 @@ $pdf->setFromID($p['user']['id']);
 $pdf->setToID($match['params']['patient']);
 $pdf->setType($match['params']['printType']);
 
+if (isset($_POST['lapPrintExigences'])) {
+    $pdf->setLapPrintExigences($_POST['lapPrintExigences']);
+}
+
 if (isset($_POST['courrierBody'])) {
     $pdf->setBodyFromPost($_POST['courrierBody']);
 }

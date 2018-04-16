@@ -91,6 +91,8 @@
                 <div class="collapse navbar-collapse" id="top-navbar">
                 {% if user.id > 0 %}
 
+                  {# Menu de navigation / peut être supprimé #}
+                  {% if noMenuInBar is empty %}
                   <ul class="nav navbar-nav">
                       {% if config.agendaDistantLink %}
                         <li class="nav-item">
@@ -285,6 +287,9 @@
              </div>
            </div>
          </div>
+
+        {# autres modals #}
+        {% block modals %}{% endblock %}
 
     </body>
 </html>

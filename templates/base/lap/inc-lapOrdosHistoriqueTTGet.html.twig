@@ -1,0 +1,110 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : historique des tt
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+
+
+<table class="table table-hover">
+  <thead>
+    <th class="col-md-6 text-center">DÉBUT</th>
+    <th class="text-center lead gras">
+      <select id="selectHistoTTAnnee">
+      {% for annee in page.histoTTannees %}
+        <option {% if annee == page.histoTTannee %}selected="selected"{% endif %}>{{ annee }}</option>
+      {% endfor %}
+      </select>
+    </th>
+    <th class="col-md-6 text-center">FIN</th>
+  </thead>
+
+  {% for mois, jours in page.histoTT %}
+    <thead>
+      <tr class="bg-primary">
+        <td></td>
+        <td class="gras text-capitalize text-center">{{ mois }}</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for jour, medics in jours %}
+        <tr>
+          <td>
+            {% if medics.start %}
+              <ul style="line-height : 1.7">
+                {% for medic in medics.start %}
+                  {% if medic.ordonnanceID > 0 %}
+                    <li data-ordonnanceid="{{ medic.ordonnanceID }}" class="voirOrdonnance" style="cursor: pointer;">
+                    {% elseif medic.value.prescripteurInitialTT %}
+                      <li data-toggle="tooltip" data-placement="top" title="Prescripteur externe : {{ medic.value.prescripteurInitialTT }}">
+                      {% else %}
+                      <li>
+                      {% endif %}
+                      <strong>{{ medic.value.nomUtileFinal }}</strong>
+                      <small>
+                        :
+                        {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
+                      {% if medic.ligneData.isALD == 'true' %}
+                        <span class="label label-danger">ald</span>{% endif %}
+                      {% if medic.ligneData.isChronique == 'true' %}
+                        <span class="label label-default">chronique</span>{% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </td>
+            <td class="gras text-center col-md-1 bg-info">{{ jour }}</td>
+            <td>
+              {% if medics.stop %}
+                <ul style="line-height : 1.7">
+                  {% for medic in medics.stop %}
+                    {% if medic.ordonnanceID > 0 %}
+                      <li data-ordonnanceid="{{ medic.ordonnanceID }}" class="voirOrdonnance" style="cursor: pointer;">
+                      {% elseif medic.value.prescripteurInitialTT %}
+                        <li data-toggle="tooltip" data-placement="top" title="Prescripteur externe : {{ medic.value.prescripteurInitialTT }}">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                        <strong>{{ medic.value.nomUtileFinal }}</strong>
+                        <small>
+                          :
+                          {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
+                        {% if medic.ligneData.isALD == 'true' %}
+                          <span class="label label-danger">ald</span>{% endif %}
+                        {% if medic.ligneData.isChronique == 'true' %}
+                          <span class="label label-default">chronique</span>{% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      {% endfor %}
+
+    </table>

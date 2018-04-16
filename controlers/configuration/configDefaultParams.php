@@ -24,7 +24,7 @@
  * Config : gérer les paramètres de configuration par défaut des utilisateurs
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib Bertrand Boutillier <b.boutillier@gmail.com> 
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 //admin uniquement
@@ -65,3 +65,4 @@ ksort($p['page']['cats']['propre'], SORT_NATURAL | SORT_FLAG_CASE);
 $p['page']['cats']['propre']=array_merge(['Serveur', 'Serveur MySQL', 'Service d\'affichage', 'Options'], $p['page']['cats']['propre']);
 $p['page']['cats']['tiers']=msSQL::sql2tabKey("SELECT DISTINCT(cat) FROM configuration WHERE level='default' AND service='tiers'", 'cat', 'cat');
 ksort($p['page']['cats']['tiers'], SORT_NATURAL | SORT_FLAG_CASE);
+

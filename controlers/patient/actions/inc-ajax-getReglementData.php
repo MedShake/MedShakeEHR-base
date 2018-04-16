@@ -29,6 +29,8 @@
 
 header('Content-Type: application/json');
 
+if(!is_numeric($_POST['acteID'])) die();
+
 $reglement = new msReglement();
 if (isset($_POST['reglementForm'])) {
     $reglement->set_secteurTarifaire($_POST['reglementForm']=='baseReglementS1'?'1':($_POST['reglementForm']=='baseReglementS2'?'2':''));

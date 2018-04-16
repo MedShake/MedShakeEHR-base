@@ -94,7 +94,6 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     //enfin, on installe les nouveaux modules
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
-            echo $file;
             includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
             includePhp($file, '_post');

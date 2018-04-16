@@ -69,4 +69,16 @@ class msModBaseDataCourrier
     }
   }
 
+  /**
+   * Ajouter des datas pour le modèle de courrier traitement en cours
+   * @param  array $d tableau des tags
+   * @return void
+   */
+    public static function getCourrierDataCompleteModuleModele_modeleCourrierTtEnCours(&$d) {
+      $lap = new msLapOrdo();
+      $lap->setToID($d['patientID']);
+      $d['tt']=$lap->getTTenCours();
+
+    }
+
 }

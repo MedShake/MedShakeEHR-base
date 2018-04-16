@@ -53,7 +53,9 @@ left join objets_data as f on f.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd
 left join objets_data as l on l.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and l.typeID in (NULL, '', '".$ids['lastname']."')
 left join objets_data as b on b.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and b.typeID in (NULL, '', '".$ids['birthname']."')
 left join data_types as t on t.id=pd.typeID
-where 1 $patientSel $typeSel $instance order by id desc limit 2000");
+where 1 $patientSel $typeSel $instance
+group by pd.id,t.id, f.id
+order by id desc limit 2000");
 
 if (isset($match['params']['patient'])) {
     $p['page']['patientID']=$match['params']['patient'];
