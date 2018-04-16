@@ -63,6 +63,10 @@ $(document).ready(function() {
     testSamsAndAlert();
   });
 
+  $('#modAlerteSamBloquerPourPatient').on("click", function() {
+    toggleSamState($(this));
+  });
+
 });
 
 
@@ -131,6 +135,7 @@ function produceSamAlert(samID) {
     success: function(data) {
       if(data.alert == 'ok') {
         $('#modalLapAlerteSam .modal-body').html(data.html);
+        $('#modAlerteSamBloquerPourPatient').attr('data-samID', samID);
         $('#modalLapAlerteSam').modal('show');
         console.log("Produire alerte SAMs : OK");
         //commentaires du SAM
@@ -151,6 +156,12 @@ function produceSamAlert(samID) {
   });
 }
 
+/**
+ * Sauver le commentaire SAM pour le patient
+ * @param  {object} source objet jquery source
+ * @param  {string} value  commentaire
+ * @return {void}
+ */
   function saveSamComment(source, value) {
     if(source.attr('data-objetID')) {
       objetID = source.attr('data-objetID');
@@ -177,6 +188,24 @@ function produceSamAlert(samID) {
       },
       error: function() {
         console.log("Sauver commentaire SAMs : PROBLEME");
+      }
+    });
+  }
+
+  function toggleSamState(source) {
+    $.ajax({
+      url: urlBase + '/lap/ajax/lapSamToggleForPatient/',
+      type: 'post',
+      data: {
+        samID: source.attr('data-samID'),
+        patientID: $('#identitePatient').attr("data-patientID"),
+      },
+      dataType: "json",
+      success: function(data) {
+
+      },
+      error: function() {
+        console.log("Toogle SAM state : PROBLEME");
       }
     });
   }

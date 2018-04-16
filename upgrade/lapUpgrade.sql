@@ -68,7 +68,12 @@ INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromI
 ('ordo', 'lapCatPorteurs', 'LAP porteurs', 'data pour les porteurs LAP', 'base', 1, '2018-02-13 20:57:19'),
 ('ordo', 'lapCatLignePrescription', 'LAP ligne de prescription', 'data des lignes de prescription', 'base', 1, '2018-02-13 20:58:15'),
 ('ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-02-13 20:59:11'),
+('ordo', 'lapCatSams', 'LAP SAMs', 'data pour SAMs LAP', 'base', 3, '2018-04-13 11:20:40');
 
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatSams');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('ordo', 'lapSamCommentaire', '', 'Commentaire patient SAM', 'commentaire par patient pour un SAM', '', '', '', '', 'base', @catID, 1, '2018-04-13 11:27:17', 1576800000, 1),
+('ordo', 'lapSamDisabled', '', 'Marqueur de SAM bloqué', 'marqueur de SAM bloqué', '', '', '', '', 'base', @catID, 1, '2018-04-13 11:26:52', 1576800000, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatMedicament');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -98,7 +103,8 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatPorteu
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ( 'ordo', 'lapLigneMedicament', '', 'Médicament', 'médicament LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:56:17', 3600, 1),
 ( 'ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:55:32', 3600, 1),
-( 'ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:54:31', 3600, 1);
+('ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:54:31', 3600, 1),
+('ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', @catID, 1, '2018-04-13 13:14:44', 1576800000, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catModelesCourriers');
 ( `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

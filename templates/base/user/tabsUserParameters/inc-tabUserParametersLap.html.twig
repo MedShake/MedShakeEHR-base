@@ -1,0 +1,102 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : tab LAP
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ {% import "macroForm.html.twig" as f %}
+ <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
+  <li class="active" role="presentation">
+    <a href="#lapMedics" aria-controls="lapMedics" role="tab" data-toggle="tab">Paramètres globaux</a>
+  </li>
+  <li role="presentation">
+    <a href="#lapSams" aria-controls="lapSams" role="tab" data-toggle="tab">SAM</a>
+  </li>
+ </ul>
+
+ <div class="col-md-9">
+   <div class="tab-content" >
+
+   {# paramètres perso du LAP #}
+   <div role="tabpanel" class="tab-pane active" id="lapMedics">
+     <h3>Paramétrage du LAP</h3>
+
+     <table class="table table-hover">
+       <tbody>
+         <tr>
+           <td class="info" colspan="2">Paramètres de recherche pour nouvelle prescription</td>
+         </tr>
+         <tr>
+           <td>Montrer les médicaments hospitaliers</td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>Montrer les médicaments non commercialisés</td>
+           <td></td>
+         </tr>
+         <tr>
+           <td class="info" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
+         </tr>
+         <tr>
+           <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>Alerte pour allaitement supérieur à 3 ans</td>
+           <td></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+
+   {# paramètres perso des SAMs #}
+   <div role="tabpanel" class="tab-pane" id="lapSams">
+     <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
+
+     <h4>SAMs gérés</h4>
+
+     <table class="table table-hover">
+       <thead>
+         <tr>
+           <th>Identifiant</th>
+           <th>Titre</th>
+           <th>Reconnu</th>
+         </tr>
+       </thead>
+       <tbody>
+         {% for sam in page.lap.samsList %}
+         <tr>
+           <td>{{ sam.id }}</td>
+           <td>{{ sam.titre }}</td>
+           <td>{{ sam.methode }}</td>
+         </tr>
+         {% endfor %}
+       </tbody>
+     </table>
+
+   </div>
+
+   </div>
+ </div>

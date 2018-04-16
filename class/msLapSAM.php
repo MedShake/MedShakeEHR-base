@@ -123,6 +123,32 @@ class msLapSAM
   }
 
 /**
+ * Obtenir la liste des SAMs dans le XML
+ * @return array tableau des SAMs
+ */
+  public function getSamListInXml() {
+    $data=[];
+    $sams = $this->_xml->getElementsByTagName('IdSAD');
+    if($sams->length) {
+      foreach($sams as $sam) {
+        $method='_getCodesSpe4_'.$sam->nodeValue;
+        $titre = $sam->parentNode->getElementsByTagName('titre')->item(0)->nodeValue;
+        if(method_exists('msLapSAM', $method)) {
+          $methodTrouve = 'oui';
+        } else {
+          $methodTrouve = 'non';
+        }
+        $data[]=array(
+          'id'=>$sam->nodeValue,
+          'titre'=>$titre,
+          'methode'=>$methodTrouve
+        );
+      }
+    }
+    return $data;
+  }
+
+/**
  * Créer le fichier de correspondance entre SAM et codes spécialité (array serialize)
  */
   public function setFileCodesSpeBySAM() {
@@ -211,6 +237,81 @@ class msLapSAM
     return $obj->createNewObjetByTypeName('lapSam', $samID);
   }
 
+/**
+ * Obtenir le statut du SAM pour le couple patient / user
+ * @return string enabled / disabled
+ */
+  public function getSamStatusForPatient() {
+    if($porteur = $this->getSamPorteurData()) {
+      $porteurID = $porteur['id'];
+
+      $name2typeID=new msData;
+      $name2typeID=$name2typeID->getTypeIDsFromName(['lapSamDisabled']);
+      if($data=msSQL::sqlUnique("select pd.id
+      from objets_data as pd
+      where pd.typeID = '".$name2typeID['lapSamDisabled']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' and pd.deleted='' and pd.outdated=''
+      order by updateDate desc
+      limit 1")) {
+        return 'disabled';
+      } else {
+        return 'enabled';
+      }
+    } else {
+      return 'enabled';
+    }
+  }
+
+/**
+ * Marquer le SAM comme bloqué pour le couple patient / user
+ */
+  public function setSamDisabledForPatient() {
+    if($porteur = $this->getSamPorteurData()) {
+      $porteurID = $porteur['id'];
+    } else {
+      $porteurID = $this->setSamPorteur($this->_samID);
+    }
+
+    $name2typeID=new msData;
+    $name2typeID=$name2typeID->getTypeIDsFromName(['lapSamDisabled']);
+
+    $obj = new msObjet;
+    $obj->setFromID($this->_fromID);
+    $obj->setToID($this->_toID);
+    $newmarqueur = $obj->createNewObjetByTypeName('lapSamDisabled', '', $porteurID);
+
+  }
+
+/**
+ * Marquer le SAM comme non bloqué pour le couple patient / user
+ */
+  public function setSamEnabledForPatient() {
+    if($porteur = $this->getSamPorteurData()) {
+      $porteurID = $porteur['id'];
+
+      $name2typeID=new msData;
+      $name2typeID=$name2typeID->getTypeIDsFromName(['lapSamDisabled']);
+
+      if($dataID=msSQL::sqlUniqueChamp("select pd.id
+      from objets_data as pd
+      where pd.typeID = '".$name2typeID['lapSamDisabled']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' pd.instance = '".$porteurID."' and pd.deleted='' and pd.outdated=''
+      order by updateDate desc
+      limit 1")) {
+
+        $obj = new msObjet;
+        $obj->setFromID($this->_fromID);
+        $obj->etToID($this->_toID);
+        $obj->setDeletedObjetAndSons($dataID);
+
+      }
+    }
+
+  }
+
+/**
+ * Créer / mettre à jour le commentaie patient pour le SAM
+ * @param string $comment commentaire
+ * @param int $objetID id de l'objet créé
+ */
   public function setSamComment($comment, $objetID) {
     if(!isset($this->_samID)) {
         throw new Exception('SamID is not set');
