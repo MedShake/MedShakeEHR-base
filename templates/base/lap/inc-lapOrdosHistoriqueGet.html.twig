@@ -26,7 +26,7 @@
  #
 #}
 
-<table class="table table-hover">
+<table class="table table-sm table-hover">
   <thead>
     <th></th>
     <th>Date</th>
@@ -41,8 +41,8 @@
       {% for ordo in v %}
         <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
           <td>
-            <button class="btn btn-default btn-xs" title="Voir">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+            <button class="btn btn-sm" title="Voir">
+              <span class="fa fa-eye" aria-hidden="true"></span></button>
           </td>
           <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
           <td>{{ ordo.prenom }}

@@ -117,42 +117,44 @@
 
     {# Onglets #}
     <ul class="nav nav-tabs gras" role="tablist" style="margin-top : 15px;">
-      <li class="active" role="presentation">
-        <a id="ongletDossierMedical" href="#tabDossierMedical" aria-controls="profile" role="tab" data-toggle="tab">Dossier médical</a>
+      <li class="nav-item">
+        <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab">Dossier médical</a>
       </li>
       {% if config.lapOnOff == 'on' %}
-      <li role="presentation">
-        <a id="ongletLAP" href="#tabLAP" aria-controls="messages" role="tab" data-toggle="tab">LAP</a>
+      <li class="nav-item">
+        <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab">LAP</a>
       </li>
       {% endif %}
-      <li role="presentation">
-        <a id="ongletDicom" href="#tabDicom" aria-controls="messages" role="tab" data-toggle="tab">DICOM</a>
-      </li>
-      <li role="presentation">
-        <a id="ongletLiensPatient" href="#tabLiensPatient" aria-controls="messages" role="tab" data-toggle="tab">Liens du patient</a>
+      {% if config.dicomHost != '' %}
+        <li class="nav-item">
+          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab">DICOM</a>
+        </li>
+      {% endif %}
+      <li class="nav-item">
+        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab">Liens du patient</a>
       </li>
     </ul>
 
     {# tabs  #}
-    <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
+    <div class="tab-content container-fluid" style="padding-top :15px; padding-bottom: 15px;">
 
       {# tab dossier médical #}
-      <div role="tabpanel" class="tab-pane active" id="tabDossierMedical">
+      <div id="tabDossierMedical" class="tab-pane active" role="tabpanel">
         {% include('inc-patientTabDossierMedical.html.twig') %}
       </div>
 
       {# tab lap #}
       {% if config.lapOnOff == 'on' %}
-      <div role="tabpanel" class="tab-pane" id="tabLAP">
+      <div id="tabLAP" class="tab-pane" role="tabpanel">
         {% include('inc-tabLAP.html.twig') %}
       </div>
       {% endif %}
 
       {# tab dicom #}
-      <div role="tabpanel" class="tab-pane" id="tabDicom" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabDicomStudiesList/"></div>
+      <div id="tabDicom" class="tab-pane" role="tabpanel" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabDicomStudiesList/"></div>
 
       {# tab liens patient #}
-      <div role="tabpanel" class="tab-pane" id="tabLiensPatient" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabLiensPatient/"></div>
+      <div id="tabLiensPatient" class="tab-pane" role="tabpanel" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabLiensPatient/"></div>
     </div>
 
 {% endblock %}

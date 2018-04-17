@@ -608,17 +608,17 @@ function makeLigneOrdo(data, mode) {
       retour += '        <span class="label label-default">chronique</span>';
     }
     if(testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance') {
-      retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+      retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
     } else if (mode == 'editionOrdonnance') {
-      retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+      retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
     if (data.medics[0].prescripteurInitialTT) {
-      retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>';
+      retour += ' <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></a>';
     }
 
     if (data.medics[0].prescriptionMotif) {
-      retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></a>';
+      retour += ' <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></a>';
     }
 
     retour += '      </div>';
@@ -645,83 +645,73 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
-      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
-      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+      retour += '<button class="btn btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="fa fa-refresh" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <span class="caret"></span>';
+      retour += '  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-times" aria-hidden="true"></span>';
       retour += '  </button>';
-      retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '    <li><a href="#" class="marquerArretEffectifCeJour">Arrêt effectif ce jour</a></li>';
-      retour += '    <li><a href="#"  class="marquerArretEffectif">Arrết effectif à date antérieure</a></li>';
-      retour += '  </ul>';
+      retour += '  <div class="dropdown-menu dropdown-menu-right">';
+      retour += '    <a href="#" class="dropdown-item marquerArretEffectifCeJour">Arrêt effectif ce jour</a>';
+      retour += '    <a href="#"  class="dropdown-item marquerArretEffectif">Arrết effectif à date antérieure</a>';
+      retour += '  </div>';
       retour += '</div>';
 
       retour += ' <div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
+      retour += '  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-book" aria-hidden="true"></span></span>';
       retour += '  </button>';
-      retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '    <li><a href="#" data-speThe="' + data.medics[0].speThe + '" class="effetsIndesirables">Effets indésirables</a></li>';
-      retour += '  </ul>';
+      retour += '  <div class="dropdown-menu dropdown-menu-right">';
+      retour += '    <a href="#" data-speThe="' + data.medics[0].speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
+      retour += '  </div>';
       retour += '</div>';
 
     }
     // voir ordo
     else if (mode == 'voirOrdonnance') {
-      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
-      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+      retour += '<button class="btn btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="fa fa-refresh" aria-hidden="true"></span></button> ';
     }
     //Actions pour mode ordonnance
     else if (mode == 'editionOrdonnance') {
-      retour += '    <button class="btn btn-default btn-xs editLignePrescription">';
-      retour += '      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
+      retour += '    <button class="btn btn-sm editLignePrescription">';
+      retour += '      <span class="fa fa-pencil" aria-hidden="true"></span></button>';
 
 
       retour += '    <div class="btn-group">';
-      retour += '      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '        <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>';
-      retour += '        <span class="caret"></span>';
+      retour += '      <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+      retour += '        <span class="fa fa-eur" aria-hidden="true"></span>';
       retour += '      </button>';
-      retour += '      <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '        <li class="disabled">';
-      retour += '          <a href="#" class="coutMedic" data-cout="' + coutMedic.math + '">Coût estimé : ';
+      retour += '      <div class="dropdown-menu dropdown-menu-right">';
+      retour += '          <a href="#" class="dropdown-item coutMedic" disabled data-cout="' + coutMedic.math + '">Coût estimé : ';
       retour += coutMedic.texte;
       retour += '           </a>';
-      retour += '        </li>';
-      retour += '        <li class="disabled">';
-      retour += '          <a href="#">Taux remboursement : ';
+      retour += '          <a class="dropdown-item" disabled href="#">Taux remboursement : ';
       retour += data.medics[0]['tauxrbt'];
       retour += '           </a>';
-      retour += '        </li>';
-      retour += '      </ul>';
+      retour += '      </div>';
       retour += '    </div>';
 
 
       retour += '    <div class="btn-group">';
-      retour += '      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>';
-      retour += '        <span class="caret"></span>';
+      retour += '      <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+      retour += '        <span class="fa fa-wrench" aria-hidden="true"></span>';
       retour += '      </button>';
-      retour += '      <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '        <li>';
-      retour += '          <a href="#" class="addToLigne">';
-      retour += '            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>';
+      retour += '      <div class="dropdown-menu dropdown-menu-right">';
+      retour += '          <a href="#" class="dropdown-item addToLigne">';
+      retour += '            <span class="fa fa-plus" aria-hidden="true"></span>';
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
-      retour += '        </li>';
 
       if (data.medics[0].prescriptibleEnDC == '1' && data.medics[0].nomDC != data.medics[0].nomUtileFinal) {
-        retour += '          <li role="separator" class="divider"></li>';
-        retour += '          <li>';
-        retour += '            <a href="#" class="convertDci">';
-        retour += '              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
+        retour += '          <div class="dropdown-divider"></div>';
+        retour += '            <a href="#" class="dropdown-item convertDci">';
+        retour += '              <span class="fa fa-refresh" aria-hidden="true"></span>';
         retour += '              Convertir en DCI</a>';
-        retour += '          </li>';
       }
-      retour += '      </ul>';
+      retour += '      </div>';
       retour += '    </div>';
 
-      retour += '    <button class="btn btn-default btn-xs removeLignePrescription">';
-      retour += '      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+      retour += '    <button class="btn btn-sm removeLignePrescription">';
+      retour += '      <span class="fa fa-trash" aria-hidden="true"></span></button>';
     }
 
     retour += '  </div>';
@@ -753,53 +743,48 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
-      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
-      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+      retour += '<button class="btn btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="fa fa-refresh" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <span class="caret"></span>';
+      retour += '  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-times" aria-hidden="true"></span>';
       retour += '  </button>';
-      retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '    <li><a href="#" class="marquerArretEffectifCeJour">Arrêt effectif ce jour</a></li>';
-      retour += '    <li><a href="#"  class="marquerArretEffectif">Arrết effectif à date antérieure</a></li>';
-      retour += '  </ul>';
+      retour += '  <div class="dropdown-menu dropdown-menu-right">';
+      retour += '    <a href="#" class="dropdown-item marquerArretEffectifCeJour">Arrêt effectif ce jour</a>';
+      retour += '    <a href="#"  class="dropdown-item marquerArretEffectif">Arrết effectif à date antérieure</a>';
+      retour += '  </div>';
       retour += '</div>';
 
     }
 
     // voir ordo
     else if (mode == 'voirOrdonnance') {
-      retour += '<button class="btn btn-default btn-xs renouvLignePrescription" title="Renouveller">';
-      retour += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> ';
+      retour += '<button class="btn btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<span class="fa fa-refresh" aria-hidden="true"></span></button> ';
     }
 
     //Actions pour mode ordonnance
     else if (mode == 'editionOrdonnance') {
       retour += '      <div class="btn-group">';
-      retour += '        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '          <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>';
-      retour += '          <span class="caret"></span>';
+      retour += '        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+      retour += '          <span class="fa fa-wrench" aria-hidden="true"></span>';
       retour += '        </button>';
-      retour += '        <ul class="dropdown-menu dropdown-menu-right">';
-      retour += '          <li>';
-      retour += '            <a href="#" class="addToLigne">';
-      retour += '              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>';
+      retour += '        <div class="dropdown-menu dropdown-menu-right">';
+      retour += '            <a href="#" class="dropdown-item addToLigne">';
+      retour += '              <span class="fa fa-plus" aria-hidden="true"></span>';
       retour += '              Ajouter un médicament à cette ligne de prescription</a>';
-      retour += '          </li>';
 
       if (data.medics[0].prescriptibleEnDC == '1') {
-        retour += '            <li role="separator" class="divider"></li>';
-        retour += '            <li>';
-        retour += '              <a href="#" class="convertDci">';
-        retour += '                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
+        retour += '            <div class="dropdown-divider"></div>';
+        retour += '              <a href="#" class="dropdown-item convertDci">';
+        retour += '                <span class="fa fa-refresh" aria-hidden="true"></span>';
         retour += '                Convertir en DCI</a>';
-        retour += '            </li>';
       }
-      retour += '        </ul>';
+      retour += '        </div>';
       retour += '      </div>';
       retour += '      ';
-      retour += '      <button class="btn btn-default btn-xs removeLignePrescription">';
-      retour += '        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+      retour += '      <button class="btn btn-sm removeLignePrescription">';
+      retour += '        <span class="fa fa-trash" aria-hidden="true"></span></button>';
     }
     retour += '    </div>';
     retour += '  </div>';
@@ -826,11 +811,11 @@ function makeLigneOrdo(data, mode) {
       }
 
       if (medic.prescripteurInitialTT) {
-        retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>';
+        retour += ' <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></a>';
       }
 
       if (medic.prescriptionMotif.length > 0) {
-        retour += ' <a tabindex="0" class="btn btn-xs btn-default" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></a>';
+        retour += ' <a tabindex="0" class="btn btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></a>';
       }
 
       retour += '    </div>';
@@ -844,22 +829,22 @@ function makeLigneOrdo(data, mode) {
       //Actions pour mode TT en cours
       if (mode == 'TTenCours') {
         retour += ' <div class="btn-group">';
-        retour += '  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> <span class="caret"></span>';
+        retour += '  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-book" aria-hidden="true"></span>';
         retour += '  </button>';
-        retour += '  <ul class="dropdown-menu dropdown-menu-right">';
-        retour += '    <li><a href="#" data-speThe="' + medic.speThe + '" class="effetsIndesirables">Effets indésirables</a></li>';
-        retour += '  </ul>';
+        retour += '  <div class="dropdown-menu dropdown-menu-right">';
+        retour += '    <a href="#" data-speThe="' + medic.speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
+        retour += '  </div>';
         retour += '</div>';
       }
       // voir ordo
       else if (mode == 'voirOrdonnance') {}
       //Actions pour mode ordonnance
       else if (mode == 'editionOrdonnance') {
-        retour += '  <button class="btn btn-default btn-xs editMedicLignePrescription">';
-        retour += '    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
+        retour += '  <button class="btn btn-sm editMedicLignePrescription">';
+        retour += '    <span class="fa fa-pencil" aria-hidden="true"></span></button>';
 
-        retour += '  <button class="btn btn-default btn-xs removeMedicLignePrescription">';
-        retour += '    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+        retour += '  <button class="btn btn-sm removeMedicLignePrescription">';
+        retour += '    <span class="fa fa-trash" aria-hidden="true"></span></button>';
       }
 
       retour += '</td>';

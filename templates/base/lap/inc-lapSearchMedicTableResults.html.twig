@@ -31,7 +31,7 @@
   {% if page.substances | length > 0 %}{% endif %}
 
   {% if page.medicListeSpe | length > 0 %}
-    <table id="tabMedicaments" class="table table-hover tablesorter">
+    <table id="tabMedicaments" class="table table-sm table-hover tablesorter">
       <thead>
         <tr class="active">
           <th></th>
@@ -47,8 +47,8 @@
 
               <tr class="sendToPrescription" data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
                 <td>
-                  <button type="button" class="btn btn-primary btn-xs" >
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  <button type="button" class="btn btn-primarybtn-sm" >
+                    <span class="fa fa-plus" aria-hidden="true"></span>
                   </button>
                 </td>
                 <td>

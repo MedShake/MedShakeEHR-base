@@ -27,37 +27,41 @@
  #}
 {% import "macroForm.html.twig" as f %}
 <div class="row">
-  <div class=" col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading gras">Praticiens</div>
-      <div class="panel-body">
-        <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
+  <div class=" col-md-6 px-0">
+    <div class="card col-md-12 p-0">
+      <div class="card-header py-0 gras">Praticiens</div>
+      <div class="card-body">
+        <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-2" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
         <form class="form-inline">
-          <div class="form-group">
-            <input class="form-control" type="text" id="searchPratID" autocomplete="off"/>
+          <div class="form-group" style="width:100%">
+            <div class="input-group" style="width:100%">
+              <input class="form-control my-1" type="text" id="searchPratID" autocomplete="off"/>
+              <div class="input-group-append">
+                {{ f.select ({
+                'select' : {
+                  'name' : 'preRelationPatientPrat',
+                  'id' : 'preRelationPatientPratID',
+                  'class' : 'input-group-text my-1',
+                  'values' : page.preRelationPatientPrat.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+              </div>
+              <div class="input-group-append">
+                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary input-group-text my-1">Ajouter</button>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            {{ f.select ({
-            'select' : {
-              'name' : 'preRelationPatientPrat',
-              'id' : 'preRelationPatientPratID',
-              'class' : 'form-control',
-              'values' : page.preRelationPatientPrat.formValues,
-              'valueDefaut' : el.value.preValue,
-              'autocomplete' : 'off' } }) }}
-          </div>
-          <button type="submit" id="addRelationPatientPrat" class="btn btn-primary">Ajouter</button>
         </form>
       </div>
 
 
-      <table class="table table-striped">
+      <table class="table table-sm mb-0 table-striped">
 				<thead>
 					<tr>
-						<th class="col-md-1"></th>
-						<th class="col-md-5">Praticien</th>
-						<th class="col-md-5">Relation</th>
-						<th class="col-md-1"></th>
+						<th></th>
+						<th>Praticien</th>
+						<th>Relation</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="bodyTabRelationPatientPrat">
@@ -68,36 +72,40 @@
   </div>
 
 
-	<div class=" col-md-6">
-		<div class="panel panel-default">
-			<div class="panel-heading gras">Liens familiaux</div>
-			<div class="panel-body">
+	<div class=" col-md-6 pr-0">
+		<div class="card col-md-12 p-0">
+			<div class="card-header py-0 gras">Liens familiaux</div>
+			<div class="card-body">
 				<form class="form-inline">
-					<div class="form-group">
-						<input class="form-control" type="text" id="searchPatientID" autocomplete="off"/>
+					<div class="form-group" style="width:100%">
+            <div class="input-group" style="width:100%">
+  						<input class="form-control my-1" type="text" id="searchPatientID" autocomplete="off"/>
+              <div class="input-group-append">
+					      {{ f.select ({
+                'select' : {
+                  'name' : 'preRelationPatientPatient',
+                  'id' : 'preRelationPatientPatientID',
+                  'class' : 'form-control input-group-text my-1',
+                  'values' : page.preRelationPatientPatient.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+				      </div>
+              <div class="input-group-append">
+					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary input-group-text my-1">Ajouter</button>
+				      </div>
+  					</div>
 					</div>
-					<div class="form-group"> est
-						{{ f.select ({
-            'select' : {
-              'name' : 'preRelationPatientPatient',
-              'id' : 'preRelationPatientPatientID',
-              'class' : 'form-control',
-              'values' : page.preRelationPatientPatient.formValues,
-              'valueDefaut' : el.value.preValue,
-              'autocomplete' : 'off' } }) }} de {{ page.patient.3 }}
-					</div>
-					<button type="submit" id="addRelationPatientPatients" class="btn btn-primary">Ajouter</button>
 				</form>
 			</div>
 
-      <table class="table table-striped">
+      <table class="table table-sm mb-0 table-striped">
 				<thead>
 					<tr>
-						<th class="col-md-1"></th>
-						<th class="col-md-4">Patients</th>
-            <th class="col-md-3">Date de naissance</th>
-						<th class="col-md-3">Relation</th>
-						<th class="col-md-1"></th>
+						<th></th>
+						<th>Patient</th>
+            <th>Date de naissance</th>
+						<th>Relation</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="bodyTabRelationPatientPatients">
@@ -124,7 +132,7 @@
         {{ f.formbuilder(page.form , 'baseNewPro' , session) }}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn" data-dismiss="modal">Fermer</button>
         <button type="button" class="btn btn-primary modal-save" data-modal="newPro" data-form="formName_baseNewPro">Créer</button>
       </div>
     </div>

@@ -27,7 +27,7 @@
 #}
 
 <div class="col-md-12">
-  <table class="table table-hover table-condensed">
+  <table class="table table-sm table-hover table-condensed">
     {% for codepere, codesfils in page.cim10code %}
       {% if codepere == 'ZZ' %}
         <tr>
@@ -40,8 +40,8 @@
             <td>{{ code }}</td>
             <td>{{ label }}</td>
             <td>
-              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-default btn-xs catchCIM10">
-                <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span></button>
+              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-sm catchCIM10">
+                <span class="fa fa-arrow-circle-down" aria-hidden="true"></span></button>
             </td>
           </tr>
         {% elseif code|length == 4 %}
@@ -49,8 +49,8 @@
             <td>&nbsp;&nbsp;&nbsp;-&nbsp;{{ code }}</td>
             <td>{{ label }}</td>
             <td>
-              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-default btn-xs catchCIM10">
-                <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span></button>
+              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-sm catchCIM10">
+                <span class="fa fa-arrow-circle-down" aria-hidden="true"></span></button>
             </td>
           </tr>
         {% endif %}

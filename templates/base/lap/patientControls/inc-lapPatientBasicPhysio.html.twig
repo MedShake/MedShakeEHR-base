@@ -27,20 +27,20 @@
 #}
 
 <label>Données physiologiques</label>
-<table class="table table-condensed table-hover table-bordered">
+<table class="table table-sm table-condensed table-hover table-bordered">
   {# poids #}
   {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
     <tr class="danger">
-      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Poids : valeur manquante !</td>
+      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Poids : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.poids.statut == 'ok' or page.patientBasicPhysio.poids.statut == 'oldValue' %}
     <tr class="{% if page.patientBasicPhysio.poids.statut == "oldValue" %}danger{% else %}active{% endif %}">
       <td data-toggle="collapse" data-target="#physioPoidsDet" style="cursor: pointer">
-        {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>{% endif %}
+        {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>{% endif %}
         Poids : {{ page.patientBasicPhysio.poids.value }} kg
         {% if page.patientBasicPhysio.poids.statut == "oldValue" %} - poids à actualiser !{% endif %}
         <div id="physioPoidsDet" class="collapse">
-          <table class="table table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm table-condensed small" style="margin-top:8px;">
             <tr>
               <td>Auteur</td>
               <td>{{ page.patientBasicPhysio.poids.from }}</td>
@@ -58,14 +58,14 @@
   {# taille #}
   {% if page.patientBasicPhysio.taillePatient.statut == 'missingValue' %}
     <tr class="danger">
-      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Taille : valeur manquante !</td>
+      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Taille : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.taillePatient.statut == 'ok' %}
     <tr class="active">
       <td data-toggle="collapse" data-target="#physioTaillePatientDet" style="cursor: pointer">
         Taille : {{ page.patientBasicPhysio.taillePatient.value }} cm
         <div id="physioTaillePatientDet" class="collapse">
-          <table class="table table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm table-condensed small" style="margin-top:8px;">
             <tr>
               <td>Auteur</td>
               <td>{{ page.patientBasicPhysio.taillePatient.from }}</td>
@@ -83,14 +83,14 @@
   {# clairance #}
   {% if page.patientBasicPhysio.clairanceCreatinine.statut == 'incorectValue' %}
     <tr class="danger">
-      <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
+      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.clairanceCreatinine.statut == 'ok' %}
     <tr class="{% if page.patientBasicPhysio.clairanceCreatinine.value < 30 %}danger{% elseif page.patientBasicPhysio.clairanceCreatinine.value < 60 %}warning{% else %}active{% endif %}">
       <td data-toggle="collapse" data-target="#clairanceCreatinineDet" style="cursor: pointer">Clairance créatinine :
         {{ page.patientBasicPhysio.clairanceCreatinine.value }} ml/min
         <div id="clairanceCreatinineDet" class="collapse">
-        <table class="table table-condensed small" style="margin-top:8px;">
+        <table class="table table-sm table-condensed small" style="margin-top:8px;">
           <tr>
             <td>Auteur</td>
             <td>{{ page.patientBasicPhysio.clairanceCreatinine.from }}</td>
@@ -125,7 +125,7 @@
             Insuffisance hépatique sévère
         {% endif %}
         <div id="statutHepatiqueDet" class="collapse">
-        <table class="table table-condensed small" style="margin-top:8px;">
+        <table class="table table-sm table-condensed small" style="margin-top:8px;">
           <tr>
             <td>Auteur</td>
             <td>{{ page.patientBasicPhysio.statutHepatique.from }}</td>
@@ -145,18 +145,18 @@
 {# grossesse #}
 {% if page.patientBasicPhysio.grossesse.statut != 'notConcerned' %}
   <label>Grossesse</label>
-  <table class="table table-condensed table-hover table-bordered">
+  <table class="table table-sm table-condensed table-hover table-bordered">
 
     {% if page.patientBasicPhysio.grossesse.statut == 'missingValue' %}
       <tr class="danger">
-        <td><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Grossesse : information manquante !</td>
+        <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Grossesse : information manquante !</td>
       </tr>
     {% elseif page.patientBasicPhysio.grossesse.statut == 'termeDepasse46SA' %}
       <tr class="danger alerteMsg" data-alertemsg="Le terme de grossesse est supérieur à 46 semaines d'aménorrhée.">
         <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
-          <span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Terme > 46SA !
+          <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Terme > 46SA !
           <div id="grosssesseDet" class="collapse">
-          <table class="table table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm table-condensed small" style="margin-top:8px;">
             <tr>
               <td>DDR</td>
               <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
@@ -186,7 +186,7 @@
       <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
         Terme : {{ page.patientBasicPhysio.grossesse.terme }}
         <div id="grosssesseDet" class="collapse">
-          <table class="table table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm table-condensed small" style="margin-top:8px;">
             <tr>
               <td>DDR</td>
               <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
@@ -214,7 +214,7 @@
 {# allaitement #}
 {% if page.patientBasicPhysio.allaitement.statut != 'notConcerned' %}
   <label>Allaitement</label>
-  <table class="table table-condensed table-hover table-bordered">
+  <table class="table table-sm table-condensed table-hover table-bordered">
 
     <tr class="{% if page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
       danger">
@@ -229,21 +229,21 @@
         {% elseif page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
           Allaitement en cours
         {% elseif page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
-          <span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Allaitement > 3 ans ?
+          <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Allaitement > 3 ans ?
         {% endif %}
-        <button class="btn btn-default btn-xs pull-right">Modifier</button>
+        <button class="btn btn-sm float-right">Modifier</button>
         <div id="allaitementDet" class="collapse">
-          <table class="table table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm table-condensed small" style="margin-top:8px;">
             <tr>
               <td>Modifier</td>
               <td>
                 {% if page.patientBasicPhysio.allaitement.basedOn =='missingValue' %}
-                  <button class="btn btn-default btn-xs allaitementStart">Allaite actuellement</button>
-                  <button class="btn btn-default btn-xs allaitementStop">N'allaite pas</button>
+                  <button class="btn btn-sm allaitementStart">Allaite actuellement</button>
+                  <button class="btn btn-sm allaitementStop">N'allaite pas</button>
                 {% elseif page.patientBasicPhysio.allaitement.statut == 'absenceAllaitement' %}
-                  <button class="btn btn-default btn-xs allaitementStart">Allaite actuellement</button>
+                  <button class="btn btn-sm allaitementStart">Allaite actuellement</button>
                 {% elseif page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' or page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
-                  <button class="btn btn-default btn-xs allaitementStop">N'allaite plus actuellement</button>
+                  <button class="btn btn-sm allaitementStop">N'allaite plus actuellement</button>
                 {% endif %}
               </td>
             </tr>

@@ -36,20 +36,20 @@
 
     {# Onglets #}
     <ul class="nav nav-tabs gras" role="tablist">
-      <li class="active" role="presentation">
-        <a id="ordonnanceTabL" href="#ordonnanceTab" aria-controls="profile" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
+      <li class="nav-item">
+        <a id="ordonnanceTabL" class="nav-link active" href="#ordonnanceTab" aria-selected="true" aria-controls="ordonnanceTab" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
       </li>
-      <li role="presentation">
-        <a id="tttencoursTabL" href="#tttencoursTab" aria-controls="messages" role="tab" data-toggle="tab">Traitement en cours</a>
+      <li class="nav-item">
+        <a id="tttencoursTabL" class="nav-link" href="#tttencoursTab" aria-controls="tttencoursTab" aria-selected="false" role="tab" data-toggle="tab">Traitement en cours</a>
       </li>
-      <li role="presentation">
-        <a id="ordohistoriqueTabL" href="#ordohistoriqueTab" aria-controls="messages" role="tab" data-toggle="tab">Historique des ordonnances</a>
+      <li  class="nav-item">
+        <a id="ordohistoriqueTabL" class="nav-link" href="#ordohistoriqueTab" aria-controls="ordohistoriqueTab" aria-selected="false" role="tab" data-toggle="tab">Historique des ordonnances</a>
       </li>
-      <li role="presentation">
-        <a id="tthistoriqueTabL" href="#tthistoriqueTab" aria-controls="messages" role="tab" data-toggle="tab">Historique des traitements</a>
+      <li class="nav-item">
+        <a id="tthistoriqueTabL" class="nav-link" href="#tthistoriqueTab" aria-controls="tthistoriqueTab" aria-selected="false" role="tab" data-toggle="tab">Historique des traitements</a>
       </li>
-      <li role="presentation">
-        <a id="prescriptionspreTabL" href="#prescriptionspreTab" aria-controls="messages" role="tab" data-toggle="tab">Prescriptions préétablies</a>
+      <li class="nav-item">
+        <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions préétablies</a>
       </li>
     </ul>
 
@@ -58,77 +58,52 @@
       {# Onglet Ordonnance #}
       <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
         <div class="row bottom-space">
-          <div class="col-md-5">
-            <button type="button" class="btn btn-primary nouvellePrescription">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          <div class="col-md-12 form-inline">
+            <button type="button" class="btn btn-primary mr-1 nouvellePrescription">
+              <span class="fa fa-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
-            <button type="button" class="btn btn-danger analyserPrescription">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <button type="button" class="btn btn-danger mr-1 analyserPrescription">
+                <span class="fa fa-plus" aria-hidden="true"></span>
                 Analyser</button>
 
-            <div class="btn-group">
-              <button type="button" class="btn btn-default printAndSaveOrdo">
-                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+            <div class="btn-group mr-1">
+              <button type="button" class="btn printAndSaveOrdo">
+                <span class="fa fa-print" aria-hidden="true"></span>
                 Imprimer et sauvegarder</button>
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <a href="#" class="printAndSaveOrdo">
-                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+              <div class="dropdown-menu mr-1">
+                  <a href="#" class="dropdown-item printAndSaveOrdo">
+                    <span class="fa fa-print" aria-hidden="true"></span>
                     Imprimer et sauvegarder</a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                  <a href="#" class="dropdown-item">
+                    <span class="fa fa-print" aria-hidden="true"></span>
                     Imprimer sans infos prescripteur et sauvegarder</a>
-                </li>
-                <li>
-                  <a href="#" class="saveOrdo">
-                    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                  <a href="#" class="dropdown-item saveOrdo">
+                    <span class="fa fa-save" aria-hidden="true"></span>
                     Sauvegarder uniquement</a>
-                </li>
-              </ul>
-            </div>
-
-          </div>
-          <div class="col-md-5 form-horizontal">
-            <div class="form-group">
-              <label for="ordoName" class="col-md-4 control-label">Titre de l'ordonnance</label>
-              <div class="col-md-8">
-                <input type="text" id="ordoName" class="form-control" value=""/>
               </div>
             </div>
-          </div>
-          <div class="col-md-2 text-right">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-                <span class="caret"></span>
+
+            <input type="text" id="ordoName" class="form-control mr-1" placeholder="Titre de l'ordonnance" value=""/>
+            <div class="btn-group float-right">
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-wrench" aria-hidden="true"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li>
-                  <a href="#" class="convertAllDci"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Convertir l'ordonnance en DCI</a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <a href="#" class="removeAllLignesPrescription">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    Supprimer tout</a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <a href="#" class="ordoLiveRestore">
-                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                    Récupération d'urgence</a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <a href="#" class="lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
-                </li>
-              </ul>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#" class="dropdown-item convertAllDci"><span class="fa fa-refresh" aria-hidden="true"></span> Convertir l'ordonnance en DCI</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item removeAllLignesPrescription">
+                  <span class="fa fa-trash" aria-hidden="true"></span>
+                  Supprimer tout</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item ordoLiveRestore">
+                  <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                  Récupération d'urgence</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
+              </div>
             </div>
 
           </div>
@@ -153,12 +128,12 @@
           <div class="col-md-12">
             <div class="form-group">
               <button type="button" class="btn btn-primary saisirTTenCours">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span class="fa fa-plus" aria-hidden="true"></span>
                 Saisir un traitement en cours</button>
-              <button type="button" class="btn btn-default newCourrier" data-modele="modeleCourrierTtEnCours">
-                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+              <button type="button" class="btn newCourrier" data-modele="modeleCourrierTtEnCours">
+                <span class="fa fa-print" aria-hidden="true"></span>
                 Imprimer</button>
-              <button type="button" class="btn btn-default effetsIndesirables">Effets indésirables</button>
+              <button type="button" class="btn effetsIndesirables">Effets indésirables</button>
             </div>
             <div class="alert alert-info gras" role="alert">Traitements chroniques
               <small>(Traitements en cours ou présumé en cours de par la nature chronique)</small>

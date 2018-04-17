@@ -41,6 +41,6 @@
  }
 
  //inclusion
- if(is_file($p['config']['homeDirectory'].'controlers/patient/tabs/'.$tab.'.php')) {
-    include($p['config']['homeDirectory'].'controlers/patient/tabs/'.$tab.'.php');
+ if(is_file($p['homepath'].'controlers/patient/tabs/'.$tab.'.php')) {
+    include($p['homepath'].'controlers/patient/tabs/'.$tab.'.php');
  }

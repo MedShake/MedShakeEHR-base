@@ -46,8 +46,8 @@
       {% for v in page.liensFamiliaux %}
         <tr>
           <td>
-            <a target="_blank" class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/">
-              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a>
+            <a target="_blank" class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/">
+              <span class="fa fa-folder-open" aria-hidden="true"></span></a>
           </td>
           <td class="gras">{{ v.nom }}
             {{v.prenom }}</td>
@@ -61,4 +61,4 @@
 </div>
 
 <a class="btn btn-info btn-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
-  <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Gérer les liens familiaux</a>
+  <span class="fa fa-link" aria-hidden="true"></span> Gérer les liens familiaux</a>

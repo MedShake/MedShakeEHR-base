@@ -62,6 +62,6 @@ if (!in_array($m, $acceptedModes)) {
 }
 
 //inclusion
-if(is_file($p['config']['homeDirectory'].'controlers/lap/actions/inc-ajax-'.$m.'.php')) {
+if(is_file($p['homepath'].'controlers/lap/actions/inc-ajax-'.$m.'.php')) {
    include('inc-ajax-'.$m.'.php');
 }

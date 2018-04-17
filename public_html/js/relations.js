@@ -232,7 +232,7 @@ function getRelationsPatientPraticiensTab() {
         $('#bodyTabRelationPatientPrat').append('\
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
-              <a class="btn btn-default btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
+              <a class="btn btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\

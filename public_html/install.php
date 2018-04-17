@@ -111,18 +111,7 @@ if (!is_file($homepath.'config/config.yml')) {
           'sqlVarPassword'=>$_POST['sqlVarPassword'],
           'templatesFolder'=>$homepath.'templates/',
           'twigEnvironnementCache'=>false,
-          'twigEnvironnementAutoescape'=>false,
-          'lapOnOff'=>'',
-          'lapActiverAtcdStrucSur'=>'',
-          'lapActiverAllergiesStrucSur'=>'',
-          'lapAtcdStrucPersoPourAnalyse'=>'',
-          'lapAllergiesStrucPersoPourAnalyse'=>'',
-          'theriaqueMode'=>'',
-          'theriaqueWsURL'=>'',
-          'theriaqueShowMedicHospi'=>'',
-          'theriaqueShowMedicNonComer'=>'',
-          'lapAlertPatientTermeGrossesseSup46'=>true,
-          'lapAlertPatientAllaitementSup3Ans'=>true
+          'twigEnvironnementAutoescape'=>false
         );
         if (file_put_contents($homepath.'config/config.yml', Spyc::YAMLDump($conf, false, 0, true))===false) {
             die("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que www-data a les droits d'écriture sur le dossier ".$homepath."config/");

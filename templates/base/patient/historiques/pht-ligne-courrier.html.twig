@@ -39,7 +39,7 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}">
+      <button class="btn btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}">
         {% if cs.iconeType == 'update' and cs.fromID == user.id %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
         {% else %}
@@ -113,6 +113,9 @@
             </li>
             <li class="d-inline-block d-lg-none">
               <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">Imprimer</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/duplicata/{{ cs.id }}/" target="_blank">Imprimer un duplicata</a>
             </li>
             {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
               {% if config.smtpHost %}

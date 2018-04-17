@@ -575,7 +575,7 @@ class msPDF
 
       msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
       $tempfile=$p['config']['workingDirectory'].$p['user']['id'].'/'.time().'.pdf';
-      $watermark=$p['config']['homeDirectory'].'templates/duplicata.pdf';
+      $watermark=$p['homepath'].'templates/duplicata.pdf';
       system("pdftk $original background $watermark output $tempfile dont_ask", $errcode);
       if (!$errcode && $ih=fopen($tempfile, 'r')) {
           header('Content-Type: application/pdf');
