@@ -51,6 +51,8 @@ if (!scriptsList) {
   };
 }
 
+var goToDicom = false;
+
 $(document).ready(function() {
   refreshHistorique();
   refreshHistoriqueToday();
@@ -252,6 +254,7 @@ $(document).ready(function() {
   // prépare la réception de documents par phonecapture
   $(".prepareReceptionDoc").on("click", function(e) {
     e.preventDefault();
+    goToDicom = $(this).hasClass('dicom') ? true : false;
     $.ajax({
       url: urlBase + '/patient/ajax/' + ($(this).hasClass('dicom') ? 'prepareEcho/' : 'prepareReceptionDoc/'),
       type: 'post',
@@ -270,6 +273,8 @@ $(document).ready(function() {
   });
 
   $("#patientPhonecapture button").on("click", function() {
+    if (goToDicom)
+      return $('#ongletDicom')[0].click();
     getHistorique();
     getHistoriqueToday();
   });

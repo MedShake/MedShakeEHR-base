@@ -218,7 +218,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
-  if ($('#QRcodeAccesPhoneCapture').length) {
+  if ($('.QRcodeAccesPhoneCapture').length) {
     var el = kjua({
       text: phoneCaptureUrlAcces,
 
@@ -269,7 +269,7 @@ $(document).ready(function() {
       image: null
 
     });
-    $('#QRcodeAccesPhoneCapture').html(el);
+    $('.QRcodeAccesPhoneCapture').html(el);
   }
 
 });
