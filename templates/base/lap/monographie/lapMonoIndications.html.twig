@@ -39,8 +39,8 @@
    {% set indicRef = page['indications']['refInd'][indication.codeind] %}
    {% set speSmr = page['indications']['smrSpe'][indication.codeind] %}
 
-   <div class="panel panel-default">
-       <div class="panel-heading" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
+   <div class="card mb-3">
+       <div class="card-header" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
 
        {% if speSmr is not empty %}
          {% for smr in speSmr|slice(-1, 1) %}
@@ -48,7 +48,7 @@
          {% endfor %}
        {% endif %}
 
-       <h4 class="panel-title">
+       <h4 class="card-title">
           {{ indicDet['7']['0']['libcourt'] }}
        </h4>
        <ul class="list-unstyled small">
@@ -60,8 +60,8 @@
        {% endfor %}
         </ul>
      </div>
-     <div id="collapse{{ loop.index }}{{ rand }}" class="panel-collapse collapse {% if loop.index == 1 and page.indications.indSpe|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
-       <div class="panel-body">
+     <div id="collapse{{ loop.index }}{{ rand }}" class="collapse {% if loop.index == 1 and page.indications.indSpe|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
+       <div class="card-body">
          <p>{{ indication.fin_texte|nl2br }}</p>
 
          {% if indicDet['4'] is not empty %}

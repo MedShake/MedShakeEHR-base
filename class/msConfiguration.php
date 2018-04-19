@@ -24,7 +24,7 @@
  * Gestion de l'agenda et des rendez-vous
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib 
+ * @contrib
  */
 
 class msConfiguration
@@ -36,7 +36,7 @@ class msConfiguration
     //obtenir tous les paramètres de configuration par défaut
     // return array[]: tableau des paramètres
     public static function getDefaultParameters() {
-        return msSQL::sql2tab("SELECT service, cat, type, name, value, description FROM configuration WHERE level='default'");
+        return msSQL::sql2tab("SELECT cat, type, name, value, description FROM configuration WHERE level='default'");
     }
 
     //obtenir un paramètre de configuration par défaut
@@ -84,7 +84,7 @@ class msConfiguration
     // return array: tableau des paramètres
     public static function getCatParametersForUser($cat, $user=array('id'=>'','module'=>'')) {
         $defaultParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='default' AND cat='".$cat."'", 'name', 'value');
-        $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration 
+        $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration
             WHERE level='module' AND module='".$user['module']."' AND name IN ('".implode("','", array_keys($defaultParams))."')", 'name', 'value');
         $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration
             WHERE level='user' AND toID='".$user['id']."' AND name IN ('".implode("','", array_keys($defaultParams))."')", 'name', 'value');
@@ -103,7 +103,7 @@ class msConfiguration
         if (!is_array($userParams)) {
             return array();
         }
-        $catTypeDefault=msSQL::sql2tabKey("SELECT name, cat, type, value FROM configuration 
+        $catTypeDefault=msSQL::sql2tabKey("SELECT name, cat, type, value FROM configuration
             WHERE level='default' AND name IN ('".implode("','",array_keys($userParams))."')", 'name');
         foreach ($userParams as $k=>$v) {
             $userParams[$k]['type']='text';
@@ -127,10 +127,10 @@ class msConfiguration
     // return value: valeur du paramètre
     public static function getParameterValue($name, $user=array('id'=>'','module'=>'')) {
         if (strpos(strtolower($name), 'password')!==false) {
-            $param=msSQL::sql2tabKey("SELECT level, CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) AS value FROM configuration WHERE name='".$name."' AND 
+            $param=msSQL::sql2tabKey("SELECT level, CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) AS value FROM configuration WHERE name='".$name."' AND
                 ((level='user' AND toID='".$user['id']."') OR (level='module' AND module='".$user['module']."') OR level='default')", 'level');
         } else {
-            $param=msSQL::sql2tabKey("SELECT level, value FROM configuration WHERE name='".$name."' AND 
+            $param=msSQL::sql2tabKey("SELECT level, value FROM configuration WHERE name='".$name."' AND
                 ((level='user' AND toID='".$user['id']."') OR (level='module' AND module='".$user['module']."') OR level='default')", 'level');
         }
         if (!is_array($param))
@@ -150,7 +150,7 @@ class msConfiguration
     // return value: valeur du paramètre
     public static function getUserParameterValue($name, $userID) {
         if (strpos(strtolower($name), 'password')!==false) {
-        return msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) FROM configuration 
+        return msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) FROM configuration
             WHERE name='".$name."' AND level='user' AND toID='".$user['id']."'");
         }
         return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='user' AND toID='".$user['id']."'");

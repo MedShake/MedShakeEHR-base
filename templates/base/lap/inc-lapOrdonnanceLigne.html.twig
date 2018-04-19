@@ -28,7 +28,7 @@
 
 {# Ligne avec 1 seul médicament #}
 {% if page.ligne.medics | length == 1 %}
-  <div class="well well-sm ui-sortable-handle lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
+  <div class="card bg-light mb-2 p-2 ui-sortable-handle lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row">
       <div class="col-md-7">
         <div class="gras">
@@ -98,7 +98,7 @@
   {# PLusieurs médicaments  #}
 {% elseif page.ligne.medics|length > 1 %}
 
-  <div class="well well-sm lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
+  <div class="card bg-light mb-2 p-2 lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row" style="margin-bottom: 12px">
       <div class="col-md-7 gras">
         {{ page.ligne.medics.0.voieUtilisee|capitalize }}

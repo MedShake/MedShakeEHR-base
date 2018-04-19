@@ -32,10 +32,10 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div class="card">
 
-  <div class="panel-heading">Images de l'étude</div>
-  <div class="panel-body imagesList">
+  <div class="card-header">Images de l'étude</div>
+  <div class="card-body imagesList">
     <button type="button" data-status="unchecked" class="btn btn-sm selectAll">Tout sélectionner / déselectionner</button>
     <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
       <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
@@ -65,10 +65,10 @@
 
 {# Data SR via XML #}
 {% if page.studyDcDataSRFull %}
-  <div class="panel panel-default">
+  <div class="card">
 
-    <div class="panel-heading">Tags DICOM SR (XML)</div>
-    <div class="panel-body">
+    <div class="card-header">Tags DICOM SR (XML)</div>
+    <div class="card-body">
       <p>Mesures remontées dans cette études</p>
     </div>
     <table class="table table-sm table-striped table-hover">

@@ -40,10 +40,10 @@
 
     {% for key, fiche in page.effetsindesirables.effindSpe %}
 
-      <div class="well">
+      <div class="card bg-light mb-2 p-2">
 
         {% if fiche.data.libind %}
-        <h4 class="panel-title gras">
+        <h4 class="card-title gras">
           {{ fiche.data.libind }}
           {% if fiche.liste | length > 1 %}
             <small>({{ fiche.liste|length }}
@@ -96,9 +96,9 @@
   <div role="tabpanel" class="tab-pane" id="tabeisurdo">
     {% for key, fiche in page.effetsindesirables.effindSpeS %}
 
-      <div class="well">
+      <div class="card bg-light mb-2 p-2">
 
-        <h4 class="panel-title gras">
+        <h4 class="card-title gras">
           {{ fiche.data.libind }}
           {% if fiche.liste | length > 1 %}
             <small>({{ fiche.liste|length }}

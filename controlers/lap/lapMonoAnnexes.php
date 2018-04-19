@@ -29,7 +29,7 @@
 $debug='';
 $template="lapMonoAnnexes";
 
-if($p['config']['lapOnOff'] != 'on') die("Le LAP n'est pas activé");
+if($p['config']['utiliserLap'] != 'true') die("Le LAP n'est pas activé");
 
 $mono=new msLapMonographie();
 

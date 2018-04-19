@@ -52,13 +52,15 @@
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
     <div class="row">
       {# navigation #}
-      <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
-        {% for cat in page.cats %}
-          <li class="nav-item">
-            <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ cat|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ cat }}" role="tab" data-toggle="tab" onclick="$('.cats').hide();$('.{{ cat|replace({' ':'_', '\'':'_'}) }}').show();">{{ cat }}</a>
-          </li>
-        {% endfor %}
-      </ul>
+      <div class=" col-md-2">
+        <ul style="padding-top:10px" class="nav nav-pills flex-column">
+          {% for cat in page.cats %}
+            <li class="nav-item">
+              <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ cat|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ cat }}" role="tab" data-toggle="tab" onclick="$('.cats').hide();$('.{{ cat|replace({' ':'_', '\'':'_'}) }}').show();">{{ cat }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
       <div class="tab-content col-md-10" >
         {% for cat in page.cats %}
           <div id="{{ cat|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">

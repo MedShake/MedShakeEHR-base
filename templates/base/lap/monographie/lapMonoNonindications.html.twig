@@ -34,15 +34,15 @@
 
 {% for tab in page.nonindications.contreIndic %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
+    <div class="card mb-3">
+        <div class="card-header" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
 
 
 
         <div class="row">
           <div class="col-md-6">
 
-            <h4 class="panel-title">
+            <h4 class="card-title">
                {{ tab.terrain }}
             </h4>
 
@@ -66,8 +66,8 @@
         </div>
 
         </div>
-        <div id="collapse{{ loop.index }}{{ rand }}" class="panel-collapse collapse {% if loop.index == 1 and page.nonindications.contreIndic|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
-          <div class="panel-body">
+        <div id="collapse{{ loop.index }}{{ rand }}" class="collapse {% if loop.index == 1 and page.nonindications.contreIndic|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
+          <div class="card-body">
 
             <p>{{ tab.text|nl2br }}</p>
 

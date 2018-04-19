@@ -39,15 +39,15 @@
    {% set rbt = page['presentations']['preRbt'][presentation.pre_code_pk] %}
    {% set conservatio = page['presentations']['preCsv'][presentation.pre_code_pk] %}
 
-   <div class="panel panel-default">
-     <div class="panel-heading" role="tab" id="heading{{ presentation.pre_code_pk }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ presentation.pre_code_pk }}" aria-expanded="true" aria-controls="collapse{{ presentation.pre_code_pk }}" style="cursor: pointer">
-       <h4 class="panel-title">
+   <div class="card mb-3">
+     <div class="card-header" role="tab" id="heading{{ presentation.pre_code_pk }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ presentation.pre_code_pk }}" aria-expanded="true" aria-controls="collapse{{ presentation.pre_code_pk }}" style="cursor: pointer">
+       <h4 class="card-title">
            Présentation n°{{ loop.index }} {{ presentation.pre_adm }}
-           {% if presentation.reservhop != 'NON' %}<span class="label label-primary pull-right">H</span>{% endif %}
+           {% if presentation.reservhop != 'NON' %}<span class="label label-primary float-right">H</span>{% endif %}
        </h4>
      </div>
-     <div id="collapse{{ presentation.pre_code_pk }}" class="panel-collapse collapse {% if loop.index == 1 and page['presentations']['presentations']|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ presentation.pre_code_pk }}">
-       <div class="panel-body">
+     <div id="collapse{{ presentation.pre_code_pk }}" class="collapse {% if loop.index == 1 and page['presentations']['presentations']|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ presentation.pre_code_pk }}">
+       <div class="card-body">
          <table class="table table-sm table-hover">
            <tbody>
              <tr>

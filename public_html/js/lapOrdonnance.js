@@ -608,7 +608,7 @@ function makeLigneOrdo(data, mode) {
 
     coutMedic = calculerCoutMedic(data.medics[0]['totalUnitesPrescrites'], data.medics[0]['uniteUtiliseeOrigine'], data.medics[0]['prixucd'], data.medics[0]['unitesConversion']);
 
-    retour = '<div class="well well-sm ui-sortable-handle lignePrescription';
+    retour = '<div class="card bg-light mb-2 p-2 ui-sortable-handle lignePrescription';
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '" ';
     if (mode == 'TTenCours') {
@@ -749,7 +749,7 @@ function makeLigneOrdo(data, mode) {
 
   } else if (data.medics.length > 1) {
 
-    retour = '<div class="well well-sm lignePrescription';
+    retour = '<div class="card bg-light mb-2 p-2 lignePrescription';
     if (data.ligneData.isALD == 'true') retour += ' ald ';
     retour += '"';
     if (mode == 'TTenCours') {

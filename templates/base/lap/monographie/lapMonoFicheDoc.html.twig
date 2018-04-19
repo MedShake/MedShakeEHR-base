@@ -53,7 +53,7 @@
       {% elseif page.type == '4' %}{{ page.doc.doc[0].precision }}
       {% elseif page.type == '5' %}{{ page.doc.doc[0].precision }}
       {% elseif page.type == '6' %}{{ page.doc.doc[0].precision }}
-      {% elseif page.type == '7' %}Références médicales opposables - Journal Officiel du 
+      {% elseif page.type == '7' %}Références médicales opposables - Journal Officiel du
       {% endif %}
        {{ page.doc.doc[0].date_texte }}
     </small>
@@ -63,5 +63,5 @@
 {% endif %}
 
 {% for data in page.doc.doc %}
-  <div class="well">{{ data.texte|nl2br }}</div>
+  <div class="card bg-light mb-2 p-2">{{ data.texte|nl2br }}</div>
 {% endfor %}

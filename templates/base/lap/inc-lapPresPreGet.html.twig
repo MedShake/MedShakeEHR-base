@@ -28,15 +28,15 @@
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   {% for id, cat in page.cat %}
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
-        <h4 class="panel-title">
+    <div class="card mb-3">
+      <div class="card-header" role="tab" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
+        <h4 class="card-title">
           {{ cat.label }}
           <span class="badge float-right">{{ cat.enfants }}</span>
         </h4>
       </div>
-      <div id="collapse{{ id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-        <div class="panel-body">
+      <div id="collapse{{ id }}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+        <div class="card-body">
           <p>{{ cat.description }}
             <button class="btn btn-sm float-right" title="Éditer cette catégorie"><span class="fa fa-pencil" aria-hidden="true"></span></button>
             {% if cat.enfants == 0 %}
