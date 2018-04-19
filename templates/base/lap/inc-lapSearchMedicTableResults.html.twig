@@ -58,7 +58,7 @@
                 <td class="sendToPrescription">
                   {{ medic.sp_nom|trim('§') }}
                   {% if medic.statutDelivrance.rh == 'OUI' or medic.statutDelivrance.ph == 'OUI' or  medic.statutDelivrance.puh == 'OUI' or medic.statutDelivrance.sp == 'OUI' or medic.statutDelivrance.ps == 'OUI' or medic.statutDelivrance.prep_h == 'OUI' or medic.statutDelivrance.atu == 'OUI' %}
-                    <span class="label label-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="glyphicon glyphicon-warning-sign"></span></span>
+                    <span class="label label-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="fa fa-exclamation-triangle"></span></span>
                   {% endif %}
                   {% if pres.reservhop != 'NON' %}
                     <span class="label label-primary" title="Ce médicament est à prescription hospitalière, consultez la monographie pour les détails">H</span>

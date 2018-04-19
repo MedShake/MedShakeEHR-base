@@ -61,7 +61,7 @@
                <div class="md-col-1 input-group date">
                    <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off"></input>
                    <span class="input-group-addon">
-                       <span class="glyphicon glyphicon-time"></span>
+                       <span class="far fa-clock"></span>
                    </span>
                </div>
              </td>
@@ -74,7 +74,7 @@
                <div class="md-col-1 input-group date">
                    <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off"></input>
                    <span class="input-group-addon">
-                       <span class="glyphicon glyphicon-time"></span>
+                       <span class="far fa-clock"></span>
                    </span>
                </div>
              </td>
@@ -87,7 +87,7 @@
                <div class="md-col-1 input-group date">
                    <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off"></input>
                    <span class="input-group-addon">
-                       <span class="glyphicon glyphicon-time"></span>
+                       <span class="far fa-clock"></span>
                    </span>
                </div>
              </td>
@@ -117,7 +117,7 @@
                    <div class='input-group date'>
                      <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off"></input>
                        <span class="input-group-addon">
-                           <span class="glyphicon glyphicon-time"></span>
+                           <span class="far fa-clock"></span>
                        </span>
                    </div>
                  </td>
@@ -125,7 +125,7 @@
                    <div class='input-group date'>
                      <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off"></input>
                        <span class="input-group-addon">
-                           <span class="glyphicon glyphicon-time"></span>
+                           <span class="far fa-clock"></span>
                        </span>
                    </div>
                  </td>
@@ -133,7 +133,7 @@
                    <div class='input-group date'>
                      <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off"></input>
                        <span class="input-group-addon">
-                           <span class="glyphicon glyphicon-time"></span>
+                           <span class="far fa-clock"></span>
                        </span>
                    </div>
                  </td>
@@ -141,7 +141,7 @@
                    <div class='input-group date'>
                      <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off"></input>
                        <span class="input-group-addon">
-                           <span class="glyphicon glyphicon-time"></span>
+                           <span class="far fa-clock"></span>
                        </span>
                    </div>
                  </td>
@@ -174,7 +174,7 @@
                  <td>
                    {% if v.readonly is defined == false %}
                      <a class="delConsult" href="javascript:void(0)">
-                       <span class="glyphicon glyphicon-minus"></span>
+                       <span class="fa fa-minus"></span>
                      </a>
                    {% endif %}
                  </td>
@@ -204,7 +204,7 @@
                <tr class="adder">
                  <td>
                    <a class="addConsult" href="javascript:void(0)">
-                     <span class="glyphicon glyphicon-plus"></span>
+                     <span class="fa fa-plus"></span>
                    </a>
                  </td>
                  <td></td>

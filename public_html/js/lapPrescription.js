@@ -195,8 +195,8 @@ $(document).ready(function() {
     th = $(this).find("th");
     th.find(".arrow").remove();
     dir = $.fn.stupidtable.dir;
-    arrow = data.direction === dir.ASC ? "glyphicon-chevron-up" : "glyphicon-chevron-down";
-    th.eq(data.column).append(' <span class="arrow glyphicon ' + arrow + '"></span>');
+    arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
+    th.eq(data.column).append(' <span class="arrow fa ' + arrow + '"></span>');
     //console.log("The sorting direction: " + data.direction);
     //console.log("The column index: " + data.column);
   });

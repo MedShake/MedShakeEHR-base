@@ -631,9 +631,9 @@ function makeLigneOrdo(data, mode) {
       retour += '        <span class="label label-default">chronique</span>';
     }
     if (testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-      retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+      retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
     } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-      retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+      retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
     if (data.medics[0].prescripteurInitialTT) {
@@ -726,7 +726,7 @@ function makeLigneOrdo(data, mode) {
 
       retour += '        <li>';
       retour += '          <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank" >';
-      retour += '            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>';
+      retour += '            <span class="fa fa-book" aria-hidden="true"></span>';
       retour += '            Monographie</a>';
       retour += '        </li>';
 
@@ -840,9 +840,9 @@ function makeLigneOrdo(data, mode) {
       }
 
       if (testIfAldOk(medic.ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-        retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+        retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
       } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-        retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+        retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
       }
 
       if (medic.prescripteurInitialTT) {

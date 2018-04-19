@@ -87,8 +87,8 @@ class msLapSAM
     if($xml=file_get_contents($url)) {
       $xml=str_replace('encoding="iso-8859-1"', 'encoding="UTF8"', $xml);
       $xml=utf8_encode($xml);
-      msTools::checkAndBuildTargetDir($p['config']['homeDirectory'].'ressources/SAM/');
-      return file_put_contents($p['config']['homeDirectory'].'ressources/SAM/SAM.xml', $xml);
+      msTools::checkAndBuildTargetDir($p['homepath'].'ressources/SAM/');
+      return file_put_contents($p['homepath'].'ressources/SAM/SAM.xml', $xml);
     } else {
       return false;
     }
@@ -101,7 +101,7 @@ class msLapSAM
   public function getSamXmlFileContent() {
     global $p;
     $document_xml = new DomDocument();
-    @$document_xml->load($p['config']['homeDirectory'].'ressources/SAM/SAM.xml');
+    @$document_xml->load($p['homepath'].'ressources/SAM/SAM.xml');
     return $this->_xml = $document_xml;
   }
 
@@ -154,7 +154,7 @@ class msLapSAM
   public function setFileCodesSpeBySAM() {
     global $p;
     $data = serialize($this->_codesSpeBySam);
-    return file_put_contents($p['config']['homeDirectory'].'ressources/SAM/samSpeCorrespondances', $data);
+    return file_put_contents($p['homepath'].'ressources/SAM/samSpeCorrespondances', $data);
   }
 
 /**
