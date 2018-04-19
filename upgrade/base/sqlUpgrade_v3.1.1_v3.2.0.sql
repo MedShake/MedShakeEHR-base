@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   `type` varchar(30) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `value` text DEFAULT NULL,
-  UNIQUE KEY `nameLevel` (`name`,`level`,'module','toID')
+  UNIQUE KEY `nameLevel` (`name`,`level`,`module`,`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT IGNORE INTO `configuration`(`name`, `service`, `cat`, `level`, `type`, `description`, `value`) VALUES
