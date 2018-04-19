@@ -442,7 +442,7 @@ $(document).ready(function() {
   });
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $("body").on('click', '.trLigneExamen td:nth-child(3), a.showDetDoc', function(e) {
+  $("body").on('click', '.trLigneExamen, .showDetDoc', function(e) {
     e.preventDefault();
     showObjetDet($(this));
   });
