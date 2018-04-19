@@ -67,7 +67,7 @@
         <a class="nav-link" href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
       </li>
     {% endif %}
-    {% if config.lapOnOff == 'on' %}
+    {% if config.utiliserLap == 'true' %}
       <li role="presentation">
         <a href="#plap" aria-controls="plap" role="tab" data-toggle="tab">LAP</a>
       </li>
@@ -83,7 +83,7 @@
     </div>
 
     {# LAP #}
-    {% if config.lapOnOff == 'on' %}
+    {% if config.utiliserLap == 'true' %}
       <div role="tabpanel" class="tab-pane" id="plap">
         <h3>Préférences pour le LAP</h3>
         <div class="alert alert-danger" role="alert">

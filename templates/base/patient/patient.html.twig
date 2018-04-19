@@ -51,7 +51,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
 
   {# JS LAP #}
-  {% if config.lapOnOff == 'on' %}
+  {% if config.utiliserLap == 'true' %}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js"></script>
@@ -120,7 +120,7 @@
       <li class="nav-item">
         <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab">Dossier médical</a>
       </li>
-      {% if config.lapOnOff == 'on' %}
+      {% if config.utiliserLap == 'true' %}
       <li class="nav-item">
         <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab">LAP</a>
       </li>
@@ -144,7 +144,7 @@
       </div>
 
       {# tab lap #}
-      {% if config.lapOnOff == 'on' %}
+      {% if config.utiliserLap == 'true' %}
       <div id="tabLAP" class="tab-pane" role="tabpanel">
         {% include('inc-tabLAP.html.twig') %}
       </div>
@@ -179,7 +179,7 @@
 {% include 'inc-patientModal-phonecapture.html.twig' %}
 
 {# modals spécifiques LAP ON #}
-{% if config.lapOnOff == 'on' %}
+{% if config.utiliserLap == 'true' %}
   {# recherche CIM10 #}
   {% include 'inc-patientModal-searchCIM10.html.twig' %}
 

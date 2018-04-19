@@ -34,4 +34,4 @@ $patient->setToID($_POST['patientID']);
 $p['page']['patient']['id']=$_POST['patientID'];
 
 //les ALD du patient
-if($p['config']['lapOnOff'] == 'on') {$p['page']['patient']['ALD']=$patient->getALD();}
+if($p['config']['utiliserLap'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}

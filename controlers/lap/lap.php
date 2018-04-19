@@ -29,7 +29,7 @@
  $debug='';
  $template="lap";
 
- if($p['config']['lapOnOff'] != 'on') die("Le LAP n'est pas activé");
+ if($p['config']['utiliserLap'] != 'true') die("Le LAP n'est pas activé");
 
  $p['page']['patient']['id']=$match['params']['patient'];
  $patient=new msPeople();
