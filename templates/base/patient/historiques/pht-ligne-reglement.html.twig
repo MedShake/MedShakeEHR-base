@@ -28,21 +28,21 @@
 
  <tr class="tr{{ cs.id }}{% if cs.important == 'y' %} table-danger{% endif %} trLigneExamen trReglement collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Règlement">
-    <a class="btn btn-sm" role="button" href="javascript:void()">
+    <a class="btn btn-light btn-sm" role="button" href="javascript:void()">
       <span class="fa fa-euro-sign" aria-hidden="true"></span>
     </a>
   </td>
   <td>
      <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
      <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
-    {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
+    {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
      <span class="far fa-clock" aria-hidden="true"></span>
     </button>{% endif %}
   </td>
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-sm editReglement d-none d-lg-inline-block" type="button">
+      <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button">
        {% if cs.iconeType == 'update' %}
          <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
        {% else %}
@@ -51,7 +51,7 @@
       </button>
       {# option #}
       <div class="btn-group">
-        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
@@ -92,4 +92,3 @@
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
   <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>
 </tr>
-

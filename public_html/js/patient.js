@@ -560,7 +560,7 @@ $(document).ready(function() {
           today: 'fa fa-crosshairs',
           clear: 'fa fa-trash',
           close: 'fa fa-times'
-        } 
+        }
       });
 
   $('body').on('dblclick', '.trLigneExamen td:nth-child(2)', function(e) {

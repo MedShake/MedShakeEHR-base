@@ -66,11 +66,11 @@
           <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
 
           {% if page.correspondants is empty %}
-          <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+          <button type="button" class="btn btn-sm editerRelationsPatient" title="Édition des relations">
             <span class="fa fa-link" aria-hidden="true"></span>
-          </a>
+          </button>
           {% endif %}
-        </div> 
+        </div>
    </small>
 </h1>
 <div style="margin-bottom : 8px;">
@@ -78,7 +78,7 @@
     {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
       <div class="btn-group">
         <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }} 
+          {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }}
         </button>
 
         <ul class="dropdown-menu">
@@ -108,9 +108,9 @@
 
     {% if page.correspondants %}
       <div class="btn-group ml-4">
-        <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/" title="Édition des relations">
+        <button type="button" class="btn btn-sm editerRelationsPatient" title="Édition des relations">
           <span class="fa fa-link" aria-hidden="true"></span>
-        </a>
+        </button>
         {% for v in page.correspondants %}
           <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
