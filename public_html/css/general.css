@@ -110,6 +110,7 @@ a {color:#337ab7}
 .btn-warning {background-color:#f0ad4e;border-color:#eea236}
 .btn-warning:hover,.btn-warning:active, .btn-warning:focus {background-color:#ec971f !important;border-color:#d58512}
 .btn-danger,.btn-danger:hover,.btn-success,.btn-success:hover,.btn-outline-secondary:hover {color:#fff}
+.btn-info,.btn-info:hover {color:#fff}
 input::placeholder {font-size:14px !important}
 .card {line-height:32px}
 .card-header {line-height:36px}
