@@ -300,7 +300,7 @@ function scrollTo(element, delai) {
 
 //agrandir un élément de formulaire automatiquement
 function auto_grow(element) {
-  $(element).height(Math.max(16*(parseInt($(element).attr('rows')) || 1), element.scrollHeight));
+  $(element).css('height', Math.max(16*(parseInt($(element).attr('rows')) || 1), element.scrollHeight));
 }
 
 function glow(type, $el) {
