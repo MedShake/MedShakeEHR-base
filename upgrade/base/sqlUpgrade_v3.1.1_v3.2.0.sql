@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   UNIQUE KEY `nameLevel` (`name`,`level`,'module','toID')
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `configuration`(`name`, `service`, `cat`, `level`, `type`, `description`, `value`) VALUES
+INSERT IGNORE INTO `configuration`(`name`, `service`, `cat`, `level`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'propre', 'Options', 'default', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'propre', 'Options', 'default', 'true/false', '', 'true'),
 ('administratifSecteurHonoraires', 'propre', 'Options', 'default', 'vide/1/2', 'vide pour non conventionné', '1'),
