@@ -49,87 +49,69 @@
 
   <h1>Paramètres  globaux</h1>
 
-  {# navigation principale #}
-  <ul style="padding-top:10px" class="nav nav-tabs">
-    <li class="nav-item" role="presentation">
-      <a class="nav-link active" href="#propre" aria-controls="propre" role="tab" data-toggle="tab">MedShakeEHR</a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link" href="#tiers" aria-controls="propre" role="tab" data-toggle="tab">Services tiers</a>
-    </li>
-  </ul>
-
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
-      <div class="tab-content">
-        {% for service in ['propre', 'tiers'] %}
-          <div id="{{ service }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
-            <div class="row">
-              {# sous navigation #}
-              <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
-                {% for cat in page.cats[service] %}
-                  <li class="nav-item role="presentation">
-                    <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ service }}{{ cat|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ cat }}" role="tab" data-toggle="tab" onclick="$('.{{ service }}').hide();$('.{{ service }}.{{ cat|replace({' ':'_', '\'':'_'}) }}').show();">{{ cat }}</a>
-                  </li>
-                {% endfor %}
-              </ul>
-              <div class="tab-content col-md-10" >
-                {% for cat in page.cats[service] %}
-                  <div id="{{ service }}{{ cat|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
-                  </div>
-                {% endfor %}
-                <table class="table table-sm mb-0 table-hover  table-striped">
-                  <thead>
-                    <tr>
-                      <th>Paramètre</th>
-                      <th>Valeur</th>
-                      <th>Type</th>
-                      <th>Description/commentaire</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for param in page.params %}
-                      {% if param.service == service %}
-                        <tr class="{{ service }} {{ param.cat|replace({' ':'_', '\'':'_'}) }}"{% if param.cat != (page.cats[service]|first) %} style="display:none"{% endif %}>
-                          <td>{{ param.name }}</td>
-                          <td {% if param.type is same as('true/false') %}class="d-flex justify-content-center checkboxFixValue"{% endif %}>
-                            {{ f.input ({
-                              'input' : {
-                                'type' : param.type is same as('true/false') ? 'checkbox' : ('password' in (param.name|lower) ? 'password' : 'text'),
-                                'name' : param.name,
-                                'id' : param.name ~ 'ID',
-                                'class' : 'form-control form-control-sm',
-                                'value' : param.value,
-                                'plus' : 'password' in (param.name|lower) ? '<i class="fa fa-eye viewPassword"></i>' : '',
-                                'autocomplete' : 'off',
-                                'readonly' : param.readonly|default('')
-                              }
-                            }) }}
-
-                          </td>
-                          <td>{{ param.type }}</td>
-                          <td>{{ param.description|default('') }}</td>
-                        </tr>
-                      {% endif %}
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>            
+    <div class="row">
+      {# navigation #}
+      <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
+        {% for cat in page.cats %}
+          <li class="nav-item">
+            <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ cat|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ cat }}" role="tab" data-toggle="tab" onclick="$('.cats').hide();$('.{{ cat|replace({' ':'_', '\'':'_'}) }}').show();">{{ cat }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="tab-content col-md-10" >
+        {% for cat in page.cats %}
+          <div id="{{ cat|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}">
           </div>
         {% endfor %}
+        <table class="table table-sm mb-0 table-hover  table-striped">
+          <thead>
+            <tr>
+              <th>Paramètre</th>
+              <th>Valeur</th>
+              <th>Type</th>
+              <th>Description/commentaire</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for param in page.params %}
+              <tr class="cats {{ param.cat|replace({' ':'_', '\'':'_'}) }}"{% if param.cat != (page.cats|first) %} style="display:none"{% endif %}>
+                <td>{{ param.name }}</td>
+                <td {% if param.type is same as('true/false') %}class="d-flex justify-content-center checkboxFixValue"{% endif %}>
+                  {{ f.input ({
+                    'input' : {
+                      'type' : param.type is same as('true/false') ? 'checkbox' : ('password' in (param.name|lower) ? 'password' : 'text'),
+                      'name' : param.name,
+                      'id' : param.name ~ 'ID',
+                      'class' : 'form-control form-control-sm',
+                      'value' : param.value,
+                      'plus' : 'password' in (param.name|lower) ? '<i class="fa fa-eye viewPassword"></i>' : '',
+                      'autocomplete' : 'off',
+                      'readonly' : param.readonly|default('')
+                    }
+                  }) }}
+
+                </td>
+                <td>{{ param.type }}</td>
+                <td>{{ param.description|default('') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-      <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
-          {{ f.input ({
-            'input' : {
-              'type' : 'submit',
-              'value' : 'Enregistrer',
-              'class' : 'btn btn-primary'
-            }
-          }) }}
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
+        {{ f.input ({
+          'input' : {
+            'type' : 'submit',
+            'value' : 'Enregistrer',
+            'class' : 'btn btn-primary'
+          }
+        }) }}
       </div>
+    </div>
 
   </form>
 

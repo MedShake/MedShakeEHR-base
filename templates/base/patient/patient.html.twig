@@ -58,6 +58,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapSam.js"></script>
   {% endif %}
 
   {# JS commun au formulaire de consultation du module #}
@@ -197,6 +198,9 @@
 
   {# modal générique pour les alertes LAP #}
   {% include 'inc-lapModalAlertes.html.twig' %}
+
+  {# modal générique pour les alertes SAM #}
+  {% include 'inc-lapModalAlerteSam.html.twig' %}
 
   {# modal générique pour les infos médicament #}
   {% include 'inc-lapInfosMedic.html.twig' %}
