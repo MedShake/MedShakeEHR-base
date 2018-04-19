@@ -31,7 +31,7 @@
   <table class="table table-sm table-hover table-bordered">
     <tbody>
       {% for aldId, ald in page.patientALD %}
-        <tr class="tr{{ aldId }} {% if ald.aldCIM10.value %}active"{% else %}danger" title="Pas de code CIM10 lié !"{% endif %}>
+        <tr class="tr{{ aldId }} {% if ald.aldCIM10.value %}table-active"{% else %}table-danger" title="Pas de code CIM10 lié !"{% endif %}>
           <td data-aldnumber="{{ ald.aldNumber.value }}" data-toggle="collapse" data-target="#aldDet{{ aldId }}lap" style="cursor: pointer">
             {% if ald.aldCIM10.value is empty %}<span class="fa fa-exclamation-triangle" aria-hidden="true"></span> {% endif %}
             {{ ald.aldLabel }}

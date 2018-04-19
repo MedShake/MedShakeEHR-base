@@ -31,7 +31,7 @@
   <table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered">
     <tbody>
       {% for id, aller in page.patientAllergies.allergiesData %}
-        <tr class="tr{{ id }} danger">
+        <tr class="tr{{ id }} table-danger">
           <td data-toggle="collapse" data-target="#atcdDet{{ id }}lap" style="cursor: pointer">
             {{ aller.libelle }}
             <div id="atcdDet{{ id }}lap" class="collapse">
