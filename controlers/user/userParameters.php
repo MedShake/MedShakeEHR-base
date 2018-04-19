@@ -26,7 +26,7 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
+$debug='y';
 $template="userParameters";
 
 /************
@@ -125,3 +125,12 @@ if ($p['page']['useClicRDV']) {
     $formClicRdv->addSubmitToForm($p['page']['formClicRdv'], $class='btn-primary insertBefore');
 
 }
+
+/************
+* LAP
+************/
+
+// liste des SAMs gérés
+$lapSams = new msLapSAM;
+$lapSams->getSamXmlFileContent();
+$p['page']['lap']['samsList']=$lapSams->getSamListInXml();

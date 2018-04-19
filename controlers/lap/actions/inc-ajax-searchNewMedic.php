@@ -42,3 +42,5 @@ if($_POST['typeRecherche'] == 'dci' ) {
 } elseif ($_POST['typeRecherche'] == 'atc' ) {
   $p['page']['medicListeSpe']=$lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
 }
+
+$p['page']['listeCodeSpeTrouve']=$lap->getListeCodeSpeTrouve();

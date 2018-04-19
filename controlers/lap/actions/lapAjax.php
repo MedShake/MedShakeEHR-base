@@ -36,6 +36,7 @@ $acceptedModes=array(
     'allergieAdd', // ajouter allergies à un dossier patient
     'allergieDel', // retirer allergies à un dossier patient
     'searchNewMedic', // checher un médicament
+    'searchNewMedicDetails', // approfondir la recherche
     'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
     'lapInstallPrescription', //installer la prescription dans la modal
     'lapAnalyseFrappePrescription', //analyse de la prescription frappée
@@ -43,7 +44,6 @@ $acceptedModes=array(
     'lapOrdoLiveSave', //sauver l'ordonnance courante à chaque modif
     'lapOrdoLiveRestore', //restaurer l'ordonnance courante
     'lapGetPosologies', //obtenir les posologies pour la fenêtre de prescription
-    'lapGetFichesPosos', //obtenir les fiches posos à partir de leur code
     'lapTTenCoursSaveOrUpdateLigne', // sauver / updater une ligne de TT en cours
     'lapTTenCoursGet', //obtenir le tt en cours
     'lapOrdoSave', // sauver ordonnnace
@@ -54,7 +54,12 @@ $acceptedModes=array(
     'lapOrdoAnalyse', // analyser l'ordo
     'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
     'lapPresPreGet', // obtenir les prescriptions préétablies
-    'lapVoirEffetsIndesirables' // voir effets indésirable d'un medic
+    'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
+    'lapMonographieSection', // sortir une section de monographie
+    'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
+    'lapSamAlerteForNew', // produire une alerte SAM
+    'lapSamSaveSamComment', // sauver le commentaire patient sur le SAM
+    'lapSamToggleForPatient' // basculer l'état dispo / non dispo pour le patient
 );
 
 if (!in_array($m, $acceptedModes)) {

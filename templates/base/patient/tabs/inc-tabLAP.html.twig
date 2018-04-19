@@ -51,6 +51,9 @@
       <li class="nav-item">
         <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions préétablies</a>
       </li>
+      <li role="presentation" style="display : none;">
+        <a id="resultsDetaTabL" href="#resultsDetaTab" aria-controls="messages" role="tab" data-toggle="tab">Résultats détaillés</a>
+      </li>
     </ul>
 
     <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
@@ -108,6 +111,7 @@
 
           </div>
         </div>
+        <div id="samsZoneOrdo"></div>
         <div class="row">
           <div id="conteneurOrdonnanceCourante" class="col-md-12">
             <div class="alert alert-danger gras" role="alert">Prescriptions ALD</div>
@@ -135,6 +139,11 @@
                 Imprimer</button>
               <button type="button" class="btn effetsIndesirables">Effets indésirables</button>
             </div>
+          </div>
+        </div>
+        <div id="samsZoneTTenCours"></div>
+        <div class="row">
+          <div class="col-md-12">
             <div class="alert alert-info gras" role="alert">Traitements chroniques
               <small>(Traitements en cours ou présumé en cours de par la nature chronique)</small>
             </div>
@@ -176,7 +185,12 @@
             <div id="voirPresPre"></div>
           </div>
         </div>
+      </div>
 
+      {# Onglet résultats détaillés de recherche #}
+      <div role="tabpanel" class="tab-pane" id="resultsDetaTab">
+        <div class="row bottom-space">
+        </div>
       </div>
 
     </div>

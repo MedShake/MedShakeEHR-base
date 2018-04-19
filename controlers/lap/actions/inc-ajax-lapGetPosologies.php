@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 $debug='';
+
 $template="inc-lapModalRechercherGetPosologies";
-$lap=new msLap;
-$p['page']['posos']=$lap->getIndicationsPosologies($_POST['codeSpe'], '');
+$mono=new msLapMonographie();
+$mono->setSpe($_POST['codeSpe']);
+$p['page']['posologies']=$mono->getMonoPosologies();

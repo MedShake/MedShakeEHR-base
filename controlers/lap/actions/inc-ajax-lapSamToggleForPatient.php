@@ -21,11 +21,22 @@
  */
 
 /**
- * LAP : ajax > obtenir les posologie pour la fenêtre de prescription
+ * LAP : ajax > basculer l'état dispo / non dispo du SAM pour le couple patient / user
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
 $debug='';
-$template="inc-lapModalRechercherGetFichesPosos";
-$lap=new msLap;
-$p['page']['fiches']=$lap->getFichePosologies($_POST['codesFiches']);
+
+$sam = new msLapSAM;
+$sam->setFromID($p['user']['id']);
+$sam->setToID($_POST['patientID']);
+$sam->setSamID($_POST['samID']);
+
+$samStatut = $sam->getSamStatusForPatient();
+
+if( $samStatut == 'enabled' ) {
+  $sam->setSamDisabledForPatient();
+} else {
+  $sam->setSamEnabledForPatient();
+}

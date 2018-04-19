@@ -278,6 +278,14 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions diverses
 
+// faire flasher le background d'un élément
+function flashBackgroundElement(el) {
+  el.css("background", "#efffe8");
+  el.delay(700).queue(function() {
+    $(this).css("background","").dequeue();
+  });
+}
+
 // checkboxes dans les formulaires
 function chkboxClick(el) {
   var hid = document.getElementById("cloned" + el.id);
@@ -379,6 +387,24 @@ function alert_popup(severity, message) {
     setTimeout((function(){$('.alert-to-remove').remove()}),4000);
   }
 }
+
+/**
+ * Comparer 2 tableaux
+ * @param  {array} arr1 tableau 1
+ * @param  {array} arr2 tableau 2
+ * @return {boolean}      true / false
+ */
+function arraysEqual(arr1, arr2) {
+    if(arr1.length !== arr2.length)
+        return false;
+    for(var i = arr1.length; i--;) {
+        if(arr1[i] !== arr2[i])
+            return false;
+    }
+
+    return true;
+}
+
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions tierces
 

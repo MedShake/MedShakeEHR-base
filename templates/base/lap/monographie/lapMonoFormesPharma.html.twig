@@ -1,0 +1,52 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > formes pharmaceutiques
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h4 class="text-uppercase">Voie(s) d'administration :</h4>
+<ul>
+{% for voie in page.formesPharma.voieSpe %}
+  <li>{{ voie.txtvoie }}</li>
+{% endfor %}
+</ul>
+
+<h4 class="text-uppercase">Formes(s) pharmaceutique(s) :</h4>
+<ul>
+{% for forme in page.formesPharma.formeSpe %}
+  <li>{{ forme.libfo }}</li>
+  <ul>
+  {% for formeComp2 in page.formesPharma.formeCompSpe2 %}
+    <li>{{ formeComp2.libfo }}</li>
+  {% endfor %}
+  {% for formeComp1 in page.formesPharma.formeCompSpe1 %}
+    <li>{{ formeComp1.libfo }}</li>
+  {% endfor %}
+  </ul>
+{% endfor %}
+</ul>
+
+{% for formeTxtSpe in page.formesPharma.formeTxtSpe %}
+  <p>{{ formeTxtSpe.textfo|nl2br }}</p>
+{% endfor %}

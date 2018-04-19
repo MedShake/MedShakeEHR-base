@@ -1,0 +1,95 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > classifications
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% if page.recommandations.choix is empty %}
+    Aucune information rencensée
+{% else %}
+
+    {% if page.recommandations.choix.1 is not empty %}
+      <h4 class="text-uppercase">Avis de la Commission de la Transparence de la HAS :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.1 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/1/">{{ choix.date_texte }} - SMR : {{ choix.precision1 }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.2 is not empty %}
+      <h4 class="text-uppercase">Fiche(s) de transparence ANSM :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.2 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/2/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.3 is not empty %}
+      <h4 class="text-uppercase">Recommandations et protocoles thérapeutiques ansm, HAS, INCa :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.3 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/3/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.4 is not empty %}
+      <h4 class="text-uppercase">Rapport(s) public d'évaluation AFSSAPS(RAPPE) et EMEA (EPAR) :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.4 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/4/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.5 is not empty %}
+      <h4 class="text-uppercase">Conseils patients :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.5 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/5/">{{ choix.titre }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.6 is not empty %}
+      <h4 class="text-uppercase">Fiches d’information thérapeutique :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.6 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/6/">{{ choix.precision1 }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if page.recommandations.choix.7 is not empty %}
+      <h4 class="text-uppercase">Références Médicales Opposables :</h4>
+      <ul>
+      {% for choix in page.recommandations.choix.7 %}
+        <li><a target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/doc/{{ page.spe }}/{{ choix.nu_fiche }}/7/">{{ choix.date_texte }} - {{ choix.titre }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+{% endif %}

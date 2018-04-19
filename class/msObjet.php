@@ -320,8 +320,8 @@ public function getToID()
 
           // création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
           // pas de marquage des versions précédentes comme outdated
-          // but : générer des versions sucessives toutes visibles à partir du moment ou la durée de vie
-          // (temps autorisé d'édition) est dépassé ou que l'auteur n'est pas le même.
+          // but : générer des versions sucessives toutes visibles à partir du moment où la durée de vie
+          // (temps autorisé d'édition) est dépassée ou que l'auteur n'est pas le même.
 
           //recup le titre
           if (is_numeric($objetID)) {

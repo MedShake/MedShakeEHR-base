@@ -1,0 +1,92 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > composition
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+{% if page.composition.subSpe4 is not empty %}
+
+  {% for subSpe4 in page.composition.subSpe4 %}
+    <h4 class="text-uppercase">{{ subSpe4.libsubst }} :</h4>
+    <ul>
+        {% for subSpe3 in page.composition.subSpe3 if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst != 'E' %}
+            {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="gras">Substance(s) active(s) :</li>{% endif %}
+            <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/1/" target="_blank" class="gras">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst > 0 %}{{ subSpe3.dosesubst|number_format(2, ',', '') }} {{ subSpe3.udosesubst }}{% endif %}</li>
+        {% endfor %}
+
+        {% for subSpe3 in page.composition.subSpe3 if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst == 'E' %}
+            {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="gras">Excipient(s) :</li>{% endif %}
+            <li>
+              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/2/" target="_blank" class="gras">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst %}{{ subSpe3.dosesubst|number_format(2, ',', '') }} {{ subSpe3.udosesubst }}{% endif %}
+              {% if subSpe3.effetnotoire in ['o', 'O'] %} <span class="small gras">excipient à effet notoire</span>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+  {% endfor %}
+
+{% else %}
+
+
+    <h4 class="text-uppercase">Composition :</h4>
+    <ul>
+        {% for subSpe3 in page.composition.subSpe3 if subSpe3.typsubst != 'E' %}
+            {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="gras">Substance(s) active(s) :</li>{% endif %}
+            <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/1/" target="_blank" class="gras">{{ subSpe3.libsubst }}</a> {{ subSpe3.dosesubst }} {{ subSpe3.udosesubst }}</li>
+        {% endfor %}
+
+        {% for subSpe3 in page.composition.subSpe3 if subSpe3.typsubst == 'E' %}
+            {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="gras">Excipient(s) :</li>{% endif %}
+            <li>
+              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/2/" target="_blank" class="gras">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst %}{{ subSpe3.dosesubst }} {{ subSpe3.udosesubst }}{% endif %}
+              {% if subSpe3.effetnotoire in ['o', 'O'] %} <span class="small gras">excipient à effet notoire</span>{% endif %}
+            </li>
+        {% endfor %}
+
+        {% if page.composition.speData.sp_ph is not empty %}
+        <li style="list-style-type: none; margin-top : 1em" class="gras">pH de la spécialité : {{ page.composition.speData.sp_ph }}</li>
+        {% endif %}
+
+    </ul>
+
+
+{% endif %}
+
+{% if page.composition.subTeneurSpe is not empty %}
+<h4 class="text-uppercase">Teneurs :</h4>
+  <ul>
+  {% for teneur in page.composition.subTeneurSpe %}
+    <li>{{ teneur.teneur }} {{ teneur.qualificatif }} {{ teneur.dosage|number_format(2, ',', '') }} {{ teneur.unitenom }}
+      {% if teneur.dosage_equiv %} soit {{ teneur.dosage_equiv|number_format(2, ',', '') }} {{ teneur.unitenom_equiv }}{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+
+<h4 class="text-uppercase">Précision(s) composition :</h4>
+
+{% for subPreSpe in page.composition.subPreCompSpe %}
+  {{ subPreSpe.textprec|nl2br }}
+{% endfor %}

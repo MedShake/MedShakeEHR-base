@@ -90,32 +90,38 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('relation', 'allergieLibelleTheriaque', '', 'Libelle Thériaque de l\'allergie', 'libelle Thériaque de l\'allergie', '', '', 'text', '', 'base', @catID, 1, '2018-01-23 10:21:58', 3600, 0),
 ('relation', 'allergieCodeTheriaque', '', 'Code Thériaque de l\'allergie', 'codee Thériaque de l\'allergie', '', '', 'text', '', 'base', @catID, 1, '2018-01-23 10:22:21', 3600, 0);
 
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatSams');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('ordo', 'lapSamCommentaire', '', 'Commentaire patient SAM', 'commentaire par patient pour un SAM', '', '', '', '', 'base', @catID, 1, '2018-04-13 11:27:17', 1576800000, 1),
+('ordo', 'lapSamDisabled', '', 'Marqueur de SAM bloqué', 'marqueur de SAM bloqué', '', '', '', '', 'base', @catID, 1, '2018-04-13 11:26:52', 1576800000, 1);
+
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatMedicament');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-( 'ordo', 'lapMedicamentEstPrescriptibleEnDC', '', 'Médicament prescriptible en DC', 'médicament prescriptible en DC', '', '', '', '', 'base', @catID, 1, '2018-02-14 12:45:47', 3600, 1),
-( 'ordo', 'lapMedicamentDC', '', 'DC du médicament', 'DC du médicament', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:34:53', 3600, 1),
-( 'ordo', 'lapMedicamentCodeATC', '', 'Code ATC du médicament', 'code ATC du médicament', '', '', '', '', 'base', 86, 1, '2018-02-13 21:33:48', 3600, 1),
-( 'ordo', 'lapMedicamentPresentationCodeTheriaque', '', 'Code Thériaque de la présentation', 'code Thériaque de la présentation (a priori le CIP7)', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:31:52', 3600, 1),
-( 'ordo', 'lapMedicamentSpecialiteCodeTheriaque', '', 'Code Thériaque de la spécialité', 'code Thériaque de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:46', 3600, 1),
-( 'ordo', 'lapMedicamentSpecialiteNom', '', 'Nom de la spécialité', 'nom de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:01', 3600, 1),
+('ordo', 'lapMedicamentEstPrescriptibleEnDC', '', 'Médicament prescriptible en DC', 'médicament prescriptible en DC', '', '', '', '', 'base', @catID, 1, '2018-02-14 12:45:47', 3600, 1),
+('ordo', 'lapMedicamentDC', '', 'DC du médicament', 'DC du médicament', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:34:53', 3600, 1),
+('ordo', 'lapMedicamentCodeATC', '', 'Code ATC du médicament', 'code ATC du médicament', '', '', '', '', 'base', 86, 1, '2018-02-13 21:33:48', 3600, 1),
+('ordo', 'lapMedicamentPresentationCodeTheriaque', '', 'Code Thériaque de la présentation', 'code Thériaque de la présentation (a priori le CIP7)', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:31:52', 3600, 1),
+('ordo', 'lapMedicamentSpecialiteCodeTheriaque', '', 'Code Thériaque de la spécialité', 'code Thériaque de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:46', 3600, 1),
+('ordo', 'lapMedicamentSpecialiteNom', '', 'Nom de la spécialité', 'nom de la spécialité', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:28:01', 3600, 1),
 ('ordo', 'lapMedicamentCodeSubstanceActive', '', 'Code substance active du médicament', 'code substance active du médicament', '', '', '', '', 'base', @catID, 1, '2018-03-27 13:27:11', 3600, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatLignePrescription');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ( 'ordo', 'lapLignePrescriptionDureeJours', '', 'Durée de la prescription en jours', 'durée de la prescription en jours', '', '', '', '', 'base', @catID, 1, '2018-02-14 14:08:21', 3600, 1),
 ( 'ordo', 'lapLignePrescriptionDatePriseFinEffective', '', 'Date effective de fin de prise', 'date effective de fin de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:17:40', 3600, 1),
-( 'ordo', 'lapLignePrescriptionDatePriseFin', '', 'Date de fin de prise', 'date de fin de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:17:12', 3600, 1),
-( 'ordo', 'lapLignePrescriptionDatePriseDebut', '', 'Date de début de prise', 'date de début de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:16:43', 3600, 1),
-( 'ordo', 'lapLignePrescriptionIsChronique', '', 'isChronique', 'ligne TT chronique ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:04:02', 3600, 1),
-( 'ordo', 'lapLignePrescriptionIsALD', '', 'isALD', 'ligne ALD ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:01:13', 3600, 1),
+('ordo', 'lapLignePrescriptionDatePriseFin', '', 'Date de fin de prise', 'date de fin de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:17:12', 3600, 1),
+('ordo', 'lapLignePrescriptionDatePriseDebut', '', 'Date de début de prise', 'date de début de prise', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:16:43', 3600, 1),
+('ordo', 'lapLignePrescriptionIsChronique', '', 'isChronique', 'ligne TT chronique ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:04:02', 3600, 1),
+('ordo', 'lapLignePrescriptionIsALD', '', 'isALD', 'ligne ALD ou non', '', '', '', '', 'base', @catID, 1, '2018-02-13 21:01:13', 3600, 1),
 ('ordo', 'lapLignePrescriptionDatePriseFinAvecRenouv', '', 'Date de fin de prise renouvellements inclus', 'date de fin de prise renouvellements inclus', '', '', '', '', 'base', @catID, 1, '2018-03-09 12:21:46', 3600, 1),
 ('ordo', 'lapLignePrescriptionRenouvelle', '', 'ID de la ligne qui est renouvelée par cette ligne', 'ID de la ligne qui est renouvelée par cette ligne', '', '', '', '', 'base', @catID, 1, '2018-03-15 19:58:49', 3600, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatPorteurs');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-( 'ordo', 'lapLigneMedicament', '', 'Médicament', 'médicament LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:56:17', 3600, 1),
-( 'ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:55:32', 3600, 1),
-( 'ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:54:31', 3600, 1);
+('ordo', 'lapLigneMedicament', '', 'Médicament', 'médicament LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:56:17', 3600, 1),
+('ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:55:32', 3600, 1),
+('ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, 1, '2018-02-13 20:54:31', 3600, 1),
+('ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', @catID, 1, '2018-04-13 13:14:44', 1576800000, 1);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catModelesCourriers');
 INSERT IGNORE INTO `data_types`( `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES

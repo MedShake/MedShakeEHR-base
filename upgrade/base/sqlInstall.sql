@@ -361,14 +361,16 @@ INSERT IGNORE INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `
 (65, 'admin', 'catMarqueursAdminDossiers', 'Marqueurs', 'marqueurs dossiers', 'user', 1, '2018-01-01 00:00:00'),
 (66, 'user', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', 1, '2018-01-01 00:00:00'),
 (67, 'ordo', 'OrdoItems', 'Ordo', 'items d\'une ordonnance', 'base', 1, '2018-01-01 00:00:00'),
-(68, 'medical', 'aldCat', 'ALD', 'paramètres pour la gestion des ALD', 'base', 1, '2018-01-19 10:29:09'),
-(69, 'medical', 'catAtcdStruc', 'ATCD structurés', 'données pour antécédents structurés', 'base', 1, '2018-01-22 12:45:18'),
-(70, 'typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', 1, '2018-01-22 20:31:57'),
-(71, 'relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-23 10:21:09'),
-(72, 'user', 'lapUserParamCat', 'LAP', 'paramètres pour les réglages utilisateur dans le LAP', 'base', 1, '2018-03-07 21:03:15'),
-(73, 'ordo', 'lapCatPorteurs', 'LAP porteurs', 'data pour les porteurs LAP', 'base', 1, '2018-02-13 20:57:19'),
-(74, 'ordo', 'lapCatLignePrescription', 'LAP ligne de prescription', 'data des lignes de prescription', 'base', 1, '2018-02-13 20:58:15'),
-(75, 'ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-02-13 20:59:11');
+(68, 'medical', 'aldCat', 'ALD', 'paramètres pour la gestion des ALD', 'base', 1, '2018-01-01 00:00:00'),
+(69, 'medical', 'catAtcdStruc', 'ATCD structurés', 'données pour antécédents structurés', 'base', 1, '2018-01-01 00:00:00'),
+(70, 'typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', 1, '2018-01-01 00:00:00'),
+(71, 'relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-01 00:00:00'),
+(72, 'user', 'lapUserParamCat', 'LAP', 'paramètres pour les réglages utilisateur dans le LAP', 'base', 1, '2018-01-01 00:00:00'),
+(73, 'ordo', 'lapCatPorteurs', 'LAP porteurs', 'data pour les porteurs LAP', 'base', 1, '2018-01-01 00:00:00'),
+(74, 'ordo', 'lapCatLignePrescription', 'LAP ligne de prescription', 'data des lignes de prescription', 'base', 1, '2018-01-01 00:00:00'),
+(75, 'ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-01-01 00:00:00'),
+(76, 'ordo', 'lapCatSams', 'LAP SAMs', 'data pour SAMs LAP', 'base', 1, '2018-01-01 00:00:00');
+
 
 
 INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -513,7 +515,8 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (555, 'ordo', 'lapLigneMedicament', '', 'Médicament', 'médicament LAP', '', '', '', '', 'base', 73, 1, '2018-02-13 20:56:17', 3600, 1),
 (556, 'ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', 73, 1, '2018-02-13 20:55:32', 3600, 1),
 (557, 'ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', 73, 1, '2018-02-13 20:54:31', 3600, 1),
-(558, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-03-20 10:10:54', 3600, 6);
+(558, 'ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', 73, 1, '2018-04-13 13:14:44', 1576800000, 1),
+(559, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-03-20 10:10:54', 3600, 6);
 
 
 INSERT IGNORE INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES

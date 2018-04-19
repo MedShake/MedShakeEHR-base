@@ -122,6 +122,10 @@ $(document).ready(function() {
     ordoLiveSave();
     afficherCoutOrdo();
 
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
+
   });
 
   // Détruire un médicament dans ligne d'ordonnance
@@ -144,6 +148,10 @@ $(document).ready(function() {
     console.log('Destruction d\'un médic dans ligne de prescription : STOP');
     ordoLiveSave();
     afficherCoutOrdo();
+
+    //SAMS : mise à jour
+    getDifferentsSamFromOrdo();
+    testSamsAndDisplay();
 
   });
 
@@ -383,6 +391,9 @@ function moveLignePrescription(tabDepart, tabArrivee, indexDepart, indexArrivee)
 function cleanOrdonnance() {
   ordoMedicsALD = [];
   ordoMedicsG = [];
+  samsInOrdo = [];
+  samsInSamsZone = [];
+  testSamsAndDisplay();
   $('#conteneurOrdonnanceCourante div.lignePrescription').remove();
 }
 
@@ -441,7 +452,13 @@ function ordoLiveRestore() {
           }
           construireOrdonnance(data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
         }
+        // Cout ordo
         afficherCoutOrdo();
+        //SAMS : mise à jour
+        getDifferentsSamFromOrdo();
+        testSamsAndDisplay();
+        samsToAlert=samsInOrdo;
+        testSamsAndAlert();
         console.log("Restoration automatique ordonnance : OK");
 
       } else if (data['statut'] == 'nofile') {
@@ -522,7 +539,7 @@ function calculerCoutOrdo() {
 
 function afficherCoutOrdo() {
   cout = calculerCoutOrdo();
-  if(cout > 0) {
+  if (cout > 0) {
     $('div.coutOrdo').html('Coût des prescriptions : ' + cout.toFixed(2).replace(".", ",") + ' €');
   } else {
     $('div.coutOrdo').html('');
@@ -562,13 +579,19 @@ function calculerCoutMedic(totalUnitesPrescrites, uniteUtiliseeOrigine, prixucd,
   }
 }
 
+/**
+ * Tester si un médicament entre dans la prise en charge ALD pour les ALD du patient
+ * @param  {array} tabList liste des ALD num => o/n
+ * @return {boolean}         true / false
+ */
 function testIfAldOk(tabList) {
-  for (var k in tabList){
-      if (tabList.hasOwnProperty(k)) {
-           if(tabList[k] == 'o' && $.inArray(k,aldActivesListe) ) {
-             return true;
-           }
+  if (aldActivesListe.length < 1) return false;
+  for (var k in tabList) {
+    if (tabList.hasOwnProperty(k)) {
+      if (tabList[k] == 'o' && $.inArray(k, aldActivesListe) > 0) {
+        return true;
       }
+    }
   }
   return false;
 }
@@ -607,10 +630,10 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.isChronique == 'true') {
       retour += '        <span class="label label-default">chronique</span>';
     }
-    if(testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance') {
-      retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
-    } else if (mode == 'editionOrdonnance') {
-      retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+    if (testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+      retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+    } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+      retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
     if (data.medics[0].prescripteurInitialTT) {
@@ -700,6 +723,12 @@ function makeLigneOrdo(data, mode) {
       retour += '          <a href="#" class="dropdown-item addToLigne">';
       retour += '            <span class="fa fa-plus" aria-hidden="true"></span>';
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
+
+      retour += '        <li>';
+      retour += '          <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank" >';
+      retour += '            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>';
+      retour += '            Monographie</a>';
+      retour += '        </li>';
 
       if (data.medics[0].prescriptibleEnDC == '1' && data.medics[0].nomDC != data.medics[0].nomUtileFinal) {
         retour += '          <div class="dropdown-divider"></div>';
@@ -808,6 +837,12 @@ function makeLigneOrdo(data, mode) {
       }
       if (data.ligneData.isChronique == 'true') {
         retour += ' <span class = "label label-default" >chronique</span>';
+      }
+
+      if (testIfAldOk(medic.ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+        retour += ' <span class="glyphicon glyphicon-ok-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+      } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
+        retour += ' <span class="glyphicon glyphicon-exclamation-sign text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
       }
 
       if (medic.prescripteurInitialTT) {

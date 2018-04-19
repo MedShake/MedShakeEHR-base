@@ -36,6 +36,7 @@ $(document).ready(function() {
   // Onglet général LAP
   $('#ongletLAP').on("show.bs.tab", function() {
     lapRefreshLateralPatientData();
+    refreshTTenCours();
     if (alerteGrossesseSup46EtAllaitSup3Deja != 'oui') {
       setTimeout(checkGrossesseSup46EtAllaitSup3, '500');
     }

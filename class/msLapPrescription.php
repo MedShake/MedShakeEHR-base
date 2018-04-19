@@ -51,6 +51,8 @@ class msLapPrescription extends msLap
   private $_tauxrbt;
   private $_prixucd;
   private $_datePremierePrise;
+  private $_stupefiant;
+  private $_genreNombre;
 
 
 /**
@@ -150,6 +152,9 @@ class msLapPrescription extends msLap
  */
     public function setUniteUtilisee($v)
     {
+        //on détermine le genre de l'unité
+        $this->_genreNombre=$this->_uniteAccordee($v, '-1');
+
         return $this->_uniteUtilisee = $v;
     }
 
@@ -249,6 +254,16 @@ class msLapPrescription extends msLap
     public function setDatePremierePrise($date)
     {
       return $this->_datePremierePrise = $date;
+    }
+
+/**
+ * Définir stupéfiant
+ * @param string $stup stup o/n
+ * @return string stup
+ */
+    public function setStupefiant($stup)
+    {
+      return $this->_stupefiant = $stup;
     }
 
 /**
@@ -368,10 +383,19 @@ class msLapPrescription extends msLap
 
       // présentation
       $dataPres=$this->_get_the_presentation($this->_presThe, 2);
+      // hospitalier ?
+      if($dataPres[0]['reservhop'] == 'NON') {
+        $reservHopital = 'n';
+      } else {
+        $reservHopital = 'o';
+      }
       // unités
       $dataSpeUnite=$this->getUnite($this->_speThe, 0);
       // voies d'administration possibles
       $dataSpeVoiesAdmin=$this->getVoiesAdministration($this->_speThe);
+      // modalités dispensation
+      $dataPresDispensation=$this->getDispensation($this->_presThe, 1);
+      $infosDispensation=$this->_analyseInfosDispensation($dataPresDispensation);
 
       // condition ald
       $dataAld=$this->_get_the_ald_info($this->_presThe, 1);
@@ -437,6 +461,9 @@ class msLapPrescription extends msLap
       //   $this->_forme='';
       // }
 
+      // SAM
+      $sams=$this->getSamList4Spe($this->_speThe);
+
       $tab = array(
         'speThe'=>$this->_speThe,
         'presThe'=> $this->_presThe,
@@ -465,7 +492,10 @@ class msLapPrescription extends msLap
         'substancesActives'=>$dataSubActives,
         'prixucd'=>$this->_prixucd,
         'tauxrbt'=>$this->_tauxrbt,
-        'ald'=>$dataAld
+        'ald'=>$dataAld,
+        'stup'=>$infosDispensation['stupefiant'],
+        'reservHopital'=>$reservHopital,
+        'sams'=>$sams
       );
 
 
@@ -598,6 +628,28 @@ class msLapPrescription extends msLap
     }
 
 /**
+ * Obtenir les sams concernés par le code spécialité
+ * @param  int $code code spécialité
+ * @return array       arrax des SAM
+ */
+    public function getSamList4Spe($code) {
+      global $p;
+      if(is_file($p['config']['homeDirectory'].'ressources/SAM/samSpeCorrespondances')) {
+        $filecontent = file_get_contents($p['config']['homeDirectory'].'ressources/SAM/samSpeCorrespondances');
+        $tabCorrespondance = unserialize($filecontent);
+        $rd=[];
+        foreach($tabCorrespondance as $sam=>$codesArray) {
+          if(in_array($code, $codesArray)) {
+            $rd[]=$sam;
+          }
+        }
+        return $rd;
+      } else {
+        throw new Exception('Le fichier de correspondance SAM <=> spécialité est introuvable');
+      }
+    }
+
+/**
  * Interpréter une ligne en la passant dans les regex
  * @param  int $indexLigne index de la ligne
  * @param  string $ligne      ligne de prescription
@@ -654,15 +706,15 @@ class msLapPrescription extends msLap
         }
         // cas ou la posologie m m s c est égale
         elseif ($m['doseMatinMath'] == $m['doseMidiMath'] and $m['doseMatinMath'] == $m['doseSoirMath'] and $m['doseCoucher'] == 0 ) {
-          $human = $m['doseMatin'] .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' matin midi et soir ';
+          $human = $this->_uniteFxStup($m['doseMatin']) .' '. $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' matin midi et soir ';
           $tab['nbPrisesParUniteTemps']=4;
         }
         // si poso m m s est différente
         else {
-          if ($m['doseMatinMath'] > 0) $pmms[] = $m['doseMatin'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' le matin';
-          if ($m['doseMidiMath'] > 0) $pmms[] = $m['doseMidi'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMidiMath']) . ' le midi';
-          if ($m['doseSoirMath'] > 0) $pmms[] = $m['doseSoir'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseSoirMath']) . ' le soir';
-          if ($m['doseCoucherMath'] > 0) $pmms[] = $m['doseCoucher'].' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseCoucherMath']) . ' au coucher';
+          if ($m['doseMatinMath'] > 0) $pmms[] = $this->_uniteFxStup($m['doseMatin']).' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMatinMath']) . ' le matin';
+          if ($m['doseMidiMath'] > 0) $pmms[] = $this->_uniteFxStup($m['doseMidi']).' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseMidiMath']) . ' le midi';
+          if ($m['doseSoirMath'] > 0) $pmms[] = $this->_uniteFxStup($m['doseSoir']).' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseSoirMath']) . ' le soir';
+          if ($m['doseCoucherMath'] > 0) $pmms[] = $this->_uniteFxStup($m['doseCoucher']).' ' . $this->_uniteAccordee($this->_uniteUtilisee,$m['doseCoucherMath']) . ' au coucher';
 
           $tab['nbPrisesParUniteTemps']=count($pmms);
           $human .= implode(', ',$pmms).' ';
@@ -1086,26 +1138,30 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
  */
     private function _uniteAccordee($forme, $nb) {
       $f=array(
-        'APPLICATION(S)' => array('s'=>'application', 'p'=>'applications'),
-        'application' => array('s'=>'application', 'p'=>'applications'),
-        'COMPRIME(S)' => array('s'=>'comprimé', 'p'=>'comprimés'),
-        'comprimé' => array('s'=>'comprimé', 'p'=>'comprimés'),
-        'comprime' => array('s'=>'comprimé', 'p'=>'comprimés'),
-        'DOSE(S)' => array('s'=>'dose', 'p'=>'doses'),
-        'EMPLATRE(S)' => array('s'=>'emplâtre', 'p'=>'emplâtres'),
-        'GELULE' => array('s'=>'gélule', 'p'=>'gélules'),
-        'gélule' => array('s'=>'gélule', 'p'=>'gélules'),
-        'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes'),
-        'goutte' => array('s'=>'goutte', 'p'=>'gouttes'),
-        'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations'),
-        'pulverisation(s)' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),
-        'puverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations'),
-        'RECIPIENT(S) UNIDOSE(S)' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses'),
-        'SACHET(S)' => array('s'=>'sachet', 'p'=>'sachets'),
-        'SUPPOSITOIRE' => array('s'=>'suppositoire', 'p'=>'suppositoires'),
+        'APPLICATION(S)' => array('s'=>'application', 'p'=>'applications', 'g'=>'f'),
+        'AMPOULE(S)' => array('s'=>'ampoule', 'p'=>'ampoules', 'g'=>'f'),
+        'ampoule(s)' => array('s'=>'ampoule', 'p'=>'ampoules', 'g'=>'f'),
+        'application' => array('s'=>'application', 'p'=>'applications', 'g'=>'f'),
+        'COMPRIME(S)' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
+        'comprimé' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
+        'comprime' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
+        'DOSE(S)' => array('s'=>'dose', 'p'=>'doses', 'g'=>'f'),
+        'EMPLATRE(S)' => array('s'=>'emplâtre', 'p'=>'emplâtres', 'g'=>'m'),
+        'flacon(s)' => array('s'=>'flacon', 'p'=>'flacon', 'g'=>'m'),
+        'GELULE' => array('s'=>'gélule', 'p'=>'gélules', 'g'=>'f'),
+        'gélule' => array('s'=>'gélule', 'p'=>'gélules', 'g'=>'f'),
+        'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes', 'g'=>'f'),
+        'goutte' => array('s'=>'goutte', 'p'=>'gouttes', 'g'=>'f'),
+        'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations', 'g'=>'f'),
+        'pulverisation(s)' => array('s'=>'pulvérisation', 'p'=>'pulvérisations', 'g'=>'f'),
+        'puverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations', 'g'=>'f'),
+        'RECIPIENT(S) UNIDOSE(S)' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses', 'g'=>'m'),
+        'SACHET(S)' => array('s'=>'sachet', 'p'=>'sachets', 'g'=>'m'),
+        'SUPPOSITOIRE' => array('s'=>'suppositoire', 'p'=>'suppositoires', 'g'=>'m'),
       );
       if(key_exists($forme,$f)) {
-        if($nb>1) return $f[$forme]['p'];
+        if($nb=='-1') return $f[$forme]['g'];
+        elseif($nb>1) return $f[$forme]['p'];
         else return $f[$forme]['s'];
       }
       return strtolower($forme);
@@ -1180,6 +1236,50 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
         $retour['dureeTotaleMachineJoursAvecRenouv']=$this->_nbRenouvellements + 1;
       }
       return $retour;
+    }
+
+
+    private function _analyseInfosDispensation($tab) {
+      $rd=[];
+      $rd['stupefiant'] = 'n';
+        if(!empty($tab)) {
+          $acol = array_column($tab, 'info_1');
+          if(in_array('STUPEFIANT', $acol)) {
+            $rd['stupefiant'] = 'o';
+          }
+        }
+      return $rd;
+    }
+
+    private function _uniteFxStup($nombre) {
+      if($this->_stupefiant == 'n') {
+        return $nombre;
+      } else {
+        return $this->_convertNombreLettres($nombre).' ('.$nombre.')';
+      }
+    }
+
+    private function _convertNombreLettres($nombre) {
+      $math = new Webit\Util\EvalMath\EvalMath;
+      $nombre = $math->evaluate(str_replace(",", ".", $nombre));
+
+      if($this->_genreNombre == 'f') {
+        $pattern = '%spellout-cardinal-feminine';
+      } else {
+        $pattern = '%spellout-cardinal-masculine';
+      }
+
+      $fmt = new NumberFormatter( 'fr', NumberFormatter::SPELLOUT);
+      $fmt->setTextAttribute(NumberFormatter::DEFAULT_RULESET, $pattern);
+
+      if(strpos($nombre, ',') != false) {
+        $part=explode(',', $nombre);
+        $part[0]=$fmt->format($part[0]);
+        $part[1]=$fmt->format($part[1]);
+        return implode(' virgule ', $part);
+      } else {
+        return $fmt->format($nombre);
+      }
     }
 
 }
