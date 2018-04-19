@@ -26,12 +26,20 @@
  #}
 
  <ul class="nav nav-tabs gras" role="tablist" style="margin-bottom : 2em;">
-  <li role="presentation" class="active"><a href="#pharmacodynamie" role="tab" data-toggle="tab">Propriétés pharmacodynamiques</a></li>
-  <li role="presentation"><a href="#pharmacocinetique" role="tab" data-toggle="tab">Propriétés pharmacocinétiques</a></li>
+  <li class="nav-item">
+    <a class="nav-link active" href="#pharmacodynamie" role="tab" data-toggle="tab">Propriétés pharmacodynamiques</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#pharmacocinetique" role="tab" data-toggle="tab">Propriétés pharmacocinétiques</a>
+  </li>
   {% if page['pharmacodynamie']['detEtioSpe'] is defined %}
-  <li role="presentation"><a href="#agentetio" role="tab" data-toggle="tab">Agent étiologique / Spectre antiinfectieux</a></li>
+    <li class="nav-item">
+      <a class="nav-link" href="#agentetio" role="tab" data-toggle="tab">Agent étiologique / Spectre antiinfectieux</a>
+    </li>
   {% endif %}
-  <li role="presentation"><a href="#securitePreCLinique" role="tab" data-toggle="tab">Sécurité préclinique</a></li>
+  <li class="nav-item">
+    <a class="nav-link" href="#securitePreCLinique" role="tab" data-toggle="tab">Sécurité préclinique</a>
+  </li>
 </ul>
 
 <div class="tab-content">
@@ -57,7 +65,9 @@
     {% if page.pharmacodynamie.etioSpe|length > 1 %}
       <ul class="nav nav-pills" role="tablist" style="margin-bottom : 2em;">
       {% for etioSpe in page.pharmacodynamie.etioSpe %}
-            <li role="presentation" {% if loop.index == 1 %}class="active"{% endif %}><a href="#fiche{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['valetio'] }}" aria-controls="home" role="pill" data-toggle="pill">{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['textetio'] }}</a></li>
+            <li class="nav-item">
+              <a class="nav-link{% if loop.index == 1 %} active{% endif %}" href="#fiche{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['valetio'] }}" aria-controls="home" role="pill" data-toggle="pill">{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['textetio'] }}</a>
+            </li>
         {% endfor %}
       </ul>
     {% endif %}

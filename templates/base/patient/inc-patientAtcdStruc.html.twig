@@ -29,14 +29,14 @@
 <button class="btn btn-sm addNewCS float-right" data-parentid="{{ parentTypeID }}" data-formtocall="atcdStrucDeclaration" data-mode="create">Ajouter</button>
 
 {% if atcd %}
-  <table class="table table-condensed table-hover table-bordered">
+  <table class="table table-sm table-hover table-bordered">
     <tbody>
       {% for atcdId, atc in atcd %}
         <tr class="tr{{ atcdId }} active">
           <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}" style="cursor: pointer">
             {{ atc.atcdStrucCIM10Label.value }}
             <div id="atcdDet{{ atcdId }}" class="collapse">
-              <table class="table table-condensed small" style="margin-top:8px;">
+              <table class="table table-sm small" style="margin-top:8px;">
                 <tr>
                   <td>Code CIM 10</td>
                   <td>{{ atc.atcdStrucCIM10.value }}</td>

@@ -56,62 +56,62 @@
   <div class="row">
     <div class="col-md-2">
       <ul class="nav nav-pills nav-stacked" role="tablist">
-        <li role="presentation" {% if page.section == 'administratif' %} class="active"{% endif %}>
-          <a href="#administratif" role="tab" aria-controls="administratif" data-toggle="pill">Renseignements administratifs</a>
+        <li class="nav-item">
+          <a  class="nav-link{% if page.section == 'administratif' %} active{% endif %}" href="#administratif" role="tab" aria-controls="administratif" data-toggle="pill">Renseignements administratifs</a>
         </li>
-        <li role="mvgeneriques" {% if page.section == 'mvgeneriques' %} class="active"{% endif %}>
-          <a href="#mvgeneriques" role="tab" aria-controls="mvgeneriques" data-toggle="pill">Médicaments virtuels / Génériques</a>
+        <li class="nav-item" {% if page.section == 'mvgeneriques' %} class="active"{% endif %}>
+          <a class="nav-link" href="#mvgeneriques" role="tab" aria-controls="mvgeneriques" data-toggle="pill">Médicaments virtuels / Génériques</a>
         </li>
-        <li role="presentation" {% if page.section == 'formesPharma' %} class="active"{% endif %}>
-          <a href="#formesPharma" role="tab" aria-controls="formes pharmaceutiques" data-toggle="pill">Forme(s) pharmaceutique(s)</a>
+        <li class="nav-item" {% if page.section == 'formesPharma' %} class="active"{% endif %}>
+          <a class="nav-link" href="#formesPharma" role="tab" aria-controls="formes pharmaceutiques" data-toggle="pill">Forme(s) pharmaceutique(s)</a>
         </li>
-        <li role="presentation" {% if page.section == 'composition' %} class="active"{% endif %}>
-          <a href="#composition" role="tab" data-toggle="pill">Composition</a>
+        <li class="nav-item" {% if page.section == 'composition' %} class="active"{% endif %}>
+          <a class="nav-link" href="#composition" role="tab" data-toggle="pill">Composition</a>
         </li>
-        <li role="presentation" {% if page.section == 'classifications' %} class="active"{% endif %}>
-          <a href="#classifications" role="tab" data-toggle="pill">Classifications</a>
+        <li class="nav-item" {% if page.section == 'classifications' %} class="active"{% endif %}>
+          <a class="nav-link" href="#classifications" role="tab" data-toggle="pill">Classifications</a>
         </li>
-        <li role="presentation" {% if page.section == 'pharmacologie' %} class="active"{% endif %}>
-          <a href="#pharmacologie" role="tab" data-toggle="pill">Pharmacologie</a>
+        <li class="nav-item" {% if page.section == 'pharmacologie' %} class="active"{% endif %}>
+          <a class="nav-link" href="#pharmacologie" role="tab" data-toggle="pill">Pharmacologie</a>
         </li>
-        <li role="presentation" {% if page.section == 'recommandations' %} class="active"{% endif %}>
-          <a href="#recommandations" role="tab" data-toggle="pill">Recommandations</a>
+        <li class="nav-item" {% if page.section == 'recommandations' %} class="active"{% endif %}>
+          < a class="nav-link" href="#recommandations" role="tab" data-toggle="pill">Recommandations</a>
         </li>
-        <li role="presentation" {% if page.section == 'presentations' %} class="active"{% endif %}>
-          <a href="#presentations" role="tab" data-toggle="pill">Présentations</a>
+        <li class="nav-item" {% if page.section == 'presentations' %} class="active"{% endif %}>
+          < a class="nav-link" href="#presentations" role="tab" data-toggle="pill">Présentations</a>
         </li>
-        <li role="indications" {% if page.section == 'indications' %} class="active"{% endif %}>
-          <a href="#indications" role="tab" data-toggle="pill">Indications</a>
+        <li class="nav-item" {% if page.section == 'indications' %} class="active"{% endif %}>
+          < a class="nav-link" href="#indications" role="tab" data-toggle="pill">Indications</a>
         </li>
-        <li role="nonindications" {% if page.section == 'nonindications' %} class="active"{% endif %}>
-          <a href="#nonindications" role="tab" data-toggle="pill">Non-indications</a>
+        <li class="nav-item" {% if page.section == 'nonindications' %} class="active"{% endif %}>
+          < a class="nav-link" href="#nonindications" role="tab" data-toggle="pill">Non-indications</a>
         </li>
-        <li role="contreindications" {% if page.section == 'contreindications' %} class="active"{% endif %}>
-          <a href="#contreindications" role="tab" data-toggle="pill">Contre-indications</a>
+        <li class="nav-item" {% if page.section == 'contreindications' %} class="active"{% endif %}>
+          < a class="nav-link" href="#contreindications" role="tab" data-toggle="pill">Contre-indications</a>
         </li>
-        <li role="mgpe" {% if page.section == 'mgpe' %} class="active"{% endif %}>
-          <a href="#mgpe" role="tab" data-toggle="pill">Mises en garde et précautions d'emploi</a>
+        <li class="nav-item" {% if page.section == 'mgpe' %} class="active"{% endif %}>
+          < a class="nav-link" href="#mgpe" role="tab" data-toggle="pill">Mises en garde et précautions d'emploi</a>
         </li>
-        <li role="noncontreindications" {% if page.section == 'noncontreindications' %} class="active"{% endif %}>
-          <a href="#noncontreindications" role="tab" data-toggle="pill">Non contre-indications</a>
+        <li class="nav-item" {% if page.section == 'noncontreindications' %} class="active"{% endif %}>
+          < a class="nav-link" href="#noncontreindications" role="tab" data-toggle="pill">Non contre-indications</a>
         </li>
-        <li role="interactions" {% if page.section == 'interactions' %} class="active"{% endif %}>
-          <a href="#interactions" role="tab" data-toggle="pill">Interactions médicamenteuses</a>
+        <li class="nav-item" {% if page.section == 'interactions' %} class="active"{% endif %}>
+          < a class="nav-link" href="#interactions" role="tab" data-toggle="pill">Interactions médicamenteuses</a>
         </li>
-        <li role="posologies" {% if page.section == 'posologies' %} class="active"{% endif %}>
-          <a href="#posologies" role="tab" data-toggle="pill">Posologies</a>
+        <li class="nav-item" {% if page.section == 'posologies' %} class="active"{% endif %}>
+          < a class="nav-link" href="#posologies" role="tab" data-toggle="pill">Posologies</a>
         </li>
-        <li role="modeAdministration" {% if page.section == 'modeAdministration' %} class="active"{% endif %}>
-          <a href="#modeAdministration" role="tab" data-toggle="pill">Mode d’administration<br>Manipulation / Incompatibilités</a>
+        <li class="nav-item" {% if page.section == 'modeAdministration' %} class="active"{% endif %}>
+          < a class="nav-link" href="#modeAdministration" role="tab" data-toggle="pill">Mode d’administration<br>Manipulation / Incompatibilités</a>
         </li>
-        <li role="grossesse" {% if page.section == 'grossesse' %} class="active"{% endif %}>
-          <a href="#grossesse" role="tab" data-toggle="pill">Grossesse / Allaitement</a>
+        <li class="nav-item" {% if page.section == 'grossesse' %} class="active"{% endif %}>
+          < a class="nav-link" href="#grossesse" role="tab" data-toggle="pill">Grossesse / Allaitement</a>
         </li>
-        <li role="effetsindesirables" {% if page.section == 'effetsindesirables' %} class="active"{% endif %}>
-          <a href="#effetsindesirables" role="tab" data-toggle="pill">Effets indesirables</a>
+        <li class="nav-item" {% if page.section == 'effetsindesirables' %} class="active"{% endif %}>
+          < a class="nav-link" href="#effetsindesirables" role="tab" data-toggle="pill">Effets indesirables</a>
         </li>
-        <li role="conduite" {% if page.section == 'conduite' %} class="active"{% endif %}>
-          <a href="#conduite" role="tab" data-toggle="pill">Conduite de véhicules</a>
+        <li class="nav-item" {% if page.section == 'conduite' %} class="active"{% endif %}>
+          < a class="nav-link" href="#conduite" role="tab" data-toggle="pill">Conduite de véhicules</a>
         </li>
       </ul>
     </div>

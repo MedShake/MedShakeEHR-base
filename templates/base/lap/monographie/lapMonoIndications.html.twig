@@ -44,7 +44,7 @@
 
        {% if speSmr is not empty %}
          {% for smr in speSmr|slice(-1, 1) %}
-          <a href="" class="btn btn-info btn-xs pull-right">SMR : {{ smr.textsmr }}</a>
+          <a href="" class="btn btn-info btn-sm pull-right">SMR : {{ smr.textsmr }}</a>
          {% endfor %}
        {% endif %}
 
@@ -93,7 +93,7 @@
 
          {% if indicDet['5'] is not empty %}
          <h4>CIM10</h4>
-         <table class="table table-hover">
+         <table class="table table-sm table-hover">
            <tbody>
                {% for cim10 in indicDet['5'] %}
                <tr>

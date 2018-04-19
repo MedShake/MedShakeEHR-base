@@ -28,7 +28,7 @@
 
 {% if page.patientALD %}
   <label >ALD</label>
-  <table class="table table-sm table-condensed table-hover table-bordered">
+  <table class="table table-sm table-hover table-bordered">
     <tbody>
       {% for aldId, ald in page.patientALD %}
         <tr class="tr{{ aldId }} {% if ald.aldCIM10.value %}active"{% else %}danger" title="Pas de code CIM10 lié !"{% endif %}>
@@ -37,7 +37,7 @@
             {{ ald.aldLabel }}
 
             <div id="aldDet{{ aldId }}lap" class="collapse">
-              <table class="table table-sm table-condensed small" style="margin-top:8px;">
+              <table class="table table-sm small" style="margin-top:8px;">
                 {% if ald.aldCIM10.value is empty %}<tr><td colspan="2" class="gras">L'absence de code CIM10 lié rend impossible la prise en compte de cette ALD dans les analyses des presrciptions !</td></tr>{% endif %}
                 <tr>
                   <td>Code CIM 10 lié</td>

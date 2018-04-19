@@ -27,7 +27,7 @@
 #}
 
 <label>Données physiologiques</label>
-<table class="table table-sm table-condensed table-hover table-bordered">
+<table class="table table-sm table-hover table-bordered">
   {# poids #}
   {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
     <tr class="danger">
@@ -40,7 +40,7 @@
         Poids : {{ page.patientBasicPhysio.poids.value }} kg
         {% if page.patientBasicPhysio.poids.statut == "oldValue" %} - poids à actualiser !{% endif %}
         <div id="physioPoidsDet" class="collapse">
-          <table class="table table-sm table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm small" style="margin-top:8px;">
             <tr>
               <td>Auteur</td>
               <td>{{ page.patientBasicPhysio.poids.from }}</td>
@@ -65,7 +65,7 @@
       <td data-toggle="collapse" data-target="#physioTaillePatientDet" style="cursor: pointer">
         Taille : {{ page.patientBasicPhysio.taillePatient.value }} cm
         <div id="physioTaillePatientDet" class="collapse">
-          <table class="table table-sm table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm small" style="margin-top:8px;">
             <tr>
               <td>Auteur</td>
               <td>{{ page.patientBasicPhysio.taillePatient.from }}</td>
@@ -90,7 +90,7 @@
       <td data-toggle="collapse" data-target="#clairanceCreatinineDet" style="cursor: pointer">Clairance créatinine :
         {{ page.patientBasicPhysio.clairanceCreatinine.value }} ml/min
         <div id="clairanceCreatinineDet" class="collapse">
-        <table class="table table-sm table-condensed small" style="margin-top:8px;">
+        <table class="table table-sm small" style="margin-top:8px;">
           <tr>
             <td>Auteur</td>
             <td>{{ page.patientBasicPhysio.clairanceCreatinine.from }}</td>
@@ -125,7 +125,7 @@
             Insuffisance hépatique sévère
         {% endif %}
         <div id="statutHepatiqueDet" class="collapse">
-        <table class="table table-sm table-condensed small" style="margin-top:8px;">
+        <table class="table table-sm small" style="margin-top:8px;">
           <tr>
             <td>Auteur</td>
             <td>{{ page.patientBasicPhysio.statutHepatique.from }}</td>
@@ -145,7 +145,7 @@
 {# grossesse #}
 {% if page.patientBasicPhysio.grossesse.statut != 'notConcerned' %}
   <label>Grossesse</label>
-  <table class="table table-sm table-condensed table-hover table-bordered">
+  <table class="table table-sm table-hover table-bordered">
 
     {% if page.patientBasicPhysio.grossesse.statut == 'missingValue' %}
       <tr class="danger">
@@ -156,7 +156,7 @@
         <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
           <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Terme > 46SA !
           <div id="grosssesseDet" class="collapse">
-          <table class="table table-sm table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm small" style="margin-top:8px;">
             <tr>
               <td>DDR</td>
               <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
@@ -186,7 +186,7 @@
       <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
         Terme : {{ page.patientBasicPhysio.grossesse.terme }}
         <div id="grosssesseDet" class="collapse">
-          <table class="table table-sm table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm small" style="margin-top:8px;">
             <tr>
               <td>DDR</td>
               <td>{{ page.patientBasicPhysio.grossesse.ddr }}</td>
@@ -214,7 +214,7 @@
 {# allaitement #}
 {% if page.patientBasicPhysio.allaitement.statut != 'notConcerned' %}
   <label>Allaitement</label>
-  <table class="table table-sm table-condensed table-hover table-bordered">
+  <table class="table table-sm table-hover table-bordered">
 
     <tr class="{% if page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
       danger">
@@ -233,7 +233,7 @@
         {% endif %}
         <button class="btn btn-sm float-right">Modifier</button>
         <div id="allaitementDet" class="collapse">
-          <table class="table table-sm table-condensed small" style="margin-top:8px;">
+          <table class="table table-sm small" style="margin-top:8px;">
             <tr>
               <td>Modifier</td>
               <td>

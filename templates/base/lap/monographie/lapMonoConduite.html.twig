@@ -30,7 +30,7 @@
 {% for fi in page.conduite.fcoIdBySpe %}
   {% if page.conduite.fcoIdBySpe|length > 1 %}<h4 class="text-uppercase">Fiche n°{{ loop.index }}</h4>{% endif %}
   {% set fiche = page.conduite.detFco[fi.idfco] %}
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <tbody>
       <tr>
         <td class="gras">Recommandations</td>

@@ -28,7 +28,7 @@
 
 <button class="btn btn-sm float-right getAllergiesPanel" data-toggle="modal" data-target="#searchAllergie" data-parentid="{{ parentTypeID }}">Ajouter</button>
 
-<table id="atcdTableauAllergieStruc" class="table table-condensed table-hover table-bordered{% if allergiesData is empty %} hidden{% endif %}">
+<table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered{% if allergiesData is empty %} hidden{% endif %}">
   <tbody>
     {% if allergiesData %}
       {% for id, aller in allergiesData %}
@@ -36,7 +36,7 @@
           <td data-toggle="collapse" data-target="#atcdDet{{ id }}" style="cursor: pointer">
             {{ aller.libelle }}
             <div id="atcdDet{{ id }}" class="collapse">
-              <table class="table table-condensed small" style="margin-top:8px;">
+              <table class="table table-sm small" style="margin-top:8px;">
                 <tr>
                   <td>Code Thériaque</td>
                   <td>{{ aller.value }}</td>

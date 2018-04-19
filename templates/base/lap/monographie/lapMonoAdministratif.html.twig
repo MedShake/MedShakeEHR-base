@@ -28,7 +28,7 @@
 <h4 class="text-uppercase">Conditions de prescription et de délivrance :</h4>
 
 {% if page.administratif.presdel is not empty %}
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <tbody>
       <tr {% if page.administratif.presdel.rh == "OUI" %}class="warning"{% endif %}>
         <td>Réserve hospitalière</td>
@@ -89,7 +89,7 @@
 <p>{{ page.administratif.produit.sp_cdt_prescr_texte|nl2br }}</p>
 
 <h4 class="text-uppercase">Autres données :</h4>
-<table class="table table-hover">
+<table class="table table-sm table-hover">
   <tbody>
     <tr>
       <td>Code UCD13</td>

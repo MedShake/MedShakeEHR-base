@@ -28,14 +28,14 @@
 
 <button class="btn btn-sm addNewCS float-right" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter</button>
 <label>ALD</label>
-<table class="table table-condensed table-hover table-bordered"><tbody>
+<table class="table table-sm table-hover table-bordered"><tbody>
 {% for aldId, ald in page.patient.ALD %}
   <tr class="tr{{ aldId }} active">
     <td data-toggle="collapse" data-target="#aldDet{{ aldId }}" style="cursor: pointer">
     {{ ald.aldLabel }}
 
     <div id="aldDet{{ aldId }}"  class="collapse">
-        <table class="table table-condensed small" style="margin-top:8px;">
+        <table class="table table-sm small" style="margin-top:8px;">
         <tr><td>Code CIM 10 lié</td><td>{{ ald.aldCIM10.value }} {{ ald.aldCIM10label.value }}</td></tr>
         <tr><td>Début de prise en charge</td><td>{{ ald.aldDateDebutPriseEnCharge.value }}</td></tr>
         <tr><td>Fin de prise en charge</td><td>{{ ald.aldDateFinPriseEnCharge.value }}</td></tr>
