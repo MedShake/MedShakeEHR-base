@@ -341,7 +341,7 @@ $(document).ready(function() {
     e.stopImmediatePropagation();
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
-    window.open(urlBase + '/patient/' + selected_event.patientid + '/', '_patient');
+    window.open(urlBase + '/patient/' + selected_event.patientid + '/');
     selected_action = undefined;
     selected_event = undefined;
     selected_period = undefined;
