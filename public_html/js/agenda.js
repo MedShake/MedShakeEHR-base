@@ -187,6 +187,11 @@ $(document).ready(function() {
       if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
         $('#titreRdv').html('Modifier le rendez-vous');
+        $("#patientInfo").find("input,textarea").prop("readonly",true);
+        $("#patientInfo").find("select").prop("disabled",true);
+        $("#patientInfo").show();
+        if ($('#calendar').attr('data-mode') == 'lateral')
+          $('#nettoyer').show();
         $('#buttonModifier').prop('disabled', false);
         $('#buttonAutresActions').prop('disabled', false);
         $("#motif").val(eventClicked.motif);
@@ -271,17 +276,21 @@ $(document).ready(function() {
         return;
       }
       else if (end.diff(start)==moment.duration(slotDuration,"HH:mm:ss").as('milliseconds')) {
-        clean();
+        if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden'))
+          return alert_popup('warning', 'Sélectionnez ou créez d\'abord un patient');
         var duree = $("#type option:first").attr('data-duree');
         $("#duree").html(" " + duree + "mn");
         selected_period.end = moment(start).add(duree, 'm');
         $("#type").val($("#type option")[0].value);
+        if ($('#calendar').attr('data-mode') == 'modal') {
+          clean();
+          $("#patientSearch").show();
+          $("#patientInfo").find("input,textarea").prop("readonly",true);
+          $("#patientInfo").find("select").prop("disabled",true);
+          $("#patientInfo").hide();
+        }
         $('#creerNouveau').modal('show');
-        $("#patientSearch").show();
         $(".modal-title").html("Nouveau rendez-vous");
-        $("#patientInfo").find("input,textarea").prop("readonly",true);
-        $("#patientInfo").find("select").prop("disabled",true);
-        $("#patientInfo").hide();
         $("#buttonAutresActions").hide();
         $('#buttonCreer').show();
         $('#buttonModifier').hide();
@@ -422,6 +431,8 @@ $(document).ready(function() {
     $("#patientInfo").find("input,textarea").prop("readonly",false).val("");
     $("#patientInfo").find("select").prop("disabled",false);
     $("#historiquePatient").hide();
+    if ($('#calendar').attr('data-mode') == 'lateral')
+      $('#nettoyer').show();
   });
 
   $("#patientInfo .form-group").addClass("mt-0 mb-2");
@@ -535,6 +546,15 @@ $(document).ready(function() {
       $("#buttonAutresActions").dropdown('toggle');
   });
 
+  $('#nettoyer').on("click", function() {
+    clean();
+    $("#patientSearch").show();
+    $("#patientInfo").find("input,textarea").prop("readonly",true);
+    $("#patientInfo").find("select").prop("disabled",true);
+    $("#patientInfo").hide();
+    $(this).hide();
+  });
+
   $("#formRdv").on("click", ".donothing", function(e) {
     e.preventDefault();
   });
@@ -554,6 +574,7 @@ $(document).ready(function() {
       $("#patientInfo").show();
       $("#patientInfo").find("input,textarea").prop("readonly",true);
       $("#patientInfo").find("select").prop("disabled",true);
+      $('#nettoyer').show();
       getPatientAdminData(ui.item.patientID);
       selected_patient = ui.item.patientID;
     }
@@ -666,7 +687,7 @@ function getHistoriquePatient(patientID) {
 
 // Nettoyage pour retour à l'état initial de la page
 function clean() {
-
+  $("#search").val('');
   $("#formRdv input[name!='userid']").val('');
   $("#formRdv textarea").val('');
   $("#formRdv select").val($("#formRdv select option:first").val());
@@ -680,10 +701,13 @@ function clean() {
 function setEvent(id) {
   var data;
   if (!selected_patient) {
-    data = $('#formRdv').serialize();
-    data+= '&userID=' + $('#calendar').attr('data-userID');
-    data+= '&start=' + selected_period.start.format("YYYY-MM-DD%20HH:mm:SS");
-    data+= '&end=' + selected_period.end.format("YYYY-MM-DD%20HH:mm:SS");
+    if ($('#calendar').attr('data-mode') == 'lateral')
+      data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
+    else
+      data += $('#formRdv').serialize();
+    data += '&userID=' + $('#calendar').attr('data-userID');
+    data += '&start=' + selected_period.start.format("YYYY-MM-DD%20HH:mm:SS");
+    data += '&end=' + selected_period.end.format("YYYY-MM-DD%20HH:mm:SS");
   }
   else {
     data = {

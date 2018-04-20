@@ -27,7 +27,6 @@
  #}
 
 {% extends "page.html.twig" %}
-{% import "macroForm.html.twig" as f %}
 {% block title %}Agenda MedShakeEHR{% endblock %}
 
 {% block head %}
@@ -108,6 +107,17 @@
 
 {% block body %}
 
+{% if config.agendaModePanneauLateral == 'true' %}
+  <div class="row">
+    <div class="col-3">
+      <form id="newPatientData">
+        {% include 'inc-agenda-patient.html.twig' %}
+      </form>
+      {% include 'inc-agenda-historiquePatient.html.twig' %}
+      <button id="nettoyer" class="btn" style="display:none">Annuler</button>
+    </div>
+    <div class="col-9">
+{% endif %}
 {% if page.agendaUsers|length > 1 %}
   <ul class="nav nav-tabs bottom-space" >
 
@@ -119,12 +129,15 @@
   </ul>
 {% endif %}
 
-<div id="calendar" data-userID="{{ page.userID }}"></div>
+<div id="calendar" data-userID="{{ page.userID }}" data-mode="{% if config.agendaModePanneauLateral == 'true' %}lateral{% else %}modal{% endif %}"></div>
 
-
+{% if config.agendaModePanneauLateral == 'true' %}
+    </div>
+  </div>
+{% endif %}
 {# modal rdv/nouveau patient #}
 <div id="creerNouveau" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-lg{% endif %}" role="document">
     <div class="modal-content">
       <form id="formRdv">
         <div class="modal-header">
@@ -137,61 +150,46 @@
               <ul></ul>
           </div>
           <div class="row">
-            <div class="col-md-6 border-right">
-              <h3>Patient</h3>
-              <div id="patientSearch" class="input-group mx-0 mb-3">
-                <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off">
-                <div class="input-group-append">
-                  <button id="newPatient" type="button" class="btn btn-outline-secondary">Créer patient</button>
-                </div>
+            {% if config.agendaModePanneauLateral != 'true' %}
+              <div class="col-md-6 border-right">
+                {% include 'inc-agenda-patient.html.twig' %}
               </div>
-              <div id="patientInfo">
-                {{ f.formbuilder(page.formNewPatient , 'baseNewPatient', session) }}
-              </div>
-            </div>
-            <div class="col-md-6">
-
-                <h3>Rendez-vous</h3>
-                <div class="card bg-light p-2">
-                  <div class="form-group">
-                    <div id="datepicker" class="input-group mx-0 mb-3">
-                      <input class="form-control"></input>
-                      <div class="input-group-append">
-                        <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
-                      </div>
+              <div class="col-md-6">
+            {% else %}
+              <div class="col-12">
+            {% endif %}
+              <h3>Rendez-vous</h3>
+              <div class="card bg-light p-2">
+                <div class="form-group">
+                  <div id="datepicker" class="input-group mx-0 mb-3">
+                    <input class="form-control"></input>
+                    <div class="input-group-append">
+                      <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
                     </div>
                   </div>
-                  <div class="form-group mb-2">
-                    <div class="input-group mx-0">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
-                      </div>
-                      <select id="type" class="form-control form-control-sm custom-select" name="type" autocomplete="off">
-                        {% for k, v in page.typeRdv if k != '[off]' %}
-                          <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
-                            {{ v.descriptif }}</option>
-                        {% endfor %}
-                      </select>
+                </div>
+                <div class="form-group mb-2">
+                  <div class="input-group mx-0">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
                     </div>
-                  </div>
-
-                  <div class="form-group">
-                    <textarea id="motif" class="form-control mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
+                    <select id="type" class="form-control form-control-sm custom-select" name="type" autocomplete="off">
+                      {% for k, v in page.typeRdv if k != '[off]' %}
+                        <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
+                          {{ v.descriptif }}</option>
+                      {% endfor %}
+                    </select>
                   </div>
                 </div>
 
-              <div id="historiquePatient" class="card col-md-12 my-3 p-0" style="display: none;">
-                <div class="card-header py-0 gras">
-                  <div id="HistoriqueRdvResume" class="btn-group float-right m-1" role="group">
-                    <button title="total" type="button" disabled class="btn btn-light btn-sm  donothing gras">0</button>
-                    <button title="honorés" type="button" disabled class="btn btn-light btn-sm btn-success donothing gras">0</button>
-                    <button title="annulés" type="button" disabled class="btn btn-light btn-sm btn-warning donothing gras">0</button>
-                    <button title="patient absent" type="button" disabled class="btn btn-light btn-sm btn-danger donothing gras">0</button>
-                  </div>
-                  Derniers rendez-vous
+                <div class="form-group">
+                  <textarea id="motif" class="form-control mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
                 </div>
-                <ul class="list-group list-sm"></ul>
               </div>
+              {% include 'inc-agenda-rendezVous.html.twig' %}
+              {% if config.agendaModePanneauLateral != 'true' %}
+                {% include 'inc-agenda-historiquePatient.html.twig' %}
+              {% endif %}
             </div>
           </div>
         </div>
