@@ -60,7 +60,7 @@
             {% for obj, reg in page.tabRegNC %}
               <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                 <td>
-                  <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
+                  <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
                     <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}
@@ -123,7 +123,7 @@
             {% for reg in page.tabRegC %}
               <tr>
                 <td>
-                  <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
+                  <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
                     <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                   </a>
                   {{ reg.prenom|e }}

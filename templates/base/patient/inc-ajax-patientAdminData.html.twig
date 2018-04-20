@@ -58,15 +58,15 @@
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
-            <button id="voirNotesPatient" type="button" class="btn btn-sm" title="Voir les notes">
+            <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
                 <span class="fa fa-comment" aria-hidden="true"></span>
             </button>
           {% endif %}
 
-          <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
 
           {% if page.correspondants is empty %}
-          <button type="button" class="btn btn-sm editerRelationsPatient" title="Édition des relations">
+          <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
             <span class="fa fa-link" aria-hidden="true"></span>
           </button>
           {% endif %}
@@ -77,7 +77,7 @@
     {# email #}
     {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
       <div class="btn-group">
-        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }}
         </button>
 
@@ -108,11 +108,11 @@
 
     {% if page.correspondants %}
       <div class="btn-group ml-4">
-        <button type="button" class="btn btn-sm editerRelationsPatient" title="Édition des relations">
+        <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
           <span class="fa fa-link" aria-hidden="true"></span>
         </button>
         {% for v in page.correspondants %}
-          <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
           </a>
         {% endfor %}

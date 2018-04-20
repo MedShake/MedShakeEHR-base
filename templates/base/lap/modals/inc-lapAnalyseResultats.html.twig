@@ -71,7 +71,7 @@
         {% for keyLigne, ligne in allergies %}
           <tr class="redon{{ keyTerrain }} collapse">
             <td>
-              <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}l{{ keyLigne }}">
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}l{{ keyLigne }}">
                 <span class="fa fa-book" aria-hidden="true"></span></button>
               {{ ligne.medic.nomUtileFinal }}
               <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
@@ -167,7 +167,7 @@
       {% for keyLigne, alerte in alertes['C'] %}
         <tr class="cipemg{{ ligneThe }} collapse">
           <td class="text-danger" style="padding-left :20px">
-            <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}c{{ keyLigne }}">
+            <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}c{{ keyLigne }}">
               <span class="fa fa-book" aria-hidden="true"></span></button>
             Contre-indication :
             {{ alerte.lib_ter }}
@@ -181,7 +181,7 @@
       {% for alerte in alertes['P'] %}
         <tr class="cipemg{{ ligneThe }} collapse">
           <td style="padding-left :20px">
-            <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}p{{ keyLigne }}">
+            <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}p{{ keyLigne }}">
               <span class="fa fa-book" aria-hidden="true"></span></button>
             Précautions d'emploi :
             {{ alerte.lib_ter }}
@@ -215,7 +215,7 @@
         <tr class="gro{{ ligneThe }} collapse">
           <td class="text-danger" style="padding-left :20px">
             {% if alerte.texte %}
-              <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ci{{ keyLigne }}">
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ci{{ keyLigne }}">
                 <span class="fa fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
@@ -234,7 +234,7 @@
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
-              <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}d{{ keyLigne }}">
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}d{{ keyLigne }}">
                 <span class="fa fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
@@ -253,7 +253,7 @@
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
-              <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}e{{ keyLigne }}">
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}e{{ keyLigne }}">
                 <span class="fa fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
@@ -272,7 +272,7 @@
         <tr class="gro{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             {% if alerte.texte %}
-              <button type="button" class="btn btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ee{{ keyLigne }}">
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ee{{ keyLigne }}">
                 <span class="fa fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}

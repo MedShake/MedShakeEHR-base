@@ -110,16 +110,16 @@
                                         <td  class="d-flex justify-content-end">
                                           <div class="btn-group">
                                             {% if w.type == 'CCAM' %}
-                                            <a class="btn btn-sm" role="button" href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}" target="CCAM" title="Voir sur le site de la CCAM">
+                                            <a class="btn btn-light btn-sm" role="button" href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}" target="CCAM" title="Voir sur le site de la CCAM">
                                               <span class="fa fa-eye" aria-hidden="true"></span>
                                             </a>
                                             {% endif %}
 
-                                            <button type="button" class="btn btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="actes_base" data-form="formModalNewCat" data-modal="modalNewCat">
+                                            <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="actes_base" data-form="formModalNewCat" data-modal="modalNewCat">
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
 
-                                            <button type="button" {% if w.nbUtilisation > 0 %} disabled{% endif %} class="btn btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes_base">
+                                            <button type="button" {% if w.nbUtilisation > 0 %} disabled{% endif %} class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes_base">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>
                                           </div>

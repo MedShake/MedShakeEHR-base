@@ -28,7 +28,7 @@
 
 <div class="row" style="margin-bottom : 20px;margin-top : 5px;">
   <div class="col-md-12">
-    <button class="btn btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
+    <button class="btn btn-light btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
   </div>
 </div>
 
@@ -36,7 +36,7 @@
 
   <div class="card-header">Images de l'étude</div>
   <div class="card-body imagesList">
-    <button type="button" data-status="unchecked" class="btn btn-sm selectAll">Tout sélectionner / déselectionner</button>
+    <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
     <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
       <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
       <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>

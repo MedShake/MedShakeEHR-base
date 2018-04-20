@@ -168,12 +168,12 @@ $(document).ready(function() {
 <h3 class=\"popover-header\">Détail</h3>\
 <div class=\"popover-body\"></div>\
 <div class=\"popover-footer btn-group m-1\">\
-<button class=\"btn btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>' +
-(event.patientid=='0' ? '' : '<button class=\"btn btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
-'<button class=\"btn btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
-<button class=\"btn btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>' +
-(event.patientid=='0' ? '' : '<button class=\"btn btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
-'<button class=\"btn btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
+<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>' +
+(event.patientid=='0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
+'<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
+<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>' +
+(event.patientid=='0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
+'<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
 </div>\
 </div>');
         element.popover();
@@ -182,7 +182,7 @@ $(document).ready(function() {
     eventClick: function(eventClicked, jsEvent, view) {
       jsEvent.stopPropagation();
       selected_patient = eventClicked.patientid;
-      selected_period = {start:eventClicked.start, end: eventClicked.end}; 
+      selected_period = {start:eventClicked.start, end: eventClicked.end};
       selected_event = eventClicked;
       if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
@@ -193,7 +193,7 @@ $(document).ready(function() {
         $("#type").val(eventClicked.type);
         $("#duree").html(" " + $("#type").children("option:selected").attr("data-duree") + "mn");
         $('#datepicker input').val(eventClicked.start.format('DD/MM/YYYY à HH:mm'));
-        $(".fc-event[data-eventid="+eventClicked.id+"]").attr('data-content', 
+        $(".fc-event[data-eventid="+eventClicked.id+"]").attr('data-content',
             '<strong>' + eventClicked.title + '</strong><br>' +
             $("#type option[value='"+eventClicked.type+"']").html() + '<br>' + eventClicked.motif +
             (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
@@ -448,7 +448,7 @@ $(document).ready(function() {
         today: 'fa fa-crosshairs',
         clear: 'fa fa-trash',
         close: 'fa fa-times'
-      } 
+      }
     });
     $("#datepicker").data("DateTimePicker").toggle();
   });
@@ -642,7 +642,7 @@ function getHistoriquePatient(patientID) {
         if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
         if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
         chaine = chaine + '">';
-        chaine = chaine + '<button type="button" class="btn btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fa fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fa fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
         chaine = chaine + dat['start'] + ' : ' + dat['type'];
         if (dat['statut'] == 'deleted') chaine = chaine + ' <small>[annulé]</small>';
         if (dat['absente'] == 'oui') chaine = chaine + ' <small>[non honoré]</small>';
@@ -796,4 +796,3 @@ function modEvent(refetch) {
     },
   });
 }
-

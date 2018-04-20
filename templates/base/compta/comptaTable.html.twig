@@ -61,7 +61,7 @@
                   <td>#{{ loop.index }}</td>
                   <td>
                       {{ reg.creationDate|date("d/m/Y H:i") }}
-                      {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
+                      {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
                         <span class="far fa-clock" aria-hidden="true"></span>
                       </button>{% endif %}
                   </td>
@@ -118,9 +118,9 @@
                   </td>
                   <td class="text-right">
                       <div class="btn-group">
-                          <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
-                              
+
                           </button>
                           <ul class="dropdown-menu dropdown-menu-right">
                               <li>
@@ -189,4 +189,3 @@
           </tr>
       </thead>
   </table>
-

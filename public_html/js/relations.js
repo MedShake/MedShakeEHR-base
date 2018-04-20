@@ -174,7 +174,7 @@ $(document).ready(function() {
   });
 
   setTimeout(getRelationsPatientPraticiensTab, 500);
-  setTimeout(getRelationsPatientPatientsTab, 500); 
+  setTimeout(getRelationsPatientPatientsTab, 500);
 
 });
 
@@ -193,7 +193,7 @@ function getRelationsPatientPatientsTab() {
         $('#bodyTabRelationPatientPatients').append('\
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
-              <a class="btn btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
+              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
@@ -201,7 +201,7 @@ function getRelationsPatientPatientsTab() {
             <td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td>\
             <td>\
               <div class="btn-group">\
-                <button class="btn btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
                 </button>\
               </div>\
             </td>\
@@ -232,14 +232,14 @@ function getRelationsPatientPraticiensTab() {
         $('#bodyTabRelationPatientPrat').append('\
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
-              <a class="btn btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
+              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
             <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td>\
             <td>\
               <div class="btn-group">\
-                <button class="btn btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
+                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
                   <span class="fa fa-times" aria-hidden="true"></span>\
                 </button>\
               </div>\

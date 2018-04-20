@@ -43,7 +43,7 @@
 
   {% for mois, jours in page.histoTT %}
     <thead>
-      <tr class="bg-primary">
+      <tr class="table-primary">
         <td></td>
         <td class="gras text-capitalize text-center">{{ mois }}</td>
         <td></td>
@@ -76,7 +76,7 @@
                 </ul>
               {% endif %}
             </td>
-            <td class="gras text-center col-md-1 bg-info">{{ jour }}</td>
+            <td class="gras text-center col-md-1 table-info">{{ jour }}</td>
             <td>
               {% if medics.stop %}
                 <ul style="line-height : 1.7">

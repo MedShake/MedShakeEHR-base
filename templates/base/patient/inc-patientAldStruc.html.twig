@@ -26,23 +26,23 @@
  #
 #}
 
-<button class="btn btn-sm addNewCS float-right" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create">Ajouter</button>
+<button class="btn btn-light btn-sm addNewCS float-right" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create" title="Ajouter une ALD"><i class="fa fa-plus"></i></button>
 <label>ALD</label>
 <table class="table table-sm table-hover table-bordered"><tbody>
 {% for aldId, ald in page.patient.ALD %}
-  <tr class="tr{{ aldId }} active">
+  <tr class="tr{{ aldId }} table-active small">
     <td data-toggle="collapse" data-target="#aldDet{{ aldId }}" style="cursor: pointer">
     {{ ald.aldLabel }}
 
     <div id="aldDet{{ aldId }}"  class="collapse">
-        <table class="table table-sm small" style="margin-top:8px;">
+        <table class="table table-sm" style="margin-top:8px;">
         <tr><td>Code CIM 10 lié</td><td>{{ ald.aldCIM10.value }} {{ ald.aldCIM10label.value }}</td></tr>
         <tr><td>Début de prise en charge</td><td>{{ ald.aldDateDebutPriseEnCharge.value }}</td></tr>
         <tr><td>Fin de prise en charge</td><td>{{ ald.aldDateFinPriseEnCharge.value }}</td></tr>
         <tr><td>Auteur</td><td>{{ ald.fromName }}</td></tr>
         <tr><td colspan="2" class="text-right">
-          <button data-objetID="{{ aldId }}" data-parentID="0" data-formtocall="aldDeclaration" data-prevalues="yes" data-mode="update" class="editCS btn btn-sm" title="Éditer"><span class="fa fa-pencil" aria-hidden="true"></span></button>
-          <a data-objetID="{{ aldId }}" class="suppCs btn btn-sm" title="Supprimer"><span class="fa fa-times" aria-hidden="true"></span></a>
+          <button data-objetID="{{ aldId }}" data-parentID="0" data-formtocall="aldDeclaration" data-prevalues="yes" data-mode="update" class="editCS btn btn-light btn-sm" title="Éditer"><i class="fa fa-pencil-alt" aria-hidden="true"></i></button>
+          <a data-objetID="{{ aldId }}" class="suppCs btn btn-light btn-sm" title="Supprimer"><i class="fa fa-times" aria-hidden="true"></i></a>
         </td></tr>
       </table>
   </div>

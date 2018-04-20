@@ -26,17 +26,17 @@
  #
 #}
 
-<button class="btn btn-sm float-right getAllergiesPanel" data-toggle="modal" data-target="#searchAllergie" data-parentid="{{ parentTypeID }}">Ajouter</button>
+<button class="btn btn-light btn-sm float-right getAllergiesPanel" data-toggle="modal" data-target="#searchAllergie" data-parentid="{{ parentTypeID }}" title="Ajouter une allergie"><i class="fa fa-plus"></i></button>
 
 <table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered{% if allergiesData is empty %} hidden{% endif %}">
   <tbody>
     {% if allergiesData %}
       {% for id, aller in allergiesData %}
-        <tr class="tr{{ id }} warning">
+        <tr class="tr{{ id }} table-warning small">
           <td data-toggle="collapse" data-target="#atcdDet{{ id }}" style="cursor: pointer">
             {{ aller.libelle }}
             <div id="atcdDet{{ id }}" class="collapse">
-              <table class="table table-sm small" style="margin-top:8px;">
+              <table class="table table-sm" style="margin-top:8px;">
                 <tr>
                   <td>Code Thériaque</td>
                   <td>{{ aller.value }}</td>
@@ -51,7 +51,7 @@
                 </tr>
                 <tr>
                   <td colspan="2" class="text-right">
-                    <button data-objetid="{{ id }}" class="btn btn-sm removeAllergie" title="Supprimer">
+                    <button data-objetid="{{ id }}" class="btn btn-light btn-sm removeAllergie" title="Supprimer">
                       <span class="fa fa-times" aria-hidden="true"></span></button>
                   </td>
                 </tr>

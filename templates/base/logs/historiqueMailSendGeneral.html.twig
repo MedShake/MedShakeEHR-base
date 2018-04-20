@@ -88,9 +88,9 @@
                             <td>{{ page['expediteurs'][v.fromID] }}<br>
                             <small>{{ v.from }}</small></td>
                             <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
-                            <td> 
+                            <td>
                               <div class="btn-group">
-                                <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
+                                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
                                   <span class="fa fa-folder-open" aria-hidden="true"></span>
                                 </a>
                               </div>

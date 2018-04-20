@@ -95,11 +95,11 @@
           </td>
           <td class="d-flex justify-content-end">
             <div class="btn-group">
-              <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/" title="Paramètres spécifiques">
+              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/" title="Paramètres spécifiques">
                   <span class="fa fa-wrench" aria-hidden="true"></span>
               </a>
               {% if v.id!=page.userid %}
-                <button class="btn btn-sm" type="button" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)">
+                <button class="btn btn-light btn-sm" type="button" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)">
                   <span class="fa fa-times revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true"></span>
                 </button>
               {% endif %}

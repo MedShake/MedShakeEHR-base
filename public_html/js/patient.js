@@ -644,7 +644,7 @@ $(document).ready(function() {
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY"))
             $tr.after(data);
           else {
-            $('#historique tbody').prepend('<tr class="anneeHistorique bg-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
+            $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
                 <span class="far fa-plus-square" style="display:none"></span>\

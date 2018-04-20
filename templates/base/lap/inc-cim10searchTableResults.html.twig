@@ -36,11 +36,11 @@
       {% endif %}
       {% for code, label in codesfils %}
         {% if code | length == 3 %}
-          <tr class="info">
+          <tr class="table-info">
             <td>{{ code }}</td>
             <td>{{ label }}</td>
             <td>
-              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-sm catchCIM10">
+              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-light btn-sm catchCIM10">
                 <span class="fa fa-arrow-circle-down" aria-hidden="true"></span></button>
             </td>
           </tr>
@@ -49,7 +49,7 @@
             <td>&nbsp;&nbsp;&nbsp;-&nbsp;{{ code }}</td>
             <td>{{ label }}</td>
             <td>
-              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-sm catchCIM10">
+              <button type="button" data-code="{{ code }}" data-label="{{ label }}" class="btn btn-light btn-sm catchCIM10">
                 <span class="fa fa-arrow-circle-down" aria-hidden="true"></span></button>
             </td>
           </tr>

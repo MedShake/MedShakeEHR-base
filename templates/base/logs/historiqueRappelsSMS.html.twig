@@ -51,7 +51,7 @@
         Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
       </a>
       <a class="btn {% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/">
-        Jour suivant 
+        Jour suivant
         <span class="fa fa-step-forward" aria-hidden="true"></span>
       </a>
 
@@ -76,7 +76,7 @@
 
           <div class="card-header py-0 gras">
             Campagne du {{ page.dates.emission|date("d/m/Y") }}
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-sm float-right m-1">Voir rappels mail</a>
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-light btn-sm float-right m-1">Voir rappels mail</a>
           </div>
 
           <ul class="list-group">
@@ -116,7 +116,7 @@
                     Statut
                     <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
                     <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
-                    <button type="submit" class="btn btn-sm"><span class="fa fa-refresh" aria-hidden="true"></span> Mettre à jour</button>
+                    <button type="submit" class="btn btn-light btn-sm"><span class="fa fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
                   </form>
                 </th>
               </tr>

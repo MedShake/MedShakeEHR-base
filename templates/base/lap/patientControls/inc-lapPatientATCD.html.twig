@@ -30,15 +30,15 @@
 
   {% for atcdType, atcd in page.patientATCD %}
     <label >{{ atcd.parentLabel }}</label>
-    <table class="table table-sm table-hover table-bordered">
+    <table class="table table-sm table-hover table-bordered small">
       <tbody>
         {% for atcdId, atc in atcd.atcd %}
           {% if atc.atcdStrucCIM10InLap.value != 'n' %}
-            <tr class="tr{{ atcdId }} table-active">
+            <tr class="tr{{ atcdId }} table-light">
               <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}lap" style="cursor: pointer">
                 {{ atc.atcdStrucCIM10Label.value }}
                 <div id="atcdDet{{ atcdId }}lap" class="collapse">
-                  <table class="table table-sm small" style="margin-top:8px;">
+                  <table class="table table-sm" style="margin-top:8px;">
                     <tr>
                       <td>Code CIM 10</td>
                       <td>{{ atc.atcdStrucCIM10.value }}</td>

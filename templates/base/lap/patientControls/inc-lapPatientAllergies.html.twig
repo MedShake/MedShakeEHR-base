@@ -28,14 +28,14 @@
 
 <label for="atcdTableauAllergieStruc">Allergies</label>
 {% if page.patientAllergies.allergiesData %}
-  <table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered">
+  <table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered small">
     <tbody>
       {% for id, aller in page.patientAllergies.allergiesData %}
         <tr class="tr{{ id }} table-danger">
           <td data-toggle="collapse" data-target="#atcdDet{{ id }}lap" style="cursor: pointer">
             {{ aller.libelle }}
             <div id="atcdDet{{ id }}lap" class="collapse">
-              <table class="table table-sm small" style="margin-top:8px;">
+              <table class="table table-sm" style="margin-top:8px;">
                 <tr>
                   <td>Code Thériaque</td>
                   <td>{{ aller.value }}</td>

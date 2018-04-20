@@ -55,7 +55,7 @@
         <tr>
           <td>{{ v.id }}</td>
           <td>
-            <a class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/" title="Afficher le dossier">
+            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/" title="Afficher le dossier">
               <span class="fa fa-folder-open" aria-hidden="true"></span>
             </a>
             {{ v.identiteDossier|e }}
@@ -66,8 +66,8 @@
           <td>{{ v.motif|e }}</td>
           <td class="d-flex justify-content-end">
             <div class="btn-group">
-              <button type="button" class="btn btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
-                <span class="fa fa-undo-alt" aria-hidden="true"></span> 
+              <button type="button" class="btn btn-light btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
+                <span class="fa fa-undo-alt" aria-hidden="true"></span>
               </button>
             </div>
 

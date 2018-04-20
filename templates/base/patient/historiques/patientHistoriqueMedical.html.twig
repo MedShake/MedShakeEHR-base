@@ -28,7 +28,7 @@
 
   <div class="col-md-12 px-0 historiqueMedicalComplet"{% if page.patient.historique|length == 0 %} style="display: none"{% endif %}>
     <div class="card">
-      <div class="card-header py-0 gras">Historique complet</div>
+      <div class="card-header gras">Historique complet</div>
 
 
       <div id="historiqueTypeSelect" style="margin : 10px 5px">
@@ -42,22 +42,22 @@
           <option data-groupe="reglement">Règlements</option>
         </select>
         <div class="btn-group btn-group-sm d-none d-sm-block d-md-none d-lg-block d-xl-none" role="group" aria-label="...">
-          <button type="button" data-groupe="tous" class="btn btn-sm active">Tous
-          </button><button type="button" data-groupe="typecs" class="btn btn-sm">Consults
-          </button><button type="button" data-groupe="ordo" class="btn btn-sm">Ordos
-          </button><button type="button" data-groupe="courrier" class="btn btn-sm">Courriers
-          </button><button type="button" data-groupe="doc" class="btn btn-sm">Docs reçus
-          </button><button type="button" data-groupe="docinterne" class="btn btn-sm">Docs créés
-          </button><button type="button" data-groupe="reglement" class="btn btn-sm">Règlements</button>
+          <button type="button" data-groupe="tous" class="btn btn-light btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-light btn-sm">Consults
+          </button><button type="button" data-groupe="ordo" class="btn btn-light btn-sm">Ordos
+          </button><button type="button" data-groupe="courrier" class="btn btn-light btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-light btn-sm">Docs reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-light btn-sm">Docs créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-light btn-sm">Règlements</button>
         </div>
         <div class="btn-group btn-group-sm d-none d-xl-block" role="group" aria-label="...">
-          <button type="button" data-groupe="tous" class="btn btn-sm active">Tous
-          </button><button type="button" data-groupe="typecs" class="btn btn-sm">Consultations
-          </button><button type="button" data-groupe="ordo" class="btn btn-sm">Ordonnances
-          </button><button type="button" data-groupe="courrier" class="btn btn-sm">Courriers
-          </button><button type="button" data-groupe="doc" class="btn btn-sm">Documents reçus
-          </button><button type="button" data-groupe="docinterne" class="btn btn-sm">Documents créés
-          </button><button type="button" data-groupe="reglement" class="btn btn-sm">Règlements</button>
+          <button type="button" data-groupe="tous" class="btn btn-light btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-light btn-sm">Consultations
+          </button><button type="button" data-groupe="ordo" class="btn btn-light btn-sm">Ordonnances
+          </button><button type="button" data-groupe="courrier" class="btn btn-light btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-light btn-sm">Documents reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-light btn-sm">Documents créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-light btn-sm">Règlements</button>
         </div>
       </div>
 
@@ -74,7 +74,7 @@
             </thead>
             <tbody>
               {% for k,c in page.patient.historique %}
-                <tr class="bg-primary anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}">
+                <tr class="table-primary anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}">
                   <td class="pl-3">
                     <span class="far fa-minus-square"{% if "now"|date('Y') != k %} style="display:none"{% endif %}></span>
                     <span class="far fa-plus-square"{% if "now"|date('Y') == k %} style="display:none"{% endif %}></span>
@@ -91,4 +91,3 @@
       </div>
     </div>
   </div>
-

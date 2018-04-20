@@ -29,9 +29,9 @@
 
 <div class="row" style="margin-bottom : 20px;margin-top : 5px;">
   <div class="col-md-12">
-    <button class="btn btn-sm tabDicomRefresh"><span class="fa fa-refresh" aria-hidden="true"></span> Rafraichir</button>
+    <button class="btn btn-light btn-sm tabDicomRefresh"><span class="fa fa-sync-alt" aria-hidden="true"></span> Rafraichir</button>
 
-    <button class="btn btn-sm prepareEcho"><span class="fa fa-share" aria-hidden="true"></span> Envoyer infos patient à échographe</button>
+    <button class="btn btn-light btn-sm prepareEcho"><span class="fa fa-share" aria-hidden="true"></span> Envoyer infos patient à échographe</button>
   </div>
 </div>
 
@@ -59,7 +59,7 @@
             {% for v in page.studiesDcData %}
               <tr data-study="{{ v.ID }}" class="viewStudy" style="cursor: pointer">
                 <td>
-                  <button class="btn btn-sm"  role="button">
+                  <button class="btn btn-light btn-sm"  role="button">
                     <span class="fa fa-eye" aria-hidden="true"></span>
                   </buttom>
                 </td>

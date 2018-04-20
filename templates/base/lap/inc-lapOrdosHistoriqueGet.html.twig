@@ -36,12 +36,12 @@
   <tbody>
     {% for annee, v in page.ordos %}
       <tr>
-        <td colspan="4" class="bg-primary gras">{{ annee }}</td>
+        <td colspan="4" class="table-primary gras">{{ annee }}</td>
       </tr>
       {% for ordo in v %}
         <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
           <td>
-            <button class="btn btn-sm" title="Voir">
+            <button class="btn btn-light btn-sm" title="Voir">
               <span class="fa fa-eye" aria-hidden="true"></span></button>
           </td>
           <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>

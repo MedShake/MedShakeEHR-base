@@ -46,7 +46,7 @@
       {% for v in page.liensFamiliaux %}
         <tr>
           <td>
-            <a target="_blank" class="btn btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/">
+            <a target="_blank" class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/">
               <span class="fa fa-folder-open" aria-hidden="true"></span></a>
           </td>
           <td class="gras">{{ v.nom }}

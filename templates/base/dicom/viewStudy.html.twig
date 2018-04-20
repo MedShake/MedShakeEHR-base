@@ -110,7 +110,7 @@
 
             <div class="card-header py-0">Images de l'étude</div>
             <div class="card-body imagesList">
-              <button type="button" data-status="unchecked" class="btn btn-sm selectAll">Tout sélectionner / déselectionner</button>
+              <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
                 <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
                     <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
                     <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
