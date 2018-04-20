@@ -31,21 +31,21 @@
   <table class="table table-sm table-hover">
     <tbody>
       {% if apatient.poids.statut != 'ok' %}
-      <tr class="danger">
+      <tr class="table-danger">
         <td>
           <strong>Poids</strong> : vérifiez et corrigez si possible le poids. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
         </td>
       </tr>
       {% endif %}
       {% if apatient.taillePatient.statut != 'ok' %}
-      <tr class="danger">
+      <tr class="table-danger">
         <td>
           <strong>Taille</strong> : renseignez si possible la taille. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
         </td>
       </tr>
       {% endif %}
       {% if apatient.clairanceCreatinine.statut != 'ok' %}
-      <tr class="danger">
+      <tr class="table-danger">
         <td>
           <strong>Clairance créatinine</strong> : renseignez si possible la clairance de la créatinine. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
         </td>
@@ -122,7 +122,7 @@
   <h3>Alertes posologies</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in aposologies %}
-      <tr class="gras {% if alertes['1'] is not empty %}danger{% else %}active{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
+      <tr class="gras {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -153,7 +153,7 @@
   <h3>Contre-indications, précautions d'emploi et mises en garde</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in acipemg %}
-      <tr class="gras {% if alertes['C'] is not empty %}danger{% else %}active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
+      <tr class="gras {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -199,7 +199,7 @@
   <h3>Grossesse et allaitement</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in agrossesse %}
-      <tr class="gras {% if alertes['1'] is not empty or alertes['2'] is not empty %}danger{% else %}active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
+      <tr class="gras {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -308,7 +308,7 @@
       </thead>
 
       {% for kinter, inter in data %}
-        <tr class="gras {% if niveau in [1, 2] %}danger{% elseif niveau in [3, 4] %}warning{% else %}active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
+        <tr class="gras {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
           <td>
             <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %}btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -368,7 +368,7 @@
             </tr>
           </thead>
           {% for c in con %}
-            <tr class="gras {% if niveau == 3 %}danger{% elseif niveau == '2' %}warning{% else %}active{% endif %}">
+            <tr class="gras {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
               <td>
                 {{ c.medicNameUtile }}
               </td>
@@ -410,7 +410,7 @@
             </tr>
           </thead>
           {% for d in dop %}
-            <tr class="{% if d.dopageNiveau == 1 %}danger{% else %}active{% endif %}">
+            <tr class="{% if d.dopageNiveau == 1 %}table-danger{% else %}table-active{% endif %}">
               <td>
                 {{ d.medicNameUtile }}
               </td>
