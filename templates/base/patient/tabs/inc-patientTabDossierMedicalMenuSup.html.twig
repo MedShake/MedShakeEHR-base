@@ -53,14 +53,14 @@
             <li class="dropdown-header">Certificats</li>
             {% for v in page.modelesCertif %}
                 <li>
-                    <a class="dropdown-item newCourrier" data-modeleID="{{ v.id }}" href="#">{{ v.label }}</a>
+                    <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
                 </li>
             {% endfor %}
             <li role="separator" class="divider"></li>
             <li class="dropdown-header">Courriers</li>
             {% for v in page.modelesCourrier %}
                 <li>
-                    <a class="dropdown-item newCourrier" data-modeleID="{{ v.id }}" href="#">{{ v.label }}</a>
+                    <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
                 </li>
             {% endfor %}
         </ul>
