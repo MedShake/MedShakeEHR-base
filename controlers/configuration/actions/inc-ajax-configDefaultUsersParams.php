@@ -70,7 +70,7 @@ $params='';
 foreach ($_POST as $param=>$value) {
     $params.=" WHEN '".$param."' THEN '".$value."'";
 }
-msSQL::sqlQuery("UPDATE configuration SET value = CASE name ".$params." ELSE value END WHERE name in ('".implode("','", array_keys($_POST))."')");
+msSQL::sqlQuery("UPDATE configuration SET value = CASE name ".$params." ELSE value END WHERE level='default' and name in ('".implode("','", array_keys($_POST))."')");
 
 
 echo json_encode(array('ok'));
