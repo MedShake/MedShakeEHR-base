@@ -672,10 +672,10 @@ function getHistoriquePatient(patientID) {
         $('#historiquePatient ul').append(chaine);
 
       });
-      $('#HistoriqueRdvResume button.btn-default').html(data['stats']['total']);
-      $('#HistoriqueRdvResume button.btn-success').html(data['stats']['ok']);
-      $('#HistoriqueRdvResume button.btn-warning').html(data['stats']['annule']);
-      $('#HistoriqueRdvResume button.btn-danger').html(data['stats']['absent']);
+      $('#HistoriqueRdvResume button[title=total]').html(data['stats']['total']);
+      $('#HistoriqueRdvResume button[title=honorés]').html(data['stats']['ok']);
+      $('#HistoriqueRdvResume button[title=annulés]').html(data['stats']['annule']);
+      $('#HistoriqueRdvResume button[title=absent]').html(data['stats']['absent']);
       $('#historiquePatient').show();
     },
     error: function() {
