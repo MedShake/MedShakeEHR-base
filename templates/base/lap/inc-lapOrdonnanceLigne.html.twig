@@ -42,7 +42,7 @@
             ]
           {% endif %}
           {% if page.ligne.ligneData.isChronique == 'true' %}
-            <span class="label label-default">chronique</span>
+            <span class="badge badge-secondary">chronique</span>
           {% endif %}
         </div>
         <div>{{ page.ligne.medics.0.voieUtilisee }}
@@ -153,7 +153,7 @@
                   ]
                 {% endif %}
                 {% if page.ligne.ligneData.isChronique == 'true' %}
-                  <span class="label label-default">chronique</span>
+                  <span class="badge badge-secondary">chronique</span>
                 {% endif %}
               </div>
               <div>{{ medic.posoHumanCompleteTab|join('<br>') }}</div>

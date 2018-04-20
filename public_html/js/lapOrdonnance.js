@@ -625,10 +625,10 @@ function makeLigneOrdo(data, mode) {
       retour += ']';
     }
     if (data.ligneData.isALD == 'true' && mode == 'TTenCours') {
-      retour += '        <span class="label label-danger">ald</span>';
+      retour += '        <span class="badge badge-danger">ald</span>';
     }
     if (data.ligneData.isChronique == 'true') {
-      retour += '        <span class="label label-default">chronique</span>';
+      retour += '        <span class="badge badge-secondary">chronique</span>';
     }
     if (testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
       retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
@@ -833,10 +833,10 @@ function makeLigneOrdo(data, mode) {
         retour += ']';
       }
       if (data.ligneData.isALD == 'true' && mode == 'TTenCours') {
-        retour += '        <span class="label label-danger">ald</span>';
+        retour += '        <span class="badge badge-danger">ald</span>';
       }
       if (data.ligneData.isChronique == 'true') {
-        retour += ' <span class = "label label-default" >chronique</span>';
+        retour += ' <span class = "badge badge-secondary" >chronique</span>';
       }
 
       if (testIfAldOk(medic.ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {

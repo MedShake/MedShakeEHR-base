@@ -76,7 +76,7 @@
               {{ ligne.medic.nomUtileFinal }}
               <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
               {% if corLi[ligne['alerte']['indiceligneprescription']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-                <span class="label label-info">TT en cours</span>{% endif %}
+                <span class="badge badge-info">TT en cours</span>{% endif %}
             </td>
           </tr>
           <tr id="texte{{ keyTerrain }}l{{ keyLigne }}" class="collapse">
@@ -108,7 +108,7 @@
             <td>{{ ligne.medic.nomUtileFinal }}
               <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
               {% if corLi[ligne['alerte']['indiceligneprescription']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-                <span class="label label-info">TT en cours</span>{% endif %}
+                <span class="badge badge-info">TT en cours</span>{% endif %}
             </td>
           </tr>
         {% endfor %}
@@ -130,7 +130,7 @@
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
           {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-            <span class="label label-info">TT en cours</span>{% endif %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
         </td>
       </tr>
       {% for alerte in alertes['1'] %}
@@ -161,7 +161,7 @@
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
           {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-            <span class="label label-info">TT en cours</span>{% endif %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
         </td>
       </tr>
       {% for keyLigne, alerte in alertes['C'] %}
@@ -207,7 +207,7 @@
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
           {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-            <span class="label label-info">TT en cours</span>{% endif %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
         </td>
       </tr>
 
@@ -314,11 +314,11 @@
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ inter.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-              <span class="label label-info">TT en cours</span>{% endif %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
             +
             {{ inter.medic2.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_2']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-              <span class="label label-info">TT en cours</span>{% endif %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
           </td>
         </tr>
         <tr id="inter{{ niveau }}i{{ kinter }}" class="collapse">
@@ -339,11 +339,11 @@
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ incon.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-              <span class="label label-info">TT en cours</span>{% endif %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
             +
             {{ incon.medic2.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_2']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
-              <span class="label label-info">TT en cours</span>{% endif %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
           </td>
         </tr>
         <tr id="incon{{ niveau }}in" class="collapse">

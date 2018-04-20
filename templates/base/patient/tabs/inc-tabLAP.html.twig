@@ -35,7 +35,7 @@
   <div class="col-md-10">
 
     {# Onglets #}
-    <ul class="nav nav-tabs gras" role="tablist">
+    <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item">
         <a id="ordonnanceTabL" class="nav-link active" href="#ordonnanceTab" aria-selected="true" aria-controls="ordonnanceTab" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
       </li>
@@ -65,18 +65,18 @@
             <button type="button" class="btn btn-primary mr-1 nouvellePrescription">
               <span class="fa fa-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
-            <button type="button" class="btn btn-danger mr-1 analyserPrescription">
+            <button type="button" class="btn btn-secondary mr-1 analyserPrescription">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 Analyser</button>
 
             <div class="btn-group mr-1">
-              <button type="button" class="btn printAndSaveOrdo">
+              <button type="button" class="btn btn-secondary printAndSaveOrdo">
                 <span class="fa fa-print" aria-hidden="true"></span>
                 Imprimer et sauvegarder</button>
-              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <div class="dropdown-menu mr-1">
+              <div class="dropdown-menu mr-1 dropdown-menu-right">
                   <a href="#" class="dropdown-item printAndSaveOrdo">
                     <span class="fa fa-print" aria-hidden="true"></span>
                     Imprimer et sauvegarder</a>
@@ -114,9 +114,9 @@
         <div id="samsZoneOrdo"></div>
         <div class="row">
           <div id="conteneurOrdonnanceCourante" class="col-md-12">
-            <div class="alert alert-danger gras" role="alert">Prescriptions ALD</div>
+            <div class="alert alert-primary gras" role="alert">Prescriptions ALD</div>
             <div style="min-height:15px;" class="connectedOrdoZones ald conteneurPrescriptionsALD"></div>
-            <div class="alert alert-success gras" role="alert">Prescriptions standards</div>
+            <div class="alert alert-dark gras" role="alert">Prescriptions standards</div>
             <div style="min-height:15px;" class="connectedOrdoZones conteneurPrescriptionsG"></div>
           </div>
         </div>

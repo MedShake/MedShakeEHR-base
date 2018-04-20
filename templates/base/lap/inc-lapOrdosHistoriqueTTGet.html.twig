@@ -68,9 +68,9 @@
                         :
                         {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
                       {% if medic.ligneData.isALD == 'true' %}
-                        <span class="label label-danger">ald</span>{% endif %}
+                        <span class="badge badge-danger">ald</span>{% endif %}
                       {% if medic.ligneData.isChronique == 'true' %}
-                        <span class="label label-default">chronique</span>{% endif %}
+                        <span class="badge badge-secondary">chronique</span>{% endif %}
                     </li>
                   {% endfor %}
                 </ul>
@@ -93,9 +93,9 @@
                           :
                           {{ medic.value.posoHumanCompleteTab|join('<br>') }}</small>
                         {% if medic.ligneData.isALD == 'true' %}
-                          <span class="label label-danger">ald</span>{% endif %}
+                          <span class="badge badge-danger">ald</span>{% endif %}
                         {% if medic.ligneData.isChronique == 'true' %}
-                          <span class="label label-default">chronique</span>{% endif %}
+                          <span class="badge badge-secondary">chronique</span>{% endif %}
                       </li>
                     {% endfor %}
                   </ul>
