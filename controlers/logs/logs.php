@@ -49,13 +49,15 @@ if (isset($match['params']['instance'])) {
 $ids = msData::getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 $p['page']['logs']=msSQL::sql2tab("select pd.* , TRIM(CONCAT(COALESCE(f.value,''), ' ', TRIM(CONCAT(COALESCE(l.value, ''), ' ', COALESCE(b.value,''))))) as prescripteur, t.label, t.groupe
 from objets_data as pd
-left join objets_data as f on f.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and f.typeID in (NULL, '', '".$ids['firstname']."')
-left join objets_data as l on l.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and l.typeID in (NULL, '', '".$ids['lastname']."')
-left join objets_data as b on b.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and b.typeID in (NULL, '', '".$ids['birthname']."')
+left join objets_data as f on f.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and f.typeID in (NULL, '', '".$ids['firstname']."') and f.outdated='' and f.deleted=''
+left join objets_data as l on l.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and l.typeID in (NULL, '', '".$ids['lastname']."') and l.outdated='' and l.deleted=''
+left join objets_data as b on b.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and b.typeID in (NULL, '', '".$ids['birthname']."') and b.outdated='' and b.deleted=''
 left join data_types as t on t.id=pd.typeID
 where 1 $patientSel $typeSel $instance
-group by pd.id,t.id, f.id
+group by pd.id,t.id, f.id, b.id, l.id
 order by id desc limit 2000");
+
+
 
 if (isset($match['params']['patient'])) {
     $p['page']['patientID']=$match['params']['patient'];
