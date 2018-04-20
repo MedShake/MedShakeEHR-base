@@ -186,7 +186,6 @@ $(document).ready(function() {
       selected_event = eventClicked;
       if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
-        $('#titreRdv').html('Modifier le rendez-vous');
         $("#patientInfo").find("input,textarea").prop("readonly",true);
         $("#patientInfo").find("select").prop("disabled",true);
         $("#patientInfo").show();
@@ -288,6 +287,8 @@ $(document).ready(function() {
           $("#patientInfo").find("input,textarea").prop("readonly",true);
           $("#patientInfo").find("select").prop("disabled",true);
           $("#patientInfo").hide();
+        } else {
+          $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
         }
         $('#creerNouveau').modal('show');
         $(".modal-title").html("Nouveau rendez-vous");
@@ -310,6 +311,8 @@ $(document).ready(function() {
       if (jsEvent)
         jsEvent.stopImmediatePropagation();
       $(".fc-event").popover('hide');
+      $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
@@ -325,6 +328,7 @@ $(document).ready(function() {
   $("body").on("click", function(e){
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
   });
 
   $("#calendar").on("click", function(e){
@@ -361,7 +365,10 @@ $(document).ready(function() {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     $('#creerNouveau').modal('show');
-    $("#patientSearch").hide();
+    if ($('#calendar').attr('data-mode') == 'modal')
+      $("#patientSearch").hide();
+    else
+      $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
     $("#type").val(selected_event.type);
     $(".modal-title").html("Modifier un rendez-vous");
     $("#patientInfo").find("input,textarea").prop("readonly",true);
