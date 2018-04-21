@@ -377,9 +377,9 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
 function alert_popup(severity, message) {
   var titre = {info: 'Note: ', success: 'Succès: ', warning: 'Message: ', danger: 'Erreur: '}
   $("#alert_section").append('\
-    <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto" role="alert">\
+    <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto pl-4" role="alert">\
       <strong>' + titre[severity] + ' </strong>' + message +
-      '<button type="button" class="close" data-dismiss="alert" aria-label="Close">\
+      '<button type="button" class="pl-2 close" data-dismiss="alert" aria-label="Close">\
         <span aria-hidden="true">&times;</span>\
       </button>\
     </div>');

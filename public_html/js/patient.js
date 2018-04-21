@@ -713,7 +713,7 @@ function prepareEcho() {
     },
     dataType: "html",
     success: function(data) {
-
+      alert_popup("success", 'Vous pouvez maintenant procéder à l\'envoi d\'images depuis l\'appareil d\'examen');
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
