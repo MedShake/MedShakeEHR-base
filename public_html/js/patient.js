@@ -252,7 +252,7 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   // prépare la réception de documents par phonecapture
-  $(".prepareReceptionDoc").on("click", function(e) {
+  $("body").on("click", ".prepareReceptionDoc", function(e) {
     e.preventDefault();
     goToDicom = $(this).hasClass('dicom') ? true : false;
     $.ajax({
@@ -273,8 +273,14 @@ $(document).ready(function() {
   });
 
   $("#patientPhonecapture button").on("click", function() {
-    if (goToDicom)
-      return $('#ongletDicom')[0].click();
+    if (goToDicom) {
+      $('#ongletDicom')[0].click();
+      if ($('#tabDicom').html() != '') {
+        var url = $('#tabDicom').attr('data-rootUrl');
+        loadTabPatient(url, 'tabDicom');
+      }
+      return;
+    }
     getHistorique();
     getHistoriqueToday();
   });
