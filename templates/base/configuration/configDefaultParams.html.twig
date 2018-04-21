@@ -47,7 +47,7 @@
     <li class="breadcrumb-item active">Paramètres globaux</li>
   </ol>
 
-  <h1>Paramètres  globaux</h1>
+  <h1>Paramètres globaux</h1>
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
     <div class="row">
@@ -100,16 +100,11 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-10">
         {{ f.input ({
           'input' : {
             'type' : 'submit',
             'value' : 'Enregistrer',
-            'class' : 'btn btn-primary'
+            'class' : 'btn btn-primary mt-2'
           }
         }) }}
       </div>
