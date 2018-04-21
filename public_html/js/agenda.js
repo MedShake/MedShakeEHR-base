@@ -335,6 +335,11 @@ $(document).ready(function() {
     e.stopImmediatePropagation();
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+    selected_patient = undefined;
+    selected_action = undefined;
+    selected_event = undefined;
+    selected_period = undefined;
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -594,6 +599,7 @@ $(document).ready(function() {
   });
 
   $("body").on("click", function(e){
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
     if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0} || $(e.target).hasClass('ui-menu-item-wrapper')) {
       e.stopPropagation();
       return;
