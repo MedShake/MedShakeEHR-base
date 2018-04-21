@@ -31,7 +31,7 @@
   <div class="col-md-12">
     <button class="btn btn-light btn-sm tabDicomRefresh"><span class="fa fa-sync-alt" aria-hidden="true"></span> Rafraichir</button>
 
-    <button class="btn btn-light btn-sm prepareEcho"><span class="fa fa-share" aria-hidden="true"></span> Envoyer infos patient à échographe</button>
+    <button class="btn btn-light btn-sm prepareEcho"><span class="fa fa-share" aria-hidden="true"></span> Envoyer patient à l'imagerie</button>
 
     <button class="btn btn-light btn-sm prepareReceptionDoc dicom"><span class="fa fa-share" aria-hidden="true"></span> Envoyer patient à phonecapture</button>
 
@@ -42,12 +42,12 @@
 <div class="row">
   <div class="col-md-10">
     <div class="card">
-      <div class="card-header">Examens du patient</div>
+      <div class="card-header">Imagerie du patient</div>
       <div class="card-body">
         {% if page.studiesDcData %}
-          <p>Liste des examens du patient trouvés sur le serveur DICOM</p>
+          <p>Images du patient trouvées sur le serveur DICOM</p>
         {% else %}
-          <p>Pas d'examens référencés pour ce patient.</p>
+          <p>Aucune image référencée pour ce patient.</p>
         {% endif %}
       </div>
       {% if page.studiesDcData %}

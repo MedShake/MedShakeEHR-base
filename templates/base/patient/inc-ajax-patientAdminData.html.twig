@@ -54,7 +54,7 @@
         {# age #}
         {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
       {% endif %}
-       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% else %}&#9794;{% endif %}
+       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}&#9794;{% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
@@ -65,11 +65,6 @@
 
           <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
 
-          {% if page.correspondants is empty %}
-          <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
-            <span class="fa fa-link" aria-hidden="true"></span>
-          </button>
-          {% endif %}
         </div>
    </small>
 </h1>

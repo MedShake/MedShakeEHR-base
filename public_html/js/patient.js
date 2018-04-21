@@ -227,8 +227,8 @@ $(document).ready(function() {
     e.preventDefault();
     prepareEcho();
   });
-  if (typeof(dicomAutoSendPatient2Echo) != "undefined") {
-    if (dicomAutoSendPatient2Echo == true) {
+  if (typeof(dicomAutoSendPatient) != "undefined") {
+    if (dicomAutoSendPatient == true) {
       prepareEcho();
     }
   }

@@ -99,33 +99,6 @@
       <a class="addNewReglement btn btn-primary m-1" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">{{ page.formReglement[0]['label'] }}</a>
     {% endif %}
 
-    {% if config.dicomHost!='' %}
-      <div class="btn-group m-1">
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              DICOM
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-                <a href="#" class="catchLastDicomSrData dropdown-item">Récupérer dernières mesures</a>
-            </li>
-            <li>
-                <a href="#" class="catchOthersDicomSrData dropdown-item">Récupérer mesures antérieures</a>
-            </li>
-            <div role="separator" class="dropdown-divider"></div>
-            <li>
-                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/" target="_blank">Voir tous les examens du patient</a>
-            </li>
-            <div role="separator" class="dropdown-divider"></div>
-            <li>
-                <a href="#" class="dropdown-item prepareEcho">Envoyer patient à échographe</a>
-            </li>
-            <li>
-                <a href="#" class="dropdown-item prepareReceptionDoc dicom">Envoyer patient à phonecapture</a>
-            </li>
-          </ul>
-      </div>
-    {% endif %}
-
     {% if page.patient.ALD is empty %}
       <button class="btn btn-primary m-1 addNewCS" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create">Saisir une ALD</button>
     {% endif %}
