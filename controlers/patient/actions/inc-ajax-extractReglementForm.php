@@ -36,13 +36,13 @@ if (!isset($delegate)) {
       $userID=is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id'];
       $module=$_POST['module'];
   } else {
-      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
+      $res=msSQL::sqlunique("SELECT dt.module AS module, dt.formValues AS form, dt.id as porteur, dt.fromID AS userID FROM data_types as dt
         LEFT JOIN objets_data as od ON dt.id=od.typeID
         WHERE od.id='".$_POST['objetID']."' limit 1");
-      $reglementForm=$res[0]['form'];
-      $porteur=$res[0]['porteur'];
-      $userID=$res[0]['userID'];
-      $module=$res[0]['module'];
+      $reglementForm=$res['form'];
+      $porteur=$res['porteur'];
+      $userID=$res['userID'];
+      $module=$res['module'];
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if (!in_array($reglementForm, ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
