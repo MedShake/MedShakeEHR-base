@@ -78,9 +78,8 @@
 
         <ul class="dropdown-menu">
           <li><a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
-          {% if config.smtpTracking %}
-            <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
-          {% endif %}
+          <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
+
         </ul>
       </div>
 

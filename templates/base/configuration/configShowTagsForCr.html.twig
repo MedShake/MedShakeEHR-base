@@ -39,7 +39,7 @@
 {% block body %}
   <h1>Tags disponibles pour l'objet</h1>
 
-  <table class="table table-sm mb-0 table-hover  table-striped">
+  <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -51,7 +51,7 @@
     <tbody>
       {% for k,v in page.tabTags %}
         <tr>
-          <td class="gras" colspan="4">
+          <td class="gras table-primary" colspan="4">
             {% if k =='calc' %}Tags calculés{% else %}{{ v.catName }}{% endif %}
           </td>
         </tr>
