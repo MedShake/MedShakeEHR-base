@@ -448,7 +448,14 @@ $(document).ready(function() {
   });
 
   //voir le détail sur un ligne: clic sur titre ou pour document, clic sur oeil
-  $("body").on('click', '.trLigneExamen, .showDetDoc', function(e) {
+  $("body").on('click', '.trLigneExamen', function(e) {
+    if (!$(e.target).hasClass('dropdown-item') && !$(e.target).hasClass('btn') && !$(e.target.parentNode).hasClass('btn')) {
+      e.preventDefault();
+      showObjetDet($(this));
+    }
+  });
+
+  $("body").on('click', '.showDetDoc', function(e) {
     e.preventDefault();
     showObjetDet($(this));
   });
@@ -506,16 +513,6 @@ $(document).ready(function() {
       },
       error: function() {}
     });
-  });
-
-  $("body").on('click', '.btn-group', function(e){
-    if ($(this).parent().prop('tagName')=="TD") {
-      e.stopPropagation();
-      $(e.target).closest('.btn-group').children('.dropdown-menu').toggle();
-    }
-  });
-  $("body").on('click', function(){
-    $('tr .dropdown-menu').hide();
   });
 
   ////////////////////////////////////////////////////////////////////////

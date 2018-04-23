@@ -28,7 +28,7 @@
 
  <tr class="tr{{ cs.id }}{% if cs.important == 'y' %} table-danger{% endif %} trLigneExamen trReglement collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Règlement">
-    <a class="btn btn-light btn-sm" role="button" href="javascript:void()">
+    <a class="btn btn-light btn-sm showDetDoc" role="button">
       <span class="fa fa-euro-sign" aria-hidden="true"></span>
     </a>
   </td>
