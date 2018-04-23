@@ -26,8 +26,8 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
- ////////////////////////////////////////////////////////////////////////
- ///////// Déclaration variables
+////////////////////////////////////////////////////////////////////////
+///////// Déclaration variables
 
 var selected_patient;
 var selected_period;
@@ -116,7 +116,7 @@ $(document).ready(function() {
         }
       },
       synchronize: {
-        click: function(){
+        click: function() {
           synchronizeEvents();
         }
       },
@@ -156,11 +156,11 @@ $(document).ready(function() {
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background') {
-        element.attr("title",event.name);
-        element.attr("data-container","body");
-        element.attr("data-placement",'right');
-        element.attr("data-boundary",'viewport');
-        element.attr("data-html","true");
+        element.attr("title", event.name);
+        element.attr("data-container", "body");
+        element.attr("data-placement", 'right');
+        element.attr("data-boundary", 'viewport');
+        element.attr("data-html", "true");
         if (event.patientid == "0")
           element.attr("data-content", "Fermé");
         element.attr("data-template", '\
@@ -169,11 +169,11 @@ $(document).ready(function() {
 <div class=\"popover-body\"></div>\
 <div class=\"popover-footer btn-group m-1\">\
 <button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>' +
-(event.patientid=='0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
-'<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
+          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
+          '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
 <button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>' +
-(event.patientid=='0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
-'<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
+          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
+          '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
 </div>\
 </div>');
         element.popover();
@@ -182,12 +182,15 @@ $(document).ready(function() {
     eventClick: function(eventClicked, jsEvent, view) {
       jsEvent.stopPropagation();
       selected_patient = eventClicked.patientid;
-      selected_period = {start:eventClicked.start, end: eventClicked.end};
+      selected_period = {
+        start: eventClicked.start,
+        end: eventClicked.end
+      };
       selected_event = eventClicked;
       if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
-        $("#patientInfo").find("input,textarea").prop("readonly",true);
-        $("#patientInfo").find("select").prop("disabled",true);
+        $("#patientInfo").find("input,textarea").prop("readonly", true);
+        $("#patientInfo").find("select").prop("disabled", true);
         $("#patientInfo").show();
         if ($('#calendar').attr('data-mode') == 'lateral')
           $('#nettoyer').show();
@@ -197,15 +200,15 @@ $(document).ready(function() {
         $("#type").val(eventClicked.type);
         $("#duree").html(" " + $("#type").children("option:selected").attr("data-duree") + "mn");
         $('#datepicker input').val(eventClicked.start.format('DD/MM/YYYY à HH:mm'));
-        $(".fc-event[data-eventid="+eventClicked.id+"]").attr('data-content',
-            '<strong>' + eventClicked.title + '</strong><br>' +
-            $("#type option[value='"+eventClicked.type+"']").html() + '<br>' + eventClicked.motif +
-            (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
+        $(".fc-event[data-eventid=" + eventClicked.id + "]").attr('data-content',
+          '<strong>' + eventClicked.title + '</strong><br>' +
+          $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + eventClicked.motif +
+          (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
       }
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
-      $(".fc-event[data-eventid="+eventClicked.id+"]").popover('show');
+      $(".fc-event[data-eventid=" + eventClicked.id + "]").popover('show');
 
       $(".fc-bg.selected").removeClass("selected");
       setTimeout(function() {
@@ -256,8 +259,7 @@ $(document).ready(function() {
           selected_period = undefined;
           selected_event = undefined;
         }
-      }
-      else if (selected_action == "move") {
+      } else if (selected_action == "move") {
         selected_event.end = moment(start).add(selected_event.end.diff(selected_event.start));
         selected_event.start = start;
         modEvent(true);
@@ -265,16 +267,14 @@ $(document).ready(function() {
         selected_action = undefined;
         selected_event = undefined;
         selected_period = undefined;
-      }
-      else if (selected_event) {
+      } else if (selected_event) {
         $('div.popover').popover('hide');
         selected_action = undefined;
         selected_patient = undefined;
         selected_event = undefined;
         selected_period = undefined;
         return;
-      }
-      else if (end.diff(start)==moment.duration(slotDuration,"HH:mm:ss").as('milliseconds')) {
+      } else if (end.diff(start) == moment.duration(slotDuration, "HH:mm:ss").as('milliseconds')) {
         if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden'))
           return alert_popup('warning', 'Sélectionnez ou créez d\'abord un patient');
         var duree = $("#type option:first").attr('data-duree');
@@ -284,8 +284,8 @@ $(document).ready(function() {
         if ($('#calendar').attr('data-mode') == 'modal') {
           clean();
           $("#patientSearch").show();
-          $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
-          $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
+          $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
+          $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
           $("#patientInfo").hide();
         } else {
           $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
@@ -297,13 +297,11 @@ $(document).ready(function() {
         $('#buttonModifier').hide();
         $('div.popover').popover('hide');
         $('#datepicker input').val(start.format('DD/MM/YYYY à HH:mm'));
-      }
-      else {
+      } else {
         if (confirm("Souhaitez-vous fermer cette période ?")) {
           closePeriod();
           selected_period = undefined;
-        }
-        else
+        } else
           $('#calendar').fullCalendar('unselect');
       }
     },
@@ -319,19 +317,19 @@ $(document).ready(function() {
       jsEvent.stopImmediatePropagation();
       if (confirm("Souhaitez-vous fermer cette journée ?"))
         selected_period.start = date.format('YYYY-MM-DD') + ' ' + minTime;
-        selected_period.end = date.format('YYYY-MM-DD') + ' ' + maxTime
-        closePeriod();
-        selected_period = undefined;
+      selected_period.end = date.format('YYYY-MM-DD') + ' ' + maxTime
+      closePeriod();
+      selected_period = undefined;
     }
   })
 
-  $("body").on("click", function(e){
+  $("body").on("click", function(e) {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
   });
 
-  $("#calendar").on("click", function(e){
+  $("#calendar").on("click", function(e) {
     e.stopImmediatePropagation();
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
@@ -376,8 +374,8 @@ $(document).ready(function() {
       $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
     $("#type").val(selected_event.type);
     $(".modal-title").html("Modifier un rendez-vous");
-    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
-    $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
+    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
+    $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
     $("#patientInfo").show();
     $("#buttonAutresActions").show();
     $('#buttonCreer').hide();
@@ -427,7 +425,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// modal : observation des actions
 
-  $("#type").on("change", function(e){
+  $("#type").on("change", function(e) {
     $("#duree").html(" " + $(this).children("option:selected").attr("data-duree") + "mn");
     selected_period.end = getEnd(selected_period.start);
     if (selected_event) {
@@ -440,8 +438,8 @@ $(document).ready(function() {
     $("#search").val("");
     selected_patient = undefined;
     $("#patientInfo").show();
-    $("#patientInfo").find("input,textarea").prop("readonly",false).val("");
-    $("#patientInfo").find("select").prop("disabled",false);
+    $("#patientInfo").find("input,textarea").prop("readonly", false).val("");
+    $("#patientInfo").find("select").prop("disabled", false);
     $("#historiquePatient").hide();
     if ($('#calendar').attr('data-mode') == 'lateral')
       $('#nettoyer').show();
@@ -449,8 +447,8 @@ $(document).ready(function() {
 
   $("#patientInfo .form-group").addClass("mt-0 mb-2");
   $("#patientInfo h3").parent().remove();
-  $("#patientInfo .col-md-6").each(function(idx,element){
-      $(element).removeClass("col-md-6").addClass(idx%2?"col-lg-6 pl-lg-1":"col-lg-6 pr-lg-1");
+  $("#patientInfo .col-md-6").each(function(idx, element) {
+    $(element).removeClass("col-md-6").addClass(idx % 2 ? "col-lg-6 pl-lg-1" : "col-lg-6 pr-lg-1");
   });
   $("#patientInfo .col-md-4").removeClass("col-md-4").addClass("col-lg-4 pr-lg-1");
   $("#patientInfo .col-md-8").removeClass("col-md-8").addClass("col-lg-8 pl-lg-1");
@@ -476,7 +474,7 @@ $(document).ready(function() {
     $("#datepicker").data("DateTimePicker").toggle();
   });
 
-  $("#datepicker").on("dp.change", function(e){
+  $("#datepicker").on("dp.change", function(e) {
     selected_period.start = e.date;
     selected_period.end = getEnd(e.date);
     if (selected_event) {
@@ -485,7 +483,7 @@ $(document).ready(function() {
     }
   });
 
-  $("body").on("click", function(e){
+  $("body").on("click", function(e) {
     if ($("#datepicker").data("DateTimePicker"))
       $("#datepicker").data("DateTimePicker").hide();
   });
@@ -552,17 +550,17 @@ $(document).ready(function() {
     $('#creerNouveau').modal('hide');
   });
 
-  $("#creerNouveau").on("click", function(e){
+  $("#creerNouveau").on("click", function(e) {
     e.stopPropagation();
-    if ($("#buttonAutresActions").attr("aria-expanded")=="true")
+    if ($("#buttonAutresActions").attr("aria-expanded") == "true")
       $("#buttonAutresActions").dropdown('toggle');
   });
 
   $('#nettoyer').on("click", function() {
     clean();
     $("#patientSearch").show();
-    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
-    $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
+    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
+    $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
     $("#patientInfo").hide();
     $(this).hide();
   });
@@ -578,10 +576,18 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Mettre à jour les infos patient
-  $('.updatable').on('change', function() {
-    if (selected_patient)
-      setPeopleData($(this).val(), selected_patient, $(this).attr("data-typeID"), $(this), 0);
+
+  $(".updatable").typeWatch({
+    wait: 1000,
+    highlight: false,
+    allowSubmit: false,
+    captureLength: 1,
+    callback: function(value) {
+      if (selected_patient)
+        setPeopleData($(this).val(), selected_patient, $(this).attr("data-typeID"), $(this), 0);
+    }
   });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// modal : chercher / nouveau / editer
 
@@ -591,8 +597,8 @@ $(document).ready(function() {
     select: function(event, ui) {
       event.stopPropagation();
       $("#patientInfo").show();
-      $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
-      $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
+      $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
+      $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
       $('#nettoyer').show();
       getPatientAdminData(ui.item.patientID);
       selected_patient = ui.item.patientID;
@@ -601,9 +607,12 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// action par défaut sur clic
-  $("body").on("click", function(e){
+  $("body").on("click", function(e) {
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
-    if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0}) {
+    if (e.currentTarget.id in {
+        'creerNouveau': 0,
+        'calendar': 0
+      }) {
       e.stopPropagation();
       return;
     }
@@ -623,12 +632,11 @@ function getEnd(start) {
 
 // synchroniser les agendas externes et internes
 function synchronizeEvents() {
-  $(".fc-synchronize-button").attr("disabled","");
+  $(".fc-synchronize-button").attr("disabled", "");
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/synchronizeEvents/',
     type: "post",
-    data: {
-    },
+    data: {},
     dataType: "json",
     success: function(data) {
       $('#calendar').fullCalendar('refetchEvents');
@@ -724,8 +732,7 @@ function setEvent(id) {
     data += '&userID=' + $('#calendar').attr('data-userID');
     data += '&start=' + selected_period.start.format("YYYY-MM-DD%20HH:mm:SS");
     data += '&end=' + selected_period.end.format("YYYY-MM-DD%20HH:mm:SS");
-  }
-  else {
+  } else {
     data = {
       patientID: selected_patient,
       userID: $('#calendar').attr('data-userID'),
