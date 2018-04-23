@@ -186,7 +186,6 @@ $(document).ready(function() {
       selected_event = eventClicked;
       if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
-        $('#titreRdv').html('Modifier le rendez-vous');
         $("#patientInfo").find("input,textarea").prop("readonly",true);
         $("#patientInfo").find("select").prop("disabled",true);
         $("#patientInfo").show();
@@ -288,6 +287,8 @@ $(document).ready(function() {
           $("#patientInfo").find("input,textarea").prop("readonly",true);
           $("#patientInfo").find("select").prop("disabled",true);
           $("#patientInfo").hide();
+        } else {
+          $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
         }
         $('#creerNouveau').modal('show');
         $(".modal-title").html("Nouveau rendez-vous");
@@ -310,6 +311,8 @@ $(document).ready(function() {
       if (jsEvent)
         jsEvent.stopImmediatePropagation();
       $(".fc-event").popover('hide');
+      $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
@@ -325,12 +328,18 @@ $(document).ready(function() {
   $("body").on("click", function(e){
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
   });
 
   $("#calendar").on("click", function(e){
     e.stopImmediatePropagation();
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+    selected_patient = undefined;
+    selected_action = undefined;
+    selected_event = undefined;
+    selected_period = undefined;
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -361,7 +370,10 @@ $(document).ready(function() {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     $('#creerNouveau').modal('show');
-    $("#patientSearch").hide();
+    if ($('#calendar').attr('data-mode') == 'modal')
+      $("#patientSearch").hide();
+    else
+      $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
     $("#type").val(selected_event.type);
     $(".modal-title").html("Modifier un rendez-vous");
     $("#patientInfo").find("input,textarea").prop("readonly",true);
@@ -587,6 +599,7 @@ $(document).ready(function() {
   });
 
   $("body").on("click", function(e){
+    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
     if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0} || $(e.target).hasClass('ui-menu-item-wrapper')) {
       e.stopPropagation();
       return;
@@ -672,10 +685,10 @@ function getHistoriquePatient(patientID) {
         $('#historiquePatient ul').append(chaine);
 
       });
-      $('#HistoriqueRdvResume button.btn-default').html(data['stats']['total']);
-      $('#HistoriqueRdvResume button.btn-success').html(data['stats']['ok']);
-      $('#HistoriqueRdvResume button.btn-warning').html(data['stats']['annule']);
-      $('#HistoriqueRdvResume button.btn-danger').html(data['stats']['absent']);
+      $('#HistoriqueRdvResume button[title=total]').html(data['stats']['total']);
+      $('#HistoriqueRdvResume button[title=honorés]').html(data['stats']['ok']);
+      $('#HistoriqueRdvResume button[title=annulés]').html(data['stats']['annule']);
+      $('#HistoriqueRdvResume button[title=absent]').html(data['stats']['absent']);
       $('#historiquePatient').show();
     },
     error: function() {

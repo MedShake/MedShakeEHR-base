@@ -37,7 +37,7 @@
 {% block head %}
   {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
   <script>
-    var dicomAutoSendPatient2Echo = {{ config.dicomAutoSendPatient2Echo }};
+    var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
   </script>
 
   {{ parent() }}
@@ -128,11 +128,11 @@
       {% endif %}
       {% if config.dicomHost != '' %}
         <li class="nav-item">
-          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab">DICOM</a>
+          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab">Imagerie</a>
         </li>
       {% endif %}
       <li class="nav-item">
-        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab">Liens du patient</a>
+        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab">Relations</a>
       </li>
     </ul>
 

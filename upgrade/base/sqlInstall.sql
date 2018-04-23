@@ -621,7 +621,7 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('ecofaxPassword', 'Fax', 'default', 'texte', 'password', ''),
 ('dicomHost', 'DICOM', 'default', 'url/ip', '', ''),
 ('dicomPrefixIdPatient', 'DICOM', 'default', 'texte', '', '1.100.100'),
-('dicomAutoSendPatient2Echo', 'DICOM', 'default', 'true/false', '', 'false'),
+('dicomAutoSendPatient', 'DICOM', 'default', 'true/false', 'Envoi automatique du patient à l`imagerie à l\'ouverture du dossier', 'false'),
 ('dicomDiscoverNewTags', 'DICOM', 'default', 'true/false', '', 'true'),
 ('dicomWorkListDirectory', 'DICOM', 'default', 'dossier', '', ''),
 ('dicomWorkingDirectory', 'DICOM', 'default', 'dossier', '', ''),

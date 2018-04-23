@@ -31,11 +31,11 @@
     <div class="card col-md-12 p-0">
       <div class="card-header gras">Praticiens</div>
       <div class="card-body">
-        <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-2" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
+        <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
         <form class="form-inline">
           <div class="form-group" style="width:100%">
             <div class="input-group" style="width:100%">
-              <input class="form-control my-1" type="text" id="searchPratID" autocomplete="off"/>
+              <input class="form-control my-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
               <div class="input-group-append">
                 {{ f.select ({
                 'select' : {
@@ -60,7 +60,7 @@
 					<tr>
 						<th></th>
 						<th>Praticien</th>
-						<th>Relation</th>
+						<th>Qualité</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -79,7 +79,7 @@
 				<form class="form-inline">
 					<div class="form-group" style="width:100%">
             <div class="input-group" style="width:100%">
-  						<input class="form-control my-1" type="text" id="searchPatientID" autocomplete="off"/>
+  						<input class="form-control my-1" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
               <div class="input-group-append">
 					      {{ f.select ({
                 'select' : {
@@ -104,7 +104,7 @@
 						<th></th>
 						<th>Patient</th>
             <th>Date de naissance</th>
-						<th>Relation</th>
+						<th>Qualité</th>
 						<th></th>
 					</tr>
 				</thead>

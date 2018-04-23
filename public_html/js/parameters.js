@@ -31,7 +31,10 @@ var gotCals = false;
 $(document).ready(function() {
 
   //pour agenda
-  $('.date').datetimepicker({
+  $("body").on("click", '.date', function(e) {
+    e.stopPropagation();
+    $('.date').each(function(idx,el){if ($(el).data("DateTimePicker")) $(el).data("DateTimePicker").destroy()});
+    $(this).datetimepicker({
       format: 'HH:mm',
       icons: {
         time: 'far fa-clock',
@@ -44,9 +47,11 @@ $(document).ready(function() {
         clear: 'fa fa-trash',
         close: 'fa fa-times'
       } 
+    });
+    $(this).data("DateTimePicker").show();
   });
-  $('.date').on("click", function() {
-    $(this).data("DateTimePicker").toggle();
+  $('body').on("click", function() {
+    $('.date').each(function(idx,el){if ($(el).data("DateTimePicker")) $(el).data("DateTimePicker").destroy()});
   });
 
   //pour les consultations
@@ -59,7 +64,7 @@ $(document).ready(function() {
   });
 
   $('body').on("click", function(e){
-    $(".colorpicker").each(function(idx,el){if ($(this).data('colorpicker')) $(this).data('colorpicker').destroy()});
+    $(".colorpicker").each(function(idx,el){if ($(el).data('colorpicker')) $(el).data('colorpicker').destroy()});
   });
 
   $('body').on('change', ".colorpicker input", function(e){

@@ -26,7 +26,7 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='y';
+$debug='';
 $template="userParameters";
 
 /************
