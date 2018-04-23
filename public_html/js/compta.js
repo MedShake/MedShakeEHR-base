@@ -36,7 +36,6 @@ $(document).ready(function() {
     $("input[name=patientID]").val($(this).attr('data-patientID'));
     $("input[name=objetID]").val($(this).attr('data-objetID'));
     $("input[name=apayer]").val($(this).attr('data-aregler'));
-    $("input[name=module]").val($(this).attr('data-module'));
     $("input[name=porteur]").val($(this).attr('data-porteur'));
     $("input[name=dejapaye]").val($(this).attr('data-dejapaye'));
     $("input[name=dejaCheque]").val($(this).attr('data-dejaCheque'));

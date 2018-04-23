@@ -111,7 +111,7 @@
                   <td>
                       {% if reg.regleFacture - reg.dejaPaye > 0 %}
                       {% set apayer = reg.regleFacture - reg.dejaPaye %}
-                        <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-module="{{ reg.module }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                        <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                           Saisir règlement
                         </button>
                       {% endif %}

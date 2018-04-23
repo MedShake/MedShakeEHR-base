@@ -112,13 +112,12 @@ $user=array('id'=>$p['page']['pratsSelect'][0], 'module'=>$prat->getModule());
 $p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonoraires', $user);
 
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
       END as nom
       from objets_data as pd
-      left join data_types as dc on dc.id=pd.typeID
       left join actes as a on pd.parentTypeID=a.id
       left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
       left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
@@ -130,13 +129,12 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       .($impayes?"and important='y'":"")."
       )
   union
-      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module, 
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
       END as nom
       from objets_data as pd
-      left join data_types as dc on dc.id=pd.typeID
       left join actes as a on pd.parentTypeID=a.id
       left join objets_data as p on p.toID=pd.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
       left join objets_data as n on n.toID=pd.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
