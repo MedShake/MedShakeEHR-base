@@ -116,7 +116,7 @@ if (is_numeric($_POST['objetID'])) {
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
 
-        echo '<td></td><td colspan="4"><div class="card bg-light mb-2 p-2 appercu">';
+        echo '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
         echo msTools::cutHtmlHeaderAndFooter($version);
         echo '</div></td>';
     }

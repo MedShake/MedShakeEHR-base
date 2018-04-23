@@ -28,7 +28,7 @@
 
 {% if page.mail.mailHeaderInfos.from %}
  <div class="card col-md-12">
-     <div class="card-header py-0 gras">Message</div>
+     <div class="card-header gras">Message</div>
      <div class="card-body">
        <table class="table table-sm mb-0 table-hover ">
            <thead>
@@ -51,7 +51,7 @@
 {% endif %}
 
 <div class="card col-md-12">
-    <div class="card-header py-0 gras">Patient</div>
+    <div class="card-header gras">Patient</div>
     <div class="card-body">
 
         <table class="table table-sm mb-0 table-hover ">
@@ -172,7 +172,7 @@
 
 {% if page.mail.pjSerializeName %}
   <div class="card col-md-12">
-      <div class="card-header py-0 gras">Pièces jointes</div>
+      <div class="card-header gras">Pièces jointes</div>
       <div class="card-body">
           {% for pj in page.mail.pjSerializeName %}
               <a class="btn btn-info" role="button" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
@@ -187,7 +187,7 @@
 {% if page.mail.bioHprim %}
 
     <div class="card col-md-12">
-        <div class="card-header py-0 gras">Résultats biologiques extraits du corps du message</div>
+        <div class="card-header gras">Résultats biologiques extraits du corps du message</div>
         <table class="table table-sm mb-0 table-striped table-hover">
             <thead>
                 <tr>
@@ -223,7 +223,7 @@
 
 
 <div class="card col-md-12">
-    <div class="card-header py-0 gras">Corps du message</div>
+    <div class="card-header gras">Corps du message</div>
     <div class="card-body">
         {{ page.mail.corps|e|nl2br }}
     </div>

@@ -51,7 +51,7 @@
           <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
         {% else %}
           {% set patientIDmod = page['outputType'][patientID]['type']=='externe' and patientID in page.extToInt|keys ? page.extToInt[patientID] : patientID %}
-          <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} info{% elseif page['outputType'][patientID]['type'] == 'dcd' %} active dcd{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/">
+          <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} table-info{% elseif page['outputType'][patientID]['type'] == 'dcd' %} table-active dcd{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/">
         {% endif %}
           <td class="d-none d-sm-table-cell">
             {% if page.porp != 'pro' %}
