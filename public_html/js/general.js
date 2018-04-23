@@ -98,7 +98,7 @@ $(document).ready(function() {
         today: 'fa fa-crosshairs',
         clear: 'fa fa-trash',
         close: 'fa fa-times'
-      } 
+      }
     });
     $div.data("DateTimePicker").toggle();
   });
@@ -280,9 +280,12 @@ $(document).ready(function() {
 
 // faire flasher le background d'un élément
 function flashBackgroundElement(el) {
+  attrInitiaux = el.attr('class');
+  el.removeClass('bg-light');
   el.css("background", "#efffe8");
   el.delay(700).queue(function() {
     $(this).css("background","").dequeue();
+    $(this).attr('class' , attrInitiaux);
   });
 }
 

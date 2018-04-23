@@ -41,7 +41,7 @@ if( $samStatut == 'enabled' ) {
 
 $commentaire = $sam->getSamCommentForPatient();
 
-  $html = '<img class="pull-right" src="data:'.$data['logoMediaType'].';base64, '.$data['logo'].'" alt="logo" style="margin-left : 10px;"/>
+  $html = '<img class="float-right" src="data:'.$data['logoMediaType'].';base64, '.$data['logo'].'" alt="logo" style="margin-left : 10px;"/>
   <h4>'.$data['titre'].'</h4>
   <p>'.nl2br($data['liste_medicaments']).'</p>
   <p>'.str_replace(array('html:','href='),array('','target="_blank" href='),$data['messageLAPV']).'</p>

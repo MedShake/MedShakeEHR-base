@@ -58,23 +58,23 @@
   {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
   {# form display #}
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="nav-item">
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
       <a class="nav-link active" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
     </li>
     {% if page.hasAgenda %}
-      <li role="presentation" class="nav-item">
+      <li class="nav-item">
         <a class="nav-link" href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
       </li>
     {% endif %}
     {% if config.utiliserLap == 'true' %}
-      <li role="presentation">
-        <a href="#plap" aria-controls="plap" role="tab" data-toggle="tab">LAP</a>
+      <li class="nav-item">
+        <a class="nav-link" href="#plap" aria-controls="plap" role="tab" data-toggle="tab">LAP</a>
       </li>
     {% endif %}
   </ul>
 
-  <div class="tab-content" style="padding-top:10px">
+  <div class="tab-content">
 
     {# formulaire mot de passe MedShake #}
     <div role="tabpanel" class="tab-pane active" id="pmdp" >

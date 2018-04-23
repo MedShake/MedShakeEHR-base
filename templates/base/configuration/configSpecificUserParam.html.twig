@@ -63,14 +63,16 @@
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
     <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
-    <div class="row">
-      <ul class="nav nav-pills flex-column col-md-2">
-        {% for k,v in page.userParams %}
-          <li class="nav-item" role="presentation">
-            <a class="nav-link{% if loop.first %} active{% endif %}" href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ k }}</a>
-          </li>
-        {% endfor %}
-      </ul>
+    <div class="row mt-3">
+      <div class=" col-md-2">
+        <ul class="nav nav-pills flex-column">
+          {% for k,v in page.userParams %}
+            <li class="nav-item" role="presentation">
+              <a class="nav-link{% if loop.first %} active{% endif %}" href="#cat{{ k|replace({' ':'_', '\'':'_'}) }}" aria-controls="cat{{ k }}" role="tab" data-toggle="tab">{{ k }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
       <div class="col-md-10 tab-content">
         <div class="col-12">
           <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>

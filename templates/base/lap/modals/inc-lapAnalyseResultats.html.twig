@@ -62,7 +62,7 @@
       {% for keyTerrain, allergies in aallergies %}
         <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyTerrain }}">
           <td style="cursor: pointer">
-            <button type="button" class="btn btn-dangerbtn-sm">
+            <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ allergies['0']['alerte']['lib_ter'] }}
           </td>
@@ -97,7 +97,7 @@
 
         <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyRedon }}">
           <td style="cursor: pointer">
-            <button type="button" class="btn btn-dangerbtn-sm">
+            <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ redon['0']['alerte']['texte'] }}
           </td>
@@ -124,7 +124,7 @@
     {% for ligneThe, alertes in aposologies %}
       <tr class="gras {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
         <td>
-          <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
+          <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
@@ -155,7 +155,7 @@
     {% for ligneThe, alertes in acipemg %}
       <tr class="gras {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
         <td>
-          <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
+          <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
@@ -201,7 +201,7 @@
     {% for ligneThe, alertes in agrossesse %}
       <tr class="gras {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
         <td>
-          <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %}btn-sm">
+          <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
@@ -310,7 +310,7 @@
       {% for kinter, inter in data %}
         <tr class="gras {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
           <td>
-            <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %}btn-sm">
+            <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %} btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ inter.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
@@ -335,7 +335,7 @@
       {% for niveau, incon in aincompatibilites %}
         <tr class="gras danger" role="button" data-toggle="collapse" data-target="#incon{{ niveau }}in">
           <td>
-            <button type="button" class="btn btn-dangerbtn-sm">
+            <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
             {{ incon.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}

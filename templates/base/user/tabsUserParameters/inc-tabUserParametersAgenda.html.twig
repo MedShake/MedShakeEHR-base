@@ -31,19 +31,21 @@
 
 {% import "macroForm.html.twig" as f %}
 <div class="row">
-  <ul style="padding-top:10px" class="nav nav-pills flex-column col-md-2">
-    <li role="presentation">
-      <a href="#pa" aria-controls="pa" class="nav-link active" role="tab" data-toggle="tab">Horaires</a>
-    </li>
-    <li role="presentation">
-      <a href="#pt" aria-controls="pt" class="nav-link" role="tab" data-toggle="tab">Types de consultations</a>
-    </li>
-    {% if page.useClicRDV %}
-      <li role="presentation">
-        <a href="#pc" aria-controls="pc" class="nav-link" role="tab" data-toggle="tab">Paramètres ClicRDV</a>
+  <div class="col-md-2">
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item">
+        <a href="#pa" aria-controls="pa" class="nav-link active" role="tab" data-toggle="tab">Horaires</a>
       </li>
-    {% endif %}
-  </ul>
+      <li class="nav-item">
+        <a href="#pt" aria-controls="pt" class="nav-link" role="tab" data-toggle="tab">Types de consultations</a>
+      </li>
+      {% if page.useClicRDV %}
+        <li class="nav-item">
+          <a href="#pc" aria-controls="pc" class="nav-link" role="tab" data-toggle="tab">Paramètres ClicRDV</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
 
   <div class="col-md-9">
    <div class="tab-content" >

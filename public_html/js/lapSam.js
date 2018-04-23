@@ -246,6 +246,7 @@ function getDifferentsSamFromOrdo() {
  * @return {[type]} [description]
  */
 function refreshTheSamsZone(zone, sams) {
+  if(sams.length < 1) return;
   $.ajax({
     url: urlBase + '/lap/ajax/lapSamRefreshTheSamsZone/',
     type: 'post',

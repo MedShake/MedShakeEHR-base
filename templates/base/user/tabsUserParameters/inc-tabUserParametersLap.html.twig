@@ -25,16 +25,19 @@
  # @author fr33z00 <https://github.com/fr33z00>
  # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
-
  {% import "macroForm.html.twig" as f %}
- <ul style="padding-top:10px" class="nav nav-pills nav-stacked col-md-2">
-  <li class="active" role="presentation">
-    <a href="#lapMedics" aria-controls="lapMedics" role="tab" data-toggle="tab">Paramètres globaux</a>
-  </li>
-  <li role="presentation">
-    <a href="#lapSams" aria-controls="lapSams" role="tab" data-toggle="tab">SAM</a>
-  </li>
- </ul>
+ <div class="row">
+   <div class=" col-md-2">
+
+     <ul class="nav nav-pills flex-column">
+      <li class="nav-item">
+        <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramètres globaux</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
+      </li>
+     </ul>
+  </div>
 
  <div class="col-md-9">
    <div class="tab-content" >
@@ -100,3 +103,4 @@
 
    </div>
  </div>
+</div>
