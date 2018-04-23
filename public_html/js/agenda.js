@@ -284,8 +284,8 @@ $(document).ready(function() {
         if ($('#calendar').attr('data-mode') == 'modal') {
           clean();
           $("#patientSearch").show();
-          $("#patientInfo").find("input,textarea").prop("readonly",true);
-          $("#patientInfo").find("select").prop("disabled",true);
+          $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
+          $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
           $("#patientInfo").hide();
         } else {
           $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
@@ -376,8 +376,8 @@ $(document).ready(function() {
       $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
     $("#type").val(selected_event.type);
     $(".modal-title").html("Modifier un rendez-vous");
-    $("#patientInfo").find("input,textarea").prop("readonly",true);
-    $("#patientInfo").find("select").prop("disabled",true);
+    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
+    $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
     $("#patientInfo").show();
     $("#buttonAutresActions").show();
     $('#buttonCreer').hide();
@@ -561,8 +561,8 @@ $(document).ready(function() {
   $('#nettoyer').on("click", function() {
     clean();
     $("#patientSearch").show();
-    $("#patientInfo").find("input,textarea").prop("readonly",true);
-    $("#patientInfo").find("select").prop("disabled",true);
+    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
+    $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
     $("#patientInfo").hide();
     $(this).hide();
   });
@@ -577,15 +577,22 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
+  ///////// Mettre à jour les infos patient
+  $('.updatable').on('change', function() {
+    if (selected_patient)
+      setPeopleData($(this).val(), selected_patient, $(this).attr("data-typeID"), $(this), 0);
+  });
+  ////////////////////////////////////////////////////////////////////////
   ///////// modal : chercher / nouveau / editer
 
   //chercher patient : porte d'entrée d'un nouveau rdv
   $('#search').autocomplete({
     source: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
     select: function(event, ui) {
+      event.stopPropagation();
       $("#patientInfo").show();
-      $("#patientInfo").find("input,textarea").prop("readonly",true);
-      $("#patientInfo").find("select").prop("disabled",true);
+      $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly",true);
+      $("#patientInfo").find("select:not(.updatable)").prop("disabled",true);
       $('#nettoyer').show();
       getPatientAdminData(ui.item.patientID);
       selected_patient = ui.item.patientID;
@@ -594,13 +601,9 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// action par défaut sur clic
-  $(".ui-menu-item-wrapper,.ui-helper-hidden-accessible").on("click", function(e){
-    e.stopPropagation();
-  });
-
   $("body").on("click", function(e){
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
-    if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0} || $(e.target).hasClass('ui-menu-item-wrapper')) {
+    if (e.currentTarget.id in {'creerNouveau':0, 'calendar':0}) {
       e.stopPropagation();
       return;
     }
