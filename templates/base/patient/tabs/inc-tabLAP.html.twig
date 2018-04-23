@@ -61,13 +61,13 @@
       {# Onglet Ordonnance #}
       <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
         <div class="row bottom-space">
-          <div class="col-md-12 form-inline">
+          <div class="col-md-6">
             <button type="button" class="btn btn-primary mr-1 nouvellePrescription">
               <span class="fa fa-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
             <button type="button" class="btn btn-secondary mr-1 analyserPrescription">
-                <span class="fa fa-plus" aria-hidden="true"></span>
-                Analyser</button>
+              <span class="fa fa-sync-alt" aria-hidden="true"></span>
+              Analyser</button>
 
             <div class="btn-group mr-1">
               <button type="button" class="btn btn-secondary printAndSaveOrdo">
@@ -77,25 +77,32 @@
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
               <div class="dropdown-menu mr-1 dropdown-menu-right">
-                  <a href="#" class="dropdown-item printAndSaveOrdo">
-                    <span class="fa fa-print" aria-hidden="true"></span>
-                    Imprimer et sauvegarder</a>
-                  <a href="#" class="dropdown-item">
-                    <span class="fa fa-print" aria-hidden="true"></span>
-                    Imprimer sans infos prescripteur et sauvegarder</a>
-                  <a href="#" class="dropdown-item saveOrdo">
-                    <span class="fa fa-save" aria-hidden="true"></span>
-                    Sauvegarder uniquement</a>
+                <a href="#" class="dropdown-item printAndSaveOrdo">
+                  <span class="fa fa-print" aria-hidden="true"></span>
+                  Imprimer et sauvegarder</a>
+                <a href="#" class="dropdown-item">
+                  <span class="fa fa-print" aria-hidden="true"></span>
+                  Imprimer sans infos prescripteur et sauvegarder</a>
+                <a href="#" class="dropdown-item saveOrdo">
+                  <span class="fa fa-save" aria-hidden="true"></span>
+                  Sauvegarder uniquement</a>
               </div>
             </div>
+          </div>
 
-            <input type="text" id="ordoName" class="form-control mr-1" placeholder="Titre de l'ordonnance" value=""/>
+          <div class="col">
+            <input type="text" id="ordoName" class="form-control" placeholder="Titre de l'ordonnance" value=""/>
+          </div>
+
+          <div class="col-md-1">
             <div class="btn-group float-right">
               <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-wrench" aria-hidden="true"></span>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <a href="#" class="dropdown-item convertAllDci"><span class="fa fa-sync-alt" aria-hidden="true"></span> Convertir l'ordonnance en DCI</a>
+                <a href="#" class="dropdown-item convertAllDci">
+                  <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                  Convertir l'ordonnance en DCI</a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item removeAllLignesPrescription">
                   <span class="fa fa-trash" aria-hidden="true"></span>
@@ -108,10 +115,11 @@
                 <a href="#" class="dropdown-item lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
               </div>
             </div>
-
           </div>
+
         </div>
-        <div id="samsZoneOrdo"></div>
+        <div id="row samsZoneOrdo"></div>
+
         <div class="row">
           <div id="conteneurOrdonnanceCourante" class="col-md-12">
             <div class="alert alert-primary gras" role="alert">Prescriptions ALD</div>
@@ -121,9 +129,9 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 text-right coutOrdo">
-          </div>
+          <div class="col-md-12 text-right coutOrdo"></div>
         </div>
+
       </div>
 
       {# Onglet Traitement en cours #}
@@ -131,13 +139,13 @@
         <div class="row bottom-space">
           <div class="col-md-12">
             <div class="form-group">
-              <button type="button" class="btn btn-primary saisirTTenCours">
+              <button type="button" class="btn btn-secondary saisirTTenCours">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 Saisir un traitement en cours</button>
-              <button type="button" class="btn newCourrier" data-modele="modeleCourrierTtEnCours">
+              <button type="button" class="btn btn-light newCourrier" data-modele="modeleCourrierTtEnCours">
                 <span class="fa fa-print" aria-hidden="true"></span>
                 Imprimer</button>
-              <button type="button" class="btn effetsIndesirables">Effets indésirables</button>
+              <button type="button" class="btn btn-light effetsIndesirables">Effets indésirables</button>
             </div>
           </div>
         </div>
@@ -149,7 +157,7 @@
             </div>
             <div id="traitementEnCoursChronique" class="traitementEnCoursChronique"></div>
 
-            <div class="alert alert-warning gras" role="alert">Traitements ponctuels</div>
+            <div class="alert alert-secondary gras" role="alert">Traitements ponctuels</div>
             <div id="traitementEnCoursPonctuel" class="traitementEnCoursPonctuel"></div>
           </div>
         </div>

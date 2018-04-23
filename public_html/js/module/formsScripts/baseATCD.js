@@ -119,8 +119,8 @@ $(document).ready(function() {
         if (data['statut'] == 'ok') {
           origin.closest('tr').addClass("success");
           origin.attr('disabled', 'disabled');
-          $("#atcdTableauAllergieStruc").removeClass('hidden');
-          $("#atcdTableauAllergieStruc tbody").append('<tr class="tr{{ id }} warning"><td>' + label + '</td></tr>');
+          $("#atcdTableauAllergieStruc").removeClass('d-none');
+          $("#atcdTableauAllergieStruc tbody").append('<tr class="tr{{ id }} table-warning small"><td>' + label + '</td></tr>');
         } else {
           alert('Problème, rechargez la page !');
         }

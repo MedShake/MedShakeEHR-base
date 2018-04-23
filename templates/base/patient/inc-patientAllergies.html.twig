@@ -28,7 +28,7 @@
 
 <button class="btn btn-light btn-sm float-right getAllergiesPanel" data-toggle="modal" data-target="#searchAllergie" data-parentid="{{ parentTypeID }}" title="Ajouter une allergie"><i class="fa fa-plus"></i></button>
 
-<table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered{% if allergiesData is empty %} hidden{% endif %}">
+<table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered{% if allergiesData is empty %} d-none{% endif %}">
   <tbody>
     {% if allergiesData %}
       {% for id, aller in allergiesData %}
