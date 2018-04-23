@@ -278,12 +278,12 @@ public function getPresentations(&$rd, $colCode, $typCode)
             foreach ($rd[$k]['presentations'] as $presK=>$presV) {
 
                 // on se débarasse des médic hospitaliers si ...
-                if ($p['config']['theriaqueShowMedicHospi'] == 'non' and $presV['reservhop'] != 'NON') {
+                if ($p['config']['theriaqueShowMedicHospi'] == 'false' and $presV['reservhop'] != 'NON') {
                     unset($rd[$k]['presentations'][$presK]);
                     continue;
                 }
                 // on se débarasse des non commercialisés si ...
-                if ($p['config']['theriaqueShowMedicNonComer'] == 'non' and $presV['pre_etat_commer'] == 'S') {
+                if ($p['config']['theriaqueShowMedicNonComer'] == 'false' and $presV['pre_etat_commer'] == 'S') {
                     unset($rd[$k]['presentations'][$presK]);
                     continue;
                 }
