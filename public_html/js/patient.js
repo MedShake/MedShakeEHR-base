@@ -703,7 +703,7 @@ function listePatientDicomStudies() {
   });
 }
 
-function prepareEcho() {
+function prepareEcho(mode) {
 
   $.ajax({
     url: urlBase + '/patient/ajax/prepareEcho/',
@@ -713,7 +713,7 @@ function prepareEcho() {
     },
     dataType: "html",
     success: function(data) {
-      alert_popup("success", 'Vous pouvez maintenant procéder à l\'envoi d\'images depuis l\'appareil d\'examen');
+      if(mode != 'nopopup') alert_popup("success", 'L\'appareil d\'imagerie est maintenant correctement configuré');
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
