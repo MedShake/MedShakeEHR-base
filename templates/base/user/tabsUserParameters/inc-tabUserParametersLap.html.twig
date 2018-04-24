@@ -67,14 +67,14 @@
               <tr>
                 <td class="table-primary" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
               </tr>
-              <tr {% if page.lap.params.lapAlertPatientAllaitementSup3Ans != 'true' %} class="table-warning" {% endif %}>
+              <tr {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 != 'true' %} class="table-warning" {% endif %}>
                 <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
                 <td><input
                   class="alerteInfSeuilCertif"
                   name="lapAlertPatientTermeGrossesseSup46"
                   value="{{ page.lap.params.lapAlertPatientTermeGrossesseSup46 }}"
                   type="checkbox"
-                  {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %}checked="checked"{% endif %}
+                  {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %} checked="checked"{% endif %}
                   autocomplete="off"></td>
               </tr>
               <tr {% if page.lap.params.lapAlertPatientAllaitementSup3Ans != 'true' %} class="table-warning" {% endif %}>
@@ -84,7 +84,7 @@
                   name="lapAlertPatientAllaitementSup3Ans"
                   value="{{ page.lap.params.lapAlertPatientAllaitementSup3Ans }}"
                   type="checkbox"
-                  {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %}                   checked="checked"{% endif %}
+                  {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %}
                   autocomplete="off"></td>
               </tr>
             </tbody>
