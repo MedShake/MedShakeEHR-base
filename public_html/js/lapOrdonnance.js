@@ -597,6 +597,48 @@ function testIfAldOk(tabList) {
 }
 
 /**
+ * COmpléter les data de l'ordo courante avec risque allergique au retour d'analyse
+ * @param  {array} data tableau des risques allergiques par zone
+ * @return {void}
+ */
+
+function incrusterRisqueAllergique(data) {
+  if ($.isArray(data['ordoMedicsG'])) {
+    $.each(data['ordoMedicsG'], function(indexLigne, ligne) {
+      $.each(ligne, function(indexMedic, medic) {
+        ordoMedicsG[indexLigne]['medics'][indexMedic]['risqueAllergique'] = true;
+      });
+    });
+  }
+  if ($.isArray(data['ordoMedicsALD'])) {
+    $.each(data['ordoMedicsALD'], function(indexLigne, ligne) {
+      $.each(ligne, function(indexMedic, medic) {
+        ordoMedicsALD[indexLigne]['medics'][indexMedic]['risqueAllergique'] = true;
+      });
+    });
+  }
+  console.log(ordoMedicsG);
+  console.log(ordoMedicsALD);
+}
+
+/**
+ * Supprimer de l'ordo courante les risques allergiques
+ * @return {[type]} [description]
+ */
+function deleteRisqueAllergique() {
+  $.each(ordoMedicsALD, function(ligneIndex, ligneData) {
+    $.each(ordoMedicsALD[ligneIndex]['medics'], function(medicIndex, medic) {
+      delete ordoMedicsALD[ligneIndex]['medics'][medicIndex]['risqueAllergique'];
+    });
+  });
+  $.each(ordoMedicsG, function(ligneIndex, ligneData) {
+    $.each(ordoMedicsG[ligneIndex]['medics'], function(medicIndex, medic) {
+      delete ordoMedicsG[ligneIndex]['medics'][medicIndex]['risqueAllergique'];
+    });
+  });
+}
+
+/**
  * Construire ligne ordonnance
  * @param  {object} data      data de la ligne de prescription
  * @param  {String} [mode=''] [description]
