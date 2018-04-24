@@ -293,18 +293,39 @@ class msLapSAM
 
       if($dataID=msSQL::sqlUniqueChamp("select pd.id
       from objets_data as pd
-      where pd.typeID = '".$name2typeID['lapSamDisabled']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' pd.instance = '".$porteurID."' and pd.deleted='' and pd.outdated=''
+      where pd.typeID = '".$name2typeID['lapSamDisabled']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' and pd.instance = '".$porteurID."' and pd.deleted='' and pd.outdated=''
       order by updateDate desc
       limit 1")) {
 
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
-        $obj->etToID($this->_toID);
+        $obj->setToID($this->_toID);
         $obj->setDeletedObjetAndSons($dataID);
 
       }
     }
+  }
 
+/**
+ * Obtenir la liste des patients pour lesquels le SAM est bloqué
+ * @return array  tableau des patients
+ */
+  public function getDisabledPatientsListForSam() {
+    if($porteur = $this->getSamPorteurData()) {
+      $name2typeID=new msData;
+      $name2typeID=$name2typeID->getTypeIDsFromName(['lapSamDisabled','lastname', 'birthname', 'firstname']);
+
+      return msSQL::sql2tab("select p.value as prenom, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom, o.id as objetID, DATE_FORMAT(o.registerDate, '%d/%m/%Y %H:%i') as date, o.toID as patientID
+      from objets_data as o
+      left join objets_data as n on n.toID=o.toID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+      left join objets_data as bn on bn.toID=o.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      left join objets_data as p on p.toID=o.toID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+      where o.typeID = '".$name2typeID['lapSamDisabled']."' and o.instance='".$porteur['id']."' and o.deleted='' and o.outdated='' and o.fromID='".$this->_fromID."'
+      ");
+
+    } else {
+      return [];
+    }
   }
 
 /**

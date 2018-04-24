@@ -126,7 +126,9 @@ function cleanLignePrescriptionAvantRenouv(ligne) {
   ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours-1, 'days').format('DD/MM/YYYY');
   //retirer éventuels prescripteurs initiaux
   $.each(ligne.medics, function(index, l) {
-    ligne.medics[index].prescripteurInitialTT='';
+    delete ligne.medics[index].prescripteurInitialTT;
+    delete ligne.medics[index].risqueAllergique;
+
   });
 
   return ligne;
@@ -224,7 +226,7 @@ function construireTTenCours() {
 
       //SAMs
       $.each(TTenCours.TTChroniques[index]['medics'], function(medicIndex, medic) {
-        if (medic['sams'].length > 0) {
+        if ($.isArray(medic['sams'])) {
           $.each(medic['sams'], function(samIndex, sam) {
             if ($.inArray(sam, samsInTTenCours) == -1) samsInTTenCours.push(sam);
           });
@@ -240,7 +242,7 @@ function construireTTenCours() {
 
       //SAMs
       $.each(TTenCours.TTPonctuels[index]['medics'], function(medicIndex, medic) {
-        if (medic['sams'].length > 0) {
+        if ($.isArray(medic['sams'])) {
           $.each(medic['sams'], function(samIndex, sam) {
             if ($.inArray(sam, samsInTTenCours) == -1) samsInTTenCours.push(sam);
           });
