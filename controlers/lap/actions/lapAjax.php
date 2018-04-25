@@ -59,7 +59,8 @@ $acceptedModes=array(
     'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
     'lapSamAlerteForNew', // produire une alerte SAM
     'lapSamSaveSamComment', // sauver le commentaire patient sur le SAM
-    'lapSamToggleForPatient' // basculer l'état dispo / non dispo pour le patient
+    'lapSamToggleForPatient', // basculer l'état dispo / non dispo pour le patient
+    'lapOutilsSearchNewMedic' // recherche de médicaments pour lapOutils
 );
 
 if (!in_array($m, $acceptedModes)) {

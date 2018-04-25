@@ -1,0 +1,124 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : index de la page LAP pour les outils liés, non spécifiques
+ # à un patient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : LAP et BDM{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOutils.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<h1>LAP : outils</h1>
+
+{% import "macroForm.html.twig" as f %}
+<div class="row mt-3">
+  <div class="col-2">
+
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item">
+        <a class="nav-link  active" href="#rechercheMedics" data-toggle="tab">Recherche médicaments</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="col">
+    <div class="tab-content">
+
+
+      <div role="tabpanel" class="tab-pane active" id="rechercheMedics">
+
+          <h3>Recherche de médicaments - accès monographie</h3>
+          <div class="row">
+            <form id="rechercheMedic" class="col-12">
+              <div class="row">
+                <div class="col pr-0">
+                  <div class="form-group">
+                    <label for="txtRechercheMedic">Rechercher</label>
+                    <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="médicament, substance, code ..."/>
+                    <span id="txtRechercheMedicHB" class="form-text small">Taper ici le texte de votre recherche</span>
+                  </div>
+                </div>
+                <div class="col pl-1 pr-0">
+                  <div class="form-group">
+                    <label for="typeRechercheMedic">Dans</label>
+                    <select id="typeRechercheMedic" class="form-control custom-select" autocomplete="off">
+                      <option value="dci">Médicaments virtuels (DCI)</option>
+                      <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="spe">Spécialités commerciales</option>
+                      <option value="suba">Substances actives</option>
+                      <option value="atc">Code ATC</option>
+                    </select>
+                    <span id="typeRechercheMedicHB" class="form-text small">Lieu de recherche du texte indiqué</span>
+                  </div>
+                </div>
+                <div class="col pl-1">
+                  <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
+                    <label for="typeRechercheMedic">Montrer</label>
+                    <select id="retourRechercheMedic" class="form-control custom-select" autocomplete="off">
+                      <option value="1">Médicaments virtuels (DCI)</option>
+                      <option value="3">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="0">Spécialités commerciales</option>
+                    </select>
+                    <span id="retourRechercheMedicHB" class="form-text small">Médicaments retournés</span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row">
+            <div id="rechercheResultats" class="col p-0"></div>
+          </div>
+
+
+
+
+
+      </div>
+
+
+      <div role="tabpanel" class="tab-pane" id="lapSams">
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

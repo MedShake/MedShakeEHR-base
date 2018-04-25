@@ -21,28 +21,10 @@
  */
 
 /**
- * Login : page de login
+ * Login : index de la page LAP pour les outils liés, non spécifiques à un patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
  $debug='';
- $template="lap";
-
- if($p['config']['utiliserLap'] != 'true') die("Le LAP n'est pas activé");
-
- $p['page']['patient']['id']=$match['params']['patient'];
- $patient=new msPeople();
- $patient->setToID($match['params']['patient']);
-
- $lapPatient=new msLapPatient;
- $lapPatient->setToID($match['params']['patient']);
- $p['page']['patientAdminData']=$lapPatient->getPatientAdminData();
- $p['page']['patientBasicPhysio']=$lapPatient->getPatientBasicPhysioDataControle();
- $p['page']['patientAllergies']=$patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
- $p['page']['patientALD']=$patient->getALD();
- if(!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
-  foreach(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
-    $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
-  }
- }
+ $template="lapOutilsIndex";
