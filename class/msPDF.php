@@ -355,9 +355,12 @@ class msPDF
                 $p['page']['courrier']['medoc']['ald'][$k].= ']';
               }
               $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+              if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
+                if($m['risqueAllergique']) $p['page']['courrier']['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+              }
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['ald'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+              $p['page']['courrier']['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
@@ -369,8 +372,11 @@ class msPDF
               $p['page']['courrier']['medoc']['ald'][$k].= ']';
             }
             $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
+              if($m['risqueAllergique']) $p['page']['courrier']['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+            }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['ald'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+              $p['page']['courrier']['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           }
         }
@@ -388,9 +394,12 @@ class msPDF
                 $p['page']['courrier']['medoc']['standard'][$k].= ']';
               }
               $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+              if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
+                if($m['risqueAllergique']) $p['page']['courrier']['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+              }
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['standard'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+              $p['page']['courrier']['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
@@ -402,8 +411,11 @@ class msPDF
               $p['page']['courrier']['medoc']['standard'][$k].= ']';
             }
             $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
+              if($m['risqueAllergique']) $p['page']['courrier']['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+            }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['standard'][$k].= "\n". $l['ligneData']['consignesPrescription']."\n";
+              $p['page']['courrier']['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           }
         }

@@ -87,12 +87,12 @@ function getOrdonnance(ordonnanceID, destination) {
       ordonnanceVisu = data;
       if(destination == 'modal') {
         $('#conteneurOrdonnanceVisu div.conteneurPrescriptionsALD , #conteneurOrdonnanceVisu div.conteneurPrescriptionsG').html('')
-        construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], '#conteneurOrdonnanceVisu');
+        construireOrdonnance(data['ordoData'], data['ordoMedicsG'], data['ordoMedicsALD'], '#conteneurOrdonnanceVisu');
         var dateOrdo = moment(data.ordoData.creationDate, "YYYY-MM-DD HH:mm:ss");
         $('#modalVoirOrdonnance h4.modal-title').html("Ordonnance du " + dateOrdo.format("DD/MM/YYYY HH:mm") + " - Prescripteur : " + data.ordoData.prenom + " " + data.ordoData.nom);
         $('#modalVoirOrdonnance').modal('show');
       } else {
-        construireOrdonnance(data['ordoMedicsG'], data['ordoMedicsALD'], destination);
+        construireOrdonnance(data['ordoData'], data['ordoMedicsG'], data['ordoMedicsALD'], destination);
       }
       console.log(ordonnanceVisu);
       console.log("Obtenir ordonnance : OK");
