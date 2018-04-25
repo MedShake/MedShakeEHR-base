@@ -133,7 +133,7 @@ if($_POST['porp']=='pro') {
           FROM objets_data AS od left join data_types AS dt
           ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
           WHERE dt.name='relationExternePatient' AND od.toID IN ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
-} elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient']){
+} elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient'] == 'true'){
     $where.=" type in ('pro', 'patient') ";
 } else {
     $where.=" type='patient' ";
