@@ -1008,13 +1008,13 @@ function toogleImportant(el) {
     dataType: "html",
     success: function() {
       if (importanceActu == 'n') {
-        el.html('N\'est plus important');
+        el.html('Démarquer important');
         el.attr('data-importanceActu', 'y');
         el.closest('tr').addClass(el.closest('tr').hasClass('trReglement')?'table-danger':'table-info');
       }
       if (importanceActu == 'y') {
         el.closest('tr').removeClass('table-info').removeClass('table-danger');
-        el.html('Rendre important');
+        el.html('Marquer important');
         el.attr('data-importanceActu', 'n');
       }
     },
