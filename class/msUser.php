@@ -114,6 +114,7 @@ class msUser
             setcookie("userIdPc", '', (time()-$duration), "/", $domain);
             setcookie("userPassPc", '', (time()-$duration), "/", $domain);
             unset($_SESSION);
+            return null;
         }
     }
 

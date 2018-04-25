@@ -77,6 +77,9 @@ if (isset($_COOKIE['userIdPc'])) {
     $p['user']=msUser::userIdentificationPhonecapture();
     if (isset($p['user']['id'])) {
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
+    } else {
+        $p['user']['id']=null;
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
     }
     $p['user']['module']='phonecapture';
 } else {
