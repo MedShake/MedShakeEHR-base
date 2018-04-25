@@ -37,11 +37,11 @@
       <thead>
         <tr class="active">
           <th></th>
-          <th data-sort="alphanum" data-sort-default="asc" data-sort-onload="yes">Spécialité</th>
+          <th data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Spécialité</th>
           <th data-sort="string">Substances actives</th>
           <th data-sort="string">Excipients à effet notoire</th>
           <th data-sort="string">Forme</th>
-          <th data-sort="string">Prix/UCD</th>
+          <th data-sort="string" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
           <th data-sort="int">Taux&nbsp;SS</th>
         </tr>
       </thead>

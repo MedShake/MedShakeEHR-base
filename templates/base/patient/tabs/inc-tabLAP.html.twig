@@ -51,8 +51,8 @@
       <li class="nav-item">
         <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions préétablies</a>
       </li>
-      <li role="presentation" style="display : none;">
-        <a id="resultsDetaTabL" href="#resultsDetaTab" aria-controls="messages" role="tab" data-toggle="tab">Résultats détaillés</a>
+      <li class="nav-item" style="display: none;">
+        <a id="resultsDetaTabL" class="nav-link" href="#resultsDetaTab" aria-controls="messages" role="tab" data-toggle="tab">Résultats détaillés</a>
       </li>
     </ul>
 
@@ -155,10 +155,11 @@
               <button type="button" class="btn btn-secondary saisirTTenCours">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 Saisir un traitement en cours</button>
-              <button type="button" class="btn btn-light newCourrier" data-modele="modeleCourrierTtEnCours">
+              <button type="button" class="btn btn btn-outline-secondary newCourrier" data-modele="modeleCourrierTtEnCours">
                 <span class="fa fa-print" aria-hidden="true"></span>
                 Imprimer</button>
-              <button type="button" class="btn btn-light effetsIndesirables">Effets indésirables</button>
+              {# Nécessité d'une fonction de la bdm pour aboutir.
+              <button type="button" class="btn btn btn-outline-secondary effetsIndesirables">Effets indésirables</button> #}
             </div>
           </div>
         </div>

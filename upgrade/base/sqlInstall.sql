@@ -656,8 +656,8 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('theriaqueShowMedicHospi', 'LAP', 'default', 'true/false', '', 'true'),
 ('theriaqueShowMedicNonComer', 'LAP', 'default', 'true/false', '', 'false'),
 ('lapAlertPatientTermeGrossesseSup46', 'LAP', 'default', 'true/false', '', 'true'),
-('lapAlertPatientAllaitementSup3Ans', 'LAP', 'default', 'true/false', '', 'true');
-
+('lapAlertPatientAllaitementSup3Ans', 'LAP', 'default', 'true/false', '', 'true'),
+('lapSearchResultsSortBy', 'LAP', 'default', 'texte', '', 'nom');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),

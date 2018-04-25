@@ -41,7 +41,7 @@
     </thead>
     <tbody>
       {% for gen in page.mvPere.genThe %}
-      <tr {% if gen.sp_type_spe == 'R' %}class="info"{% endif %}>
+      <tr {% if gen.sp_type_spe == 'R' %}class="table-info"{% endif %}>
         <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ gen.sp_code }}/">{{ gen.sp_nomlong|trim('§') }}</a></td>
         <td>{% if gen.sp_type_spe == 'R' %}Référence{% else %}Générique{% endif %}</td>
       </tr>
@@ -75,7 +75,7 @@ mise à jour du groupe générique</td>
     </thead>
     <tbody>
       {% for gen in page.gen.genAfssaps %}
-      <tr {% if gen.sp_type_spe == 'R' %}class="info"{% endif %}>
+      <tr {% if gen.sp_type_spe == 'R' %}class="table-info"{% endif %}>
         <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ gen.sp_code }}/">{{ gen.sp_nomlong|trim('§') }}</a></td>
         <td>{% if gen.sp_type_spe == 'R' %}Référence{% else %}Générique{% endif %}</td>
       </tr>

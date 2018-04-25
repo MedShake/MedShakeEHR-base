@@ -262,7 +262,8 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('theriaqueShowMedicHospi', 'LAP', 'default', 'true/false', '', 'true'),
 ('theriaqueShowMedicNonComer', 'LAP', 'default', 'true/false', '', 'false'),
 ('lapAlertPatientTermeGrossesseSup46', 'LAP', 'default', 'true/false', '', 'true'),
-('lapAlertPatientAllaitementSup3Ans', 'LAP', 'default', 'true/false', '', 'true');
+('lapAlertPatientAllaitementSup3Ans', 'LAP', 'default', 'true/false', '', 'true'),
+('lapSearchResultsSortBy', 'LAP', 'default', 'texte', '', 'nom');
 
 INSERT IGNORE INTO configuration (`name`, `level`, `toID`, `value`)
 SELECT dt.name, 'user', od.toID, od.value FROM objets_data AS od

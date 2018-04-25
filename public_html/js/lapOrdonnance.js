@@ -755,6 +755,7 @@ function makeLigneOrdo(data, mode) {
       retour += '  </button>';
       retour += '  <div class="dropdown-menu dropdown-menu-right">';
       retour += '    <a href="#" data-speThe="' + data.medics[0].speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
+      retour += '     <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
       retour += '  </div>';
       retour += '</div>';
 
@@ -938,6 +939,7 @@ function makeLigneOrdo(data, mode) {
         retour += '  </button>';
         retour += '  <div class="dropdown-menu dropdown-menu-right">';
         retour += '    <a href="#" data-speThe="' + medic.speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
+        retour += '     <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
         retour += '  </div>';
         retour += '</div>';
       }

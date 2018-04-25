@@ -65,6 +65,15 @@
                 <td><input name="theriaqueShowMedicNonComer" value="{{ page.lap.params.theriaqueShowMedicNonComer }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr>
+                <td>Ordre de tris par défaut des recherches de médicaments à prescrire</td>
+                <td>
+                  <select class="form-control" name="lapSearchResultsSortBy" autocomplete="off">
+                    <option {% if page.lap.params.lapSearchResultsSortBy == 'nom' %} selected="selected"{% endif %}  value="nom">Nom de spécialité</option>
+                    <option {% if page.lap.params.lapSearchResultsSortBy == 'prixUcd' %} selected="selected"{% endif %} value="prixUcd">Prix estimatif par UCD</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
                 <td class="table-primary" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
               </tr>
               <tr {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 != 'true' %} class="table-warning" {% endif %}>

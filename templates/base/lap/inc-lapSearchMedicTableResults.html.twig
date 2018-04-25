@@ -39,9 +39,9 @@
       <thead>
         <tr class="active">
           <th></th>
-          <th class="col-md-10" data-sort="alphanum" data-sort-default="asc" data-sort-onload="yes">Nom</th>
+          <th class="col-md-10" data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Nom</th>
           <th data-sort="string">Forme</th>
-          <th data-sort="float">Prix/UCD</th>
+          <th data-sort="float" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
           <th data-sort="int">Taux&nbsp;SS</th>
         </tr>
       </thead>
