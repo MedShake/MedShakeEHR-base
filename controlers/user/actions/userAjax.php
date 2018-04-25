@@ -24,6 +24,7 @@
  * user : les requête ajax
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 
@@ -37,25 +38,13 @@ $acceptedModes=array(
     'userParametersAgenda', // changer les paramètres d'agenda
     'userParametersConsultations', // changer les paramètres de consultations
     'userParametersClicRdv', // changer les paramètres clicRDV
+    'userParametersLap', // changer les paramètres LAP
+    'displayListSamPatientsDisabled', // afficher la liste des patients concernés par la blocage d'un SAM
 );
 
-if (!in_array($m, $acceptedModes)) {
-    die;
+//inclusion
+if(is_file($p['homepath'].'controlers/user/actions/inc-ajax-'.$m.'.php')) {
+    include('inc-ajax-'.$m.'.php');
+} else {
+    die();
 }
-
-
-// Récupérer la liste des groupes de clicRDV
-if ($m=='updateGroups') {
-    include('inc-ajax-updateGroups.php');
-} elseif ($m=='updateCals') {
-    include('inc-ajax-updateCals.php');
-} elseif ($m=='updateConsults') {
-    include('inc-ajax-updateConsults.php');
-} elseif ($m=='userParametersAgenda') {
-    include('inc-ajax-userParametersAgenda.php');
-} elseif ($m=='userParametersConsultations') {
-    include('inc-ajax-userParametersConsultations.php');
-} elseif ($m=='userParametersClicRdv') {
-    include('inc-ajax-userParametersClicRdv.php');
-}
-

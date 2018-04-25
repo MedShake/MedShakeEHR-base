@@ -21,37 +21,42 @@
  */
 
 /**
- * Gestion de l'agenda et des rendez-vous
+ * Gestion des paramètres de configuration de MedShakeEHR au niveau général / module / user
  *
  * @author fr33z00 <https://github.com/fr33z00>
- * @contrib
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 class msConfiguration
 {
     private static $_usersParams;
 
-    ////////////////// NIVEAU DEFAULT \\\\\\\\\\\\\\\\\\\
+////////////////// NIVEAU DEFAULT \\\\\\\\\\\\\\\\\\\
 
-    //obtenir tous les paramètres de configuration par défaut
-    // return array[]: tableau des paramètres
+/**
+ * Obtenir tous les paramètres de configuration par défaut
+ * @return array tableau des paramètres
+ */
     public static function getDefaultParameters() {
         return msSQL::sql2tab("SELECT cat, type, name, value, description FROM configuration WHERE level='default'");
     }
 
-    //obtenir un paramètre de configuration par défaut
-    // $name nom du paramètre désiré
-    // $userID: id du user
-    // return value: valeur du paramètre
+/**
+ * Obtenir un paramètre de configuration par défaut
+ * @param  string $name nom du paramètre
+ * @return string       valeur du paramètre
+ */
     public static function getDefaultParameterValue($name) {
         return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='defaut'");
     }
 
-    ////////////////// NIVEAU USER \\\\\\\\\\\\\\\\\\\
+////////////////// NIVEAU USER \\\\\\\\\\\\\\\\\\\
 
-    // obtenir la liste des paramètres sustituables (non déjà subtitués) pour un user
-    // $user[]: user
-    // return array[name][cat, description]: tableau des paramètres
+/**
+ * Obtenir la liste des paramètres sustituables (non déjà subtitués) pour un user
+ * @param  array $user $user
+ * @return array       tableau des paramètres
+ */
     public static function listAvailableParameters($user) {
         $all=msSQL::sql2tabKey("SELECT cat, name, description FROM configuration WHERE level='default' ORDER BY cat, name", 'name');
         self::$_usersParams=self::getUserParamaters($user['id']);
@@ -61,9 +66,11 @@ class msConfiguration
         return array_filter($all, function($key){return !array_key_exists($key, self::$_usersParams);}, ARRAY_FILTER_USE_KEY);
     }
 
-    //obtenir les paramètres de configuration pour un user
-    // $user[]: user
-    // return array: tableau des paramètres
+/**
+ * Obtenir les paramètres de configuration pour un user
+ * @param  array $user $user
+ * @return array       tableau des paramètres
+ */
     public static function getAllParametersForUser($user) {
         $defaultParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='default'", 'name','value');
         $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='module' AND module='".$user['module']."'", 'name', 'value');
@@ -77,11 +84,14 @@ class msConfiguration
         return array_replace($defaultParams, $moduleParams, $userParams);
     }
 
-    //obtenir les paramètres de configuration d'une catégorie pour un user
-    // NOTE : si l'id du user est '', les valeurs du module sont retournées
-    //        si user n'est pas défini, les valeurs par défaut sont retournées
-    // $user[]: user
-    // return array: tableau des paramètres
+/**
+ * Obtenir les paramètres de configuration d'une catégorie pour un user
+ * NOTE : si l'id du user est '', les valeurs du module sont retournées
+ *        si user n'est pas défini, les valeurs par défaut sont retournées
+ * @param  string $cat  nom de la catégorie
+ * @param  array  $user user
+ * @return array       tableau des paramètres
+ */
     public static function getCatParametersForUser($cat, $user=array('id'=>'','module'=>'')) {
         $defaultParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='default' AND cat='".$cat."'", 'name', 'value');
         $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration
@@ -95,9 +105,11 @@ class msConfiguration
         return array_replace($defaultParams, $moduleParams, $userParams);
     }
 
-    //obtenir les paramètres niveau user d'un user
-    // $userID: id du user
-    // return array: tableau des paramètres
+/**
+ * Obtenir les paramètres niveau user d'un user
+ * @param  int $userID id du user
+ * @return array         tableau des paramètres
+ */
     public static function getUserParamaters($userID) {
         $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='user' AND toID='".$userID."'", 'name');
         if (!is_array($userParams)) {
@@ -119,12 +131,14 @@ class msConfiguration
         return $userParams;
     }
 
-    //obtenir un paramètre de configuration pour un user, éventuellement à la valeur fixée par le module ou par défaut
-    // NOTE : si l'id du user est '', c'est la valeur du module qui est retournée,
-    //        et si user n'est pas défini, la valeur par défaut est retournée
-    // $name nom du paramètre désiré
-    // $user[]: user
-    // return value: valeur du paramètre
+/**
+ * Obtenir un paramètre de configuration pour un user, éventuellement à la valeur fixée par le module ou par défaut
+ * NOTE : si l'id du user est '', c'est la valeur du module qui est retournée,
+ *        et si user n'est pas défini, la valeur par défaut est retournée
+ * @param  string $name nom du paramètre
+ * @param  array  $user user
+ * @return string       valeur du paramètre
+ */
     public static function getParameterValue($name, $user=array('id'=>'','module'=>'')) {
         if (strpos(strtolower($name), 'password')!==false) {
             $param=msSQL::sql2tabKey("SELECT level, CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) AS value FROM configuration WHERE name='".$name."' AND
@@ -144,10 +158,12 @@ class msConfiguration
         return NULL;
     }
 
-    //obtenir un paramètre de configuration pour un user, s'il existe au niveau user
-    // $name nom du paramètre désiré
-    // $userID: id du user
-    // return value: valeur du paramètre
+/**
+ * Obtenir un paramètre de configuration pour un user, s'il existe au niveau user
+ * @param  string $name   nom du paramètre
+ * @param  int $userID user ID
+ * @return string         valeur du paramètre
+ */
     public static function getUserParameterValue($name, $userID) {
         if (strpos(strtolower($name), 'password')!==false) {
         return msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) FROM configuration
@@ -156,16 +172,20 @@ class msConfiguration
         return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='user' AND toID='".$user['id']."'");
     }
 
-    //fixer (+ créer) un paramètre de configuration pour un user
-    // $name: nom du paramètre
-    // $value: valeur du paramètre
-    // $userID: id du user
-    // return value: true (succès) / false
+/**
+ * fixer (+ créer) un paramètre de configuration pour un user
+ * @param string  $name   nom du paramètres
+ * @param string $value  valeur du paramètre
+ * @param int $userID id du USER
+ * @return bool true (succès) / false
+ */
     public static function setUserParameterValue($name, $value, $userID) {
-        if (strpos(strtolower($name), 'password')!==false and $value!='')
-            return msSQL::sqlQuery("INSERT INTO configuration (name, level, toID, value) VALUES ('".$name."', 'user', '".$userID."', HEX(AES_ENCRYPT('".$value."',@password)))
-                ON DUPLICATE KEY UPDATE value=HEX(AES_ENCRYPT('".$value."',@password))");
-        return msSQL::sqlQuery("INSERT INTO configuration (name, level, toID, value) VALUES ('".$name."', 'user', '".$userID."', '".$value."')
-            ON DUPLICATE KEY UPDATE value='".$value."'");
+        if (strpos(strtolower($name), 'password')!==false and $value!='') {
+            return msSQL::sqlQuery("INSERT INTO configuration (name, level, toID, value) VALUES ('".msSQL::cleanVar($name)."', 'user', '".msSQL::cleanVar($userID)."', HEX(AES_ENCRYPT('".$value."',@password)))
+            ON DUPLICATE KEY UPDATE value=HEX(AES_ENCRYPT('".$value."',@password))");
+        }
+
+        return msSQL::sqlQuery("INSERT INTO configuration (name, level, toID, value) VALUES ('".msSQL::cleanVar($name)."', 'user', '".msSQL::cleanVar($userID)."', '".msSQL::cleanVar($value)."')
+        ON DUPLICATE KEY UPDATE value='".$value."'");
     }
 }

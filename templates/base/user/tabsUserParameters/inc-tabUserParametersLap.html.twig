@@ -25,82 +25,103 @@
  # @author fr33z00 <https://github.com/fr33z00>
  # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
- {% import "macroForm.html.twig" as f %}
- <div class="row">
-   <div class=" col-md-2">
+{% import "macroForm.html.twig" as f %}
+<div class="row">
+  <div class=" col-md-2">
 
-     <ul class="nav nav-pills flex-column">
+    <ul class="nav nav-pills flex-column">
       <li class="nav-item">
         <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramètres globaux</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
       </li>
-     </ul>
+    </ul>
   </div>
 
- <div class="col-md-9">
-   <div class="tab-content" >
+  <div class="col-md-9">
+    <div class="tab-content">
 
-   {# paramètres perso du LAP #}
-   <div role="tabpanel" class="tab-pane active" id="lapMedics">
-     <h3>Paramétrage du LAP</h3>
+      {# paramètres perso du LAP #}
+      <div role="tabpanel" class="tab-pane active" id="lapMedics">
+        <h3>Paramétrage du LAP</h3>
 
-     <table class="table table-sm table-hover">
-       <tbody>
-         <tr>
-           <td class="table-primary" colspan="2">Paramètres de recherche pour nouvelle prescription</td>
-         </tr>
-         <tr>
-           <td>Montrer les médicaments hospitaliers</td>
-           <td></td>
-         </tr>
-         <tr>
-           <td>Montrer les médicaments non commercialisés</td>
-           <td></td>
-         </tr>
-         <tr>
-           <td class="table-primary" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
-         </tr>
-         <tr>
-           <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
-           <td></td>
-         </tr>
-         <tr>
-           <td>Alerte pour allaitement supérieur à 3 ans</td>
-           <td></td>
-         </tr>
-       </tbody>
-     </table>
-   </div>
+        <div class="alert alert-warning" role="alert">
+          Le changement des paramètres sur cette page peut affecter le niveau d'efficacité du LAP et abaisser son seuil de performance en dessous de celui prévu lors de la certification. Le cas échéant, les options concernées apparaissent sur fond jaune.
+        </div>
 
-   {# paramètres perso des SAMs #}
-   <div role="tabpanel" class="tab-pane" id="lapSams">
-     <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
+        <form class="ajaxForm checkboxFixValue" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersLap/">
+          <table class="table table-hover">
+            <tbody>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres de recherche pour nouvelle prescription</td>
+              </tr>
+              <tr>
+                <td>Montrer les médicaments hospitaliers</td>
+                <td><input name="theriaqueShowMedicHospi" value="{{ page.lap.params.theriaqueShowMedicHospi }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicHospi == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td>Montrer les médicaments non commercialisés</td>
+                <td><input name="theriaqueShowMedicNonComer" value="{{ page.lap.params.theriaqueShowMedicNonComer }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
+              </tr>
+              <tr {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 != 'true' %} class="table-warning" {% endif %}>
+                <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
+                <td><input
+                  class="alerteInfSeuilCertif"
+                  name="lapAlertPatientTermeGrossesseSup46"
+                  value="{{ page.lap.params.lapAlertPatientTermeGrossesseSup46 }}"
+                  type="checkbox"
+                  {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %} checked="checked"{% endif %}
+                  autocomplete="off"></td>
+              </tr>
+              <tr {% if page.lap.params.lapAlertPatientAllaitementSup3Ans != 'true' %} class="table-warning" {% endif %}>
+                <td>Alerte pour allaitement supérieur à 3 ans</td>
+                <td><input
+                  class="alerteInfSeuilCertif"
+                  name="lapAlertPatientAllaitementSup3Ans"
+                  value="{{ page.lap.params.lapAlertPatientAllaitementSup3Ans }}"
+                  type="checkbox"
+                  {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %}
+                  autocomplete="off"></td>
+              </tr>
+            </tbody>
+          </table>
+          <input class="btn btn-primary mt-2" type="submit" value="Valider"></input>
+        </form>
+      </div>
 
-     <h4>SAMs gérés</h4>
+      {# paramètres perso des SAMs #}
+      <div role="tabpanel" class="tab-pane" id="lapSams">
+        <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
 
-     <table class="table table-sm table-hover">
-       <thead>
-         <tr>
-           <th>Identifiant</th>
-           <th>Titre</th>
-           <th>Reconnu</th>
-         </tr>
-       </thead>
-       <tbody>
-         {% for sam in page.lap.samsList %}
-         <tr>
-           <td>{{ sam.id }}</td>
-           <td>{{ sam.titre }}</td>
-           <td>{{ sam.methode }}</td>
-         </tr>
-         {% endfor %}
-       </tbody>
-     </table>
+        <h4>SAMs gérés</h4>
 
-   </div>
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr>
+              <th>Identifiant</th>
+              <th>Titre</th>
+              <th>Reconnu</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sam in page.lap.samsList %}
+              <tr>
+                <td>{{ sam.id }}</td>
+                <td>{{ sam.titre }}</td>
+                <td>{{ sam.methode }}</td>
+                <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm displayListSamPatientsDisabled"><i class="fas fa-user"></i></button></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
 
-   </div>
- </div>
+      </div>
+
+    </div>
+  </div>
 </div>

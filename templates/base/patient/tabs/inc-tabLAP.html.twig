@@ -65,9 +65,23 @@
             <button type="button" class="btn btn-primary mr-1 nouvellePrescription">
               <span class="fa fa-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
-            <button type="button" class="btn btn-secondary mr-1 analyserPrescription">
-              <span class="fa fa-sync-alt" aria-hidden="true"></span>
-              Analyser</button>
+
+            <div class="btn-group mr-1">
+              <button type="button" class="btn btn-secondary analyserPrescription">
+                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                Analyser</button>
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu mr-1">
+                <a href="#" class="dropdown-item analyserPrescription">Analyser les prescriptions en fonction du paramétrage utilisateur (défaut)</a>
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Voir sans aucune restriction</h6>
+                <a href="#" class="dropdown-item analyseWithNoRestrictionPhysio">Alertes données physiologiques patient</a>
+                <a href="#" class="dropdown-item analyseWithNoRestrictionSam">Alertes SAM</a>
+                <a href="#" class="dropdown-item analyserPrescription">Analyses prescriptions</a>
+              </div>
+            </div>
 
             <div class="btn-group mr-1">
               <button type="button" class="btn btn-secondary printAndSaveOrdo">
@@ -76,7 +90,7 @@
               <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <div class="dropdown-menu mr-1 dropdown-menu-right">
+              <div class="dropdown-menu mr-1">
                 <a href="#" class="dropdown-item printAndSaveOrdo">
                   <span class="fa fa-print" aria-hidden="true"></span>
                   Imprimer et sauvegarder</a>
@@ -131,7 +145,6 @@
         <div class="row">
           <div class="col-md-12 text-right coutOrdo"></div>
         </div>
-
       </div>
 
       {# Onglet Traitement en cours #}

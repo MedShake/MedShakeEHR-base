@@ -26,8 +26,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//print_r($_POST);
-
 // sortie de l'objet patient
 $lapPatient=new msLapPatient;
 $lapPatient->setToID($_POST['patientID']);
@@ -47,5 +45,6 @@ $lapOrdo->getAnalyseTheriaque();
 $retour=array(
   'html'=>$lapOrdo->getHtmlAnalysesResults(),
   'correspondanceLignes'=>$lapOrdo->getCorrespondanceLignes(),
+  'lignesRisqueAllergique'=>$lapOrdo->getLignesRisqueAllergique(),
 );
 echo json_encode($retour);

@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * fr33z00 <https://github.com/fr33z00>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,25 +21,19 @@
  */
 
 /**
- * LAP : ajax > basculer l'état dispo / non dispo du SAM pour le couple patient / user
+ * enregistrement des paramètres utilisateur LAP
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
 
-$sam = new msLapSAM;
-$sam->setFromID($p['user']['id']);
-$sam->setToID($_POST['patientID']);
-$sam->setSamID($_POST['samID']);
-
-$samStatut = $sam->getSamStatusForPatient();
-
-
-if( $samStatut == 'enabled' ) {
-  $sam->setSamDisabledForPatient();
-} else {
-  $sam->setSamEnabledForPatient();
+if($listesVar = msConfiguration::getCatParametersForUser('LAP')) {
+  foreach($listesVar as $k=>$v) {
+    if(isset($_POST[$k])) {
+      msConfiguration::setUserParameterValue($k, $_POST[$k], $p['user']['id']);
+    }
+  }
 }
 
-echo json_encode(array('statut'=>'ok'));
+header('Content-Type: application/json');
+echo json_encode(array('status'=>'success'));

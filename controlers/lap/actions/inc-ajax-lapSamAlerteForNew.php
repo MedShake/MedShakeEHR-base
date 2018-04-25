@@ -37,7 +37,7 @@ $data = $sam->getSamData();
 // procédure pour vérifier si pas bloqué ou pas pour le patient
 $samStatut = $sam->getSamStatusForPatient();
 
-if( $samStatut == 'enabled' ) {
+if( $samStatut == 'enabled' or $_POST['analyseWithNoRestriction'] == true ) {
 
 $commentaire = $sam->getSamCommentForPatient();
 
@@ -56,6 +56,7 @@ $commentaire = $sam->getSamCommentForPatient();
 
   echo json_encode(array(
     'alert'=>'ok',
+    'analyseWithNoRestriction'=>$_POST['analyseWithNoRestriction'],
     'samID'=>$_POST['samID'],
     'samData'=>$data,
     'html'=>$html
@@ -64,6 +65,7 @@ $commentaire = $sam->getSamCommentForPatient();
 } else {
   echo json_encode(array(
     'alert'=>'ko',
+    'analyseWithNoRestriction'=>$_POST['analyseWithNoRestriction'],
     'samID'=>$_POST['samID'],
     'samData'=>$data,
     'html'=>''

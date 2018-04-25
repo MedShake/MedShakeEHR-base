@@ -58,11 +58,33 @@ var voirOrdonnanceMode;
  */
 var ordoDejaAnalysee;
 
+var analyseWithNoRestriction = false;
+
 $(document).ready(function() {
 
   //Analyser l'ordonnance (avec tt en cours)
-  $("button.analyserPrescription").on("click", function(e) {
+  $(".analyserPrescription").on("click", function(e) {
+    e.preventDefault();
     analyserPrescription();
+  });
+
+  //Analyser les SAM ordonnance (avec tt en cours) sans restriction
+  $(".analyseWithNoRestrictionSam").on("click", function(e) {
+    e.preventDefault();
+    analyseWithNoRestriction = true;
+    getDifferentsSamFromOrdo();
+    samsToAlert = samsInOrdo;
+    samsAlertViewed = [];
+    testSamsAndAlert();
+    analyseWithNoRestriction = false;
+  });
+
+  // Voir les alertes patient physio sans restriction
+  $(".analyseWithNoRestrictionPhysio").on("click", function(e) {
+    e.preventDefault();
+    analyseWithNoRestriction = true;
+    checkGrossesseSup46EtAllaitSup3();
+    analyseWithNoRestriction = false;
   });
 
   // Ordonner par drag & drop l'ordonnance
@@ -158,11 +180,11 @@ $(document).ready(function() {
   // Détruire tout le contenu de l'ordonnance
   $('a.removeAllLignesPrescription').on("click", function(e) {
     if (confirm("Confirmez-vous la suppression de toutes les lignes de prescription ?")) {
-      e.preventDefault();
       cleanOrdonnance();
       ordoLiveSave();
       afficherCoutOrdo();
     }
+    e.preventDefault();
   });
 
   // convertire une ligne en DCI
@@ -278,6 +300,7 @@ function analyserPrescription() {
       $('#modalLapAlerte div.modal-body').html(data['html']);
       $('#modAlerteImprimer, #modAlerteModifier').show();
       $('#modAlerteFermer').hide();
+      incrusterRisqueAllergique(data.lignesRisqueAllergique);
       $('#modalLapAlerte').modal('show')
       ordoDejaAnalysee = true;
     },
@@ -452,13 +475,18 @@ function ordoLiveRestore() {
           }
           construireOrdonnance(data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
         }
+
+        // retrait des infos allergiques
+        deleteRisqueAllergique();
         // Cout ordo
         afficherCoutOrdo();
         //SAMS : mise à jour
         getDifferentsSamFromOrdo();
         testSamsAndDisplay();
-        samsToAlert=samsInOrdo;
+        samsToAlert = samsInOrdo;
+        samsAlertViewed = [];
         testSamsAndAlert();
+
         console.log("Restoration automatique ordonnance : OK");
 
       } else if (data['statut'] == 'nofile') {
@@ -594,6 +622,48 @@ function testIfAldOk(tabList) {
     }
   }
   return false;
+}
+
+/**
+ * COmpléter les data de l'ordo courante avec risque allergique au retour d'analyse
+ * @param  {array} data tableau des risques allergiques par zone
+ * @return {void}
+ */
+
+function incrusterRisqueAllergique(data) {
+  if ($.isArray(data['ordoMedicsG'])) {
+    $.each(data['ordoMedicsG'], function(indexLigne, ligne) {
+      $.each(ligne, function(indexMedic, medic) {
+        ordoMedicsG[indexLigne]['medics'][indexMedic]['risqueAllergique'] = true;
+      });
+    });
+  }
+  if ($.isArray(data['ordoMedicsALD'])) {
+    $.each(data['ordoMedicsALD'], function(indexLigne, ligne) {
+      $.each(ligne, function(indexMedic, medic) {
+        ordoMedicsALD[indexLigne]['medics'][indexMedic]['risqueAllergique'] = true;
+      });
+    });
+  }
+  console.log(ordoMedicsG);
+  console.log(ordoMedicsALD);
+}
+
+/**
+ * Supprimer de l'ordo courante les risques allergiques
+ * @return {[type]} [description]
+ */
+function deleteRisqueAllergique() {
+  $.each(ordoMedicsALD, function(ligneIndex, ligneData) {
+    $.each(ordoMedicsALD[ligneIndex]['medics'], function(medicIndex, medic) {
+      delete ordoMedicsALD[ligneIndex]['medics'][medicIndex]['risqueAllergique'];
+    });
+  });
+  $.each(ordoMedicsG, function(ligneIndex, ligneData) {
+    $.each(ordoMedicsG[ligneIndex]['medics'], function(medicIndex, medic) {
+      delete ordoMedicsG[ligneIndex]['medics'][medicIndex]['risqueAllergique'];
+    });
+  });
 }
 
 /**

@@ -134,3 +134,6 @@ if ($p['page']['useClicRDV']) {
 $lapSams = new msLapSAM;
 $lapSams->getSamXmlFileContent();
 $p['page']['lap']['samsList']=$lapSams->getSamListInXml();
+
+// Paramètres de l'utilisateur
+$p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', array('id'=>$p['user']['id'], 'module'=>''));

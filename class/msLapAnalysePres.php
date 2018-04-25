@@ -150,6 +150,8 @@ class msLapAnalysePres extends msLap
 
     private $_alertesDopageEtConducteur;
 
+    private $_tabLignesRisqueAllergiques;
+
 /**
  * Set the value of patient objet
  * @param mixed _ordonnanceContenu
@@ -359,10 +361,25 @@ class msLapAnalysePres extends msLap
               'alerte'=>$v,
               'medic'=>$this->_getMedicFromIndiceLignePrescription($v['indiceligneprescription'])
             );
+            $this->_tabLignesRisqueAllergiques[] = $v['indiceligneprescription'];
           }
         }
       }
       return $this->_alertesAllergies=$tab;
+    }
+
+/**
+ * Retourner les lignes d'ordo qui correspondent à un risque allergique
+ * @return array lignes d'ordonnance
+ */
+    public function getLignesRisqueAllergique() {
+      if(!empty($this->_tabLignesRisqueAllergiques)) {
+        foreach($this->_tabLignesRisqueAllergiques as $l) {
+          $tab[$this->_correspondanceLignes[$l]['zone']][$this->_correspondanceLignes[$l]['ligne']][$this->_correspondanceLignes[$l]['medic']]=1;
+        }
+        return $tab;
+      }
+      return [];
     }
 
 /**

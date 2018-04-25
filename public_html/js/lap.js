@@ -137,10 +137,12 @@ function getAldActivesListe() {
  * @return {void}
  */
 function checkGrossesseSup46EtAllaitSup3() {
-  console.log('ok');
   var msg = '';
   $('#patientLateralData tr.alerteMsg').each(function() {
-    msg = msg + '<br>- ' + $(this).attr('data-alertemsg');
+    typeAlerte = $(this).attr('data-typeAlert');
+    if ((typeAlerte == 'lapAlertPatientTermeGrossesseSup46' && lapAlertPatientTermeGrossesseSup46 == true) || (typeAlerte == 'lapAlertPatientAllaitementSup3Ans' && lapAlertPatientAllaitementSup3Ans == true) || analyseWithNoRestriction == true) {
+      msg = msg + '<br>- ' + $(this).attr('data-alertemsg');
+    }
   });
   if (msg.length > 10) {
     msg = "Veuillez noter les informations suivantes : " + msg;
