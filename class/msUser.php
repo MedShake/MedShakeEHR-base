@@ -99,23 +99,20 @@ class msUser
         if (!isset($_COOKIE['userPassPc'])) {
             return msUser::cleanBadAuth();
         }
-
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".msSQL::cleanVar($_COOKIE['userIdPc'])."' LIMIT 1");
+        
+        $userID=msSQL::cleanVar($_COOKIE['userIdPc']); 
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".$userID."' LIMIT 1");
 
         //recherche clef de salage spécifique au user
-        $name2typeID = new msData();
-        if ($phonecaptureFingerprintID = $name2typeID->getTypeIDFromName('phonecaptureFingerprint')) {
-            $clef=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$phonecaptureFingerprintID."' and toID='".msSQL::cleanVar($_COOKIE['userIdPc'])."' and outdated='' and deleted='' limit 1");
-            if (!empty(trim($clef))) {
-                $p['config']['phonecaptureFingerprint']=$clef;
-            }
-        }
+        $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', $userID);
 
         if ($_COOKIE['userPassPc']==md5(md5(sha1(md5($user['pass'].$p['config']['phonecaptureFingerprint']))))) {
             return $user;
         } else {
-            setcookie("userIdPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
-            setcookie("userPassPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+            $duration=msConfiguration::getParameterValue('phonecaptureCookieDuration');
+            $domain=msConfiguration::getParameterValue('cookieDomain');
+            setcookie("userIdPc", '', (time()-$duration), "/", $domain);
+            setcookie("userPassPc", '', (time()-$duration), "/", $domain);
             unset($_SESSION);
         }
     }

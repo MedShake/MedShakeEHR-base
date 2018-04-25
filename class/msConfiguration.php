@@ -173,9 +173,9 @@ class msConfiguration
     public static function getUserParameterValue($name, $userID) {
         if (strpos(strtolower($name), 'password')!==false) {
         return msSQL::sqlUniqueChamp("SELECT CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) FROM configuration
-            WHERE name='".$name."' AND level='user' AND toID='".$user['id']."'");
+            WHERE name='".$name."' AND level='user' AND toID='".$userID."'");
         }
-        return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='user' AND toID='".$user['id']."'");
+        return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='user' AND toID='".$userID."'");
     }
 
 /**

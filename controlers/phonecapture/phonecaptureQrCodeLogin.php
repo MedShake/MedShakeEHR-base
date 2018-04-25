@@ -21,9 +21,10 @@
  */
 
 /**
- * Phonecpature : landingpage QR code
+ * Phonecapture : landingpage QR code
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
@@ -52,13 +53,7 @@ if (isset($match['params']['key'])) {
       $userPass=msSQL::sqlUniqueChamp("select CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($params[0])."' and LENGTH(pass)>0");
 
       //recherche de fingeprint specifique utilisateur
-      $name2typeID = new msData();
-      if ($phonecaptureFingerprintID = $name2typeID->getTypeIDFromName('phonecaptureFingerprint')) {
-          $clef=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$phonecaptureFingerprintID."' and toID='".msSQL::cleanVar($params[0])."' and outdated='' and deleted='' limit 1");
-          if (!empty(trim($clef))) {
-              $p['config']['phonecaptureFingerprint']=$clef;
-          }
-      }
+      $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', msSQL::cleanVar($params[0]));
 
       $userPass=md5(md5(sha1(md5($userPass.$p['config']['phonecaptureFingerprint']))));
 

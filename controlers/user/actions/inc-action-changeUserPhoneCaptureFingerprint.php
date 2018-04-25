@@ -25,38 +25,14 @@
  * (Révoquer les périphériques phonecapture logués)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 if (is_numeric($p['user']['id'])) {
-    // Vérification de l'éxistence en base du data_type
-    $dataType = new msData();
-    if (!$dataType->checkDataTypeExistByName('phonecaptureFingerprint')) {
-        $data= array(
-          'groupe'=>'user',
-          'name'=>'phonecaptureFingerprint',
-          'placeholder'=>'indiquer une chaine aléatoire de caractères',
-          'label'=>'phonecaptureFingerprint',
-          'description'=>'clef utilisateur pour l\'identification des périphériques phonecapture',
-          'formType'=>'text',
-          'type'=>'base',
-          'cat'=>56,
-          'fromID'=>$p['user']['id'],
-          'durationLife' => 3600,
-          'displayOrder' => 0
-        );
-
-        $retour=$dataType->createOrUpdateDataType($data);
-        if ($retour['status']!='ok') {
-            die("Problème de création du data_type phonecaptureFingerprint");
-        }
-    }
 
     // Création / renouvellement de phonecaptureFingerprint de l'utilisateur
-    $objet = new msObjet();
-    $objet->setFromID($p['user']['id']);
-    $objet->setToID($p['user']['id']);
     $key=substr(md5(rand(1, 10).rand(20, 99)), 0, 10);
-    $objet->createNewObjetByTypeName('phonecaptureFingerprint', $key);
+    msConfiguration::setUserParameterValue('phonecaptureFingerprint', $key, $p['user']['id']);
 }
 
 msTools::redirRoute('userPhoneCaptureAccess');

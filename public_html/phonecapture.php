@@ -82,6 +82,7 @@ if (isset($_COOKIE['userIdPc'])) {
 } else {
     $p['user']=null;
     $p['user']['id']=null;
+    $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
 ///////// Controler else -> 404
