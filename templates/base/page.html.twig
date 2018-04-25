@@ -103,7 +103,7 @@
                         </li>
                       {% elseif page.agendaUsers|length == 1 and user.id in page.agendaUsers|keys %}
                         {% for k,v in page.agendaUsers %}
-                          <li nav-item">
+                          <li class="nav-item">
                               <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
                               <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">Agenda</a>
                           </li>
