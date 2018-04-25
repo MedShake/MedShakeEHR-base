@@ -101,6 +101,8 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirRoute('userLogIn');
     }
+    // compléter la config par défaut
+    array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
 ///////// Controler

@@ -76,7 +76,7 @@ $match = $router->match();
 if (isset($_COOKIE['userIdPc'])) {
     $p['user']=msUser::userIdentificationPhonecapture();
     if (isset($p['user']['id'])) {
-        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
     $p['user']['module']='phonecapture';
 } else {

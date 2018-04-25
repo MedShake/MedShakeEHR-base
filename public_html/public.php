@@ -62,6 +62,9 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+/////////// Compléter le tableau des paramètres de configuration par défaut
+$p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
 /////////// Validators loader
 require $homepath.'fonctions/validators.php';
 
