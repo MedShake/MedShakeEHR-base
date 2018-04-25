@@ -251,10 +251,9 @@ function construireTTenCours() {
 
     });
   }
-  $(function () {
+  $(function() {
     $('[data-toggle="popover"]').popover()
   })
-
   refreshTheSamsZone('ttencours', samsInTTenCours);
   testSamsAndDisplay();
 }

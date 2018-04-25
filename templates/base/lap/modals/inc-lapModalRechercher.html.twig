@@ -65,11 +65,11 @@
                     <div class="form-group">
                       <label for="typeRechercheMedic">Dans</label>
                       <select id="typeRechercheMedic" class="form-control custom-select form-control-sm" autocomplete="off">
-                        <option value="dci">Médicaments virtuels (DCI)</option>
-                        <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
-                        <option value="spe">Spécialités commerciales</option>
-                        <option value="suba">Substances actives</option>
-                        <option value="atc">Code ATC</option>
+                        <option {% if config.lapSearchDefaultType == 'dci' %} selected="selected"{% endif %} value="dci">Médicaments virtuels (DCI)</option>
+                        <option {% if config.lapSearchDefaultType == 'dcispe' %} selected="selected"{% endif %} value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                        <option {% if config.lapSearchDefaultType == 'spe' %} selected="selected"{% endif %} value="spe">Spécialités commerciales</option>
+                        <option {% if config.lapSearchDefaultType == 'suba' %} selected="selected"{% endif %} value="suba">Substances actives</option>
+                        <option {% if config.lapSearchDefaultType == 'atc' %} selected="selected"{% endif %} value="atc">Code ATC</option>
                       </select>
                       <span id="typeRechercheMedicHB" class="form-text small">Lieu de recherche du texte indiqué</span>
                     </div>

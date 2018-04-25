@@ -569,7 +569,9 @@ function construireHtmlLigneOrdonnance(ligne, methode, destination, parentdestin
   } else if (methode == 'replace') {
     destination.replaceWith(nouvelleLigneOrdo);
   }
-
+  $(function() {
+    $('[data-toggle="popover"]').popover()
+  })
 }
 
 /**
@@ -727,11 +729,11 @@ function makeLigneOrdo(data, mode) {
     }
 
     if (data.medics[0].prescripteurInitialTT) {
-      retour += ' <a tabindex="0" class="btn btn-light btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></a>';
+      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></button>';
     }
 
     if (data.medics[0].prescriptionMotif) {
-      retour += ' <a tabindex="0" class="btn btn-light btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></a>';
+      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></button>';
     }
 
     retour += '      </div>';
@@ -937,11 +939,11 @@ function makeLigneOrdo(data, mode) {
       }
 
       if (medic.prescripteurInitialTT) {
-        retour += ' <a tabindex="0" class="btn btn-light btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></a>';
+        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></button>';
       }
 
       if (medic.prescriptionMotif.length > 0) {
-        retour += ' <a tabindex="0" class="btn btn-light btn-sm" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"  title="Commentaire" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></a>';
+        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></button>';
       }
 
       retour += '    </div>';

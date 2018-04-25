@@ -30,6 +30,12 @@ var aldActivesListe = [];
 
 $(document).ready(function() {
 
+  $(document).mouseup(function (e) {
+    if(!($(e.target).hasClass("popover-content"))){
+      $(".popover").popover('hide');
+      }
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
 
@@ -40,7 +46,16 @@ $(document).ready(function() {
     if (alerteGrossesseSup46EtAllaitSup3Deja != 'oui') {
       setTimeout(checkGrossesseSup46EtAllaitSup3, '500');
     }
-    voirOrdonnanceMode = 'editionOrdonnance';
+    if ($('#ordonnanceTabL').hasClass('active')) {
+      voirOrdonnanceMode = 'editionOrdonnance';
+    } else if ($('#tttencoursTabL').hasClass('active')) {
+      voirOrdonnanceMode = 'TTenCours';
+    } else if ($('#ordohistoriqueTabL').hasClass('active')) {
+      voirOrdonnanceMode = 'voirOrdonnance';
+    } else if ($('#tthistoriqueTabL').hasClass('active')) {
+      voirOrdonnanceMode = 'voirOrdonnance';
+    }
+
     setTimeout(getAldActivesListe, '500');
   });
 
@@ -64,6 +79,7 @@ $(document).ready(function() {
   // Onglet historique traitement
   $('#tthistoriqueTabL').on("show.bs.tab", function() {
     getHistoriqueTT(year);
+    voirOrdonnanceMode = 'voirOrdonnance';
   });
 
   // Afficher prescriptions préétablies

@@ -657,7 +657,9 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('theriaqueShowMedicNonComer', 'LAP', 'default', 'true/false', '', 'false'),
 ('lapAlertPatientTermeGrossesseSup46', 'LAP', 'default', 'true/false', '', 'true'),
 ('lapAlertPatientAllaitementSup3Ans', 'LAP', 'default', 'true/false', '', 'true'),
-('lapSearchResultsSortBy', 'LAP', 'default', 'texte', '', 'nom');
+('lapSearchResultsSortBy', 'LAP', 'default', 'texte', '', 'nom'),
+('lapSearchDefaultType', 'LAP', 'default', 'texte', '', 'dci'),
+('lapPrintAllergyRisk', 'LAP', 'default', 'true/false', '', 'true');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),

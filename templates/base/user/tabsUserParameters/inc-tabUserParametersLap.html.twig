@@ -65,6 +65,18 @@
                 <td><input name="theriaqueShowMedicNonComer" value="{{ page.lap.params.theriaqueShowMedicNonComer }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr>
+                <td>Choix par défaut du menu de recherche des médicaments</td>
+                <td>
+                  <select class="form-control" name="lapSearchDefaultType" autocomplete="off">
+                    <option {% if page.lap.params.lapSearchDefaultType == 'dci' %} selected="selected"{% endif %}  value="dci">Médicaments virtuels (DCI)</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'dcispe' %} selected="selected"{% endif %} value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'spe' %} selected="selected"{% endif %} value="spe">Spécialités commerciales</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'suba' %} selected="selected"{% endif %} value="suba">Substances actives</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'atc' %} selected="selected"{% endif %} value="atc">Code ATC</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
                 <td>Ordre de tris par défaut des recherches de médicaments à prescrire</td>
                 <td>
                   <select class="form-control" name="lapSearchResultsSortBy" autocomplete="off">
@@ -95,6 +107,13 @@
                   type="checkbox"
                   {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %}
                   autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres d'impression</td>
+              </tr>
+              <tr {% if page.lap.params.lapPrintAllergyRisk != 'true' %} class="table-warning" {% endif %}>
+                <td>Signaler les risques allergiques ou d'intolérance sur les ordonnances imprimées</td>
+                <td><input class="alerteInfSeuilCertif" name="lapPrintAllergyRisk" value="{{ page.lap.params.lapPrintAllergyRisk }}" type="checkbox" {% if page.lap.params.lapPrintAllergyRisk == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
             </tbody>
           </table>

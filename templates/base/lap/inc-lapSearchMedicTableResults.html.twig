@@ -36,13 +36,13 @@
 
   {% if page.medicListeSpe | length > 0 %}
     <table id="tabMedicaments" class="table table-sm table-hover tablesorter">
-      <thead>
-        <tr class="active">
+      <thead class="thead-dark small">
+        <tr>
           <th></th>
-          <th class="col-md-10" data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Nom</th>
-          <th data-sort="string">Forme</th>
-          <th data-sort="float" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
-          <th data-sort="int">Taux&nbsp;SS</th>
+          <th class="col-auto" data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Nom</th>
+          <th class="col-auto" data-sort="string">Forme</th>
+          <th class="col-auto" data-sort="float" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
+          <th class="col-auto" data-sort="int">Taux&nbsp;SS</th>
         </tr>
       </thead>
       <tbody>

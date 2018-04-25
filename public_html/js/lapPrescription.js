@@ -156,7 +156,7 @@ $(document).ready(function() {
     th.find(".arrow").remove();
     dir = $.fn.stupidtable.dir;
     arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
-    th.eq(data.column).append(' <span class="arrow fa ' + arrow + '"></span>');
+    th.eq(data.column).append('<span class="ml-1 arrow fa ' + arrow + '"></span>');
     //console.log("The sorting direction: " + data.direction);
     //console.log("The column index: " + data.column);
   });
@@ -604,7 +604,9 @@ function cleanModalRechercherOngletPrescrire() {
   $('#beginPeriodeID, #endPeriodeID').val('');
   $('#prescripteurInitialTT').val('');
   $('#nbRenouvellements option[value="0"]').prop('selected', true);
-  $('#lapConsignesPrescription, #prescriptionHumanConsignes').show();
+  $('#prescriptionHumanConsignes').show();
+  $('#lapConsignesPrescription').val('');
+  $('#prescriptionHumanConsignes').html('');
 }
 
 
@@ -710,6 +712,7 @@ function prepareModalPrescription() {
   $('#prescriptionAlertMultimedic').hide();
   $('.prescriptionChampsDuree, .prescriptionChampsEnd').show();
   $('#prescripteurInitialTT').parent('div.form-group').hide();
+  $('#lapConsignesPrescription').show();
 
   if (modeActionModal == 'new') {
     $('#recherchermedicTab').parent('li').show();
@@ -735,6 +738,7 @@ function prepareModalPrescription() {
     $('#modalRecherche h4.modal-title').html('Ajout à la ligne de prescription');
     $('#modalRecherche button.addToLigneOnOrdonnance').show();
     $('.prescriptionChampsDuree').hide();
+    $('#lapConsignesPrescription').hide();
   } else if (modeActionModal == 'saisirTTenCours') {
     $('#recherchermedicTab').parent('li').show();
     $('#recherchermedicTab').tab('show');
