@@ -188,12 +188,10 @@ class msGetHtml
          $this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($baseFolder, '/'));
      }
 
-
      //templates pdf
-     if (isset($p['user']['id']) and is_dir($p['config']['templatesPdfFolder'])) {
+     if (is_dir($p['config']['templatesPdfFolder'])) {
          $this->_templatesDirectories[]=$p['config']['templatesPdfFolder'];
      }
-
      return $this->_templatesDirectories;
  }
 }
