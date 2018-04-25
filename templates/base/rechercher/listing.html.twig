@@ -56,16 +56,16 @@
           <td class="d-none d-sm-table-cell">
             {% if page.porp != 'pro' %}
               {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod==patientID) or page.porp == 'externe' %}
-                <a class="btn btn-light btn-light-custom btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à un dossier">
+                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à un dossier">
                   <span class="fa fa-paperclip" aria-hidden="true"></span>
                 </a>
               {% else %}
-                <a class="btn btn-light btn-light-custom btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Ouvrir le dossier">
+                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Ouvrir le dossier">
                   <span class="fa fa-folder-open" aria-hidden="true"></span>
                 </a>
               {% endif %}
             {% else %}
-              <a class="btn btn-light btn-light-custom btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Afficher la synthèse">
+              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Afficher la synthèse">
                 <span class="fa fa-user" aria-hidden="true"></span>
               </a>
             {% endif %}
@@ -82,20 +82,20 @@
           <td class="d-table-cell d-flex justify-content-end">
             <div class="btn-group">
               {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
-                <a class="btn btn-light btn-light-custom btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
+                <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
                   <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                 </a>
                 {% if page.porp != 'pro' %}
-                  <a class="btn btn-light btn-light-custom btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
+                  <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
                     <span class="fa fa-link" aria-hidden="true"></span>
                   </a>
 
-                  <button class="btn btn-light btn-light-custom btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
+                  <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
                     <span class="fa fa-edit" aria-hidden="true"></span>
                   </button>
                 {% endif %}
                 <div class="btn-group">
-                  <button type="button" class="btn btn-light btn-light-custom btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">

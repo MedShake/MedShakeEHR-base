@@ -28,7 +28,7 @@
 
 <tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}"  data-groupe="{{ cs.groupe|e('html_attr') }}">
     <td title="Mail">
-      <a class="btn btn-light btn-light-custom btn-sm showDetDoc" role="button">
+      <a class="btn btn-light btn-sm showDetDoc" role="button">
         <span class="fa fa-at" aria-hidden="true"></span>
       </a>
     </td>
@@ -39,12 +39,12 @@
     <td>
       <div class="btn-group">
         {# voir #}
-        <a class="btn btn-light btn-light-custom btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank">
+        <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank">
           <span class="fa fa-eye" aria-hidden="true" title="Voir"></span>
         </a>
         {# option #}
         <div class="btn-group">
-          <button type="button" class="btn btn-light btn-light-custom btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
           </button>
           <ul class="dropdown-menu">
