@@ -58,7 +58,17 @@ var voirOrdonnanceMode;
  */
 var ordoDejaAnalysee;
 
+/**
+ * Analyser sans restriction
+ * @type {Boolean}
+ */
 var analyseWithNoRestriction = false;
+
+/**
+ * Version Thériaque
+ * @type {String}
+ */
+var ordoVersionTheriaque;
 
 $(document).ready(function() {
 
@@ -303,6 +313,7 @@ function analyserPrescription() {
       incrusterRisqueAllergique(data.lignesRisqueAllergique);
       $('#modalLapAlerte').modal('show')
       ordoDejaAnalysee = true;
+      ordoVersionTheriaque = data.versionTheriaque;
     },
     error: function() {
       console.log("Analyse ordonnance : PROBLEME");
@@ -375,6 +386,7 @@ function saveOrdo(view) {
       ordo: ordo,
       patientID: $('#identitePatient').attr("data-patientID"),
       ordoName: $('#ordoName').val(),
+      versionTheriaque: ordoVersionTheriaque
     },
     dataType: "json",
     success: function(data) {
@@ -473,7 +485,7 @@ function ordoLiveRestore() {
           } else {
             ordoMedicsALD = [];
           }
-          construireOrdonnance(data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
+          construireOrdonnance(data['ordoData'], data['ordoLive']['ordoMedicsG'], data['ordoLive']['ordoMedicsALD'], '#conteneurOrdonnanceCourante');
         }
 
         // retrait des infos allergiques
@@ -506,7 +518,7 @@ function ordoLiveRestore() {
  * @param  {array} tabMedicsALD données médicaments ald
  * @return {void}
  */
-function construireOrdonnance(tabMedicsG, tabMedicsALD, parentdestination) {
+function construireOrdonnance(ordoData, tabMedicsG, tabMedicsALD, parentdestination) {
   console.log('reconstruction d\'ordonnance : START');
   if (tabMedicsG) {
     $.each(tabMedicsG, function(index, ligne) {
@@ -520,6 +532,14 @@ function construireOrdonnance(tabMedicsG, tabMedicsALD, parentdestination) {
       console.log('econstruction d\'ordonnance : ajout ligne ALD');
     });
   }
+  $('div.placeForVersionTheriaque').remove();
+  if (ordoData != undefined && ordoData.value != undefined && ordoData.value.versionTheriaque != undefined) {
+      $(parentdestination).append('<div class="small mt-2 placeForVersionTheriaque">Version Thériaque : ' + ordoData['value']['versionTheriaque'] + '</div>');
+  }
+
+  $(function() {
+    $('[data-toggle="popover"]').popover()
+  })
   console.log(ordoMedicsALD);
   console.log(ordoMedicsG);
   console.log('reconstruction d\'ordonnance : STOP');

@@ -64,6 +64,7 @@ class msLapOrdo extends msLap
       left join objets_data as bn on bn.toID=o.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
       where o.id='".$this->_ordonnanceID."'
       group by  o.id, n.id, p.id, bn.id order by o.id desc");
+      $tab['ordoData']['value']=json_decode($tab['ordoData']['value'], TRUE);
 
       //extraction des lignes de prescrition
       if($lignes = msSQL::sql2tabKey("select * from objets_data where instance='".$this->_ordonnanceID."' and typeID='".$name2typeID['lapLignePrescription']."' order by id", 'id')) {
@@ -79,8 +80,6 @@ class msLapOrdo extends msLap
             $lignes[$m['instance']]['medics'][]=$medic;
           }
         }
-
-        //print_r($lignes);
 
         //préparation tableau final
         foreach($lignes as $ligne) {

@@ -369,9 +369,6 @@ class msLapPrescription extends msLap
  */
     public function lapInstallPrescription() {
 
-      //data légales Thériaque
-      $dataTheriaque=$this->getTheriaqueInfos();
-
       //spécialité
       $dataSpe=$this->getSpecialiteByCode($this->_speThe,1,3);
       $this->_nomSpe = $dataSpe[0]['sp_nom'];
@@ -482,7 +479,6 @@ class msLapPrescription extends msLap
         'codeCIP13'=>$dataPres[0]['pre_ean_ref'],
         'codeUCD'=>$dataSpe[0]['sp_cipucd'],
         'codeUCD13'=>$dataSpe[0]['sp_cipucd13'],
-        'TheriaqueVersion'=>$dataTheriaque[0]['vers'].' '.$dataTheriaque[0]['date_ext'],
         'conducteur'=>array(
           'reco'=>$dataConducteur[0]['reco'],
           'niveau'=>$dataConducteur[0]['niv'],

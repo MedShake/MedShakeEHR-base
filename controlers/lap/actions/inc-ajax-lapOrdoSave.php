@@ -30,8 +30,11 @@ $ordo = new msObjet();
 $ordo->setFromID($p['user']['id']);
 $ordo->setToID($_POST['patientID']);
 
+$ordoValue=array('versionTheriaque'=>$_POST['versionTheriaque']);
+$ordoValue=json_encode($ordoValue);
+
 // Créer porteur ordonnance
-$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', '');
+$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', $ordoValue);
 // enregistrer nom de l'ordo.
 $ordo->setTitleObjet($ordoID, $_POST['ordoName']);
 

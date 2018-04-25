@@ -1076,13 +1076,13 @@ function showObjetDet(element, timed) {
   zone = element.closest('table').attr('data-zone');
   objetID = element.closest('tr').attr('data-objetID');
   ligne = element.closest('tr');
-  destination = $("." + zone + " .detObjet" + objetID);
+  destination = $("." + zone + " .detObjet" + objetID );
 
   if (destination.length == 0) {
     if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
-      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="py-4"><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
       voirOrdonnanceMode='voirOrdonnance';
-      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID);
+      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID + ' td.placeForOrdoLap');
     } else {
       ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
       destination = $("." + zone + " .detObjet" + objetID);

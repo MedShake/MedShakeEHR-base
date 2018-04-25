@@ -42,9 +42,13 @@ if(isset($_POST['ordo'])) {
 $lapOrdo->getObjetsFromTTenCours();
 $lapOrdo->getAnalyseTheriaque();
 
+//data légales Thériaque
+$dataTheriaque=$lapOrdo->getTheriaqueInfos();
+
 $retour=array(
   'html'=>$lapOrdo->getHtmlAnalysesResults(),
   'correspondanceLignes'=>$lapOrdo->getCorrespondanceLignes(),
   'lignesRisqueAllergique'=>$lapOrdo->getLignesRisqueAllergique(),
+  'versionTheriaque'=>$dataTheriaque[0]['vers'].' '.$dataTheriaque[0]['date_ext'],
 );
 echo json_encode($retour);
