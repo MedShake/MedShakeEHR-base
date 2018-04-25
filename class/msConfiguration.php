@@ -71,13 +71,17 @@ class msConfiguration
  * @param  array $user $user
  * @return array       tableau des paramètres
  */
-    public static function getAllParametersForUser($user) {
+    public static function getAllParametersForUser($user=array('id'=>'', 'module'=>'')) {
         $defaultParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='default'", 'name','value');
-        $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='module' AND module='".$user['module']."'", 'name', 'value');
-        $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='user' AND toID='".$user['id']."'", 'name', 'value');
-        if (!is_array($userParams))
+        if ($user['module']) {
+            $moduleParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='module' AND module='".$user['module']."'", 'name', 'value');
+        }
+        if ($user['id']) {
+            $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='user' AND toID='".$user['id']."'", 'name', 'value');
+        }
+        if (!isset($userParams) or !is_array($userParams))
           $userParams=array();
-        if (!is_array($moduleParams))
+        if (!isset($moduleParams) or !is_array($moduleParams))
           $moduleParams=array();
         if (!is_array($defaultParams))
           $defaultParams=array();
@@ -102,6 +106,8 @@ class msConfiguration
           $userParams=array();
         if (!is_array($moduleParams))
           $moduleParams=array();
+        if (!is_array($defaultParams))
+          $defaultParams=array();
         return array_replace($defaultParams, $moduleParams, $userParams);
     }
 
