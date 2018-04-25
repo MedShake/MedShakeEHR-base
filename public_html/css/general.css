@@ -94,7 +94,7 @@
   border-right: 1pt solid #000;
 }
 
-.btn-light {background-color:rgba(248,249,250,0.6);min-width:34px}
+.btn-light-custom {background-color:rgba(248,249,250,0.6);border:none;min-width:34px}
 
 /* h1 {
   margin-top: 0.25em;

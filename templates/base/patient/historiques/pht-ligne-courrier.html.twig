@@ -28,7 +28,7 @@
 
 <tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Courrier">
-    <a class="btn btn-light btn-sm showDetDoc" role="button">
+    <a class="btn btn-light btn-light-custom btn-sm showDetDoc" role="button">
       <span class="far fa-file-alt" aria-hidden="true"></span>
     </a>
   </td>
@@ -39,7 +39,7 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}">
+      <button class="btn btn-light btn-light-custom btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}">
         {% if cs.iconeType == 'update' and cs.fromID == user.id %}
           <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
         {% else %}
@@ -48,14 +48,14 @@
       </button>
 
         {# print #}
-        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
+        <a class="btn btn-light btn-light-custom btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
           <span class="fa fa-print" aria-hidden="true" title="Imprimer"></span>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
-            <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
+            <button type="button" class="btn btn-light btn-light-custom btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
               <span class="fa fa-paper-plane" aria-hidden="true"></span>
 
             </button>
@@ -88,13 +88,13 @@
           </div>
         {% endif %}
         {% if cs.sendMail > 0 %}
-          <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
+          <a class="btn btn-light btn-light-custom btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
             <span class="fa fa-envelope" aria-hidden="true"></span>
           </a>
         {% endif %}
         {# option #}
         <div class="btn-group">
-          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn btn-light btn-light-custom btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
 
           </button>
@@ -112,7 +112,7 @@
               </a>
             </li>
             <li class="d-inline-block d-lg-none">
-              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">Imprimer</a>
+              <a class="btn btn-light btn-light-custom btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">Imprimer</a>
             </li>
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/duplicata/{{ cs.id }}/" target="_blank">Imprimer un duplicata</a>
