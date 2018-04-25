@@ -154,7 +154,7 @@
             {% if cs.fromID == user.id %}
               <li>
                 <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                  {% if cs.important == 'n' %}Rendre important{% else %}Rendre non important{% endif %}
+                  {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
                 </a>
               </li>
               <li>
