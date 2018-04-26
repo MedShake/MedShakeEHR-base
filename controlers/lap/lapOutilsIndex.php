@@ -28,3 +28,10 @@
 
  $debug='';
  $template="lapOutilsIndex";
+
+ // version de la BdM
+ $lap = new msLap;
+ $p['page']['infosTheriaque']=$lap->getTheriaqueInfos();
+
+ //version de MedShake
+ $p['page']['modules']=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
