@@ -89,17 +89,9 @@
       display: none;
     }
 
-    .imageDc {
-        display: inline-block;
-        width: 330px;
-        margin: 5px;
-    }
-
     .imageDc img {
-        display: inline-block;
-        width: 330px;
-        vertical-align: top;
-        border: 10px solid #EEE;
+        max-width: 330px;
+        max-height: 330px;
     }
 
     .voirframes {
@@ -127,6 +119,9 @@
       <li class="nav-item">
         <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab">Dossier médical</a>
       </li>
+      <li class="nav-item">
+        <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab">Biométrie</a>
+      </li>
       {% if config.utiliserLap == 'true' %}
       <li class="nav-item">
         <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab">LAP</a>
@@ -150,6 +145,11 @@
         {% include('inc-patientTabDossierMedical.html.twig') %}
       </div>
 
+      {# tab Graphiques #}
+      <div id="tabGraph" class="tab-pane" role="tabpanel">
+        {% include('inc-patientTabGraphsIMC.html.twig') %}
+      </div>
+
       {# tab lap #}
       {% if config.utiliserLap == 'true' %}
       <div id="tabLAP" class="tab-pane" role="tabpanel">
@@ -167,8 +167,6 @@
 {% endblock %}
 
 {% block modals %}
-{# modal courbes de poids/taille/IMC #}
-{% include 'inc-patientModal-GraphsIMC.html.twig' %}
 
 {# modal changer nom consultation ou doc #}
 {% include 'inc-patientModal-changerTitre.html.twig' %}

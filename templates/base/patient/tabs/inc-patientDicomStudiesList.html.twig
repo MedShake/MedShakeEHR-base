@@ -28,8 +28,8 @@
 {% import "macroForm.html.twig" as f %}
 
 <div class="row" style="margin-bottom : 20px;margin-top : 5px;">
-  <div class="col-md-12">
-
+  <div class="col-10 py-2" style="background-color:#eee">
+    <span class="mr-2">Préparer une acquisition</span>
     <button class="btn btn-light btn-sm prepareEcho" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
       <span class="p-0" aria-hidden="true" style="position:relative;top:2px">
         <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" style="fill:#212529" class="py-0">
@@ -53,16 +53,14 @@
 </div>
 
 <div class="row">
-  <div class="col-md-10">
+  <div class="col-10 px-0">
     <div class="card">
       <div class="card-header">Imagerie du patient
         <button class="btn btn-light btn-sm ml-3 tabDicomRefresh" title="Rafraîchir la liste"><span class="fa fa-sync-alt" aria-hidden="true"></span></button>
       </div>
-      <div class="card-body">
-        {% if page.studiesDcData %}
-          <p>Images du patient trouvées sur le serveur DICOM</p>
-        {% else %}
-          <p>Aucune image référencée pour ce patient.</p>
+      <div class="card-body py-1">
+        {% if not page.studiesDcData %}
+          <p><i>Aucune étude référencée pour ce patient.</i></p>
         {% endif %}
       </div>
       {% if page.studiesDcData %}

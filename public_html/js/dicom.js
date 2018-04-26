@@ -83,8 +83,8 @@ function checkUncheck(el) {
   imgfor = '#' + el.attr('data-imgfor');
 
   if (el.is(':checked')) {
-    $(imgfor).css("border", "10px solid green");
+    $(imgfor).closest('td').css("border-color", "green");
   } else {
-    $(imgfor).css("border", "10px solid #EEE");
+    $(imgfor).closest('td').css("border-color", "#eee");
   }
 }
