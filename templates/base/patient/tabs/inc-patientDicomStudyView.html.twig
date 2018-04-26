@@ -34,31 +34,48 @@
 
 <div class="card">
 
-  <div class="card-header">Images de l'étude</div>
-  <div class="card-body imagesList">
-    <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
+  <div class="card-header">Images de l'étude
+    <div class="float-right">
+      <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary mb-0">Générer un ZIP</button>
+      <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary mb-0">Générer un PDF</button>
+    </div>
+  </div>
+  <div class="card-body pt-1 imagesList">
     <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
       <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
       <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
+      <span class="imageDc" style="display:block; vertical-align:bottom; width:100%">
+        <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
+      </span>
       {% for instance, frames in page.imagesPath %}
         {% for frame, imagepath in frames %}
-          <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
-            <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off">
-            {% if frame == 0 and frames | length > 1 %}
+          <table class="d-inline-block m-1 mb-2" style="border:5px solid #eee;background-color:#eee">
+            <thead>
+              <tr>
+                <th style="text-align:center;line-height:0">
+                  <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off"/>
+                </th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <td style="border:5px solid #eee">
+                <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
+                  {% if frame == 0 and frames | length > 1 %}
 
-              <span class="voirframes" data-frames="frames{{ instance }}">
-                {{ frames|length }}
-                images - voir / masquer
-              </span>
-            {% endif %}
-          </span>
-        {% endfor %}
-      {% endfor %}
-      <span class="imageDc" style="text-align : right; vertical-align: bottom;">
-        <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary">Générer un ZIP</button>
-        <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary">Générer un PDF</button>
-      </span>
+                    <span class="voirframes" data-frames="frames{{ instance }}">
+                      {{ frames|length }}
+                      images - voir / masquer
+                    </span>
+                  {% endif %}
+                </span>
+              </td>
+            {% endfor %}
+          {% endfor %}
+          </tr>
+        <tbody>
+      </table>
     </form>
   </div>
 </div>

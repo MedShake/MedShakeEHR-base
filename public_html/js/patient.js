@@ -65,6 +65,10 @@ $(document).ready(function() {
     getHistorique();
   });
 
+  //chargement/mise à jour tab Biométrie
+  $("#ongletGraph").on("click", function() {
+    getGraph();
+  });
 
   // 1er chargement tab dicom
   $('#ongletDicom').on("show.bs.tab", function() {
@@ -480,39 +484,6 @@ $(document).ready(function() {
     dir = $.fn.stupidtable.dir;
     arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
     th.eq(data.column).append(' <span class="arrow fa ' + arrow + '"></span>');
-  });
-
-  //modal Courbes de poids/taille/IMC
-  $(".graph").parent().on("click", function() {
-    $(".histo-suppr").remove();
-    $.ajax({
-      url: urlBase + '/patient/ajax/getGraphData/',
-      type: 'post',
-      data: {
-        patientID: $('#identitePatient').attr("data-patientID")
-      },
-      dataType: "html",
-      success: function(data) {
-        if (data == 'ok')
-          return;
-        else if (data.substr(0,7)=='Erreur:')
-          return alert_popup('danger', data.substr(8));
-        data = JSON.parse(data);
-        for (var i in data)
-          if (i != 'bornes')
-            $("table.histo tbody").append('\
-              <tr class="histo-suppr">\
-                <td data-sort-value="' + i + '" style="text-align:center">' + (i < 3 * 365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
-                <td style="text-align:center">' + moment(data[i].date, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY") + '</td>\
-                <td style="text-align:center;color:' + (data[i].poids.reel ? 'black' : 'grey') + '">' + data[i].poids.value + '</td>\
-                <td style="text-align:center;color:' + (data[i].taille.reel ? 'black' : 'grey') + '">' + data[i].taille.value + '</td>\
-                <td style="text-align:center;color:' + (data[i].imc.reel ? 'black' : 'grey') + '">' + data[i].imc.value + '</td>\
-              </tr>');
-        drawGraph(data);
-        $('#viewGraph').modal('show');
-      },
-      error: function() {}
-    });
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -1109,7 +1080,7 @@ function showObjetDet(element, timed) {
 
 }
 
-// rafraichier le header du dossier patient (infos administratives)
+// rafraichir le header du dossier patient (infos administratives)
 function ajaxModalPatientAdminCloseAndRefreshHeader() {
   $.ajax({
     url: urlBase + '/patient/ajax/refreshHeaderPatientAdminData/',
@@ -1125,6 +1096,39 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
       alert_popup("danger", 'Problème, rechargez la page !');
 
     }
+  });
+}
+///////////////////////////////////////////
+/////// fonctions relatives à la biométrie
+
+function getGraph() {
+  $(".histo-suppr").remove();
+  $.ajax({
+    url: urlBase + '/patient/ajax/getGraphData/',
+    type: 'post',
+    data: {
+      patientID: $('#identitePatient').attr("data-patientID")
+    },
+    dataType: "html",
+    success: function(data) {
+      if (data == 'ok')
+        return;
+      else if (data.substr(0,7)=='Erreur:')
+        return alert_popup('danger', data.substr(8));
+      data = JSON.parse(data);
+      for (var i in data)
+        if (i != 'bornes')
+          $("table.histo tbody").append('\
+            <tr class="histo-suppr">\
+              <td data-sort-value="' + i + '" style="text-align:center">' + (i < 3 * 365.25 ? ((i * 24 / 365.25) >> 1) + ' mois' : ((i * 2 / 365.25) >> 1) + ' ans') + '</td>\
+              <td style="text-align:center">' + moment(data[i].date, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY") + '</td>\
+              <td style="text-align:center;color:' + (data[i].poids.reel ? 'black' : 'grey') + '">' + data[i].poids.value + '</td>\
+              <td style="text-align:center;color:' + (data[i].taille.reel ? 'black' : 'grey') + '">' + data[i].taille.value + '</td>\
+              <td style="text-align:center;color:' + (data[i].imc.reel ? 'black' : 'grey') + '">' + data[i].imc.value + '</td>\
+            </tr>');
+      drawGraph(data);
+    },
+    error: function() {}
   });
 }
 
@@ -1184,7 +1188,7 @@ function drawGraphPoidsNourisson(data, ctx) {
   $(".graph-poids")
     .attr("width", "610")
     .attr("height", "790")
-    .css("background-image", "url(/img/poids_nourissons.svg)")
+    .css("background-image", "url(" + urlBase + "/img/poids_nourissons.svg)")
     .css("background-size", "cover");
   drawDots(18, 567 / (3 * 365.25), 756 / 22, 0, 22, ctx, 'poids', data);
 }
@@ -1193,7 +1197,7 @@ function drawGraphTailleNourisson(data, ctx) {
   $(".graph-taille")
     .attr("width", "614")
     .attr("height", "532")
-    .css("background-image", "url(/img/taille_nourissons.svg)")
+    .css("background-image", "url(" + urlBase + "/img/taille_nourissons.svg)")
     .css("background-size", "cover");
   drawDots(22, 567 / (3 * 365.25), 500 / 85, 0, 115, ctx, 'taille', data);
 }
@@ -1202,7 +1206,7 @@ function drawGraphPoidsGarcon(data, ctx) {
   $(".graph-poids")
     .attr("width", "596")
     .attr("height", "615")
-    .css("background-image", "url(/img/poids_garcons.svg)")
+    .css("background-image", "url(" + urlBase + "/img/poids_garcons.svg)")
     .css("background-size", "cover");
   drawDots(16, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
 }
@@ -1211,7 +1215,7 @@ function drawGraphTailleGarcon(data, ctx) {
   $(".graph-taille")
     .attr("width", "602")
     .attr("height", "831")
-    .css("background-image", "url(/img/taille_garcons.svg)")
+    .css("background-image", "url(" + urlBase + "/img/taille_garcons.svg)")
     .css("background-size", "cover");
   drawDots(22, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
 }
@@ -1220,7 +1224,7 @@ function drawGraphIMCGarcon(data, ctx) {
   $(".graph-imc")
     .attr("width", "622")
     .attr("height", "861")
-    .css("background-image", "url(/img/IMC_garcons.svg)")
+    .css("background-image", "url(" + urlBase + "/img/IMC_garcons.svg)")
     .css("background-size", "cover");
   drawDots(31, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
 }
@@ -1229,7 +1233,7 @@ function drawGraphPoidsFille(data, ctx) {
   $(".graph-poids")
     .attr("width", "608")
     .attr("height", "614")
-    .css("background-image", "url(/img/poids_filles.svg)")
+    .css("background-image", "url(" + urlBase + "/img/poids_filles.svg)")
     .css("background-size", "cover");
   drawDots(19, 567 / (18 * 365.25), 596 / 110, 0, 110, ctx, 'poids', data);
 }
@@ -1238,7 +1242,7 @@ function drawGraphTailleFille(data, ctx) {
   $(".graph-taille")
     .attr("width", "611")
     .attr("height", "831")
-    .css("background-image", "url(/img/taille_filles.svg)")
+    .css("background-image", "url(" + urlBase + "/img/taille_filles.svg)")
     .css("background-size", "cover");
   drawDots(23, 567 / (18 * 365.25), 812 / 150, 0, 200, ctx, 'taille', data);
 }
@@ -1247,7 +1251,7 @@ function drawGraphIMCFille(data, ctx) {
   $(".graph-imc")
     .attr("width", "619")
     .attr("height", "861")
-    .css("background-image", "url(/img/IMC_filles.svg)")
+    .css("background-image", "url(" + urlBase + "/img/IMC_filles.svg)")
     .css("background-size", "cover");
   drawDots(29, 567 / (18 * 365.25), 843 / 25, 0, 35, ctx, 'imc', data);
 }

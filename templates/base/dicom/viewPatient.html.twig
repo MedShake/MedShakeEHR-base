@@ -85,11 +85,9 @@
                 <div class="card col-md-12">
 
                     <div class="card-header">Examens du patient</div>
-                    <div class="card-body">
-                        {% if page.studiesDcData %}
-                            <p>Liste des examens du patient trouvés sur le serveur DICOM</p>
-                        {% else %}
-                            <p>Pas d'examens référencés pour ce patient.</p>
+                    <div class="card-body py-1">
+                        {% if not page.studiesDcData %}
+                            <p><i>Pas d'examens référencés pour ce patient.</i></p>
                         {% endif %}
                     </div>
                     {% if page.studiesDcData %}
