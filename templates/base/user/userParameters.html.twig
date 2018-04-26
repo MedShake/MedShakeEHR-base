@@ -33,8 +33,8 @@
 {% block head %}
 {{ parent() }}
   <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/parameters.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/parameters.js?{{ modules.base }}"></script>
   <script>
     var clicRdvConsults={{ page.clicRdvConsults|default('{}') }};
     var clicRdvConsultsRel={{ page.clicRdvConsultsRel|default('[]') }};

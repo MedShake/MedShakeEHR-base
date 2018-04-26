@@ -32,7 +32,7 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
   <style>
     .uploader {
       min-height: 100vh;

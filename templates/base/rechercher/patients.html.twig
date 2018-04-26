@@ -39,7 +39,7 @@ associer patient
 
 {% block head %}
 {{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js"></script>
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js?{{ modules.base }}"></script>
 <style>
 .openPatient td:nth-child(-n+7) {
 	cursor: pointer;

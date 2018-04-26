@@ -33,7 +33,7 @@
 
 {% block head %}
   {{ parent() }}
-  {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js"></script>{% endif %}
+  {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js?{{ modules.base }}"></script>{% endif %}
 {% endblock %}
 
 {% block body %}

@@ -32,7 +32,7 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}

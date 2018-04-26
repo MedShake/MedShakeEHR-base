@@ -32,7 +32,7 @@
 
 {% block head %}
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/outils/outilsRouletteObs.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/outils/outilsRouletteObs.js?{{ modules.base }}"></script>
     <style>
       .trHide, .trMensuHide, #tdjPanel, #calculSpeRes, #TDDRes {
         display: none;

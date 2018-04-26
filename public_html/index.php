@@ -67,8 +67,8 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base
-if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
+/////////// Vérification de l'état de la base et sortie des versions des modules
+if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
@@ -91,7 +91,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     }
 } elseif (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
-    if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+    if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
     if (isset($p['user']['id'])) {

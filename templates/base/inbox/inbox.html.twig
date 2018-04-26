@@ -32,7 +32,7 @@
 
 {% block head %}
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js?{{ modules.base }}"></script>
     <style>
         tr.mailClicView:hover, tr.patietSelect:hover {
             cursor: pointer;

@@ -31,7 +31,7 @@
 {% block title %}MedShakeEHR{% endblock %}
 
 {% block head %}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/phonecapture.js?{{ modules.base }}"></script>
 
   <script>
     var urlDestination = '{{ page.urlDestination }}';
