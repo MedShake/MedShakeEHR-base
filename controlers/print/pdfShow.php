@@ -33,9 +33,6 @@ $doc->setObjetID($match['params']['objetID']);
 
 if (!$doc->testDocExist()) {
     $pdf= new msPDF();
-    if (isset($_POST['lapPrintExigences'])) {
-        $pdf->setLapPrintExigences($_POST['lapPrintExigences']);
-    }
     $pdf->setObjetID($match['params']['objetID']);
     $pdf->makePDFfromObjetID();
     $pdf->savePDF();

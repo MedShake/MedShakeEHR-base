@@ -55,8 +55,8 @@ class msPDF
     private $_pageHeader;
     /** @var string footer du pdf */
     private $_pageFooter;
-    /** @var string lap : exigences spécifiques */
-    private $_lapPrintExigences;
+    /** @var string lap : mode d'impression anonyme */
+    private $_anonymeMode=FALSE;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -140,12 +140,11 @@ class msPDF
     }
 
 /**
- * Définir des exigences pour l'impression via LAP.
- * @param string $v HTML du footer
+ * Définir le mode d'impression auteur anonyme.
  */
-    public function setLapPrintExigences($v)
+    public function setAnonymeMode()
     {
-        return $this->_lapPrintExigences = $v;
+        return $this->_anonymeMode = TRUE;
     }
 
 /**
@@ -259,7 +258,9 @@ class msPDF
         'value'=>$this->_contenuFinalPDF
       );
 
-      // test préalable car pour courrier dont le body ets injecté en POST, ca ne fonctionne pas.
+      if($this->_anonymeMode) $data['anonyme'] = 'y';
+
+      // test préalable car pour courrier dont le body est injecté en POST, ca ne fonctionne pas.
       if(isset($p['page']['courrier'])) {
         $data['serializedTags']=serialize($p['page']['courrier']);
       }
@@ -423,11 +424,20 @@ class msPDF
 
       //si on sort en mode ald alors on va annuler les header et footer standard
       if ($modePrint=='ald') {
-          $this->_pageHeader=$this->_pageFooter='';
+        $this->_pageHeader=$this->_pageFooter='';
+        if($this->_anonymeMode) {
+          $p['page']['courrier']['printModel']='ordonnanceAnonymeALD.html.twig';
+        } else {
           $p['page']['courrier']['printModel']=$p['config']['templateOrdoALD'];
+        }
       } else {
+        if($this->_anonymeMode) {
+          $this->_pageHeader=$this->_pageFooter='';
+          $p['page']['courrier']['printModel']='ordonnanceAnonyme.html.twig';
+        } else {
           $this->_pageHeader= $this->makeWithTwig($p['config']['templateOrdoHeadAndFoot']);
           $p['page']['courrier']['printModel']=$p['config']['templateOrdoBody'];
+        }
       }
 
       //on génère le body avec twig

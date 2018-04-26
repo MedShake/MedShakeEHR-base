@@ -275,8 +275,9 @@ CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
   KEY `displayOrder` (`displayOrder`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `printed` (
-  `id` int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
+CREATE TABLE `printed` (
+  `id` int(11) UNSIGNED NOT NULL,
   `fromID` int(11) UNSIGNED NOT NULL,
   `toID` int(11) UNSIGNED NOT NULL,
   `type` enum('cr','ordo','courrier','ordoLAP') NOT NULL DEFAULT 'cr',
@@ -286,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `printed` (
   `value` text NOT NULL,
   `serializedTags` longblob,
   `outdated` enum('','y') NOT NULL,
-  KEY `examenID` (`objetID`)
+  `anonyme` enum('','y') DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `system` (

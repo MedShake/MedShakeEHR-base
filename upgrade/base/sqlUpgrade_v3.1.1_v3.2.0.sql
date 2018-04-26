@@ -7,6 +7,8 @@ ALTER TABLE `objets_data` ADD `byID` INT(11) UNSIGNED;
 
 ALTER TABLE `printed` CHANGE `type` `type` ENUM('cr','ordo','courrier','ordoLAP') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'cr';
 
+ALTER TABLE `printed` ADD `anonyme` ENUM('','y') NULL DEFAULT '' AFTER `outdated`;
+
 UPDATE `prescriptions_cat` set `type`='user';
 ALTER TABLE `prescriptions_cat` CHANGE `type` `type` ENUM('nonlap','lap','user') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'nonlap';
 UPDATE `prescriptions_cat` set `type`='nonlap';

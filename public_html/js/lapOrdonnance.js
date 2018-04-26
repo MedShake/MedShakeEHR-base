@@ -244,13 +244,19 @@ $(document).ready(function() {
   // Ordo : print and save
   $("a.printAndSaveOrdo, button.printAndSaveOrdo").on("click", function(e) {
     e.preventDefault();
-    saveOrdo(true);
+    saveOrdo('print');
+  });
+
+  // Ordo : print anonymous and save
+  $(".printAnonymeAndSaveOrdo").on("click", function(e) {
+    e.preventDefault();
+    saveOrdo('printAnonyme');
   });
 
   // Ordo : sauvegarder
   $("a.saveOrdo, button.saveOrdo").on("click", function(e) {
     e.preventDefault();
-    saveOrdo();
+    saveOrdo('saveOnly');
     cleanOrdonnance();
   });
 
@@ -361,7 +367,7 @@ function lapOrdoAnalyseResBrut() {
  * Sauver l'ordonnance en cours
  * @return {void}
  */
-function saveOrdo(view) {
+function saveOrdo(action) {
 
   // on impose l'analyse avant si non faite
   if (ordoDejaAnalysee != true) {
@@ -390,8 +396,10 @@ function saveOrdo(view) {
     },
     dataType: "json",
     success: function(data) {
-      if (view == true) {
+      if (action == 'print') {
         window.open('/showpdf/' + data['ordoID'] + '/', '_blank');
+      } else if (action == 'printAnonyme') {
+        window.open('/makepdf/' + $('#identitePatient').attr("data-patientID") + '/ordoLAP/' + data['ordoID'] + '/anonyme/', '_blank');
       }
       console.log("Sauvegarde ordonnance : OK");
       cleanOrdonnance();
@@ -534,7 +542,7 @@ function construireOrdonnance(ordoData, tabMedicsG, tabMedicsALD, parentdestinat
   }
   $('div.placeForVersionTheriaque').remove();
   if (ordoData != undefined && ordoData.value != undefined && ordoData.value.versionTheriaque != undefined) {
-      $(parentdestination).append('<div class="small mt-2 placeForVersionTheriaque">Version Thériaque : ' + ordoData['value']['versionTheriaque'] + '</div>');
+    $(parentdestination).append('<div class="small mt-2 placeForVersionTheriaque">Version Thériaque : ' + ordoData['value']['versionTheriaque'] + '</div>');
   }
 
   $(function() {
