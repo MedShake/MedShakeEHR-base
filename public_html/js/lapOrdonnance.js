@@ -785,7 +785,7 @@ function makeLigneOrdo(data, mode) {
       retour += '  </button>';
       retour += '  <div class="dropdown-menu dropdown-menu-right">';
       retour += '    <a href="#" data-speThe="' + data.medics[0].speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
-      retour += '     <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
+      retour += '     <a href="' + urlBase + '/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
       retour += '  </div>';
       retour += '</div>';
 
@@ -826,7 +826,7 @@ function makeLigneOrdo(data, mode) {
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
 
 
-      retour += '          <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">';
+      retour += '          <a href="' + urlBase + '/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">';
       retour += '            <span class="fa fa-book" aria-hidden="true"></span>';
       retour += '            Monographie</a>';
 
@@ -969,7 +969,7 @@ function makeLigneOrdo(data, mode) {
         retour += '  </button>';
         retour += '  <div class="dropdown-menu dropdown-menu-right">';
         retour += '    <a href="#" data-speThe="' + medic.speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
-        retour += '     <a href="/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
+        retour += '     <a href="' + urlBase + '/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">Monographie</a>';
         retour += '  </div>';
         retour += '</div>';
       }

@@ -45,7 +45,7 @@
 
               <tr data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}">
                 <td>
-                  <a class="btn btn-light" role="button" href="/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank">
+                  <a class="btn btn-light" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank">
                     <span class="fa fa-book" aria-hidden="true"></span>
                   </a>
                 </td>
