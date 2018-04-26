@@ -189,7 +189,7 @@ class msGetHtml
      }
 
      //templates pdf
-     if (is_dir($p['config']['templatesPdfFolder'])) {
+     if (isset($p['config']['templatesPdfFolder']) and is_dir($p['config']['templatesPdfFolder'])) {
          $this->_templatesDirectories[]=$p['config']['templatesPdfFolder'];
      }
      return $this->_templatesDirectories;
