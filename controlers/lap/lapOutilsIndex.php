@@ -35,3 +35,8 @@
 
  //version de MedShake
  $p['page']['modules']=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+
+ // liste des SAMs gérés
+ $lapSams = new msLapSAM;
+ $lapSams->getSamXmlFileContent();
+ $p['page']['lap']['samsList']=$lapSams->getSamListInXml();

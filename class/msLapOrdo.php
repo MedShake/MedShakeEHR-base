@@ -31,7 +31,7 @@
 class msLapOrdo extends msLap
 {
     private $_ordonnanceID;
-
+    private $_samsListInOrdo=[];
 
 /**
  * Définir l'ordonnance concernée
@@ -45,6 +45,14 @@ class msLapOrdo extends msLap
         } else {
             throw new Exception('OrdonnanceID is not numeric');
         }
+    }
+
+/**
+ * Obtenir le tanleau des samID présent dans l'ordo.
+ * @return array tableau des samID
+ */
+    public function getSamsListInOrdo() {
+      return $this->_samsListInOrdo;
     }
 
 /**
@@ -149,9 +157,15 @@ class msLapOrdo extends msLap
                   $lap->createNewObjetByTypeName('lapMedicamentCodeSubstanceActive', $k, $medicamentID);
                 }
               }
+
+              if(isset($m['sams']) and !empty($m['sams'])) {
+                foreach($m['sams'] as $k=>$v) {
+                  if(!in_array($v, $this->_samsListInOrdo)) $this->_samsListInOrdo[]=$v;
+                }
+              }
           }
-      }
         }
+      }
     }
 
 /**

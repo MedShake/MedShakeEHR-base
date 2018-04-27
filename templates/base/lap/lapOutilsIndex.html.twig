@@ -109,7 +109,33 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="lapSams"></div>
+        <div role="tabpanel" class="tab-pane" id="lapSams">
+          <h3>Patients dont la condition du SAM est réalisée lors de la dernière prescription</h3>
+
+          <p>Cliquer sur le bouton en fin de ligne pour rechercher les patients dont la dernière ordonnance était concernée par la condition du SAM choisi.</p>
+
+          <table class="table table-sm table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th>Identifiant</th>
+                <th>Titre</th>
+                <th>Traité par le LAP</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sam in page.lap.samsList %}
+                <tr>
+                  <td>{{ sam.id }}</td>
+                  <td>{{ sam.titre }}</td>
+                  <td>{{ sam.methode }}</td>
+                  <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm displayListSamPatients"><i class="fas fa-users"></i></button></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
 
         <div role="tabpanel" class="tab-pane" id="lapPhamracovigilance">
           <h3>Faire une déclaration de pharmacovigilance sur le site de l'ANSM</h3>

@@ -30,13 +30,10 @@ $ordo = new msObjet();
 $ordo->setFromID($p['user']['id']);
 $ordo->setToID($_POST['patientID']);
 
-$ordoValue=array('versionTheriaque'=>$_POST['versionTheriaque']);
-$ordoValue=json_encode($ordoValue);
-
 // Créer porteur ordonnance
-$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', $ordoValue);
+$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', '');
 // enregistrer nom de l'ordo.
-$ordo->setTitleObjet($ordoID, $_POST['ordoName']);
+if(!empty($_POST['ordoName'])) $ordo->setTitleObjet($ordoID, $_POST['ordoName']);
 
 $lap = new msLapOrdo();
 $lap->setToID($_POST['patientID']);
@@ -55,5 +52,12 @@ if(!empty($_POST['ordo']['ordoMedicsG'])) {
     $lap->saveLignePrescription($ligneG);
   }
 }
+//enregistrement de versionTheriaque + liste SAMs dans value porteur ordo
+$ordoValue=array('versionTheriaque'=>$_POST['versionTheriaque']);
+if($samsList=$lap->getSamsListInOrdo()) {
+  if(!empty($samsList)) $ordoValue['sams']=$samsList;
+}
+$ordoValue=json_encode($ordoValue);
+$ordo->createNewObjetByTypeName('lapOrdonnance', $ordoValue, '0','0',$ordoID);
 
 echo json_encode(array('ordoID'=>$ordoID));

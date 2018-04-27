@@ -64,8 +64,57 @@ $(document).ready(function() {
 
   });
 
+  // afficher la liste des patients dont le SAM choisi concerne la dernière prescription
+  $(".displayListSamPatients").on("click", function() {
+    samID = $(this).attr('data-samID');
+    if ($('#' + samID + 'List').length) {
+      $('#' + samID + 'List').remove();
+    } else {
+      displayListSamPatients($(this));
+    }
+  });
+
 });
 
+/**
+ * Afficher la liste des patients dont la condition du SAM choisi est réalisée
+ * lors de la dernière prescription
+ * @param  {object} el object jquery source du click
+ * @return {void}
+ */
+function displayListSamPatients(el) {
+  samID = el.attr('data-samID');
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapOutilDisplayListSamPatients/',
+    type: 'post',
+    data: {
+      samID: samID,
+    },
+    dataType: "json",
+    success: function(data) {
+      if ($.isArray(data.patientsList)) {
+        html = '<tr id="' + samID + 'List"><td colspan="4"><div class="card my-3"><div class="card-header">Liste des patients dont la condition du SAM est réalisée lors de la dernière prescription</div><div class="card-body"><table class="table table-hover table-sm">';
+        html += '<thead><tr><th class="col-auto"></th><th class="col-auto">Identité</th><th class="col-auto">Date de la prescription</th></tr></thead><tbody>';
+        $.each(data.patientsList, function(index, ligne) {
+          html += '<tr>';
+          html += '<td><a class="btn btn-light btn-sm" role="button" href="'+ urlBase +'/patient/'+ ligne.toID +'/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+          html += '<td>' + ligne.identiteDossier + '</td>';
+          html += '<td>' + ligne.registerDate + '</td>';
+          html += '</tr>';
+        });
+        html += '</tbody></table></div></div></td></tr>';
+
+        el.parents('tr').after(html);
+      } else {
+        alert_popup("info", 'Ce SAM n\'est bloqué pour aucun patient');
+      }
+    },
+    error: function() {
+      alert_popup("danger", 'Impossible de récupérer la liste demandée');
+
+    }
+  });
+}
 /**
  * Faire une recherche sur un terme
  * @param  {string} term texte de recherche
