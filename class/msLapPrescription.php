@@ -400,6 +400,9 @@ class msLapPrescription extends msLap
       //recherche DC
       $dataGenerique=$this->getDC(2, $dataSpe[0]['sp_gsp_code_fk'], 1);
       $this->_nomDC = $dataGenerique[0]['libelle'];
+      // corrections pour sortie postgre
+      if($dataGenerique[0]['prescription_dc'] == 't') $dataGenerique[0]['prescription_dc'] = 1;
+      if($dataGenerique[0]['prescription_dc'] == 'f') $dataGenerique[0]['prescription_dc'] = 0;
       $this->_prescriptibleEnDC = $dataGenerique[0]['prescription_dc'];
 
       // substances actives
