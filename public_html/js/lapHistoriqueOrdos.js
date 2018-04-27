@@ -36,7 +36,7 @@ $(document).ready(function() {
     getOrdonnance(ordonnanceID);
   });
 
-  // Renouveller une ligne de l'ordo visualisée
+  // Renouveler une ligne de l'ordo visualisée
   $('body').on("click", 'button.renouvLignePrescription', function(e) {
 
     var ligneIndex = $(this).parents('div.lignePrescription').index();

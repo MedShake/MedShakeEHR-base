@@ -751,7 +751,7 @@ function makeLigneOrdo(data, mode) {
       retour += '          ' + nl2br(data.ligneData.dureeTotaleHuman);
     }
     if (data.ligneData.nbRenouvellements > 0) {
-      retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
+      retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';
     }
     if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
       retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
@@ -768,7 +768,7 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
-      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
@@ -792,7 +792,7 @@ function makeLigneOrdo(data, mode) {
     }
     // voir ordo
     else if (mode == 'voirOrdonnance') {
-      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
     }
     //Actions pour mode ordonnance
@@ -861,7 +861,7 @@ function makeLigneOrdo(data, mode) {
     retour += '    <div class="col-md-11 gras">';
     retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
     if (data.ligneData.nbRenouvellements > 0) {
-      retour += ' - à renouveller ' + data.ligneData.nbRenouvellements + ' fois';
+      retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';
     }
     if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
       retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
@@ -873,7 +873,7 @@ function makeLigneOrdo(data, mode) {
 
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
-      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
@@ -889,7 +889,7 @@ function makeLigneOrdo(data, mode) {
 
     // voir ordo
     else if (mode == 'voirOrdonnance') {
-      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveller">';
+      retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
     }
 

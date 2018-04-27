@@ -887,7 +887,7 @@ function matchAndGo() {
         $('#prescriptionHumanPoso').html(data['posoHumanCompleteTab'].join('<br>'));
         $('#prescriptionHumanRecap').html(data['voieUtilisee']);
         if (data['posoFrappeeNbDelignes'] > 1) $('#prescriptionHumanRecap').append(' - Durée totale : ' + data['dureeTotaleHuman']);
-        if (data['nbRenouvellements'] > 0) $('#prescriptionHumanRecap').append(' - À renouveller ' + data['nbRenouvellements'] + ' fois');
+        if (data['nbRenouvellements'] > 0) $('#prescriptionHumanRecap').append(' - À renouveler ' + data['nbRenouvellements'] + ' fois');
         if (data['posoFrappeeNbDelignes'] > 0) $("button.sendToOrdonnance").removeAttr('disabled');
         if (data['alerteSecabilite'] == true) {
           $("#prescriptionAlertSecabilite").show();
