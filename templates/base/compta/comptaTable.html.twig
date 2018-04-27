@@ -51,14 +51,13 @@
               <th class="text-right">Payé</th>
               <th class="text-right">Impayé</th>
               <th></th>
-              <th></th>
           </tr>
         {% endif %}
       </thead>
       <tbody>
           {% for obj, reg in page.tabReg %}
               <tr>
-                  <td>#{{ loop.index }}</td>
+                  <td title="objet #{{ obj }}">#{{ loop.index }}</td>
                   <td>
                       {{ reg.creationDate|date("d/m/Y H:i") }}
                       {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
@@ -66,6 +65,7 @@
                       </button>{% endif %}
                   </td>
                   <td>
+                      <a class="btn btn-sm btn-light" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/"><span class="fa fa-folder-open"></span></a>
                       <strong>{{ reg.prenom|e }}
                           {{ reg.nom|e }}</strong>
                       {% if reg.regleIdentiteCheque %}(réglé par
@@ -116,24 +116,6 @@
                         </button>
                       {% endif %}
                   </td>
-                  <td class="text-right">
-                      <div class="btn-group">
-                          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
-
-                          </button>
-                          <ul class="dropdown-menu dropdown-menu-right">
-                              <li>
-                                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">Dossier patient</a>
-                              </li>
-                              <li role="separator" class="dropdown-divider"></li>
-                              <li class="disabled">
-                                  <a class="dropdown-item" href="#">#{{ obj }}</a>
-                              </li>
-                          </ul>
-                      </div>
-
-                  </td>
               </tr>
 
           {% endfor %}
@@ -161,7 +143,6 @@
               <th class="text-right">Payé</th>
               <th class="text-right">Impayé</th>
               <th class="text-right"></th>
-              <th class="text-right"></th>
           </tr>
           <tr>
               <th></th>
@@ -184,8 +165,7 @@
               {% endif %}
               <th class="text-right">{{ (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur)|number_format(2, '.', ' ')|e }}</th>
               <th class="text-right">{{ (page.tabTot.regleFacture - (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur))|number_format(2, '.', ' ')|e }}</th>
-              <th></th>
-              <th></th>
+              <th class="text-right">{% if page.tabReg|length > 0 %}{{ page.tabReg|length }} règlement{% if page.tabReg|length > 1 %}s{% endif %}{% endif %}</th>
           </tr>
       </thead>
   </table>
