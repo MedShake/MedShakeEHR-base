@@ -42,7 +42,7 @@ if($p['page']['mode']=='ei') {
   $mono->setSpe($match['params']['spe']);
   $p['page']['speData']=$mono->getSpeData();
   $p['page']['ficheEi']=$mono->getMonoAnnexesEI($p['page']['fiche']);
-  $p['page']['title'] = 'Fiche effets indésribales '.$p['page']['speData']['sp_nom'];
+  $p['page']['title'] = 'Fiche effets indésirables '.$p['page']['speData']['sp_nom'];
 }
 elseif($p['page']['mode']=='eis') {
   $mono->setSpe($match['params']['spe']);
