@@ -107,11 +107,11 @@
       {% endif %}
 
       {% if page.tabRegC %}
-        <h2>Paiements terminés</h2>
+        <h2>Paiements effectués</h2>
         <table class="table table-sm mb-0 table-hover table-striped table-responsive-xl">
           <thead>
             <tr>
-              <th>Patiente</th>
+              <th>Patient</th>
               {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
               {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
               <th>Montant à régler</th>
