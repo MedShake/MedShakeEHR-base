@@ -90,8 +90,8 @@ for ($i=1;$i<=$col;$i++) {
     $p['page']['outputTableHead'][]=$form['col'.$i]['head'];
 }
 
-// création d'une view avec tous les champs nécessaires
-$viewSelect="CREATE OR REPLACE VIEW preselect AS(
+// création d'une temporary avec tous les champs nécessaires
+$viewSelect="CREATE TEMPORARY TABLE preselect AS(
     SELECT od.toID AS id";
 foreach ($IdentiteTypes as $k=>$v) {
     $viewSelect.=" ,GROUP_CONCAT(CASE WHEN od.typeID='".$v."' then od.value END) AS ".$k;
@@ -129,7 +129,7 @@ if($_POST['porp']=='pro') {
     } else {
         return;
     }
-    $p['page']['extToInt']=msSQL::sql2tabKey("SELECT od.toID, od.value 
+    $p['page']['extToInt']=msSQL::sql2tabKey("SELECT od.toID, od.value
           FROM objets_data AS od left join data_types AS dt
           ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
           WHERE dt.name='relationExternePatient' AND od.toID IN ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
@@ -143,9 +143,9 @@ if($_POST['porp']=='pro') {
 
 if (!empty($_POST['d2'])) {
     $term=preg_replace('/  +/', ' ', msSQL::cleanVar($_POST['d2']));
-    $where.=" AND (CONCAT(firstname, ' ', birthname) LIKE '".$term."%' 
+    $where.=" AND (CONCAT(firstname, ' ', birthname) LIKE '".$term."%'
         OR CONCAT(firstname, ' ', lastname) LIKE '".$term."%'
-        OR CONCAT(birthname, ' ', firstname) LIKE '".$term."%' 
+        OR CONCAT(birthname, ' ', firstname) LIKE '".$term."%'
         OR CONCAT(lastname, ' ', firstname) LIKE '".$term."%'
     )";
 }
@@ -160,7 +160,7 @@ if (is_numeric($_POST['autreCrit']) and !empty($_POST['autreCritVal'])) {
 
 // construction de la requête
 
-$searchSelect="SELECT id, 
+$searchSelect="SELECT id,
   CASE WHEN birthname!='' and lastname!='' and administrativeGenderCode='F' THEN concat(trim(birthname),' ', trim(COALESCE(firstname,'')),' (née ',trim(lastname),')')
        WHEN birthname!='' and lastname!='' and administrativeGenderCode!='F' THEN concat(trim(birthname),' ', trim(COALESCE(firstname,'')), ' (né ', trim(lastname), ')')
        ELSE concat(trim(COALESCE(birthname,'')),trim(COALESCE(lastname,'')),' ',trim(COALESCE(firstname,''))) END as Identité,"
@@ -199,5 +199,3 @@ foreach ($row as $patientID=>$v) {
         $p['page']['outputType'][$patientID]['type']=$data[$patientID]['type'];
     }
 }
-
-
