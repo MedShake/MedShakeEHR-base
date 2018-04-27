@@ -371,8 +371,8 @@ class msLapPrescription extends msLap
 
       //spécialité
       $dataSpe=$this->getSpecialiteByCode($this->_speThe,1,3);
-      $this->_nomSpe = $dataSpe[0]['sp_nom'];
-      if($dataSpe[0]['mono_vir'] == 1) {
+      $this->_nomSpe = trim($dataSpe[0]['sp_nom'], '§ ');
+      if($dataSpe[0]['mono_vir'] == 1 or $dataSpe[0]['mono_vir'] =='t') {
         $this->_medicVirtuel = 1;
       } else {
         $this->_medicVirtuel = 0;
@@ -399,7 +399,7 @@ class msLapPrescription extends msLap
 
       //recherche DC
       $dataGenerique=$this->getDC(2, $dataSpe[0]['sp_gsp_code_fk'], 1);
-      $this->_nomDC = $dataGenerique[0]['libelle'];
+      $this->_nomDC = trim($dataGenerique[0]['libelle'], '§ ');
       // corrections pour sortie postgre
       if($dataGenerique[0]['prescription_dc'] == 't') $dataGenerique[0]['prescription_dc'] = 1;
       if($dataGenerique[0]['prescription_dc'] == 'f') $dataGenerique[0]['prescription_dc'] = 0;
@@ -449,31 +449,19 @@ class msLapPrescription extends msLap
         }
       }
 
-      // if(!empty($dataSpeUnite[0]['unite_prise'])) {
-      //   $this->_forme=$dataSpeUnite[0]['unite_prise'];
-      // } elseif(!empty($dataPres[0]['unite_prise'])) {
-      //   $this->_forme=$dataPres[0]['unite_prise'];
-      // } elseif(!empty($dataPres[0]['pre_nat'])) {
-      //   $this->_forme=$dataPres[0]['pre_nat'];
-      // } elseif(isset($dataSpeUnite[0]['ucd'])) {
-      //   $this->_forme=$dataSpeUnite[0]['ucd'];
-      // } else {
-      //   $this->_forme='';
-      // }
-
       // SAM
       $sams=$this->getSamList4Spe($this->_speThe);
 
       $tab = array(
         'speThe'=>$this->_speThe,
         'presThe'=> $this->_presThe,
-        'nomSpe'=> trim($this->_nomSpe, '§'),
-        'nomDC'=> trim($this->_nomDC, '§'),
+        'nomSpe'=> $this->_nomSpe,
+        'nomDC'=> $this->_nomDC,
         'medicVirtuel'=> $this->_medicVirtuel,
         'divisibleEn'=> $this->_divisibleEn,
         'unitesPossibles'=> $this->_unitesPossibles,
         'unitesConversion'=> $dataSpeUnite[0],
-        'nomUtileFinal' => trim($this->determineNomUtileFinal(),'§'),
+        'nomUtileFinal' => $this->determineNomUtileFinal(),
         'voiesPossibles'=>$dataSpeVoiesAdmin,
         'prescriptibleEnDC'=>$this->_prescriptibleEnDC,
         'codeATC'=>$dataSpe[0]['sp_catc_code_fk'],
