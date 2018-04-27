@@ -98,16 +98,20 @@ function lapOutilsSearchPres(el) {
       html += '<thead class="thead-dark"><tr>';
       html += '<th class="col-auto"></th>';
       html += '<th class="col-auto">Identité patient</th>';
+      html += '<th class="col-auto">Ddn</th>';
       html += '<th class="col-auto">Médicament</th>';
       html += '<th class="col-auto">Date de la prescription</th>';
+      html += '<th class="col-auto">Age à la prescription</th>';
       html += '</tr></thead><tbody>';
 
       $.each(data.patientsList, function(index, ligne) {
         html += '<tr>';
         html += '<td><a class="btn btn-light btn-sm" role="button" href="'+ urlBase +'/patient/'+ ligne.toID +'/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
         html += '<td>' + ligne.identiteDossier + '</td>';
+        html += '<td>' + ligne.birthdate + '</td>';
         html += '<td>' + ligne.specialite + ' (' + ligne.specialite + ')</td>';
         html += '<td>' + ligne.registerDate + '</td>';
+        html += '<td>' + ligne.ageALaPresc + ' ' + ligne.ageALaPrescUnite + '</td>';
         html += '</tr>';
       });
 
