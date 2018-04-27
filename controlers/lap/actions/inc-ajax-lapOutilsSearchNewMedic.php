@@ -44,3 +44,8 @@ if($_POST['typeRecherche'] == 'dci' ) {
 }
 
 $p['page']['listeCodeSpeTrouve']=$lap->getListeCodeSpeTrouve();
+if(!empty($p['page']['listeCodeSpeTrouve'])) {
+  foreach($p['page']['listeCodeSpeTrouve'] as $codeSpe) {
+    $p['page']['suba'][$codeSpe]=$lap->getSubtancesActivesTab($codeSpe);
+  }
+}
