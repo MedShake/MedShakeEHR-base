@@ -30,7 +30,7 @@ var inhibdates = false;
 $(document).ready(function() {
 
   //bouton de nouveau reglement
-  $(".editReglement").on("click", function(e) {
+  $("body").on("click", ".editReglement", function(e) {
     $("#nomPatient").html($(this).attr('data-patientname'));
     $("#montant").html('Reste à payer: ' + $(this).attr('data-aregler') + '€');
     $("input[name=patientID]").val($(this).attr('data-patientID'));
