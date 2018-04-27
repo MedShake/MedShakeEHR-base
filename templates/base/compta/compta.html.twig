@@ -68,11 +68,11 @@
 
 
 <form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin : 30px 0;">
-    <button class="btn m-1 refresh" type="button">
+    <button class="btn refresh mr-sm-2 mb-2" type="button">
       <span class="fa fa-sync-alt"></span>
     </button>
   {% if page.pratsAuto|length > 1 %}
-    <div class="input-group">
+    <div class="input-group mr-sm-2 mb-2">
       <div class="input-group-prepend">
         <span class="input-group-text" style="width:45px;padding-left:15px"><i class="fa fa-user-md"></i></span>
       </div>
@@ -87,7 +87,7 @@
     <input type="hidden" name="prat" value="{% for prat in page.pratsAuto %}{{ prat.id }}{% endfor %}" />
   {% endif %}
 
-  <div class="input-group">
+  <div class="input-group mr-sm-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:45px;padding-left:17px"><i class="fa fa-bolt"></i></span>
     </div>
@@ -99,7 +99,7 @@
     </select>
   </div>
 
-  <div id="beginPeriodeIDB" class="input-group date datepick">
+  <div id="beginPeriodeIDB" class="input-group date datepick mr-sm-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:45px">du: </span>
     </div>
@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <div id="endPeriodeIDB" class="input-group date datepick">
+  <div id="endPeriodeIDB" class="input-group date datepick mr-sm-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:45px">au: </span>
     </div>
@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <div class="input-group">
+  <div class="input-group mr-sm-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:85px">impayés</span>
     </div>
@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <div class="input-group">
+  <div class="input-group mr-sm-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:85px">bilan</span>
     </div>
