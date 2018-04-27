@@ -335,6 +335,12 @@ function addConsult(idx, consult) {
   }
 }
 
+/**
+ * ALerte légale pour réduction du seuil de fonctionnement du LAP par rapport à
+ * son niveau de certification
+ * @param  {object} el object jquery source du click
+ * @return {void}
+ */
 function alerteInfSeuilCertif(el) {
   if (el.is(":checked") != true) {
     alert("En décochant ce paramètre vous utiliserez le LAP avec des performances inférieures à celles prévues par la certification HAS");
@@ -345,6 +351,11 @@ function alerteInfSeuilCertif(el) {
   }
 }
 
+/**
+ * Afficher la liste des patients pour lesquels le SAM est bloqué
+ * @param  {object} el oject jquery source du click
+ * @return {void}
+ */
 function displayListSamPatientsDisabled(el) {
   samID = el.attr('data-samID');
   $.ajax({
@@ -380,6 +391,11 @@ function displayListSamPatientsDisabled(el) {
 
 }
 
+/**
+ * Retirer le blocage du SAM pour un patient
+ * @param  {object} source object jquery source du clic
+ * @return {void}
+ */
 function removePatientFromDisabledSamList(source) {
   $.ajax({
     url: urlBase + '/lap/ajax/lapSamToggleForPatient/',
