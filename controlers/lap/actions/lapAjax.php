@@ -61,7 +61,8 @@ $acceptedModes=array(
     'lapSamSaveSamComment', // sauver le commentaire patient sur le SAM
     'lapSamToggleForPatient', // basculer l'état dispo / non dispo pour le patient
     'lapOutilsSearchNewMedic', // recherche de médicaments pour lapOutils
-    'lapOutilDisplayListSamPatients' //btenir la liste des patients dont la condition du SAM est réalisée dernière ordo
+    'lapOutilDisplayListSamPatients', //btenir la liste des patients dont la condition du SAM est réalisée dernière ordo
+    'lapOutilsSearchPres' //rechercher des prescritions sur critères (outils LAP)
 );
 
 if (!in_array($m, $acceptedModes)) {

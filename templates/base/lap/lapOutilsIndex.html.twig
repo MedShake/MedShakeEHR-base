@@ -46,7 +46,10 @@
 
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-          <a class="nav-link  active" href="#rechercheMedics" data-toggle="tab">Recherche médicaments</a>
+          <a class="nav-link active" href="#rechercheMedics" data-toggle="tab">Recherche médicaments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#recherchePres" data-toggle="tab">Recherche prescriptions</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
@@ -62,6 +65,53 @@
 
     <div class="col">
       <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane" id="recherchePres">
+          <h3>Recherche et exports de prescriptions</h3>
+
+          <p>Les codes nécessaires à la recherche peuvent être trouvés facilement à l'onglet "Recherche médicament".</p>
+
+          <form method="post" class="form-inline">
+
+            <input type="text" class="form-control m-1" name="code" placeholder="Indiquer le code ici" autocomplete="off">
+
+            <select name="typeRecherche" class="custom-select m-1" autocomplete="off">
+              <option value="lapMedicamentSpecialiteCodeTheriaque">code spécialité</option>
+              <option value="lapMedicamentPresentationCodeTheriaque">code présentation</option>
+              <option value="lapMedicamentCodeSubstanceActive">code substance active</option>
+              <option value="lapMedicamentCodeATC">classe ATC</option>
+            </select>
+
+          <div id="beginPeriodeIDB" class="input-group date datepick">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="width:45px">du:
+              </span>
+            </div>
+            <input type="text" id="beginPeriodeID" name="beginPeriode" class="form-control" autocomplete="off" value="{{ page.periode.begin }}"/>
+            <div class="input-group-append">
+              <span class="fa fa-calendar input-group-text"></span>
+            </div>
+          </div>
+
+          <div id="endPeriodeIDB" class="input-group date datepick ml-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="width:45px">au:
+              </span>
+            </div>
+            <input type="text" id="endPeriodeID" name="endPeriode" class="form-control" autocomplete="off" value="{{ page.periode.end }}"/>
+            <div class="input-group-append">
+              <span class="fa fa-calendar input-group-text"></span>
+            </div>
+          </div>
+
+          <button id="lapOutilsSearchPres" class="btn btn-primary m-1">Rechercher</button>
+          </form>
+
+          <div class="row mt-3">
+            <div class="col" id="lapOutilsSearchPresResults"></div>
+          </div>
+
+        </div>
 
         <div role="tabpanel" class="tab-pane active" id="rechercheMedics">
 

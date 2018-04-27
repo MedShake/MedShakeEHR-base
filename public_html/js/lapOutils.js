@@ -55,7 +55,6 @@ $(document).ready(function() {
   $('#rechercheResultats').on("aftertablesort", "#tabMedicaments", function(event, data) {
 
     th = $(this).find("th");
-    console.log(th);
     th.find(".arrow").remove();
     dir = $.fn.stupidtable.dir;
     arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
@@ -74,7 +73,53 @@ $(document).ready(function() {
     }
   });
 
+  $('body').on('click', "#lapOutilsSearchPres", function(e) {
+    e.preventDefault();
+    lapOutilsSearchPres($(this));
+  });
+
+
 });
+
+
+/**
+ * Recherche de prescriptions sur critères
+ * @param  {el} el object jquery source
+ * @return {void}
+ */
+function lapOutilsSearchPres(el) {
+  $.ajax({
+    url: urlBase + '/lap/ajax/lapOutilsSearchPres/',
+    type: 'post',
+    data: el.parents("form").serialize(),
+    dataType: "json",
+    success: function(data) {
+      html = '<table class="table table-hover table-sm small">';
+      html += '<thead class="thead-dark"><tr>';
+      html += '<th class="col-auto"></th>';
+      html += '<th class="col-auto">Identité patient</th>';
+      html += '<th class="col-auto">Médicament</th>';
+      html += '<th class="col-auto">Date de la prescription</th>';
+      html += '</tr></thead><tbody>';
+
+      $.each(data.patientsList, function(index, ligne) {
+        html += '<tr>';
+        html += '<td><a class="btn btn-light btn-sm" role="button" href="'+ urlBase +'/patient/'+ ligne.toID +'/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+        html += '<td>' + ligne.identiteDossier + '</td>';
+        html += '<td>' + ligne.specialite + ' (' + ligne.specialite + ')</td>';
+        html += '<td>' + ligne.registerDate + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      $('#lapOutilsSearchPresResults').html(html);
+    },
+    error: function() {
+      alert_popup("danger", "Une erreur s'est produite durant l'opération");
+    }
+  });
+}
+
 
 /**
  * Afficher la liste des patients dont la condition du SAM choisi est réalisée
