@@ -120,7 +120,6 @@
                               {% if k != user.id %}
                                 <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
                                 <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
-                                </li>
                               {% endif %}
                             {% endfor %}
                           </div>
