@@ -47,7 +47,7 @@ class msConfiguration
  * @return string       valeur du paramètre
  */
     public static function getDefaultParameterValue($name) {
-        return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='defaut'");
+        return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='default'");
     }
 
 ////////////////// NIVEAU USER \\\\\\\\\\\\\\\\\\\
