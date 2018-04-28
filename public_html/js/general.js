@@ -209,13 +209,6 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// page SpecificUserParam
-  $('select[name=paramCat]').on('click', function(){
-    $('.paramselect').hide();
-    $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
-  });
-
-  ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
   if ($('.QRcodeAccesPhoneCapture').length) {

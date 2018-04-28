@@ -189,7 +189,7 @@
                     {% set first = true %}
                     {% for p in page.availableParams %}
                       {% if p.cat == cat %}
-                        <option value="{{ p.name }}"{% if first %}selected{% endif %}>{{ p.name }}</option>
+                        <option value="{{ p.name }}"{% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
                         {% set first = false %}
                       {% endif %}
                     {% endfor %}
@@ -197,6 +197,8 @@
                 {% endfor %}
               </div>
             </div>
+            <p id="description" class="py-1" style="background-color:#eee">description : {{ (page.availableParams|first).description }}</p>
+            <p id="type" class="py-1" style="background-color:#eee">type : {{ (page.availableParams|first).type }}</p>
             <div class="form-group row">
               <div class="col-12">
                 <label>Valeur</label>

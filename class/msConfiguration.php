@@ -58,7 +58,7 @@ class msConfiguration
  * @return array       tableau des paramètres
  */
     public static function listAvailableParameters($user) {
-        $all=msSQL::sql2tabKey("SELECT cat, name, description FROM configuration WHERE level='default' ORDER BY cat, name", 'name');
+        $all=msSQL::sql2tabKey("SELECT cat, name, type, description FROM configuration WHERE level='default' ORDER BY cat, name", 'name');
         self::$_usersParams=self::getUserParamaters($user['id']);
         if (!is_array(self::$_usersParams)) {
             return $all;
