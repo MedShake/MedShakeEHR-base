@@ -62,7 +62,17 @@ spl_autoload_register(function ($class) {
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
-/// enregistre le fichier sous le nom déterminé en config 
-if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
-  msExternalData::fileSaveLocal($p['config']['agendaDistantPatientsOfTheDay'], $p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+/////////// SQL connexion
+$mysqli=msSQL::sqlConnect();
+
+$users=msPeople::getUsersWithSpecificParam('agendaDistantPatientsOfTheDay');
+
+foreach ($users as $userID=>$value) {
+    /////////// config pour l'utilisateur concerné
+    $p['userConfig']=msConfiguration::getAllParametersForUser($userID);
+
+    /// enregistre le fichier sous le nom déterminé en config 
+    if(isset($p['userConfig']['agendaDistantPatientsOfTheDay']) and isset($p['userConfig']['agendaLocalPatientsOfTheDay'])) {
+      msExternalData::fileSaveLocal($p['userConfig']['agendaDistantPatientsOfTheDay'], $p['userConfig']['workingDirectory'].$p['userConfig']['agendaLocalPatientsOfTheDay']);
+    }
 }
