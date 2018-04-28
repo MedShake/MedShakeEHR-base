@@ -192,9 +192,9 @@ $(document).ready(function() {
       return;
     }
     $.ajax({
-      url: $(this).parents("form").attr("action"),
+      url: $(this).closest("form").attr("action"),
       type: 'post',
-      data: $(this).parents("form").serialize(),
+      data: $(this).closest("form").serialize(),
       dataType: "json",
       success: function(data) {
         if (reload)
