@@ -53,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
@@ -68,11 +68,11 @@ function sendmailjet($pa)
 {
     global $p;
 
-    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['userConfig']['mailRappelMessage'])));
+    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['config']['mailRappelMessage'])));
 
     $mailParams=array(
-    "FromEmail"=>$p['userConfig']['smtpFrom'],
-    "FromName"=>$p['userConfig']['smtpFromName'],
+    "FromEmail"=>$p['config']['smtpFrom'],
+    "FromName"=>$p['config']['smtpFromName'],
     "Subject"=>'Rappel rendez-vous Dr '.$pa['praticien'].' le '.$pa['jourRdv'].' à '.$pa['heureRdv'],
     "Text-part"=>$msgRappel,
     "Html-part"=>nl2br($msgRappel),
@@ -90,7 +90,7 @@ function sendmailjet($pa)
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($mailParams));
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_USERPWD, $p['userConfig']['smtpUsername'] . ":" . $p['userConfig']['smtpPassword']);
+    curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
     $headers = array();
     $headers[] = "Content-Type: application/json";
@@ -119,9 +119,9 @@ $users=msPeople::getUsersListForService('mailRappelActiver');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['userConfig']=msConfiguration::getAllParametersForUser($userID);
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
-    $tsJourRDV=time()+($p['userConfig']['mailRappelDaysBeforeRDV']*24*60*60);
+    $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 
     $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
     $patientsList=json_decode($patientsList, true);
@@ -154,7 +154,7 @@ foreach ($users as $userID=>$value) {
         }
 
         //log json
-        $logFileDirectory=$p['userConfig']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
+        $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
         msTools::checkAndBuildTargetDir($logFileDirectory);
         file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
     }

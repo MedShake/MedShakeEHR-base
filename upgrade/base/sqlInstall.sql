@@ -644,7 +644,7 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('smsDaysBeforeRDV', 'Rappels SMS', 'default', 'nombre', '', '3'),
 ('smsCreditsFile', 'Rappels SMS', 'default', 'fichier', '', 'creditsSMS.txt'),
 ('smsSeuilCreditsAlerte', 'Rappels SMS', 'default', 'nombre', '', '150'),
-('smsTpoa', 'Rappels SMS', 'default', 'texte', '', 'Dr ....'),
+('smsTpoa', 'Rappels SMS', 'default', 'texte', 'La balise #praticien sera automatiquement remplacée dans le message envoyé', 'Dr #praticien'),
 ('clicRdvApiKey', 'clicRDV', 'default', 'texte', '', ''),
 ('clicRdvUserId', 'clicRDV', 'default', 'texte', '', ''),
 ('clicRdvPassword', 'clicRDV', 'default', 'texte', '', ''),

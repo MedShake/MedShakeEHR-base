@@ -53,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
@@ -63,15 +63,15 @@ $users=msPeople::getUsersListForService('smsRappelActiver');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['userConfig']=msConfiguration::getAllParametersForUser($userID);
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
-    $tsJourRDV=time()+($p['userConfig']['smsDaysBeforeRDV']*24*60*60);
+    $tsJourRDV=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
 
     $campaignSMS = new msSMSallMySMS();
 
     $campaignSMS->set_campaign_name("RappelsRDV".date('Ymd', $tsJourRDV));
-    $campaignSMS->set_message(str_replace("#praticien", $value['lastname']?:$value['birthname'], str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['userConfig']['smsRappelMessage']))));
-    $campaignSMS->set_tpoa($p['userConfig']['smsTpoa']);
+    $campaignSMS->set_message(str_replace("#praticien", $value['lastname']?:$value['birthname'], str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['config']['smsRappelMessage']))));
+    $campaignSMS->set_tpoa(iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', str_replace("#praticien", $value['lastname']?:$value['birthname'], $p['config']['smsTpoa'])));
 
     $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
     $patientsList=json_decode($patientsList, true);

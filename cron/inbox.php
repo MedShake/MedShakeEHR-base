@@ -57,7 +57,7 @@ spl_autoload_register(function ($class) {
 });
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 
@@ -70,12 +70,12 @@ $users=msPeople::getUsersWithSpecificParam('apicryptPopUser');
 
 foreach ($users as $userID) {
     /////////// config pour l'utilisateur concerné
-    $p['userConfig']=msConfiguration::getAllParametersForUser($userID);
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
     /////////// Relever le compte pop3
 
     $pop = new msPop3();
-    if ($connection = $pop->pop3_login($p['userConfig']['apicryptPopHost'], $p['userConfig']['apicryptPopPort'], $p['userConfig']['apicryptPopUser'], $p['userConfig']['apicryptPopPasswordword'], 'INBOX', false)) {
+    if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPasswordword'], 'INBOX', false)) {
         $liste=$pop->pop3_list($connection);
 
         if (count($liste)>0) {
@@ -89,17 +89,17 @@ foreach ($users as $userID) {
                     foreach ($message as $kpart=>$part) {
                         if ($kpart > 0 and isset($part['is_attachment'])) {
                             if (strlen($part['data'])>10) {
-                                msTools::checkAndBuildTargetDir($p['userConfig']['apicryptCheminInbox'].$dirname);
-                                $filec=$p['userConfig']['apicryptCheminInbox'].$dirname.'/'.msTools::sanitizeFilename($part['filename']);
-                                $filenc=$p['userConfig']['apicryptCheminInbox'].$dirname.'/';
+                                msTools::checkAndBuildTargetDir($p['config']['apicryptCheminInbox'].$dirname);
+                                $filec=$p['config']['apicryptCheminInbox'].$dirname.'/'.msTools::sanitizeFilename($part['filename']);
+                                $filenc=$p['config']['apicryptCheminInbox'].$dirname.'/';
                                 file_put_contents($filec, $part['data']);
                                 msApicrypt::decrypterPJ($filec, $filenc);
                                 unlink($filec);
                             }
                         } elseif ($kpart > 0) {
                             if (strlen($part['data'])>10) {
-                                $filec=$p['userConfig']['apicryptCheminInbox'].$filename;
-                                $filenc=$p['userConfig']['apicryptCheminInbox'].$filename.'.txt';
+                                $filec=$p['config']['apicryptCheminInbox'].$filename;
+                                $filenc=$p['config']['apicryptCheminInbox'].$filename.'.txt';
 
                                 file_put_contents($filec, $part['data']);
                                 msApicrypt::decrypterCorps($filec, $filenc);
@@ -114,11 +114,11 @@ foreach ($users as $userID) {
                     }
 
                     // sauvegarder en base
-                    $hprim = msHprim::getHprimHeaderData($p['userConfig']['apicryptCheminInbox'].$filename.'.txt');
+                    $hprim = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$filename.'.txt');
                     $hprim=msTools::utf8_converter($hprim);
 
                     // pj
-                    $dir=$p['userConfig']['apicryptCheminInbox'].$dirname;
+                    $dir=$p['config']['apicryptCheminInbox'].$dirname;
                     if (is_dir($dir)) {
                         msTools::sanitizeDirectoryFiles($dir.'/');
                         $pj = array_diff(scandir($dir), array('..', '.'));

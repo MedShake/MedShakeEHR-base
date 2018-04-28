@@ -53,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
@@ -72,11 +72,11 @@ function sendmail($pa)
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';
     $mail->isSMTP();
-    $mail->Host = $p['userConfig']['smtpHost'];
+    $mail->Host = $p['config']['smtpHost'];
     $mail->SMTPAuth = true;
-    $mail->Username = $p['userConfig']['smtpUsername'];
-    $mail->Password = $p['userConfig']['smtpPassword'];
-    if($p['userConfig']['smtpOptions'] == 'on') {
+    $mail->Username = $p['config']['smtpUsername'];
+    $mail->Password = $p['config']['smtpPassword'];
+    if($p['config']['smtpOptions'] == 'on') {
       $mail->SMTPOptions = array(
         'ssl' => array(
           'verify_peer' => false,
@@ -85,14 +85,14 @@ function sendmail($pa)
         )
       );
     }
-    if(!empty($p['userConfig']['smtpSecureType'])) $mail->SMTPSecure = $p['userConfig']['smtpSecureType'];
-    $mail->Port = $p['userConfig']['smtpPort'];
+    if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
+    $mail->Port = $p['config']['smtpPort'];
 
-    $mail->setFrom($p['userConfig']['smtpFrom'], $p['userConfig']['smtpFromName']);
+    $mail->setFrom($p['config']['smtpFrom'], $p['config']['smtpFromName']);
     $mail->addAddress($pa['email'], $pa['identite']);
     $mail->Subject = 'Rappel rdv le '.$pa['jourRdv'].' à '.$pa['heureRdv'];
 
-    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['userConfig']['mailRappelMessage'])));
+    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['config']['mailRappelMessage'])));
 
     $mail->Body = nl2br($msgRappel);
     $mail->AltBody = $msgRappel;
@@ -109,10 +109,10 @@ $users=msPeople::getUsersListForService('mailRappelActiver');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['userConfig']=msConfiguration::getAllParametersForUser($userID);
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
 
-$tsJourRDV=time()+($p['userConfig']['mailRappelDaysBeforeRDV']*24*60*60);
+$tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 
 $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
 $patientsList=json_decode($patientsList, true);
@@ -148,7 +148,7 @@ if (is_array($patientsList)) {
     }
 
     //log json
-    $logFileDirectory=$p['userConfig']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
+    $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
     msTools::checkAndBuildTargetDir($logFileDirectory);
     file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
 
