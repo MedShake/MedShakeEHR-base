@@ -278,13 +278,23 @@ class msPeople
       $name2typeID = new msData();
       $name2typeID = $name2typeID->getTypeIDsFromName([$service, 'firstname', 'lastname', 'birthname']);
 
-      return msSQL::sql2tabKey("select p.id, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
-        from people as p
-        join configuration as c on c.toID=p.id and c.name='".$service."' and c.value='true'
-        left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
-        left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
-        where p.pass!='' order by identite", 'id', 'identite');
+      if (msConfiguration::getDefaultParameterValue($service)=='true') {
+          $forbiddenIDs=msSQL::sql2tabKey("SELECT toID FROM configuration WHERE level='user' and name='".$service."' and value='false'", 'toID', 'toID')?:array();
+          return msSQL::sql2tabKey("select p.id, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
+            from people as p
+            left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
+            left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+            left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
+            where p.pass!='' and p.id not in ('".implode("','", $forbiddenIDs)."') order by identite", 'id', 'identite');
+      } else {
+          $allowedIDs=msSQL::sql2tabKey("SELECT toID FROM configuration WHERE level='user' and name='".$service."' and value='true'", 'toID', 'toID')?:array();
+          return msSQL::sql2tabKey("select p.id, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
+            from people as p
+            left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
+            left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+            left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
+            where p.pass!='' and p.id in ('".implode("','", $allowedIDs)."') order by identite", 'id', 'identite');
+      }
   }
 
   /**
