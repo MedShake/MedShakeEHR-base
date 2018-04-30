@@ -27,7 +27,7 @@
  */
 
  $name2typeID = new msData();
- $name2typeID = $name2typeID->getTypeIDsFromName(['lapMedicamentCodeATC', 'lapMedicamentCodeSubstanceActive', 'lapMedicamentPresentationCodeTheriaque', 'lapMedicamentSpecialiteCodeTheriaque', 'firstname', 'lastname', 'birthname','lapMedicamentSpecialiteNom','lapMedicamentDC', 'administrativeGenderCode', 'birthdate', 'allergieCodeTheriaque', 'atcdStrucCIM10']);
+ $name2typeID = $name2typeID->getTypeIDsFromName(['lapMedicamentCodeATC', 'lapMedicamentCodeSubstanceActive', 'lapMedicamentPresentationCodeTheriaque', 'lapMedicamentSpecialiteCodeTheriaque', 'firstname', 'lastname', 'birthname','lapMedicamentSpecialiteNom','lapMedicamentDC', 'administrativeGenderCode', 'birthdate', 'allergieCodeTheriaque', 'atcdStrucCIM10','lapMedicamentMotifPrescription']);
 
  //gestion des dates
  if(!empty($_POST['beginPeriode'])) {
@@ -106,7 +106,7 @@
 
  left join objets_data as cimg on cimg.toID=w.toID and cimg.typeID='".$name2typeID['atcdStrucCIM10']."' and cimg.outdated='' and cimg.deleted=''
 
- where w.fromID= '".$p['user']['id']."' and w.outdated ='' and w.deleted=''and w.typeID = '".$name2typeID[msSQL::cleanVar($_POST['typeRecherche'])]."' and w.value like '".msSQL::cleanVar($_POST['code'])."' $whereBeginPeriode $whereEndPeriode $whereSexe $whereAllergie $whereCIM
+ where w.fromID= '".$p['user']['id']."' and w.outdated ='' and w.deleted=''and w.typeID like '".$name2typeID[msSQL::cleanVar($_POST['typeRecherche'])]."' and w.value like '".msSQL::cleanVar($_POST['code'])."' $whereBeginPeriode $whereEndPeriode $whereSexe $whereAllergie $whereCIM
  group by w.id, spe.id, dc.id, o.id, o2.id, bn1.id, bd.id $groubySexe $groupbyAllergie $groupbyCIM
  order by w.registerDate desc
  ");

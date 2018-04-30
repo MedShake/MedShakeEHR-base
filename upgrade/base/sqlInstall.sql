@@ -500,8 +500,8 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (546, 'ordo', 'lapMedicamentSpecialiteCodeTheriaque', '', 'Code Thériaque de la spécialité', 'code Thériaque de la spécialité', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
 (547, 'ordo', 'lapMedicamentSpecialiteNom', '', 'Nom de la spécialité', 'nom de la spécialité', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
 (548, 'ordo', 'lapMedicamentCodeSubstanceActive', '', 'Code substance active du médicament', 'code substance active du médicament', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
-( 'ordo', 'lapLignePrescriptionDureeJours', '', 'Durée de la prescription en jours', 'durée de la prescription en jours', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
-( 'ordo', 'lapLignePrescriptionDatePriseFinEffective', '', 'Date effective de fin de prise', 'date effective de fin de prise', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
+(560, 'ordo', 'lapLignePrescriptionDureeJours', '', 'Durée de la prescription en jours', 'durée de la prescription en jours', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
+(561, 'ordo', 'lapLignePrescriptionDatePriseFinEffective', '', 'Date effective de fin de prise', 'date effective de fin de prise', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
 (549, 'ordo', 'lapLignePrescriptionDatePriseFin', '', 'Date de fin de prise', 'date de fin de prise', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
 (550, 'ordo', 'lapLignePrescriptionDatePriseDebut', '', 'Date de début de prise', 'date de début de prise', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
 (551, 'ordo', 'lapLignePrescriptionIsChronique', '', 'isChronique', 'ligne TT chronique ou non', '', '', '', '', 'base', 74, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -512,7 +512,8 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (556, 'ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', 73, 1, '2018-01-01 00:00:00', 3600, 1),
 (557, 'ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', 73, 1, '2018-01-01 00:00:00', 3600, 1),
 (558, 'ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', 73, 1, '2018-01-01 00:00:00', 1576800000, 1),
-(559, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-01-01 00:00:00', 3600, 6);
+(559, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-01-01 00:00:00', 3600, 6),
+(562, 'ordo', 'lapMedicamentMotifPrescription', '', 'Motif de prescription du médicament', 'motif de prescription du médicament', '', '', '', '', 'base', 75, 1, '2018-04-30 20:30:06', 3600, 1);
 
 
 INSERT IGNORE INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES

@@ -151,6 +151,7 @@ class msLapOrdo extends msLap
               $lap->createNewObjetByTypeName('lapMedicamentDC', $m['nomDC'], $medicamentID);
               $lap->createNewObjetByTypeName('lapMedicamentCodeATC', $m['codeATC'], $medicamentID);
               $lap->createNewObjetByTypeName('lapMedicamentEstPrescriptibleEnDC', $m['prescriptibleEnDC'], $medicamentID);
+              if(isset($m['prescriptionMotif']) and !empty(trim($m['prescriptionMotif']))) $lap->createNewObjetByTypeName('lapMedicamentMotifPrescription', $m['prescriptionMotif'], $medicamentID);
 
               if(!empty($m['substancesActives'])) {
                 foreach($m['substancesActives'] as $k=>$v) {
