@@ -32,7 +32,7 @@
   <thead>
     <th class="col-md-6 text-center">DÉBUT</th>
     <th class="text-center gras">
-      <select id="selectHistoTTAnnee">
+      <select id="selectHistoTTAnnee" class="custom-select">
       {% for annee in page.histoTTannees %}
         <option {% if annee == page.histoTTannee %}selected="selected"{% endif %}>{{ annee }}</option>
       {% endfor %}

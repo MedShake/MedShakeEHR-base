@@ -25,31 +25,46 @@
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #
 #}
-
-<table class="table table-sm table-hover">
-  <thead>
-    <th></th>
-    <th>Date</th>
-    <th>Prescripteur</th>
-    <th>Titre de l'ordonnance</th>
-  </thead>
-  <tbody>
-    {% for annee, v in page.ordos %}
-      <tr>
-        <td colspan="4" class="table-primary gras">{{ annee }}</td>
-      </tr>
-      {% for ordo in v %}
-        <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
-          <td>
-            <button class="btn btn-light btn-sm" title="Voir">
-              <span class="fa fa-eye" aria-hidden="true"></span></button>
-          </td>
-          <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
-          <td>{{ ordo.prenom }}
-            {{ ordo.nom }}</td>
-          <td>{{ ordo.titre }}</td>
-        </tr>
-      {% endfor %}
+<div class="row mb-2 justify-content-center">
+  <div class="col-auto">
+    <select id="selectHistoOrdo" class="custom-select">
+    {% for annee in page.histoOrdoAnnees %}
+      <option {% if annee == page.histoOrdoAnnee %}selected="selected"{% endif %}>{{ annee }}</option>
     {% endfor %}
-  </tbody>
-</table>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+
+    <table class="table table-sm table-hover">
+      <thead>
+        <th></th>
+        <th>Date</th>
+        <th>Prescripteur</th>
+        <th>Titre de l'ordonnance</th>
+      </thead>
+      <tbody>
+        {% for mois, v in page.ordos %}
+          <tr>
+            <td colspan="4" class="table-primary gras text-center">{{ mois|capitalize }}</td>
+          </tr>
+          {% for ordo in v %}
+            <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
+              <td>
+                <button class="btn btn-light btn-sm" title="Voir">
+                  <span class="fa fa-eye" aria-hidden="true"></span></button>
+              </td>
+              <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
+              <td>{{ ordo.prenom }}
+                {{ ordo.nom }}</td>
+              <td>{{ ordo.titre }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>

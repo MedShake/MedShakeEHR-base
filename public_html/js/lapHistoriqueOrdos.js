@@ -30,6 +30,12 @@ var ordonnanceVisu = {};
 
 $(document).ready(function() {
 
+  // liste des ordos en fonction de l'année sélectionnée
+  $('#ordohistoriqueTab').on("change", "#selectHistoOrdo", function() {
+    year = $("#selectHistoOrdo option:selected").text();
+    getHistoriqueOrdos(year);
+  });
+
   // Obtenir l'ordo
   $('body').on("click", '.voirOrdonnance', function(e) {
     var ordonnanceID = $(this).attr("data-ordonnanceID");
@@ -107,12 +113,14 @@ function getOrdonnance(ordonnanceID, destination) {
  * Obtenir l'historique ordonnances
  * @return {string} html
  */
-function getHistoriqueOrdos() {
+function getHistoriqueOrdos(year) {
+  if (!year)  var year = moment(new Date()).format('YYYY');
   $.ajax({
     url: urlBase + '/lap/ajax/lapOrdoHistoriqueGet/',
     type: 'post',
     data: {
       patientID: $('#identitePatient').attr("data-patientID"),
+      year: year
     },
     dataType: "html",
     success: function(data) {

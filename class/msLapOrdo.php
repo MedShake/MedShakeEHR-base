@@ -172,16 +172,16 @@ class msLapOrdo extends msLap
  * Obtenir l'historique des ordonnances
  * @return array tableau de l'historique
  */
-    public function getHistoriqueOrdos() {
+    public function getHistoriqueOrdos($annee) {
       $data = new msData();
       $name2typeID=$data->getTypeIDsFromName(['lapOrdonnance','firstname','lastname','birthname']);
 
-      return msSQL::sql2tabKey("select o.*, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom, p.value as prenom, year(o.registerDate) as annee
+      return msSQL::sql2tabKey("select o.*, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom, p.value as prenom, month(o.registerDate) as mois
       from objets_data as o
       left join objets_data as n on n.toID=o.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
       left join objets_data as p on p.toID=o.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
       left join objets_data as bn on bn.toID=o.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-      where o.typeID='".$name2typeID['lapOrdonnance']."' and o.toID='".$this->_toID."' and o.deleted='' and o.outdated=''
+      where o.typeID='".$name2typeID['lapOrdonnance']."' and o.toID='".$this->_toID."' and o.deleted='' and o.outdated='' and YEAR(o.registerDate) = '".msSQL::cleanVar($annee)."'
       group by  o.id, n.id, p.id, bn.id order by o.id desc", 'id');
     }
 
@@ -260,10 +260,20 @@ class msLapOrdo extends msLap
     }
 
 /**
+ * Obtenir les années distinctes pour lesquelles il existe des ordonnances pour le patient
+ * @return array tableau des années (desc)
+ */
+    public function getHistoriqueAnneesDistinctesOrdos() {
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['lapOrdonnance']);
+      return msSQL::sql2tabKey("select distinct(YEAR(registerDate)) as annee from objets_data where toID='".$this->_toID."' and typeID='".$name2typeID['lapOrdonnance']."' order by annee desc", 'annee', 'annee');
+    }
+
+/**
  * Obtenir les années distinctes pour lesquelles il y a eu presciption interne ou par tiers
  * @return array tableau des années
  */
-    public function getHistoriqueAnneesDistinctes() {
+    public function getHistoriqueAnneesDistinctesMedics() {
       $data = new msData();
       $name2typeID=$data->getTypeIDsFromName(['lapLignePrescription','lapLigneMedicament','lapLignePrescriptionIsChronique','lapLignePrescriptionDatePriseDebut', 'lapLignePrescriptionDatePriseFinAvecRenouv', 'lapLignePrescriptionDatePriseFinEffective']);
 

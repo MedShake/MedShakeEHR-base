@@ -21,7 +21,7 @@
  */
 
 /**
- * Login : page de login
+ * Patient : onglet LAP
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
