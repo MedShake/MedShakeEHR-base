@@ -152,6 +152,8 @@ class msLapAnalysePres extends msLap
 
     private $_tabLignesRisqueAllergiques;
 
+    private $_ligneObjetIdDejaVus;
+
 /**
  * Set the value of patient objet
  * @param mixed _ordonnanceContenu
@@ -510,10 +512,20 @@ class msLapAnalysePres extends msLap
         $l=$this->_ordonnanceContenu[$this->_zoneOrdo][$this->_indexLignePresOrdo];
       }
 
+      // si on est en TTChro et que l'objetID existe déjà on exclue la ligne car
+      // un renouv la concernant est passé dans l'ordo
+      if($this->_zoneOrdo == 'TTChroniques') {
+        if(in_array($l['ligneData']['objetID'],$this->_ligneObjetIdDejaVus)) return;
+      }
+      // on stocke les objetID des lignes s'ils existent pour exclure ensuite les lignes
+      // du TT en cours qui serait un renouv d'un tt chronique (crit 74)
+      if(isset($l['ligneData']['objetID']) and $l['ligneData']['objetID']>0) $this->_ligneObjetIdDejaVus[] = $l['ligneData']['objetID'];
+
       if(!empty($l['medics'])) {
 
         // on boucle sur les medic de la ligne
         foreach($l['medics'] as $indexMedic=>$m) {
+
             //fixe la date de départ pour ce médicament (= date départ de la ligne)
             if($this->_zoneOrdo == 'TTChroniques') {
               $this->_dateDepart=$this->_dateBorneDebutOrdo;

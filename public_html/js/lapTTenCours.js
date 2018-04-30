@@ -94,11 +94,11 @@ $(document).ready(function() {
     }
 
     var ligneAinjecter = TTenCours[source][ligneIndex];
-    ligneAinjecter=cleanLignePrescriptionAvantRenouv(ligneAinjecter);
+    ligneAinjecter = cleanLignePrescriptionAvantRenouv(ligneAinjecter);
 
     console.log(ligneAinjecter);
     zone.push(ligneAinjecter);
-    construireHtmlLigneOrdonnance(ligneAinjecter, 'append','', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
+    construireHtmlLigneOrdonnance(ligneAinjecter, 'append', '', '#conteneurOrdonnanceCourante', 'editionOrdonnance');
 
     // SAMS
     getDifferentsSamFromOrdo();
@@ -121,14 +121,18 @@ $(document).ready(function() {
  * @return {object}       ligne de prescrition nettoyée
  */
 function cleanLignePrescriptionAvantRenouv(ligne) {
+
   //ajuster nouvelles dates
   ligne.ligneData.dateDebutPrise = moment(new Date()).format('DD/MM/YYYY');
-  ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours-1, 'days').format('DD/MM/YYYY');
+  if (ligne.ligneData.dureeTotaleMachineJours > 0) {
+    ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours - 1, 'days').format('DD/MM/YYYY');
+  } else {
+    ligne.ligneData.dateFinPrise = ligne.ligneData.dateDebutPrise;
+  }
   //retirer éventuels prescripteurs initiaux
   $.each(ligne.medics, function(index, l) {
     delete ligne.medics[index].prescripteurInitialTT;
     delete ligne.medics[index].risqueAllergique;
-
   });
 
   return ligne;
