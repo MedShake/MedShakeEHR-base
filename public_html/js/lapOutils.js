@@ -88,35 +88,52 @@ $(document).ready(function() {
  * @return {void}
  */
 function lapOutilsSearchPres(el) {
+  stop=false;
+  el.closest("form").find('input[required],textarea[required]').each(function(idx, el) {
+    if (el.value==''){
+      glow('danger', $(el));
+      stop=true;
+    }
+  });
+  if (stop) {
+    return;
+  }
   $.ajax({
     url: urlBase + '/lap/ajax/lapOutilsSearchPres/',
     type: 'post',
     data: el.parents("form").serialize(),
     dataType: "json",
     success: function(data) {
-      html = '<table class="table table-hover table-sm small">';
+      html = '<div class="row mb-2"><div class="col text-right"><button class="btn btn-secondary btn-sm" onclick="exportTableToCSV(\'#tableResultatsReMulti\',\'recherche.csv\')">Exporter en CSV</button></div></div>';
+      html += '<div class="row"><div class="col">';
+      html += '<table id="tableResultatsReMulti" class="table table-hover table-sm small">';
       html += '<thead class="thead-dark"><tr>';
-      html += '<th class="col-auto"></th>';
+      html += '<th class="col-auto">ID patient</th>';
       html += '<th class="col-auto">Identité patient</th>';
       html += '<th class="col-auto">Ddn</th>';
       html += '<th class="col-auto">Médicament</th>';
       html += '<th class="col-auto">Date de la prescription</th>';
       html += '<th class="col-auto">Age à la prescription</th>';
-      html += '</tr></thead><tbody>';
+      html += '<th class="col-auto">Allergies</th>';
+      html += '<th class="col-auto">Atcd</th>';
+      html += '</tr></thead><tbody></div></div>';
 
       $.each(data.patientsList, function(index, ligne) {
         html += '<tr>';
-        html += '<td><a class="btn btn-light btn-sm" role="button" href="'+ urlBase +'/patient/'+ ligne.toID +'/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+        html += '<td><a href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier">' + ligne.toID + '</a></td>';
         html += '<td>' + ligne.identiteDossier + '</td>';
         html += '<td>' + ligne.birthdate + '</td>';
         html += '<td>' + ligne.specialite + ' (' + ligne.specialite + ')</td>';
         html += '<td>' + ligne.registerDate + '</td>';
         html += '<td>' + ligne.ageALaPresc + ' ' + ligne.ageALaPrescUnite + '</td>';
+        html += '<td>' + ligne.allergies + '</td>';
+        html += '<td>' + ligne.atcd + '</td>';
         html += '</tr>';
       });
 
       html += '</tbody></table>';
       $('#lapOutilsSearchPresResults').html(html);
+
     },
     error: function() {
       alert_popup("danger", "Une erreur s'est produite durant l'opération");
@@ -146,7 +163,7 @@ function displayListSamPatients(el) {
         html += '<thead><tr><th class="col-auto"></th><th class="col-auto">Identité</th><th class="col-auto">Date de la prescription</th></tr></thead><tbody>';
         $.each(data.patientsList, function(index, ligne) {
           html += '<tr>';
-          html += '<td><a class="btn btn-light btn-sm" role="button" href="'+ urlBase +'/patient/'+ ligne.toID +'/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+          html += '<td><a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
           html += '<td>' + ligne.identiteDossier + '</td>';
           html += '<td>' + ligne.registerDate + '</td>';
           html += '</tr>';

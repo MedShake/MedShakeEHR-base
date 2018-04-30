@@ -70,13 +70,14 @@
           <h3>Recherche et exports de prescriptions</h3>
 
           <p>Les codes nécessaires à la recherche peuvent être trouvés facilement à l'onglet "Recherche médicaments".</p>
+          <p class="text-danger">Les prescriptions retournées sont uniquement celles de l'utilisateur actuellement identifié.</p>
 
           <form method="post">
             <div class="row my-1">
-              <div class="col">
-                <input type="text" class="form-control" name="code" placeholder="Indiquer le code ici" autocomplete="off">
+              <div class="col-2">
+                Rechercher
               </div>
-              <div class="col">
+              <div class="col-3">
                   <select name="typeRecherche" class="custom-select" autocomplete="off">
                     <option value="lapMedicamentSpecialiteCodeTheriaque">code spécialité</option>
                     <option value="lapMedicamentPresentationCodeTheriaque">code présentation</option>
@@ -84,7 +85,15 @@
                     <option value="lapMedicamentCodeATC">classe ATC</option>
                   </select>
                 </div>
-              <div class="col">
+                <div class="col-3">
+                  <input type="text" required class="form-control" name="code" placeholder="Indiquer le code ici" autocomplete="off">
+                </div>
+              </div>
+              <div class="row my-1">
+              <div class="col-2">
+                Interval de dates à considérer
+              </div>
+              <div class="col-3">
                   <div id="beginPeriodeIDB" class="input-group date datepick">
                     <div class="input-group-prepend">
                       <span class="input-group-text" style="width:45px">du:
@@ -96,8 +105,8 @@
                     </div>
                   </div>
                 </div>
-              <div class="col">
-                  <div id="endPeriodeIDB" class="input-group date datepick ml-1">
+              <div class="col-3">
+                  <div id="endPeriodeIDB" class="input-group date datepick">
                     <div class="input-group-prepend">
                       <span class="input-group-text" style="width:45px">au:
                       </span>
@@ -111,12 +120,21 @@
             </div>
             <div class="row my-1">
               <div class="col-2">
+                Autres critéres
+              </div>
+              <div class="col-3">
                 <select name="sexe" class="custom-select" autocomplete="off">
-                  <option value="">sans importance</option>
+                  <option value="">sexe sans importance</option>
                   <option value="F">femme</option>
                   <option value="M">homme</option>
                 </select>
+
+                <input type="text" class="form-control my-1" name="codeAllergie" placeholder="code allergie" autocomplete="off">
+
+                <input type="text" class="form-control" name="codeAtcdCIM10" placeholder="code antécédent CIM10" autocomplete="off">
               </div>
+            </div>
+            <div class="row my-1">
               <div class="col">
                 <button id="lapOutilsSearchPres" class="btn btn-primary">Rechercher</button>
               </div>
