@@ -53,12 +53,11 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
-
 
 /**
  * Envoi du mail de rappel
@@ -93,7 +92,7 @@ function sendmail($pa)
     $mail->addAddress($pa['email'], $pa['identite']);
     $mail->Subject = 'Rappel rdv le '.$pa['jourRdv'].' à '.$pa['heureRdv'];
 
-    $msgRappel="Bonjour,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
+    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['config']['mailRappelMessage'])));
 
     $mail->Body = nl2br($msgRappel);
     $mail->AltBody = $msgRappel;
@@ -105,6 +104,12 @@ function sendmail($pa)
     }
     return $pa;
 }
+
+$users=msPeople::getUsersListForService('mailRappelActiver');
+
+foreach ($users as $userID=>$value) {
+    /////////// config pour l'utilisateur concerné
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
 
 $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
@@ -128,6 +133,7 @@ if (is_array($patientsList)) {
 
 
                 $detinataire=array(
+                  'praticien'=>$value['lastname']?:$value['birthname'],
                   'id'=>$patient['id'],
                   'typeCs'=>$patient['type'],
                   'jourRdv'=>$date_sms,

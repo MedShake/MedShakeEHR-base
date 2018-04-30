@@ -392,6 +392,20 @@ $(document).ready(function() {
     });
   });
 
+  // selecteur de catégorie page SpecificUserParam
+  $('select[name=paramCat]').on('click', function(){
+    $('.paramselect').hide();
+    $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
+    $('#description').html('description : ' + $('.paramselect:visible').find('option:selected').attr('data-desc'));
+    $('#type').html('type : ' + $('.paramselect:visible').find('option:selected').attr('data-type'));
+  });
+
+  // selecteur de paramètre page SpecificUserParam
+  $('.paramselect').on('click', function(){
+    $('#description').html('description : ' + $(this).find('option:selected').attr('data-desc'));
+    $('#type').html('type : ' + $(this).find('option:selected').attr('data-type'));
+  });
+  
   $("body.uploader").dmUploader({
     url: urlBase + '/configuration/ajax/configInstallModule/',
     extFilter: ["zip"],

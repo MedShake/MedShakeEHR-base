@@ -135,4 +135,7 @@ end($data);
 $Xmax=key($data);
 $data['bornes']=array('Xmin'=>$Xmin, 'Xmax'=>$Xmax, 'Ymin'=>array('poids'=>$Pmin, 'taille'=>$Tmin, 'imc'=>$Imin), 'Ymax'=>array('poids'=>$Pmax, 'taille'=>$Tmax, 'imc'=>$Imax));
 
+if ($data == null) {
+    exit('ok');
+}
 exit(json_encode($data));
