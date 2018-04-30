@@ -43,7 +43,7 @@ $(document).ready(function() {
   });
 
   // Renouveler une ligne de l'ordo visualisée
-  $('body').on("click", 'button.renouvLignePrescription', function(e) {
+  $('body').on("click", '#conteneurOrdonnanceVisu button.renouvLignePrescription, .placeForOrdoLap button.renouvLignePrescription', function(e) {
 
     var ligneIndex = $(this).parents('div.lignePrescription').index();
     if ($(this).parents('div.lignePrescription').hasClass('ald')) {
