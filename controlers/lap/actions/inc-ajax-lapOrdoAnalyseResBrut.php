@@ -48,10 +48,10 @@ $retourAnalyseBrute=$lapOrdo->getBrutAnalyseResults();
 $retourAnalyseFormate=$lapOrdo->getFormateAnalyseResults();
 
 echo '<ul class="nav nav-tabs" style="margin-bottom: 10px">
-  <li role="presentation" class="active"><a href="#patient" role="tab" data-toggle="tab">Patient</a></li>
-  <li role="presentation"><a href="#prescriptions" role="tab" data-toggle="tab">Prescriptions / posologies</a></li>
-  <li role="presentation"><a href="#retour" role="tab" data-toggle="tab">Retour brut</a></li>
-  <li role="presentation"><a href="#retourformate" role="tab" data-toggle="tab">Retour formaté</a></li>
+  <li class="nav-item active"><a class="nav-link active" href="#patient" role="tab" data-toggle="tab">Patient</a></li>
+  <li class="nav-item"><a class="nav-link" href="#prescriptions" role="tab" data-toggle="tab">Prescriptions / posologies</a></li>
+  <li class="nav-item"><a class="nav-link" href="#retour" role="tab" data-toggle="tab">Retour brut</a></li>
+  <li class="nav-item"><a class="nav-link" href="#retourformate" role="tab" data-toggle="tab">Retour formaté</a></li>
   </ul>';
 
 echo '<div class="tab-content" >';
