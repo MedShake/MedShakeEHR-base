@@ -780,6 +780,7 @@ class msLapAnalysePres extends msLap
  */
     private function _formatDateTimeAddString($duree, $unite) {
       if($unite=='m') return 'P'.($duree * 28 - 1).'D';
+      if($unite=='s') return 'P'.($duree * 7 - 1).'D';
       if($unite=='j') return 'P'.($duree-1).'D';
       if($unite=='h') return 'PT'.$duree.'H';
       return false;
