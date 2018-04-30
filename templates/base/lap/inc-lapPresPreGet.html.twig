@@ -20,36 +20,37 @@
  #/
 
 /##
- # Template > lap : historique des tt
+ # Template > lap : prescriptions pré enregistrées
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #
 #}
 
-<div  id="accordion" role="tablist" aria-multiselectable="true">
+<div id="accordion" role="tablist" aria-multiselectable="true">
   {% for id, cat in page.cat %}
-    <div class="card mb-3">
-      <div class="card-header" role="tab" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
-        <h4 class="card-title">
-          {{ cat.label }}
-          <span class="badge float-right">{{ cat.enfants }}</span>
-        </h4>
+    <div class="card mb-1">
+      <div class="card-body p-2" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
+        <span class="card-title">{{ cat.label }}
+        <span class="badge float-right">{{ cat.enfants }}</span><br>
+        <small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>
       </div>
-      <div id="collapse{{ id }}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
-        <div class="card-body">
-          <p>{{ cat.description }}
-            <button class="btn btn-light btn-sm float-right" title="Éditer cette catégorie"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
-            {% if cat.enfants == 0 %}
-                <button class="btn btn-light btn-sm float-right" title="Supprimer cette catégorie"><span class="fa fa-times" aria-hidden="true"></span></button>
-            {% endif %}
-          </p>
-        </div>
-        <div class="list-group">
+      <div class="collapse" id="collapse{{ id }}">
+        <ul class="list-group list-group-flush small  border-top">
           {% for k, pres in page['pres'][id] %}
-            <button type="button" class="list-group-item">{{ pres.label }}</button>
+            <li class="list-group-item">{{ pres.label }}</li>
           {% endfor %}
-        </div>
+
+          <li class="list-group-item">
+            <button class="btn btn-light btn-sm" title="Éditer cette catégorie">
+              <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+            {% if cat.enfants == 0 %}
+              <button class="btn btn-light btn-sm" title="Supprimer cette catégorie">
+                <span class="fa fa-times" aria-hidden="true"></span></button>
+            {% endif %}
+          </li>
+        </ul>
       </div>
-    </div>
-  {% endfor %}
-</div>
+
+      </div>
+    {% endfor %}
+  </div>
