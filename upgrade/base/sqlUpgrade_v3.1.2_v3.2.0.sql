@@ -88,7 +88,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('relation', 'allergieCodeTheriaque', '', 'Code Thériaque de l\'allergie', 'codee Thériaque de l\'allergie', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 0);
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatSams');
-INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('ordo', 'lapSamCommentaire', '', 'Commentaire patient SAM', 'commentaire par patient pour un SAM', '', '', '', '', 'base', @catID, 1, '2018-01-01 00:00:00', 1576800000, 1),
 ('ordo', 'lapSamDisabled', '', 'Marqueur de SAM bloqué', 'marqueur de SAM bloqué', '', '', '', '', 'base', @catID, 1, '2018-01-01 00:00:00', 1576800000, 1);
 
