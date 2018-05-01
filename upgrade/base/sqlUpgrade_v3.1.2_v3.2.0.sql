@@ -251,7 +251,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('clicRdvGroupId', 'clicRDV', 'default', 'nombre', '', ''),
 ('clicRdvCalId', 'clicRDV', 'default', 'nombre', '', ''),
 ('clicRdvConsultId', 'clicRDV', 'default', 'JSON', '', ''),
-('utiliserLap', 'propre', 'LAP', 'default', 'true/false', ''),
+('utiliserLap', 'LAP', 'default', 'true/false', '', 'true'),
 ('lapActiverAtcdStrucSur', 'LAP', 'default', 'texte', '', ''),
 ('lapActiverAllergiesStrucSur', 'LAP', 'default', 'texte','', ''),
 ('lapAtcdStrucPersoPourAnalyse', 'LAP', 'default', 'texte','', ''),
