@@ -42,14 +42,15 @@
    <div class="card mb-3">
        <div class="card-header" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
 
-       {% if speSmr is not empty %}
-         {% for smr in speSmr|slice(-1, 1) %}
-          <a href="" class="btn btn-info btn-sm float-right">SMR : {{ smr.textsmr }}</a>
-         {% endfor %}
-       {% endif %}
-
        <h4 class="card-title">
           {{ indicDet['7']['0']['libcourt'] }}
+
+          {% if speSmr is not empty %}
+            {% for smr in speSmr|slice(-1, 1) %}
+             <span class="badge badge-info float-right">SMR : {{ smr.textsmr }}</span>
+            {% endfor %}
+          {% endif %}
+
        </h4>
        <ul class="list-unstyled small">
        {% for indic2 in indicDet['2'] %}
