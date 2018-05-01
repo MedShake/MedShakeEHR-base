@@ -112,7 +112,7 @@ function lapOutilsSearchPres(el) {
       html += '<th class="col-auto">Identité patient</th>';
       html += '<th class="col-auto">Ddn</th>';
       html += '<th class="col-auto">Médicament</th>';
-      html += '<th class="col-auto">Date de la prescription</th>';
+      html += '<th class="col-auto">Date prescription</th>';
       html += '<th class="col-auto">Age à la prescription</th>';
       html += '<th class="col-auto">Allergies</th>';
       html += '<th class="col-auto">Atcd</th>';

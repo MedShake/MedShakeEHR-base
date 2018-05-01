@@ -70,7 +70,6 @@
           <h3>Recherche et exports de prescriptions</h3>
 
           <p>Les codes nécessaires à la recherche peuvent être trouvés facilement à l'onglet "Recherche médicaments".</p>
-          <p class="text-danger">Les prescriptions retournées sont uniquement celles de l'utilisateur actuellement identifié.</p>
 
           <form method="post">
             <div class="row my-1">
@@ -87,7 +86,7 @@
                   </select>
                 </div>
                 <div class="col-3">
-                  <input type="text" required class="form-control" name="code" placeholder="Indiquer le code ici" autocomplete="off">
+                  <input type="text" class="form-control" name="code" placeholder="Indiquer le code ici" autocomplete="off">
                 </div>
               </div>
               <div class="row my-1">
@@ -119,6 +118,15 @@
                   </div>
                 </div>
             </div>
+            <div class="row my-1">
+              <div class="col-2">
+                Dossier(s) patient
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" name="patientID" placeholder="id numériques séparés par des virgules si besoin" autocomplete="off">
+              </div>
+            </div>
+
             <div class="row my-1">
               <div class="col-2">
                 Autres critéres
