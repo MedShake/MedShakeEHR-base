@@ -572,7 +572,7 @@ INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `re
 (1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),
 (2, 'clicRDV', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', '');
 
-INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES
+INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'Options', 'default', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'Options', 'default', 'true/false', '', 'true'),
 ('administratifSecteurHonoraires', 'Options', 'default', 'vide/1/2', 'vide pour non conventionné', '1'),
@@ -619,7 +619,7 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('ecofaxPassword', 'Fax', 'default', 'texte', 'password', ''),
 ('dicomHost', 'DICOM', 'default', 'url/ip', '', ''),
 ('dicomPrefixIdPatient', 'DICOM', 'default', 'texte', '', '1.100.100'),
-('dicomAutoSendPatient', 'DICOM', 'default', 'true/false', 'Envoi automatique du patient à l`imagerie à l\'ouverture du dossier', 'false'),
+('dicomAutoSendPatient', 'DICOM', 'default', 'true/false', 'Envoi automatique du patient à l\'imagerie à l\'ouverture du dossier', 'false'),
 ('dicomDiscoverNewTags', 'DICOM', 'default', 'true/false', '', 'true'),
 ('dicomWorkListDirectory', 'DICOM', 'default', 'dossier', '', ''),
 ('dicomWorkingDirectory', 'DICOM', 'default', 'dossier', '', ''),
@@ -637,7 +637,7 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('mailRappelActiver', 'Rappels mail', 'default', 'true/false', '', 'false'),
 ('mailRappelLogCampaignDirectory', 'Rappels mail', 'default', 'dossier', '', ''),
 ('mailRappelDaysBeforeRDV', 'Rappels mail', 'default', 'nombre', '', '3'),
-('mailRappelMessage', 'Rappels mail', 'default', 'texte', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.'),
+('mailRappelMessage', 'Rappels mail', 'default', 'texte', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu\’aucun autre rendez-vous ne sera donné à un patient n\’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
 ('smsRappelActiver', 'Rappels SMS', 'default', 'true/false', '', 'false'),
 ('smsProvider', 'Rappels SMS', 'default', 'url/ip', '', ''),
 ('smsLogCampaignDirectory', 'Rappels SMS', 'default', 'dossier', '', ''),
@@ -652,7 +652,7 @@ INSERT INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `valu
 ('clicRdvGroupId', 'clicRDV', 'default', 'nombre', '', ''),
 ('clicRdvCalId', 'clicRDV', 'default', 'nombre', '', ''),
 ('clicRdvConsultId', 'clicRDV', 'default', 'JSON', '', ''),
-('utiliserLap','propre','LAP', 'default', 'true/false', '', ''),
+('utiliserLap','propre','LAP', 'default', 'true/false', ''),
 ('lapActiverAtcdStrucSur', 'LAP', 'default', 'texte', '', ''),
 ('lapActiverAllergiesStrucSur', 'LAP', 'default', 'texte','', ''),
 ('lapAtcdStrucPersoPourAnalyse', 'LAP', 'default', 'texte','', ''),
