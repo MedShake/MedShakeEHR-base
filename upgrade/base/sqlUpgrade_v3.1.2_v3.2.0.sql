@@ -19,10 +19,10 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('medical', 'catAtcdStruc', 'ATCD structurés', 'données pour antécédents structurés', 'base', 1, '2018-01-01 00:00:00'),
 ('typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', 1, '2018-01-01 00:00:00'),
 ('relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', 1, '2018-01-01 00:00:00'),
-('user', 'lapUserParamCat', 'LAP', 'paramètres pour les réglages utilisateur dans le LAP', 'base', 1, '2018-01-01 00:00:00'),
 ('ordo', 'lapCatPorteurs', 'LAP porteurs', 'data pour les porteurs LAP', 'base', 1, '2018-01-01 00:00:00'),
 ('ordo', 'lapCatLignePrescription', 'LAP ligne de prescription', 'data des lignes de prescription', 'base', 1, '2018-01-01 00:00:00'),
-('ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-01-01 00:00:00');
+('ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-01-01 00:00:00'),
+('ordo', 'lapCatSams', 'LAP SAMs', 'data pour SAMs LAP', 'base', 1, '2018-01-01 00:00:00');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='porteursReglement');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`,`cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -55,14 +55,6 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='atcd');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('medical', 'allaitementActuel', '', 'Allaitement', 'allaitement actuel', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
 ('medical', 'insuffisanceHepatique', '', 'Insuffisance hépatique', 'degré d\'insuffisance hépatique', '', '', 'select', '\'z\': "?"\n\'n\': "Pas d\'insuffisance hépatique connue"\n\'1\': \'Légère\'\n\'2\': \'Modérée\'\n\'3\': \'Sévère\'', 'base', @catID, 3, '2018-01-01 00:00:00', 3600, 1);
-
-SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapUserParamCat');
-INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('user', 'lapAlertPatientTermeGrossesseSup46', '', 'lapAlertPatientTermeGrossesseSup46', 'alerte pour terme de grossesse supérieur à 46SA', '', '', 'checkbox', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
-('user', 'lapAlertPatientAllaitementSup3Ans', '', 'lapAlertPatientAllaitementSup3Ans', 'alerte pour allaitement supérieur à 3 ans', '', '', 'checkbox', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
-('user', 'theriaqueShowMedicHospi', '', 'theriaqueShowMedicHospi', 'montrer les médicaments hospitaliers', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-14 16:37:34', 3600, 1),
-('user', 'theriaqueShowMedicNonComer', '', 'theriaqueShowMedicNonComer', 'montrer les médicaments non commercialisés', '', '', 'checkbox', '', 'base', @catID, 1, '2018-03-14 16:37:42', 3600, 1);
-
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='aldCat');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
