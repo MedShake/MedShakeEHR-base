@@ -166,7 +166,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">Boite de réception
                                 {% if page.inbox.numberOfMsg > 0 %}
-                                    <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                                    <span class="badge badge-light">{{ page.inbox.numberOfMsg }}</span>
                                 {% endif %}
                             </a>
                         </li>
@@ -174,7 +174,7 @@
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %}</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge badge-danger">!!!</span>{% endif %}</a>
 
                         <div class="dropdown-menu">
                             {% if config.utiliserLap == 'true' or  config.VoirRouletteObstetricale == 'true' %}

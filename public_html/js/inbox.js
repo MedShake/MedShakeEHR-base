@@ -43,7 +43,7 @@ $(document).ready(function() {
   //spécifier manuellement le patientID
   $("#view").on("click", "#specifierPatientIDManu", function(e) {
     e.preventDefault();
-    $("tr.patietSelect").removeClass('success gras');
+    $("tr.patietSelect").removeClass('table-success gras');
     $("#idConfirmPatientIDLabel").show();
     $("#idConfirmPatientID").attr('type', 'text');
   });
@@ -60,15 +60,15 @@ $(document).ready(function() {
   // rafraichir quand on classe
   $("#view").on("submit", "#classerDansDossier", function(e) {
     setTimeout(function() {
-      $("tr.mailClicView.success").attr('data-status', 'c');
-      viewMail($("tr.mailClicView.success"));
+      $("tr.mailClicView.table-success").attr('data-status', 'c');
+      viewMail($("tr.mailClicView.table-success"));
     }, 500);
 
   });
 
 
   // premier chargement
-  viewMail($("tr.mailClicView.success"));
+  viewMail($("tr.mailClicView.table-success"));
 
 
 });
@@ -84,11 +84,11 @@ function viewMail(el) {
     success: function(data) {
 
       $("tr.mailClicView").each(function( index ) {
-        $(this).removeClass('success');
-        if($(this).attr('data-status') == 'c') $(this).addClass('warning');
+        $(this).removeClass('table-success');
+        if($(this).attr('data-status') == 'c') $(this).addClass('table-warning');
       });
 
-      $(el).removeClass('warning').addClass('success');
+      $(el).removeClass('table-warning').addClass('table-success');
 
       $('#view').html(data);
     },
@@ -101,8 +101,8 @@ function viewMail(el) {
 
 
 function selectPatient(el) {
-  $("tr.patietSelect").removeClass('success gras');
-  $(el).addClass('success gras');
+  $("tr.patietSelect").removeClass('table-success gras');
+  $(el).addClass('table-success gras');
   patientID = $(el).attr('data-patientID');
   $("#idConfirmPatientID").val(patientID);
   if (patientID > 0) {

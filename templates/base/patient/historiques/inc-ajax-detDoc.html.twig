@@ -31,7 +31,7 @@
 
     {% if page.pj.href %}
       {% if page.pj.detail or page.pj.view %}
-        <div class="card">
+        <div class="card mb-3">
           <table class="table table-sm mb-0 table-striped table-hover">
             <tbody>
               <tr>
@@ -63,7 +63,7 @@
 
     {% if page.bioHprim %}
 
-        <div class="card col-md-12">
+        <div class="card mb-3">
             <div class="card-header">Résultats biologiques extraits du corps du message</div>
             <table class="table table-sm mb-0 table-striped table-hover">
                 <thead>
@@ -76,7 +76,7 @@
                 </thead>
                 <tbody>
                     {% for v in page.bioHprim %}
-                        <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="danger"{% endif %}>
+                        <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="table-danger"{% endif %}>
                             <td>
                                 {{ v.label|e }}
                             </td>
@@ -98,7 +98,7 @@
     {% endif %}
 
     {% if page.texte %}
-        <div class="card col-md-12">
+        <div class="card">
             <div class="card-header">Corps du message initial</div>
             <div class="card-body">
                 {{ page.texte|e|nl2br }}
