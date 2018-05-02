@@ -64,6 +64,7 @@ if (!is_array($clicUsers)) {
     return;
 }
 $clicrdv=new msClicRDV();
+$startdate=date("Y-m-d H:i:s");
 foreach($clicUsers as $userid=>$value) {
     $clicrdv->setUserID($userid);
     $ret=$clicrdv->syncEvents();
@@ -71,3 +72,4 @@ foreach($clicUsers as $userid=>$value) {
         echo $ret."\n";
     }
 }
+msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'cron', 'value'=>$startdate));
