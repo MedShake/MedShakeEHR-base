@@ -161,8 +161,8 @@ if (is_numeric($_POST['autreCrit']) and !empty($_POST['autreCritVal'])) {
 // construction de la requête
 
 $searchSelect="SELECT id,
-  CASE WHEN birthname!='' and lastname!='' and administrativeGenderCode='F' THEN concat(trim(birthname),' ', trim(COALESCE(firstname,'')),' (née ',trim(lastname),')')
-       WHEN birthname!='' and lastname!='' and administrativeGenderCode!='F' THEN concat(trim(birthname),' ', trim(COALESCE(firstname,'')), ' (né ', trim(lastname), ')')
+  CASE WHEN birthname!='' and lastname!='' and administrativeGenderCode='F' THEN concat(trim(lastname),' ', trim(COALESCE(firstname,'')), ' (née ',trim(birthname), ')')
+       WHEN birthname!='' and lastname!='' and administrativeGenderCode!='F' THEN concat(trim(lastname),' ', trim(COALESCE(firstname,'')), ' (né ', trim(birthname), ')')
        ELSE concat(trim(COALESCE(birthname,'')),trim(COALESCE(lastname,'')),' ',trim(COALESCE(firstname,''))) END as Identité,"
   .implode(',', array_keys($listeTypes)).
   ", type, deathdate
