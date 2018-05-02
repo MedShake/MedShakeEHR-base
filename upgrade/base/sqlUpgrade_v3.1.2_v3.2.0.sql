@@ -40,7 +40,6 @@ UPDATE `data_types` SET `placeholder`='type et nom de la voie', `label`='Voie', 
 UPDATE `data_types` SET `placeholder`='type et nom de la voie', `label`='Voie', `description`='Adresse pro : voie' WHERE `name`='rueAdressePro';
 UPDATE `data_types` SET `placeholder`='n° dans la voie', `label`='n°', `description`='Adresse perso : n° dans la voie' WHERE `name`='streetNumber';
 UPDATE `data_types` SET `placeholder`='n° dans la voie', `label`='n°', `description`='Adresse pro : n° dans la voie' WHERE `name`='numAdressePro';
-UPDATE `data_types` SET `description`='Adresse pro : n° dans la voie' WHERE `name`='numAdressePro';
 UPDATE `data_types` SET `placeholder`='mobile: 0x xx xx xx xx' WHERE  `name`='mobilePhone';
 UPDATE `data_types` SET `placeholder`='fixe: 0x xx xx xx xx' WHERE  `name`='homePhone';
 UPDATE `data_types` SET `placeholder`='naissance: dd/mm/YYYY' WHERE  `name`='birthdate';
