@@ -27,28 +27,17 @@
 
 $(document).ready(function() {
 
-  $('a[href="#prescriptionsTypes"]').on('shown.bs.tab', function (e) {
+  // afficher les catégories de prescriptions types quand l'onglet devient visible
+  $('a[href="#prescriptionsTypes"]').on('shown.bs.tab', function(e) {
     userParametersPrescriptionsCatList();
   })
 
-  $("input.alerteInfSeuilCertif").on("change", function() {
-    alerteInfSeuilCertif($(this));
-  });
+  // afficher les prescriptions types quand l'onglet devient visible
+  $('a[href="#presType"]').on('shown.bs.tab', function(e) {
+    userParametersPrescriptionsList();
+  })
 
-  $(".userParametersDisplayListSamPatientsDisabled").on("click", function() {
-    samID = $(this).attr('data-samID');
-    if ($('#' + samID + 'List').length) {
-      $('#' + samID + 'List').remove();
-    } else {
-      userParametersDisplayListSamPatientsDisabled($(this));
-    }
-  });
-
-  $('body').on("click", ".removePatientFromDisabledSamList", function() {
-    removePatientFromDisabledSamList($(this));
-  });
-
-  // extract by primary key
+  // editer (extract by primary key)
   $('body').on("click", "button.edit-by-prim-key", function(e) {
 
     var modal = '#' + $(this).attr("data-modal");
@@ -70,7 +59,7 @@ $(document).ready(function() {
         $(modal + ' form textarea').val('');
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
@@ -96,7 +85,7 @@ $(document).ready(function() {
     var table = $(this).attr("data-table");
 
     $.ajax({
-      url: urlBase + '/configuration/ajax/configExtractByPrimaryKey/',
+      url: urlBase + '/user/ajax/userParametersExtractByPrimaryKey/',
       type: 'post',
       data: {
         id: id,
@@ -106,15 +95,20 @@ $(document).ready(function() {
       success: function(data) {
         $(modal + ' form select option').removeProp('selected');
         $(modal + ' form textarea').val('');
+
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
             $(form + ' textarea[name="' + index + '"]').val(value);
           }
         });
+        if ($(modal + ' form input[name="name"]').length) {
+          $(modal + ' form input[name="name"]').val('userDefined' + Date.now());
+        }
+        $(modal + ' form input[name="id"]').remove();
         $(modal).modal('show');
 
       },
@@ -142,7 +136,6 @@ $(document).ready(function() {
 
     if (confirm("Êtes-vous certain ?")) {
 
-
       $.ajax({
         url: urlBase + '/user/ajax/userParametersDelByPrimaryKey/',
         type: 'post',
@@ -153,6 +146,8 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
           userParametersPrescriptionsCatList();
+          userParametersPrescriptionsList();
+
         },
         error: function() {
           alert_popup("danger", 'Problème, rechargez la page !');
@@ -163,18 +158,6 @@ $(document).ready(function() {
   });
 
 
-  // reset modal form
-  $('body').on("click", "button.reset-modal", function(e) {
-    var modal = $(this).attr("data-target");
-    $(modal + ' form input[name="id"]').remove();
-
-    $(modal + ' form input').attr('value', '');
-    $(modal + ' form textarea').val('');
-    $(modal + ' form select option').removeProp('selected');
-    $(modal + ' form select option:eq(0)').prop('selected', 'selected');
-
-  });
-
   // nouvelle catégorie de prescription
   $('body').on("click", "button.nouvelle-cat", function(e) {
     var modal = $(this).attr("data-target");
@@ -183,8 +166,43 @@ $(document).ready(function() {
     $(modal + ' form textarea').val('');
     $(modal + ' form select option').removeProp('selected');
     $(modal + ' form select option:eq(0)').prop('selected', 'selected');
-    $(modal + ' form input[name="name"]').attr('value', 'userDefined' + Date.now());
+    $(modal + ' form input[name="name"]').val('userDefined' + Date.now());
 
+  });
+
+  // nouvelle prescription type
+  $('body').on("click", "button.nouvelle-pres", function(e) {
+    var modal = $(this).attr("data-target");
+    $(modal + ' form input[name="id"]').remove();
+    $(modal + ' form input[name="label"], ' + modal + ' form input[name="description"]').val('');
+    $(modal + ' form textarea').val('');
+    $(modal + ' form select option').removeProp('selected');
+    $(modal + ' form select option:eq(0)').prop('selected', 'selected');
+    $(modal + ' form input[name="name"]').val('userDefined' + Date.now());
+
+  });
+
+  //////////////////////////////////////////////
+  /////////////////////// LAP
+
+  // alerter sur le passsage sous le seuil de certification
+  $("input.alerteInfSeuilCertif").on("change", function() {
+    alerteInfSeuilCertif($(this));
+  });
+
+  // afficher la liste des patients pour lesquels le SAM est off
+  $(".userParametersDisplayListSamPatientsDisabled").on("click", function() {
+    samID = $(this).attr('data-samID');
+    if ($('#' + samID + 'List').length) {
+      $('#' + samID + 'List').remove();
+    } else {
+      userParametersDisplayListSamPatientsDisabled($(this));
+    }
+  });
+
+  // retirer un patient de la liste des patients pour lesquels le SAM est off
+  $('body').on("click", ".removePatientFromDisabledSamList", function() {
+    removePatientFromDisabledSamList($(this));
   });
 
 });
@@ -294,6 +312,7 @@ function ajaxModalFormSave(form, modal) {
     success: function(data) {
       if (data.status == 'ok') {
         userParametersPrescriptionsCatList();
+        userParametersPrescriptionsList();
         $(modal).modal('hide');
       } else {
         $(modal + ' div.alert').show();
@@ -312,7 +331,10 @@ function ajaxModalFormSave(form, modal) {
   });
 }
 
-
+/**
+ * Afficher les catégories de prescriptions types
+ * @return {void}
+ */
 function userParametersPrescriptionsCatList() {
   $.ajax({
     url: urlBase + '/user/ajax/userParametersPrescriptionsCatList/',
@@ -320,6 +342,32 @@ function userParametersPrescriptionsCatList() {
     dataType: "json",
     success: function(data) {
       $('#catPrescrip').html(data.html);
+      // on met à jour le select du modal nouvelle prescription
+      if (data.catNonLap) {
+        $('#formModalNewPres select[name="cat"]').html('');
+        $.each(data.catNonLap, function(index, value) {
+          $('#formModalNewPres select[name="cat"]').append('<option value="' + value.id + '">' + value.label + '</option>');
+        });
+      }
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+
+    }
+  });
+}
+
+/**
+ * Afficher les prescriptions types
+ * @return {void}
+ */
+function userParametersPrescriptionsList() {
+  $.ajax({
+    url: urlBase + '/user/ajax/userParametersPrescriptionsList/',
+    type: 'post',
+    dataType: "json",
+    success: function(data) {
+      $('#presType').html(data.html);
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');

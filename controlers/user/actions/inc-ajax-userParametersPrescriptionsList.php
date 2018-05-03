@@ -21,33 +21,28 @@
  */
 
 /**
- * Paramètres utilisateur > > ajax : lister les catégories de prescriptions types
+ * Paramètres utilisateur > > ajax : lister les prescriptions types
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 
-// Catégories des prescriptions types
-if($p['page']['tabCatPres']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
-from prescriptions_cat as c
-left join prescriptions as p on c.id=p.cat
-where c.toID in ('0','".$p['user']['id']."')
-group by c.id
-order by c.displayOrder asc, c.label asc", 'id')) {
+ if ($tabTypes=msSQL::sql2tab("select p.* , c.name as catName, c.label as catLabel
+      from prescriptions as p
+      left join prescriptions_cat as c on c.id=p.cat
+      where p.toID in ('0', '".$p['user']['id']."') and c.type='nonlap'
+      group by p.id
+      order by c.label asc, p.label asc")) {
+     foreach ($tabTypes as $v) {
+         $p['page']['tabTypes'][$v['catName']][]=$v;
+     }
+ }
 
-  foreach($p['page']['tabCatPres'] as $k=>$v) {
-    $tab[$v['type']][]=$v;
 
-  }
-
-}
+ $p['page']['catList']=msSQL::sql2tabKey("select id, label from prescriptions_cat where type='nonlap' order by label", 'id', 'label');
 
 $html = new msGetHtml;
-$html->set_template('inc-ajax-tabUserParametersPresCatList.html.twig');
+$html->set_template('inc-ajax-tabUserParametersPresList.html.twig');
 $html = $html->genererHtmlString($p);
 
-echo json_encode(array(
-  'html'=>$html,
-  'catLap'=>$tab['lap'],
-  'catNonLap'=>$tab['nonlap'],
-));
+echo json_encode(array('html'=>$html));

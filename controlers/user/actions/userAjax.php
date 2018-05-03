@@ -41,12 +41,16 @@ $acceptedModes=array(
     'userParametersLap', // changer les paramètres LAP
     'userParametersDisplayListSamPatientsDisabled', // afficher la liste des patients concernés par la blocage d'un SAM
     'userParametersPrescriptionsCatList', // lister les catégories de prescription
+    'userParametersPrescriptionsList', // lister les prescriptions types
     'userParametersExtractByPrimaryKey', //extraire d'une table par la primary key
     'userParametersDelByPrimaryKey', // effacer d'une table par la primary key
+    'userParametersPrescriptionsCatCreate', // céer une nouvelle catégorie
+    'userParametersPrescriptionsCreate', // créer une nouvelle prescription type
+
 );
 
 //inclusion
-if(is_file($p['homepath'].'controlers/user/actions/inc-ajax-'.$m.'.php')) {
+if( in_array($m,$acceptedModes) and is_file($p['homepath'].'controlers/user/actions/inc-ajax-'.$m.'.php')) {
     include('inc-ajax-'.$m.'.php');
 } else {
     die();

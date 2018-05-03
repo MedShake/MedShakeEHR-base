@@ -21,33 +21,41 @@
  */
 
 /**
- * Paramètres utilisateur > > ajax : lister les catégories de prescriptions types
+ * Config > ajax : créer une prescription type
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+//check & validate datas
+$gump=new GUMP();
+$_POST = $gump->sanitize($_POST);
 
-// Catégories des prescriptions types
-if($p['page']['tabCatPres']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
-from prescriptions_cat as c
-left join prescriptions as p on c.id=p.cat
-where c.toID in ('0','".$p['user']['id']."')
-group by c.id
-order by c.displayOrder asc, c.label asc", 'id')) {
+if (isset($_POST['id'])) {
+    $gump->validation_rules(array(
+            'id'=> 'required|numeric',
+            'label'=> 'required'
+        ));
+} else {
+    $gump->validation_rules(array(
+            'label'=> 'required'
 
-  foreach($p['page']['tabCatPres'] as $k=>$v) {
-    $tab[$v['type']][]=$v;
-
-  }
-
+        ));
 }
 
-$html = new msGetHtml;
-$html->set_template('inc-ajax-tabUserParametersPresCatList.html.twig');
-$html = $html->genererHtmlString($p);
+$validated_data = $gump->run($_POST);
 
-echo json_encode(array(
-  'html'=>$html,
-  'catLap'=>$tab['lap'],
-  'catNonLap'=>$tab['nonlap'],
-));
+if ($validated_data === false) {
+    $return['status']='failed';
+    $return['msg']=$gump->get_errors_array();
+} else {
+    $validated_data['fromID']=$p['user']['id'];
+    $validated_data['creationDate']=date("Y-m-d H:i:s");
+
+    if (msSQL::sqlInsert('prescriptions', $validated_data) > 0) {
+        $return['status']='ok';
+    } else {
+        $return['status']='failed';
+        $return['msg']=mysqli_error($mysqli);
+    }
+}
+echo json_encode($return);

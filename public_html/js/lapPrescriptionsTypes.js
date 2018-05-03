@@ -41,7 +41,7 @@ $(document).ready(function() {
 
 
   $('body').on('click', '#creatNewPresTypeCat', function(e) {
-    $('#modalNewPresTypeCat form input[name="name"]').attr('value', 'userDefined' + Date.now());
+    $('#modalNewPresTypeCat form input[name="name"]').val('userDefined' + Date.now());
     $('#modalNewPresTypeCat form input[name="id"]').remove();
     $('#modalNewPresTypeCat form input[name="label"], #modalNewPresTypeCat form input[name="description"]').val('');
     $('#modalNewPresTypeCat').modal('toggle');

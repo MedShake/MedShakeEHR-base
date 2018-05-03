@@ -1,0 +1,73 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : lister les prescriptions types
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+ <div class="row">
+   <div class="col text-right">
+     <button type="button" class="btn btn-primary btn-sm nouvelle-pres" data-toggle="modal" data-target="#modalNewPres"><i class="fas fa-plus"></i>
+         Nouvelle prescription type
+     </button>
+   </div>
+ </div>
+
+ {% for k, v in page.tabTypes %}
+     <h5 id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h5>
+     <table class="table table-sm mb-3 table-hover small">
+         <thead class="thead-dark">
+             <tr>
+                 <th>#</th>
+                 <th class="col-2">Label</th>
+                 <th class="col-8">Texte</th>
+                 <th></th>
+             </tr>
+         </thead>
+         <tbody>
+             {% for w in v %}
+                 <tr>
+                     <td>{{ w.id }}</td>
+                     <td>{{ w.label }}</td>
+                     <td>{{ w.description }}</td>
+                     <td class="d-flex justify-content-end">
+                       <div class="btn-group">
+                         <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" {% if w.toID == 0 %} disabled {% endif %} data-table="prescriptions" data-form="formModalNewPres" data-modal="modalNewPres">
+                             <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                         </button>
+
+                         <button type="button" class="btn btn-light btn-sm duplicate" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewPres" data-modal="modalNewPres">
+           						  <span class="fa fa-copy" aria-hidden="true"></span>
+           						  </button>
+
+                         <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.toID == 0 %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
+                             <span class="fa fa-times" aria-hidden="true"></span>
+                         </button>
+                       </div>
+                     </td>
+                 </tr>
+             {% endfor %}
+         </tbody>
+     </table>
+ {% endfor %}
