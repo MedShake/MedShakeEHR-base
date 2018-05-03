@@ -28,7 +28,7 @@
 $(document).ready(function() {
 
   // afficher les catégories de prescriptions types quand l'onglet devient visible
-  $('a[href="#prescriptionsTypes"]').on('shown.bs.tab', function(e) {
+  $('a[href="#prescriptionsTypes"], a[href="#presType"]').on('shown.bs.tab', function(e) {
     userParametersPrescriptionsCatList();
   })
 

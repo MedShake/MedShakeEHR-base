@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$tab['lap']=[];
+$tab['nonlap']=[];
 
 // Catégories des prescriptions types
 if($p['page']['tabCatPres']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants

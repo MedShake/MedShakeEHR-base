@@ -207,9 +207,16 @@ function modalLapPresPreSave() {
     dataType: "json",
     success: function(data) {
       $('#ordoTypeCat').html('');
-      $.each(data, function(catIndex, cat) {
-        $('#ordoTypeCat').append('<option value="' + cat.id + '">' + cat.label + '</value>');
-      });
+      if(!data) {
+        $('#modalLapPresPreSaveDo').addClass('disabled');
+        $('#modalLapPresPreSave div.modal-body').prepend('<div class="alert alert-danger" role="alert">Rendez-vous à l\'onglet Prescriptions types pour créer préalablement les catégories supports à l\'enregistrement !</div>');
+      } else {
+        $('#modalLapPresPreSaveDo').removeClass('disabled');
+        $.each(data, function(catIndex, cat) {
+          $('#ordoTypeCat').append('<option value="' + cat.id + '">' + cat.label + '</value>');
+          $('#modalLapPresPreSave div.modal-body div.alert-danger').remove();
+        });
+      }
     },
     error: function() {
       console.log("Problème");

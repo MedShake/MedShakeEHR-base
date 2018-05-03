@@ -75,7 +75,9 @@
                    </div>
                  </td>
              </tr>
-         {% endfor %}
+        {% else %}
+          <tr><td colspan="5">Aucune catégorie de ce type</td></tr>
+        {% endfor %}
      </tbody>
  </table>
  {% endif %}
@@ -119,6 +121,8 @@
                    </div>
                  </td>
              </tr>
-         {% endfor %}
+        {% else %}
+           <tr><td colspan="5">Aucune catégorie de ce type</td></tr>
+        {% endfor %}
      </tbody>
  </table>

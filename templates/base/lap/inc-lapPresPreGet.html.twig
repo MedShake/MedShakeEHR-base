@@ -20,30 +20,38 @@
  #/
 
 /##
- # Template > lap : prescriptions pré enregistrées
+ # Template > lap : prescriptions types
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #
 #}
 
-<div id="accordion" role="tablist" aria-multiselectable="true">
-  {% for cat in page.cat %}
-    <div class="card mb-1">
-      <div class="card-body p-2">
-        <span class="card-title">{{ cat.label }}
-        <span class="badge float-right">{{ cat.enfants }}</span><br>
-        {% if cat.description %}<small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>{% endif %}
+{% if page.cat|length > 0 %}
+  <div>
+    {% for cat in page.cat %}
+      <div class="card mb-1">
+        <div class="card-body p-2">
+          <span class="card-title">{{ cat.label }}
+          <span class="badge float-right">{{ cat.enfants }}</span><br>
+          {% if cat.description %}<small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>{% endif %}
 
-        {% if cat.enfants > 0 %}
-        <select class="form-control custom-select form-control-sm small presTypeSelect">
-          <option> </option>
-          {% for k, pres in page['pres'][cat.id] %}
-            <option value="{{ pres.id }}">{{ pres.label }}</option>
-          {% endfor %}
-        </select>
-        {% endif %}
-      </div>
+          {% if cat.enfants > 0 %}
+          <select class="form-control custom-select form-control-sm small presTypeSelect">
+            <option> </option>
+            {% for k, pres in page['pres'][cat.id] %}
+              <option value="{{ pres.id }}">{{ pres.label }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+        </div>
 
       </div>
     {% endfor %}
   </div>
+{% else %}
+<div class="card mb-1 text-white bg-danger">
+  <div class="card-body p-2">
+    Créez une première catégorie avec le bouton ci-dessous pour pouvoir enregistrer des ordonnances comme prescriptions types !
+  </div>
+</div>
+{% endif %}
