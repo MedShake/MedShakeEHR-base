@@ -174,7 +174,7 @@
              </table>
          {% endfor %}
 
-        {{ page.posologies.posoText[posologie.nofic]['texte']|nl2br }}
+        <p>{{ page.posologies.posoText[posologie.nofic]['texte']|nl2br }}</p>
 
         {% if page.posologies.posoRef[posologie.nofic] is not empty %}
           <h4>Référence(s) officielle(s)</h4>
