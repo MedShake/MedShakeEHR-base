@@ -114,9 +114,9 @@ $(document).ready(function() {
         el = source.closest('tr');
         if (data.type == 'pro') {
           source.html('Retirer de la liste Praticiens');
-          el.addClass('info')
+          el.addClass('table-info')
         } else {
-          el.removeClass('info')
+          el.removeClass('table-info')
           source.html('Ajouter de la liste Praticiens');
         };
       },
@@ -167,7 +167,7 @@ $(document).ready(function() {
 
       }
     });
-    
+
   });
 
 });
