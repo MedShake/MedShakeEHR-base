@@ -236,7 +236,7 @@ $(document).ready(function() {
   //changement date début prescription
   $("#beginPeriodeIDB").on("dp.change", function(e) {
     var debut = moment($('#beginPeriodeID').val(), "DD-MM-YYYY");
-    if(ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
+    if (ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
       $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY'));
     } else {
       $('#endPeriodeID').val(debut.format('DD/MM/YYYY'));
@@ -246,7 +246,7 @@ $(document).ready(function() {
   $("#beginPeriodeID").on("dblclick", function(e) {
     var debut = moment(new Date()).add(1, 'days');
     $('#beginPeriodeID').val(debut.format('DD/MM/YYYY'));
-    if(ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
+    if (ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
       $('#endPeriodeID').val(debut.add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY'));
     } else {
       $('#endPeriodeID').val(debut.format('DD/MM/YYYY'));
@@ -380,12 +380,12 @@ function catchCurrentPrescriptionData() {
   ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
   ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
   ligneData['dateDebutPrise'] = $('#beginPeriodeID').val();
-  if(ligneData['dureeTotaleMachineJours']>0) {
+  if (ligneData['dureeTotaleMachineJours'] > 0) {
     ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
   } else {
     ligneData['dateFinPrise'] = $('#beginPeriodeID').val();
   }
-  if(ligneData['dureeTotaleMachineJoursAvecRenouv']>0) {
+  if (ligneData['dureeTotaleMachineJoursAvecRenouv'] > 0) {
     ligneData['dateFinPriseAvecRenouv'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJoursAvecRenouv'] - 1, 'days').format('DD/MM/YYYY');
   } else {
     ligneData['dateFinPrise'] = $('#beginPeriodeID').val();
@@ -413,15 +413,15 @@ function sendToOrdonnance() {
   } else {
     ordoMedicsG.push(ligne);
   }
-  construireHtmlLigneOrdonnance(ligne, 'append');
+  construireHtmlLigneOrdonnance(ligne, 'append', '', '#conteneurOrdonnanceCourante');
 
   // SAMS
-  if(ligne['medics'][0]['sams'].length > 0) {
+  if (ligne['medics'][0]['sams'].length > 0) {
     $.each(ligne['medics'][0]['sams'], function(samIndex, sam) {
       // sams dans l'ordo
-      if($.inArray(sam, samsInOrdo) == -1) samsInOrdo.push(sam);
+      if ($.inArray(sam, samsInOrdo) == -1) samsInOrdo.push(sam);
       //sams qui doivent générer une alerte
-      if($.inArray(sam, samsToAlert) == -1 && $.inArray(sam, samsAlertViewed) == -1 ) samsToAlert.push(sam);
+      if ($.inArray(sam, samsToAlert) == -1 && $.inArray(sam, samsAlertViewed) == -1) samsToAlert.push(sam);
     });
     testSamsAndDisplay();
 
@@ -912,7 +912,7 @@ function matchAndGo() {
         if (data['dureeTotaleMachineJoursAvecRenouv'] > 0) {
           $('#endPeriodeID').val(start.add((data['dureeTotaleMachineJoursAvecRenouv'] - 1), 'days').format('DD/MM/YYYY'));
         } else {
-          $('#endPeriodeID').val(start.add(data['dureeTotaleMachine']['h'] , 'hours').format('DD/MM/YYYY'));
+          $('#endPeriodeID').val(start.add(data['dureeTotaleMachine']['h'], 'hours').format('DD/MM/YYYY'));
         }
 
         console.log(ligneData);
@@ -951,9 +951,9 @@ function matchLigne(index, ligne) {
   } else if (m = regExp[1].exec(ligne)) {
     return true;
   } else if (m = regExp[2].exec(ligne)) {
-     return true;
+    return true;
   } else if (m = regExp[3].exec(ligne)) {
-     return true;
+    return true;
   }
   return false;
 }

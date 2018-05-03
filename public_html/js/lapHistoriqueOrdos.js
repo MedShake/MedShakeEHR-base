@@ -64,6 +64,9 @@ $(document).ready(function() {
     getDifferentsSamFromOrdo();
     testSamsAndDisplay();
 
+    // retirer les infos allergiques potentiellement présentes
+    deleteRisqueAllergique();
+
     // sauvegarde
     ordoLiveSave();
 
@@ -71,6 +74,11 @@ $(document).ready(function() {
     resetObjets();
 
     flashBackgroundElement($(this).parents('div.lignePrescription'));
+  });
+
+  // Renouveler toutes les lignes de l'ordonnance affichée
+  $('body').on("click", '#modalVoirOrdonnance button.renouvToutesLignes', function(e) {
+    $('#modalVoirOrdonnance button.renouvLignePrescription').trigger('click');
   });
 
 });
@@ -130,24 +138,6 @@ function getHistoriqueOrdos(year) {
     },
     error: function() {
       console.log("Historique des ordonnances : PROBLEME");
-    }
-  });
-}
-
-function getPresPre() {
-  $.ajax({
-    url: urlBase + '/lap/ajax/lapPresPreGet/',
-    type: 'post',
-    data: {
-      patientID: $('#identitePatient').attr("data-patientID"),
-    },
-    dataType: "html",
-    success: function(data) {
-      $('#listePresPre').html(data);
-      console.log("Liste des prescriptions préétablies : OK");
-    },
-    error: function() {
-      console.log("Liste des prescriptions préétablies : PROBLEME");
     }
   });
 }

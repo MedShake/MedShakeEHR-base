@@ -53,7 +53,6 @@ $acceptedModes=array(
     'lapSaveDateEffectiveArretTT',
     'lapOrdoAnalyse', // analyser l'ordo
     'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
-    'lapPresPreGet', // obtenir les prescriptions préétablies
     'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
     'lapMonographieSection', // sortir une section de monographie
     'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
@@ -62,7 +61,12 @@ $acceptedModes=array(
     'lapSamToggleForPatient', // basculer l'état dispo / non dispo pour le patient
     'lapOutilsSearchNewMedic', // recherche de médicaments pour lapOutils
     'lapOutilDisplayListSamPatients', //btenir la liste des patients dont la condition du SAM est réalisée dernière ordo
-    'lapOutilsSearchPres' //rechercher des prescritions sur critères (outils LAP)
+    'lapOutilsSearchPres', //rechercher des prescritions sur critères (outils LAP)
+    'lapPresPreGet', // obtenir les prescriptions préétablies
+    'lapPresPreGetCat', // obtenir les catégories de prescriptions types
+    'modalLapPresPreSaveDo', //enregistrer la prescription type
+    'lapPresTypeGetDetails', //obtenir le json de la prescription type
+    'lapPresTypeGetDelete' // effacer une prescription type
 );
 
 if (!in_array($m, $acceptedModes)) {

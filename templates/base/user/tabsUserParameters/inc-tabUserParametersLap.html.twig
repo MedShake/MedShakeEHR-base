@@ -30,12 +30,19 @@
   <div class=" col-md-2">
 
     <ul class="nav nav-pills flex-column">
+      {% if config.utiliserLap == 'true' %}
       <li class="nav-item">
-        <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramètres globaux</a>
+        <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramétrage du LAP</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
       </li>
+      {% endif %}
+      {% if config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
+      <li class="nav-item">
+        <a class="nav-link" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
+      </li>
+      {% endif %}
     </ul>
   </div>
 
@@ -43,6 +50,7 @@
     <div class="tab-content">
 
       {# paramètres perso du LAP #}
+      {% if config.utiliserLap == 'true' %}
       <div role="tabpanel" class="tab-pane active" id="lapMedics">
         <h3>Paramétrage du LAP</h3>
 
@@ -120,8 +128,10 @@
           <input class="btn btn-primary mt-2" type="submit" value="Valider"></input>
         </form>
       </div>
+      {% endif %}
 
       {# paramètres perso des SAMs #}
+      {% if config.utiliserLap == 'true' %}
       <div role="tabpanel" class="tab-pane" id="lapSams">
         <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
 
@@ -142,13 +152,44 @@
                 <td>{{ sam.id }}</td>
                 <td>{{ sam.titre }}</td>
                 <td>{{ sam.methode }}</td>
-                <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm displayListSamPatientsDisabled"><i class="fas fa-user"></i></button></td>
+                <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm userParametersDisplayListSamPatientsDisabled"><i class="fas fa-user"></i></button></td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
+      </div>
+      {% endif %}
+
+      {# prescriptions types #}
+      <div role="tabpanel" class="tab-pane" id="prescriptionsTypes">
+        <h3>Gestion des catégories et des prescritpions types personnelles</h3>
+
+        <div class="alert alert-info" role="alert">
+          Si plusieurs utilisateurs sont susceptibles d'utiliser les mêmes catégories et/ou les mêmes prescriptions types, il est plus judicieux de demander à l'administrateur du logiciel de les mettre en place au niveau <a class="alert-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Configuration / Paramètres courants / Prescriptions types</a>.
+        </div>
+
+        <ul class="nav nav-tabs mb-3">
+          <li class="nav-item">
+            <a class="nav-link active" href="#catPrescrip" role="tab" data-toggle="tab">Catégories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#presType" aria-controls="presType" role="presType" data-toggle="tab">Prescriptions types</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          {# catégories prescriptions types #}
+          <div role="tabpanel" class="tab-pane active" id="catPrescrip"></div>
+
+          {# prescriptions types hors LAP #}
+          <div role="tabpanel" class="tab-pane" id="presType"></div>
+
+        </div>
+
 
       </div>
+
 
     </div>
   </div>

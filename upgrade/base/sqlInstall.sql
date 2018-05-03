@@ -251,44 +251,48 @@ CREATE TABLE IF NOT EXISTS `people` (
   KEY `type` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `prescriptions` (
-  `id` smallint(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `cat` smallint(3) UNSIGNED NOT NULL DEFAULT '0',
-  `label` varchar(250) NOT NULL,
-  `description` text NOT NULL,
-  `fromID` smallint(5) UNSIGNED NOT NULL,
-  `toID` mediumint(7) UNSIGNED NOT NULL DEFAULT '0',
-  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `toID` (`toID`),
-  KEY `cat` (`cat`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE `prescriptions` (
+ `id` smallint(5) NOT NULL AUTO_INCREMENT,
+ `cat` smallint(5) unsigned NOT NULL DEFAULT '0',
+ `label` varchar(250) NOT NULL,
+ `description` text NOT NULL,
+ `fromID` smallint(5) unsigned NOT NULL,
+ `toID` mediumint(7) unsigned NOT NULL DEFAULT '0',
+ `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`),
+ KEY `toID` (`toID`),
+ KEY `cat` (`cat`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
-CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
-  `id` smallint(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL,
-  `label` varchar(60) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` ENUM('nonlap','lap') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'nonlap',
-  `fromID` smallint(5) UNSIGNED NOT NULL,
-  `creationDate` datetime NOT NULL,
-  `displayOrder` tinyint(2) UNSIGNED NOT NULL DEFAULT '1',
-  KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
+CREATE TABLE `prescriptions_cat` (
+ `id` smallint(5) NOT NULL AUTO_INCREMENT,
+ `name` varchar(60) NOT NULL,
+ `label` varchar(60) NOT NULL,
+ `description` varchar(255) NOT NULL,
+ `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
+ `fromID` smallint(5) unsigned NOT NULL,
+ `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
+ `creationDate` datetime NOT NULL,
+ `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
+ PRIMARY KEY (`id`),
+ KEY `displayOrder` (`displayOrder`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 CREATE TABLE `printed` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `fromID` int(11) UNSIGNED NOT NULL,
-  `toID` int(11) UNSIGNED NOT NULL,
-  `type` enum('cr','ordo','courrier','ordoLAP') NOT NULL DEFAULT 'cr',
-  `objetID` int(11) UNSIGNED DEFAULT NULL,
-  `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
-  `title` varchar(255) NOT NULL,
-  `value` text NOT NULL,
-  `serializedTags` longblob,
-  `outdated` enum('','y') NOT NULL,
-  `anonyme` enum('','y') DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `fromID` int(11) unsigned NOT NULL,
+ `toID` int(11) unsigned NOT NULL,
+ `type` enum('cr','ordo','courrier','ordoLAP') NOT NULL DEFAULT 'cr',
+ `objetID` int(11) unsigned DEFAULT NULL,
+ `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
+ `title` varchar(255) NOT NULL,
+ `value` text NOT NULL,
+ `serializedTags` longblob,
+ `outdated` enum('','y') NOT NULL,
+ `anonyme` enum('','y') DEFAULT '',
+ PRIMARY KEY (`id`),
+ KEY `examenID` (`objetID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 CREATE TABLE IF NOT EXISTS `system` (
   `id` smallint(4) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -565,8 +569,8 @@ INSERT IGNORE INTO `prescriptions` (`id`, `cat`, `label`, `description`, `fromID
 (2, 4, 'Ligne vierge', '', 1, 0, '2018-01-01 00:00:00');
 
 INSERT IGNORE INTO `prescriptions_cat` (`id`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`, `displayOrder`) VALUES
-(2, 'prescripMedic', 'Prescriptions médicamenteuses', 'prescriptions médicamenteuses', 'nonlap', 1, '2018-01-01 00:00:00', 1),
-(4, 'prescriNonMedic', 'Prescriptions non médicamenteuses', 'prescriptions non médicamenteuses', 'nonlap', 1, '2018-01-01 00:00:00', 1);
+(2, 'prescripMedic', 'Prescriptions médicamenteuses', 'prescriptions médicamenteuses', 'nonlap', 1, 0, '2018-01-01 00:00:00', 1),
+(4, 'prescriNonMedic', 'Prescriptions non médicamenteuses', 'prescriptions non médicamenteuses', 'nonlap', 1, 0, '2018-01-01 00:00:00', 1);
 
 INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
 (1, 'medshake', 'service', '', 'base', '', '2018-01-01 00:00:00', '1', '', '2018-01-01 00:00:00', ''),

@@ -135,5 +135,8 @@ $lapSams = new msLapSAM;
 $lapSams->getSamXmlFileContent();
 $p['page']['lap']['samsList']=$lapSams->getSamListInXml();
 
-// Paramètres de l'utilisateur
+// Paramètres LAP de l'utilisateur
 $p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', array('id'=>$p['user']['id'], 'module'=>''));
+
+// Types des prescriptions types
+ $p['page']['typesPrescriptionsList']=array('lap'=>'Prescriptions LAP', 'nonlap'=>'Prescriptions hors LAP');

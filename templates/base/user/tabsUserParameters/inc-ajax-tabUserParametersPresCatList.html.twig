@@ -1,0 +1,116 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : lister les catégories de prescriptions types
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+ <div class="row">
+   <div class="col text-right">
+     <button type="button" class="btn btn-primary btn-sm nouvelle-cat" data-toggle="modal" data-target="#modalNewCat">
+         Nouvelle catégorie
+     </button>
+   </div>
+ </div>
+
+ {% if config.utiliserLap == 'true' %}
+ <h5>LAP
+ </h5>
+
+ <table class="table table-sm mb-0 table-hover small">
+     <thead class="thead-dark">
+         <tr>
+             <th>#</th>
+             <th>Label</th>
+             <th>Enfants</th>
+             <th>Description</th>
+             <th></th>
+         </tr>
+     </thead>
+     <tbody>
+         {% for k, v in page.tabCatPres if v.type == 'lap' %}
+             <tr>
+                 <td>{{ k }}</td>
+                 <td>{{ v.label }}</td>
+                 <td>
+                   {% if v.enfants > 0 %}
+                     {{ v.enfants }}
+                   {% endif %}
+                 </td>
+                 <td>{{ v.description }}</td>
+                 <td class="d-flex justify-content-end">
+                   <div class="btn-group">
+                     <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="prescriptions_cat" data-form="formModalNewCat" data-modal="modalNewCat" {% if v.toID == '0' %} disabled {% endif %}>
+                         <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                     </button>
+
+                     <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.toID == '0' %} disabled {% endif %} data-id="{{ k }}" data-table="prescriptions_cat">
+                         <span class="fa fa-times" aria-hidden="true"></span>
+                     </button>
+                   </div>
+                 </td>
+             </tr>
+         {% endfor %}
+     </tbody>
+ </table>
+ {% endif %}
+
+ <h5 class="mt-2">Hors LAP</h5>
+
+ <table class="table table-sm mb-0 table-hover small">
+     <thead class="thead-dark">
+         <tr>
+             <th>#</th>
+             <th>Label</th>
+             <th>Enfants</th>
+             <th>Description</th>
+             <th></th>
+         </tr>
+     </thead>
+     <tbody>
+         {% for k, v in page.tabCatPres if v.type == 'nonlap' %}
+             <tr>
+                 <td>{{ k }}</td>
+                 <td>{{ v.label }}</td>
+                 <td>
+                   {% if v.enfants > 0 %}
+                     {{ v.enfants }}
+                   {% endif %}
+                 </td>
+                 <td>{{ v.description }}</td>
+                 <td class="d-flex justify-content-end">
+                   <div class="btn-group">
+                     <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="prescriptions_cat" data-form="formModalNewCat" data-modal="modalNewCat" {% if v.toID == '0' %} disabled {% endif %}>
+                         <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                     </button>
+
+                     <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.toID == '0' %} disabled {% endif %} data-id="{{ k }}" data-table="prescriptions_cat">
+                         <span class="fa fa-times" aria-hidden="true"></span>
+                     </button>
+                   </div>
+                 </td>
+             </tr>
+         {% endfor %}
+     </tbody>
+ </table>

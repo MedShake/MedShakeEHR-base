@@ -104,6 +104,9 @@ $(document).ready(function() {
     getDifferentsSamFromOrdo();
     testSamsAndDisplay();
 
+    // retirer les infos allergiques potentiellement présentes
+    deleteRisqueAllergique();
+
     // sauvegarde
     ordoLiveSave();
 

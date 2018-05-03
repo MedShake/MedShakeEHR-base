@@ -595,6 +595,10 @@ function calculerCoutOrdo() {
   return prixTotal;
 }
 
+/**
+ * Afficher le coût de l'ordonnance
+ * @return {void}
+ */
 function afficherCoutOrdo() {
   cout = calculerCoutOrdo();
   if (cout > 0) {
@@ -753,10 +757,12 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';
     }
-    if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
-      retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
-    } else {
-      retour += ' <small> - le ' + data.ligneData.dateDebutPrise + '</small>';
+    if (mode != 'voirPrescriptionType') {
+      if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
+        retour += ' <small> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+      } else {
+        retour += ' <small> - le ' + data.ligneData.dateDebutPrise + '</small>';
+      }
     }
     retour += '      </div>';
     retour += '      <div>' + data.medics[0].posoHumanCompleteTab.join('<br>') + '</div>';
@@ -791,7 +797,7 @@ function makeLigneOrdo(data, mode) {
 
     }
     // voir ordo
-    else if (mode == 'voirOrdonnance') {
+    else if (mode == 'voirOrdonnance' || mode == 'voirPrescriptionType') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
     }
@@ -863,10 +869,12 @@ function makeLigneOrdo(data, mode) {
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';
     }
-    if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
-      retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
-    } else {
-      retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
+    if (mode != 'voirPrescriptionType') {
+      if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
+        retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+      } else {
+        retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
+      }
     }
     retour += '    </div>';
     retour += '    <div class="col-md-1 text-right">';
@@ -888,7 +896,7 @@ function makeLigneOrdo(data, mode) {
     }
 
     // voir ordo
-    else if (mode == 'voirOrdonnance') {
+    else if (mode == 'voirOrdonnance' || mode == 'voirPrescriptionType') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
       retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
     }

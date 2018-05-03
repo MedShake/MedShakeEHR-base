@@ -367,12 +367,12 @@ class msLapOrdo extends msLap
  * @return array tableau par catID
  */
     public function getCatPresPre() {
-      return msSQL::sql2tabKey("select c.*, count(p.id) as enfants
+      return msSQL::sql2tab("select c.*, count(p.id) as enfants
  			from prescriptions_cat as c
  			left join prescriptions as p on c.id=p.cat
        where c.type='lap' and c.fromID = '".$this->_fromID."'
  			group by c.id
- 			order by c.displayOrder asc, c.label", 'id');
+ 			order by c.displayOrder asc, c.label asc");
     }
 
 /**

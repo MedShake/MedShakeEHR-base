@@ -65,6 +65,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapSam.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescriptionsTypes.js?{{ modules.base }}"></script>
   {% endif %}
 
   {# JS commun au formulaire de consultation du module #}
@@ -208,6 +209,14 @@
 
   {# modal générique pour les infos médicament #}
   {% include 'inc-lapInfosMedic.html.twig' %}
+
+  {# modal enregistrer comme prescription type #}
+  {% include 'inc-lapModalPresPre.html.twig' %}
+
+  {# modal créer nouvelle catégorie de prescription type #}
+  {% include 'inc-lapModalPresTypesCatNew.html.twig' %}
+
+
 {% endif %}
 
 {% endblock %}

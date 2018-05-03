@@ -40,6 +40,9 @@
         <a id="ordonnanceTabL" class="nav-link active" href="#ordonnanceTab" aria-selected="true" aria-controls="ordonnanceTab" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
       </li>
       <li class="nav-item">
+        <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions types</a>
+      </li>
+      <li class="nav-item">
         <a id="tttencoursTabL" class="nav-link" href="#tttencoursTab" aria-controls="tttencoursTab" aria-selected="false" role="tab" data-toggle="tab">Traitement en cours</a>
       </li>
       <li  class="nav-item">
@@ -47,9 +50,6 @@
       </li>
       <li class="nav-item">
         <a id="tthistoriqueTabL" class="nav-link" href="#tthistoriqueTab" aria-controls="tthistoriqueTab" aria-selected="false" role="tab" data-toggle="tab">Historique des traitements</a>
-      </li>
-      <li class="nav-item">
-        <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions préétablies</a>
       </li>
       <li class="nav-item" style="display: none;">
         <a id="resultsDetaTabL" class="nav-link" href="#resultsDetaTab" aria-controls="messages" role="tab" data-toggle="tab">Résultats détaillés</a>
@@ -100,6 +100,9 @@
                 <a href="#" class="dropdown-item saveOrdo">
                   <span class="fa fa-save" aria-hidden="true"></span>
                   Sauvegarder uniquement</a>
+                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLapPresPreSave">
+                  <span class="fa fa-save" aria-hidden="true"></span>
+                    Sauvegarder comme prescriptions types</a>
               </div>
             </div>
           </div>
@@ -190,21 +193,33 @@
       {# Onglet historique des traitements #}
       <div role="tabpanel" class="tab-pane" id="tthistoriqueTab">
         <div class="row bottom-space">
-          <div class="col-md-12">
+          <div class="col-12">
             <div id="historiqueTT"></div>
           </div>
         </div>
 
       </div>
 
-      {# Onglet prescriptions préétablies #}
+      {# Onglet prescriptions types #}
       <div role="tabpanel" class="tab-pane" id="prescriptionspreTab">
-        <div class="row bottom-space">
-          <div class="col-md-3">
+        <div class="row">
+          <div class="col-3">
             <div id="listePresPre"></div>
+            <button id="creatNewPresTypeCat" class="btn btn-light btn-sm" title="Ajouter une catégorie"><span class="fa fa-plus" aria-hidden="true"></span></button>
           </div>
-          <div class="col-md-9">
-            <div id="voirPresPre"></div>
+          <div class="col-9">
+            <div class="text-right">
+              <button class="btn btn-primary btn-sm renouvToutesLignes mb-1"><span class="fa fa-sync-alt" aria-hidden="true"></span> Tout ajouter</button>
+            </div>
+            <div id="voirPresPre" class="mb-3">
+              <div class="alert alert-primary gras" role="alert">Prescriptions ALD</div>
+              <div style="min-height:15px;" class="conteneurPrescriptionsALD"></div>
+              <div class="alert alert-dark gras" role="alert">Prescriptions standards</div>
+              <div style="min-height:15px;" class="conteneurPrescriptionsG"></div>
+            </div>
+            <div class="text-right">
+              <button data-presID="" class="btn btn-light btn-sm presPreDelete disabled" title="Supprimer cette prescription type"><span class="fa fa-trash" aria-hidden="true"></span></button>
+            </div>
           </div>
         </div>
       </div>

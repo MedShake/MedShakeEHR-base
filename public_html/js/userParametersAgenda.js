@@ -20,7 +20,7 @@
  */
 
 /**
- * Fonctions JS pour les paramètres utilisateur
+ * Fonctions JS pour les paramètres utilisateur : onglet agenda
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
  */
@@ -218,24 +218,6 @@ $(document).ready(function() {
     updateConsultList();
   });
 
-  // pour LAP
-  $("input.alerteInfSeuilCertif").on("change", function() {
-    alerteInfSeuilCertif($(this));
-  });
-
-  $(".displayListSamPatientsDisabled").on("click", function() {
-    samID = $(this).attr('data-samID');
-    if ($('#' + samID + 'List').length) {
-      $('#' + samID + 'List').remove();
-    } else {
-      displayListSamPatientsDisabled($(this));
-    }
-  });
-
-  $('body').on("click", ".removePatientFromDisabledSamList", function() {
-    removePatientFromDisabledSamList($(this));
-  });
-
 });
 
 function updateGroupList() {
@@ -331,84 +313,4 @@ function addConsult(idx, consult) {
     }
     j++;
   }
-}
-
-/**
- * ALerte légale pour réduction du seuil de fonctionnement du LAP par rapport à
- * son niveau de certification
- * @param  {object} el object jquery source du click
- * @return {void}
- */
-function alerteInfSeuilCertif(el) {
-  if (el.is(":checked") != true) {
-    alert("En décochant ce paramètre vous utiliserez le LAP avec des performances inférieures à celles prévues par la certification HAS");
-    el.parents('tr').addClass('table-warning');
-
-  } else {
-    el.parents('tr').removeClass('table-warning');
-  }
-}
-
-/**
- * Afficher la liste des patients pour lesquels le SAM est bloqué
- * @param  {object} el oject jquery source du click
- * @return {void}
- */
-function displayListSamPatientsDisabled(el) {
-  samID = el.attr('data-samID');
-  $.ajax({
-    url: urlBase + '/user/ajax/displayListSamPatientsDisabled/',
-    type: 'post',
-    data: {
-      samID: samID,
-    },
-    dataType: "json",
-    success: function(data) {
-      if ($.isArray(data.patientsList)) {
-        html = '<tr id="' + samID + 'List"><td colspan="4"><div class="card my-3"><div class="card-header">Liste des patients pour lesquels vous avez bloqué ce SAM</div><div class="card-body"><table class="table table-hover table-sm">';
-        html += '<thead><tr><th>Identité</th><th>Bloqué depuis</th><th>Retirer</th></tr></thead><tbody>';
-        $.each(data.patientsList, function(index, ligne) {
-          html += '<tr class="lignePatientSamDisabled">';
-          html += '<td>' + ligne.prenom + ' ' + ligne.nom + '</td>';
-          html += '<td>' + ligne.date + '</td>';
-          html += '<td><button type="button" class="btn btn-light btn-sm  removePatientFromDisabledSamList" data-samID="' + samID + '" data-patientID="' + ligne.patientID + '"><i class="fas fa-times"></i></button></td>';
-          html += '</tr>';
-        });
-        html += '</tbody></table></div></div></td></tr>';
-
-        el.parents('tr').after(html);
-      } else {
-        alert_popup("info", 'Ce SAM n\'est bloqué pour aucun patient');
-      }
-    },
-    error: function() {
-      alert_popup("danger", 'Impossible de récupérer la liste demandée');
-
-    }
-  });
-
-}
-
-/**
- * Retirer le blocage du SAM pour un patient
- * @param  {object} source object jquery source du clic
- * @return {void}
- */
-function removePatientFromDisabledSamList(source) {
-  $.ajax({
-    url: urlBase + '/lap/ajax/lapSamToggleForPatient/',
-    type: 'post',
-    data: {
-      samID: source.attr('data-samID'),
-      patientID: source.attr("data-patientID"),
-    },
-    dataType: "json",
-    success: function(data) {
-      source.parents('tr.lignePatientSamDisabled').remove();
-      alert_popup("success", 'Ce SAM est réactivé pour ce patient');
-    },
-    error: function() {
-      alert_popup("danger", 'La réactivation de ce SAM pour ce patient a échoué');
-    }
-  });
 }

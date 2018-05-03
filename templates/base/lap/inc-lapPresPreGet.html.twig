@@ -27,28 +27,21 @@
 #}
 
 <div id="accordion" role="tablist" aria-multiselectable="true">
-  {% for id, cat in page.cat %}
+  {% for cat in page.cat %}
     <div class="card mb-1">
-      <div class="card-body p-2" id="heading{{ id }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ id }}" style="cursor: pointer">
+      <div class="card-body p-2">
         <span class="card-title">{{ cat.label }}
         <span class="badge float-right">{{ cat.enfants }}</span><br>
-        <small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>
-      </div>
-      <div class="collapse" id="collapse{{ id }}">
-        <ul class="list-group list-group-flush small  border-top">
-          {% for k, pres in page['pres'][id] %}
-            <li class="list-group-item">{{ pres.label }}</li>
-          {% endfor %}
+        {% if cat.description %}<small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>{% endif %}
 
-          <li class="list-group-item">
-            <button class="btn btn-light btn-sm" title="Éditer cette catégorie">
-              <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
-            {% if cat.enfants == 0 %}
-              <button class="btn btn-light btn-sm" title="Supprimer cette catégorie">
-                <span class="fa fa-times" aria-hidden="true"></span></button>
-            {% endif %}
-          </li>
-        </ul>
+        {% if cat.enfants > 0 %}
+        <select class="form-control custom-select form-control-sm small presTypeSelect">
+          <option> </option>
+          {% for k, pres in page['pres'][cat.id] %}
+            <option value="{{ pres.id }}">{{ pres.label }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
       </div>
 
       </div>

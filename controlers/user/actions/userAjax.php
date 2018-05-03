@@ -39,7 +39,10 @@ $acceptedModes=array(
     'userParametersConsultations', // changer les paramètres de consultations
     'userParametersClicRdv', // changer les paramètres clicRDV
     'userParametersLap', // changer les paramètres LAP
-    'displayListSamPatientsDisabled', // afficher la liste des patients concernés par la blocage d'un SAM
+    'userParametersDisplayListSamPatientsDisabled', // afficher la liste des patients concernés par la blocage d'un SAM
+    'userParametersPrescriptionsCatList', // lister les catégories de prescription
+    'userParametersExtractByPrimaryKey', //extraire d'une table par la primary key
+    'userParametersDelByPrimaryKey', // effacer d'une table par la primary key
 );
 
 //inclusion

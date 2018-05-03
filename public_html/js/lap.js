@@ -88,7 +88,7 @@ $(document).ready(function() {
       //getPresPre();
     }
     getPresPre();
-    voirOrdonnanceMode = 'voirOrdonnance';
+    voirOrdonnanceMode = 'voirPrescriptionType';
   });
 
 
