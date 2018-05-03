@@ -104,6 +104,10 @@
                                                 <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                                             </button>
 
+                                            <button type="button" class="btn btn-light btn-sm duplicate" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
+                              						  <span class="fa fa-copy" aria-hidden="true"></span>
+                              						  </button>
+
                                             <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
                                                 <span class="fa fa-times" aria-hidden="true"></span>
                                             </button>

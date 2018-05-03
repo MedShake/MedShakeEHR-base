@@ -57,7 +57,7 @@ $(document).ready(function() {
         $(modal + ' form textarea').val('');
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
@@ -95,13 +95,14 @@ $(document).ready(function() {
         $(modal + ' form textarea').val('');
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
             $(form + ' textarea[name="' + index + '"]').val(value);
           }
         });
+        $(modal + ' form input[name="id"]').remove();
         $(modal).modal('show');
 
       },
@@ -155,7 +156,7 @@ $(document).ready(function() {
     var modal = $(this).attr("data-target");
     $(modal + ' form input[name="id"]').remove();
 
-    $(modal + ' form input').attr('value', '');
+    $(modal + ' form input').val('');
     $(modal + ' form textarea').val('');
     $(modal + ' form select option').removeProp('selected');
     $(modal + ' form select option:eq(0)').prop('selected', 'selected');
@@ -276,7 +277,7 @@ $(document).ready(function() {
     .on("mouseup", function(){
       $(this).closest('.input-group').find('input').attr('type','password');
     });
-  
+
   //Suppression d'un paramètre dans la page paramètres spécifiques
   $('body').on('click', '.removeParam', function(){
     var $tr = $(this).closest('tr');
@@ -405,7 +406,7 @@ $(document).ready(function() {
     $('#description').html('description : ' + $(this).find('option:selected').attr('data-desc'));
     $('#type').html('type : ' + $(this).find('option:selected').attr('data-type'));
   });
-  
+
   $("body.uploader").dmUploader({
     url: urlBase + '/configuration/ajax/configInstallModule/',
     extFilter: ["zip"],
