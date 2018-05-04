@@ -245,12 +245,14 @@ $(document).ready(function() {
   $("a.printAndSaveOrdo, button.printAndSaveOrdo").on("click", function(e) {
     e.preventDefault();
     saveOrdo('print');
+    $('#modalLapAlerte').modal('hide');
   });
 
   // Ordo : print anonymous and save
   $(".printAnonymeAndSaveOrdo").on("click", function(e) {
     e.preventDefault();
     saveOrdo('printAnonyme');
+    $('#modalLapAlerte').modal('hide');
   });
 
   // Ordo : sauvegarder
