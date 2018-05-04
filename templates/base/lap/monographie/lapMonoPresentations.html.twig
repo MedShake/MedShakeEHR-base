@@ -176,7 +176,7 @@
                <td colspan="2">Prix en officine ville :</td>
              </tr>
              <tr>
-               <td style="padding-left :2em;">Prix de cette présentation (CIP) / date JO</td>
+               <td class="pl-5">Prix de cette présentation (CIP) / date JO</td>
                <td>
                  {% for pri in prix if pri.grp == 'A.0' %}
                   {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
@@ -186,7 +186,7 @@
               </td>
              </tr>
              <tr>
-               <td style="padding-left :2em;">Tarif forfaitaire de responsabilité / date JO (génériques)</td>
+               <td class="pl-5">Tarif forfaitaire de responsabilité / date JO (génériques)</td>
                <td>
                  {% for pri in prix if pri.grp == 'A.1' %}
                   {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
@@ -199,7 +199,7 @@
                <td colspan="2">Prix à l'hôpital (Pharmacie à usage intérieur) :</td>
              </tr>
              <tr>
-               <td style="padding-left :2em;">Prix de vente aux établissements de santé par UCD/date JO (rétrocession - vente au public)</td>
+               <td class="pl-5">Prix de vente aux établissements de santé par UCD/date JO (rétrocession - vente au public)</td>
                <td>
                  {% for pri in prix if pri.grp == 'B.0' %}
                   {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
@@ -209,7 +209,7 @@
               </td>
              </tr>
              <tr>
-               <td style="padding-left :2em;">Tarif de responsabilité par UCD (tarification à l'activité)</td>
+               <td class="pl-5">Tarif de responsabilité par UCD (tarification à l'activité)</td>
                <td>
                  {% for pri in prix if pri.grp == 'B.1' %}
                   {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
@@ -227,7 +227,7 @@
              </tr>
 
              <tr>
-               <td style="padding-left :2em;">Taux de remboursement / date JO</td>
+               <td class="pl-5">Taux de remboursement / date JO</td>
                <td>
                   <ul class="list-unstyled">
                   {% for rb in rbt if rb.type == '1' %}
@@ -246,7 +246,7 @@
              </tr>
 
              <tr>
-               <td style="padding-left :2em;">Taux de remboursement</td>
+               <td class="pl-5">Taux de remboursement</td>
                <td>
                   <ul class="list-unstyled">
                   {% for rb in rbt if rb.type == '1.1' %}
@@ -293,7 +293,7 @@
                   {% for dispen in dispensia if dispen.typ == '1' %}
                     <li>{{ dispen.info_1 }}</li>
                     {% for dis in dispensia if dis.typ == '2' and dis.valeur_1 == dispen.valeur_1  %}
-                      <li style="padding-left : 2em;">{{ dis.info_1 }}</li>
+                      <li class="pl-5">{{ dis.info_1 }}</li>
                     {% endfor %}
                   {% endfor %}
                   </ul>
@@ -311,7 +311,7 @@
                   {% for conserva in conservatio if conserva.type starts with '1.' and conserva.valeur_1 %}
                     <li>{{ conserva.valeur_1 }} {{ conserva.info_1 }}</li>
                     {% for conserva2 in conservatio if conserva2.type starts with conserva.type and conserva2.type|length > conserva.type|length  %}
-                      <li style="padding-left : 2em;">{{ conserva2.info_1 }}</li>
+                      <li class="pl-5">{{ conserva2.info_1 }}</li>
                     {% endfor %}
                   {% endfor %}
                   </ul>

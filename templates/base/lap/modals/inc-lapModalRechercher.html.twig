@@ -36,7 +36,7 @@
       <div class="modal-body">
 
         {# Onglets #}
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs mb-2" role="tablist">
           <li class="nav-item">
             <a id="recherchermedicTab" class="nav-link active" href="#recherchermedic" aria-selected="true" aria-controls="recherchermedic" role="tab" data-toggle="tab">Rechercher</a>
           </li>
@@ -47,7 +47,7 @@
             <a id="posologiesmedicTab" class="nav-link" href="#posologiesmedic" aria-controls="posologiesmedic" aria-selected="false" role="tab" data-toggle="tab">Posologies</a>
           </li>
         </ul>
-        <div class="tab-content" style="padding-top :15px; padding-bottom: 15px;">
+        <div class="tab-content">
 
           {# Onglet Rechercher #}
           <div role="tabpanel" class="tab-pane active" id="recherchermedic">
@@ -166,7 +166,7 @@
 
               <div id="prescriptionAlertSecabilite" class="alert alert-danger" role="alert" style="display: none;">Attention, la sécabilité telle que vous la souhaitez ne semble pas assurée !</div>
 
-              <div class="jumbotron" id="prescriptionHuman" style="padding : 1em">
+              <div class="jumbotron p-4" id="prescriptionHuman">
                   <div id="prescriptionHumanMedicName" class="gras"></div>
                   <div id="prescriptionHumanRecap"></div>
                   <div id="prescriptionHumanPoso"></div>

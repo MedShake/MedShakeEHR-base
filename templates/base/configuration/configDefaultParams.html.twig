@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > Config : paramètres de configuration s'appliquant par défaut à tous les utilisteurs
+ # Template > Config : paramètres de configuration s'appliquant par défaut à tous les utilisateurs
  #
  # @author fr33z00 <https://github.com/fr33z00>
  # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
@@ -50,10 +50,10 @@
   <h1>Paramètres globaux</h1>
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configDefaultUsersParams/">
-    <div class="row">
+    <div class="row mt-3">
       {# navigation #}
-      <div class=" col-md-2">
-        <ul style="padding-top:10px" class="nav nav-pills flex-column">
+      <div class="col-md-2">
+        <ul class="nav nav-pills flex-column">
           {% for cat in page.cats %}
             <li class="nav-item">
               <a class="nav-link{% if loop.first %} active{% endif %}" href="#{{ cat|replace({' ':'_', '\'':'_'}) }}" aria-controls="{{ cat }}" role="tab" data-toggle="tab" onclick="$('.cats').hide();$('.{{ cat|replace({' ':'_', '\'':'_'}) }}').show();">{{ cat }}</a>
@@ -67,7 +67,7 @@
           </div>
         {% endfor %}
         <table class="table table-sm mb-0 table-hover table-striped checkboxFixValue">
-          <thead>
+          <thead class="thead-dark">
             <tr>
               <th>Paramètre</th>
               <th>Valeur</th>
@@ -94,8 +94,8 @@
                   }) }}
 
                 </td>
-                <td>{{ param.type }}</td>
-                <td>{{ param.description|default('') }}</td>
+                <td class="text-muted small">{{ param.type }}</td>
+                <td class="text-muted small">{{ param.description|default('') }}</td>
               </tr>
             {% endfor %}
           </tbody>
