@@ -113,9 +113,8 @@
 
                     <div class="centrer t10" style=" display : inline-block; float : right; width : 45%; vertical-align : top; border : 1px solid #000; height : 110pt">
                         <br><br><br>
-                        <span class="gras t10">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %}
-                            {{ tag.3 }}
-                            {{ tag.nomsUsageNaissance }}</span><br>({{ tag.8 }})
+                        <span class="gras t10">{{ tag.identiteCompleteTitreCourt }}
+                        </span><br>{{ tag.birthdate }} - {{ tag.age }}
                     </div>
                 </div>
 
