@@ -50,6 +50,12 @@ class msConfiguration
         return msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='".$name."' AND level='default'");
     }
 
+////////////////// NIVEAU MODULE \\\\\\\\\\\\\\\\\\\
+
+public static function getModuleDefaultParameters($module) {
+    return msSQL::sql2tab("SELECT cat, type, name, value, description FROM configuration WHERE level='module' and module='".$module."'");
+}
+
 ////////////////// NIVEAU USER \\\\\\\\\\\\\\\\\\\
 
 /**
