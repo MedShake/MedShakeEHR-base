@@ -27,6 +27,8 @@
  */
 header('Content-Type: application/json');
 $lappres=new msLapPrescription;
+$lappres->setToID($_POST['toID']);
+$lappres->setFromID($p['user']['id']);
 $lappres->setSpeThe($_POST['speThe']);
 $lappres->setPresThe($_POST['presThe']);
 $lappres->setTauxRbt($_POST['tauxrbt']);

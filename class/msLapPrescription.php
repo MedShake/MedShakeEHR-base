@@ -452,7 +452,7 @@ class msLapPrescription extends msLap
       // SAM
       $sams=$this->getSamList4Spe($this->_speThe);
 
-      $tab = array(
+      $tab['medicData'] = array(
         'speThe'=>$this->_speThe,
         'presThe'=> $this->_presThe,
         'nomSpe'=> $this->_nomSpe,
@@ -485,9 +485,48 @@ class msLapPrescription extends msLap
         'sams'=>$sams
       );
 
+      // information sur la dernière utilisation de cette spé.
+      $tab['lastPrescription']=$this->_getLastPrescriptionData();
 
       return $tab;
 
+    }
+
+/**
+ * Obtenir des infos sur la dernière prescription de cette spécialité
+ * @return array tab des infos (voie, unité, consignes)
+ */
+    private function _getLastPrescriptionData() {
+      $tab = [];
+      $idLigneMedic='';
+
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['lapMedicamentSpecialiteCodeTheriaque']);
+
+
+
+      // on cherche d'abord pour le patient en cours, même prat
+      if($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and toID='".$this->_toID."' and fromID='".$this->_fromID."' and value='".$this->_speThe."' order by id desc limit 1")) {}
+      // autre patient même prat
+      elseif($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and fromID='".$this->_fromID."' and value='".$this->_speThe."' order by id desc limit 1")) {}
+      // autre prat
+      else {
+        $idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and value='".$this->_speThe."' order by id desc limit 1");
+      }
+
+      if($idLigneMedic > 0) {
+
+        $idLignePres = msSQL::sqlUniqueChamp("select instance from objets_data where id='".$idLigneMedic."'  limit 1");
+        $infosMedic = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLigneMedic."'  limit 1"), TRUE);
+        $infosLignePres = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLignePres."'  limit 1"), TRUE);
+
+        $tab=array(
+          'uniteUtiliseeOrigine'=>$infosMedic['uniteUtiliseeOrigine'],
+          'voieUtiliseeCode'=>$infosLignePres['voieUtiliseeCode'],
+          'consignesPrescription'=>$infosLignePres['consignesPrescription'],
+        );
+      }
+      return $tab;
     }
 
 /**

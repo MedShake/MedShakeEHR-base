@@ -365,7 +365,7 @@ function catchCurrentPrescriptionData() {
   else medicData['isNPS'] = "false";
   medicData['motifNPS'] = $('#prescriptionNpsMotif').val();
   medicData['uniteUtilisee'] = $('#uniteUtilisee option:selected').text();
-  medicData['uniteUtiliseeOrigine'] = $('#uniteUtilisee option:selected').attr('name');
+  medicData['uniteUtiliseeOrigine'] = $('#uniteUtilisee option:selected').val();
   medicData['prescriptionMotif'] = $('#prescriptionMotif').val();
   medicData['prescripteurInitialTT'] = $('#prescripteurInitialTT').val();
 
@@ -378,7 +378,7 @@ function catchCurrentPrescriptionData() {
   else ligneData['isChronique'] = "false"
   ligneData['nbRenouvellements'] = parseInt($('#nbRenouvellements option:selected').val());
   ligneData['voieUtilisee'] = $('#voieUtilisee option:selected').text();
-  ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').attr('name');
+  ligneData['voieUtiliseeCode'] = $('#voieUtilisee option:selected').val();
   ligneData['dateDebutPrise'] = $('#beginPeriodeID').val();
   if (ligneData['dureeTotaleMachineJours'] > 0) {
     ligneData['dateFinPrise'] = moment($('#beginPeriodeID').val(), "DD-MM-YYYY").add(ligneData['dureeTotaleMachineJours'] - 1, 'days').format('DD/MM/YYYY');
@@ -625,6 +625,7 @@ function lapInstallPrescription(tab) {
     url: urlBase + '/lap/ajax/lapInstallPrescription/',
     type: 'post',
     data: {
+      toID: $('#identitePatient').attr("data-patientID"),
       speThe: tab.speThe,
       presThe: tab.presThe,
       tauxrbt: tab.tauxrbt,
@@ -633,9 +634,9 @@ function lapInstallPrescription(tab) {
     },
     dataType: "json",
     success: function(data) {
-
+      console.log(data);
       // placer le retour sur ce medic dans le medic en cours de manipulation
-      medicData = data;
+      medicData = data['medicData'];
 
       // ménage préalable au cas ou ...
       cleanModalRechercherOngletPrescrire();
@@ -668,19 +669,33 @@ function lapInstallPrescription(tab) {
       $('#prescriptionHumanMedicName').html(medicData['nomUtileFinal']);
 
       // voies d'administration
-      $.each(data['voiesPossibles'], function(index, value) {
+      $.each(data['medicData']['voiesPossibles'], function(index, value) {
         if (preSelectedCodeVoie == value['codevoie']) {
           selectedCodeVoie = ' selected="selected" ';
         } else {
           selectedCodeVoie = '';
         }
-        $('#voieUtilisee').append('<option name="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
+        $('#voieUtilisee').append('<option value="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
       });
 
       // unités possibles
-      $.each(data['unitesPossibles'], function(index, value) {
-        $('#uniteUtilisee').append('<option name="' + index + '">' + value + '</option>');
+      $.each(data['medicData']['unitesPossibles'], function(index, value) {
+        $('#uniteUtilisee').append('<option value="' + index + '">' + value + '</option>');
       });
+
+      // si lastPrescription
+      if(data.lastPrescription) {
+        if(data.lastPrescription.consignesPrescription) {
+          $('#lapConsignesPrescription').val(data.lastPrescription.consignesPrescription);
+          $("#prescriptionHumanConsignes").html(nl2br($('#lapConsignesPrescription').val()));
+        }
+        if(data.lastPrescription.uniteUtiliseeOrigine) {
+          $('#uniteUtilisee').val(data.lastPrescription.uniteUtiliseeOrigine);
+        }
+        if(data.lastPrescription.voieUtiliseeCode) {
+          $('#voieUtilisee').val(data.lastPrescription.voieUtiliseeCode);
+        }
+      }
 
       //montre l'onglet et le panel
       $('#prescriremedicTab').parent('li').show();
@@ -789,7 +804,7 @@ function editPrescription(ordoZone, index) {
     } else {
       selectedCodeVoie = '';
     }
-    $('#voieUtilisee').append('<option name="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
+    $('#voieUtilisee').append('<option value="' + value['codevoie'] + '" ' + selectedCodeVoie + '>voie ' + value['txtvoie'].toLowerCase() + '</option>');
   });
 
   //nb renouvellements
@@ -806,7 +821,7 @@ function editPrescription(ordoZone, index) {
     } else {
       selectedUniteUtilisee = '';
     }
-    $('#uniteUtilisee').append('<option name="' + index + '" ' + selectedUniteUtilisee + '>' + value + '</option>');
+    $('#uniteUtilisee').append('<option value="' + index + '" ' + selectedUniteUtilisee + '>' + value + '</option>');
   });
 
   //cases à cocher
