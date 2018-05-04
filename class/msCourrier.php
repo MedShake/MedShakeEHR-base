@@ -460,6 +460,7 @@ class msCourrier
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
         $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'];
         $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
+        $rdata['identiteCompleteTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].' le '.$data['birthdate'].')';
 
@@ -471,6 +472,7 @@ class msCourrier
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'];
         $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'];
         $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'];
+        $rdata['identiteCompleteTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'];
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
 
@@ -482,6 +484,7 @@ class msCourrier
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['birthname'];
         $rdata['identiteUsuelleTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'];
         $rdata['identiteCompleteTitreLong'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'];
+        $rdata['identiteCompleteTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'];
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
       }
