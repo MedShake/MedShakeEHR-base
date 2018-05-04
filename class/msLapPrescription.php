@@ -1163,34 +1163,36 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
  * @return string        mot accordé
  */
     private function _uniteAccordee($forme, $nb) {
+      $forme = $formeOriginelle = strtolower($forme);
+      $forme = msTools::stripAccents(str_replace('(s)', '', $forme));
       $f=array(
-        'APPLICATION(S)' => array('s'=>'application', 'p'=>'applications', 'g'=>'f'),
-        'AMPOULE(S)' => array('s'=>'ampoule', 'p'=>'ampoules', 'g'=>'f'),
-        'ampoule(s)' => array('s'=>'ampoule', 'p'=>'ampoules', 'g'=>'f'),
+        'ampoule' => array('s'=>'ampoule', 'p'=>'ampoules', 'g'=>'f'),
         'application' => array('s'=>'application', 'p'=>'applications', 'g'=>'f'),
-        'COMPRIME(S)' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
-        'comprimé' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
         'comprime' => array('s'=>'comprimé', 'p'=>'comprimés', 'g'=>'m'),
-        'DOSE(S)' => array('s'=>'dose', 'p'=>'doses', 'g'=>'f'),
-        'EMPLATRE(S)' => array('s'=>'emplâtre', 'p'=>'emplâtres', 'g'=>'m'),
-        'flacon(s)' => array('s'=>'flacon', 'p'=>'flacon', 'g'=>'m'),
-        'GELULE' => array('s'=>'gélule', 'p'=>'gélules', 'g'=>'f'),
-        'gélule' => array('s'=>'gélule', 'p'=>'gélules', 'g'=>'f'),
-        'GOUTTE(S)' => array('s'=>'goutte', 'p'=>'gouttes', 'g'=>'f'),
+        'dose' => array('s'=>'dose', 'p'=>'doses', 'g'=>'f'),
+        'dose kg' => array('s'=>'dose kg', 'p'=>'doses kg', 'g'=>'f'),
+        'emplatre' => array('s'=>'emplâtre', 'p'=>'emplâtres', 'g'=>'m'),
+        'flacon' => array('s'=>'flacon', 'p'=>'flacon', 'g'=>'m'),
+        'flacon pressurise' => array('s'=>'flacon pressurisé', 'p'=>'flacons pressurisés', 'g'=>'m'),
+        'gelule' => array('s'=>'gélule', 'p'=>'gélules', 'g'=>'f'),
         'goutte' => array('s'=>'goutte', 'p'=>'gouttes', 'g'=>'f'),
-        'PULVERISATION(S)' => array('s'=>'puverisation', 'p'=>'pulverisations', 'g'=>'f'),
-        'pulverisation(s)' => array('s'=>'pulvérisation', 'p'=>'pulvérisations', 'g'=>'f'),
+        'microgramme' => array('s'=>'microgramme', 'p'=>'microgrammes', 'g'=>'m'),
+        'pansement' => array('s'=>'pansement', 'p'=>'pansements', 'g'=>'m'),
+        'poche' => array('s'=>'poche', 'p'=>'poches', 'g'=>'f'),
+        'pulverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations', 'g'=>'f'),
         'puverisation' => array('s'=>'pulvérisation', 'p'=>'pulvérisations', 'g'=>'f'),
-        'RECIPIENT(S) UNIDOSE(S)' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses', 'g'=>'m'),
-        'SACHET(S)' => array('s'=>'sachet', 'p'=>'sachets', 'g'=>'m'),
-        'SUPPOSITOIRE' => array('s'=>'suppositoire', 'p'=>'suppositoires', 'g'=>'m'),
+        'recipient unidose' => array('s'=>'récipient unidose', 'p'=>'récipients unidoses', 'g'=>'m'),
+        'sachet' => array('s'=>'sachet', 'p'=>'sachets', 'g'=>'m'),
+        'seringue preremplie' => array('s'=>'seringue preremplie', 'p'=>'seringues preremplies', 'g'=>'f'),
+        'suppositoire' => array('s'=>'suppositoire', 'p'=>'suppositoires', 'g'=>'m'),
+        'tube' => array('s'=>'tube', 'p'=>'tubes', 'g'=>'m'),
       );
       if(key_exists($forme,$f)) {
         if($nb=='-1') return $f[$forme]['g'];
         elseif($nb>1) return $f[$forme]['p'];
         else return $f[$forme]['s'];
       }
-      return strtolower($forme);
+      return $formeOriginelle;
 
     }
 /**
@@ -1264,7 +1266,11 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
       return $retour;
     }
 
-
+/**
+ * Obtenir le statut de stupéfiant en analysant les infos de dispensation
+ * @param  array $tab infos dispensation
+ * @return array      infos stup
+ */
     private function _analyseInfosDispensation($tab) {
       $rd=[];
       $rd['stupefiant'] = 'n';
@@ -1277,6 +1283,11 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
       return $rd;
     }
 
+/**
+ * Obtenir la poso en lettres si classé stupéfiant
+ * @param  string $nombre nombre
+ * @return string         nombre, en lettre si nécessaire
+ */
     private function _uniteFxStup($nombre) {
       if($this->_stupefiant == 'n') {
         return $nombre;
@@ -1285,6 +1296,11 @@ private function _calculerNbReelDeJours($dureeNumeric, $dureeUnite,$joursSemaine
       }
     }
 
+/**
+ * Convertir un nombre en lettres avec accord du genre
+ * @param  float  $nombre nombre
+ * @return string         nombre en lettres
+ */
     private function _convertNombreLettres($nombre) {
       $math = new Webit\Util\EvalMath\EvalMath;
       $nombre = $math->evaluate(str_replace(",", ".", $nombre));
