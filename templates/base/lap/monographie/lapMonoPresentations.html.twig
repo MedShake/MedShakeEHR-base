@@ -43,7 +43,7 @@
      <div class="card-header" role="tab" id="heading{{ presentation.pre_code_pk }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ presentation.pre_code_pk }}" aria-expanded="true" aria-controls="collapse{{ presentation.pre_code_pk }}" style="cursor: pointer">
        <h4 class="card-title">
            Présentation n°{{ loop.index }} : {{ presentation.pre_adm }}
-           {% if presentation.reservhop != 'NON' %}<span class="badge badge-primary float-right">H</span>{% endif %}
+           {% if presentation.reservhop != 'NON' %}<small><span class="badge badge-primary float-right" title="Présentation réservée à l'hôpital">H</span></small>{% endif %}
        </h4>
      </div>
      <div id="collapse{{ presentation.pre_code_pk }}" class="collapse {% if loop.index == 1 and page['presentations']['presentations']|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ presentation.pre_code_pk }}">
