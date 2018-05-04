@@ -520,11 +520,11 @@ class msLapPrescription extends msLap
         $infosMedic = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLigneMedic."'  limit 1"), TRUE);
         $infosLignePres = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLignePres."'  limit 1"), TRUE);
 
-        $tab=array(
-          'uniteUtiliseeOrigine'=>$infosMedic['uniteUtiliseeOrigine'],
-          'voieUtiliseeCode'=>$infosLignePres['voieUtiliseeCode'],
-          'consignesPrescription'=>$infosLignePres['consignesPrescription'],
-        );
+        if(!empty($infosMedic) and !empty($infosLignePres)) {
+          if(isset($infosMedic['uniteUtiliseeOrigine'])) $tab['uniteUtiliseeOrigine']=$infosMedic['uniteUtiliseeOrigine'];
+          if(isset($infosMedic['voieUtiliseeCode'])) $tab['voieUtiliseeCode']=$infosMedic['voieUtiliseeCode'];
+          if(isset($infosMedic['consignesPrescription'])) $tab['consignesPrescription']=$infosMedic['consignesPrescription'];
+        }
       }
       return $tab;
     }
