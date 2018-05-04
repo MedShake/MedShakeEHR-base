@@ -72,6 +72,7 @@
           <tr>
             <th>Nom</th>
             <th>Version</th>
+            <th  class="col-auto"></th>
           </tr>
         </thead>
         <tbody>
@@ -79,13 +80,45 @@
             <tr>
               <td>{{ m.name }}</td>
               <td>{{ m.version }}</td>
+              <td class="text-right">
+                {% if m.name != 'base' %}
+                  <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}"><i class="fas fa-search-plus"></i></button>
+                {% endif %}
+              </td>
             </tr>
+            {% if m.name != 'base' %}
+              <tr class="collapse" id="{{ m.name }}">
+                <td colspan="3" class="p-3 bg-white">
+                  <h5>Paramètres de configuration spécifiques au module {{ m.name }}</h5>
+                  {% if page.modulesConfig[m.name]|length > 0 %}
+                  <table class="table table-sm small">
+                    <thead>
+                      <th>nom</th>
+                      <th>catégorie</th>
+                      <th>valeur</th>
+                    </thead>
+                    <tbody>
+                      {% for c in page.modulesConfig[m.name] %}
+                      <tr>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.cat }}</td>
+                        <td>{{ c.value }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% else %}
+                    <p>Pas de paramètres spécifiques.</p>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-  <h1>Installer un nouveau module ou une mise à jour</h1>
+  <h1 class="mt-3">Installer un nouveau module ou une mise à jour</h1>
   <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.<p>
   <p><strong>Ceci aura pour effet de mettre la base de données en état de maintenance</strong>, ce qui empêchera tout utilisateur non administrateur d'accèder à MedShakeEHR, jusqu'à ce que vous vous reloguiez pour terminer les mises à jour</p>
       <input type="hidden"></input>
