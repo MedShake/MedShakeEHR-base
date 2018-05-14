@@ -396,7 +396,7 @@
 			{% if keycol == "elements" %}
 				<div class="col-md-12"><h3>{{ col.value }}</h3></div>
 			{% else %}
-				<div class="col-md-{{ col.size }}">
+				<div class="{{ col.size|e('html_attr') }}">
 					{% for el in col.elements %}
 						{% if el.type == "head" %}
 							<h4>{{ el.value }}</h4>
