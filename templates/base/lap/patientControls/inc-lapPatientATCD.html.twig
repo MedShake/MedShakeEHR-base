@@ -29,70 +29,71 @@
 {% if page.patientATCD %}
 
   {% for atcdType, atcd in page.patientATCD %}
-    <label >{{ atcd.parentLabel }}</label>
-    <table class="table table-sm table-hover table-bordered small">
-      <tbody>
-        {% for atcdId, atc in atcd.atcd %}
-          {% if atc.atcdStrucCIM10InLap.value != 'n' %}
-            <tr class="tr{{ atcdId }} table-light">
-              <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}lap" style="cursor: pointer">
-                {{ atc.atcdStrucCIM10Label.value }}
-                <div id="atcdDet{{ atcdId }}lap" class="collapse">
-                  <table class="table table-sm" style="margin-top:8px;">
-                    <tr>
-                      <td>Code CIM 10</td>
-                      <td>{{ atc.atcdStrucCIM10.value }}</td>
-                    </tr>
-                    <tr>
-                      <td>LAP</td>
-                      <td>
-                        {% if atc.atcdStrucCIM10InLap.value == 'o' %}pris en compte{% else %}non pris en compte{% endif %}
-                      </td>
-                    </tr>
-                    {% if atc.atcdStrucDateDebutAnnee.value %}
+    <label class="w-100">{{ atcd.parentLabel }}</label>
+    {% if atcd.atcd %}
+      <table class="table table-sm table-hover table-bordered small">
+        <tbody>
+          {% for atcdId, atc in atcd.atcd %}
+            {% if atc.atcdStrucCIM10InLap.value != 'n' %}
+              <tr class="tr{{ atcdId }} table-light">
+                <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}lap" style="cursor: pointer">
+                  {{ atc.atcdStrucCIM10Label.value }}
+                  <div id="atcdDet{{ atcdId }}lap" class="collapse">
+                    <table class="table table-sm" style="margin-top:8px;">
                       <tr>
-                        <td>Début</td>
+                        <td>Code CIM 10</td>
+                        <td>{{ atc.atcdStrucCIM10.value }}</td>
+                      </tr>
+                      <tr>
+                        <td>LAP</td>
                         <td>
-                          {% if atc.atcdStrucDateDebutJour.value > 0%}
-                            {% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}
-                          {% if atc.atcdStrucDateDebutMois.value > 0 %}
-                            {% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+                          {% if atc.atcdStrucCIM10InLap.value == 'o' %}pris en compte{% else %}non pris en compte{% endif %}
                         </td>
                       </tr>
-                    {% endif %}
-                    {% if atc.atcdStrucDateFinAnnee.value %}
+                      {% if atc.atcdStrucDateDebutAnnee.value %}
+                        <tr>
+                          <td>Début</td>
+                          <td>
+                            {% if atc.atcdStrucDateDebutJour.value > 0%}
+                              {% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}
+                            {% if atc.atcdStrucDateDebutMois.value > 0 %}
+                              {% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+                          </td>
+                        </tr>
+                      {% endif %}
+                      {% if atc.atcdStrucDateFinAnnee.value %}
+                        <tr>
+                          <td>Fin</td>
+                          <td>
+                            {% if atc.atcdStrucDateFinJour.value > 0%}
+                              {% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}
+                            {% if atc.atcdStrucDateFinMois.value > 0 %}
+                              {% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
+                          </td>
+                        </tr>
+                      {% endif %}
+                      {% if atc.atcdStrucNotes.value %}
+                        <tr>
+                          <td colspan="2">Notes:
+                            <br>{{ atc.atcdStrucNotes.value|nl2br }}</td>
+                        </tr>
+                      {% endif %}
                       <tr>
-                        <td>Fin</td>
-                        <td>
-                          {% if atc.atcdStrucDateFinJour.value > 0%}
-                            {% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}
-                          {% if atc.atcdStrucDateFinMois.value > 0 %}
-                            {% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
-                        </td>
+                        <td>Auteur</td>
+                        <td>{{ atc.fromName }}</td>
                       </tr>
-                    {% endif %}
-                    {% if atc.atcdStrucNotes.value %}
                       <tr>
-                        <td colspan="2">Notes:
-                          <br>{{ atc.atcdStrucNotes.value|nl2br }}</td>
+                        <td>Ajout le</td>
+                        <td>{{ atc.atcdStrucCIM10.registerDate }}</td>
                       </tr>
-                    {% endif %}
-                    <tr>
-                      <td>Auteur</td>
-                      <td>{{ atc.fromName }}</td>
-                    </tr>
-                    <tr>
-                      <td>Ajout le</td>
-                      <td>{{ atc.atcdStrucCIM10.registerDate }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-            </tr>
-          {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
-
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
   {% endfor %}
 {% endif %}
