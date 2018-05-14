@@ -321,17 +321,20 @@ private function _checkAllaitement()
                  $moduleClass="msModGynobsCalcMed";
 
                  if ($data=$objet->getLastObjetByTypeName('ddgReel', $findGro['idGro'])) {
-                     $rd['ddg']=$data['value'];
-                     $rd['basedOn']='ddgReel';
+                    $rd['ddg']=$data['value'];
+                    $rd['basedOn']='ddgReel';
                  } elseif ($data=$objet->getLastObjetByTypeName('DDR', $findGro['idGro'])) {
-                     $rd['ddr']=$data['value'];
-                     $rd['ddg']=$moduleClass::ddr2ddg($data['value']);
-                     $rd['basedOn']='DDR';
+                    if(empty($data['value'])) return $rd=array('statut'=>'missingValue');
+                    $rd['ddr']=$data['value'];
+                    $rd['ddg']=$moduleClass::ddr2ddg($data['value']);
+                    $rd['basedOn']='DDR';
                  } else {
-                     return $rd=array('statut'=>'missingValue');
+                    return $rd=array('statut'=>'missingValue');
                  }
-                 $rd['terme']=$moduleClass::ddg2terme($rd['ddg'], date('d/m/Y'));
-                 $rd['termeMath']=$moduleClass::ddg2termeMath($rd['ddg'], date('d/m/Y'));
+                 if(isset($rd['ddg'])) {
+                   $rd['terme']=$moduleClass::ddg2terme($rd['ddg'], date('d/m/Y'));
+                   $rd['termeMath']=$moduleClass::ddg2termeMath($rd['ddg'], date('d/m/Y'));
+                 }
 
                  if ($rd['termeMath']>46) {
                      $rd['statut']='termeDepasse46SA';
