@@ -334,6 +334,7 @@ INSERT IGNORE INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `
 (1, 'admin', 'identity', 'Etat civil', 'Datas relatives à l\'identité d\'une personne', 'base', 1, '2018-01-01 00:00:00'),
 (2, 'admin', 'addressPerso', 'Adresse personnelle', 'datas de l\'adresse personnelle', 'base', 1, '2018-01-01 00:00:00'),
 (3, 'admin', 'internet', 'Internet', 'Datas liées aux services internet', 'base', 1, '2018-01-01 00:00:00'),
+(4, 'medical', 'grossesse', 'Grossesse', 'Données liées à la grossesse', 'base', 1, '2018-01-01 00:00:00'),
 (24, 'admin', 'contact', 'Contact', 'Moyens de contact', 'base', 1, '2018-01-01 00:00:00'),
 (25, 'admin', 'activity', 'Activités', 'Activités professionnelles et de loisir', 'base', 1, '2018-01-01 00:00:00'),
 (26, 'admin', 'divers', 'Divers', 'Divers', 'base', 1, '2018-01-01 00:00:00'),
@@ -371,8 +372,6 @@ INSERT IGNORE INTO `data_cat` (`id`, `groupe`, `name`, `label`, `description`, `
 (75, 'ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', 1, '2018-01-01 00:00:00'),
 (76, 'ordo', 'lapCatSams', 'LAP SAMs', 'data pour SAMs LAP', 'base', 1, '2018-01-01 00:00:00');
 
-
-
 INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 (0, 'admin', 'submit', '', '', '', '', '', 'submit', '', 'base', 0, 1, '2018-01-01 00:00:00', 3600, 1),
 (1, 'admin', 'birthname', 'nom', 'Nom de naissance', 'Nom reçu à la naissance', 'identite', 'Le nom de naissance est indispensable et ne doit pas contenir de caractères interdits', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -401,6 +400,13 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (41, 'medical', 'atcdMedicChir', 'Antécédents médico-chirugicaux personnels', 'Antécédents médico-chirugicaux', 'Antécédents médico-chirugicaux personnels', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (42, 'medical', 'toxiques', 'tabac et drogues', 'Toxiques', 'habitudes de consommation', '', '', 'text', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (43, 'medical', 'imc', 'imc', 'IMC', 'IMC (autocalcule)', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
+(44, 'typecs', 'nouvelleGrossesse', '', 'Nouvelle grossesse', 'support parent pour nouvelle grossesse', '', '', '', '', 'base', 57, 1, '2018-01-01 00:00:00', 86400, 1),
+(45, 'medical', 'groFermetureSuivi', '', 'Fermeture de la grossesse', 'date de fermeture de la grossesse (porteur)', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(46, 'medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '00/00/0000', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(47, 'medical', 'ddg', 'ddg', 'DDG (théorique)', 'date de début de grossesse', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(48, 'medical', 'ddgReel', '', 'DDG (retenue)', 'date de début de grossesse corrigé', '', '', 'date', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(49,'medical', 'termeDuJour', '', 'Terme du jour', 'terme du jour', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(50, 'medical', 'terme9mois', '', 'Terme (9 mois)', 'terme', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
 (51, 'admin', 'titre', 'Dr, Pr ...', 'Titre', 'Titre du pro de santé', '', '', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (53, 'admin', 'codePostalPro', 'code postal', 'Code postal', 'Adresse pro : code postal', 'alpha_space', 'Le code postal n\'est pas conforme', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
 (54, 'admin', 'numAdressePro', 'n° dans la voie', 'n°', 'Adresse pro : n° dans la voie', 'alpha_space', 'Le numero n\'est pas conforme', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -518,6 +524,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (558, 'ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', 73, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (559, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-01-01 00:00:00', 3600, 6),
 (562, 'ordo', 'lapMedicamentMotifPrescription', '', 'Motif de prescription du médicament', 'motif de prescription du médicament', '', '', '', '', 'base', 75, 1, '2018-04-30 20:30:06', 3600, 1);
+
 
 
 INSERT IGNORE INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES

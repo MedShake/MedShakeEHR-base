@@ -37,6 +37,19 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('reglement', 'regleTarifLibreCejour', '', 'Tarif', 'tarif appliqué ce jour', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 1576800000, 1),
 ('reglement', 'regleModulCejour', '', 'Modulation', 'modulation appliquée ce jour', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 1576800000, 1);
 
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='declencheur');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('typecs', 'nouvelleGrossesse', '', 'Nouvelle grossesse', 'support parent pour nouvelle grossesse', '', '', '', '', 'base', @catID, 1, '2018-01-01 00:00:00', 86400, 1);
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='grossesse');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('medical', 'groFermetureSuivi', '', 'Fermeture de la grossesse', 'date de fermeture de la grossesse (porteur)', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '00/00/0000', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'ddg', 'ddg', 'DDG (théorique)', 'date de début de grossesse', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'ddgReel', '', 'DDG (retenue)', 'date de début de grossesse corrigé', '', '', 'date', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'termeDuJour', '', 'Terme du jour', 'terme du jour', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'terme9mois', '', 'Terme (9 mois)', 'terme', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1);
+
 UPDATE `data_types` SET `name`='regleTarifSSCejour' WHERE `name`='regleTarifCejour';
 UPDATE `data_types` SET `name`='reglePorteurS2', `label`='Règlement conventionné S2', `placeholder`='Règlement conventionné S2', `formValues`='baseReglementS2' WHERE `name`='reglePorteur';
 UPDATE `data_types` SET `placeholder`='type et nom de la voie', `label`='Voie', `description`='Adresse perso : voie' WHERE `name`='street';
