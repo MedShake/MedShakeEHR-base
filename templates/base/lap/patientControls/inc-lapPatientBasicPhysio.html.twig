@@ -26,7 +26,7 @@
  #
 #}
 
-<label>Données physiologiques</label>
+<label class="w-100">Données physiologiques</label>
 <table class="table table-sm table-hover table-bordered small">
   {# poids #}
   {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
@@ -144,7 +144,7 @@
 
 {# grossesse #}
 {% if page.patientBasicPhysio.grossesse.statut != 'notConcerned' %}
-  <label>Grossesse</label>
+  <label class="w-100">Grossesse</label>
   <table class="table table-sm table-hover table-bordered small">
 
     {% if page.patientBasicPhysio.grossesse.statut == 'missingValue' %}
@@ -213,7 +213,7 @@
 
 {# allaitement #}
 {% if page.patientBasicPhysio.allaitement.statut != 'notConcerned' %}
-  <label>Allaitement</label>
+  <label class="w-100">Allaitement</label>
   <table class="table table-sm table-hover table-bordered small">
 
     <tr class="{% if page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
