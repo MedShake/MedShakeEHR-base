@@ -1,0 +1,126 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient :  onglet biométrie, données cardio
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+
+{% if page.distinctYears | length > 0 %}
+  <table class="table table-sm table-hover table-striped">
+    <thead>
+      <tr>
+        <th>
+          <select id="selectAnneeHistoBiometrieCardio" class="form-control form-control-sm custom-select w-50 gras">
+            {% for annee in page.distinctYears %}
+              <option {% if annee == page.selectedYear %} selected="selected" {% endif %}>{{ annee }}</option>
+            {% endfor %}
+          </select>
+        </th>
+        <th>TA systolique</th>
+        <th>TA diastolique</th>
+        <th>Fréquence cardiaque</th>
+        <th>Saturation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mois, moisdata in page.histoData %}
+        <tr class="table-primary gras">
+          <td colspan="5">{{ mois|capitalize }}</td>
+        </tr>
+        {% for date, datadate in moisdata %}
+          <tr>
+            <td>
+              {{ date|date("d/m/Y") }}
+            </td>
+            <td>
+              <ul class="list-unstyled mb-0">
+                {% for heure, data in datadate.taSystolique %}
+                  {% if datadate.taSystolique | length > 1 %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ heure }}
+                      :
+                      {{ data.value }}
+                      mm Hg</li>
+                  {% else %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ data.value }}
+                      mm Hg</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </td>
+            <td>
+              <ul class="list-unstyled mb-0">
+                {% for heure, data in datadate.taDiastolique %}
+                  {% if datadate.taDiastolique | length > 1 %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ heure }}
+                      :
+                      {{ data.value }}
+                      mm Hg</li>
+                  {% else %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ data.value }}
+                      mm Hg</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </td>
+            <td>
+              <ul class="list-unstyled mb-0">
+                {% for heure, data in datadate.freqCardiaque %}
+                  {% if datadate.freqCardiaque | length > 1 %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ heure }}
+                      :
+                      {{ data.value }}
+                      bpm</li>
+                  {% else %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ data.value }}
+                      bpm</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </td>
+            <td>
+              <ul class="list-unstyled mb-0">
+                {% for heure, data in datadate.spO2 %}
+                  {% if datadate.spO2 | length > 1 %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ heure }}
+                      :
+                      {{ data.value }}
+                      %</li>
+                  {% else %}
+                    <li title="{{ data.prenom }} {{ data.nom }} - {{ heure }}">{{ data.value }}
+                      %</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <div class="alert alert-info" role="alert">
+    Pas de données à afficher !
+  </div>
+{% endif %}

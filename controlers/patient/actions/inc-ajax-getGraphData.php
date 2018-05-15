@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : obtenir une ligne pour l'ordonnance
+ * Patient > ajax : obtenir les datas pour les graphs biométrie poids / taille / IMC
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */

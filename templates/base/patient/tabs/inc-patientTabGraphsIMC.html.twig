@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > patient : modal pour graph poids taille IMC
+ # Template > patient : tab pour données biométriques et cliniques
  #
  # @author fr33z00 <https://github.com/fr33z00>
  # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
@@ -42,15 +42,21 @@
       <li role="presentation" class="nav-item">
         <a class="nav-link" href="#si" aria-controls="si" role="tab" data-toggle="tab">Courbe d'IMC</a>
       </li>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#biometrieCardio" data-toggle="tab">Historique TA / FC / Sat</a>
+      </li>
     </ul>
   </div>
   <div class="tab-content col-md-10">
+    <div role="tabpanel" class="tab-pane" id="biometrieCardio">
+    </div>
+
     <div role="tabpanel" class="tab-pane active" id="sl">
       <table class="table table-sm mb-0 table-striped table-hover histo">
         <thead>
           <tr class="histo-head">
             <th style="text-align:center; cursor: pointer" data-sort="int">Age <span class="arrow fa fa-chevron-up"></span></th>
-            <th style="text-align:center">Mesuré le</th>
+            <th style="text-align:center; cursor: pointer" data-sort="int" data-sort-default="desc" data-sort-onload="yes">Mesuré le</th>
             <th style="text-align:center; cursor: pointer" data-sort="int">Poids (kg)</th>
             <th style="text-align:center; cursor: pointer" data-sort="int">Taille (cm)</th>
             <th style="text-align:center; cursor: pointer" data-sort="float">IMC (kg/m&sup2;)</th>

@@ -57,12 +57,14 @@ $acceptedModes=array(
     'saveReglementForm', // sauver une ordonnance
     'changeObjetCreationDate', // changer le creationDate d'un objet
     'getHistorique', // Obtenir l'historique complet
-    'getHistoriqueToday'// Obtenir l'historique du jour
+    'getHistoriqueToday', // Obtenir l'historique du jour
+    'getGraphData', // Obtenir les data pour les graphs biométrie
+    'getGraphDataCardio' // Obtenir les data pour les graphs biométrie cardio
 );
 
 
 //inclusion
-if(is_file($p['homepath'].'controlers/patient/actions/inc-ajax-'.$m.'.php')) {
+if(in_array($m, $acceptedModes) and is_file($p['homepath'].'controlers/patient/actions/inc-ajax-'.$m.'.php')) {
     include('inc-ajax-'.$m.'.php');
 } else {
     die();
