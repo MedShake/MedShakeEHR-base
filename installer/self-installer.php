@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
         $dossier=$_POST['destination'];
         if (!is_dir($_POST['destination'])) {
             mkdir($_POST['destination'], 0774, true);
-        } 
+        }
         if (!is_dir($_POST['destination']) or !is_writable($_POST['destination'])) {
             $template='erreur-droits';
         } else {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
             file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/'.$res['tag_name'].'.zip', 'r'));
             $zip = new ZipArchive;
             if ($zip->open("/tmp/medshake.zip"))  {
-                $zip->extractTo('/tmp/');     
+                $zip->extractTo('/tmp/');
                 unlink("/tmp/medshake.zip");
                 //deplacement du contenu de public_html
                 $dossierdezip='/tmp/MedShakeEHR-base-'.$res['tag_name'];
@@ -68,14 +68,14 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 }
                 foreach (scandir($dossierdezip.'/public_html') as $f) {
                     if ($f !='.' and $f !='..') {
-                        rename($dossierdezip.'/public_html/'.$f, $dossierweb.'/'.$f);
+                        exec('mv '.$dossierdezip.'/public_html/'.$f.' '.$dossierweb.'/'.$f);
                     }
                 }
                 rmdir($dossierdezip.'/public_html');
                 //deplacement du reste vers la destination
                 foreach (scandir($dossierdezip) as $f) {
                     if ($f !='.' and $f !='..') {
-                        rename($dossierdezip.'/'.$f, $dossier.$f);
+                        exec('mv '.$dossierdezip.'/'.$f.' '.$dossier.$f);
                     }
                 }
                 chdir($dossier);
