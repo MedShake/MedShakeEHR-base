@@ -524,9 +524,11 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (558, 'ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', 73, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (559, 'courrier', 'modeleCourrierTtEnCours', '', 'Traitement en cours', 'modèle de courrier pour l\'impression du traitement en cours', '', '', '', 'courrier-ttEnCours', 'base', 38, 1, '2018-01-01 00:00:00', 3600, 6),
 (562, 'ordo', 'lapMedicamentMotifPrescription', '', 'Motif de prescription du médicament', 'motif de prescription du médicament', '', '', '', '', 'base', 75, 1, '2018-04-30 20:30:06', 3600, 1),
-(563, 'medical', 'taSystolique', '', 'TAS', 'tension artérielle systolique en mm Hg', '', '', 'text', '', 'base', 28, 3, '2018-05-14 13:41:48', 3600, 1),
-(564, 'medical', 'taDiastolique', '', 'TAD', 'tension artérielle diastolique en mm Hg', '', '', 'text', '', 'base', 28, 3, '2018-05-14 13:41:54', 3600, 1),
-(565, 'medical', 'freqCardiaque', '', 'FC', 'fréquence cardiaque en bpm', '', '', 'text', '', 'base', 28, 3, '2018-05-14 13:41:42', 3600, 1);
+(563, 'medical', 'taSystolique', '', 'TAS', 'tension artérielle systolique en mm Hg', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:48', 60, 1),
+(564, 'medical', 'taDiastolique', '', 'TAD', 'tension artérielle diastolique en mm Hg', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:54', 60, 1),
+(565, 'medical', 'freqCardiaque', '', 'FC', 'fréquence cardiaque en bpm', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:42', 60, 1),
+(565, 'medical', 'spO2', '', 'SpO2', 'saturation en oxygène', '', '', 'text', '', 'base', 28, 1, '2018-05-15 10:08:20', 60, 1);
+
 
 
 INSERT IGNORE INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `yamlStructureDefaut`, `printModel`) VALUES

@@ -50,6 +50,15 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('medical', 'termeDuJour', '', 'Terme du jour', 'terme du jour', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
 ('medical', 'terme9mois', '', 'Terme (9 mois)', 'terme', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1);
 
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='dataCliniques');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('medical', 'taSystolique', '', 'TAS', 'tension artérielle systolique en mm Hg', '', '', 'text', '', 'base', @catID, 1, '2018-05-14 13:41:48', 60, 1),
+('medical', 'taDiastolique', '', 'TAD', 'tension artérielle diastolique en mm Hg', '', '', 'text', '', 'base', @catID, 1, '2018-05-14 13:41:54', 60, 1),
+('medical', 'freqCardiaque', '', 'FC', 'fréquence cardiaque en bpm', '', '', 'text', '', 'base', @catID, 1, '2018-05-14 13:41:42', 60, 1),
+('medical', 'spO2', '', 'SpO2', 'saturation en oxygène', '', '', 'text', '', 'base', @catID, 1, '2018-05-15 10:08:20', 60, 1);
+
+
+
 UPDATE `data_types` SET `name`='regleTarifSSCejour' WHERE `name`='regleTarifCejour';
 UPDATE `data_types` SET `name`='reglePorteurS2', `label`='Règlement conventionné S2', `placeholder`='Règlement conventionné S2', `formValues`='baseReglementS2' WHERE `name`='reglePorteur';
 UPDATE `data_types` SET `placeholder`='type et nom de la voie', `label`='Voie', `description`='Adresse perso : voie' WHERE `name`='street';
