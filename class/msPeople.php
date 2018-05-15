@@ -619,4 +619,49 @@ class msPeople
             return $this->_toID;
         }
     }
+
+/**
+ * Obtenir l'historique des valeurs pour une data patient
+ * @param  string $name     name
+ * @param  string $borneInf borne inférieure de date
+ * @param  string $borneSup borne supérieure de date
+ * @return array           array date=>datas
+ */
+    public function getDataHistoricalValues($name, $borneInf="1971-01-01 00:00:00", $borneSup="NOW()") {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+      if (!isset($name)) {
+          throw new Exception('Name is not defined');
+      }
+
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['firstname', 'lastname', 'birthname', $name]);
+
+      return msSQL::sql2tabKey("select v.registerDate, v.value, DATE_FORMAT(v.registerDate, '%Y-%m-%d') as dateonly, DATE_FORMAT(v.registerDate,'%H:%i:%s') as timeonly, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom, n1.value as prenom
+      from objets_data as v
+      left join objets_data as n1 on n1.toID=v.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=v.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=v.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      where v.toID='".$this->_toID."' and v.typeID='".$name2typeID[$name]."' and v.deleted='' and v.registerDate >= '".msSQL::cleanVar($borneInf)."' and v.registerDate <= '".msSQL::cleanVar($borneSup)."'
+      group by v.id, n1.id, n2.id, bn.id
+      order by v.registerDate desc", 'registerDate');
+
+    }
+
+/**
+ * Obtenir les années distinctes pour lesquelles il existe des valeurs de la data
+ * @param  string $name name
+ * @return array       tableau des années
+ */
+    public function getDataHistoricalValuesDistinctYears($name) {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName([$name]);
+      return msSQL::sql2tabSimple("select YEAR(registerDate) as year from objets_data where toID='".$this->_toID."' and typeID='".$name2typeID[$name]."' and deleted='' ");
+    }
+
 }
