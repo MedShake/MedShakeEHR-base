@@ -27,12 +27,24 @@
  *
  */
 
- // mod_rewrite
- if(in_array('mod_rewrite', apache_get_modules()) or strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false ) {
-   $infos[] = 'apache mod_rewrite : présent';
- } else {
-   $infos[] = 'apache mod_rewrite : absent';
- }
+function command_exist($cmd) {
+   $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
+   return !empty($return);
+}
+
+// git (binaire)
+if (command_exist('git')) {
+  $infos[] = 'git (binaire) : présent';
+} else {
+  $infos[] = 'git (binaire) : absent';
+}
+
+// mod_rewrite
+if(in_array('mod_rewrite', apache_get_modules()) or strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false ) {
+ $infos[] = 'apache mod_rewrite : présent';
+} else {
+ $infos[] = 'apache mod_rewrite : absent';
+}
 
 // variable MEDSHAKEEHRPATH et droits
 if (($homepath=getenv("MEDSHAKEEHRPATH"))!=false) {
@@ -72,9 +84,9 @@ if(is_dir('thirdparty')) {
 }
 
 // composer public_html -> dossier vendor
-if(is_dir($homepath.'/vendor')) {
+if(is_dir($homepath.'vendor')) {
   $infos[] = 'dossier vendor : présent';
-  $dirs = array_filter(glob($homepath.'/vendor/*'), 'is_dir');
+  $dirs = array_filter(glob($homepath.'vendor/*'), 'is_dir');
   if(!empty($dirs)) {
     $liste='contenu vendor :<ul>';
     foreach($dirs as $dir) {
