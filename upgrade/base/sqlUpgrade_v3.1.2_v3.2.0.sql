@@ -261,7 +261,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('agendaModePanneauLateral', 'Agenda', 'default', 'true/false', 'Utilisation du panneau latéral (true) ou d\'une fenêtre contextuelle (false)', 'true'),
 ('mailRappelActiver', 'Rappels mail', 'default', 'true/false', 'activer / désactiver les rappels par mail', 'false'),
 ('mailRappelLogCampaignDirectory', 'Rappels mail', 'default', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par mail', ''),
-('mailRappelDaysBeforeRDV', 'Rappels mail', 'default', 'nombre', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel', '3'),
+('mailRappelDaysBeforeRDV', 'Rappels mail', 'default', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel', '3'),
 ('mailRappelMessage', 'Rappels mail', 'default', 'texte', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu\’aucun autre rendez-vous ne sera donné à un patient n\’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
 ('smsRappelActiver', 'Rappels SMS', 'default', 'true/false', 'activer / désactiver les rappels par SMS', 'false'),
 ('smsProvider', 'Rappels SMS', 'default', 'url/ip', 'active le service tiers concerné', ''),
