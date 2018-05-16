@@ -94,13 +94,16 @@
                    <td>Dose</td>
                    <td>
                      <ul class="list-unstyled">
-                     {% for dose in poso.dose %}
-                       <li>{% if dose.mini and dose.maxi %}
-                         {{ dose.mini }} à {{ dose.maxi }} {{ dose.info_02 }}
-                       {% elseif dose.mini or dose.maxi %}
-                         {{ dose.mini }}{{ dose.maxi }} {{ dose.info_02 }}
-                       {% endif %}</li>
-                     {% endfor %}
+                       {% for dose in poso.dose %}
+                         <li>
+                         {% if dose.mini == dose.maxi and dose.mini > 0 %}
+                           {{ dose.maxi }} {{ dose.info_02 }}
+                         {% elseif dose.mini and dose.maxi %}
+                           {{ dose.mini }} à {{ dose.maxi }} {{ dose.info_02 }}
+                         {% elseif dose.mini or dose.maxi %}
+                           {{ dose.mini }}{{ dose.maxi }} {{ dose.info_02 }}
+                         {% endif %}</li>
+                       {% endfor %}
                      </ul>
                    </td>
                  </tr>
