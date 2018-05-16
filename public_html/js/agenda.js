@@ -659,6 +659,7 @@ function getPatientAdminData(patientID) {
     },
     dataType: "json",
     success: function(data) {
+      $("#patientInfo input[name!='userid'], #patientInfo textarea").val('');
       $.each(data, function(index, value) {
         if ($("#id_" + index + "_id").length) $("#id_" + index + "_id").val(value);
       });
@@ -712,7 +713,7 @@ function getHistoriquePatient(patientID) {
 // Nettoyage pour retour à l'état initial de la page
 function clean() {
   $("#search").val('');
-  $("#formRdv input[name!='userid']").val('');
+  $("#patientInfo input[name!='userid'], #patientInfo textarea").val('');
   $("#formRdv textarea").val('');
   $("#formRdv select").val($("#formRdv select option:first").val());
 
