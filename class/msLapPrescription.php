@@ -614,8 +614,19 @@ class msLapPrescription extends msLap
  * @return boolean true si pb de sécabilité
  */
     private function _controleSecabilite() {
+      $tot=0;
+      if(is_array($this->_prescriptionInterpretee['posoDosesSuccessives'])) {
+        foreach($this->_prescriptionInterpretee['posoDosesSuccessives'] as $tab) {
+          $tot=$tot+array_sum($tab);
+        }
+      }
+
+      // si rien de prescrit (poso = 0)
+      if($tot==0) {
+        $this->_prescriptionInterpretee['alerteSecabilite'] = false;
+      }
       //si sécabilité inexistante
-      if($this->_divisibleEn == -1 and $this->_prescriptionInterpretee['posoMinParPriseMin'] < 1) {
+      elseif($this->_divisibleEn == -1 and $this->_prescriptionInterpretee['posoMinParPriseMin'] < 1) {
         $this->_prescriptionInterpretee['alerteSecabilite'] = true;
       }
       // unité utilisée : ucd
@@ -968,14 +979,22 @@ class msLapPrescription extends msLap
         }
 
         elseif($l['regEx']=='1') {
-          $fqcMinutes = $this->_convertToMinutes(1, $l['nbPrisesParUniteTempsUnite']) / $l['nbPrisesParUniteTemps'];
+          if($l['nbPrisesParUniteTemps'] > 0) {
+            $fqcMinutes = $this->_convertToMinutes(1, $l['nbPrisesParUniteTempsUnite']) / $l['nbPrisesParUniteTemps'];
 
-          if(!empty($l['posoJours'])) {
-            $dureeMinutes = $this->_calculerNbReelDeJours($l['duree'], $l['dureeUnite'],$l['posoJours']) * 60 * 24;
+            if(!empty($l['posoJours'])) {
+              $dureeMinutes = $this->_calculerNbReelDeJours($l['duree'], $l['dureeUnite'],$l['posoJours']) * 60 * 24;
+            } else {
+              $dureeMinutes = $this->_convertToMinutes($l['duree'], $l['dureeUnite']);
+            }
+            if((float)$l['posoDosesSuccessives'][0] > 0) {
+              $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
+            } else {
+              $total[$k] = 0;
+            }
           } else {
-            $dureeMinutes = $this->_convertToMinutes($l['duree'], $l['dureeUnite']);
+            $total[$k] = 0;
           }
-          $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
         }
 
         elseif($l['regEx']=='3') {
@@ -985,7 +1004,11 @@ class msLapPrescription extends msLap
           } else {
             $dureeMinutes = $this->_convertToMinutes($l['duree'], $l['dureeUnite']);
           }
-          $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
+          if((float)$l['posoDosesSuccessives'][0] > 0) {
+            $total[$k] = $dureeMinutes / $fqcMinutes * (float)$l['posoDosesSuccessives'][0];
+          } else {
+            $total[$k] = 0;
+          }
         }
       }
 
