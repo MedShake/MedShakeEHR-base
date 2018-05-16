@@ -26,7 +26,7 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<div class="col-md-12">
+<div class="col-12">
   <h1>
     {# firstname #}
     {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
@@ -59,7 +59,7 @@
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
             <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
-                <span class="fa fa-comment" aria-hidden="true"></span>
+                <i class="fas fa-comment-alt"></i>
             </button>
           {% endif %}
 
@@ -114,8 +114,9 @@
     {% endif %}
   </div>
 </div>
-<div class="col-md-12">
+<div class="col-12">
   <div id="notesPatient" class="card bg-light p-2" style="display: none;">
     {{ page['patient']['administrativeDatas']['notes']['value']|e|nl2br }}
   </div>
+
 </div>
