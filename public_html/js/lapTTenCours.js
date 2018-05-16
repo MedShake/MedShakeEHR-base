@@ -129,8 +129,10 @@ function cleanLignePrescriptionAvantRenouv(ligne) {
   ligne.ligneData.dateDebutPrise = moment(new Date()).format('DD/MM/YYYY');
   if (ligne.ligneData.dureeTotaleMachineJours > 0) {
     ligne.ligneData.dateFinPrise = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJours - 1, 'days').format('DD/MM/YYYY');
+    ligne.ligneData.dateFinPriseAvecRenouv = moment(new Date()).add(ligne.ligneData.dureeTotaleMachineJoursAvecRenouv - 1, 'days').format('DD/MM/YYYY');
   } else {
     ligne.ligneData.dateFinPrise = ligne.ligneData.dateDebutPrise;
+    ligne.ligneData.dateFinPriseAvecRenouv = ligne.ligneData.dateDebutPrise;
   }
   //retirer éventuels prescripteurs initiaux
   $.each(ligne.medics, function(index, l) {
