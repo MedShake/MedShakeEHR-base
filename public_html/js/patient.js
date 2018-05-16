@@ -136,8 +136,22 @@ $(document).ready(function() {
       instance = $(this).closest("form").attr("data-instance");
       setPeopleData(value, patientID, typeID, source, instance);
     }
-
   });
+
+  $(".changeObservByTypeName input:not(.datepic), .changeObservByTypeName textarea").typeWatch({
+    wait: 1000,
+    highlight: false,
+    allowSubmit: false,
+    captureLength: 1,
+    callback: function(value) {
+      patientID = $('#identitePatient').attr("data-patientID");
+      typeName = $(this).attr("data-typeName");
+      source = $(this);
+      instance = $(this).closest("form").attr("data-instance");
+      setPeopleDataByTypeName(value, patientID, typeName, source, instance);
+    }
+  });
+
   $(".changeObserv select").on("change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).attr("data-typeID");
