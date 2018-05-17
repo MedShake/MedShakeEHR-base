@@ -24,6 +24,7 @@
  * enregistrement des paramètres d'agenda utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 //construction du répertoire
@@ -35,6 +36,9 @@ $js[]="businessHours = [\n";
 $hiddenDays=[];
 $day=1;
 foreach($params as $k=>$v) {
+    if(!isset($_POST['workOn_'.$k])) $_POST['workOn_'.$k]=false;
+    if(!isset($_POST['visible_'.$k])) $_POST['visible_'.$k]=false;
+
     $params[$k]=array('worked'=>$_POST['workOn_'.$k], 'visible'=>$_POST['visible_'.$k], 'minTime'=> $_POST['minTime_'.$k], 'maxTime'=> $_POST['maxTime_'.$k]);
     $js[]="  {\n";
     $js[]="    dow: [".$day."],\n";
@@ -84,6 +88,11 @@ $params['slotDuration']=$_POST['slotDuration'];
 $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
 
 file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
-file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.js', $js);
 
-msTools::redirRoute('userParameters');
+if(file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.js', $js)) {
+  header('Content-Type: application/json');
+  exit(json_encode(array('status'=>'success')));
+} else {
+  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+  exit();
+}

@@ -24,7 +24,9 @@
  * enregistrement des paramètres d'agenda utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
 
 $preparams=array();
 
@@ -40,6 +42,10 @@ foreach ($preparams as $k=>$v) {
     }
 }
 
-file_put_contents($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
-
-msTools::redirRoute('userParameters');
+if(file_put_contents($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true))) {
+  header('Content-Type: application/json');
+  exit(json_encode(array('status'=>'success')));
+} else {
+  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+  exit();
+}

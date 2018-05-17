@@ -24,6 +24,7 @@
  * Login : page de login
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $debug='';
@@ -50,8 +51,8 @@ $p['page']['hasAgenda']=true;
 * Agenda
 ************/
 //paramètres de l'agenda
-if(is_file($p['homepath'].'config/configAgenda'.$p['user']['id'].'.yml')) {
-  $p['page']['agenda']=Spyc::YAMLLoad($p['homepath'].'config/configAgenda'.$p['user']['id'].'.yml');
+if(is_file($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.yml')) {
+  $p['page']['agenda']=Spyc::YAMLLoad($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.yml');
 } else {
   $p['page']['agenda']=array('minTime'=>'08:00', 'maxTime'=>'20:00', 'slotDuration'=>'00:20',
                             'Lundi'=>array('worked'=> true, 'visible'=>true, 'minTime'=>'09:00', 'maxTime'=>'19:00', 'pauseStart'=>'12:00', 'pauseEnd'=>'13:00'),

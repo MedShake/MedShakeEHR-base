@@ -62,7 +62,7 @@
             </td>
             <td class="time">
               <div class="md-col-1 input-group input-group-sm date">
-                  <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off">
                   <div class="input-group-append">
                       <span class="far fa-clock input-group-text"></span>
                   </div>
@@ -75,7 +75,7 @@
             </td>
             <td class="time">
               <div class="md-col-1 input-group input-group-sm date">
-                  <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off">
                   <div class="input-group-append">
                       <span class="far fa-clock input-group-text"></span>
                   </div>
@@ -88,7 +88,7 @@
             </td>
             <td class="time">
               <div class="md-col-1 input-group input-group-sm date">
-                  <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off">
                   <div class="input-group-append">
                       <span class="far fa-clock input-group-text"></span>
                   </div>
@@ -110,14 +110,14 @@
             <tr>
               <td>{{ i }}</td>
               <td>
-                <input name="visible_{{ i }}" value="{{ page.agenda[i]['visible'] }}" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off"></input>
+                <input name="visible_{{ i }}" {% if page.agenda[i]['visible'] != false %}checked{% endif %} value="1" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off">
               </td>
               <td>
-                <input name="workOn_{{ i }}" value="{{ page.agenda[i]['worked'] }}" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %}></input autocomplete="off">
+                <input name="workOn_{{ i }}" {% if page.agenda[i]['worked'] != false %}checked{% endif %} value="1" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %} autocomplete="off">
               </td>
               <td>
                 <div class='input-group input-group-sm date'>
-                  <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off">
                     <div class="input-group-append">
                         <span class="far fa-clock input-group-text"></span>
                     </div>
@@ -125,7 +125,7 @@
               </td>
               <td>
                 <div class='input-group input-group-sm date'>
-                  <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off">
                     <div class="input-group-append">
                         <span class="far fa-clock input-group-text"></span>
                     </div>
@@ -133,7 +133,7 @@
               </td>
               <td>
                 <div class='input-group input-group-sm date'>
-                  <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off">
                     <div class="input-group-append">
                         <span class="far fa-clock input-group-text"></span>
                     </div>
@@ -141,7 +141,7 @@
               </td>
               <td>
                 <div class='input-group input-group-sm date'>
-                  <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off"></input>
+                  <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off">
                     <div class="input-group-append">
                         <span class="far fa-clock input-group-text"></span>
                     </div>
@@ -150,7 +150,7 @@
             </tr>
           {% endfor %}
         </table>
-        <input class="btn btn-primary mt-2" type="submit" value="Valider"></input>
+        <input class="btn btn-primary mt-2" type="submit" value="Valider">
       </div>
     </form>
     </div>
@@ -179,14 +179,14 @@
                 {% endif %}
               </td>
               <td>
-                <input class="form-control form-control-sm" {% if v.readonly %}readonly{% endif %} name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off"></input>
+                <input class="form-control form-control-sm" {% if v.readonly %}readonly{% endif %} name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off">
               </td>
               <td>
-                <input class="form-control form-control-sm" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off"></input>
+                <input class="form-control form-control-sm" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off">
               </td>
               <td>
                 <div class="input-group input-group-sm colorpicker" data-toggle="false">
-                  <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off"></input>
+                  <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off">
                   <div class="input-group-append">
                     <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.backgroundColor }}"></i></span>
                   </div>
@@ -194,14 +194,14 @@
               </td>
               <td>
                 <div class="input-group input-group-sm colorpicker" data-toggle="false">
-                  <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off"></input>
+                  <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off">
                   <div class="input-group-append">
                     <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.borderColor }}"></i></span>
                   </div>
                 </div>
               </td>
               <td>
-                <input class="form-control form-control-sm" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off"></input>
+                <input class="form-control form-control-sm" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off">
               </td>
             </tr>
             {% endfor %}
@@ -218,7 +218,7 @@
               <td></td>
             </tr>
           </table>
-          <input class="btn btn-primary mt-2" type="submit" value="Valider"></input>
+          <input class="btn btn-primary mt-2" type="submit" value="Valider">
         </div>
       </form>
     </div>
