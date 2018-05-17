@@ -66,11 +66,11 @@
               </tr>
               <tr>
                 <td>Montrer les médicaments hospitaliers</td>
-                <td><input name="theriaqueShowMedicHospi" value="{{ page.lap.params.theriaqueShowMedicHospi }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicHospi == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+                <td><input id="theriaqueShowMedicHospiID" name="theriaqueShowMedicHospi" value="true" type="checkbox" {% if page.lap.params.theriaqueShowMedicHospi == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr>
                 <td>Montrer les médicaments non commercialisés</td>
-                <td><input name="theriaqueShowMedicNonComer" value="{{ page.lap.params.theriaqueShowMedicNonComer }}" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+                <td><input id="theriaqueShowMedicNonComerID" name="theriaqueShowMedicNonComer" value="true" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr>
                 <td>Choix par défaut du menu de recherche des médicaments</td>
@@ -98,30 +98,18 @@
               </tr>
               <tr {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 != 'true' %} class="table-warning" {% endif %}>
                 <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
-                <td><input
-                  class="alerteInfSeuilCertif"
-                  name="lapAlertPatientTermeGrossesseSup46"
-                  value="{{ page.lap.params.lapAlertPatientTermeGrossesseSup46 }}"
-                  type="checkbox"
-                  {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %} checked="checked"{% endif %}
-                  autocomplete="off"></td>
+                <td><input class="alerteInfSeuilCertif" id="lapAlertPatientTermeGrossesseSup46ID" name="lapAlertPatientTermeGrossesseSup46" value="true" type="checkbox" {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr {% if page.lap.params.lapAlertPatientAllaitementSup3Ans != 'true' %} class="table-warning" {% endif %}>
                 <td>Alerte pour allaitement supérieur à 3 ans</td>
-                <td><input
-                  class="alerteInfSeuilCertif"
-                  name="lapAlertPatientAllaitementSup3Ans"
-                  value="{{ page.lap.params.lapAlertPatientAllaitementSup3Ans }}"
-                  type="checkbox"
-                  {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %}
-                  autocomplete="off"></td>
+                <td><input class="alerteInfSeuilCertif" id="lapAlertPatientAllaitementSup3AnsID" name="lapAlertPatientAllaitementSup3Ans" value="true" type="checkbox" {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
               <tr>
                 <td class="table-primary" colspan="2">Paramètres d'impression</td>
               </tr>
               <tr {% if page.lap.params.lapPrintAllergyRisk != 'true' %} class="table-warning" {% endif %}>
                 <td>Signaler les risques allergiques ou d'intolérance sur les ordonnances imprimées</td>
-                <td><input class="alerteInfSeuilCertif" name="lapPrintAllergyRisk" value="{{ page.lap.params.lapPrintAllergyRisk }}" type="checkbox" {% if page.lap.params.lapPrintAllergyRisk == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+                <td><input class="alerteInfSeuilCertif" id="lapPrintAllergyRiskID" name="lapPrintAllergyRisk" value="true" type="checkbox" {% if page.lap.params.lapPrintAllergyRisk == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
               </tr>
             </tbody>
           </table>
