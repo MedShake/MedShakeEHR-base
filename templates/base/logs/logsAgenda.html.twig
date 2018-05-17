@@ -45,12 +45,12 @@
   <div class="row">
     <div class="col">
       <ul class="nav nav-tabs bottom-space" >
-        <li role="presentation" {% if page.agendaID is not defined %}class="active"{% endif %}>
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Tous les agendas</a>
+        <li class="nav-item">
+            <a class="nav-link{% if page.agendaID is not defined %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Tous les agendas</a>
         </li>
         {% for k,v in page.agendaUsers %}
-          <li role="presentation" {% if k == page.agendaID %}class="active"{% endif %}>
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ k }}/">{{ v }}</a>
+          <li class="nav-item">
+              <a class="nav-link{% if k == page.agendaID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ k }}/">{{ v }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -83,7 +83,7 @@
                     <tr class="{% if v.type == '[off]' %}table-info{% elseif v.operation is not defined %}table-success{% elseif v.operation == 'missing' %}table-warning{% elseif v.operation == 'delete' %}table-danger{% endif %}">
                         <td>{{ v.date }}
                         </td>
-                        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }} {{ page['agendaUsers'][v.agendaID] }}</a></td>
+                        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }}</a> {{ page['agendaUsers'][v.agendaID] }}</td>
                         <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/{{ v.eventID }}/">#{{ v.eventID }}</a></td>
                         <td>{{ v.start }} &rarr; {{ v.end }}</td>
                         <td>{{ v.type }}</td>

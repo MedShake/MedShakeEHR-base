@@ -51,16 +51,20 @@ $lastAdd=[];
 $lasrUpdate=[];
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-if ($lastAdd=msSQL::sql2tab("select a.id as eventID, a.userid as agendaID, a.start, a.end, a.type, a.dateAdd as date, a.patientid as patientID, a.fromID, a.statut, a.absente, a.motif, n.value as patientNom, p.value as patientPrenom, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree, n1.value as auteurNom, p1.value as auteurPrenom
+if ($lastAdd=msSQL::sql2tab("select a.id as eventID, a.userid as agendaID, a.start, a.end, a.type, a.dateAdd as date, a.patientid as patientID, a.fromID, a.statut, a.absente, a.motif, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree,
+CASE WHEN n.value != '' THEN n.value ELSE bn.value END as patientNom, p.value as patientPrenom,
+CASE WHEN n1.value != '' THEN n1.value ELSE bn1.value END as auteurNom, p1.value as auteurPrenom
   from agenda as a
+  left join objets_data as bn on bn.toID=a.patientid and bn.typeID='".$name2typeID['birthname']."' and bn.deleted = '' and bn.outdated = ''
   left join objets_data as n on n.toID=a.patientid and n.typeID='".$name2typeID['lastname']."' and n.deleted = '' and n.outdated = ''
   left join objets_data as p on p.toID=a.patientid and p.typeID='".$name2typeID['firstname']."' and p.deleted = '' and p.outdated = ''
+  left join objets_data as bn1 on bn1.toID=a.fromID and bn1.typeID='".$name2typeID['birthname']."' and bn1.deleted = '' and bn1.outdated = ''
   left join objets_data as n1 on n1.toID=a.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
   left join objets_data as p1 on p1.toID=a.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
   where ".implode(' and ', $whereLA)."
-  group by a.id, n.value, p.value, n1.value, p1.value
+  group by a.id, n.value, p.value, n1.value, p1.value, bn.value, bn1.value
   order by a.id desc
   limit 2000")) {
     foreach ($lastAdd as $v) {
@@ -68,15 +72,19 @@ if ($lastAdd=msSQL::sql2tab("select a.id as eventID, a.userid as agendaID, a.sta
     }
 }
 //dernies rdv modifiés
-if ($lastUpdate=msSQL::sql2tab("select l.eventID, l.userID as agendaID, l.date, l.operation, l.olddata, l.fromID, a.patientid as patientID, a.type as type, n.value as patientNom, p.value as patientPrenom, a.start, a.end, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree, n1.value as auteurNom, p1.value as auteurPrenom
+if ($lastUpdate=msSQL::sql2tab("select l.eventID, l.userID as agendaID, l.date, l.operation, l.olddata, l.fromID, a.patientid as patientID, a.type as type, a.start, a.end, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree,
+CASE WHEN n.value != '' THEN n.value ELSE bn.value END as patientNom, p.value as patientPrenom,
+CASE WHEN n1.value != '' THEN n1.value ELSE bn1.value END as auteurNom, p1.value as auteurPrenom
   from agenda_changelog as l
   left join agenda as a on a.id=l.eventID
+  left join objets_data as bn on bn.toID=a.patientid and bn.typeID='".$name2typeID['birthname']."' and bn.deleted = '' and bn.outdated = ''
   left join objets_data as n on n.toID=a.patientid and n.typeID='".$name2typeID['lastname']."' and n.deleted = '' and n.outdated = ''
   left join objets_data as p on p.toID=a.patientid and p.typeID='".$name2typeID['firstname']."' and p.deleted = '' and p.outdated = ''
+  left join objets_data as bn1 on bn1.toID=a.fromID and bn1.typeID='".$name2typeID['birthname']."' and bn1.deleted = '' and bn1.outdated = ''
   left join objets_data as n1 on n1.toID=a.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
   left join objets_data as p1 on p1.toID=a.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
   where ".implode(' and ', $whereLU)."
-  group by l.id, n.value, p.value, n1.value, p1.value
+  group by l.id, n.value, p.value, n1.value, p1.value, bn.value, bn1.value
   order by l.id desc
   limit 2000")) {
     foreach ($lastUpdate as $v) {
