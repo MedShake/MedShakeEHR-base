@@ -34,10 +34,10 @@ $template="agenda";
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
 //paramètres de l'agenda
-if(is_file($p['homepath'].'config/agendas/'.$match['params']['userID'].'.js')) {
-  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/'.$match['params']['userID'].'.js');
-  if(is_file($p['homepath'].'config/agendas/'.$match['params']['userID'].'_ad.js')) {
-    $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/'.$match['params']['userID'].'_ad.js');
+if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
+  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js');
+  if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
   }
 }
 
@@ -59,4 +59,3 @@ if (isset($_SESSION['form']['baseModalNewPatient']['formValues'])) {
 $p['page']['formNewPatient']=$formpatient->getForm();
 //modifier action pour url ajax
 $p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
-
