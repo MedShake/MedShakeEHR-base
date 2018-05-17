@@ -161,14 +161,15 @@ $(document).ready(function() {
         element.attr("data-placement", 'right');
         element.attr("data-boundary", 'viewport');
         element.attr("data-html", "true");
-        if (event.patientid == "0")
+        if (event.patientid == "0") {
           element.attr("data-content", "Fermé");
+        }
         element.attr("data-template", '\
 <div class=\"popover\" role=\"tooltip\">\
 <h3 class=\"popover-header\">Détail</h3>\
 <div class=\"popover-body\"></div>\
-<div class=\"popover-footer btn-group m-1\">\
-<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>' +
+<div class=\"popover-footer btn-group m-1\">' +
+          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>') +
           (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
           '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
 <button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>' +
@@ -192,8 +193,9 @@ $(document).ready(function() {
         $("#patientInfo").find("input,textarea").prop("readonly", true);
         $("#patientInfo").find("select").prop("disabled", true);
         $("#patientInfo").show();
-        if ($('#calendar').attr('data-mode') == 'lateral')
+        if ($('#calendar').attr('data-mode') == 'lateral') {
           $('#nettoyer').show();
+        }
         $('#buttonModifier').prop('disabled', false);
         $('#buttonAutresActions').prop('disabled', false);
         $("#motif").val(eventClicked.motif);
@@ -205,6 +207,9 @@ $(document).ready(function() {
           $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + eventClicked.motif +
           (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
+      } else {
+        $('#patientInfo, #nettoyer').hide();
+        clean();
       }
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
@@ -315,10 +320,14 @@ $(document).ready(function() {
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
       jsEvent.stopImmediatePropagation();
-      if (confirm("Souhaitez-vous fermer cette journée ?"))
-        selected_period.start = date.format('YYYY-MM-DD') + ' ' + minTime;
-      selected_period.end = date.format('YYYY-MM-DD') + ' ' + maxTime
-      closePeriod();
+      console.log(date.format('YYYY-MM-DD') + ' ' + minTime);
+      if (confirm("Souhaitez-vous fermer cette journée ?")) {
+        selected_period = {
+          start: moment(date.format('YYYY-MM-DD') + ' ' + minTime),
+          end: moment(date.format('YYYY-MM-DD') + ' ' + maxTime)
+        };
+        closePeriod();
+      }
       selected_period = undefined;
     }
   })
@@ -690,8 +699,8 @@ function getHistoriquePatient(patientID) {
         chaine = chaine + '">';
         chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fa fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
         chaine = chaine + dat['start'] + ' : ' + dat['type'];
-        if (dat['statut'] == 'deleted') chaine = chaine + ' <small>[annulé]</small>';
-        if (dat['absente'] == 'oui') chaine = chaine + ' <small>[non honoré]</small>';
+        if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
+        if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
         chaine = chaine + '</li>';
 
         $('#historiquePatient ul').append(chaine);
@@ -715,7 +724,7 @@ function clean() {
   $("#search").val('');
   $("#patientInfo input[name!='userid'], #patientInfo textarea").val('');
   $("#formRdv textarea").val('');
-  $("#formRdv select").val($("#formRdv select option:first").val());
+  $("#formRdv select")[0].selectedIndex = 0;
 
   $('#historiquePatient').hide();
   $('#historiquePatient ul').html('');
