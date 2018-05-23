@@ -1,0 +1,421 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > formatage du retour Thériaque sur l'analyse des prescriptions
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% if apatient.poids.statut != 'ok' or apatient.taillePatient.statut != 'ok' or apatient.clairanceCreatinine.statut != 'ok' %}
+  <h3>Données physiologiques patient</h3>
+  <table class="table table-sm table-hover">
+    <tbody>
+      {% if apatient.poids.statut != 'ok' %}
+      <tr class="table-danger">
+        <td>
+          <strong>Poids</strong> : vérifiez et corrigez si possible le poids. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+      {% if apatient.taillePatient.statut != 'ok' %}
+      <tr class="table-danger">
+        <td>
+          <strong>Taille</strong> : renseignez si possible la taille. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+      {% if apatient.clairanceCreatinine.statut != 'ok' %}
+      <tr class="table-danger">
+        <td>
+          <strong>Clairance créatinine</strong> : renseignez si possible la clairance de la créatinine. Dans le cas contraire, les controles ne pourront être réalisés intégrallement.
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if aallergies %}
+  <h3>Allergies et hypersensibilités</h3>
+  <table class="table table-sm table-hover">
+    <tbody>
+      {% for keyTerrain, allergies in aallergies %}
+        <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyTerrain }}">
+          <td style="cursor: pointer">
+            <button type="button" class="btn btn-danger btn-sm">
+              <span class="fa fa-plus" aria-hidden="true"></span></button>
+            {{ allergies['0']['alerte']['lib_ter'] }}
+          </td>
+        </tr>
+
+        {% for keyLigne, ligne in allergies %}
+          <tr class="redon{{ keyTerrain }} collapse">
+            <td>
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}l{{ keyLigne }}">
+                <span class="fa fa-book" aria-hidden="true"></span></button>
+              {{ ligne.medic.nomUtileFinal }}
+              <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
+              {% if corLi[ligne['alerte']['indiceligneprescription']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+                <span class="badge badge-info">TT en cours</span>{% endif %}
+            </td>
+          </tr>
+          <tr id="texte{{ keyTerrain }}l{{ keyLigne }}" class="collapse">
+            <td>{{ ligne['alerte']['texte']|nl2br }}</td>
+          </tr>
+        {% endfor %}
+
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if aredondances %}
+  <h3>Traitements redondants</h3>
+  <table class="table table-sm table-hover">
+    <tbody>
+      {% for keyRedon, redon in aredondances %}
+
+        <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyRedon }}">
+          <td style="cursor: pointer">
+            <button type="button" class="btn btn-danger btn-sm">
+              <span class="fa fa-plus" aria-hidden="true"></span></button>
+            {{ redon['0']['alerte']['texte'] }}
+          </td>
+        </tr>
+
+        {% for ligne in redon %}
+          <tr class="redon{{ keyRedon }} collapse">
+            <td>{{ ligne.medic.nomUtileFinal }}
+              <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
+              {% if corLi[ligne['alerte']['indiceligneprescription']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+                <span class="badge badge-info">TT en cours</span>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if aposologies %}
+  <h3>Alertes posologies</h3>
+  <table class="table table-sm table-hover">
+    {% for ligneThe, alertes in aposologies %}
+      <tr class="gras {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
+        <td>
+          <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
+            <span class="fa fa-plus" aria-hidden="true"></span></button>
+          {{ alertes.medic.nomUtileFinal }}
+          -
+          <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
+          {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
+        </td>
+      </tr>
+      {% for alerte in alertes['1'] %}
+        <tr class="poso{{ ligneThe }} collapse">
+          <td class="text-danger" style="padding-left :20px">Alerte posologique :
+            {{ alerte.texte }}</td>
+        </tr>
+      {% endfor %}
+      {% for alerte in alertes['0'] %}
+        <tr class="poso{{ ligneThe }} collapse">
+          <td style="padding-left :20px">Alerte technique :
+            {{ alerte.texte }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+{% endif %}
+
+{% if acipemg %}
+  <h3>Contre-indications, précautions d'emploi et mises en garde</h3>
+  <table class="table table-sm table-hover">
+    {% for ligneThe, alertes in acipemg %}
+      <tr class="gras {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
+        <td>
+          <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
+            <span class="fa fa-plus" aria-hidden="true"></span></button>
+          {{ alertes.medic.nomUtileFinal }}
+          -
+          <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
+          {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
+        </td>
+      </tr>
+      {% for keyLigne, alerte in alertes['C'] %}
+        <tr class="cipemg{{ ligneThe }} collapse">
+          <td class="text-danger" style="padding-left :20px">
+            <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}c{{ keyLigne }}">
+              <span class="fa fa-book" aria-hidden="true"></span></button>
+            Contre-indication :
+            {{ alerte.lib_ter }}
+          </td>
+        </tr>
+        <tr id="texte{{ keyTerrain }}c{{ keyLigne }}" class="collapse">
+          <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+        </tr>
+
+      {% endfor %}
+      {% for alerte in alertes['P'] %}
+        <tr class="cipemg{{ ligneThe }} collapse">
+          <td style="padding-left :20px">
+            <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}p{{ keyLigne }}">
+              <span class="fa fa-book" aria-hidden="true"></span></button>
+            Précautions d'emploi :
+            {{ alerte.lib_ter }}
+          </td>
+        </tr>
+        <tr id="texte{{ keyTerrain }}p{{ keyLigne }}" class="collapse">
+          <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+{% endif %}
+
+{% if agrossesse %}
+  <h3>Grossesse et allaitement</h3>
+  <table class="table table-sm table-hover">
+    {% for ligneThe, alertes in agrossesse %}
+      <tr class="gras {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
+        <td>
+          <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
+            <span class="fa fa-plus" aria-hidden="true"></span></button>
+          {{ alertes.medic.nomUtileFinal }}
+          -
+          <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
+          {% if corLi[ligneThe]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+            <span class="badge badge-info">TT en cours</span>{% endif %}
+        </td>
+      </tr>
+
+      {% for keyLigne, alerte in alertes['1'] %}
+        <tr class="gro{{ ligneThe }} collapse">
+          <td class="text-danger" style="padding-left :20px">
+            {% if alerte.texte %}
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ci{{ keyLigne }}">
+                <span class="fa fa-book" aria-hidden="true"></span></button>
+            {% endif %}
+            {{ alerte.lib_ter_per }}
+            :
+            {{ alerte.lib_reco }}
+          </td>
+        </tr>
+        {% if alerte.texte %}
+          <tr id="texte{{ keyTerrain }}ci{{ keyLigne }}" class="collapse">
+            <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+          </tr>
+        {% endif %}
+
+      {% endfor %}
+      {% for keyLigne, alerte in alertes['2'] %}
+        <tr class="gro{{ ligneThe }} collapse">
+          <td style="padding-left :20px">
+            {% if alerte.texte %}
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}d{{ keyLigne }}">
+                <span class="fa fa-book" aria-hidden="true"></span></button>
+            {% endif %}
+            {{ alerte.lib_ter_per }}
+            :
+            {{ alerte.lib_reco }}
+          </td>
+        </tr>
+        {% if alerte.texte %}
+          <tr id="texte{{ keyTerrain }}d{{ keyLigne }}" class="collapse">
+            <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+          </tr>
+        {% endif %}
+
+      {% endfor %}
+      {% for keyLigne, alerte in alertes['3'] %}
+        <tr class="gro{{ ligneThe }} collapse">
+          <td style="padding-left :20px">
+            {% if alerte.texte %}
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}e{{ keyLigne }}">
+                <span class="fa fa-book" aria-hidden="true"></span></button>
+            {% endif %}
+            {{ alerte.lib_ter_per }}
+            :
+            {{ alerte.lib_reco }}
+          </td>
+        </tr>
+        {% if alerte.texte %}
+          <tr id="texte{{ keyTerrain }}e{{ keyLigne }}" class="collapse">
+            <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+
+      {% for keyLigne, alerte in alertes['4'] %}
+        <tr class="gro{{ ligneThe }} collapse">
+          <td style="padding-left :20px">
+            {% if alerte.texte %}
+              <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ee{{ keyLigne }}">
+                <span class="fa fa-book" aria-hidden="true"></span></button>
+            {% endif %}
+            {{ alerte.lib_ter_per }}
+            :
+            {{ alerte.lib_reco }}
+          </td>
+        </tr>
+        {% if alerte.texte %}
+          <tr id="texte{{ keyTerrain }}ee{{ keyLigne }}" class="collapse">
+            <td style="padding-left :20px">{{ alerte.texte|nl2br }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </table>
+{% endif %}
+
+{% if ainteractions %}
+  <h3>Interactions</h3>
+  <table class="table table-sm table-hover">
+    {% for niveau, data in ainteractions %}
+      <thead>
+        <tr>
+          <th>
+            {% if niveau == '1' %}Contre-indication
+            {% elseif niveau == '2' %}Association déconseillée
+            {% elseif niveau == '3' %}Précautions d’emploi
+            {% elseif niveau == '4' %}A prendre en compte
+            {% elseif niveau == '11' %}Information générale
+            {% else %}Divers{% endif %}
+          </th>
+        </tr>
+      </thead>
+
+      {% for kinter, inter in data %}
+        <tr class="gras {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
+          <td>
+            <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %} btn-sm">
+              <span class="fa fa-plus" aria-hidden="true"></span></button>
+            {{ inter.medic1.nomUtileFinal }}
+            {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
+            +
+            {{ inter.medic2.nomUtileFinal }}
+            {% if corLi[inter['infos']['indiceligneprescription_2']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
+          </td>
+        </tr>
+        <tr id="inter{{ niveau }}i{{ kinter }}" class="collapse">
+          <td style="padding-left :20px">{{ inter.infos.texte|nl2br }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  {% if aincompatibilites %}
+    <h3>Incompatibilités</h3>
+    <table class="table table-sm table-hover">
+      {% for niveau, incon in aincompatibilites %}
+        <tr class="gras danger" role="button" data-toggle="collapse" data-target="#incon{{ niveau }}in">
+          <td>
+            <button type="button" class="btn btn-danger btn-sm">
+              <span class="fa fa-plus" aria-hidden="true"></span></button>
+            {{ incon.medic1.nomUtileFinal }}
+            {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
+            +
+            {{ incon.medic2.nomUtileFinal }}
+            {% if corLi[inter['infos']['indiceligneprescription_2']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
+              <span class="badge badge-info">TT en cours</span>{% endif %}
+          </td>
+        </tr>
+        <tr id="incon{{ niveau }}in" class="collapse">
+          <td style="padding-left :20px">{{ incon.infos.texte|nl2br }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+    {% if adopageconduc.aconducteur %}
+      <h3>Alertes pour la conduite</h3>
+      <table class="table table-sm table-hover">
+        {% for niveau, con in adopageconduc.aconducteur  if niveau in ['1', '2', '3'] %}
+          <thead>
+            <tr>
+              <th>
+                {% if niveau == '1' %}Niveau 1 ("soyez prudent")
+                {% elseif niveau == '2' %}Niveau 2 ("soyez très prudent")
+                {% elseif niveau == '3' %}Niveau 3 ("attention danger : ne pas conduire")
+                {% endif %}
+              </th>
+            </tr>
+          </thead>
+          {% for c in con %}
+            <tr class="gras {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
+              <td>
+                {{ c.medicNameUtile }}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+
+        {% for niveau, con in adopageconduc.aconducteur  if niveau in ['4', '5'] %}
+          <thead>
+            <tr>
+              <th>
+                {% if niveau == '4' %}Niveau non précisé
+                {% elseif niveau == '5' %}Recommandations hors pictogramme
+                {% endif %}
+              </th>
+            </tr>
+          </thead>
+          {% for c in con %}
+            <tr class="gras active">
+              <td>
+                {{ c.medicNameUtile }}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+    {% endif %}
+
+    {% if adopageconduc.adopage %}
+      <h3>Alertes produits dopants</h3>
+      <table class="table table-sm table-hover">
+        {% for niveau, dop in adopageconduc.adopage %}
+          <thead>
+            <tr>
+              <th>
+                {% if niveau == '1' %}Contre-indication
+                {% elseif niveau == '2' %}Précautions d’emploi{% endif %}
+              </th>
+            </tr>
+          </thead>
+          {% for d in dop %}
+            <tr class="{% if d.dopageNiveau == 1 %}table-danger{% else %}table-active{% endif %}">
+              <td>
+                {{ d.medicNameUtile }}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+    {% endif %}

@@ -24,6 +24,7 @@
  * Patient : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -31,6 +32,7 @@
 $m=$match['params']['m'];
 
 $acceptedModes=array(
+    'saveCsForm', // sauver une consultation
     'saveOrdoForm', // sauver une ordonnance
     'sendMail' // envoyer un mail
 );

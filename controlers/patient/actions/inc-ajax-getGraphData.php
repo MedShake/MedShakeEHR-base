@@ -21,14 +21,20 @@
  */
 
 /**
- * Patient > ajax : obtenir une ligne pour l'ordonnance
+ * Patient > ajax : obtenir les datas pour les graphs biométrie poids / taille / IMC
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
+header('Content-Type: application/json');
+
 $patient=new msPeople();
 $patient->setToID($_POST['patientID']);
 $patientData=$patient->getSimpleAdminDatasByName();
+
+if ($patientData['birthdate']=='') {
+    exit("Erreur: La date de naissance du patient n'est pas renseignée.");
+}
 $naissance=DateTime::createFromFormat('d/m/Y', $patientData['birthdate']);
 
 $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
@@ -37,7 +43,6 @@ $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
   WHERE dt.groupe='medical' AND od.instance='0'
   ORDER BY od.registerDate ASC");
 
-header('Content-Type: application/json');
 
 if (!is_array($dataBrutes)) {
     exit("ok");
@@ -130,4 +135,7 @@ end($data);
 $Xmax=key($data);
 $data['bornes']=array('Xmin'=>$Xmin, 'Xmax'=>$Xmax, 'Ymin'=>array('poids'=>$Pmin, 'taille'=>$Tmin, 'imc'=>$Imin), 'Ymax'=>array('poids'=>$Pmax, 'taille'=>$Tmax, 'imc'=>$Imax));
 
+if ($data == null) {
+    exit('ok');
+}
 exit(json_encode($data));

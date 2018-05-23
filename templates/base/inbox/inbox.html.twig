@@ -32,7 +32,7 @@
 
 {% block head %}
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js?{{ modules.base }}"></script>
     <style>
         tr.mailClicView:hover, tr.patietSelect:hover {
             cursor: pointer;
@@ -47,20 +47,20 @@
 
         <h1>Boite de réception</h1>
 
-        <div class="row" style="margin-top : 40px;">
+        <div class="row mt-4">
 
-            <div class="col-md-3">
-                <table class="table table-hover" style="font-size : 12px">
+            <div class="col-3">
+                <table class="table table-sm mb-0 table-hover small">
 
                     {% for k, mails in page.inbox.mails %}
                       {% set parentLoop = loop.index %}
                         <tr>
-                            <td class="bg-primary" colspan="3">
+                            <td class="table-primary" colspan="3">
                                 <strong>{{ k }}</strong>
                             </td>
                         </tr>
                         {% for mail in mails %}
-                            <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} success{% elseif mail.archived == 'c' %} warning{% endif %}" data-mailID="{{ mail.id }}" data-status="{{ mail.archived }}">
+                            <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailID="{{ mail.id }}" data-status="{{ mail.archived }}">
                                 <td class="gras">
                                 {{ mail.hprimIdentite|e }}
                                 </td>
@@ -69,7 +69,7 @@
                                 </td>
                                 <td>
                                     {% if mail.pjNombre > 0 %}
-                                        <span class="badge">{{ mail.pjNombre }}</span>
+                                        <span class="badge badge-secondary">{{ mail.pjNombre }}</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -79,7 +79,7 @@
                 </table>
             </div>
 
-            <div id="view" class="col-md-9"></div>
+            <div id="view" class="col-9"></div>
 
         </div>
 

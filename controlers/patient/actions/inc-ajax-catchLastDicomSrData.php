@@ -27,6 +27,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['patientID'])) die;
+
 $dc = new msDicomSR();
 $dc->setToID($_POST['patientID']);
 

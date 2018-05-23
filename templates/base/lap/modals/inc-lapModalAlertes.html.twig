@@ -1,0 +1,63 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : modal d'alerte
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div id="modalLapAlerte" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title gras">Alerte !</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+
+        <div id="modAlerteImprimer" class="btn-group mr-1">
+          <button type="button" class="btn btn-secondary printAndSaveOrdo">
+            <span class="fa fa-print" aria-hidden="true"></span>
+            Imprimer et sauvegarder</button>
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu mr-1">
+            <a href="#" class="dropdown-item printAndSaveOrdo">
+              <span class="fa fa-print" aria-hidden="true"></span>
+              Imprimer et sauvegarder</a>
+            <a href="#" class="dropdown-item printAnonymeAndSaveOrdo">
+              <span class="fa fa-print" aria-hidden="true"></span>
+              Imprimer sans infos prescripteur et sauvegarder</a>
+          </div>
+        </div>
+
+        <button id="modAlerteModifier" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fa fa-pencil" aria-hidden="true"></span> Modifier ordonnance</button>
+        <button id="modAlerteFermer" type="button" class="btn btn-danger" data-dismiss="modal">C'est noté !</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -23,6 +23,7 @@
  # Template > login  
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
@@ -65,11 +66,13 @@
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
   <div class="form-signer">
-    <img class="form-img" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo.svg" width=128 height=128/>
     {# form display #}
-    <div class="row">
-      <h3>Identifiez vous</h3>
-      {{ f.formbuilder(page.form , page.formIN , session) }}
+    <div class="row justify-content-md-center">
+      <div class="col-md-4">
+        <img class="form-img" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo.svg" width=128 height=128/>
+        <h3>Identifiez vous</h3>
+        {{ f.formbuilder(page.form , page.formIN , session) }}
+      </div>
     </div>
   </div>
 

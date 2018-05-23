@@ -1,0 +1,171 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Compta : Table des enregistrement dans compta du jour
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+  <table id="recettes" class="table table-sm mb-0 table-hover table-striped" style="min-width:1105px">
+      <thead>
+        {% if page.tabReg|length %}
+          <tr>
+              <th></th>
+              <th>Date</th>
+              <th>Patient</th>
+              <th class="text-right">Actes</th>
+              {% if page.secteur %}
+                <th class="text-right">CMU / TP</th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">Montant facturé</th>
+              <th class="text-right">Chèque</th>
+              <th class="text-right">CB</th>
+              <th class="text-right">Espèces</th>
+              {% if page.secteur %}
+                <th class="text-right">TP</th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">Payé</th>
+              <th class="text-right">Impayé</th>
+              <th></th>
+          </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+          {% for obj, reg in page.tabReg %}
+              <tr>
+                  <td title="objet #{{ obj }}">#{{ loop.index }}</td>
+                  <td>
+                      {{ reg.creationDate|date("d/m/Y H:i") }}
+                      {% if reg.creationDate != reg.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm" title="Saisi le {{ reg.registerDate|date("d/m/Y H:i:s") }}">
+                        <span class="far fa-clock" aria-hidden="true"></span>
+                      </button>{% endif %}
+                  </td>
+                  <td>
+                      <a class="btn btn-sm btn-light" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" title="Voir dossier"><span class="fa fa-folder-open"></span></a>
+                      <strong>{{ reg.prenom|e }}
+                          {{ reg.nom|e }}</strong>
+                      {% if reg.regleIdentiteCheque %}(réglé par
+                          {{ reg.regleIdentiteCheque|e }}){% endif %}
+                  </td>
+                  <td class="text-right">
+                      <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                          <span class="fa fa-question-circle" aria-hidden="true"></span>
+                      </button>
+                  </td>
+                  {% if page.secteur %}
+                    <td class="text-right">
+                        {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient|e }}{% endif %}
+                    </td>
+                  {% else %}
+                    <td style="width:0"></td>
+                  {% endif %}
+                  <td class="text-right">
+                      {{ reg.regleFacture|number_format(2, '.', ' ')|e }}
+                  </td>
+                  <td class="text-right">
+                      {% if reg.regleCheque > 0%}{{ reg.regleCheque|number_format(2, '.', ' ')|e }}{% endif %}
+                  </td>
+                  <td class="text-right">
+                      {% if reg.regleCB > 0%}{{ reg.regleCB|number_format(2, '.', ' ')|e }}{% endif %}
+                  </td>
+                  <td class="text-right">
+                      {% if reg.regleEspeces > 0%}{{ reg.regleEspeces|number_format(2, '.', ' ')|e }}{% endif %}
+                  </td>
+                  {% if page.secteur %}
+                    <td class="text-right">
+                        {% if reg.regleTiersPayeur > 0%}{{ reg.regleTiersPayeur|number_format(2, '.', ' ')|e }}{% endif %}
+                    </td>
+                  {% else %}
+                    <td style="width:0"></td>
+                  {% endif %}
+                  <td class="text-right">
+                      {% if reg.dejaPaye > 0%}{{ reg.dejaPaye|number_format(2, '.', ' ')|e }}{% endif %}
+                  </td>
+                  <td class="text-right">
+                      {% if reg.regleFacture - reg.dejaPaye > 0 %}{{ (reg.regleFacture-reg.dejaPaye)|number_format(2, '.', ' ')|e }}{% endif %}
+                  </td>
+                  <td>
+                      {% if reg.regleFacture - reg.dejaPaye > 0 %}
+                      {% set apayer = reg.regleFacture - reg.dejaPaye %}
+                        <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ apayer|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                          Saisir règlement
+                        </button>
+                      {% endif %}
+                  </td>
+              </tr>
+
+          {% endfor %}
+      </tbody>
+      <thead>
+          <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              {% if page.secteur %}
+                <th></th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">Montant facturé</th>
+              <th class="text-right">Chèque</th>
+              <th class="text-right">CB</th>
+              <th class="text-right">Espèces</th>
+              {% if page.secteur %}
+                <th class="text-right">TP</th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">Payé</th>
+              <th class="text-right">Impayé</th>
+              <th class="text-right"></th>
+          </tr>
+          <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              {% if page.secteur %}
+                <th></th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">Totaux</th>
+              <th class="text-right">{{ page.tabTot.regleFacture|number_format(2, '.', ' ')|e }}</th>
+              <th class="text-right">{{ page.tabTot.regleCheque|number_format(2, '.', ' ')|e }}</th>
+              <th class="text-right">{{ page.tabTot.regleCB|number_format(2, '.', ' ')|e }}</th>
+              <th class="text-right">{{ page.tabTot.regleEspeces|number_format(2, '.', ' ')|e }}</th>
+              {% if page.secteur %}
+                <th class="text-right">{{ page.tabTot.regleTiersPayeur|number_format(2, '.', ' ')|e }}</th>
+              {% else %}
+                <th style="width:0"></th>
+              {% endif %}
+              <th class="text-right">{{ (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur)|number_format(2, '.', ' ')|e }}</th>
+              <th class="text-right">{{ (page.tabTot.regleFacture - (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur))|number_format(2, '.', ' ')|e }}</th>
+              <th class="text-right">{% if page.tabReg|length > 0 %}{{ page.tabReg|length }} règlement{% if page.tabReg|length > 1 %}s{% endif %}{% endif %}</th>
+          </tr>
+      </thead>
+  </table>

@@ -24,6 +24,7 @@
  * Calculs médicaux
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msModBaseCalcMed

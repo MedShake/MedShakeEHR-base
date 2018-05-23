@@ -1,0 +1,117 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > indications
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ <p class="lead">{{ page['indications']['indSpe']|length }} indication{% if page['indications']['indSpe']|length > 1 %}s{% endif %}</p>
+
+ {% set rand = random(10000) %}
+
+ <div  id="accordion{{ rand }}" role="tablist" aria-multiselectable="true">
+
+   {% for indication in page['indications']['indSpe'] %}
+
+   {# se simplifier la vie #}
+
+   {% set indicDet = page['indications']['detInd'][indication.codeind] %}
+   {% set indicRef = page['indications']['refInd'][indication.codeind] %}
+   {% set speSmr = page['indications']['smrSpe'][indication.codeind] %}
+
+   <div class="card mb-3">
+       <div class="card-header" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
+
+       <h4 class="card-title">
+          {{ indicDet['7']['0']['libcourt'] }}
+
+          {% if speSmr is not empty %}
+            {% for smr in speSmr|slice(-1, 1) %}
+             <small><span class="badge badge-info float-right">SMR : {{ smr.textsmr }}</span></small>
+            {% endfor %}
+          {% endif %}
+
+       </h4>
+       <ul class="list-unstyled small">
+       {% for indic2 in indicDet['2'] %}
+        <li>{{ indic2.libcourt }}</li>
+       {% endfor %}
+       {% for indic3 in indicDet['3'] %}
+        <li style="margin-left : 1em;">{{ indic3.libcourt }}</li>
+       {% endfor %}
+        </ul>
+     </div>
+     <div id="collapse{{ loop.index }}{{ rand }}" class="collapse {% if loop.index == 1 and page.indications.indSpe|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
+       <div class="card-body">
+         <p>{{ indication.fin_texte|nl2br }}</p>
+
+         {% if indicDet['4'] is not empty %}
+           <h4>Agent(s) étiologique(s)</h4>
+           <ul class="list-unstyled">
+           {% for etio in indicDet['4'] %}
+           <li>{{ etio.libcourt }}</li>
+           {% endfor %}
+           </ul>
+         {% endif %}
+
+         {% if speSmr is not empty %}
+           <h4>SMR de l'indication</h4>
+           <ul class="list-unstyled">
+           {% for smr in speSmr|slice(-1, 1) %}
+           <li>{{ smr.textsmr }} {% if config.theriaqueMode == 'WS' %}{{ smr.dtsmr }}{% else %}{{ smr.dtsmr|date("d/m/Y") }}{% endif %}</li>
+           {% endfor %}
+           </ul>
+         {% endif %}
+
+         {% if indicRef is not empty %}
+           <h4>Référence(s) officielle(s)</h4>
+           <ul class="list-unstyled">
+           {% for ref in indicRef %}
+           <li>{{ ref.referind }} {% if config.theriaqueMode == 'WS' %}{{ ref.dtrefind }}{% else %}{{ ref.dtrefind|date("d/m/Y") }}{% endif %}</li>
+           {% endfor %}
+           </ul>
+         {% endif %}
+
+         {% if indicDet['5'] is not empty %}
+         <h4>CIM10</h4>
+         <table class="table table-sm table-hover">
+           <tbody>
+               {% for cim10 in indicDet['5'] %}
+               <tr>
+                 <td>
+                   {{ cim10.libcourt }}
+                   {% if cim10.liblong %}<br><span class="small">{{ cim10.liblong }}</span>{% endif %}
+                 </td>
+                 <td>{{ cim10.codefils }}</td>
+               </tr>
+               {% endfor %}
+           </tbody>
+         </table>
+         {% endif %}
+
+       </div>
+     </div>
+   </div>
+   {% endfor %}
+
+ </div>

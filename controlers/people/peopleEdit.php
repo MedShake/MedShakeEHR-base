@@ -26,6 +26,7 @@
  * soit en mode pro -> formualire baseNewPro
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';

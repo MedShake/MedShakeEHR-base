@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 //accès par admin uniquement
 if (!msUser::checkUserIsAdmin()) {
@@ -38,18 +38,9 @@ if (!isset($_POST['file'])) {
     die;
 }
 
-//config défaut
-$p['page']['configDefaut']=$p['configDefaut'];
-
-//utilisateurs ayant un repertoire de clefs spécifiques
-$p['page']['apicryptClefsUsers']=msPeople::getUsersWithSpecificParam('apicryptCheminVersClefs');
-
 // détermination du répertoire
-if (isset($p['page']['apicryptClefsUsers'][$_POST['userID']])) {
-    $directory=$p['page']['apicryptClefsUsers'][$_POST['userID']]['paramValue'];
-} else {
-    $directory=$p['page']['configDefaut']['apicryptCheminVersClefs'];
-}
+$user=array('id'=>$_POST['userID'], 'module'=>'');
+$directory=msConfiguration::getParameterValue('apicryptCheminVersClefs', $user);
 
 if (is_file($directory.'Clefs/'.$_POST['file'])) {
     if (unlink($directory.'Clefs/'.$_POST['file'])) {

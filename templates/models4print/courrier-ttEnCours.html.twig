@@ -1,0 +1,55 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : courrier vierge
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+{% import "macroLap.html.twig" as lap %}
+{% set tag = page.courrier %}
+
+
+<p style="text-align:right">New York, le {{ "now"|date("d/m/Y") }}</p>
+<br>
+<h2>Traitement en cours de {{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+{% if tag.tt.TTChroniques is not empty %}
+<h3><u>Traitements chroniques</u></h3>
+
+<p>Traitements en cours ou présumé en cours de par la nature chronique :</p>
+<ol>
+{% for l in tag.tt.TTChroniques %}
+  {{ lap.lignePres(l, false) }}
+{% endfor %}
+</ol>
+
+{% endif %}
+
+{% if tag.tt.TTPonctuels is not empty %}
+<h3><u>Traitements ponctuels</u></h3>
+
+<ol>
+{% for l in tag.tt.TTPonctuels %}
+  {{ lap.lignePres(l, true) }}
+{% endfor %}
+</ol>
+{% endif %}

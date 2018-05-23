@@ -32,19 +32,19 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-    <li class="active">
+    <li class="breadcrumb-item active">
       Agendas
     </li>
   </ol>
@@ -53,12 +53,12 @@
 
   {# Nav tabs #}
   <ul class="nav nav-tabs bottom-space" role="tablist">
-    <li role="presentation" {% if page.selectUser < 1 %} class="active" {% endif %}>
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
+    <li role="presentation" class="nav-item">
+      <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
     {% for id, user in page.agendaUsers %}
-      <li role="presentation" {% if page.selectUser == id %} class="active" {% endif %}>
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/{{ id }}/" aria-controls="prescriptions" role="tab">Agenda :
+      <li role="presentation" class="nav-item">
+        <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/{{ id }}/" aria-controls="prescriptions" role="tab">Agenda :
           {{ user }}</a>
       </li>
     {% endfor %}
@@ -87,10 +87,10 @@
       			    'textarea' : {
       				    'name' : 'configAgenda',
       				    'placeholder' : 'entrer ici du yaml',
-      				    'class' : 'form-control',
+      				    'class' : 'form-control reload-on-mod',
       				    'autocomplete' : 'off',
       				    'value' : page.configAgenda,
-      				    'add' : 'rows="32" style="font-family:monospace;"'
+      				    'add' : 'rows="31" style="font-family:monospace;"'
       			    },
       			    'label' : {
       				    'position' : 'before',
@@ -113,7 +113,7 @@
 				      'label' : "Code JS résultant (altérable par l'utilisateur dans ses paramètres personnels)"
 			      }
   		    }) }}
-          <div style="margin-top:24px">
+          <div style="margin-top:14px">
             {{ f.textarea ({
 			        'textarea' : {
 				        'name' : 'configAgendaAd',
@@ -142,7 +142,7 @@
 
           {{ f.textarea ({
 			    'textarea' : {
-				    'name' : 'configTypesRdv',
+				    'name' : 'typesRdv',
 				    'placeholder' : 'entrer ici du yaml',
 				    'class' : 'form-control',
 				    'autocomplete' : 'off',
@@ -163,7 +163,7 @@
       </div>
     </form>
   {% else %}
-    <table class="table table-hover">
+    <table class="table table-sm mb-0 table-hover ">
       <thead>
         <th>Paramètre</th>
         <th>Valeur</th>
@@ -171,23 +171,23 @@
       <tbody>
         <tr>
           <td>agendaDistantLink</td>
-          <td>{{ page.configDefaut.agendaDistantLink }}</td>
+          <td>{{ page.config.agendaDistantLink }}</td>
         </tr>
         <tr>
           <td>agendaDistantPatientsOfTheDay</td>
-          <td>{{ page.configDefaut.agendaDistantPatientsOfTheDay }}</td>
+          <td>{{ page.config.agendaDistantPatientsOfTheDay }}</td>
         </tr>
         <tr>
           <td>agendaLocalPatientsOfTheDay</td>
-          <td>{{ page.configDefaut.agendaLocalPatientsOfTheDay }}</td>
+          <td>{{ page.config.agendaLocalPatientsOfTheDay }}</td>
         </tr>
         <tr>
           <td>agendaNumberForPatientsOfTheDay</td>
-          <td>{{ page.configDefaut.agendaNumberForPatientsOfTheDay }}</td>
+          <td>{{ page.config.agendaNumberForPatientsOfTheDay }}</td>
         </tr>
         <tr>
           <td>administratifPeutAvoirAgenda</td>
-          <td>{{ page.configDefaut.administratifPeutAvoirAgenda }}</td>
+          <td>{{ page.config.administratifPeutAvoirAgenda }}</td>
         </tr>
       </tbody>
     </table>

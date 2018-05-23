@@ -1,0 +1,84 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > macro de construction des ordonnances
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% macro lignePres(l, dates) %}
+  <li style="margin-bottom : 15px">
+    {% if l.medics | length > 1 %}
+      {{ l.ligneData.voieUtilisee }}
+      -
+      {{ l.ligneData.dureeTotaleHuman }}
+      {% if l.ligneData.nbRenouvellement > 0 %}
+        - à renouveler
+        {{ l.ligneData.nbRenouvellement }}
+        fois
+      {% endif %}
+      {% if dates == true %}
+        -
+        {{ l.ligneData.dateDebutPrise }}
+        au
+        {{ l.ligneData.dateFinPriseAvecRenouv }}
+      {% endif %}
+      <br>
+      <ol>
+        {% for km, m in l.medics %}
+          <li>
+            <strong>{{ m.nomUtileFinal }}</strong>
+            {% if m.isNPS == 'true' %}
+              [non substituable
+              {% if m.motifNPS != '' %} : {{ m.motifNPS }}
+              {% endif %}]
+            {% endif %}
+            <br>{{ m.posoHumanBase }}
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      {% set m = l.medics.0 %}
+      <strong>{{ m.nomUtileFinal }}</strong><br>
+      {{ l.ligneData.voieUtilisee }}
+      {% if l.ligneData.nbRenouvellement > 0 %}
+        - à renouveler
+        {{ l.ligneData.nbRenouvellement }}
+        fois
+      {% endif %}
+      {% if dates == true %}
+        -
+        {{ l.ligneData.dateDebutPrise }}
+        au
+        {{ l.ligneData.dateFinPriseAvecRenouv }}
+      {% endif %}
+      {% if m.isNPS == 'true' %}
+        - [non substituable
+        {% if m.motifNPS != '' %} : {{ m.motifNPS }}
+        {% endif %}]
+      {% endif %}
+      <br>{{ m.posoHumanCompleteTab|join('<br>') }}
+    </li>
+  {% endif %}
+
+{% endmacro %}

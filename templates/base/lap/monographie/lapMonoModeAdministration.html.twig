@@ -1,0 +1,87 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > mode d'administration + Utilisation/Manipulation/Elimination/Incompatibilités
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h4 class="text-uppercase">Mode d'administration :</h4>
+
+<table class="table table-sm table-hover">
+  <tbody>
+    <tr>
+      <td class="gras">Voie(s) d'administration
+      </td>
+      <td>
+        <ul class="list-unstyled">
+          {% for voie in page.modeAdministration.voieSpe %}
+            <li>{{ voie.txtvoie }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="gras">Modalité(s)
+      </td>
+      <td>
+        <ul class="list-unstyled">
+          {% for modalite in page.modeAdministration.posoComUti.1 if modalite.grp starts with '2.' %}
+            <li>{{ modalite.info_01 }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        {{ page['modeAdministration']['posoComUti']['2']['0']['texte']|nl2br }}
+      </td>
+    </tr>
+
+
+    {% for ref in page.modeAdministration.posoComUti.1 if ref.grp == '3' %}
+      {% if loop.first %}
+        <tr>
+          <td class="gras">Référence(s) officielle(s)</td>
+          <td>
+            <ul class="list-unstyled">
+      {% endif %}
+            <li>{{ ref.info_01 }}
+              {{ ref.date_01|date("d/m/Y") }}</li>
+    {% endfor %}
+    {% if loop.index > 0 %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+  </tbody>
+</table>
+
+
+<h4 class="text-uppercase">Utilisation / Manipulation / Elimination / Incompatibilités :</h4>
+
+{% for ref in page.modeAdministration.posoComUti.3  %}
+  {{ ref.texte|nl2br }}
+{% endfor %}

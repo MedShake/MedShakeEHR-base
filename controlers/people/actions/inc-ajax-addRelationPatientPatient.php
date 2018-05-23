@@ -24,6 +24,7 @@
  * People : ajax > ajouter une relation patient <-> patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  //sortir les choix de relations patient<->patient pour faire un reverse tab

@@ -1,0 +1,540 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > grossesse allaitement
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+ <ul class="nav nav-tabs" role="tablist" style="margin-bottom : 2em;">
+  <li class="nav-item"><a class="nav-link active" href="#tabgrossesse" role="tab" data-toggle="tab">Grossesse</a></li>
+  <li class="nav-item"><a class="nav-link" href="#taballaitement" role="tab" data-toggle="tab">Allaitement</a></li>
+  <li class="nav-item"><a class="nav-link" href="#tabageprocreer" role="tab" data-toggle="tab">Femme en âge de procréer</a></li>
+</ul>
+
+<div class="tab-content">
+
+
+
+  <div role="tabpanel" class="tab-pane active" id="tabgrossesse">
+    {% for fiche in page.grossesse.grFicSpe %}
+        {% set dataFiche = page.grossesse.grSpe[fiche.code_fiche] %}
+
+        {% if page.grossesse.grFicSpe|length > 1 %}
+          <h4 class="text-uppercase">Fiche grossesse n°{{ loop.index }}</h4>
+        {% endif %}
+
+        <table class="table table-sm table-hover">
+          <tbody>
+
+            {% if dataFiche.2 is not empty or dataFiche.3 is not empty or dataFiche.4 is not empty or dataFiche.5 is not empty %}
+            <tr class="table-info text-uppercase">
+              <td colspan="2">Données expérimentales animales</td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.2 is not empty %}
+            <tr>
+              <td class="gras">Observations</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.2 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.3 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.3 %}
+                {{ txt.textgr|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.5 is not empty %}
+            <tr>
+              <td class="gras">Circonstances favorisantes</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.5 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.4 is not empty %}
+            <tr>
+              <td class="gras">Risque humain</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.4 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+
+            {% if dataFiche.6 is not empty or dataFiche.7 is not empty or dataFiche.8 is not empty or dataFiche.9 is not empty or dataFiche.10 is not empty %}
+            <tr class="table-info text-uppercase">
+              <td colspan="2">Données cliniques humaines</td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.9 is not empty %}
+            <tr>
+              <td class="gras">Période critique</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.9 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.6 is not empty %}
+            <tr>
+              <td class="gras">Observations</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.6 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.10 is not empty %}
+            <tr>
+              <td class="gras">Circonstances favorisantes</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.10 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.7 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.7 %}
+                {{ txt.textgr|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.8 is not empty %}
+            <tr>
+              <td class="gras">Risque humain</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.8 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            <tr class="table-info text-uppercase">
+              <td colspan="2">Recommandations et conduites à tenir</td>
+            </tr>
+            <tr>
+              <td class="gras">Type d'effet</td>
+              <td>
+                {% if fiche.typeeffet == 1 %}Effet classe
+                {% elseif fiche.typeeffet == 2 %}Effet spécialité
+                {% elseif fiche.typeeffet == 3 %}Effet substance active
+                {% elseif fiche.typeeffet == 4 %}Effet excipient
+                {% endif %}
+              </td>
+            </tr>
+
+            {% if dataFiche.11 is not empty %}
+            <tr>
+              <td class="gras">Niveau(x) de risque</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.11 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.12 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.12 %}
+                {{ txt.textgr|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.13 is not empty or dataFiche.14 is not empty %}
+            {% if dataFiche.13 is not empty %}
+            <tr>
+              <td class="gras">Conduite à tenir chez la femme enceinte</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.13 %}
+                <li>{{ catf.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.14 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.14 %}
+                {{ txt.textgr|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.15 is not empty or dataFiche.16 is not empty %}
+            {% if dataFiche.15 is not empty %}
+            <tr>
+              <td class="gras">Conduite à tenir chez le nouveau-né</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.15 %}
+                <li>{{ catf.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.16 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.16 %}
+                {{ txt.textgr|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.17 is not empty %}
+            <tr>
+              <td class="gras">Référence(s) officielle(s)</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.17 %}
+                <li>{{ risque.textgr }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+          </tbody>
+        </table>
+
+    {% endfor %}
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="taballaitement">
+
+    {% for fiche in page.allaitement.alFicSpe %}
+        {% set dataFiche = page.allaitement.alSpe[fiche.code_fiche] %}
+
+        {% if page.allaitement.alFicSpe|length > 1 %}
+          <h4 class="text-uppercase">Fiche allaitement n°{{ loop.index }}</h4>
+        {% endif %}
+
+        <table class="table table-sm table-hover">
+          <tbody>
+
+            <tr class="table-info text-uppercase">
+              <td colspan="2">Données sur le passage dans le lait maternel</td>
+            </tr>
+
+            <tr>
+              <td class="gras">Type d'effet</td>
+              <td>
+                {% if fiche.typeeffet == 1 %}Effet classe
+                {% elseif fiche.typeeffet == 2 %}Effet spécialité
+                {% elseif fiche.typeeffet == 3 %}Effet substance active
+                {% elseif fiche.typeeffet == 4 %}Effet excipient
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td class="gras">Passage dans le lait</td>
+              <td>
+                {% if fiche.passagelait == 'O' %}Oui
+                {% elseif fiche.passagelait == 'N' %}Non
+                {% elseif fiche.passagelait == 'P' %}Pas d'information
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td class="gras">Fixation protéique</td>
+              <td>
+                {% if fiche.fixprot == 'O' %}Oui
+                {% elseif fiche.fixprot == 'N' %}Non
+                {% elseif fiche.fixprot == 'P' %}Pas d'information
+                {% endif %}
+              </td>
+            </tr>
+
+            {% if fiche.fixprotmini or fiche.fixprotmaxi %}
+            <tr>
+              <td class="gras">Fixation protéique</td>
+              <td>
+                <ul class="list-unstyled">
+                {% if fiche.fixprotmini %}<li>minimale : {{ fiche.fixprotmini }} %</li>{% endif %}
+                {% if fiche.fixprotmaxi %}<li>maximale : {{ fiche.fixprotmaxi }} %</li>{% endif %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            <tr>
+              <td class="gras">Rapport concentration lait/plasma maternels</td>
+              <td>
+                <ul class="list-unstyled">
+                  {% if fiche.plasmalait == 'P' %}
+                    Pas d'information
+                  {% else %}
+                    {% if fiche.plasmalaitmini %}<li>minimal : {{ fiche.plasmalaitmini }} {{ fiche.concentuni }}</li>{% endif %}
+                    {% if fiche.plasmalaitmaxi %}<li>maximal : {{ fiche.plasmalaitmaxi }} {{ fiche.concentuni }}</li>{% endif %}
+                  {% endif %}
+                </ul>
+              </td>
+            </tr>
+
+            {% if dataFiche.1 is not empty or dataFiche.2 is not empty %}
+            {% if dataFiche.1 is not empty %}
+            <tr>
+              <td class="gras">Conduite à tenir</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.1 %}
+                <li>{{ catf.textal }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.2 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.2 %}
+                {{ txt.textal|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.3 is not empty or dataFiche.4 is not empty %}
+            {% if dataFiche.3 is not empty %}
+            <tr>
+              <td class="gras">Recommandations</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.3 %}
+                <li>{{ catf.textal }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.4 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.4 %}
+                {{ txt.textal|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.6 is not empty or dataFiche.8 is not empty or dataFiche.5 is not empty %}
+            <tr class="table-info text-uppercase">
+              <td colspan="2">Nouveau né</td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.6 is not empty %}
+            <tr>
+              <td class="gras">Circonstances favorisantes</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.6 %}
+                <li>{{ risque.textal }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.8 is not empty %}
+            <tr>
+              <td class="gras">Observations</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.8 %}
+                <li>{{ risque.textal }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.5 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.5 %}
+                {{ txt.textal|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+
+            {% if dataFiche.7 is not empty %}
+            <tr>
+              <td class="gras">Référence(s) officielle(s)</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.7 %}
+                <li>{{ risque.textal }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+          </tbody>
+        </table>
+
+    {% endfor %}
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="tabageprocreer">
+
+    {% for fiche in page.allaitement.alFicSpe %}
+        {% set dataFiche = page.allaitement.fproSpe[fiche.code_fiche] %}
+
+        {% if page.allaitement.alFicSpe|length > 1 %}
+          <h4 class="text-uppercase">Fiche n°{{ loop.index }}</h4>
+        {% endif %}
+
+        <table class="table table-sm table-hover">
+          <tbody>
+
+            {% if dataFiche.3 is not empty or dataFiche.4 is not empty %}
+            {% if dataFiche.3 is not empty %}
+            <tr>
+              <td class="gras">Conduite à tenir</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.3 %}
+                <li>{{ catf.textfp }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.4 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.4 %}
+                {{ txt.textfp|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.1 is not empty or dataFiche.2 is not empty %}
+            {% if dataFiche.1 is not empty %}
+            <tr>
+              <td>Recommandations</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for catf in dataFiche.1 %}
+                <li>{{ catf.textfp }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% if dataFiche.2 is not empty %}
+            <tr>
+              <td colspan="2">
+                {% for txt in dataFiche.2 %}
+                {{ txt.textfp|nl2br }}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            {% if dataFiche.5 is not empty %}
+            <tr>
+              <td>Référence(s) officielle(s)</td>
+              <td>
+                <ul class="list-unstyled">
+                {% for risque in dataFiche.5 %}
+                <li>{{ risque.textfp }}</li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+          </tbody>
+        </table>
+
+    {% endfor %}
+  </div>
+
+
+</div>

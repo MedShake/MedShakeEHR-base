@@ -27,7 +27,7 @@
 
 $(document).ready(function() {
 
-  $('.imagesList').magnificPopup({
+  $('#tabDicom').magnificPopup({
     delegate: 'a',
     type: 'image',
     gallery: {
@@ -36,12 +36,12 @@ $(document).ready(function() {
 
   });
 
-  $('span.voirframes').on("click", function(e) {
+  $('#tabDicom').on("click", 'span.voirframes', function(e) {
     frames = $(this).attr("data-frames");
-    $('span.'+frames).toggle();
+    $('span.' + frames).toggle();
   });
 
-  $('button.selectAll').on("click", function(e) {
+  $('#tabDicom').on("click", 'button.selectAll', function(e) {
     status = $(this).attr('data-status');
 
 
@@ -62,7 +62,7 @@ $(document).ready(function() {
 
   });
 
-  $('.imagesList input[type=checkbox]').change(function() {
+  $('#tabDicom').on('change', '.imagesList input[type=checkbox]', function() {
     checkUncheck($(this));
   });
 
@@ -72,19 +72,19 @@ $(document).ready(function() {
 function checkUncheck(el) {
 
   numberOfChecked = $('.imagesList input:checkbox:checked').length;
-  if(numberOfChecked>0) {
+  if (numberOfChecked > 0) {
     $('#makePdfWithDcImages').removeAttr('disabled');
     $('#makeZipWithDcImages').removeAttr('disabled');
   } else {
-    $('#makePdfWithDcImages').attr('disabled','disabled');
-    $('#makeZipWithDcImages').attr('disabled','disabled');
+    $('#makePdfWithDcImages').attr('disabled', 'disabled');
+    $('#makeZipWithDcImages').attr('disabled', 'disabled');
   }
 
   imgfor = '#' + el.attr('data-imgfor');
 
   if (el.is(':checked')) {
-    $(imgfor).css("border", "10px solid green");
+    $(imgfor).closest('td').css("border-color", "green");
   } else {
-    $(imgfor).css("border", "10px solid #EEE");
+    $(imgfor).closest('td').css("border-color", "#eee");
   }
 }

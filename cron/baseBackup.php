@@ -53,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 $today=date('Y-m-d');
 exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql');

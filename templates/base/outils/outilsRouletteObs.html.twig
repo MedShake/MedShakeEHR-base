@@ -32,7 +32,7 @@
 
 {% block head %}
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/outils/outilsRouletteObs.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/outils/outilsRouletteObs.js?{{ modules.base }}"></script>
     <style>
       .trHide, .trMensuHide, #tdjPanel, #calculSpeRes, #TDDRes {
         display: none;
@@ -46,32 +46,34 @@
 
 <div class="container-fluid">
 
-  <div class="row">
-    <form>
+  <form>
+    <div class="row">
       <div class="form-group col-md-2">
-        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDR', 'id' : 'DDRID', 'placeholder' : 'ddr', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDRId" class="input-group date datepick" data-typeid="DDRID">', 'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date des dernières règles', } }) }}
+        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDR', 'id' : 'DDRID', 'placeholder' : 'ddr', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDRId" class="input-group date datepick mx-0" data-typeid="DDRID">', 'after' : '<div class="input-group-append"><span class="fa fa-calendar input-group-text"></span></div></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date des dernières règles', } }) }}
       </div>
       <div class="form-group col-md-2">
-        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDG', 'id' : 'DDGID', 'placeholder' : 'ddg', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDGId" class="input-group date datepick" data-typeid="DDGID">', 'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date de début de grossesse', } }) }}
+        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDG', 'id' : 'DDGID', 'placeholder' : 'ddg', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDGId" class="input-group date datepick mx-0" data-typeid="DDGID">', 'after' : '<div class="input-group-append"><span class="fa fa-calendar input-group-text"></span></div></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date de début de grossesse', } }) }}
       </div>
       <div class="form-group col-md-2">
-        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDT', 'id' : 'DDTID', 'placeholder' : 'terme 41SA', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDTId" class="input-group date datepick" data-typeid="DDTID">', 'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date de terme (41 SA)', } }) }}
+        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'DDT', 'id' : 'DDTID', 'placeholder' : 'terme 41SA', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="DDTId" class="input-group date datepick mx-0" data-typeid="DDTID">', 'after' : '<div class="input-group-append"><span class="fa fa-calendar input-group-text"></span></div></div>' }, 'label' : { 'position' : 'before', 'label' : 'Date de terme (41 SA)', } }) }}
       </div>
-
-
-    </form>
-  </div>
+    </div>
+  </form>
 
   <div class="row">
     <div class="col-md-6">
 
 
-        <div class="panel panel-default">
-          <div class="panel-heading gras">Calendrier général <a href="#" id="calComplet" class="btn btn-primary btn-xs pull-right">Calendrier complet</a></div>
-          <div class="panel-body">
+      <div class="col-md-12 px-0 mb-4">
+        <div class="card">
+          <div class="card-header gras">
+            <button id="calComplet" class="btn btn-secondary btn-sm float-right" type="button">Calendrier complet</button>
+            Calendrier général
+          </div>
+          <div class="card-body">
             <p id="tdjPanel" class="alert alert-success">Terme ce <span class="TDJ">&nbsp;</span> : <span class="TDJRes gras">&nbsp;</span></p>
           </div>
-            <table class="table table-hover">
+            <table class="table table-sm mb-0 table-hover ">
               <tbody>
                 <tr><td>Dernières règles</td><td class="cleanThis SA0"></td><td></td></tr>
                 <tr><td>Début de grossesse</td><td class="cleanThis SA2"></td><td></td></tr>
@@ -96,14 +98,18 @@
               </tbody>
             </table>
         </div>
+      </div>
 
 
-
-        <div class="panel panel-default">
-          <div class="panel-heading gras">Calendrier en mois révolus <a href="#" id="calMensuComplet" class="btn btn-primary btn-xs pull-right">Voir le calendrier</a></div>
-          <div class="panel-body">
+      <div class="col-md-12 px-0">
+        <div class="card">
+          <div class="card-header gras">
+            <button id="calMensuComplet" class="btn btn-secondary btn-sm float-right">Voir le calendrier</button>
+            Calendrier en mois révolus
           </div>
-          <table class="table table-hover">
+          <div class="card-body">
+          </div>
+          <table class="table table-sm mb-0 table-hover ">
             <tbody>
               {% for i in 1..9 %}
               <tr class="trMensuHide"><td>{{ i }} Mois</td><td class="MOIS{{ i }}"></td><td></td></tr>
@@ -111,7 +117,7 @@
             </tbody>
           </table>
         </div>
-
+      </div>
 
     </div>
 
@@ -119,13 +125,14 @@
 
 
 
-        <div class="panel panel-default">
-          <div class="panel-heading gras">Calculs spécifiques</div>
-          <div class="panel-body">
+      <div class="col-md-12 px-0 mb-4">
+        <div class="card">
+          <div class="card-header gras">Calculs spécifiques</div>
+          <div class="card-body">
 
             <form>
               <div class="form-group ">
-              <select class="form-control" id="calculSpeID" name="calculSpe" disabled="disabled" autocomplete="off" >
+              <select class="form-control custom-select" id="calculSpeID" name="calculSpe" disabled autocomplete="off" >
             <option value="rien"></option>
             <optgroup label="Congé maternité">
               <option value="G1">Grossesse simple (6s - T - 10S)</option>
@@ -150,20 +157,21 @@
 
           </div>
         </div>
+      </div>
+      <div class="col-md-12 px-0">
+        <div class="card">
+          <div class="card-header gras">Terme à une date donnée</div>
+          <div class="card-body">
 
-        <div class="panel panel-default">
-          <div class="panel-heading gras">Terme à une date donnée</div>
-          <div class="panel-body">
-
-            <p>{{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'TDD', 'id' : 'TDDID', 'placeholder' : '', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="TDDId" class="input-group date datepick  col-md-4" data-typeid="TDDID">', 'after' : '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>', 'disabled': 'disabled' } }) }}
+            <p>{{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'TDD', 'id' : 'TDDID', 'placeholder' : '', 'class' : 'form-control datepic', 'autocomplete' : 'off', 'before' : '<div id="TDDId" class="input-group date datepick  col-md-4" data-typeid="TDDID">', 'after' : '<div class="input-group-append"><span class="fa fa-calendar input-group-text"></span></div></div>', 'disabled': 'disabled' } }) }}
             </p>
 
             <p class="alert alert-info" id="TDDRes"></p>
 
           </div>
         </div>
-
       </div>
+    </div>
 
   </div>
 

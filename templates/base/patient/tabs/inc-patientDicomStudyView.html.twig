@@ -1,0 +1,140 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dicom : voir toutes les datas (images + SR) d'une etude dicom
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+<div class="row" style="margin-bottom : 20px;margin-top : 5px;">
+  <div class="col-md-12">
+    <button class="btn btn-light btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
+  </div>
+</div>
+
+<div class="card">
+
+  <div class="card-header">Images de l'étude
+    <div class="float-right">
+      <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary mb-0">Générer un ZIP</button>
+      <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary mb-0">Générer un PDF</button>
+    </div>
+  </div>
+  <div class="card-body pt-1 imagesList">
+    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
+      <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
+      <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
+      <span class="imageDc" style="display:block; vertical-align:bottom; width:100%">
+        <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
+      </span>
+      {% for instance, frames in page.imagesPath %}
+        {% for frame, imagepath in frames %}
+          <table class="d-inline-block m-1 mb-2" style="border:5px solid #eee;background-color:#eee">
+            <thead>
+              <tr>
+                <th style="text-align:center;line-height:0">
+                  <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off"/>
+                </th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <td style="border:5px solid #eee">
+                <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
+                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
+                  {% if frame == 0 and frames | length > 1 %}
+
+                    <span class="voirframes" data-frames="frames{{ instance }}">
+                      {{ frames|length }}
+                      images - voir / masquer
+                    </span>
+                  {% endif %}
+                </span>
+              </td>
+            {% endfor %}
+          {% endfor %}
+          </tr>
+        <tbody>
+      </table>
+    </form>
+  </div>
+</div>
+
+{# Data SR via XML #}
+{% if page.studyDcDataSRFull %}
+  <div class="card">
+
+    <div class="card-header">Tags DICOM SR (XML)</div>
+    <div class="card-body">
+      <p>Mesures remontées dans cette études</p>
+    </div>
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+        <th>Tag</th>
+        <th>Foetus</th>
+        <th>Nom</th>
+        <th>Valeur</th>
+        <th>Précision</th>
+        <th>Unité</th>
+      </thead>
+      <tbody>
+        {% for k, v in page.studyDcDataSRFull %}
+          {% for l, w in v.NumericValue %}
+            <tr>
+              {% if loop.index0 == 0 %}
+                <td>{{ k }}</td>
+                <td>{{ v.FoetusID }}</td>
+                <td>{{ v.CodeMeaning }}
+                  {% if v.structure %}
+                    <small>({{ v.structure|join(' > ') }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ w }}</td>
+                <td>
+                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                    <small>
+                      ({{ l }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ v.MeasurementUnits }}</td>
+              {% else %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ w }}</td>
+                <td>
+                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                    <small>
+                      ({{ l }})</small>
+                  {% endif %}
+                </td>
+                <td>{{ v.MeasurementUnits }}</td>
+              {% endif %}
+
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

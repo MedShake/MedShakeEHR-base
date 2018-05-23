@@ -1,0 +1,66 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiches annexes
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set noMenuInBar = 'ok' %}
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ page.title }} - MedShakeEHR
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapMonographie.js?{{ modules.base }}"></script>
+
+    <script>
+    var spe = {{ page.spe }};
+    var section = '{{ page.section }}';
+    </script>
+
+    <style>
+    h4 {
+      margin-top : 1.5em;
+    }
+    h4:first-child {
+      margin-top : 0;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+  {% if page.mode == 'ei' %}
+    {% include('lapMonoFicheEI.html.twig') %}
+  {% elseif page.mode == 'eis' %}
+    {% include('lapMonoFicheEIS.html.twig') %}
+  {% elseif page.mode == 'doc' %}
+    {% include('lapMonoFicheDoc.html.twig') %}
+  {% elseif page.mode == 'sub' and page.fiche == '1' %}
+    {% include('lapMonoFicheSubA.html.twig') %}
+  {% elseif page.mode == 'sub' and page.fiche == '2' %}
+    {% include('lapMonoFicheSubE.html.twig') %}
+  {% endif %}
+
+{% endblock %}

@@ -39,196 +39,199 @@
 {% if page.agendaID > 0 %}#{{ page.agendaID }}{% endif %}
 {% if page.eventID > 0 %} - Rdv #{{ page.eventID }}{% endif %}
 </h1>
-    <div class="container-fluid">
 
-    {% if page.agendaUsers|length > 1 %}
-    <div class="row">
+
+{% if page.agendaUsers|length > 1 %}
+  <div class="row">
+    <div class="col">
       <ul class="nav nav-tabs bottom-space" >
-        <li role="presentation" {% if page.agendaID is not defined %}class="active"{% endif %}>
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Tous les agendas</a>
+        <li class="nav-item">
+            <a class="nav-link{% if page.agendaID is not defined %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Tous les agendas</a>
         </li>
         {% for k,v in page.agendaUsers %}
-          <li role="presentation" {% if k == page.agendaID %}class="active"{% endif %}>
-              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ k }}/">{{ v }}</a>
+          <li class="nav-item">
+              <a class="nav-link{% if k == page.agendaID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ k }}/">{{ v }}</a>
           </li>
         {% endfor %}
       </ul>
     </div>
-    {% endif %}
+  </div>
+{% endif %}
 
-    {% if page.eventID is not defined %}
+{% if page.eventID is not defined %}
 
-        <div class="row">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="">date action</th>
-                        <th class="">agenda</th>
-                        <th class="">rendez-vous</th>
-                        <th class="">dates actuelles du rdv</th>
-                        <th class="">type rdv</th>
-                        <th colspan="2">patient</th>
-                        <th>action</th>
-                        <th class="">auteur action</th>
+    <div class="row">
+      <div class="col">
+        <table class="table table-sm mb-0 table-hover ">
+            <thead>
+                <tr>
+                    <th class="">date action</th>
+                    <th class="">agenda</th>
+                    <th class="">rendez-vous</th>
+                    <th class="">dates actuelles du rdv</th>
+                    <th class="">type rdv</th>
+                    <th colspan="2">patient</th>
+                    <th>action</th>
+                    <th class="">auteur action</th>
 
 
+                </tr>
+            </thead>
+            <tbody>
+                {% for date in page.last %}
+                {% for v in date %}
+                    <tr class="{% if v.type == '[off]' %}table-info{% elseif v.operation is not defined %}table-success{% elseif v.operation == 'missing' %}table-warning{% elseif v.operation == 'delete' %}table-danger{% endif %}">
+                        <td>{{ v.date }}
+                        </td>
+                        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }}</a> {{ page['agendaUsers'][v.agendaID] }}</td>
+                        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/{{ v.eventID }}/">#{{ v.eventID }}</a></td>
+                        <td>{{ v.start }} &rarr; {{ v.end }}</td>
+                        <td>{{ v.type }}</td>
+                        <td>#{{ v.patientID }}</td><td>{{ v.patientPrenom }} {{ v.patientNom }}</td>
+                        <td>
+                          {% if v.operation is not defined %}
+                            nouveau
+                          {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
+                            marquage patient absent
+                          {% elseif v.operation == 'missing' and v.olddata.absente == 'oui' %}
+                            marquage patient présent
+                          {% elseif v.operation == 'edit' %}
+                            édition
+                          {% elseif v.operation == 'move' %}
+                            déplacement / changement de durée
+                          {% elseif v.operation == 'delete' %}
+                            suppression
+                          {% else %}
+                            {{ v.operation }}
+                          {% endif %}
+                        </td>
+                        <td>#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for date in page.last %}
-                    {% for v in date %}
-                        <tr class="{% if v.type == '[off]' %}info{% elseif v.operation is not defined %}success{% elseif v.operation == 'missing' %}warning{% elseif v.operation == 'delete' %}danger{% endif %}">
-                            <td>{{ v.date }}
-                            </td>
-                            <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/">#{{ v.agendaID }} {{ page['agendaUsers'][v.agendaID] }}</a></td>
-                            <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/{{ v.agendaID }}/{{ v.eventID }}/">#{{ v.eventID }}</a></td>
-                            <td>{{ v.start }} &rarr; {{ v.end }}</td>
-                            <td>{{ v.type }}</td>
-                            <td>#{{ v.patientID }}</td><td>{{ v.patientPrenom }} {{ v.patientNom }}</td>
-                            <td>
-                              {% if v.operation is not defined %}
-                                nouveau
-                              {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
-                                marquage patient absent
-                              {% elseif v.operation == 'missing' and v.olddata.absente == 'oui' %}
-                                marquage patient présent
-                              {% elseif v.operation == 'edit' %}
-                                édition
-                              {% elseif v.operation == 'move' %}
-                                déplacement / changement de durée
-                              {% elseif v.operation == 'delete' %}
-                                suppression
-                              {% else %}
-                                {{ v.operation }}
-                              {% endif %}
-                            </td>
-                            <td>#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
-                        </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-              </table>
-            </div>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+{% else %}
+  <div class="row">
+    <div class="col-md-6">
+    {% for k,v in page.rdv %}
+
+      {% if k == 0 %}
+        <div class="card mb-3">
+          <div class="card-header gras">Donné actuel du rendez-vous</div>
+          <div class="card-body">
+            <p>Données actuelles présente dans l'agenda</p>
+          </div>
+          <table class="table table-sm mb-0 table-hover ">
+              <tr class="{% if v.statut == 'actif' %}table-success{% else %}table-danger{% endif %}">
+                <td class="col-md-4">Statut</td>
+                <td>
+                  {% if v.statut == 'actif' %}rdv actif{% else %}rdv supprimé{% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>Créé le</td>
+                <td>{{ v.date }}</td>
+              </tr>
+              <tr>
+                <td>Auteur</td>
+                <td>#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
+              </tr>
+              <tr>
+                <td>Date de début</td>
+                <td>{{ v.start }}</td>
+              </tr>
+              <tr>
+                <td>Date de fin</td>
+                <td>{{ v.end }}</td>
+              </tr>
+              <tr>
+                <td>Durée</td>
+                <td>{{ v.duree }} minutes</td>
+              </tr>
+              <tr>
+                <td>Patient</td>
+                <td>#{{ v.patientID }} {{ v.patientPrenom }} {{ v.patientNom }}</td>
+              </tr>
+              <tr>
+                <td>Type de rdv</td>
+                <td>{{ v.type }}</td>
+              </tr>
+              <tr>
+                <td>Motif rdv</td>
+                <td>{{ v.motif|e|nl2br }}</td>
+              </tr>
+          </table>
+        </div>
+      {% else %}
+
+        <div class="card">
+          <div class="card-header gras">{% if v.operation is not defined %}
+            Nouveau
+          {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
+            Marquage patient absent
+          {% elseif v.operation == 'missing' and v.olddata.absente == 'oui' %}
+            Marquage patient présent
+          {% elseif v.operation == 'edit' %}
+            Édition
+          {% elseif v.operation == 'move' %}
+            Déplacement / changement de durée
+          {% elseif v.operation == 'delete' %}
+            Suppression du rendez-vous
+          {% else %}
+            {{ v.operation }}
+          {% endif %}</div>
+          <div class="card-body">
+            <p>Données sur l'action effectuée</p>
+          </div>
+          <table class="table table-sm mb-0 table-hover ">
+              <tr>
+                <td>Effectuée le</td>
+                <td colspan="2">{{ v.date }}</td>
+              </tr>
+              <tr>
+                <td>Auteur</td>
+                <td colspan="2">#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
+              </tr>
+              {% if v.olddata.start != v.newdata.start %}
+                <tr>
+                  <td>Modification date de début</td>
+                  <td>Initiallement : {{ v.olddata.start }}</td>
+                  <td>Modifié pour : {{ v.newdata.start }}</td>
+                </tr>
+              {% endif %}
+              {% if v.olddata.end != v.newdata.end %}
+                <tr>
+                  <td>Modification date de fin</td>
+                  <td>Initiallement : {{ v.olddata.end }}</td>
+                  <td>Modifié pour : {{ v.newdata.end }}</td>
+                </tr>
+              {% endif %}
+              {% if v.olddata.type != v.newdata.type %}
+                <tr>
+                  <td>Modification du type de consultation</td>
+                  <td>Initiallement : {{ v.olddata.type }}</td>
+                  <td>Modifié pour : {{ v.newdata.type }}</td>
+                </tr>
+              {% endif %}
+              {% if v.olddata.motif != v.newdata.motif %}
+                <tr>
+                  <td>Modification du motif de consultation</td>
+                  <td>Initiallement :<br>{{ v.olddata.motif|e|nl2br }}</td>
+                  <td>Modifié pour :<br>{{ v.newdata.motif|e|nl2br }}</td>
+                </tr>
+              {% endif %}
+          </table>
         </div>
 
-    {% else %}
-      <div class="row">
-        <div class=" col-md-6">
-      {% for k,v in page.rdv %}
+      {% endif %}
 
-        {% if k == 0 %}
-          <div class="panel panel-default">
-            <div class="panel-heading gras">Donné actuel du rendez-vous</div>
-            <div class="panel-body">
-              <p>Données actuelles présente dans l'agenda</p>
-            </div>
-            <table class="table table-hover">
-                <tr class="{% if v.statut == 'actif' %}success{% else %}danger{% endif %}">
-                  <td class="col-md-4">Statut</td>
-                  <td>
-                    {% if v.statut == 'actif' %}rdv actif{% else %}rdv supprimé{% endif %}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Créé le</td>
-                  <td>{{ v.date }}</td>
-                </tr>
-                <tr>
-                  <td>Auteur</td>
-                  <td>#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
-                </tr>
-                <tr>
-                  <td>Date de début</td>
-                  <td>{{ v.start }}</td>
-                </tr>
-                <tr>
-                  <td>Date de fin</td>
-                  <td>{{ v.end }}</td>
-                </tr>
-                <tr>
-                  <td>Durée</td>
-                  <td>{{ v.duree }} minutes</td>
-                </tr>
-                <tr>
-                  <td>Patient</td>
-                  <td>#{{ v.patientID }} {{ v.patientPrenom }} {{ v.patientNom }}</td>
-                </tr>
-                <tr>
-                  <td>Type de rdv</td>
-                  <td>{{ v.type }}</td>
-                </tr>
-                <tr>
-                  <td>Motif rdv</td>
-                  <td>{{ v.motif|e|nl2br }}</td>
-                </tr>
-            </table>
-          </div>
-        {% else %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
-          <div class="panel panel-default">
-            <div class="panel-heading gras">{% if v.operation is not defined %}
-              Nouveau
-            {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
-              Marquage patient absent
-            {% elseif v.operation == 'missing' and v.olddata.absente == 'oui' %}
-              Marquage patient présent
-            {% elseif v.operation == 'edit' %}
-              Édition
-            {% elseif v.operation == 'move' %}
-              Déplacement / changement de durée
-            {% elseif v.operation == 'delete' %}
-              Suppression du rendez-vous
-            {% else %}
-              {{ v.operation }}
-            {% endif %}</div>
-            <div class="panel-body">
-              <p>Données sur l'action effectuée</p>
-            </div>
-            <table class="table table-hover">
-                <tr>
-                  <td>Effectuée le</td>
-                  <td colspan="2">{{ v.date }}</td>
-                </tr>
-                <tr>
-                  <td>Auteur</td>
-                  <td colspan="2">#{{ v.fromID }} {{ v.auteurPrenom }} {{ v.auteurNom }}</td>
-                </tr>
-                {% if v.olddata.start != v.newdata.start %}
-                  <tr>
-                    <td>Modification date de début</td>
-                    <td>Initiallement : {{ v.olddata.start }}</td>
-                    <td>Modifié pour : {{ v.newdata.start }}</td>
-                  </tr>
-                {% endif %}
-                {% if v.olddata.end != v.newdata.end %}
-                  <tr>
-                    <td>Modification date de fin</td>
-                    <td>Initiallement : {{ v.olddata.end }}</td>
-                    <td>Modifié pour : {{ v.newdata.end }}</td>
-                  </tr>
-                {% endif %}
-                {% if v.olddata.type != v.newdata.type %}
-                  <tr>
-                    <td>Modification du type de consultation</td>
-                    <td>Initiallement : {{ v.olddata.type }}</td>
-                    <td>Modifié pour : {{ v.newdata.type }}</td>
-                  </tr>
-                {% endif %}
-                {% if v.olddata.motif != v.newdata.motif %}
-                  <tr>
-                    <td>Modification du motif de consultation</td>
-                    <td>Initiallement :<br>{{ v.olddata.motif|e|nl2br }}</td>
-                    <td>Modifié pour :<br>{{ v.newdata.motif|e|nl2br }}</td>
-                  </tr>
-                {% endif %}
-            </table>
-          </div>
-
-        {% endif %}
-
-      {% endfor %}
-    </div>
-    </div>
-    {% endif %}
-
-    {% endblock %}
+{% endblock %}

@@ -29,28 +29,37 @@
 
 $debug='';
 
-//si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if (!isset($delegate)) {
+  if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
+      $ordoForm=$_POST['ordoForm'];
+      $porteur=$_POST['porteur'];
+      $userID=$_POST['asUserID']?:$p['user']['id'];
+      $module=$_POST['module'];
+  } else {
+      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt 
+        LEFT JOIN objets_data as od ON dt.id=od.typeID 
+        WHERE od.id='".$_POST['objetID']."' limit 1");
+      $ordoForm=$res[0]['form'];
+      $porteur=$res[0]['porteur'];
+      $userID=$res[0]['userID'];
+      $module=$res[0]['module'];
+  }
+  //si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
+  if ($ordoForm!='') {
+        $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
+        if ($module!='' and $module!='base' and is_file($hook)) {
+            include $hook;
+        }
+        if (!isset($delegate)) {
+            return;
+        }
+  }
 }
 
 //template
 $template="patientOrdoForm";
 
-if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
-    $ordoForm=$_POST['ordoForm'];
-    $porteur=$_POST['porteur'];
-    $module=$_POST['module'];
-} else {
-    $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur FROM data_types as dt 
-      LEFT JOIN objets_data as od ON dt.id=od.typeID 
-      WHERE od.id='".$_POST['objetID']."' limit 1");
-    $ordoForm=$res[0]['form'];
-    $porteur=$res[0]['porteur'];
-    $module=$res[0]['module'];
-}
-
-$p['page']['ordo']=array('module'=>$module, 'porteur'=>$porteur);
+$p['page']['ordo']=array('module'=>$module, 'ordoForm'=>$ordoForm, 'porteur'=>$porteur, 'asUserID'=>$_POST['asUserID']);
 
 //patient
 $p['page']['patient']['id']=$_POST['patientID'];
@@ -59,7 +68,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as catLabel
   from prescriptions as p
   left join prescriptions_cat as c on c.id=p.cat
-  where p.toID in ('0','".$p['user']['id']."')
+  where p.toID in ('0','".$userID."') and c.type='nonlap'
   group by p.id
   order by c.displayOrder, p.id in (1,2) desc, c.label asc, p.label asc")) {
     foreach ($tabTypes as $v) {

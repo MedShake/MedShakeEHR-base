@@ -26,6 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ if(!is_numeric($_POST['patientID'])) die;
+
  $dc = new msDicom();
  $dc->setToID($_POST['patientID']);
  $p['page']['studiesDcData']=$dc->getAllStudiesFromPatientDcData();

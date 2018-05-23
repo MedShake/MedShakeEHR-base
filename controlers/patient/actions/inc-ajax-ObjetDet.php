@@ -50,7 +50,7 @@ if (is_numeric($_POST['objetID'])) {
                 $fsz=filesize($fn);
                 $f=fopen($fn, 'r');
                 $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
-            } 
+            }
         }
         if (!empty($data['value'])) {
             //hprim
@@ -61,8 +61,9 @@ if (is_numeric($_POST['objetID'])) {
     } elseif ($data['groupe']=="reglement") {
         $template='inc-ajax-detReglement';
         $data = new msObjet();
-
         $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID'], 'name');
+        $p['page']['secteurHonoraires']='baseReglementSS'==msSQL::sqlUniqueChamp("SELECT dt.formValues AS form FROM data_types as dt
+        LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$_POST['objetID']."' limit 1") ? '1' : '';
         $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$_POST['objetID']."')");
     } elseif ($data['groupe']=="mail") {
         $template='inc-ajax-detMail';
@@ -97,6 +98,15 @@ if (is_numeric($_POST['objetID'])) {
 
             $p['page']['courrier']['modeprint']=$modePrint;
         }
+    } elseif($data['groupe']=="typecs" and $data['name']=="csAldDeclaration") {
+      $debug='';
+      $template='inc-ajax-detCsAldDeclaration';
+      $data = new msObjet();
+      $p['page']['dataAld'] = $data->getObjetAndSons($_POST['objetID'], 'name');
+      $selectedAldLabel=new msData;
+      $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$p['page']['dataAld']['aldNumber']['typeID']]);
+
+      $p['page']['dataAld']['aldNumber']['aldLabel']=$selectedAldLabel[$p['page']['dataAld']['aldNumber']['typeID']][$p['page']['dataAld']['aldNumber']['value']];
 
     } else {
         $fakePDF = new msPDF();
@@ -106,7 +116,7 @@ if (is_numeric($_POST['objetID'])) {
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
 
-        echo '<td></td><td colspan="4"><div class="well appercu">';
+        echo '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
         echo msTools::cutHtmlHeaderAndFooter($version);
         echo '</div></td>';
     }

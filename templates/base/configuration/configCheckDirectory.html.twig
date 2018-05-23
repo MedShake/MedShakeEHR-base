@@ -23,6 +23,7 @@
  # Template > Config : vérification des répertoires de stockage
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
@@ -35,37 +36,37 @@
 {% block body %}
 
     <ol class="breadcrumb">
-      <li>
+      <li class="breadcrumb-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
       </li>
-      <li>
+      <li class="breadcrumb-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
       </li>
-	    <li class="active">
+	    <li class="breadcrumb-item active">
 			    Vérifications des répertoires de stockage 
 	    </li>
     </ol>
 
     <h1>Accessibilité en écriture des répertoires généraux</h1>
 
-    <p>Les répertoires testés sont ceux de la configuration générale (fichier config.yml).</p>
+    <p>Les répertoires testés sont ceux de la configuration générale.</p>
 
     <div class="row">
 
         <div class="col-md-12">
 
-            <table class="table table-bordered">
+            <table class="table table-sm mb-0 table-bordered">
                 <tr>
-                    <th class="col-md-2">
+                    <th>
                         Répertoire
                     </th>
-                    <th class="col-md-6">
+                    <th>
                         Chemin
                     </th>
-                    <th class="col-md-2">
+                    <th>
                         Existe
                     </th>
-                    <th class="col-md-2">
+                    <th>
                         Est accessible en écriture
                     </th>
                 </tr>
@@ -73,10 +74,9 @@
                     <tr>
                         <td>{{ k }}</td>
                         <td>{{ config[k] }}
-                          {% if k == 'agendasConfigurations' %}{{ config.webDirectory }}agendasConfigurations/{% endif %}
                         </td>
-                        <td class="{% if v.is_dir == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
-                        <td class="{% if v.is_writable == 1 %}success{% else %}danger{% endif %}">&nbsp;</td>
+                        <td class="{% if v.is_dir == 1 %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
+                        <td class="{% if v.is_writable == 1 %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
                     </tr>
                 {% endfor %}
             </table>

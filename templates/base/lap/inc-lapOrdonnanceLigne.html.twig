@@ -1,0 +1,185 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : lignes d'ordonnances
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{# Ligne avec 1 seul médicament #}
+{% if page.ligne.medics | length == 1 %}
+  <div class="card bg-light mb-2 p-2 ui-sortable-handle lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="gras">
+          {{ page.ligne.medics.0.nomUtileFinal }}
+          {% if page.ligne.medics.0. isNPS == 'true' %}
+            [non substituable
+            {% if page.ligne.medics.0. motifNPS %}
+              -
+              {{ page.ligne.medics.0.motifNPS }}
+            {% endif %}
+            ]
+          {% endif %}
+          {% if page.ligne.ligneData.isChronique == 'true' %}
+            <span class="badge badge-secondary">chronique</span>
+          {% endif %}
+        </div>
+        <div>{{ page.ligne.medics.0.voieUtilisee }}
+          {% if page.ligne.medics.0. posoFrappeeNbDelignesPosologiques > 1 %}
+            -
+            {{ page.ligne.medics.0.dureeTotaleHuman }}
+          {% endif %}
+        </div>
+        <div>{{ page.ligne.medics.0.posoHumanCompleteTab|join('<br>') }}</div>
+      </div>
+
+      <div class="col-md-4">
+        {% if page.ligne.medics.0. prescriptionMotif %}
+          <div class="small">Motif de prescription :<br>
+            {{ page.ligne.medics.0.prescriptionMotif|e|nl2br }}</div>
+        {% endif %}
+      </div>
+
+      <div class="col-md-1 text-right">
+
+        {# editer ligne #}
+        <button class="btn btn-light btn-sm editLignePrescription">
+          <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+
+        {# options de ligne  #}
+        <div class="btn-group">
+          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="fa fa-wrench" aria-hidden="true"></span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+              <a href="#" class="dropdown-item addToLigne">
+                <span class="fa fa-plus" aria-hidden="true"></span>
+                Ajouter un médicament à cette ligne de prescription
+              </a>
+
+            {% if page.ligne.medics.0. prescriptibleEnDC == '1' %}
+              <div role="separator" class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                Convertir en DCI
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        {# supprimer la ligne #}
+        <button class="btn btn-light btn-sm removeLignePrescription">
+          <span class="fa fa-trash" aria-hidden="true"></span></button>
+
+      </div>
+    </div>
+  </div>
+
+  {# PLusieurs médicaments  #}
+{% elseif page.ligne.medics|length > 1 %}
+
+  <div class="card bg-light mb-2 p-2 lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
+    <div class="row" style="margin-bottom: 12px">
+      <div class="col-md-7 gras">
+        {{ page.ligne.medics.0.voieUtilisee|capitalize }}
+        -
+        {{ page.ligne.medics.0.dureeTotaleHuman }}
+        :
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-1 text-right">
+
+        {# options de ligne  #}
+        <div class="btn-group">
+          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="fa fa-wrench" aria-hidden="true"></span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a href="#" class="dropdown-item addToLigne">
+              <span class="fa fa-plus" aria-hidden="true"></span>
+              Ajouter un médicament à cette ligne de prescription
+            </a>
+
+            {% if page.ligne.medics.0. prescriptibleEnDC == '1' %}
+              <div class="drowdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                Convertir en DCI
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        {# supprimer la ligne #}
+        <button class="btn btn-light btn-sm removeLignePrescription">
+          <span class="fa fa-trash" aria-hidden="true"></span></button>
+      </div>
+    </div>
+
+    <table class="table table-sm table-hover tablePrescripMultiMedic">
+      <tbody>
+        {% for medic in page.ligne.medics %}
+          <tr>
+            <td class="col-md-6">
+              <div class="gras">
+                {{ loop.index }}
+                -
+                {{ medic.nomUtileFinal }}
+                {% if medic.isNPS == 'true' %}
+                  [non substituable
+                  {% if medic.motifNPS %}
+                    -
+                    {{ medic.motifNPS }}
+                  {% endif %}
+                  ]
+                {% endif %}
+                {% if page.ligne.ligneData.isChronique == 'true' %}
+                  <span class="badge badge-secondary">chronique</span>
+                {% endif %}
+              </div>
+              <div>{{ medic.posoHumanCompleteTab|join('<br>') }}</div>
+            </td>
+
+            <td class="col-md-4">
+              {% if medic.prescriptionMotif %}
+                <div class="small">Motif de prescription :<br>
+                  {{ medic.prescriptionMotif|e|nl2br }}</div>
+              {% endif %}
+            </td>
+
+            <td class="col-md-2">
+              {# editer medic #}
+              <button class="btn btn-light btn-sm editMedicLignePrescription">
+                <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+              {# supprimer medic #}
+              <button class="btn btn-light btn-sm removeMedicLignePrescription">
+                <span class="fa fa-trash" aria-hidden="true"></span></button>
+            </td>
+
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+{% endif %}

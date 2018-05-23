@@ -29,7 +29,7 @@
 $(document).ready(function() {
 
   //réactiver un dossier marqué comme supprimé
-  $('body').on("click", "a.unmarkDeleted", function(e) {
+  $('body').on("click", ".unmarkDeleted", function(e) {
     e.preventDefault();
     if (confirm("Ce dossier sera à nouveau visible dans les listings de recherche.\nSouhaitez-vous poursuivre ? ")) {
       source = $(this);
@@ -50,7 +50,8 @@ $(document).ready(function() {
 
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
 

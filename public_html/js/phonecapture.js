@@ -26,6 +26,32 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+var page = document.querySelector("#page");
+document.addEventListener("touchstart", function(e) {
+  if (e.targetTouches.length != 2)
+    return;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+    if(page.requestFullscreen)
+      page.requestFullscreen();
+    else if (page.mozRequestFullScreen)
+      page.mozRequestFullScreen();
+    else if (page.webkitRequestFullscreen)
+      page.webkitRequestFullscreen();
+    else if (page.msRequestFullscreen)
+      page.msRequestFullscreen();
+  }
+  else {
+    if (document.exitFullscreen)
+      document.exitFullscreen();
+    else if (document.webkitExitFullscreen)
+      document.webkitExitFullscreen();
+    else if (document.mozCancelFullScreen)
+      document.mozCancelFullScreen();
+    else if (document.msExitFullscreen)
+      document.msExitFullscreen();
+  }
+}, false);
+
 $(document).ready(function() {
 
   if ($('#landscape').length) {
@@ -38,54 +64,55 @@ $(document).ready(function() {
       }
     });
 
-    $("#declencher").show();
-    $("#envoyer").hide();
-    $("#refaire").hide();
-    $("#rafraichir").hide();
+    var video = $(window).width() < $(window).height() ? $("#portrait video")[0] : $("#landscape video")[0];
+    var orientation = $(window).width() < $(window).height() ? 'portrait' : 'landscape';
+    $(".declencher").show();
+    $(".envoyer").hide();
+    $(".refaire").hide();
+    $(".rafraichir").hide();
 
     function onTimeout() {
-      $("video")[0].srcObject.getVideoTracks()[0].stop();
-      $("#declencher").hide();
-      $("#envoyer").hide();
-      $("#refaire").hide();
-      $("#rafraichir").show();
+      video.srcObject.getVideoTracks()[0].stop();
+      $(".declencher").hide();
+      $(".envoyer").hide();
+      $(".refaire").hide();
+      $(".rafraichir").show();
       videoTO = undefined;
     };
     var videoTO = setTimeout(onTimeout, 30000);
 
-    $("#rafraichir").on("click", function() {
+    $(".rafraichir").on("click", function() {
       startVideo();
-      $("#declencher").show();
-      $("#envoyer").hide();
-      $("#refaire").hide();
-      $("#rafraichir").hide();
+      $(".declencher").show();
+      $(".envoyer").hide();
+      $(".refaire").hide();
+      $(".rafraichir").hide();
       videoTO = setTimeout(onTimeout, 30000);
     });
 
-    $("#refaire").on("click", function() {
-      $("video")[0].play();
-      $("#declencher").show();
-      $("#envoyer").hide();
-      $("#refaire").hide();
+    $(".refaire").on("click", function() {
+      video.play();
+      $(".declencher").show();
+      $(".envoyer").hide();
+      $(".refaire").hide();
       if (videoTO) {
         clearTimeout(videoTO);
         videoTO = setTimeout(onTimeout, 30000);
       }
     });
-    $("#declencher").on("click", function() {
-      $("video")[0].pause();
-      $("#declencher").hide();
-      $("#envoyer").show();
-      $("#refaire").show();
+    $(".declencher").on("click", function() {
+      video.pause();
+      $(".declencher").hide();
+      $(".envoyer").show();
+      $(".refaire").show();
       if (videoTO) {
         clearTimeout(videoTO);
         videoTO = setTimeout(onTimeout, 30000);
       }
     });
-    $("#envoyer").on("click", function() {
+    $(".envoyer").on("click", function() {
       var canvas = document.createElement("canvas");
       var context = canvas.getContext('2d');
-      var video = $("video")[0];
       var div = document.createElement("div");
       div.appendChild(canvas);
       $(div).addClass("miniature");
@@ -103,14 +130,23 @@ $(document).ready(function() {
       $("#miniatures").append(div);
       envoiImage(canvas);
       $("#miniatures").width("+=" + (80 * video.videoWidth / video.videoHeight + 5));
-      $("video")[0].play();
-      $("#declencher").show();
-      $("#envoyer").hide();
-      $("#refaire").hide();
+      video.play();
+      $(".declencher").show();
+      $(".envoyer").hide();
+      $(".refaire").hide();
       if (videoTO) {
         clearTimeout(videoTO);
         videoTO = setTimeout(onTimeout, 30000);
       }
+    });
+
+    $(window).on("resize", function () {
+      if ((orientation == 'portrait' && $(window).width() < $(window).height()) || (orientation == 'landscape' && $(window).width() > $(window).height()))
+        return;
+      clearTimeout(videoTO);
+      onTimeout();
+      video = $(window).width() < $(window).height() ? $("#portrait video")[0] : $("#landscape video")[0];
+      orientation = $(window).width() < $(window).height() ? 'portrait' : 'landscape';
     });
 
     function avancement(canvas, valeur) {
@@ -156,12 +192,14 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
           if (data['status'] == 'badDicomPatientID') {
-            alert("L'image n'a pas été enregistrée car le dossier ouvert sur l'ordinateur a changé entre temps. L'interface va être mise à jour.");
+            alert_popup("danger", "L'image n'a pas été enregistrée car le dossier ouvert sur l'ordinateur a changé entre temps. L'interface va être mise à jour.");
+
             location.reload();
           }
         },
         error: function() {
-          alert('Un problème est survenu.');
+          alert_popup("danger", 'Un problème est survenu.');
+
           location.reload();
         },
       });
@@ -179,7 +217,6 @@ $(document).ready(function() {
 
       navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
-          var video = $('video')[0];
           video.srcObject = mediaStream;
           video.onloadedmetadata = function(e) {
             video.play();

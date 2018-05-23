@@ -21,43 +21,60 @@
  */
 
 /**
- * Patient > action : sauver un règlement
+ * Patient > ajax : sauver un règlement
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
 }
 
 if (count($_POST['acteID'])>0) {
     $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
+    $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
     $patient->setToID($_POST['patientID']);
+    if ($_POST['asUserID']) {
+        $patient->setByID($p['user']['id']);
+    }
 
     if (!isset($_POST['regleSituationPatient'])) {
       $_POST['regleSituationPatient']='A';
     }
-    foreach (['regleTarifCejour', 'regleDepaCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
+    foreach (['regleTarifSSCejour', 'regleTarifLibreCejour', 'regleDepaCejour', 'regleModulCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
         if (!isset($_POST[$param])) {
           $_POST[$param]='';
         }
     }
     //support
     if ($_POST['objetID']!=='') {
-        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
+        $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
     } else {
-        $supportID=$patient->createNewObjetByTypeName($_POST['porteur'], '', '0', $_POST['acteID']);
+        $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID']);
     }
 
     $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
-    $apayer= $_POST['regleTarifCejour'] + $_POST['regleDepaCejour'] + '0';
+    $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
     $important=array('id'=>$supportID, 'important'=>$paye < $apayer?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
 
+    if ($_POST['regleTarifSSCejour']!='' or $_POST['regleDepaCejour']!='') {
+         unset($_POST['regleTarifLibreCejour']);
+         unset($_POST['regleModulCejour']);
+    } elseif ($_POST['regleTarifLibreCejour']!='' or $_POST['regleModulCejour']!='') {
+         unset($_POST['regleTarifSSCejour']);
+         unset($_POST['regleDepaCejour']);
+    }
+
     foreach ($_POST as $param=>$value) {
-        if (!in_array($param, ['module', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
+        if (!in_array($param, ['module', 'asUserID', 'reglementForm', 'formIN', 'acteID', 'objetID', 'patientID', 'porteur'])) {
             $patient->createNewObjetByTypeName($param, $value, $supportID);
         }
     }

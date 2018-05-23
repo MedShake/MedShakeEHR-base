@@ -45,6 +45,10 @@ if (isset($match['params']['examen'])) {
     $pdf->setObjetID($match['params']['examen']);
 }
 
+if (isset($match['params']['anonyme'])) {
+    if($match['params']['anonyme']=='anonyme') $pdf->setAnonymeMode();
+}
+
 $pdf->makePDF();
 $pdf->savePDF();
 $pdf->showPDF();

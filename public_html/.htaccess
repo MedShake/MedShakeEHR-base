@@ -1,3 +1,4 @@
+php_value max_input_vars 20000
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^public/.* public.php [L]

@@ -28,7 +28,11 @@
  */
 
 $debug='';
-$template="compta";
+if (isset($match['params']['m']) and $match['params']['m']=='getTableData') {
+    $template="comptaTable";
+} else {
+    $template="compta";
+}
 
 // sortie des typeID dont on va avoir besoin
 $data = new msData();
@@ -36,29 +40,30 @@ $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursRegle
 $name2typeID = $data->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
 //gestion des plages
-if (!isset($_POST['beginPeriode'])) {
+if (!isset($_POST['beginPeriode']) or !$_POST['beginPeriode']) {
     $beginPeriode = new DateTime();
 } else {
     $beginPeriode= DateTime::createFromFormat('d/m/Y', $_POST['beginPeriode']);
 }
-if (!isset($_POST['endPeriode'])) {
+if (!isset($_POST['endPeriode']) or !$_POST['endPeriode']) {
     $endPeriode = new DateTime();
 } else {
     $endPeriode= DateTime::createFromFormat('d/m/Y', $_POST['endPeriode']);
 }
-if (isset($_POST['impayes']) and $_POST['impayes']=='true') {
-    $beginPeriode=DateTime::createFromFormat('d/m/Y', "01/01/1970");
+if (isset($_POST['impayes']) and $_POST['impayes']) {
     $impayes=true;
 } else {
     $impayes=false;
 }
-
-
-$p['page']['periode']['begin']=$impayes?'':$beginPeriode->format("d/m/Y") ;
-$p['page']['periode']['end']=$endPeriode->format("d/m/Y") ;
-if (isset($_POST['periodeQuickSelect'])) {
-    $p['page']['periode']['quick']=$_POST['periodeQuickSelect'];
+if (isset($_POST['bilan']) and $_POST['bilan']) {
+    $bilan=true;
+} else {
+    $bilan=false;
 }
+
+
+$p['page']['periode']['begin']=$beginPeriode->format("d/m/Y") ;
+$p['page']['periode']['end']=$endPeriode->format("d/m/Y") ;
 
 //quick options
 $p['page']['periode']['quickOptions']=array(
@@ -68,7 +73,10 @@ $p['page']['periode']['quickOptions']=array(
 "lastweek"=>"Semaine dernière",
 "thismonth"=>"Ce mois",
 "lastmonth"=>"Mois dernier",
-"impayes"=>"Impayés");
+"bilanmois"=>"Bilan mois dernier",
+"bilanannee"=>"Bilan année dernière",
+"impayesmois"=>"Impayés mois",
+"impayesannee"=>"Impayés année");
 
 
 //liste praticiens autorisés
@@ -98,8 +106,13 @@ if (isset($_POST['prat'])) {
   }
 }
 
+$prat=new msPeople();
+$prat->setToID($p['page']['pratsSelect'][0]);
+$user=array('id'=>$p['page']['pratsSelect'][0], 'module'=>$prat->getModule());
+$p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonoraires', $user);
+
 //sortir les reglements du jour
-if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
+if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
@@ -117,7 +130,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
       .($impayes?"and important='y'":"")."
       )
   union
-      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module, 
+      select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
       CASE WHEN n.value != '' and bn.value !='' THEN concat(n.value, ' (', bn.value,')')
       WHEN n.value != '' THEN n.value
       ELSE bn.value
@@ -167,6 +180,8 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
     }
 
     //transmission à la page
-    $p['page']['tabReg']=$tabReg;
+    if (!$bilan) {
+        $p['page']['tabReg']=$tabReg;
+    }
     $p['page']['tabTot']=$tabTot;
 }

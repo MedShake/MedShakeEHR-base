@@ -26,5 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['ligneID'])) die;
+
 $template="ligneOrdoForm";
 $p['page']['ligneOrdo']=msSQL::sqlUnique("select id, description, label, concat(id,'_',UNIX_TIMESTAMP(),'_0') as formname from prescriptions where id='".$_POST['ligneID']."' limit 1");

@@ -44,11 +44,11 @@
     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
     {# js #}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/brinley/jsignature/src/jSignature.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/brinley/jsignature/src/plugins/jSignature.CompressorSVG.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/signer.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/brinley/jsignature/src/jSignature.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/brinley/jsignature/src/plugins/jSignature.CompressorSVG.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/signer.js?{{ modules.base }}"></script>
 
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
@@ -59,11 +59,7 @@
         padding : 10px;
       }
       #consignes {
-        text-align: center;
-        color: #444;
-        font-size: 20px;
-        margin-top : 40px;
-        height: 50px;
+
       }
 
       #signature {
@@ -81,12 +77,23 @@
   </head>
 
   <body>
+    <div class="row">
+      <div class="col">
     {% include('consentementEcho.html.twig') %}
+    </div>
+  </div>
 
-    <div id="consignes">
-      <button class="btn btn-primary btn-lg resetSignature pull-left">Recommencer</button>
-      Merci de signer dans la zone grise ci-dessous puis de valider
-      <button class="btn btn-danger btn-lg saveSignature pull-right">Valider</button></div>
+    <div id="consignes" class="row mb-2 mt-5">
+      <div class="col-1">
+        <button class="btn btn-primary btn-lg resetSignature ">Recommencer</button>
+      </div>
+      <div class="col text-center">
+        <h4>Merci de signer dans la zone grise ci-dessous puis de valider</h4>
+      </div>
+      <div class="col-1 text-right">
+        <button class="btn btn-danger btn-lg saveSignature ">Valider</button>
+      </div>
+    </div>
     <div id="signature"></div>
 
     <p>

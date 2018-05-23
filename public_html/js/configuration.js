@@ -57,7 +57,7 @@ $(document).ready(function() {
         $(modal + ' form textarea').val('');
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
@@ -68,7 +68,8 @@ $(document).ready(function() {
 
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
 
@@ -94,18 +95,20 @@ $(document).ready(function() {
         $(modal + ' form textarea').val('');
         $.each(data, function(index, value) {
           if ($(form + ' input[name="' + index + '"]').length) {
-            $(form + ' input[name="' + index + '"]').attr('value', value);
+            $(form + ' input[name="' + index + '"]').val(value);
           } else if ($(form + ' select[name="' + index + '"]').length) {
             $(form + ' select[name="' + index + '"]').find('option[value="' + value + '"]').prop("selected", "selected");
           } else if ($(form + ' textarea[name="' + index + '"]').length) {
             $(form + ' textarea[name="' + index + '"]').val(value);
           }
         });
+        $(modal + ' form input[name="id"]').remove();
         $(modal).modal('show');
 
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
 
@@ -140,7 +143,8 @@ $(document).ready(function() {
           location.reload();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     }
@@ -152,7 +156,7 @@ $(document).ready(function() {
     var modal = $(this).attr("data-target");
     $(modal + ' form input[name="id"]').remove();
 
-    $(modal + ' form input').attr('value', '');
+    $(modal + ' form input').val('');
     $(modal + ' form textarea').val('');
     $(modal + ' form select option').removeProp('selected');
     $(modal + ' form select option:eq(0)').prop('selected', 'selected');
@@ -192,7 +196,7 @@ $(document).ready(function() {
   });
 
   //delete clef apicrypt
-  $("a.delApicryptClef").on("click", function(e) {
+  $(".delApicryptClef").on("click", function(e) {
     e.preventDefault();
     var userID = $(this).attr("data-user");
     var file = $(this).attr("data-file");
@@ -212,14 +216,15 @@ $(document).ready(function() {
           location.reload();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     }
   });
 
   //delete template PDF
-  $("a.delTemplatePDF").on("click", function(e) {
+  $(".delTemplatePDF").on("click", function(e) {
     e.preventDefault();
     var userID = $(this).attr("data-user");
     var file = $(this).attr("data-file");
@@ -239,7 +244,8 @@ $(document).ready(function() {
           location.reload();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     }
@@ -260,7 +266,39 @@ $(document).ready(function() {
     $(this).css("overflow", "hidden");
     auto_grow(this);
   });
-  
+
+  // voir les mots de passe dans les paramètres par défaut
+  $(".viewPassword").removeClass('viewPassword').parent()
+    .css('cursor', 'pointer')
+    .addClass('viewPassword')
+    .on("mousedown", function(){
+      $(this).closest('.input-group').find('input').attr('type','text');
+    })
+    .on("mouseup", function(){
+      $(this).closest('.input-group').find('input').attr('type','password');
+    });
+
+  //Suppression d'un paramètre dans la page paramètres spécifiques
+  $('body').on('click', '.removeParam', function(){
+    var $tr = $(this).closest('tr');
+    $.ajax({
+      url: urlBase+"/configuration/ajax/configUserParamDelete/",
+      type: 'post',
+      data: {
+        userID: $('input[name=userID]').val(),
+        paramName: $tr.attr('data-name')
+      },
+      dataType: "json",
+      success: function(data) {
+        $tr.remove();
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+
+      }
+    });
+  });
+
   //droits admin dans la page liste des utilisateurs
   $(".changeAdmin").on("click", function(e){
     e.preventDefault();
@@ -273,12 +311,13 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        $ca.children(".glyphicon-unchecked").removeClass("glyphicon-unchecked").addClass("glyphicon-checked");
-        $ca.children(".glyphicon-check").removeClass("glyphicon-check").addClass("glyphicon-unchecked");
-        $ca.children(".glyphicon-checked").removeClass("glyphicon-checked").addClass("glyphicon-check");
+        $ca.children(".fa-square").removeClass("fa-square").addClass("check-square");
+        $ca.children(".fa-check-square").removeClass("fa-check-square").addClass("fa-square");
+        $ca.children(".check-square").removeClass("check-square").addClass("fa-check-square");
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -297,7 +336,8 @@ $(document).ready(function() {
       success: function(data) {
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -315,12 +355,19 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        alert('le mot de passe de l\'utilisateur "'+ $cp.attr('data-name') + '" a été changé avec succès');
+        alert_popup("success", 'le mot de passe de l\'utilisateur "'+ $cp.attr('data-name') + '" a été changé avec succès');
+
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
+  });
+
+  //forcer le rechargement de la page sur modif du yaml agenda
+  $(".reload-on-mod").on("keyup", function(){
+    $(this).closest("form").addClass('reload');
   });
 
   //Révoquer un utilisateur dans la page liste des utilisateurs
@@ -340,9 +387,24 @@ $(document).ready(function() {
           $ru.closest("tr").remove();
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
+  });
+
+  // selecteur de catégorie page SpecificUserParam
+  $('select[name=paramCat]').on('click', function(){
+    $('.paramselect').hide();
+    $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
+    $('#description').html('description : ' + $('.paramselect:visible').find('option:selected').attr('data-desc'));
+    $('#type').html('type : ' + $('.paramselect:visible').find('option:selected').attr('data-type'));
+  });
+
+  // selecteur de paramètre page SpecificUserParam
+  $('.paramselect').on('click', function(){
+    $('#description').html('description : ' + $(this).find('option:selected').attr('data-desc'));
+    $('#type').html('type : ' + $(this).find('option:selected').attr('data-type'));
   });
 
   $("body.uploader").dmUploader({
@@ -362,7 +424,8 @@ $(document).ready(function() {
       $(".mask").animate({opacity: 0}, 500, "linear", function(){$(".mask").css("display", "none")});
     },
     onFileTypeError: function(){
-      alert("Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
+      alert_popup("danger", "Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
+
     },
     onBeforeUpload: function(id) {
       if (!confirm("Confirmez l'installation du fichier"))
@@ -373,9 +436,11 @@ $(document).ready(function() {
             $("#errormessage").html(data);
             $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
         } else if (data.toLowerCase().indexOf("ok")==0) {
-          alert("La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+          alert_popup("success", "La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+
         } else {
-          alert("La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+          alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+
         }
     },
     onUploadError: function(id, xhr, status, errorThrown) {
@@ -416,7 +481,8 @@ function ajaxModalFormSave(form, modal) {
       }
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 }

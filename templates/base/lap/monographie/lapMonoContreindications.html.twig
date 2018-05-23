@@ -1,0 +1,87 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > contre-indications
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ <p class="lead">{{ page.contreindications.contreIndic|length }} contre-indication{% if page.contreindications.contreIndic|length > 1 %}s{% endif %}</p>
+
+{% set rand = random(10000) %}
+
+<div  id="accordion{{ rand }}" role="tablist" aria-multiselectable="true">
+
+{% for tab in page.contreindications.contreIndic %}
+
+    <div class="card mb-3">
+        <div class="card-header" role="tab" id="heading{{ loop.index }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ loop.index }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}{{ rand }}" style="cursor: pointer">
+
+
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <h4 class="card-title">
+               {{ tab.terrain }}
+            </h4>
+
+            <ul class="list-unstyled small">
+              {% for ter in tab.det1 %}
+                <li>{{ ter.textdet }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="col-md-6">
+            <ul class="list-unstyled">
+              {% for niv in tab.det2 %}
+                <li>{{ niv.textdet }}</li>
+              {% endfor %}
+              {% for nivp in tab.det3 %}
+                <li class="small" style="margin-left : 1em">{{ nivp.textdet }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        </div>
+        <div id="collapse{{ loop.index }}{{ rand }}" class="collapse {% if loop.index == 1 and page.contreindications.contreIndic|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}{{ rand }}">
+          <div class="card-body">
+
+            <p>{{ tab.text|nl2br }}</p>
+
+            {% if tab.ref is not empty %}
+              <h4>Référence(s) officielle(s)</h4>
+              <ul class="list-unstyled">
+              {% for ref in tab.ref %}
+              <li>{{ ref.refoff }} {% if ref.dtrefoff|length > 10 %}{{ ref.dtrefoff|date("d/m/Y") }}{% else %}{{ ref.dtrefoff }}{% endif %}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+{% endfor %}
+</div>

@@ -26,7 +26,21 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+
+/**
+ * Inclure les scripts php éventuels liés au dump
+ * @param  string $file   chemin + fichier
+ * @param  string $prefix préfixe pour le pre ou post update
+ * @return void
+ */
+function includePhp($file, $suffixe) {
+  global $p;
+  if($suffixe == '_pre' or $suffixe == '_post' ) {
+    $file=str_replace('.sql', $suffixe.'.php', $file);
+    if(is_file($file)) include($file);
+  }
+}
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 $formIN=$_POST['formIN'];
@@ -34,22 +48,22 @@ unset($_SESSION['form'][$formIN]);
 
 $modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
 
-$availableInstalls=scandir($p['config']['homeDirectory'].'upgrade/');
+$availableInstalls=scandir($p['homepath'].'upgrade/');
 $installFiles=[];
 //on fait la liste des installations à réaliser
 foreach ($availableInstalls as $module) {
     if ($module!='.' and $module!='..' and !array_key_exists($module, $modules)) {
-        $installFiles[]=glob($p['config']['homeDirectory'].'upgrade/'.$module.'/sqlInstall.sql');
+        $installFiles[]=glob($p['homepath'].'upgrade/'.$module.'/sqlInstall.sql');
     }
 }
 //on fait la liste des patches à appliquer
 $moduleUpdateFiles=[];
 foreach ($modules as $module) {
-    $installed=file_get_contents($p['config']['homeDirectory'].'versionMedShakeEHR-'.$module['name'].'.txt');
+    $installed=file_get_contents($p['homepath'].'versionMedShakeEHR-'.$module['name'].'.txt');
     if (trim($installed," \t\n\r\0\x0B") == trim($module['version'])) {
       continue;
     }
-    $updateFiles=glob($p['config']['homeDirectory'].'upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
+    $updateFiles=glob($p['homepath'].'upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
     foreach ($updateFiles as $k=>$file) {
         if (preg_match('/sqlUpgrade_(.+)_(.+)/', $file, $matches) and $matches[1] >= $module['version']) {
             $moduleUpdateFiles[$module['name']][]=$updateFiles[$k];
@@ -60,23 +74,29 @@ foreach ($modules as $module) {
 if (count($installFiles) or count($moduleUpdateFiles)) {
     msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
     //on fait une sauvegarde de la base
-    exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d H:i:s').'-avant update.sql');
+    exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql');
     //puis on applique les patches en commençant par ceux de base s'il y en a
-    if (array_key_exists($moduleUpdateFiles, 'base')) {
+    if (array_key_exists('base', $moduleUpdateFiles)) {
         foreach ($moduleUpdateFiles['base'] as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
         unset($moduleUpdateFiles['base']);
     }
     foreach ($moduleUpdateFiles as $k=>$module) {
         foreach ($module as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
     }
     //enfin, on installe les nouveaux modules
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
+            includePhp($file, '_pre');
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' 2>&1 < '.$file, $output);
+            includePhp($file, '_post');
         }
     }
 }
@@ -94,4 +114,4 @@ if (isset($output) and is_array($output)) {
     }
 }
 unset($_SESSION['form'][$formIN]);
-msTools::redirection('/patients/');
+msTools::redirRoute('configModules');

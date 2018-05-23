@@ -1,0 +1,89 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > médicaments virtuels et génériques
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h4 class="text-uppercase">Médicament virtuel Thériaque</h4>
+
+{% for ref in page.mvPere.ref %}
+  {{ ref.sp_nom|trim('§') }}
+{% endfor %}
+
+<p>Les spécialités correspondant à ce médicament virtuel peuvent contenir des excipients à effet notoire. Ces excipients à effet notoire peuvent être différents selon les spécialités</p>
+
+{% if page.mvPere.genThe is not empty %}
+  <table class="table table-sm table-hover">
+    <thead>
+      <th>Spécialité(s) génériques Thériaque</th>
+      <th>Type</th>
+    </thead>
+    <tbody>
+      {% for gen in page.mvPere.genThe %}
+      <tr {% if gen.sp_type_spe == 'R' %}class="table-info"{% endif %}>
+        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ gen.sp_code }}/">{{ gen.sp_nomlong|trim('§') }}</a></td>
+        <td>{% if gen.sp_type_spe == 'R' %}Référence{% else %}Générique{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+<h4 class="text-uppercase">Génériques</h4>
+
+{% if page.gen.genAfssaps is not empty %}
+
+<table class="table table-sm table-hover">
+  <tbody>
+    <tr>
+      <td>Date de création du groupe générique</td>
+      <td>{% if page.gen.genAfssaps[0].sp_gref_datecr|length > 10 %}{{ page.gen.genAfssaps[0].sp_gref_datecr|date("d/m/Y") }}{% else %}{{ page.gen.genAfssaps[0].sp_gref_datecr }}{% endif %}</td>
+    </tr>
+    <tr>
+      <td>Date de parution au journal officiel de la dernière
+mise à jour du groupe générique</td>
+      <td>{% if page.gen.genAfssaps[0].sp_datejogene|length > 10 %}{{ page.gen.genAfssaps[0].sp_datejogene|date("d/m/Y") }}{% else %}{{ page.gen.genAfssaps[0].sp_datejogene }}{% endif %}</td>
+    </tr>
+  </tbody>
+</table>
+
+  <table class="table table-sm table-hover">
+    <thead>
+      <th>Spécialité(s) générique(s) ansm</th>
+      <th>Type</th>
+    </thead>
+    <tbody>
+      {% for gen in page.gen.genAfssaps %}
+      <tr {% if gen.sp_type_spe == 'R' %}class="table-info"{% endif %}>
+        <td><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ gen.sp_code }}/">{{ gen.sp_nomlong|trim('§') }}</a></td>
+        <td>{% if gen.sp_type_spe == 'R' %}Référence{% else %}Générique{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+<p>sans objet</p>
+
+{% endif %}

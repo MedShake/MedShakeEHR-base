@@ -1,0 +1,71 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : tab dossier médical
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{# menu supérieur #}
+{% include('inc-patientTabDossierMedicalMenuSup.html.twig') %}
+
+<div class="row swipable mt-4">
+    <div id="patientLatCol" class="col-md-4 col-xl-3 px-0 pl-md-0 pr-md-3 atcd">
+      {% include('inc-patientLatCol.html.twig') %}
+    </div>
+
+    {# colonne principale #}
+    <div class="col-md-8 col-xl-9 dossier">
+
+      {# Div d'import de nouveau doc #}
+      <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
+
+      {# historique du jour #}
+      <div id="historiqueToday" class="row">
+        {% include 'patientHistoriqueToday.html.twig' %}
+      </div>
+
+      {# Div d'insertion de nouveau reglement #}
+      <div id="newReglement" class="row toclear"></div>
+
+      {# Div d'insertion de nouveau courrier #}
+      <div id="newCourrier" class="row toclear"></div>
+
+      {# Div d'insertion de nouvelle ordonance #}
+      <div id="newOrdo" class="row toclear"></div>
+
+      {# Div d'insertion de nouvelle consultation #}
+      <div id="nouvelleCs" class="row toclear checkboxFixValue"></div>
+
+      {# Div d'insertion de nouveau mail  #}
+      <div id="newMail" class="row toclear"></div>
+
+      {# Synthèse patient #}
+      {% include 'patientSynthese.html.twig' %}
+
+      {# Historique complet #}
+      <div id="historique" class="row">
+        {% include 'patientHistoriqueMedical.html.twig' %}
+      </div>
+    </div>
+</div>

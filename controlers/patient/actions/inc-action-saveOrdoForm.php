@@ -27,13 +27,23 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-if ($_POST['module']!='base' and !isset($delegate)) {
-    return;
+if ($_POST['ordoForm']!='') {
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-action-saveOrdoForm.php';
+      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
+          include $hook;
+      }
+      if (!isset($delegate)) {
+          return;
+      }
 }
+
 if (count($_POST)>2) {
     $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
+    $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
     $patient->setToID($_POST['patientID']);
+    if ($_POST['asUserID']) {
+        $patient->setByID($p['user']['id']);
+    }
 
     //support
     if (isset($_POST['objetID'])) {
@@ -73,7 +83,6 @@ if (count($_POST)>2) {
             if(!empty(trim($v))) {
               $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
             }
-
             if ($postObjetId>0) {
                 if($v=='' and $modeAction == 'edition') {
                   $patient->setDeletedObjetAndSons($postObjetId);

@@ -32,29 +32,29 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
   <h1>Configuration</h1>
 
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active">
-      <a href="#cc" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
+  <ul class="nav nav-tabs mb-3" role="tablist">
+    <li role="presentation" class="nav-item">
+      <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
     </li>
 
-    <li role="presentation">
-      <a href="#ca" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
+    <li role="presentation" class="nav-item">
+      <a href="#ca" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
     </li>
-    <li role="presentation">
-      <a href="#ap" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
+    <li role="presentation" class="nav-item">
+      <a href="#ap" class="nav-link" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
     </li>
   </ul>
 
   <div class="tab-content">
 
     <div role="tabpanel" class="tab-pane active" id="cc">
-      <h2>Configuration générale</h2>
+      <h2 class="my-2">Configuration générale</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configuration-globale/">Paramètres globaux
@@ -63,9 +63,12 @@
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/modules/">Modules</a>
         </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
+        </li>
       </ul>
 
-      <h2>Utilisateurs</h2>
+      <h2 class="my-2">Utilisateurs</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options
@@ -73,11 +76,8 @@
         </li>
       </ul>
 
-      <h2>Paramètres courants</h2>
+      <h2 class="my-2">Paramètres courants</h2>
       <ul class="list-group">
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions types</a>
-        </li>
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/">Actes et tarifs</a>
         </li>
@@ -85,10 +85,10 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/">Agendas</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Clefs Apicrypt</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Prescriptions types</a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/">Clefs Apicrypt</a>
         </li>
       </ul>
 
@@ -96,7 +96,7 @@
 
     <div role="tabpanel" class="tab-pane" id="ca">
 
-      <h2>Formulaires et modèles</h2>
+      <h2 class="my-2">Formulaires et modèles</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/">Edition des formulaires</a>
@@ -106,18 +106,15 @@
         </li>
       </ul>
 
-      <h2>DICOM</h2>
+      <h2 class="my-2">DICOM</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/tags-dicom/">Correspondances DICOM</a>
         </li>
       </ul>
 
-      <h2>Données</h2>
+      <h2 class="my-2">Données</h2>
       <ul class="list-group">
-        <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/user/">Utilisateurs</a>
-        </li>
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/admin/">Administratives</a>
         </li>
@@ -149,7 +146,7 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/dicom/">Dicom</a>
         </li>
       </ul>
-      <h2>Vérifications techniques</h2>
+      <h2 class="my-2">Vérifications techniques</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs généraux
@@ -165,14 +162,16 @@
         </li>
         <li class="list-group-item">
           Données de session
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" class="btn btn-default btn-xs" role="button" target="_blank">Supprimer</a>
+          <a class="btn btn-outline-secondary px-1 py-0 ml-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
+            Supprimer
+          </a>
         </li>
       </ul>
 
     </div>
 
     <div role="tabpanel" class="tab-pane" id="ap">
-      <h2>Licence et crédits</h2>
+      <h2 class="my-2">Licence et crédits</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>

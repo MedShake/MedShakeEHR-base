@@ -34,8 +34,8 @@ $objet = new msObjet();
 $p['page']['patient'] = $objet->getObjetDataByID($match['params']['objetID'], ['toID']);
 
 
-if ($p['page']['print']=msSQL::sql2tab("select id, creationDate, value, toID from printed where objetID='".$match['params']['objetID']."' order by creationDate desc")) {
+if ($p['page']['print']=msSQL::sql2tab("select id, creationDate, value, toID, anonyme from printed where objetID='".$match['params']['objetID']."' order by creationDate desc")) {
     foreach ($p['page']['print'] as $k=>$v) {
-        $p['page']['print'][$k]['value'] = msTools::cutHtmlHeaderAndFooter($v['value']); 
+        $p['page']['print'][$k]['value'] = msTools::cutHtmlHeaderAndFooter($v['value']);
     }
 }

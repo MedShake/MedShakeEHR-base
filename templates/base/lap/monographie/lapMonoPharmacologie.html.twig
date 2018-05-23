@@ -1,0 +1,160 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > pharmacologie
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ <ul class="nav nav-tabs gras" role="tablist" style="margin-bottom : 2em;">
+  <li class="nav-item">
+    <a class="nav-link active" href="#pharmacodynamie" role="tab" data-toggle="tab">Propriétés pharmacodynamiques</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#pharmacocinetique" role="tab" data-toggle="tab">Propriétés pharmacocinétiques</a>
+  </li>
+  {% if page['pharmacodynamie']['detEtioSpe'] is defined %}
+    <li class="nav-item">
+      <a class="nav-link" href="#agentetio" role="tab" data-toggle="tab">Agent étiologique / Spectre antiinfectieux</a>
+    </li>
+  {% endif %}
+  <li class="nav-item">
+    <a class="nav-link" href="#securitePreCLinique" role="tab" data-toggle="tab">Sécurité préclinique</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="pharmacodynamie">
+    <p>
+      {% for detPhdyn1 in page.pharmacodynamie.detPhdyn1 %}
+        {{ detPhdyn1.texteph|nl2br }}
+      {% endfor %}
+    </p>
+    <h5 class="text-uppercase">Référence(s) officielle(s) :</h5>
+    {% for detPhdyn2 in page.pharmacodynamie.detPhdyn2 %}
+      {{ detPhdyn2.texteph }} ({{ detPhdyn2.dtref }})
+    {% endfor %}
+  </div>
+  <div role="tabpanel" class="tab-pane" id="pharmacocinetique">
+    {% for cinetiqueSpe in page.pharmacocinetique.cinetiqueSpe %}
+      <p>
+        {{ cinetiqueSpe.pharmacotext|nl2br }}
+      </p>
+      <h5 class="text-uppercase">Référence(s) officielle(s) :</h5>
+      {{ cinetiqueSpe.refofficielle }} ({{ cinetiqueSpe.dtref }})
+    {% endfor %}
+  </div>
+  <div role="tabpanel" class="tab-pane" id="agentetio">
+
+    {% if page.pharmacodynamie.etioSpe|length > 1 %}
+      <ul class="nav nav-pills" role="tablist" style="margin-bottom : 2em;">
+      {% for etioSpe in page.pharmacodynamie.etioSpe %}
+            <li class="nav-item">
+              <a class="nav-link{% if loop.index == 1 %} active{% endif %}" href="#fiche{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['valetio'] }}" aria-controls="home" role="pill" data-toggle="pill">{{ page['pharmacodynamie']['detEtioSpe'][etioSpe['codefic']][2][0]['textetio'] }}</a>
+            </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="tab-content">
+
+      {% for k,detEtioSpe in page['pharmacodynamie']['detEtioSpe'] %}
+
+        <div role="tabpanel" class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="fiche{{ detEtioSpe[2][0]['valetio'] }}">
+        <h4 class="text-uppercase">{{ detEtioSpe[2][0]['textetio'] }}</h4>
+        {{ detEtioSpe[3][0]['textetio']|nl2br }}
+
+        {% if detEtioSpe[12] is not empty or detEtioSpe[16][0]['textetio'] is not empty or detEtioSpe[4][0]['textetio'] is not empty %}
+          <h4 class="text-uppercase">Espèce(s) habituellement sensible(s)</h4>
+          {% if detEtioSpe[8][0]['valetio'] %}<p>CMI : {{ detEtioSpe[8][0]['valetio'] }} {{ detEtioSpe[8][0]['textetio'] }}</p>{% endif %}
+          <ul>
+          {% for bhs in detEtioSpe[12] %}
+          <li>{{ bhs.textetio }} {{ bhs.valetio }}</li>
+          {% endfor %}
+          </ul>
+          <p>{{ detEtioSpe[4][0]['textetio']|nl2br }}</p>
+          <p>{{ detEtioSpe[16][0]['textetio']|nl2br }}</p>
+        {% endif %}
+
+        {% if detEtioSpe[13] is not empty or detEtioSpe[17][0]['textetio'] is not empty or detEtioSpe[5][0]['textetio'] is not empty %}
+          <h4 class="text-uppercase">Espèce(s) inconstamment sensible(s)</h4>
+          {% if detEtioSpe[9][0]['valetio'] %}<p>CMI : {{ detEtioSpe[9][0]['valetio'] }} {{ detEtioSpe[9][0]['textetio'] }}</p>{% endif %}
+          <ul>
+          {% for bis in detEtioSpe[13] %}
+          <li>{{ bis.textetio }} {{ bis.valetio }}</li>
+          {% endfor %}
+          </ul>
+          <p>{{ detEtioSpe[5][0]['textetio']|nl2br }}</p>
+          <p>{{ detEtioSpe[17][0]['textetio']|nl2br }}</p>
+        {% endif %}
+
+        {% if detEtioSpe[14] is not empty or detEtioSpe[18][0]['textetio'] is not empty or detEtioSpe[6][0]['textetio'] is not empty %}
+          <h4 class="text-uppercase">Espèce(s) modérement sensible(s)</h4>
+          {% if detEtioSpe[10][0]['valetio'] %}<p>CMI : {{ detEtioSpe[10][0]['valetio'] }} {{ detEtioSpe[10][0]['textetio'] }}</p>{% endif %}
+          <ul>
+          {% for bms in detEtioSpe[14] %}
+          <li>{{ bms.textetio }} {{ bms.valetio }}</li>
+          {% endfor %}
+          </ul>
+          <p>{{ detEtioSpe[6][0]['textetio']|nl2br }}</p>
+          <p>{{ detEtioSpe[18][0]['textetio']|nl2br }}</p>
+        {% endif %}
+
+        {% if detEtioSpe[15] is not empty or detEtioSpe[19][0]['textetio'] is not empty or detEtioSpe[7][0]['textetio'] is not empty %}
+          <h4 class="text-uppercase">Espèce(s) résistante(s)</h4>
+          {% if detEtioSpe[11][0]['valetio'] %}<p>CMI : {{ detEtioSpe[11][0]['valetio'] }} {{ detEtioSpe[11][0]['textetio'] }}</p>{% endif %}
+          <ul>
+          {% for br in detEtioSpe[15] %}
+          <li>{{ br.textetio }} {{ br.valetio }}</li>
+          {% endfor %}
+          </ul>
+          <p>{{ detEtioSpe[7][0]['textetio']|nl2br }}</p>
+          <p>{{ detEtioSpe[19][0]['textetio']|nl2br }}</p>
+        {% endif %}
+
+        {% if detEtioSpe[1][0]['textetio'] %}
+          <h4 class="text-uppercase">Référence(s) officielle(s) :</h4>
+          {{ detEtioSpe[1][0]['textetio'] }} ({{ detEtioSpe[1][0]['valetio'] }})
+        {% endif %}
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+  <div role="tabpanel" class="tab-pane" id="securitePreCLinique">
+
+    {% for secuPrecliniqueSpe in page.securitePreclinique.secuPrecliniqueSpe %}
+      <p>
+        {{ secuPrecliniqueSpe.textfic|nl2br }}
+      </p>
+      <h5 class="text-uppercase">Référence(s) officielle(s) :</h5>
+      {% for refSecuPreclinique in page['securitePreclinique']['refSecuPreclinique'][secuPrecliniqueSpe['codefic']] %}
+        {{ refSecuPreclinique.refoff }} ({{ refSecuPreclinique.dateref }})
+      {% endfor %}
+
+    {% endfor %}
+
+
+  </div>
+</div>

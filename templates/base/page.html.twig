@@ -40,30 +40,31 @@
         <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
         {# css #}
+        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FortAwesome/Font-Awesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
-
+        {% if user.module %}
+          <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/{{ user.module }}.css" rel="stylesheet"/>
+        {% endif %}
         <style>
           #top-navbar {max-height:calc(100vh - 100px) !important}
-          .submit-type {position:fixed;padding:2px;text-align:center;width:100%;z-index:1}
-          .submit-success {background-color:#8dfc9e;top:0}
-          .submit-warning {background-color:#fcde8d;top:0}
-          .submit-error {background-color:#ff6d6d;top:0}
         </style>
 
         {# js #}
-        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js"></script>
-        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js"></script>
-        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FezVrasta/popper.js/dist/umd/popper.min.js?{{ modules.base }}"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/HubSpot/tether/dist/js/tether.min.js?{{ modules.base }}"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js?{{ modules.base }}"></script>
+        <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js?{{ modules.base }}"></script>
         <script>
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
           var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
@@ -74,229 +75,174 @@
 
     <body {% block bodyTagAdd %} {% endblock %}>
 
-        <div class="submit-type submit-success">
-          <span class="glyphicon glyphicon-info-sign"></span> Données enregistrées avec succès
-        </div>
-        <div class="submit-type submit-warning">
-          <span class="glyphicon glyphicon-warning-sign"></span> <span id="warningmessage"></span>
-        </div>
-        <div class="submit-type submit-error">
-          <span class="glyphicon glyphicon-warning-sign"></span> <span id="errormessage">Une erreur s'est produite lors de l'enregistrement des données</span>
+        <div class="container-fluid">
+          <div class="row fixed-top" style="z-index:20000">
+            <div id="alert_section" class="col-md-auto mx-auto"></div>
+          </div>
         </div>
 
-        <nav class="navbar navbar-inverse navbar-fixed-top" style="z-index:100">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <i class="fa fa-bars" aria-hidden="true"></i>
-                    </button>
-                    <a href="" class="navbar-brand">MedShakeEHR</a>
-                </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="z-index:100">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a href="" class="navbar-brand">MedShakeEHR</a>
 
                 <div class="collapse navbar-collapse" id="top-navbar">
                 {% if user.id > 0 %}
 
-                  <ul class="nav navbar-nav">
+                  {# Menu de navigation / peut être supprimé #}
+                  {% if noMenuInBar is empty %}
+                  <ul class="navbar-nav mr-auto">
                       {% if config.agendaDistantLink %}
-                        <li>
-                            <a href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                        <li class="nav-item">
+                            <a class="d-none d-lg-block nav-link" href="{{ config.agendaDistantLink }}" target="agenda">Agenda</a>
+                            <a class="d-lg-none nav-link" href="{{ config.agendaDistantLink }}">Agenda</a>
                         </li>
                       {% elseif page.agendaUsers|length == 1 and user.id in page.agendaUsers|keys %}
                         {% for k,v in page.agendaUsers %}
-                          <li>
-                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                          <li class="nav-item">
+                              <a class="d-none d-lg-block nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">Agenda</a>
+                              <a class="d-lg-none nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">Agenda</a>
                           </li>
                         {% endfor %}
                       {% elseif page.agendaUsers %}
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Agenda
-                              <span class="caret"></span>
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">Agenda
                           </a>
-                          <ul class="dropdown-menu">
+                          <div class="dropdown-menu">
                             {% if user.id in page.agendaUsers|keys %}
-                              <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
-                              </li>
-                              <li role="separator" class="divider"></li>
+                              <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
+                              <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/">{{ page.agendaUsers[user.id] }}</a>
+
+                              <div class="dropdown-divider"></div>
                             {% endif %}
                             {% for k,v in page.agendaUsers %}
                               {% if k != user.id %}
-                                <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
-                                </li>
+                                <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+                                <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
                               {% endif %}
                             {% endfor %}
-                          </ul>
+                          </div>
                         </li>
                       {% endif %}
-                      <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patients
-                              <span class="caret"></span>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">Patients
                           </a>
-                          <ul class="dropdown-menu">
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
-                              </li>
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
-                              </li>
+                          <div class="dropdown-menu">
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/">Rechercher</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/">Nouveau patient</a>
+
 
                               {% if page.patientsOfTheDay %}
-                                <li role="separator" class="divider"></li>
-                                <li class="dropdown-header">Patients du jour</li>
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
-                                </li>
+                                <div class="dropdown-divider"></div>
+                                <h6 class="dropdown-header">Patients du jour</h6>
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
                                 {% for v in page.patientsOfTheDay %}
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
-                                </li>
-                                {% endfor %}
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
+                                  {% endfor %}
 
                               {% endif %}
-                          </ul>
+                          </div>
                       </li>
-                      <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Praticiens
-                              <span class="caret"></span>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" aria-haspopup="true" aria-expanded="false">Praticiens
                           </a>
-                          <ul class="dropdown-menu">
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
-                              </li>
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
-                              </li>
-                          </ul>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
+                          </div>
                       </li>
-                      <li class="dropdown">
-                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comptabilité
-                              <span class="caret"></span>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" aria-haspopup="true" aria-expanded="false">Comptabilité
                           </a>
-                          <ul class="dropdown-menu">
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
-                              </li>
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
-                              </li>
-                              <li role="separator" class="divider"></li>
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
-                              </li>
-                          </ul>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
+                          </div>
                       </li>
-                      {% if config.apicryptPopHost != '' %}
-                        <li>
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">Boite de réception
+                      {% if config.apicryptPopHost %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">Boite de réception
                                 {% if page.inbox.numberOfMsg > 0 %}
-                                    <span class="badge">{{ page.inbox.numberOfMsg }}</span>
+                                    <span class="badge badge-light">{{ page.inbox.numberOfMsg }}</span>
                                 {% endif %}
                             </a>
                         </li>
                       {% endif %}
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
-                      <li class="dropdown">
-                        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge">!!!</span>{% endif %} <span class="caret"></span></a>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge badge-danger">!!!</span>{% endif %}</a>
 
-                        <ul class="dropdown-menu">
-
+                        <div class="dropdown-menu">
+                            {% if config.utiliserLap == 'true' or  config.VoirRouletteObstetricale == 'true' %}
+                              <h6 class="dropdown-header">Outils</h6>
+                            {% endif %}
+                            {% if config.utiliserLap == 'true' %}
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/lap/">LAP et BDM</a>
+                            {% endif %}
                             {% if config.VoirRouletteObstetricale == 'true' %}
-                              <li class="dropdown-header">Outils</li>
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
-                              </li>
-                              <li role="separator" class="divider"></li>
+                              <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
+                              <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/">Roulette obstétricale</a>
+                              <div role="separator" class="dropdown-divider"></div>
                             {% endif %}
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
-                              <li class="dropdown-header">Historique rappels RDV</li>
+                              <h6 class="dropdown-header">Historique rappels RDV</h6>
 
                               {% if config.mailRappelDaysBeforeRDV %}
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
-                                </li>
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
                               {% endif %}
                               {% if config.smsProvider %}
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
-                                </li>
-                                <li class="disabled"><a {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a></li>
-
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
+                                <a class="dropdown-item disabled" {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a>
                               {% endif %}
-                              <li role="separator" class="divider"></li>
+                              <div class="dropdown-divider"></div>
                             {% endif %}
-                            <li class="dropdown-header">Patients</li>
+                            <h6 class="dropdown-header">Patients</h6>
                             {% if config.smtpHost or config.apicryptSmtpHost %}
-                              <li>
-                                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
-                              </li>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
                             {% endif %}
-                            <li>
-                                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
-                            </li>
-                        </ul>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
+                        </div>
                       </li>
                       {% endif %}
 
                       {% if user.rank == 'admin' %}
-                          <li>
-                              <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+                          <li class="nav-item">
+                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
                           </li>
                       {% endif %}
                   </ul>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+                    <ul class="nav navbar-nav ml-md-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
                                 {{ user.nom }}
-                                <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                  {% if config.PraticienPeutEtrePatient %}
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ user.id }}/">Edition profil</a>
-                                  {% else %}
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
-                                  {% endif %}
-                                </li>
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>
-                                </li>
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer PhoneCapture</a>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">Déconnexion</a>
-                                </li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-right">
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer PhoneCapture</a>
+                              <div role="separator" class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">Déconnexion</a>
+                            </div>
                         </li>
                     </ul>
+                  {% endif %}
                 {% endif %}
                 </div>
-            </div>
+
         </nav>
 
-        <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
+        <div class="container-fluid" role="main" style="padding-top:70px; padding-bottom : 50px;">
             {% block body %}{% endblock %}
         </div>
 
-        {# modal accès phonecapture #}
-        <div class="modal fade" id="accesPhoneCapture" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-body text-center">
-                <span id="QRcodeAccesPhoneCapture"></span><br>
-                {{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/<br>
-                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer un nouveau périphérique</a>
-              </div>
-             </div>
-           </div>
-         </div>
+
+        {# modals #}
+        {% block modals %}{% endblock %}
 
     </body>
 </html>

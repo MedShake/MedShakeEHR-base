@@ -32,18 +32,18 @@
 
  {% block head %}
    {{ parent() }}
-   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
  {% endblock %}
 
  {% block body %}
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
     </li>
-	  <li class="active">
+	  <li class="breadcrumb-item active">
 			  Correspondances DICOM
 	  </li>
   </ol>
@@ -52,7 +52,7 @@
 
    <p></p>
 
-   <table class="table">
+   <table class="table table-sm">
      <tr>
        <th>Tag</th>
        <th colspan="2">Type associé</th>
@@ -66,8 +66,8 @@
        <td colspan="6" class="gras">
          {{ k }}&nbsp;&nbsp;&nbsp;&nbsp;{{ v.0.dicomCodeMeaning }}
        </td>
-       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-default btn-xs pull-right reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-light btn-sm float-right m-1 reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
+        <span class="fa fa-plus" aria-hidden="true"></span>
         </button></td>
       </tr>
      {% for t in v %}
@@ -91,13 +91,15 @@
           {{ t.roundDecimal }}
         </td>
 
-        <td>
-          <button type="button" class="btn btn-default btn-xs edit-by-prim-key" aria-label="Editer" data-id="{{ t.id }}" data-table="dicomTags" data-form="formModalNewType" data-modal="modalNewType">
-          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn btn-default btn-xs delete-by-prim-key" aria-label="Supprimer" data-id="{{ t.id }}" data-table="dicomTags">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </button>
+        <td class="d-flex justify-content-end">
+          <div class="btn-group">
+            <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ t.id }}" data-table="dicomTags" data-form="formModalNewType" data-modal="modalNewType">
+            <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" data-id="{{ t.id }}" data-table="dicomTags">
+            <span class="fa fa-times" aria-hidden="true"></span>
+            </button>
+          </div>
         </td>
 
 
@@ -115,8 +117,8 @@
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
            <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
 
@@ -214,7 +216,7 @@
    			</form>
          </div>
          <div class="modal-footer">
-           <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+           <button type="button" class="btn" data-dismiss="modal">Fermer</button>
            <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
          </div>
        </div>

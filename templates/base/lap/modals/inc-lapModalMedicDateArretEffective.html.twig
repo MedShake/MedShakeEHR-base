@@ -1,0 +1,54 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : changer date d'effet d'un élément de l'historique
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div id="modalDateFinEffective" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title gras">Specifier la date d'arrêt effective d'un traitement</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+          <input name="ligneID" type="hidden" value=""/>
+          <div class="form-group">
+            <label class="control-label" for="">Ce traitement a été stoppé le</label>
+            <div class="input-group input-group-sm mx-0 date datepick">
+              <input name="dateEffectiveDeFin" type="text" class="form-control form-control-sm"/>
+              <div class="input-group-append input-group-text">
+                <span class="fa fa-calendar"></span>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary marquerArretEffectifGo">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>

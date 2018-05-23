@@ -43,15 +43,16 @@
      $dataform = new msObjet();
      $dataform=$dataform->getObjetDataByID($_POST['objetID'], ['value']);
      $p['page']['courrier']['pre']=msTools::unbbcodifier($dataform['value']);
- } elseif (isset($_POST['modeleID'])) {
+ } elseif (isset($_POST['modele'])) {
      $courrier = new msCourrier();
-     $courrier->setModeleID($_POST['modeleID']);
+     $courrier->setModeleIDByName($_POST['modele']);
+     $modeleID=$courrier->getModeleID();
      $courrier->setPatientID($_POST['patientID']);
      $courrier->setModule($p['user']['module']);
      $p['page']['courrier']=$courrier->getCourrierData();
 
      $data=new msData();
-     if ($printModel=$data->getDataType($_POST['modeleID'], ['formValues'], ['formValues'])) {
+     if ($printModel=$data->getDataType($modeleID, ['formValues'], ['formValues'])) {
          $p['page']['courrier']['printModel']=$printModel['formValues'].'.html.twig';
      } else {
          $p['page']['courrier']['printModel']='defaut.html.twig';
@@ -61,9 +62,9 @@
  }
 
  $p['page']['courrier']['actionForm']="/makepdf/".$_POST['patientID']."/".$p['page']['printType'].'/';
- if (isset($_POST['modeleID'])) {
-     $p['page']['courrier']['actionForm'].=$_POST['modeleID'].'/';
+ if (isset($modeleID)) {
+     $p['page']['courrier']['actionForm'].=$modeleID.'/';
  }
  if (isset($_POST['objetID'])) {
-     $p['page']['courrier']['actionForm'].=$_POST['objetID'].'/';
+     $p['page']['courrier']['actionForm'].=$modeleID.'/';
  }

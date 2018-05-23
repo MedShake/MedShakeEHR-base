@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > administratif
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h4 class="text-uppercase">Conditions de prescription et de délivrance :</h4>
+
+{% if page.administratif.presdel is not empty %}
+  <table class="table table-sm table-hover">
+    <tbody>
+      <tr {% if page.administratif.presdel.rh == "OUI" %}class="warning"{% endif %}>
+        <td>Réserve hospitalière</td>
+        <td>{{ page.administratif.presdel.rh }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.ph == "OUI" %}class="warning"{% endif %}>
+        <td>Prescription hospitalière</td>
+        <td>{{ page.administratif.presdel.ph }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.puh == "OUI" %}class="warning"{% endif %}>
+        <td>Prescription initiale hospitalière</td>
+        <td>{{ page.administratif.presdel.puh }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.sp == "OUI" %}class="warning"{% endif %}>
+        <td>Surveillance particulière</td>
+        <td>{{ page.administratif.presdel.sp }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.ps == "OUI" %}class="warning"{% endif %}>
+        <td>Prescription spécialiste</td>
+        <td>{{ page.administratif.presdel.ps }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.t2a == "OUI" %}class="warning"{% endif %}>
+        <td>Facturation hors GHS</td>
+        <td>{{ page.administratif.presdel.t2a }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.orphelin == "OUI" %}class="warning"{% endif %}>
+        <td>Médicament orphelin</td>
+        <td>{{ page.administratif.presdel.orphelin }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.orph_cref == "OUI" %}class="warning"{% endif %}>
+        <td>Médicament orphelin avec centre de référence</td>
+        <td>{{ page.administratif.presdel.orph_cref }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.sage_f == "OUI" %}class="warning"{% endif %}>
+        <td>Prescription par sage-femme</td>
+        <td>{{ page.administratif.presdel.sage_f }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.r_ide == "OUI" %}class="warning"{% endif %}>
+        <td>Renouvellement par IDE</td>
+        <td>{{ page.administratif.presdel.r_ide }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.podo == "OUI" %}class="warning"{% endif %}>
+        <td>Prescription par pédicure</td>
+        <td>{{ page.administratif.presdel.podo }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.atu == "OUI" %}class="warning"{% endif %}>
+        <td>Autorisation temporaire d’utilisation</td>
+        <td>{{ page.administratif.presdel.atu }}</td>
+      </tr>
+      <tr {% if page.administratif.presdel.prep_h == "OUI" %}class="warning"{% endif %}>
+        <td>Préparation hospitalière</td>
+        <td>{{ page.administratif.presdel.prep_h }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endif %}
+
+<p>{{ page.administratif.produit.sp_cdt_prescr_texte|nl2br }}</p>
+
+<h4 class="text-uppercase">Autres données :</h4>
+<table class="table table-sm table-hover">
+  <tbody>
+    <tr>
+      <td>Code UCD13</td>
+      <td>{{ page.administratif.produit.sp_cipucd13 }}</td>
+    </tr>
+    <tr>
+      <td>Code UCD7</td>
+      <td>{{ page.administratif.produit.sp_cipucd }}</td>
+    </tr>
+    <tr>
+      <td>Code Identifiant spécialité</td>
+      <td>{{ page.administratif.produit.sp_nl }}</td>
+    </tr>
+    <tr>
+      <td>Laboratoire(s) titulaire(s) AMM</td>
+      <td>
+        <ul class="list-unstyled">
+          {% for laboTit in page.administratif.labSpe1 %}
+            <li>{{ laboTit.nomlab }} ({{ laboTit.refof }} {% if laboTit.dateref|length > 10 %}{{ laboTit.dateref|date("d/m/Y") }}{% else %}{{ laboTit.dateref }}{% endif %})</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>Laboratoire(s) exploitant(s)</td>
+      <td>
+        <ul class="list-unstyled">
+          {% for laboE in page.administratif.labSpe2 %}
+            <li>{{ laboE.nomlab }} ({{ laboE.refof }} {% if laboE.dateref|length > 10 %}{{ laboE.dateref|date("d/m/Y") }}{% else %}{{ laboE.dateref }}{% endif %})</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>

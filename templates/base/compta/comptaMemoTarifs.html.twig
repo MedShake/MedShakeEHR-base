@@ -32,7 +32,7 @@
 
 {% block head %}
     {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
     <style>
       .texteadroite {
         text-align: right;
@@ -53,8 +53,8 @@
           {% if page.users|length > 1 %}
           <ul class="nav nav-tabs" role="tablist">
               {% for id, user in page.users %}
-                <li role="presentation" {% if page.selectUser == id %}class="active"{% endif %}>
-                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/{{ id }}/" aria-controls="prescriptions" role="tab">{% if id == 0 %}Tarifs communs{% else %}Tarifs : {{ user }}{% endif %}</a>
+                <li role="presentation" class="nav-item">
+                    <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/{{ id }}/" aria-controls="prescriptions" role="tab">{% if id == 0 %}Tarifs communs{% else %}Tarifs : {{ user }}{% endif %}</a>
                 </li>
               {% endfor %}
 
@@ -71,15 +71,18 @@
 
                     {% for k, v in page.tabTypes %}
                         <h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h2>
-                        <table class="table table-hover">
+                        <table class="table table-sm mb-0 table-hover">
                             <thead>
                                 <tr>
-                                    <th class="col-md-2">Code</th>
-                                    <th class="col-md-3">Label</th>
-
-                                    <th class="texteadroite">Tarif&nbsp;SS</th>
-                                    <th class="texteadroite">Dépassement</th>
-                                    <th class="texteadroite">Total</th>
+                                    <th>Code</th>
+                                    <th>Label</th>
+                                    {% if page.secteurs[k] != '' %}
+                                      <th class="texteadroite">Tarif&nbsp;SS</th>
+                                      <th class="texteadroite">Dépassement</th>
+                                      <th class="texteadroite">Total</th>
+                                    {% else %}
+                                      <th class="texteadroite">Tarif</th>
+                                    {% endif %}
                                     <th></th>
 
                                 </tr>
@@ -94,22 +97,27 @@
                                         <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
 
                                         <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">
-                                            <button type="button" class="btn btn-default btn-xs typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
-                                                <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                                        {% if page.secteurs[k] != '' %}
+                                          <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
+                                          <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+                                        {% endif %}
+                                        <td class="d-flex justify-content-end">
+                                          <div class="btn-group">
+                                            <button type="button" class="btn btn-light btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
+                                                <span class="fa fa-search-plus" aria-hidden="true"></span>
                                             </button>
+                                          </div>
                                         </td>
                                     </tr>
                                     {% for key,det in w.details %}
                                       <tr class="active small details details{{ w.id }}" >
                                         <td></td>
-                                        <td>{{ key }}  ({{ det.pourcents }}%)</td>
-
-                                        <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
-                                        <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
-                                        <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        <td>{{ key }}{% if page.secteurs[k] != '' %} ({{ det.pourcents }}%){% endif %}</td>
+                                          <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        {% if page.secteurs[k] != '' %}
+                                          <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
+                                          <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                        {% endif %}
                                         <td colspan="2"></td>
                                       </tr>
                                     {% endfor %}

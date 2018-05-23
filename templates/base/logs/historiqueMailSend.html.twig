@@ -32,54 +32,55 @@
 
 {% block head %}
     {{ parent() }}
-        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js"></script>{% endif %}
+        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js?{{ modules.base }}"></script>{% endif %}
 {% endblock %}
 
 {% block body %}
 <h1>Historique d'envoi par mail</h1>
 <p>
-<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/" role="button">Retour dossier patient</a>
+<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/">
+  Retour dossier patient
+</a>
 </p>
-    <div class="container-fluid">
-        <div class="row">
-            <table class="table table-hover ">
-                <thead>
-                    <tr>
-                        <th class="col-md-1">Date</th>
-                        <th class="col-md-2">De</th>
-                        <th class="col-md-2">A</th>
-                        <th class="col-md-3">Sujet</th>
-                        <th class="col-md-4">Message</th>
-                    </tr>
-                </thead>
-                <tbody>
+<div class="row">
+  <div class="col">
+    <table class="table table-sm mb-0 table-hover  ">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>De</th>
+                <th>A</th>
+                <th>Sujet</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
 
-                    {% for v in page.mailListe %}
-                        <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
-                            <td>{{ v.creationDate }}</td>
-                            <td>
-                              {{ page['expediteurs'][v.expediteurID] }}<br>
-                              <small>{{ v.mailFrom|e }}</small>
-                            </td>
-                            <td><strong>
-                              {% if v.mailToEcofaxName %}{{ v.mailToEcofaxName }}<br>{% endif %}
-                              {{ v.mailTo|e }}
-                              {{ v.mailToApicrypt|e }}
-                            </strong>
-                            <div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div>
-                          </td>
-                            <td>
-                              {{ v.mailSujet|e }}
+            {% for v in page.mailListe %}
+                <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
+                    <td>{{ v.creationDate }}</td>
+                    <td>
+                      {{ page['expediteurs'][v.expediteurID] }}<br>
+                      <small>{{ v.mailFrom|e }}</small>
+                    </td>
+                    <td><strong>
+                      {% if v.mailToEcofaxName %}{{ v.mailToEcofaxName }}<br>{% endif %}
+                      {{ v.mailTo|e }}
+                      {{ v.mailToApicrypt|e }}
+                    </strong>
+                    <div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div>
+                  </td>
+                    <td>
+                      {{ v.mailSujet|e }}
 
-                            </td>
-                            <td class="small">{{ v.mailBody|e|nl2br }}</td>
-                        </tr>
+                    </td>
+                    <td class="small">{{ v.mailBody|e|nl2br }}</td>
+                </tr>
 
-                    {% endfor %}
-                </tbody>
-            </table>
-
-        </div>
-    </div>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
 
 {% endblock %}

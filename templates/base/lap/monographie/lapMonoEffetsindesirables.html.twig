@@ -1,0 +1,150 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > Effets indesirables
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<ul class="nav nav-tabs gras" role="tablist" style="margin-bottom : 2em;">
+  <li class="nav-item">
+    <a class="nav-link active" href="#tabei" role="tab" data-toggle="tab">Dose thérapeutique</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#tabeisurdo" role="tab" data-toggle="tab">Surdosage</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+
+  <div role="tabpanel" class="tab-pane active" id="tabei">
+
+    {% for key, fiche in page.effetsindesirables.effindSpe %}
+
+      <div class="card bg-light mb-2 p-2">
+
+        {% if fiche.data.libind %}
+        <h4 class="card-title gras">
+          {{ fiche.data.libind }}
+          {% if fiche.liste | length > 1 %}
+            <small>({{ fiche.liste|length }}
+              fiches)</small>
+          {% endif %}
+        </h4>
+        {% endif %}
+
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="gras text-uppercase">Effets indésirables cliniques</h5>
+            <ul class="list-unstyled small">
+              {% for idfiche, array in fiche.liste %}
+                {% if fiche.liste[idfiche][1] | length > 0 and fiche.liste | length > 1 %}
+                  <li class="gras text-uppercase">Fiche
+                    {{ loop.index }}
+                    :</li>
+                {% endif %}
+                {% for idtype, item in array[1] %}
+                  <li>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/ei/{{ page.spe }}/{{ idfiche }}/" target="_blank">{{ item }}</a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="gras text-uppercase">Effets indésirables paracliniques</h5>
+            <ul class="list-unstyled small">
+              {% for idfiche, array in fiche.liste %}
+                {% if fiche.liste[idfiche][2] | length > 0 and fiche.liste | length > 1 %}
+                  <li class="gras text-uppercase">Fiche
+                    {{ loop.index }}
+                    :</li>
+                {% endif %}
+                {% for idtype, item in array[2] %}
+                  <li>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/ei/{{ page.spe }}/{{ idfiche }}/" target="_blank">{{ item }}</a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="tabeisurdo">
+    {% for key, fiche in page.effetsindesirables.effindSpeS %}
+
+      <div class="card bg-light mb-2 p-2">
+
+        <h4 class="card-title gras">
+          {{ fiche.data.libind }}
+          {% if fiche.liste | length > 1 %}
+            <small>({{ fiche.liste|length }}
+              fiches)</small>
+          {% endif %}
+        </h4>
+
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="gras text-uppercase">Effets indésirables cliniques</h5>
+            <ul class="list-unstyled small">
+              {% for idfiche, array in fiche.liste %}
+                {% if fiche.liste[idfiche][3] | length > 0 and fiche.liste | length > 1 %}
+                  <li class="gras text-uppercase">Fiche
+                    {{ loop.index }}
+                    :</li>
+                {% endif %}
+                {% for idtype, item in array[3] %}
+                  <li>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/eis/{{ page.spe }}/{{ idfiche }}/" target="_blank">{{ item }}</a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="gras text-uppercase">Effets indésirables paracliniques</h5>
+            <ul class="list-unstyled small">
+              {% for idfiche, array in fiche.liste %}
+                {% if fiche.liste[idfiche][4] | length > 0 and fiche.liste | length > 1 %}
+                  <li class="gras text-uppercase">Fiche
+                    {{ loop.index }}
+                    :</li>
+                {% endif %}
+                {% for idtype, item in array[4] %}
+                  <li>
+                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/eis/{{ page.spe }}/{{ idfiche }}/" target="_blank">{{ item }}</a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>

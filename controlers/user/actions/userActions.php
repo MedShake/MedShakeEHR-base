@@ -24,6 +24,7 @@
  * User : les actions avec reload de page
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -34,9 +35,6 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
     'userParametersPassword', // changer le mot de passe de l'utilisateur courant
-    'userParametersAgenda', // changer les paramètres d'agenda
-    'userParametersConsultations', // changer les paramètres de consultations
-    'userParametersClicRdv', // changer les paramètres clicRDV
 );
 if (!in_array($m, $acceptedModes)) {
     die;

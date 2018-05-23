@@ -33,25 +33,25 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
   <h1>Tags disponibles pour l'objet</h1>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
         <th>#</th>
-        <th class="col-md-2">Tag</th>
-        <th class="col-md-2">Label</th>
+        <th>Tag</th>
+        <th>Label</th>
         <th>Valeur</th>
       </tr>
     </thead>
     <tbody>
       {% for k,v in page.tabTags %}
         <tr>
-          <td class="gras" colspan="4">
+          <td class="gras table-primary" colspan="4">
             {% if k =='calc' %}Tags calculés{% else %}{{ v.catName }}{% endif %}
           </td>
         </tr>

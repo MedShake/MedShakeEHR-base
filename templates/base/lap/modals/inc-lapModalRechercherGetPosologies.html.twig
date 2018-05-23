@@ -1,0 +1,195 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : rapatrier posologies dans la modal de prescription
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<p class="lead">{{ page['posologies']['posoFiches']|length }} {% if page['posologies']['posoFiches']|length > 1 %}schémas posologiques{% else %}schéma posologique{% endif %}</p>
+
+{% set rand = random(10000) %}
+
+<div  id="accordion{{ rand }}" role="tablist" aria-multiselectable="true">
+
+  {% for posologie in page['posologies']['posoFiches'] %}
+  <div class="card mb-3">
+    <div class="card-header" role="tab" id="heading{{ posologie.nofic }}{{ rand }}" data-toggle="collapse" data-parent="#accordion{{ rand }}" data-target="#collapse{{ posologie.nofic }}{{ rand }}" aria-expanded="true" aria-controls="collapse{{ posologie.nofic }}{{ rand }}" style="cursor: pointer">
+
+      <h4 class="card-title">
+         Schéma posologique n°{{ loop.index }}
+      </h4>
+
+       <div class="row">
+         <div class="col-md-6">
+           <h5>Voie(s) d'administration :</h5>
+           <ul class="list-unstyled small">
+             {% for voies in page.posologies.posoVoies[posologie.nofic] %}
+               <li>{{ voies.info_01 }}</li>
+             {% endfor %}
+           </ul>
+
+           <h5>Terrain(s) physio-pathologique(s) :</h5>
+           <ul class="list-unstyled small">
+             {% for terrain in page.posologies.posoTerrains[posologie.nofic] %}
+               <li>{{ terrain }}</li>
+             {% endfor %}
+           </ul>
+
+         </div>
+         <div class="col-md-6">
+         <h5>Indication(s) :</h5>
+         <ul class="list-unstyled small">
+           {% for indication in page.posologies.posoIndications[posologie.nofic] %}
+             <li>{{ indication.info_01 }}</li>
+           {% endfor %}
+         </ul>
+         <ul class="list-unstyled small" style="margin-top : 1em;">
+           {% for terrainc in page.posologies.posoIndicationsComp[posologie.nofic] %}
+             <li>{{ terrainc.info_01 }}</li>
+           {% endfor %}
+         </ul>
+         </div>
+       </div>
+
+    </div>
+    <div id="collapse{{ posologie.nofic }}{{ rand }}" class="collapse {% if loop.index == 1 and page['posologies']['poso']|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ posologie.nofic }}{{ rand }}">
+      <div class="card-body">
+
+         {% for poso in page.posologies.detPosoSpe[posologie.nofic] %}
+
+           <h4>Posologie {{ poso.dose.0.nature }}</h4>
+
+           {% if poso.frequenceCom is not empty %}
+           <ul class="list-unstyled">
+             {% for com in poso.commentaire %}
+               <li>{{ com }}</li>
+             {% endfor %}
+           </ul>
+           {% endif %}
+
+             <table class="table table-sm table-hover">
+               <tbody>
+                 <tr>
+                   <td>Dose</td>
+                   <td>
+                     <ul class="list-unstyled">
+                       {% for dose in poso.dose %}
+                         <li>
+                         {% if dose.mini == dose.maxi and dose.mini > 0 %}
+                           {{ dose.maxi }} {{ dose.info_02 }}
+                         {% elseif dose.mini and dose.maxi %}
+                           {{ dose.mini }} à {{ dose.maxi }} {{ dose.info_02 }}
+                         {% elseif dose.mini or dose.maxi %}
+                           {{ dose.mini }}{{ dose.maxi }} {{ dose.info_02 }}
+                         {% endif %}</li>
+                       {% endfor %}
+                     </ul>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td>Fréquence</td>
+                   <td>
+                     <ul class="list-unstyled">
+                     {% for fqc in poso.frequence %}
+                       {% if fqc.mini %}<li>minimale : {{ fqc.mini }} {{ fqc.info_02 }}</li>{% endif %}
+                       {% if fqc.maxi %}<li>maximale : {{ fqc.maxi }} {{ fqc.info_03 }}</li>{% endif %}
+                     {% endfor %}
+                     </ul>
+
+                     {% if poso.frequenceCom is not empty %}
+                       <ul class="list-unstyled small" style="margin-top : 1em;">
+                       {% for fqc in poso.frequenceCom %}
+                         <li>{{ fqc.info_01 }}</li>
+                       {% endfor %}
+                       </ul>
+                     {% endif %}
+                   </td>
+                 </tr>
+
+                 <tr>
+                   <td>Durée de traitement</td>
+                   <td>
+                     <ul class="list-unstyled">
+                       {% for duree in poso.duree %}
+                         {% if duree.mini %}<li>minimale : {{ duree.mini }} {{ duree.info_02 }}</li>{% endif %}
+                         {% if duree.maxi %}<li>maximale : {{ duree.maxi }} {{ duree.info_03 }}</li>{% endif %}
+                       {% endfor %}
+                     </ul>
+
+                     {% if poso.dureeCom is not empty %}
+                       <ul class="list-unstyled" style="margin-top : 1em;">
+                       {% for dureeCom in poso.dureeCom %}
+                         <li>{{ dureeCom.info_01 }}</li>
+                       {% endfor %}
+                       </ul>
+                     {% endif %}
+                   </td>
+                 </tr>
+
+                 {% if page.posologies.detPosoAdapt[posologie.nofic] is not empty %}
+                 <tr>
+                   <td>Adaptation posologique</td>
+                   <td>
+                     <ul class="list-unstyled">
+                       {% for adapt in page.posologies.detPosoAdapt[posologie.nofic] %}
+                         <li>{{ adapt.info_01 }}</li>
+                       {% endfor %}
+                     </ul>
+                   </td>
+                 </tr>
+                 {% endif %}
+
+                 {% if page.posologies.detPosoSurvei[posologie.nofic] is not empty %}
+                 <tr>
+                   <td>Surveillance</td>
+                   <td>
+                     <ul class="list-unstyled">
+                       {% for surveil in page.posologies.detPosoSurvei[posologie.nofic] %}
+                         <li>{{ surveil.info_01 }}</li>
+                       {% endfor %}
+                     </ul>
+                   </td>
+                 </tr>
+                 {% endif %}
+
+               </tbody>
+             </table>
+         {% endfor %}
+
+        <p>{{ page.posologies.posoText[posologie.nofic]['texte']|nl2br }}</p>
+
+        {% if page.posologies.posoRef[posologie.nofic] is not empty %}
+          <h4>Référence(s) officielle(s)</h4>
+          <ul class="list-unstyled">
+          {% for ref in page.posologies.posoRef[posologie.nofic] %}
+          <li>{{ ref.info_01 }} {{ ref.date_01|date("d/m/Y") }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>

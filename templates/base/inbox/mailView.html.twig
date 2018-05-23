@@ -27,10 +27,10 @@
  #}
 
 {% if page.mail.mailHeaderInfos.from %}
- <div class="panel panel-default">
-     <div class="panel-heading gras">Message</div>
-     <div class="panel-body">
-       <table class="table table-hover">
+ <div class="card mb-3">
+     <div class="card-header gras">Message</div>
+     <div class="card-body">
+       <table class="table table-sm mb-0 table-hover ">
            <thead>
                <tr>
                    <th>De</th>
@@ -50,11 +50,11 @@
 </div>
 {% endif %}
 
-<div class="panel panel-default">
-    <div class="panel-heading gras">Patient</div>
-    <div class="panel-body">
+<div class="card mb-3">
+    <div class="card-header gras">Patient</div>
+    <div class="card-body">
 
-        <table class="table table-hover">
+        <table class="table table-sm mb-0 table-hover ">
             <thead>
                 <tr>
                     <th></th>
@@ -87,7 +87,7 @@
                 </tr>
                 {% for k, v in page.mail.patientsPossibles %}
 
-                    <tr class="patietSelect {% if loop.index0 == 0 %} success gras{% endif %}" data-patientID="{{ v.id }}">
+                    <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}">
                         <td>#{{ v.id }}</td>
                         <td>
                           {% if v.1 and v.2 %}
@@ -110,8 +110,8 @@
                             <small>{{ v.180|e }}</small>
                         </td>
                         <td>
-                            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" role="button" target="_blank">
-                                <span class="glyphicon glyphicon-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
+                              <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                             </a>
                         </td>
 
@@ -125,60 +125,60 @@
 </div>
 
 {% if page.mail.archived == 'n' %}
-  <form id="classerDansDossier" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/classerDansDossier/" target="_blank" method="post" class="form-horizontal" style="margin-bottom : 20px;">
+  <form id="classerDansDossier" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/classerDansDossier/" target="_blank" method="post">
+    <div class="row mb-1">
       <input type="hidden" name="mailID" value="{{ page.mail.id }}"/>
 
-      <div class="form-group">
-          <label for="titreOptionnel" id="idConfirmPatientIDLabel" style="display : none" class="col-sm-6 control-label">Numéro de dossier</label>
-          <div class="col-sm-6">
-              <input type="hidden" class="form-control" id="idConfirmPatientID" name="patientID" value="{{ page.mail.patientsPossibles.0.id }}">
-          </div>
+      <div class="form-group col-3">
+          <label for="idConfirmPatientID" id="idConfirmPatientIDLabel" style="display : none" >Numéro de dossier</label>
+          <input type="hidden" class="form-control" id="idConfirmPatientID" name="patientID" value="{{ page.mail.patientsPossibles.0.id }}">
       </div>
-      <div class="form-group">
-          <label for="titreOptionnel" class="col-sm-6 control-label">Titre (optionnel)</label>
-          <div class="col-sm-6">
-              <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.mail.hprimExpediteur }}">
-          </div>
+      <div class="form-group col-9">
+          <label for="titreOptionnel">Titre (optionnel)</label>
+          <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.mail.hprimExpediteur }}">
       </div>
-      <button type="submit" id="submitBoutonClasser" class="btn btn-danger pull-right" {% if page.mail.patientsPossibles.0.id <= 0 %} style="display : none" {% endif %}>Classer dans le dossier #<span id="submitIndicID">{{ page.mail.patientsPossibles.0.id }}</span>
-      </button>
+    </div>
+    <div class="row mb-4">
+      <div class="col text-right">
 
-      <div class="btn-group pull-right" style="margin-right : 5px;">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-              <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-              <li>
-                  <a id="specifierPatientIDManu" href="#">Spécifier numéro de dossier manuellement</a>
-              </li>
-              <li role="separator" class="divider"></li>
-              <li>
-                  <a class="confirmBefore" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppSansClasser/{{ page.mail.id }}/">Supprimer sans archiver</a>
-              </li>
-          </ul>
-      </div>
+        <div class="btn-group dropleft m-1">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-wrench" aria-hidden="true"></span>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" id="specifierPatientIDManu" href="#">Spécifier numéro de dossier manuellement</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item confirmBefore" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppSansClasser/{{ page.mail.id }}/">Supprimer sans archiver</a>
+            </div>
+        </div>
 
-      <span class="clearfix"></span>
-  </form>
+        <button type="submit" id="submitBoutonClasser" class="btn btn-danger m-1" {% if page.mail.patientsPossibles.0.id <= 0 %} style="display : none" {% endif %}>Classer dans le dossier #<span id="submitIndicID">{{ page.mail.patientsPossibles.0.id }}</span>
+        </button>
+
+    </div>
+  </div>
+</form>
 {% elseif page.mail.archived == 'c' %}
-
-  <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppInbox/" method="post" class="form-horizontal" style="margin-bottom : 20px;">
-      <input type="hidden" name="mailID" value="{{ page.mail.id }}"/>
-      <button type="submit" id="submitBoutonSupp" class="btn btn-danger pull-right">Déjà classé : supprimer
-      </button>
-      <span class="clearfix"></span>
-  </form>
+<div class="row mb-4">
+  <div class="col text-right">
+    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/suppInbox/" method="post">
+        <input type="hidden" name="mailID" value="{{ page.mail.id }}"/>
+        <button type="submit" id="submitBoutonSupp" class="btn btn-danger m-1">Déjà classé : supprimer
+        </button>
+    </form>
+  </div>
+</div>
 {% endif %}
 
 {% if page.mail.pjSerializeName %}
-  <div class="panel panel-default">
-      <div class="panel-heading gras">Pièces jointes</div>
-      <div class="panel-body">
+  <div class="card mb-3">
+      <div class="card-header gras">Pièces jointes</div>
+      <div class="card-body">
           {% for pj in page.mail.pjSerializeName %}
-              <a class="btn btn-info" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" role="button" target="_blank">
-                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                  {{ pj }}</a>
+              <a class="btn btn-info" role="button" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
+                <span class="fa fa-file" aria-hidden="true"></span>
+                {{ pj }}
+              </a>
           {% endfor %}
       </div>
   </div>
@@ -186,9 +186,9 @@
 
 {% if page.mail.bioHprim %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading gras">Résultats biologiques extraits du corps du message</div>
-        <table class="table table-striped table-hover">
+    <div class="card mb-3">
+        <div class="card-header gras">Résultats biologiques extraits du corps du message</div>
+        <table class="table table-sm mb-0 table-striped table-hover">
             <thead>
                 <tr>
                     <th>Analyse</th>
@@ -199,7 +199,7 @@
             </thead>
             <tbody>
                 {% for v in page.mail.bioHprim %}
-                    <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="danger"{% endif %}>
+                    <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="table-danger"{% endif %}>
                         <td>
                             {{ v.label|e }}
                         </td>
@@ -222,9 +222,9 @@
 
 
 
-<div class="panel panel-default">
-    <div class="panel-heading gras">Corps du message</div>
-    <div class="panel-body">
+<div class="card mb-3">
+    <div class="card-header gras">Corps du message</div>
+    <div class="card-body">
         {{ page.mail.corps|e|nl2br }}
     </div>
 </div>

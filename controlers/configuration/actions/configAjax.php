@@ -24,6 +24,7 @@
  * Config : les requêtes ajax
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 header('Content-Type: application/json');
@@ -55,7 +56,9 @@ $acceptedModes=array(
     'configFormEdit', // Edition du formulaire
     'configCronJobs', //Configurer les crons
     'configInstallModule', // Installer un module
-    'configSpecificUserParam' // Attribuer une config spécifique à un utilisateur
+    'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
+    'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
+    'configUserParamDelete' // Supprimer un paramètre dans la configuration spécifique à un utilisateur
 );
 if (!in_array($m, $acceptedModes)) {
     die;
@@ -184,6 +187,16 @@ elseif ($m=='configInstallModule') {
 // Attribuer une config spécifique à un utilisateur
 elseif ($m=='configSpecificUserParam') {
     include('inc-ajax-configSpecificUserParam.php');
+}
+
+// Créer un paramètre dans la configuration spécifique à un utilisateur
+elseif ($m=='configUserParamCreate') {
+    include('inc-ajax-configUserParamCreate.php');
+}
+
+// Supprimer un paramètre dans la configuration spécifique à un utilisateur
+elseif ($m=='configUserParamDelete') {
+    include('inc-ajax-configUserParamDelete.php');
 }
 
 die();

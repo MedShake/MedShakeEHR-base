@@ -1,0 +1,236 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > LAP : tab patient racine
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="row">
+  {# Colonne de gauche : données physio #}
+  <div id="patientLateralData" class="col-md-2 px-0 pl-md-0 pr-md-3">
+  </div>
+
+  {# Colonne de droite #}
+  <div class="col-md-10">
+
+    {# Onglets #}
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a id="ordonnanceTabL" class="nav-link active" href="#ordonnanceTab" aria-selected="true" aria-controls="ordonnanceTab" role="tab" data-toggle="tab">Nouvelle ordonnance</a>
+      </li>
+      <li class="nav-item">
+        <a id="prescriptionspreTabL" class="nav-link" href="#prescriptionspreTab" aria-controls="prescriptionspreTab" aria-selected="false" role="tab" data-toggle="tab">Prescriptions types</a>
+      </li>
+      <li class="nav-item">
+        <a id="tttencoursTabL" class="nav-link" href="#tttencoursTab" aria-controls="tttencoursTab" aria-selected="false" role="tab" data-toggle="tab">Traitement en cours</a>
+      </li>
+      <li  class="nav-item">
+        <a id="ordohistoriqueTabL" class="nav-link" href="#ordohistoriqueTab" aria-controls="ordohistoriqueTab" aria-selected="false" role="tab" data-toggle="tab">Historique des ordonnances</a>
+      </li>
+      <li class="nav-item">
+        <a id="tthistoriqueTabL" class="nav-link" href="#tthistoriqueTab" aria-controls="tthistoriqueTab" aria-selected="false" role="tab" data-toggle="tab">Historique des traitements</a>
+      </li>
+      <li class="nav-item" style="display: none;">
+        <a id="resultsDetaTabL" class="nav-link" href="#resultsDetaTab" aria-controls="messages" role="tab" data-toggle="tab">Résultats détaillés</a>
+      </li>
+    </ul>
+
+    <div class="tab-content py-4">
+
+      {# Onglet Ordonnance #}
+      <div role="tabpanel" class="tab-pane active" id="ordonnanceTab">
+        <div class="row bottom-space">
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary mr-1 nouvellePrescription">
+              <span class="fa fa-plus" aria-hidden="true"></span>
+              Nouvelle prescription</button>
+
+            <div class="btn-group mr-1">
+              <button type="button" class="btn btn-secondary analyserPrescription">
+                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                Analyser</button>
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu mr-1">
+                <a href="#" class="dropdown-item analyserPrescription">Analyser les prescriptions en fonction du paramétrage utilisateur (défaut)</a>
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Voir sans aucune restriction</h6>
+                <a href="#" class="dropdown-item analyseWithNoRestrictionPhysio">Alertes données physiologiques patient</a>
+                <a href="#" class="dropdown-item analyseWithNoRestrictionSam">Alertes SAM</a>
+                <a href="#" class="dropdown-item analyserPrescription">Analyses prescriptions</a>
+              </div>
+            </div>
+
+            <div class="btn-group mr-1">
+              <button type="button" class="btn btn-secondary printAndSaveOrdo">
+                <span class="fa fa-print" aria-hidden="true"></span>
+                Imprimer et sauvegarder</button>
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu mr-1">
+                <a href="#" class="dropdown-item printAndSaveOrdo">
+                  <span class="fa fa-print" aria-hidden="true"></span>
+                  Imprimer et sauvegarder</a>
+                <a href="#" class="dropdown-item printAnonymeAndSaveOrdo">
+                  <span class="fa fa-print" aria-hidden="true"></span>
+                  Imprimer sans infos prescripteur et sauvegarder</a>
+                <a href="#" class="dropdown-item saveOrdo">
+                  <span class="fa fa-save" aria-hidden="true"></span>
+                  Sauvegarder uniquement</a>
+                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLapPresPreSave">
+                  <span class="fa fa-save" aria-hidden="true"></span>
+                    Sauvegarder comme prescriptions types</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <input type="text" id="ordoName" class="form-control" placeholder="Titre de l'ordonnance" value=""/>
+          </div>
+
+          <div class="col-md-1">
+            <div class="btn-group float-right">
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-wrench" aria-hidden="true"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="#" class="dropdown-item convertAllDci">
+                  <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                  Convertir l'ordonnance en DCI</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item removeAllLignesPrescription">
+                  <span class="fa fa-trash" aria-hidden="true"></span>
+                  Supprimer tout</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item ordoLiveRestore">
+                  <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                  Récupération d'urgence</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row" id="samsZoneOrdo"></div>
+
+        <div class="row">
+          <div id="conteneurOrdonnanceCourante" class="col-md-12">
+            <div class="alert alert-primary gras" role="alert">Prescriptions ALD</div>
+            <div style="min-height:25px;" class="connectedOrdoZones ald conteneurPrescriptionsALD"></div>
+            <div class="alert alert-dark gras mt-3" role="alert">Prescriptions standards</div>
+            <div style="min-height:25px;" class="connectedOrdoZones conteneurPrescriptionsG"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-right coutOrdo"></div>
+        </div>
+      </div>
+
+      {# Onglet Traitement en cours #}
+      <div role="tabpanel" class="tab-pane" id="tttencoursTab">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <button type="button" class="btn btn-secondary saisirTTenCours">
+                <span class="fa fa-plus" aria-hidden="true"></span>
+                Saisir un traitement en cours</button>
+              <button type="button" class="btn btn btn-outline-secondary newCourrier" data-modele="modeleCourrierTtEnCours">
+                <span class="fa fa-print" aria-hidden="true"></span>
+                Imprimer</button>
+              {# Nécessité d'une fonction de la bdm pour aboutir.
+              <button type="button" class="btn btn btn-outline-secondary effetsIndesirables">Effets indésirables</button> #}
+            </div>
+          </div>
+        </div>
+        <div id="samsZoneTTenCours" class="row"></div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-info gras" role="alert">Traitements chroniques
+              <small>(Traitements en cours ou présumé en cours de par la nature chronique)</small>
+            </div>
+            <div id="traitementEnCoursChronique" class="traitementEnCoursChronique"></div>
+
+            <div class="alert alert-secondary gras" role="alert">Traitements ponctuels</div>
+            <div id="traitementEnCoursPonctuel" class="traitementEnCoursPonctuel"></div>
+          </div>
+        </div>
+      </div>
+
+      {# Onglet historique des ordo #}
+      <div role="tabpanel" class="tab-pane" id="ordohistoriqueTab">
+        <div class="row bottom-space">
+          <div class="col-md-12">
+            <div id="historiqueOrdos"></div>
+          </div>
+        </div>
+
+      </div>
+
+      {# Onglet historique des traitements #}
+      <div role="tabpanel" class="tab-pane" id="tthistoriqueTab">
+        <div class="row bottom-space">
+          <div class="col-12">
+            <div id="historiqueTT"></div>
+          </div>
+        </div>
+
+      </div>
+
+      {# Onglet prescriptions types #}
+      <div role="tabpanel" class="tab-pane" id="prescriptionspreTab">
+        <div class="row">
+          <div class="col-3">
+            <div id="listePresPre"></div>
+            <button id="creatNewPresTypeCat" class="btn btn-light btn-sm" title="Ajouter une catégorie"><span class="fa fa-plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="col-9">
+            <div class="text-right">
+              <button class="btn btn-primary btn-sm renouvToutesLignes mb-1"><span class="fa fa-sync-alt" aria-hidden="true"></span> Tout ajouter</button>
+            </div>
+            <div id="voirPresPre" class="mb-3">
+              <div class="alert alert-primary gras" role="alert">Prescriptions ALD</div>
+              <div style="min-height:15px;" class="conteneurPrescriptionsALD"></div>
+              <div class="alert alert-dark gras" role="alert">Prescriptions standards</div>
+              <div style="min-height:15px;" class="conteneurPrescriptionsG"></div>
+            </div>
+            <div class="text-right">
+              <button data-presID="" class="btn btn-light btn-sm presPreDelete disabled" title="Supprimer cette prescription type"><span class="fa fa-trash" aria-hidden="true"></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Onglet résultats détaillés de recherche #}
+      <div role="tabpanel" class="tab-pane" id="resultsDetaTab">
+        <div class="row bottom-space">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

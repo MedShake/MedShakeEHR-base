@@ -29,7 +29,7 @@
 $clicrdv=new msClicRDV();
 $clicrdv->setUserID($match['params']['userID']);
 
-if ($_POST['eventID']>0) {
+if (isset($_POST['eventID']) and $_POST['eventID']>0) {
     $ret=$clicrdv->modEvent($event);
 } else {
     $ret=$clicrdv->sendEvent($event);

@@ -1,0 +1,104 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiche substance active
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h1>{{ page.sub.subId.sac_nom }} <small>(substance active)</small></h1>
+
+<table class="table table-sm table-hover">
+  <tbody>
+
+    <tr>
+      <td colspan="2" class="gras table-info text-uppercase">Dénomination(s)</td>
+    </tr>
+
+    {% if page.sub.subId.sac_cdf_orn_code_fk is not empty %}
+    <tr>
+      <td class="gras">Origine de la dénomination</td>
+      <td>
+        {% if page.sub.subId.sac_cdf_orn_code_fk == '3' %}Dénomination commune Française
+        {% elseif page.sub.subId.sac_cdf_orn_code_fk == '6' %}Dénomination Commune Internationale
+        {% elseif page.sub.subId.sac_cdf_orn_code_fk == '8' %}Dénomination non définie
+        {% endif %}
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.subId.sac_noma is not empty %}
+    <tr>
+      <td class="gras">Terme en langue anglaise</td>
+      <td>{{ page.sub.subId.sac_noma }}</td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.detSubact.1 is not empty %}
+    <tr>
+      <td colspan="2" class="gras table-info text-uppercase">Numéro(s) de CAS</td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <ul class="list-unstyled">
+        {% for data in page.sub.detSubact.1 %}
+        <li>{{ data.libdet }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.detSubact.2 is not empty  or page.sub.detSubact.3 is not empty %}
+    <tr>
+      <td colspan="2" class="gras table-info text-uppercase">Classe(s) chimique(s) et classe(s) pharmacothérapeutique(s)</td>
+    </tr>
+      {% if page.sub.detSubact.3 is not empty %}
+      <tr>
+        <td class="gras">Classe(s) chimique(s)</td>
+        <td>
+          <ul class="list-unstyled">
+          {% for data in page.sub.detSubact.3 %}
+          <li>{{ data.libdet }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endif %}
+
+      {% if page.sub.detSubact.2 is not empty %}
+      <tr>
+        <td class="gras">Classe(s) pharmacothérapeutique(s)</td>
+        <td>
+          <ul class="list-unstyled">
+          {% for data in page.sub.detSubact.2 %}
+          <li>{{ data.libdet }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endif %}
+
+    {% endif %}
+
+  </tbody>
+</table>

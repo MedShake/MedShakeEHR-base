@@ -57,7 +57,8 @@ $(document).ready(function() {
         }, 1000);
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -89,7 +90,8 @@ $(document).ready(function() {
 
           },
           error: function() {
-            alert('Problème, rechargez la page !');
+            alert_popup("danger", 'Problème, rechargez la page !');
+
           }
         });
       }
@@ -112,14 +114,15 @@ $(document).ready(function() {
         el = source.closest('tr');
         if (data.type == 'pro') {
           source.html('Retirer de la liste Praticiens');
-          el.addClass('info')
+          el.addClass('table-info')
         } else {
-          el.removeClass('info')
+          el.removeClass('table-info')
           source.html('Ajouter de la liste Praticiens');
         };
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -140,7 +143,8 @@ $(document).ready(function() {
         window.location=urlBase+'/patient/'+patientID+'/';
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   });
@@ -159,10 +163,11 @@ $(document).ready(function() {
         window.location=urlBase+'/patient/edit/'+externID+'/';
       },
       error: function() {
-        alert('Problème, rechargez la page !');
+        alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
-    
+
   });
 
 });
@@ -185,7 +190,8 @@ function updateListingPatients() {
       $('#listing').html(data);
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 

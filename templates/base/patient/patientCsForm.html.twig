@@ -20,15 +20,22 @@
  #/
 
 /##
- # Template > patient : formulaire de consultation      
+ # Template > patient : formulaire de consultation
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
 {# Formulaire de synthèse #}
-<div class="jumbotron">
-<button id="cleanNewCS" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+<div class="jumbotron col-md-12">
+
+  <div class="row">
+    <div class="col">
+      <button id="cleanNewCS" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+    </div>
+  </div>
 
   {{ f.formbuilder(page.form , page.formIN ) }}
 </div>

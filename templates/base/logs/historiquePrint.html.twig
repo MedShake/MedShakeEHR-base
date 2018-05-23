@@ -37,12 +37,14 @@
 {% block body %}
 <h1>Historique des versions PDF générées</h1>
 <p>
-<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/" role="button">Retour dossier patient</a>
+<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/">Retour dossier patient</a>
 </p>
 <div>
 <ul class="nav nav-tabs" role="tablist">
   {% for v in page.print %}
-  <li role="presentation" {% if loop.index0 == 0 %}class="active"{% endif %}><a href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a></li>
+  <li role="presentation" class="nav-item">
+    <a class="nav-link{% if loop.first %} active{% endif %}" href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a>
+  </li>
   {% endfor %}
 </ul>
 </div>

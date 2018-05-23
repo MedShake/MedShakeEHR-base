@@ -55,11 +55,12 @@ spl_autoload_register(function ($class) {
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// utilisateurs potentiels et leur répertoire
 if ($usersTab= msSQL::sql2tabSimple("select p.id from people as p where p.pass!='' order by p.id")) {

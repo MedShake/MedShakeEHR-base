@@ -43,8 +43,8 @@
 
 
      {# js #}
-     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+     <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
 
      <script>
        var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
@@ -55,7 +55,7 @@
   <div class="container" style="padding-top: 40px;">
     <div class="alert alert-danger" role="alert">{{ page.error|join('<br>') }}</div>
     {% if page.errorReloadButton %}
-      <button class="btn btn-danger btn-lg btn-block" onClick="window.location.reload()"><i class="glyphicon glyphicon-repeat"></i> Recharger</button>
+      <button class="btn btn-danger btn-lg btn-block" onClick="window.location.reload()"><i class="fa fa-repeat"></i> Recharger</button>
     {% endif %}
   </div>
 

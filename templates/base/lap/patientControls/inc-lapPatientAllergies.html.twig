@@ -1,0 +1,58 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau des allergies
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<label class="w-100" for="atcdTableauAllergieStruc">Allergies</label>
+{% if page.patientAllergies.allergiesData %}
+  <table id="atcdTableauAllergieStruc" class="table table-sm table-hover table-bordered small">
+    <tbody>
+      {% for id, aller in page.patientAllergies.allergiesData %}
+        <tr class="tr{{ id }} table-danger">
+          <td data-toggle="collapse" data-target="#atcdDet{{ id }}lap" style="cursor: pointer">
+            {{ aller.libelle }}
+            <div id="atcdDet{{ id }}lap" class="collapse">
+              <table class="table table-sm" style="margin-top:8px;">
+                <tr>
+                  <td>Code Thériaque</td>
+                  <td>{{ aller.value }}</td>
+                </tr>
+                <tr>
+                  <td>Auteur</td>
+                  <td>{{ aller.fromName }}</td>
+                </tr>
+                <tr>
+                  <td>Ajout le</td>
+                  <td>{{ aller.registerDate }}</td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
@@ -57,7 +57,7 @@ if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
@@ -76,12 +76,16 @@ $match = $router->match();
 if (isset($_COOKIE['userIdPc'])) {
     $p['user']=msUser::userIdentificationPhonecapture();
     if (isset($p['user']['id'])) {
-        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
+    } else {
+        $p['user']['id']=null;
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
     }
     $p['user']['module']='phonecapture';
 } else {
     $p['user']=null;
     $p['user']['id']=null;
+    $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
 ///////// Controler else -> 404

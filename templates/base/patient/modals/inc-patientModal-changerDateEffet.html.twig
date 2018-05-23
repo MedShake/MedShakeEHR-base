@@ -23,6 +23,7 @@
  # Template > patient : changer date d'effet d'un élément de l'historique
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #
 #}
 
@@ -30,8 +31,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
         <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
@@ -40,17 +41,17 @@
           <input name="objetID" type="hidden" value="" />
           <div class="form-group">
               <label for="datepickHisto">Modifier la date d'effet pour le</label>
-              <div class="input-group date  col-md-6" id="datepickHisto">
+              <div class="input-group date  col-md-8" id="datepickHisto">
                   <input name="newCreationDate" type="text" class="form-control" />
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
+                  <span class="input-group-append">
+                      <span class="fa fa-calendar input-group-text"></span>
                   </span>
               </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn" data-dismiss="modal">Annuler</button>
         <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
       </div>
     </div>

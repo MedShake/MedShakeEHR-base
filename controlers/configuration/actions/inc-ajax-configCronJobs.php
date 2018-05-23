@@ -41,7 +41,7 @@ foreach ($_POST as $k=>$v) {
 exec("crontab -l", $cronFileLines);
 
 foreach ($cronFileLines as $line) {
-    if (strpos($line, $p['config']['homeDirectory'])===false) {
+    if (strpos($line, $p['homepath'])===false) {
         $newCronFileLines[]=$line;
     }
 }
@@ -50,7 +50,7 @@ foreach ($crons as $k=>$cron) {
     if (!isset($cron['a']) or $cron['a'] == 'false') {
         continue;
     }
-    $newCronFileLines[]=$cron['m'].' '.$cron['h'].' '.$cron['M'].' '.$cron['dom'].' '.$cron['dow'].' cd '.$p['config']['homeDirectory'].' && php -f cron/'.$k.'.php';
+    $newCronFileLines[]=$cron['m'].' '.$cron['h'].' '.$cron['M'].' '.$cron['dom'].' '.$cron['dow'].' cd '.$p['homepath'].' && php -f cron/'.$k.'.php';
 }
 
 $file=tempnam(sys_get_temp_dir(), 'ct_');

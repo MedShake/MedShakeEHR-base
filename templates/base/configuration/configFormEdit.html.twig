@@ -32,22 +32,22 @@
 
 {% block head %}
 {{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
   </li>
-  <li class="active">{{ page.form.name }}
+  <li class="breadcrumb-item active">{{ page.form.name }}
   </li>
 </ol>
 
@@ -78,18 +78,18 @@
 
 	<h3>Types utilisables <small><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/administratives-data/types/">Modifier</a></small></h3>
 
-		<table class="table table-hover">
+		<table class="table table-sm mb-0 table-hover ">
 		<tr>
 			<th>#</th>
-      <th class="col-md-2">Tag</th>
-			<th class="col-md-4">Label</th>
-			<th class="col-md-6">Description</th>
+      <th>Tag</th>
+			<th>Label</th>
+			<th>Description</th>
 		</tr>
 		{% for k,v in page.tabTypes %}
 		<tr>
 			<th colspan="4">
-				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-default btn-xs typeToggleVisibility">
-  				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-light btn-sm typeToggleVisibility">
+  				<span class="fa fa-search" aria-hidden="true"></span>
 				</button> {{ v.0.catLabel }}
 			</th>
 		</tr>
@@ -111,7 +111,7 @@
 
 
 	<form id="formParamsEdit" class="col-md-7 ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
-    <button type="submit" class="btn btn-primary pull-right" style="margin-top : 25px">Enregistrer</button>
+    <button type="submit" class="btn btn-primary float-right m-1" style="margin-top : 25px">Enregistrer</button>
 	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
 
 		{{ f.input ({
@@ -258,7 +258,7 @@
 		</div>
 
 
-		<button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
+		<button type="submit" class="btn btn-primary float-right m-1">Enregistrer</button>
 
 		<p>
 		{{ page.form.yaml }}

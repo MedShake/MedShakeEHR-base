@@ -34,10 +34,10 @@ $template="agenda";
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
 //paramètres de l'agenda
-if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
-  $p['page']['configAgenda']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
-  if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
-    $p['page']['configAgenda'].=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
+if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
+  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js');
+  if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
   }
 }
 
@@ -52,16 +52,10 @@ $p['page']['formPriseRdv']=$formPriseRdv->getForm();
 
 //formulaire nouveau patient
 $formpatient = new msForm();
-$formpatient->setFormIDbyName('baseNewPatient');
-if (isset($_SESSION['form']['baseNewPatient']['formValues'])) {
-    $formpatient->setPrevalues($_SESSION['form']['baseNewPatient']['formValues']);
+$formpatient->setFormIDbyName('baseModalNewPatient');
+if (isset($_SESSION['form']['baseModalNewPatient']['formValues'])) {
+    $formpatient->setPrevalues($_SESSION['form']['baseModalNewPatient']['formValues']);
 }
 $p['page']['formNewPatient']=$formpatient->getForm();
-//ajout champs cachés au form
-$p['page']['formNewPatient']['addHidden']=array(
-  'actAsAjax'=>'true',
-  'porp'=>'patient'
-);
 //modifier action pour url ajax
 $p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
-

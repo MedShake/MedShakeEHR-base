@@ -68,11 +68,13 @@ $(document).ready(function() {
           getRelationsPatientPatientsTab();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le patient n'est pas correctement sélectionné");
+      alert_popup("danger", "Le patient n'est pas correctement sélectionné");
+
     }
 
   });
@@ -113,13 +115,16 @@ $(document).ready(function() {
         dataType: "html",
         success: function(data) {
           getRelationsPatientPraticiensTab();
+          ajaxModalPatientAdminCloseAndRefreshHeader();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le praticien n'est pas correctement sélectionné");
+      alert_popup("danger", "Le praticien n'est pas correctement sélectionné");
+
     }
 
   });
@@ -127,6 +132,7 @@ $(document).ready(function() {
   //retirer une relation patient <-> praticien/patient
   $('body').on("click", ".removeRelationPatient", function(e) {
     e.preventDefault();
+    e.stopPropagation();
     ID2 = $(this).attr('data-peopleID');
     ID1 = $('#identitePatient').attr("data-patientID");
     if (ID1 > 0 && ID2 > 0) {
@@ -141,27 +147,34 @@ $(document).ready(function() {
         success: function(data) {
           getRelationsPatientPraticiensTab();
           getRelationsPatientPatientsTab();
+          ajaxModalPatientAdminCloseAndRefreshHeader();
         },
         error: function() {
-          alert('Problème, rechargez la page !');
+          alert_popup("danger", 'Problème, rechargez la page !');
+
         }
       });
     } else {
-      alert("Le praticien n'est pas correctement sélectionné");
+      alert_popup("danger", "Le praticien n'est pas correctement sélectionné");
+
     }
 
   });
 
-  getRelationsPatientPraticiensTab();
-  getRelationsPatientPatientsTab();
-
   //ajax save form in modal
-  $("button.modal-save").on("click", function(e) {
+  $('body').on("click", "#newPro button.modal-save", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
     ajaxModalFormSave(form, modal);
 
   });
+
+  $('body').on('click', '.voirDossier', function(){
+    window.location = $(this).find('a.btn').attr('href');
+  });
+
+  setTimeout(getRelationsPatientPraticiensTab, 500);
+  setTimeout(getRelationsPatientPatientsTab, 500);
 
 });
 
@@ -177,12 +190,28 @@ function getRelationsPatientPatientsTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPatients').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPatients').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/patient/' + value.patientID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + value.prenom + ' ' + value.nom + '</td><td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.patientID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPatients').append('\
+          <tr class="voirDossier" style="cursor:pointer">\
+            <td>\
+              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
+                <span class="fa fa-folder-open" aria-hidden="true"></span>\
+              </a>\
+            </td>\
+            <td>' + value.prenom + ' ' + value.nom + '</td>\
+            <td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>\
+              <div class="btn-group">\
+                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+                </button>\
+              </div>\
+            </td>\
+          </tr>');
       });
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -200,12 +229,28 @@ function getRelationsPatientPraticiensTab() {
     success: function(data) {
       $('#bodyTabRelationPatientPrat').html('');
       $.each(data, function(index, value) {
-        $('#bodyTabRelationPatientPrat').append('<tr><td><a class="btn btn-default btn-xs" role="button" href="' + urlBase + '/pro/' + value.pratID + '/"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a></td><td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td><td><a class="btn btn-default btn-xs removeRelationPatient" role="button" href="#" data-peopleID="' + value.pratID + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td></tr>');
+        $('#bodyTabRelationPatientPrat').append('\
+          <tr class="voirDossier" style="cursor:pointer">\
+            <td>\
+              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
+                <span class="fa fa-folder-open" aria-hidden="true"></span>\
+              </a>\
+            </td>\
+            <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>\
+              <div class="btn-group">\
+                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
+                  <span class="fa fa-times" aria-hidden="true"></span>\
+                </button>\
+              </div>\
+            </td>\
+          </tr>');
       });
 
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 }
@@ -241,7 +286,8 @@ function ajaxModalFormSave(form, modal) {
       }
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 }

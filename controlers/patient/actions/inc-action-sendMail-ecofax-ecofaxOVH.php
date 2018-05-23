@@ -69,7 +69,7 @@ $mail->addAddress($detsinataireFAX);
 if (is_file($sourceFile)) {
     $mail->addAttachment($sourceFile, "document.".$ext);
 }
-$mail->Body    =  'password : '.$p['config']['ecofaxPass'];
+$mail->Body    =  'password : '.$p['config']['ecofaxPassword'];
 $mail->AltBody = $mail->Body;
 
 

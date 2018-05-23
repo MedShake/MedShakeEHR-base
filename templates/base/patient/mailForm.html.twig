@@ -23,11 +23,12 @@
  # Template > patient : formulaire d'envoi de mail
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
 {# Formulaire de synthèse #}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
     <button id="cleanNewMail" type="button" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -43,8 +44,8 @@
             {{ page.doc.label|e }}
             {{ page.doc.titre|e }}
             <small>(Taille : {{ page.doc.filesize|e }})</small>
-            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" role="button" target="_blank" title="Voir">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Voir
+            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" target="_blank" title="Voir">
+              <span class="fa fa-eye" aria-hidden="true"></span> Voir
             </a>
 
         </p>

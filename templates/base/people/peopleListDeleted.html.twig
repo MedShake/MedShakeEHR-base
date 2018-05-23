@@ -32,13 +32,13 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
   <h1>Liste des dossiers supprimés</h1>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-sm mb-0 table-hover  table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -55,8 +55,8 @@
         <tr>
           <td>{{ v.id }}</td>
           <td>
-            <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/">
-              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/" title="Afficher le dossier">
+              <span class="fa fa-folder-open" aria-hidden="true"></span>
             </a>
             {{ v.identiteDossier|e }}
           </td>
@@ -64,14 +64,11 @@
           <td>{{ v.identiteUser|e }}</td>
           <td>{{ v.dateDeleted|e }}</td>
           <td>{{ v.motif|e }}</td>
-          <td>
-
+          <td class="d-flex justify-content-end">
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> <span class="caret"></span>
+              <button type="button" class="btn btn-light btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
+                <span class="fa fa-undo-alt" aria-hidden="true"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a class="unmarkDeleted" data-patientID="{{ v.id }}" href="#">Réactiver ce dossier</a></li>
-              </ul>
             </div>
 
           </td>

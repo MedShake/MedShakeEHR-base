@@ -32,6 +32,10 @@
 $template="patientCsForm";
 $formIN = $p['page']['formIN'] = $_POST['formIN'];
 
+if(!isset($_POST['csID'])) {
+  $_POST['csID']=msSQL::sqlUniqueChamp("select id from data_types where groupe='typecs' and formValues='".$_POST['formIN']."' limit 1");
+}
+
 //infos sur le form
 $formInfos = new msData();
 $p['page']['formInfos'] = $formInfos->getDataType($_POST['csID'], array('label'));

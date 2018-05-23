@@ -1,0 +1,378 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : index de la page LAP pour les outils liés, non spécifiques
+ # à un patient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}MedShakeEHR : LAP et BDM{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOutils.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block body %}
+
+  <h1 class="d-print-none">LAP : outils</h1>
+
+  {% import "macroForm.html.twig" as f %}
+  <div class="row mt-3">
+    <div class="col-2 d-print-none">
+
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#rechercheMedics" data-toggle="tab">Recherche médicaments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#recherchePres" data-toggle="tab">Recherche prescriptions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#lapPhamracovigilance" data-toggle="tab">Pharmacovigilance</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#lapLegaleDoc" data-toggle="tab">Documentation légale</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane" id="recherchePres">
+          <h3>Recherche et exports de prescriptions</h3>
+
+          <p>Les codes nécessaires à la recherche peuvent être trouvés facilement à l'onglet "Recherche médicaments".</p>
+
+          <form method="post">
+            <div class="row my-1">
+              <div class="col-2">
+                Rechercher
+              </div>
+              <div class="col-3">
+                  <select name="typeRecherche" class="custom-select" autocomplete="off">
+                    <option value="lapMedicamentSpecialiteCodeTheriaque">code spécialité</option>
+                    <option value="lapMedicamentPresentationCodeTheriaque">code présentation</option>
+                    <option value="lapMedicamentCodeSubstanceActive">code substance active</option>
+                    <option value="lapMedicamentCodeATC">classe ATC</option>
+                    <option value="lapMedicamentMotifPrescription">motif de prescription</option>
+                  </select>
+                </div>
+                <div class="col-3">
+                  <input type="text" class="form-control" name="code" placeholder="Indiquer le code ici" autocomplete="off">
+                </div>
+              </div>
+              <div class="row my-1">
+              <div class="col-2">
+                Interval de dates à considérer
+              </div>
+              <div class="col-3">
+                  <div id="beginPeriodeIDB" class="input-group date datepick">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" style="width:45px">du:
+                      </span>
+                    </div>
+                    <input type="text" id="beginPeriodeID" name="beginPeriode" class="form-control" autocomplete="off" value="{{ page.periode.begin }}"/>
+                    <div class="input-group-append">
+                      <span class="fa fa-calendar input-group-text"></span>
+                    </div>
+                  </div>
+                </div>
+              <div class="col-3">
+                  <div id="endPeriodeIDB" class="input-group date datepick">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" style="width:45px">au:
+                      </span>
+                    </div>
+                    <input type="text" id="endPeriodeID" name="endPeriode" class="form-control" autocomplete="off" value="{{ page.periode.end }}"/>
+                    <div class="input-group-append">
+                      <span class="fa fa-calendar input-group-text"></span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="row my-1">
+              <div class="col-2">
+                Dossier(s) patient
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control" name="patientID" placeholder="id numériques séparés par des virgules si besoin" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="row my-1">
+              <div class="col-2">
+                Autres critéres
+              </div>
+              <div class="col-3">
+                <select name="sexe" class="custom-select" autocomplete="off">
+                  <option value="">sexe sans importance</option>
+                  <option value="F">femme</option>
+                  <option value="M">homme</option>
+                </select>
+
+                <input type="text" class="form-control my-1" name="codeAllergie" placeholder="code allergie" autocomplete="off">
+
+                <input type="text" class="form-control" name="codeAtcdCIM10" placeholder="code antécédent CIM10" autocomplete="off">
+              </div>
+            </div>
+            <div class="row my-1">
+              <div class="col">
+                <button id="lapOutilsSearchPres" class="btn btn-primary">Rechercher</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row mt-3">
+            <div class="col" id="lapOutilsSearchPresResults"></div>
+          </div>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane active" id="rechercheMedics">
+
+          <h3>Recherche de médicaments - accès monographie</h3>
+          <div class="row">
+            <form id="rechercheMedic" class="col-12">
+              <div class="row">
+                <div class="col pr-0">
+                  <div class="form-group">
+                    <label for="txtRechercheMedic">Rechercher</label>
+                    <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="médicament, substance, code ..."/>
+                    <span id="txtRechercheMedicHB" class="form-text small">Taper ici le texte de votre recherche</span>
+                  </div>
+                </div>
+                <div class="col pl-1 pr-0">
+                  <div class="form-group">
+                    <label for="typeRechercheMedic">Dans</label>
+                    <select id="typeRechercheMedic" class="form-control custom-select" autocomplete="off">
+                      <option value="dci">Médicaments virtuels (DCI)</option>
+                      <option value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="spe">Spécialités commerciales</option>
+                      <option value="suba">Substances actives</option>
+                      <option value="atc">Code ATC</option>
+                    </select>
+                    <span id="typeRechercheMedicHB" class="form-text small">Lieu de recherche du texte indiqué</span>
+                  </div>
+                </div>
+                <div class="col pl-1">
+                  <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
+                    <label for="typeRechercheMedic">Montrer</label>
+                    <select id="retourRechercheMedic" class="form-control custom-select" autocomplete="off">
+                      <option value="1">Médicaments virtuels (DCI)</option>
+                      <option value="3">Médicaments virtuels + Spécialités commerciales</option>
+                      <option value="0">Spécialités commerciales</option>
+                    </select>
+                    <span id="retourRechercheMedicHB" class="form-text small">Médicaments retournés</span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row">
+            <div id="rechercheResultats" class="col p-0"></div>
+          </div>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="lapSams">
+          <h3>Patients dont la condition du SAM est réalisée lors de la dernière prescription</h3>
+
+          <p>Cliquer sur le bouton en fin de ligne pour rechercher les patients dont la dernière ordonnance était concernée par la condition du SAM choisi.</p>
+
+          <table class="table table-sm table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th>Identifiant</th>
+                <th>Titre</th>
+                <th>Traité par le LAP</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sam in page.lap.samsList %}
+                <tr>
+                  <td>{{ sam.id }}</td>
+                  <td>{{ sam.titre }}</td>
+                  <td>{{ sam.methode }}</td>
+                  <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm displayListSamPatients"><i class="fas fa-users"></i></button></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="lapPhamracovigilance">
+          <h3>Faire une déclaration de pharmacovigilance sur le site de l'ANSM</h3>
+          <a class="btn btn-primary" target="_blank" href="http://ansm.sante.fr/Declarer-un-effet-indesirable/Comment-declarer-un-effet-indesirable/Declarer-un-effet-indesirable-mode-d-emploi/(offset)/0" role="button">Accès au site de l'ANSM</a>
+        </div>
+
+
+
+        <div role="tabpanel" class="tab-pane d-print-block" id="lapLegaleDoc">
+          <h3>Documentation légale</h3>
+
+          <div class="alert alert-danger" role="alert">
+            Cette page de MedShakeEHR est distribuée sous licence GPL v3 dans les sources du logiciel. Elle n'a en l'état aucune valeur légale d'engagement des auteurs du logiciel ou des fournisseurs de composants tiers pouvant y être cités. Seule une version complétée est fournie spécifiquement par l'EIRL Bertrand Boutillier (ou tout autre éditeur ayant complété le processus de certification et possédant des accords pour l'utilisation des composants tiers) pourra faire foi.
+          </div>
+
+          <p>Document mis à jour le ... - <span class="d-print-none">Utilisez les fonctions d'impression de votre navigateur pour produire une version papier de ce document</span></p>
+
+          <h4>Client de certification</h4>
+          <h5>Identité et coordonnées</h5>
+          <h5>Liens et conflits d'intérêt</h5>
+
+          <p>Le client de certification identifié ci-dessus déclare l’absence de lien avec toute autre structure active dans le domaine de la santé à ce jour.</p>
+
+          <h4>MedShakeEHR</h4>
+
+          <p>Les modules suivant sont installés :
+          <table class="table table-sm mb-0  table-hover">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in page.modules %}
+                <tr>
+                  <td>{{ m.name }}</td>
+                  <td>{{ m.version }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          </p>
+
+          <h4>Base de données médicamenteuse</h4>
+
+          <p>La base de données médicamenteuse utilisée par le LAP de MedShakeEHR est <a href="http://www.theriaque.org">Thériaque</a> éditée par le <a href="http://www.cnhim.org/">Centre National Hospitalier d'Information sur le Médicament</a> (CNHIM).</p>
+
+          <p>
+            Version en production : {{ page.infosTheriaque.0.vers }}<br>
+            Date d'extraction : {{ page.infosTheriaque.0.date_ext }}
+          </p>
+
+          <h4>Engagement au respect des critères HAS</h4>
+
+          <p>Conformément au Référentiel de certification par essai de type des logiciels d'aide à la prescription en médecine ambulatoire (version de septembre 2016, version 2016.1, critères 2016.1 - dernière version disponible à la finalisation du logiciel),
+            le client de certification ci-dessus énoncé s'engage au respect des critères 1, 10, 12, 34, 42, 43, 44, 45, 50, 57, 58, 59, 66, 68, 69, 71, 88, 103, 105, 106, 107, 114, 115, 116, 117, 118 et 120 repris ci-dessous :
+          </p>
+
+          <p>1. Le LAP met à disposition de tous les utilisateurs la totalité de l’information sur le médicament exigée par le présent référentiel et qui est proposée par une base de données sur les médicaments (BdM) agréée par la HAS. Cette information est
+            différenciée de celle ayant une autre origine.</p>
+
+          <p>10. Si le LAP permet une évaluation de la clairance de la créatinine, la formule utilisée pour cette évaluation, la date, la nature, la valeur et les unités de chacun des paramètres cliniques et biologiques qui ont servi à cette évaluation sont
+            consultables par l’utilisateur à partir des interfaces qui affichent cette évaluation.</p>
+
+          <p>12. Si la date prévue de l’accouchement est lue sur la carte vitale, le LAP propose l’enregistrement d’une date des dernières règles calculée en se basant sur cette lecture.</p>
+
+          <p>34. La sélection, l’ordre et la présentation des médicaments dans les listes ne sont pas influencés par des considérations promotionnelles. Aucun signe distinctif à caractère promotionnel ne figure dans les listes de médicaments. Les listes de
+            médicaments ne peuvent résulter que de sélections dont tous les paramètres sont explicites pour l’utilisateur.</p>
+
+          <p>42. Tout au long du processus de prescription, un zéro précède le séparateur décimal pour les nombres affichés inférieurs à 1, indépendamment du système d’exploitation.</p>
+
+          <p>43. Tout au long du processus de prescription, pour toutes les données numériques affichées, ni la virgule ni le point ne sont utilisés comme séparateur de milliers, indépendamment du système d’exploitation.</p>
+
+          <p>44. Tout au long du processus de prescription, pour toutes les données numériques affichées, la virgule est utilisée comme séparateur décimal, indépendamment du système d’exploitation.</p>
+
+          <p>45. Les versions diffusées du LAP ne proposent pas de modèles préétablis d’ordonnance.</p>
+
+          <p>50. Dans l’expression des posologies, chaque nombre est immédiatement suivi de l’unité qu’il quantifie.</p>
+
+          <p>57. La formulation de la ligne de prescription doit permettre le calcul de la posologie journalière maximale durant le traitement pour le (ou les) médicament(s). C’est sur ces posologies journalières maximales qu’est basé le contrôle de sécurité
+            du critère 79.</p>
+
+          <p>58. La formulation d’une ligne de prescription doit permettre le calcul de la posologie maximale par prise pour chacun des médicaments. C’est sur ces posologies maximales par prise qu’est basé le contrôle de sécurité du critère 81.</p>
+
+          <p>59. La formulation d’une ligne de prescription doit permettre le calcul de l’intervalle minimal entre deux prises durant le traitement pour chacun des médicaments. C’est sur cet intervalle qu’est basé le contrôle de sécurité du critère 80.</p>
+
+          <p>66. Le LAP permet d’afficher la signification en toutes lettres en français des icônes, des alertes et des signaux d’information affichés par le LAP ou par la base de données sur les médicaments (BdM).</p>
+
+          <p>68. Sous le paramétrage de certification, les contrôles de sécurité décrits au chapitre 5 se manifestent selon l’ergonomie précisée. Une alerte ne peut pas remplacer un signal d’information pour les exigences fonctionnelles du chapitre 5.</p>
+
+          <p>69. Les contrôles de qualité et de sécurité de la prescription décrits au chapitre 5.2 déclenchent des alertes ou des signaux d’information. L’opportunité du déclenchement d’une alerte ou d’un signal d’information peut éventuellement être
+            paramétrée par l’utilisateur. Cependant dans ce cas :
+            <br>- ce paramétrage est attaché au profil de l’utilisateur ;
+            <br>- le paramétrage ayant servi à réaliser la certification est celui proposé par défaut à chaque nouvel utilisateur du LAP;
+            <br>- tout changement de paramétrage qui aboutit à un niveau de sécurité moindre que celui utilisé pour les tests de certification entraîne une alerte qui signale à l’utilisateur que le paramétrage choisi est inférieur au niveau de la certification.</p>
+
+          <p>71. Les alertes et signaux d’information ont pour objectif d’informer le prescripteur. Sous son paramétrage par défaut, un LAP n’empêche pas un prescripteur de rédiger une quelconque prescription.</p>
+
+          <p>88. Si le LAP permet de bloquer un Système d’Aide à la décision indexée par Médicament (SAM) :
+            <br>- ce paramétrage est attaché au profil de l’utilisateur ;
+            <br>- ce paramétrage est spécifique du SAM ;
+            <br>- un SAM auquel l’utilisateur n’a pas encore été confronté ne peut pas être bloqué ;
+            <br>- le blocage ne peut concerner que les fonctions décrites dans les critères 90 et 91. Le blocage ne peut pas s’exercer dans le cadre de la fonction décrite au critère 70;
+            <br>- le paramétrage ayant servi à réaliser la certification est celui proposé par défaut à chaque nouvel utilisateur du LAP.</p>
+
+          <p>103. Pour chaque médicament à l’origine d’une ordonnance effectivement imprimée, le LAP enregistre la spécialité, la posologie, la dénomination commune et le code ATC.</p>
+
+          <p>105. Le LAP permet d’afficher un document imprimable par tout utilisateur qui énonce en français :
+            <br>- l’identité du client de la certification ;
+            <br>- une adresse physique du client de la certification ;
+            <br>- les liens (en particulier capitalistiques, commerciaux, juridiques) et les modalités d’éventuels partenariats du client de certification avec d’autres structures (professionnelles, industrielles, commerciales ou associatives) actives dans le
+              domaine de la santé. En l’absence de tels liens, le document affichable déclare l’absence de lien du client de certification avec toute autre structure active dans le domaine de la santé ;
+            <br>- la date de mise à jour du document.</p>
+
+          <p>106. Le LAP n’affiche aucune publicité.</p>
+
+          <p>107. S’il met à disposition de l’utilisateur des aides automatisées à la décision, le LAP met aussi à disposition les explications complètes et transparentes sur les sources et méthodes utilisées pour leur élaboration ainsi que le (ou les)
+            auteur(s) responsable(s) de cette élaboration.</p>
+
+          <p>114. Le client de certification fournit un manuel d’utilisation imprimable ou imprimé et met à disposition une aide en ligne sur l’utilisation du LAP. Les méthodes de sauvegarde des dossiers électroniques des patients sont clairement détaillées.
+            <br>Ces documents sont mis à jour en même temps que le LAP, au moins pour ce qui concerne les exigences du présent référentiel.</p>
+
+          <p>115. Avec la vente du LAP, le client de certification propose une garantie d’assistance à distance selon des modalités qu’il précise contractuellement.</p>
+
+          <p>116. Selon des modalités qu’il précise contractuellement, le client de certification propose une formation individuelle ou collective à l’utilisation :
+            <br>- du LAP mis en circulation ;
+            <br>- des nouveautés proposées lors des mises à jour du LAP.</p>
+
+          <p>117. Le client de certification garantit la récupération des données de la version précédente lors de chaque mise à jour du LAP.
+            <br>Dans le cas où, suite à un changement de version du LAP, des modifications de structuration ou de codification des données du dossier d’un patient rendraient inopérante ou aléatoire tout ou partie des contrôles de sécurité énoncés au chapitre
+              5.2, l’utilisateur doit en être informé au moins lors de la première ouverture du dossier patient concerné.</p>
+
+          <p>118. Le client de certification garantit le support technique à l’utilisation de la version antérieure du LAP pendant au moins les 12 mois qui suivent la mise à disposition de la version suivante.</p>
+
+          <p>120. Le LAP permet d’afficher un document imprimable par tout utilisateur qui comporte les items suivants clairement séparés :
+            <br>- l’identité du client de la certification ;
+            <br>- le nom et la version du LAP. Toute modification du code compilé d’un programme constitutif du LAP est accompagnée d’une modification incrémentale de l’identifiant de version ;
+            <br>- l’éditeur, le nom et la version de la BdM ;
+            <br>- la date de mise à jour du document.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

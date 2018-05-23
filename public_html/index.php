@@ -27,11 +27,10 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
-
-if(($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
+if (($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
     if (!is_file("MEDSHAKEEHRPATH") or ($homepath=file_get_contents("MEDSHAKEEHRPATH"))===false) {
         die("La variable d'environnement MEDSHAKEEHRPATH n'a pas été fixée.<br>Veuillez insérer <code>SetEnv MEDSHAKEEHRPATH /chemin/vers/MedShakeEHR</code> dans votre .htaccess ou la configuration du serveur.<br>Alternativement, vous pouvez créer un fichier 'MEDSHAKEEHRPATH' contenant <code>/chemin/vers/MedShakeEHR</code> et le placer dans le dossier web de MedShakeEHR");
     }
@@ -63,14 +62,13 @@ if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
-$p['config']['homeDirectory']=$homepath;
-$p['configDefaut']=$p['config'];
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base
-if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
+/////////// Vérification de l'état de la base et sortie des versions des modules
+if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
@@ -93,30 +91,30 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     }
 } elseif (isset($_COOKIE['userName'])) {
     $p['user']=msUser::userIdentification();
-    if ($p['user']['rank']!='admin' and 'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+    if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
-    if (is_file($homepath.'config/config-'.$p['user']['module'].'.yml') and $p['user']['module']) {
-        $p['config']=array_merge($p['config'], Spyc::YAMLLoad($homepath.'config/config-'.$p['user']['module'].'.yml'));
-    }
     if (isset($p['user']['id'])) {
-        msUser::applySpecificConfig($p['config'], $p['user']['id']);
+        $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
 } else {
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirRoute('userLogIn');
     }
+    // compléter la config par défaut
+    array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
 ///////// Controler
 if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+
     include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
     if (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
         include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
     }
-    // si c'est l'interface RESTful qui était visée et qu'on est ici, c'est que l'instruction n'est pas supportée  
+    // si c'est l'interface RESTful qui était visée et qu'on est ici, c'est que l'instruction n'est pas supportée
     if ($match['target']=='rest/rest') {
         header('HTTP/1.1 404 Not Found');
         die;
@@ -127,38 +125,38 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
 
 //////// View if defined
 if (isset($template)) {
+
     if (isset($_SESSION)) {
         $p['session']=$_SESSION;
     }
 
     if (isset($p['user']['id'])) {
-      //inbox number of messages
+        //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
 
       // patients of the day
       if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-        $events = new msAgenda();
-        $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      }
-      elseif($p['config']['administratifPeutAvoirAgenda']=='true') {
-        $events = new msAgenda();
-        $events->set_userID($p['user']['id']);
-        $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      }
-      elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
+          $events = new msAgenda();
+          $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      } elseif ($p['config']['administratifPeutAvoirAgenda']=='true') {
+          $events = new msAgenda();
+          $events->set_userID($p['user']['id']);
+          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
+      } elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
           $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
       }
+
+      // crédits SMS
+      if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
+          $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
+      }
+
+      //utilisateurs pouvant avoir un agenda
+      $agendaUsers= new msPeople();
+      $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
     }
 
-    // crédits SMS
-    if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
-        $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
-    }
-
-    //utilisateurs pouvant avoir un agenda
-    $agendaUsers= new msPeople();
-    $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
@@ -167,8 +165,8 @@ if (isset($template)) {
     //générer et sortir le html
     $getHtml = new msGetHtml();
     $getHtml->set_template($template);
-    if(isset($forceAllTemplates)) {
-      $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'],'/'));
+    if (isset($forceAllTemplates)) {
+        $getHtml->set_templatesDirectories(msTools::getAllSubDirectories($p['config']['templatesFolder'], '/'));
     }
     echo $getHtml->genererHtml();
 }
@@ -180,7 +178,7 @@ if (!isset($debug)) {
 
 //and $p['user']['id']=='1'
 
-if ($debug=='y' and $p['user']['id']=='1') {
+if ($debug=='y' and $p['user']['id']=='3') {
     echo '<pre style="margin-top : 50px;">';
     //echo '$p[\'config\'] :';
     //print_r($p['config']);

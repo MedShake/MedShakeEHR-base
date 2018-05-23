@@ -29,10 +29,10 @@
 {% import "macroForm.html.twig" as f %}
 <div class="row changeObserv" id="synthesePatient" style="">
 
-    <div class="jumbotron">
+    <div class="jumbotron col-md-12">
         {{ f.formbuilder(page.formData_baseSynthese , page.formName_baseSynthese ) }}
         {% for v in page.typeCs_csBase %}
-            <button type="button" class="btn btn-success btn-sm newCS" style="margin-bottom : 3px;" data-parentID='0' data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
+            <button type="button" class="btn btn-success btn-sm addNewCS" style="margin-bottom : 3px;" data-parentID='0' data-formtocall="{{ v.formValues }}" data-csID="{{ v.id }}" data-mode="create">{{ v.label|e }}</button>
         {% endfor %}
 
     </div>

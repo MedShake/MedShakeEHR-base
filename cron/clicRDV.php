@@ -53,25 +53,23 @@ spl_autoload_register(function ($class) {
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
 
-if(isset($p['config']['agendaService'])) {
-  if ($p['config']['agendaService'] == 'clicRDV') {
-    $clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
-    if (!is_array($clicUsers)) {
-        return;
-    }
-    $clicrdv=new msClicRDV();
-    foreach($clicUsers as $userid=>$value) {
-        $clicrdv->setUserID($userid);
-        $ret=$clicrdv->syncEvents();
-        if ($ret!==false and $ret!==true) {
-            echo $ret."\n";
-        }
-    }
-  }
+$clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
+if (!is_array($clicUsers)) {
+    return;
 }
+$clicrdv=new msClicRDV();
+$startdate=date("Y-m-d H:i:s");
+foreach($clicUsers as $userid=>$value) {
+    $clicrdv->setUserID($userid);
+    $ret=$clicrdv->syncEvents();
+    if ($ret!==false and $ret!==true) {
+        echo $ret."\n";
+    }
+}
+msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'cron', 'value'=>$startdate));

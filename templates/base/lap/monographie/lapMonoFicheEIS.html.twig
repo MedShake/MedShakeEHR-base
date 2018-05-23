@@ -1,0 +1,164 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiche annexe EI surdosage
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+  <h1 style="margin-bottom : 1em;">{{ page.speData.sp_nom|trim('§') }}<br><small>{{ page.speData.sp_nomlong }}</small></h1>
+
+{% set dataFiche = page.ficheEi.effind %}
+<h2 class="text-uppercase">Effets indésirables en cas de surdosage</h2>
+
+<table class="table table-sm table-hover">
+  <tbody>
+
+    {% if page.ficheEi.effindg is not empty %}
+    <tr>
+      <td class="gras">Type d'effet</td>
+      <td>
+        <ul class="list-unstyled text-uppercase">
+        {% for data in page.ficheEi.effindg %}
+          {% if data.effet_specialite_classe == 1 %}<li>Effet classe</li>
+          {% elseif data.effet_specialite_classe == 2 %}<li>Effet spécialité</li>
+          {% elseif data.effet_specialite_classe == 3 %}<li>Effet excipient</li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Classe chimique</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '0.1' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Classe pharmaco-thérapeutique</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '0.2' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Nature(s) des EI cliniques</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '1.0.' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Nature(s) des EI paracliniques</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '1.1.' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Degré(s) de sévérité</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '1.2.' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Commentaire(s) conduite à tenir</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 if data.grp starts with '1.3.' %}
+        <li>{{ data.info_01 }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+    {% if dataFiche.3 is not empty %}
+    <tr>
+      <td colspan="2">
+        {% for data in dataFiche.3 %}
+        <p>{{ data.txt|nl2br }}</p>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.2 is not empty %}
+    <tr>
+      <td colspan="2">
+        <span class="gras">Commentaires RCP</span>
+        {% for data in dataFiche.2 %}
+        <p>{{ data.txt|nl2br }}</p>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.ficheEi.refEffind is not empty %}
+    <tr>
+      <td class="gras">Référence(s) officielle(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.ficheEi.refEffind %}
+        <li>{{ data.refoff }} {{ data.datref }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+  </tbody>
+</table>

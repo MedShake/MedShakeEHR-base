@@ -32,18 +32,18 @@
 
 {% block head %}
 {{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 <ol class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
-  <li class="active">
+  <li class="breadcrumb-item active">
     {% if page.groupe == "admin" %}
       Administratives
     {% elseif page.groupe == "medical" %}
@@ -99,8 +99,8 @@
 
 	{# Nav tabs #}
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/{{ page.groupe }}/" aria-controls="categories" role="tab">Catégories</a></li>
-		<li role="presentation"><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ page.groupe }}/" aria-controls="types" role="tab" >Types</a></li>
+		<li role="presentation" class="nav-item"><a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/{{ page.groupe }}/" aria-controls="categories" role="tab">Catégories</a></li>
+		<li role="presentation" class="nav-item"><a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ page.groupe }}/" aria-controls="types" role="tab" >Types</a></li>
 	</ul>
 
   {# Tab panes #}
@@ -110,35 +110,45 @@
 		<div role="tabpanel" class="tab-pane active" id="categories">
 
 			<p></p>
-			<button type="button" class="btn btn-primary pull-right reset-modal" data-toggle="modal" data-target="#modalNewCat">
+			<button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewCat">
 			Nouvelle catégorie
 			</button>
 
-			<table class="table table-hover">
-			<caption>Catégories de type de données</caption>
+			<table class="table table-sm mb-0 table-hover ">
 			<thead>
 			<tr>
 				<th>#</th>
 				<th>Label</th>
 				<th>Enfants</th>
 				<th>Description</th>
-				<th>Actions</th>
+				<th></th>
 			</tr>
 			</thead><tbody>
 			{% for k,v in page.tabCat %}
 			<tr>
 				<td>{{ k }}</td>
 				<td>{{ v.label }}</td>
-				<td>{% if v.enfants > 0 %}<a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ v.groupe }}/{{ k }}/"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a> {{ v.enfants }}{% endif %}</td>
-				<td>{{ v.description }}</td>
 				<td>
-					<button type="button" class="btn btn-default btn-xs edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="data_cat" data-form="formModalNewCat" data-modal="modalNewCat">
-					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-					</button>
+                                  {% if v.enfants > 0 %}
+                                  <div class="btn-group">
+                                    <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ v.groupe }}/{{ k }}/">
+                                        <span class="fa fa-search-plus" aria-hidden="true"></span>
+                                      </a>
+                                    </div>
+                                    {{ v.enfants }}
+                                  {% endif %}
+                                </td>
+				<td>{{ v.description }}</td>
+				<td class="d-flex justify-content-end">
+          <div class="btn-group">
+					  <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ k }}" data-table="data_cat" data-form="formModalNewCat" data-modal="modalNewCat">
+					  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+					  </button>
 
-					<button type="button" class="btn btn-default btn-xs delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled="disabled"{% endif %} data-id="{{ k }}" data-table="data_cat">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					</button>
+					  <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if v.enfants > 0 or v.module=="base" %}disabled{% endif %} data-id="{{ k }}" data-table="data_cat">
+					  <span class="fa fa-times" aria-hidden="true"></span>
+					  </button>
+          </div>
 				</td>
 			</tr>
 			{% endfor %}
@@ -157,8 +167,8 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myModalLabel">Création / édition catégorie</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -220,7 +230,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+				<button type="button" class="btn" data-dismiss="modal">Fermer</button>
 				<button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button>
 			</div>
 		</div>

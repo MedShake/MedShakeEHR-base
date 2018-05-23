@@ -34,21 +34,13 @@
     {{ parent() }}
     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
 
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js?{{ modules.base }}"></script>
 
     <style>
-        .imageDc {
-            display: inline-block;
-            width: 330px;
-            margin: 5px;
-        }
-
         .imageDc img {
-            display: inline-block;
-            width: 330px;
-            vertical-align: top;
-            border: 10px solid #EEE;
+            max-width: 330px;
+            max-height: 330px;
         }
 
         .voirframes {
@@ -65,15 +57,15 @@
             {{ page.studyDcData.Datetime|date('d/m/Y H:i') }}
             de
             {# firstname #}
-            {{ page['patient']['administrativeDatas']['3']['value']|e }}
+            {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
             {# name #}
-            {% if page['patient']['administrativeDatas']['2']['value'] %}
-                {{ page['patient']['administrativeDatas']['2']['value']|e }}
-                {% if page['patient']['administrativeDatas']['1']['value'] %}
-                    ({{ page['patient']['administrativeDatas']['1']['value']|e }})
+            {% if page['patient']['administrativeDatas']['lastname']['value'] %}
+                {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+                {% if page['patient']['administrativeDatas']['birthname']['value'] %}
+                    ({{ page['patient']['administrativeDatas']['birthname']['value']|e }})
                 {% endif %}
             {% else %}
-              {{ page['patient']['administrativeDatas']['1']['value']|e }}
+              {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
             {% endif %}
             <small>
                 {{ page['patient']['administrativeDatas']['8']['value']|e }}
@@ -87,8 +79,8 @@
 
         <ol class="breadcrumb">
             <li>
-                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/">{{ page['patient']['administrativeDatas']['3']['value']|e }}
-                    {{ page['patient']['administrativeDatas']['2']['value']|e }}</a>
+                <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/">{{ page['patient']['administrativeDatas']['firstname']['value']|e }}
+                    {{ page['patient']['administrativeDatas']['lastname']['value']|e }}</a>
             </li>
             <li class="active">Examen du
                 {{ page.studyDcData.Datetime|date('d/m/Y H:i') }}</li>
@@ -106,45 +98,63 @@
                 {{ page.studyDcDataRapro.creationDate|date('d/m/Y H:i') }}</p>
         {% endif %}
 
-        <div class="panel panel-default">
+        <div class="card col-md-12">
 
-            <div class="panel-heading">Images de l'étude</div>
-            <div class="panel-body imagesList">
-              <button type="button" data-status="unchecked" class="btn btn-default btn-sm selectAll">Tout sélectionner / déselectionner</button>
-                <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
-                    <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
-                    <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
-                    {% for instance, frames in page.imagesPath %}
-                      {% for frame,imagepath in frames %}
-                        <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %}style="display: none;"{% endif %}>
-                            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
-                            <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off">
-                            {% if frame == 0 and frames|length > 1 %}
-
-                              <span class="voirframes" data-frames="frames{{ instance }}">
-                               {{ frames|length }} images - voir / masquer
-                             </span>
-                            {% endif %}
-                        </span>
-                      {% endfor %}
-                    {% endfor %}
-                    <span class="imageDc" style="text-align : right; vertical-align: bottom;">
-                        <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary">Générer un ZIP</button>
-                        <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary">Générer un PDF</button>
-                    </span>
-                </form>
+          <div class="card-header">Images de l'étude
+            <div class="float-right">
+              <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary mb-0">Générer un ZIP</button>
+              <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary mb-0">Générer un PDF</button>
             </div>
+          </div>
+          <div class="card-body pt-1 imagesList">
+            <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
+              <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
+              <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
+              <span class="imageDc" style="display:block; vertical-align:bottom; width:100%">
+                <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
+              </span>
+              {% for instance, frames in page.imagesPath %}
+                {% for frame, imagepath in frames %}
+                  <table class="d-inline-block m-1 mb-2" style="border:5px solid #eee;background-color:#eee">
+                    <thead>
+                      <tr>
+                        <th style="text-align:center;line-height:0">
+                          <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off"/>
+                        </th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border:5px solid #eee">
+                        <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
+                          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
+                          {% if frame == 0 and frames | length > 1 %}
+
+                            <span class="voirframes" data-frames="frames{{ instance }}">
+                              {{ frames|length }}
+                              images - voir / masquer
+                            </span>
+                          {% endif %}
+                        </span>
+                      </td>
+                    {% endfor %}
+                  {% endfor %}
+                  </tr>
+                <tbody>
+              </table>
+            </form>
+          </div>
         </div>
 
         {# DEPRECATED #}
         {% if page.studyDcDataSR %}
-            <div class="panel panel-default">
+            <div class="card col-md-12">
 
-                <div class="panel-heading">Tags DICOM SR</div>
-                <div class="panel-body">
+                <div class="card-header">Tags DICOM SR</div>
+                <div class="card-body">
                     <p>Mesures remontées dans cette études</p>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-sm mb-0 table-striped table-hover">
                     <thead>
                         <th>Tag</th>
                         <th>Nom</th>
@@ -172,13 +182,13 @@
 
         {# Data SR via XML #}
         {% if page.studyDcDataSRFull %}
-            <div class="panel panel-default">
+            <div class="card col-md-12">
 
-                <div class="panel-heading">Tags DICOM SR (XML)</div>
-                <div class="panel-body">
+                <div class="card-header">Tags DICOM SR (XML)</div>
+                <div class="card-body">
                     <p>Mesures remontées dans cette études</p>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-sm mb-0 table-striped table-hover">
                     <thead>
                         <th>Tag</th>
                         <th>Foetus</th>

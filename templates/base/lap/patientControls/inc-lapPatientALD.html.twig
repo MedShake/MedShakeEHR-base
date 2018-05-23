@@ -1,0 +1,66 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau des ALD
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% if page.patientALD %}
+  <label class="w-100">ALD</label>
+  <table class="table table-sm table-hover table-bordered small">
+    <tbody>
+      {% for aldId, ald in page.patientALD %}
+        <tr class="tr{{ aldId }} {% if ald.aldCIM10.value %}table-light"{% else %}table-danger" title="Pas de code CIM10 lié !"{% endif %}>
+          <td data-aldnumber="{{ ald.aldNumber.value }}" data-toggle="collapse" data-target="#aldDet{{ aldId }}lap" style="cursor: pointer">
+            {% if ald.aldCIM10.value is empty %}<span class="fa fa-exclamation-triangle" aria-hidden="true"></span> {% endif %}
+            {{ ald.aldLabel }}
+
+            <div id="aldDet{{ aldId }}lap" class="collapse">
+              <table class="table table-sm" style="margin-top:8px;">
+                {% if ald.aldCIM10.value is empty %}<tr><td colspan="2" class="gras">L'absence de code CIM10 lié rend impossible la prise en compte de cette ALD dans les analyses des presrciptions !</td></tr>{% endif %}
+                <tr>
+                  <td>Code CIM 10 lié</td>
+                  <td>{% if ald.aldCIM10.value %}{{ ald.aldCIM10.value }}
+                    {{ ald.aldCIM10label.value }}{% else %}Aucun{% endif %}</td>
+                </tr>
+                <tr>
+                  <td>Début de prise en charge</td>
+                  <td>{{ ald.aldDateDebutPriseEnCharge.value }}</td>
+                </tr>
+                <tr>
+                  <td>Fin de prise en charge</td>
+                  <td>{{ ald.aldDateFinPriseEnCharge.value }}</td>
+                </tr>
+                <tr>
+                  <td>Auteur</td>
+                  <td>{{ ald.fromName }}</td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

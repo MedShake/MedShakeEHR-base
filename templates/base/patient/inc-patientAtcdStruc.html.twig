@@ -1,0 +1,90 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : tableau des ATCD structuré
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<button class="btn btn-light btn-sm addNewCS float-right" data-parentid="{{ parentTypeID }}" data-formtocall="atcdStrucDeclaration" data-mode="create" title="Ajouter un antécédent"><i class="fa fa-plus"></i></button>
+
+{% if atcd %}
+  <table class="table table-sm table-hover table-bordered">
+    <tbody>
+      {% for atcdId, atc in atcd %}
+        <tr class="tr{{ atcdId }} table-active small">
+          <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}" style="cursor: pointer">
+            {{ atc.atcdStrucCIM10Label.value }}
+            <div id="atcdDet{{ atcdId }}" class="collapse">
+              <table class="table table-sm" style="margin-top:8px;">
+                <tr>
+                  <td>Code CIM 10</td>
+                  <td>{{ atc.atcdStrucCIM10.value }}</td>
+                </tr>
+                <tr>
+                  <td>LAP</td>
+                  <td>{% if atc.atcdStrucCIM10InLap.value == 'o' %}pris en compte{% else %}non pris en compte{% endif %}</td>
+                </tr>
+                {% if atc.atcdStrucDateDebutAnnee.value %}
+                  <tr>
+                    <td>Début</td>
+                    <td>
+                      {% if atc.atcdStrucDateDebutJour.value > 0%}{% if atc.atcdStrucDateDebutJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutJour.value }}/{% endif %}{% if atc.atcdStrucDateDebutMois.value > 0 %}{% if atc.atcdStrucDateDebutMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateDebutMois.value }}/{% endif %}{{ atc.atcdStrucDateDebutAnnee.value }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if atc.atcdStrucDateFinAnnee.value %}
+                  <tr>
+                    <td>Fin</td>
+                    <td>
+                      {% if atc.atcdStrucDateFinJour.value > 0%}{% if atc.atcdStrucDateFinJour.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinJour.value }}/{% endif %}{% if atc.atcdStrucDateFinMois.value > 0 %}{% if atc.atcdStrucDateFinMois.value < 10 %}0{% endif %}{{ atc.atcdStrucDateFinMois.value }}/{% endif %}{{ atc.atcdStrucDateFinAnnee.value }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if atc.atcdStrucNotes.value %}
+                <tr>
+                  <td colspan="2">Notes: <br>{{ atc.atcdStrucNotes.value|nl2br }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <td>Auteur</td>
+                  <td>{{ atc.fromName }}</td>
+                </tr>
+                <tr>
+                  <td>Ajout le</td>
+                  <td>{{ atc.atcdStrucCIM10.registerDate }}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="text-right">
+                    <button data-objetid="{{ atcdId }}" data-parentid="0" data-formtocall="atcdStrucDeclaration" data-prevalues="yes" data-mode="update" class="editCS btn btn-sm" title="Éditer"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+                    <a data-objetid="{{ atcdId }}" class="suppCs btn btn-sm" title="Supprimer"><span class="fa fa-times" aria-hidden="true"></span></a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

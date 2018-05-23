@@ -24,6 +24,7 @@
  * Patient : les requête ajax
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
@@ -50,145 +51,21 @@ $acceptedModes=array(
     'extractMailModele', // Extraire le modele de mail
     'extractCourrierForm', // Extraire l'éditeur de courrier
     'refreshHeaderPatientAdminData', // Mettre à jour les données administratives patient en tête de dossier
+    'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
     'saveCsForm', // sauver le formulaire de consultation
     'saveOrdoForm', // sauver une ordonnance
     'saveReglementForm', // sauver une ordonnance
     'changeObjetCreationDate', // changer le creationDate d'un objet
     'getHistorique', // Obtenir l'historique complet
-    'getHistoriqueToday'// Obtenir l'historique du jour
+    'getHistoriqueToday', // Obtenir l'historique du jour
+    'getGraphData', // Obtenir les data pour les graphs biométrie
+    'getGraphDataCardio' // Obtenir les data pour les graphs biométrie cardio
 );
 
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
 
-
-// Extraire un form et lancer nouvelle Cs
-if ($m=='extractCsForm') {
-    include('inc-ajax-extractCsForm.php');
-}
-
-// Extraire un form et lancer nouveau Règlement
-elseif ($m=='extractReglementForm' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-extractReglementForm.php');
-}
-
-// Extraire un form et lancer nouvelle Ordo
-elseif ($m=='extractOrdoForm' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-extractOrdoForm.php');
-}
-
-// Extraire le form de mail et le lancer dans le div
-elseif ($m=='extractMailForm') {
-    include('inc-ajax-extractMailForm.php');
-}
-
-//ajouter un complément au titre d'une ligne de l'historique
-elseif ($m=='completerTitreCs' and is_numeric($_POST['objetID'])) {
-    msObjet::setTitleObjet($_POST['objetID'], $_POST['titre']);
-}
-
-//changer l'importance d'une ligne de l'historique
-elseif ($m=='importanceCsToogle' and is_numeric($_POST['objetID'])) {
-    include('inc-ajax-importanceCsToogle.php');
-}
-
-//upload new Doc
-elseif ($m=='uploadNewDoc' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-uploadNewDoc.php');
-}
-
-//obtenir les ligne d'ordo
-elseif ($m=='getLigneOrdo' and is_numeric($_POST['ligneID'])) {
-    include('inc-ajax-getLigneOrdo.php');
-
-
-//obtenir les data sur un règlement
-} elseif ($m=='getReglementData' and is_numeric($_POST['acteID'])) {
-    include('inc-ajax-getReglementData.php');
-}
-
-//Obtenir l'historique de poids et taille du patient
-elseif ($m=='getGraphData' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-getGraphData.php');
-}
-
-// marquer une ligne de l'historique comme effacée
-elseif ($m=='suppCs' and is_numeric($_POST['objetID'])) {
-    include('inc-ajax-suppCs.php');
-}
-
-// obtenir détails sur objet
-elseif ($m=='ObjetDet' and is_numeric($_POST['objetID'])) {
-    include('inc-ajax-ObjetDet.php');
-}
-
-// préparer l'échographe
-elseif ($m=='prepareEcho' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-prepareEcho.php');
-}
-
-// préparer la réception de doc par phonecapture
-elseif ($m=='prepareReceptionDoc' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-prepareReceptionDoc.php');
-}
-
-// attraper les dernières data SR de l'échographe pour un patient
-elseif ($m=='catchLastDicomSrData' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-catchLastDicomSrData.php');
-}
-
-// lister les studies dicom pour un patient
-elseif ($m=='listPatientDicomStudies' and is_numeric($_POST['patientID'])) {
-    include('inc-ajax-listPatientDicomStudies.php');
-}
-
-// attraper les dernières data SR de l'échographe pour un patient
-elseif ($m=='extractMailModele') {
-    include('inc-ajax-extractMailModele.php');
-}
-
-// extraire l'éditeur de courrier
-elseif ($m=='extractCourrierForm') {
-    include('inc-ajax-extractCourrierForm.php');
-}
-
-// Mettre à jour les données administratives patient en tête de dossier
-elseif ($m=='refreshHeaderPatientAdminData') {
-    include('inc-ajax-refreshHeaderPatientAdminData.php');
-}
-
-// sauver le formulaire de consultation
-elseif ($m=='saveCsForm') {
-    include('inc-ajax-saveCsForm.php');
-}
-
-// envoyer un mail
-elseif ($m=='sendMail') {
-    include('inc-ajax-sendMail.php');
-}
-
-// sauver une ordonnance
-elseif ($m=='saveOrdoForm') {
-    include('inc-ajax-saveOrdoForm.php');
-}
-
-// sauver un règlement
-elseif ($m=='saveReglementForm') {
-    include('inc-ajax-saveReglementForm.php');
-}
-
- // changer le creationDate d'un objet
-elseif ($m=='changeObjetCreationDate') {
-    include('inc-ajax-changeObjetCreationDate.php');
-}
-
-// Obtenir l'historique
-elseif ($m=='getHistorique') {
-    include('inc-ajax-getHistorique.php');
-}
-
-// Obtenir l'historique du jour
-elseif ($m=='getHistoriqueToday') {
-    include('inc-ajax-getHistoriqueToday.php');
+//inclusion
+if(in_array($m, $acceptedModes) and is_file($p['homepath'].'controlers/patient/actions/inc-ajax-'.$m.'.php')) {
+    include('inc-ajax-'.$m.'.php');
+} else {
+    die();
 }

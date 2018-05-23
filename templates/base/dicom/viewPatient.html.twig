@@ -34,8 +34,8 @@
     {{ parent() }}
     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
 
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/dicom.js?{{ modules.base }}"></script>
 
     <style>
         .imageDc img {
@@ -53,15 +53,15 @@
 
         <h1>Examens de
           {# firstname #}
-          {{ page['patient']['administrativeDatas']['3']['value']|e }}
+          {{ page['patient']['administrativeDatas']['firstname']['value']|e }}
           {# name #}
-          {% if page['patient']['administrativeDatas']['2']['value'] %}
-              {{ page['patient']['administrativeDatas']['2']['value']|e }}
-              {% if page['patient']['administrativeDatas']['1']['value'] %}
-                  ({{ page['patient']['administrativeDatas']['1']['value']|e }})
+          {% if page['patient']['administrativeDatas']['lastname']['value'] %}
+              {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+              {% if page['patient']['administrativeDatas']['birthname']['value'] %}
+                  ({{ page['patient']['administrativeDatas']['birthname']['value']|e }})
               {% endif %}
           {% else %}
-            {{ page['patient']['administrativeDatas']['1']['value']|e }}
+            {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
           {% endif %}
             <small>
                 {{ page['patient']['administrativeDatas']['8']['value']|e }}
@@ -74,26 +74,24 @@
         </h1>
 
         <ol class="breadcrumb">
-            <li class="active">{{ page['patient']['administrativeDatas']['3']['value']|e }}
-                {{ page['patient']['administrativeDatas']['2']['value']|e }}</li>
+            <li class="active">{{ page['patient']['administrativeDatas']['firstname']['value']|e }}
+                {{ page['patient']['administrativeDatas']['lastname']['value']|e }}</li>
         </ol>
 
         <div class="row">
 
             <div class="col-md-10">
 
-                <div class="panel panel-default">
+                <div class="card col-md-12">
 
-                    <div class="panel-heading">Examens du patient</div>
-                    <div class="panel-body">
-                        {% if page.studiesDcData %}
-                            <p>Liste des examens du patient trouvés sur le serveur DICOM</p>
-                        {% else %}
-                            <p>Pas d'examens référencés pour ce patient.</p>
+                    <div class="card-header">Examens du patient</div>
+                    <div class="card-body py-1">
+                        {% if not page.studiesDcData %}
+                            <p><i>Pas d'examens référencés pour ce patient.</i></p>
                         {% endif %}
                     </div>
                     {% if page.studiesDcData %}
-                        <table id="listeExamens" class="table table-striped table-hover">
+                        <table id="listeExamens" class="table table-sm mb-0 table-striped table-hover">
                             <thead>
                                 <th></th>
                                 <th>Date</th>
@@ -105,8 +103,8 @@
                                 {% for v in page.studiesDcData %}
                                   <tr>
                                     <td>
-                                        <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/" role="button">
-                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                        <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ v.ID }}/">
+                                          <span class="fa fa-eye" aria-hidden="true"></span>
                                         </a>
                                     </td>
                                     <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>

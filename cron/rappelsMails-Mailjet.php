@@ -53,8 +53,8 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
@@ -68,12 +68,12 @@ function sendmailjet($pa)
 {
     global $p;
 
-    $msgRappel="Madame,\n\nNous vous rappelons votre RDV du ".$pa['jourRdv']." à ".$pa['heureRdv']." avec le Dr ... .\n\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nPS : Ceci est un mail automatique, merci de ne pas répondre.";
+    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['config']['mailRappelMessage'])));
 
     $mailParams=array(
     "FromEmail"=>$p['config']['smtpFrom'],
     "FromName"=>$p['config']['smtpFromName'],
-    "Subject"=>'Rappel rendez-vous Dr ... le '.$pa['jourRdv'].' à '.$pa['heureRdv'],
+    "Subject"=>'Rappel rendez-vous Dr '.$pa['praticien'].' le '.$pa['jourRdv'].' à '.$pa['heureRdv'],
     "Text-part"=>$msgRappel,
     "Html-part"=>nl2br($msgRappel),
     "Recipients"=>[
@@ -115,40 +115,47 @@ function sendmailjet($pa)
     return $pa;
 }
 
+$users=msPeople::getUsersListForService('mailRappelActiver');
 
-$tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
+foreach ($users as $userID=>$value) {
+    /////////// config pour l'utilisateur concerné
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
-$patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
-$patientsList=json_decode($patientsList, true);
+    $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
+
+    $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+    $patientsList=json_decode($patientsList, true);
 
 
-if (is_array($patientsList)) {
-    $listeID=array_column($patientsList, 'id');
+    if (is_array($patientsList)) {
+        $listeID=array_column($patientsList, 'id');
 
-    $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('personalEmail')."' and deleted='' and outdated='' ", 'toID', 'value');
+        $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('personalEmail')."' and deleted='' and outdated='' ", 'toID', 'value');
 
-    $date_sms=date("d/m/y", $tsJourRDV);
+        $date_sms=date("d/m/y", $tsJourRDV);
 
-    $dejaInclus=[];
-    foreach ($patientsList as $patient) {
-        if (isset($listeEmail[$patient['id']])) {
-            if (!in_array($listeEmail[$patient['id']], $dejaInclus)) {
-                $detinataire=array(
-                  'id'=>$patient['id'],
-                  'typeCs'=>$patient['type'],
-                  'jourRdv'=>$date_sms,
-                  'heureRdv'=>$patient['heure'],
-                  'identite'=>$patient['identite'],
-                  'email'=>$listeEmail[$patient['id']]
-                );
-                $log[]=sendmailjet($detinataire);
+        $dejaInclus=[];
+        foreach ($patientsList as $patient) {
+            if (isset($listeEmail[$patient['id']])) {
+                if (!in_array($listeEmail[$patient['id']], $dejaInclus)) {
+                    $detinataire=array(
+                      'praticien'=>$value['lastname']?:$value['birthname'],
+                      'id'=>$patient['id'],
+                      'typeCs'=>$patient['type'],
+                      'jourRdv'=>$date_sms,
+                      'heureRdv'=>$patient['heure'],
+                      'identite'=>$patient['identite'],
+                      'email'=>$listeEmail[$patient['id']]
+                    );
+                    $log[]=sendmailjet($detinataire);
+                }
+                $dejaInclus[]=$listeEmail[$patient['id']];
             }
-            $dejaInclus[]=$listeEmail[$patient['id']];
         }
-    }
 
-    //log json
-    $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
-    msTools::checkAndBuildTargetDir($logFileDirectory);
-    file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
+        //log json
+        $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
+        msTools::checkAndBuildTargetDir($logFileDirectory);
+        file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
+    }
 }

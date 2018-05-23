@@ -1,0 +1,235 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : tab Agenda
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+
+
+{% import "macroForm.html.twig" as f %}
+<div class="row">
+  <div class="col-md-2">
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item">
+        <a href="#pa" aria-controls="pa" class="nav-link active" role="tab" data-toggle="tab">Horaires</a>
+      </li>
+      <li class="nav-item">
+        <a href="#pt" aria-controls="pt" class="nav-link" role="tab" data-toggle="tab">Types de consultations</a>
+      </li>
+      {% if page.useClicRDV %}
+        <li class="nav-item">
+          <a href="#pc" aria-controls="pc" class="nav-link" role="tab" data-toggle="tab">Paramètres ClicRDV</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="col-md-9">
+   <div class="tab-content" >
+
+    {# plages de l'agenda #}
+    <div role="tabpanel" class="tab-pane active" id="pa">
+      <h3>Paramétrage des jours et horaires dans l'agenda MedShakeEHR</h3>
+      <form id="formName_ConfAgenda" class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersAgenda/">
+      <div class="col-md-12">
+        <table class="table" style="width:340px">
+          <tr>
+            <td>
+              Affichage débutant à
+            </td>
+            <td class="time">
+              <div class="md-col-1 input-group input-group-sm date">
+                  <input class="form-control" name="minTime" value="{{ page.agenda.minTime }}" type="text" autocomplete="off">
+                  <div class="input-group-append">
+                      <span class="far fa-clock input-group-text"></span>
+                  </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Affichage finissant à
+            </td>
+            <td class="time">
+              <div class="md-col-1 input-group input-group-sm date">
+                  <input class="form-control" name="maxTime" value="{{ page.agenda.maxTime }}" type="text" autocomplete="off">
+                  <div class="input-group-append">
+                      <span class="far fa-clock input-group-text"></span>
+                  </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Durée d'un créneau
+            </td>
+            <td class="time">
+              <div class="md-col-1 input-group input-group-sm date">
+                  <input class="form-control" name="slotDuration" value="{{ page.agenda.slotDuration }}" type="text" autocomplete="off">
+                  <div class="input-group-append">
+                      <span class="far fa-clock input-group-text"></span>
+                  </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table class="table table-sm mb-0 table-hover ">
+          <tr>
+              <th>Jour</th>
+              <th>Visible</th>
+              <th>Ouvré</th>
+              <th>Premier Rdv</th>
+              <th>Dernier Rdv</th>
+              <th>Début de pause</th>
+              <th>Fin de pause</th>
+          </tr>
+          {% for i in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+            <tr>
+              <td>{{ i }}</td>
+              <td>
+                <input name="visible_{{ i }}" {% if page.agenda[i]['visible'] != false %}checked{% endif %} value="1" type="checkbox" {% if page.agenda[i]['visible'] %}checked{% endif %} autocomplete="off">
+              </td>
+              <td>
+                <input name="workOn_{{ i }}" {% if page.agenda[i]['worked'] != false %}checked{% endif %} value="1" type="checkbox" {% if page.agenda[i]['worked'] %}checked{% endif %} autocomplete="off">
+              </td>
+              <td>
+                <div class='input-group input-group-sm date'>
+                  <input class="form-control" name="minTime_{{ i }}" value="{{ page.agenda[i]['minTime'] }}" type="text" autocomplete="off">
+                    <div class="input-group-append">
+                        <span class="far fa-clock input-group-text"></span>
+                    </div>
+                </div>
+              </td>
+              <td>
+                <div class='input-group input-group-sm date'>
+                  <input class="form-control" name="maxTime_{{ i }}" value="{{ page.agenda[i]['maxTime'] }}" type="text" autocomplete="off">
+                    <div class="input-group-append">
+                        <span class="far fa-clock input-group-text"></span>
+                    </div>
+                </div>
+              </td>
+              <td>
+                <div class='input-group input-group-sm date'>
+                  <input class="form-control" name="pauseStart_{{ i }}" value="{{ page.agenda[i]['pauseStart'] }}" type="text" autocomplete="off">
+                    <div class="input-group-append">
+                        <span class="far fa-clock input-group-text"></span>
+                    </div>
+                </div>
+              </td>
+              <td>
+                <div class='input-group input-group-sm date'>
+                  <input class="form-control" name="pauseEnd_{{ i }}" value="{{ page.agenda[i]['pauseEnd'] }}" type="text" autocomplete="off">
+                    <div class="input-group-append">
+                        <span class="far fa-clock input-group-text"></span>
+                    </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+        <input class="btn btn-primary mt-2" type="submit" value="Valider">
+      </div>
+    </form>
+    </div>
+
+    {# types de consultations dan l'agenda MedShake #}
+    <div role="tabpanel" class="tab-pane" id="pt">
+      <h3>Gestion des types de consultations disponibles dans l'agenda</h3>
+      <form id="formName_ConfConsults" class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersConsultations/">
+        <div class="col-md-12">
+          <table class="table table-sm mb-0 table-hover  consult">
+            <tr>
+              <th></th>
+              <th>Code</th>
+              <th>Descriptif</th>
+              <th>Couleur d'arrière plan</th>
+              <th>Couleur de bordure</th>
+              <th>Durée (min)</th>
+            </tr>
+            {% for k,v in page.consultations %}
+            <tr>
+              <td>
+                {% if v.readonly is defined == false %}
+                  <a class="delConsult" href="javascript:void(0)">
+                    <span class="fa fa-minus"></span>
+                  </a>
+                {% endif %}
+              </td>
+              <td>
+                <input class="form-control form-control-sm" {% if v.readonly %}readonly{% endif %} name="key_{{ k }}" type="text" value="{{ k }}" autocomplete="off">
+              </td>
+              <td>
+                <input class="form-control form-control-sm" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off">
+              </td>
+              <td>
+                <div class="input-group input-group-sm colorpicker" data-toggle="false">
+                  <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.backgroundColor }}"></i></span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="input-group input-group-sm colorpicker" data-toggle="false">
+                  <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.borderColor }}"></i></span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <input class="form-control form-control-sm" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off">
+              </td>
+            </tr>
+            {% endfor %}
+            <tr class="adder">
+              <td>
+                <a class="addConsult" href="javascript:void(0)">
+                  <span class="fa fa-plus"></span>
+                </a>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <input class="btn btn-primary mt-2" type="submit" value="Valider">
+        </div>
+      </form>
+    </div>
+
+    {# formulaire clicRDV #}
+    {% if page.useClicRDV %}
+      <div role="tabpanel" class="tab-pane" id="pc">
+        <h3>Paramétrage de clicRDV</h3>
+        {{ f.formbuilder(page.formClicRdv , page.formIN , session) }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>

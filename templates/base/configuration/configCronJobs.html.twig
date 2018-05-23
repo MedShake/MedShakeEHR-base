@@ -34,19 +34,19 @@
   <style>
     .leftcell {vertical-align:middle !important;text-align:center;border-right:1px solid #ddd;}
   </style>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-		<li class="active">
+		<li class="breadcrumb-item active">
 				Tâches planifiées
 		</li>
   </ol>
@@ -54,7 +54,7 @@
   <h1>Liste des tâches planifiées</h1>
 
   <form id="formCrons" class="ajaxForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configCronJobs/" method="post">
-    <table class="table table-hover table-striped">
+    <table class="table table-sm mb-0 table-hover  table-striped">
       <thead>
         <tr>
           <th>Nom</th>
@@ -74,25 +74,25 @@
           </tr>
           <tr>
             {% if v.values %}
-              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value="true" checked></input></td>
-              <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.values.m }}"></input></td>
-              <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.values.h }}"></input></td>
-              <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.values.M }}"></input></td>
-              <td><input class="form-control" type="text" name="p_dom{{ k }}" value="{{ v.values.dom }}"></input></td>
-              <td><input class="form-control" type="text" name="p_dow{{ k }}" value="{{ v.values.dow }}"></input></td>
+              <td class="d-flex justify-content-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="true" checked></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_m{{ k }}" value="{{ v.values.m }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_h{{ k }}" value="{{ v.values.h }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_M{{ k }}" value="{{ v.values.M }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_dom{{ k }}" value="{{ v.values.dom }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_dow{{ k }}" value="{{ v.values.dow }}"></input></td>
             {% else %}
-              <td class="checkboxFixValue"><input class="form-control" type="checkbox" name="p_a{{ k }}" value=""></input></td>
-              <td><input class="form-control" type="text" name="p_m{{ k }}" value="{{ v.defaults.m }}"></input></td>
-              <td><input class="form-control" type="text" name="p_h{{ k }}" value="{{ v.defaults.h }}"></input></td>
-              <td><input class="form-control" type="text" name="p_M{{ k }}" value="{{ v.defaults.M }}"></input></td>
-              <td><input class="form-control" type="text" name="p_dom{{ k }}" value="{{ v.defaults.dom }}"></input></td>
-              <td><input class="form-control" type="text" name="p_dow{{ k }}" value="{{ v.defaults.dow }}"></input></td>
+              <td class="d-flex justify-content-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value=""></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_m{{ k }}" value="{{ v.defaults.m }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_h{{ k }}" value="{{ v.defaults.h }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_M{{ k }}" value="{{ v.defaults.M }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_dom{{ k }}" value="{{ v.defaults.dom }}"></input></td>
+              <td><input class="form-control form-control-sm" type="text" name="p_dow{{ k }}" value="{{ v.defaults.dow }}"></input></td>
             {% endif %}
           </tr>
         {% endfor %}
       </tbody>
     </table>
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
   </form>
 
 {% endblock %}

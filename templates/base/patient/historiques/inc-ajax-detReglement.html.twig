@@ -23,14 +23,15 @@
  # Template > patient : details sur un règlement pour l'historique
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 <td></td>
-<td colspan="4">
+<td colspan="4" class="py-4">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">Facturation</div>
-        <table class="table table-striped table-hover">
+    <div class="card">
+        <div class="card-header">Facturation</div>
+        <table class="table table-sm mb-0 table-striped table-hover">
             <thead>
                 <tr>
                     <th colspan="2">{{ page.acteFacture.label }}</th>
@@ -38,14 +39,25 @@
                 </tr>
             </thead>
             <tbody>
+              {% if page.secteurHonoraires != '' %}
                 <tr>
-                    <td>Tarif SS</td>
-                    <td>{{ page.datareg.regleTarifCejour.value }}€</td>
+                  <td>Tarif SS</td>
+                  <td>{{ page.datareg.regleTarifSSCejour.value }}€</td>
                 </tr>
                 <tr>
-                    <td>Dépassement</td>
-                    <td>{{ page.datareg.regleDepaCejour.value }}€</td>
+                  <td>Dépassement</td>
+                  <td>{{ page.datareg.regleDepaCejour.value }}€</td>
                 </tr>
+              {% else %}
+                <tr>
+                  <td>Tarif</td>
+                  <td>{{ page.datareg.regleTarifLibreCejour.value }}€</td>
+                </tr>
+                <tr>
+                  <td>Modulation</td>
+                  <td>{{ page.datareg.regleModulCejour.value }}€</td>
+                </tr>
+              {% endif %}
                 <tr>
                     <td>Facturé ce jour</td>
                     <td>{{ page.datareg.regleFacture.value }}€</td>

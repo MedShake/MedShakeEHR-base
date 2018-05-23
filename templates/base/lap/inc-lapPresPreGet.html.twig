@@ -1,0 +1,57 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : prescriptions types
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% if page.cat|length > 0 %}
+  <div>
+    {% for cat in page.cat %}
+      <div class="card mb-1">
+        <div class="card-body p-2">
+          <span class="card-title">{{ cat.label }}
+          <span class="badge float-right">{{ cat.enfants }}</span><br>
+          {% if cat.description %}<small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>{% endif %}
+
+          {% if cat.enfants > 0 %}
+          <select class="form-control custom-select form-control-sm small presTypeSelect">
+            <option> </option>
+            {% for k, pres in page['pres'][cat.id] %}
+              <option value="{{ pres.id }}">{{ pres.label }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+<div class="card mb-1 text-white bg-danger">
+  <div class="card-body p-2">
+    Créez une première catégorie avec le bouton ci-dessous pour pouvoir enregistrer des ordonnances comme prescriptions types !
+  </div>
+</div>
+{% endif %}

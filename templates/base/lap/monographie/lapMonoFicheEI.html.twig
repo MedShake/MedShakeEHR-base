@@ -1,0 +1,247 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiche annexe EI (hors surdosage)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+  <h1 style="margin-bottom : 1em;">{{ page.speData.sp_nom|trim('§') }}<br><small>{{ page.speData.sp_nomlong }}</small></h1>
+
+{% set dataFiche = page.ficheEi.effind %}
+<h2 class="text-uppercase">Effets indésirables à dose thérapeutique</h2>
+<h3>{{ page.ficheEi.effind.12[0].libind }}</h3>
+
+<table class="table table-sm table-hover">
+  <tbody>
+
+    {% if page.ficheEi.effindg is not empty %}
+    <tr>
+      <td class="gras">Type d'effet</td>
+      <td>
+        <ul class="list-unstyled text-uppercase">
+        {% for data in page.ficheEi.effindg %}
+          {% if data.effet_specialite_classe == 1 %}<li>Effet classe</li>
+          {% elseif data.effet_specialite_classe == 2 %}<li>Effet spécialité</li>
+          {% elseif data.effet_specialite_classe == 3 %}<li>Effet excipient</li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.8 is not empty %}
+    <tr>
+      <td class="gras">Nature(s) des EI cliniques</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.8 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.9 is not empty %}
+    <tr>
+      <td class="gras">Nature(s) des EI paracliniques</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.9 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.7 is not empty %}
+    <tr>
+      <td class="gras">Classe pharmacologique</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.7 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.12 is not empty %}
+    <tr>
+      <td class="gras">Organe cible</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.12 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.10 is not empty %}
+    <tr>
+      <td class="gras">Degré(s) de sévérité</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.10 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.4 is not empty %}
+    <tr>
+      <td class="gras">Fréquence</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.4 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.1 is not empty %}
+    <tr>
+      <td class="gras">Terrain favorisant</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.1 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.2 is not empty %}
+    <tr>
+      <td class="gras">Autre(s) circonstance(s) favorisante(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.2 %}
+        <li>{{ data.libind|nl2br }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.3 is not empty %}
+    <tr>
+      <td class="gras">Moment(s) de survenue</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.3 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.5 is not empty %}
+    <tr>
+      <td colspan="2">
+        <ul class="list-unstyled">
+        {% for data in dataFiche.5 %}
+        <li>{{ data.libind|nl2br }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.11 is not empty %}
+    <tr>
+      <td class="gras">Conduite à tenir</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.11 %}
+        <li>{{ data.libind }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.14 is not empty %}
+    <tr>
+      <td colspan="2">
+        <ul class="list-unstyled">
+        {% for data in dataFiche.14 %}
+        <li>{{ data.libind|nl2br }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.13 is not empty %}
+    <tr>
+      <td colspan="2">
+        <span class="gras">Commentaires RCP</span>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.13 %}
+        <li>{{ data.libind|nl2br }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if dataFiche.15 is not empty %}
+    <tr>
+      <td colspan="2">
+        <span class="gras">Commentaires Thériaque</span>
+        <ul class="list-unstyled">
+        {% for data in dataFiche.15 %}
+        <li>{{ data.libind|nl2br }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.ficheEi.refEffind is not empty %}
+    <tr>
+      <td class="gras">Référence(s) officielle(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.ficheEi.refEffind %}
+        <li>{{ data.refoff }} {{ data.datref }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+  </tbody>
+</table>

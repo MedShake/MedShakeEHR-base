@@ -1,0 +1,115 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiche excipient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h1>{{ page.sub.subId.sau_nom }} <small>(excipient)</small></h1>
+
+<table class="table table-sm table-hover">
+  <tbody>
+
+
+    {% if page.sub.subId2.sac_noma is not empty %}
+    <tr>
+      <td class="gras">Terme en langue anglaise</td>
+      <td>{{ page.sub.subId2.sac_noma }}</td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.detExp.3 is not empty %}
+    <tr>
+      <td class="gras">Classe(s) chimique(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.sub.detExp.3 %}
+        <li>{{ data.libdet }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.detExp.4 is not empty %}
+    <tr>
+      <td class="gras">Nature(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.sub.detExp.4 %}
+        <li>{{ data.libdet }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if page.sub.detExp.2 is not empty %}
+    <tr>
+      <td class="gras">Fonctions(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.sub.detExp.2 %}
+        <li>{{ data.libdet }}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+
+    <tr>
+      <td class="gras">Effet notoire</td>
+      <td>{% if page.sub.subId.sau_effetnotoire == 'O' %}OUI{% else %}NON{% endif %}</td>
+    </tr>
+    {% if page.sub.detExp.1 is not empty %}
+    <tr>
+      <td class="gras">Voie(s)</td>
+      <td>
+        <ul class="list-unstyled">
+        {% for data in page.sub.detExp.1 %}
+        <li>{{ data.libdet }} {% if data.doseseuil == 'N' %}sans dose seuil{% else %}avec dose seuil{% endif %}</li>
+        {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
+    {% if page.sub.subId.sau_texte is not empty %}
+    <tr>
+      <td colspan="2">{{ page.sub.subId.sau_texte|nl2br }}</td>
+    </tr>
+    {% endif %}
+
+
+
+    {% if page.sub.subId.cdf_nom is not empty %}
+    <tr>
+      <td class="gras">Référence(s) officielle(s)</td>
+      <td>{{ page.sub.subId.cdf_nom }}
+        {% if page.sub.subId.sau_doc_date|length > 10 %}{{ page.sub.subId.sau_doc_date|date("d/m/Y") }}{% else %}{{ page.sub.subId.sau_doc_date }}{% endif %}
+      </td>
+    </tr>
+    {% endif %}
+
+
+  </tbody>
+</table>

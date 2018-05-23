@@ -52,38 +52,38 @@
     {{ page.patientData.1|e }}
   {% endif %} <small>({{ page.patientData.4 }})</small></h1>
 <p>
-<a class="btn btn-default btn-primary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/" role="button">Retour dossier patient</a>
+<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/">Retour dossier patient</a>
 </p>
-    <div class="container-fluid">
-        <div class="row">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="col-md-2">Date</th>
-                        <th class="col-md-2">De</th>
-                        <th class="col-md-2">A</th>
-                        <th class="col-md-4">Sujet</th>
-                        <th class="col-md-2">Statut</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-                    {% for v in page.listeMessages.Data %}
-                        <tr {% if v.Status == "opened" %}class="success"
-                          {% elseif v.Status in ["blocked", "bounce" ] %}class="danger"
-                          {% elseif v.Status in ["spam" ] %}class="warning"{% endif %}>
-                            <td>{{ v.ArrivedAt|date("Y-m-d H:i:s") }}</td>
-                            <td>{{ v.CampaignData.FromEmail|e }}</td>
-                            <td>{{ page.patientData.4 }}</td>
-                            <td>{{ v.CampaignData.Subject|e }}</td>
-                            <td>{{ v.Status|e }}</td>
-                        </tr>
+<div class="row">
+  <div class="col">
+    <table class="table table-sm mb-0 table-hover ">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>De</th>
+                <th>A</th>
+                <th>Sujet</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
 
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% for v in page.listeMessages.Data %}
+                <tr {% if v.Status == "opened" %}class="success"
+                  {% elseif v.Status in ["blocked", "bounce" ] %}class="danger"
+                  {% elseif v.Status in ["spam" ] %}class="warning"{% endif %}>
+                    <td>{{ v.ArrivedAt|date("Y-m-d H:i:s") }}</td>
+                    <td>{{ v.CampaignData.FromEmail|e }}</td>
+                    <td>{{ page.patientData.4 }}</td>
+                    <td>{{ v.CampaignData.Subject|e }}</td>
+                    <td>{{ v.Status|e }}</td>
+                </tr>
 
-        </div>
-    </div>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
 
 {% endblock %}

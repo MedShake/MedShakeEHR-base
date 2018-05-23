@@ -1,0 +1,67 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie sur base Thériaque : fiche document
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% if page.type == '1' %}
+  <h1>{{ page.speData.sp_nom|trim('§') }}<br><small>{{ page.speData.sp_nomlong }}</small></h1>
+  <h2>Avis de la Commision de la transparence du {{ page.doc.doc[0].date_texte }}</h2>
+
+
+  <table class="table table-sm" style="margin-bottom : 3em;">
+    <tbody>
+      <tr>
+        <td class="gras">Nature de l'avis</td>
+        <td>
+          <ul class="list-unstyled">
+          {% for nature in page.doc.docDet %}
+          <li>{{ nature.avis }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+{% else %}
+  <h1>{{ page.doc.doc[0].titre }}<br>
+    <small>
+      {% if page.type == '2' %}Fiche de transparence ANSM
+      {% elseif page.type == '3' %}{{ page.doc.doc[0].precision }}
+      {% elseif page.type == '4' %}{{ page.doc.doc[0].precision }}
+      {% elseif page.type == '5' %}{{ page.doc.doc[0].precision }}
+      {% elseif page.type == '6' %}{{ page.doc.doc[0].precision }}
+      {% elseif page.type == '7' %}Références médicales opposables - Journal Officiel du
+      {% endif %}
+       {{ page.doc.doc[0].date_texte }}
+    </small>
+  </h1>
+
+
+{% endif %}
+
+{% for data in page.doc.doc %}
+  <div class="card bg-light mb-2 p-2">{{ data.texte|nl2br }}</div>
+{% endfor %}

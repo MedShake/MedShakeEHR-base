@@ -1,0 +1,121 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > people : relations du patient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+{% import "macroForm.html.twig" as f %}
+<div class="row">
+  <div class=" col-md-6 px-0">
+    <div class="card col-md-12 p-0">
+      <div class="card-header gras">Praticiens</div>
+      <div class="card-body">
+        <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
+        <form class="form-inline">
+          <div class="form-group" style="width:100%">
+            <div class="input-group" style="width:100%">
+              <input class="form-control my-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
+              <div class="input-group-append">
+                {{ f.select ({
+                'select' : {
+                  'name' : 'preRelationPatientPrat',
+                  'id' : 'preRelationPatientPratID',
+                  'class' : 'input-group-text my-1',
+                  'values' : page.preRelationPatientPrat.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+              </div>
+              <div class="input-group-append">
+                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary input-group-text my-1">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+      <table class="table table-sm mb-0 table-striped">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Praticien</th>
+						<th>Qualité</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="bodyTabRelationPatientPrat">
+				</tbody>
+
+			</table>
+    </div>
+  </div>
+
+
+	<div class=" col-md-6 pr-0">
+		<div class="card col-md-12 p-0">
+			<div class="card-header gras">Liens familiaux</div>
+			<div class="card-body">
+				<form class="form-inline">
+					<div class="form-group" style="width:100%">
+            <div class="input-group" style="width:100%">
+  						<input class="form-control my-1" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+              <div class="input-group-append">
+					      {{ f.select ({
+                'select' : {
+                  'name' : 'preRelationPatientPatient',
+                  'id' : 'preRelationPatientPatientID',
+                  'class' : 'form-control input-group-text my-1',
+                  'values' : page.preRelationPatientPatient.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+				      </div>
+              <div class="input-group-append">
+					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary input-group-text my-1">Ajouter</button>
+				      </div>
+  					</div>
+					</div>
+				</form>
+			</div>
+
+      <table class="table table-sm mb-0 table-striped">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Patient</th>
+            <th>Date de naissance</th>
+						<th>Qualité</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="bodyTabRelationPatientPatients">
+				</tbody>
+
+			</table>
+		</div>
+	</div>
+
+</div>
+
+{# modal creation nouveau praticien #}
+{% include 'inc-patientModal-newPrat.html.twig' %}

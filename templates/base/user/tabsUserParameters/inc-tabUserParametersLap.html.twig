@@ -1,0 +1,184 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : tab LAP
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+{% import "macroForm.html.twig" as f %}
+<div class="row">
+  <div class=" col-md-2">
+
+    <ul class="nav nav-pills flex-column">
+      {% if config.utiliserLap == 'true' %}
+      <li class="nav-item">
+        <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramétrage du LAP</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#lapSams" data-toggle="tab">SAM</a>
+      </li>
+      {% endif %}
+      {% if config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
+      <li class="nav-item">
+        <a class="nav-link" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="col-md-9">
+    <div class="tab-content">
+
+      {# paramètres perso du LAP #}
+      {% if config.utiliserLap == 'true' %}
+      <div role="tabpanel" class="tab-pane active" id="lapMedics">
+        <h3>Paramétrage du LAP</h3>
+
+        <div class="alert alert-warning" role="alert">
+          Le changement des paramètres sur cette page peut affecter le niveau d'efficacité du LAP et abaisser son seuil de performance en dessous de celui prévu lors de la certification. Le cas échéant, les options concernées apparaissent sur fond jaune.
+        </div>
+
+        <form class="ajaxForm checkboxFixValue" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersLap/">
+          <table class="table table-hover">
+            <tbody>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres de recherche pour nouvelle prescription</td>
+              </tr>
+              <tr>
+                <td>Montrer les médicaments hospitaliers</td>
+                <td><input id="theriaqueShowMedicHospiID" name="theriaqueShowMedicHospi" value="true" type="checkbox" {% if page.lap.params.theriaqueShowMedicHospi == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td>Montrer les médicaments non commercialisés</td>
+                <td><input id="theriaqueShowMedicNonComerID" name="theriaqueShowMedicNonComer" value="true" type="checkbox" {% if page.lap.params.theriaqueShowMedicNonComer == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td>Choix par défaut du menu de recherche des médicaments</td>
+                <td>
+                  <select class="form-control" name="lapSearchDefaultType" autocomplete="off">
+                    <option {% if page.lap.params.lapSearchDefaultType == 'dci' %} selected="selected"{% endif %}  value="dci">Médicaments virtuels (DCI)</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'dcispe' %} selected="selected"{% endif %} value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'spe' %} selected="selected"{% endif %} value="spe">Spécialités commerciales</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'suba' %} selected="selected"{% endif %} value="suba">Substances actives</option>
+                    <option {% if page.lap.params.lapSearchDefaultType == 'atc' %} selected="selected"{% endif %} value="atc">Code ATC</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Ordre de tris par défaut des recherches de médicaments à prescrire</td>
+                <td>
+                  <select class="form-control" name="lapSearchResultsSortBy" autocomplete="off">
+                    <option {% if page.lap.params.lapSearchResultsSortBy == 'nom' %} selected="selected"{% endif %}  value="nom">Nom de spécialité</option>
+                    <option {% if page.lap.params.lapSearchResultsSortBy == 'prixUcd' %} selected="selected"{% endif %} value="prixUcd">Prix estimatif par UCD</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres des alertes à l'ouverture du LAP</td>
+              </tr>
+              <tr {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 != 'true' %} class="table-warning" {% endif %}>
+                <td>Alerte pour un terme de grossesse supérieur à 46SA</td>
+                <td><input class="alerteInfSeuilCertif" id="lapAlertPatientTermeGrossesseSup46ID" name="lapAlertPatientTermeGrossesseSup46" value="true" type="checkbox" {% if page.lap.params.lapAlertPatientTermeGrossesseSup46 == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr {% if page.lap.params.lapAlertPatientAllaitementSup3Ans != 'true' %} class="table-warning" {% endif %}>
+                <td>Alerte pour allaitement supérieur à 3 ans</td>
+                <td><input class="alerteInfSeuilCertif" id="lapAlertPatientAllaitementSup3AnsID" name="lapAlertPatientAllaitementSup3Ans" value="true" type="checkbox" {% if page.lap.params.lapAlertPatientAllaitementSup3Ans == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td class="table-primary" colspan="2">Paramètres d'impression</td>
+              </tr>
+              <tr {% if page.lap.params.lapPrintAllergyRisk != 'true' %} class="table-warning" {% endif %}>
+                <td>Signaler les risques allergiques ou d'intolérance sur les ordonnances imprimées</td>
+                <td><input class="alerteInfSeuilCertif" id="lapPrintAllergyRiskID" name="lapPrintAllergyRisk" value="true" type="checkbox" {% if page.lap.params.lapPrintAllergyRisk == 'true' %} checked="checked"{% endif %} autocomplete="off"></td>
+              </tr>
+            </tbody>
+          </table>
+          <input class="btn btn-primary mt-2" type="submit" value="Valider"></input>
+        </form>
+      </div>
+      {% endif %}
+
+      {# paramètres perso des SAMs #}
+      {% if config.utiliserLap == 'true' %}
+      <div role="tabpanel" class="tab-pane" id="lapSams">
+        <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
+
+        <h4>SAMs gérés</h4>
+
+        <table class="table table-sm table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Identifiant</th>
+              <th>Titre</th>
+              <th>Traité par le LAP</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sam in page.lap.samsList %}
+              <tr>
+                <td>{{ sam.id }}</td>
+                <td>{{ sam.titre }}</td>
+                <td>{{ sam.methode }}</td>
+                <td><button type="button" data-samID="{{ sam.id }}" class="btn btn-light btn-sm userParametersDisplayListSamPatientsDisabled"><i class="fas fa-user"></i></button></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+      {# prescriptions types #}
+      <div role="tabpanel" class="tab-pane" id="prescriptionsTypes">
+        <h3>Gestion des catégories et des prescriptions types personnelles</h3>
+
+        <div class="alert alert-info" role="alert">
+          Si plusieurs utilisateurs sont susceptibles d'utiliser les mêmes catégories et/ou les mêmes prescriptions types, il est plus judicieux de demander à l'administrateur du logiciel de les mettre en place au niveau <a class="alert-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/">Configuration / Paramètres courants / Prescriptions types</a>.
+        </div>
+
+        <ul class="nav nav-tabs mb-3">
+          <li class="nav-item">
+            <a class="nav-link active" href="#catPrescrip" role="tab" data-toggle="tab">Catégories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#presType" aria-controls="presType" role="presType" data-toggle="tab">Prescriptions types hors LAP</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          {# catégories prescriptions types #}
+          <div role="tabpanel" class="tab-pane active" id="catPrescrip"></div>
+
+          {# prescriptions types hors LAP #}
+          <div role="tabpanel" class="tab-pane" id="presType"></div>
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+  </div>
+</div>

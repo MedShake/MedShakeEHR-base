@@ -22,38 +22,65 @@
  # Template > patient : historique medical
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
-{% if page.patient.historique %}
-  <div class="row">
-    <div class="panel panel-default historiqueMedicalComplet">
-        <div class="panel-heading gras">Historique complet</div>
+
+  <div class="col-md-12 px-0 historiqueMedicalComplet"{% if page.patient.historique|length == 0 %} style="display: none"{% endif %}>
+    <div class="card">
+      <div class="card-header gras">Historique complet</div>
 
 
-        <div id="historiqueTypeSelect" class="btn-group btn-group-sm" role="group" aria-label="..." style="margin : 10px 5px">
-          <button type="button" data-groupe="tous" class="btn btn-default active">Tous</button>
-          <button type="button" data-groupe="typecs" class="btn btn-default">Consultations</button>
-          <button type="button" data-groupe="ordo" class="btn btn-default">Ordonnances</button>
-          <button type="button" data-groupe="courrier" class="btn btn-default">Courriers</button>
-          <button type="button" data-groupe="doc" class="btn btn-default">Documents reçus</button>
-          <button type="button" data-groupe="docinterne" class="btn btn-default">Documents créés</button>
-          <button type="button" data-groupe="reglement" class="btn btn-default">Règlements</button>
+      <div id="historiqueTypeSelect" style="margin : 10px 5px">
+        <select class="custom-select d-block d-sm-none d-md-block d-lg-none">
+          <option data-groupe="tous" selected>Tous</option>
+          <option data-groupe="typecs">Consultations</option>
+          <option data-groupe="ordo">Ordonnances</option>
+          <option data-groupe="courrier">Courriers</option>
+          <option data-groupe="doc">Documents reçus</option>
+          <option data-groupe="docinterne">Documents créés</option>
+          <option data-groupe="reglement">Règlements</option>
+        </select>
+        <div class="btn-group btn-group-sm d-none d-sm-block d-md-none d-lg-block d-xl-none" role="group" aria-label="...">
+          <button type="button" data-groupe="tous" class="btn btn-light btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-light btn-sm">Consults
+          </button><button type="button" data-groupe="ordo" class="btn btn-light btn-sm">Ordos
+          </button><button type="button" data-groupe="courrier" class="btn btn-light btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-light btn-sm">Docs reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-light btn-sm">Docs créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-light btn-sm">Règlements</button>
         </div>
+        <div class="btn-group btn-group-sm d-none d-xl-block" role="group" aria-label="...">
+          <button type="button" data-groupe="tous" class="btn btn-light btn-sm active">Tous
+          </button><button type="button" data-groupe="typecs" class="btn btn-light btn-sm">Consultations
+          </button><button type="button" data-groupe="ordo" class="btn btn-light btn-sm">Ordonnances
+          </button><button type="button" data-groupe="courrier" class="btn btn-light btn-sm">Courriers
+          </button><button type="button" data-groupe="doc" class="btn btn-light btn-sm">Documents reçus
+          </button><button type="button" data-groupe="docinterne" class="btn btn-light btn-sm">Documents créés
+          </button><button type="button" data-groupe="reglement" class="btn btn-light btn-sm">Règlements</button>
+        </div>
+      </div>
 
-
-        <table class="table table-hover" data-zone="historiqueMedicalComplet">
+      <div class="mx-1">
+        <table class="table table-sm mb-0 table-hover " data-zone="historiqueMedicalComplet">
             <thead>
-                <tr>
-                    <th>Date</th>
-                    <th class="col-md-2">Actions</th>
-                    <th class="col-md-5">Acte</th>
-                    <th class="col-md-3">Auteur</th>
+                <tr class="histoHead">
                     <th></th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                    <th>Acte</th>
+                    <th>Auteur</th>
                 </tr>
             </thead>
             <tbody>
               {% for k,c in page.patient.historique %}
-                <tr class="anneeHistorique"><td colspan="5" class="bg-primary"><strong>{{ k }}</strong></td></tr>
+                <tr class="table-primary anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee={{ k }}]" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}">
+                  <td class="pl-3">
+                    <span class="far fa-minus-square"{% if "now"|date('Y') != k %} style="display:none"{% endif %}></span>
+                    <span class="far fa-plus-square"{% if "now"|date('Y') == k %} style="display:none"{% endif %}></span>
+                  </td>
+                  <td colspan="4"><strong>{{ k }}</strong></td>
+                </tr>
                 {% for cs in c %}
                   {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
                 {% endfor %}
@@ -61,6 +88,6 @@
 
             </tbody>
         </table>
+      </div>
     </div>
   </div>
-{% endif %}

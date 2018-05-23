@@ -32,28 +32,28 @@
 
 {% block head %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
   <ol class="breadcrumb">
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
-    <li>
+    <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
     </li>
-		<li class="active">
+		<li  class="breadcrumb-item active">
 				Utilisateurs et options
 		</li>
   </ol>
 
   <h1>Liste des utilisateurs</h1>
 
-  <a href="javascript:void(0)" class="btn btn-primary pull-right newUser" data-toggle="modal" data-target="#modalUserCreation" role="button" style="margin-bottom:10px">Nouvel utilisateur</a>
+  <button class="btn btn-primary float-right m-1 newUser" type="button" data-toggle="modal" data-target="#modalUserCreation" style="margin-bottom:10px">Nouvel utilisateur</button>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-sm mb-0 table-hover text-center table-striped">
     <thead>
       <tr>
         <th>#</th>
@@ -61,9 +61,8 @@
         <th>Identité</th>
         <th>Module</th>
         <th>Administrateur</th>
-        <th>Réglages</th>
         <th>Mot de passe</th>
-        <th>Révoquer</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -76,31 +75,35 @@
              <select class="changeModule" data-userid="{{ v.id }}">
               {% for mi,mv in page.modules %}
                 <option value="{{ mv }}" {% if mv==v.module %}selected{% endif %}>{{ mv }}</option>
-              {% endfor %} 
+              {% endfor %}
             </select>
          </td>
           <td>
             <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
-              <span class="glyphicon glyphicon-{% if v.rank =='' %}unchecked{% else %}check{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
+              <span class="far fa-{% if v.rank =='' %}square{% else %}check-square{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
             </a>
           </td>
           <td>
-            <a class="btn btn-default btn-xs" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Paramètres spécifiques</a>
-          </td>
-          <td>
             {% if v.id!=page.userid %}
-              <input style="border:1px solid #ccc;border-radius:4px" type="password" title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value=""></input>
-              <a class="btn btn-default btn-xs" href="javascript:void(0)">
-                <span class="glyphicon glyphicon-ok changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Valider le nouveau mot de passe"></span>
-              </a>
+              <div class="input-group my-0 input-group-sm">
+                <input title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value="" class="form-control" type="password"/>
+                <div class="input-group-append changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                  <span aria-hidden="true" title="Valider le nouveau mot de passe" class="far fa-arrow-alt-circle-down input-group-text"></span>
+                </div>
+              </div>
             {% endif %}
           </td>
-          <td>
-            {% if v.id!=page.userid %}
-              <a class="btn btn-default btn-xs" href="javascript:void(0)">
-                <span class="glyphicon glyphicon-remove revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)"></span>
+          <td class="d-flex justify-content-end">
+            <div class="btn-group">
+              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/" title="Paramètres spécifiques">
+                  <span class="fa fa-wrench" aria-hidden="true"></span>
               </a>
-            {% endif %}
+              {% if v.id!=page.userid %}
+                <button class="btn btn-light btn-sm" type="button" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)">
+                  <span class="fa fa-times revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true"></span>
+                </button>
+              {% endif %}
+            </div>
           </td>
         </tr>
       {% endfor %}
@@ -108,7 +111,7 @@
   </table>
 
   <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title gras">Nouvel utilisateur</h4>
@@ -131,10 +134,10 @@
               <div class="col-md-4">
                 <div class="form-group">
                     <label for="p_module">Module</label>
-                    <select class="form-control" name="p_module">
+                    <select class="form-control custom-select" name="p_module">
                       {% for mi,mv in page.modules %}
                         <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
-                      {% endfor %} 
+                      {% endfor %}
                     </select>
                 </div>
               </div>
@@ -160,7 +163,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button type="button" class="btn" data-dismiss="modal">Annuler</button>
               <button type="submit" class="btn btn-primary">Valider</button>
             </div>
           </form>

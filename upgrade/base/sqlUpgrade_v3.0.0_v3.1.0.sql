@@ -45,7 +45,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='identity');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('admin', 'deathdate', 'dd/mm/YYYY', 'Date de décès', 'Date de décès au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de décès indiquée n\'est pas valide', 'date', '', 'base', @cat, 1, '2018-02-21 10:09:29', 3600, 1);
+('admin', 'deathdate', 'dd/mm/YYYY', 'Date de décès', 'Date de décès au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de décès indiquée n\'est pas valide', 'date', '', 'base', @cat, 1, '2018-01-01 00:00:00', 3600, 1);
 
 SET @cat=(SELECT `id` FROM `data_cat` WHERE `name`='clicRDV');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -118,9 +118,9 @@ update `form_basic_types` set creationDate='2018-01-01 00:00:00', deleteDate='20
 ALTER TABLE `form_basic_types` ADD UNIQUE(`name`);
 DELETE FROM `form_basic_types` WHERE `name` in ('moduleSelect');
 INSERT IGNORE INTO  `form_basic_types` (`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-('actualPassword', 'Mot de passe de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel', '', '', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
-('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-06 12:41:50', 0, '1970-01-01 00:00:00'),
-('module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2017-03-27 00:00:00', 0, '2017-03-27 00:00:00'),
+('actualPassword', 'Mot de passe de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel', '', '', 'password', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '1970-01-01 00:00:00'),
+('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '1970-01-01 00:00:00'),
+('module', '', 'Module', '', '', '', 'hidden', '', 'base', 0, 0, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00'),
 ('currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', '', 'base', 0, 1, '2018-01-01 00:00:00', 0, '2018-01-01 00:00:00');
 
 
@@ -144,3 +144,5 @@ ALTER TABLE `system` CHANGE `version` `value` text DEFAULT NULL;
 
 UPDATE `system` SET `groupe`='module' WHERE `name`='base';
 UPDATE `system` SET `value`='v3.1.0' WHERE `name`='base';
+INSERT IGNORE INTO `system` (`name`, `groupe`,`value`) VALUES
+('state', 'system', 'normal');

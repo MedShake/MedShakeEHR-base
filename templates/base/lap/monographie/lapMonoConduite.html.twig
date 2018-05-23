@@ -1,0 +1,64 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > conduite de véhicules
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<h4 class="text-uppercase">Effets sur l'aptitude à conduire des véhicules et à utiliser des machines</h4>
+
+{% for fi in page.conduite.fcoIdBySpe %}
+  {% if page.conduite.fcoIdBySpe|length > 1 %}<h4 class="text-uppercase">Fiche n°{{ loop.index }}</h4>{% endif %}
+  {% set fiche = page.conduite.detFco[fi.idfco] %}
+  <table class="table table-sm table-hover">
+    <tbody>
+      <tr>
+        <td class="gras">Recommandations</td>
+        <td>
+          <ul class="list-unstyled">
+          {% for data in fiche if data.grp starts with '0.' %}
+          <li>{{ data.info_01 }}</li>
+          {% endfor %}
+          {% for data in fiche if data.grp starts with '1.' %}
+          <li style="margin-left : 1em">{{ data.info_01 }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <p>{{ fi.fco_txt|nl2br }}</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="gras">Référence(s) officielle(s)</td>
+        <td>
+          {{ fi.info_01 }} {{ fi.dat_cre }}
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+{% endfor %}

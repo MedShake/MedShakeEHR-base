@@ -24,12 +24,19 @@
  * Patient > ajax : obtenir les informations de règlement d'un acte
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 header('Content-Type: application/json');
 
+if(!is_numeric($_POST['acteID'])) die();
+
 $reglement = new msReglement();
-$reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+if (isset($_POST['reglementForm'])) {
+    $reglement->set_secteurTarifaire($_POST['reglementForm']=='baseReglementS1'?'1':($_POST['reglementForm']=='baseReglementS2'?'2':''));
+} else {
+    $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+}
 $reglement->set_factureTypeID($_POST['acteID']);
 $data = $reglement->getCalculateFactureTypeData();
 

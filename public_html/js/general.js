@@ -80,20 +80,27 @@ $(document).ready(function() {
   ///////// Obesrvations générales pour formulaires
 
   //// datepicker bootstrap
-  $('.datepick').datetimepicker({
-    locale: 'fr',
-    viewMode: 'years',
-    format: 'L',
-    showClear: true
-
-  });
-  $("#nouvelleCs").on("focusin click", 'div.datepick', function() {
+  $("body").on("click", 'div.datepick', function() {
+    var $div=$(this).closest("div.datepick");
+    var viewMode = $div.hasClass("pick-year")?'years':($div.hasClass("pick-month")?'months':'days');
+    viewMode = $div.find("input").hasClass("pick-year")?'years':($div.find("input").hasClass("pick-month")?'months':viewMode);
     $(this).datetimepicker({
       locale: 'fr',
-      viewMode: 'years',
-      format: 'L'
+      viewMode: viewMode,
+      format: 'L',
+      icons: {
+        time: 'far fa-clock',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-crosshairs',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+      }
     });
-    $(this).data("DateTimePicker").show();
+    $div.data("DateTimePicker").toggle();
   });
 
   // age affiché en label de l'input date de naissance
@@ -106,10 +113,10 @@ $(document).ready(function() {
   // autocomplete simple
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
+      source: urlBase + '/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //autocomplete pour la liaison code postal - > ville
@@ -140,7 +147,7 @@ $(document).ready(function() {
 
       }
     });
-    $(this).autocomplete( "option", "appendTo", "#"+$(this).closest('form').attr('id') );
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
   //prévention du form submit sur la touche enter
@@ -172,16 +179,31 @@ $(document).ready(function() {
   //enregistrement de forms en ajax
   $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
+    var reload = $(this).closest("form").hasClass('reload');
+    var stop = false;
+    $(this).closest("form").find('input[required],textarea[required]').each(function(idx, el) {
+      if (el.value==''){
+        glow('danger', $(el));
+        stop=true;
+      }
+    });
+    if (stop) {
+      alert_popup("warning", "Certains champs requis n'ont pas été remplis.");
+      return;
+    }
     $.ajax({
-      url: $(this).parents("form").attr("action"),
+      url: $(this).closest("form").attr("action"),
       type: 'post',
-      data: $(this).parents("form").serialize(),
+      data: $(this).closest("form").serialize(),
       dataType: "json",
       success: function(data) {
-        $(".submit-success").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-success").animate({top:"0"},300)}), 4000)});
+        if (reload)
+          window.location.reload();
+        else
+          alert_popup("success", "Opération validée");
       },
       error: function() {
-        $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+        alert_popup("danger", "Une erreur s'est produite durant l'opération");
       }
     });
   });
@@ -189,7 +211,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
-  if ($('#QRcodeAccesPhoneCapture').length) {
+  if ($('.QRcodeAccesPhoneCapture').length) {
     var el = kjua({
       text: phoneCaptureUrlAcces,
 
@@ -240,7 +262,7 @@ $(document).ready(function() {
       image: null
 
     });
-    $('#QRcodeAccesPhoneCapture').html(el);
+    $('.QRcodeAccesPhoneCapture').html(el);
   }
 
 });
@@ -248,6 +270,17 @@ $(document).ready(function() {
 
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions diverses
+
+// faire flasher le background d'un élément
+function flashBackgroundElement(el) {
+  attrInitiaux = el.attr('class');
+  el.removeClass('bg-light');
+  el.css("background", "#efffe8");
+  el.delay(700).queue(function() {
+    $(this).css("background","").dequeue();
+    $(this).attr('class' , attrInitiaux);
+  });
+}
 
 // checkboxes dans les formulaires
 function chkboxClick(el) {
@@ -271,7 +304,15 @@ function scrollTo(element, delai) {
 
 //agrandir un élément de formulaire automatiquement
 function auto_grow(element) {
-  element.style.height = (element.scrollHeight) + "px";
+  $(element).css('height', Math.max(16*(parseInt($(element).attr('rows')) || 1), element.scrollHeight) + 2);
+}
+
+function glow(type, $el) {
+  var colors={success:"#efffe8", danger:"#f8d7da"};
+  $el.css("background", colors[type]);
+  $el.delay(700).queue(function() {
+    $(this).css("background","").dequeue();
+  });
 }
 
 //fonction pour la sauvegarde automatique de champ de formulaire
@@ -288,20 +329,23 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       },
       dataType: "json",
       success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
-        });
+        glow('success', $(source));
       },
       error: function() {
-        //alert('Problème, rechargez la page !');
+        //alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   }
 }
 
-//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée 
+// équivalent de nl2br php
+function nl2br(str, is_xhtml) {
+  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+}
+
+//fonction pour la sauvegarde automatique de champ de formulaire via le nom du type de donnée
 function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
   if (patientID && typeName && source) {
     $.ajax({
@@ -315,17 +359,101 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
       },
       dataType: "json",
       success: function(data) {
-        el = $(source);
-        el.css("background", "#efffe8");
-        el.delay(700).queue(function() {
-          $(this).css("background","").dequeue();
-        });
+        glow('success', $(source));
       },
       error: function() {
-        //alert('Problème, rechargez la page !');
+        //alert_popup("danger", 'Problème, rechargez la page !');
+
       }
     });
   }
+}
+
+// affichage de messages d'alerte
+function alert_popup(severity, message) {
+  var titre = {info: 'Note: ', success: 'Succès: ', warning: 'Message: ', danger: 'Erreur: '}
+  $("#alert_section").append('\
+    <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto pl-4" role="alert">\
+      <strong>' + titre[severity] + ' </strong>' + message +
+      '<button type="button" class="pl-2 close" data-dismiss="alert" aria-label="Close">\
+        <span aria-hidden="true">&times;</span>\
+      </button>\
+    </div>');
+  if (severity == 'info' || severity == 'success') {
+    setTimeout((function(){$('.alert-to-remove').remove()}),4000);
+  }
+}
+
+/**
+ * Comparer 2 tableaux
+ * @param  {array} arr1 tableau 1
+ * @param  {array} arr2 tableau 2
+ * @return {boolean}      true / false
+ */
+function arraysEqual(arr1, arr2) {
+    if(arr1.length !== arr2.length)
+        return false;
+    for(var i = arr1.length; i--;) {
+        if(arr1[i] !== arr2[i])
+            return false;
+    }
+
+    return true;
+}
+
+
+/**
+ * download csv file
+ * Thanks to codexworld <https://www.codexworld.com/export-html-table-data-to-csv-using-javascript/>
+ */
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+}
+
+/**
+ * Make csv file from html table
+ * Thanks to codexworld <https://www.codexworld.com/export-html-table-data-to-csv-using-javascript/>
+ * @param  {string} table    table selector
+ * @param  {string} filename filename
+ * @return {file}          file
+ */
+function exportTableToCSV(table, filename) {
+    var csv = [];
+    var rows = document.querySelectorAll(table + " tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++)
+            row.push(cols[j].innerText);
+
+        csv.push(row.join(";"));
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -51,6 +51,7 @@ $(document).ready(function() {
   //observer le changement sur dépassement
   $("#newReglement").on("change, keyup", ".regleDepaCejour", function(e) {
     e.preventDefault();
+    $(this).val($(this).val().replace(' ',''));
     calcResteDu();
   });
 
@@ -80,14 +81,26 @@ function searchAndInsertActeData(selecteur) {
   id = selecteur.attr('id');
   acteID = $('#' + id + ' option:selected').val();
 
+  if (acteID == '') {
+    resetModesReglement();
+    $('#detFacturation').hide();
+    $('.regleFacture').val('');
+    $('.regleTarifCejour').val('');
+    $('.regleDepaCejour').val('');
+    return;
+  }
+
+  var pourcents = $('.pourcents').length;
+
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
-
+  
   $.ajax({
     url: urlBase+'/patient/ajax/getReglementData/',
     type: 'post',
     data: {
       acteID: acteID,
+      reglementForm: $('#newReglement input[name=reglementForm]').val(),
     },
     dataType: "json",
     success: function(data) {
@@ -103,7 +116,7 @@ function searchAndInsertActeData(selecteur) {
 
       $('#detFacturation tbody').html('');
       $.each(data['details'], function( index, value ) {
-        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + value['pourcents'] + "</td><td>" + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
+        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + (pourcents ? (value['pourcents'] + "</td><td>") : '') + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
 
       });
       $('#detFacturation').show();
@@ -112,7 +125,8 @@ function searchAndInsertActeData(selecteur) {
       calcResteDu();
     },
     error: function() {
-      alert('Problème, rechargez la page !');
+      alert_popup("danger", 'Problème, rechargez la page !');
+
     }
   });
 

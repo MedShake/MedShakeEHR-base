@@ -38,30 +38,30 @@
 {% block body %}
 
     <ol class="breadcrumb">
-      <li>
+      <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
       </li>
-      <li>
+      <li class="breadcrumb-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ap">A propos</a>
       </li>
-      <li class="active">
+      <li class="breadcrumb-item active">
         Crédits
       </li>
     </ol>
 
     <h1>Crédits</h1>
 
-    <h2>Auteur</h2>
+    <h2 class="my-2">Auteur</h2>
     <p>
         Bertrand Boutillier <b.boutillier@gmail.com><br>
         Medecin généraliste et informaticien <br>
         <a href="http://www.medshake.net">MedShake</a> &amp; <a href="http://www.logiciel-cabinet-medical.fr/">MedShakeEHR</a>
     </p>
 
-    <h2>Contributeurs</h2>
+    <h2 class="my-2">Contributeurs</h2>
     <p>MedShakeEHR n'aurait pas été ce qu'il est sans leurs contributions, grandes ou modestes. Merci à eux!</p>
 
-      <table class="table table-striped table-hover">
+      <table class="table table-sm mb-0 table-striped table-hover">
         <tr>
           <td>
             fr33z00
@@ -76,10 +76,10 @@
       </table>
 
 
-    <h2>Remerciements</h2>
+    <h2 class="my-2">Remerciements</h2>
     <p>MedShakeEHR utilise ou est basé sur (liste non exhaustive!) ces excelents logiciels, librairies, class, plugins... Merci à leurs auteurs respectifs!</p>
 
-      <table class="table table-striped table-hover">
+      <table class="table table-sm mb-0 table-striped table-hover">
         {% for k, v in page.thanks %}
           <tr>
             <td>

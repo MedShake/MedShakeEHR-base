@@ -1,0 +1,92 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau de résultat de recherche de médicaments à ajouter
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% if page.medicListeSpe | length > 0 %}
+<div class="col-md-12 text-right" style="margin-bottom : 3px;">
+  <button class="btn btn-light btn-sm approRecherche" data-codesSpe="{{ page.listeCodeSpeTrouve|join(',') }}">Détailler ces résultats</button>
+</div>
+{% endif %}
+
+<div class="col-md-12">
+
+  {% if page.medicListeSpe | length > 0 %}
+    <table id="tabMedicaments" class="table table-sm table-hover tablesorter">
+      <thead class="thead-dark small">
+        <tr>
+          <th></th>
+          <th class="col-auto" data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Nom</th>
+          <th class="col-auto" data-sort="string">Forme</th>
+          <th class="col-auto" data-sort="float" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
+          <th class="col-auto" data-sort="int">Taux&nbsp;SS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for medic in page.medicListeSpe %}
+          {% for pres in medic.presentations %}
+
+              <tr data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
+                <td>
+                  <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank">
+                    <span class="fa fa-book" aria-hidden="true"></span>
+                  </a>
+                </td>
+                <td class="sendToPrescription">
+                  {{ medic.sp_nom|trim('§') }}
+                  {% if medic.statutDelivrance.rh == 'OUI' or medic.statutDelivrance.ph == 'OUI' or  medic.statutDelivrance.puh == 'OUI' or medic.statutDelivrance.sp == 'OUI' or medic.statutDelivrance.ps == 'OUI' or medic.statutDelivrance.prep_h == 'OUI' or medic.statutDelivrance.atu == 'OUI' %}
+                    <span class="badge badge-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="fa fa-exclamation-triangle"></span></span>
+                  {% endif %}
+                  {% if pres.reservhop != 'NON' %}
+                    <span class="badge badge-primary" title="Ce médicament est à prescription hospitalière, consultez la monographie pour les détails">H</span>
+                  {% endif %}
+                  {% if pres.pre_adm %}
+                    <br><span class="small">{{ pres.pre_adm }}</span>
+                  {% endif %}
+                </td>
+                <td class="sendToPrescription small">
+                  {% if pres.pre_nat %}
+                    <span class="badge badge-secondary">{{ pres.pre_nat }}</span>{% endif %}
+                </td>
+                <td data-sort-value="{{ medic.prixEstim|number_format(5, '.', '') }}" class="sendToPrescription small">
+                  {% if medic.prixEstim %}
+                    <span class="badge badge-secondary" title="{{ medic.prixEstim }}€">{{ medic.prixEstim|number_format(2, ',', ' ') }}€</span>
+                  {% endif %}
+                </td>
+                <td class="sendToPrescription small">
+                  {% if pres.rbtVille not in ['0 %'] %}
+                    <span class="badge badge-secondary">{{ pres.rbtVille }}</span>{% endif %}
+                </td>
+              </tr>
+
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning" role="alert">Votre recherche n'a produit aucun résultats</div>
+  {% endif %}
+</div>

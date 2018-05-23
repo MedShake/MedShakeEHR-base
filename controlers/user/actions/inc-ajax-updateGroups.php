@@ -27,7 +27,7 @@
  */
 
 $clicRdv=new msClicRDV();
-if ($_POST['password']!="********") {
+if ($_POST['password']!=str_repeat('*',strlen(msConfiguration::getParameterValue('clicRdvPassword', array('id'=>$p['user']['id'], 'module'=>''))))) {
     $clicRdv->setUserPwd($_POST['userid'],$_POST['password']);
 } else {
     $clicRdv->setUserID($p['user']['id']);

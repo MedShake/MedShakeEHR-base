@@ -1,0 +1,51 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : ALD structurées
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<button class="btn btn-light btn-sm addNewCS float-right" type="submit" data-parentID="0" data-formtocall="aldDeclaration" data-mode="create" title="Ajouter une ALD"><i class="fa fa-plus"></i></button>
+<label>ALD</label>
+<table class="table table-sm table-hover table-bordered"><tbody>
+{% for aldId, ald in page.patient.ALD %}
+  <tr class="tr{{ aldId }} table-active small">
+    <td data-toggle="collapse" data-target="#aldDet{{ aldId }}" style="cursor: pointer">
+    {{ ald.aldLabel }}
+
+    <div id="aldDet{{ aldId }}"  class="collapse">
+        <table class="table table-sm" style="margin-top:8px;">
+        <tr><td>Code CIM 10 lié</td><td>{{ ald.aldCIM10.value }} {{ ald.aldCIM10label.value }}</td></tr>
+        <tr><td>Début de prise en charge</td><td>{{ ald.aldDateDebutPriseEnCharge.value }}</td></tr>
+        <tr><td>Fin de prise en charge</td><td>{{ ald.aldDateFinPriseEnCharge.value }}</td></tr>
+        <tr><td>Auteur</td><td>{{ ald.fromName }}</td></tr>
+        <tr><td colspan="2" class="text-right">
+          <button data-objetID="{{ aldId }}" data-parentID="0" data-formtocall="aldDeclaration" data-prevalues="yes" data-mode="update" class="editCS btn btn-light btn-sm" title="Éditer"><i class="fa fa-pencil-alt" aria-hidden="true"></i></button>
+          <a data-objetID="{{ aldId }}" class="suppCs btn btn-light btn-sm" title="Supprimer"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </td></tr>
+      </table>
+  </div>
+  </td></tr>
+{% endfor %}
+</tbody></table>

@@ -23,6 +23,7 @@
  # Template > patient : formulaire d'ajout d'une ligne à l'ordonnance
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
 
@@ -42,7 +43,7 @@
                     'textarea' : {
                       'name' : ligne.formname ,
                       'id' : 'ligne' ~ ligne.formname ~'ID',
-                      'class' : 'form-control',
+                      'class' : 'form-control form-control-sm',
                       'value' : ligne.description ,
                       'autocomplete' : 'off',
                       'rows' : '5'

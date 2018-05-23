@@ -28,7 +28,7 @@
 
 {% import "macroForm.html.twig" as f %}
 {# Formulaire de synthèse #}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
 <button id="cleanNewCourrier" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
 <form id="invisible_form" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}{{ page.courrier.actionForm }}" method="post" target="_blank" data-patientID="{{ page.patient.id }}">
@@ -38,7 +38,7 @@
     <div class="container">
         <div class="row" style="margin-bottom : 30px;">
             <button id="makePDF" type="button" class="btn btn-primary">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                <span class="fa fa-save" aria-hidden="true"></span>
                 Imprimer & Sauver
             </button>
         </div>

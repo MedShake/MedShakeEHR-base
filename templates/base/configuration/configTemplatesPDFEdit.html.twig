@@ -23,6 +23,7 @@
  # Template > Config : edition d'un templates d'impression PDF
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #
  #}
 
@@ -32,30 +33,30 @@
 
 {% block head %}
 {{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js"></script>
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 <link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.css">
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.js"></script>
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/mode/twig/twig.js"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.js?{{ modules.base }}"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/mode/twig/twig.js?{{ modules.base }}"></script>
 
 {% endblock %}
 
 {% block body %}
 <ol class="breadcrumb">
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
-  <li>
+  <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des modèles</a>
   </li>
   {% if page.selectUser > 0 %}
-    <li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {% if page.fichier.proprio.2 %}{{ page.fichier.proprio.2 }}{% else %}{{ page.fichier.proprio.1 }}{% endif %}</a>
     </li>
   {% endif %}
-  <li class="active">
+  <li class="breadcrumb-item active">
     Édition
   </li>
 </ol>
@@ -122,8 +123,8 @@
   </div>
 
 
-  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
-  <button {% if page.templatesDirAutorisationEcriture == false %}disabled="disabled"{% endif %} type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled{% endif %} type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled{% endif %} type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
 
   <p>
   {{ page.form.yaml }}

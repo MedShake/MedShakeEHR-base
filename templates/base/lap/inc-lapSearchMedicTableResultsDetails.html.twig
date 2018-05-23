@@ -1,0 +1,113 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : tableau des résultats détaillés de recherche de médicaments
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="row bottom-space">
+  <div class="col-md-12">
+    <button type="button" class="btn btn-primary nouvellePrescription">
+    <span class="fa fa-search" aria-hidden="true"></span>
+    Nouvelle recherche</button>
+  </div>
+</div>
+    <table id="tabDetMedicaments" class="table table-sm table-hover tablesorter small">
+      <thead>
+        <tr class="active">
+          <th></th>
+          <th data-sort="alphanum" {% if config.lapSearchResultsSortBy == 'nom' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Spécialité</th>
+          <th data-sort="string">Substances actives</th>
+          <th data-sort="string">Excipients à effet notoire</th>
+          <th data-sort="string">Forme</th>
+          <th data-sort="string" {% if config.lapSearchResultsSortBy == 'prixUcd' %}data-sort-default="asc" data-sort-onload="yes"{% endif %}>Prix/UCD</th>
+          <th data-sort="int">Taux&nbsp;SS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for medic in page.medic %}
+          {% for pres in medic.presentations %}
+          <tr data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}">
+              <td >
+                <a  href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank" class="btn btn-light btn-sm" >
+                  <span class="fa fa-book" aria-hidden="true"></span>
+                </a>
+              </td>
+              <td >
+                {{ medic.sp_nom|trim('§') }}
+                {% if medic.statutDelivrance.rh == 'OUI' or medic.statutDelivrance.ph == 'OUI' or  medic.statutDelivrance.puh == 'OUI' or medic.statutDelivrance.sp == 'OUI' or medic.statutDelivrance.ps == 'OUI' or medic.statutDelivrance.prep_h == 'OUI' or medic.statutDelivrance.atu == 'OUI' %}
+                  <span class="badge badge-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="fa fa-exclamation-triangle"></span></span>
+                {% endif %}
+
+                {% if pres.reservhop != 'NON' %}
+                  <span class="badge badge-primary" title="Ce médicament est à prescription hospitalière, consultez la monographie pour les détails">H</span>
+                {% endif %}
+                {% if pres.pre_adm %}
+                  <br>{{ pres.pre_adm }}
+                {% endif %}
+
+
+              </td>
+              <td >
+                <ul class="list-unstyled small">
+                {% for suba in medic.suba %}
+                    <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ suba.codesubst }}/1/" target="_blank" class="gras">{{ suba.libsubst }}</a> {% if suba.dosesubst > 0 %}{{ suba.dosesubst|number_format(2, ',', '') }} {{ suba.udosesubst }}{% endif %}</li>
+                {% endfor %}
+                </ul>
+              </td>
+              <td >
+                <ul class="list-unstyled small">
+                {% for sube in medic.sube if sube.effetnotoire == 'O' %}
+                    <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ sube.codesubst }}/1/" target="_blank" class="gras">{{ sube.libsubst }}</a> {% if sube.dosesubst > 0 %}{{ sube.dosesubst|number_format(2, ',', '') }} {{ sube.udosesubst }}{% endif %}</li>
+                {% endfor %}
+                </ul>
+              </td>
+
+              <td >
+              {% if pres.pre_nat %}
+                <span class="badge badge-secondary">{{ pres.pre_nat }}</span>
+              {% endif %}
+              </td>
+
+              <td  data-sort-value="{{ medic.prixEstim|number_format(5, '.', '') }}" class="sendToPrescription">
+                {% if medic.prixEstim %}
+                  <span class="badge badge-secondary" title="{{ medic.prixEstim }}€">{{ medic.prixEstim|number_format(2, ',', ' ') }}€</span>
+                {% endif %}
+              </td>
+
+
+
+
+            <td class="sendToPrescription">
+              {% if pres.rbtVille not in ['0 %'] %}
+                <span class="badge badge-secondary">{{ pres.rbtVille }}</span>
+              {% endif %}
+            </td>
+
+            </tr>
+          {% endfor %}
+
+        {% endfor %}
+      </tbody>
+    </table>

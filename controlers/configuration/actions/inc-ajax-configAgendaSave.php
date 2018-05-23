@@ -34,31 +34,31 @@ $agendaUsers= new msPeople();
 $autorisedUsers=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
 
 //construction du répertoire
-msTools::checkAndBuildTargetDir($p['config']['webDirectory'].'agendasConfigurations/');
+msTools::checkAndBuildTargetDir($p['homepath'].'config/agendas/');
 
 
 if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers))) {
-    file_put_contents($p['config']['homeDirectory'].'config/configTypesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
+    file_put_contents($p['homepath'].'config/agendas/typesRdv'.$_POST['userID'].'.yml', $_POST['configTypesRdv']);
 
     if(empty($_POST['configTypesRdv']))
-        unlink($p['config']['homeDirectory'].'config/configTypesRdv'.$_POST['userID'].'.yml');
+        unlink($p['homepath'].'config/agendas/typesRdv'.$_POST['userID'].'.yml');
     if(empty($_POST['configAgendaAd'])) {
-        if (is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js')) {
-            unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js');
+        if (is_file($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'_ad.js')) {
+            unlink($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'_ad.js');
         }
     } else {
-        file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'_ad.js', $_POST['configAgendaAd']);
+        file_put_contents($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'_ad.js', $_POST['configAgendaAd']);
     }
     if(empty($_POST['configAgenda'])) {
-        if (is_file($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml')) {
-            unlink($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
+        if (is_file($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.yml')) {
+            unlink($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.yml');
         }
-        if (is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js')) {
-            unlink($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js');
+        if (is_file($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.js')) {
+            unlink($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.js');
         }
     } else {
-        file_put_contents($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
-        $params=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configAgenda'.$_POST['userID'].'.yml');
+        file_put_contents($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.yml', $_POST['configAgenda']);
+        $params=Spyc::YAMLLoad($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.yml');
 
         $js=array();
         $js[]="businessHours = [\n";
@@ -107,7 +107,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="minTime = '".$params['minTime'].":00';\n";
         $js[]="maxTime = '".$params['maxTime'].":00';\n";
         $js[]="slotDuration = '".$params['slotDuration'].":00';\n";
-        file_put_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$_POST['userID'].'.js', $js);
+        file_put_contents($p['homepath'].'config/agendas/agenda'.$_POST['userID'].'.js', $js);
     }
 }
 echo json_encode("ok");

@@ -24,6 +24,7 @@
  * user : les requête ajax
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 
@@ -33,20 +34,24 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'updateGroups', // Récupérer la liste des groupes de clicRDV
     'updateCals', // Récupérer la liste des agendas d'un groupe de clicRDV
-    'updateConsults' // Récupérer la liste des types de consultation d'un agenda de clicRDV
+    'updateConsults', // Récupérer la liste des types de consultation d'un agenda de clicRDV
+    'userParametersAgenda', // changer les paramètres d'agenda
+    'userParametersConsultations', // changer les paramètres de consultations
+    'userParametersClicRdv', // changer les paramètres clicRDV
+    'userParametersLap', // changer les paramètres LAP
+    'userParametersDisplayListSamPatientsDisabled', // afficher la liste des patients concernés par la blocage d'un SAM
+    'userParametersPrescriptionsCatList', // lister les catégories de prescription
+    'userParametersPrescriptionsList', // lister les prescriptions types
+    'userParametersExtractByPrimaryKey', //extraire d'une table par la primary key
+    'userParametersDelByPrimaryKey', // effacer d'une table par la primary key
+    'userParametersPrescriptionsCatCreate', // céer une nouvelle catégorie
+    'userParametersPrescriptionsCreate', // créer une nouvelle prescription type
+
 );
 
-if (!in_array($m, $acceptedModes)) {
-    die;
+//inclusion
+if( in_array($m,$acceptedModes) and is_file($p['homepath'].'controlers/user/actions/inc-ajax-'.$m.'.php')) {
+    include('inc-ajax-'.$m.'.php');
+} else {
+    die();
 }
-
-
-// Récupérer la liste des groupes de clicRDV
-if ($m=='updateGroups') {
-    include('inc-ajax-updateGroups.php');
-} elseif ($m=='updateCals') {
-    include('inc-ajax-updateCals.php');
-} elseif ($m=='updateConsults') {
-    include('inc-ajax-updateConsults.php');
-}
-

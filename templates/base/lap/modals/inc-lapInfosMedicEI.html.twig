@@ -1,0 +1,65 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : inclusion effets indésirables pour modal d'informations médicament
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<h2>Effets indésirables de {{ page.spe.sp_nomlong }}</h2>
+
+{% if page.eiCli is not empty  %}
+<h3>Effets indésirables cliniques (hors surdosage)</h3>
+<div>
+{% for ei in page.eiCli %}
+  <span class="badge badge-info" style="display: inline-block; margin-bottom : 0.5em;padding : 0.5em">{{ ei }}</span>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if page.eiParaCli is not empty  %}
+<h3>Effets indésirables paracliniques (hors surdosage)</h3>
+<div>
+{% for ei in page.eiParaCli %}
+  <span class="badge badge-secondary" style="display: inline-block; margin-bottom : 0.5em;padding : 0.5em">{{ ei }}</span>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if page.eiCliSd is not empty  %}
+<h3>Effets indésirables cliniques (surdosage)</h3>
+<div>
+{% for ei in page.eiCliSd %}
+  <span class="badge badge-info" style="display: inline-block; margin-bottom : 0.5em;padding : 0.5em">{{ ei }}</span>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if page.eiParaCliSd is not empty  %}
+<h3>Effets indésirables paracliniques (surdosage)</h3>
+<div>
+{% for ei in page.eiParaCliSd %}
+  <span class="badge badge-secondary" style="display: inline-block; margin-bottom : 0.5em;padding : 0.5em">{{ ei }}</span>
+{% endfor %}
+</div>
+{% endif %}

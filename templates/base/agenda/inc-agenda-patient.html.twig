@@ -1,0 +1,40 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # fr33z00 <https://github.com/fr33z00>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Agenda, cadre patient
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+
+<h3>Patient</h3>
+<div id="patientSearch" class="input-group mx-0 mb-3">
+  <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
+  <div class="input-group-append">
+    <button id="newPatient" type="button" class="btn btn-outline-secondary">Créer patient</button>
+  </div>
+</div>
+<div id="patientInfo" style="display: none">
+  {{ f.formbuilder(page.formNewPatient , 'baseNewPatient', session) }}
+</div>
+

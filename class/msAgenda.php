@@ -307,8 +307,8 @@ class msAgenda
       {
           global $p;
           if (!isset($this->_tabTypeRdv)) {
-              if (is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$this->_userID.'.yml')) {
-                  $this->_tabTypeRdv=Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$this->_userID.'.yml');
+              if (is_file($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml')) {
+                  $this->_tabTypeRdv=Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml');
               } else {
                   $this->_tabTypeRdv=array(
                 '[C]'=> array(
@@ -550,8 +550,8 @@ class msAgenda
 
     public static function getRdvTypes($userID) {
         global $p;
-        if(is_file($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml')) {
-          return Spyc::YAMLLoad($p['config']['homeDirectory'].'config/configTypesRdv'.$userID.'.yml');
+        if(is_file($p['homepath'].'config/agendas/typesRdv'.$userID.'.yml')) {
+          return Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$userID.'.yml');
         } else {
           return array(
             '[C]'=> array(

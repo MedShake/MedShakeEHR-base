@@ -1,0 +1,71 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > paramètres utilisateur : modal de création / edition de
+ # cat prescriptions type
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+{% import "macroForm.html.twig" as f %}
+<div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Création / édition catégorie</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger" role="alert" style="display : none;">
+                    Merci de considérer les informations suivantes et de corriger les champs concernés :
+                    <ul></ul>
+                </div>
+                <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersPrescriptionsCatCreate/" data-groupe="SERTaRIENici">
+
+                    <input type="hidden" name="name" value="">
+                    <input type="hidden" name="toID" value="{{ user.id }}">
+                    <input type="hidden" name="fromID" value="{{ user.id }}">
+
+                    <div class="form-group">
+                        {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : page.typesPrescriptionsList, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Type', } }) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'label', 'placeholder' : 'nom principal', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label', } }) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'description', 'placeholder' : 'description', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Description', } }) }}
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>

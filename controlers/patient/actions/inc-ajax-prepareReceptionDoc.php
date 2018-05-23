@@ -40,8 +40,8 @@ $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
 
 //inclusion si présence dans module installé du fichier sépcifique
-if (is_file($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php')) {
-    include($p['config']['homeDirectory'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php');
+if (is_file($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php')) {
+    include($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php');
 }
 
 // Vérification répertoire de travail

@@ -24,6 +24,7 @@
  * Gestion des utilisateurs de l'EHR
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msUser
@@ -98,24 +99,22 @@ class msUser
         if (!isset($_COOKIE['userPassPc'])) {
             return msUser::cleanBadAuth();
         }
-
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".msSQL::cleanVar($_COOKIE['userIdPc'])."' LIMIT 1");
+        
+        $userID=msSQL::cleanVar($_COOKIE['userIdPc']); 
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".$userID."' LIMIT 1");
 
         //recherche clef de salage spécifique au user
-        $name2typeID = new msData();
-        if ($phonecaptureFingerprintID = $name2typeID->getTypeIDFromName('phonecaptureFingerprint')) {
-            $clef=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$phonecaptureFingerprintID."' and toID='".msSQL::cleanVar($_COOKIE['userIdPc'])."' and outdated='' and deleted='' limit 1");
-            if (!empty(trim($clef))) {
-                $p['config']['phonecaptureFingerprint']=$clef;
-            }
-        }
+        $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', $userID);
 
         if ($_COOKIE['userPassPc']==md5(md5(sha1(md5($user['pass'].$p['config']['phonecaptureFingerprint']))))) {
             return $user;
         } else {
-            setcookie("userIdPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
-            setcookie("userPassPc", '', (time()-$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+            $duration=msConfiguration::getParameterValue('phonecaptureCookieDuration');
+            $domain=msConfiguration::getParameterValue('cookieDomain');
+            setcookie("userIdPc", '', (time()-$duration), "/", $domain);
+            setcookie("userPassPc", '', (time()-$duration), "/", $domain);
             unset($_SESSION);
+            return null;
         }
     }
 
@@ -127,31 +126,10 @@ class msUser
     public static function cleanBadAuth()
     {
         global $match, $p;
-        include $p['config']['homeDirectory'].'controlers/login/logOutDo.php';
+        include $p['homepath'].'controlers/login/logOutDo.php';
         return false;
     }
 
-
-/**
- * surcharger la config yaml avec les paramètres perso de l'utilisateur
- * @param  array $config Tableau porteur de la configuration
- * @param  int   $userID userID
- * @return void
- */
-    public static function applySpecificConfig(&$config, $userID)
-    {
-        $data = new msPeople();
-        $data->setToID($userID);
-        $params = $data->getPeopleDataFromDataTypeGroupe('user', ['dt.name', 'od.value as userVal']);
-
-        if (count($params) > 0) {
-            foreach ($params as $param) {
-                if ($param['userVal'] != null) {
-                    $config[$param['name']]=$param['userVal'];
-                }
-            }
-        }
-    }
 
 /**
  * Vérifier le login utilisateur

@@ -28,7 +28,7 @@
 
 {% import "macroForm.html.twig" as f %}
 {# Formulaire de synthèse #}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
     <button id="cleanNewOrdo" type="button" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
                     </label>
-                    <select class="form-control selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
+                    <select class="form-control custom-select selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}" {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}>{{ val.optionmenu }}</option>
@@ -56,12 +56,14 @@
     <form id="ordoComposer" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/actions/saveOrdoForm/" target="_blank" method="post" class="">
         <input type="hidden" name="porteur" value="{{ page.ordo.porteur }}"></input>
         <input type="hidden" name="module" value="{{ page.ordo.module }}"></input>
+        <input type="hidden" name="ordoForm" value="{{ page.ordo.ordoForm }}"></input>
+        <input type="hidden" name="asUserID" value="{{ page.ordo.asUserID }}"></input>
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="control-label" for="p_189ID">Modèle impression
                     </label>
-                    <select class="form-control" name="ordoTypeImpression" data-typeid="189" autocomplete="off">
+                    <select class="form-control custom-select" name="ordoTypeImpression" data-typeid="189" autocomplete="off">
 
                         <option value="standard">standard</option>
                         <option value="ald"{% if page.courrier.modeprint == 'ald' %} selected="selected"{% endif %}>ALD</option>

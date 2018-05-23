@@ -1,0 +1,79 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : tab pour données biométriques et cliniques
+ #
+ # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="row">
+  <div class="col-md-2 pl-0">
+    <ul class="nav nav-pills flex-column" role="tablist">
+      <li role="presentation" class="nav-item">
+        <a class="nav-link active" href="#sl" aria-controls="sl" role="tab" data-toggle="tab">Historique taille / poids / IMC</a>
+      </li>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#sp" aria-controls="sp" role="tab" data-toggle="tab">Courbe de poids</a>
+      </li>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#st" aria-controls="st" role="tab" data-toggle="tab">Courbe de taille</a>
+      </li>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#si" aria-controls="si" role="tab" data-toggle="tab">Courbe d'IMC</a>
+      </li>
+      <li role="presentation" class="nav-item">
+        <a class="nav-link" href="#biometrieCardio" data-toggle="tab">Historique TA / FC / Sat</a>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content col-md-10">
+    <div role="tabpanel" class="tab-pane" id="biometrieCardio">
+    </div>
+
+    <div role="tabpanel" class="tab-pane active" id="sl">
+      <table class="table table-sm mb-0 table-striped table-hover histo">
+        <thead>
+          <tr class="histo-head">
+            <th style="text-align:center; cursor: pointer" data-sort="int">Age <span class="arrow fa fa-chevron-up"></span></th>
+            <th style="text-align:center; cursor: pointer" data-sort="int" data-sort-default="desc" data-sort-onload="yes">Mesuré le</th>
+            <th style="text-align:center; cursor: pointer" data-sort="int">Poids (kg)</th>
+            <th style="text-align:center; cursor: pointer" data-sort="int">Taille (cm)</th>
+            <th style="text-align:center; cursor: pointer" data-sort="float">IMC (kg/m&sup2;)</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="sp">
+      <canvas class="graph-poids" width="800" height="400"></canvas>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="st">
+      <canvas class="graph-taille" width="800" height="400"></canvas>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="si">
+      <canvas class="graph-imc" width="800" height="400"></canvas>
+    </div>
+  </div>
+</div>

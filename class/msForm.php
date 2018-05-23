@@ -27,6 +27,7 @@
  * - obtention des valeurs pour un individu particulier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 class msForm
@@ -244,7 +245,7 @@ class msForm
     public function addSubmitToForm(&$f, $class='btn-primary')
     {
         $f['structure'][][1]=array(
-        'size'=>12,
+        'size'=>'col-12',
         'elements'=>array(
           '0'=>array(
             'type'=>'form',
@@ -743,7 +744,7 @@ class msForm
 
 /**
  * Construire le tableau: définir la largeur de colonne
- * @param  int $value     Largeur
+ * @param  string $value     largeur exprimée avec un int ou class bootstrap
  * @param  int $rowNumber Numéro de ligne
  * @param  int $colNumber Numéro de colonne
  * @param  array $r         Tableau final de résultat
@@ -751,7 +752,11 @@ class msForm
  */
     private function _formBuilderColSize($value, $rowNumber, $colNumber, &$r)
     {
+      if(is_numeric(trim($value){0})) {
+        $r['structure'][$rowNumber][$colNumber]['size']='col-md-'.$value;
+      } else {
         $r['structure'][$rowNumber][$colNumber]['size']=$value;
+      }
     }
 
 

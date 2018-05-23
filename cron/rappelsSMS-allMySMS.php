@@ -53,46 +53,52 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
-$p['config']['homeDirectory']=$homepath;
+$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+$users=msPeople::getUsersListForService('smsRappelActiver');
 
-$tsJourRDV=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
+foreach ($users as $userID=>$value) {
+    /////////// config pour l'utilisateur concerné
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
-$campaignSMS = new msSMSallMySMS();
+    $tsJourRDV=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
 
-$campaignSMS->set_campaign_name("RappelsRDV".date('Ymd', $tsJourRDV));
-$campaignSMS->set_message("Nous vous rappelons votre rendez-vous avec le Dr ... le #param_1# #param_2#. Bien cordialement.");
-$campaignSMS->set_tpoa($p['config']['smsTpoa']);
+    $campaignSMS = new msSMSallMySMS();
 
-$patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
-$patientsList=json_decode($patientsList, true);
+    $campaignSMS->set_campaign_name("RappelsRDV".date('Ymd', $tsJourRDV));
+    $campaignSMS->set_message(str_replace("#praticien", $value['lastname']?:$value['birthname'], str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['config']['smsRappelMessage']))));
+    $campaignSMS->set_tpoa(iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', str_replace("#praticien", $value['lastname']?:$value['birthname'], $p['config']['smsTpoa'])));
 
-$campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=>$tsJourRDV));
+    $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+    $patientsList=json_decode($patientsList, true);
 
-if (is_array($patientsList)) {
-    $listeID=array_column($patientsList, 'id');
+    $campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=>$tsJourRDV));
 
-    $listeTel=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('mobilePhone')."' and deleted='' and outdated='' ", 'toID', 'value');
+    if (is_array($patientsList)) {
+        $listeID=array_column($patientsList, 'id');
 
-    $date_sms=date("d/m/y", $tsJourRDV);
+        $listeTel=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('mobilePhone')."' and deleted='' and outdated='' ", 'toID', 'value');
 
-    $numDejaInclus=[];
-    foreach ($patientsList as $patient) {
-        if (isset($listeTel[$patient['id']])) {
-            $telNumber=str_ireplace(array(' ', '/', '.'), '', $listeTel[$patient['id']]);
-            if (!in_array($telNumber, $numDejaInclus)) {
-                $campaignSMS->ajoutDestinataire($telNumber, array('PARAM_1'=>$date_sms , 'PARAM_2'=>$patient['heure']));
+        $date_sms=date("d/m/y", $tsJourRDV);
+
+        $numDejaInclus=[];
+        foreach ($patientsList as $patient) {
+            if (isset($listeTel[$patient['id']])) {
+                $telNumber=str_ireplace(array(' ', '/', '.'), '', $listeTel[$patient['id']]);
+                if (!in_array($telNumber, $numDejaInclus)) {
+                    $campaignSMS->ajoutDestinataire($telNumber, array('PARAM_1'=>$date_sms , 'PARAM_2'=>$patient['heure']));
+                }
+                $numDejaInclus[]=$telNumber;
             }
-            $numDejaInclus[]=$telNumber;
         }
-    }
 
-    $campaignSMS->sendCampaign();
-    $campaignSMS->set_filename4log('RappelsRDV.json');
-    $campaignSMS->logCampaign();
-    $campaignSMS->logCreditsRestants();
+        $campaignSMS->sendCampaign();
+        $campaignSMS->set_filename4log('RappelsRDV.json');
+        $campaignSMS->logCampaign();
+        $campaignSMS->logCreditsRestants();
+    }
 }

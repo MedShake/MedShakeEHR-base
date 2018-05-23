@@ -20,13 +20,14 @@
  #/
 
 /##
- # Template > patient : formulaire d'upload par drag&drop     
+ # Template > patient : formulaire d'upload par drag&drop
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
     <button id="cleanNewDocImport" type="button" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -34,7 +35,8 @@
     <h3>Importer un document dans le dossier du patient</h3>
 
     <div class="row">
-        <div id="dropZoneDoc"  class="col-md-9 bg-danger center-block" style="padding : 30px; border-radius : 6px">
+      <div class="col">
+        <div id="dropZoneDoc"  class="bg-info center-block text-white" style="padding : 30px; border-radius : 6px">
             Déposer ici le document ou sélectionnez-le avec le bouton ci-dessous<br/>
             <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
 
@@ -59,6 +61,6 @@
             }) }} -->
 
         </div>
+      </div>
     </div>
-
 </div>

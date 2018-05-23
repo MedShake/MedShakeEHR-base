@@ -23,10 +23,11 @@
  # Template > patient : formulaire de règlement
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% import "macroForm.html.twig" as f %}
-<div class="jumbotron">
+<div class="jumbotron col-md-12">
     <button id="cleanNewReglement" type="button" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -37,13 +38,13 @@
         <h3>Nouveau règlement</h3>
     {% endif %}
 
-    <div class="row" style="margin-bottom : 30px">
+    <div class="row mb-3">
         {% for k, v in page.menusActes %}
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
                     </label>
-                    <select class="form-control selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
+                    <select class="form-control custom-select selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}"
@@ -60,15 +61,21 @@
         {% endfor %}
     </div>
 
-    <div id="detFacturation" class="panel panel-default" style="display: none;">
-      <div class="panel-heading">Détails par acte dans le règlement sélectionné</div>
+    <div id="detFacturation" class="card col-md-12 px-0 mb-3" style="display: none;">
+      <div class="card-header">Détails par acte dans le règlement sélectionné</div>
 
-      <table class="table table-condensed">
+      <table class="table table-sm mb-0">
         <thead>
           <th>acte</th>
-          <th>%</th>
+          {% if page.secteur != '' %}
+            <th class="pourcents">%</th>
+          {% endif %}
           <th>tarif</th>
-          <th>depassement</th>
+          {% if page.secteur == '' %}
+            <th>modulation</th>
+          {% else %}
+            <th>depassement</th>
+          {% endif %}
           <th>total</th>
         </thead>
         <tbody></tbody>

@@ -27,6 +27,8 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if(!isset($_FILES['file']) or !is_numeric($_POST['patientID'])) die;
+
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
 $acceptedtypes=array(

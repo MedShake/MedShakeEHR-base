@@ -27,8 +27,34 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!isset($_POST['patientID'])) {
+    $patient = new msObjet();
+    $patient->setFromID($p['user']['id']);
+
+    $newpatient = new msPeople();
+    $newpatient->setFromID($p['user']['id']);
+    $newpatient->setType('patient');
+
+    $patient->setToID($_POST['patientID']=$newpatient->createNew());
+    $patient->setDataset('admin');
+
+    foreach ($_POST as $k=>$v) {
+        if (array_search($k, ['eventID', 'userID', 'eventStartID', 'eventEndID', 'start', 'end', 'motif', 'type'])!==FALSE) {
+            continue;
+        }
+        if (($pos = strpos($k, "_")) !== false) {
+            $in = substr($k, $pos+1);
+            if (isset($in)) {
+                if (!empty(trim($v)) and !empty(trim($in))) {
+                    $patient->createNewObjetByTypeName($in, $v);
+                }
+            }
+        }
+    }
+}
+
 $agenda = new msAgenda();
-if ($_POST['eventID']>0) {
+if (isset($_POST['eventID']) and $_POST['eventID']>0) {
     $agenda->set_eventID($_POST['eventID']);
 }
 $agenda->set_userID($match['params']['userID']);
@@ -43,7 +69,7 @@ $event=$agenda->addOrUpdateRdv();
 header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
-    $hook=$p['config']['homeDirectory'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
+    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setNewRdv.php';
     if (is_file($hook)) {
         include($hook);
     }

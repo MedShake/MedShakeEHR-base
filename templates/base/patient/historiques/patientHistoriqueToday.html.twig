@@ -19,34 +19,34 @@
  # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
  #/
 /##
- # Template > patient : historique medical du jour      
+ # Template > patient : historique medical du jour
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 {% import "macroForm.html.twig" as f %}
-{% if page.patient.today %}
-  <div class="row">
-      <div class="panel panel-default historiqueToday">
-          <div class="panel-heading gras">Aujourd'hui</div>
 
-          <table class="table table-hover" data-zone="historiqueToday">
-              <thead>
-                  <tr>
-                      <th class="col-md-1">Heure</th>
-                      <th class="col-md-2">Actions</th>
-                      <th class="col-md-5">Acte</th>
-                      <th class="col-md-3">Auteur</th>
-                      <th class="col-md-1"></th>
-                  </tr>
-              </thead>
-              <tbody>
+    <div class="card col-md-12 px-0 mb-4 historiqueToday"{% if page.patient.today|length == 0 %} style="display:none"{% endif %}>
+        <div class="card-header gras">Aujourd'hui</div>
 
-                  {% for cs in page.patient.today %}
-                    {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
-                  {% endfor %}
+        <div class="mx-1">
+            <table class="table table-sm mb-0 table-hover " data-zone="historiqueToday">
+                <thead>
+                    <tr class="histoHead">
+                        <th></th>
+                        <th>Heure</th>
+                        <th>Actions</th>
+                        <th>Acte</th>
+                        <th>Auteur</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-              </tbody>
-          </table>
-      </div>
-  </div>
-{% endif %}
+                    {% for cs in page.patient.today %}
+                      {% include 'pht-ligne-'~ cs.groupe ~'.html.twig' %}
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>

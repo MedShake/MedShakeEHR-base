@@ -1,0 +1,62 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > classifications
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+
+<h4 class="text-uppercase">Classe(s) pharmacothérapeutique(s) :</h4>
+
+<ul>
+{% for cphSpe in page.classifications.cphSpe %}
+  <li>{{ cphSpe.libcph }}</li>
+{% endfor %}
+</ul>
+
+<h4 class="text-uppercase">Classe(s) ATC (d'après l'OMS) :</h4>
+
+<ul>
+{% for atc in page.classifications.atc %}
+  <li>{{ atc.libelle }} : {{ atc.code }}</li>
+{% endfor %}
+</ul>
+
+{% if page.classifications.ddd is not empty %}
+<h4 class="text-uppercase">Dose journalière usuelle DDD (source Thériaque d'après l'OMS) :</h4>
+
+<ul>
+{% for ddd in page.classifications.ddd %}
+  <li>Voie : {{ ddd.nomvoie }} - {{ ddd.dosage }} {{ ddd.nomunite }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<h4 class="text-uppercase">Classe(s) EphMRA (d'après le CLub Inerpharmaceutique) :</h4>
+
+<ul>
+{% for ephmra in page.classifications.ephmra %}
+  <li>{{ ephmra.libelle }} : {{ ephmra.code }}</li>
+{% endfor %}
+</ul>

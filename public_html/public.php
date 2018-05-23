@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
@@ -57,10 +57,13 @@ if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
     $p['config']['cookieDomain']=$_SERVER['SERVER_ADDR'];
 }
-$p['config']['homeDirectory']=$homepath;
+$p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
+
+/////////// Compléter le tableau des paramètres de configuration par défaut
+$p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// Validators loader
 require $homepath.'fonctions/validators.php';

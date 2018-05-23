@@ -1,86 +1,226 @@
 .bottom-space {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .gras {
-	font-weight: bold;
+  font-weight: bold;
+}
+
+.nongras {
+  font-weight: normal;
 }
 
 .underlined {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 /*Style pour la zone de preview dans historique patient*/
 
 .appercu .gras {
-	font-weight: bold;
+  font-weight: bold;
 }
+
 .appercu .centrer {
-	text-align: center;
+  text-align: center;
 }
+
 .appercu .t6 {
-	font-size: 10px;
+  font-size: 10px;
 }
+
 .appercu .t8 {
-	font-size: 12px;
+  font-size: 12px;
 }
+
 .appercu .t9 {
-	font-size: 13px;
+  font-size: 13px;
 }
+
 .appercu .t10 {
-	font-size: 14px;
+  font-size: 14px;
 }
+
 .appercu .t12 {
-	font-size: 16px;
+  font-size: 16px;
 }
 
 .appercu h2 {
-	margin-top: 4px;
-	font-size: 22px;
+  margin-top: 4px;
+  font-size: 22px;
 }
 
 .appercu h3 {
-	margin: 12pt 0 5px;
-	padding: 0;
-	font-size: 20px;
+  margin: 12pt 0 5px;
+  padding: 0;
+  font-size: 20px;
 }
 
 .appercu h4 {
-	margin: 10pt 0 3px;
-	padding: 0;
-	font-size: 18px;
+  margin: 10pt 0 3px;
+  padding: 0;
+  font-size: 18px;
 }
 
 .appercu ul {
-	margin: 0 0 0 10px;
-	padding: 0;
+  margin: 0 0 0 10px;
+  padding: 0;
 }
 
 .appercu .vat {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 .appercu .cbox {
-	font-family: DejaVu Sans, sans-serif;
-	font-size: 16px;
+  font-family: DejaVu Sans, sans-serif;
+  font-size: 16px;
 }
 
 .appercu th {
-	background: #555;
-	color: #FFF;
-	text-align: center;
-	font-size: 14px;
+  background: #555;
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
 }
 
 .appercu .tabPatiente td {
-	vertical-align: top;
-	margin: 0;
-	padding: 0;
-	text-align: left;
+  vertical-align: top;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
 .appercu .bordurelat {
-	border-left: 1pt solid #000;
-	border-right: 1pt solid #000;
-
+  border-left: 1pt solid #000;
+  border-right: 1pt solid #000;
 }
+
+/* h1 {
+  margin-top: 0.25em;
+  margin-bottom: 0.5em
+}
+
+h2 {
+  margin-top: 0.25em;
+  margin-bottom: 0.5em
+}
+
+label {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 14px
+}
+
+.btn-group {
+  margin: 0
+}
+
+.input-group {
+  margin: 0.25em
+}
+
+.btn-group>.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info) {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: #bbb
+}
+
+.btn-group>.btn:not(.btn-primary):not(.btn-warning):not(.btn-success):not(.btn-danger):not(.btn-info):hover {
+  background-color: #ddd
+}
+
+a {
+  color: #337ab7
+}
+
+.btn {
+  color: #484848;
+}
+
+.btn:hover {
+  color: #181818;
+}
+
+.btn.btn-sm {
+  min-width: 36px;
+  height: 31px;
+  padding-top: 5px;
+  margin: 0
+}
+
+.btn .fa, .btn .far {
+  font-size: 1rem
+}
+
+.btn-group>.btn:not(:last-child):not(:first-child:last-child):not(.btn-primary):not(.btn-secondary):not(.btn-warning):not(.btn-info) {
+  border-right: none
+}
+
+.btn-group>.btn.active {
+  box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
+}
+
+:not(.input-group-append):not(.input-group-prepend)>.btn:not(.btn-sm) {
+  border-radius: 2px
+}
+
+.btn.btn-primary, .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+
+.btn.btn-primary:hover, .btn-primary:active, .btn-primary.dropdown-toggle:active, .show>.btn-primary.dropdown-toggle, .btn-primary.dropdown-toggle:focus {
+  background-color: #286090 !important;
+  border-color: #204d74
+}
+
+.bg-primary {
+  color: #fff;
+  background-color: #337ab7 !important;
+}
+
+.btn-warning {
+  background-color: #f0ad4e;
+  border-color: #eea236
+}
+
+.btn-warning:hover, .btn-warning:active, .btn-warning:focus {
+  background-color: #ec971f !important;
+  border-color: #d58512
+}
+
+.btn-danger, .btn-danger:hover, .btn-success, .btn-success:hover, .btn-outline-secondary:hover {
+  color: #fff
+}
+
+input::placeholder {
+  font-size: 14px !important
+}
+
+.card {
+  line-height: 32px
+}
+
+.card-header {
+  line-height: 36px
+}
+
+.list-group {
+  line-height: 16px
+}
+
+.nav .dropdown-item a {
+  padding: 0
+}
+
+.nav .dropdown-divider {
+  margin-bottom: 0.25rem
+}
+
+.nav-pills .nav-link.active, :not(.navbar-nav) .dropdown-item:active {
+  background-color: #337ab7;
+}
+
+select.custom-select.form-control-sm {
+  padding: 4px
+} */

@@ -29,33 +29,48 @@
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
 
 $booleans=array(
-          'PraticienPeutEtrePatient',
           'twigEnvironnementAutoescape',
           'twigEnvironnementCache'
           );
 
-$modules=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
-foreach ($modules as $module) {
-    if (is_file($p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/actions/inc-ajax-configDefaultUsersParams.php')) {
-        include $p['config']['homeDirectory'].'controlers/module/'.$module['name'].'/configuration/actions/inc-ajax-configDefaultUsersParams.php';
+$toyaml=array(
+        'protocol'=>'',
+        'host'=>'',
+        'urlHostSuffixe'=>'',
+        'webDirectory'=>'',
+        'stockageLocation'=>'',
+        'backupLocation'=>'',
+        'workingDirectory'=>'',
+        'cookieDomain'=>'',
+        'cookieDuration'=>'',
+        'fingerprint'=>'',
+        'sqlServeur'=>'',
+        'sqlBase'=>'',
+        'sqlUser'=>'',
+        'sqlPass'=>'',
+        'sqlVarPassword'=>'',
+        'templatesFolder'=>'',
+        'twigEnvironnementCache'=>'',
+        'twigEnvironnementAutoescape'=>''
+        );
+
+foreach ($toyaml as $k=>$v) {
+    if (isset($_POST[$k])) {
+        if (in_array($k, $booleans)) {
+            $toyaml[$k]=$_POST[$k]==='true'?true:false;
+        } else {
+            $toyaml[$k]=$_POST[$k];
+        }
+        unset($_POST[$k]);
     }
 }
+file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($toyaml, false, 0, true));
 
-unset($p['configDefaut']['homeDirectory']);
-
-foreach ($p['configDefaut'] as $param=>$v) {
-    if (array_key_exists($param, $_POST)) {
-      if (in_array($param, $booleans)) {
-          if ($_POST[$param]==='true') {
-              $_POST[$param]=true;
-          } elseif ($_POST[$param]==='false') {
-              $_POST[$param]=false;
-          }
-      }
-      $p['configDefaut'][$param]=$_POST[$param];
-    }
+$params='';
+foreach ($_POST as $param=>$value) {
+    $params.=" WHEN '".$param."' THEN '".$value."'";
 }
+msSQL::sqlQuery("UPDATE configuration SET value = CASE name ".$params." ELSE value END WHERE level='default' and name in ('".implode("','", array_keys($_POST))."')");
 
-file_put_contents($p['config']['homeDirectory'].'config/config.yml', Spyc::YAMLDump($p['configDefaut'], false, 0, true));
 
 echo json_encode(array('ok'));

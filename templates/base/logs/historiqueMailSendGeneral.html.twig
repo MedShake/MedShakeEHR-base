@@ -32,71 +32,87 @@
 
 {% block head %}
     {{ parent() }}
-        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js"></script>{% endif %}
+        {% if config.smtpTracking %}<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/mailtracking.js?{{ modules.base }}"></script>{% endif %}
 {% endblock %}
 
 {% block body %}
 <h1>Historique général des envois par mail <small>(hors fax et apicrypt)</small></h1>
 
-    <div class="container-fluid">
+<div class="row">
+  <div class="col">
+    <ul class="nav nav-tabs my-3">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link{% if page.expediteurID ==  0 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/0/">Expéditeurs : tous</a>
+      </li>
+      {% for k,v in page.expediteurs %}
+      <li role="presentation" class="nav-item">
+        <a class="nav-link{% if k == page.expediteurID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ k }}/">{{ v }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 
-      <div class="row bottom-space">
-        <ul class="nav nav-tabs">
-          <li role="presentation" {% if page.expediteurID ==  0 %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/0/">Expéditeurs : tous</a></li>
-          {% for k,v in page.expediteurs %}
-          <li role="presentation" {% if k == page.expediteurID %}class="active"{% endif %}><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ k }}/">{{ v }}</a></li>
-          {% endfor %}
-        </ul>
+<div class="row">
+  <div class="col">
+      <div class="btn-group float-right m-1" role="group" aria-label="...">
+        <a class="btn btn-secondary btn-sm" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
+          <span class="fa fa-chevron-left" aria-hidden="true"></span>
+          Plus récents
+        </a>
+        <a class="btn btn-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
+          Plus anciens
+          <span class="fa fa-chevron-right" aria-hidden="true"></span>
+        </a>
       </div>
+  </div>
+</div>
 
-      <div class="row">
-            <div class="btn-group  pull-right" role="group" aria-label="...">
-              <a type="button" {% if page.nextStart < 0 %}disabled="disabled"{% endif %} class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/"> <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Suivants</a>
-              <a type="button" class="btn btn-default" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">Précédents  <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a>
-            </div>
-      </div>
+<div class="row">
+  <div class="col">
+    <table class="table table-sm mb-0 table-hover ">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>De</th>
+                <th>A</th>
+                <th>Concernant</th>
+                <th>Sujet</th>
 
-        <div class="row">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="col-md-2">Date</th>
-                        <th class="col-md-2">De</th>
-                        <th class="col-md-2">A</th>
-                        <th class="col-md-3">Concernant</th>
-                        <th class="col-md-3">Sujet</th>
+            </tr>
+        </thead>
+        <tbody>
 
-                    </tr>
-                </thead>
-                <tbody>
+            {% for v in page.mailListe %}
+                <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
+                    <td>{{ v.date }}</td>
+                    <td>{{ page['expediteurs'][v.fromID] }}<br>
+                    <small>{{ v.from }}</small></td>
+                    <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
+                    <td>
+                      <div class="btn-group">
+                        <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
+                          <span class="fa fa-folder-open" aria-hidden="true"></span>
+                        </a>
+                      </div>
+                      {{ v.patient.3 }}
+                      {% if v.patient.1 and v.patient.2 %}
+                        {{ v.patient.2|e }} ({{ v.patient.1|e }})
+                      {% elseif v.patient.2 %}
+                        {{ v.patient.2 }}
+                      {% else %}
+                        {{ v.patient.1 }}
+                      {% endif %}
+                    </td>
 
-                    {% for v in page.mailListe %}
-                        <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
-                            <td>{{ v.date }}</td>
-                            <td>{{ page['expediteurs'][v.fromID] }}<br>
-                            <small>{{ v.from }}</small></td>
-                            <td>{{ v.to }}<div class="{% if v.mailTrackingID %}infos{{ v.mailTrackingID }}{% endif %} small"></div></td>
-                            <td> <a class="btn btn-default btn-xs" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
-                              <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                            </a>
-                              {{ v.patient.3 }}
-                              {% if v.patient.1 and v.patient.2 %}
-                                {{ v.patient.2|e }} ({{ v.patient.1|e }})
-                              {% elseif v.patient.2 %}
-                                {{ v.patient.2 }}
-                              {% else %}
-                                {{ v.patient.1 }}
-                              {% endif %}
-                            </td>
+                    <td>{{ v.sujet|e }}</td>
+                </tr>
 
-                            <td>{{ v.sujet|e }}</td>
-                        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
 
-                    {% endfor %}
-                </tbody>
-            </table>
-
-        </div>
-    </div>
 
 {% endblock %}

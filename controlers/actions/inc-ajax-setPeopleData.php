@@ -24,6 +24,7 @@
  * Requêtes AJAX > enregistrement des données patient 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
  $patient = new msObjet();

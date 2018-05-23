@@ -44,8 +44,8 @@
     <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
 
     {# js #}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
 
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
@@ -63,7 +63,7 @@
 
   <body>
     <div class="container">
-    <div class="jumbotron">
+    <div class="jumbotron col-md-12">
       <p>Votre consentement est bien enregistré, merci !<br><br>
         Vous pouvez maintenant rendre cette tablette à la secrétaire.
       </p>

@@ -1,0 +1,347 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # LAP > monographie > présentations
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+ <p class="lead">{{ page['presentations']['presentations']|length }} présentation{% if page['presentations']['presentations']|length > 1 %}s{% endif %}</p>
+ <div  id="accordion" role="tablist" aria-multiselectable="true">
+
+   {% for presentation in page['presentations']['presentations'] %}
+
+   {# se simplifier la vie #}
+   {% set conditio = page['presentations']['preCdt'][presentation.pre_code_pk] %}
+   {% set dispensia = page['presentations']['preDsp'][presentation.pre_code_pk] %}
+   {% set statut = page['presentations']['preStatut'][presentation.pre_code_pk] %}
+   {% set prix = page['presentations']['prePri'][presentation.pre_code_pk] %}
+   {% set rbt = page['presentations']['preRbt'][presentation.pre_code_pk] %}
+   {% set conservatio = page['presentations']['preCsv'][presentation.pre_code_pk] %}
+
+   <div class="card mb-3">
+     <div class="card-header" role="tab" id="heading{{ presentation.pre_code_pk }}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ presentation.pre_code_pk }}" aria-expanded="true" aria-controls="collapse{{ presentation.pre_code_pk }}" style="cursor: pointer">
+       <h4 class="card-title">
+           Présentation n°{{ loop.index }} : {{ presentation.pre_adm }}
+           {% if presentation.reservhop != 'NON' %}<small><span class="badge badge-primary float-right" title="Présentation réservée à l'hôpital">H</span></small>{% endif %}
+       </h4>
+     </div>
+     <div id="collapse{{ presentation.pre_code_pk }}" class="collapse {% if loop.index == 1 and page['presentations']['presentations']|length == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ presentation.pre_code_pk }}">
+       <div class="card-body">
+         <table class="table table-sm table-hover">
+           <tbody>
+             <tr>
+               <td>Code CIP13</td><td>{{ presentation.pre_ean_ref }}</td>
+             </tr>
+             <tr>
+               <td>Code CIP7</td><td>{{ presentation.pre_code_pk }}</td>
+             </tr>
+             <tr>
+               <td>Commercialisation</td>
+               <td>
+                 {% if presentation.pre_etat_commer == 'D' %}Disponible (depuis le {{ presentation.pre_datecommer }})
+                 {% elseif presentation.pre_etat_commer == 'S' %}
+                 {% endif %}
+               </td>
+             </tr>
+             <tr>
+               <td>Agrément collectivités / date JO</td>
+               <td>
+                 {% if presentation.pre_agrcoll == 'O' %}Oui le {{ presentation.pre_datejocoll }}
+                 {% elseif presentation.pre_agrcoll == 'N' %}Non
+                 {% elseif presentation.pre_agrcoll == 'E' %}En cours
+                 {% endif %}
+               </td>
+             </tr>
+             <tr>
+               <td>Radiation collectivités / date JO</td>
+               <td>
+                 {% if presentation.pre_date_applifincoll %}Oui le {{ presentation.pre_date_applifincoll }} (JO du {{ presentation.pre_datefincoll }})
+                 {% endif %}
+               </td>
+             </tr>
+             <tr>
+               <td>Présentation réservée à l'hôpital</td>
+               <td>
+                 {{ presentation.reservhop }}
+               </td>
+             </tr>
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Conditionnement</td>
+             </tr>
+             <tr>
+               <td>Dose totale contenue dans l'unité commune de dispensation (UCD)</td>
+               <td>
+                 {% for condi in conditio if condi.type == '1' %}
+                 {{ condi.valeur_1|number_format(2, ',', '') }} {{ condi.info_1 }} {{ condi.info_2 }}
+                 {% endfor %}
+               </td>
+             </tr>
+             <tr>
+               <td>Conditionnement primaire</td>
+               <td>
+                 {% for condi in conditio if condi.type starts with '2.' and condi.valeur_1 > 0 %}
+                 {{ condi.info_1 }} ({{ condi.valeur_1|number_format(2, ',', '') }})
+                    {# matériaux #}
+                    <p class="small">matériaux :
+                   {% for materiaux in conditio if materiaux.type starts with condi.type ~ '.' %}
+                    {{ materiaux.info_1 }}
+                   {% endfor %}
+                    </p>
+                 {% endfor %}
+               </td>
+             </tr>
+             <tr>
+               <td>Caractéristique(s) de l'emballage</td>
+               <td>
+                 <ul class="list-unstyled">
+                 {% for condi in conditio if condi.type == '' %}
+                 <li>{{ condi.info_1 }}</li>
+                 {% endfor %}
+               </ul>
+               </td>
+             </tr>
+             {% if presentation.pre_cacdt_texte|length > 2 %}
+               <tr>
+                 <td colspan="2">{{ presentation.pre_cacdt_texte|nl2br }}</td>
+               </tr>
+             {% endif %}
+
+             <tr>
+               <td>Référence(s) officielle(s)</td>
+               <td>
+                 <ul class="list-unstyled">
+                 {% for condi in conditio if condi.type == '4' %}
+                 <li>{{ condi.info_1 }} {{ condi.info_2 }}</li>
+                 {% endfor %}
+               </ul>
+               </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Conditions de délivrance</td>
+             </tr>
+             <tr>
+               <td>Liste</td>
+               <td>
+                 {% for dispen in dispensia if dispen.typ == '4' %}
+                 {{ dispen.info_1 }}
+                 {% endfor %}
+               </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Statut de la présentation</td>
+             </tr>
+             <tr>
+               <td>Statut de la présentation</td>
+               <td>
+                 <ul class="list-unstyled">
+                 {% set statutListe = [] %}
+
+                 {% for statu in statut %}
+                  {% if statu.ref_off ~ statu.ident ~ statu.dat_ref_off not in statutListe %}
+                    <li>{{ statu.ref_off }} {{ statu.ident }} {{ statu.dat_ref_off }} {% if statu.dat_revision %}{% endif %}</li>
+                    {% set statutListe = statutListe|merge([statu.ref_off ~ statu.ident ~ statu.dat_ref_off]) %}
+                  {% endif %}
+                 {% endfor %}
+                </ul>
+               </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Prix</td>
+             </tr>
+             <tr>
+               <td colspan="2">Prix en officine ville :</td>
+             </tr>
+             <tr>
+               <td class="pl-5">Prix de cette présentation (CIP) / date JO</td>
+               <td>
+                 {% for pri in prix if pri.grp == 'A.0' %}
+                  {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                {% else %}
+                  Non concerné
+                {% endfor %}
+              </td>
+             </tr>
+             <tr>
+               <td class="pl-5">Tarif forfaitaire de responsabilité / date JO (génériques)</td>
+               <td>
+                 {% for pri in prix if pri.grp == 'A.1' %}
+                  {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                {% else %}
+                  Non concerné
+                {% endfor %}
+              </td>
+             </tr>
+             <tr>
+               <td colspan="2">Prix à l'hôpital (Pharmacie à usage intérieur) :</td>
+             </tr>
+             <tr>
+               <td class="pl-5">Prix de vente aux établissements de santé par UCD/date JO (rétrocession - vente au public)</td>
+               <td>
+                 {% for pri in prix if pri.grp == 'B.0' %}
+                  {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                {% else %}
+                  Non concerné
+                {% endfor %}
+              </td>
+             </tr>
+             <tr>
+               <td class="pl-5">Tarif de responsabilité par UCD (tarification à l'activité)</td>
+               <td>
+                 {% for pri in prix if pri.grp == 'B.1' %}
+                  {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                {% else %}
+                  Non concerné
+                {% endfor %}
+              </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Remboursement</td>
+             </tr>
+             <tr>
+               <td colspan="2">Ville :</td>
+             </tr>
+
+             <tr>
+               <td class="pl-5">Taux de remboursement / date JO</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for rb in rbt if rb.type == '1' %}
+                    <li>{{ rb.info_1 }}
+                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                      {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
+                      {% if rb.texte %}<p>{{ rb.texte }}</p>{% endif %}
+                    </li>
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr>
+               <td colspan="2">Hôpital (Rétrocession - vente au public) :</td>
+             </tr>
+
+             <tr>
+               <td class="pl-5">Taux de remboursement</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for rb in rbt if rb.type == '1.1' %}
+                    <li>{{ rb.info_1 }}
+                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                      {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
+                    </li>
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr>
+               <td>Tarif forfaitaire de remboursement</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for rb in rbt if rb.type == 2 %}
+                    <li>{{ rb.valeur_1 }}
+                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                    </li>
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr>
+               <td>Statut(s) du remboursement</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for rb in rbt if rb.type == '3' %}
+                    <li>{{ rb.info_1 }}</li>
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Dispensation</td>
+             </tr>
+             <tr>
+               <td>Modalité(s) de dispensation</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for dispen in dispensia if dispen.typ == '1' %}
+                    <li>{{ dispen.info_1 }}</li>
+                    {% for dis in dispensia if dis.typ == '2' and dis.valeur_1 == dispen.valeur_1  %}
+                      <li class="pl-5">{{ dis.info_1 }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr class="table-info text-uppercase">
+               <td colspan="2">Conservation</td>
+             </tr>
+
+             <tr>
+               <td>Durée(s) et condition(s) de conservation</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for conserva in conservatio if conserva.type starts with '1.' and conserva.valeur_1 %}
+                    <li>{{ conserva.valeur_1 }} {{ conserva.info_1 }}</li>
+                    {% for conserva2 in conservatio if conserva2.type starts with conserva.type and conserva2.type|length > conserva.type|length  %}
+                      <li class="pl-5">{{ conserva2.info_1 }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+             <tr>
+               <td colspan="2">
+                  {% for conserva in conservatio if conserva.type == '2' %}
+                    {{ conserva.texte|nl2br }}
+                  {% endfor %}
+              </td>
+             </tr>
+
+             <tr>
+               <td>Référence(s) officielles(s)</td>
+               <td>
+                  <ul class="list-unstyled">
+                  {% for conserva in conservatio if conserva.type == 3 and conserva.info_1 %}
+                    <li>{{ conserva.info_1 }} ({{ conserva.date_1 }})</li>
+                  {% endfor %}
+                  </ul>
+              </td>
+             </tr>
+
+           </tbody>
+         </table>
+       </div>
+     </div>
+   </div>
+   {% endfor %}
+
+ </div>

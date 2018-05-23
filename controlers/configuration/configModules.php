@@ -25,8 +25,14 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
-
+$debug='';
 $template='configModules';
 
 $p['page']['modules']=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
 
+$config = new msConfiguration;
+foreach($p['page']['modules'] as $k=>$v) {
+  if($v['name'] != 'base') {
+    $p['page']['modulesConfig'][$v['name']]=$config->getModuleDefaultParameters($v['name']);
+  }
+}

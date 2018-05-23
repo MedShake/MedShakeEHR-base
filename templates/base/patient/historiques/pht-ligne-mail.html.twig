@@ -26,59 +26,60 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<tr class="tr{{ cs.id }} trLigneExamen" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}"  data-groupe="{{ cs.groupe|e('html_attr') }}">
-    <td>{{ cs.creationTime }}</td>
+<tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}"  data-groupe="{{ cs.groupe|e('html_attr') }}">
+    <td title="Mail">
+      <a class="btn btn-light btn-sm showDetDoc" role="button">
+        <span class="fa fa-at" aria-hidden="true"></span>
+      </a>
+    </td>
     <td>
+     <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
+     <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
+    </td>
+    <td>
+      <div class="btn-group">
         {# voir #}
-        <a class="btn btn-default btn-xs showDetDoc" href="#" role="button" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="Voir"></span></a>
-
-    </td>
-    <td>
-        <span class="icoImportant{{ cs.id }}">
-            {% if cs.important == 'y' %}
-                <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-            {% endif %}
-        </span>
-        {{ cs.label }}
-        <span class="alternatTitre{{ cs.id }}">
-            {% if cs.titre %}
-                :
-                {{ cs.titre|e }}{% endif %}
-        </span>
-
-
-
-    </td>
-    <td>{{ cs.prenom|e }} {{ cs.nom|e }}</td>
-    <td>
-
+        <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank">
+          <span class="fa fa-eye" aria-hidden="true" title="Voir"></span>
+        </a>
         {# option #}
         <div class="btn-group">
-            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <li>
-                    <a href="#" class="toogleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                        {% if cs.important == 'n' %}Rendre important{% else %}N'est plus important{% endif %}
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
-                </li>
-                  <li role="separator" class="divider"></li>
-                <li class="disabled">
-                    <a href="#">#{{ cs.id }}</a>
-                </li>
-                {% if cs.sendMail > 0 %}
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
-                </li>
-                {% endif %}
-            </ul>
+          <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <span class="dropdown-header py-0"><i>#{{ cs.id }} Mail</i></span>
+            </li>
+            <li class="d-inline-block d-lg-none">
+              <a class="dropdown-item showDetDoc" href="#" target="_blank">Voir</a>
+            </li>
+            <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+            {% if cs.fromID == user.id %}
+              <li>
+                  <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
+                      {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
+              </li>
+              <li role="separator" class="dropdown-divider m-0"></li>
+            {% endif %}
+            {% if cs.sendMail > 0 %}
+              <li>
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
+              </li>
+            {% endif %}
+          </ul>
         </div>
+      </div>
 
     </td>
+    <td>
+      <span class="d-none d-lg-inline">{{ cs.label }}{% if cs.titre %} : {% endif %}</span>
+      <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
+    </td>
+    <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
+    <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>
 </tr>

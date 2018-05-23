@@ -38,18 +38,9 @@ if (!isset($_POST['file'])) {
     die;
 }
 
-//config défaut
-$p['page']['configDefaut']=$p['configDefaut'];
-
-//utilisateurs ayant un repertoire de temmplate spécifique
-$p['page']['specificDirTemplatesUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
-
 // détermination du répertoire
-if (isset($p['page']['specificDirTemplatesUsers'][$_POST['userID']])) {
-    $directory=$p['page']['specificDirTemplatesUsers'][$_POST['userID']]['paramValue'];
-} else {
-    $directory=$p['page']['configDefaut']['templatesPdfFolder'];
-}
+$user=array('id'=>$_POST['userID'], 'module'=>'');
+$directory=msConfiguration::getParameterValue('templatesPdfFolder', $user);
 
 if (is_file($directory.'/'.$_POST['file'])) {
     if (unlink($directory.'/'.$_POST['file'])) {

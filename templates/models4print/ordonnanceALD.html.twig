@@ -31,7 +31,7 @@
 {% set ms = page.courrier.medoc.standard %}
 {% set ma = page.courrier.medoc.ald %}
 
-<head>
+
     <html>
         <head>
             <style>
@@ -113,9 +113,8 @@
 
                     <div class="centrer t10" style=" display : inline-block; float : right; width : 45%; vertical-align : top; border : 1px solid #000; height : 110pt">
                         <br><br><br>
-                        <span class="gras t10">{% if tag.14 == 'Femme' %}Mme{% elseif tag.14 == 'Homme' %}M.{% endif %}
-                            {{ tag.3 }}
-                            {{ tag.nomsUsageNaissance }}</span><br>({{ tag.8 }})
+                        <span class="gras t10">{{ tag.identiteCompleteTitreCourt }}
+                        </span><br>{{ tag.birthdate }} - {{ tag.age }}
                     </div>
                 </div>
 
@@ -130,11 +129,12 @@
                     <p style="text-align : right;">New York, le
                         {{ tag.date|date("d/m/Y") }}</p>
 
-                    <div style="height : 200pt;">
+                    <div>
                         <div class="centrer" style="width: 100%; border: 1px solid #000;">
                             <strong>Prescriptions relatives au traitement de l'affection de longue durée reconnue (liste ou hors liste)</strong><br>
                             (AFFECTION EXONERANTE)
                         </div>
+                        <p class="t8" style="text-align : right;">{{ ma|length }} ligne{% if ma|length > 1 %}s{% endif %} de prescriptions</p>
 
                         {% for v in ma %}
                             <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>
@@ -146,6 +146,7 @@
                         <strong>Prescriptions SANS RAPPORTS avec l'affection de longue durée</strong><br>
                         (MALADIES INTERCURRENTES)
                     </div>
+                    <p class="t8" style="text-align : right;">{{ ms|length }} ligne{% if ms|length > 1 %}s{% endif %} de prescriptions</p>
 
                     {% for v in ms %}
                         <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>

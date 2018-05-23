@@ -28,43 +28,41 @@
  */
 
  //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configAgenda";
-     $debug='';
+if (!msUser::checkUserIsAdmin()) {
+    $template="forbidden";
+    return;
+}
+$template="configAgenda";
+$debug='';
 
-     //config défaut
-     if (!isset($match['params']['userID'])) {
-       $p['page']['configDefaut']=$p['configDefaut'];
-     }
+//utilisateurs pouvant avoir un agenda
+$agendaUsers= new msPeople();
+$p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
 
-     //utilisateurs pouvant avoir un agenda
-     $agendaUsers= new msPeople();
-     $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+//config défaut
+if (!isset($match['params']['userID'])) {
+    $p['page']['config']=array_merge(msConfiguration::getCatParametersForUser('Agenda'), msConfiguration::getCatParametersForUser('Options'));
+    return;
+}
 
-     // si user
-     if (isset($match['params']['userID'])) {
+// si user
 
-       $p['page']['selectUser']=$match['params']['userID'];
+$p['page']['selectUser']=$match['params']['userID'];
 
-       //paramètres de l'agenda
-       if(is_file($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml')) {
-         $p['page']['configAgenda']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configAgenda'.$match['params']['userID'].'.yml');
-       }
+//paramètres de l'agenda
+if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.yml')) {
+    $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.yml');
+}
 
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js')) {
-         $p['page']['configAgendaJs']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'.js');
-       }
+if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
+    $p['page']['configAgendaJs']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js');
+}
 
-       if(is_file($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js')) {
-         $p['page']['configAgendaAd']=file_get_contents($p['config']['webDirectory'].'agendasConfigurations/configAgenda'.$match['params']['userID'].'_ad.js');
-       }
+if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
+    $p['page']['configAgendaAd']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
+}
 
-       // types de rendez-vous
-       if(is_file($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml')) {
-         $p['page']['typeRdv']=file_get_contents($p['configDefaut']['homeDirectory'].'config/configTypesRdv'.$match['params']['userID'].'.yml');
-       }
-
-     }
- }
+// types de rendez-vous
+if(is_file($p['homepath'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml')) {
+    $p['page']['typeRdv']=file_get_contents($p['homepath'].'config/agendas/typesRdv'.$match['params']['userID'].'.yml');
+}

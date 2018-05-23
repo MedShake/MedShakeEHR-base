@@ -1,0 +1,66 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : sams de l'ordonnance
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div class="col-md-12">
+{% if page.zone == 'ordo' %} <span class="small">Informations SAM basées sur l'ordonnance et le traitement en cours</span>
+{% elseif page.zone == 'ttencours' %}<span class="small">Informations SAM basées sur le traitement en cours</span>
+{% endif %}
+</div>
+
+{% set numberrand = random(10000) %}
+
+<div class="col-md-12" id="accordionSams{{ numberrand }}" role="tablist" aria-multiselectable="true">
+
+  {% for samID, sam in page.sams %}
+    <div class="card mb-3">
+      <div class="card-header py-2" role="tab" id="heading{{ samID }}{{ numberrand }}" data-toggle="collapse" data-parent="#accordionaccordionSams{{ numberrand }}" data-target="#collapse{{ samID }}{{ numberrand }}" aria-expanded="true" aria-controls="collapse{{ samID }}{{ numberrand }}" style="cursor: pointer">
+        <span class="card-title"><span class="fa fa-info-circle"></span> {{ sam.titre }}</span>
+      </div>
+      <div id="collapse{{ samID }}{{ numberrand }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ samID }}{{ numberrand }}">
+        <div class="card-body">
+
+          <img class="float-right" src="data:{{ sam.logoMediaType }};base64, {{ sam.logo }}" alt="logo" />
+
+          <p>{{ sam.liste_medicaments|nl2br }}</p>
+
+          <p>{{ sam.messageLAPV|replace({'html:':'', 'href=' : 'target="_blank" href='}) }}</p>
+
+          <p>Référence : {{ sam.reference|replace({'html:':'', 'href=' : 'target="_blank" href='}) }}</p>
+
+          <p>
+            <label>Commentaire pour ce patient concernant ce SAM</label>
+            <textarea data-samID="{{ samID }}" class="form-control samCommentObserv {{ samID }}" rows="3" placeholder="Commentaire pour ce patient"
+            {% if sam.co.id > 0 %} data-objetID="{{ sam.co.id }}" {% endif %}
+            >{{ sam.co.value }}</textarea>
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>

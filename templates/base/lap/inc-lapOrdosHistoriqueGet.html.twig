@@ -1,0 +1,70 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > lap : historique des ordonnances
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+<div class="row mb-2 justify-content-center">
+  <div class="col-auto">
+    <select id="selectHistoOrdo" class="custom-select">
+    {% for annee in page.histoOrdoAnnees %}
+      <option {% if annee == page.histoOrdoAnnee %}selected="selected"{% endif %}>{{ annee }}</option>
+    {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+
+    <table class="table table-sm table-hover">
+      <thead>
+        <th></th>
+        <th>Date</th>
+        <th>Prescripteur</th>
+        <th>Titre de l'ordonnance</th>
+      </thead>
+      <tbody>
+        {% for mois, v in page.ordos %}
+          <tr>
+            <td colspan="4" class="table-primary gras text-center">{{ mois|capitalize }}</td>
+          </tr>
+          {% for ordo in v %}
+            <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
+              <td>
+                <button class="btn btn-light btn-sm" title="Voir">
+                  <span class="fa fa-eye" aria-hidden="true"></span></button>
+              </td>
+              <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
+              <td>{{ ordo.prenom }}
+                {{ ordo.nom }}</td>
+              <td>{{ ordo.titre }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
