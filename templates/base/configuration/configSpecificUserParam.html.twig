@@ -176,22 +176,20 @@
                 <div class="form-group">
                   <label for="paramCat">Catégorie</label>
                   <select id="paramCat" class="custom-select" name="paramCat" autocomplete="off">
-                    {% for v in page.availableCats %}
-                      <option value="{{ v }}"{% if loop.first %} selected{% endif %}>{{ v }}</option>
+                    {% for k,v in page.availableCats %}
+                      <option value="{{ k }}"{% if loop.first %} selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                   </select>
                 </div>
               </div>
               <div class="col-md-6">
                 <label>Paramètre</label>
-                {% for cat in page.availableCats %}
-                  <select class="custom-select paramselect" name="paramNameInCat{{ cat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
+                {% for saniCat,cat in page.availableCats %}
+                  <select class="custom-select paramselect" name="paramNameInCat{{ saniCat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
                     {% set first = true %}
-                    {% for p in page.availableParams %}
-                      {% if p.cat == cat %}
-                        <option value="{{ p.name }}"{% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
-                        {% set first = false %}
-                      {% endif %}
+                    {% for p in page.availableParams if p.saniCat == saniCat %}
+                      <option value="{{ p.name }}"{% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
+                      {% set first = false %}
                     {% endfor %}
                   </select>
                 {% endfor %}

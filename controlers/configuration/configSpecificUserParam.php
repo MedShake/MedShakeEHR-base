@@ -61,4 +61,7 @@ if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
 }
 
 $p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
-$p['page']['availableCats']=array_unique(array_column($p['page']['availableParams'], 'cat'));
+foreach($p['page']['availableParams'] as $k=>$v) {
+  $p['page']['availableParams'][$k]['saniCat']=msTools::sanitizeFilename($v['cat']);
+}
+$p['page']['availableCats']=msConfiguration::getListOfParametersCat();
