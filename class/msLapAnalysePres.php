@@ -514,7 +514,7 @@ class msLapAnalysePres extends msLap
 
       // si on est en TTChro et que l'objetID existe déjà on exclue la ligne car
       // un renouv la concernant est passé dans l'ordo
-      if($this->_zoneOrdo == 'TTChroniques') {
+      if($this->_zoneOrdo == 'TTChroniques' and is_array($this->_ligneObjetIdDejaVus)) {
         if(in_array($l['ligneData']['objetID'],$this->_ligneObjetIdDejaVus)) return;
       }
       // on stocke les objetID des lignes s'ils existent pour exclure ensuite les lignes
