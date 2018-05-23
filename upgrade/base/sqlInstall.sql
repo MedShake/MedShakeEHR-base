@@ -684,4 +684,4 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v3.2.0');
+ (2, 'base', 'module', 'v4.0.0');
