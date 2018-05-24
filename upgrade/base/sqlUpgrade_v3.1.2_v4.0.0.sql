@@ -271,6 +271,8 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('smsCreditsFile', 'Rappels SMS', 'default', 'fichier', 'nom du fichier qui contient le nombre de SMS restants', 'creditsSMS.txt'),
 ('smsSeuilCreditsAlerte', 'Rappels SMS', 'default', 'nombre', 'prévenir dans l\'interface du logiciel si crédit inférieur ou égale à', '150'),
 ('smsTpoa', 'Rappels SMS', 'default', 'texte', 'La balise #praticien sera automatiquement remplacée dans le message envoyé', 'Dr #praticien'),
+('allMySmsLogin', 'Rappels SMS', 'default', 'texte', 'login allMySMS', ''),
+('allMySmsApiKey', 'Rappels SMS', 'default', 'texte', 'API key allMySMS', ''),
 ('clicRdvApiKey', 'clicRDV', 'default', 'texte', '', ''),
 ('clicRdvUserId', 'clicRDV', 'default', 'texte', '', ''),
 ('clicRdvPassword', 'clicRDV', 'default', 'texte', '', ''),
