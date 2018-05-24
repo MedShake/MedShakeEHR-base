@@ -185,6 +185,20 @@ public static function getModuleDefaultParameters($module) {
     }
 
 /**
+ * Obtenir la liste des catégories des paramètres
+ * @return array tableau avec clef = cat "sanitizée"
+ */
+    public static function getListOfParametersCat() {
+      if($all=msSQL::sql2tab("SELECT distinct(cat) as cat FROM configuration WHERE level='default' ORDER BY cat")) {
+        foreach($all as $v) {
+          $tab[msTools::sanitizeFilename($v['cat'])]=$v['cat'];
+        }
+        return $tab;
+      }
+    }
+
+
+/**
  * fixer (+ créer) un paramètre de configuration pour un user
  * @param string  $name   nom du paramètres
  * @param string $value  valeur du paramètre

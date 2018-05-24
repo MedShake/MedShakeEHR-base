@@ -75,7 +75,7 @@ foreach ($users as $userID) {
     /////////// Relever le compte pop3
 
     $pop = new msPop3();
-    if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPasswordword'], 'INBOX', false)) {
+    if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPassword'], 'INBOX', false)) {
         $liste=$pop->pop3_list($connection);
 
         if (count($liste)>0) {
@@ -154,4 +154,3 @@ foreach ($users as $userID) {
         }
     }
 }
-

@@ -62,7 +62,7 @@
        <th></th>
      </tr>
      {% for k,v in page.tags %}
-      <tr class="{% if v.0.typeID > 0 or v.1.typeID > 0 %}success{% else %}warning{% endif %}">
+      <tr class="{% if v.0.typeID > 0 or v.1.typeID > 0 %}table-success{% else %}table-warning{% endif %}">
        <td colspan="6" class="gras">
          {{ k }}&nbsp;&nbsp;&nbsp;&nbsp;{{ v.0.dicomCodeMeaning }}
        </td>

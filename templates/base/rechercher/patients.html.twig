@@ -63,14 +63,14 @@ associer patient
 <div class="row" style="margin-top : 40px;">
 
   <form class="form-inline col-12 col-lg-10 mx-0 row" data-dataset="data_types">
-    <div class="form-group col-12 m-0 p-0 col-lg-6">
+    <div class="form-group col-12 m-0 p-0 col-lg-3">
       {{ f.input ({
 	      'input' : {
 		      'type' : 'text',
 		      'id' : 'd2',
 		      'name' : 'lastname',
           'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')) ~ ' ' ~  (page.patient.administrativeDatas.firstname|default('')))|trim,
-		      'placeholder' : 'Identité',
+		      'placeholder' : 'Nom',
 		      'class' : 'form-control col-12 searchupdate jqautocomplete',
 		      'autocomplete' : 'off',
 		      'dataAcTypeID' : 'data-acTypeID="2:1:3"',
@@ -81,6 +81,25 @@ associer patient
 	      }
       }) }}
     </div>
+
+		<div class="form-group col-12 my-2 my-lg-0 m-0 p-0 pl-lg-3 col-lg-3">
+			{{ f.input ({
+				'input' : {
+					'type' : 'text',
+					'id' : 'd3',
+					'name' : 'firstname',
+					'value' : page.patient.administrativeDatas.firstname|default(''),
+					'placeholder' : 'Prénom',
+					'class' : 'form-control col-12 searchupdate jqautocomplete',
+					'autocomplete' : 'off',
+					'dataAcTypeID' : 'data-acTypeID="3"',
+					'datatypeid' : '2'
+				},
+				'label' : {
+					'position' : 'before',
+				}
+			}) }}
+		</div>
 
     <div class="col-12 my-2 my-lg-0 mx-0 p-0 pl-lg-3 col-lg-6">
       <div class="input-group mx-0">

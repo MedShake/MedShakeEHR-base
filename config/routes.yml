@@ -156,6 +156,7 @@ configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 
 configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configuration/configDefaultParams']
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
 configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
+configExecUpgradeScript: ['GET', '/configuration/exec/[a:module]/[*:script]/', 'configuration/configExecUpgradeScript']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
