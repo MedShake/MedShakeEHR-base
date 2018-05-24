@@ -34,7 +34,7 @@ $mail->isSMTP();
 $mail->Host = $p['config']['apicryptSmtpHost'];
 $mail->SMTPAuth = true;
 $mail->Username = $p['config']['apicryptUtilisateur'];
-$mail->Password = $p['config']['apicryptPopPasswordword'];
+$mail->Password = $p['config']['apicryptPopPassword'];
 $mail->Port = $p['config']['apicryptSmtpPort'];
 
 //obtenir le chemin complet de la pj
