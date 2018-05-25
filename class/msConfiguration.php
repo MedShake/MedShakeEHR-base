@@ -130,7 +130,7 @@ public static function getModuleDefaultParameters($module) {
         $catTypeDefault=msSQL::sql2tabKey("SELECT name, cat, type, value FROM configuration
             WHERE level='default' AND name IN ('".implode("','",array_keys($userParams))."')", 'name');
         foreach ($userParams as $k=>$v) {
-            $userParams[$k]['type']='text';
+            $userParams[$k]['type']=$catTypeDefault[$k]['type'];
             $userParams[$k]['cat']=$catTypeDefault[$k]['cat'];
             $userParams[$k]['default']=$catTypeDefault[$k]['value'];
             if (strpos(strtolower($k), 'password')!==false and $v['value']!='') {
