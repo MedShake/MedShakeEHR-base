@@ -200,7 +200,7 @@
 			</label>
 		{% endif %}
 	{% endif %}
-  <input type="hidden" name="{{ v.select.name }}[]" value=""></input>
+  <input type="hidden" name="{{ v.select.name }}[]" value="" />
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
