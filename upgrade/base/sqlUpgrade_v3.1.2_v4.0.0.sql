@@ -44,7 +44,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='grossesse');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('medical', 'groFermetureSuivi', '', 'Fermeture de la grossesse', 'date de fermeture de la grossesse (porteur)', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
-('medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '00/00/0000', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
+('medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
 ('medical', 'ddg', 'ddg', 'DDG (théorique)', 'date de début de grossesse', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
 ('medical', 'ddgReel', '', 'DDG (retenue)', 'date de début de grossesse corrigé', '', '', 'date', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
 ('medical', 'termeDuJour', '', 'Terme du jour', 'terme du jour', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 00:00:00', 3600, 1),
