@@ -51,7 +51,7 @@ $(document).ready(function() {
   //observer le changement sur dépassement
   $("#newReglement").on("change, keyup", ".regleDepaCejour", function(e) {
     e.preventDefault();
-    $(this).val($(this).val().replace(' ',''));
+    $(this).val($(this).val().replace(' ', ''));
     calcResteDu();
   });
 
@@ -69,7 +69,7 @@ $(document).ready(function() {
 
   //reinjection pour édition
   $(".regleTarifCejour").attr('data-tarifdefaut', $(".regleTarifCejour").val());
-  $(".regleDepaCejour").attr('data-tarifdefaut',$(".regleDepaCejour").val());
+  $(".regleDepaCejour").attr('data-tarifdefaut', $(".regleDepaCejour").val());
 
 });
 
@@ -94,9 +94,9 @@ function searchAndInsertActeData(selecteur) {
 
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
-  
+
   $.ajax({
-    url: urlBase+'/patient/ajax/getReglementData/',
+    url: urlBase + '/patient/ajax/getReglementData/',
     type: 'post',
     data: {
       acteID: acteID,
@@ -105,17 +105,17 @@ function searchAndInsertActeData(selecteur) {
     dataType: "json",
     success: function(data) {
       $(".regleTarifCejour").attr('data-tarifdefaut', data['tarif']);
-      $(".regleDepaCejour").attr('data-tarifdefaut',data['depassement']);
+      $(".regleDepaCejour").attr('data-tarifdefaut', data['depassement']);
       $('input[name="acteID"]').val(acteID);
 
-      if(data['flagCmu'] == "1") {
+      if (data['flagCmu'] == "1") {
         $(".regleSituationPatient").val('CMU');
       } else {
         $(".regleSituationPatient").val('G');
       }
 
       $('#detFacturation tbody').html('');
-      $.each(data['details'], function( index, value ) {
+      $.each(data['details'], function(index, value) {
         $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + (pourcents ? (value['pourcents'] + "</td><td>") : '') + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
 
       });
@@ -148,15 +148,15 @@ function setDefautTarifEtDepa() {
   //tout venant
   if (cas == 'G') {
     $(".regleDepaCejour").removeAttr('readonly');
-  //CMU
+    //CMU
   } else if (cas == 'CMU') {
     $(".regleDepaCejour").attr('readonly', 'readonly');
     $(".regleDepaCejour").val('0');
-  // TP
+    // TP
   } else if (cas == 'TP') {
     $(".regleDepaCejour").removeAttr('readonly');
     $(".regleDepaCejour").val('0');
-  // TP ALD
+    // TP ALD
   } else if (cas == 'TP ALD') {
     $(".regleDepaCejour").attr('readonly', 'readonly');
     $(".regleDepaCejour").val('0');
@@ -164,7 +164,7 @@ function setDefautTarifEtDepa() {
 }
 
 function calcResteDu() {
-  cas = $(".regleSituationPatient" +" option:selected").val() || 'G';
+  cas = $(".regleSituationPatient" + " option:selected").val() || 'G';
   tarif = parseFloat($(".regleTarifCejour").val());
   depassement = parseFloat($(".regleDepaCejour").val());
 
@@ -180,11 +180,11 @@ function calcResteDu() {
     $(".regleFacture").val(total).change();
   } else if (cas == 'TP') {
     total = parseFloat(tarif) + parseFloat(depassement);
-    tiers = Math.round((tarif * 70 / 100)*100) /100;
-    reste = Math.round((total-tiers)*100)/100;
+    tiers = Math.round((tarif * 70 / 100) * 100) / 100;
+    reste = Math.round((total - tiers) * 100) / 100;
     $(".regleTiersPayeur").val(tiers);
     $(".regleFacture").val(total).change();
-    $(".regleTiersPayeur").parents(".form-group").children("label").html('Tiers (reste à payer : '+ reste +'€)');
+    $(".regleTiersPayeur").parents(".form-group").children("label").html('Tiers (reste à payer : ' + reste + '€)');
   } else if (cas == 'TP ALD') {
     total = parseFloat(tarif);
     $(".regleTiersPayeur").val(total);
