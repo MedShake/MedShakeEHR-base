@@ -84,9 +84,8 @@
               <thead>
                 <tr>
                   <th>Paramètre</th>
-                  <th>Valeur défaut</th>
+                  <th class="col-3">Valeur défaut</th>
                   <th>Valeur utilisateur</th>
-                  <th>Description</th>
                   <th></th>
                 </tr>
               </thead>
@@ -94,8 +93,8 @@
                 {% for w in v %}
                   <tr data-name="{{ w.name }}">
                     <td>{{ w.name }}</td>
-                    <td>{{ w.default }}</td>
-                    <td{% if w.type=='checkbox' %} class="d-flex justify-content-center"{% endif %}>
+                    <td {% if w.type == 'textarea' %}class="small"{% endif %}>{{ w.default|nl2br }}</td>
+                    <td {% if w.type=='checkbox' %}class="text-center"{% endif %}>
                       {% if w.name == 'agendaNumberForPatientsOfTheDay' %}
                         {{ f.select ({
                           'select' : {
@@ -120,6 +119,18 @@
                             'autocomplete' : 'off'
                           }
                         }) }}
+                      {% elseif w.type == 'textarea' %}
+                        {{ f.textarea ({
+                          'textarea' : {
+                            'name' : w.name,
+                            'id' : w.name ~ 'ID',
+                            'placeholder' : w.placeholder,
+                            'class' : 'form-control form-control-sm h-100',
+                            'value' : w.value,
+                            'rows' : 5,
+                            'autocomplete' : 'off'
+                          }
+                        }) }}
                       {% else %}
                         {{ f.input ({
                           'input' : {
@@ -134,13 +145,13 @@
                         }) }}
                       {% endif %}
                     </td>
-                    <td>{{ w.description }}</td>
-                    <td class="d-flex justify-content-end">
+                    <td class="text-right">
                       <div class="btn-group">
                         <button class="btn btn-light btn-sm removeParam" type="button">
                           <span class="fa fa-times"></span>
                         </button>
                       </div>
+                    </td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -177,7 +188,7 @@
                   <label for="paramCat">Catégorie</label>
                   <select id="paramCat" class="custom-select" name="paramCat" autocomplete="off">
                     {% for k,v in page.availableCats %}
-                      <option value="{{ k }}"{% if loop.first %} selected{% endif %}>{{ v }}</option>
+                      <option value="{{ k }}" {% if loop.first %} selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -188,7 +199,7 @@
                   <select class="custom-select paramselect" name="paramNameInCat{{ saniCat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
                     {% set first = true %}
                     {% for p in page.availableParams if p.saniCat == saniCat %}
-                      <option value="{{ p.name }}"{% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
+                      <option value="{{ p.name }}" {% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
                       {% set first = false %}
                     {% endfor %}
                   </select>
