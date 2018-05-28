@@ -69,7 +69,7 @@ associer patient
 		      'type' : 'text',
 		      'id' : 'd2',
 		      'name' : 'lastname',
-          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')) ~ ' ' ~  (page.patient.administrativeDatas.firstname|default('')))|trim,
+          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
 		      'placeholder' : 'Nom',
 		      'class' : 'form-control col-12 searchupdate jqautocomplete',
 		      'autocomplete' : 'off',
