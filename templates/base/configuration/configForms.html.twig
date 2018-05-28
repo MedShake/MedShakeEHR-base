@@ -72,8 +72,8 @@
 
 			{% for k,v in page.tabTypes %}
         {% if page.groupe=='' or page.groupe==v.0.catName %}
-				  <h2 id="cat{{ v.0.catName }}">{{ v.0.catLabel }}</h2>
-				  <table class="table table-sm mb-0 table-hover ">
+				  <h2 class="mb-2" id="cat{{ v.0.catName }}">{{ v.0.catLabel }}</h2>
+				  <table class="table table-sm mb-0 table-hover mb-3">
 				  <thead>
 				  <tr>
 					  <th>#</th>
