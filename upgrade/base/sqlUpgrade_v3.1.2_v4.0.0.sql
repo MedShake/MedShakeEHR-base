@@ -9,7 +9,10 @@ ALTER TABLE `printed` CHANGE `type` `type` ENUM('cr','ordo','courrier','ordoLAP'
 
 ALTER TABLE `printed` ADD `anonyme` ENUM('','y') NULL DEFAULT '' AFTER `outdated`;
 
+ALTER TABLE `forms_cat` ADD UNIQUE(`name`);
+
 ALTER TABLE `prescriptions_cat` ADD `toID` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT '0' AFTER `fromID`;
+ALTER TABLE `prescriptions_cat` ADD UNIQUE(`name`);
 ALTER TABLE `prescriptions` CHANGE `cat` `cat` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0';
 
 UPDATE `prescriptions_cat` set `type`='user';
