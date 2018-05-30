@@ -100,6 +100,30 @@
       <div class="jumbotron col-md-12">
         {{ f.formbuilder(page.form , page.formIN ) }}
       </div>
+
+      <div class="card my-3">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseTemplate" style="cursor: pointer">
+          <button class="btn btn-light btn-sm"><i class="far fa-plus-square"></i></button> Template d'impression
+        </div>
+        <div id="collapseTemplate" class="collapse card-body">
+          <div class="alert alert-warning" role="alert">
+            Ce code est généré automatiquement pour servir de base à la création d'un template d'impression. Il doit être retravaillé pour obtenir un résultat correct.
+          </div>
+          <textarea class="form-control" rows="20">{{ page.basicTemplateCode }}</textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseSql" style="cursor: pointer">
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
+          Code SQL de création
+        </div>
+        <div id="collapseSql" class="collapse card-body">
+          <textarea class="form-control" rows="20">{{ page.sqlCode }}</textarea>
+        </div>
+      </div>
     </div>
   </div>
 
