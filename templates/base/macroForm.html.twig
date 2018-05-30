@@ -185,6 +185,50 @@
 	{% endif %}
 {% endmacro %}
 
+
+{# radio #}
+{% macro radio(v) %}
+
+	{% if 'notInline' in v.radio.class %}
+
+		{# si un label existe #}
+		{% if v.label.label != '' %}
+			<div class="{% if v.label.class %}{{ v.label.class }}{% endif %}"
+			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
+			</div>
+		{% endif %}
+
+
+		{% for key,value in v.radio.values %}
+			<div class="custom-control custom-radio">
+				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+				<label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
+			</div>
+		{% endfor %}
+
+
+	{% else %}
+		<div class="d-flex">
+		{# si un label existe #}
+		{% if v.label.label != '' %}
+		  <div class="flex-grow-1 {% if v.label.class %}{{ v.label.class }}{% endif %} mr-2"
+			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
+		  </div>
+		{% endif %}
+
+
+		{% for key,value in v.radio.values %}
+			<div class="custom-control custom-radio custom-control-inline">
+			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+			  <label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
+			</div>
+		{% endfor %}
+		</div>
+	{% endif %}
+
+{% endmacro %}
+
+
 {# selectMultiple #}
 {% macro selectMultiple(v) %}
 
@@ -399,7 +443,7 @@
 				<div class="{{ col.size|e('html_attr') }}">
 					{% for el in col.elements %}
 						{% if el.type == "head" %}
-							<h4>{{ el.value }}</h4>
+							<h4 class="my-2">{{ el.value }}</h4>
 						{% elseif el.type == "label" %}
 							<p>{{ el.value }}</p>
 						{% elseif el.type == "template" %}
@@ -407,7 +451,7 @@
 						{% else %}
 
 
-							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox','hidden','radio','range','reset'] %}
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox','hidden','range','reset'] %}
 								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
 								{{ f.input ({
 									'input' : {
@@ -489,6 +533,30 @@
 									}
 								}) }}
 								</div>
+
+								{% elseif el.value.formType == "radio" %}
+									<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+									{{ f.radio ({
+										'radio' : {
+											'name' : el.value.name,
+											'id' : 'id_' ~ el.value.internalName ~ '_id',
+											'class' : 'form-control form-control-sm' ~ el.value.class,
+											'values' : el.value.formValues,
+											'valueDefaut' : el.value.preValue,
+											'readonly' : el.value.readonly,
+											'disabled' : el.value.disabled,
+											'datatypeid' : el.value.id,
+											'autocomplete' : 'off',
+											'internalName' : el.value.internalName,
+											'before' : t['before'][el.value.internalName]
+										},
+										'label' : {
+											'position' : 'before',
+											'label' : el.value.label,
+											'class' : 'control-label'
+										}
+									}) }}
+									</div>
 
 							{% elseif el.value.formType == "date" %}
 								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">

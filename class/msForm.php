@@ -72,6 +72,10 @@ class msForm
      * @var array log des row et col du form pour pouvoir mettre une preValue après coup
      */
     private $_log;
+    /**
+     * @var array array PHP du formulaire construit
+     */
+    private $_builtForm;
 
 /**
  * Définir le numéro du formulaire
@@ -232,7 +236,7 @@ class msForm
     public function getForm()
     {
         if ($formYaml=$this->getFormFromDb($this->_formID)) {
-            return $this->_formBuilder($formYaml);
+            return $this->_builtForm = $this->_formBuilder($formYaml);
         } else {
             throw new Exception('Form cannot be generated');
         }
@@ -646,6 +650,10 @@ class msForm
                           $type['formValues']=Spyc::YAMLLoad($type['formValues']);
                         }
 
+                    //traitement spécifique au radio
+                    } elseif ($type['formType']=="radio") {
+                      $type['formValues']=Spyc::YAMLLoad($type['formValues']);
+
                     //traitement spécifique au textarea
                     } elseif ($type['formType']=="textarea") {
                         foreach ($bloc as $h) {
@@ -867,4 +875,134 @@ class msForm
       return $formyaml;
     }
   }
+
+/**
+ * Obtenir une version basique du template d'impression du form
+ * @return string html/twig
+ */
+  public function getFlatBasicTemplateCode() {
+    if(!isset($this->_builtForm)) throw new Exception('Form is not yet built');
+    $string='';
+    foreach($this->_builtForm['structure'] as $ligneID=>$ligne) {
+      foreach($ligne as $colID=>$element) {
+        if(isset($element['type'])) {
+          if($element['type'] == 'head') {
+            $string.='<h2>'.$element['value']."</h2>\n";
+          }
+        }
+        foreach($element as $typeID=>$type) {
+          if(!is_array($type)) continue;
+          foreach($type as $ID=>$el) {
+            if(isset($el['type']) and $el['type'] == 'form') {
+              if($el['value']['formType'] == 'radio' or $el['value']['formType'] == 'select') {
+                $string.=$el['value']['label'].' : ';
+                $i=0;
+                foreach($el['value']['formValues'] as $repId=>$rep) {
+                  if($i==0) {
+                    $string.='{% if tag.val_'.$el['value']['name'].' == "'.$repId.'" %}'.$rep;
+                  } else {
+                    $string.='{% elseif tag.val_'.$el['value']['name'].' == "'.$repId.'" %}'.$rep;
+                  }
+                  $i++;
+                }
+                $string.="{% else %}- non renseigné -{% endif %}<br>\n";
+              } elseif($el['value']['formType'] == 'textarea' ) {
+                $string.=$el['value']['label'].' :<p>{{ tag.'.$el['value']['name']."|nl2br }}</p>\n";
+              } else {
+              if(!isset($el['value']['label'])) $el['value']['label']='';
+                $string.=$el['value']['label'].' : {{ tag.'.$el['value']['name']." }}<br>\n";
+              }
+            } elseif($el['type'] == 'head' and !empty(trim(str_replace('&nbsp;','',$el['value'])))) {
+              $string.="\n<h3>".$el['value']."</h3>\n";
+            }
+          }
+        }
+        }
+
+    }
+    return $string;
+  }
+
+  public function getSqlInsertionDataForm() {
+    $string='';
+    //extraire tous les types du form
+    $types=$this->_formExtractDistinctTypes();
+
+    if($typesData=msSQL::sql2tab("select * from data_types where id in ('".implode("', '", $types)."')")) {
+      //print_r($typesData);
+      $cat=array_unique(array_column($typesData, 'cat'));
+      $catData=msSQL::sql2tab("select * from data_cat where id in ('".implode("', '", $cat)."')");
+
+      // catégories de data
+      $i=0;
+      foreach($catData as $c) {
+        $corresCatIdName[$c['id']]=$c['name'];
+        unset($c['id']);
+        if($i==0) {
+          $string.="-- data_cat\n";
+          $string.="INSERT IGNORE INTO `data_cat` (`".implode("`, `", array_keys($c))."`) VALUES \n";
+          $string.="('".implode("', '", $this->_formatForSqlInsertString($c))."')";
+        } else {
+          $string.=",\n('".implode("', '", $this->_formatForSqlInsertString($c))."')\n";
+        }
+        $i++;
+      }
+      $string.=";\n\n";
+
+      // data
+      foreach($typesData as $d) {
+        $dataByCat[$corresCatIdName[$d['cat']]][]=$d;
+      }
+      $string.="-- data_types\n";
+
+      foreach($dataByCat as $catName=>$dataInCat) {
+        $string.="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
+        $i=0;
+        foreach($dataInCat as $d) {
+          unset($d['id']);
+          $d['cat']='@catID';
+          if($i==0) {
+            $string.="INSERT IGNORE INTO `data_types` (`".implode("`, `", array_keys($d))."`) VALUES \n";
+            $string.="('".implode("', '", $this->_formatForSqlInsertString($d))."')";
+          } else {
+            $string.=",\n('".implode("', '", $this->_formatForSqlInsertString($d))."')\n";
+          }
+          $i++;
+        }
+        $string.=";\n\n";
+      }
+    }
+
+    $form=msSQL::sqlUnique("select * from forms where id='".$this->_formID."' limit 1");
+    $formCat=msSQL::sqlUnique("select * from forms_cat where id='".$form['cat']."' limit 1");
+
+    $string="-- FORMULAIRE :\n-- ".$form['name']."\n\n".$string;
+
+    unset($formCat['id']);
+    $string.="-- form_cat\n";
+    $string.="INSERT IGNORE INTO `forms_cat` (`".implode("`, `", array_keys($formCat))."`) VALUES \n";
+    $string.="('".implode("', '", $this->_formatForSqlInsertString($formCat))."');\n\n";
+
+    unset($form['id']);
+    $form['cat']='@catID';
+    $string.="-- form\n";
+    $string.="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$formCat['name']."');\n";
+    $string.="INSERT IGNORE INTO `forms` (`".implode("`, `", array_keys($form))."`) VALUES \n";
+    $string.="('".implode("', '", $this->_formatForSqlInsertString($form))."');";
+
+    $string = str_replace("'@catID'", "@catID", $string);
+    $string = str_replace("\n,\n", ",\n", $string);
+    $string = str_replace("\n;", ";", $string);
+    return $string;
+  }
+
+  private function _formatForSqlInsertString($s) {
+    array_walk_recursive($s, function(&$item, $key) {
+      $item = addslashes($item);
+    });
+    $s=str_replace("\n", '\n', $s);
+    $s=str_replace("\r", '\r', $s);
+    return $s;
+  }
+
 }
