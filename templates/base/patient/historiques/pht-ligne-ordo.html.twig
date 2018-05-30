@@ -169,10 +169,10 @@
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ page.patient.id }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ page.patient.id }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/anonyme/" target="_blank">Forcer impression par défaut avec auteur anonyme</a>
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/anonyme/" target="_blank">Forcer impression par défaut avec auteur anonyme</a>
           </li>
           <li role="separator" class="dropdown-divider m-0"></li>
           <li>
