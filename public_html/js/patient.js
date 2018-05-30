@@ -970,6 +970,8 @@ function sendFormToReglementDiv(el) {
         //reinjection pour édition
         $(".regleTarifCejour").attr('data-tarifdefaut', $(".regleTarifCejour").val());
         $(".regleDepaCejour").attr('data-tarifdefaut', $(".regleDepaCejour").val());
+        // Non car change param antérieur ... à revoir
+        //setTimeout(function() { searchAndInsertActeData($("#newReglement select.selectActeStarter option[selected='selected']").parent('select')); }, 500);
       }
       scrollTo(scrollDestination.newReglement, scrollDestination.delai);
       $(window).on("beforeunload", preventDataLoss);

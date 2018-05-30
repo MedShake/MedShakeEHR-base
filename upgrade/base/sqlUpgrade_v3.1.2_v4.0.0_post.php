@@ -46,4 +46,6 @@ if (exec('COMPOSER_HOME="/tmp/" composer.phar -V', $ret) and strpos($ret, 'Compo
 }
 chdir($p['config']['webDirectory']);
 exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
+chdir($p['homepath']);
+exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
 chdir($initialDir);

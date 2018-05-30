@@ -79,19 +79,33 @@
             {% for param in page.params %}
               <tr class="cats {{ param.cat|replace({' ':'_', '\'':'_'}) }}"{% if param.cat != (page.cats|first) %} style="display:none"{% endif %}>
                 <td>{{ param.name }}</td>
-                <td {% if param.type is same as('true/false') %}class="d-flex justify-content-center checkboxFixValue"{% endif %}>
-                  {{ f.input ({
-                    'input' : {
-                      'type' : param.type is same as('true/false') ? 'checkbox' : ('password' in (param.name|lower) ? 'password' : 'text'),
-                      'name' : param.name,
-                      'id' : param.name ~ 'ID',
-                      'class' : 'form-control form-control-sm',
-                      'value' : param.value,
-                      'plus' : 'password' in (param.name|lower) ? '<i class="fa fa-eye viewPassword"></i>' : '',
-                      'autocomplete' : 'off',
-                      'readonly' : param.readonly|default('')
-                    }
-                  }) }}
+                <td {% if param.type is same as('true/false') %}class="text-center checkboxFixValue"{% endif %}>
+                  {% if param.type == 'textarea' %}
+                    {{ f.textarea ({
+                      'textarea' : {
+                        'name' : param.name,
+                        'id' : param.name ~ 'ID',
+                        'class' : 'form-control form-control-sm h-100',
+                        'value' : param.value,
+                        'autocomplete' : 'off',
+                        'rows' : 4,
+                        'readonly' : param.readonly|default('')
+                      }
+                    }) }}
+                  {% else %}
+                    {{ f.input ({
+                      'input' : {
+                        'type' : param.type is same as('true/false') ? 'checkbox' : ('password' in (param.name|lower) ? 'password' : 'text'),
+                        'name' : param.name,
+                        'id' : param.name ~ 'ID',
+                        'class' : 'form-control form-control-sm',
+                        'value' : param.value,
+                        'plus' : 'password' in (param.name|lower) ? '<i class="fa fa-eye viewPassword"></i>' : '',
+                        'autocomplete' : 'off',
+                        'readonly' : param.readonly|default('')
+                      }
+                    }) }}
+                  {% endif %}
 
                 </td>
                 <td class="text-muted small">{{ param.type }}</td>

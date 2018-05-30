@@ -139,14 +139,16 @@ CREATE TABLE IF NOT EXISTS `forms` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `forms_cat` (
-  `id` smallint(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL,
-  `label` varchar(60) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` enum('base','user') NOT NULL DEFAULT 'user',
-  `fromID` smallint(5) UNSIGNED NOT NULL,
-  `creationDate` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ `id` smallint(5) NOT NULL AUTO_INCREMENT,
+ `name` varchar(60) NOT NULL,
+ `label` varchar(60) NOT NULL,
+ `description` varchar(255) NOT NULL,
+ `type` enum('base','user') NOT NULL DEFAULT 'user',
+ `fromID` smallint(5) unsigned NOT NULL,
+ `creationDate` datetime NOT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `form_basic_types` (
   `id` int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -265,18 +267,19 @@ CREATE TABLE IF NOT EXISTS `prescriptions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
- `id` smallint(5) NOT NULL AUTO_INCREMENT,
- `name` varchar(60) NOT NULL,
- `label` varchar(60) NOT NULL,
- `description` varchar(255) NOT NULL,
- `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
- `fromID` smallint(5) unsigned NOT NULL,
- `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
- `creationDate` datetime NOT NULL,
- `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
- PRIMARY KEY (`id`),
- KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `label` varchar(60) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
+  `fromID` smallint(5) unsigned NOT NULL,
+  `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `creationDate` datetime NOT NULL,
+  `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `displayOrder` (`displayOrder`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `printed` (
  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -402,7 +405,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (43, 'medical', 'imc', 'imc', 'IMC', 'IMC (autocalcule)', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (44, 'typecs', 'nouvelleGrossesse', '', 'Nouvelle grossesse', 'support parent pour nouvelle grossesse', '', '', '', '', 'base', 57, 1, '2018-01-01 00:00:00', 86400, 1),
 (45, 'medical', 'groFermetureSuivi', '', 'Fermeture de la grossesse', 'date de fermeture de la grossesse (porteur)', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
-(46, 'medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '00/00/0000', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
+(46, 'medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
 (47, 'medical', 'ddg', 'ddg', 'DDG (théorique)', 'date de début de grossesse', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
 (48, 'medical', 'ddgReel', '', 'DDG (retenue)', 'date de début de grossesse corrigé', '', '', 'date', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
 (49,'medical', 'termeDuJour', '', 'Terme du jour', 'terme du jour', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -437,8 +440,8 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (187, 'ordo', 'ordoTypeImpression', '', 'Type ordonnance impression', 'type d\'ordonnance pour impression', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
 (188, 'ordo', 'ordoLigneOrdo', '', 'Ligne d\'ordonnance', 'porteur pour une ligne d\'ordo', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
 (189, 'ordo', 'ordoLigneOrdoALDouPas', '', 'Ligne d\'ordonnance : ald', '1 si ald', '', '', '', '', 'base', 67, 1, '2018-01-01 00:00:00', 3600, 1),
-(190, 'reglement', 'reglePorteurS1', '', 'Règlement conventionné S1', 'Règlement conventionné S1', '', '', '', 'baseReglementSS', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
-(191, 'reglement', 'reglePorteurS2', '', 'Règlement conventionné S2', 'Règlement conventionné S2', '', '', '', 'baseReglementSS', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
+(190, 'reglement', 'reglePorteurS1', '', 'Règlement conventionné S1', 'Règlement conventionné S1', '', '', '', 'baseReglementS1', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
+(191, 'reglement', 'reglePorteurS2', '', 'Règlement conventionné S2', 'Règlement conventionné S2', '', '', '', 'baseReglementS2', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (192, 'reglement', 'reglePorteurLibre', '', 'Règlement non conventionné', 'Règlement non conventionné', '', '', '', 'baseReglementLibre', 'base', 45, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (193, 'reglement', 'regleCheque', '', 'Chèque', 'montant versé en chèque', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (194, 'reglement', 'regleCB', '', 'CB', 'montant versé en CB', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
@@ -652,11 +655,11 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('mailRappelActiver', 'Rappels mail', 'default', 'true/false', 'activer / désactiver les rappels par mail', 'false'),
 ('mailRappelLogCampaignDirectory', 'Rappels mail', 'default', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par mail', ''),
 ('mailRappelDaysBeforeRDV', 'Rappels mail', 'default', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel', '3'),
-('mailRappelMessage', 'Rappels mail', 'default', 'texte', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu\’aucun autre rendez-vous ne sera donné à un patient n\’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
+('mailRappelMessage', 'Rappels mail', 'default', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu\’aucun autre rendez-vous ne sera donné à un patient n\’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
 ('smsRappelActiver', 'Rappels SMS', 'default', 'true/false', 'activer / désactiver les rappels par SMS', 'false'),
 ('smsProvider', 'Rappels SMS', 'default', 'url/ip', 'active le service tiers concerné', ''),
 ('smsLogCampaignDirectory', 'Rappels SMS', 'default', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par SMS', ''),
-('smsRappelMessage', 'Rappels SMS', 'default', 'texte', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien'),
+('smsRappelMessage', 'Rappels SMS', 'default', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien'),
 ('smsDaysBeforeRDV', 'Rappels SMS', 'default', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel SMS', '3'),
 ('smsCreditsFile', 'Rappels SMS', 'default', 'fichier', 'nom du fichier qui contient le nombre de SMS restants', 'creditsSMS.txt'),
 ('smsSeuilCreditsAlerte', 'Rappels SMS', 'default', 'nombre', 'prévenir dans l\'interface du logiciel si crédit inférieur ou égale à', '150'),

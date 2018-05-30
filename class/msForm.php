@@ -577,7 +577,7 @@ class msForm
     private function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
     {
         if (is_array($blocs)) {
-            $r['structure'][$rowNumber][$colNumber]['elements']=array();
+            if(!isset($r['structure'][$rowNumber][$colNumber]['elements'])) $r['structure'][$rowNumber][$colNumber]['elements']=array();
             foreach ($blocs as $k=>$v) {
 
                 //template

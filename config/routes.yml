@@ -171,6 +171,9 @@ configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configAppl
 # configuration modules
 configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
 
+# configuration LAP
+configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
+
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']

@@ -137,7 +137,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     }
 
     $p['page']['sqlString']=$sql='select
-    CASE WHEN ln.value !="" and bn.value !="" THEN concat(ln.value, " (", bn.Value ,")", " ", fn.value)
+    CASE WHEN ln.value !="" and bn.value !="" THEN concat(ln.value, " ", fn.value, " (", bn.Value ,")")
     WHEN bn.value !="" THEN concat(bn.value, " ", fn.value)
     WHEN ln.value !="" THEN concat(ln.value, " ", fn.value)
     ELSE concat("(inconnu) ", fn.value)

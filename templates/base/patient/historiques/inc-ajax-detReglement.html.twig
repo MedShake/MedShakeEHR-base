@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-              {% if page.secteurHonoraires != '' %}
+              {% if page.typeFormHonoraires in ['baseReglementS1', 'baseReglementS2'] %}
                 <tr>
                   <td>Tarif SS</td>
                   <td>{{ page.datareg.regleTarifSSCejour.value }}€</td>

@@ -26,7 +26,7 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
@@ -42,7 +42,12 @@ if (!is_writable($p['homepath'])) {
 $zip = new ZipArchive;
 if ($zip->open($fichier['tmp_name'])) {
     if ($zip->getFromName(".MedShakeEHR")!==false) {
-        msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
+        $dataMaintenance = array(
+          'name'=>'state',
+          'value'=>'maintenance',
+          'groupe'=>'system'
+        );
+        msSQL::sqlInsert('system', $dataMaintenance);
         if ($zip->extractTo($p['homepath'])) {
             $zip->close();
             if ($p['config']['webDirectory']!=$p['homepath'].'public_html/') {

@@ -33,7 +33,7 @@ $(document).ready(function() {
     mailID = $(this).attr('data-mailtrackingid');
 
     $.ajax({
-      url: urlBase+'/ajax/mailTracking/',
+      url: urlBase + '/ajax/mailTracking/',
       type: 'post',
       data: {
         mailID: mailID,
@@ -42,23 +42,14 @@ $(document).ready(function() {
       success: function(data) {
 
         if (data['lastStatus'] == 'opened') {
-          $('#mt' + data['mailTrackingID']).addClass('success');
+          $('#mt' + data['mailTrackingID']).addClass('table-success');
         } else if (data['lastStatus'] == 'blocked' || data['lastStatus'] == 'bounced') {
-          $('#mt' + data['mailTrackingID']).addClass('danger');
+          $('#mt' + data['mailTrackingID']).addClass('table-danger');
         } else if (data['lastStatus'] == 'spam') {
-          $('#mt' + data['mailTrackingID']).addClass('warning');
+          $('#mt' + data['mailTrackingID']).addClass('table-warning');
         }
         if ($('.infos' + data['mailTrackingID']).length) $('.infos' + data['mailTrackingID']).html('Statut : ' + data['lastStatus'] + ' - ' + data['lastDate']);
-      },
-      error: function() {
-
       }
     });
-
   });
-
-
-
-
-
 });
