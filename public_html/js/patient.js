@@ -276,7 +276,7 @@ $(document).ready(function() {
   });
   if (typeof(dicomAutoSendPatient) != "undefined") {
     if (dicomAutoSendPatient == true) {
-      prepareEcho();
+      prepareEcho('nopopup');
     }
   }
 
