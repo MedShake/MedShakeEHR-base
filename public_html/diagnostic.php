@@ -72,7 +72,7 @@ if(is_dir('thirdparty')) {
   $infos[] = 'dossier thirparty : présent';
   $dirs = array_filter(glob('thirdparty/*'), 'is_dir');
   if(!empty($dirs)) {
-    $liste='contenu thirdparty :<ul>';
+    $liste='contenu thirdparty : '.count($dirs).'<ul>';
     foreach($dirs as $dir) {
       $liste.='<li>'.$dir.'</li>';
     }
@@ -88,7 +88,7 @@ if(is_dir($homepath.'vendor')) {
   $infos[] = 'dossier vendor : présent';
   $dirs = array_filter(glob($homepath.'vendor/*'), 'is_dir');
   if(!empty($dirs)) {
-    $liste='contenu vendor :<ul>';
+    $liste='contenu vendor : '.count($dirs).'<ul>';
     foreach($dirs as $dir) {
       $liste.='<li>'.$dir.'</li>';
     }
