@@ -899,18 +899,18 @@ class msForm
                 $i=0;
                 foreach($el['value']['formValues'] as $repId=>$rep) {
                   if($i==0) {
-                    $string.='{% if tag.val_'.$el['value']['name'].' == "'.$repId.'" %}'.$rep;
+                    $string.='{% if tag.val_'.$el['value']['internalName'].' == "'.$repId.'" %}'.$rep;
                   } else {
-                    $string.='{% elseif tag.val_'.$el['value']['name'].' == "'.$repId.'" %}'.$rep;
+                    $string.='{% elseif tag.val_'.$el['value']['internalName'].' == "'.$repId.'" %}'.$rep;
                   }
                   $i++;
                 }
                 $string.="{% else %}- non renseigné -{% endif %}<br>\n";
               } elseif($el['value']['formType'] == 'textarea' ) {
-                $string.=$el['value']['label'].' :<p>{{ tag.'.$el['value']['name']."|nl2br }}</p>\n";
+                $string.=$el['value']['label'].' :<p>{{ tag.'.$el['value']['internalName']."|nl2br }}</p>\n";
               } else {
               if(!isset($el['value']['label'])) $el['value']['label']='';
-                $string.=$el['value']['label'].' : {{ tag.'.$el['value']['name']." }}<br>\n";
+                $string.=$el['value']['label'].' : {{ tag.'.$el['value']['internalName']." }}<br>\n";
               }
             } elseif($el['type'] == 'head' and !empty(trim(str_replace('&nbsp;','',$el['value'])))) {
               $string.="\n<h3>".$el['value']."</h3>\n";
