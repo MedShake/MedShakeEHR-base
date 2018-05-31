@@ -208,7 +208,7 @@ class msData
  */
     public function getSelectOptionValue($typeIDsArray)
     {
-        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType='select' and id in ('".implode("', '", $typeIDsArray)."')", "id", "formValues");
+        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in ('".implode("', '", $typeIDsArray)."')", "id", "formValues");
         if (is_array($tab)) {
             foreach ($tab as $k=>$v) {
                 $tab[$k]=Spyc::YAMLLoad($v);
