@@ -100,7 +100,7 @@
       {% endif %}
 
       {% if cs.dicomStudy %}
-        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ cs.dicomStudy }}/" target="_blank">
+        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ cs.toID }}/study/{{ cs.dicomStudy }}/" target="_blank">
           <span class="far fa-picture" aria-hidden="true"></span>
         </a>
       {% endif %}
@@ -154,7 +154,7 @@
           {% endif %}
           {% if cs.dicomStudy %}
             <li class="d-block d-lg-none">
-              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ page.patient.id }}/study/{{ cs.dicomStudy }}/" target="_blank">Voir images DICOM</a>
+              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ cs.toID }}/study/{{ cs.dicomStudy }}/" target="_blank">Voir images DICOM</a>
             </li>
           {% endif %}
           <li class="dropdown-divider m-0 d-block d-lg-none"></li>
@@ -185,7 +185,7 @@
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ page.patient.id }}/cr/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/cr/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
           </li>
           <li>
             <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
