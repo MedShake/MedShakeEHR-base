@@ -49,9 +49,13 @@ class msModBaseDataCourrier
     $atcd = new msCourrier();
     $atcd = $atcd->getExamenData($d['patientID'], 'baseATCD', 0);
     if(is_array($atcd)) {
-      $d=$d+$atcd;
+      foreach($atcd as $k=>$v) {
+        if(!in_array($k, array_keys($d))) $d[$k]=$v;
+      }
     }
-
+    // résoudre le problème potentiel de l'IMC
+    unset($d['imc']);
+    if(isset($d['poids'],$d['taillePatient'])) $d['imc']=msModMedgeCalcMed::imc($d['poids'],$d['taillePatient']);
   }
 
 /**
