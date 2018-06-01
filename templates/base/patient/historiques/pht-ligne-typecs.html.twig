@@ -100,9 +100,9 @@
       {% endif %}
 
       {% if cs.dicomStudy %}
-        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/{{ cs.toID }}/study/{{ cs.dicomStudy }}/" target="_blank">
-          <span class="far fa-picture" aria-hidden="true"></span>
-        </a>
+      <a class="btn btn-light btn-sm d-none d-lg-inline-block viewStudy" data-study="{{ cs.dicomStudy }}" role="button" href="#">
+        <i class="far fa-image"></i>
+      </a>
       {% endif %}
 
       {# option #}

@@ -507,6 +507,19 @@ $(document).ready(function() {
     showObjetDet($(this));
   });
 
+  // voir étude dicom correspondant à l'examen
+  $('#tabDossierMedical').on("click", "a.viewStudy", function(e) {
+    e.preventDefault();
+    $.getScriptOnce(urlBase + "/js/dicom.js");
+    var url = '/patient/' + $('#identitePatient').attr("data-patientID") + '/tab/tabDicomStudyView/';
+    var param = {
+      'dcStudyID': $(this).attr('data-study')
+    };
+    $('#ongletDicom').tab('show');
+    loadTabPatient(url, 'tabDicom', param);
+
+  });
+
   ////////////////////////////////////////////////////////////////////////
   // gestion des historiques et courbes de poids/taille/imc
 
