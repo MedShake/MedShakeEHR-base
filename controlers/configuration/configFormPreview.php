@@ -61,6 +61,7 @@
          $p['page']['form']=$form->getForm();
 
          $p['page']['basicTemplateCode']=$form->getFlatBasicTemplateCode();
-         $p['page']['sqlCode']=$form->getSqlInsertionDataForm();
+         $sqlGen = new msSqlGenerate;
+         $p['page']['sqlCode']=$sqlGen->getSqlForForm($form->getFormIN());
      }
  }
