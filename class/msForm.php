@@ -222,12 +222,24 @@ class msForm
             $where=null;
         }
 
-        if ($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->_formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' ".$where, "typeID", "value")) {
+        if ($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' ".$where, "typeID", "value")) {
             return $this->_prevalues;
         } else {
             return $this->_prevalues=array();
         }
     }
+
+/**
+ * Obtenir le name de la categorie du form à partir partir du cat id
+ * @param  int $id de la catégorie
+ * @return string     name
+ */
+    public static function getCatNameFromCatID($id)
+    {
+        return msSQL::sqlUniqueChamp("select name from forms_cat where id = '".$id."' ");
+    }
+
+
 /**
  * Obetnir le formulaire sous forme d'array PHP qui sera décotiqué par une macro Twig
  * pour obtenir au final une version HTML
@@ -803,7 +815,7 @@ class msForm
  * Brutal mais ça fonctionne ;-)
  * @return array Array de tous les typeID présents.
  */
-    private function _formExtractDistinctTypes()
+    public function formExtractDistinctTypes()
     {
         if ($formyaml=msSQL::sqlUniqueChamp("select yamlStructure from forms where id='".$this->_formID."' limit 1")) {
 
@@ -922,87 +934,4 @@ class msForm
     }
     return $string;
   }
-
-  public function getSqlInsertionDataForm() {
-    $string='';
-    //extraire tous les types du form
-    $types=$this->_formExtractDistinctTypes();
-
-    if($typesData=msSQL::sql2tab("select * from data_types where id in ('".implode("', '", $types)."')")) {
-      //print_r($typesData);
-      $cat=array_unique(array_column($typesData, 'cat'));
-      $catData=msSQL::sql2tab("select * from data_cat where id in ('".implode("', '", $cat)."')");
-
-      // catégories de data
-      $i=0;
-      foreach($catData as $c) {
-        $corresCatIdName[$c['id']]=$c['name'];
-        unset($c['id']);
-        if($i==0) {
-          $string.="-- data_cat\n";
-          $string.="INSERT IGNORE INTO `data_cat` (`".implode("`, `", array_keys($c))."`) VALUES \n";
-          $string.="('".implode("', '", $this->_formatForSqlInsertString($c))."')";
-        } else {
-          $string.=",\n('".implode("', '", $this->_formatForSqlInsertString($c))."')\n";
-        }
-        $i++;
-      }
-      $string.=";\n\n";
-
-      // data
-      foreach($typesData as $d) {
-        $dataByCat[$corresCatIdName[$d['cat']]][]=$d;
-      }
-      $string.="-- data_types\n";
-
-      foreach($dataByCat as $catName=>$dataInCat) {
-        $string.="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
-        $i=0;
-        foreach($dataInCat as $d) {
-          unset($d['id']);
-          $d['cat']='@catID';
-          if($i==0) {
-            $string.="INSERT IGNORE INTO `data_types` (`".implode("`, `", array_keys($d))."`) VALUES \n";
-            $string.="('".implode("', '", $this->_formatForSqlInsertString($d))."')";
-          } else {
-            $string.=",\n('".implode("', '", $this->_formatForSqlInsertString($d))."')\n";
-          }
-          $i++;
-        }
-        $string.=";\n\n";
-      }
-    }
-
-    $form=msSQL::sqlUnique("select * from forms where id='".$this->_formID."' limit 1");
-    $formCat=msSQL::sqlUnique("select * from forms_cat where id='".$form['cat']."' limit 1");
-
-    $string="-- FORMULAIRE :\n-- ".$form['name']."\n\n".$string;
-
-    unset($formCat['id']);
-    $string.="-- form_cat\n";
-    $string.="INSERT IGNORE INTO `forms_cat` (`".implode("`, `", array_keys($formCat))."`) VALUES \n";
-    $string.="('".implode("', '", $this->_formatForSqlInsertString($formCat))."');\n\n";
-
-    unset($form['id']);
-    $form['cat']='@catID';
-    $string.="-- form\n";
-    $string.="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$formCat['name']."');\n";
-    $string.="INSERT IGNORE INTO `forms` (`".implode("`, `", array_keys($form))."`) VALUES \n";
-    $string.="('".implode("', '", $this->_formatForSqlInsertString($form))."');";
-
-    $string = str_replace("'@catID'", "@catID", $string);
-    $string = str_replace("\n,\n", ",\n", $string);
-    $string = str_replace("\n;", ";", $string);
-    return $string;
-  }
-
-  private function _formatForSqlInsertString($s) {
-    array_walk_recursive($s, function(&$item, $key) {
-      $item = addslashes($item);
-    });
-    $s=str_replace("\n", '\n', $s);
-    $s=str_replace("\r", '\r', $s);
-    return $s;
-  }
-
 }
