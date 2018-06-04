@@ -92,6 +92,8 @@ if (count($_POST['acteID'])>0) {
         $patient=new msPeople();
         $patient->setToID($_POST['patientID']);
         $p['cs']=$patient->getToday("limit 1")[0];
+    } else {
+        exit('Refresh: mise à jour règlement');
     }
 
 } else {
