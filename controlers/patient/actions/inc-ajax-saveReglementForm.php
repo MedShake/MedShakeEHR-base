@@ -94,6 +94,8 @@ if (count($_POST['acteID'])>0) {
         $p['cs']=array_pop($patient->getHistorique($_POST['objetID']))[0];
     } else {
         $p['cs']=$patient->getToday("limit 1")[0];
+    } else {
+        exit('Refresh: mise à jour règlement');
     }
 
 } else {
