@@ -658,6 +658,7 @@ $(document).ready(function() {
     $(window).unbind("beforeunload");
     $(this).closest(".toclear").html("");
     var form = $(this).closest("form");
+    var objetid = form.find("input[name=objetID]").val();
     $.ajax({
       url: form.attr("action"),
       type: 'post',
@@ -676,9 +677,13 @@ $(document).ready(function() {
           alert_popup("warning", data);
         } else {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
-          if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY"))
-            $tr.after(data);
-          else {
+          if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
+            var $l = $("#historique tr.tr" + objetid);
+            if (objetid && $l.length)
+              $l.replaceWith(data);
+            else
+              $tr.after(data);
+          } else {
             $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
@@ -686,11 +691,23 @@ $(document).ready(function() {
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
             </tr>' + data);
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(moment().format("DD/MM/YYYY"));
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(moment().format("DD/MM"));
+            var regdate=$('#historique tr:nth-of-type(2)').attr('data-registerdate');
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0,10));
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0,5));
             refreshHistorique();
           }
-          $('#historiqueToday tbody').prepend(data);
+
+          var $lt = $("#historiqueToday tr.tr" + objetid);
+          if (objetid && $lt.length)
+            $lt.replaceWith(data);
+          else {
+            $('#historiqueToday tbody').prepend(data);
+            if ($('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate').substr(0,10) != moment().format("YYYY-MM-DD"))
+              $('#historiqueToday tbody tr:nth-of-type(1)').remove();
+          }
+          var regdatet=$('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate');
+          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-none').html(regdatet.substr(11));
+          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11,5));
           refreshHistoriqueToday();
         }
       },

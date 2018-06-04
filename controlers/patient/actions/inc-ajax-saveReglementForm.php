@@ -85,12 +85,14 @@ if (count($_POST['acteID'])>0) {
     $codes = implode(' + ', array_keys($codes));
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-        $debug='';
-        //template
-        $template="pht-ligne-reglement";
-        $patient=new msPeople();
-        $patient->setToID($_POST['patientID']);
+    $debug='';
+    //template
+    $template="pht-ligne-reglement";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
+        $p['cs']=array_pop($patient->getHistorique($_POST['objetID']))[0];
+    } else {
         $p['cs']=$patient->getToday("limit 1")[0];
     }
 
