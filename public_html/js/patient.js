@@ -675,9 +675,6 @@ $(document).ready(function() {
           alert_popup("danger", data);
         } else if (data.substr(0, 14) == "Avertissement:") {
           alert_popup("warning", data);
-        } else if (form.hasClass('refreshHistoriques') || data.substr(0, 8) == "Refresh:") {
-          getHistoriqueToday();
-          getHistorique();
         } else {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
