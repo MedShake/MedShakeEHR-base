@@ -492,7 +492,7 @@ class msPeople
  * Historique complet des actes pour un individu
  * @return array Array multi avec année en clef de 1er niveau
  */
-    public function getHistorique()
+    public function getHistorique($objetID='')
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
@@ -522,8 +522,9 @@ class msPeople
               or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
               or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')
               )
-        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
-        group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
+        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".
+        ($objetID ? (" and p.id=".$objetID) : "").
+        " group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
         order by p.creationDate desc")) {
               foreach ($data as $v) {
                   $return[$v['creationYear']][]=$v;

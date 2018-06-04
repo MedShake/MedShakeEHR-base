@@ -97,6 +97,7 @@ if (isset($_POST['objetID'])) {
     $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));
 }
 $p['page']['form']=$form->getForm();
+$p['page']['formIN']=$reglementForm;
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 //ajout champs cachés au form
