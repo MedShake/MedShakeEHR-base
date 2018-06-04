@@ -91,7 +91,8 @@ if (count($_POST['acteID'])>0) {
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
-        $p['cs']=array_pop($patient->getHistorique($_POST['objetID']))[0];
+        $ligneHisto=$patient->getHistorique($_POST['objetID']);
+        $p['cs']=array_pop($ligneHisto)[0];
     } else {
         $p['cs']=$patient->getToday("limit 1")[0];
     }
