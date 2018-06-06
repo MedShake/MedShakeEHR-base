@@ -414,6 +414,18 @@
 		data-instance="{{ t.global.instance }}" >
 	{% endif %}
 
+
+	{# form autoTitle : name du data_type dont la valeur déterminera le titre de l'objet créé #}
+	{% if t.global.autoTitle %}
+		{{ f.input ({
+			'input' : {
+				'type' : 'hidden',
+				'name' : 'autoTitle',
+				'value' : t.global.autoTitle
+			}
+		}) }}
+	{% endif %}
+
 	{# form number #}
 	{{ f.input ({
 		'input' : {
