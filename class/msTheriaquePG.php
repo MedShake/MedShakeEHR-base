@@ -158,6 +158,10 @@ class msTheriaquePG {
   /////////////////////////////////////////////////////
   ////// 6. les indications
 
+  public function get_the_ind_txt($libtxt) {
+    return $this->get_data_from_pg("get_the_ind_txt('$libtxt')");
+  }
+
   public function get_the_ind_spe($codeid) {
     return $this->get_data_from_pg("get_the_ind_spe($codeid)");
   }
