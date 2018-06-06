@@ -21,7 +21,7 @@
  */
 
 /**
- * Config : gérer les paramètres de configuration par défaut des utilisateurs
+ * Config : gérer les paramètres de configuration globaux
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
@@ -34,15 +34,17 @@ if (!msUser::checkUserIsAdmin()) {
 }
 $debug='';
 $template='configDefaultParams';
+// extraction des paramètres réels si besoin (host / cookieDomain qui peuvent changer si IP dynamique par exemple)
+$p['configInYml']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['page']['params']=array(
   array('cat'=>'Serveur','type'=>'texte','name'=>'protocol','value'=>$p['config']['protocol'],'readonly'=>true),
-  array('cat'=>'Serveur','type'=>'texte','name'=>'host','value'=>$p['config']['host'],'readonly'=>true),
+  array('cat'=>'Serveur','type'=>'texte','name'=>'host','value'=>$p['configInYml']['host'],'readonly'=>true),
   array('cat'=>'Serveur','type'=>'texte','name'=>'urlHostSuffixe','value'=>$p['config']['urlHostSuffixe'],'readonly'=>true),
   array('cat'=>'Serveur','type'=>'texte','name'=>'webDirectory','value'=>$p['config']['webDirectory'],'readonly'=>true),
   array('cat'=>'Serveur','type'=>'texte','name'=>'stockageLocation','value'=>$p['config']['stockageLocation']),
   array('cat'=>'Serveur','type'=>'texte','name'=>'backupLocation','value'=>$p['config']['backupLocation']),
   array('cat'=>'Serveur','type'=>'texte','name'=>'workingDirectory','value'=>$p['config']['workingDirectory']),
-  array('cat'=>'Serveur','type'=>'texte','name'=>'cookieDomain','value'=>$p['config']['cookieDomain']),
+  array('cat'=>'Serveur','type'=>'texte','name'=>'cookieDomain','value'=>$p['configInYml']['cookieDomain']),
   array('cat'=>'Serveur','type'=>'texte','name'=>'cookieDuration','value'=>$p['config']['cookieDuration']),
   array('cat'=>'Serveur','type'=>'texte','name'=>'fingerprint','value'=>$p['config']['fingerprint'],'readonly'=>true),
 
@@ -63,4 +65,3 @@ $p['page']['cats']=msSQL::sql2tabKey("SELECT DISTINCT(cat) FROM configuration WH
 unset($p['page']['cats']['Options']);
 ksort($p['page']['cats'], SORT_NATURAL | SORT_FLAG_CASE);
 $p['page']['cats']=array_merge(['Serveur', 'Serveur MySQL', 'Service d\'affichage', 'Options'], $p['page']['cats']);
-
