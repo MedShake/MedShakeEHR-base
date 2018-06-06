@@ -130,7 +130,7 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
               FROM objets_data AS od left join data_types AS dt
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='relationExternePatient' and od.toID in ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
-    } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient']){
+    } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient'] == 'true'){
         $peopleType=array('pro','patient');
     } else {
         $peopleType=array('patient');

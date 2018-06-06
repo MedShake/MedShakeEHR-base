@@ -47,7 +47,7 @@ if (isset($match['params']['instance'])) {
 }
 
 $ids = msData::getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
-$p['page']['logs']=msSQL::sql2tab("select pd.* , TRIM(CONCAT(COALESCE(f.value,''), ' ', TRIM(CONCAT(COALESCE(l.value, ''), ' ', COALESCE(b.value,''))))) as prescripteur, t.label, t.groupe
+$p['page']['logs']=msSQL::sql2tab("select pd.* , TRIM(CONCAT(COALESCE(f.value,''), ' ', TRIM(CONCAT(COALESCE(l.value, ''), ' ', COALESCE(b.value,''))))) as prescripteur, t.label, t.groupe, t.name
 from objets_data as pd
 left join objets_data as f on f.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and f.typeID in (NULL, '', '".$ids['firstname']."') and f.outdated='' and f.deleted=''
 left join objets_data as l on l.toID=(CASE WHEN pd.byID!='' THEN pd.byID ELSE pd.fromID END) and l.typeID in (NULL, '', '".$ids['lastname']."') and l.outdated='' and l.deleted=''

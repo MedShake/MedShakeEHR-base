@@ -59,7 +59,7 @@
         </thead>
         <tbody>
             {% for v in page.logs %}
-                <tr class="{% if v.groupe == 'typecs' %}table-info{% elseif v.groupe == 'courrier' or v.typeID in [177,186,184,192,488] %}table-success{% elseif v.groupe == 'admin' %}table-warning{% elseif v.groupe == 'user' %}table-danger{% endif %}">
+                <tr class="{% if v.groupe == 'typecs' or v.name == 'allergieCodeTheriaque' %}table-info{% elseif v.groupe == 'admin' %}table-warning{% elseif v.groupe == 'user' %}table-danger{% elseif v.groupe == 'courrier' or v.name in ['relationID'] or 'Porteur' in v.name %}table-success{% endif %}">
                     <td>#{{ v.id }}</td>
                     <td>{{ v.registerDate|replace({' ':'&nbsp;'}) }}</td>
                     <td>{% if v.registerDate != v.updateDate %}{{ v.updateDate|replace({' ':'&nbsp;'}) }}{% endif %}
