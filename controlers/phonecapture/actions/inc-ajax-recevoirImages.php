@@ -107,7 +107,13 @@ if ($type !== false) {
         // injecter le jpeg dans le DCM
         exec("img2dcm ".$jpegFile." ".$dcmFinalFile." -df " . $dcmBaseFile . " -stf " . $dcmBaseFile . " -sef " . $dcmBaseFile);
         // transférer à Orthanc
-        exec("storescu -aec ORTHANC ".$p['config']['dicomHost']." 4242 ".$dcmFinalFile."  --propose-jpeg8");
+        if(strpos($p['config']['dicomHost'], '@') > 0) {
+          $sendToHost = explode('@', $p['config']['dicomHost']);
+          $sendToHost = $sendToHost[1];
+        } else {
+          $sendToHost = $p['config']['dicomHost'];
+        }
+        exec("storescu -aec ORTHANC ".$sendToHost." 4242 ".$dcmFinalFile."  --propose-jpeg8");
 
         @unlink($jpegFile);
         @unlink($templateForDCM);
