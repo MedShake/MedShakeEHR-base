@@ -38,17 +38,18 @@
 
  $p['page']['printType']='courrier';
 
+ $courrier = new msCourrier();
+ $courrier->setModeleIDByName($_POST['modele']);
+ $modeleID=$courrier->getModeleID();
+ $courrier->setPatientID($_POST['patientID']);
+ $courrier->setModule($p['user']['module']);
 
  if (isset($_POST['objetID'])) {
      $dataform = new msObjet();
      $dataform=$dataform->getObjetDataByID($_POST['objetID'], ['value']);
      $p['page']['courrier']['pre']=msTools::unbbcodifier($dataform['value']);
  } elseif (isset($_POST['modele'])) {
-     $courrier = new msCourrier();
-     $courrier->setModeleIDByName($_POST['modele']);
-     $modeleID=$courrier->getModeleID();
-     $courrier->setPatientID($_POST['patientID']);
-     $courrier->setModule($p['user']['module']);
+
      $p['page']['courrier']=$courrier->getCourrierData();
 
      $data=new msData();
@@ -66,5 +67,5 @@
      $p['page']['courrier']['actionForm'].=$modeleID.'/';
  }
  if (isset($_POST['objetID'])) {
-     $p['page']['courrier']['actionForm'].=$modeleID.'/';
+     $p['page']['courrier']['actionForm'].=$_POST['objetID'].'/';
  }
