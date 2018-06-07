@@ -139,10 +139,10 @@ class msModBaseObjetPreview
     return $html;
   }
 
-  /**
-   * Obtenir le HTML de prévisualisation d'une Ordo (non LAP)
-   * @return string code html
-   */
+/**
+ * Obtenir le HTML de prévisualisation d'une Ordo (non LAP)
+ * @return string code html
+ */
     public function getGenericPreviewOrdo() {
       global $p;
 
@@ -175,6 +175,25 @@ class msModBaseObjetPreview
       $html = $html->genererHtmlString($p);
       return $html;
     }
+
+/**
+ * Obtenir le HTML de prévisualisation d'un Courrier
+ * @return string code html
+ */
+      public function getGenericPreviewCourrier() {
+        global $p;
+        $fakePDF = new msPDF();
+        $fakePDF->setPageHeader('');
+        $fakePDF->setPageFooter('');
+        $fakePDF->setObjetID($this->_objetID);
+        $fakePDF->makePDFfromObjetID();
+        $version = $fakePDF->getContenuFinal();
+
+        $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
+        $string .=  msTools::cutHtmlHeaderAndFooter($version);
+        $string .=  '</div></td>';
+        return $string;
+      }
 
 /**
  * Obtenir le HTML de prévisualisation à partir du template d'impression

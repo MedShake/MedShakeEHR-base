@@ -43,6 +43,8 @@ if (is_numeric($_POST['objetID'])) {
         echo $preview->getGenericPreviewMail();
     } elseif ($objetGroupe=="ordo") {
         echo $preview->getGenericPreviewOrdo();
+    } elseif ($objetGroupe=="courrier") {
+          echo $preview->getGenericPreviewCourrier();
     } elseif($objetGroupe=="typecs") {
 
         //si méthode existe dans base
