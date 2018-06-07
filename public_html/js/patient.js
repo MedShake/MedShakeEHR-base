@@ -124,42 +124,10 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour sauvegarde automatique des champs modifiés
-  $(".changeObserv input:not(.datepic), .changeObserv textarea").typeWatch({
-    wait: 1000,
-    highlight: false,
-    allowSubmit: false,
-    captureLength: 1,
-    callback: function(value) {
-      patientID = $('#identitePatient').attr("data-patientID");
-      typeID = $(this).attr("data-typeID");
-      source = $(this);
-      instance = $(this).closest("form").attr("data-instance");
-      setPeopleData(value, patientID, typeID, source, instance);
-    }
-  });
 
-  $(".changeObservByTypeName input:not(.datepic), .changeObservByTypeName textarea").typeWatch({
-    wait: 1000,
-    highlight: false,
-    allowSubmit: false,
-    captureLength: 1,
-    callback: function(value) {
-      patientID = $('#identitePatient').attr("data-patientID");
-      typeName = $(this).attr("data-typeName");
-      source = $(this);
-      instance = $(this).closest("form").attr("data-instance");
-      setPeopleDataByTypeName(value, patientID, typeName, source, instance);
-    }
-  });
+  activeWatchChange('.changeObserv');
+  activeWatchChange('.changeObservByTypeName');
 
-  $(".changeObserv select").on("change", function(e) {
-    patientID = $('#identitePatient').attr("data-patientID");
-    typeID = $(this).attr("data-typeID");
-    value = $(this).val();
-    source = $(this);
-    instance = $(this).closest("form").attr("data-instance");
-    setPeopleData(value, patientID, typeID, source, instance);
-  });
   $(".datepick").on("dp.change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).children('input').attr("data-typeID");
@@ -442,8 +410,7 @@ $(document).ready(function() {
     if (groupe != 'tous') {
       $('.historiqueMedicalComplet tr.trLigneExamen').hide();
       $('.historiqueMedicalComplet tr[data-groupe="' + groupe + '"]').show();
-    } 
-    else {
+    } else {
       $('.historiqueMedicalComplet tr.trLigneExamen').show();
 
     }
@@ -691,9 +658,9 @@ $(document).ready(function() {
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
             </tr>' + data);
-            var regdate=$('#historique tr:nth-of-type(2)').attr('data-registerdate');
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0,10));
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0,5));
+            var regdate = $('#historique tr:nth-of-type(2)').attr('data-registerdate');
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0, 10));
+            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0, 5));
             refreshHistorique();
           }
 
@@ -702,12 +669,12 @@ $(document).ready(function() {
             $lt.replaceWith(data);
           else {
             $('#historiqueToday tbody').prepend(data);
-            if ($('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate').substr(0,10) != moment().format("YYYY-MM-DD"))
+            if ($('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate').substr(0, 10) != moment().format("YYYY-MM-DD"))
               $('#historiqueToday tbody tr:nth-of-type(1)').remove();
           }
-          var regdatet=$('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate');
+          var regdatet = $('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate');
           $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-none').html(regdatet.substr(11));
-          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11,5));
+          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11, 5));
           refreshHistoriqueToday();
         }
       },
@@ -1016,152 +983,13 @@ function sendFormToReglementDiv(el) {
   });
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////
-/////////Fonctions spécifiques aux lignes de l'historique  (dont modal)
+/////////Fonctions spécifiques aux header dossier patient
 
-//supprimer une ligne de l'historique
-function suppCs(el) {
-  objetID = el.attr('data-objetID');
-
-  $.ajax({
-    url: urlBase + '/patient/ajax/suppCs/',
-    type: 'post',
-    data: {
-      objetID: objetID
-    },
-    dataType: "json",
-    success: function() {
-      $('.tr' + objetID).remove();
-      refreshHistorique();
-      refreshHistoriqueToday();
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
-  });
-}
-
-// toggle importance d'une ligne
-function toogleImportant(el) {
-  importanceActu = el.attr('data-importanceActu');
-  objetID = el.attr('data-objetID');
-
-  $.ajax({
-    url: urlBase + '/patient/ajax/importanceCsToogle/',
-    type: 'post',
-    data: {
-      importanceActu: importanceActu,
-      objetID: objetID
-    },
-    dataType: "html",
-    success: function() {
-      if (importanceActu == 'n') {
-        el.html('Démarquer important');
-        el.attr('data-importanceActu', 'y');
-        el.closest('tr').addClass(el.closest('tr').hasClass('trReglement') ? 'table-danger' : 'table-info');
-      }
-      if (importanceActu == 'y') {
-        el.closest('tr').removeClass('table-info').removeClass('table-danger');
-        el.html('Marquer important');
-        el.attr('data-importanceActu', 'n');
-      }
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
-  });
-}
-
-// compléter le titre avec la modal
-function modalAlternateTitreChange() {
-  titreActu = $('#alternatTitreModal #titreActu').val();
-  objetID = $('#alternatTitreModal #objetID').val();
-
-  $.ajax({
-    url: urlBase + '/patient/ajax/completerTitreCs/',
-    type: 'post',
-    data: {
-      titre: titreActu,
-      objetID: objetID
-    },
-    dataType: "html",
-    success: function() {
-      $('.alternatTitre' + objetID).html(' : ' + titreActu);
-      $('#alternatTitreModal').modal('toggle');
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
-  });
-}
-
-function changeCreationDate($el) {
-  var objetID = $el.closest('tr').attr('data-objetID');
-  var registerDate = $el.closest('tr').attr('data-registerDate');
-  var creationDate = $el.closest('tr').attr('data-creationDate');
-
-  $("#modalCreationDate input[name='objetID']").val(objetID);
-  $("#modalRegisterDateDisplay").html(registerDate);
-  $("#modalCreationDateDisplay").html(creationDate);
-  $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
-  $("#modalCreationDate").modal('show');
-}
-
-// voir le détail d'une ligne d'historique
-var objDetTimer;
-
-function showObjetDet(element, timed) {
-  if (objDetTimer == undefined) {
-    objDetTimer = setTimeout(showObjetDet, 200, element, true);
-    return;
-  }
-  clearTimeout(objDetTimer);
-  objDetTimer = undefined;
-  if (timed == undefined) {
-    return;
-  }
-  zone = element.closest('table').attr('data-zone');
-  objetID = element.closest('tr').attr('data-objetID');
-  ligne = element.closest('tr');
-  destination = $("." + zone + " .detObjet" + objetID);
-
-  if (destination.length == 0) {
-    if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
-      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
-      voirOrdonnanceMode = 'voirOrdonnance';
-      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID + ' td.placeForOrdoLap');
-    } else {
-      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
-      destination = $("." + zone + " .detObjet" + objetID);
-
-      $.ajax({
-        url: urlBase + '/patient/ajax/ObjetDet/',
-        type: 'post',
-        data: {
-          objetID: objetID,
-        },
-        dataType: "html",
-        success: function(data) {
-          destination.html(data);
-        },
-        error: function() {
-          destination.remove();
-          alert_popup("danger", 'Problème, rechargez la page !');
-        }
-      });
-    }
-  } else {
-    destination.toggle();
-  }
-
-}
-
-// rafraichir le header du dossier patient (infos administratives)
+/**
+ * Rafraichir le header du dossier patient
+ * @return {void}
+ */
 function ajaxModalPatientAdminCloseAndRefreshHeader() {
   $.ajax({
     url: urlBase + '/patient/ajax/refreshHeaderPatientAdminData/',
@@ -1175,10 +1003,10 @@ function ajaxModalPatientAdminCloseAndRefreshHeader() {
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
-
     }
   });
 }
+
 ///////////////////////////////////////////
 /////// fonctions relatives à la biométrie
 
@@ -1411,9 +1239,175 @@ function drawDots(margeX, scaleX, scaleY, Xmin, Ymax, ctx, sel, data) {
   }
 
 }
-/////////////////////////////////////////////////
-// fonctions relatives aux historiques
 
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions relatives aux historiques
+
+/**
+ * Supprimer un élément de l'historique
+ * @param  {object} el objet jquery cliqué
+ * @return {void}
+ */
+function suppCs(el) {
+  objetID = el.attr('data-objetID');
+
+  $.ajax({
+    url: urlBase + '/patient/ajax/suppCs/',
+    type: 'post',
+    data: {
+      objetID: objetID
+    },
+    dataType: "json",
+    success: function() {
+      $('.tr' + objetID).remove();
+      refreshHistorique();
+      refreshHistoriqueToday();
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+
+    }
+  });
+}
+
+/**
+ * Permuter l'importance d'une ligne d'historique
+ * @param  {object} el objet jquery cliqué
+ * @return {void}
+ */
+function toogleImportant(el) {
+  importanceActu = el.attr('data-importanceActu');
+  objetID = el.attr('data-objetID');
+
+  $.ajax({
+    url: urlBase + '/patient/ajax/importanceCsToogle/',
+    type: 'post',
+    data: {
+      importanceActu: importanceActu,
+      objetID: objetID
+    },
+    dataType: "html",
+    success: function() {
+      if (importanceActu == 'n') {
+        el.html('Démarquer important');
+        el.attr('data-importanceActu', 'y');
+        el.closest('tr').addClass(el.closest('tr').hasClass('trReglement') ? 'table-danger' : 'table-info');
+      }
+      if (importanceActu == 'y') {
+        el.closest('tr').removeClass('table-info').removeClass('table-danger');
+        el.html('Marquer important');
+        el.attr('data-importanceActu', 'n');
+      }
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+
+    }
+  });
+}
+
+/**
+ * Compléter le titre de la ligne d'historique via modal
+ * @return {void}
+ */
+function modalAlternateTitreChange() {
+  titreActu = $('#alternatTitreModal #titreActu').val();
+  objetID = $('#alternatTitreModal #objetID').val();
+
+  $.ajax({
+    url: urlBase + '/patient/ajax/completerTitreCs/',
+    type: 'post',
+    data: {
+      titre: titreActu,
+      objetID: objetID
+    },
+    dataType: "html",
+    success: function() {
+      $('.alternatTitre' + objetID).html(' : ' + titreActu);
+      $('#alternatTitreModal').modal('toggle');
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+
+    }
+  });
+}
+
+/**
+ * Changer la date de création d'une ligne d'historique
+ * @param  {object} $el objet jquery cliqué
+ * @return {void}
+ */
+function changeCreationDate($el) {
+  var objetID = $el.closest('tr').attr('data-objetID');
+  var registerDate = $el.closest('tr').attr('data-registerDate');
+  var creationDate = $el.closest('tr').attr('data-creationDate');
+
+  $("#modalCreationDate input[name='objetID']").val(objetID);
+  $("#modalRegisterDateDisplay").html(registerDate);
+  $("#modalCreationDateDisplay").html(creationDate);
+  $("#modalCreationDate input[name='newCreationDate']").val(creationDate);
+  $("#modalCreationDate").modal('show');
+}
+
+/**
+ * Voir les détails d'une ligne d'historique
+ * @param  {object} element objet jquery cliqué (ligne d'historique)
+ * @param  {[type]} timed   [description]
+ * @return {void}
+ */
+var objDetTimer;
+
+function showObjetDet(element, timed) {
+  if (objDetTimer == undefined) {
+    objDetTimer = setTimeout(showObjetDet, 200, element, true);
+    return;
+  }
+  clearTimeout(objDetTimer);
+  objDetTimer = undefined;
+  if (timed == undefined) {
+    return;
+  }
+  zone = element.closest('table').attr('data-zone');
+  objetID = element.closest('tr').attr('data-objetID');
+  ligne = element.closest('tr');
+  destination = $("." + zone + " .detObjet" + objetID);
+
+  if (destination.length == 0) {
+    if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      voirOrdonnanceMode = 'voirOrdonnance';
+      getOrdonnance(objetID, "." + zone + " .detObjet" + objetID + ' td.placeForOrdoLap');
+    } else {
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"></tr>');
+      destination = $("." + zone + " .detObjet" + objetID);
+
+      $.ajax({
+        url: urlBase + '/patient/ajax/ObjetDet/',
+        type: 'post',
+        data: {
+          objetID: objetID,
+        },
+        dataType: "html",
+        success: function(data) {
+          destination.html(data);
+        },
+        error: function() {
+          destination.remove();
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
+  } else {
+    destination.toggle();
+  }
+
+}
+
+/**
+ * Rafraichir l'historique complet
+ * @return {void}
+ */
 function refreshHistorique() {
   if (!$('.historiqueMedicalComplet .trLigneExamen').length) {
     $('.historiqueMedicalComplet').hide();
@@ -1432,6 +1426,10 @@ function refreshHistorique() {
   });
 }
 
+/**
+ * Obtenir l'historique (complet)
+ * @return {void}
+ */
 function getHistorique() {
   $.ajax({
     url: urlBase + '/patient/ajax/getHistorique/',
@@ -1448,6 +1446,10 @@ function getHistorique() {
   });
 }
 
+/**
+ * Rafrachir historique du jour
+ * @return {void}
+ */
 function refreshHistoriqueToday() {
   if (!$('.historiqueToday .trLigneExamen').length)
     $('.historiqueToday').hide();
@@ -1455,6 +1457,10 @@ function refreshHistoriqueToday() {
     $('.historiqueToday').show();
 }
 
+/**
+ * Obtenir l'historique du jour
+ * @return {void}
+ */
 function getHistoriqueToday() {
   $.ajax({
     url: urlBase + '/patient/ajax/getHistoriqueToday/',
@@ -1471,7 +1477,10 @@ function getHistoriqueToday() {
   });
 }
 
-
+/**
+ * Obtenir et rafraichir la colonne latérale
+ * @return {void}
+ */
 function getLatCol() {
   $.ajax({
     url: urlBase + '/patient/ajax/refreshLatColPatientAtcdData/',
@@ -1482,7 +1491,49 @@ function getLatCol() {
     dataType: "html",
     success: function(data) {
       $("#patientLatCol").html(data);
+      activeWatchChange('#patientLatCol');
     },
     error: function() {}
+  });
+}
+
+////////////////////////////////////////////////////////////////////////
+///////// Fonctions relatives à la surveillance de changeemnt dans
+///////// formulaires pour enregistrement automatique
+
+/**
+ * Activer la surveillance des changements sur les input / textarea / select
+ * enfants de l'élément et sauvegarder les nouvelles valeurs
+ * @param  {string} parentTarget élément parent
+ * @return {void}
+ */
+function activeWatchChange(parentTarget) {
+  // la frappe sur input ou textarea
+  $(parentTarget + " input:not(.datepic), " + parentTarget + " textarea").typeWatch({
+    wait: 1000,
+    highlight: false,
+    allowSubmit: false,
+    captureLength: 1,
+    callback: function(value) {
+      patientID = $('#identitePatient').attr("data-patientID");
+      source = $(this);
+      instance = $(this).closest("form").attr("data-instance");
+      if ($(this).hasClass('changeObservByTypeName')) {
+        typeName = $(this).attr("data-typeName");
+        setPeopleDataByTypeName(value, patientID, typeName, source, instance);
+      } else {
+        typeID = $(this).attr("data-typeID");
+        setPeopleData(value, patientID, typeID, source, instance);
+      }
+    }
+  });
+  // les selects
+  $(parentTarget + " select").on("change", function(e) {
+    patientID = $('#identitePatient').attr("data-patientID");
+    typeID = $(this).attr("data-typeID");
+    value = $(this).val();
+    source = $(this);
+    instance = $(this).closest("form").attr("data-instance");
+    setPeopleData(value, patientID, typeID, source, instance);
   });
 }
