@@ -170,8 +170,8 @@ $(document).ready(function() {
 <div class=\"popover-footer btn-group m-1\">' +
           (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>') +
           (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
-          '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>\
-<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>' +
+          '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>' +
+          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>') +
           (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
           '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
 </div>\
@@ -208,6 +208,9 @@ $(document).ready(function() {
         );
       } else {
         nettoyer();
+        selected_patient = undefined;
+        selected_action = undefined;
+        selected_period = undefined;
       }
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
@@ -260,6 +263,7 @@ $(document).ready(function() {
       } else if (selected_event) {
         $('div.popover').popover('hide');
         nettoyer();
+        cleanSelectedVar();
         return;
       } else if (end.diff(start) == moment.duration(slotDuration, "HH:mm:ss").as('milliseconds')) {
         if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden'))
@@ -289,6 +293,7 @@ $(document).ready(function() {
         } else {
           $('#calendar').fullCalendar('unselect');
           nettoyer();
+          cleanSelectedVar();
         }
       }
     },
@@ -309,6 +314,7 @@ $(document).ready(function() {
         closePeriod();
       } else {
         nettoyer();
+        cleanSelectedVar();
       }
     }
   })
@@ -340,6 +346,7 @@ $(document).ready(function() {
     $(".fc-bg.selected").removeClass("selected");
     window.open(urlBase + '/patient/' + selected_event.patientid + '/');
     nettoyer();
+    cleanSelectedVar();
   });
 
   $("body").on("click", ".fc-editer-button", function(e) {
@@ -504,6 +511,7 @@ $(document).ready(function() {
 
   $('#nettoyer').on("click", function() {
     nettoyer();
+    cleanSelectedVar();
   });
 
   $("#formRdv").on("click", ".donothing", function(e) {
@@ -636,6 +644,7 @@ function getPatientAdminData(patientID) {
     error: function() {
       alert_popup('error', "Des données n'ont pas pu être récupérées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
@@ -678,6 +687,7 @@ function getHistoriquePatient(patientID) {
     error: function() {
       alert_popup('error', "Des données n'ont pas pu être récupérées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
@@ -705,9 +715,6 @@ function nettoyer() {
   $('#historiquePatient').hide();
   $('#historiquePatient ul').html('');
   $('#HistoriqueRdvResume button').html('');
-
-  // reset de var clef
-  cleanSelectedVar();
 
 }
 
@@ -759,10 +766,12 @@ function setEvent(id) {
     success: function(data) {
       $('#calendar').fullCalendar('refetchEvents');
       nettoyer();
+      cleanSelectedVar();
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
@@ -788,10 +797,12 @@ function closePeriod() {
     success: function(data) {
       $('#calendar').fullCalendar('refetchEvents');
       nettoyer();
+      cleanSelectedVar();
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
@@ -814,10 +825,12 @@ function deleteEvent() {
       success: function(data) {
         $('#calendar').fullCalendar('removeEvents', id);
         nettoyer();
+        cleanSelectedVar();
       },
       error: function() {
         alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
         nettoyer();
+        cleanSelectedVar();
       },
     });
   }
@@ -837,10 +850,12 @@ function setPasVenu() {
     success: function(data) {
       $('#calendar').fullCalendar('refetchEvents');
       nettoyer();
+      cleanSelectedVar();
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
@@ -865,10 +880,12 @@ function modEvent(refetch) {
       if (refetch)
         $('#calendar').fullCalendar('refetchEvents');
         nettoyer();
+        cleanSelectedVar();
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
       nettoyer();
+      cleanSelectedVar();
     },
   });
 }
