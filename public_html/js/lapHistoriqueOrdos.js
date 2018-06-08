@@ -76,9 +76,15 @@ $(document).ready(function() {
     flashBackgroundElement($(this).parents('div.lignePrescription'));
   });
 
-  // Renouveler toutes les lignes de l'ordonnance affichée
+  // Renouveler toutes les lignes de l'ordonnance affichée : lap > modal
   $('body').on("click", '#modalVoirOrdonnance button.renouvToutesLignes', function(e) {
     $('#modalVoirOrdonnance button.renouvLignePrescription').trigger('click');
+  });
+
+  // Renouveler toutes les lignes de l'ordonnance affichée : dossier patient > historiques
+  $('body').on("click", '#tabDossierMedical button.renouvToutesLignes', function(e) {
+    parentTd = $(this).parents('.placeForOrdoLap');
+    parentTd.find('button.renouvLignePrescription').trigger('click');
   });
 
 });
