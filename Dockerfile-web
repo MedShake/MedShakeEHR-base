@@ -1,0 +1,117 @@
+# We will go for a Bionic
+FROM ubuntu:bionic
+LABEL description="MedShake EHR dockerized"
+LABEL maintainer="bugeaud@gmail.com"
+
+# Set some environement variables required
+ENV APP_PATH /app
+ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base/
+ENV MEDSHAKEEHRPUBLICPATH $APP_PATH/MedShakeEHR-base/public_html/
+
+
+# Create the APP directory and move to it
+ADD --chown=www-data:www-data . $MEDSHAKEEHRPATH
+WORKDIR $APP_PATH
+
+# Check system is fresh and clean
+RUN apt update && apt --assume-yes upgrade
+
+# Set the timezone
+ENV TZ 'Europe/Paris'
+RUN echo $TZ > /etc/timezone && \
+	apt install --assume-yes tzdata && \
+	rm /etc/localtime && \
+	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+	dpkg-reconfigure -f noninteractive tzdata && \
+	apt clean
+
+# Install some global prerequisites
+RUN apt --assume-yes install imagemagick git dcmtk 
+# Install PhP as apache's mod
+RUN apt --assume-yes install libapache2-mod-php
+
+# Ubuntu has dropped pdftk because of gcj reliance.
+# We need to build a pdftk alternative version
+# Let's install prerequisites for the alternative pdftk 
+RUN apt --assume-yes install git default-jdk-headless ant libcommons-lang3-java libbcprov-java
+# Get the latest alternative pdftk, build it & check if help can be displayed
+RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
+	&& cd pdftk \
+	&& ant -lib /usr/share/java jar \
+	&& java -jar build/jar/pdftk.jar --help
+
+
+WORKDIR $APP_PATH
+
+# Fetch the latest MedShakeEHR Base
+#RUN git clone https://github.com/MedShake/MedShakeEHR-base.git
+
+# Get & install composer 1.6.5
+RUN apt --assume-yes install curl
+#RUN curl -sf -L https://getcomposer.org/download/1.6.5/composer.phar \
+#	&& chmod 0774 /tmp/composer.phar \
+#	&& php /tmp/composer.phar install
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php composer-setup.php
+RUN php -r "unlink('composer-setup.php');"
+
+
+# Test the composer
+RUN php composer.phar --version --no-interaction
+
+# Fetch the PHP Extension installer for Docker
+RUN curl -sf -L -O https://github.com/docker-library/php/blob/master/docker-php-ext-install \
+	&& chmod 0774 docker-php-ext-install
+
+# Install some more PhP's dependencies
+RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql mariadb-client
+
+# Install the MedShakeEHR Base PhP's dependencies
+RUN php composer.phar install -d ./MedShakeEHR-base
+#WORKDIR $MEDSHAKEEHRPATH
+#RUN php composer.phar intall
+
+# Install MedShakeEHR's Web dependencies
+#WORKDIR $MEDSHAKEEHRPUBLICPATH
+RUN php composer.phar install -d ./MedShakeEHR-base/public_html
+#RUN php composer.phar install
+
+WORKDIR $APP_PATH
+# Check which .ini files are used
+RUN php --ini
+
+# Install npm
+RUN apt-get install -y -qq npm
+#RUN ln -s /usr/bin/nodejs /usr/bin/node
+
+# Install bower
+RUN npm install --global bower
+
+# Allow bower to run under docker's root
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
+# Make sure any bower module will be fixed toward wrong line end
+RUN git config --global core.autocrlf input
+
+WORKDIR $MEDSHAKEEHRPUBLICPATH
+#RUN bower install -V --config.cwd ./MedShakeEHR-base/public_html/
+RUN bower install -V
+
+# Create the Apache 2 configuration for the MedShake EHR application
+COPY medshakeehr.conf /etc/apache2/sites-available/
+
+#Enable URL rewriting
+RUN a2enmod rewrite
+
+# Activate the application
+RUN a2ensite medshakeehr
+
+# Run Apache 2 as foreground
+WORKDIR $APP_PATH
+CMD apachectl -D FOREGROUND
+
+EXPOSE 80/tcp
+EXPOSE 443/tcp
+

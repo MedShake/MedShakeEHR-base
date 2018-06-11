@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+    web:
+        image: medshake-ehr-web:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ~/ehr/log:/var/log
+        links:
+            - db:db
+    db:
+        image: medshake-ehr-db:latest
+        volumes:
+            - ~/ehr/data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=D1zIzDaSoundOfC!
+            - MYSQL_DATABASE=medshakeehr
+            - MYSQL_USER=mse-user
+            - MYSQL_PASSWORD=#Jenk1nsWhatTimeIzIT
+
+    myadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - "8080:80"
+        links:
+            - db:db
