@@ -154,8 +154,14 @@
 
                         <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configActesBaseCreate/">
 
-                            <div class="form-group">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
+                            <div class="form-row align-items-end">
+                              <div class="form-group col-6">
+                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
+                              </div>
+
+                              <div class="form-group col-6 text-right">
+                                <button type="button" class="btn btn-secondary importFromAmeliCCAM" title="Importer / mettre à jour depuis le site de la CCAM"><i class="fas fa-search"></i> CCAM</button>
+                              </div>
                             </div>
 
                             <div class="form-group">
@@ -172,6 +178,16 @@
 
                             <div class="form-group">
                                 {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2 ou libre', } }) }}
+                            </div>
+
+                            <div class="form-row">
+                            {% for modif in ['F', 'P', 'S', 'M', 'R', 'D', 'E', 'C', 'U'] %}
+                            {% if loop.index0 % 2 == 0 %}</div><div class="form-row">{% endif %}
+                            <div class="form-group col-6">
+                                {{ f.select ({ 'select' : { 'name' : modif, 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'true' : 'applicable', 'false' : 'non applicable'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Modificateur ' ~ modif, } }) }}
+                            </div>
+
+                            {% endfor %}
                             </div>
 
                           </form>

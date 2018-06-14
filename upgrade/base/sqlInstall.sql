@@ -16,17 +16,27 @@ CREATE TABLE IF NOT EXISTS `actes` (
   KEY `cat` (`cat`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `actes_base` (
-  `id` mediumint(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `code` varchar(7) NOT NULL,
-  `label` varchar(255) DEFAULT NULL,
-  `type` enum('NGAP','CCAM', 'Libre') NOT NULL DEFAULT 'CCAM',
-  `tarifs1` float DEFAULT NULL,
-  `tarifs2` float DEFAULT NULL,
-  `fromID` mediumint(7) UNSIGNED NOT NULL DEFAULT '1',
-  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `code` (`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE `actes_base` (
+ `id` mediumint(6) unsigned NOT NULL AUTO_INCREMENT,
+ `code` varchar(7) NOT NULL,
+ `label` varchar(255) DEFAULT NULL,
+ `type` enum('NGAP','CCAM','Libre') NOT NULL DEFAULT 'CCAM',
+ `tarifs1` float DEFAULT NULL,
+ `tarifs2` float DEFAULT NULL,
+ `F` enum('false','true') NOT NULL DEFAULT 'false',
+ `P` enum('false','true') NOT NULL DEFAULT 'false',
+ `S` enum('false','true') NOT NULL DEFAULT 'false',
+ `M` enum('false','true') NOT NULL DEFAULT 'false',
+ `R` enum('false','true') NOT NULL DEFAULT 'false',
+ `D` enum('false','true') NOT NULL DEFAULT 'false',
+ `E` enum('false','true') NOT NULL DEFAULT 'false',
+ `C` enum('false','true') NOT NULL DEFAULT 'false',
+ `U` enum('false','true') NOT NULL DEFAULT 'false',
+ `fromID` mediumint(7) unsigned NOT NULL DEFAULT '1',
+ `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
 
 CREATE TABLE IF NOT EXISTS `actes_cat` (
   `id` smallint(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -594,6 +604,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('PraticienPeutEtrePatient', 'Options', 'default', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'Options', 'default', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
 ('administratifSecteurHonoraires', 'Options', 'default', 'vide/1/2', 'vide pour non conventionné', '1'),
+('administratifSecteurIK', 'Options', 'default', 'texte', 'tarification des IK : indiquer plaine ou montagne', 'plaine'),
 ('administratifPeutAvoirFacturesTypes', 'Options', 'default', 'true/false', 'peut avoir des factures types à son nom', 'false'),
 ('administratifPeutAvoirPrescriptionsTypes', 'Options', 'default', 'true/false', 'peut avoir des prescriptions types à son nom', 'false'),
 ('administratifPeutAvoirAgenda', 'Options', 'default', 'true/false', 'peut avoir un agenda à son nom', 'true'),
