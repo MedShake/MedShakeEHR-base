@@ -70,9 +70,9 @@
         <tbody>
 
             {% for v in page.listeMessages.Data %}
-                <tr {% if v.Status == "opened" %}class="success"
-                  {% elseif v.Status in ["blocked", "bounce" ] %}class="danger"
-                  {% elseif v.Status in ["spam" ] %}class="warning"{% endif %}>
+                <tr {% if v.Status == "opened" %}class="table-success"
+                  {% elseif v.Status in ["blocked", "bounce" ] %}class="table-danger"
+                  {% elseif v.Status in ["spam" ] %}class="table-warning"{% endif %}>
                     <td>{{ v.ArrivedAt|date("Y-m-d H:i:s") }}</td>
                     <td>{{ v.CampaignData.FromEmail|e }}</td>
                     <td>{{ page.patientData.4 }}</td>
