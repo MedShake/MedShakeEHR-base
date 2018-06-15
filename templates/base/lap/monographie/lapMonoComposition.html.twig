@@ -77,8 +77,11 @@
 <h4 class="text-uppercase">Teneurs :</h4>
   <ul>
   {% for teneur in page.composition.subTeneurSpe %}
-    <li>{{ teneur.teneur }} {{ teneur.qualificatif }} {{ teneur.dosage|number_format(2, ',', '') }} {{ teneur.unitenom }}
-      {% if teneur.dosage_equiv %} soit {{ teneur.dosage_equiv|number_format(2, ',', '') }} {{ teneur.unitenom_equiv }}{% endif %}
+    <li>{{ teneur.teneur }}
+      {% if teneur.dosage > 0 %}
+        {{ teneur.qualificatif }} {{ teneur.dosage|number_format(2, ',', '') }} {{ teneur.unitenom }}
+        {% if teneur.dosage_equiv %} soit {{ teneur.dosage_equiv|number_format(2, ',', '') }} {{ teneur.unitenom_equiv }}{% endif %}
+      {% endif %}
     </li>
   {% endfor %}
   </ul>
