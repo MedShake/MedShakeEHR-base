@@ -28,20 +28,19 @@
 
 <div class="row" style="margin-bottom : 20px;margin-top : 5px;">
   <div class="col-md-12">
-    <button class="btn btn-light btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
+    <button class="btn btn-secondary btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
   </div>
 </div>
 
-<div class="card">
-
-  <div class="card-header">Images de l'étude
-    <div class="float-right">
-      <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-primary mb-0">Générer un ZIP</button>
-      <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-primary mb-0">Générer un PDF</button>
-    </div>
+<div class="card mb-3">
+    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
+      <div class="float-right m-1">
+        <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-sm btn-primary mb-0">Générer un ZIP</button>
+        <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-sm btn-primary mb-0">Générer un PDF</button>
+      </div>
+  <div class="card-header"><h3>Images de l'étude</h3>
   </div>
   <div class="card-body pt-1 imagesList">
-    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
       <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
       <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
       <span class="imageDc" style="display:block; vertical-align:bottom; width:100%">
@@ -84,7 +83,7 @@
 {% if page.studyDcDataSRFull %}
   <div class="card">
 
-    <div class="card-header">Tags DICOM SR (XML)</div>
+    <div class="card-header"><h3>Tags DICOM SR (XML)</h3></div>
     <div class="card-body">
       <p>Mesures remontées dans cette études</p>
     </div>
