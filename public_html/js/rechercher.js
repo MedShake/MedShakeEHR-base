@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 
   //envoyer pour signature
-  $('body').on("click", "a.sendSign", function(e) {
+  $('body').on("click", "a.sendSign, button.sendSign", function(e) {
     e.preventDefault();
     source = $(this);
     $.ajax({
