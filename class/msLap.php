@@ -444,6 +444,28 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
     }
 
 /**
+ * Obtenir les indications sur une recherche texte en vue d'obtenir ensuite
+ * les codes spés de l'indication
+ * @param  string $txt texte de recherche d'indication
+ * @return [type]      [description]
+ */
+  public function getIndicsByTxt($txt, $sel='') {
+    $rd=[];
+    if (strlen($txt)>=3) {
+      if ($data=$this->_the->get_the_ind_txt($txt.'%')) {
+        $fiches=$this->_prepareData($data);
+        foreach($fiches as $fiche) {
+          $lib=$this->_the->get_the_det_ind($fiche['codeind'], 7);
+          $lib=$this->_prepareData($lib);
+          $rd[$lib[0]['libcourt']][]=$lib[0]['codedoc'];
+        }
+        ksort($rd);
+      }
+    }
+    return $rd;
+  }
+
+/**
  * Obtenir des médicaments via substance
  * @param  string $txt mot clé de recherche
  * @param  string $type 1 : sa / 2 : excipient / 0 : sa + excipient
@@ -470,6 +492,13 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         }
     }
 
+/**
+ * Obtenir une liste de codes spécialités qui contiennent plusieurs substances
+ * @param  string $txt     texte de recherche ( séparateur : +)
+ * @param  string $type    $type 1 : sa / 2 : excipient / 0 : sa + excipient
+ * @param  string $monovir type de recherche 0 : spé / 1 : dci / 3 : tout
+ * @return array          tableau des codes spécialité
+ */
     public function getCodesSpesListBySub ($txt, $type, $monovir) {
       if (strlen($txt)>=3) {
         global $p;
@@ -521,6 +550,28 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
                 $rd=$this->_prepareData($data);
                 // natural sorting => confié maintenant à jquey stupid table
                 //msTools::array_natsort_by('sp_nom', $rd);
+                if (!empty($rd)) {
+                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
+                }
+                return $rd;
+            }
+        }
+    }
+
+/**
+ * Obtenir des médicaments via codes indications
+ * @param  string $classe classe de recherche
+ * @param  string $monovir type de recherche 0 : spé / 1 : dci / 3 : tout
+ * @return array      tableau de retour
+ */
+    public function getMedicByCodeIndic($classe, $monovir)
+    {
+        if (strlen($classe)>=1) {
+            $rd=[];
+            if ($data=$this->_the->get_the_specialite_multi_codeid($classe, 6, $monovir)) {
+                $rd=$this->_prepareData($data);
                 if (!empty($rd)) {
                     $this->getPresentations($rd, 'sp_code_sq_pk', 1);
                     $this->attacherPrixMedic($rd, 'sp_code_sq_pk');

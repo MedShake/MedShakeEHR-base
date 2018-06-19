@@ -37,7 +37,7 @@
     <tr class="{% if page.patientBasicPhysio.poids.statut == "oldValue" %}table-danger{% else %}table-light{% endif %}">
       <td data-toggle="collapse" data-target="#physioPoidsDet" style="cursor: pointer">
         {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>{% endif %}
-        Poids : {{ page.patientBasicPhysio.poids.value }} kg
+        Poids : {{ page.patientBasicPhysio.poids.value|replace({'.':','}) }} kg
         {% if page.patientBasicPhysio.poids.statut == "oldValue" %} - poids à actualiser !{% endif %}
         <div id="physioPoidsDet" class="collapse">
           <table class="table table-sm" style="margin-top:8px;">
@@ -63,7 +63,7 @@
   {% elseif page.patientBasicPhysio.taillePatient.statut == 'ok' %}
     <tr class="table-light">
       <td data-toggle="collapse" data-target="#physioTaillePatientDet" style="cursor: pointer">
-        Taille : {{ page.patientBasicPhysio.taillePatient.value }} cm
+        Taille : {{ page.patientBasicPhysio.taillePatient.value|replace({'.':','}) }} cm
         <div id="physioTaillePatientDet" class="collapse">
           <table class="table table-sm" style="margin-top:8px;">
             <tr>
@@ -88,7 +88,7 @@
   {% elseif page.patientBasicPhysio.clairanceCreatinine.statut == 'ok' %}
     <tr class="{% if page.patientBasicPhysio.clairanceCreatinine.value < 30 %}table-danger{% elseif page.patientBasicPhysio.clairanceCreatinine.value < 60 %}table-warning{% else %}table-light{% endif %}">
       <td data-toggle="collapse" data-target="#clairanceCreatinineDet" style="cursor: pointer">Clairance créatinine :
-        {{ page.patientBasicPhysio.clairanceCreatinine.value }} ml/min
+        {{ page.patientBasicPhysio.clairanceCreatinine.value|replace({'.':','}) }} ml/min
         <div id="clairanceCreatinineDet" class="collapse">
         <table class="table table-sm" style="margin-top:8px;">
           <tr>

@@ -50,7 +50,16 @@ class msPeople
  * @var int $_creationDate Date de création de la donnée (si besoin)
  */
     private $_creationDate;
-
+/**
+ * date de naissance
+ * @var string
+ */
+    private $_birthdate;
+/**
+ * age du patient à différent format
+ * @var array
+ */
+    private $_ageFormats;
 
 /**
  * Définir l'individu concerné
@@ -158,6 +167,7 @@ class msPeople
   			order by d.parentTypeID ")) {
 
           foreach ($datas as $v) {
+              if($v['name']=='birthdate') $this->_birthdate=$v['value'];
               $tab[$v['typeID']]=$v;
               $tab[$v['name']]=$v;
           }
@@ -199,6 +209,8 @@ class msPeople
         from objets_data as d
         left join data_types as t on d.typeID=t.id
 			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "name", "value");
+
+        if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
 
         return $tab;
     }
@@ -561,33 +573,73 @@ class msPeople
     }
 
 /**
- * Calcul l'age
- * @return int Retourne l'age
+ * Calcul de l'age du patient
+ * @return string age à afficher
  */
     public function getAge()
     {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
+      if(isset($this->_ageFormats['ageDisplay'])) return $this->_ageFormats['ageDisplay'];
+      else return $this->getAgeFormats()['ageDisplay'];
+    }
 
+/**
+ * Calcul de l'age sous différents formats
+ * @return array array de l'age au différents formats
+ */
+    public function getAgeFormats() {
+
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if(isset($this->_ageFormats)) {
+        return $this->_ageFormats;
+      }
+
+      if(isset($this->_birthdate)) {
+        $birthdate=$this->_birthdate;
+      } else {
         $typeID=msData::getTypeIDFromName('birthdate');
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+      }
 
-        if ($birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1")) {
-            $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
-            $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
-            $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
-            if ($annees>=3) {
-              return $annees.' ans';
-            } elseif (($annees*12+$mois)>=3){
-              return ($annees*12+$mois).' mois';
-            } elseif (((30*$mois+$jours)/7)>=2){
-              return round((30*$mois+$jours)/7).' semaines';
-            } else {
-              return $jours.' jours';
-            }
-        } else {
-            return false;
-        }
+      if (isset($birthdate)) {
+
+          // age à aficher
+          $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
+          $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
+          $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
+          if ($annees>=3) {
+            $ageDisplay = $annees.' ans';
+          } elseif (($annees*12+$mois)>=3){
+            $ageDisplay = ($annees*12+$mois).' mois';
+          } elseif (((30*$mois+$jours)/7)>=2){
+            $ageDisplay = round((30*$mois+$jours)/7).' semaines';
+          } else {
+            $ageDisplay = $jours.' jours';
+          }
+
+          // différences
+          $dtNaissance = DateTime::createFromFormat('d/m/Y', $birthdate);
+          $dtNow = new DateTime;
+          $interval = $dtNaissance->diff($dtNow);
+
+          return $this->_ageFormats = array(
+            'birthdate'=>$birthdate,
+            'ageDisplay'=>$ageDisplay,
+            'ageTotalDays'=>$interval->format('%a'),
+            'ageTotalYears'=>$interval->format('%y'),
+            'ageComposantes'=>array(
+              'y'=>$interval->format('%y'),
+              'm'=>$interval->format('%m'),
+              'd'=>$interval->format('%d')
+            )
+          );
+
+      } else {
+          return false;
+      }
+
     }
 
 /**

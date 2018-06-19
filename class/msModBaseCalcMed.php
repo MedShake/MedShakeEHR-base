@@ -43,4 +43,90 @@ class msModBaseCalcMed
         }
       }
 
+/**
+ * DDR vers DDG
+ * @param  string $ddr DDR au format d/m/Y
+ * @return string      DDG au format d/m/Y
+ */
+    public static function ddr2ddg($ddr)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $ddr);
+        $date->add(new DateInterval('P14D'));
+        return $date->format('d/m/Y');
+    }
+
+
+/**
+ * DDG vers DDR
+ * @param  string $ddg DDG au format d/m/Y
+ * @return string      DDR au format d/m/Y
+ */
+    public static function ddg2ddr($ddg)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $ddg);
+        $date->sub(new DateInterval('P14D'));
+        return $date->format('d/m/Y');
+    }
+
+/**
+ * DDR vers terme au jour
+ * @param  string $ddr  DDR au format d/m/Y
+ * @param  string $jour Jour au format d/m/Y
+ * @return string       terme au format xSA + xJ
+ */
+    public static function ddr2terme($ddr, $jour)
+    {
+        $ddr = DateTime::createFromFormat('d/m/Y', $ddr);
+        $jour = DateTime::createFromFormat('d/m/Y', $jour);
+        $interval = date_diff($ddr, $jour);
+        $nbjours=$interval->format('%a');
+
+        $nbsemaines = floor($nbjours/7);
+        $plus = $nbjours-($nbsemaines *7);
+        $chaine =  $nbsemaines.'SA';
+        if ($plus > 0) {
+            $chaine.=' + '.$plus.'J';
+        }
+        return $chaine;
+    }
+
+
+/**
+ * DDG vers terme au jour
+ * @param  string $ddg  DDG au format d/m/Y
+ * @param  string $jour Jour au format d/m/Y
+ * @return string       terme au format xSA + xJ
+ */
+    public static function ddg2terme($ddg, $jour)
+    {
+        $ddg = DateTime::createFromFormat('d/m/Y', $ddg);
+        $jour = DateTime::createFromFormat('d/m/Y', $jour);
+        $interval = date_diff($ddg, $jour);
+        $nbjours=$interval->format('%a') + 14; #on corrige pour sortir en SA
+
+        $nbsemaines = floor($nbjours/7);
+        $plus = $nbjours-($nbsemaines *7);
+        $chaine =  $nbsemaines.'SA';
+        if ($plus > 0) {
+            $chaine.=' + '.$plus.'J';
+        }
+        return $chaine;
+    }
+
+/**
+ * DDG vers le terme exprimé en SA avec 1 décimale
+ * @param  string $ddg  DDG au format d/m/Y
+ * @param  string $jour Jour au format d/m/Y
+ * @return float       Nb de SA avec 1 décimale
+ */
+    public static function ddg2termeMath($ddg, $jour)
+    {
+        $ddg = DateTime::createFromFormat('d/m/Y', $ddg);
+        $jour = DateTime::createFromFormat('d/m/Y', $jour);
+        $interval = date_diff($ddg, $jour);
+        $nbjours=$interval->format('%a') + 14; #on corrige pour sortir en SA
+
+        return round(($nbjours/7), 1);
+    }
+
 }

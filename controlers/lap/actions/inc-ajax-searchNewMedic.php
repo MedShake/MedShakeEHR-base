@@ -41,6 +41,12 @@ if($_POST['typeRecherche'] == 'dci' ) {
   $p['page']['medicListeSpe']=$lap->getMedicBySub($_POST['term'].'%', 1 ,$_POST['retourRecherche']);
 } elseif ($_POST['typeRecherche'] == 'atc' ) {
   $p['page']['medicListeSpe']=$lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
+} elseif ($_POST['typeRecherche'] == 'indications' ) {
+  $p['page']['listeIndics']=$lap->getIndicsByTxt($_POST['term']);
+  if (isset($_POST['listeCodesIndics']) and !empty($_POST['listeCodesIndics'])) {
+    $p['page']['medicListeSpe']=$lap->getMedicByCodeIndic($_POST['listeCodesIndics'], $_POST['retourRecherche']);
+  }
+
 }
 
 $p['page']['listeCodeSpeTrouve']=$lap->getListeCodeSpeTrouve();

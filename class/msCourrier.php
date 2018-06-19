@@ -157,7 +157,7 @@ class msCourrier
         $tabRetour['objetID']=$objetData['id'];
         $tabRetour['patientID']=$objetData['toID'];
         $tabRetour['instance']=$objetData['instance'];
-        $tabRetour['printModel']=$this->_getPrintModel($objetData['formValues']).'.html.twig';
+        $tabRetour['printModel']=$this->getPrintModel($objetData['formValues']).'.html.twig';
         $tabRetour['module']=$this->_getModuleOrigine($objetData['formValues']);
 
         //patient data
@@ -412,7 +412,7 @@ class msCourrier
  * @param  int $formIN internalName du formulaire
  * @return string          nom du template (sans extension)
  */
-    private function _getPrintModel($formIN)
+    public function getPrintModel($formIN)
     {
         return msSQL::sqlUniqueChamp("select printModel from forms where internalName='".$formIN."' limit 1");
     }

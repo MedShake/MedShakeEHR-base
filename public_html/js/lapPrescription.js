@@ -61,6 +61,12 @@ var zoneOrdoAction;
  */
 var modeActionModal = 'new';
 
+/**
+ * Liste des codes indications
+ * @type {String}
+ */
+listeCodesIndics = '';
+
 $(document).ready(function() {
 
   //Nouvelle prescription
@@ -124,10 +130,19 @@ $(document).ready(function() {
 
   // Lancer la recherche de médicament par validation avec enter
   $("#txtRechercheMedic").keypress(function(event) {
+    listeCodesIndics = '';
     keycode = event.keyCode || event.which;
     if (keycode == '13') {
       sendMedicRecherche($('#txtRechercheMedic').val());
     }
+  });
+
+  // Lancer la recherche quand on clique sur une indication
+  $('body').on('click', 'button.searchIndic', function(e) {
+    $('div.modalListeIndications button').addClass('btn-secondary').removeClass('btn-primary');
+    $(this).addClass('btn-primary').removeClass('btn-secondary');
+    listeCodesIndics = $(this).attr('data-codes');
+    sendMedicRecherche($('#txtRechercheMedic').val());
   });
 
   // Relancer la recherche médic quand on change le groupe de recherche (générique, spé ...)
@@ -515,13 +530,15 @@ function sendMedicRecherche(term) {
     data: {
       term: term,
       typeRecherche: $('#typeRechercheMedic').val(),
-      retourRecherche: $('#retourRechercheMedic').val()
+      retourRecherche: $('#retourRechercheMedic').val(),
+      listeCodesIndics: listeCodesIndics
     },
     dataType: "html",
     beforeSend: function() {
       $('#txtRechercheMedicHB').html("Recherche en cours ...");
     },
     success: function(data) {
+      listeCodesIndics = '';
       $('#rechercheResultats').html(data);
       $('#txtRechercheMedicHB').html("Taper le texte de votre recherche ici");
       var tableMedics = $("#tabMedicaments").stupidtable({
@@ -534,6 +551,7 @@ function sendMedicRecherche(term) {
       });
     },
     error: function() {
+      listeCodesIndics = '';
       alert('Problème, rechargez la page !');
     }
   });

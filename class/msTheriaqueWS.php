@@ -143,6 +143,10 @@ class msTheriaqueWS {
   /////////////////////////////////////////////////////
   ////// 6. les indications
 
+  public function get_the_ind_txt($libtxt) {
+    return $this->_client->get_the_ind_txt($libtxt);
+  }
+
   public function get_the_ind_spe($codeid) {
     return $this->_client->get_the_ind_spe($codeid);
   }

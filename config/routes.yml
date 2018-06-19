@@ -170,6 +170,7 @@ configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configAppl
 
 # configuration modules
 configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
+configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/', 'configuration/configExportModuleToSQL']
 
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']

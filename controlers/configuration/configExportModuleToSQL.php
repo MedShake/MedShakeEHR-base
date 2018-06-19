@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,21 +21,22 @@
  */
 
 /**
- * Patient > ajax : générer le header du dossier patient (infos administratives)
+ * Config > renvoyer le code SQL complet d'un module
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-ajax-patientAdminData";
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-//le patient
-$patient = new msPeople();
-$patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
-$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename=' . $match['params']['moduleName'].'.sql');
+header('Content-Transfer-Encoding: binary');
+header('Connection: Keep-Alive');
+header('Expires: 0');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+header('Pragma: public');
+//header('Content-Length: ' . $size);
 
-//les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+$sqlGen = new msSqlGenerate;
+echo $sqlGen->getSqlForModule($match['params']['moduleName']);
