@@ -40,11 +40,13 @@
     <div class="btn-group">
       {% if cs.name != 'lapOrdonnance' %}
       {# edit #}
-        <button class="btn btn-light btn-sm editOrdo d-none d-lg-inline-block" type="button">
+        <button class="btn btn-light btn-sm editOrdo d-none d-lg-inline-block" type="button"
           {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
-            <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
+            title="Editer">
+            <span class="fa fa-pencil-alt" aria-hidden="true"></span>
           {% else %}
-            <span class="far fa-clone" aria-hidden="true" title="Dupliquer"></span>
+            title="Dupliquer">
+            <span class="far fa-clone" aria-hidden="true"></span>
           {% endif %}
         </button>
       {% endif %}

@@ -39,11 +39,13 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}">
+        <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}"
         {% if cs.iconeType == 'update' and ( cs.fromID == user.id  or user.rank == 'admin') %}
-          <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
+          title="Editer">
+          <span class="fa fa-pencil-alt" aria-hidden="true"></span>
         {% else %}
-          <span class="fa fa-share" aria-hidden="true" title="Dupliquer"></span>
+          title="Dupliquer">
+          <span class="far fa-clone" aria-hidden="true"></span>
         {% endif %}
       </button>
 
