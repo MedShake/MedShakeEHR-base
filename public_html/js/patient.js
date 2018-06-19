@@ -662,6 +662,9 @@ $(document).ready(function() {
             else
               $tr.after(data);
           } else {
+            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-minus-square').show();
+            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-plus-square').hide();
+            $('.historiqueMedicalComplet .anneeHistorique').eq(0).attr('data-target').collapse('show');
             $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
@@ -672,9 +675,6 @@ $(document).ready(function() {
             var regdate = $('#historique tr:nth-of-type(2)').attr('data-registerdate');
             $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0, 10));
             $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0, 5));
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-minus-square').show();
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-plus-square').hide();
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).attr('data-target')).collapse('show');
             refreshHistorique();
           }
 
