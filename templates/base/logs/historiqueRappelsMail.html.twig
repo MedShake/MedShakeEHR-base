@@ -66,7 +66,7 @@
           <span class="fa fa-calendar input-group-text"></span>
         </span>
       </div>
-      <button type="submit" class="btn m-1">Chercher</button>
+      <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
     </form>
 
     {% if page.data %}
@@ -75,10 +75,11 @@
 
       <div class="col-md-8">
 
-        <div class="card col-md-12">
+        <div class="card">
 
-          <div class="card-header gras">Mails envoyés le {{ page.dates.emission|date("d/m/Y") }}
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-light btn-sm float-right m-1">Voir rappels SMS</a>
+          <div class="card-header gras">
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-secondary btn-sm float-right m-1">Voir rappels SMS</a>
+            <h3>Mails envoyés le {{ page.dates.emission|date("d/m/Y") }}</h3>
           </div>
 
           <table class="table table-sm mb-0 table-hover table-striped">

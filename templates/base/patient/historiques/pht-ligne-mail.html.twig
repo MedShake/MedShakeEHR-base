@@ -39,8 +39,8 @@
     <td>
       <div class="btn-group">
         {# voir #}
-        <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank">
-          <span class="fa fa-eye" aria-hidden="true" title="Voir"></span>
+        <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank" title="Voir">
+          <span class="fa fa-eye" aria-hidden="true"></span>
         </a>
         {# option #}
         <div class="btn-group">
@@ -55,7 +55,7 @@
               <a class="dropdown-item showDetDoc" href="#" target="_blank">Voir</a>
             </li>
             <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
-            {% if cs.fromID == user.id %}
+            {% if cs.fromID == user.id or user.rank == 'admin' %}
               <li>
                   <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
                       {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}

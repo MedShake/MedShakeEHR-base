@@ -55,6 +55,17 @@ var goToDicom = false;
 
 $(document).ready(function() {
   refreshHistorique();
+  $('.historiqueMedicalComplet .anneeHistorique').each(function(idx, el) {
+    if (!idx) {
+      $(el).find('.fa-minus-square').show();
+      $(el).find('.fa-plus-square').hide();
+      $($(el).attr('data-target')).collapse('show');
+    } else {
+      $(el).find('.fa-minus-square').hide();
+      $(el).find('.fa-plus-square').show();
+      $($(el).attr('data-target')).collapse('hide');
+    }
+  });
   refreshHistoriqueToday();
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
@@ -645,6 +656,9 @@ $(document).ready(function() {
         } else {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
+            $tr.find('.fa-minus-square').show();
+            $tr.find('.fa-plus-square').hide();
+            $($tr.attr('data-target')).collapse('show');
             var $l = $("#historique tr.tr" + objetid);
             if (objetid && $l.length)
               $l.replaceWith(data);
@@ -1413,17 +1427,7 @@ function refreshHistorique() {
     $('.historiqueMedicalComplet').hide();
     return;
   }
-  $('.historiqueMedicalComplet').show().find('.anneeHistorique').each(function(idx, el) {
-    if (!idx) {
-      $(el).find('.fa-minus-square').show();
-      $(el).find('.fa-plus-square').hide();
-      $($(el).attr('data-target')).collapse('show');
-    } else {
-      $(el).find('.fa-minus-square').hide();
-      $(el).find('.fa-plus-square').show();
-      $($(el).attr('data-target')).collapse('hide');
-    }
-  });
+  $('.historiqueMedicalComplet').show();
 }
 
 /**
