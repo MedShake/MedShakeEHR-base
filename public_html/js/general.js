@@ -88,6 +88,7 @@ $(document).ready(function() {
       locale: 'fr',
       viewMode: viewMode,
       format: 'L',
+      useCurrent: false,
       icons: {
         time: 'far fa-clock',
         date: 'fa fa-calendar',
