@@ -656,15 +656,15 @@ $(document).ready(function() {
         } else {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
+            $tr.find('.fa-minus-square').show();
+            $tr.find('.fa-plus-square').hide();
+            $($tr.attr('data-target')).collapse('show');
             var $l = $("#historique tr.tr" + objetid);
             if (objetid && $l.length)
               $l.replaceWith(data);
             else
               $tr.after(data);
           } else {
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-minus-square').show();
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).find('.fa-plus-square').hide();
-            $('.historiqueMedicalComplet .anneeHistorique').eq(0).attr('data-target').collapse('show');
             $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
                 <span class="far fa-minus-square"></span>\
