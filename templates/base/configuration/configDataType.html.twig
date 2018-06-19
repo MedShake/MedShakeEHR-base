@@ -121,7 +121,7 @@
 			</button>
 
 			{% for k,v in page.tabTypes %}
-				<h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }} <small>
+				<h2 class="my-3" id="cat{{ v.0.cat }}">{{ v.0.catLabel }} <small>
 
                                   <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-type/{{ page.groupe }}/{{ v.0.cat }}/">
                                     <span class="fa fa-search" aria-hidden="true"></span>
@@ -131,10 +131,11 @@
 				<thead>
 				<tr>
 					<th>#</th>
+          <th>Module</th>
 					<th>Nom</th>
-					<th>Label</th>
-					<th>Utilisé</th>
-					<th>{% if page.groupe == "courrier" %}Module{% else %}Validation{% endif %}</th>
+          <th>Label</th>
+          <th>Utilisé</th>
+					{% if page.groupe not in ["courrier"] %}<th>Validation</th>{% endif %}
 					<th>Type&nbsp;formulaire</th>
 					<th>Vie</th>
 					<th>Description</th>
@@ -145,10 +146,11 @@
 				{% for w in v %}
 					<tr>
 					<td>{{ w.id }}</td>
+          <td>{{ w.module }}</td>
 					<td>{{ w.name }}</td>
-					<td>{{ w.label }}</td>
+          <td>{{ w.label }}</td>
 					<td>{{ w.enfants }}</td>
-					<td>{% if page.groupe == "courrier" %}{{ w.module }}{% else %}{{ w.validationRules }}{% endif %}</td>
+					{% if page.groupe not in ["courrier"] %}<td>{{ w.validationRules }}</td>{% endif %}
 					<td>{{ w.formType }}</td>
 					<td>{{ w.durationLife }}</td>
 					<td>{{ w.description }}</td>
@@ -299,7 +301,7 @@
 				}) }}
 			</div>
 
-      {% if page.groupe == "courrier" %}
+
         <div class="form-group">
         {{ f.select ({
           'select' : {
@@ -317,7 +319,7 @@
         }) }}
         </div>
 
-				{% elseif page.groupe not in ["typecs", "courrier"] %}
+				{% if page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">
 					{{ f.input ({
 						'input' : {

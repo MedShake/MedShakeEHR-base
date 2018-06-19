@@ -565,10 +565,6 @@ class msPDF
     {
         global $p;
 
-        if(isset($this->_lapPrintExigences)) {
-          $p['page']['lapPrintExigences']=$this->_lapPrintExigences;
-        }
-
         // les variables d'environnement twig
         if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
         if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;

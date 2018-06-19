@@ -78,7 +78,7 @@
 
 	<h3>Types utilisables <small><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/administratives-data/types/">Modifier</a></small></h3>
 
-		<table class="table table-sm mb-0 table-hover ">
+		<table class="table table-sm mb-0 table-hover">
 		<tr>
 			<th>#</th>
       <th>Tag</th>
@@ -94,7 +94,7 @@
 			</th>
 		</tr>
 		{% for w in v %}
-			<tr class="cat{{ v.0.cat }}" style="display : none;">
+			<tr class="cat{{ v.0.cat }} small" style="display : none;">
 			<td>{{ w.id }}</td>
       <td>{{ w.name }}</td>
 			<td>{{ w.label }}</td>

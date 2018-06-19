@@ -28,96 +28,44 @@
  */
 
 if (is_numeric($_POST['objetID'])) {
-    $data = new msObjet();
-    $data->setToID($_POST['objetID']);
-    $data = $data->getCompleteObjetDataByID($_POST['objetID']);
 
-    if ($data['groupe']=="doc") {
-        $template='inc-ajax-detDoc';
+    $preview = new msModBaseObjetPreview;
+    $preview->setObjetID($_POST['objetID']);
+    $objetGroupe=$preview->getObjetGroupe();
+    $objetName=$preview->getObjetName();
+    $objetModule=$preview->getObjetModule();
 
-        $doc = new msStockage();
-        $doc->setObjetID($_POST['objetID']);
+    if ($objetGroupe=="doc") {
+        echo $preview->getGenericPreviewDocument();
+    } elseif ($objetGroupe=="reglement") {
+        echo $preview->getGenericPreviewReglement();
+    } elseif ($objetGroupe=="mail") {
+        echo $preview->getGenericPreviewMail();
+    } elseif ($objetGroupe=="ordo") {
+        echo $preview->getGenericPreviewOrdo();
+    } elseif ($objetGroupe=="courrier") {
+          echo $preview->getGenericPreviewCourrier();
+    } elseif($objetGroupe=="typecs") {
 
-        if ($doc->testDocExist()) {
-            $p['page']['pj']['href']=$doc->getWebPathToDoc();
-            $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
-            $p['page']['pj']['filesize']= $doc->getFileSize(0);
-
-            if (array_key_exists($p['page']['pj']['html'], array('JPG'=>true, 'PNG'=>true))) {
-                $p['page']['pj']['view']='<img style="max-width:100%;max-height:200px" src="'.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/'.$doc->getWebPathToDoc().'"/>';
-            } elseif ($p['page']['pj']['html']=='TXT') {
-                $fn=$doc->getPathToDoc();
-                $fsz=filesize($fn);
-                $f=fopen($fn, 'r');
-                $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
-            }
+        //si méthode existe dans base
+        $classModuleObjet = 'msMod'.ucfirst($objetModule).'ObjetPreview';
+        $methode = 'getPreview'.ucfirst($objetName);
+        if(method_exists('msModBaseObjetPreview',$methode)) {
+          echo $preview->$methode();
         }
-        if (!empty($data['value'])) {
-            //hprim
-            $p['page']['bioHprim'] = msHprim::parseSourceHprim($data['value']);
-            //texte
-            $p['page']['texte']= $data['value'];
+        // si méthode existe dans extension proposé par le module dont le type dépend
+        elseif(method_exists($classModuleObjet,$methode)) {
+          $previewExtend = new $classModuleObjet;
+          $previewExtend->setObjetID($_POST['objetID']);
+          echo $previewExtend->$methode();
         }
-    } elseif ($data['groupe']=="reglement") {
-        $template='inc-ajax-detReglement';
-        $data = new msObjet();
-        $p['page']['datareg'] = $data->getObjetAndSons($_POST['objetID'], 'name');
-        $p['page']['typeFormHonoraires']=msSQL::sqlUniqueChamp("SELECT dt.formValues AS form FROM data_types as dt
-        LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$_POST['objetID']."' limit 1");
-        $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$_POST['objetID']."')");
-    } elseif ($data['groupe']=="mail") {
-        $template='inc-ajax-detMail';
-        $data = new msObjet();
-        $p['page']['dataMail'] = $data->getObjetAndSons($_POST['objetID'], 'name');
-
-    } elseif ($data['groupe']=="ordo") {
-
-        $template='inc-ajax-detOrdo';
-
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression','ordoLigneOrdo']);
-
-        if ($ordoData=msSQL::sql2tab("select ald.value as ald, p.value as description, p.typeID, p.id
-        from objets_data as p
-        left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
-        where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."')
-        group by p.id, ald.id
-        order by p.id asc")) {
-            $modePrint='standard';
-
-            foreach ($ordoData as $v) {
-                if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
-                    $modePrint=$v['description'];
-                } else {
-                    if ($v['ald']==1) {
-                        $modePrint='ALD';
-                    }
-                    $p['page']['courrier']['medoc'][]=$v;
-                }
-            }
-
-            $p['page']['courrier']['modeprint']=$modePrint;
+        // sinon on tente au final avec le template impression
+        else {
+          echo $preview->getGenericPreviewFromPrintTemplate();
         }
-    } elseif($data['groupe']=="typecs" and $data['name']=="csAldDeclaration") {
-      $debug='';
-      $template='inc-ajax-detCsAldDeclaration';
-      $data = new msObjet();
-      $p['page']['dataAld'] = $data->getObjetAndSons($_POST['objetID'], 'name');
-      $selectedAldLabel=new msData;
-      $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$p['page']['dataAld']['aldNumber']['typeID']]);
-
-      $p['page']['dataAld']['aldNumber']['aldLabel']=$selectedAldLabel[$p['page']['dataAld']['aldNumber']['typeID']][$p['page']['dataAld']['aldNumber']['value']];
 
     } else {
-        $fakePDF = new msPDF();
-        $fakePDF->setPageHeader('');
-        $fakePDF->setPageFooter('');
-        $fakePDF->setObjetID($_POST['objetID']);
-        $fakePDF->makePDFfromObjetID();
-        $version = $fakePDF->getContenuFinal();
-
-        echo '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
-        echo msTools::cutHtmlHeaderAndFooter($version);
-        echo '</div></td>';
+      echo $preview->getGenericPreviewFromPrintTemplate();
     }
+    exit();
 }

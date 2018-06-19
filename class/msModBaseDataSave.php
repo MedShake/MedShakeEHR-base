@@ -173,5 +173,12 @@ class msModBaseDataSave
       {
           return $this->formatDecimalNumber($value);
       }
-
+      public function tbs_poids($value)
+      {
+          return $this->formatDecimalNumber($value);
+      }
+      public function tbs_taillePatient($value)
+      {
+          return $this->formatDecimalNumber($value);
+      }
 }
