@@ -55,6 +55,17 @@ var goToDicom = false;
 
 $(document).ready(function() {
   refreshHistorique();
+  $('.historiqueMedicalComplet .anneeHistorique').each(function(idx, el) {
+    if (!idx) {
+      $(el).find('.fa-minus-square').show();
+      $(el).find('.fa-plus-square').hide();
+      $($(el).attr('data-target')).collapse('show');
+    } else {
+      $(el).find('.fa-minus-square').hide();
+      $(el).find('.fa-plus-square').show();
+      $($(el).attr('data-target')).collapse('hide');
+    }
+  });
   refreshHistoriqueToday();
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
@@ -1413,17 +1424,7 @@ function refreshHistorique() {
     $('.historiqueMedicalComplet').hide();
     return;
   }
-  $('.historiqueMedicalComplet').show().find('.anneeHistorique').each(function(idx, el) {
-    if (!idx) {
-      $(el).find('.fa-minus-square').show();
-      $(el).find('.fa-plus-square').hide();
-      $($(el).attr('data-target')).collapse('show');
-    } else {
-      $(el).find('.fa-minus-square').hide();
-      $(el).find('.fa-plus-square').show();
-      $($(el).attr('data-target')).collapse('hide');
-    }
-  });
+  $('.historiqueMedicalComplet').show();
 }
 
 /**
