@@ -48,7 +48,7 @@
       </span>
       {% for instance, frames in page.imagesPath %}
         {% for frame, imagepath in frames %}
-          <table class="d-inline-block m-1 mb-2" style="border:5px solid #eee;background-color:#eee">
+          <table class="{% if frame > 0 %}d-none{% else %}d-inline-block{% endif %} m-1 mb-2 {% if frame > 0 %}frames{{ instance }}{% endif %}" style="border:5px solid #eee;background-color:#eee;">
             <thead>
               <tr>
                 <th style="text-align:center;line-height:0">
@@ -59,11 +59,11 @@
           <tbody>
             <tr>
               <td style="border:5px solid #eee">
-                <span id="{{ instance }}-{{ frame }}" class="imageDc {% if frame > 0 %}frames{{ instance }}{% endif %}" {% if frame > 0 %} style="display: none;" {% endif %}>
+                <span id="{{ instance }}-{{ frame }}" class="imageDc">
                   <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
                   {% if frame == 0 and frames | length > 1 %}
 
-                    <span class="voirframes" data-frames="frames{{ instance }}">
+                    <span class="voirframes d-block text-center" data-frames="frames{{ instance }}">
                       {{ frames|length }}
                       images - voir / masquer
                     </span>

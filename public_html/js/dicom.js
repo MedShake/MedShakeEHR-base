@@ -38,7 +38,13 @@ $(document).ready(function() {
 
   $('#tabDicom').on("click", 'span.voirframes', function(e) {
     frames = $(this).attr("data-frames");
-    $('span.' + frames).toggle();
+    if($('table.' + frames).hasClass('d-none')) {
+      $('table.' + frames).addClass('d-inline-block');
+      $('table.' + frames).removeClass('d-none');
+    } else {
+      $('table.' + frames).addClass('d-none');
+      $('table.' + frames).removeClass('d-inline-block');
+    }
   });
 
   $('#tabDicom').on("click", 'button.selectAll', function(e) {
