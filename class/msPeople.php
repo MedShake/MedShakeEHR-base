@@ -629,6 +629,7 @@ class msPeople
             'ageDisplay'=>$ageDisplay,
             'ageTotalDays'=>$interval->format('%a'),
             'ageTotalYears'=>$interval->format('%y'),
+            'ageTotalMonths'=>$interval->m + 12*$interval->y,
             'ageComposantes'=>array(
               'y'=>$interval->format('%y'),
               'm'=>$interval->format('%m'),
