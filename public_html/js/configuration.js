@@ -411,7 +411,7 @@ $(document).ready(function() {
     url: urlBase + '/configuration/ajax/configInstallModule/',
     extFilter: ["zip"],
     maxFiles: 1,
-    allowedTypes: "application/zip",
+    allowedTypes: "application/(zip|x-zip-compressed)",
     dataType: 'html',
     onUploadSuccess: function() {
       console.log('fichier envoyé');
