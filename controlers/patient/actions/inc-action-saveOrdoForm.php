@@ -46,10 +46,19 @@ if (count($_POST)>2) {
     }
 
     //support
-    if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', '0', '0', $_POST['objetID']);
+    if(isset($_POST['porteur'])) {
+      if(is_numeric($_POST['porteur'])) {
+        $porteurName=msData::getNameFromTypeID($_POST['porteur']);
+      } else {
+        $porteurName=$_POST['porteur'];
+      }
     } else {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
+      $porteurName='ordoPorteur';
+    }
+    if (isset($_POST['objetID'])) {
+        $supportID=$patient->createNewObjetByTypeName($porteurName, '', '0', '0', $_POST['objetID']);
+    } else {
+        $supportID=$patient->createNewObjetByTypeName($porteurName, '');
     }
 
     // pour plus de clarté

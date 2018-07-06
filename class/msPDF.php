@@ -57,6 +57,8 @@ class msPDF
     private $_pageFooter;
     /** @var string lap : mode d'impression anonyme */
     private $_anonymeMode=FALSE;
+    /** @var string optimiser (reduction de taille) avec GhostScript */
+    private $_optimizeWihtGS=FALSE;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -157,6 +159,14 @@ class msPDF
     }
 
 /**
+ * Définir le fait d'optimiser ou non le PDF final avec GhostScript
+ * @param boolean $v FALSE/TRUE
+ */
+    public function setOptimizeWithGS($v) {
+      return $this->_optimizeWihtGS = $v;
+    }
+
+/**
  * Construire un PDF à partir d'un numéro d'objet
  * @return void
  */
@@ -235,8 +245,16 @@ class msPDF
 
         $folder=msStockage::getFolder($this->_objetID);
         msTools::checkAndBuildTargetDir($p['config']['stockageLocation'].$folder.'/');
+        $finalFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
 
-        file_put_contents($p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf', $pdf);
+        if($this->_optimizeWihtGS == TRUE and msTools::commandExist('gs')) {
+          $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
+          file_put_contents($tempFile, $pdf);
+          exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$finalFile.' '.$tempFile);
+          unlink($tempFile);
+        } else {
+          file_put_contents($finalFile, $pdf);
+        }
 
         //sauver la copie en base
         $this->_savePrinted();
