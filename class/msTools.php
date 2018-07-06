@@ -341,4 +341,14 @@ class msTools
        });
    }
 
+/**
+ * Vérifier si une commande système existe
+ * @param  string $cmd nom de la commande
+ * @return boolean      true / false
+ */
+   public static function commandExist($cmd) {
+      $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
+      return !empty($return);
+   }
+
 }

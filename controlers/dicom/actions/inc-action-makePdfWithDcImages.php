@@ -74,6 +74,7 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
     $pdf->setToID($_POST['patientID']);
     $pdf->setType('doc');
     $pdf->setObjetID($supportID);
+    $pdf->setOptimizeWithGS(TRUE);
 
     $pdf->setPageHeader($pdf->makeWithTwig('base-page-headAndNoFoot.html.twig'));
     $pdf->setBodyFromPost($pdf->makeWithTwig('rapportImagesDicom.html.twig'));
