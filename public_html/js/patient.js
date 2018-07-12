@@ -976,7 +976,13 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      if($.isArray(scriptsList.reglement)) {
+        $.each(scriptsList.reglement, function(index, value) {
+          $.getScriptOnce(urlBase + "/js/patientScripts/" + value);
+        });
+      } else {
+        $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      }
       if (el.hasClass('editReglement')) {
         //reinjection pour édition
         $(".regleTarifCejour").attr('data-tarifdefaut', $(".regleTarifCejour").val());
