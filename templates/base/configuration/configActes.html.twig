@@ -127,12 +127,12 @@
                                         <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
                                         <td>{{ w.shortLabel }}</td>
                                         <td>{{ page['utilisationParFacture'][w.id] }}</td>
-                                        <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
+                                        <td class="texteadroite">{{ (w.tarif + w.majoModifCCAM)|number_format(2, '.', ' ') }}</td>
                                         {% if page.secteurs[k] != '' %}
                                           <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
                                           <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
                                         {% endif %}
-                                        <td  class="d-flex justify-content-end">
+                                        <td  class="text-right">
                                           <div class="btn-group">
                                             <button type="button" class="btn btn-light btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
                                                 <span class="fa fa-search-plus" aria-hidden="true"></span>
@@ -163,13 +163,23 @@
                                     {% for key,det in w.details %}
                                       <tr class="active small details details{{ w.id }}" >
                                         <td colspan="2"></td>
-                                        <td>{{ key }}{% if page.secteurs[k] != '' %} ({{ det.pourcents }}%){% endif %}</td>
+                                        <td>
+                                          {{ key }}{% if page.secteurs[k] != '' %} ({{ det.pourcents }}%){% endif %}
+                                          {% if det.modifsCCAM %}
+                                          + {{ det.modifsCCAM }}
+                                          {% endif %}
+                                        </td>
                                         <td></td>
                                         <td></td>
-                                        <td class="texteadroite">{{ det.tarif|number_format(2, '.', '')  }}</td>
+                                        <td class="texteadroite">
+                                          {{ det.tarif|number_format(2, '.', '')  }}
+                                          {% if det.majoModifCCAM > 0 %}
+                                            + {{ det.majoModifCCAM }}
+                                          {% endif %}
+                                        </td>
                                         {% if page.secteurs[k] != '' %}
                                           <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
-                                          <td class="texteadroite">{{ (det.tarif + det.depassement)|number_format(2, '.', '')  }}</td>
+                                          <td class="texteadroite">{{ det.total|number_format(2, '.', '')  }}</td>
                                         {% endif %}
                                         <td colspan="2"></td>
                                       </tr>
