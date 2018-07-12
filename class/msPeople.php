@@ -147,7 +147,16 @@ class msPeople
         return msSQL::sqlUniqueChamp("SELECT module FROM people WHERE id='".$this->_toID."' limit 1");
     }
 
-
+/**
+ * Obtenir le type du dossier
+ * @return string patient / pro / deleted / externe ...
+ */
+    public function getPeopleType() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        return msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
+    }
 
 /**
  * Obtenir les données administratives d'un individu (version complète)
