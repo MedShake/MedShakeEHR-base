@@ -32,7 +32,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 
-    {% if page.formActes.prevalue %}
+    {% if page.form.addHidden.objetID > 0 %}
         <h3>Édition du règlement</h3>
     {% else %}
         <h3>Nouveau règlement</h3>
@@ -62,25 +62,41 @@
     </div>
 
     <div id="detFacturation" class="card col-md-12 px-0 mb-3" style="display: none;">
-      <div class="card-header">Détails par acte dans le règlement sélectionné</div>
+      <div class="card-header text-center gras">Facturation à appliquer</div>
 
       <table class="table table-sm mb-0">
         <thead>
-          <th>acte</th>
+          <th class="col-1">acte</th>
+          <th class="text-left col-3"></th>
+          <th class="col-1 text-left" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}>code asso.</th>
+          <th class="col-1 text-center">base</th>
           {% if page.secteur != '' %}
-            <th class="pourcents">%</th>
+            <th class="pourcents col-1 text-center">%</th>
           {% endif %}
-          <th>tarif</th>
+          <th class="col-1 text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}>modif CCAM</th>
+          <th class="col-1 text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}></th>
+          <th class="col-1 text-center"></th>
           {% if page.secteur == '' %}
-            <th>modulation</th>
+            <th class="col-1 text-center">modulation</th>
           {% else %}
-            <th>depassement</th>
+            <th class="col-1 text-center">depassement</th>
           {% endif %}
-          <th>total</th>
+          <th class="col-1 text-right">total</th>
+          <th class="col-auto"></th>
         </thead>
+
         <tbody></tbody>
       </table>
     </div>
     {{ f.formbuilder(page.form , page.formIN ) }}
+
+
+    {% if page.form.addHidden.objetID > 0 %}
+    <script>
+      setTimeout(function() {
+        construireTabActesEdition();
+      }, 200);
+      </script>
+    {% endif %}
 
 </div>

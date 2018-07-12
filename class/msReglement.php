@@ -51,6 +51,8 @@ class msReglement
  */
     private $_tarifsNgapCcamForOneSecteur;
 
+    private $_modifsCCAM;
+
 /**
  * Set factureTypeID
  * @param int $_factureTypeID ID d'une facture type
@@ -101,7 +103,7 @@ class msReglement
 
 /**
  * Obtenir les data calculées sur une facture type
- * @return array array avec les datas de la facture type 
+ * @return array array avec les datas de la facture type
  */
 public function getCalculateFactureTypeData() {
 
@@ -123,21 +125,43 @@ public function getCalculateFactureTypeData() {
 
   $data['tarif']=0;
   $data['depassement']=0;
+  $data['majoModifCCAM']=0;
+
   foreach($data['details'] as $key=>$val) {
     if (!is_array($val)) {
         $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');
     }
     //sur l'acte
-    if(isset($val['pourcents'])) {
-        $data['details'][$key]['tarif'] = round(($dataTarifs[$key]*$val['pourcents']/100), 2);
+    $data['details'][$key]['base']=$dataTarifs[$key]['tarif'];
+    if(isset($val['codeAsso'])) {
+      $data['details'][$key]['codeAsso']=$val['codeAsso'];
     } else {
-        $data['details'][$key]['tarif'] = $dataTarifs[$key];
+      $data['details'][$key]['codeAsso']='';
+    }
+
+    if(isset($val['modifsCCAM'])) {
+      $data['details'][$key]['modifsCCAM']=$val['modifsCCAM'];
+    } else {
+      $data['details'][$key]['modifsCCAM']='';
+    }
+
+    if(isset($val['pourcents'])) {
+        $data['details'][$key]['tarif'] = round(($dataTarifs[$key]['tarif']*$val['pourcents']/100), 2);
+    } else {
+        $data['details'][$key]['tarif'] = $dataTarifs[$key]['tarif'];
     }
     if(isset($val['depassement'])) {
         $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
     } else {
-         $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
+        $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
     }
+
+    if(isset($val['modifsCCAM'])) {
+        $data['details'][$key]['majoModifCCAM'] = $this->_getMontantModifsCCAM($dataTarifs[$key]['tarif'], $val['modifsCCAM']);
+        $data['details'][$key]['total'] = $data['details'][$key]['total'] + $data['details'][$key]['majoModifCCAM'];
+    }
+
+    $data['details'][$key]['type'] = $dataTarifs[$key]['type'];
     $data['details'][$key]['tarif'] = number_format($data['details'][$key]['tarif'], 2,'.','');
     $data['details'][$key]['total'] = number_format($data['details'][$key]['total'], 2,'.','');
 
@@ -148,12 +172,18 @@ public function getCalculateFactureTypeData() {
     if(isset($val['depassement'])) {
         $data['depassement']=$data['depassement']+$val['depassement'];
     }
+    if(isset($val['modifsCCAM'])) {
+        $data['majoModifCCAM']=$data['majoModifCCAM'] + $data['details'][$key]['majoModifCCAM'];
+    }
 
   }
+
+  $data['total']=$data['tarif'];
   if(isset($data['depassement'])) {
-      $data['total']=$data['tarif'] + $data['depassement'];
-  } else {
-      $data['total']=$data['tarif'];
+      $data['total']=$data['total'] + $data['depassement'];
+  }
+  if(isset($data['majoModifCCAM'])) {
+      $data['total']=$data['total'] + $data['majoModifCCAM'];
   }
 
   $data['total']=number_format($data['total'],2,'.','');
@@ -174,9 +204,60 @@ public function getCalculateFactureTypeData() {
         if($this->_secteurTarifaire !=1 and $this->_secteurTarifaire !=2)  {
           throw new Exception('SecteurTarifaire is not correctly set');
         }
-        $this->_tarifsNgapCcamForOneSecteur = msSQL::sql2tabKey("select code, tarifs".$this->_secteurTarifaire." from actes_base", "code", "tarifs".$this->_secteurTarifaire);
+        $this->_tarifsNgapCcamForOneSecteur = msSQL::sql2tabKey("select code, tarifs".$this->_secteurTarifaire." as tarif, type from actes_base", "code");
 
         return $this->_tarifsNgapCcamForOneSecteur;
+      }
+
+/**
+ * Obtenir les data sur un acte NGAP / CCAM
+ * @param  string $codeActe code acte
+ * @return array           tableau des data
+ */
+      public function getActeData($codeActe) {
+        return msSQL::sqlUnique("select code, label, type, tarifs1, tarifs2, tarifUnit, F, P, S, M, R, D, E, C , U from actes_base where code = '".msSQL::cleanVar($codeActe)."' limit 1");
+      }
+
+/**
+ * Obtenir les data sur les actes NGAP / CCAM trouvés par une recherche
+ * @param  string $search chaine de recherche
+ * @return array           tableau des data
+ */
+      public function getActeDataFromTerm($search) {
+        $searcho=$search;
+        $search=str_replace(' ', '%', $search).'%';
+        return msSQL::sql2tab("select code, label, type, tarifs1, tarifs2, tarifUnit, F, P, S, M, R, D, E, C , U from actes_base where code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."' order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc limit 25");
+      }
+
+/**
+ * Retourner les modificateur CCAM
+ * @return array tableau code => data
+ */
+      public function getModificateursCcam() {
+        return $this->_modifsCCAM = msSQL::sql2tabKey("select * from actes_base where type = 'mCCAM' ", 'code');
+      }
+
+/**
+ * Obtenir le montant de surtarification apporté par des modificateurs CCAM
+ * @param  float $tarifBase    tarif de base
+ * @param  string $modifsString chaine de modificateurs
+ * @return float               valeur à appliquer en plus du tarif de base
+ */
+      private function _getMontantModifsCCAM($tarifBase, $modifsString) {
+        $modifsCcamSum=0;
+        if(strlen(trim($modifsString)) < 1) return $modifsCcamSum;
+        if(!isset($this->_modifsCCAM)) {
+          $this->getModificateursCcam();
+        }
+        $modifs = str_split($modifsString);
+        foreach ($modifs as $modif) {
+          if ($this->_modifsCCAM[$modif]['tarifUnit'] == 'euro') {
+            $modifsCcamSum = $modifsCcamSum + $this->_modifsCCAM[$modif]['tarifs1'];
+          } else if ($this->_modifsCCAM[$modif]['tarifUnit'] == 'pourcent') {
+            $modifsCcamSum = $modifsCcamSum + ($tarifBase * $this->_modifsCCAM[$modif]['tarifs1'] / 100);
+          }
+        }
+        return $modifsCcamSum;
       }
 
 }

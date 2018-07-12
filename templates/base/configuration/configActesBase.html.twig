@@ -135,9 +135,9 @@
 
         </div>
 
-        {# modal new category #}
+        {# modal nouvel acte / edition #}
         <div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
@@ -169,15 +169,22 @@
                             </div>
 
                             <div class="form-group">
-                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'Libre' : 'Libre', 'NGAP' : 'NGAP', 'CCAM' : 'CCAM'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
+                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'Libre' : 'Libre', 'NGAP' : 'NGAP', 'CCAM' : 'CCAM', 'mCCAM' : 'Modificateur CCAM'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
                             </div>
 
-                            <div class="form-group">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs1', 'placeholder' : 'tarif secteur 1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S1', } }) }}
-                            </div>
+                            <div class="form-row">
+                              <div class="form-group col">
+                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs1', 'placeholder' : 'tarif secteur 1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S1', } }) }}
+                              </div>
 
-                            <div class="form-group">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2 ou libre', } }) }}
+                              <div class="form-group col">
+                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2 ou libre', } }) }}
+                              </div>
+
+                              <div class="form-group col">
+                                  {{ f.select ({ 'select' : { 'name' : 'tarifUnit', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'euro' : '€', 'pourcent' : '%'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Unité tarif', } }) }}
+                              </div>
+
                             </div>
 
                             <div class="form-row">

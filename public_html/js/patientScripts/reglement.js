@@ -26,6 +26,8 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
+var factureActuelle = [];
+
 $(document).ready(function() {
 
   //close button zone newReglement
@@ -35,7 +37,7 @@ $(document).ready(function() {
   });
 
 
-  //sortir les data d'un acte
+  //sortir les data d'une facture type
   $("#newReglement").on("change", ".selectActeStarter", function(e) {
     e.preventDefault();
     searchAndInsertActeData($(this));
@@ -48,10 +50,71 @@ $(document).ready(function() {
     calcResteDu();
   });
 
+  //observer le champ de recherche d'acte
+  $("body").delegate('#acteSearch', "focusin", function() {
+    $(this).autocomplete({
+      source: urlBase + '/ajax/getAutocompleteCodeNgapOrCcamData/',
+      autoFocus: false,
+      select: function(event, ui) {
+        ui.item.label = ui.item.labelo;
+        $('#detFacturation tbody').append(construireLigneTableauActes(ui.item.code, ui.item));
+        $('#detFacturation').show();
+        setDefautTarifEtDepa();
+        calcResteDu();
+        $(this).val('');
+        return false;
+      }
+    });
+    $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
+  });
+
   //observer le changement sur dépassement
   $("#newReglement").on("change, keyup", ".regleDepaCejour", function(e) {
     e.preventDefault();
     $(this).val($(this).val().replace(' ', ''));
+    calcResteDu();
+  });
+
+  //observer la sup d'un acte dans le tableau
+  $("#newReglement").on("click", ".removeActe", function(e) {
+    e.preventDefault();
+    factureActuelle.splice($("tr").index(this), 1);
+    $(this).closest('tr').remove();
+    setDefautTarifEtDepa();
+    calcResteDu();
+  });
+
+  //observer le dépassement acte par acte dans le tableau
+  $("#newReglement").on("change, keyup", "input.add2DepaSum", function(e) {
+    calculerTotalLigneTabActes($(this));
+    setDefautTarifEtDepa();
+    calcResteDu();
+  });
+
+  //observer les modificateur CCAM acte par acte dans le tableau
+  $("#newReglement").on("change, keyup", "input.modifsCCAM", function(e) {
+    calculerTotalIntermedLigneTabActes($(this));
+    calculerTotalLigneTabActes($(this));
+    setDefautTarifEtDepa();
+    calcResteDu();
+  });
+
+  // observer la modulation des IK dans le tableau
+  $("#newReglement").on("change, keyup", "input.ikNombre", function(e) {
+    nombreIK = parseInt($(this).val());
+    valeurIK = parseFloat($(this).closest('tr').find('.baseActeValue').text());
+    valeurFinalIK = nombreIK * valeurIK;
+    $(this).closest('tr').find('.add2TarifSum').text(valeurFinalIK);
+    calculerTotalLigneTabActes($(this));
+    setDefautTarifEtDepa();
+    calcResteDu();
+  });
+
+  // observer la modulation en % d'un acte dans le tableau
+  $("#newReglement").on("change, keyup", "input.modulationActe", function(e) {
+    calculerTotalIntermedLigneTabActes($(this))
+    calculerTotalLigneTabActes($(this));
+    setDefautTarifEtDepa();
     calcResteDu();
   });
 
@@ -75,9 +138,13 @@ $(document).ready(function() {
 
 
 
-//rapatrier en json les data sur un réglement
+/**
+ * Obtenir les infos règlements à partir d'un menu présentant factures types
+ * @param  {object} selecteur objet jquery du select source
+ * @return {void}
+ */
 function searchAndInsertActeData(selecteur) {
-
+  factureActuelle = [];
   id = selecteur.attr('id');
   acteID = $('#' + id + ' option:selected').val();
 
@@ -89,8 +156,6 @@ function searchAndInsertActeData(selecteur) {
     $('.regleDepaCejour').val('');
     return;
   }
-
-  var pourcents = $('.pourcents').length;
 
   $(".selectActeStarter option[value='']").prop('selected', 'selected');
   $("#" + id + " option[value='" + acteID + "']").prop('selected', 'selected');
@@ -104,23 +169,18 @@ function searchAndInsertActeData(selecteur) {
     },
     dataType: "json",
     success: function(data) {
-      $(".regleTarifCejour").attr('data-tarifdefaut', data['tarif']);
-      $(".regleDepaCejour").attr('data-tarifdefaut', data['depassement']);
+      // fixer l'ID de la facture type
       $('input[name="acteID"]').val(acteID);
 
-      if (data['flagCmu'] == "1") {
-        $(".regleSituationPatient").val('CMU');
-      } else {
-        $(".regleSituationPatient").val('G');
-      }
+      // fixer les data de paiement par défaut
+      fixerDataPaiementDefaut(data);
 
-      $('#detFacturation tbody').html('');
-      $.each(data['details'], function(index, value) {
-        $('#detFacturation tbody').append("<tr><td>" + index + "</td><td>" + (pourcents ? (value['pourcents'] + "</td><td>") : '') + value['tarif'] + "</td><td>" + value['depassement'] + "</td><td>" + value['total'] + "</td></tr>");
-
-      });
+      // construire le tableau des actes
+      construireTableauActes(data);
+      // montrer le tableau des actes
       $('#detFacturation').show();
 
+      // ajuster l'affichage final
       setDefautTarifEtDepa();
       calcResteDu();
     },
@@ -129,16 +189,210 @@ function searchAndInsertActeData(selecteur) {
 
     }
   });
-
 }
 
+/**
+ * Fixer les data paiement par défaut (tarif, dépassement ...) en sortie de retour json
+ * @param  {object} data objet contenant les data de la facturation
+ * @return {[type]}      [description]
+ */
+function fixerDataPaiementDefaut(data) {
+  $(".regleTarifCejour").attr('data-tarifdefaut', data['tarif']);
+  $(".regleDepaCejour").attr('data-tarifdefaut', data['depassement']);
+
+
+  if (data['flagCmu'] == "1") {
+    $(".regleSituationPatient").val('CMU');
+  } else {
+    $(".regleSituationPatient").val('G');
+  }
+}
+
+/**
+ * construire le tableau des actes facturés
+ * @param  {object} data objet contenant les data de la facturation
+ * @return {void}
+ */
+function construireTableauActes(data) {
+  $('#detFacturation tbody').html('');
+  var pourcents = $('.pourcents').length;
+  $.each(data['details'], function(index, value) {
+    tabLigne = construireLigneTableauActes(index, value);
+    $('#detFacturation tbody').append(tabLigne);
+
+  });
+}
+
+function construireLigneTableauActes(index, value) {
+
+  if (!value['pourcents']) value['pourcents'] = '100';
+  if (!value['modifsCCAM']) value['modifsCCAM'] = '';
+
+  if (RegExp('[A-Z]{4}[0-9]{3}').test(index)) {
+    value['type'] = 'CCAM';
+  } else {
+    value['type'] = 'NGAP'
+  }
+
+  reglementForm = $('#newReglement input[name=reglementForm]').val();
+  if (reglementForm == 'baseReglementLibre') {
+    tabColHide = ' style="display : none"';
+  } else {
+    tabColHide = '';
+  }
+
+  //acte
+  tabLigne = '<tr><td class="gras row' + index + '" >' + index + '</td>';
+  // label
+  tabLigne += '<td class="small text-left">' + (value['label'] == null ? '' : value['label']) + '</td>';
+  // code asso
+  tabLigne += '<td' + tabColHide + '>' + (value['type'] == 'NGAP' ? '' : '<input class="form-control form-control-sm text-right codeAsso" value="' + value['codeAsso'] + '">') + '</td>';
+  // valeur de base
+  tabLigne += '<td class="text-center"><span class="baseActeValue">' + value['base'] + '</span>€</td>';
+  // poucents
+  if (value['code'] == 'IK' || index == 'IK') {
+    tabLigne += '<td class="text-right"' + tabColHide + '><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text">x</span></div><input class="form-control text-right ikNombre" value="' + value['ikNombre'] + '"></div></td>")';
+  } else {
+    tabLigne += '<td class="text-right"' + tabColHide + '><div class="input-group input-group-sm"><input class="form-control text-right modulationActe" value="' + value['pourcents'] + '"><div class="input-group-append"><span class="input-group-text">%</span></div></div></td>")';
+  }
+  // modifs ccam
+  tabLigne += '<td class="text-right"' + tabColHide + '>' + (value['type'] == 'NGAP' ? '' : '<input class="form-control form-control-sm text-right modifsCCAM" maxlength="4" value="' + value['modifsCCAM'] + '">') + '</td>")';
+  // total sécu
+  tabLigne += '<td class="text-center"' + tabColHide + '><span class="add2TarifSum">' + value['tarif'] + '</span>€</td>';
+  // colonne vide
+  tabLigne += '<td></td>';
+  // dépassement
+  tabLigne += '<td class="text-right"><div class="input-group input-group-sm"><input class="form-control text-right add2DepaSum" value="' + value['depassement'] + '"><div class="input-group-append"><span class="input-group-text">€</span></div></div></td>';
+  //total ligne
+  tabLigne += '<td class="text-right gras total"><span class="totalLigne">' + value['total'] + '</span>€</td>';
+  // sup ligne
+  tabLigne += '<td class="removeActe text-right"><button class="btn btn-sm btn-light"><i class="far fa-trash-alt"></i></button></td>';
+  tabLigne += '</tr>';
+  return tabLigne;
+}
+
+/**
+ * Calculer le montant total intermédiaire basé sur le % et modifs CCAM
+ * @param  {object} source objet source jquery
+ * @return {void}
+ */
+function calculerTotalIntermedLigneTabActes(source) {
+
+  // ajustement en fonction %
+  base = parseFloat(source.closest('tr').find('.baseActeValue').text());
+  pourcents = parseFloat(source.closest('tr').find('.modulationActe').val());
+  add2TarifSum = Math.round(base * pourcents) / 100;
+
+  // ajustement en fonction modificateurs CCAM
+  modifsCcamSum = 0;
+
+  if (modifs = source.closest('tr').find('.modifsCCAM').val()) {} 
+  else {
+    modifs = {};
+  }
+  if (modifs.length > 0) {
+    for (var i = 0; i < modifs.length; i++) {
+      modif = modifs.charAt(i);
+      if (modificateursCcamUnit[modif] == 'euro') {
+        modifsCcamSum = parseFloat(modifsCcamSum) + parseFloat(modificateursCcamValue[modif]);
+      } else if (modificateursCcamUnit[modif] == 'pourcent') {
+        modifsCcamSum = parseFloat(modifsCcamSum) + parseFloat(base * parseFloat(modificateursCcamValue[modif]) / 100);
+      } else {
+        alert("Le modificateur " + modif + " n'est pas connu du système et ne sera pas pris en compte");
+      }
+    }
+  }
+
+  if (source.closest('tr').find('.ikNombre').val()) {
+    ikNombre = source.closest('tr').find('.ikNombre').val();
+    total = parseFloat(base) * parseFloat(ikNombre);
+  } else {
+    total = parseFloat(add2TarifSum) + parseFloat(modifsCcamSum);
+  }
+  total = Math.round(total * 100) / 100;
+  source.closest('tr').find('.add2TarifSum').html(total);
+}
+
+/**
+ * calculer le total à facturer d'une ligne du tableau des actes
+ * @param  {object} source objet jquery source de l'event
+ * @return {void}
+ */
+function calculerTotalLigneTabActes(source) {
+  totalLigne = parseFloat(source.closest('tr').find('.add2TarifSum').text()) + parseFloat(source.closest('tr').find('.add2DepaSum').val());
+  source.closest('tr').find('.totalLigne').html(totalLigne);
+}
+
+/**
+ * obtenir les montants finaux total et dépassement
+ * @return {object} total et depassement
+ */
+function getFinalTarifTableauActes() {
+  var sumTot = 0;
+  var sumDep = 0;
+  // somme tarifs
+  $("#detFacturation span.add2TarifSum").each(function() {
+    var value = $(this).text();
+    if (!isNaN(value) && value.length != 0) {
+      sumTot += parseFloat(value);
+    }
+  });
+  // somme des dépassements
+  $("#detFacturation input.add2DepaSum").each(function() {
+    var value = $(this).val();
+    if (!isNaN(value) && value.length != 0) {
+      sumDep += parseFloat(value);
+    }
+  });
+
+  sumTot = Math.round(sumTot * 100) / 100;
+  sumDep = Math.round(sumDep * 100) / 100;
+
+  // construction d'un objet recap des actes
+  $("#detFacturation tbody tr").each(function(index, val) {
+
+    factureActuelle[index] = {
+      'acte': $(this).children('td:first').text(),
+      'codeAsso': '',
+      'base': $(this).find('.baseActeValue').text(),
+      'ikNombre': $(this).find('.ikNombre').val(),
+      'pourcents': $(this).find('.modulationActe').val(),
+      'modifsCCAM': $(this).find('.modifsCCAM').val(),
+      'depassement': $(this).find('.add2DepaSum').val(),
+    };
+    console.log(factureActuelle);
+  });
+
+  $('input[name="regleDetailsActes"]').val(JSON.stringify(factureActuelle, null, 2));
+
+  return sums = {
+    tarif: sumTot,
+    depassement: sumDep
+  };
+}
+
+function construireTabActesEdition() {
+  if(actes = tryParseJSON($('input[name="regleDetailsActes"]').val())) {
+    $.each(actes, function(index, value) {
+      tabLigne = construireLigneTableauActes(value['acte'], value);
+      $('#detFacturation tbody').append(tabLigne);
+      calculerTotalIntermedLigneTabActes($('#detFacturation td.row' + value['acte']));
+      calculerTotalLigneTabActes($('#detFacturation td.row' + value['acte']))
+    });
+    $('#detFacturation').show();
+  }
+}
+
+/**
+ * Régler affichage des tarifs et des champs du paiement en fonction des cas
+ */
 function setDefautTarifEtDepa() {
-  resetModesReglement();
+  //resetModesReglement();
 
-  $(".regleTarifCejour").val($(".regleTarifCejour").attr('data-tarifdefaut'));
-  $(".regleDepaCejour").val($(".regleDepaCejour").attr('data-tarifdefaut'));
-
-
+  $(".regleTarifCejour").val(getFinalTarifTableauActes().tarif);
+  $(".regleDepaCejour").val(getFinalTarifTableauActes().depassement);
+  //$(".regleTarifCejour").val($(".regleTarifCejour").attr('data-tarifdefaut'));
+  //$(".regleDepaCejour").val($(".regleDepaCejour").attr('data-tarifdefaut'));
 
   cas = $(".regleSituationPatient" + ' option:selected').val() || 'G';
 
@@ -163,6 +417,10 @@ function setDefautTarifEtDepa() {
   }
 }
 
+/**
+ * Calculer le reste du
+ * @return {void}
+ */
 function calcResteDu() {
   cas = $(".regleSituationPatient" + " option:selected").val() || 'G';
   tarif = parseFloat($(".regleTarifCejour").val());
@@ -193,8 +451,10 @@ function calcResteDu() {
 
 }
 
+/**
+ * Reset des champs de règlement
+ */
 function resetModesReglement() {
-
   $(".regleCheque").val('');
   $(".regleCB").val('');
   $(".regleEspeces").val('');

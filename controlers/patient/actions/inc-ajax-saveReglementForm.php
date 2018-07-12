@@ -28,7 +28,7 @@
  */
 
 if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
-      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveReglementForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-hook-saveReglementForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
       }
@@ -37,7 +37,8 @@ if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1',
       }
 }
 
-if (count($_POST['acteID'])>0) {
+if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
+    if(!is_numeric($_POST['acteID'])) $_POST['acteID']=0;
     $patient = new msObjet();
     $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
     $patient->setToID($_POST['patientID']);
@@ -54,11 +55,14 @@ if (count($_POST['acteID'])>0) {
         }
     }
     //support
-    if ($_POST['objetID']!=='') {
+    if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
-    } else {
+    } elseif($_POST['acteID']>0) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID']);
+    } else {
+        $supportID=$patient->createNewObjet($_POST['porteur'], '');
     }
+    echo 'support : '.$supportID;
 
     $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
     $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
@@ -80,11 +84,18 @@ if (count($_POST['acteID'])>0) {
     }
 
     //titre
-    $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");
-    $codes = Spyc::YAMLLoad($codes);
-    $codes = implode(' + ', array_keys($codes));
+    if($_POST['acteID'] > 0) {
+        $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");
+        $codes = Spyc::YAMLLoad($codes);
+        $codes = implode(' + ', array_keys($codes));
+    } else {
+        $codes = json_decode($_POST['regleDetailsActes'], TRUE);
+        $codes = implode(' + ', array_column($codes, 'acte') );
+    }
+
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
+    // générer le retour
     $debug='';
     //template
     $template="pht-ligne-reglement";

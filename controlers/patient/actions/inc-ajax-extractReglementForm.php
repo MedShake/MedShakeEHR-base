@@ -30,7 +30,7 @@
 $debug='';
 
 if (!isset($delegate)) {
-  if (!isset($_POST['objetID']) || $_POST['objetID']==='') {
+  if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
       $reglementForm=$_POST['reglementForm'];
       $porteur=$_POST['porteur'];
       $userID=is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id'];
@@ -46,7 +46,7 @@ if (!isset($delegate)) {
   }
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if (!in_array($reglementForm, ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
-      $hook=$p['homepath'].'/controlers/module/'.$module.'/patient/actions/inc-ajax-extractReglementForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$module.'/patient/actions/inc-hook-extractReglementForm.php';
       if ($module!='' and $module!='base' and is_file($hook)) {
           include $hook;
       }
@@ -55,6 +55,7 @@ if (!isset($delegate)) {
       }
   }
 }
+
 
 //template
 $template="patientReglementForm";
@@ -93,8 +94,9 @@ if (isset($_POST['objetID'])) {
 $form = new msForm();
 $form->setFormIDbyName($reglementForm);
 $form->setTypeForNameInForm('byName');
-if (isset($_POST['objetID'])) {
-    $form->setPrevalues(msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value'));
+if ($_POST['objetID'] > 0) {
+    $prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where id='".$_POST['objetID']."' or instance='".$_POST['objetID']."'", 'typeID', 'value');
+    $form->setPrevalues($prevalues);
 }
 $p['page']['form']=$form->getForm();
 $p['page']['formIN']=$reglementForm;
@@ -108,7 +110,9 @@ $p['page']['form']['addHidden']=array(
   'asUserID'=>$_POST['asUserID'],
   'patientID'=>$_POST['patientID'],
   'acteID'=>$p['page']['formActes']['prevalue'],
+  'regleDetailsActes'=>''
 );
-if (isset($_POST['objetID'])) {
+if ($_POST['objetID'] > 0) {
     $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];
+    $p['page']['form']['addHidden']['regleDetailsActes']=$prevalues[msData::getTypeIDFromName('regleDetailsActes')];
 }

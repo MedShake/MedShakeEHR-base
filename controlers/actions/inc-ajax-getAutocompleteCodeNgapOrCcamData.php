@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,27 +21,20 @@
  */
 
 /**
- * Requêtes AJAX utiles sur l'ensemble du site
+ * Requêtes AJAX > retourner les infos sur les actes NGAP / CCAM correspondant à la recherche texte
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
-header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData', // Enregistrer des données patient
-    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée
-    'mailTracking', // Retourner les infos de tracking d'un mail
-    'getAutocompleteCodeNgapOrCcamData' // Retourner les infos sur un acte NGAP ou CCAM
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-} else {
-    include('inc-ajax-'.$m.'.php');
+$reg = new msReglement;
+if($data = $reg->getActeDataFromTerm($_GET['term'])) {
+  foreach($data as $k=>$v) {
+    $data[$k]['labelo'] = $v['label'];
+    $data[$k]['label'] = $v['code'].' '.$v['label'];
+    $data[$k]['base'] = $data[$k]['tarif'] = $data[$k]['total'] = $v['tarifs1'];
+    $data[$k]['pourcents'] = '100';
+    $data[$k]['depassement'] = '0';
+    $data[$k]['codeAsso'] = '';
+  }
 }
+exit(json_encode($data));
