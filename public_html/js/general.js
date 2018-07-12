@@ -434,6 +434,22 @@ function downloadCSV(csv, filename) {
 }
 
 /**
+ * Parser le JSON si correct, false sinon
+ * @param  {string} jsonString json string à parser
+ * @return {mixte}            json ou false
+ */
+function tryParseJSON(jsonString){
+    try {
+        var o = JSON.parse(jsonString);
+        if (o && typeof o === "object") {
+            return o;
+        }
+    }
+    catch (e) { }
+    return false;
+};
+
+/**
  * Make csv file from html table
  * Thanks to codexworld <https://www.codexworld.com/export-html-table-data-to-csv-using-javascript/>
  * @param  {string} table    table selector
