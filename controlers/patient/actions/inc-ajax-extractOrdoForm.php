@@ -36,8 +36,8 @@ if (!isset($delegate)) {
       $userID=$_POST['asUserID']?:$p['user']['id'];
       $module=$_POST['module'];
   } else {
-      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt 
-        LEFT JOIN objets_data as od ON dt.id=od.typeID 
+      $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
+        LEFT JOIN objets_data as od ON dt.id=od.typeID
         WHERE od.id='".$_POST['objetID']."' limit 1");
       $ordoForm=$res[0]['form'];
       $porteur=$res[0]['porteur'];
@@ -46,7 +46,7 @@ if (!isset($delegate)) {
   }
   //si le formulaire d'ordonnance n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if ($ordoForm!='') {
-        $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-extractOrdoForm.php';
+        $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-hook-extractOrdoForm.php';
         if ($module!='' and $module!='base' and is_file($hook)) {
             include $hook;
         }
