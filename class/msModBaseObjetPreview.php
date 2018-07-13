@@ -117,6 +117,14 @@ class msModBaseObjetPreview
     LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$this->_objetID."' limit 1");
     $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$this->_objetID."')");
 
+    // détails de la facturation
+    if(isset($p['page']['datareg']['regleDetailsActes'])) {
+      $p['page']['datareg']['regleDetailsActes']['value'] = json_decode($p['page']['datareg']['regleDetailsActes']['value'], TRUE);
+      if(empty($p['page']['acteFacture']['label'])) {
+        $p['page']['acteFacture']['label']=implode(' + ', array_column($p['page']['datareg']['regleDetailsActes']['value'], 'acte'));
+      }
+    }
+
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detReglement.html.twig');
     $html = $html->genererHtmlString($p);
