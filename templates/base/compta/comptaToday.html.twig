@@ -43,121 +43,134 @@
     <div class="col-lg-10 col-md-12">
 
       {% if page.tabRegNC %}
-        <h2>Paiements à recevoir</h2>
-        <table class="table table-sm mb-0 table-hover table-striped" style="min-width:870px">
-          <thead>
-            <tr>
-              <th>Patient</th>
-              {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
-              {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
-              <th>Montant des actes</th>
-              <th>Déjà réglé</th>
-              <th>Reste à régler</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for obj, reg in page.tabRegNC %}
-              <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
-                <td>
-                  <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
-                    <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                  </a>
-                  {{ reg.prenom|e }}
-                  {{ reg.nom|e }}
-                </td>
-                {% if page.pratsAuto|length > 1 %}
-                  <td>
-                    {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
-                  </td>
-                {% endif %}
-                {% if page.secteur %}
-                  <td>
-                    {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
-                  </td>
-                {% else %}
-                  <td style="width:0"></td>
-                {% endif %}
-                <td>
-                  <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                    <span class="fa fa-question-circle" aria-hidden="true"></span>
-                  </button>
-                  {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
-                    <strong>{{ reg.regleFacture|e }}€</strong>
-                  {% else %}
-                    <strong>{{ reg.regleFacture }}€</strong>
-                    ({{ reg.regleTarifCejour|e }}€ +
-                    {{ reg.regleDepaCejour|e }}€)
-                  {% endif %}
-                </td>
+      <div class="card mt-4">
+        <div class="card-header h5">
+          Paiements à recevoir
+        </div>
+        <div class="card-body">
 
-                <td>{{ reg.dejaPaye|e }}€</td>
-                <td>{{ reg.resteAPaye }}€</td>
-                <td>
-                  <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
-                    Saisir règlement
-                  </button>
-
-                </td>
+          <table class="table table-sm mb-0 table-hover table-striped" style="min-width:870px">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
+                {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
+                <th>Montant des actes</th>
+                <th>Déjà réglé</th>
+                <th>Reste à régler</th>
+                <th>&nbsp;</th>
               </tr>
+            </thead>
+            <tbody>
+              {% for obj, reg in page.tabRegNC %}
+                <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
+                  <td>
+                    <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
+                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                    </a>
+                    {{ reg.prenom|e }}
+                    {{ reg.nom|e }}
+                  </td>
+                  {% if page.pratsAuto|length > 1 %}
+                    <td>
+                      {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
+                    </td>
+                  {% endif %}
+                  {% if page.secteur %}
+                    <td>
+                      {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
+                    </td>
+                  {% else %}
+                    <td style="width:0"></td>
+                  {% endif %}
+                  <td>
+                    <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                    </button>
+                    {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
+                      <strong>{{ reg.regleFacture|e }}€</strong>
+                    {% else %}
+                      <strong>{{ reg.regleFacture }}€</strong>
+                      ({{ reg.regleTarifCejour|e }}€ +
+                      {{ reg.regleDepaCejour|e }}€)
+                    {% endif %}
+                  </td>
 
-            {% endfor %}
-          </tbody>
-        </table>
+                  <td>{{ reg.dejaPaye|e }}€</td>
+                  <td>{{ reg.resteAPaye }}€</td>
+                  <td>
+                    <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                      Saisir règlement
+                    </button>
+
+                  </td>
+                </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
       {% endif %}
 
       {% if page.tabRegC %}
-        <h2>Paiements effectués</h2>
-        <table class="table table-sm mb-0 table-hover table-striped table-responsive-xl">
-          <thead>
-            <tr>
-              <th>Patient</th>
-              {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
-              {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
-              <th>Montant à régler</th>
-              <th>Payé</th>
-              <th>Mode</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for reg in page.tabRegC %}
+      <div class="card mt-5">
+        <div class="card-header h5">
+          Paiements effectués
+        </div>
+        <div class="card-body">
+          <table class="table table-sm mb-0 table-hover table-striped table-responsive-xl">
+            <thead>
               <tr>
-                <td>
-                  <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
-                    <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                  </a>
-                  {{ reg.prenom|e }}
-                  {{ reg.nom|e }}
-                </td>
-                {% if page.pratsAuto|length > 1 %}
-                  <td>
-                    {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
-                  </td>
-                {% endif %}
-                <td>
-                  {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
-                </td>
-                <td>
-                  <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                    <span class="fa fa-question-circle" aria-hidden="true"></span>
-                  </button>
-                  {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
-                  {% else %}
-                    {{ reg.regleFacture|e }}€ ({{ reg.regleTarifCejour|e }}€ +
-                    {{ reg.regleDepaCejour|e }}€)
-                  {% endif %}
-                </td>
-                <td>{{ reg.dejaPaye|e }}€</td>
-                <td>
-                  {% if reg.regleCheque > 0 %}Chèque{% endif %}
-                  {% if reg.regleCB > 0 %}CB{% endif %}
-                  {% if reg.regleEspeces > 0 %}Espèces{% endif %}
-                </td>
+                <th>Patient</th>
+                {% if page.pratsAuto|length > 1 %}<th>Praticien</th>{% endif %}
+                {% if page.secteur %}<th>CMU / TP ?</th>{% else %}<th style="width:0"></th>{% endif %}
+                <th>Montant à régler</th>
+                <th>Payé</th>
+                <th>Mode</th>
               </tr>
+            </thead>
+            <tbody>
+              {% for reg in page.tabRegC %}
+                <tr>
+                  <td>
+                    <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
+                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                    </a>
+                    {{ reg.prenom|e }}
+                    {{ reg.nom|e }}
+                  </td>
+                  {% if page.pratsAuto|length > 1 %}
+                    <td>
+                      {{ page['pratsAuto'][reg.fromID]['prenom'] }} {{ page['pratsAuto'][reg.fromID]['nom'] }}
+                    </td>
+                  {% endif %}
+                  <td>
+                    {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleSituationPatient }}{% endif %}
+                  </td>
+                  <td>
+                    <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
+                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                    </button>
+                    {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
+                    {% else %}
+                      {{ reg.regleFacture|e }}€ ({{ reg.regleTarifCejour|e }}€ +
+                      {{ reg.regleDepaCejour|e }}€)
+                    {% endif %}
+                  </td>
+                  <td>{{ reg.dejaPaye|e }}€</td>
+                  <td>
+                    {% if reg.regleCheque > 0 %}Chèque{% endif %}
+                    {% if reg.regleCB > 0 %}CB{% endif %}
+                    {% if reg.regleEspeces > 0 %}Espèces{% endif %}
+                  </td>
+                </tr>
 
-            {% endfor %}
-          </tbody>
-        </table>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
       {% endif %}
 
     </div>
