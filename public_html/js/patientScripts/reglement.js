@@ -223,6 +223,12 @@ function construireTableauActes(data) {
   });
 }
 
+/**
+ * Construire une ligne du tbleau des actes facturés
+ * @param  {string} index index de la ligne
+ * @param  {array} value data
+ * @return {string}       ligne HTML
+ */
 function construireLigneTableauActes(index, value) {
 
   if (!value['pourcents']) value['pourcents'] = '100';
@@ -371,6 +377,10 @@ function getFinalTarifTableauActes() {
   };
 }
 
+/**
+ * Construire le tableau des actes à l'édition
+ * @return {void}
+ */
 function construireTabActesEdition() {
   if(actes = tryParseJSON($('input[name="regleDetailsActes"]').val())) {
     $.each(actes, function(index, value) {
