@@ -193,8 +193,8 @@
     </div>
   </td>
   <td>
-    <span class="d-none d-lg-inline">{% if cs.name == 'lapOrdonnance' %}Ordonnance LAP{% else %}{{ cs.label }}{% endif %}{% if cs.titre %} : {% endif %}</span>
-    <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
+    <span class="d-none d-lg-inline">{% if cs.name == 'lapOrdonnance' %}Ordonnance LAP{% else %}{{ cs.label }}{% endif %}</span>
+    <span class="alternatTitre{{ cs.id }}">{% if cs.titre is not empty %} : {{ cs.titre|e }}{% endif %}</span>
   </td>
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
   <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>

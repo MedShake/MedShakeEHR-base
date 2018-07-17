@@ -1343,7 +1343,12 @@ function modalAlternateTitreChange() {
     },
     dataType: "html",
     success: function() {
-      $('.alternatTitre' + objetID).html(' : ' + titreActu);
+      if(titreActu.length > 0) {
+        $('.alternatTitre' + objetID).html(' : ' + titreActu);
+      } else {
+        $('.alternatTitre' + objetID).html('');
+      }
+      $('.alternatTitre' + objetID).parents('tr.trLigneExamen').attr('data-alternatTitre', titreActu);
       $('#alternatTitreModal').modal('toggle');
     },
     error: function() {
