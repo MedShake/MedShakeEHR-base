@@ -137,6 +137,7 @@ class msSqlGenerate
  * @return void
  */
   public function _prepareSqlForActes($name) {
+    $collecteCcamNgap=[];
 
     if($cats=msSQL::sql2tab("select * from actes_cat where module='".$name."'")) {
       foreach($cats as $cat) {
@@ -168,20 +169,30 @@ class msSqlGenerate
           if(is_array($details)) {
             $collecteCcamNgap=array_merge($collecteCcamNgap, array_keys($details));
           }
-
         }
+    }
 
-        $collecteCcamNgap=array_unique($collecteCcamNgap);
-        if($actesbase=msSQL::sql2tab("select * from actes_base where code in ('".implode("', '", $collecteCcamNgap)."')")) {
-          foreach($actesbase as $actebase) {
-            unset($actebase['id']);
-            $actebase['fromID']=1;
-            $actebase['creationDate']=date("Y-m-d H:i:s");
-            if(!isset($this->_actes_base_fields)) $this->_actes_base_fields=$this->_getSqlFieldsPart($actebase);
-            $this->_actes_base_values[]=$this->_getSqlValuesPart($actebase);
-        }
+    // recherche de méthode informative dans la class Honoraires du module
+    $listFromModule = [];
+    $className = 'msMod'.ucfirst($name).'CalcHonoraires';
+    if(class_exists($className, TRUE)) {
+      if(method_exists($className, 'getActesModuleSqlExtraction')) {
+        $listFromModule = $className::getActesModuleSqlExtraction();
       }
     }
+
+    // extraction finale des actes NGAP / CCAM nécessaires
+    $collecteCcamNgap=array_unique(array_merge($collecteCcamNgap + $listFromModule));
+    if($actesbase=msSQL::sql2tab("select * from actes_base where code in ('".implode("', '", $collecteCcamNgap)."') order by type, code")) {
+      foreach($actesbase as $actebase) {
+        unset($actebase['id']);
+        $actebase['fromID']=1;
+        $actebase['creationDate']=date("Y-m-d H:i:s");
+        if(!isset($this->_actes_base_fields)) $this->_actes_base_fields=$this->_getSqlFieldsPart($actebase);
+        $this->_actes_base_values[]=$this->_getSqlValuesPart($actebase);
+    }
+  }
+
   }
 
 
