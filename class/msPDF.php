@@ -59,6 +59,8 @@ class msPDF
     private $_anonymeMode=FALSE;
     /** @var string optimiser (reduction de taille) avec GhostScript */
     private $_optimizeWihtGS=FALSE;
+    /** @var string dossier de template à utiliser */
+    private $_templatesPdfFolder;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -93,6 +95,8 @@ class msPDF
  */
     public function setFromID($v)
     {
+
+        $this->_templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', $user=array('id'=>$v, 'module'=>''));
         return $this->_fromID = $v;
     }
 
@@ -177,7 +181,7 @@ class msPDF
         }
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
-        $this->_fromID=$data['fromID'];
+        $this->setFromID($data['fromID']);
         $this->_toID=$data['toID'];
         if($data['name'] == 'lapOrdonnance') {
             $this->_type="ordoLAP";
@@ -582,12 +586,16 @@ class msPDF
     public function makeWithTwig($template)
     {
         global $p;
-
+        if(isset($this->_templatesPdfFolder)) {
+          $templatesPdfFolder=$this->_templatesPdfFolder;
+        } else {
+          $templatesPdfFolder=$p['config']['templatesPdfFolder'];
+        }
         // les variables d'environnement twig
         if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
         if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
 
-        $loaderPDF = new Twig_Loader_Filesystem($p['config']['templatesPdfFolder']);
+        $loaderPDF = new Twig_Loader_Filesystem($templatesPdfFolder);
         $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
         $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
