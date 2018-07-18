@@ -27,3 +27,6 @@ ALTER TABLE `actes_base` ADD `tarifUnit` ENUM('euro','pourcent') NOT NULL DEFAUL
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='reglementItems');
 INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('reglement', 'regleDetailsActes', '', 'Détails des actes', 'détails des actes de la facture', '', '', 'text', '', 'base', @catID, 1, '2018-07-04 15:31:47', 1576800000, 1);
+
+-- Mise à jour n° de version
+UPDATE `system` SET `value`='v4.1.0' WHERE `name`='base' and `groupe`='module';

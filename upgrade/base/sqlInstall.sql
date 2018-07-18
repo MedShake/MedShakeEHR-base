@@ -37,7 +37,7 @@ CREATE TABLE `actes_base` (
  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
  PRIMARY KEY (`id`),
  UNIQUE KEY `code` (`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `actes_cat` (
   `id` smallint(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -702,4 +702,4 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v4.0.0');
+ (2, 'base', 'module', 'v4.1.0');
