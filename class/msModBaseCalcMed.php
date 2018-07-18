@@ -114,7 +114,7 @@ class msModBaseCalcMed
     }
 
 /**
- * DDG vers le terme exprimé en SA avec 1 décimale
+ * DDG vers le terme exprimé en SA
  * @param  string $ddg  DDG au format d/m/Y
  * @param  string $jour Jour au format d/m/Y
  * @return float       Nb de SA avec 1 décimale
@@ -126,7 +126,7 @@ class msModBaseCalcMed
         $interval = date_diff($ddg, $jour);
         $nbjours=$interval->format('%a') + 14; #on corrige pour sortir en SA
 
-        return round(($nbjours/7), 1);
+        return ($nbjours/7);
     }
 
 }
