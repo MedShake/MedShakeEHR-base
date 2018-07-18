@@ -30,7 +30,7 @@
 <td colspan="4" class="py-4">
 
     {% if page.pj.href %}
-      {% if page.pj.detail or page.pj.view %}
+      {% if (page.pj.detail and page.texte is empty) or page.pj.view %}
         <div class="card mb-3">
           <table class="table table-sm mb-0 table-striped table-hover">
             <tbody>
@@ -51,7 +51,6 @@
         </div>
       {% else %}
         <p>
-
             <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
               <span class="fa fa-file" aria-hidden="true"></span>
               VOIR FICHIER
