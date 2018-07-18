@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `actes` (
   KEY `cat` (`cat`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE `actes_base` (
+CREATE TABLE IF NOT EXISTS `actes_base` (
  `id` mediumint(6) unsigned NOT NULL AUTO_INCREMENT,
  `code` varchar(7) NOT NULL,
  `label` varchar(255) DEFAULT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `forms_cat` (
  `creationDate` datetime NOT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `form_basic_types` (
   `id` int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -278,19 +278,19 @@ CREATE TABLE IF NOT EXISTS `prescriptions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL,
-  `label` varchar(60) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `creationDate` datetime NOT NULL,
-  `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+ `id` smallint(5) NOT NULL AUTO_INCREMENT,
+ `name` varchar(60) NOT NULL,
+ `label` varchar(60) NOT NULL,
+ `description` varchar(255) NOT NULL,
+ `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
+ `fromID` smallint(5) unsigned NOT NULL,
+ `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
+ `creationDate` datetime NOT NULL,
+ `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `name` (`name`),
+ KEY `displayOrder` (`displayOrder`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `printed` (
  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
