@@ -1,3 +1,47 @@
+-- Procédure pour créer index manquant
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `CreerIndexMsEHR` $$
+CREATE PROCEDURE `CreerIndexMsEHR`
+(
+    given_type     VARCHAR(64),
+    given_table    VARCHAR(64),
+    given_index    VARCHAR(64),
+    given_columns  VARCHAR(64)
+)
+BEGIN
+
+    DECLARE IndexIsThere INTEGER;
+
+    SELECT COUNT(1) INTO IndexIsThere
+    FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE table_name   = given_table
+    AND   index_name   = given_index;
+
+    IF IndexIsThere = 0 THEN
+        IF given_type = 'unique' THEN
+          SET @sqlstmt = CONCAT('CREATE UNIQUE INDEX ',given_index,' ON ',given_table,' (',given_columns,')');
+        END IF;
+        IF given_type = 'index' THEN
+          SET @sqlstmt = CONCAT('CREATE INDEX ',given_index,' ON ',given_table,' (',given_columns,')');
+        END IF;
+        PREPARE st FROM @sqlstmt;
+        EXECUTE st;
+        DEALLOCATE PREPARE st;
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+-- créer index sur le name de forms_cat si besoin
+call CreerIndexMsEHR('unique','forms_cat','name','name');
+
+-- créer index sur name de prescriptions_cat si besoin
+call CreerIndexMsEHR('unique','prescriptions_cat','name','name');
+
+DROP PROCEDURE IF EXISTS `CreerIndexMsEHR`;
 
 -- Retrait des placeholders
 update data_types set placeholder="", description="poids du patient en kg" where name="poids";
