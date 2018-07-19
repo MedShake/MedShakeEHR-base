@@ -31,7 +31,7 @@
  //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
     $template="forbidden";
-    return; 
+    return;
 }
 
 $template="configTemplatesPDFEdit";
@@ -49,7 +49,8 @@ if (isset($match['params']['userID'])) {
 
     $proprio = new msPeople();
     $proprio->setToID($match['params']['userID']);
-    $p['page']['fichier']['proprio']=$proprio->getSimpleAdminDatas();
+    $p['page']['selectUser']=$match['params']['userID'];
+    $p['page']['fichier']['proprio']=$proprio->getSimpleAdminDatasByName();
 } else {
     $directory=msConfiguration::getParameterValue('templatesPdfFolder');
 }

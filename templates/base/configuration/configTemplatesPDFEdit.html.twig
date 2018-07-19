@@ -53,7 +53,7 @@
   </li>
   {% if page.selectUser > 0 %}
     <li class="breadcrumb-item">
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.3 }} {% if page.fichier.proprio.2 %}{{ page.fichier.proprio.2 }}{% else %}{{ page.fichier.proprio.1 }}{% endif %}</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/{{ page.selectUser }}/">{{ page.fichier.proprio.firstname }} {% if page.fichier.proprio.lastname %}{{ page.fichier.proprio.lastname }}{% else %}{{ page.fichier.proprio.birthname }}{% endif %}</a>
     </li>
   {% endif %}
   <li class="breadcrumb-item active">
@@ -63,11 +63,11 @@
 
 <h1>Edition du modèle de rapport <small>{{ page.fichier.name }}
 {% if page.selectUser > 0 %}
-  de {{ page.fichier.proprio.3 }}
-  {% if page.fichier.proprio.2 %}
-    {{ page.fichier.proprio.2 }}
+  de {{ page.fichier.proprio.firstname }}
+  {% if page.fichier.proprio.lastname %}
+    {{ page.fichier.proprio.lastname }}
   {% else %}
-    {{ page.fichier.proprio.1 }}
+    {{ page.fichier.proprio.birthname }}
   {% endif %}
 {% endif %}</small></h1>
 
@@ -76,9 +76,10 @@
   <div class="alert alert-danger" role="alert">Le répertoire {{ page.fichier.chemin }} n'est pas accessible en écriture. Le template ne peut être édité par cette méthode.</div>
 {% endif %}
 
-<div class="row">
+<div class="row mt-4">
 
 <form class="col-md-12"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configTemplatePDFSave/">
+
   {{ f.input ({
     'input' : {
       'type' : 'hidden',
@@ -87,22 +88,48 @@
     },
   }) }}
 
-  <div class="form-group">
-  {{ f.input ({
-    'input' : {
-      'type' : 'text',
-      'name' : 'fichier',
-      'placeholder' : 'nom du fichier',
-      'class' : 'form-control',
-      'autocomplete' : 'off',
-      'value' : page.fichier.name
-    },
-    'label' : {
-      'position' : 'before',
-      'label' : 'Nom du fichier (indiquer un nouveau nom pour conserver l\'original)',
-    }
-  }) }}
-  </div>
+  <div class="form-row">
+
+    <div class="form-group col-4">
+
+      {{ f.input ({
+        'input' : {
+          'type' : 'text',
+          'name' : 'directory',
+          'placeholder' : 'nom du fichier',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'readonly' : 'readonly',
+          'value' : page.fichier.chemin
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Répertoire',
+        }
+      }) }}
+
+    </div>
+
+    <div class="form-group col-5">
+
+      {{ f.input ({
+        'input' : {
+          'type' : 'text',
+          'name' : 'fichier',
+          'placeholder' : 'nom du fichier',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'value' : page.fichier.name
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Nom du fichier (indiquer un nouveau nom pour conserver l\'original)',
+        }
+      }) }}
+      </div>
+    </div>
+
+
 
   <div class="form-group">
   {{ f.textarea ({
