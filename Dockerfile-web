@@ -3,10 +3,14 @@ FROM ubuntu:bionic
 LABEL description="MedShake EHR dockerized"
 LABEL maintainer="bugeaud@gmail.com"
 
+# Some environement variables to customize
+#ENV SERVER_NAME=www.example.net
+#ENV SERVER_ALIAS=
+
 # Set some environement variables required
 ENV APP_PATH /app
-ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base/
-ENV MEDSHAKEEHRPUBLICPATH $APP_PATH/MedShakeEHR-base/public_html/
+ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base
+ENV MEDSHAKEEHRPUBLICPATH $APP_PATH/MedShakeEHR-base/public_html
 
 
 # Create the APP directory and move to it
@@ -19,7 +23,7 @@ RUN apt update && apt --assume-yes upgrade
 # Set the timezone
 ENV TZ 'Europe/Paris'
 RUN echo $TZ > /etc/timezone && \
-	apt install --assume-yes tzdata && \
+	apt install --assume-yes apt-utils tzdata locales && \
 	rm /etc/localtime && \
 	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 	dpkg-reconfigure -f noninteractive tzdata && \
@@ -33,13 +37,20 @@ RUN apt --assume-yes install libapache2-mod-php
 # Ubuntu has dropped pdftk because of gcj reliance.
 # We need to build a pdftk alternative version
 # Let's install prerequisites for the alternative pdftk 
-RUN apt --assume-yes install git default-jdk-headless ant libcommons-lang3-java libbcprov-java
+RUN apt --assume-yes install git openjdk-8-jdk ant libcommons-lang3-java libbcprov-java gradle
+# If gradle is used for build add : gradle
+# If latest JDK use : default-jdk-headless
+# If ANT based setup install would need : ant libcommons-lang3-java libbcprov-java
 # Get the latest alternative pdftk, build it & check if help can be displayed
-RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
-	&& cd pdftk \
-	&& ant -lib /usr/share/java jar \
-	&& java -jar build/jar/pdftk.jar --help
+#RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
+#	&& cd pdftk \
+#	&& ant -lib /usr/share/java jar \
+#	&& java -jar build/jar/pdftk.jar --help
 
+RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
+       && cd pdftk \
+       && gradle shadowJar \
+       && java -jar build/libs/pdftk-all.jar --help
 
 WORKDIR $APP_PATH
 
@@ -101,16 +112,19 @@ RUN bower install -V
 
 # Create the Apache 2 configuration for the MedShake EHR application
 COPY medshakeehr.conf /etc/apache2/sites-available/
+#RUN  envsubst < $MEDSHAKEEHRPATH/medshakeehr.conf > /etc/apache2/sites-available/medshakeehr.conf
 
 #Enable URL rewriting
 RUN a2enmod rewrite
 
 # Activate the application
-RUN a2ensite medshakeehr
+RUN a2dissite 000-default && a2ensite medshakeehr
 
 # Run Apache 2 as foreground
 WORKDIR $APP_PATH
-CMD apachectl -D FOREGROUND
+#CMD apachectl -D FOREGROUND
+COPY docker-ehr-web-apache2-foreground /usr/local/bin/
+CMD docker-ehr-web-apache2-foreground
 
 EXPOSE 80/tcp
 EXPOSE 443/tcp

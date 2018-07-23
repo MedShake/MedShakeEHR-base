@@ -1,7 +1,7 @@
 INSERT INTO configuration (name, level, value) VALUES
             ('mailRappelLogCampaignDirectory', 'default', '/app/MedShakeEHR-base/mailsRappelRdvArchives/'),
-            ('smsLogCampaignDirectory', 'default', '/app/MedShakeEHR-base//smsArchives/'),
-            ('apicryptCheminInbox', 'default', '/app/MedShakeEHR-base//inbox/'),
+            ('smsLogCampaignDirectory', 'default', '/app/MedShakeEHR-base/smsArchives/'),
+            ('apicryptCheminInbox', 'default', '/app/MedShakeEHR-base/inbox/'),
             ('apicryptCheminArchivesInbox', 'default', '/app/MedShakeEHR-base/inboxArchives/'),
             ('apicryptCheminFichierNC', 'default', '/app/MedShakeEHR-base/workingDirectory/NC/'),
             ('apicryptCheminFichierC', 'default', '/app/MedShakeEHR-base/workingDirectory/C/'),
