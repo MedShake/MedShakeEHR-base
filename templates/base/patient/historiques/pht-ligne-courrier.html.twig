@@ -39,11 +39,13 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}">
-        {% if cs.iconeType == 'update' and cs.fromID == user.id %}
-          <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
+        <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}"
+        {% if cs.iconeType == 'update' and ( cs.fromID == user.id  or user.rank == 'admin') %}
+          title="Editer">
+          <span class="fa fa-pencil-alt" aria-hidden="true"></span>
         {% else %}
-          <span class="fa fa-share" aria-hidden="true" title="Dupliquer"></span>
+          title="Dupliquer">
+          <span class="far fa-clone" aria-hidden="true"></span>
         {% endif %}
       </button>
 
@@ -104,7 +106,7 @@
             </li>
             <li class="d-inline-block d-lg-none">
               <a class="dropdown-item newCourrier" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}">
-                {% if cs.iconeType == 'update' and cs.fromID == user.id %}
+                {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
                   Editer
                 {% else %}
                   Dupliquer
@@ -151,7 +153,7 @@
               </li>
             {% endif %}
             <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
-            {% if cs.fromID == user.id %}
+            {% if cs.fromID == user.id or user.rank == 'admin' %}
               <li>
                 <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
                   {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
@@ -174,7 +176,7 @@
             <li>
               <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
             </li>
-            {% if cs.fromID == user.id %}
+            {% if cs.fromID == user.id or user.rank == 'admin' %}
               <li role="separator" class="dropdown-divider m-0"></li>
               <li>
                 <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
@@ -185,8 +187,8 @@
       </div>
     </td>
     <td>
-      <span class="d-none d-lg-inline">{{ cs.label }}{% if cs.titre %} : {% endif %}</span>
-      <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
+      <span class="d-none d-lg-inline">{{ cs.label }}</span>
+      <span class="alternatTitre{{ cs.id }}">{% if cs.titre is not empty %} : {{ cs.titre|e }}{% endif %}</span>
     </td>
     <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
     <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>

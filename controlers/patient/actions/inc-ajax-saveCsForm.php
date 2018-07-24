@@ -66,6 +66,16 @@ if ($validation === false) {
         $supportID=$patient->createNewObjet($_POST['csID'], '', $_POST['parentID']);
     }
 
+    // si on a un champ qui est déclaré pour l'autoTitle
+    if(isset($_POST['autoTitle'])) {
+      if(isset($_POST['p_'.$_POST['autoTitle']])) {
+        if(!empty($_POST['p_'.$_POST['autoTitle']])) {
+          $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
+        }
+      }
+
+    }
+
     //on traite chaque POST
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {
@@ -81,12 +91,12 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formIN]);
 
-    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-        $debug='';
-        //template
-        $template="pht-ligne-typecs";
-        $patient=new msPeople();
-        $patient->setToID($_POST['patientID']);
-        $p['cs']=$patient->getToday("limit 1")[0];
-    }
+    // générer le html de la ligne d'historique
+    $debug='';
+    //template
+    $template="pht-ligne-typecs";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
+    $p['cs']=$patient->getToday("limit 1")[0];
+
 }

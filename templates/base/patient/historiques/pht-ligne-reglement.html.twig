@@ -42,11 +42,13 @@
   <td>
     <div class="btn-group">
       {# edit #}
-      <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button">
+      <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button"
        {% if cs.iconeType == 'update' %}
-         <span class="fa fa-pencil-alt" aria-hidden="true" title="Editer"></span>
+          title="Editer">
+         <span class="fa fa-pencil-alt" aria-hidden="true"></span>
        {% else %}
-         <span class="fa fa-share" aria-hidden="true" title="Dupliquer"></span>
+          title="Dupliquer">
+         <span class="fa fa-share" aria-hidden="true"></span>
        {% endif %}
       </button>
       {# option #}
@@ -86,8 +88,8 @@
     </div>
   </td>
   <td>
-    <span class="d-none d-lg-inline">{{ cs.label }}{% if cs.titre %} : {% endif %}</span>
-    <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
+    <span class="d-none d-lg-inline">{{ cs.label }}</span>
+    <span class="alternatTitre{{ cs.id }}">{% if cs.titre is not empty %} : {{ cs.titre|e }}{% endif %}</span>
   </td>
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
   <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>

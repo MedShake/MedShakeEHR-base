@@ -127,7 +127,7 @@
             </li>
           {% endif %}
           <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
-          {% if cs.fromID == user.id %}
+          {% if cs.fromID == user.id or user.rank == 'admin' %}
             <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
                 {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
@@ -143,7 +143,7 @@
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
             </li>
           {% endif %}
-          {% if cs.fromID == user.id %}
+          {% if cs.fromID == user.id or user.rank == 'admin' %}
             <li role="separator" class="dropdown-divider m-0"></li>
             <li>
               <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
@@ -154,8 +154,8 @@
     </div>
   </td>
   <td>
-    <span class="d-none d-lg-inline">{{ cs.label }} {% if cs.docOrigine == 'interne' %}créé{% else %}reçu{% endif %}{% if cs.titre %}  : {% endif %}</span>
-    <span class="alternatTitre{{ cs.id }}">{{ cs.titre|e }}</span>
+    <span class="d-none d-lg-inline">{{ cs.label }} {% if cs.docOrigine == 'interne' %}créé{% else %}reçu{% endif %}</span>
+    <span class="alternatTitre{{ cs.id }}">{% if cs.titre is not empty %} : {{ cs.titre|e }}{% endif %}</span>
   </td>
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>
   <td class="d-lg-none">{{ cs.prenom|first }}. {{ cs.nom|first }}.</td>

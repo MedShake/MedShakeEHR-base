@@ -29,7 +29,7 @@
 
 $data=msSQL::sqlUnique("SELECT module, formValues as reglementForm FROM data_types WHERE id=".$_POST['porteur']);
 if (!in_array($data['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
-      $hook=$p['homepath'].'/controlers/module/'.$data['module'].'/compta/actions/inc-action-saveReglementForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$data['module'].'/compta/actions/inc-hook-saveReglementForm.php';
       if ($data['module']!='' and $data['module']!='base' and is_file($hook)) {
           include $hook;
       }
@@ -53,7 +53,7 @@ if (count($_POST)>0) {
 
     $important=array('id'=>$supportID, 'important'=>($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
-    
+
     if (($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) <= $_POST['apayer']) {
         $patient->createNewObjetByTypeName('regleCheque', $_POST['regleCheque']+$_POST['dejaCheque'], $supportID);
         $patient->createNewObjetByTypeName('regleCB', $_POST['regleCB']+$_POST['dejaCB'], $supportID);

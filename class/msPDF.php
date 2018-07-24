@@ -57,6 +57,10 @@ class msPDF
     private $_pageFooter;
     /** @var string lap : mode d'impression anonyme */
     private $_anonymeMode=FALSE;
+    /** @var string optimiser (reduction de taille) avec GhostScript */
+    private $_optimizeWihtGS=FALSE;
+    /** @var string dossier de template à utiliser */
+    private $_templatesPdfFolder;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -91,6 +95,8 @@ class msPDF
  */
     public function setFromID($v)
     {
+
+        $this->_templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', $user=array('id'=>$v, 'module'=>''));
         return $this->_fromID = $v;
     }
 
@@ -157,6 +163,14 @@ class msPDF
     }
 
 /**
+ * Définir le fait d'optimiser ou non le PDF final avec GhostScript
+ * @param boolean $v FALSE/TRUE
+ */
+    public function setOptimizeWithGS($v) {
+      return $this->_optimizeWihtGS = $v;
+    }
+
+/**
  * Construire un PDF à partir d'un numéro d'objet
  * @return void
  */
@@ -167,7 +181,7 @@ class msPDF
         }
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);
-        $this->_fromID=$data['fromID'];
+        $this->setFromID($data['fromID']);
         $this->_toID=$data['toID'];
         if($data['name'] == 'lapOrdonnance') {
             $this->_type="ordoLAP";
@@ -235,8 +249,16 @@ class msPDF
 
         $folder=msStockage::getFolder($this->_objetID);
         msTools::checkAndBuildTargetDir($p['config']['stockageLocation'].$folder.'/');
+        $finalFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
 
-        file_put_contents($p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf', $pdf);
+        if($this->_optimizeWihtGS == TRUE and msTools::commandExist('gs')) {
+          $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
+          file_put_contents($tempFile, $pdf);
+          exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$finalFile.' '.$tempFile);
+          unlink($tempFile);
+        } else {
+          file_put_contents($finalFile, $pdf);
+        }
 
         //sauver la copie en base
         $this->_savePrinted();
@@ -564,16 +586,16 @@ class msPDF
     public function makeWithTwig($template)
     {
         global $p;
-
-        if(isset($this->_lapPrintExigences)) {
-          $p['page']['lapPrintExigences']=$this->_lapPrintExigences;
+        if(isset($this->_templatesPdfFolder)) {
+          $templatesPdfFolder=$this->_templatesPdfFolder;
+        } else {
+          $templatesPdfFolder=$p['config']['templatesPdfFolder'];
         }
-
         // les variables d'environnement twig
         if(isset($p['config']['twigEnvironnementCache'])) $twigEnvironment['cache']=$p['config']['twigEnvironnementCache']; else $twigEnvironment['cache']=false;
         if(isset($p['config']['twigEnvironnementAutoescape'])) $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape']; else $twigEnvironment['autoescape']=false;
 
-        $loaderPDF = new Twig_Loader_Filesystem($p['config']['templatesPdfFolder']);
+        $loaderPDF = new Twig_Loader_Filesystem($templatesPdfFolder);
         $twigPDF = new Twig_Environment($loaderPDF, $twigEnvironment);
         $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');

@@ -193,7 +193,7 @@ public function getToID()
     public function getCompleteObjetDataByID($id)
     {
         $docTypeID = msData::getTypeIDFromName('docType');
-        return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, doc.value as ext
+        return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, t.module, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
         left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
@@ -526,6 +526,28 @@ public function getToID()
           }
         } else {
           return false;
+        }
+      }
+      return false;
+    }
+
+/**
+ * Obtenir la liste des ID pour un type donnée et un patient donné
+ * @param  string $name name du type
+ * @return array       tableau id=>date création
+ */
+    public function getListObjetsIdFromName($name) {
+      if (!isset($this->_toID)) {
+          throw new Exception('toID is not defined');
+      }
+      $name2typeID=new msData;
+
+      if($name2typeID=$name2typeID->getTypeIDsFromName([$name])) {
+        if($data=msSQL::sql2tabKey("select pd.id, pd.creationDate
+        from objets_data as pd
+        where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated=''
+        order by  pd.creationDate", 'id', 'creationDate')) {
+          return $data;
         }
       }
       return false;

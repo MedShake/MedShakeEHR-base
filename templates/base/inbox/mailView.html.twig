@@ -87,7 +87,7 @@
                 </tr>
                 {% for k, v in page.mail.patientsPossibles %}
 
-                    <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}">
+                    <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}" {% if v.patientType == 'deleted' %}style="text-decoration: line-through"{% endif %}>
                         <td>#{{ v.id }}</td>
                         <td>
                           {% if v.1 and v.2 %}

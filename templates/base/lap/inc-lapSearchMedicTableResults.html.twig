@@ -26,8 +26,19 @@
  #
 #}
 
-{% if page.medicListeSpe | length > 0 %}
-<div class="col-md-12 text-right" style="margin-bottom : 3px;">
+
+
+{% if page.listeIndics|length > 0 %}
+<div class="col-md-12 modalListeIndications">
+    Choisir l'indication :<br>
+  {% for indic, codes in page.listeIndics %}
+    <button type="button" class="btn btn-sm btn-secondary my-1 searchIndic" data-codes="{{ codes|join(',')}}">{{ indic }}</button>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if page.medicListeSpe|length > 0 %}
+<div class="col-md-12 text-right mb-1">
   <button class="btn btn-light btn-sm approRecherche" data-codesSpe="{{ page.listeCodeSpeTrouve|join(',') }}">Détailler ces résultats</button>
 </div>
 {% endif %}
@@ -86,7 +97,7 @@
         {% endfor %}
       </tbody>
     </table>
-  {% else %}
+  {% elseif page.listeIndics is not defined or page.listeIndics is empty %}
     <div class="alert alert-warning" role="alert">Votre recherche n'a produit aucun résultats</div>
   {% endif %}
 </div>

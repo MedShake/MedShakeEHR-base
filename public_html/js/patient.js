@@ -55,6 +55,17 @@ var goToDicom = false;
 
 $(document).ready(function() {
   refreshHistorique();
+  $('.historiqueMedicalComplet .anneeHistorique').each(function(idx, el) {
+    if (!idx) {
+      $(el).find('.fa-minus-square').show();
+      $(el).find('.fa-plus-square').hide();
+      $($(el).attr('data-target')).collapse('show');
+    } else {
+      $(el).find('.fa-minus-square').hide();
+      $(el).find('.fa-plus-square').show();
+      $($(el).attr('data-target')).collapse('hide');
+    }
+  });
   refreshHistoriqueToday();
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
@@ -645,6 +656,9 @@ $(document).ready(function() {
         } else {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
+            $tr.find('.fa-minus-square').show();
+            $tr.find('.fa-plus-square').hide();
+            $($tr.attr('data-target')).collapse('show');
             var $l = $("#historique tr.tr" + objetid);
             if (objetid && $l.length)
               $l.replaceWith(data);
@@ -962,7 +976,13 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      if($.isArray(scriptsList.reglement)) {
+        $.each(scriptsList.reglement, function(index, value) {
+          $.getScriptOnce(urlBase + "/js/patientScripts/" + value);
+        });
+      } else {
+        $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.reglement);
+      }
       if (el.hasClass('editReglement')) {
         //reinjection pour édition
         $(".regleTarifCejour").attr('data-tarifdefaut', $(".regleTarifCejour").val());
@@ -1323,7 +1343,12 @@ function modalAlternateTitreChange() {
     },
     dataType: "html",
     success: function() {
-      $('.alternatTitre' + objetID).html(' : ' + titreActu);
+      if(titreActu.length > 0) {
+        $('.alternatTitre' + objetID).html(' : ' + titreActu);
+      } else {
+        $('.alternatTitre' + objetID).html('');
+      }
+      $('.alternatTitre' + objetID).parents('tr.trLigneExamen').attr('data-alternatTitre', titreActu);
       $('#alternatTitreModal').modal('toggle');
     },
     error: function() {
@@ -1375,7 +1400,7 @@ function showObjetDet(element, timed) {
 
   if (destination.length == 0) {
     if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
-      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="text-right"><button class="btn btn-secondary btn-sm renouvToutesLignes mb-1" type="button" title="Renouveler"><i class="fa fa-sync-alt" aria-hidden="true"></i> Tout renouveler</button></div><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
       voirOrdonnanceMode = 'voirOrdonnance';
       getOrdonnance(objetID, "." + zone + " .detObjet" + objetID + ' td.placeForOrdoLap');
     } else {
@@ -1413,17 +1438,7 @@ function refreshHistorique() {
     $('.historiqueMedicalComplet').hide();
     return;
   }
-  $('.historiqueMedicalComplet').show().find('.anneeHistorique').each(function(idx, el) {
-    if (!idx) {
-      $(el).find('.fa-minus-square').show();
-      $(el).find('.fa-plus-square').hide();
-      $($(el).attr('data-target')).collapse('show');
-    } else {
-      $(el).find('.fa-minus-square').hide();
-      $(el).find('.fa-plus-square').show();
-      $($(el).attr('data-target')).collapse('hide');
-    }
-  });
+  $('.historiqueMedicalComplet').show();
 }
 
 /**

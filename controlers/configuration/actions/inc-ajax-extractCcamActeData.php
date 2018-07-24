@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,21 +21,11 @@
  */
 
 /**
- * Patient > ajax : générer le header du dossier patient (infos administratives)
+ * Config > ajax : extraire les infos sur un acte CCAM
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-ajax-patientAdminData";
-
-//le patient
-$patient = new msPeople();
-$patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
-$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
-
-//les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+$scrap = new msCcamWebScraping;
+$scrap->setCodeActe($_POST['codeActe']);
+echo json_encode($scrap->getActeData());

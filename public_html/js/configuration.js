@@ -411,7 +411,7 @@ $(document).ready(function() {
     url: urlBase + '/configuration/ajax/configInstallModule/',
     extFilter: ["zip"],
     maxFiles: 1,
-    allowedTypes: "application/zip",
+    allowedTypes: "application/(zip|x-zip-compressed)",
     dataType: 'html',
     onUploadSuccess: function() {
       console.log('fichier envoyé');
@@ -447,6 +447,46 @@ $(document).ready(function() {
       $("#errormessage").html(errorThrown);
       $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
     }
+  });
+
+  // importer les datas d'un acte CCAM
+  $(".importFromAmeliCCAM").on("click", function(e){
+    e.preventDefault();
+    codeActe=$('.modal input[name="code"]').val();
+
+    if(codeActe.length != 7) {
+      alert('Le code inséré n\'est pas un code d\'acte CCAM valide !');
+      return;
+    }
+
+    $.ajax({
+      url: urlBase+"/configuration/ajax/extractCcamActeData/",
+      type: 'post',
+      data: {
+        codeActe: codeActe
+      },
+      dataType: "json",
+      success: function(data) {
+        $('.modal input[name="label"]').val(data.label);
+        $('.modal input[name="tarifs1"]').val(data.tarifs1);
+        $('.modal input[name="tarifs2"]').val(data.tarifs2);
+        $('.modal select[name="type"]').find('option[value="CCAM"]').prop("selected", "selected");
+        console.log(data.modificateurs);
+        $.each(['F', 'P', 'S', 'M', 'R', 'D', 'E', 'C', 'U'], function( index, value ) {
+          if(data.modificateurs.indexOf(value) != -1) {
+            console.log(value + ' applicable');
+            $('.modal select[name="'+ value +'"]').find('option[value="true"]').prop("selected", "selected");
+          } else {
+            console.log(value + ' non applicable');
+            $('.modal select[name="'+ value +'"]').find('option[value="false"]').prop("selected", "selected");
+          }
+        });
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+
+      }
+    });
   });
 
 });

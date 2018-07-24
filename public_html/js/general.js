@@ -88,6 +88,7 @@ $(document).ready(function() {
       locale: 'fr',
       viewMode: viewMode,
       format: 'L',
+      useCurrent: false,
       icons: {
         time: 'far fa-clock',
         date: 'fa fa-calendar',
@@ -431,6 +432,22 @@ function downloadCSV(csv, filename) {
     // Click download link
     downloadLink.click();
 }
+
+/**
+ * Parser le JSON si correct, false sinon
+ * @param  {string} jsonString json string à parser
+ * @return {mixte}            json ou false
+ */
+function tryParseJSON(jsonString){
+    try {
+        var o = JSON.parse(jsonString);
+        if (o && typeof o === "object") {
+            return o;
+        }
+    }
+    catch (e) { }
+    return false;
+};
 
 /**
  * Make csv file from html table

@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : extraire l'éditeur de courrier
+ * Patient > ajax : extraire l'historique pour le dossier patient
  *
  * @author fr33z00 <https://github.com/fr33z00>
  */
@@ -39,4 +39,3 @@ $p['page']['patient']['id']=$_POST['patientID'];
 
 //historique complet des consultation du patient
 $p['page']['patient']['historique']=$patient->getHistorique();
-

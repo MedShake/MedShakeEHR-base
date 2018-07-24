@@ -59,5 +59,9 @@
          $form = new msForm();
          $form->setFormID($match['params']['form']);
          $p['page']['form']=$form->getForm();
+
+         $p['page']['basicTemplateCode']=$form->getFlatBasicTemplateCode();
+         $sqlGen = new msSqlGenerate;
+         $p['page']['sqlCode']=$sqlGen->getSqlForForm($form->getFormIN());
      }
  }

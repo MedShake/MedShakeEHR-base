@@ -17,15 +17,26 @@ CREATE TABLE IF NOT EXISTS `actes` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `actes_base` (
-  `id` mediumint(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `code` varchar(7) NOT NULL,
-  `label` varchar(255) DEFAULT NULL,
-  `type` enum('NGAP','CCAM', 'Libre') NOT NULL DEFAULT 'CCAM',
-  `tarifs1` float DEFAULT NULL,
-  `tarifs2` float DEFAULT NULL,
-  `fromID` mediumint(7) UNSIGNED NOT NULL DEFAULT '1',
-  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `code` (`code`)
+ `id` mediumint(6) unsigned NOT NULL AUTO_INCREMENT,
+ `code` varchar(7) NOT NULL,
+ `label` varchar(255) DEFAULT NULL,
+ `type` enum('NGAP','CCAM','Libre','mCCAM') NOT NULL DEFAULT 'CCAM',
+ `tarifs1` float DEFAULT NULL,
+ `tarifs2` float DEFAULT NULL,
+ `tarifUnit` enum('euro','pourcent') NOT NULL DEFAULT 'euro',
+ `F` enum('false','true') NOT NULL DEFAULT 'false',
+ `P` enum('false','true') NOT NULL DEFAULT 'false',
+ `S` enum('false','true') NOT NULL DEFAULT 'false',
+ `M` enum('false','true') NOT NULL DEFAULT 'false',
+ `R` enum('false','true') NOT NULL DEFAULT 'false',
+ `D` enum('false','true') NOT NULL DEFAULT 'false',
+ `E` enum('false','true') NOT NULL DEFAULT 'false',
+ `C` enum('false','true') NOT NULL DEFAULT 'false',
+ `U` enum('false','true') NOT NULL DEFAULT 'false',
+ `fromID` mediumint(7) unsigned NOT NULL DEFAULT '1',
+ `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `code` (`code`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `actes_cat` (
@@ -148,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `forms_cat` (
  `creationDate` datetime NOT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `form_basic_types` (
   `id` int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -267,19 +278,19 @@ CREATE TABLE IF NOT EXISTS `prescriptions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL,
-  `label` varchar(60) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `creationDate` datetime NOT NULL,
-  `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+ `id` smallint(5) NOT NULL AUTO_INCREMENT,
+ `name` varchar(60) NOT NULL,
+ `label` varchar(60) NOT NULL,
+ `description` varchar(255) NOT NULL,
+ `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
+ `fromID` smallint(5) unsigned NOT NULL,
+ `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
+ `creationDate` datetime NOT NULL,
+ `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `name` (`name`),
+ KEY `displayOrder` (`displayOrder`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `printed` (
  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -397,12 +408,12 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (21, 'admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', 26, 1, '2018-01-01 00:00:00', 3600, 1),
 (22, 'admin', 'othersfirstname', 'liste des prénoms secondaires', 'Autres prénoms', 'Les autres prénoms d\'une personne', '', '', 'text', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
 (32, 'typecs', 'csBaseGroup', '', 'Consultation', 'support parent pour les consultations', '', '', '', 'baseConsult', 'base', 33, 1, '2018-01-01 00:00:00', 86400, 1),
-(34, 'medical', 'poids', 'kg', 'Poids', 'poids du patient', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
-(35, 'medical', 'taillePatient', 'cm', 'Taille', 'taille du patient', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
+(34, 'medical', 'poids', '', 'Poids', 'poids du patient en kg', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
+(35, 'medical', 'taillePatient', '', 'Taille', 'taille du patient en cm', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (38, 'medical', 'atcdFamiliaux', 'Antécédents familiaux', 'Antécédents familiaux', 'Antécédents familiaux', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (41, 'medical', 'atcdMedicChir', 'Antécédents médico-chirugicaux personnels', 'Antécédents médico-chirugicaux', 'Antécédents médico-chirugicaux personnels', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (42, 'medical', 'toxiques', 'tabac et drogues', 'Toxiques', 'habitudes de consommation', '', '', 'text', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
-(43, 'medical', 'imc', 'imc', 'IMC', 'IMC (autocalcule)', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
+(43, 'medical', 'imc', '', 'IMC', 'IMC (autocalcule)', '', '', 'text', '', 'base', 28, 1, '2018-01-01 00:00:00', 3600, 1),
 (44, 'typecs', 'nouvelleGrossesse', '', 'Nouvelle grossesse', 'support parent pour nouvelle grossesse', '', '', '', '', 'base', 57, 1, '2018-01-01 00:00:00', 86400, 1),
 (45, 'medical', 'groFermetureSuivi', '', 'Fermeture de la grossesse', 'date de fermeture de la grossesse (porteur)', '', '', 'text', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
 (46, 'medical', 'DDR', 'ddr', 'DDR', 'date des dernières règles', '', 'validedate,\'d/m/Y\'', 'date', '', 'base', 4, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -454,6 +465,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (201, 'reglement', 'regleModulCejour', '', 'Modulation', 'modulation appliquée ce jour', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (202, 'reglement', 'regleTiersPayeur', '', 'Tiers', 'part du tiers', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (205, 'reglement', 'regleIdentiteCheque', 'n° de chèque, nom du payeur si différent du patient,...', 'Informations paiement', 'Information complémentaires sur le paiement', '', '', 'text', '', 'base', 46, 1, '2018-01-01 00:00:00', 1576800000, 1),
+(206, 'reglement', 'regleDetailsActes', '', 'Détails des actes', 'détails des actes de la facture', '', '', 'text', '', 'base', 46, 1, '2018-07-04 15:31:47', 1576800000, 1),
 (247, 'admin', 'mobilePhonePro', '06 xx xx xx xx', 'Téléphone mobile pro.', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile pro est incorrect', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
 (248, 'admin', 'telPro2', 'téléphone professionnel 2', 'Téléphone professionnel 2', 'Téléphone pro. 2', 'phone', '', 'tel', '', 'base', 24, 1, '2018-01-01 00:00:00', 3600, 1),
 (249, 'admin', 'serviceAdressePro', 'service', 'Service', 'Adresse pro : service', '', '', 'text', '', 'base', 47, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -480,7 +492,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (506, 'medical', 'baseSynthese', 'synthèse sur le patient', 'Synthèse patient', 'Synthèse sur le patient', '', '', 'textarea', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (514, 'relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', 63, 1, '2018-01-01 00:00:00', 1576800000, 1),
 (516, 'admin', 'deathdate', 'décès: dd/mm/YYYY', 'Date de décès', 'Date de décès au format dd/mm/YYYY', 'validedate,\'d/m/Y\'', 'La date de décès indiquée n\'est pas valide', 'date', '', 'base', 1, 1, '2018-01-01 00:00:00', 3600, 1),
-(517, 'medical', 'clairanceCreatinine', 'ml/min', 'Clairance créatinine', 'clairance de la créatinine', '', '', 'text', '', 'base', 31, 1, '2018-01-01 00:00:00', 3600, 1),
+(517, 'medical', 'clairanceCreatinine', '', 'Clairance créatinine', 'clairance de la créatinine en mL/min', '', '', 'text', '', 'base', 31, 1, '2018-01-01 00:00:00', 3600, 1),
 (518, 'medical', 'allaitementActuel', '', 'Allaitement', 'allaitement actuel', '', '', 'text', '', 'base', 29, 1, '2018-01-01 00:00:00', 3600, 1),
 (519, 'medical', 'insuffisanceHepatique', '', 'Insuffisance hépatique', 'degré d\'insuffisance hépatique', '', '', 'select', '\'z\': "?"\n\'n\': "Pas d\'insuffisance hépatique connue"\n\'1\': \'Légère\'\n\'2\': \'Modérée\'\n\'3\': \'Sévère\'', 'base', 29, 3, '2018-01-01 00:00:00', 3600, 1),
 (520, 'user', 'lapAlertPatientTermeGrossesseSup46', '', 'lapAlertPatientTermeGrossesseSup46', 'alerte pour terme de grossesse supérieur à 46SA', '', '', 'checkbox', '', 'base', 72, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -594,6 +606,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('PraticienPeutEtrePatient', 'Options', 'default', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'Options', 'default', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
 ('administratifSecteurHonoraires', 'Options', 'default', 'vide/1/2', 'vide pour non conventionné', '1'),
+('administratifSecteurIK', 'Options', 'default', 'texte', 'tarification des IK : indiquer plaine ou montagne', 'plaine'),
 ('administratifPeutAvoirFacturesTypes', 'Options', 'default', 'true/false', 'peut avoir des factures types à son nom', 'false'),
 ('administratifPeutAvoirPrescriptionsTypes', 'Options', 'default', 'true/false', 'peut avoir des prescriptions types à son nom', 'false'),
 ('administratifPeutAvoirAgenda', 'Options', 'default', 'true/false', 'peut avoir un agenda à son nom', 'true'),
@@ -689,4 +702,4 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v4.0.0');
+ (2, 'base', 'module', 'v4.1.0');

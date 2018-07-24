@@ -35,8 +35,9 @@ $acceptedModes=array(
     'getAutocompleteFormValues', // Autocomplete des forms
     'getAutocompleteLinkType', // Autocomplete plus évolué
     'setPeopleData', // Enregistrer des données patient
-    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée 
-    'mailTracking' // Retourner les infos de tracking d'un mail
+    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée
+    'mailTracking', // Retourner les infos de tracking d'un mail
+    'getAutocompleteCodeNgapOrCcamData' // Retourner les infos sur un acte NGAP ou CCAM
 );
 
 if (!in_array($m, $acceptedModes)) {

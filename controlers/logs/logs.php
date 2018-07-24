@@ -33,7 +33,8 @@ $template="logs";
 if (isset($match['params']['patient'])) {
     $patientSel=" and pd.toID='".$match['params']['patient']."'";
 } else {
-    $patientSel=null;
+    $listeId = msSQL::sql2tabSimple("select id from objets_data order by id desc limit 2000");
+    $patientSel=" and pd.id in (".implode(", ", $listeId ).")";
 }
 if (isset($match['params']['typeID'])) {
     $typeSel=" and pd.typeID='".$match['params']['typeID']."'";
@@ -56,7 +57,6 @@ left join data_types as t on t.id=pd.typeID
 where 1 $patientSel $typeSel $instance
 group by pd.id,t.id, f.id, b.id, l.id
 order by id desc limit 2000");
-
 
 
 if (isset($match['params']['patient'])) {

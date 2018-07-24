@@ -202,13 +202,23 @@ class msData
     }
 
 /**
+ * Obtenir le cat name à partir du cat id
+ * @param  int $id de la catégorie
+ * @return string     name
+ */
+    public static function getCatNameFromCatID($id)
+    {
+        return msSQL::sqlUniqueChamp("select name from data_cat where id = '".$id."' ");
+    }
+
+/**
  * sortir pour les data de type select un tableau key=>$value pour chaque item option
  * @param  array $typeIDsArray les typeID concernés
  * @return array               Array ('720'=> 'A' : 'plus', 'B' => 'moins')
  */
     public function getSelectOptionValue($typeIDsArray)
     {
-        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType='select' and id in ('".implode("', '", $typeIDsArray)."')", "id", "formValues");
+        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in ('".implode("', '", $typeIDsArray)."')", "id", "formValues");
         if (is_array($tab)) {
             foreach ($tab as $k=>$v) {
                 $tab[$k]=Spyc::YAMLLoad($v);

@@ -28,7 +28,7 @@
  */
 
 if ($_POST['ordoForm']!='') {
-      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-ajax-saveOrdoForm.php';
+      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-hook-saveOrdoForm.php';
       if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
           include $hook;
       }
@@ -46,10 +46,19 @@ if (count($_POST)>2) {
     }
 
     //support
-    if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '', '0', '0', $_POST['objetID']);
+    if(isset($_POST['porteur'])) {
+      if(is_numeric($_POST['porteur'])) {
+        $porteurName=msData::getNameFromTypeID($_POST['porteur']);
+      } else {
+        $porteurName=$_POST['porteur'];
+      }
     } else {
-        $supportID=$patient->createNewObjetByTypeName('ordoPorteur', '');
+      $porteurName='ordoPorteur';
+    }
+    if (isset($_POST['objetID'])) {
+        $supportID=$patient->createNewObjetByTypeName($porteurName, '', '0', '0', $_POST['objetID']);
+    } else {
+        $supportID=$patient->createNewObjetByTypeName($porteurName, '');
     }
 
     // pour plus de clarté  ...

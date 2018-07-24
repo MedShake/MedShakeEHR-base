@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,21 +21,20 @@
  */
 
 /**
- * Patient > ajax : générer le header du dossier patient (infos administratives)
+ * Requêtes AJAX > retourner les infos sur les actes NGAP / CCAM correspondant à la recherche texte
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-ajax-patientAdminData";
-
-//le patient
-$patient = new msPeople();
-$patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
-$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
-
-//les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+$reg = new msReglement;
+if($data = $reg->getActeDataFromTerm($_GET['term'])) {
+  foreach($data as $k=>$v) {
+    $data[$k]['labelo'] = $v['label'];
+    $data[$k]['label'] = $v['code'].' '.$v['label'];
+    $data[$k]['base'] = $data[$k]['tarif'] = $data[$k]['total'] = $v['tarifs1'];
+    $data[$k]['pourcents'] = '100';
+    $data[$k]['depassement'] = '0';
+    $data[$k]['codeAsso'] = '';
+  }
+}
+exit(json_encode($data));
