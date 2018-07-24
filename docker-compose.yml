@@ -25,6 +25,10 @@ services:
             - ~/ehr/data:/var/lib/mysql
 #        ports:
 #            - "3306:3306"
+        command:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
         environment:
             - MYSQL_ROOT_PASSWORD=${EHR_DBMS_ROOT_PASSWORD}
             - MYSQL_DATABASE=${EHR_DBMS_NAME}
