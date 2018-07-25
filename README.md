@@ -26,8 +26,8 @@ La configuration complète du logiciel est documentée sur le site [www.logiciel
 
 # Docker Install / Installation Docker
 
-WARNING : the docker image required server name and password to be given. If you decided not to follow the procedure, make sure to set the expected environement variables (cf. the docker-compose.yml)
-ATTENTION : cette configuration docker contient des mots de passes par défaut. Vous devez changer tous les mots de passe avant l'utilisation.
+WARNING : The docker configuration requires various environment variables to be set (server name, password ...). If you decided not to follow the procedure, make sure to set the expected environement variables (cf. the docker-compose.yml)
+ATTENTION : La configuration Docker requiert le positionnement de variables d'environements (nom de serveur, mot de passe ...). Si vous décidez de ne pas suivre la procédure, assurez-vous de positionner ces variables (cf. docker-compose.yml).
 
 1- Install Git and Docker as per their documentation for your platform. For instance on Ubuntu :
 1- Installer GIT & Docker selon les instruction de votre plateforme. Par exemple sous Ubuntu :
@@ -52,8 +52,9 @@ Tant que la demande d'intégration #32 n'est pas actée, vous devez effectuer à
 
 >cd MedShakeEHR-base
 
-4- Define the required environement variables. Only EHR_SERVER_NAME is mandatory to be set as the real FQDN for the hostname. Password related variable values MUST be changed :
-4- Definir les variables d'environement requises. Seul EHR_SERVER_NAME doit obligatoirement être positionée. Les valeurs des variables relative aux mots de passe doivent également être changées :
+4- Define (export) the required environement variables. Only EHR_SERVER_NAME is mandatory to be set as the real FQDN for the hostname.
+4- Definir (export) les variables d'environement requises. Seul EHR_SERVER_NAME doit obligatoirement être positionée.
+
   - EHR_SERVER_NAME  : Nom du server / Name of the server
   - EHR_SERVER_ALIAS : Alias web / Web alias
   - EHR_DBMS_NAME : Nom de la base / Name of the database
@@ -68,8 +69,8 @@ Tant que la demande d'intégration #32 n'est pas actée, vous devez effectuer à
 
 > . docker-ehr-config.sh
 
-WARNING : please not the dot and space before the command that are mandatory to enable the spreading of the environement variables.
-NB: Veuillez noter le point et l'espace avant la commande qui sont obligatoire pour permettre la bonne propagation des variables d'environements.
+NOTE : The dot and space before the command are mandatory to enable the spreading of the environement variables. Please save all the generated data at a proper location to enable a potential reuse.
+NB: Le point et l'espace avant la commande sont obligatoires pour permettre la bonne propagation des variables d'environements. Veuillez sauvegarder toutes les données générées à un endroit adapté pour permettre un usage éventuel.
 
 6- Prepare the local filesystem to store the valuable data
 6- Prepare le système de fichier local pour le stocker des données clés
@@ -114,6 +115,9 @@ From another terminal, access the "web" container's shell (here the db) :
 Depuis un autre terminal, accèder à l'invite du conteneur "web" (ici le db)
 
 > docker exec -it medshakeehrbase_web_1 /bin/bash
+
+NOTE : most changes on files  will not be retained if starting a new container fresh from the image.
+NB : la plus part des changements sur des fichiers ne seront pas concervés si un nouveau conteneur est créé à partir de l'impage.
 
 # Single container Install / Installation dans un conteneur unique
 
