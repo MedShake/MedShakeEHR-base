@@ -26,18 +26,26 @@ La configuration complète du logiciel est documentée sur le site [www.logiciel
 
 # Docker Install / Installation Docker
 
-WARNING : the generated docker config contain default password. You must change all the passwords before use.
+WARNING : the docker image required server name and password to be given. If you decided not to follow the procedure, make sure to set the expected environement variables (cf. the docker-compose.yml)
 ATTENTION : cette configuration docker contient des mots de passes par défaut. Vous devez changer tous les mots de passe avant l'utilisation.
 
-1- Install Git and Docker, for instance with Ubuntu :
-1- Installer GIT & Docker, par exemple sous Ubuntu :
+1- Install Git and Docker as per their documentation for your platform. For instance on Ubuntu :
+1- Installer GIT & Docker selon les instruction de votre plateforme. Par exemple sous Ubuntu :
 
 >sudo apt install git docker.io docker-compose
 
-2- Fetch/clone the desired version of EHR (here the latest):
-2- Récupérer la version souhaitée de EHR (ici la dernière):
+NOTE : The version on the Ubuntu repository are usually a bit old. If you experience issues, check with the latest release.
+NB: Les version disponibles danes les dépots Ubuntu sont souvent anciens. Si vous rencontrez des difficutlés, vérifiez avec des versions plus récentes.
+
+2- Fetch/clone the desired version of EHR that is Docker compatible (here the latest):
+2- Récupérer la version souhaitée de EHR qui soit compatible Docker (ici la dernière):
 
 >git clone https://github.com/MedShake/MedShakeEHR-base.git
+
+Until the pull request #32 is not done, you shall get instead :
+Tant que la demande d'intégration #32 n'est pas actée, vous devez effectuer à la place :
+
+>git clone https://github.com/bugeaud/MedShakeEHR-base.git
 
 3- Enter the folder
 3- Entrer dans le répertoire
@@ -109,7 +117,7 @@ Depuis un autre terminal, accèder à l'invite du conteneur "web" (ici le db)
 
 # Single container Install / Installation dans un conteneur unique
 
-There is also a Docker-in-Docker (dind) single container configuration existing thru the Dockerfile file.
+There is also an alpha Docker-in-Docker (dind) single container configuration existing thru the Dockerfile file.
 Il existe également une installation Docker-in-Docker (dind) de disponible via le fichier Dockerfile.
 
 To use it follow the docker's procedure, but at step 8 instead of launching docker-compose :
