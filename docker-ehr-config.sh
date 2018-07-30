@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Perform the configuration duty, it consist of two steps :
 #   1- Environment variable checking and initialization with default values
