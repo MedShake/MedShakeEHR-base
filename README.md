@@ -24,7 +24,7 @@ Chaque paramètre peut être surchargé au niveau utilisateur.
 
 La configuration complète du logiciel est documentée sur le site [www.logiciel-cabinet-medical.fr](http://www.logiciel-cabinet-medical.fr/) à la rubrique [Documentation technique](http://www.logiciel-cabinet-medical.fr/documentation-technique/).
 
-# Docker Install / Installation Docker
+## Docker Image Build / Construction d'image Docker
 
 WARNING : The docker configuration requires various environment variables to be set (server name, password ...). If you decided not to follow the procedure, make sure to set the expected environement variables (cf. the docker-compose.yml)
 ATTENTION : La configuration Docker requiert le positionnement de variables d'environements (nom de serveur, mot de passe ...). Si vous décidez de ne pas suivre la procédure, assurez-vous de positionner ces variables (cf. docker-compose.yml).
@@ -95,6 +95,15 @@ NB: Le point et l'espace avant la commande sont obligatoires pour permettre la b
 Follow the instructions there ...
 Y suivre les instructions ...
 
+## Docker Compose
+
+A ready to use Docker Compose setup is propose with the following containers :
+Une configuration Docker Compose prête à l'emploi est proposée qui dispose des conteneurs suivants :
+- db : the DBMS for EHR / le SGBD de EHR
+- web : the web front / le frontal web
+
+An additional myadmin container can be enabled to perform some database maintenance duty.
+Un conteneur myadmin additionel peut être activé pour effectuer des tâches de maintenances sur la base.
 
 To start the containers
 Pour démarrer les conteneurs
@@ -119,7 +128,7 @@ Depuis un autre terminal, accèder à l'invite du conteneur "web" (ici le db)
 NOTE : most changes on files  will not be retained if starting a new container fresh from the image.
 NB : la plus part des changements sur des fichiers ne seront pas concervés si un nouveau conteneur est créé à partir de l'impage.
 
-# Single container Install / Installation dans un conteneur unique
+## Single container Install / Installation dans un conteneur unique
 
 There is also an alpha Docker-in-Docker (dind) single container configuration existing thru the Dockerfile file.
 Il existe également une installation Docker-in-Docker (dind) de disponible via le fichier Dockerfile.
