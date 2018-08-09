@@ -88,14 +88,28 @@ removeEnvSubstInstance() {
  done
 }
 
+copyGeneratedEnv(){
+ if [ -e  ~/ehr/env.sh ]; then
+  echo "$(tput setaf 11)WARN$(tput sgr0) ~/ehr/env.sh is already existing. We will not overwrite it to keep this existing configuration safe. To get a new configuration beeing generated, you will need to empty all ~/ehr first." 
+ else
+  cp config/env.sh ~/ehr/env.sh
+  echo "$(tput setaf 10)DONE$(tput sgr0) env.sh containing the default env variable values is now saved as ~/ehr/env.sh"
+ fi
+}
+
 clean(){
  cleanEnv
+ removeEnvSubstInstance
+}
+
+cleanNoEnv(){
  removeEnvSubstInstance
 }
 
 init(){
  initEnv
  replaceEnvSubst
+ copyGeneratedEnv
 }
 
 calledProcedure=${1:-init}

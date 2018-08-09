@@ -1,6 +1,6 @@
 #!/bin/sh
 # Prepare some local folder structure to ensure volume sharing with containers
-mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var
+mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var ~/ehr/security/ca ~/ehr/dicom/
 echo "$(tput setaf 10)DONE$(tput sgr0) File structure checked"
 # Make sure that some classic DNS are use to make Docker's DNS behave as expected
 # See https://github.com/michaelgrosner/tribeca/issues/184

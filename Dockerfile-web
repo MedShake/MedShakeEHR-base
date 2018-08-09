@@ -39,14 +39,15 @@ RUN apt --assume-yes install libapache2-mod-php
 # Let's install prerequisites for the alternative pdftk 
 RUN apt --assume-yes install git openjdk-8-jdk ant libcommons-lang3-java libbcprov-java gradle
 # If gradle is used for build add : gradle
-# If latest JDK use : default-jdk-headless
+# If latest JDK use default-jdk-headless as a JDK
 # If ANT based setup install would need : ant libcommons-lang3-java libbcprov-java
 # Get the latest alternative pdftk, build it & check if help can be displayed
+# Solution 1 : use ant
 #RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
 #	&& cd pdftk \
 #	&& ant -lib /usr/share/java jar \
 #	&& java -jar build/jar/pdftk.jar --help
-
+# Solution 2 : use Gradle (the new default)
 RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
        && cd pdftk \
        && gradle shadowJar \
@@ -54,23 +55,23 @@ RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
 
 WORKDIR $APP_PATH
 
-# Fetch the latest MedShakeEHR Base
-#RUN git clone https://github.com/MedShake/MedShakeEHR-base.git
-
-# Get & install composer 1.6.5
+# Get & install PHP Composer
+# First install curl as it is required anyway to fetch extensions 
 RUN apt --assume-yes install curl
+# Solution 1 : PHAR download
 #RUN curl -sf -L https://getcomposer.org/download/1.6.5/composer.phar \
 #	&& chmod 0774 /tmp/composer.phar \
 #	&& php /tmp/composer.phar install
-
+# Solution 2 : Setup script (Composer recommanded way)
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 
-
-# Test the composer
-RUN php composer.phar --version --no-interaction
+# Test the composer & set that root exec is fine as we are in a container
+# Let's suppress the warning we are using root as we are inside Docker
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN php composer.phar --version --no-interaction 
 
 # Fetch the PHP Extension installer for Docker
 RUN curl -sf -L -O https://github.com/docker-library/php/blob/master/docker-php-ext-install \
@@ -81,13 +82,9 @@ RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-z
 
 # Install the MedShakeEHR Base PhP's dependencies
 RUN php composer.phar install -d ./MedShakeEHR-base
-#WORKDIR $MEDSHAKEEHRPATH
-#RUN php composer.phar intall
 
 # Install MedShakeEHR's Web dependencies
-#WORKDIR $MEDSHAKEEHRPUBLICPATH
 RUN php composer.phar install -d ./MedShakeEHR-base/public_html
-#RUN php composer.phar install
 
 WORKDIR $APP_PATH
 # Check which .ini files are used
@@ -95,7 +92,6 @@ RUN php --ini
 
 # Install npm
 RUN apt-get install -y -qq npm
-#RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Install bower
 RUN npm install --global bower
@@ -112,7 +108,6 @@ RUN bower install -V
 
 # Create the Apache 2 configuration for the MedShake EHR application
 COPY medshakeehr.conf /etc/apache2/sites-available/
-#RUN  envsubst < $MEDSHAKEEHRPATH/medshakeehr.conf > /etc/apache2/sites-available/medshakeehr.conf
 
 #Enable URL rewriting
 RUN a2enmod rewrite
@@ -128,4 +123,3 @@ CMD docker-ehr-web-apache2-foreground
 
 EXPOSE 80/tcp
 EXPOSE 443/tcp
-
