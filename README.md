@@ -64,18 +64,18 @@ Tant que la demande d'intégration #32 n'est pas actée, vous devez effectuer à
   - EHR_DBMS_VAR : Some random data used at the dbms level
   - EHR_FINGERPRINT : Some random data used at the web level
 
-5- Initialize legacy configuration files with environement variables set :
-5- Initialiser les fichiers de configuration historique à l'aide des valeur des variables d'environement positionnés :
+5- Prepare the local filesystem to store the user data
+5- Prepare le système de fichier local pour le stocker des données utilisateurs
+
+> ./docker-ehr-prepare.sh
+
+6- Initialize legacy configuration files with environement variables set :
+6- Initialiser les fichiers de configuration historique à l'aide des valeur des variables d'environement positionnés :
 
 > . docker-ehr-config.sh
 
-NOTE : The dot and space before the command are mandatory to enable the spreading of the environement variables. Please save all the generated data at a proper location to enable a potential reuse.
-NB: Le point et l'espace avant la commande sont obligatoires pour permettre la bonne propagation des variables d'environements. Veuillez sauvegarder toutes les données générées à un endroit adapté pour permettre un usage éventuel.
-
-6- Prepare the local filesystem to store the valuable data
-6- Prepare le système de fichier local pour le stocker des données clés
-
-> ./docker-ehr-prepare.sh
+NOTE : The dot and space before the command are mandatory to enable the spreading of the environement variables. Please save all the generated data at a proper location to enable a potenti$
+NB: Le point et l'espace avant la commande sont obligatoires pour permettre la bonne propagation des variables d'environements. Veuillez sauvegarder toutes les données générées à un endroi$
 
 7- Build the required EHR images :
 7- Construire les images de EHR :
