@@ -2,8 +2,8 @@ protocol: //
 host: ${EHR_SERVER_NAME}
 urlHostSuffixe: ""
 webDirectory: /app/MedShakeEHR-base/public_html/
-stockageLocation: /app/MedShakeEHR-base/stockage/
-backupLocation: /app/MedShakeEHR-base/backups/
+stockageLocation: /app/MedShakeEHR-base/work/store/
+backupLocation: /app/MedShakeEHR-base/backup/
 workingDirectory: /app/MedShakeEHR-base/public_html/workingDirectory/
 cookieDomain: ${EHR_SERVER_NAME}
 cookieDuration: 31104000
@@ -16,3 +16,9 @@ sqlVarPassword: ${EHR_DBMS_VAR}
 templatesFolder: /app/MedShakeEHR-base/templates/
 twigEnvironnementCache: false
 twigEnvironnementAutoescape: false
+dicomHost: ${EHR_SERVER_NAME}
+dicomAutoSendPatient: true
+dicomDiscoverNewTags: true
+dicomWorkListDirectory: /app/MedShakeEHR-base/work/worklist/
+dicomWorkingDirectory: /app/MedShakeEHR-base/public_html/workingDirectory/
+utiliserLap: false

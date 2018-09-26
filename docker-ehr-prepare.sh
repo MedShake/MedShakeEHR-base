@@ -1,6 +1,11 @@
 #!/bin/sh
 # Prepare some local folder structure to ensure volume sharing with containers
-mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var ~/ehr/security/ca ~/ehr/dicom/
+mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var ~/ehr/security/ca ~/ehr/dicom/ ~/ehr/work/store ~/ehr/work/worklist ~/ehr/backup ~/ehr/apicrypt ~/ehr/template/
+chmod -R 755 ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
+chown -R www-data:www-data ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
+
+# FIXED: Prevent file error write access . TODO see alternative solution
+chmod a+w ~/work ~/work/worklist
 echo "$(tput setaf 10)DONE$(tput sgr0) File structure checked"
 # Make sure that some classic DNS are use to make Docker's DNS behave as expected
 # See https://github.com/michaelgrosner/tribeca/issues/184
@@ -22,3 +27,7 @@ if test -n "$(find /var/lib/dhcp/ -maxdepth 1 -name 'dhclient*.leases' -print -q
 else
  echo "$(tput setaf 11)WARN$(tput sgr0) Not able to update $DAEMON_CONF as your DHCP configuration is currently not supported by this script. If Docker generate some DNS issues EAI_RETRY, please open an issue with details of your distribution & environment."
 fi
+cp utils/ehr-up.sh ~/ehr/
+cp utils/ehr-down.sh ~/ehr/
+echo "$(tput setaf 10)DONE$(tput sgr0) File utils copied"
+
