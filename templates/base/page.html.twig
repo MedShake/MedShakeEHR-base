@@ -172,6 +172,12 @@
                         </li>
                       {% endif %}
 
+                      {% if config.transmissionsPeutVoir == 'true' %}
+                          <li class="nav-item">
+                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">Transmissions</a>
+                          </li>
+                      {% endif %}
+
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">Outils {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}<span class="badge badge-danger">!!!</span>{% endif %}</a>

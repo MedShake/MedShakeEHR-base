@@ -115,6 +115,11 @@ inboxAjax: ['POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
 inboxActions: ['POST|GET', '/inbox/actions/[a:m]/[i:mailID]?/', 'inbox/actions/inboxActions']
 inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 
+#transmissions
+transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']
+transmissionsIndex: ['GET', '/transmissions/', 'transmissions/transmissionsIndex']
+transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmissions/transmissionsTransmission']
+
 #outils
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
 

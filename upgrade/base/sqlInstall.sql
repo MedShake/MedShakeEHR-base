@@ -329,6 +329,31 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   UNIQUE KEY `nameLevel` (`name`,`level`,`module`,`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `transmissions` (
+ `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+ `fromID` mediumint(6) unsigned DEFAULT NULL,
+ `aboutID` int(6) unsigned DEFAULT NULL,
+ `sujetID` int(10) unsigned DEFAULT NULL,
+ `statut` enum('open','deleted') NOT NULL DEFAULT 'open',
+ `priorite` tinyint(3) unsigned DEFAULT NULL,
+ `registerDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `sujet` varchar(255) DEFAULT NULL,
+ `texte` text,
+ PRIMARY KEY (`id`),
+ KEY `fromID` (`fromID`),
+ KEY `aboutID` (`aboutID`),
+ KEY `sujetID` (`sujetID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `transmissions_to` (
+ `sujetID` int(7) unsigned NOT NULL,
+ `toID` mediumint(6) unsigned NOT NULL,
+ `destinataire` enum('oui','non') NOT NULL DEFAULT 'non',
+ `statut` enum('open','checked','deleted') NOT NULL DEFAULT 'open',
+ `dateLecture` timestamp NULL DEFAULT NULL,
+ PRIMARY KEY (`sujetID`,`toID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT IGNORE INTO `actes` (`id`, `cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`) VALUES
 (1, 1, 'Consultation de base', 'Cs base', 'CS:\n  pourcents: 100\n  depassement: 15 \nMCS:\n  pourcents: 100\n  depassement: 0\nMPC:\n  pourcents: 100\n  depassement: 0', 1, 0, 1, 0, '2018-01-01 00:00:00'),
@@ -612,6 +637,12 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('administratifPeutAvoirAgenda', 'Options', 'default', 'true/false', 'peut avoir un agenda à son nom', 'true'),
 ('administratifPeutAvoirRecettes', 'Options', 'default', 'true/false', 'peut enregistrer des recettes à son nom', 'true'),
 ('administratifComptaPeutVoirRecettesDe', 'Options', 'default', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
+('transmissionsPeutVoir', 'Transmissions', 'default', 'true/false', 'peut accéder aux transmissions', 'true'),
+('transmissionsPeutCreer', 'Transmissions', 'default', 'true/false', 'peut créer des transmissions', 'true'),
+('transmissionsPeutRecevoir', 'Transmissions', 'default', 'true/false', 'peut recevoir des transmissions', 'true'),
+('transmissionsDefautDestinataires', 'Transmissions', 'default', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
+('transmissionsNbParPage', 'Transmissions', 'default', 'nombre entier', 'nombre de transmissions par page', '30'),
+('administratifComptaPeutVoirRecettesDe', 'Options', 'default', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('templatesPdfFolder', 'Modèles de documents', 'default', 'dossier', 'répertoire des fichiers de template pour la génération de PDF', ''),
 ('templateDefautPage', 'Modèles de documents', 'default', 'fichier', 'template par défaut pour l\'impression', 'base-page-headAndFoot.html.twig'),
 ('templateOrdoHeadAndFoot', 'Modèles de documents', 'default', 'fichier', 'template pour header et footer des ordonnances standards (non ALD)', 'base-page-headAndFoot.html.twig'),
@@ -702,4 +733,4 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v4.1.0');
+ (2, 'base', 'module', 'v4.2.0');
