@@ -20,7 +20,7 @@
  #/
 
 /##
- # Transmissions, modal de création / édition d'une transmission 
+ # Transmissions, modal de création / édition d'une transmission
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
@@ -46,8 +46,8 @@
               <div class="form-group">
                 <label for="transDestinataires" class="font-weight-bold">Destinataires</label>
                 <select id="transDestinataires" class="custom-select" multiple="multiple" autocomplete="off">
-                  {% for id, name in page.listeDestinatairesPossibles %}
-                  <option value="{{ id }}" {% if id in page.listeDestinatairesDefaut %}selected{% endif %}>{{ name }}</option>
+                  {% for id, name in page.transmissionsListeDestinatairesPossibles %}
+                  <option value="{{ id }}" {% if id in page.transmissionsListeDestinatairesDefaut %}selected{% endif %}>{{ name }}</option>
                   {% endfor %}
                 </select>
                 <small class="form-text text-muted">Sélection multiple en maintenant la touche ctrl enfoncée.</small>

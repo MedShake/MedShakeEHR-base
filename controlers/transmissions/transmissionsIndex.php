@@ -32,5 +32,5 @@ $template="transmissionsIndex";
 $trans = new msTransmissions();
 $trans->setUserID($p['user']['id']);
 if($p['config']['transmissionsPeutVoir'] != 'true') die("Vous n'êtes pas autorisé à accéder aux transmissions.");
-$p['page']['listeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
-$p['page']['listeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+$p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+$p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);

@@ -26,6 +26,7 @@
  */
 
 var numPageTrans = 1;
+var transmissionNewNextLocation = '';
 
 $(document).ready(function() {
 

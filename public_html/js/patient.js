@@ -384,6 +384,31 @@ $(document).ready(function() {
     }
   });
 
+  // bouton de nouvelle transmission
+  $('body').on("click", ".newTransmission", function(e) {
+    e.preventDefault();
+
+    $('#transSujet').val("Pièce du dossier patient");
+    datepiece = $(this).parents('tr').attr('data-creationDate');
+    datepiece = moment(datepiece).format('DD/MM/YYYY HH:mm');
+    texte = "Voir la ligne de l'historique \"" + $(this).parents('td').next('td').text() + '" du ' + datepiece;
+    texte = texte.replace(/\r?\n|\r/g,"");
+    texte = texte.replace(/  +/g, ' ');
+    $('#transTransmission').val(texte);
+
+    $('#transPatientConcID').val($('#identitePatient').attr('data-patientid'));
+    $('#transPatientConcSel').html($('#identitePatient').attr('data-patientIdentite'));
+    $('#transPatientConcSel').removeClass('d-none');
+
+    $('#modalTransmission').modal('show');
+  });
+  // poster une transmission
+  $('body').on("click", "#transmissionEnvoyer", function(e) {
+    e.preventDefault();
+    transmissionNewNextLocation = 'stayHere';
+    posterTransmission();
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations fermeture actions non terminées
 

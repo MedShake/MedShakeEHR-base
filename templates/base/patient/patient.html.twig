@@ -56,6 +56,11 @@
   {# JS général du dossier patient #}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
 
+  {# JS Transmissions #}
+  {% if config.transmissionsPeutCreer == 'true' %}
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+
   {# JS LAP #}
   {% if config.utiliserLap == 'true' %}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js?{{ modules.base }}"></script>
@@ -111,7 +116,18 @@
     {% endif %}
 
     {# identité patient #}
-    <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode.value }}" data-patientid="{{ page.patient.id }}">
+    <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode.value }}" data-patientid="{{ page.patient.id }}"
+    data-patientIdentite="{{ page['patient']['administrativeDatas']['firstname']['value']|e }} {# lastname & birthname #}
+    {% if page['patient']['administrativeDatas']['birthname']['value'] and page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+      ({{ page['patient']['administrativeDatas']['birthname']['value']|e }})
+      {# birthname only #}
+    {% elseif page['patient']['administrativeDatas']['birthname']['value'] %}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
+      {# lastname only #}
+    {% elseif page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+    {% endif %}">
       {% include('inc-ajax-patientAdminData.html.twig') %}
     </div>
 
@@ -215,8 +231,12 @@
 
   {# modal créer nouvelle catégorie de prescription type #}
   {% include 'inc-lapModalPresTypesCatNew.html.twig' %}
+{% endif %}
 
-
+{# modals spécifiques Transmissions #}
+{% if config.transmissionsPeutCreer == 'true' %}
+  {# modal nouvelle transmission #}
+  {% include 'inc-transmissionsNouvelleModal.html.twig' %}
 {% endif %}
 
 {% endblock %}

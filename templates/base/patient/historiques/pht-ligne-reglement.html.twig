@@ -60,6 +60,11 @@
           <li>
             <span class="dropdown-header py-0"><i>#{{ cs.id }} Règlement</i></span>
           </li>
+          {% if config.transmissionsPeutCreer == 'true' %}
+            <li>
+              <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">Créer une transmission</a>
+            </li>
+          {% endif %}
           <li class="d-block d-lg-none">
            {% if cs.iconeType == 'update' %}
              <a class="dropdown-item editReglement">Editer</a>

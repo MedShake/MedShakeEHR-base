@@ -80,6 +80,12 @@
                   <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
                 </li>
               {% endif %}
+              {% if config.transmissionsPeutCreer == 'true' %}
+                <li role="separator" class="dropdown-divider m-0"></li>
+                <li>
+                  <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">Créer une transmission</a>
+                </li>
+              {% endif %}
               {% if cs.sendMail > 0 %}
                 <li role="separator" class="dropdown-divider m-0"></li>
                 <li>

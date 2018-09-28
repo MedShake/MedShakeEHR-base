@@ -41,8 +41,8 @@ $trans->setSujetID($p['page']['transmissionID']);
 $trans->setTranmissionDateLecture();
 $p['page']['transmission']=$trans->getTransmission();
 $p['page']['transmissionReponses']=$trans->getTransmissionReponses();
-$p['page']['listeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
-$p['page']['listeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+$p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+$p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
 if(!empty($p['page']['transmission']['destinataires'])) {
   $p['page']['transmission']['statutDestinataires']=array_column($p['page']['transmission']['destinataires'],'statut', 'toID');
   $p['page']['transmission']['destinatairesID']=array_column($p['page']['transmission']['destinataires'],'toID');

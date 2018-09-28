@@ -164,3 +164,9 @@ if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModel
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();
 $p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+
+// Transmissions
+$trans = new msTransmissions();
+$trans->setUserID($p['user']['id']);
+$p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+$p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);

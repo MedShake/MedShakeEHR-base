@@ -58,7 +58,12 @@ function posterTransmission() {
       },
       dataType: "json",
       success: function(data) {
-        window.location.href = urlBase + '/transmission/' + data.sujetID + '/';
+        if (transmissionNewNextLocation == 'stayHere') {
+          $('#modalTransmission').modal('hide');
+          alert_popup("success", 'Transmission enregistrée !');
+        } else {
+          window.location.href = urlBase + '/transmission/' + data.sujetID + '/';
+        }
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -207,7 +212,7 @@ function getTransmissions() {
       if (data.nbTransRetour > 0) {
         $('#pageCourante').html('Page ' + data.page + ' / ' + Math.ceil(data.nbTotalTran / data.nbTransRetour));
       }
-      if (data.page < Math.ceil(data.nbTotalTran / data.nbTransRetour) ) {
+      if (data.page < Math.ceil(data.nbTotalTran / data.nbTransRetour)) {
         $('#pagePrecedente').removeClass('d-none');
       } else {
         $('#pagePrecedente').addClass('d-none');
