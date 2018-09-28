@@ -115,7 +115,7 @@ function posterReponse() {
         $('#blocReponses').html(data.html);
         $('#texteReponse').val('');
         $('#transmissionRepondre').collapse('toggle');
-
+        updateIconesOnAnswer();
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -138,6 +138,7 @@ function editerReponse(id) {
       $('#formRepReponseID').val(data.id)
       $('#texteReponse').val(data.texte);
       $('#transmissionRepondre').collapse('show');
+      updateIconesOnAnswer();
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
@@ -233,4 +234,12 @@ function resetTransmissionModal() {
   $('#transPatientConcSel').html('');
   $('#modalTransmission input[value=0]').attr('checked', 'checked');
   $('#transPatientConcSel').addClass('d-none');
+}
+
+function updateIconesOnAnswer() {
+  $('.toRemoveOnUpdate').remove();
+  $('.toChangeOnUpdate').addClass('text-danger');
+  $('.toChangeOnUpdate').removeClass('text-success');
+  $('.toChangeOnUpdate').addClass('fa-eye-slash');
+  $('.toChangeOnUpdate').removeClass('fa-eye');
 }
