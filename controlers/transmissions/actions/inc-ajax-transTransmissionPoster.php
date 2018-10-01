@@ -43,5 +43,8 @@ $trans->setSujet($_POST['sujet']);
 $trans->setPriorite($_POST['priorite']);
 $sujetID=$trans->setTranmissionPoster();
 
+//purger les transmissions anciennes
+$trans->purgerTransmissions();
+
 header('Content-Type: application/json');
 echo json_encode(['sujetID'=>$sujetID]);

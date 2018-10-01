@@ -32,7 +32,8 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('transmissionsPeutVoir', 'Transmissions', 'default', 'true/false', 'peut accéder aux transmissions', 'true'),
 ('transmissionsPeutCreer', 'Transmissions', 'default', 'true/false', 'peut créer des transmissions', 'true'),
 ('transmissionsPeutRecevoir', 'Transmissions', 'default', 'true/false', 'peut recevoir des transmissions', 'true'),
-('transmissionsNbParPage', 'Transmissions', 'default', 'nombre entier', 'nombre de transmissions par page', '30');
+('transmissionsNbParPage', 'Transmissions', 'default', 'nombre entier', 'nombre de transmissions par page', '30'),
+('transmissionsPurgerNbJours', 'Transmissions', 'default', 'nombre entier', 'nombre de jours sans update après lequel une transmission sera supprimée de la base de données (0 = jamais)', '365');
 
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v4.2.0' WHERE `name`='base' and `groupe`='module';

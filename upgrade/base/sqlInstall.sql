@@ -642,6 +642,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('transmissionsPeutRecevoir', 'Transmissions', 'default', 'true/false', 'peut recevoir des transmissions', 'true'),
 ('transmissionsDefautDestinataires', 'Transmissions', 'default', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('transmissionsNbParPage', 'Transmissions', 'default', 'nombre entier', 'nombre de transmissions par page', '30'),
+('transmissionsPurgerNbJours', 'Transmissions', 'default', 'nombre entier', 'nombre de jours sans update après lequel une transmission sera supprimée de la base de données (0 = jamais)', '365'),
 ('administratifComptaPeutVoirRecettesDe', 'Options', 'default', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('templatesPdfFolder', 'Modèles de documents', 'default', 'dossier', 'répertoire des fichiers de template pour la génération de PDF', ''),
 ('templateDefautPage', 'Modèles de documents', 'default', 'fichier', 'template par défaut pour l\'impression', 'base-page-headAndFoot.html.twig'),

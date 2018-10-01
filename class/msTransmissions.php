@@ -438,5 +438,19 @@
      return msSQL::sqlUniqueChamp("select dateLecture from transmissions_to where sujetID='".$sujetID."' and toID='".$toID."' limit 1");
    }
 
+/**
+ * Purger la base de transmissions des transmissions non updatées depuis transmissionsPurgerNbJours jours
+ * @return void
+ */
+   public function purgerTransmissions() {
+     global $p;
+     if($p['config']['transmissionsPurgerNbJours'] > 0) {
+       $ids = msSQL::sql2tabSimple("select id from transmissions where updateDate < DATE_SUB(NOW() , INTERVAL ".$p['config']['transmissionsPurgerNbJours']." DAY)");
+       if(!empty($ids)) {
+         msSQL::sqlQuery("delete from transmissions where id in ('".implode("', '", $ids)."')");
+         msSQL::sqlQuery("delete from transmissions_to where sujetID in ('".implode("', '", $ids)."')");
+       }
+     }
+   }
 
  }
