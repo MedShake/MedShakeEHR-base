@@ -108,6 +108,14 @@ $(document).ready(function() {
   });
   $("#transConcerne").autocomplete("option", "appendTo", ".formModalNewTrans");
 
+  //enlever destinataire choisi
+  $('body').on("click", "#transPatientConcSelDel", function(e) {
+    e.preventDefault();
+    $('#transPatientConcID').val('');
+    $('#transPatientConcSel').html('');
+    $('#transPatientConcSel').addClass('d-none');
+  });
+
   getTransmissions();
 
 });
