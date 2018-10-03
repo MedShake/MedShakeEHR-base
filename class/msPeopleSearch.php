@@ -125,10 +125,10 @@ class msPeopleSearch
     $sp[0]='';
     foreach($this->_colonnesRetour as $v) {
       if($v=='identite') {
-        $sp[0]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(d'.$name2typeID['lastname'].'.value, " ", d'.$name2typeID['firstname'].'.value, " (", d'.$name2typeID['birthname'].'.value ,")")
-        WHEN d'.$name2typeID['birthname'].'.value !="" THEN concat(d'.$name2typeID['birthname'].'.value, " ", d'.$name2typeID['firstname'].'.value)
-        WHEN d'.$name2typeID['lastname'].'.value !="" THEN concat(d'.$name2typeID['lastname'].'.value, " ", d'.$name2typeID['firstname'].'.value)
-        ELSE concat("(inconnu) ", d'.$name2typeID['firstname'].'.value)
+        $sp[0]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""), " (", COALESCE(d'.$name2typeID['birthname'].'.value,"") ,")")
+        WHEN d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['birthname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
+        WHEN d'.$name2typeID['lastname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
+        ELSE concat("(inconnu) ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         END as identite';
       } else {
         if(isset($name2typeID[$v])) $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
