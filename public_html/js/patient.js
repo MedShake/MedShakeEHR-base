@@ -715,6 +715,7 @@ $(document).ready(function() {
           $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-none').html(regdatet.substr(11));
           $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11, 5));
           refreshHistoriqueToday();
+          scrollTo('body', 2);
         }
       },
       error: function() {
