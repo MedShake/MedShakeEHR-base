@@ -177,7 +177,7 @@
          $lj="left join transmissions_to as trto on t.id = trto.sujetID and trto.statut = 'open' and trto.destinataire = 'oui' ";
          $where .= "trto.statut='open' and ";
          $groupby = " group by t.id, trto.statut, ln.id, bn.id, fn.id, ln1.id, bn1.id, fn1.id ";
-         $groupbycount = " group by trto.statut ";
+         $groupbycount = " group by t.id, trto.statut ";
        }
      }
      elseif($this->_modeInboxOutbox == 'inbox') {
@@ -188,12 +188,12 @@
        }
      }
 
-     $ret['nbTotalTran'] = msSQL::sqlUniqueChamp("select count(t.id)
+     $ret['nbTotalTran'] = msSQL::sqlUniqueChamp("select count(*) from(select t.id
       from transmissions as t
       ".$lj."
       where  ".$where." t.statut = 'open' and t.sujetID is NULL
       ".$groupbycount."
-      ");
+      ) as a ");
 
      if($listeSujets = msSQL::sql2tab("select t.id, t.sujet, t.aboutID, t.priorite, t.updateDate, t.registerDate,
       CASE
