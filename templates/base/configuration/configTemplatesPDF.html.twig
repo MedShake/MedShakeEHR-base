@@ -136,7 +136,7 @@
                     </ul>
                     {% endif %}
                   </td>
-                  <td class="d-flex justify-content-end">
+                  <td class="text-right">
                     <div class="btn-group">
                       <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
                         {% if page.templatesDirAutorisationEcriture == false %}

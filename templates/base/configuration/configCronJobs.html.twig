@@ -74,14 +74,14 @@
           </tr>
           <tr>
             {% if v.values %}
-              <td class="d-flex justify-content-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="true" checked /></td>
+              <td class="text-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="true" checked /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_m{{ k }}" value="{{ v.values.m }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_h{{ k }}" value="{{ v.values.h }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_M{{ k }}" value="{{ v.values.M }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_dom{{ k }}" value="{{ v.values.dom }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_dow{{ k }}" value="{{ v.values.dow }}" /></td>
             {% else %}
-              <td class="d-flex justify-content-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="" /></td>
+              <td class="text-center checkboxFixValue"><input type="checkbox" name="p_a{{ k }}" value="" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_m{{ k }}" value="{{ v.defaults.m }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_h{{ k }}" value="{{ v.defaults.h }}" /></td>
               <td><input class="form-control form-control-sm" type="text" name="p_M{{ k }}" value="{{ v.defaults.M }}" /></td>

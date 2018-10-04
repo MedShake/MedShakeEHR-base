@@ -79,7 +79,7 @@
             {% endif %}
           {% endfor %}
 
-          <td class="d-table-cell d-flex justify-content-end">
+          <td class="text-right">
             <div class="btn-group">
               {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
                 <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
