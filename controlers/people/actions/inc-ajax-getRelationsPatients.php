@@ -54,7 +54,7 @@
  left join objets_data as d2 on do.toID = d2.toID and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
  left join objets_data as d3 on do.toID = d3.toID and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
  left join people as p on p.id=do.toID
- where do.typeID in ('1', '2', '3') and (concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%' or concat(COALESCE(d1.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%')
+ where do.typeID in ('1', '2', '3') and (concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%' or concat(COALESCE(d1.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%') and p.type not in ('deleted', 'service', 'externe')
  group by label, d1.id, d2.id, d3.id, p.id
  limit 25");
 
