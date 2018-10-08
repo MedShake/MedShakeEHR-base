@@ -116,56 +116,58 @@ class msLapOrdo extends msLap
  */
     public function saveLignePrescription($ligne)
     {
-        global $p;
-        $lap = new msObjet();
-        $lap->setFromID($p['user']['id']);
-        $lap->setToID($this->_toID);
+        if(!empty($ligne['medics'])) {
+          global $p;
+          $lap = new msObjet();
+          $lap->setFromID($p['user']['id']);
+          $lap->setToID($this->_toID);
 
-        if(is_numeric($this->_ordonnanceID)) {
-          $ligneID=$lap->createNewObjetByTypeName('lapLignePrescription', json_encode($ligne['ligneData']),$this->_ordonnanceID);
-        } else {
-          $ligneID=$lap->createNewObjetByTypeName('lapLignePrescription', json_encode($ligne['ligneData']));
-        }
+          if(is_numeric($this->_ordonnanceID)) {
+            $ligneID=$lap->createNewObjetByTypeName('lapLignePrescription', json_encode($ligne['ligneData']),$this->_ordonnanceID);
+          } else {
+            $ligneID=$lap->createNewObjetByTypeName('lapLignePrescription', json_encode($ligne['ligneData']));
+          }
 
-        if (is_numeric($ligneID)) {
-            // infos sur la ligne
-            $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseDebut', $ligne['ligneData']['dateDebutPrise'], $ligneID);
-            $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFin', $ligne['ligneData']['dateFinPrise'], $ligneID);
-            $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFinAvecRenouv', $ligne['ligneData']['dateFinPriseAvecRenouv'], $ligneID);
-            $lap->createNewObjetByTypeName('lapLignePrescriptionDureeJours', $ligne['ligneData']['dureeTotaleMachineJours'], $ligneID);
-            $lap->createNewObjetByTypeName('lapLignePrescriptionIsALD', $ligne['ligneData']['isALD'], $ligneID);
-            $lap->createNewObjetByTypeName('lapLignePrescriptionIsChronique', $ligne['ligneData']['isChronique'], $ligneID);
+          if (is_numeric($ligneID)) {
+              // infos sur la ligne
+              $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseDebut', $ligne['ligneData']['dateDebutPrise'], $ligneID);
+              $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFin', $ligne['ligneData']['dateFinPrise'], $ligneID);
+              $lap->createNewObjetByTypeName('lapLignePrescriptionDatePriseFinAvecRenouv', $ligne['ligneData']['dateFinPriseAvecRenouv'], $ligneID);
+              $lap->createNewObjetByTypeName('lapLignePrescriptionDureeJours', $ligne['ligneData']['dureeTotaleMachineJours'], $ligneID);
+              $lap->createNewObjetByTypeName('lapLignePrescriptionIsALD', $ligne['ligneData']['isALD'], $ligneID);
+              $lap->createNewObjetByTypeName('lapLignePrescriptionIsChronique', $ligne['ligneData']['isChronique'], $ligneID);
 
-            // on note la ligne qui a servi pour le renouv
-            if(isset($ligne['ligneData']['objetID'])) {
-              if($ligne['ligneData']['objetID']>0) {
-                  $lap->createNewObjetByTypeName('lapLignePrescriptionRenouvelle', $ligne['ligneData']['objetID'], $ligneID);
+              // on note la ligne qui a servi pour le renouv
+              if(isset($ligne['ligneData']['objetID'])) {
+                if($ligne['ligneData']['objetID']>0) {
+                    $lap->createNewObjetByTypeName('lapLignePrescriptionRenouvelle', $ligne['ligneData']['objetID'], $ligneID);
+                }
               }
+
+        // Médicaments
+        foreach ($ligne['medics'] as $k=>$m) {
+            $medicamentID=$lap->createNewObjetByTypeName('lapLigneMedicament', json_encode($ligne['medics'][$k]), $ligneID);
+            if (is_numeric($medicamentID)) {
+                $lap->createNewObjetByTypeName('lapMedicamentSpecialiteCodeTheriaque', $m['speThe'], $medicamentID);
+                $lap->createNewObjetByTypeName('lapMedicamentPresentationCodeTheriaque', $m['presThe'], $medicamentID);
+                $lap->createNewObjetByTypeName('lapMedicamentSpecialiteNom', $m['nomSpe'], $medicamentID);
+                $lap->createNewObjetByTypeName('lapMedicamentDC', $m['nomDC'], $medicamentID);
+                $lap->createNewObjetByTypeName('lapMedicamentCodeATC', $m['codeATC'], $medicamentID);
+                $lap->createNewObjetByTypeName('lapMedicamentEstPrescriptibleEnDC', $m['prescriptibleEnDC'], $medicamentID);
+                if(isset($m['prescriptionMotif']) and !empty(trim($m['prescriptionMotif']))) $lap->createNewObjetByTypeName('lapMedicamentMotifPrescription', $m['prescriptionMotif'], $medicamentID);
+
+                if(!empty($m['substancesActives'])) {
+                  foreach($m['substancesActives'] as $k=>$v) {
+                    $lap->createNewObjetByTypeName('lapMedicamentCodeSubstanceActive', $k, $medicamentID);
+                  }
+                }
+
+                if(isset($m['sams']) and !empty($m['sams'])) {
+                  foreach($m['sams'] as $k=>$v) {
+                    if(!in_array($v, $this->_samsListInOrdo)) $this->_samsListInOrdo[]=$v;
+                  }
+                }
             }
-
-      // Médicaments
-      foreach ($ligne['medics'] as $k=>$m) {
-          $medicamentID=$lap->createNewObjetByTypeName('lapLigneMedicament', json_encode($ligne['medics'][$k]), $ligneID);
-          if (is_numeric($medicamentID)) {
-              $lap->createNewObjetByTypeName('lapMedicamentSpecialiteCodeTheriaque', $m['speThe'], $medicamentID);
-              $lap->createNewObjetByTypeName('lapMedicamentPresentationCodeTheriaque', $m['presThe'], $medicamentID);
-              $lap->createNewObjetByTypeName('lapMedicamentSpecialiteNom', $m['nomSpe'], $medicamentID);
-              $lap->createNewObjetByTypeName('lapMedicamentDC', $m['nomDC'], $medicamentID);
-              $lap->createNewObjetByTypeName('lapMedicamentCodeATC', $m['codeATC'], $medicamentID);
-              $lap->createNewObjetByTypeName('lapMedicamentEstPrescriptibleEnDC', $m['prescriptibleEnDC'], $medicamentID);
-              if(isset($m['prescriptionMotif']) and !empty(trim($m['prescriptionMotif']))) $lap->createNewObjetByTypeName('lapMedicamentMotifPrescription', $m['prescriptionMotif'], $medicamentID);
-
-              if(!empty($m['substancesActives'])) {
-                foreach($m['substancesActives'] as $k=>$v) {
-                  $lap->createNewObjetByTypeName('lapMedicamentCodeSubstanceActive', $k, $medicamentID);
-                }
-              }
-
-              if(isset($m['sams']) and !empty($m['sams'])) {
-                foreach($m['sams'] as $k=>$v) {
-                  if(!in_array($v, $this->_samsListInOrdo)) $this->_samsListInOrdo[]=$v;
-                }
-              }
           }
         }
       }
