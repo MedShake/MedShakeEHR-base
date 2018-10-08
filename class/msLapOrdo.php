@@ -96,10 +96,12 @@ class msLapOrdo extends msLap
           } else {
             $zone='ordoMedicsG';
           }
-          $tab[$zone][]=array(
-            'ligneData'=>$ligne['ligneData'],
-            'medics'=>$ligne['medics']
-          );
+          if(!empty($ligne['medics'])) {
+            $tab[$zone][]=array(
+              'ligneData'=>$ligne['ligneData'],
+              'medics'=>$ligne['medics']
+            );
+          }
         }
 
         return $tab;
