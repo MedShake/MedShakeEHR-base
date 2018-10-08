@@ -57,14 +57,14 @@
                   <div class="col-md-4 pr-0">
                     <div class="form-group">
                       <label for="txtRechercheMedic">Rechercher</label>
-                      <input type="text" class="form-control form-control-sm" id="txtRechercheMedic" autocomplete="off" placeholder="médicament, substance, code ..."/>
+                      <input type="text" class="form-control" id="txtRechercheMedic" autocomplete="off" placeholder="médicament, substance, code ..."/>
                       <span id="txtRechercheMedicHB" class="form-text small">Taper ici le texte de votre recherche</span>
                     </div>
                   </div>
                   <div class="col-md-4 pl-1 pr-0">
                     <div class="form-group">
                       <label for="typeRechercheMedic">Dans</label>
-                      <select id="typeRechercheMedic" class="form-control custom-select form-control-sm" autocomplete="off">
+                      <select id="typeRechercheMedic" class="custom-select" autocomplete="off">
                         <option {% if config.lapSearchDefaultType == 'dci' %} selected="selected"{% endif %} value="dci">Médicaments virtuels (DCI)</option>
                         <option {% if config.lapSearchDefaultType == 'dcispe' %} selected="selected"{% endif %} value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
                         <option {% if config.lapSearchDefaultType == 'spe' %} selected="selected"{% endif %} value="spe">Spécialités commerciales</option>
@@ -78,7 +78,7 @@
                   <div class="col-md-4 pl-1">
                     <div id="retourRechercheMedicBloc" class="form-group" style="display : none;">
                       <label for="typeRechercheMedic">Montrer</label>
-                      <select id="retourRechercheMedic" class="form-control custom-select form-control-sm" autocomplete="off">
+                      <select id="retourRechercheMedic" class="custom-select" autocomplete="off">
                         <option value="1">Médicaments virtuels (DCI)</option>
                         <option value="3">Médicaments virtuels + Spécialités commerciales</option>
                         <option value="0">Spécialités commerciales</option>
