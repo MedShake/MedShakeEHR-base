@@ -212,7 +212,8 @@ class msModBaseObjetPreview
       $string='';
       $courrier=new msCourrier;
       $modelImpression = $courrier->getPrintModel($this->_dataObjet['formValues']);
-      if(is_file($p['config']['templatesPdfFolder'].$modelImpression.'.html.twig')) {
+      $templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', ['id'=>$this->_dataObjet['fromID'], 'module'=>'']);
+      if(is_file($templatesPdfFolder.$modelImpression.'.html.twig')) {
         $fakePDF = new msPDF();
         $fakePDF->setPageHeader('');
         $fakePDF->setPageFooter('');
