@@ -39,25 +39,47 @@
 <p>
 <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/">Retour dossier patient</a>
 </p>
-<div>
-<ul class="nav nav-tabs" role="tablist">
-  {% for v in page.print %}
-  <li role="presentation" class="nav-item">
-    <a class="nav-link{% if loop.first %} active{% endif %}" href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a>
-  </li>
-  {% endfor %}
-</ul>
-</div>
 
 
-<div class="tab-content">
-{% for v in page.print %}
-<div role="tabpanel" class="tab-pane{% if loop.index0 == 0 %} active{% endif %}" id="print{{ v.id }}">
-  <div class="appercu">
-    {{ v.value }}
+<div class="row">
+  <div class="col-2">
+  <ul class="nav flex-column nav-pills" role="tablist">
+    {% for v in page.print %}
+    <li role="presentation" class="nav-item">
+      <a class="nav-link{% if loop.first %} active{% endif %}" href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a>
+    </li>
+    {% endfor %}
+  </ul>
   </div>
-</div>
-{% endfor %}
+
+  <div class="col-10">
+    <div class="tab-content">
+    {% for v in page.print %}
+    <div role="tabpanel" class="tab-pane{% if loop.index0 == 0 %} active{% endif %}" id="print{{ v.id }}">
+      <div class="row mb-4">
+        <div class="col-6 col-xl-4 ">
+                Auteur : {{ v.identiteAuteur }}
+        </div>
+        <div class="col-6 col-xl-4  text-right">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ v.toID }}/fromHistory/{{ v.id }}/" class="btn btn-sm btn-outline-secondary" target="_blank"><i class="far fa-file-pdf"></i> Voir la version PDF</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-xl-8 ">
+          <div class="card" >
+            <div class="card-body">
+              <div class="appercu">
+                {{ v.value }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
 </div>
 
 {% endblock %}

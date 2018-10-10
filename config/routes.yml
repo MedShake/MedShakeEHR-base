@@ -99,6 +99,7 @@ makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP:printType]/[i:exa
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 duplicataPDF: ['GET|POST', '/duplicata/[i:objetID]/', 'print/pdfDuplicata']
+pdfMakeFromHistory: ['GET|POST', '/makepdf/[i:patient]/fromHistory/[i:versionID]/', 'print/pdfMakeFromHistory']
 
 #fichier (extraire vers navigateur)
 fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
