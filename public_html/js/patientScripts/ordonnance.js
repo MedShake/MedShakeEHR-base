@@ -37,7 +37,7 @@ $(document).ready(function() {
   //supprimer ligne ordo
   $('#newOrdo').on("click", "button.cleanLigneOrdo", function(e) {
     name = $(this).parent().find("textarea").attr('name');
-    newinput = '<input name="'+ name + '" type="hidden" value="" >';
+    newinput = '<input name="' + name + '" type="hidden" value="" >';
     $(this).parents('form').prepend(newinput);
     $(this).closest('div.ligneOrdo').remove();
   });
@@ -50,8 +50,10 @@ $(document).ready(function() {
   //retour à la racine du dossier patient quand submit d'ordo.
   $('#newOrdo').on("submit", '#ordoComposer', function() {
     setTimeout(function() {
-      window.location.reload();
-    }, 1000);
+      getHistorique();
+      getHistoriqueToday();
+      $('#newOrdo').html('');
+    }, 500);
   });
 
   //autogrow sur la ligne d'ordo
@@ -70,7 +72,7 @@ function ajouterLigneOrdo(selecteur) {
   item = $('#' + id + ' option:selected').val();
 
   $.ajax({
-    url: urlBase+'/patient/ajax/getLigneOrdo/',
+    url: urlBase + '/patient/ajax/getLigneOrdo/',
     type: 'post',
     data: {
       ligneID: item,

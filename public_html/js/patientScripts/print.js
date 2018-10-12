@@ -45,10 +45,11 @@ $(document).ready(function() {
   $('#newCourrier').on("click", "#makePDF" ,  function(e) {
     courrierBody = tinymce.get('editeurCourrier').getContent();
     $('#courrierBodyID').val(courrierBody);
-    patientID = $('#invisible_form').attr('data-patientID');
     setTimeout(function() {
-      location.href = urlBase + '/patient/' + patientID + '/'
-    }, 2000);
+      getHistorique();
+      getHistoriqueToday();
+      $('#newCourrier').html('');
+    }, 500);
     $("#editeurCourrier").tinymce().remove();
     $('#invisible_form').submit();
 
