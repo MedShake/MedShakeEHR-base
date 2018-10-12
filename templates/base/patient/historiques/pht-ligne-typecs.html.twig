@@ -29,14 +29,14 @@
  <tr id="lh{{ cs.id }}" class="tr{{ cs.id }}{% if cs.important == 'y' %} table-info{% endif %} trLigneExamen collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Consultation">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <span class="fa fa-stethoscope" aria-hidden="true"></span>
+      <span class="fa fa-stethoscope fa-fw" aria-hidden="true"></span>
     </a>
   </td>
   <td>
      <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
      <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
      {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
-       <span class="far fa-clock" aria-hidden="true"></span>
+       <span class="far fa-clock fa-fw" aria-hidden="true"></span>
      </button>{% endif %}
   </td>
   <td>
@@ -45,10 +45,10 @@
       <button type="button" class="btn btn-light btn-sm editCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}"
         {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
           title="Editer">
-          <span class="fa fa-pencil-alt" aria-hidden="true" ></span>
+          <span class="fa fa-pencil-alt fa-fw" aria-hidden="true" ></span>
         {% else %}
           title="Voir">
-          <span class="fa fa-eye" aria-hidden="true"></span>
+          <span class="fa fa-eye fa-fw" aria-hidden="true"></span>
         {% endif %}
       </button>
 
@@ -56,14 +56,14 @@
       {% if cs.printModel %}
 
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
-          <span class="fa fa-print" aria-hidden="true" title="Imprimer"></span>
+          <span class="fa fa-print fa-fw" aria-hidden="true" title="Imprimer"></span>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
             <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-              <span class="fa fa-paper-plane" aria-hidden="true"></span>
+              <span class="fa fa-paper-plane fa-fw" aria-hidden="true"></span>
             </button>
             <ul class="dropdown-menu">
               {% if config.smtpHost %}
@@ -102,20 +102,20 @@
       {% endif %}
       {% if cs.sendMail > 0 %}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
-          <span class="fa fa-envelope" aria-hidden="true"></span>
+          <span class="fa fa-envelope fa-fw" aria-hidden="true"></span>
         </a>
       {% endif %}
 
       {% if cs.dicomStudy %}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block viewStudy" data-study="{{ cs.dicomStudy }}" role="button" href="#">
-          <i class="far fa-image"></i>
+          <i class="far fa-image fa-fw"></i>
         </a>
       {% endif %}
 
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
+          <span class="fa fa-ellipsis-h fa-fw" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
             <li>

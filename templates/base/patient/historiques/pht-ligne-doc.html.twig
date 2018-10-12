@@ -30,7 +30,7 @@
 
   <td title="Document">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <span class="fa fa-file" aria-hidden="true"></span>
+      <span class="fa fa-file fa-fw" aria-hidden="true"></span>
     </a>
   </td>
   <td>
@@ -41,14 +41,14 @@
     <div class="btn-group">
       {# voir #}
       <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank" title="Voir">
-        <span class="fa fa-eye" aria-hidden="true"></span>
+        <span class="fa fa-eye fa-fw" aria-hidden="true"></span>
       </a>
 
       {# send #}
       {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
         <div class="btn-group d-none d-lg-inline-flex">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-            <span class="fa fa-paper-plane" aria-hidden="true"></span>
+            <span class="fa fa-paper-plane fa-fw" aria-hidden="true"></span>
           </button>
           <ul class="dropdown-menu">
             {% if config.smtpHost %}
@@ -86,13 +86,13 @@
       {% endif %}
       {% if cs.sendMail > 0 %}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
-          <span class="fa fa-envelope" aria-hidden="true"></span>
+          <span class="fa fa-envelope fa-fw" aria-hidden="true"></span>
         </a>
       {% endif %}
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
+          <span class="fa fa-ellipsis-h fa-fw" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
           <li>
