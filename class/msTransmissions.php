@@ -160,6 +160,7 @@
        'data'=>'',
        'nbTotalTran'=>0,
        'nbTransRetour'=>0,
+       'nbParPage'=>$p['config']['transmissionsNbParPage'],
        'page'=>$this->_page
      );
 

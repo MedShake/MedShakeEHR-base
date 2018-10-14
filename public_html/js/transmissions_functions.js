@@ -210,9 +210,9 @@ function getTransmissions() {
     success: function(data) {
       $('#listeTransmissions tbody').html(data.html);
       if (data.nbTransRetour > 0) {
-        $('#pageCourante').html('Page ' + data.page + ' / ' + Math.ceil(data.nbTotalTran / data.nbTransRetour));
+        $('#pageCourante').html('Page ' + data.page + ' / ' + Math.ceil(data.nbTotalTran / data.nbParPage));
       }
-      if (data.page < Math.ceil(data.nbTotalTran / data.nbTransRetour)) {
+      if (data.page < Math.ceil(data.nbTotalTran / data.nbParPage)) {
         $('#pagePrecedente').removeClass('d-none');
       } else {
         $('#pagePrecedente').addClass('d-none');
