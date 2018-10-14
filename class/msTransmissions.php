@@ -197,13 +197,13 @@
 
      if($listeSujets = msSQL::sql2tab("select t.id, t.sujet, t.aboutID, t.priorite, t.updateDate, t.registerDate,
       CASE
-        WHEN ln.value != '' and bn.value != '' THEN concat(ln.value , ' (' , bn.value , ') ',fn.value)
-        WHEN bn.value != '' THEN concat(bn.value , ' ' ,fn.value)
-        ELSE concat(ln.value , ' ' , bn.value)
+        WHEN ln.value != '' and bn.value != '' THEN concat(COALESCE(ln.value,'') , ' (' , COALESCE(bn.value,'') , ') ',COALESCE(fn.value,''))
+        WHEN bn.value != '' THEN concat(COALESCE(bn.value,'') , ' ' ,COALESCE(fn.value,''))
+        ELSE concat(COALESCE(ln.value,'') , ' ' , COALESCE(fn.value,''))
       END as identiteAbout,
       CASE
-        WHEN ln1.value != '' THEN concat(ln1.value , ' ' , fn1.value)
-        ELSE concat(fn1.value , ' ' , bn1.value)
+        WHEN ln1.value != '' THEN concat(COALESCE(ln1.value,'') , ' ' , COALESCE(fn1.value,''))
+        ELSE concat(COALESCE(bn1.value,'') , ' ' , COALESCE(fn1.value,''))
       END as identiteAuteur
       from transmissions as t
       ".$lj."
@@ -243,8 +243,8 @@
 
      return $reponses = msSQL::sql2tab("select t.id, t.texte, t.registerDate, t.fromID,
       CASE
-        WHEN ln1.value != '' THEN concat(ln1.value , ' ' , fn1.value)
-        ELSE concat(fn1.value , ' ' , bn1.value)
+        WHEN ln1.value != '' THEN concat(COALESCE(ln1.value,'') , ' ' , COALESCE(fn1.value,''))
+        ELSE concat(COALESCE(bn1.value,'') , ' ' , COALESCE(fn1.value,''))
       END as identiteAuteur
       from transmissions as t
 
@@ -266,13 +266,13 @@
 
      if($trans = msSQL::sqlUnique("select t.id, t.fromID, t.sujet, t.aboutID, t.priorite, t.updateDate, t.registerDate, t.texte, t.statut,
       CASE
-        WHEN ln.value != '' and bn.value != '' THEN concat(ln.value , ' (' , bn.value , ') ',fn.value)
-        WHEN bn.value != '' THEN concat(bn.value , ' ' ,fn.value)
-        ELSE concat(ln.value , ' ' , fn.value)
+        WHEN ln.value != '' and bn.value != '' THEN concat(COALESCE(ln.value,'') , ' (' , COALESCE(bn.value,'') , ') ',COALESCE(fn.value,''))
+        WHEN bn.value != '' THEN concat(COALESCE(bn.value,'') , ' ' ,COALESCE(fn.value,''))
+        ELSE concat(COALESCE(ln.value,'') , ' ' , COALESCE(fn.value,''))
       END as identiteAbout,
       CASE
-        WHEN ln1.value != '' THEN concat(ln1.value , ' ' , fn1.value)
-        ELSE concat(fn1.value , ' ' , bn1.value)
+        WHEN ln1.value != '' THEN concat(COALESCE(ln1.value,'') , ' ' , COALESCE(fn1.value,''))
+        ELSE concat(COALESCE(bn1.value,'') , ' ' , COALESCE(fn1.value,''))
       END as identiteAuteur
       from transmissions as t
       left join transmissions_to as trto on t.id = trto.sujetID and trto.toID = '".$this->_userID."'
@@ -307,8 +307,8 @@
 
     return msSQL::sql2tab("select trto.toID,trto.statut, trto.dateLecture, trto.destinataire,
          CASE
-          WHEN ln.value != '' THEN concat(ln.value , ' ' , fn.value)
-          ELSE concat(fn.value , ' ' , bn.value)
+          WHEN ln.value != '' THEN concat(COALESCE(ln.value,'') , ' ' , COALESCE(fn.value,''))
+          ELSE concat(COALESCE(bn.value,'') , ' ' , COALESCE(fn.value,''))
          END as identiteDestinataire
          from transmissions_to as trto
          left join objets_data as ln on ln.toID=trto.toID and ln.typeID='".$name2typeID['lastname']."' and ln.outdated='' and ln.deleted=''
@@ -391,6 +391,7 @@
      }
 
      if($sujetID = msSQL::sqlInsert('transmissions', $trans)) {
+       // enregistrement des destinataires
        foreach($this->_toID as $toID) {
          $trans=array(
            'sujetID'=>$sujetID,
@@ -400,6 +401,17 @@
          if($toID == $this->_userID) $trans['dateLecture']=date('Y-m-d H:i:s');
          msSQL::sqlInsert('transmissions_to', $trans);
        }
+       // enregistrement de l'auteur comme non destinataire (controle de date de lecture)
+       if(!in_array($this->_userID, $this->_toID)) {
+         $trans=array(
+           'sujetID'=>$sujetID,
+           'toID'=>$this->_userID,
+           'destinataire'=>'non',
+           'dateLecture'=>date('Y-m-d H:i:s')
+         );
+         msSQL::sqlInsert('transmissions_to', $trans);
+       }
+
        if($this->_id > 0) {
          return $this->_id;
        } else {
