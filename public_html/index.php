@@ -131,8 +131,15 @@ if (isset($template)) {
     }
 
     if (isset($p['user']['id'])) {
-        //inbox number of messages
+      //inbox number of messages
       $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
+
+      //transmissions non lues
+      if($p['config']['transmissionsPeutVoir'] == 'true') {
+        $p['page']['nbTransmissionsNonLues']=msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
+        left join transmissions as t on tt.sujetID = t.id
+        where tt.toID = '".$p['user']['id']."' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
+      }
 
       // patients of the day
       if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {

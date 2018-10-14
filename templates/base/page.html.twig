@@ -174,7 +174,11 @@
 
                       {% if config.transmissionsPeutVoir == 'true' %}
                           <li class="nav-item">
-                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">Transmissions</a>
+                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">Transmissions
+                                {% if page.nbTransmissionsNonLues > 0 %}
+                                    <span class="badge badge-light">{{ page.nbTransmissionsNonLues }}</span>
+                                {% endif %}
+                              </a>
                           </li>
                       {% endif %}
 
