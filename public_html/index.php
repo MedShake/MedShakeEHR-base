@@ -138,7 +138,7 @@ if (isset($template)) {
       if($p['config']['transmissionsPeutVoir'] == 'true') {
         $p['page']['nbTransmissionsNonLues']=msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
         left join transmissions as t on tt.sujetID = t.id
-        where tt.toID = '".$p['user']['id']."' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
+        where tt.toID = '".$p['user']['id']."' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
       }
 
       // patients of the day
