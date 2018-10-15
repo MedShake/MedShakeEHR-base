@@ -422,6 +422,26 @@
    }
 
 /**
+ * Obtenir le nombre de transmissions reçues non lues
+ * @return int nb de transmissions reçues non lues
+ */
+   public function getNbTransmissionsRecuesNonLues() {
+     return msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
+     left join transmissions as t on tt.sujetID = t.id
+     where tt.toID = '".$this->_userID."' and tt.destinataire='oui' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
+   }
+
+/**
+* Obtenir le nombre de transmissions envoyées non lues
+* @return int nb de transmissions envoyées non lues
+*/
+   public function getNbTransmissionsEnvoyeesNonLues() {
+     return msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
+     left join transmissions as t on tt.sujetID = t.id
+     where tt.toID = '".$this->_userID."' and tt.destinataire='non' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
+   }
+
+/**
  * Définir en base une nouvelle réponse à une transmission ou l'éditer
  */
    public function setTranmissionReponsePoster() {

@@ -34,3 +34,5 @@ $trans->setUserID($p['user']['id']);
 if($p['config']['transmissionsPeutVoir'] != 'true') die("Vous n'êtes pas autorisé à accéder aux transmissions.");
 $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
 $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+$p['page']['nbTransmissionsRecuesNonLues']=$trans->getNbTransmissionsRecuesNonLues();
+$p['page']['nbTransmissionsEnvoyeesNonLues']=$trans->getNbTransmissionsEnvoyeesNonLues();
