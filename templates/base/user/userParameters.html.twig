@@ -83,7 +83,7 @@
     </div>
 
     {# LAP #}
-    {% if config.utiliserLap == 'true' %}
+    {% if config.utiliserLap == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
       <div role="tabpanel" class="tab-pane" id="plap">
         {% include('inc-tabUserParametersLap.html.twig') %}
       </div>

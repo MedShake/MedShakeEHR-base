@@ -31,6 +31,7 @@ $(document).ready(function() {
   $('a[href="#prescriptionsTypes"], a[href="#presType"]').on('shown.bs.tab', function(e) {
     userParametersPrescriptionsCatList();
   })
+  if($('#prescriptionsTypesButton').hasClass('active')) userParametersPrescriptionsCatList();
 
   // afficher les prescriptions types quand l'onglet devient visible
   $('a[href="#presType"]').on('shown.bs.tab', function(e) {
