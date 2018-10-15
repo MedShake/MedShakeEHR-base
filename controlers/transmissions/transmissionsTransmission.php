@@ -47,3 +47,9 @@ if(!empty($p['page']['transmission']['destinataires'])) {
   $p['page']['transmission']['statutDestinataires']=array_column($p['page']['transmission']['destinataires'],'statut', 'toID');
   $p['page']['transmission']['destinatairesID']=array_column($p['page']['transmission']['destinataires'],'toID');
 }
+
+if($p['page']['transmission']['fromID'] == $p['user']['id']) {
+  $p['page']['transmission']['fromBox']='envoyees';
+} else {
+  $p['page']['transmission']['fromBox']='recues';
+}

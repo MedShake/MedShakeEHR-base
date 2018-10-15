@@ -27,8 +27,15 @@
  *
  */
 
-$debug='';
-$template="transmissionsIndex";
+ $debug='';
+ $template="transmissionsIndex";
+
+if(isset($match['params']['transBox'])) {
+  $p['page']['transBox']=$match['params']['transBox'];
+} else {
+  $p['page']['transBox']='recues';
+}
+
 $trans = new msTransmissions();
 $trans->setUserID($p['user']['id']);
 if($p['config']['transmissionsPeutVoir'] != 'true') die("Vous n'êtes pas autorisé à accéder aux transmissions.");

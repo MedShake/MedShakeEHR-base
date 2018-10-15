@@ -118,7 +118,7 @@ inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 
 #transmissions
 transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']
-transmissionsIndex: ['GET', '/transmissions/', 'transmissions/transmissionsIndex']
+transmissionsIndex: ['GET', '/transmissions/[recues|envoyees:transBox]?/', 'transmissions/transmissionsIndex']
 transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmissions/transmissionsTransmission']
 
 #outils
