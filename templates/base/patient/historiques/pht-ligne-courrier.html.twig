@@ -26,7 +26,7 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
+<tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-groupe="{{ cs.groupe|e('html_attr') }}" data-creationDate="{{ cs.creationDate }}">
   <td title="Courrier">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
       <span class="far fa-file-alt fa-fw" aria-hidden="true"></span>

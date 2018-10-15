@@ -98,6 +98,22 @@ $(document).ready(function() {
     }
   });
 
+  // bouton de nouvelle transmission
+  $('body').on("click", ".newTransmission", function(e) {
+    e.preventDefault();
+
+    $('#transPatientConcID').val($(this).attr('data-patientID'));
+    $('#transPatientConcSel').html($(this).parents('tr').find('span.identite').html());
+    $('#transPatientConcSel').removeClass('d-none');
+
+    $('#modalTransmission').modal('show');
+  });
+  // poster une transmission
+  $('body').on("click", "#transmissionEnvoyer", function(e) {
+    e.preventDefault();
+    transmissionNewNextLocation = 'stayHere';
+    posterTransmission();
+  });
 
   //ajouter / retirer liste des Praticiens
   $('body').on("click", "a.switchPraticienListe", function(e) {

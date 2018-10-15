@@ -39,6 +39,10 @@ associer patient
 
 {% block head %}
 {{ parent() }}
+{# JS Transmissions #}
+{% if config.transmissionsPeutCreer == 'true' %}
+	<script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+{% endif %}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js?{{ modules.base }}"></script>
 <style>
 .openPatient td:nth-child(-n+7) {
@@ -156,4 +160,12 @@ associer patient
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block modals %}
+	{# modal nouvelle transmission #}
+	{% if config.transmissionsPeutCreer == 'true' %}
+	  {# modal nouvelle transmission #}
+	  {% include 'inc-transmissionsNouvelleModal.html.twig' %}
+	{% endif %}
 {% endblock %}

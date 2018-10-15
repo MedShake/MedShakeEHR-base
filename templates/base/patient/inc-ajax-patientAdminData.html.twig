@@ -52,20 +52,24 @@
         {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
       {% else %}
         {# age #}
-        {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
+
       {% endif %}
        - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}&#9794;{% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
             <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
-                <i class="fas fa-comment-alt"></i>
+                <i class="far fa-comment-alt"></i>
             </button>
           {% endif %}
 
           <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
-
+          {% if config.transmissionsPeutCreer == 'true' %}
+            <button type="button" class="btn btn-light btn-sm newTransmission" data-toggle="modal" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
+          {% endif %}
         </div>
+
    </small>
 </h1>
 <div style="margin-bottom : 8px;">

@@ -44,3 +44,11 @@ if ($tabTypes=msSQL::sql2tab("select t.label, t.id, c.label as catName, c.label 
         $p['page']['tabTypes'][$v['catName']][]=$v;
     }
 }
+
+// Transmissions
+if($p['config']['transmissionsPeutCreer'] == 'true') {
+  $trans = new msTransmissions();
+  $trans->setUserID($p['user']['id']);
+  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+}

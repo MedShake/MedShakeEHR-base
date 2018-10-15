@@ -166,7 +166,9 @@ $p['page']['correspondants']=$patient->getRelationsWithPros();
 $p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
 
 // Transmissions
-$trans = new msTransmissions();
-$trans->setUserID($p['user']['id']);
-$p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
-$p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+if($p['config']['transmissionsPeutCreer'] == 'true') {
+  $trans = new msTransmissions();
+  $trans->setUserID($p['user']['id']);
+  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+}

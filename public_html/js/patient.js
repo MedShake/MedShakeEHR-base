@@ -388,13 +388,15 @@ $(document).ready(function() {
   $('body').on("click", ".newTransmission", function(e) {
     e.preventDefault();
 
-    $('#transSujet').val("Pièce du dossier patient");
-    datepiece = $(this).parents('tr').attr('data-creationDate');
-    datepiece = moment(datepiece).format('DD/MM/YYYY HH:mm');
-    texte = "Voir la ligne de l'historique \"" + $(this).parents('td').next('td').text() + '" du ' + datepiece;
-    texte = texte.replace(/\r?\n|\r/g,"");
-    texte = texte.replace(/  +/g, ' ');
-    $('#transTransmission').val(texte);
+    if($(this).parents('tr').attr('data-creationDate')) {
+      $('#transSujet').val("Pièce du dossier patient");
+      datepiece = $(this).parents('tr').attr('data-creationDate');
+      datepiece = moment(datepiece).format('DD/MM/YYYY HH:mm');
+      texte = "Voir la ligne de l'historique \"" + $(this).parents('td').next('td').text() + '" du ' + datepiece;
+      texte = texte.replace(/\r?\n|\r/g,"");
+      texte = texte.replace(/  +/g, ' ');
+      $('#transTransmission').val(texte);
+    }
 
     $('#transPatientConcID').val($('#identitePatient').attr('data-patientid'));
     $('#transPatientConcSel').html($('#identitePatient').attr('data-patientIdentite'));
@@ -604,8 +606,8 @@ $(document).ready(function() {
   $('body').on('dblclick', '.trLigneExamen td:nth-child(2)', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    if ($(this).closest('tr').attr('data-creationdate'))
-      changeCreationDate($(this));
+    groupe = $(this).closest('tr').attr('data-groupe');
+    if (groupe == 'typecs' || groupe == 'reglement') changeCreationDate($(this));
   });
   $("body").on("click", ".changeCreationDate", function(e) {
     e.preventDefault();
