@@ -397,7 +397,7 @@ $(document).ready(function() {
       texte = texte.replace(/  +/g, ' ');
       $('#transTransmission').val(texte);
     }
-
+    $('#transConcerne').addClass('d-none');
     $('#transPatientConcID').val($('#identitePatient').attr('data-patientid'));
     $('#transPatientConcSel').html($('#identitePatient').attr('data-patientIdentite'));
     $('#transPatientConcSel').removeClass('d-none');

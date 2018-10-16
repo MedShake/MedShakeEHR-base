@@ -101,7 +101,7 @@ $(document).ready(function() {
   // bouton de nouvelle transmission
   $('body').on("click", ".newTransmission", function(e) {
     e.preventDefault();
-
+    $('#transConcerne').addClass('d-none');
     $('#transPatientConcID').val($(this).attr('data-patientID'));
     $('#transPatientConcSel').html($(this).parents('tr').find('span.identite').html());
     $('#transPatientConcSel').removeClass('d-none');
