@@ -37,52 +37,62 @@
 {% block body %}
   <h1>Transmissions</h1>
 
-  <div class="row my-4">
-    <div class="col">
-      <div id="toolbarTransmissions" class="btn-toolbar">
-        <div class="btn-group mr-4">
-          <button type="button" id="inbox" class="btn {% if page.transBox == 'recues' %}btn-secondary{% else %}btn-light{% endif %}"><i class="fas fa-arrow-down"></i> <strong>Reçues</strong>
-            {%if page.nbTransmissionsRecuesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsRecuesNonLues}}</span>{% endif %}
-          </button>
-          <button type="button" id="outbox" class="btn {% if page.transBox == 'envoyees' %}btn-secondary{% else %}btn-light{% endif %}"><i class="fas fa-arrow-up"></i> <strong>Envoyées</strong>
-            {%if page.nbTransmissionsEnvoyeesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsEnvoyeesNonLues}}</span>{% endif %}
-          </button>
+  <div id="toolbarTransmissions">
+    <div class="row mt-4">
+      <div class="col">
+        <div class="btn-toolbar">
+          <div class="btn-group mr-4">
+            <button type="button" id="inbox" class="btn {% if page.transBox == 'recues' %}btn-secondary{% else %}btn-light{% endif %}"><i class="fas fa-arrow-down"></i> <strong>Reçues</strong>
+              {%if page.nbTransmissionsRecuesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsRecuesNonLues}}</span>{% endif %}
+            </button>
+            <button type="button" id="outbox" class="btn {% if page.transBox == 'envoyees' %}btn-secondary{% else %}btn-light{% endif %}"><i class="fas fa-arrow-up"></i> <strong>Envoyées</strong>
+              {%if page.nbTransmissionsEnvoyeesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsEnvoyeesNonLues}}</span>{% endif %}
+            </button>
+          </div>
         </div>
+      </div>
+        {% if config.transmissionsPeutCreer == 'true' %}
+          <div class="col text-right">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTransmission"><i class="far fa-comments"></i> Nouvelle transmission</button>
+          </div>
+        {% endif %}
+    </div>
+
+    <div class="row mt-3 mb-4">
+      <div class="col">
         <div class="btn-group">
+          <button type="button" id="traitees" disabled class="btn btn-sm">Filtrer : </button>
           <button type="button" id="traitees" class="btn btn-sm btn-secondary">Toutes</button>
           <button type="button" id="nontraitees" class="btn btn-sm btn-light">Non traitées</button>
         </div>
       </div>
     </div>
-      {% if config.transmissionsPeutCreer == 'true' %}
-        <div class="col text-right">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTransmission"><i class="far fa-comments"></i> Nouvelle transmission</button>
-        </div>
-      {% endif %}
   </div>
-          <table id="listeTransmissions" class="table table-hover text-left my-4">
-            <thead class="thead-light">
-              <tr>
-                <th>Création</th>
-                <th>Sujet</th>
-                <th>Concerne</th>
-                <th>Auteur</th>
-                <th>Destinataires</th>
-              </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-          </table>
+  <table id="listeTransmissions" class="table table-hover text-left my-4">
+    <thead class="thead-light">
+      <tr>
+        <th>Création</th>
+        <th></th>
+        <th>Sujet</th>
+        <th>Concerne</th>
+        <th>Auteur</th>
+        <th>Destinataires</th>
+      </tr>
+    </thead>
+    <tbody>
 
-<div class="row">
-  <div class="col"></div>
-  <div class="col text-center"><span id="pageCourante"></span></div>
-  <div class="col text-right">
-    <button id="pageSuivante" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-left"></i></button>
-    <button id="pagePrecedente" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-right"></i></button>
+    </tbody>
+  </table>
+
+  <div class="row">
+    <div class="col"></div>
+    <div class="col text-center"><span id="pageCourante"></span></div>
+    <div class="col text-right">
+      <button id="pageSuivante" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-left"></i></button>
+      <button id="pagePrecedente" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-right"></i></button>
+    </div>
   </div>
-</div>
 
 
 {% endblock %}

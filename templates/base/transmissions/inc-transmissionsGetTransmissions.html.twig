@@ -20,7 +20,7 @@
  #/
 
 /##
- # Transmissions, bloc des sujets pour inclusion 
+ # Transmissions, bloc des sujets pour inclusion
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
@@ -31,13 +31,16 @@
   </tr>
 {% else %}
  {% for suj in page.listeSujets %}
-   <tr class="{% if suj.priorite == 10 %}table-danger{% elseif suj.priorite == 5 %}table-warning{% endif %}{% if suj.updateDate > suj.dateLectureUser %} font-weight-bold{% endif %} voirTransmission" data-transmissionid="{{ suj.id }}" style="cursor: pointer;">
+   <tr class="{% if suj.updateDate > suj.dateLectureUser %} font-weight-bold{% endif %} voirTransmission" data-transmissionid="{{ suj.id }}" style="cursor: pointer;">
      <td>
        {% if suj.registerDate|date('Ymd') != "now"|date('Ymd') %}
         {{ suj.registerDate|date('d/m/Y H:i') }}
        {% else %}
          {{ suj.registerDate|date('H:i') }}
        {% endif %}
+     </td>
+     <td>
+       {% if suj.priorite == 10 %}<i class="fas fa-exclamation-triangle fa-lg text-danger"></i>{% elseif suj.priorite == 5 %}<i class="fas fa-exclamation-triangle fa-lg text-warning">{% endif %}
      </td>
      <td>
        <a href="/transmission/{{ suj.id }}/" class="text-dark">{{ suj.sujet }}</a>
