@@ -193,17 +193,27 @@ function getTransmissions() {
   } else {
     box = 'outbox';
   }
-  if ($('#nontraitees').hasClass('btn-secondary')) {
+  if ($('#traitees').hasClass('btn-secondary')) {
+    traite = 'traitees';
+  } else if ($('#nontraitees').hasClass('btn-secondary')) {
     traite = 'nontraitees';
   } else {
     traite = 'toutes';
   }
+
+  if ($('#ctrlTransLecture').hasClass('btn-secondary')) {
+    lecture = 'nonlues';
+  } else {
+    lecture = 'toutes';
+  }
+
   $.ajax({
     url: urlBase + '/transmissions/ajax/transGetTransmissions/',
     type: 'post',
     data: {
       box: box,
       traite: traite,
+      lecture: lecture,
       page: numPageTrans
     },
     dataType: "json",

@@ -33,6 +33,7 @@ $trans->setUserID($p['user']['id']);
 $trans->setPage($_POST['page']);
 $trans->setModeInboxOutbox($_POST['box']);
 $trans->setTraite($_POST['traite']);
+$trans->setLecture($_POST['lecture']);
 $trans=$trans->getTransmissionsListeSujets();
 $p['page']['listeSujets']=$trans['data'];
 

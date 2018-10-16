@@ -38,10 +38,15 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
-  $('#toolbarTransmissions').on("click", "button", function(e) {
+  $('#toolbarTransmissions').on("click", "#ctrlTransLecture", function(e) {
+    $(this).toggleClass('btn-secondary btn-light');
+    getTransmissions();
+  });
+
+  $('#toolbarTransmissions').on("click", "button.ctrlTransListing", function(e) {
     numPageTrans = 1;
-    $(this).siblings().addClass('btn-light');
-    $(this).siblings().removeClass('btn-secondary');
+    $(this).siblings('.ctrlTransListing').addClass('btn-light');
+    $(this).siblings('.ctrlTransListing').removeClass('btn-secondary');
     $(this).removeClass('btn-light');
     $(this).addClass('btn-secondary');
     getTransmissions();

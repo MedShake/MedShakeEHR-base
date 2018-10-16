@@ -41,6 +41,7 @@
    private $_texte;
    private $_modeInboxOutbox='inbox';
    private $_traite='nontraitees';
+   private $_lecture='toutes';
 
 
 /**
@@ -71,13 +72,22 @@
    }
 
 /**
- * Définir le type de transmission à sélectionner : non traitées ou toutes
+ * Définir le type de transmission à sélectionner : non traitées, traitées ou toutes
  * @param string $traite nontraitees ou toutes
  */
    public function setTraite($traite) {
-     if (!in_array($traite, ['nontraitees','toutes'])) throw new Exception('Traite est incorrect');
+     if (!in_array($traite, ['traitees','nontraitees','toutes'])) throw new Exception('Traite est incorrect');
      $this->_traite=$traite;
    }
+
+/**
+* Définir le type de transmission à sélectionner : non lues, lues ou toutes
+* @param string $traite nontraitees ou toutes
+*/
+  public function setLecture($lecture) {
+    if (!in_array($lecture, ['lues','nonlues','toutes'])) throw new Exception('Lecture est incorrect');
+    $this->_lecture=$lecture;
+  }
 
 /**
  * Définir l'auteur de la transmission
@@ -172,21 +182,41 @@
 
      $groupby = $groupbycount = '';
      if($this->_modeInboxOutbox == 'outbox') {
-       $lj="";
+       $lj="left join transmissions_to as aut on t.id = aut.sujetID and aut.toID = '".$this->_userID."' ";
        $where = "t.fromID='".$this->_userID."' and ";
-       if($this->_traite == 'nontraitees') {
-         $lj="left join transmissions_to as trto on t.id = trto.sujetID and trto.statut = 'open' and trto.destinataire = 'oui' ";
-         $where .= "trto.statut='open' and ";
+       if($this->_traite != 'toutes') {
+         $lj.="left join transmissions_to as trto on t.id = trto.sujetID and trto.destinataire = 'oui' ";
          $groupby = " group by t.id, trto.statut, ln.id, bn.id, fn.id, ln1.id, bn1.id, fn1.id ";
          $groupbycount = " group by t.id, trto.statut ";
+         if($this->_traite == 'nontraitees') {
+           $where .= "trto.statut='open' and ";
+         } elseif ($this->_traite == 'traitees') {
+           $where .= "trto.statut='checked' and ";
+         }
        }
+
+       if($this->_lecture == 'nonlues') {
+         $where .= " (aut.dateLecture < t.updateDate or aut.dateLecture is null) and ";
+       }  elseif($this->_lecture == 'lues') {
+         $where .= " aut.dateLecture >= t.updateDate and ";
+       }
+
      }
      elseif($this->_modeInboxOutbox == 'inbox') {
        $lj="left join transmissions_to as trto on t.id = trto.sujetID and trto.toID = '".$this->_userID."'";
        $where = "t.fromID!='".$this->_userID."' and trto.toID='".$this->_userID."' and ";
        if($this->_traite == 'nontraitees') {
          $where .= "trto.statut='open' and ";
+       } elseif ($this->_traite == 'traitees') {
+         $where .= "trto.statut='checked' and ";
        }
+
+       if($this->_lecture == 'nonlues') {
+         $where .= " (trto.dateLecture < t.updateDate or trto.dateLecture is null) and ";
+       }  elseif($this->_lecture == 'lues') {
+         $where .= " trto.dateLecture >= t.updateDate and ";
+       }
+
      }
 
      $ret['nbTotalTran'] = msSQL::sqlUniqueChamp("select count(*) from(select t.id
