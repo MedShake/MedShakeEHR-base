@@ -323,13 +323,15 @@ class msData
 /**
  * Purger un array de datas sur les critères onlyfor et notfor de chaque item
  * @param  array $tab tableau de courriers / certificats / doc à signer obtenu par getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor']))
+ * @param  int $userID ID de l'utilisateur concerné
  * @return void
  */
     public function applyRulesOnlyforNotforOnArray(&$tab, $userID) {
       foreach($tab as $k=>$v) {
-        if(isset($v['onlyfor'])) {
-          $tab[$k]['onlyfor']=explode(',', $v['onlyfor']);
-          if(is_array($tab[$k]['notfor'])) {
+        if(isset($v['onlyfor']) and !empty($v['onlyfor'])) {
+          $tab[$k]['onlyfor'] = explode(',', $v['onlyfor']);
+          $tab[$k]['onlyfor'] = array_filter($tab[$k]['onlyfor'], 'is_numeric');
+          if(is_array($tab[$k]['onlyfor']) and !empty($tab[$k]['onlyfor'])) {
             if(count(array_filter($tab[$k]['onlyfor']))>0) {
               if(!in_array($userID, $tab[$k]['onlyfor'])) {
                 unset($tab[$k]);
@@ -337,9 +339,10 @@ class msData
             }
           }
         }
-        if(isset($v['notfor'])) {
-          $tab[$k]['notfor']=explode(',', $v['notfor']);
-          if(is_array($tab[$k]['notfor'])) {
+        if(isset($tab[$k]['notfor']) and !empty($tab[$k]['notfor'])) {
+          $tab[$k]['notfor'] = explode(',', $tab[$k]['notfor']);
+          $tab[$k]['notfor'] = array_filter($tab[$k]['notfor'], 'is_numeric');
+          if(is_array($tab[$k]['notfor']) and !empty($tab[$k]['notfor'])) {
             if(in_array($userID, $tab[$k]['notfor'])) {
               unset($tab[$k]);
             }
