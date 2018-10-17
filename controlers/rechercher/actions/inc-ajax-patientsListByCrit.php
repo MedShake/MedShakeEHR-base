@@ -31,6 +31,12 @@ $debug='';
 
 $template="listing";
 
+// liste des documents pouvant être envoyés à la signature
+$docASigner = new msData;
+if($p['page']['modelesDocASigner']=$docASigner->getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
+  $docASigner->applyRulesOnlyforNotforOnArray($p['page']['modelesDocASigner'], $p['user']['id']);
+}
+
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN='baseListingPatients';
 } elseif ($_POST['porp']=='pro') {
@@ -121,7 +127,6 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
     $mss->setColonnesRetour($colRetour);
 
     $p['page']['sqlString']=$sql=$mss->getSql();
-
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=0;$i<=$col-1;$i++) {

@@ -112,5 +112,13 @@ if ($p['page']['templatesDirAutorisationLecture']) {
                 }
             }
         }
+        // templates liés aux documents à signer
+        if ($modelesDocASigner=$certificats->getDataTypesFromCatName('catModelesDocASigner', ['formValues','label'])) {
+            foreach ($modelesDocASigner as $v) {
+                if (isset($p['page']['listeTemplates'][$v['formValues'].'.html.twig'])) {
+                    $p['page']['listeTemplates'][$v['formValues'].'.html.twig']['linkedTo'][]=array('type'=>'Document à signer', 'name'=>$v['label']);
+                }
+            }
+        }
     }
 }

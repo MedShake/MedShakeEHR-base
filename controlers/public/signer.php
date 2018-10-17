@@ -29,15 +29,15 @@
 $template="signer";
 
 if (is_file($p['config']['workingDirectory'].'consentementPatientID.txt')) {
-    $patientID=trim(file_get_contents($p['config']['workingDirectory'].'consentementPatientID.txt'));
+    $p['page']['docasigner']=Spyc::YAMLLoad($p['config']['workingDirectory'].'consentementPatientID.txt');
 }
 
-if (!isset($patientID)) {
+if (!isset($p['page']['docasigner']['patientID'])) {
     die('Le patient n\'est pas défini');
 } else {
-    if (is_numeric($patientID)) {
+    if (is_numeric($p['page']['docasigner']['patientID'])) {
         $courrier = new msCourrier();
-        $courrier->setPatientID($patientID);
+        $courrier->setPatientID($p['page']['docasigner']['patientID']);
         $p['page']['courrier']=$courrier->getCourrierData();
     } else {
         die('Le patient n\'est pas défini');

@@ -319,4 +319,32 @@ class msData
             return false;
         }
     }
+
+/**
+ * Purger un array de datas sur les critères onlyfor et notfor de chaque item
+ * @param  array $tab tableau de courriers / certificats / doc à signer obtenu par getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor']))
+ * @return void
+ */
+    public function applyRulesOnlyforNotforOnArray(&$tab, $userID) {
+      foreach($tab as $k=>$v) {
+        if(isset($v['onlyfor'])) {
+          $tab[$k]['onlyfor']=explode(',', $v['onlyfor']);
+          if(is_array($tab[$k]['notfor'])) {
+            if(count(array_filter($tab[$k]['onlyfor']))>0) {
+              if(!in_array($userID, $tab[$k]['onlyfor'])) {
+                unset($tab[$k]);
+              }
+            }
+          }
+        }
+        if(isset($v['notfor'])) {
+          $tab[$k]['notfor']=explode(',', $v['notfor']);
+          if(is_array($tab[$k]['notfor'])) {
+            if(in_array($userID, $tab[$k]['notfor'])) {
+              unset($tab[$k]);
+            }
+          }
+        }
+      }
+    }
 }

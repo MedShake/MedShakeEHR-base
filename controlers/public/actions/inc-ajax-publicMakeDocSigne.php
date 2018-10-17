@@ -32,12 +32,12 @@ $svg=$p['config']['workingDirectory'].'signature.svg';
 $png=$p['config']['workingDirectory'].'signature.png';
 
 if (is_file($p['config']['workingDirectory'].'consentementPatientID.txt')) {
-    $patientID=trim(file_get_contents($p['config']['workingDirectory'].'consentementPatientID.txt'));
+    $data=Spyc::YAMLLoad($p['config']['workingDirectory'].'consentementPatientID.txt');
 } else {
-    $patientID=null;
+    $data['patientID']=null;
 }
 
-if ($signature and is_numeric($patientID)) {
+if ($signature and is_numeric($data['patientID'])) {
     file_put_contents($svg, $signature[1]);
     exec('convert '.$svg.' '.$png);
 
@@ -51,11 +51,11 @@ if ($signature and is_numeric($patientID)) {
 
     //Data patient
     $courrier = new msCourrier();
-    $courrier->setPatientID($patientID);
+    $courrier->setPatientID($data['patientID']);
     $p['page']['courrier']=$courrier->getCourrierData();
 
     $pdf= new msPDF();
-    $pdfCorps = $pdf->makeWithTwig('consentementEcho.html.twig');
+    $pdfCorps = $pdf->makeWithTwig($data['template'].'.html.twig');
     $signIMG = '<img src="'.$png.'" style="height : 50pt" />';
     $pdfCorps = str_replace('<!-- signatureIMG -->', '<br><br>'.$signIMG, $pdfCorps);
     $pdfCorps = str_replace('class="tailleFont"', 'style="font-size : 9pt;"', $pdfCorps);
@@ -63,21 +63,21 @@ if ($signature and is_numeric($patientID)) {
 
     // nouvel objet support
     $doc = new msObjet();
-    $doc->setFromID('3');
-    $doc->setToID($patientID);
+    $doc->setFromID($data['fromID']);
+    $doc->setToID($data['patientID']);
 
 
     if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
 
         //titre
-        $doc->setTitleObjet($supportID, 'Consentement échographie foetale');
+        $doc->setTitleObjet($supportID, $data['label']);
 
         //type
         $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
         $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
         $pdf->setFromID('0');
-        $pdf->setToID($patientID);
+        $pdf->setToID($data['patientID']);
         $pdf->setType('doc');
         $pdf->setObjetID($supportID);
 

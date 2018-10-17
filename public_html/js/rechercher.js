@@ -46,7 +46,8 @@ $(document).ready(function() {
       url: urlBase+'/patients/ajax/patientsSendSign/',
       type: 'post',
       data: {
-        patientID: $(this).attr('data-patientID')
+        patientID: $(this).attr('data-patientID'),
+        typeID: $(this).attr('data-typeID')
       },
       dataType: "html",
       success: function(data) {

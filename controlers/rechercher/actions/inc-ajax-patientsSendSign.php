@@ -21,10 +21,24 @@
  */
 
 /**
- * Patients > ajax : plae l'ID patient dans un TXT pour le retrouver sur le
+ * Patients > ajax : place les infos nécessaires dans un TXT pour le retrouver sur le
  * périphérique tactil de signature de consentement, coté non logué.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-file_put_contents($p['config']['workingDirectory'].'consentementPatientID.txt', $_POST['patientID']);
+$data = new msData;
+$data = $data->getDataType($_POST['typeID'], $col=['id','label', 'formValues as template'] );
+
+// petite prévention
+$data['template']=str_replace('.html.twig','',$data['template']);
+
+$tab=array(
+  'patientID'=>(int)$_POST['patientID'],
+  'fromID'=>(int)$p['user']['id'],
+  'typeID'=>(int)$data['id'],
+  'template'=>(string)$data['template'],
+  'label'=>(string)$data['label'],
+);
+
+file_put_contents($p['config']['workingDirectory'].'consentementPatientID.txt', Spyc::YAMLDump($tab, false, 0, true));

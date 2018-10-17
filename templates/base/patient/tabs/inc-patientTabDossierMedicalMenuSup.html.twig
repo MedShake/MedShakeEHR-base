@@ -56,13 +56,22 @@
                     <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
                 </li>
             {% endfor %}
-            <li role="separator" class="divider"></li>
+            <li role="separator" class="dropdown-divider"></li>
             <li class="dropdown-header">Courriers</li>
             {% for v in page.modelesCourrier %}
                 <li>
                     <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
                 </li>
             {% endfor %}
+            {% if page.modelesDocASigner|length > 0 %}
+              <li role="separator" class="dropdown-divider"></li>
+              <li class="dropdown-header">Documents à signer</li>
+              {% for v in page.modelesDocASigner %}
+                  <li>
+                      <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
+                  </li>
+              {% endfor %}
+            {% endif %}
         </ul>
     </div>
 
