@@ -699,8 +699,8 @@ class msForm
                             $type['autocompleteclass']=' jqautocomplete';
 
                             foreach ($bloc as $h) {
-                                if (preg_match('#data-acTypeID=([0-9]+:{0,1})+#i', $h)) {
-                                    $type['dataAcTypeID']=$h;
+                                if (preg_match('#data-acTypeID=(([0-9a-z]+:{0,1})+)#i', $h, $matchOut)) {
+                                    $type['dataAcTypeID']='data-acTypeID="'.$this->_traiterListeTypesAutocomplete($matchOut[1]).'"';
                                 }
                             }
                             if (!isset($type['dataAcTypeID'])) {
@@ -724,6 +724,27 @@ class msForm
             }
         }
     }
+
+/**
+ * Traiter les types passés en paramètre pour un autocomplete étendu aux valeurs d'autres types
+ * @param  string $stringTypes typeID ou typeName séparés par :
+ * @return string              typeID séparés par :
+ */
+    private function _traiterListeTypesAutocomplete($stringTypes) {
+      $finalTab=[];
+      if(!empty($stringTypes)) {
+        $typesTab=explode(':', $stringTypes);
+        foreach($typesTab as $type) {
+          if(is_numeric($type)) {
+            $finalTab[]=$type;
+          } elseif (is_string($type)) {
+            if($convert = msData::getTypeIDFromName($type)) $finalTab[]=$convert;
+          }
+        }
+      }
+      return implode(':', $finalTab);
+    }
+
 /**
  * Construire le formulaire: traitement des en-tête de ligne
  * @param  string $value     Le nom de ligne à afficher
