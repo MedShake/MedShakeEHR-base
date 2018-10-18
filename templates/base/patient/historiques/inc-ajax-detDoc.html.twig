@@ -40,7 +40,7 @@
               <tr>
                 <td>
                   <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-                    <span class="fa fa-file" aria-hidden="true"></span>
+                    <i class="fas fa-external-link-alt"></i>
                     VOIR FICHIER
                     {{ page.pj.html }} ({{ page.pj.filesize }})
                   </a>
@@ -52,12 +52,19 @@
       {% else %}
         <p>
             <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-              <span class="fa fa-file" aria-hidden="true"></span>
+              <i class="fas fa-external-link-alt"></i>
               VOIR FICHIER
               {{ page.pj.html }} ({{ page.pj.filesize }})
             </a>
         </p>
       {% endif %}
+
+      {% if page.pj.html == 'PDF' %}
+      <object data="{{ page.pj.href }}" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD">
+      </object>
+      {% endif %}
+
+
     {% endif %}
 
     {% if page.bioHprim %}
