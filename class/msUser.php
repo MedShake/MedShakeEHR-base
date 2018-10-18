@@ -99,8 +99,8 @@ class msUser
         if (!isset($_COOKIE['userPassPc'])) {
             return msUser::cleanBadAuth();
         }
-        
-        $userID=msSQL::cleanVar($_COOKIE['userIdPc']); 
+
+        $userID=msSQL::cleanVar($_COOKIE['userIdPc']);
         $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".$userID."' LIMIT 1");
 
         //recherche clef de salage spécifique au user
@@ -170,6 +170,7 @@ class msUser
     {
         global $p;
         setcookie("userName", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
+        setcookie("apacheLogUserID", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userIdPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
         setcookie("userPassPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
@@ -229,6 +230,7 @@ class msUser
 
         $userPass=md5(md5(sha1(md5($this->_userPass))));
         setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
+        setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
     }
 }
