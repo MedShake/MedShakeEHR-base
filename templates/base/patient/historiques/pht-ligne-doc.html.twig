@@ -56,7 +56,7 @@
                 <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
               </li>
             {% endif %}
-            {% if config.apicryptSmtpHost %}
+            {% if config.apicryptAdresse %}
               <li>
                 <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
               </li>
@@ -107,7 +107,7 @@
                 <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
               </li>
             {% endif %}
-            {% if config.apicryptSmtpHost %}
+            {% if config.apicryptAdresse %}
               <li class="d-inline-block d-lg-none">
                 <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
               </li>
