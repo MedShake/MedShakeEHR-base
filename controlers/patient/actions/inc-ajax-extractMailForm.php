@@ -42,26 +42,28 @@ if ($_POST['mailType']=='ns') {
     $preValues['mailTo']= array_key_exists('personalEmail', $toAdminData) ? $toAdminData['personalEmail'] : '';
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
-    $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');
+    $catModelesMails='catModelesMailsToPatient';
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['mailFrom']=$p['config']['apicryptAdresse'];
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
-    $catModelesMails=msData::getCatIDFromName('catModelesMailsToApicrypt');
+    $catModelesMails='catModelesMailsToApicrypt';
 } else {
-    $catModelesMails=0;
+    $catModelesMails='';
 }
 
 //modèles
-//les certificats
-$lm=new msData();
-if($lm=$lm->getDataTypesFromCatID($catModelesMails, ['id','label'])) {
-  $preValues['446'][0]='';
-  foreach($lm as $v) {
-    $preValues['446'][$v['id']]=$v['label'];
+$lmc=new msData();
+if($lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+  $lmc->applyRulesOnlyforNotforOnArray($lm, $p['user']['id']);
+  $typeID = msData::getTypeIDFromName('mailModeles');
+  $preValues[$typeID][0]='';
+  if(!empty($lm)) {
+    foreach($lm as $v) {
+      $preValues[$typeID][$v['id']]=$v['label'];
+    }
   }
 }
-
 
 //sur le doc à joindre
 if (isset($_POST['objetID'])) {
