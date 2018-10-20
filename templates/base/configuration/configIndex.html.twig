@@ -42,9 +42,11 @@
     <li role="presentation" class="nav-item">
       <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
     </li>
-
     <li role="presentation" class="nav-item">
       <a href="#ca" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
+    </li>
+    <li role="presentation" class="nav-item">
+      <a href="#journaux" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Journaux et informations techniques</a>
     </li>
     <li role="presentation" class="nav-item">
       <a href="#ap" class="nav-link" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
@@ -155,16 +157,29 @@
         </li>
       </ul>
 
-      <h2 class="my-2">Vérifications techniques</h2>
+
+
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="journaux">
+      <h2 class="my-2">Journaux</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs généraux
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs généraux des écritures utilisateurs en base de données
           </a>
         </li>
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Logs des agendas
           </a>
         </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/accesHttp/">Logs des accès (http)
+          </a>
+        </li>
+      </ul>
+
+      <h2 class="my-2">Informations techniques</h2>
+      <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Vérifications des répertoires de stockage
           </a>
