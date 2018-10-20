@@ -1437,7 +1437,7 @@ function showObjetDet(element, timed) {
 
       $.ajax({
         url: urlBase + '/patient/ajax/ObjetDet/',
-        type: 'post',
+        type: 'get',
         data: {
           objetID: objetID,
         },

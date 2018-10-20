@@ -27,10 +27,10 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (is_numeric($_POST['objetID'])) {
+if (is_numeric($_GET['objetID'])) {
 
     $preview = new msModBaseObjetPreview;
-    $preview->setObjetID($_POST['objetID']);
+    $preview->setObjetID($_GET['objetID']);
     $objetGroupe=$preview->getObjetGroupe();
     $objetName=$preview->getObjetName();
     $objetModule=$preview->getObjetModule();
@@ -56,7 +56,7 @@ if (is_numeric($_POST['objetID'])) {
         // si méthode existe dans extension proposé par le module dont le type dépend
         elseif(method_exists($classModuleObjet,$methode)) {
           $previewExtend = new $classModuleObjet;
-          $previewExtend->setObjetID($_POST['objetID']);
+          $previewExtend->setObjetID($_GET['objetID']);
           echo $previewExtend->$methode();
         }
         // sinon on tente au final avec le template impression
