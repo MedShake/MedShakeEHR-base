@@ -85,6 +85,7 @@ dcViewStudy: ['GET', '/dicom/[i:patientID]/study/[:dcStudyID]/', 'dicom/viewStud
 
 #logs
 logsActions: ['GET|POST', '/logs/actions/[a:m]/', 'logs/actions/logsActions']
+logsAjax: ['GET|POST', '/logs/ajax/[a:m]/', 'logs/actions/logsAjax']
 logs: ['GET', '/logs/[i:patient]?/[i:typeID]?/[i:instance]?/', 'logs/logs']
 historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiquePrint']
 historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
@@ -93,6 +94,7 @@ historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patie
 historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/', 'logs/historiqueRappelsSMS']
 historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'logs/historiqueRappelsMail']
 logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
+historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 
 #pdf
 makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
