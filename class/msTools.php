@@ -134,6 +134,16 @@ class msTools
   }
 
 /**
+ * Valider une chaîne comme étant une expression régulière
+ * @param  string  $string expression
+ * @return boolean         TRUE / FALSE
+ */
+  public static function isRegularExpression($string) {
+    return @preg_match($string, '') !== FALSE;
+  }
+
+
+/**
  * "bbcodifier" du html
  * @param  string $t le texte
  * @return string    le texte "bbcodifier"
