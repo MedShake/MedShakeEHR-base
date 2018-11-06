@@ -35,7 +35,7 @@ if (isset($match['params']['porp'])) {
 }
 
 // liste des types par catégorie
-if ($tabTypes=msSQL::sql2tab("select t.label, t.id, c.label as catName, c.label as catLabel
+if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
   from data_types as t
   left join data_cat as c on c.id=t.cat
   where t.id > 0 and t.groupe = 'admin' and t.formType != 'group'

@@ -473,6 +473,19 @@ function exportTableToCSV(table, filename) {
     downloadCSV(csv.join("\n"), filename);
 }
 
+/**
+ * Equivalent JS d'ucfirst en PHP
+ * @param  {string} str chaine à couvertir
+ * @return {string}     chaine convertie
+ */
+function ucfirst(str) {
+  return str.toLowerCase().replace(/[^\s_'-]+/g, function(word) {
+    return word.replace(/^./, function(firstLetter) {
+      return firstLetter.toUpperCase();
+    });
+  });
+}
+
 ////////////////////////////////////////////////////////////////////////
 ///////// Fonctions tierces
 

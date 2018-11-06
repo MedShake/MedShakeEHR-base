@@ -37,7 +37,9 @@ $acceptedModes=array(
     'setPeopleData', // Enregistrer des données patient
     'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée
     'mailTracking', // Retourner les infos de tracking d'un mail
-    'getAutocompleteCodeNgapOrCcamData' // Retourner les infos sur un acte NGAP ou CCAM
+    'getAutocompleteCodeNgapOrCcamData', // Retourner les infos sur un acte NGAP ou CCAM
+    'getCpsVitaleData', // Obtenir les infos de la carte Vitale
+    'getCpsVitaleDataRappro' // Obtenir les infos de la carte Vitale rapprochées aux ID patients
 );
 
 if (!in_array($m, $acceptedModes)) {

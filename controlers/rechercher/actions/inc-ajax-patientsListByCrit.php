@@ -118,8 +118,8 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         'lastname'=>$_POST['d2'],
         'birthname'=>$_POST['d2']
       );
-    if(!empty($_POST['autreCritVal']) and $typeName=msData::getNameFromTypeID($_POST['autreCrit'])) {
-      $criteres[$typeName]=$_POST['autreCritVal'];
+    if(!empty($_POST['autreCritVal'])) {
+      $criteres[$_POST['autreCrit']]=$_POST['autreCritVal'];
     }
     $mss->setCriteresRecherche($criteres);
 

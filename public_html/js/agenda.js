@@ -37,6 +37,54 @@ var selected_action;
 $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
+  ///////// Actions carte vitale
+
+  //lire la carte vitale
+  $('#lectureCpsVital').on("click", function(e) {
+    btnLec= $(this);
+    $.ajax({
+      url: urlBase + '/ajax/getCpsVitaleDataRappro/',
+      type: 'post',
+      data: {
+        patientID: $(this).attr('data-patientID'),
+      },
+      dataType: "json",
+      beforeSend: function() {
+        btnLec.find('i').addClass('fa-spin');
+      },
+      complete: function() {
+        btnLec.find('i').removeClass('fa-spin');
+      },
+      success: function(data) {
+        if ($('#calendar').attr('data-mode') != 'lateral') $('#creerNouveau').modal('hide');
+        console.log(vitaleToEhrTypeName(data));
+        $('#lectureCpsVitale div.modal-body').html(ehrTypeDataToHtml('prevenirDossierExistant'));
+        $('#lectureCpsVitale').modal('show');
+      },
+      error: function() {
+        alert_popup("danger", 'Essayez à nouveau !');
+      }
+    });
+  });
+
+  $('body').on("click", ".goToPatientFromVitaleData", function(e) {
+    e.stopPropagation();
+  });
+
+  $('body').on("click", ".peopleVitale", function(e) {
+    e.preventDefault();
+    indexVitale = $(this).attr('data-indexVitale');
+
+    dataVitale[indexVitale]['firstname'] = ucfirst(dataVitale[indexVitale]['firstname']);
+
+    $.each(dataVitale[indexVitale], function(key, value) {
+      $('#id_' + key + '_id').val(value);
+    });
+    $('#lectureCpsVitale').modal('hide');
+    if ($('#calendar').attr('data-mode') != 'lateral') $('#creerNouveau').modal('show');
+  });
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Définition des variables par défaut construction agenda
 
   if (!hiddenDays) {
@@ -194,6 +242,7 @@ $(document).ready(function() {
         $("#patientInfo").show();
         if ($('#calendar').attr('data-mode') == 'lateral') {
           $('#nettoyer').show();
+          $('.lireCpsVitale').hide();
         }
         $('#buttonModifier').prop('disabled', false);
         $('#buttonAutresActions').prop('disabled', false);
@@ -419,6 +468,7 @@ $(document).ready(function() {
     $("#patientInfo").find("select").prop("disabled", false);
     $("#historiquePatient").hide();
     $('#buttonCreer').removeAttr('disabled');
+    $('.lireCpsVitale').show();
     if ($('#calendar').attr('data-mode') == 'lateral') {
       $('#nettoyer').show();
     }
@@ -501,6 +551,7 @@ $(document).ready(function() {
 
   $("#buttonCancel").on("click", function(e) {
     $('#creerNouveau').modal('hide');
+    nettoyer();
   });
 
   $("#creerNouveau").on("click", function(e) {
@@ -709,7 +760,8 @@ function nettoyer() {
   $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
   $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
   $("#patientInfo select")[0].selectedIndex = 0;
-  $('#buttonCreer').attr('disabled','disabled');
+  $('#buttonCreer').attr('disabled', 'disabled');
+  $('.lireCpsVitale').hide();
 
   // historique patient
   $('#historiquePatient').hide();
@@ -879,8 +931,8 @@ function modEvent(refetch) {
     success: function(data) {
       if (refetch)
         $('#calendar').fullCalendar('refetchEvents');
-        nettoyer();
-        cleanSelectedVar();
+      nettoyer();
+      cleanSelectedVar();
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");

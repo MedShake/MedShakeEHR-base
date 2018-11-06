@@ -37,6 +37,9 @@
     <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
     <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
     <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
+    {% if config.vitaleActiver =='true' %}
+    	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+    {% endif %}
     <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
 
     <style>
@@ -106,7 +109,6 @@
 {% endblock %}
 
 {% block body %}
-
 {% if config.agendaModePanneauLateral == 'true' %}
   <div class="row">
     <div class="col-3">
@@ -135,8 +137,12 @@
     </div>
   </div>
 {% endif %}
+{% endblock %}
+
+{% block modals %}
+
 {# modal rdv/nouveau patient #}
-<div id="creerNouveau" class="modal fade" tabindex="-1" role="dialog">
+<div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog">
   <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-lg{% endif %}" role="document">
     <div class="modal-content">
       <form id="formRdv">
@@ -212,4 +218,9 @@
     </div>
   </div>
 </div>
+
+{# modal résultat lecture CPS Vitale  #}
+{% if config.vitaleActiver =='true' %}
+	{% include 'inc-modalLectureCpsVitale.html.twig' %}
+{% endif %}
 {% endblock %}

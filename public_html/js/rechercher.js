@@ -37,6 +37,45 @@ $(document).ready(function() {
   });
 
 
+  //lire la carte vitale
+  $('body').on("click", ".lireCpsVitale", function(e) {
+    btnLec= $(this);
+    $.ajax({
+      url: urlBase + '/ajax/getCpsVitaleDataRappro/',
+      type: 'post',
+      data: {
+        patientID: $(this).attr('data-patientID'),
+      },
+      dataType: "json",
+      beforeSend: function() {
+        btnLec.find('i').addClass('fa-spin');
+      },
+      complete: function() {
+        btnLec.find('i').removeClass('fa-spin');
+      },
+      success: function(data) {
+        console.log(vitaleToEhrTypeName(data));
+        $('#lectureCpsVitale div.modal-body').html(ehrTypeDataToHtml());
+        $('#lectureCpsVitale').modal('show');
+      },
+      error: function() {
+        alert_popup("danger", 'Essayez à nouveau !');
+      }
+    });
+  });
+
+  // Rechercher a partir des data vitale
+  $('body').on("click", ".searchPatientFromVitaleDataNss", function(e) {
+    e.preventDefault();
+    $('#lectureCpsVitale').modal('hide');
+    indexVitale = $(this).attr('data-indexVitale');
+
+    dataVitale[indexVitale]['firstname'] = ucfirst(dataVitale[indexVitale]['firstname']);
+    $('#autreCritVal').val(dataVitale[indexVitale]['nss']);
+    $('#autreCrit').val('nss');
+    $('#autreCritVal').trigger('keyup');
+
+  });
 
   //envoyer pour signature
   $('body').on("click", "a.sendSign, button.sendSign", function(e) {

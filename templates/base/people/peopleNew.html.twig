@@ -33,6 +33,9 @@
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
+{% if config.vitaleActiver =='true' %}
+	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -41,6 +44,10 @@
 <h1>Nouveau patient</h1>
 {% elseif page.porp == 'pro' %}
 <h1>Nouveau praticien</h1>
+{% endif %}
+
+{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
+	<button type="button" class="btn btn-success my-3 lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
 {% endif %}
 
 {% if session['form'][page.formIN]['validationErrorsMsg'] %}
@@ -61,7 +68,14 @@
 	</div>
 </div>
 
+{% endblock %}
 
 
+{% block modals %}
+
+{# modal résultat lecture CPS Vitale  #}
+{% if config.vitaleActiver =='true' %}
+	{% include 'inc-modalLectureCpsVitale.html.twig' %}
+{% endif %}
 
 {% endblock %}
