@@ -204,12 +204,12 @@
                               {% if config.designTopMenuStyle == 'icones' %}
                                 <i class="fas fa-at fa-lg d-none d-lg-inline"></i>
                                 <span class="d-lg-none"> Boite de réception</span>
-                                {% if page.inbox.numberOfMsg > 0 %}
+                                {% if page.inbox.numberOfMsg > 0 and config.designTopMenuInboxCountDisplay =='true' %}
                                     <span class="badge text-white" style="margin-left: -5px">{{ page.inbox.numberOfMsg }}</span>
                                 {% endif %}
                               {% else %}
                                 Boite de réception
-                                {% if page.inbox.numberOfMsg > 0 %}
+                                {% if page.inbox.numberOfMsg > 0 and config.designTopMenuInboxCountDisplay =='true' %}
                                    <span class="badge badge-light">{{ page.inbox.numberOfMsg }}</span>
                                 {% endif %}
                               {% endif %}
@@ -223,12 +223,12 @@
                                 {% if config.designTopMenuStyle == 'icones' %}
                                   <i class="fas fa-comments fa-lg d-none d-lg-inline"></i>
                                   <span class="d-lg-none"> Transmissions</span>
-                                  {% if page.nbTransmissionsNonLues > 0 %}
+                                  {% if page.nbTransmissionsNonLues > 0 and config.designTopMenuTransmissionsCountDisplay =='true' %}
                                       <span class="badge text-white" style="margin-left: -5px">{{ page.nbTransmissionsNonLues }}</span>
                                   {% endif %}
                                 {% else %}
                                   Transmissions
-                                  {% if page.nbTransmissionsNonLues > 0 %}
+                                  {% if page.nbTransmissionsNonLues > 0 and config.designTopMenuTransmissionsCountDisplay =='true' %}
                                       <span class="badge badge-light">{{ page.nbTransmissionsNonLues }}</span>
                                   {% endif %}
                                 {% endif %}

@@ -132,10 +132,12 @@ if (isset($template)) {
 
     if (isset($p['user']['id'])) {
       //inbox number of messages
-      $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
+      if($p['config']['designTopMenuInboxCountDisplay'] == 'true') {
+        $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
+      }
 
       //transmissions non lues
-      if($p['config']['transmissionsPeutVoir'] == 'true') {
+      if($p['config']['transmissionsPeutVoir'] == 'true' and $p['config']['designTopMenuTransmissionsCountDisplay'] == 'true') {
         $p['page']['nbTransmissionsNonLues']=msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
         left join transmissions as t on tt.sujetID = t.id
         where tt.toID = '".$p['user']['id']."' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
