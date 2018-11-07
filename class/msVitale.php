@@ -57,6 +57,8 @@ class msVitale
       foreach($data['vitale']['data'] as $index=>$dat) {
         if($toID = msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['nss']."' and value = '".$dat[9].$dat[10]."' group by toID ")) {
           $data['vitale']['correspondances'][$index]=$toID;
+        } else {
+          $data['vitale']['correspondances'][$index]='';
         }
       }
     }
