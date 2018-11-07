@@ -156,7 +156,7 @@ if (isset($template)) {
 
       // crédits SMS
       if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
-          $p['page']['creditsSMS']=file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
+          $p['page']['creditsSMS']=(int)file_get_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile']);
       }
 
       //utilisateurs pouvant avoir un agenda
