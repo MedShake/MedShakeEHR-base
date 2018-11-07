@@ -472,6 +472,30 @@
    }
 
 /**
+ * Obtenir le nb de transmissions non lues par priorité
+ * @return array toutes=>int, importantes=>int, urgentes=>int
+ */
+   public function getNbTransmissionsNonLuesParPrio() {
+     $tab=array(
+       'toutes'=>0,
+       'importantes'=>0,
+       'urgentes'=>0
+     );
+     if($transmissionsNbNonLues=msSQL::sql2tabKey("select count(tt.sujetID) as nb, priorite from transmissions_to as tt
+     left join transmissions as t on tt.sujetID = t.id
+     where tt.toID = '".$this->_userID."' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null) group by priorite", 'priorite')) {
+       $tab['toutes'] = array_sum(array_column($transmissionsNbNonLues, 'nb'));
+       if(isset($transmissionsNbNonLues[5]['nb'])) {
+         $tab['importantes'] = $transmissionsNbNonLues[5]['nb'];
+       }
+       if(isset($transmissionsNbNonLues[10]['nb'])) {
+         $tab['urgentes'] = $transmissionsNbNonLues[10]['nb'];
+       }
+     }
+     return $tab;
+   }
+
+/**
  * Définir en base une nouvelle réponse à une transmission ou l'éditer
  */
    public function setTranmissionReponsePoster() {

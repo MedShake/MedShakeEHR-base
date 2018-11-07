@@ -137,10 +137,10 @@ if (isset($template)) {
       }
 
       //transmissions non lues
-      if($p['config']['transmissionsPeutVoir'] == 'true' and $p['config']['designTopMenuTransmissionsCountDisplay'] == 'true') {
-        $p['page']['nbTransmissionsNonLues']=msSQL::sqlUniqueChamp("select count(tt.sujetID) from transmissions_to as tt
-        left join transmissions as t on tt.sujetID = t.id
-        where tt.toID = '".$p['user']['id']."' and t.statut='open' and (tt.dateLecture < t.updateDate or tt.dateLecture is null)");
+      if($p['config']['transmissionsPeutVoir'] == 'true') {
+        $transCompter=new msTransmissions;
+        $transCompter->setUserID($p['user']['id']);
+        $p['page']['transmissionsNbNonLues']=$transCompter->getNbTransmissionsNonLuesParPrio();
       }
 
       // patients of the day

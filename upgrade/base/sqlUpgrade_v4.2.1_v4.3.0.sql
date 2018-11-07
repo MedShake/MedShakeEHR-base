@@ -28,7 +28,9 @@ update `forms` set `yamlStructure`= 'structure:\r\n  row1:                      
 INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES
 ('designTopMenuStyle', 'Ergonomie et design', 'default', 'icones / textes', 'aspect du menu de navigation du haut de page', 'textes'),
 ('designTopMenuInboxCountDisplay', 'Ergonomie et design', 'default', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
-('designTopMenuTransmissionsCountDisplay', 'Ergonomie et design', 'default', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true');
+('designTopMenuTransmissionsCountDisplay', 'Ergonomie et design', 'default', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true'),
+('designTopMenuTransmissionsColorIconeImportant', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
+('designTopMenuTransmissionsColorIconeUrgent', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true');
 
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v4.3.0' WHERE `name`='base' and `groupe`='module';
