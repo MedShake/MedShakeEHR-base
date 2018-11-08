@@ -105,13 +105,15 @@
     {{ page['patient']['administrativeDatas']['city']['value']|e }}
 
     {% if page.correspondants %}
-      <div class="btn-group ml-4">
+      <div class="d-inline ml-4">
         <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
           <span class="fa fa-link" aria-hidden="true"></span>
         </button>
         {% for v in page.correspondants %}
-          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
+
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
+            {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm text-secondary"></i></sup>{% endif %}
           </a>
         {% endfor %}
       </div>

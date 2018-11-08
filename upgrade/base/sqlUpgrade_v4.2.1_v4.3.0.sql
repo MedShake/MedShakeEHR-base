@@ -32,5 +32,8 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('designTopMenuTransmissionsColorIconeImportant', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
 ('designTopMenuTransmissionsColorIconeUrgent', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true');
 
+-- Ajout de la relation Patient <-> Médecin traitant déclaré 
+update `data_types` set formValues = concat("'MTD': 'Médecin traitant déclaré'\n", formValues) where name='relationPatientPraticien';
+
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v4.3.0' WHERE `name`='base' and `groupe`='module';

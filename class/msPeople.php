@@ -234,10 +234,10 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname']);
+        $data = new msData();
+        $name2typeID = $data->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname']);
 
-        return msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+        if($relations =  msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
         from objets_data as o
         inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
         left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
@@ -246,7 +246,15 @@ class msPeople
         left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted=''
         where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
         group by o.value, c.id, bn.id, n.id, p.id, t.id
-        order by typeRelation = 'MT' desc, nom asc");
+        order by typeRelation = 'MT' desc, nom asc")) {
+
+          $typeID = $data->getTypeIDFromName('relationPatientPraticien');
+          $options = $data->getSelectOptionValue(array($typeID))[$typeID];
+          foreach($relations as $k=>$v) {
+            $relations[$k]['typeRelationTxt']=$options[$relations[$k]['typeRelation']];
+          }
+        }
+        return $relations;
     }
 
     /**
