@@ -50,12 +50,13 @@ if (isset($match['params']['key'])) {
       $template='phonecaptureError';
     } else {
       //mdp de l'utilisateur
-      $userPass=msSQL::sqlUniqueChamp("select CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($params[0])."' and LENGTH(pass)>0");
+      $userPass=msUser::getUserPassByUserID($params[0]);
 
       //recherche de fingeprint specifique utilisateur
       $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', msSQL::cleanVar($params[0]));
 
-      $userPass=md5(md5(sha1(md5($userPass.$p['config']['phonecaptureFingerprint']))));
+      //$userPass=md5(md5(sha1(md5($userPass.$p['config']['phonecaptureFingerprint']))));
+      $userPass=password_hash($userPass.$p['config']['phonecaptureFingerprint'],PASSWORD_DEFAULT);
 
       setcookie("userIdPc", $params[0], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
       setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);

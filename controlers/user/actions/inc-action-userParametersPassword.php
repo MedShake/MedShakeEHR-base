@@ -24,6 +24,7 @@
  * enregistrement des paramètres utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
@@ -41,7 +42,7 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
     unset($_SESSION['form'][$formIN]);
     if (empty($_POST['p_currentPassword'])) {
         unset($_SESSION['form'][$formIN]);
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShake, vous devez entrer votre mot de passe actuel.';
+        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShakeEHR, vous devez entrer votre mot de passe actuel.';
         msTools::redirRoute('userParameters');
     } elseif ($_POST['p_password'] != $_POST['p_verifPassword']) {
         unset($_SESSION['form'][$formIN]);
@@ -49,18 +50,19 @@ if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
         msTools::redirRoute('userParameters');
     }
     else {
-        if (msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".$p['user']['id']."' and pass=AES_ENCRYPT('".$_POST['p_currentPassword']."',@password)")) {
+        $checkLogin = new msUser;
+        if ($checkLogin->checkLoginByUserID($p['user']['id'], $_POST['p_currentPassword'])) {
             $changeMdp=true;
         } else {
             unset($_SESSION['form'][$formIN]);
-            $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe actuel du compte MedShake n\'est pas correct.';
+            $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe actuel du compte MedShakeEHR n\'est pas correct.';
             msTools::redirRoute('userParameters');
         }
     }
 }
 
 if ($changeMdp) {
-    msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE id='".$p['user']['id']."' limit 1");
+    msUser::setUserNewPassword($p['user']['id'], $_POST['p_password']);
 }
 
 msTools::redirRoute('userParameters');

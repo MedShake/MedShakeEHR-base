@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `type` enum('patient','pro','externe','service', 'deleted') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `module` varchar(20) DEFAULT 'base',
-  `pass` varbinary(60) DEFAULT NULL,
+  `pass` varbinary(1000) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
   `fromID` smallint(5) DEFAULT NULL,
   `lastLogIP` varchar(50) DEFAULT NULL,

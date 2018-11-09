@@ -24,12 +24,13 @@
  * Config : change le mot de passe d'un utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 if(!is_numeric($_POST['id']) or !isset($_POST['password'])) die;
 
-msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['password']."',@password) WHERE id='".$_POST['id']."'");
+msUser::setUserNewPassword($_POST['id'], $_POST['password']);
 
 echo json_encode(array('ok'));

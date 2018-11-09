@@ -68,9 +68,10 @@ class msUser
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
 
-        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank, module from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
+        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank, module from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
-        if ($_COOKIE['userPass']==md5(md5(sha1(md5($user['pass']))))) {
+        if(password_verify($user['pass'],$_COOKIE['userPass'])) {
+        //if(md5(sha1($user['pass'])) == $_COOKIE['userPass']) {
 
             $name2typeID = new msData();
             $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
@@ -101,12 +102,12 @@ class msUser
         }
 
         $userID=msSQL::cleanVar($_COOKIE['userIdPc']);
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass, rank from people where id='".$userID."' LIMIT 1");
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank from people where id='".$userID."' LIMIT 1");
 
         //recherche clef de salage spécifique au user
         $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', $userID);
 
-        if ($_COOKIE['userPassPc']==md5(md5(sha1(md5($user['pass'].$p['config']['phonecaptureFingerprint']))))) {
+        if(password_verify($user['pass'].$p['config']['phonecaptureFingerprint'],$_COOKIE['userPassPc'])) {
             return $user;
         } else {
             $duration=msConfiguration::getParameterValue('phonecaptureCookieDuration');
@@ -130,25 +131,42 @@ class msUser
         return false;
     }
 
-
 /**
  * Vérifier le login utilisateur
- * @param  int $userID userID
+ * @param  int $userName userName
  * @param  string $pass  password
  * @return bool         true/false
  */
     public function checkLogin($userName, $pass)
     {
-        if ($userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where name='".msSQL::cleanVar($userName)."' and pass=AES_ENCRYPT('".msSQL::cleanVar($pass)."',@password)")) {
+        $userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass from people where name='".msSQL::cleanVar($userName)."' limit 1");
+        if (password_verify($pass, $userlogin['pass'])) {
             $this->_userID=$userlogin['id'];
             $this->_userName=$userlogin['name'];
             $this->_userPass=$userlogin['pass'];
             $this->_loginChecked=true;
             return true;
         } else {
+            if($this->_checkPasswordFormatAndUpdate()) {
+              return $this->checkLogin($userName, $pass);
+            }
             $this->_loginChecked=false;
             return false;
         }
+    }
+
+/**
+ * Vérifier le login utilisateur via le userID
+ * @param  int $userID userID
+ * @param  string $pass   userPass
+ * @return bool          true/false
+ */
+    public function checkLoginByUserID($userID, $pass) {
+      if($userName = msSQL::sqlUniqueChamp("select name from people where id='".msSQL::cleanVar($userID)."' limit 1")) {
+        return $this->checkLogin($userName, $pass);
+      } else {
+        return false;
+      }
     }
 
 /**
@@ -178,18 +196,43 @@ class msUser
     }
 
 /**
+ * Mettre à jour la password d'un utilisateur
+ * @param int $userID user id
+ * @param string $userPass user password
+ */
+    public static function setUserNewPassword($userID, $userPass) {
+      if (!is_numeric($userID)) {
+          throw new Exception('UserID is not numeric');
+      }
+      $userPass = password_hash($userPass, PASSWORD_DEFAULT);
+      return msSQL::sqlQuery("UPDATE people set pass=AES_ENCRYPT('".msSQL::cleanVar($userPass)."',@password) WHERE id='".$userID."' limit 1");
+    }
+
+/**
+ * Obtenir le password d'un utilisateur via son ID
+ * @param  int $userID userID
+ * @return string         password
+ */
+    public static function getUserPassByUserID($userID) {
+      if (!is_numeric($userID)) {
+          throw new Exception('UserID is not numeric');
+      }
+      return msSQL::sqlUniqueChamp("select CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass from people where id='".msSQL::cleanVar($userID)."' and LENGTH(pass)>0");
+    }
+
+/**
  * Vérifier si un utilisater est admin
  * @return bool true or false
  */
-  public static function checkUserIsAdmin()
-  {
-      global $p;
-      if ($p['user']['rank']=='admin') {
-          return true;
-      } else {
-          return false;
-      }
-  }
+    public static function checkUserIsAdmin()
+    {
+        global $p;
+        if ($p['user']['rank']=='admin') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 /**
  * Loguer la dernière connexion
@@ -227,10 +270,30 @@ class msUser
             throw new Exception('Login is not yet checked');
         }
         global $p;
-
-        $userPass=md5(md5(sha1(md5($this->_userPass))));
+        $userPass=password_hash($this->_userPass,PASSWORD_DEFAULT);
         setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
         setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
         setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
     }
+
+/**
+ * Fonction permettant la transition de password
+ * @return bool true|false
+ */
+     private function _checkPasswordFormatAndUpdate() {
+       $cols = msSQL::sql2tabKey("SHOW COLUMNS FROM people", "Field");
+       if($cols['pass']['Type']=="varbinary(60)") {
+         msSQL::sqlQuery("ALTER TABLE `people` CHANGE `pass` `pass` VARBINARY(1000) NULL DEFAULT NULL");
+         if($pass=msSQL::sql2tabKey("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass from people where pass != '' ", 'id', 'pass')) {
+           foreach($pass as $id=>$pass) {
+             msUser::setUserNewPassword($id, $pass);
+           }
+           return true;
+         }
+         return false;
+       } else {
+         return false;
+       }
+     }
+
 }

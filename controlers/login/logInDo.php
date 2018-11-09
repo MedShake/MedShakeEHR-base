@@ -40,13 +40,13 @@ $validation=$form->getValidation();
 
 
 if ($validation === false) {
+
     msTools::redirRoute('userLogIn');
 } else {
 
     //check login
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-//        unset($_SESSION['form'][$formIN]);
         $message='Nous n\'avons pas trouvé d\'utilisateur correspondant ou le mot de passe est incorrect';
         if (!is_array($_SESSION['form'][$formIN]['validationErrorsMsg']) or !in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
@@ -57,13 +57,14 @@ if ($validation === false) {
     //do login
     if ($validation != false) {
         $user-> doLogin();
+
         unset($_SESSION['form'][$formIN]);
 
-    if ('admin'==msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1") and
-        'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
-        msTools::redirRoute('configUpdates');
-    }
-    msTools::redirection('/patients/');
+        if ('admin'==msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".$_POST['p_username']."' limit 1") and
+            'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
+            msTools::redirRoute('configUpdates');
+        }
+        msTools::redirection('/patients/');
     } else {
         $form->savePostValues2Session();
         msTools::redirRoute('userLogIn');

@@ -58,14 +58,14 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0"
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 1
     );
-    $id=msSQL::sqlInsert('people', $data);
-    msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['p_password']."',@password) WHERE name='".$_POST['p_username']."' limit 1");
-    $obj= new msObjet();
-    $obj->setToID($id);
-    $obj->setFromID(1);
-    $obj->createNewObjetByTypeName('firstname', $_POST['p_username']);
-    $obj->createNewObjetByTypeName('lastname', 'ADMIN');
-
+    if($id=msSQL::sqlInsert('people', $data)) {
+      msUser::setUserNewPassword($id, $_POST['p_password']);
+      $obj= new msObjet();
+      $obj->setToID($id);
+      $obj->setFromID(1);
+      $obj->createNewObjetByTypeName('firstname', $_POST['p_username']);
+      $obj->createNewObjetByTypeName('lastname', 'ADMIN');
+    }
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
         unset($_SESSION['form'][$formIN]);
