@@ -34,9 +34,9 @@
 // pour le configurateur de cron
 if (isset($p)) {
     $p['page']['availableCrons']['inbox']=array(
-        'task' => 'Mail',
+        'task' => 'Apicrypt',
         'defaults' => array('m'=>'0,5,10,15,20,25,30,35,40,45,50,55','h'=>'8-20','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Relève des mails');
+        'description' => 'Relève des mails Apicrypt');
     return;
 }
 
@@ -65,15 +65,15 @@ $p['homepath']=$homepath;
 $mysqli=msSQL::sqlConnect();
 
 
-$users=msPeople::getUsersWithSpecificParam('apicryptPopUser');
+$users=msPeople::getUsersWithSpecificParam('apicryptAdresse');
 
 
-foreach ($users as $userID) {
+foreach ($users as $userID=>$val) {
+
     /////////// config pour l'utilisateur concerné
     $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
 
     /////////// Relever le compte pop3
-
     $pop = new msPop3();
     if ($connection = $pop->pop3_login($p['config']['apicryptPopHost'], $p['config']['apicryptPopPort'], $p['config']['apicryptPopUser'], $p['config']['apicryptPopPassword'], 'INBOX', false)) {
         $liste=$pop->pop3_list($connection);
@@ -118,12 +118,11 @@ foreach ($users as $userID) {
                     $hprim=msTools::utf8_converter($hprim);
 
                     // pj
+                    $pj=[];
                     $dir=$p['config']['apicryptCheminInbox'].$dirname;
                     if (is_dir($dir)) {
                         msTools::sanitizeDirectoryFiles($dir.'/');
                         $pj = array_diff(scandir($dir), array('..', '.'));
-                    } else {
-                        $pj=null;
                     }
 
 
@@ -143,7 +142,6 @@ foreach ($users as $userID) {
                     );
 
                     msSQL::sqlInsert('inbox', $data);
-
 
                     // supprimer le message
                     $pop->pop3_dele($connection, $msgID);
