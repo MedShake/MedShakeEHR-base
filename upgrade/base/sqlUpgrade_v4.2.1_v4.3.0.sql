@@ -6,12 +6,24 @@ UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'data-acTypeID=11:55
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'data-acTypeID=12:56', 'data-acTypeID=city:villeAdressePro');
 UPDATE `forms` SET `yamlStructureDefaut` = yamlStructure;
 
+-- fix: orthographe
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'médico-chirugicaux', 'médico-chirurgicaux');
+UPDATE `data_types` SET `label` = replace(label, 'médico-chirugicaux', 'médico-chirurgicaux');
+UPDATE `data_types` SET `placeholder` = replace(placeholder, 'médico-chirugicaux', 'médico-chirurgicaux');
+UPDATE `data_types` SET `description` = replace(description, 'médico-chirugicaux', 'médico-chirurgicaux');
+
 -- Support pour les documents à signer
 INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
 ('courrier', 'catModelesDocASigner', 'Documents à signer', 'documents à envoyer à la signature numérique', 'base', 1, '2018-01-01 00:00:00');
 
 -- Paramètres de configuration : changement catégorie
 UPDATE `configuration` set cat = 'Règlements' where name in ('administratifSecteurHonoraires', 'administratifPeutAvoirFacturesTypes', 'administratifPeutAvoirRecettes', 'administratifComptaPeutVoirRecettesDe', 'administratifSecteurIK');
+
+-- Support pour retour data FSE par service tiers
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='reglementItems');
+INSERT INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('reglement', 'regleFseData', '', 'FSE data', 'data de la FSE générée par service tiers', '', '', 'text', '', 'base', @catID, 1, '2018-01-01 01:00:00', 1576800000, 1);
+
 
 -- Paramètres pour vitale
 INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES

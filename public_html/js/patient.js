@@ -411,6 +411,20 @@ $(document).ready(function() {
     posterTransmission();
   });
 
+  // bouton de nouvelle FSE
+  $('body').on("click", ".newFse", function(e) {
+    e.preventDefault();
+    getFseData($(this));
+    $('#modalFaireFse').modal('show');
+  });
+
+  // bouton de validation FSE
+  $('body').on("click", "#modalFaireFseValider", function(e) {
+    e.preventDefault();
+    doFse($(this));
+    $('#modalFaireFse').modal('hide');
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations fermeture actions non terminées
 

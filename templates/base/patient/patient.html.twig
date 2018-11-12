@@ -53,6 +53,11 @@
 
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/mattbryson/TouchSwipe-Jquery-Plugin/jquery.touchSwipe.min.js?{{ modules.base }}"></script>
 
+  {# JS fonctions pour Vitale #}
+  {% if config.vitaleActiver =='true' %}
+  	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+
   {# JS général du dossier patient #}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
 
@@ -237,6 +242,11 @@
 {% if config.transmissionsPeutCreer == 'true' %}
   {# modal nouvelle transmission #}
   {% include 'inc-transmissionsNouvelleModal.html.twig' %}
+{% endif %}
+
+{# modal CPS Vitale  #}
+{% if config.vitaleActiver =='true' %}
+  {% include 'inc-modalFaireFse.html.twig' %}
 {% endif %}
 
 {% endblock %}
