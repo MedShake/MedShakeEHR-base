@@ -24,8 +24,20 @@
  * RESTful : recevoir des documents
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$user=new msUser();
+if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$user->checkLogin($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+   header('HTTP/1.1 401 Unauthorized');
+   die;
+}
+$userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
+
+if ((!array_key_exists('timestamp', $parameters) or $parameters['timestamp'] < date_sub(new Datetime(), new Dateinterval("PT0H15M0S"))->format("Y-m-d H:i:s"))) {
+   header('HTTP/1.1 401 Unauthorized');
+   die;
+}
 
 if (!is_array($parameters) or !array_key_exists('filename', $parameters)) {
     header('HTTP/1.1 400 Bad Request');
