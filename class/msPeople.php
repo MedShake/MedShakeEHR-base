@@ -138,7 +138,7 @@ class msPeople
 
 /**
  * Obtenir le module pour un user
- * @return value module
+ * @return string module
  */
     public function getModule() {
         if (!is_numeric($this->_toID)) {
@@ -224,10 +224,10 @@ class msPeople
         return $tab;
     }
 
-    /**
-     * Obtenir les pros en relation avec ce patient
-     * @return array array des pros en relation
-     */
+/**
+ * Obtenir les pros en relation avec ce patient
+ * @return array array des pros en relation
+ */
     public function getRelationsWithPros()
     {
         if (!is_numeric($this->_toID)) {
@@ -257,11 +257,11 @@ class msPeople
         return $relations;
     }
 
-    /**
-     * Obtenir les autres patients liés généalogiquement avec ce patient
-     * @return array array des autres patients
-     *
-     */
+/**
+ * Obtenir les autres patients liés généalogiquement avec ce patient
+ * @return array array des autres patients
+ *
+ */
     public function getRelationsWithOtherPatients()
     {
         if (!is_numeric($this->_toID)) {
