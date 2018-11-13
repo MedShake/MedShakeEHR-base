@@ -24,6 +24,7 @@
  * Config : gérer les tâches planifiées
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $template='configCronJobs';
@@ -41,7 +42,7 @@ if (!$crons or !is_array($crons) or count($crons)==2) {
 $crons=array_splice($crons, 2);
 
 foreach ($crons as $cron) {
-    include $p['homepath'].'cron/'.$cron;
+  if(is_file($p['homepath'].'cron/'.$cron)) include $p['homepath'].'cron/'.$cron;
 }
 exec("crontab -l", $installedCrons);
 if (!is_array($installedCrons)) {
@@ -56,4 +57,3 @@ foreach($installedCrons as $line) {
         $p['page']['availableCrons'][$matches[6]]['values']=array('m'=>$matches[1],'h'=>$matches[2],'M'=>$matches[3],'dom'=>$matches[4],'dow'=>$matches[5]);
     }
 }
-
