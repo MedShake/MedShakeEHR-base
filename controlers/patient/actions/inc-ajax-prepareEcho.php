@@ -62,7 +62,7 @@ $jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['p
 file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
 
 //wl dicom
-file_put_contents($p['config']['workingDirectory'].'workList.txt', $fichierDicomTXT);
-exec("dump2dcm ".$p['config']['workingDirectory']."workList.txt ".$p['config']['dicomWorkListDirectory']."workList.wl");
-unlink($p['config']['workingDirectory'].'workList.txt');
+file_put_contents($p['config']['workingDirectory'].'workList'.$p['user']['id'].'.txt', $fichierDicomTXT);
+exec("dump2dcm ".$p['config']['workingDirectory']."workList".$p['user']['id'].".txt ".$p['config']['dicomWorkListDirectory']."workList".$p['user']['id'].".wl");
+unlink($p['config']['workingDirectory'].'workList'.$p['user']['id'].'.txt');
 die();
