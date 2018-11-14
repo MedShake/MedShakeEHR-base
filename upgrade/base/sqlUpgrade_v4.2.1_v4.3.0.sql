@@ -44,6 +44,9 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('designTopMenuTransmissionsColorIconeImportant', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
 ('designTopMenuTransmissionsColorIconeUrgent', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true');
 
+-- Paramètre de configuration : précision d'intitulé
+UPDATE `configuration` set description = 'ID ou IDs numériques des comptes utilisateurs (séparés par des virgules) pour lesquels l\'utilisateur courant peut voir les mails Apicrypt relevés en inbox' where name = 'apicryptInboxMailForUserID' and level='default';
+
 -- Ajout de la relation Patient <-> Médecin traitant déclaré
 update `data_types` set formValues = concat("'MTD': 'Médecin traitant déclaré'\n", formValues) where name='relationPatientPraticien';
 

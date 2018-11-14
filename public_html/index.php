@@ -133,7 +133,14 @@ if (isset($template)) {
     if (isset($p['user']['id'])) {
       //inbox number of messages
       if($p['config']['designTopMenuInboxCountDisplay'] == 'true') {
-        $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID = '".$p['config']['apicryptInboxMailForUserID']."' ");
+        if(!empty($p['config']['apicryptInboxMailForUserID'])) {
+          $apicryptInboxMailForUserID=explode(',', $p['config']['apicryptInboxMailForUserID']);
+          $apicryptInboxMailForUserID[]=$p['user']['id'];
+          $apicryptInboxMailForUserID=implode("','", $apicryptInboxMailForUserID);
+        } else {
+          $apicryptInboxMailForUserID=$p['user']['id'];
+        }
+        $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in ('".$apicryptInboxMailForUserID."') ");
       }
 
       //transmissions non lues

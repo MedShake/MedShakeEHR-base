@@ -666,7 +666,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('apicryptCheminFichierC', 'Apicrypt', 'default', 'dossier', 'répertoire de travail apicrypt, fichiers chiffrés', ''),
 ('apicryptCheminVersClefs', 'Apicrypt', 'default', 'dossier', 'chemin vers les répertoire Clefs Apicrypt contenant les clefs de l’utilisateur', ''),
 ('apicryptCheminVersBinaires', 'Apicrypt', 'default', 'dossier', 'chemin vers le répertoire contenant les programmes Apicrypt en ligne de commande', ''),
-('apicryptInboxMailForUserID', 'Apicrypt', 'default', 'nombre', 'ID numérique qui indique pour l\'utilisateur quels mails il est susceptible de pouvoir lire', '0'),
+('apicryptInboxMailForUserID', 'Apicrypt', 'default', 'nombre', 'ID ou IDs numériques des comptes utilisateurs (séparés par des virgules) pour lesquels l\'utilisateur courant peut voir les mails Apicrypt relevés en inbox', ''),
 ('apicryptUtilisateur', 'Apicrypt', 'default', 'texte', 'nom d\'utilisateur Apicrypt (portion devant le @ de l\'adresse)', ''),
 ('apicryptAdresse', 'Apicrypt', 'default', 'texte', 'adresse complète apicrypt, ex :  prenom.NOM@medicalXX.apicrypt.org', ''),
 ('apicryptSmtpHost', 'Apicrypt', 'default', 'url/ip', 'serveur smtp pour l\'envoi des messages Apicrypt, en règle générale : smtp.intermedic.org', 'smtp.intermedic.org'),
