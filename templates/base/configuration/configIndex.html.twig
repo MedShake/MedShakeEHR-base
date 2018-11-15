@@ -56,7 +56,7 @@
   <div class="tab-content">
 
     <div role="tabpanel" class="tab-pane active" id="cc">
-      <h2 class="my-2">Configuration générale</h2>
+      <h2 class="mt-4 mb-2">Configuration générale</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configuration-globale/">Paramètres globaux
@@ -70,7 +70,7 @@
         </li>
       </ul>
 
-      <h2 class="my-2">Utilisateurs</h2>
+      <h2 class="mt-4 mb-2">Utilisateurs</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options
@@ -78,7 +78,7 @@
         </li>
       </ul>
 
-      <h2 class="my-2">Paramètres courants</h2>
+      <h2 class="mt-4 mb-2">Paramètres courants</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/">Actes et tarifs</a>
@@ -98,7 +98,7 @@
 
     <div role="tabpanel" class="tab-pane" id="ca">
 
-      <h2 class="my-2">Formulaires et modèles</h2>
+      <h2 class="mt-4 mb-2">Formulaires et modèles</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/">Edition des formulaires</a>
@@ -108,14 +108,14 @@
         </li>
       </ul>
 
-      <h2 class="my-2">DICOM</h2>
+      <h2 class="mt-4 mb-2">DICOM</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/tags-dicom/">Correspondances DICOM</a>
         </li>
       </ul>
 
-      <h2 class="my-2">Données</h2>
+      <h2 class="mt-4 mb-2">Données</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/admin/">Administratives</a>
@@ -149,7 +149,7 @@
         </li>
       </ul>
 
-      <h2 class="my-2">Ressources externes</h2>
+      <h2 class="mt-4 mb-2">Ressources externes</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/refreshSams/">Rafraichir le XML HAS des SAMs
@@ -162,7 +162,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="journaux">
-      <h2 class="my-2">Journaux</h2>
+      <h2 class="mt-4 mb-2">Journaux</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/">Logs généraux des écritures utilisateurs en base de données
@@ -178,7 +178,15 @@
         </li>
       </ul>
 
-      <h2 class="my-2">Informations techniques</h2>
+      <h2 class="mt-4 mb-2">Backups</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configBackups/">Listes des backups SQL
+          </a>
+        </li>
+      </ul>
+
+      <h2 class="mt-4 mb-2">Informations techniques</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Vérifications des répertoires de stockage
@@ -195,7 +203,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="ap">
-      <h2 class="my-2">Licence et crédits</h2>
+      <h2 class="mt-4 mb-2">Licence et crédits</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>

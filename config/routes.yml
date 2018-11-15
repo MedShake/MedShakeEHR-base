@@ -142,6 +142,7 @@ configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
 configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
+configBackups: ['GET', '/configuration/configBackups/', 'configuration/configBackups']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
