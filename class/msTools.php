@@ -361,4 +361,17 @@ class msTools
       return !empty($return);
    }
 
+/**
+ * Obtenir la taille d'un fichier en version lisible simple
+ * @param  string  $file     fichier (dont chemin)
+ * @param  integer $decimals nombre de décimales
+ * @return string            taille
+ */
+   public static function getFileSize($file, $decimals = 2) {
+     $bytes=filesize($file);
+     $sz = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po'];
+     $factor = floor((strlen($bytes) - 1) / 3);
+     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+   }
+
 }
