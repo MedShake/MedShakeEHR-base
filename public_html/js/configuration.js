@@ -32,6 +32,9 @@ $(document).ready(function() {
     $($("ul.nav-tabs li")[1]).children("a")[0].click();
   }
   else if (document.URL.indexOf("#ap") >= 0) {
+    $($("ul.nav-tabs li")[3]).children("a")[0].click();
+  }
+  else if (document.URL.indexOf("#journaux") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
   }
 
@@ -251,14 +254,14 @@ $(document).ready(function() {
     }
   });
 
-  //activation de codemirror pour édition templates
+//  activation de codemirror pour édition templates
   if ($("#templateEditor").length ) {
     var editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
       lineNumbers: true,
       mode: "twig",
       lineWrapping: true
     });
-    editor.setSize(null, 400);
+    editor.setSize(null, 500);
   }
 
   //auto_grow pour edition de formulaires

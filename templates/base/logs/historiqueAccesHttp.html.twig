@@ -39,6 +39,18 @@
 
 {% block body %}
 
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+        Historique des accès http
+    </li>
+  </ol>
+
   {% if page.MEDSHAKEEHRLOGFILE == FALSE %}
   <div class="alert alert-danger my-4" role="alert">
     Le fichier de log n'est pas défini comme variable d'environnement "MEDSHAKEEHRLOGFILE" du serveur ! Consultez la documentation.

@@ -35,6 +35,19 @@
 {% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+  </li>
+  <li class="breadcrumb-item active">
+      Logs Agendas
+  </li>
+</ol>
+
 <h1>Logs Agendas
 {% if page.agendaID > 0 %}#{{ page.agendaID }}{% endif %}
 {% if page.eventID > 0 %} - Rdv #{{ page.eventID }}{% endif %}
