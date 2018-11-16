@@ -60,7 +60,8 @@ $acceptedModes=array(
     'getHistoriqueToday', // Obtenir l'historique du jour
     'getGraphData', // Obtenir les data pour les graphs biométrie
     'getGraphDataCardio', // Obtenir les data pour les graphs biométrie cardio
-    'getFseData' // obtenir les data nécessaires à l'établissement d'une FSE
+    'getFseData', // obtenir les data nécessaires à l'établissement d'une FSE
+    'getFilePreviewDocument' // obtenir le html de prévisualisation d'un fichier
 );
 
 

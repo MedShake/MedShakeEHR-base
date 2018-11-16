@@ -106,6 +106,28 @@ class msModBaseObjetPreview
   }
 
 /**
+ * Obtenir le html pour l'inclusion du fichier propre à un document
+ * @return string html
+ */
+  public function getFilePreviewDocument() {
+    global $p;
+    $doc = new msStockage();
+    $doc->setObjetID($this->_objetID);
+
+    if ($doc->testDocExist()) {
+        $p['page']['pj']['href']=$doc->getWebPathToDoc();
+        $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
+    }
+
+    if($p['page']['pj']['html'] == 'PDF') {
+      $html = '<object data="'.$p['page']['pj']['href'].'" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD"></object>';
+    } elseif($p['page']['pj']['html'] == 'TXT') {
+      $html = nl2br(file_get_contents($doc->getPathToDoc()));
+    }
+    return $html;
+  }
+
+/**
  * Obtenir le HTML de prévisualisation d'un Mail
  * @return string code html
  */

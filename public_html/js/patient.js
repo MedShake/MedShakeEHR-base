@@ -67,6 +67,7 @@ $(document).ready(function() {
     }
   });
   refreshHistoriqueToday();
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
 
@@ -114,6 +115,13 @@ $(document).ready(function() {
     }
   });
 
+  // 1er chargement tab Bio
+  $('#ongletBio').on("show.bs.tab", function() {
+    if ($('#tabBio').html() == '') {
+      var url = $('#tabBio').attr('data-rootUrl');
+      loadTabPatient(url, 'tabBio');
+    }
+  });
 
   function loadTabPatient(url, tab, param) {
     $.ajax({
@@ -244,6 +252,48 @@ $(document).ready(function() {
       $('.swipable').removeClass('swipableon').removeClass('swipable-right').removeClass('swipable-left');
       $('.atcd').show().css('left', '');
       $('.dossier').show().css('left', '').css('top', '');
+    }
+  });
+
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations Tab Biologie
+
+  $('#tabBio').on('click', 'a.bioDateSelect, button.bioDateSelect', function(e) {
+    e.preventDefault();
+    var url = $('#tabBio').attr('data-rootUrl');
+    var param = {
+      'dateBio': $(this).attr('data-dateBio')
+    };
+    loadTabPatient(url, 'tabBio', param);
+  });
+
+  $('#tabBio').on('change', 'select.bioDateSelect', function(e) {
+    var url = $('#tabBio').attr('data-rootUrl');
+    var param = {
+      'dateBio': $(this).val()
+    };
+    loadTabPatient(url, 'tabBio', param);
+  });
+
+  $('#tabBio').on('click', '#accordionDocs div.card-header', function(e) {
+    objetID = $(this).attr('data-objetid');
+    destination = $("#collapse" + objetID + " div.card-body");
+    if (destination.html() == '') {
+      $.ajax({
+        url: urlBase + '/patient/ajax/getFilePreviewDocument/',
+        type: 'get',
+        data: {
+          objetID: objetID,
+        },
+        dataType: "html",
+        success: function(data) {
+          destination.html(data)
+        },
+        error: function() {
+          destination.remove();
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
     }
   });
 
@@ -388,12 +438,12 @@ $(document).ready(function() {
   $('body').on("click", ".newTransmission", function(e) {
     e.preventDefault();
 
-    if($(this).parents('tr').attr('data-creationDate')) {
+    if ($(this).parents('tr').attr('data-creationDate')) {
       $('#transSujet').val("Pièce du dossier patient");
       datepiece = $(this).parents('tr').attr('data-creationDate');
       datepiece = moment(datepiece).format('DD/MM/YYYY HH:mm');
       texte = "Voir la ligne de l'historique \"" + $(this).parents('td').next('td').text() + '" du ' + datepiece;
-      texte = texte.replace(/\r?\n|\r/g,"");
+      texte = texte.replace(/\r?\n|\r/g, "");
       texte = texte.replace(/  +/g, ' ');
       $('#transTransmission').val(texte);
     }
@@ -1018,7 +1068,7 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      if($.isArray(scriptsList.reglement)) {
+      if ($.isArray(scriptsList.reglement)) {
         $.each(scriptsList.reglement, function(index, value) {
           $.getScriptOnce(urlBase + "/js/patientScripts/" + value);
         });
@@ -1385,7 +1435,7 @@ function modalAlternateTitreChange() {
     },
     dataType: "html",
     success: function() {
-      if(titreActu.length > 0) {
+      if (titreActu.length > 0) {
         $('.alternatTitre' + objetID).html(' : ' + titreActu);
       } else {
         $('.alternatTitre' + objetID).html('');

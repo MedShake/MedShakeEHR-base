@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,27 +21,21 @@
  */
 
 /**
- * Patient : accès aux tabs du dossier patient
+ * Patient > ajax : obtenir le code html pour une inclusion du fichier d'un document reçu
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $tab=$match['params']['tab'];
+if (is_numeric($_GET['objetID'])) {
 
- $acceptedModes=array(
-     'tabDicomStudiesList', // liste des studies dicom du patient
-     'tabDicomStudyView', // voir une étude dicom
-     'tabLiensPatient', // relation patient / patient et praticien
-     'tabLAP', // lap
-     'tabBio', // bio hprim
- );
+    $preview = new msModBaseObjetPreview;
+    $preview->setObjetID($_GET['objetID']);
+    $objetGroupe=$preview->getObjetGroupe();
+    $objetName=$preview->getObjetName();
+    $objetModule=$preview->getObjetModule();
 
- if (!in_array($tab, $acceptedModes)) {
-     die;
- }
-
- //inclusion
- if(is_file($p['homepath'].'controlers/patient/tabs/'.$tab.'.php')) {
-    include($p['homepath'].'controlers/patient/tabs/'.$tab.'.php');
- }
+    if ($objetGroupe=="doc") {
+        echo $preview->getFilePreviewDocument();
+    }
+    exit();
+}

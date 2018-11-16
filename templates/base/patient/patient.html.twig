@@ -142,6 +142,9 @@
         <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-notes-medical mr-2"></i>Dossier médical</a>
       </li>
       <li class="nav-item">
+        <a id="ongletBio" class="nav-link" href="#tabBio"data-toggle="tab"><i class="fas fa-chart-line mr-2"></i>Biologie</a>
+      </li>
+      <li class="nav-item">
         <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-chart-line mr-2"></i>Biométrie</a>
       </li>
       {% if config.utiliserLap == 'true' %}
@@ -166,6 +169,9 @@
       <div id="tabDossierMedical" class="tab-pane active" role="tabpanel">
         {% include('inc-patientTabDossierMedical.html.twig') %}
       </div>
+
+      {# tab Bio #}
+      <div id="tabBio" class="tab-pane" role="tabpanel" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabBio/"></div>
 
       {# tab Graphiques #}
       <div id="tabGraph" class="tab-pane" role="tabpanel">
