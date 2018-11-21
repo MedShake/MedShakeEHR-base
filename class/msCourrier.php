@@ -51,16 +51,24 @@ class msCourrier
  * @var int $_module du document concerné
  */
     private $_module;
-
+/**
+ * @var array $_objetData
+ */
+    private $_objetData;
 
 
 /**
  * Définir l'objetID
  * @param int $data objetId du document concerné
  */
-    public function setObjetID($data)
+    public function setObjetID($objetID)
     {
-        return $this->_objetID = $data;
+      if (!is_numeric($objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      $this->_objetID = $objetID;
+      $this->_getObjetData();
+      return $this->_objetID;
     }
 
 /**
@@ -123,17 +131,17 @@ class msCourrier
         if (!is_numeric($this->_objetID)) {
             throw new Exception('ObjetID is not numeric');
         }
+        if(!isset($this->_objetData)) {
+          $this->_getObjetData();
+        }
+        $this->_patientID=$this->_objetData['toID'];
 
-        $doc = new msObjet();
-        $data=$doc->getCompleteObjetDataByID($this->_objetID);
-        $this->_patientID=$data['toID'];
-
-        if ($data['groupe']=="courrier") {
-            $this->_modeleID = $data['typeID'];
+        if ($this->_objetData['groupe']=="courrier") {
+            $this->_modeleID = $this->_objetData['typeID'];
             $tagsValues=$this->getCourrierData();
-        } elseif ($data['groupe']=="typecs") {
+        } elseif ($this->_objetData['groupe']=="typecs") {
             $tagsValues=$this->getCrData();
-        } elseif ($data['groupe']=="ordo") {
+        } elseif ($this->_objetData['groupe']=="ordo") {
             $tagsValues=$this->getOrdoData();
         }
         return $tagsValues;
@@ -145,30 +153,40 @@ class msCourrier
  */
     public function getCrData()
     {
+        global $p;
         if (!is_numeric($this->_objetID)) {
             throw new Exception('ObjetID is not numeric');
         }
-
-        $objetData=new msObjet();
-        $objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
+        if(!isset($this->_objetData)) {
+          $this->_getObjetData();
+        }
 
         //ajout
-        $tabRetour['date']=$objetData['creationDate'];
-        $tabRetour['objetID']=$objetData['id'];
-        $tabRetour['patientID']=$objetData['toID'];
-        $tabRetour['instance']=$objetData['instance'];
-        $tabRetour['printModel']=$this->getPrintModel($objetData['formValues']).'.html.twig';
-        $tabRetour['module']=$this->_getModuleOrigine($objetData['formValues']);
+        $tabRetour['date']=$this->_objetData['creationDate'];
+        $tabRetour['objetID']=$this->_objetData['id'];
+        $tabRetour['patientID']=$this->_objetData['toID'];
+        $tabRetour['instance']=$this->_objetData['instance'];
+        $tabRetour['printModel']=$this->getPrintModel($this->_objetData['formValues']).'.html.twig';
+        $tabRetour['module']=$this->_getModuleOrigine($this->_objetData['formValues']);
 
         //patient data
-        $tabRetour=$tabRetour+$this->_getPatientData($objetData['toID']);
+        $tabRetour=$tabRetour+$this->_getPatientData($this->_objetData['toID']);
+
+        //auteur initial data
+        $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['fromID'],'AuteurInitial_');
+
+        //utilisateur qui a effectué la tâche si délégation
+        if($this->_objetData['byID'] > 0) $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['byID'],'DelegueA_');
+
+        //data utilisateur courant
+        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
 
         //examen data
-        $tabRetour=$tabRetour+$this->getExamenData($objetData['toID'], $objetData['formValues'], $objetData['id']);
+        $tabRetour=$tabRetour+$this->getExamenData($this->_objetData['toID'], $this->_objetData['formValues'], $this->_objetData['id']);
 
         //data de l'instance mère
-        if ($objetData['instance']>0) {
-            $tabRetour=$tabRetour+$this->_getInstanceMereData($objetData['instance']);
+        if ($this->_objetData['instance']>0) {
+            $tabRetour=$tabRetour+$this->_getInstanceMereData($this->_objetData['instance']);
         }
 
         ksort($tabRetour, SORT_REGULAR);
@@ -182,7 +200,7 @@ class msCourrier
         }
 
         //complément dans le module pour ce formulaire spécifique ?
-        $methodToCall = "getCrDataCompleteModuleForm_".$objetData['formValues'];
+        $methodToCall = "getCrDataCompleteModuleForm_".$this->_objetData['formValues'];
         if (method_exists($moduleClass, $methodToCall)) {
             $moduleClass::$methodToCall($tabRetour);
         }
@@ -200,10 +218,11 @@ class msCourrier
 
 /**
  * Retourne les data dans un array pour rédaction courrier / certificat
- * @return array             les patientData dans un ['patientData'=>]
+ * @return array             les patientData
  */
     public function getCourrierData()
     {
+        global $p;
         if (!is_numeric($this->_patientID)) {
             throw new Exception('PatientID is not numeric');
         }
@@ -211,6 +230,9 @@ class msCourrier
         $tabRetour = $this->_getPatientData($this->_patientID);
         $tabRetour['date']=date('Y-m-d H:i:s');
         $tabRetour['patientID']=$this->_patientID;
+
+        //data utilisateur courant
+        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
 
         if (!isset($this->_modeleID)) {
             $objetData=new msObjet();
@@ -255,16 +277,26 @@ class msCourrier
  */
     public function getOrdoData()
     {
+        global $p;
         if (!is_numeric($this->_objetID)) {
             throw new Exception('ObjetID is not numeric');
         }
-
-        $objetData=new msObjet();
-        $objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
+        if(!isset($this->_objetData)) {
+          $this->_getObjetData();
+        }
 
         //patient data
-        $tabRetour=$this->_getPatientData($objetData['toID']);
-        $tabRetour['patientID'] = $objetData['toID'];
+        $tabRetour=$this->_getPatientData($this->_objetData['toID']);
+        $tabRetour['patientID'] = $this->_objetData['toID'];
+
+        //auteur initial data
+        $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['fromID'],'AuteurInitial_');
+
+        //utilisateur qui a effectué la tâche si délégation
+        if($this->_objetData['byID'] > 0) $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['byID'],'DelegueA_');
+
+        //data utilisateur courant
+        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
 
         //examen data
         $examData = new msObjet();
@@ -337,6 +369,52 @@ class msCourrier
 
         return $tabPatientData;
     }
+
+/**
+ * Retourne les data du PS dans un array
+ * @param  int $pratID ID du praticien concerné
+ * @return array             tableau avec data PS
+ */
+    private function _getPsData($psID, $prefix='PsAuteur_')
+    {
+        $psData = new msPeople();
+        $psData->setToID($psID);
+        $tabData = $psData->getSimpleAdminDatas();
+
+        $dat = new msData();
+        $data = $dat->getSelectOptionValue(array_keys($tabData));
+        $typeId2name = $dat->getNamesFromTypeIDs(array_keys($tabData));
+
+        foreach ($tabData as $k=>$v) {
+            //tags name
+            if(array_key_exists($k,$typeId2name )) {
+                if (isset($data[$k][$v])) {
+                  $tabPsData[$prefix.$typeId2name[$k]]=$data[$k][$v];
+                  $tabPsData['val_'.$prefix.$typeId2name[$k]]=$v;
+                } else {
+                  $tabPsData[$prefix.$typeId2name[$k]]=$v;
+                }
+            }
+        }
+
+        //ajout tags génériques
+        $tabPsData[$prefix.'id']=$psID;
+
+        $tabPsData=array_filter($tabPsData);
+
+        // ajouter tags identité
+        if(isset($tabPsData[$prefix.'lastname'],$tabPsData[$prefix.'birthname'],$tabPsData[$prefix.'firstname']) and $tabPsData[$prefix.'lastname']!=$tabPsData[$prefix.'birthname']) {
+          $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'lastname'];
+        } elseif(isset($tabPsData[$prefix.'lastname'],$tabPsData[$prefix.'firstname'])) {
+          $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'lastname'];
+        } elseif(isset($tabPsData[$prefix.'birthname'],$tabPsData[$prefix.'firstname'])) {
+          $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'birthname'];
+        }
+        $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'titre'].' '.$tabPsData[$prefix.'identiteUsuelle'];
+
+        return $tabPsData;
+    }
+
 
 /**
  * Retourne les données de l'examen
@@ -489,6 +567,18 @@ class msCourrier
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
       }
       if(isset($rdata)) return $rdata;
+    }
+
+/**
+ * Obtenir les données complètes sur l'objet porteur
+ * @return array data sur l'objet
+ */
+    private function _getObjetData() {
+        if (!is_numeric($this->_objetID)) {
+            throw new Exception('ObjetID is not numeric');
+        }
+        $objetData=new msObjet();
+        return $this->_objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
     }
 
 }

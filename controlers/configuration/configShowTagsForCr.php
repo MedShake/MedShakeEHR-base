@@ -58,7 +58,12 @@ foreach ($tagsValues as $k=>$v) {
       }
     } elseif(!is_numeric($k)) {
       $val=substr($k,0,3);
-      if ($val != 'val' and $val != 'pct') {
+      if(in_array($val, ['Aut', 'Del', 'Uti'])) {
+        $tabFinal[$val]['tags'][$k]=array(
+          'value'=>$v,
+          'infos'=>$v
+        );
+      } elseif ($val != 'val' and $val != 'pct') {
         $tabFinal['calc']['tags'][$k]=array(
           'value'=>$v,
           'infos'=>$v
@@ -66,8 +71,11 @@ foreach ($tagsValues as $k=>$v) {
         $tabFinal['calc']['catName']='calc';
       }
     }
-
 }
+
+if(!empty($tabFinal['Aut'])) $tabFinal['Aut']['catName']='Auteur initial du document';
+if(!empty($tabFinal['Del'])) $tabFinal['Del']['catName']='Utilisateur qui a agi en délégation';
+$tabFinal['Uti']['catName']='Utilisateur actif';
 
 if(isset($tabFinal)) $p['page']['tabTags']=$tabFinal;
 if(isset($tagsValues)) $p['page']['tagsValues']=$tagsValues;
