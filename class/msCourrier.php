@@ -375,7 +375,7 @@ class msCourrier
  * @param  int $pratID ID du praticien concerné
  * @return array             tableau avec data PS
  */
-    private function _getPsData($psID, $prefix='PsAuteur_')
+    private function _getPsData($psID, $prefix)
     {
         $psData = new msPeople();
         $psData->setToID($psID);
@@ -529,6 +529,9 @@ class msCourrier
           $titreLong="Monsieur";
         }
       }
+
+      $rdata['mOuMmeCourt']=$titreCourt;
+      $rdata['mOuMmeLong']=$titreLong;
 
       if(isset($data['lastname'],$data['birthname'],$data['firstname']) and $data['lastname']!=$data['birthname']) {
 
