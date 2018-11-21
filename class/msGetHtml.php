@@ -125,7 +125,7 @@ class msGetHtml
    * Générer le HTML et le retourner mais avec variable injectée
    * @return string HTML générer par le moteur de template
    */
-    public function genererHtmlString($var)
+    public function genererHtmlVar($var)
     {
         global $p;
 

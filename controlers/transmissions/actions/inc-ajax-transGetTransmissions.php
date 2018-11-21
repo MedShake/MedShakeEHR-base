@@ -39,6 +39,6 @@ $p['page']['listeSujets']=$trans['data'];
 
 $html = new msGetHtml;
 $html->set_template('inc-transmissionsGetTransmissions');
-$trans['html']=$html->genererHtmlString($p);
+$trans['html']=$html->genererHtmlVar($p);
 header('Content-Type: application/json');
 echo json_encode($trans);

@@ -249,7 +249,7 @@ class msLapAnalysePres extends msLap
         'ordo'=>$this->_ordonnanceContenu
       );
 
-      return $html->genererHtmlString($data);
+      return $html->genererHtmlVar($data);
     }
 
 /**

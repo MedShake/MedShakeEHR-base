@@ -46,7 +46,7 @@ order by c.displayOrder asc, c.label asc", 'id')) {
 
 $html = new msGetHtml;
 $html->set_template('inc-ajax-tabUserParametersPresCatList.html.twig');
-$html = $html->genererHtmlString($p);
+$html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
   'html'=>$html,

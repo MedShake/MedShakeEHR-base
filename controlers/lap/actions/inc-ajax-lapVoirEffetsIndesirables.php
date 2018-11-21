@@ -39,7 +39,7 @@ sort($p['page']['eiCli']);
 
 $html = new msGetHtml;
 $html->set_template('inc-lapInfosMedicEI');
-$html = $html->genererHtmlString($p);
+$html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
   'html'=>$html,

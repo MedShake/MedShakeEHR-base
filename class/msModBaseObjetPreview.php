@@ -101,7 +101,7 @@ class msModBaseObjetPreview
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detDoc.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 
@@ -149,7 +149,7 @@ class msModBaseObjetPreview
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detReglement.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 
@@ -165,7 +165,7 @@ class msModBaseObjetPreview
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detMail.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 
@@ -202,7 +202,7 @@ class msModBaseObjetPreview
 
       $html = new msGetHtml;
       $html->set_template('inc-ajax-detOrdo.html.twig');
-      $html = $html->genererHtmlString($p);
+      $html = $html->genererHtmlVar($p);
       return $html;
     }
 
@@ -268,7 +268,7 @@ class msModBaseObjetPreview
 
         $html = new msGetHtml;
         $html->set_template('inc-ajax-detCsAldDeclaration.html.twig');
-        $html = $html->genererHtmlString($p);
+        $html = $html->genererHtmlVar($p);
         return $html;
       }
 

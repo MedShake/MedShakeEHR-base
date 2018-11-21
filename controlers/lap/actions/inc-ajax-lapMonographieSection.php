@@ -98,7 +98,7 @@ elseif($_POST['section'] == 'mvgeneriques') {
 
 $html = new msGetHtml;
 $html->set_template('lapMono'.ucfirst($_POST['section']).'.html.twig');
-$html = $html->genererHtmlString($p);
+$html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
   'html'=>$html,

@@ -51,7 +51,7 @@ rsort($p['page']['distinctYears']);
 
 $html = new msGetHtml;
 $html->set_template('inc-patientBiometrieCardio.html.twig');
-$html = $html->genererHtmlString($p);
+$html = $html->genererHtmlVar($p);
 
 exit(json_encode(array(
   'html'=>$html,

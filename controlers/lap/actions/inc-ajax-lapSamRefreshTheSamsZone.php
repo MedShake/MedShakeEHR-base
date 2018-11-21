@@ -47,7 +47,7 @@ if(count($samsArray) > 0) {
   $p['page']['zone']=$_POST['zone'];
   $html = new msGetHtml;
   $html->set_template('inc-lapSamsZone.html.twig');
-  $html = $html->genererHtmlString($p);
+  $html = $html->genererHtmlVar($p);
 
   $samsInSamsZone = array_keys($p['page']['sams']);
 

@@ -43,6 +43,6 @@
 
 $html = new msGetHtml;
 $html->set_template('inc-ajax-tabUserParametersPresList.html.twig');
-$html = $html->genererHtmlString($p);
+$html = $html->genererHtmlVar($p);
 
 echo json_encode(array('html'=>$html));

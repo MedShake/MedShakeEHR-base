@@ -43,7 +43,7 @@ $trans->setTranmissionReponsePoster();
 $p['page']['transmissionReponses']=$trans->getTransmissionReponses();
 $html = new msGetHtml;
 $html->set_template('inc-transmissionsBlocReponses');
-$html=$html->genererHtmlString($p);
+$html=$html->genererHtmlVar($p);
 header('Content-Type: application/json');
 echo json_encode([
   'html'=>$html
