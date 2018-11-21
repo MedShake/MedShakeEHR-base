@@ -121,10 +121,10 @@ class msGetHtml
       return $twig->render($this->_template.'.html.twig', $p);
   }
 
-  /**
-   * Générer le HTML et le retourner mais avec variable injectée
-   * @return string HTML générer par le moteur de template
-   */
+/**
+ * Générer le HTML et le retourner mais avec variable injectée
+ * @return string HTML généré par le moteur de template
+ */
     public function genererHtmlVar($var)
     {
         global $p;
@@ -156,6 +156,36 @@ class msGetHtml
         $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
 
         return $twig->render($this->_template.'.html.twig', $var);
+    }
+
+
+/**
+ * Obtenir l'interprétation d'une chaine comportant des balises twig
+ * @param  string $string chaine à interpréter
+ * @param  array $var    array pour les tags
+ * @return string         chaine interprétée
+ */
+    public static function genererHtmlFromString($string, $var) {
+        // les variables d'environnement twig
+        if (isset($p['config']['twigEnvironnementCache'])) {
+            $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
+        } else {
+            $twigEnvironment['cache']=false;
+        }
+        if (isset($p['config']['twigEnvironnementAutoescape'])) {
+            $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
+        } else {
+            $twigEnvironment['autoescape']=false;
+        }
+
+        if(empty($string)) return;
+
+        $tplName = uniqid( 'string_template_', true );
+        $loader = new Twig_Loader_Array( [ $tplName => $string ]);
+        $twig = new Twig_Environment($loader, $twigEnvironment);
+        $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+        return $twig->render($tplName, $var);
     }
 
 /**

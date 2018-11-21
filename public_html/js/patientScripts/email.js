@@ -43,6 +43,8 @@ $(document).ready(function() {
       type: 'post',
       data: {
         modeleID: modeleID,
+        patientID: $('#identitePatient').attr("data-patientID"),
+        objetID: $("input[name='objetID']").val()
       },
       dataType: "html",
       success: function(data) {
