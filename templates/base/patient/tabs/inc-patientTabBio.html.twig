@@ -33,17 +33,17 @@
 {% else %}
   <div class="row mt-4 mb-3">
     <div class="col">
-      <button class="btn btn-secondary bioDateSelect" {% if page.dateSuivanteBio is not defined %}disabled{% endif %} data-dateBio="{{ page.dateSuivanteBio }}">
+      <button class="btn btn-primary btn-sm bioDateSelect" {% if page.dateSuivanteBio is not defined %}disabled{% endif %} data-dateBio="{{ page.dateSuivanteBio }}">
         <i class="fas fa-angle-left"></i>
       </button>
 
-      <select class="custom-select font-weight-bold text-center bioDateSelect" style="width: 200px;"> {{ dateOption }}
+      <select class="custom-select custom-select-sm font-weight-bold text-center bioDateSelect" style="width: 200px;"> {{ dateOption }}
         {% for dateOption in page.datesBio %}
           <option value="{{ dateOption }}" {% if dateOption == page.dateCouranteBio %}selected{% endif %}>{{ dateOption|date("d/m/Y") }}</option>
         {% endfor %}
       </select>
 
-      <button class="btn btn-secondary bioDateSelect" {% if page.datePrecedBio is not defined %}disabled{% endif %} data-dateBio="{{ page.datePrecedBio }}">
+      <button class="btn btn-primary btn-sm bioDateSelect" {% if page.datePrecedBio is not defined %}disabled{% endif %} data-dateBio="{{ page.datePrecedBio }}">
         <i class="fas fa-angle-right"></i>
       </button>
       <p class="d-block small text-muted mt-3">NB : seule la biologie reçue par mail et contenant des données HPRIM valides est affichée ici. Les antériorités sont affichées sous réserve d'un codage cohérent entre les sources reçues.</p>
