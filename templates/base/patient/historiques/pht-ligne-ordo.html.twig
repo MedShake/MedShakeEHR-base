@@ -184,10 +184,11 @@
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/anonyme/" target="_blank">Forcer impression par défaut avec auteur anonyme</a>
           </li>
-          <li role="separator" class="dropdown-divider m-0"></li>
+          {% if user.rank == 'admin' %}
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/" target="_blank">Tags utilisables dans templates</a>
           </li>
+          {% endif %}
           {% if cs.fromID == user.id or user.rank == 'admin' %}
             <li role="separator" class="dropdown-divider m-0"></li>
             <li>
