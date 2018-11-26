@@ -24,6 +24,7 @@
  * Installateur sur base préinstallée
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $webpath=str_replace('/install.php','',$_SERVER['REQUEST_URI']);
@@ -154,7 +155,8 @@ if (!is_file($homepath.'config/config.yml')) {
             ('apicryptCheminVersBinaires', 'default', '".$homepath."apicrypt/bin/'),
             ('dicomWorkListDirectory', 'default', '".$webdir."/workingDirectory/'),
             ('dicomWorkingDirectory', 'default', '".$webdir."/workingDirectory/'),
-            ('templatesPdfFolder', 'default', '".$homepath."templates/models4print/')
+            ('templatesPdfFolder', 'default', '".$homepath."templates/models4print/'),
+            ('templatesCdaFolder', 'default', '".$homepath."templates/CDA/')
             ON DUPLICATE KEY UPDATE value=VALUES(value)");
 
             $modules=scandir($homepath.'upgrade/');
