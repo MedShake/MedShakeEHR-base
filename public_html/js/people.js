@@ -61,7 +61,7 @@ $(document).ready(function() {
 
   //lire la carte vitale
   $('body').on("click", ".lireCpsVitale", function(e) {
-    btnLec= $(this);
+    btnLec = $(this);
     $.ajax({
       url: urlBase + '/ajax/getCpsVitaleDataRappro/',
       type: 'post',
@@ -103,4 +103,20 @@ $(document).ready(function() {
     });
     $('#lectureCpsVitale').modal('hide');
   });
+
+
+  $('body').on("click", "#id_PSCodeProSpe_idAddOn, #id_PSCodeStructureExercice_idAddOn", function(e) {
+    groupe = $(this).parents('div.input-group');
+    selectFils = groupe.children('select');
+    curVal = selectFils.val();
+    if(!curVal) curVal = selectFils.attr('data-defautValue');
+    id = selectFils.attr('id');
+    title = selectFils.attr('title');
+    name = selectFils.attr('name');
+    dataTypeid = selectFils.attr('data-typeid');
+    dataInternalName = selectFils.attr('data-typeid');
+    groupe.replaceWith('<input class="form-control form-control-sm" type="text" id="' + id + '" title="' + title + '" name="' + name + '" data-typeid="' + dataTypeid + '" data-internalname="' + dataInternalName + '" value="' + curVal + '"/>');
+    activeWatchChange('.changeObserv');
+  });
+
 });

@@ -163,98 +163,99 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations touch pour vue mobile
-  $('.swipable').swipe({
-    triggerOnTouchEnd: true,
-    swipeStatus: function(event, phase, direction, distance) {
-      if (!$('.swipable').hasClass('swipableon'))
-        return;
-      if (phase == 'move') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.swipable').css('overflow-y', 'hidden');
-          $('.atcd').css('left', -distance);
-          $('.dossier').show().css('left', $(window).width() - distance).css('top', -$('.atcd')[0].offsetHeight);
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.swipable').css('overflow-y', 'hidden');
-          $('.atcd').show().css('left', -$(window).width() + distance);
-          $('.dossier').css('left', distance).css('top', -$('.atcd')[0].offsetHeight);
+  if ($('.swipable').length) {
+    $('.swipable').swipe({
+      triggerOnTouchEnd: true,
+      swipeStatus: function(event, phase, direction, distance) {
+        if (!$('.swipable').hasClass('swipableon'))
+          return;
+        if (phase == 'move') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.swipable').css('overflow-y', 'hidden');
+            $('.atcd').css('left', -distance);
+            $('.dossier').show().css('left', $(window).width() - distance).css('top', -$('.atcd')[0].offsetHeight);
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.swipable').css('overflow-y', 'hidden');
+            $('.atcd').show().css('left', -$(window).width() + distance);
+            $('.dossier').css('left', distance).css('top', -$('.atcd')[0].offsetHeight);
+          }
+        } else if (phase == 'cancel') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.atcd').animate({
+              left: 0
+            }, 400);
+            $('.dossier').animate({
+              left: $(window).width()
+            }, 400, function() {
+              $('.dossier').hide().css('top', 0);
+            });
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.atcd').animate({
+              left: -$(window).width()
+            }, 400, function() {
+              $('.atcd').hide();
+              $('.swipable').css('overflow-y', 'auto')
+            });
+            $('.dossier').animate({
+              left: 0
+            }, 400, function() {
+              $('.dossier').css('top', 0)
+            });
+          }
+        } else if (phase == 'end') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.atcd').animate({
+              left: -$(window).width()
+            }, 400, function() {
+              $('.atcd').hide();
+              $('.swipable').removeClass('swipable-left').addClass('swipable-right');
+              $('.swipable').css('overflow-y', 'auto')
+            });
+            $('.dossier').animate({
+              left: 0
+            }, 400, function() {
+              $('.dossier').css('top', 0)
+            });
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.atcd').animate({
+              left: 0
+            }, 400);
+            $('.dossier').animate({
+              left: $(window).width()
+            }, 400, function() {
+              $('.dossier').hide().css('top', 0);
+              $('.swipable').removeClass('swipable-right').addClass('swipable-left');
+              $('.swipable').css('overflow-y', 'auto')
+            });
+          }
         }
-      } else if (phase == 'cancel') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.atcd').animate({
-            left: 0
-          }, 400);
-          $('.dossier').animate({
-            left: $(window).width()
-          }, 400, function() {
-            $('.dossier').hide().css('top', 0);
-          });
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.atcd').animate({
-            left: -$(window).width()
-          }, 400, function() {
-            $('.atcd').hide();
-            $('.swipable').css('overflow-y', 'auto')
-          });
-          $('.dossier').animate({
-            left: 0
-          }, 400, function() {
-            $('.dossier').css('top', 0)
-          });
-        }
-      } else if (phase == 'end') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.atcd').animate({
-            left: -$(window).width()
-          }, 400, function() {
-            $('.atcd').hide();
-            $('.swipable').removeClass('swipable-left').addClass('swipable-right');
-            $('.swipable').css('overflow-y', 'auto')
-          });
-          $('.dossier').animate({
-            left: 0
-          }, 400, function() {
-            $('.dossier').css('top', 0)
-          });
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.atcd').animate({
-            left: 0
-          }, 400);
-          $('.dossier').animate({
-            left: $(window).width()
-          }, 400, function() {
-            $('.dossier').hide().css('top', 0);
-            $('.swipable').removeClass('swipable-right').addClass('swipable-left');
-            $('.swipable').css('overflow-y', 'auto')
-          });
-        }
-      }
-    },
-    allowPageScroll: 'vertical',
-    preventDefaultEvents: false,
-    threshold: 100
-  });
-  if (window.innerWidth < 768) {
-    $('.swipable').addClass('swipableon swipable-right');
-    $('.atcd').hide();
-    $('.dossier').show();
-  } else {
-    $('.atcd').show();
-    $('.dossier').show();
-  };
-  $(window).on("resize", function() {
+      },
+      allowPageScroll: 'vertical',
+      preventDefaultEvents: false,
+      threshold: 100
+    });
     if (window.innerWidth < 768) {
-      if (!$('.swipable').hasClass('swipableon')) {
-        $('.swipable').addClass('swipableon swipable-right');
-        $('.atcd').hide();
-        $('.dossier').show();
-      }
+      $('.swipable').addClass('swipableon swipable-right');
+      $('.atcd').hide();
+      $('.dossier').show();
     } else {
-      $('.swipable').removeClass('swipableon').removeClass('swipable-right').removeClass('swipable-left');
-      $('.atcd').show().css('left', '');
-      $('.dossier').show().css('left', '').css('top', '');
-    }
-  });
-
+      $('.atcd').show();
+      $('.dossier').show();
+    };
+    $(window).on("resize", function() {
+      if (window.innerWidth < 768) {
+        if (!$('.swipable').hasClass('swipableon')) {
+          $('.swipable').addClass('swipableon swipable-right');
+          $('.atcd').hide();
+          $('.dossier').show();
+        }
+      } else {
+        $('.swipable').removeClass('swipableon').removeClass('swipable-right').removeClass('swipable-left');
+        $('.atcd').show().css('left', '');
+        $('.dossier').show().css('left', '').css('top', '');
+      }
+    });
+  }
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations Tab Biologie
 

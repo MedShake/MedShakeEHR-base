@@ -48,6 +48,25 @@ $p['page']['patient']['id']=$match['params']['patient'];
 $formpatient = new msForm();
 $formpatient->setFormIDbyName($p['page']['formIN']);
 $formpatient->setPrevalues($p['page']['patient']);
+
+//si formulaire pro
+if ($p['page']['porp']=='pro') {
+
+  //si jeux de valeurs normées présents
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+    $optionsInject['p_PSCodeProSpe']=array_column($codes, 'displayName', 'code');
+    $optionsInject['p_PSCodeProSpe']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['p_PSCodeProSpe'];
+  }
+
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+    $optionsInject['p_PSCodeStructureExercice']=array_column($codes, 'displayName', 'code');
+    $optionsInject['p_PSCodeStructureExercice']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['p_PSCodeStructureExercice'];
+  }
+  if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
+}
+
 $p['page']['form']=$formpatient->getForm();
 
 //ajout au form
