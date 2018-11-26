@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 $form=new msForm();
 $form->setFormID($_POST['id']);
@@ -43,7 +43,8 @@ $data=array(
     'cat'=>$_POST['cat'],
     'yamlStructure'=>$cleanForm,
     'formAction'=>$_POST['formAction'],
-    'printModel'=>$_POST['printModel']
+    'printModel'=>$_POST['printModel'],
+    'cda'=>$_POST['cda'],
 );
 
 msSQL::sqlInsert('forms', $data);
