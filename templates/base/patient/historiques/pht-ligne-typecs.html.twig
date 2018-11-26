@@ -198,6 +198,9 @@
           <li>
             <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
           </li>
+          <li>
+            <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showcda/{{ cs.id }}/">Exporter en XML CDA</a>
+          </li>
           {% endif %}
           {% if cs.fromID == user.id or user.rank == 'admin' %}
             <li role="separator" class="dropdown-divider m-0"></li>
