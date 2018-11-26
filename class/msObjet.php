@@ -186,6 +186,17 @@ public function getToID()
     }
 
 /**
+ * Obtenir le nom du formulaire d'origine à partir d'un objetID
+ * @return string nom du formulaire d'origine
+ */
+    public function getOriginFormNameFromObjetID() {
+      return msSQL::sqlUniqueChamp("select t.formValues
+      from objets_data as pd
+      left join data_types as t on t.id=pd.typeID
+      where pd.id='".$this->_ID."' and t.groupe='typecs' limit 1");
+    }
+
+/**
  * Obtenir toutes les datas sur l'objet à partir de son ID
  * @param  int $id ID de l'objet
  * @return array     Array
@@ -552,5 +563,4 @@ public function getToID()
       }
       return false;
     }
-
 }
