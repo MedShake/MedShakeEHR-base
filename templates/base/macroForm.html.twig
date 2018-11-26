@@ -143,9 +143,24 @@
 		{% endif %}
 	{% endif %}
 
+	{# insertion avant le select #}
 	{% if v.select.before %}
 		{{ v.select.before }}
+		{% if v.select.plusg %}
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="{{v.select.id}}AddOnG">{{ v.select.plusg }}</span>
+			</div>
+		{% endif %}
+	{% elseif v.select.plus or v.select.plusg %}
+		<div class="input-group input-group-sm mx-0">
+			{% if v.select.plusg %}
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="{{v.select.id}}AddOnG">{{ v.select.plusg }}</span>
+				</div>
+			{% endif %}
+
 	{% endif %}
+
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	class="custom-select{% if v.select.class %} {{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}{% endif %}"
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -154,7 +169,9 @@
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
-	{{ v.select.add }}>
+	{{ v.select.add }}
+	{% if v.select.valueDefaut is not iterable %}data-defautValue="{{ v.select.valueDefaut|e('html_attr') }}"{% endif %}
+	>
 	{% if v.select.valueDefaut is iterable %}
 		{% for key,value in v.select.valueDefaut %}
 			<option value="{{ key|e('html_attr') }}">{{ value|e }}</option>
@@ -169,6 +186,15 @@
 	{% endif %}
 
 	</select>
+
+	{% if v.select.plus %}
+		<div class="input-group-append">
+			<span class="input-group-text" id="{{v.select.id}}AddOn">{{ v.select.plus }}</span>
+		</div>
+	{% endif %}
+	{% if v.select.plus or v.select.plusg %}
+		</div>
+	{% endif %}
 
 	{# si un label existe #}
 	{% if v.label.label != '' %}
@@ -536,7 +562,9 @@
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
 										'internalName' : el.value.internalName,
-										'before' : t['before'][el.value.internalName]
+										'before' : t['before'][el.value.internalName],
+										'plus' : el.value.plus,
+										'plusg' : el.value.plusg
 									},
 									'label' : {
 										'position' : 'before',
