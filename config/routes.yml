@@ -184,6 +184,9 @@ configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/'
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
 
+# configuration voir jeux de valeurs
+configJdvShow: ['GET', '/configuration/configJdvShow/', 'configuration/configJdvShow']
+
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
 userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
