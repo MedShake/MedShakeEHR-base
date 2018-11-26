@@ -378,7 +378,7 @@ class msForm
             $_SESSION['form'][$this->_formIN]['validationErrors']=array();
             $_SESSION['form'][$this->_formIN]['validationErrorsMsg']=array();
             foreach ($errors as $k=>$v) {
-                $correctName=str_replace(' ', '_', strtolower($k));
+                $correctName=str_replace(' ', '_', $k);
                 if (!in_array($correctName, $_SESSION['form'][$this->_formIN]['validationErrors'])) {
                     $_SESSION['form'][$this->_formIN]['validationErrors'][]=$correctName;
 
