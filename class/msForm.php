@@ -635,21 +635,28 @@ class msForm
                     if (in_array('nolabel', $bloc)) {
                         unset($type['label']);
                     }
-                      if (in_array('disabled', $bloc)) {
-                          $type['disabled']='disabled';
-                      }
-                      if (in_array('readonly', $bloc)) {
-                          $type['readonly']='readonly';
-                      }
-                      if (in_array('required', $bloc)) {
-                          $type['required']='required';
-                      }
-                      $type['class']='';
-                      foreach ($bloc as $h) {
-                          if (preg_match('/^class=(.+)/', $h, $match)) {
-                              $type['class'].=' '.$match[1];
-                          }
-                      }
+                    if (in_array('disabled', $bloc)) {
+                        $type['disabled']='disabled';
+                    }
+                    if (in_array('readonly', $bloc)) {
+                        $type['readonly']='readonly';
+                    }
+                    if (in_array('required', $bloc)) {
+                        $type['required']='required';
+                    }
+                    $type['class']='';
+                    foreach ($bloc as $h) {
+                        if (preg_match('/^class=(.+)/', $h, $match)) {
+                            $type['class'].=' '.$match[1];
+                        }
+                        if (preg_match('#plus={(.*)}#i', $h, $match)) {
+                            $type['plus']=$match[1];
+                        }
+                        if (preg_match('#plusg={(.*)}#i', $h, $match)) {
+                            $type['plusg']=$match[1];
+                        }
+                    }
+
                     //traitement spécifique au select
                     if ($type['formType']=="select") {
 
@@ -707,16 +714,6 @@ class msForm
                                 $type['dataAcTypeID']='data-acTypeID='.$type['id'];
                             }
                         }
-
-                        foreach ($bloc as $h) {
-                            if (preg_match('#plus={(.*)}#i', $h, $match)) {
-                                $type['plus']=$match[1];
-                            }
-                            if (preg_match('#plusg={(.*)}#i', $h, $match)) {
-                                $type['plusg']=$match[1];
-                            }
-                        }
-
                     }
                     $idx=array_push($r['structure'][$rowNumber][$colNumber]['elements'], array('type'=>'form', 'value'=>$type));
                     $this->_log[$type['internalName']]=[$rowNumber, $colNumber, $idx-1];
