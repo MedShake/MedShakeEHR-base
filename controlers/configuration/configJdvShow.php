@@ -27,7 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='y';
+$debug='';
 $template='configJdvShow';
 
 if(is_dir($p['homepath'].'ressources/JDV/')) {
