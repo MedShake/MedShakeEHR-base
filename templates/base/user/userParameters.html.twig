@@ -61,7 +61,10 @@
   {# form display #}
   <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-      <a class="nav-link active" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
+      <a class="nav-link active" href="#pergonomie" aria-controls="pergonomie" role="tab" data-toggle="tab">Ergonomie</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
     </li>
     {% if page.hasAgenda %}
       <li class="nav-item">
@@ -76,9 +79,14 @@
   </ul>
 
   <div class="tab-content">
+    {# formulaire ergonomie #}
+    <div role="tabpanel" class="tab-pane active" id="pergonomie" >
+      {% include('inc-tabUserParametersErgonomie.html.twig') %}
+    </div>
+
 
     {# formulaire mot de passe MedShake #}
-    <div role="tabpanel" class="tab-pane active" id="pmdp" >
+    <div role="tabpanel" class="tab-pane" id="pmdp" >
       {% include('inc-tabUserParametersPassword.html.twig') %}
     </div>
 

@@ -141,3 +141,10 @@ $p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', arra
 
 // Types des prescriptions types
  $p['page']['typesPrescriptionsList']=array('lap'=>'Prescriptions LAP', 'nonlap'=>'Prescriptions hors LAP');
+
+ /************
+ * Ergonomie et design
+ ************/
+
+ // Paramètres LAP de l'utilisateur
+ $p['page']['ergonomie']['params']=msConfiguration::getCatParametersForUser('Ergonomie et design', array('id'=>$p['user']['id'], 'module'=>''));

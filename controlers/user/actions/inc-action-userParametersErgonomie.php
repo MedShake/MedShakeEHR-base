@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,25 +21,18 @@
  */
 
 /**
- * User : les actions avec reload de page
+ * enregistrement des paramètres utilisateur ergonomie 
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
-//$debug='';
-$m=$match['params']['m'];
-
-//modes acceptés et die() si non connu
-$acceptedModes=array(
-    'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
-    'userParametersPassword', // changer le mot de passe de l'utilisateur courant
-    'userParametersErgonomie' // changer param ergonomie et design
-);
-if (!in_array($m, $acceptedModes)) {
-    die;
+if($listesVar = msConfiguration::getCatParametersForUser('Ergonomie et design')) {
+  foreach($listesVar as $k=>$v) {
+    if(isset($_POST[$k])) {
+      msConfiguration::setUserParameterValue($k, $_POST[$k], $p['user']['id']);
+    }
+  }
 }
 
-//inclusion
-include('inc-action-'.$m.'.php');
+msTools::redirRoute('userParameters');
