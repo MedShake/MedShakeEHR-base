@@ -44,9 +44,10 @@ $p['page']['hasAgenda']=false;
 $people= new msPeople();
 $usersWithAgenda=$people->getUsersListForService('administratifPeutAvoirAgenda');
 if (!is_array($usersWithAgenda) or !array_key_exists($p['user']['id'], $usersWithAgenda)) {
-    return;
+  $p['page']['hasAgenda']=false;
+} else {
+  $p['page']['hasAgenda']=true;
 }
-$p['page']['hasAgenda']=true;
 /************
 * Agenda
 ************/
@@ -146,5 +147,5 @@ $p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', arra
  * Ergonomie et design
  ************/
 
- // Paramètres LAP de l'utilisateur
+ // Paramètres Ergonomie de l'utilisateur
  $p['page']['ergonomie']['params']=msConfiguration::getCatParametersForUser('Ergonomie et design', array('id'=>$p['user']['id'], 'module'=>''));
