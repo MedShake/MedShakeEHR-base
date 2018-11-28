@@ -232,7 +232,7 @@ class msCourrier
         $tabRetour['patientID']=$this->_patientID;
 
         //data utilisateur courant
-        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        if(isset($p['user']['id'])) $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
 
         if (!isset($this->_modeleID)) {
             $objetData=new msObjet();
