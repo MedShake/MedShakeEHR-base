@@ -92,11 +92,13 @@ if (is_file($sourceFile)) {
 if (!$mail->send()) {
     echo 'Le message n\'a pu être envoyé.';
     echo 'Mailer Error: ' . $mail->ErrorInfo;
+    //clean
+    @unlink($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.'.$ext.'.apz');
 } else {
     //echo 'envoyé !';
 
     //clean
-    unlink($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.pdf.apz');
+    @unlink($p['config']['apicryptCheminFichierC'].$p['user']['id'].'/'.$_POST['objetID'].'.'.$ext.'.apz');
 
     //logs
     $patient = new msObjet();
