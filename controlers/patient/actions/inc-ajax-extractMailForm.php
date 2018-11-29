@@ -49,12 +49,12 @@ if ($_POST['mailType']=='ns') {
     $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
     $catModelesMails='catModelesMailsToApicrypt';
 } else {
-    $catModelesMails='';
+    $catModelesMails=false;
 }
 
 //modèles
 $lmc=new msData();
-if($lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+if($catModelesMails and $lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
   $lmc->applyRulesOnlyforNotforOnArray($lm, $p['user']['id']);
   $typeID = msData::getTypeIDFromName('mailModeles');
   $preValues[$typeID][0]='';
