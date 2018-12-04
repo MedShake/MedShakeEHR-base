@@ -128,6 +128,17 @@ class msData
         return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where groupe='".$groupe."' order by displayOrder, label");
     }
 
+/**
+ * Obtenir les données de data types à partir d'une liste de name passés dans un array
+ * @param  array $listArray liste des types souhaités, par nom
+ * @param  array  $col       colonnes SQL à retourner
+ * @return array            array
+ */
+    public function getDataTypesFromNameList($listArray, $col=['*'])
+    {
+        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where name in ('".implode("','", $listArray)."') order by displayOrder, label");
+    }
+
 
 /**
  * Sortir les infos d'un type à partir de son ID
