@@ -78,34 +78,58 @@
                 {# categories tab #}
                 <div role="tabpanel" class="tab-pane active" id="prescriptions">
 
-                    <p></p>
-                    <button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewCat">
-                        Nouvel acte
-                    </button>
+                    <div class="row mt-2 ">
+                      <div class="col">
+                        {% if config.apiCcamNgapUrl is not empty %}
+                        <p class="text-muted">
+                          Le serveur d'actes est configuré à {{ config.apiCcamNgapUrl }}
+                        </p>
+                        {% else %}
+                        <p class="text-danger">
+                          Le serveur d'actes n'est pas configuré. L'import automatique du tarif des actes n'est pas fonctionnel.
+                        </p>
+                        {% endif %}
+                      </div>
+                      <div class="col text-right">
+                        <button type="button" class="btn btn-primary reset-modal float-right" data-toggle="modal" data-target="#modalNewCat">
+                            Nouvel acte
+                        </button>
+                      </div>
+                    </div>
 
-                        <table class="table table-sm mb-0 table-hover">
-                            <thead>
+                    <nav>
+                      <div class="nav nav-tabs mb-4" id="nav-typesActes" role="tablist">
+                      {% for typeActe in page.typesActes %}
+                        <a class="nav-item nav-link{% if loop.index == 1 %} active{% endif %}" id="nav-typesActesTab-{{ typeActe }}" data-toggle="tab" href="#nav-typesActes-{{ typeActe }}">
+                        {% if typeActe == 'mCCAM' %}Modificateurs CCAM{% else %}{{ typeActe }}{% endif %}
+                        </a>
+                      {% endfor %}
+                      </div>
+                    </nav>
+
+                    <div class="tab-content" id="nav-tabContent">
+                    {% for typeActe in page.typesActes %}
+
+                    <div class="tab-pane fade {% if loop.index == 1 %} show active{% endif %}" id="nav-typesActes-{{ typeActe }}">
+                        <table class="table table-sm table-hover">
+                            <thead class="thead-light">
                                 <tr>
                                   <th>#</th>
                                     <th>Code</th>
                                     <th>Label</th>
                                     <th>Utilisation</th>
                                     <th>Type</th>
-                                    <th class="texteadroite">Tarif S1</th>
-                                    <th class="texteadroite">Tarif S2 ou Libre</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for w in page.actesBase %}
+                                {% for w in page['actesBase'][typeActe] %}
                                     <tr>
                                         <td>{{ w.id }}</td>
                                         <td>{{ w.code }}</td>
                                         <td>{{ w.label }}</td>
                                         <td>{{ w.nbUtilisation }}</td>
                                         <td>{{ w.type }}</td>
-                                        <td class="texteadroite">{{ w.tarifs1|number_format(2, '.', ' ') }}</td>
-                                        <td class="texteadroite">{{ w.tarifs2|number_format(2, '.', ' ') }}</td>
 
                                         <td  class="text-right">
                                           <div class="btn-group">
@@ -129,10 +153,11 @@
                             </tbody>
                         </table>
 
+                      </div>
+                      {% endfor %}
+                    </div>
                 </div>
-
             </div>
-
         </div>
 
         {# modal nouvel acte / edition #}
@@ -153,14 +178,22 @@
                         </div>
 
                         <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configActesBaseCreate/">
-
+                            <div class="form-group">
+                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'NGAP' : 'NGAP', 'CCAM' : 'CCAM', 'mCCAM' : 'Modificateur CCAM','Libre' : 'Libre'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Type du code', } }) }}
+                            </div>
                             <div class="form-row align-items-end">
-                              <div class="form-group col-6">
+                              <div class="form-group col-3">
                                   {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
                               </div>
+                              <div class="form-group col-3">
+                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'activite', 'value':'1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Activité', } }) }}
+                              </div>
+                              <div class="form-group col-3">
+                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'phase', 'value':'0', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Phase', } }) }}
+                              </div>
 
-                              <div class="form-group col-6 text-right">
-                                <button type="button" class="btn btn-secondary importFromAmeliCCAM" title="Importer / mettre à jour depuis le site de la CCAM"><i class="fas fa-search"></i> CCAM</button>
+                              <div class="form-group col-3 text-right">
+                                <button type="button" class="btn btn-secondary importFromCCAM" title="Importer / mettre à jour depuis le site de la CCAM"><i class="fas fa-search"></i> Rechercher</button>
                               </div>
                             </div>
 
@@ -168,33 +201,31 @@
                                 {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'label', 'placeholder' : 'description', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label', } }) }}
                             </div>
 
+
+
                             <div class="form-group">
-                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'Libre' : 'Libre', 'NGAP' : 'NGAP', 'CCAM' : 'CCAM', 'mCCAM' : 'Modificateur CCAM'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Catégorie', } }) }}
+                                {{ f.select ({ 'select' : { 'name' : 'tarifUnit', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'euro' : '€', 'pourcent' : '%'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Unité tarif', } }) }}
                             </div>
+
+
 
                             <div class="form-row">
-                              <div class="form-group col">
-                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs1', 'placeholder' : 'tarif secteur 1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S1', } }) }}
+                              <div class="form-group col-12">
+                              {{ f.textarea ({
+                                'textarea' : {
+                                  'name' : 'dataYaml',
+                                  'id' : 'dataYamlID',
+                                  'placeholder' : '',
+                                  'class' : 'form-control',
+                                  'autocomplete' : 'off',
+                                  'rows' : '10'
+                                },
+                                'label' : {
+                                  'position' : 'before',
+                                  'label' : 'Données sur l\'acte',
+                                }
+                              }) }}
                               </div>
-
-                              <div class="form-group col">
-                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'tarifs2', 'placeholder' : 'tarif secteur 2', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Tarif S2 ou libre', } }) }}
-                              </div>
-
-                              <div class="form-group col">
-                                  {{ f.select ({ 'select' : { 'name' : 'tarifUnit', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'euro' : '€', 'pourcent' : '%'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Unité tarif', } }) }}
-                              </div>
-
-                            </div>
-
-                            <div class="form-row">
-                            {% for modif in ['F', 'P', 'S', 'M', 'R', 'D', 'E', 'C', 'U'] %}
-                            {% if loop.index0 % 2 == 0 %}</div><div class="form-row">{% endif %}
-                            <div class="form-group col-6">
-                                {{ f.select ({ 'select' : { 'name' : modif, 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'true' : 'applicable', 'false' : 'non applicable'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Modificateur ' ~ modif, } }) }}
-                            </div>
-
-                            {% endfor %}
                             </div>
 
                           </form>

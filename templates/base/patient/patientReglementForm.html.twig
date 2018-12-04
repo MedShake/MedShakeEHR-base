@@ -48,7 +48,7 @@
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}"
-                            {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}
+                            {% if val.id == page.selectedFactureTypeID %} selected="selected" {% endif %}
                              style="padding-top : 6px; padding-bottom : 6px; border-top : 1px solid #DDD;
                             {% if val.flagCmu %}background : #EEE; {% endif %}
                             {% if val.flagImportant %}font-weight : bold; {% endif %}
@@ -71,13 +71,13 @@
             <th class="text-left"></th>
             <th class="text-left" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 100px;"{% endif %}>code asso.</th>
             <th class="text-center">base</th>
-            {% if page.secteur != '' %}
+            {% if page.formIN != 'baseReglementLibre' %}
               <th class="pourcents text-center" style="width : 100px;">%</th>
             {% endif %}
             <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 120px;"{% endif %}>modif CCAM</th>
             <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}></th>
             <th class="text-center"></th>
-            {% if page.secteur == '' %}
+            {% if page.secteur == 'baseReglementLibre' %}
               <th class="text-center" style="width : 120px;">modulation</th>
             {% else %}
               <th class="text-center" style="width : 120px;">dépassement</th>
@@ -101,4 +101,17 @@
       </script>
     {% endif %}
 
+    <script>
+      modificateursCcamValue = {
+        {% for code, val in page.modifcateursCcam %}
+        '{{ code }}' : '{{ val.tarif }}',
+        {% endfor %}
+      };
+
+      modificateursCcamUnit = {
+        {% for code, val in page.modifcateursCcam %}
+        '{{ code }}' : '{{ val.tarifUnit }}',
+        {% endfor %}
+      };
+    </script>
 </div>

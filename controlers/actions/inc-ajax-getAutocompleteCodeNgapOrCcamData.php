@@ -27,11 +27,21 @@
  */
 
 $reg = new msReglement;
+if($_GET['regleSecteurHonoraires']) {
+  $reg->setSecteurTarifaire($_GET['regleSecteurHonoraires']);
+} else {
+  $reg->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+}
+if($_GET['regleSecteurGeoTarifaire']) {
+  $reg->setSecteurTarifaireGeo($_GET['regleSecteurGeoTarifaire']);
+} else {
+  $reg->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+}
 if($data = $reg->getActeDataFromTerm($_GET['term'])) {
   foreach($data as $k=>$v) {
     $data[$k]['labelo'] = $v['label'];
     $data[$k]['label'] = $v['code'].' '.$v['label'];
-    $data[$k]['base'] = $data[$k]['tarif'] = $data[$k]['total'] = $v['tarifs1'];
+    $data[$k]['base'] = $data[$k]['tarif'] = $data[$k]['total'] = $v['tarif'];
     $data[$k]['pourcents'] = '100';
     $data[$k]['depassement'] = '0';
     $data[$k]['codeAsso'] = '';

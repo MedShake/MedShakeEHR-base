@@ -53,7 +53,20 @@ $(document).ready(function() {
   //observer le champ de recherche d'acte
   $("body").delegate('#acteSearch', "focusin", function() {
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteCodeNgapOrCcamData/',
+      source: function(request, response) {
+          $.ajax({
+              url: urlBase + '/ajax/getAutocompleteCodeNgapOrCcamData/',
+              dataType: "json",
+              data: {
+                  term : request.term,
+                  regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
+                  regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
+              },
+              success: function(data) {
+                  response(data);
+              }
+          });
+      },
       autoFocus: false,
       select: function(event, ui) {
         ui.item.label = ui.item.labelo;
@@ -166,6 +179,8 @@ function searchAndInsertActeData(selecteur) {
     data: {
       acteID: acteID,
       reglementForm: $('#newReglement input[name=reglementForm]').val(),
+      regleSecteurGeoTarifaire : $("#newReglement input[name='regleSecteurGeoTarifaire']").val(),
+      regleSecteurHonoraires : $("#newReglement input[name='regleSecteurHonoraires']").val(),
     },
     dataType: "json",
     success: function(data) {
@@ -224,7 +239,7 @@ function construireTableauActes(data) {
 }
 
 /**
- * Construire une ligne du tbleau des actes facturés
+ * Construire une ligne du tableau des actes facturés
  * @param  {string} index index de la ligne
  * @param  {array} value data
  * @return {string}       ligne HTML

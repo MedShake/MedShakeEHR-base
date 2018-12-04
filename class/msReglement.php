@@ -30,6 +30,12 @@
 
 class msReglement
 {
+  private $_patientID;
+  private $_userID;
+  private $_module;
+  private $_objetID=null;
+  private $_porteur;
+  private $_reglementForm;
 
 /**
  * @var int  $_factureTypeID facture type concernée
@@ -39,7 +45,17 @@ class msReglement
 /**
  * @var int  $_secteurTarifaire secteur tarifaire
  */
-    private $_secteurTarifaire;
+    protected $_secteurTarifaire;
+
+/**
+ * @var string  $_secteurTarifaireGeo secteur tarifaire géographique
+ */
+    protected $_secteurTarifaireGeo='metro';
+
+/**
+ * @var string  $_secteurIK secteur tarifaire IK
+ */
+    protected $_secteurIK;
 
 /**
  * @var array  $_factureTypeData data d'une facture type
@@ -51,25 +67,131 @@ class msReglement
  */
     private $_tarifsNgapCcamForOneSecteur;
 
+/**
+ * @var array  $_modifsCCAM modificateur CCAM
+ */
     private $_modifsCCAM;
+
+/**
+ * @var array  $_prevalues valeurs de pré remplissage à l'édition d'un formulaire de règlement
+ */
+    private $_prevalues;
+
+/**
+ * Définir le patientID
+ * @param int $patientID patientID
+ */
+    public function setPatientID($patientID) {
+      return $this->_patientID=$patientID;
+    }
+
+/**
+ * Définir l'objetID et ce qui en découle automatiquement
+ * @param int $objetID objetID
+ */
+    public function setObjetID($objetID) {
+      if(!is_numeric($objetID)) throw new Exception('ObjetID is not numeric');
+      $this->_objetID=$objetID;
+      if($res=msSQL::sqlunique("SELECT dt.module AS module, dt.formValues AS form, dt.id as porteur, dt.fromID AS userID
+        FROM data_types as dt
+        LEFT JOIN objets_data as od ON dt.id=od.typeID
+        WHERE od.id='".$_POST['objetID']."' limit 1")) {
+          $this->_reglementForm=$res['form'];
+          $this->_porteur=$res['porteur'];
+          $this->_userID=$res['userID'];
+          $this->_module=$res['module'];
+      } else {
+        throw new Exception('ObjetID n\'est pas valide');
+      }
+
+      return $this->_objetID;
+    }
+
+/**
+ * Définir le module
+ * @param string $module module
+ */
+    public function setModule($module) {
+      return $this->_module=$module;
+    }
+
+/**
+ * Obtneir la valeur courante pour le module
+ * @return string valeur courante pour module
+ */
+    public function getModule() {
+      return $this->_module;
+    }
+
+/**
+ * Définir le userID
+ * @param int $userID userID
+ */
+    public function setUserID($userID) {
+      return $this->_userID=$userID;
+    }
+
+/**
+ * Définir le porteur
+ * @param int $porteur porteur du règlement (ID du dataType porteur)
+ */
+    public function setPorteur($porteur) {
+      return $this->_porteur=$porteur;
+    }
+
+/**
+ * Définir le nom du formulaire de réglement
+ * @param string $reglementForm nom du formaulaire de réglèment
+ */
+    public function setReglementForm($reglementForm) {
+      return $this->_reglementForm=$reglementForm;
+    }
+
+/**
+ * Obtneir le nom courant du formulaire de règlement
+ * @return string nom courant formulaire de règlement
+ */
+    public function getReglementForm() {
+      return $this->_reglementForm;
+    }
 
 /**
  * Set factureTypeID
  * @param int $_factureTypeID ID d'une facture type
  */
-    public function set_factureTypeID($_factureTypeID)
+    public function setFactureTypeID($_factureTypeID)
     {
         $this->_factureTypeID = $_factureTypeID;
         return $this;
     }
 
 /**
- * Set secteur tarifaire (vide, 1 ou 2)
+ * Set secteur tarifaire
  * @param int $_secteurTarifaire secteur identifié par un int
  */
-    public function set_secteurTarifaire($_secteurTarifaire)
+    public function setSecteurTarifaire($_secteurTarifaire)
     {
-      $this->_secteurTarifaire = $_secteurTarifaire !=''?:2;
+      $this->_secteurTarifaire = $_secteurTarifaire;
+      return $this;
+    }
+
+/**
+ * Set secteur tarifaire géographique
+ * @param int $_secteurTarifaireGeo secteur tarifaire géographique
+ */
+    public function setSecteurTarifaireGeo($_secteurTarifaireGeo)
+    {
+      $this->_secteurTarifaireGeo = $_secteurTarifaireGeo;
+      return $this;
+    }
+
+/**
+ * Définir le secteur des IK
+ * @param string $_secteurK sexteur IK
+ */
+    public function setSecteurIK($_secteurK)
+    {
+      $this->_secteurIK = $_secteurK;
       return $this;
     }
 
@@ -77,13 +199,104 @@ class msReglement
  * Set facture type pre calculated data
  * @param array $_factureTypeData tableau brut des données d'une facture type
  */
-    public function set_factureTypeData($_factureTypeData)
+    public function setFactureTypeData($_factureTypeData)
     {
       if(!is_array($_factureTypeData['details'])) {
         $_factureTypeData['details']=Spyc::YAMLLoad($_factureTypeData['details']);
       }
       $this->_factureTypeData = $_factureTypeData;
       return $this;
+    }
+
+    public function getFacturesTypesMenus() {
+      $tab=[];
+      if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
+        from actes as a
+        left join actes_cat as c on c.id=a.cat
+        where a.toID in ('0','".$this->_userID."') and c.module='".$this->_module."'
+        group by a.id
+        order by c.displayOrder, c.label asc, a.label asc")) {
+          foreach ($tabTypes as $k=>$v) {
+
+              //n° de facture correspondant
+              $v['numIndexFSE']=$k+1;
+
+              //on récupère détails
+              $v['details']=Spyc::YAMLLoad($v['details']);
+
+              $tab[$v['catLabel']][]=$v;
+          }
+      }
+      return $tab;
+    }
+
+/**
+ * Définir l'ID de la facture type en fonction de l'objetID courant
+ * @return int ID de la facture type
+ */
+    public function getFactureTypeIDFromObjetID() {
+      if($factureTypeID=msSQL::sqlUniqueChamp("select parentTypeID from objets_data where id='".$this->_objetID."' limit 1 ")) {
+        return $this->_factureTypeID = $factureTypeID;
+      } else {
+        return $this->_factureTypeID = null;
+      }
+    }
+
+/**
+ * Obtenir les prevalues pour le formulaire de règlement à partir de l'objetID courant
+ * @return array typeID=>value
+ */
+    public function getPreValuesForReglementForm() {
+      return $this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where id='".$this->_objetID."' or instance='".$this->_objetID."'", 'typeID', 'value');
+    }
+
+/**
+ * Définir les secteurs tarifaires en fonction du contexte de règlement
+ */
+    public function setSecteursTarifaires() {
+      global $p;
+
+      $data=new msData();
+      $name2typeID=$data->getTypeIDsFromName(['regleSecteurGeoTarifaire', 'regleSecteurHonoraires', 'regleSecteurIK']);
+      if(isset($this->prevalues[$name2typeID['regleSecteurHonoraires']])) {
+        $this->setSecteurTarifaire($this->prevalues[$name2typeID['regleSecteurHonoraires']]);
+      } else {
+        $this->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+      }
+      if(isset($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']])) {
+        $this->setSecteurTarifaireGeo($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']]);
+      } else {
+        $this->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+      }
+      if(isset($this->prevalues[$name2typeID['regleSecteurIK']])) {
+        $this->setSecteurIK($this->prevalues[$name2typeID['regleSecteurIK']]);
+      } else {
+        $this->setSecteurIK($p['config']['administratifSecteurIK']);
+      }
+    }
+
+/**
+ * Définir les champs cachés utiles au formulaire de règlement
+ * @param array $f formualire de règlement sous forme d'aray PHP
+ */
+    public function setHiddenInputToReglementForm(&$f) {
+      $add=array(
+        'porteur'=>$this->_porteur,
+        'reglementForm'=>$this->_reglementForm,
+        'module'=>$this->_module,
+        'asUserID'=>$_POST['asUserID'],
+        'patientID'=>$this->_patientID,
+        'acteID'=>$this->_factureTypeID,
+        'regleDetailsActes'=>'',
+        'regleSecteurGeoTarifaire'=>$this->_secteurTarifaireGeo,
+        'regleSecteurHonoraires'=>$this->_secteurTarifaire,
+        'regleSecteurIK'=>$this->_secteurIK,
+      );
+      if ($this->_objetID > 0) {
+        $add['objetID']=$this->_objetID;
+        $add['regleDetailsActes']=$this->_prevalues[msData::getTypeIDFromName('regleDetailsActes')];
+      }
+      msForm::addHiddenInput($f , $add);
     }
 
 /**
@@ -105,93 +318,93 @@ class msReglement
  * Obtenir les data calculées sur une facture type
  * @return array array avec les datas de la facture type
  */
-public function getCalculateFactureTypeData() {
+    public function getCalculateFactureTypeData() {
 
-  if (!isset($this->_factureTypeID)) {
-      throw new Exception('FactureTypeID is not set');
-  }
+      if (!isset($this->_factureTypeID)) {
+          throw new Exception('FactureTypeID is not set');
+      }
 
-  if (!isset($this->_factureTypeData)) {
-    $data = $this->getFactureTypeData();
-  } else {
-    $data = $this->_factureTypeData;
-  }
+      if (!isset($this->_factureTypeData)) {
+        $data = $this->getFactureTypeData();
+      } else {
+        $data = $this->_factureTypeData;
+      }
 
-  if (!isset($this->_tarifsNgapCcamForOneSecteur)) {
-    $dataTarifs = $this->getAllTarifsNgapCcamForOneSecteur();
-  } else {
-    $dataTarifs = $this->_tarifsNgapCcamForOneSecteur;
-  }
+      if (!isset($this->_tarifsNgapCcamForOneSecteur)) {
+        $dataTarifs = $this->getAllTarifsNgapCcamForOneSecteur();
+      } else {
+        $dataTarifs = $this->_tarifsNgapCcamForOneSecteur;
+      }
 
-  $data['tarif']=0;
-  $data['depassement']=0;
-  $data['majoModifCCAM']=0;
+      $data['tarif']=0;
+      $data['depassement']=0;
+      $data['majoModifCCAM']=0;
 
-  foreach($data['details'] as $key=>$val) {
-    if (!is_array($val)) {
-        $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');
+      foreach($data['details'] as $key=>$val) {
+        if (!is_array($val)) {
+            $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');
+        }
+        //sur l'acte
+        $data['details'][$key]['base']=$dataTarifs[$key]['tarif'];
+        if(isset($val['codeAsso'])) {
+          $data['details'][$key]['codeAsso']=$val['codeAsso'];
+        } else {
+          $data['details'][$key]['codeAsso']='';
+        }
+
+        if(isset($val['modifsCCAM'])) {
+          $data['details'][$key]['modifsCCAM']=$val['modifsCCAM'];
+        } else {
+          $data['details'][$key]['modifsCCAM']='';
+        }
+
+        if(isset($val['pourcents'])) {
+            $data['details'][$key]['tarif'] = round(($dataTarifs[$key]['tarif']*$val['pourcents']/100), 2);
+        } else {
+            $data['details'][$key]['tarif'] = $dataTarifs[$key]['tarif'];
+        }
+        if(isset($val['depassement'])) {
+            $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
+        } else {
+            $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
+        }
+
+        if(isset($val['modifsCCAM'])) {
+            $data['details'][$key]['majoModifCCAM'] = $this->_getMontantModifsCCAM($dataTarifs[$key]['tarif'], $val['modifsCCAM']);
+            $data['details'][$key]['total'] = $data['details'][$key]['total'] + $data['details'][$key]['majoModifCCAM'];
+        }
+
+        $data['details'][$key]['type'] = $dataTarifs[$key]['type'];
+        $data['details'][$key]['tarif'] = number_format($data['details'][$key]['tarif'], 2,'.','');
+        $data['details'][$key]['total'] = number_format($data['details'][$key]['total'], 2,'.','');
+
+        //sur la facturation totale
+        if(isset($data['details'][$key]['tarif'])) {
+            $data['tarif']=$data['tarif']+$data['details'][$key]['tarif'];
+        }
+        if(isset($val['depassement'])) {
+            $data['depassement']=$data['depassement']+$val['depassement'];
+        }
+        if(isset($val['modifsCCAM'])) {
+            $data['majoModifCCAM']=$data['majoModifCCAM'] + $data['details'][$key]['majoModifCCAM'];
+        }
+
+      }
+
+      $data['total']=$data['tarif'];
+      if(isset($data['depassement'])) {
+          $data['total']=$data['total'] + $data['depassement'];
+      }
+      if(isset($data['majoModifCCAM'])) {
+          $data['total']=$data['total'] + $data['majoModifCCAM'];
+      }
+
+      $data['total']=number_format($data['total'],2,'.','');
+      $data['tarif']=number_format($data['tarif'],2,'.','');
+      $data['depassement']=number_format($data['depassement'],2,'.','');
+
+      return $data;
     }
-    //sur l'acte
-    $data['details'][$key]['base']=$dataTarifs[$key]['tarif'];
-    if(isset($val['codeAsso'])) {
-      $data['details'][$key]['codeAsso']=$val['codeAsso'];
-    } else {
-      $data['details'][$key]['codeAsso']='';
-    }
-
-    if(isset($val['modifsCCAM'])) {
-      $data['details'][$key]['modifsCCAM']=$val['modifsCCAM'];
-    } else {
-      $data['details'][$key]['modifsCCAM']='';
-    }
-
-    if(isset($val['pourcents'])) {
-        $data['details'][$key]['tarif'] = round(($dataTarifs[$key]['tarif']*$val['pourcents']/100), 2);
-    } else {
-        $data['details'][$key]['tarif'] = $dataTarifs[$key]['tarif'];
-    }
-    if(isset($val['depassement'])) {
-        $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
-    } else {
-        $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
-    }
-
-    if(isset($val['modifsCCAM'])) {
-        $data['details'][$key]['majoModifCCAM'] = $this->_getMontantModifsCCAM($dataTarifs[$key]['tarif'], $val['modifsCCAM']);
-        $data['details'][$key]['total'] = $data['details'][$key]['total'] + $data['details'][$key]['majoModifCCAM'];
-    }
-
-    $data['details'][$key]['type'] = $dataTarifs[$key]['type'];
-    $data['details'][$key]['tarif'] = number_format($data['details'][$key]['tarif'], 2,'.','');
-    $data['details'][$key]['total'] = number_format($data['details'][$key]['total'], 2,'.','');
-
-    //sur la facturation totale
-    if(isset($data['details'][$key]['tarif'])) {
-        $data['tarif']=$data['tarif']+$data['details'][$key]['tarif'];
-    }
-    if(isset($val['depassement'])) {
-        $data['depassement']=$data['depassement']+$val['depassement'];
-    }
-    if(isset($val['modifsCCAM'])) {
-        $data['majoModifCCAM']=$data['majoModifCCAM'] + $data['details'][$key]['majoModifCCAM'];
-    }
-
-  }
-
-  $data['total']=$data['tarif'];
-  if(isset($data['depassement'])) {
-      $data['total']=$data['total'] + $data['depassement'];
-  }
-  if(isset($data['majoModifCCAM'])) {
-      $data['total']=$data['total'] + $data['majoModifCCAM'];
-  }
-
-  $data['total']=number_format($data['total'],2,'.','');
-  $data['tarif']=number_format($data['tarif'],2,'.','');
-  $data['depassement']=number_format($data['depassement'],2,'.','');
-
-  return $data;
-}
 
 /**
  * Obtenir les tarifs des actes NGAP / CCAM pour un secteur tarifaire
@@ -201,21 +414,47 @@ public function getCalculateFactureTypeData() {
         if (!isset($this->_secteurTarifaire)) {
             throw new Exception('SecteurTarifaire is not set');
         }
-        if($this->_secteurTarifaire !=1 and $this->_secteurTarifaire !=2)  {
-          throw new Exception('SecteurTarifaire is not correctly set');
-        }
-        $this->_tarifsNgapCcamForOneSecteur = msSQL::sql2tabKey("select code, tarifs".$this->_secteurTarifaire." as tarif, type from actes_base", "code");
 
-        return $this->_tarifsNgapCcamForOneSecteur;
+        if($data = msSQL::sql2tabKey("select code, dataYaml, type, tarifUnit from actes_base where type!='mCCAM'", "code")) {
+          foreach($data as $k=>$v) {
+            $tarif=$this->_getTarifFromYamlData($v)['tarif'];
+            $tab[$k]=array(
+              'code'=>$k,
+              'tarif'=>$tarif,
+              'type'=>$v['type']
+            );
+          }
+        }
+        return $this->_tarifsNgapCcamForOneSecteur=$tab;
       }
 
+
 /**
- * Obtenir les data sur un acte NGAP / CCAM
- * @param  string $codeActe code acte
- * @return array           tableau des data
+ * Obtenir le tarif d'un acte de base à partir des datas yaml en fonctions des secteurs tarifaires
+ * @param  array $v données de l'acte
+ * @return array    données de l'acte avec champ tarif
  */
-      public function getActeData($codeActe) {
-        return msSQL::sqlUnique("select code, label, type, tarifs1, tarifs2, tarifUnit, F, P, S, M, R, D, E, C , U from actes_base where code = '".msSQL::cleanVar($codeActe)."' limit 1");
+      private function _getTarifFromYamlData(&$v) {
+        $dataYaml=Spyc::YAMLLoadString($v['dataYaml']);
+        if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
+          $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire];
+          if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
+            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParConventionPs']['CodePs'.$this->_secteurTarifaire]);
+          }
+        } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
+          if($v['tarifUnit']=='euro') {
+            $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+          } else {
+            $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+          }
+        } elseif($v['type']=='NGAP') {
+          $v['tarif']=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
+        } elseif($v['type']=='Libre') {
+          $v['tarif']=$dataYaml['tarifBase'];
+        } else {
+          $v['tarif']='';
+        }
+        return $v;
       }
 
 /**
@@ -226,7 +465,13 @@ public function getCalculateFactureTypeData() {
       public function getActeDataFromTerm($search) {
         $searcho=$search;
         $search=str_replace(' ', '%', $search).'%';
-        return msSQL::sql2tab("select code, label, type, tarifs1, tarifs2, tarifUnit, F, P, S, M, R, D, E, C , U from actes_base where code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."' order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc limit 25");
+        $data=[];
+        if($data =  msSQL::sql2tab("select * from actes_base where code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."' order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc limit 25")) {
+          foreach($data as $k=>$v) {
+            $data[$k]=$this->_getTarifFromYamlData($v);
+          }
+        }
+        return $data;
       }
 
 /**
@@ -234,7 +479,22 @@ public function getCalculateFactureTypeData() {
  * @return array tableau code => data
  */
       public function getModificateursCcam() {
-        return $this->_modifsCCAM = msSQL::sql2tabKey("select * from actes_base where type = 'mCCAM' ", 'code');
+        $modifs=[];
+          if($modifs=msSQL::sql2tabKey("select * from actes_base where type = 'mCCAM' ", 'code')) {
+           foreach($modifs as $k=>$v) {
+             $modifs[$k]['dataYaml']=Spyc::YAMLLoad($v['dataYaml']);
+             if(isset($modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire])) {
+               if($v['tarifUnit']=='euro') {
+                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+               } else {
+                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+               }
+             } else {
+               //unset($modifs[$k]);
+             }
+           }
+          }
+        return $this->_modifsCCAM = $modifs;
       }
 
 /**
@@ -251,10 +511,10 @@ public function getCalculateFactureTypeData() {
         }
         $modifs = str_split($modifsString);
         foreach ($modifs as $modif) {
-          if ($this->_modifsCCAM[$modif]['tarifUnit'] == 'euro') {
-            $modifsCcamSum = $modifsCcamSum + $this->_modifsCCAM[$modif]['tarifs1'];
-          } else if ($this->_modifsCCAM[$modif]['tarifUnit'] == 'pourcent') {
-            $modifsCcamSum = $modifsCcamSum + ($tarifBase * $this->_modifsCCAM[$modif]['tarifs1'] / 100);
+          if ($this->_modifsCCAM[$modif]['dataYaml']['tarifUnit'] == 'euro') {
+            $modifsCcamSum = $modifsCcamSum + $this->_modifsCCAM[$modif]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+          } else if ($this->_modifsCCAM[$modif]['dataYaml']['tarifUnit'] == 'pourcent') {
+            $modifsCcamSum = $modifsCcamSum + ($tarifBase * $this->_modifsCCAM[$modif]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'] / 100);
           }
         }
         return $modifsCcamSum;

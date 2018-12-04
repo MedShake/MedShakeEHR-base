@@ -26,22 +26,27 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 //check & validate datas
 $gump=new GUMP();
 $_POST = $gump->sanitize($_POST);
 
 if (isset($_POST['id'])) {
-    $gump->validation_rules(array(
-            'id'=> 'required|numeric',
-            'code'=> 'required'
-        ));
+  $gump->validation_rules(array(
+    'id'=> 'required|numeric',
+    'code'=> 'required',
+    'activite'=> 'required',
+    'phase'=> 'required',
+    'type'=> 'required',
+  ));
 } else {
-    $gump->validation_rules(array(
-            'code'=> 'required'
-
-        ));
+  $gump->validation_rules(array(
+    'code'=> 'required',
+    'activite'=> 'required',
+    'phase'=> 'required',
+    'type'=> 'required',
+  ));
 }
 
 $validated_data = $gump->run($_POST);
