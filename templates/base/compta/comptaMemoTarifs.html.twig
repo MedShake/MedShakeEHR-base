@@ -51,10 +51,10 @@
 
           {# Nav tabs #}
           {% if page.users|length > 1 %}
-          <ul class="nav nav-tabs" role="tablist">
+          <ul class="nav nav-pills my-3" role="tablist">
               {% for id, user in page.users %}
-                <li role="presentation" class="nav-item">
-                    <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/{{ id }}/" aria-controls="prescriptions" role="tab">{% if id == 0 %}Tarifs communs{% else %}Tarifs : {{ user }}{% endif %}</a>
+                <li role="presentation" class="nav-pills">
+                    <a class="nav-link{% if page.selectUser == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/{{ id }}/" aria-controls="prescriptions" role="tab">{% if id == 0 %}Tarifs communs{% else %}{{ user }}{% endif %}</a>
                 </li>
               {% endfor %}
 

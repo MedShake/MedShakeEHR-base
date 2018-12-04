@@ -27,46 +27,50 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+$template="comptaMemoTarifs";
+$debug='';
 
- $template="comptaMemoTarifs";
- $debug='';
+//utilisateurs différents qui peuvent enregistrer des recettes
+$autoUsers= new msPeople();
+if($p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirRecettes')) {
+
+  $where[]="a.toID='0'";
+
+  // sélection du user
+  if (isset($match['params']['user'])) {
+    $p['page']['selectUser']=$match['params']['user'];
+    if (is_numeric($p['page']['selectUser'])) {
+       $where[]="a.toID='".$p['page']['selectUser']."'";
+    }
+  } else {
+    reset($p['page']['users']);
+    $p['page']['selectUser']=key($p['page']['users']);
+    $where[]="a.toID='".$p['page']['selectUser']."'";
+  }
+  // params du user
+  $userOb = new msPeople;
+  $userOb->setToID($p['page']['selectUser']);
+  $module = $userOb->getModule();
+  $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>$p['page']['selectUser'], 'module'=>$module));
+  $secteurGeo=msConfiguration::getParameterValue('administratifSecteurGeoTarifaire', array('id'=>$p['page']['selectUser'], 'module'=>$module));
+  $reglement = new msReglement();
+  $reglement->setSecteurTarifaire($secteur);
+  $reglement->setSecteurTarifaireGeo($secteurGeo);
 
 
-
- //utilisateurs différents
- $autoUsers= new msPeople();
- $p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirFacturesTypes');
- if(is_array($p['page']['users'])) $p['page']['users']=array('0'=>'Tous')+$p['page']['users']; else {$p['page']['users']=array('0'=>'Tous');}
-
-
- // si user
- if (isset($match['params']['user'])) {
-     $p['page']['selectUser']=$match['params']['user'];
-     if (is_numeric($p['page']['selectUser'])) {
-         $where[]="a.toID='".$p['page']['selectUser']."'";
-     }
-
- } else {
-     $where[]="a.toID='0'";
-     $p['page']['selectUser']=0;
- }
-
-
- if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
-			from actes as a
-			left join actes_cat as c on c.id=a.cat
-      where ".implode(' and ', $where)."
-			group by a.id
-			order by c.displayOrder, c.label asc, a.label asc")) {
+  if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
+  		from actes as a
+  		left join actes_cat as c on c.id=a.cat
+      where (".implode(' or ', $where).") and c.module='".$module."'
+  		group by a.id
+  		order by c.displayOrder, c.label asc, a.label asc")) {
      foreach ($tabTypes as $v) {
-         $reglement = new msReglement();
-         $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>'', 'module'=>$v['catModule']));
-         $reglement->set_secteurTarifaire($secteur);
-         $reglement->set_factureTypeID($v['id']);
-         $reglement->set_factureTypeData($v);
+         $reglement->setFactureTypeID($v['id']);
+         $reglement->setFactureTypeData($v);
          $p['page']['secteurs'][$v['catName']]=$secteur;
          $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
      }
- }
- // liste des catégories
- $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat order by label", 'id', 'label');
+  }
+  // liste des catégories
+  $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat where module='".$module."' order by label", 'id', 'label');
+}
