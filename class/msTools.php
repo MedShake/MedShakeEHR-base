@@ -352,6 +352,20 @@ class msTools
    }
 
 /**
+ * Trier un tableau en natural sorting via un nom de clef de colonne, en préservant les clefs
+ * @param  string $key   colonne sur laquelle trier
+ * @param  array  $array tableau à trier
+ * @return array        tableau trié
+ */
+   public static function array_unatsort_by($key, array &$array)
+   {
+       return uasort($array, function($x, $y) use ($key)
+       {
+           return strnatcasecmp($x[$key] ?? null, $y[$key] ?? null);
+       });
+   }
+
+/**
  * Vérifier si une commande système existe
  * @param  string $cmd nom de la commande
  * @return boolean      true / false
