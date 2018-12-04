@@ -253,6 +253,21 @@ class msForm
             throw new Exception('Form cannot be generated');
         }
     }
+
+/**
+ * Ajouter des champs input hidden à un form généré
+ * @param array $f    formulaire u format array php
+ * @param array $data array input name=> input value
+ */
+    public static function addHiddenInput(&$f, $data) {
+      if(!empty($data)) {
+        foreach($data as $k=>$v) {
+          $f['addHidden'][$k]=$v;
+        }
+      }
+      return $f;
+    }
+
 /**
  * Ajouter un bouton submit au formulaire
  * @param array $f     Formulaire au format array PHP
