@@ -139,3 +139,7 @@ if($p['config']['transmissionsPeutCreer'] == 'true') {
   $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
   $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
 }
+
+// Formulaires de règlement
+$data=new msData;
+$p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));

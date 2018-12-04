@@ -89,7 +89,7 @@
         </ul>
       </div>
     {% else %}
-      <a class="addNewReglement btn btn-secondary m-1" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">{{ page.formReglement[0]['label'] }}</a>
+      <a class="addNewReglement btn btn-secondary m-1" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">Règlement</a>
     {% endif %}
 
     <div class="btn-group m-1">

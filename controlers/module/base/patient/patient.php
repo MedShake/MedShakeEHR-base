@@ -71,16 +71,6 @@ $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
 $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
 
-$data=new msData;
-$reglements=$data->getDataTypesFromCatName('porteursReglement', array('id', 'module', 'label', 'description', 'formValues'));
-foreach ($reglements as $v) {
-    if ($v['module']=='base' and (
-       ($v['formValues']=='baseReglementLibre' and $p['config']['administratifSecteurHonoraires']=='') or
-       ($v['formValues']=='baseReglementS1' and $p['config']['administratifSecteurHonoraires']=='1') or
-       ($v['formValues']=='baseReglementS2' and $p['config']['administratifSecteurHonoraires']=='2'))) {
-        $p['page']['formReglement'][]=$v;
-    }
-}
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($ordos as $v) {
     if ($v['module']=='base') {
