@@ -64,6 +64,9 @@
       <a class="nav-link active" href="#pergonomie" aria-controls="pergonomie" role="tab" data-toggle="tab">Ergonomie</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="#padministratif" aria-controls="padministratif" role="tab" data-toggle="tab">Réglages administratifs</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
     </li>
     {% if page.hasAgenda %}
@@ -84,6 +87,10 @@
       {% include('inc-tabUserParametersErgonomie.html.twig') %}
     </div>
 
+    {# réglages administratifs #}
+    <div role="tabpanel" class="tab-pane" id="padministratif" >
+      {% include('inc-tabUserParametersAdministratif.html.twig') %}
+    </div>
 
     {# formulaire mot de passe MedShake #}
     <div role="tabpanel" class="tab-pane" id="pmdp" >

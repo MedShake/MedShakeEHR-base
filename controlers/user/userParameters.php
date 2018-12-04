@@ -148,4 +148,11 @@ $p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', arra
  ************/
 
  // Paramètres Ergonomie de l'utilisateur
- $p['page']['ergonomie']['params']=msConfiguration::getCatParametersForUser('Ergonomie et design', array('id'=>$p['user']['id'], 'module'=>''));
+ $p['page']['ergonomie']['params']=msConfiguration::getCatParametersForUser('Ergonomie et design', array('id'=>$p['user']['id'], 'module'=>$p['user']['module']));
+
+ /************
+ * Administratif
+ ************/
+
+ // Paramètres Règlements
+ $p['page']['reglement']['params']=msConfiguration::getCatParametersForUser('Règlements', array('id'=>$p['user']['id'], 'module'=>$p['user']['module']));
