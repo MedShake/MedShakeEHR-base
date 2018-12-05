@@ -32,6 +32,7 @@ class msReglement
 {
   private $_patientID;
   private $_userID;
+  private $_asUserID;
   private $_module;
   private $_objetID=null;
   private $_porteur;
@@ -129,6 +130,14 @@ class msReglement
  */
     public function setUserID($userID) {
       return $this->_userID=$userID;
+    }
+
+/**
+ * Définir le asUserID
+ * @param int $asUserID asUserID
+ */
+    public function setAsUserID($asUserID) {
+      return $this->_asUserID=$asUserID;
     }
 
 /**
@@ -288,7 +297,7 @@ class msReglement
         'porteur'=>$this->_porteur,
         'reglementForm'=>$this->_reglementForm,
         'module'=>$this->_module,
-        'asUserID'=>$_POST['asUserID'],
+        'asUserID'=>$this->_asUserID,
         'patientID'=>$this->_patientID,
         'acteID'=>$this->_factureTypeID,
         'regleDetailsActes'=>'',

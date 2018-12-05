@@ -42,6 +42,7 @@ if (!isset($delegate)) {
   } else {
     $hono->setObjetID($_POST['objetID']);
   }
+  if(isset($_POST['asUserID']) and is_numeric($_POST['asUserID'])) $hono->setAsUserID($_POST['asUserID']);
 
   //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
   if (!in_array($hono->getReglementForm(), ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
