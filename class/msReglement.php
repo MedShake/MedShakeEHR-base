@@ -116,7 +116,7 @@ class msReglement
     }
 
 /**
- * Obtneir la valeur courante pour le module
+ * Obtenir la valeur courante pour le module
  * @return string valeur courante pour module
  */
     public function getModule() {
@@ -208,6 +208,10 @@ class msReglement
       return $this;
     }
 
+/**
+ * Obtenir les array pour la constructions des menus de factures types
+ * @return array array pour construction menu factures types
+ */
     public function getFacturesTypesMenus() {
       $tab=[];
       if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
@@ -440,6 +444,10 @@ class msReglement
           $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire];
           if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
             $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParConventionPs']['CodePs'.$this->_secteurTarifaire]);
+          }
+          // application coeff majoration DOM
+          if(isset($dataYaml['majorationsDom'][$this->_secteurTarifaireGeo])) {
+            $v['tarif']=round(($v['tarif']*$dataYaml['majorationsDom'][$this->_secteurTarifaireGeo]),2);
           }
         } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
           if($v['tarifUnit']=='euro') {
