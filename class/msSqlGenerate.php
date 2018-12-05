@@ -174,7 +174,7 @@ class msSqlGenerate
 
     // recherche de méthode informative dans la class Honoraires du module
     $listFromModule = [];
-    $className = 'msMod'.ucfirst($name).'CalcHonoraires';
+    $className = 'msMod'.ucfirst($name).'Reglement';
     if(class_exists($className, TRUE)) {
       if(method_exists($className, 'getActesModuleSqlExtraction')) {
         $listFromModule = $className::getActesModuleSqlExtraction();
