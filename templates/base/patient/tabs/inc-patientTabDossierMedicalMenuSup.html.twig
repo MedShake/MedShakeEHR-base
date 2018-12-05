@@ -83,7 +83,7 @@
         <ul class="dropdown-menu">
           {% for v in page.formReglement %}
             <li>
-              <a class="dropdown-item addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
+              <a class="dropdown-item addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.description }}</a>
             </li>
           {% endfor %}
         </ul>
