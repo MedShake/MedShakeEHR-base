@@ -95,7 +95,7 @@ class msReglement
       if($res=msSQL::sqlunique("SELECT dt.module AS module, dt.formValues AS form, dt.id as porteur, dt.fromID AS userID
         FROM data_types as dt
         LEFT JOIN objets_data as od ON dt.id=od.typeID
-        WHERE od.id='".$_POST['objetID']."' limit 1")) {
+        WHERE od.id='".$objetID."' limit 1")) {
           $this->_reglementForm=$res['form'];
           $this->_porteur=$res['porteur'];
           $this->_userID=$res['userID'];
