@@ -29,7 +29,6 @@
 class msCcamNgapApi
 {
 
-
 /**
 * Code CCAM
 * @var string
@@ -82,6 +81,17 @@ class msCcamNgapApi
 */
   public function getActeData()
   {
+    if($this->_acteType == 'Libre') {
+      return $data2return=array(
+        'acteCode'=>$this->_acteCode,
+        'acteLabel'=>$this->_acteCode,
+        'activiteCode'=>$this->_activiteCode,
+        'phaseCode'=>$this->_phaseCode,
+        'yaml'=>'tarifBase: ',
+        'tarifUnite'=>'euro'
+      );
+    }
+
     $scrap = $this->_loadCcamFromServer();
     if(is_string($scrap)) return $scrap;
     $data2return=[];
@@ -191,6 +201,8 @@ class msCcamNgapApi
         $url=$p['config']['apiCcamNgapUrl']."/ngap/actes/".$this->_acteCode."/?key=".$p['config']['apiCcamNgapKey'];
       } elseif($this->_acteType == 'mCCAM') {
         $url=$p['config']['apiCcamNgapUrl']."/ccam/modificateur/".$this->_acteCode."/?key=".$p['config']['apiCcamNgapKey'];
+      } else {
+        return;
       }
 
       $agent= 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:58.0) Gecko/20100101 Firefox/58.0';
