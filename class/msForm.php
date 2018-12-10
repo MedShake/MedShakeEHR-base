@@ -274,6 +274,20 @@ class msForm
     }
 
 /**
+ * Extraire le code javascript accompagnant le formulaire
+ * @return string code javascript
+ */
+    public function getFormJavascript()
+    {
+      if (!isset($this->_formID)) {
+          throw new Exception('formID is not defined');
+      }
+      $jsFromBdd = msSQL::sqlUniqueChamp("select javascript from forms where id='".$this->_formID."' limit 1");
+      $jsFromCda = $this->_getJsFromCdaRules();
+      return $jsFromBdd."\n".$jsFromCda;
+    }
+
+/**
  * Ajouter des champs input hidden à un form généré
  * @param array $f    formulaire u format array php
  * @param array $data array input name=> input value
@@ -344,7 +358,7 @@ class msForm
         if (!isset($this->_formID)) {
             throw new Exception('formID is not defined');
         }
-        if ($formyaml=msSQL::sqlUnique("select yamlStructure, dataset, formMethod, formAction from forms where id='".$this->_formID."' limit 1")) {
+        if ($formyaml=msSQL::sqlUnique("select yamlStructure, dataset, formMethod, formAction, cda from forms where id='".$this->_formID."' limit 1")) {
 
             if($this->_testNumericBloc($formyaml['yamlStructure'])) {
               $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure'],$formyaml['dataset']);
@@ -354,6 +368,11 @@ class msForm
             $form['global']['dataset']=$formyaml['dataset'];
             $form['global']['formAction']=$formyaml['formAction'];
             $form['global']['formMethod']=$formyaml['formMethod'];
+            if(!empty($formyaml['cda'])) {
+              $this->_cdaData=$form['cda'] = Spyc::YAMLLoad($formyaml['cda']);
+            } else {
+              $this->_cdaData=$form['cda'] = NULL;
+            }
 
             return $form;
         } else {
@@ -581,7 +600,49 @@ class msForm
                 $this->_formBuilderRow($t['structure']['row'.$rowNumber], $rowNumber, $r, $dataset);
             }
         }
+
+        //ajouter un champ final avant validation pour coder l'examen pour version CDA si data CDA existent
+        if(!empty($t['cda']['actesPossibles'])) $this->_formBuilderAddSelectForServiceEventCode($r,$t['cda']);
+
         return $r;
+    }
+
+/**
+ * AJouter un champ pour le codage de l'examen validé par le form
+ * @param  array $r   formulaire au format array PHP
+ * @param  array $cda data CDA issue du formulaire
+ * @return void
+ */
+    private function _formBuilderAddSelectForServiceEventCode(&$r,$cda) {
+
+      foreach($cda['actesPossibles'] as $code=>$v) {
+        $formValues[$code]=$code.': '.$v['serviceEventCode']['displayName'];
+      }
+
+      //valeur par défaut si présente
+      $typeID=msData::getTypeIDFromName('codeTechniqueExamen');
+      if (isset($this->_prevalues[$typeID])) {
+          $preValue=$this->_prevalues[$typeID];
+      } elseif (isset($this->_prevalues['codeTechniqueExamen'])) {
+          $preValue=$this->_prevalues['codeTechniqueExamen'];
+      } else {
+          $preValue='noPreValue';
+      }
+
+
+      $newRow = count($r['structure']);
+      $r['structure'][$newRow][1]['size']='col-md-12';
+      $r['structure'][$newRow][1]['elements'][]=array(
+        'type'=>'form',
+        'value'=>array(
+          'name'=>'p_codeTechniqueExamen',
+          'internalName'=>'codeTechniqueExamen',
+          'formType'=>'select',
+          'formValues'=>$formValues,
+          'preValue'=>$preValue,
+          'label'=>'Acte correspondant à l\'examen réalisé'
+        )
+      );
     }
 
 /**
@@ -989,5 +1050,35 @@ class msForm
 
     }
     return $string;
+  }
+
+/**
+ * Obtenir le code javascript de sélection automatique de l'acte effectué en fonction des règles CDA en yaml
+ * @return string javascript
+ */
+  private function _getJsFromCdaRules() {
+    if(empty($this->_cdaData)) return;
+
+    $d=$this->_cdaData['clinicalDocument']['documentationOf']['serviceEvent'];
+    if(is_string($d['paramConditionServiceEvent'])) {
+      $d['paramConditionServiceEvent']=array($d['paramConditionServiceEvent']);
+    }
+
+    if(is_array($d['paramConditionServiceEvent'])) {
+      $r="$('#nouvelleCs').on('change','#id_".implode("_id, #id_", $d['paramConditionServiceEvent'])."_id', function() {";
+      foreach($d['paramConditionServiceEvent'] as $champ) {
+        $r.="val".$champ." = $('#id_".$champ."_id').val();";
+      }
+      $r.="clef = val".implode(" + '|' + val", $d['paramConditionServiceEvent']).";";
+      $i=0;
+      foreach($d['code'] as $k=>$v) {
+        if($i > 0) $r.=' else ';
+        $r.= "if(clef == '".$k."') $('#id_codeTechniqueExamen_id option[value=\"".$v."\"]').prop('selected', true);";
+        $i++;
+      }
+      $r.="});";
+    }
+    return $r;
+
   }
 }
