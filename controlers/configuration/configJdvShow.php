@@ -48,4 +48,10 @@ if(is_dir($p['homepath'].'ressources/JDV/')) {
     $p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS']=false;
   }
 
+  if(array_key_exists('JDV_J07-XdsTypeCode_CI-SIS', $p['page']['files'])) {
+    $p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS']=true;
+  } else {
+    $p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS']=false;
+  }
+
 }
