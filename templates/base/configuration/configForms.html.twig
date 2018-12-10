@@ -72,7 +72,9 @@
 
 			{% for k,v in page.tabTypes %}
         {% if page.groupe=='' or page.groupe==v.0.catName %}
-				  <h2 class="mb-2" id="cat{{ v.0.catName }}">{{ v.0.catLabel }}</h2>
+				  <h2 class="mb-2" id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
+            <span class="fa fa-search-plus" aria-hidden="true"></span>
+          </a></h2>
 				  <table class="table table-sm mb-0 table-hover mb-3">
 				  <thead>
 				  <tr>
@@ -94,7 +96,7 @@
             <td>{{ w.description }}</td>
             <td class="text-right">
               <div class="btn-group">
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+                <a class="btn btn-light btn-sm{% if k=='displayforms' %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
                   <span class="fa fa-eye" aria-hidden="true"></span>
                 </a>
                 <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">

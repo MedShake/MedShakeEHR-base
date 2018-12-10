@@ -56,27 +56,8 @@
 <div class="row">
 	<div class="col-md-5" style="padding-right : 40px">
 	<h2>Références</h2>
-	<form>
-		<h3>Défauts</h3>
-		<div class="form-group">
-		{{ f.textarea ({
-			'textarea' : {
-				'name' : 'yamlStructure',
-				'placeholder' : 'valeurs par défaut',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.yamlStructureDefaut,
-				'add' : 'rows="10" readonly style="font-family:monospace;"'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Structure du formulaire par defaut'
-			}
-		}) }}
-		</div>
-	</form>
 
-	<h3>Types utilisables <small><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/administratives-data/types/">Modifier</a></small></h3>
+	<h3>Types utilisables <a class="btn btn-sm btn-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/"><i class="fas fa-pen"></i> Modifier</a></h3>
 
 		<table class="table table-sm mb-0 table-hover">
 		<tr>
@@ -112,174 +93,215 @@
 
 	<form id="formParamsEdit" class="col-md-7 ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
     <button type="submit" class="btn btn-primary float-right m-1" style="margin-top : 25px">Enregistrer</button>
-	<h2>Edition <small>formulaire #{{ page.form.id }}</small></h2>
+	<h2>Édition <small>formulaire #{{ page.form.id }}</small></h2>
 
-		{{ f.input ({
-			'input' : {
-				'type' : 'hidden',
-				'name' : 'id',
-				'value' : page.form.id
-			},
-		}) }}
+  <ul class="nav nav-tabs mb-3" id="navTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="generalites-tab" data-toggle="tab" href="#generalites-pan">Généralités</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="structure-tab" data-toggle="tab" href="#structure-pan">Structure</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="cda-tab" data-toggle="tab" href="#cda-pan">CDA</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="javascript-tab" data-toggle="tab" href="#javascript-pan">JavaScript</a>
+    </li>
+  </ul>
 
-    <div class="form-group">
-		{{ f.input ({
-			'input' : {
-				'type' : 'text',
-				'name' : 'internalName',
-				'placeholder' : 'nom à usage interne, pas d\'espace, pas d\'accent',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.internalName,
-        'readonly' : 'readonly'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Nom à usage interne',
-			}
-		}) }}
-		</div>
+  <div class="tab-content" id="navTabContent">
+    <div class="tab-pane fade show active" id="generalites-pan" >
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'hidden',
+  				'name' : 'id',
+  				'value' : page.form.id
+  			},
+  		}) }}
 
-    <div class="form-group">
-		{{ f.select ({
-			'select' : {
-				'name' : 'module',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'values' : page.modules,
-				'valueDefaut': page.form.module
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Module concerné',
-			}
-		}) }}
-		</div>
+      <div class="form-group">
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'text',
+  				'name' : 'internalName',
+  				'placeholder' : 'nom à usage interne, pas d\'espace, pas d\'accent',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.internalName,
+          'readonly' : 'readonly'
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Nom à usage interne',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.input ({
-			'input' : {
-				'type' : 'text',
-				'name' : 'name',
-				'placeholder' : 'nom du formulaire',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.name
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Nom du formulaire',
-			}
-		}) }}
-		</div>
+      <div class="form-group">
+  		{{ f.select ({
+  			'select' : {
+  				'name' : 'module',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'values' : page.modules,
+  				'valueDefaut': page.form.module
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Module concerné',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.input ({
-			'input' : {
-				'type' : 'text',
-				'name' : 'description',
-				'placeholder' : 'description du formulaire',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.description
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Description du formulaire',
-			}
-		}) }}
-		</div>
+  		<div class="form-group">
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'text',
+  				'name' : 'name',
+  				'placeholder' : 'nom du formulaire',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.name
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Nom du formulaire',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.select ({
-			'select' : {
-				'name' : 'cat',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'values' : page.tabCat,
-				'valueDefaut': page.form.cat
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Catégorie',
-			}
-		}) }}
-		</div>
+  		<div class="form-group">
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'text',
+  				'name' : 'description',
+  				'placeholder' : 'description du formulaire',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.description
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Description du formulaire',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.input ({
-			'input' : {
-				'type' : 'text',
-				'name' : 'printModel',
-				'placeholder' : 'modèle pour l\'impression',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.printModel
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Modèle pour l\'impression',
-			}
-		}) }}
-		</div>
+  		<div class="form-group">
+  		{{ f.select ({
+  			'select' : {
+  				'name' : 'cat',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'values' : page.tabCat,
+  				'valueDefaut': page.form.cat
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Catégorie',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.input ({
-			'input' : {
-				'type' : 'text',
-				'name' : 'formAction',
-				'placeholder' : 'url de destination à la validation',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.formAction
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'URL de destination à la validation (action)',
-			}
-		}) }}
-		</div>
+  		<div class="form-group">
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'text',
+  				'name' : 'printModel',
+  				'placeholder' : 'modèle pour l\'impression',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.printModel
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Modèle pour l\'impression',
+  			}
+  		}) }}
+  		</div>
 
-		<div class="form-group">
-		{{ f.textarea ({
-			'textarea' : {
-				'name' : 'yamlStructure',
-				'placeholder' : 'valeurs par défaut',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.yamlStructure,
-				'add' : 'rows="20" style="font-family:monospace;"'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Structure du formulaire (format yaml)'
-			}
-		}) }}
-		</div>
+  		<div class="form-group">
+  		{{ f.input ({
+  			'input' : {
+  				'type' : 'text',
+  				'name' : 'formAction',
+  				'placeholder' : 'url de destination à la validation',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.formAction
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'URL de destination à la validation (action)',
+  			}
+  		}) }}
+  		</div>
 
-    <div class="form-group">
-		{{ f.textarea ({
-			'textarea' : {
-				'name' : 'cda',
-				'placeholder' : '',
-				'class' : 'form-control',
-				'autocomplete' : 'off',
-				'value' : page.form.cda,
-				'add' : 'rows="10" style="font-family:monospace;"'
-			},
-			'label' : {
-				'position' : 'before',
-				'label' : 'Variables pour construction du CDA'
-			}
-		}) }}
-		</div>
+    </div>
+    <div class="tab-pane fade" id="structure-pan">
+
+  		<div class="form-group">
+  		{{ f.textarea ({
+  			'textarea' : {
+  				'name' : 'yamlStructure',
+  				'placeholder' : 'valeurs par défaut',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.yamlStructure,
+  				'add' : 'rows="20" style="font-family:monospace;"'
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Structure du formulaire (format yaml)'
+  			}
+  		}) }}
+  		</div>
+    </div>
+    <div class="tab-pane fade" id="cda-pan">
+      <div class="form-group">
+  		{{ f.textarea ({
+  			'textarea' : {
+  				'name' : 'cda',
+  				'placeholder' : 'Code au format YAML pour la génération du document au format XML CDA R2',
+  				'class' : 'form-control',
+  				'autocomplete' : 'off',
+  				'value' : page.form.cda,
+  				'add' : 'rows="20" style="font-family:monospace;"'
+  			},
+  			'label' : {
+  				'position' : 'before',
+  				'label' : 'Variables pour construction du CDA'
+  			}
+  		}) }}
+  		</div>
+    </div>
+
+    <div class="tab-pane fade" id="javascript-pan">
+      <div class="form-group">
+      {{ f.textarea ({
+        'textarea' : {
+          'name' : 'javascript',
+          'placeholder' : 'Le code entré ici n\'est interprété que pour les formulaires de consultation',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'value' : page.form.javascript,
+          'add' : 'rows="20" style="font-family:monospace;"'
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Javascript'
+        }
+      }) }}
+      </div>
+    </div>
 
 		<button type="submit" class="btn btn-primary float-right m-1">Enregistrer</button>
 
 		<p>
 		{{ page.form.yaml }}
 		</p>
-
+    </div>
 	</form>
 
 </div>
