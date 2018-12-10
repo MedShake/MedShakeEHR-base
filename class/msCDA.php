@@ -33,7 +33,8 @@ class msCDA
     private $_objetID;
     private $_objetTag;
     private $_template;
-
+    private $_codeActe;
+    private $_codeDocument;
 /**
  * Définir l'objetID
  * @param int $objetID objetID
@@ -121,7 +122,7 @@ class msCDA
     }
 
 /**
- * Ajouter les tags issus du formulaire d'origine de l'obejt
+ * Ajouter les tags issus du formulaire d'origine de l'objet
  * @return void
  */
     private function _ajouterTagsFormulaireOrigine() {
@@ -133,28 +134,66 @@ class msCDA
 
           $this->_template=$d['template'];
 
-          // clinicalDocument/documentationOf/serviceEvent/code
-          if(isset($d['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'], $this->_objetTag[$d['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent']])) {
-            $d['clinicalDocument']['documentationOf']['serviceEvent']=$d['clinicalDocument']['documentationOf']['serviceEvent']['code'][$this->_objetTag[$d['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent']]];
-          }
-          if(isset($d['clinicalDocument']['documentationOf']['serviceEvent']) and !empty($d['clinicalDocument']['documentationOf']['serviceEvent'])) {
-            foreach($d['clinicalDocument']['documentationOf']['serviceEvent'] as $k=>$v) {
-              $this->_objetTag['cda_serviceEvent_'.$k]=$v;
-            }
-          }
+          // clinicalDocument / documentationOf / serviceEvent / code
+          $this->_getDocumentationOfServiceEventCode($d);
 
           // clinicalDocument/title
           if(!isset($d['clinicalDocument']['title']) or empty($d['clinicalDocument']['title'])) {
-            $d['clinicalDocument']['title']=$d['clinicalDocument']['documentationOf']['serviceEvent']['displayName'];
+            $d['clinicalDocument']['title']=$this->_objetTag['cda_serviceEvent_displayName'];
           }
           $this->_objetTag['cda_clinicalDocument_title']=$d['clinicalDocument']['title'];
 
           // clinicalDocument/code
-          foreach($d['clinicalDocument']['code'] as $k=>$v) {
-            $this->_objetTag['cda_clinicalDocument_code_'.$k]=$v;
-          }
+          $this->_getClinicalDocumentCode();
         }
       }
+    }
+
+/**
+ * Obtenir le code du document
+ * @return void
+ */
+    private function _getClinicalDocumentCode() {
+      $tabVal=msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
+      $this->_objetTag['cda_clinicalDocument_code_code']=$tabVal[$this->_codeDocument]['code'];
+      $this->_objetTag['cda_clinicalDocument_code_displayName']=$tabVal[$this->_codeDocument]['displayName'];
+      $this->_objetTag['cda_clinicalDocument_code_codeSystem']=$tabVal[$this->_codeDocument]['codeSystem'];
+      $this->_objetTag['cda_clinicalDocument_code_codeSystemName']='LOINC';
+    }
+
+/**
+ * Obtenir le codage du document en fonction de l'acte (CCAM) attaché lors de sa production
+ * @param  array $d data issues du yaml
+ * @return void
+ */
+    private function _getDocumentationOfServiceEventCode($d) {
+
+      $documentationOf=$d['clinicalDocument']['documentationOf'];
+      $actesPossibles=$d['actesPossibles'];
+      unset($d);
+
+      if(isset($documentationOf['serviceEvent']['paramConditionServiceEvent'])) {
+        // param simple ou association de param
+        if(is_array($documentationOf['serviceEvent']['paramConditionServiceEvent'])) {
+          foreach($documentationOf['serviceEvent']['paramConditionServiceEvent'] as $v) {
+            if(isset($this->_objetTag[$v])) $expectedKeyParts[]=$this->_objetTag[$v];
+          }
+          $expectedKey=implode('|',$expectedKeyParts);
+        } elseif(is_string($documentationOf['serviceEvent']['paramConditionServiceEvent'])) {
+          $expectedKey=$this->_objetTag[$documentationOf['serviceEvent']['paramConditionServiceEvent']];
+        }
+
+        $this->_codeActe=$documentationOf['serviceEvent']['code'][$expectedKey];
+      }
+
+      if(isset($actesPossibles[$this->_codeActe]['serviceEventCode']) and !empty($actesPossibles[$this->_codeActe]['serviceEventCode'])) {
+        $this->_objetTag['cda_serviceEvent_code']=$this->_codeActe;
+        foreach($actesPossibles[$this->_codeActe]['serviceEventCode'] as $k=>$v) {
+          $this->_objetTag['cda_serviceEvent_'.$k]=$v;
+        }
+      }
+
+      $this->_codeDocument=$actesPossibles[$this->_codeActe]['clinicalDocumentCode'];
     }
 
 /**
