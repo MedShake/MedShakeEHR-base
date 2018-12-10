@@ -64,7 +64,7 @@ public static function getModuleDefaultParameters($module) {
  * @return array       tableau des paramètres
  */
     public static function listAvailableParameters($user) {
-        $all=msSQL::sql2tabKey("SELECT cat, name, type, description FROM configuration WHERE level='default' ORDER BY cat, name", 'name');
+        $all=msSQL::sql2tabKey("SELECT cat, name, type, description FROM configuration WHERE level in ('default', 'module') ORDER BY cat, name", 'name');
         self::$_usersParams=self::getUserParamaters($user['id']);
         if (!is_array(self::$_usersParams)) {
             return $all;
@@ -189,7 +189,7 @@ public static function getModuleDefaultParameters($module) {
  * @return array tableau avec clef = cat "sanitizée"
  */
     public static function getListOfParametersCat() {
-      if($all=msSQL::sql2tab("SELECT distinct(cat) as cat FROM configuration WHERE level='default' ORDER BY cat")) {
+      if($all=msSQL::sql2tab("SELECT distinct(cat) as cat FROM configuration ORDER BY cat")) {
         foreach($all as $v) {
           $tab[msTools::sanitizeFilename($v['cat'])]=$v['cat'];
         }
