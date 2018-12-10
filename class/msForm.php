@@ -76,6 +76,12 @@ class msForm
      * @var array array PHP du formulaire construit
      */
     private $_builtForm;
+   /**
+    * @var array tableau de type à extraire dans la recherche de prevalues
+    */
+    private $_typesSupForPrevaluesExtraction=[];
+
+    private $_cdaData=[];
 
 /**
  * Définir le numéro du formulaire
@@ -205,6 +211,19 @@ class msForm
             throw new Exception('Var is not an array');
         }
     }
+
+/**
+ * Définir des nom de data type dont il faut extraire les prevalues en plus des prevalues du form
+ * @param array $v array de name
+ */
+    public function setTypesSupForPrevaluesExtraction($v) {
+      if (is_array($v)) {
+          return $this->_typesSupForPrevaluesExtraction = $v;
+      } elseif(!empty($v)) {
+          throw new Exception('TypesSupForPrevaluesExtraction is not an array');
+      }
+    }
+
 /**
  * Obtenir les valeurs de remplissage d'un formulaire pour un patient donné
  * @param  int $patientID ID du patient
@@ -241,7 +260,7 @@ class msForm
 
 
 /**
- * Obetnir le formulaire sous forme d'array PHP qui sera décotiqué par une macro Twig
+ * Obtenir le formulaire sous forme d'array PHP qui sera décotiqué par une macro Twig
  * pour obtenir au final une version HTML
  * @return array Array de description du formulaire
  */
@@ -854,6 +873,10 @@ class msForm
 
             $rtypes=[];
             preg_match_all("# - (?!template|label)([\w]+)#i", $formyaml, $matchIN);
+
+            //ajout des types sup
+            if(!empty($this->_typesSupForPrevaluesExtraction)) $matchIN[1]=array_merge($matchIN[1],$this->_typesSupForPrevaluesExtraction);
+
             if(count($matchIN[1])>0) {
               $types=new msData();
               if($types=$types->getTypeIDsFromName($matchIN[1])) $rtypes=$types;
