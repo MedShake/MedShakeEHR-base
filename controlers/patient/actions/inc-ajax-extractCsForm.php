@@ -48,10 +48,12 @@ $form->setFormIDbyName($formIN);
 if (isset($_POST['prevalues'])) {
     if ($_POST['prevalues']=='yes') {
         $form->setInstance($_POST['objetID']);
+        $form->setTypesSupForPrevaluesExtraction(['codeTechniqueExamen']);
         $form->getPrevaluesForPatient($_POST['patientID']);
     }
 }
 $p['page']['form']=$form->getForm();
+
 if($_POST['mode'] == 'update' or $_POST['mode'] == 'create' ) $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 //ajout champs cachés au form
@@ -64,3 +66,5 @@ $p['page']['form']['addHidden']=array(
 if (isset($_POST['objetID'])) {
     $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];
 }
+
+$p['page']['formJavascript']=$form->getFormJavascript();

@@ -38,4 +38,10 @@
   </div>
 
   {{ f.formbuilder(page.form , page.formIN ) }}
+
+  {% if page.formJavascript is not empty %}
+  <script>
+   {{ page.formJavascript }}
+  </script>
+  {% endif %}
 </div>

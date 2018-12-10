@@ -45,6 +45,7 @@ $data=array(
     'formAction'=>$_POST['formAction'],
     'printModel'=>$_POST['printModel'],
     'cda'=>$_POST['cda'],
+    'javascript'=>$_POST['javascript'],
 );
 
 msSQL::sqlInsert('forms', $data);
