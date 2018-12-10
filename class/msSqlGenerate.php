@@ -29,24 +29,24 @@
 
 class msSqlGenerate
 {
-  private $_actes_fields;
-  private $_actes_values;
-  private $_actes_base_fields;
-  private $_actes_base_values;
-  private $_actes_cat_fields;
-  private $_actes_cat_values;
-  private $_configuration_fields;
-  private $_configuration_values;
-  private $_data_cat_fields;
-  private $_data_cat_values;
-  private $_data_types_fields;
-  private $_data_types_values;
-  private $_forms_fields;
-  private $_forms_values;
-  private $_forms_cat_fields;
-  private $_forms_cat_values;
-  private $_system_fields;
-  private $_system_values;
+  protected $_actes_fields;
+  protected $_actes_values;
+  protected $_actes_base_fields;
+  protected $_actes_base_values;
+  protected $_actes_cat_fields;
+  protected $_actes_cat_values;
+  protected $_configuration_fields;
+  protected $_configuration_values;
+  protected $_data_cat_fields;
+  protected $_data_cat_values;
+  protected $_data_types_fields;
+  protected $_data_types_values;
+  protected $_forms_fields;
+  protected $_forms_values;
+  protected $_forms_cat_fields;
+  protected $_forms_cat_values;
+  protected $_system_fields;
+  protected $_system_values;
 
 /**
  * Obtenir le SQL complet d'un module
@@ -82,6 +82,11 @@ class msSqlGenerate
 
     //autres data_type
     $this->_prepareSqlForDataTypes ($name, ['admin', 'medical']);
+
+    //extension par module
+    if(method_exists('msMod'.ucfirst($name).'SqlGenerate', '_getSpecifSql')) {
+      $this->_getSpecifSql();
+    }
 
     return $this->_composeSql();
 
@@ -172,12 +177,12 @@ class msSqlGenerate
         }
     }
 
-    // recherche de méthode informative dans la class Honoraires du module
+    // recherche de méthode informative dans la class du module
     $listFromModule = [];
-    $className = 'msMod'.ucfirst($name).'Reglement';
+    $className = 'msMod'.ucfirst($name).'SqlGenerate';
     if(class_exists($className, TRUE)) {
-      if(method_exists($className, 'getActesModuleSqlExtraction')) {
-        $listFromModule = $className::getActesModuleSqlExtraction();
+      if(method_exists($className, '_getActesModuleSqlExtraction')) {
+        $listFromModule = $this->_getActesModuleSqlExtraction();
       }
     }
 
@@ -201,7 +206,7 @@ class msSqlGenerate
  * @param  string $name internalName du formulaire
  * @return void
  */
-  private function _prepareSqlForForm($name) {
+  protected function _prepareSqlForForm($name) {
     $form = new msForm();
     $form->setFormIDbyName($name);
     //extraire tous les types du form
@@ -254,7 +259,7 @@ class msSqlGenerate
  * Composer le SQL
  * @return string code SQL
  */
-  private function _composeSql() {
+  protected function _composeSql() {
     $string='';
 
     //actes_cat
@@ -340,7 +345,7 @@ class msSqlGenerate
  * @param  array $a tableau col=>value
  * @return string    chaine ('value', 'value' ...)
  */
-  private function _getSqlValuesPart($a) {
+  protected function _getSqlValuesPart($a) {
 
     if(!empty($a)) {
       $p=[];
@@ -370,7 +375,7 @@ class msSqlGenerate
  * @param  array $a tableau col=>$value
  * @return string    chaine (col1, col2 ...)
  */
-  private function _getSqlFieldsPart($a) {
+  protected function _getSqlFieldsPart($a) {
     return "(`".implode("`, `", array_keys($a))."`)";
   }
 }
