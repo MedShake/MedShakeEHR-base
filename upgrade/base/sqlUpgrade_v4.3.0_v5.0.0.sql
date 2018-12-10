@@ -28,5 +28,17 @@ update `data_types` set label='Règlement', description='Règlement conventionn�
 update `data_types` set label='Règlement', description='Règlement conventionné S2' WHERE `name` = 'reglePorteurS2';
 update `data_types` set label='Règlement', description='Règlement hors convention' WHERE `name` = 'reglePorteurLibre';
 
+-- Catégorie pour data med transverse
+INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+('medical', 'catDataTransversesFormCs', 'Données transverses', 'champs utilisables dans tous formulaires (codage des actes par exemple)', 'base', 1, '2018-12-07 11:38:30');
+
+-- Code acte lié à l'examen
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataTransversesFormCs');
+INSERT INTO `data_types` ( `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('medical', 'codeTechniqueExamen', '', 'Acte lié à l\'examen réalisé', 'code acte caractérisant l\'examen fait via le formulaire qui l\'emploie', '', '', 'text', '', 'base', @catID, 1, '2018-12-07 11:40:29', 3600, 1);
+
+-- JS en base pour les forms 
+ALTER TABLE `forms` ADD `javascript` TEXT NULL DEFAULT NULL AFTER `cda`;
+
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.0.0' WHERE `name`='base' and `groupe`='module';
