@@ -40,6 +40,7 @@
         <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
         {# css #}
+        {% block cssFiles %}
         <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FortAwesome/Font-Awesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
@@ -48,11 +49,10 @@
         {% if user.module %}
           <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/{{ user.module }}.css" rel="stylesheet"/>
         {% endif %}
-        <style>
-          #top-navbar {max-height:calc(100vh - 100px) !important}
-        </style>
+        {% endblock %}
 
         {# js #}
+        {% block jsFiles %}
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FezVrasta/popper.js/dist/umd/popper.min.js?{{ modules.base }}"></script>
         <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/HubSpot/tether/dist/js/tether.min.js?{{ modules.base }}"></script>
@@ -65,10 +65,21 @@
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js?{{ modules.base }}"></script>
         <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js?{{ modules.base }}"></script>
+        {% endblock %}
+
         <script>
+          {% block jsEmbed %}
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
           var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
+          {% endblock %}
         </script>
+
+        <style>
+          {% block cssEmbed %}
+          #top-navbar {max-height:calc(100vh - 100px) !important}
+          {% endblock %}
+        </style>
+
 
         {% block head %}{% endblock %}
     </head>
@@ -198,7 +209,7 @@
                             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
                           </div>
                       </li>
-                      {% if config.apicryptPopHost %}
+                      {% if config.apicryptAdresse is not empty or config.apicryptInboxMailForUserID is not empty or config.apicryptInboxMailForUserID is same as(0) %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">
                               {% if config.designTopMenuStyle == 'icones' %}
