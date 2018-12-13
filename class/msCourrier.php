@@ -136,7 +136,7 @@ class msCourrier
         }
         $this->_patientID=$this->_objetData['toID'];
         $tagsValues=[];
-        if ($this->_objetData['groupe']=="courrier") {
+        if ($this->_objetData['groupe']=="courrier" or $this->_objetData['groupe']=="doc") {
             $this->_modeleID = $this->_objetData['typeID'];
             $tagsValues=$this->getCourrierData();
         } elseif ($this->_objetData['groupe']=="typecs") {
