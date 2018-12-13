@@ -1,0 +1,201 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : dossier patient, structure de base étendue
+ # par fichiers patient.html.twig des dossiers modules
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+
+{% block title %}{{ page.patient.administrativeDatas.firstname.value|e }}
+    {{ (page.patient.administrativeDatas.lastname.value|default(page.patient.administrativeDatas.birthname.value))|e }}
+    : dossier patient - MedShakeEHR
+{% endblock %}
+
+{% block cssEmbed %}
+  {{ parent() }}
+  tr.collapsing {
+      transition:none;
+      -webkit-transition: none;
+      display:table-row;
+  }
+
+  #newDoc {
+    display: none;
+  }
+
+  .imageDc img {
+      max-width: 330px;
+      max-height: 330px;
+  }
+
+  .voirframes {
+    cursor: pointer;
+  }
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
+  var signPeriphName = '{{ config.signPeriphName }}';
+  {% if config.utiliserLap == 'true' %}
+    lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};
+    lapAlertPatientAllaitementSup3Ans = {{ config.lapAlertPatientAllaitementSup3Ans }};
+  {% endif %}
+{% endblock %}
+
+{% block jsFiles %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/tinymce.min.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/jquery.tinymce.min.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/mattbryson/TouchSwipe-Jquery-Plugin/jquery.touchSwipe.min.js?{{ modules.base }}"></script>
+
+  {# JS fonctions pour Vitale #}
+  {% if config.vitaleActiver =='true' %}
+  	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+
+  {# JS général du dossier patient #}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
+
+  {# JS Transmissions #}
+  {% if config.transmissionsPeutCreer == 'true' %}
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+
+  {# JS LAP #}
+  {% if config.utiliserLap == 'true' %}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapSam.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescriptionsTypes.js?{{ modules.base }}"></script>
+  {% endif %}
+
+  {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
+  {% for i in page.listeForms %}
+    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js?{{ modules.base }}"></script>
+  {% endfor %}
+{% endblock %}
+
+{% block cssFiles %}
+    {{ parent() }}
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {# alerte dossier supprimé #}
+    {% if page.patient.dossierType == "deleted" %}
+      <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
+    {% endif %}
+
+    {# identité patient #}
+    <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode.value }}" data-patientid="{{ page.patient.id }}"
+    data-patientIdentite="{{ page['patient']['administrativeDatas']['firstname']['value']|e }} {# lastname & birthname #}
+    {% if page['patient']['administrativeDatas']['birthname']['value'] and page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+      ({{ page['patient']['administrativeDatas']['birthname']['value']|e }})
+      {# birthname only #}
+    {% elseif page['patient']['administrativeDatas']['birthname']['value'] %}
+      {{ page['patient']['administrativeDatas']['birthname']['value']|e }}
+      {# lastname only #}
+    {% elseif page['patient']['administrativeDatas']['lastname']['value'] %}
+      {{ page['patient']['administrativeDatas']['lastname']['value']|e }}
+    {% endif %}">
+      {% include('inc-ajax-patientAdminData.html.twig') %}
+    </div>
+
+{% endblock %}
+
+{% block modals %}
+
+{# modal changer nom consultation ou doc #}
+{% include 'inc-patientModal-changerTitre.html.twig' %}
+
+{# modal rapatrier mesures examen particulier #}
+{% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
+
+{# modal éditer infos adminsitratives du patient #}
+{% include 'inc-patientModal-editAdminData.html.twig' %}
+
+{# modal changer la date d'une ligne d'historique #}
+{% include 'inc-patientModal-changerDateEffet.html.twig' %}
+
+{# modal phonecapture #}
+{% include 'inc-patientModal-phonecapture.html.twig' %}
+
+{# modals spécifiques LAP ON #}
+{% if config.utiliserLap == 'true' %}
+  {# recherche CIM10 #}
+  {% include 'inc-patientModal-searchCIM10.html.twig' %}
+
+  {# recherche Allergie #}
+  {% include 'inc-patientModal-searchAllergie.html.twig' %}
+
+  {# modal recherche de médicament #}
+  {% include 'inc-lapModalRechercher.html.twig' %}
+
+  {# modal voir ordonnance #}
+  {% include 'inc-lapModalVoirOrdonnance.html.twig' %}
+
+  {# modal spécifier date d'arrêt effective #}
+  {% include 'inc-lapModalMedicDateArretEffective.html.twig' %}
+
+  {# modal générique pour les alertes LAP #}
+  {% include 'inc-lapModalAlertes.html.twig' %}
+
+  {# modal générique pour les alertes SAM #}
+  {% include 'inc-lapModalAlerteSam.html.twig' %}
+
+  {# modal générique pour les infos médicament #}
+  {% include 'inc-lapInfosMedic.html.twig' %}
+
+  {# modal enregistrer comme prescription type #}
+  {% include 'inc-lapModalPresPre.html.twig' %}
+
+  {# modal créer nouvelle catégorie de prescription type #}
+  {% include 'inc-lapModalPresTypesCatNew.html.twig' %}
+{% endif %}
+
+{# modals spécifiques Transmissions #}
+{% if config.transmissionsPeutCreer == 'true' %}
+  {# modal nouvelle transmission #}
+  {% include 'inc-transmissionsNouvelleModal.html.twig' %}
+{% endif %}
+
+{# modal CPS Vitale  #}
+{% if config.vitaleActiver =='true' %}
+  {% include 'inc-modalFaireFse.html.twig' %}
+{% endif %}
+
+{% endblock %}
