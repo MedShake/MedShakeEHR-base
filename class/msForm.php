@@ -83,6 +83,8 @@ class msForm
 
     private $_cdaData=[];
 
+    private $_formYamlStructure;
+
 /**
  * Définir le numéro du formulaire
  * @param int $formID L'ID du formulaire
@@ -363,6 +365,8 @@ class msForm
             if($this->_testNumericBloc($formyaml['yamlStructure'])) {
               $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure'],$formyaml['dataset']);
             }
+
+            $this->_formYamlStructure=$formyaml['yamlStructure'];
 
             $form = Spyc::YAMLLoad($formyaml['yamlStructure']);
             $form['global']['dataset']=$formyaml['dataset'];
@@ -1094,16 +1098,26 @@ class msForm
       $d['paramConditionServiceEvent']=array($d['paramConditionServiceEvent']);
     }
 
+    $d['paramConditionServiceEvent']=msTools::array_values_multi($d['paramConditionServiceEvent']);
+
     if(is_array($d['paramConditionServiceEvent'])) {
-      $r="$('#nouvelleCs').on('change','#id_".implode("_id, #id_", $d['paramConditionServiceEvent'])."_id', function() {";
+      $r="$('#nouvelleCs').on('change','#id_".implode("_id, #id_", $d['paramConditionServiceEvent'])."_id', function() {\n";
       foreach($d['paramConditionServiceEvent'] as $champ) {
-        $r.="val".$champ." = $('#id_".$champ."_id').val();";
+        $r.="val".$champ." = '".$champ."@' + $('#id_".$champ."_id').val();\n";
       }
-      $r.="clef = val".implode(" + '|' + val", $d['paramConditionServiceEvent']).";";
       $i=0;
-      foreach($d['code'] as $k=>$v) {
+      foreach($d['code'] as $clef=>$v) {
+        $vals=explode('|',$clef);
+        $tabChamps=$tabVal=[];
+        foreach($vals as $val) {
+          $uval=explode('@',$val);
+          $tabChamps[]=$uval[0];
+          $tabVal[]=$uval[1];
+        }
+        $clefc= "val".implode(" + '|' + val",   $tabChamps);
+
         if($i > 0) $r.=' else ';
-        $r.= "if(clef == '".$k."') $('#id_codeTechniqueExamen_id option[value=\"".$v."\"]').prop('selected', true);";
+        $r.= "if($clefc == '".$clef."') $('#id_codeTechniqueExamen_id option[value=\"".$v."\"]').prop('selected', true);\n";
         $i++;
       }
       $r.="});";

@@ -259,6 +259,11 @@
   		</div>
     </div>
     <div class="tab-pane fade" id="cda-pan">
+      <div class="alert alert-secondary">
+        <p><a href="/configuration/forms/cdaTools/{{ page.formID }}/" class="btn btn-sm btn-secondary float-right" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+          <strong>Outil de génération des blocs <code>actesPossibles</code> et <code>clinicalDocument/documentationOf/serviceEvent/code</code>.</strong>
+          <br>NB : <code>paramConditionServiceEvent</code> doit être déjà complètement défini avec les champs concernés puis enregistré.</p>
+      </div>
       <div class="form-group">
   		{{ f.textarea ({
   			'textarea' : {

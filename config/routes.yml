@@ -160,6 +160,7 @@ configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[
 # Configuration forms
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configFormCdaTools: ['GET', '/configuration/forms/cdaTools/[i:form]/', 'configuration/configFormCdaTools']
 configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
 configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configForms']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
