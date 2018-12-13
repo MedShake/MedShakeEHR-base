@@ -135,7 +135,7 @@ class msCourrier
           $this->_getObjetData();
         }
         $this->_patientID=$this->_objetData['toID'];
-
+        $tagsValues=[];
         if ($this->_objetData['groupe']=="courrier") {
             $this->_modeleID = $this->_objetData['typeID'];
             $tagsValues=$this->getCourrierData();
