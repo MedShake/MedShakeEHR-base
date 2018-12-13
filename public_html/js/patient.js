@@ -489,7 +489,6 @@ $(document).ready(function() {
   ///////// Observations spécifiques aux lignes de l'historique  (dont modal)
 
   // contraction d'une année
-
   $("body").on("click", ".anneeHistorique", function() {
     setTimeout((function($el) {
       if ($el.hasClass('collapsed'))
@@ -500,7 +499,6 @@ $(document).ready(function() {
   });
 
   //sélectionner un groupe dans l'historique
-
   $("body").on("click change", "#historiqueTypeSelect button, #historiqueTypeSelect option", function(e) {
     e.preventDefault();
     groupe = $(this).attr('data-groupe');
@@ -587,6 +585,34 @@ $(document).ready(function() {
     };
     $('#ongletDicom').tab('show');
     loadTabPatient(url, 'tabDicom', param);
+  });
+
+  // envoyer à la signature
+  $('#tabDossierMedical').on("click", "a.sendSign", function(e) {
+    e.preventDefault();
+    source = $(this);
+    $.ajax({
+      url: urlBase+'/patients/ajax/patientsSendSign/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+        typeID: $(this).attr('data-csID'),
+        signPeriphName: signPeriphName,
+        modeSign: 'secondaire'
+      },
+      dataType: "html",
+      success: function(data) {
+        el = source.closest('tr');
+        el.css("background", "#efffe8");
+        setTimeout(function() {
+          el.css("background", "");
+        }, 1000);
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+
+      }
+    });
 
   });
 

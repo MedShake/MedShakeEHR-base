@@ -10,6 +10,9 @@ INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `
 -- Configuration : liste des formulaires de règlement dispo
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ( 'administratifReglementFormulaires', 'default', '0', '', 'Règlements', 'liste', 'liste des formulaires de règlement disponible dans le dossier patient ', 'reglePorteurS1,reglePorteurS2,reglePorteurLibre');
 
+-- Configuration : périphérique e signature par défaut
+INSERT INTO `configuration` (`id`, `name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES (NULL, 'signPeriphName', 'default', '0', '', 'Options', 'texte', 'nom du périphérique pour signature (caractères alphanumériques, sans espaces ni accents)', 'default');
+
 -- Paramètres de configuration : API CCAM NGAP
 INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES
 ('apiCcamNgapUrl', 'Règlements', 'default', 'url', 'URL de l\'API CCAM NGAP MedShake', '');
@@ -37,8 +40,10 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataTrans
 INSERT INTO `data_types` ( `groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('medical', 'codeTechniqueExamen', '', 'Acte lié à l\'examen réalisé', 'code acte caractérisant l\'examen fait via le formulaire qui l\'emploie', '', '', 'text', '', 'base', @catID, 1, '2018-12-07 11:40:29', 3600, 1);
 
--- JS en base pour les forms 
+-- JS en base pour les forms
 ALTER TABLE `forms` ADD `javascript` TEXT NULL DEFAULT NULL AFTER `cda`;
+-- Taille du champ printModel un peu juste
+ALTER TABLE `forms` CHANGE `printModel` `printModel` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.0.0' WHERE `name`='base' and `groupe`='module';

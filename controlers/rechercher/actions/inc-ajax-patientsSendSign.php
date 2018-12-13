@@ -30,8 +30,18 @@
 $data = new msData;
 $data = $data->getDataType($_POST['typeID'], $col=['id','label', 'formValues as template'] );
 
+if(isset($_POST['modeSign'])) {
+  $cour= new msCourrier;
+  $data['template']=$cour->getPrintModel($data['template']);
+}
+
 // petite prévention
 $data['template']=str_replace('.html.twig','',$data['template']);
+if($_POST['signPeriphName']) {
+  $signPeriphName=$_POST['signPeriphName'];
+} else {
+  $signPeriphName=$p['config']['signPeriphName'];
+}
 
 $tab=array(
   'patientID'=>(int)$_POST['patientID'],
@@ -39,6 +49,7 @@ $tab=array(
   'typeID'=>(int)$data['id'],
   'template'=>(string)$data['template'],
   'label'=>(string)$data['label'],
+  'signPeriphName'=>(string)$signPeriphName,
 );
 
-file_put_contents($p['config']['workingDirectory'].'consentementPatientID.txt', Spyc::YAMLDump($tab, false, 0, true));
+file_put_contents($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt', Spyc::YAMLDump($tab, false, 0, true));

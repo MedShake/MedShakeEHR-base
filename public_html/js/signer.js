@@ -37,21 +37,22 @@ $(document).ready(function() {
 
 
   $(".saveSignature").on("click", function(e) {
-   if( $("#signature").jSignature('getData', 'native').length == 0) {
+    if ($("#signature").jSignature('getData', 'native').length == 0) {
       alert_popup("danger", 'Merci de signer avant de valider !');
 
-   } else {
+    } else {
       signatureSvg = $("#signature").jSignature("getData", "svg");
 
       $.ajax({
-        url: urlBase+'/public/ajax/publicMakeDocSigne/',
+        url: urlBase + '/public/ajax/publicMakeDocSigne/',
         type: 'post',
         data: {
-          signatureSvg: signatureSvg
+          signatureSvg: signatureSvg,
+          signPeriphName: signPeriphName
         },
         dataType: "html",
         success: function() {
-          window.location.href = urlBase+'/public/signer/merci/';
+          window.location.href = urlBase + '/public/signer-merci/';
         },
         error: function() {
           alert_popup("danger", 'Problème, rechargez la page !');
@@ -60,8 +61,8 @@ $(document).ready(function() {
       });
 
 
-   }
-});
+    }
+  });
 
 
 });

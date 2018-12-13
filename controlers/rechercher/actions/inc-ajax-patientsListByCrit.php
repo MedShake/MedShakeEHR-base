@@ -31,11 +31,10 @@ $debug='';
 
 $template="listing";
 
-// liste des documents pouvant être envoyés à la signature
-$docASigner = new msData;
-if($p['page']['modelesDocASigner']=$docASigner->getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
-  $docASigner->applyRulesOnlyforNotforOnArray($p['page']['modelesDocASigner'], $p['user']['id']);
-}
+// liste des documents pouvant être envoyés à la signature par l'utilisateur courant
+$docAsSigner = new msSignatureNumerique;
+$docAsSigner->setFromID($p['user']['id']);
+$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN='baseListingPatients';

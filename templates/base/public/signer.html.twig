@@ -52,6 +52,7 @@
 
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+      var signPeriphName = '{{ page.signPeriphName }}';
     </script>
 
     <style>
@@ -84,13 +85,13 @@
   </div>
 
     <div id="consignes" class="row mb-2 mt-5">
-      <div class="col-1">
+      <div class="col-2">
         <button class="btn btn-primary btn-lg resetSignature ">Recommencer</button>
       </div>
       <div class="col text-center">
         <h4>Merci de signer dans la zone grise ci-dessous puis de valider</h4>
       </div>
-      <div class="col-1 text-right">
+      <div class="col-2 text-right">
         <button class="btn btn-danger btn-lg saveSignature ">Valider</button>
       </div>
     </div>

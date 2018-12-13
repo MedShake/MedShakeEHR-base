@@ -28,11 +28,13 @@
 
 $signature=$_POST['signatureSvg'];
 
-$svg=$p['config']['workingDirectory'].'signature.svg';
-$png=$p['config']['workingDirectory'].'signature.png';
+$svg=$p['config']['workingDirectory'].$signPeriphName.'signature.svg';
+$png=$p['config']['workingDirectory'].$signPeriphName.'signature.png';
 
-if (is_file($p['config']['workingDirectory'].'consentementPatientID.txt')) {
-    $data=Spyc::YAMLLoad($p['config']['workingDirectory'].'consentementPatientID.txt');
+$signPeriphName=$_POST['signPeriphName'];
+
+if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')) {
+    $data=Spyc::YAMLLoad($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');
 } else {
     $data['patientID']=null;
 }
@@ -92,4 +94,4 @@ if ($signature and is_numeric($data['patientID'])) {
 
 unlink($svg);
 unlink($png);
-unlink($p['config']['workingDirectory'].'consentementPatientID.txt');
+unlink($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');

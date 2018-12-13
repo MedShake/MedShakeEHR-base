@@ -123,10 +123,10 @@ if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModel
   $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCourrier'], $p['user']['id']);
 }
 
-//les doc à signer pour les imprimer si besoin
-if($p['page']['modelesDocASigner']=$certificats->getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
-  $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesDocASigner'], $p['user']['id']);
-}
+// liste des documents pouvant être envoyés à la signature par l'utilisateur courant
+$docAsSigner = new msSignatureNumerique;
+$docAsSigner->setFromID($p['user']['id']);
+$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();

@@ -86,7 +86,8 @@ $(document).ready(function() {
       type: 'post',
       data: {
         patientID: $(this).attr('data-patientID'),
-        typeID: $(this).attr('data-typeID')
+        typeID: $(this).attr('data-typeID'),
+        signPeriphName: $(this).attr('data-signPeriphName'),
       },
       dataType: "html",
       success: function(data) {
