@@ -29,6 +29,7 @@
 class msCcamNgapApi
 {
 
+
 /**
 * Code CCAM
 * @var string
@@ -97,21 +98,21 @@ class msCcamNgapApi
     $data2return=[];
 
     if($this->_acteType == 'CCAM') {
-      if(!empty($scrap['tarifParConventionPs'])) {
-        foreach($scrap['tarifParConventionPs'] as $k=>$v) {
-          $newData['CodePs'.$k]=(float)str_replace(',', '.', $v);
+      if(!empty($scrap['tarifParGrilleTarifaire'])) {
+        foreach($scrap['tarifParGrilleTarifaire'] as $k=>$v) {
+          $newData['CodeGrilleT'.$k]=(float)str_replace(',', '.', $v);
         }
-        $scrap['tarifParConventionPs']=$newData;
+        $scrap['tarifParGrilleTarifaire']=$newData;
       }
       if(!empty($scrap['modificateursApplicables'])) {
         foreach($scrap['modificateursApplicables'] as $k=>$v) {
-          $newDataMa['CodePs'.$k]= $v;
+          $newDataMa['CodeGrilleT'.$k]= $v;
         }
         $scrap['modificateursApplicables']=$newDataMa;
       }
 
       $data=Spyc::YAMLDump(array(
-        'tarifParConventionPs'=>$newData,
+        'tarifParGrilleTarifaire'=>$newData,
         'modificateursParConventionPs'=>$scrap['modificateursApplicables'],
         'majorationsDom'=>$scrap['majorationsDom'],
       ), false, 0, TRUE);
@@ -164,14 +165,14 @@ class msCcamNgapApi
           $coef=0;
           $tarifUnite='euro';
         }
-        $dataRet['CodePs'.$k]=array(
+        $dataRet['CodeGrilleT'.$k]=array(
           'label'=>$v['libelle'],
           'coef'=>$coef,
           'forfait'=>$v['forfait']
         );
       }
 
-      $data=Spyc::YAMLDump(array('tarifParConventionPs'=>$dataRet), false, 0, TRUE);
+      $data=Spyc::YAMLDump(array('tarifParGrilleTarifaire'=>$dataRet), false, 0, TRUE);
       $data=preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
 
       $data2return=array(

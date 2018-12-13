@@ -450,9 +450,9 @@ class msReglement
       private function _getTarifFromYamlData(&$v) {
         $dataYaml=Spyc::YAMLLoadString($v['dataYaml']);
         if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
-          $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire];
+          $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
           if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
-            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParConventionPs']['CodePs'.$this->_secteurTarifaire]);
+            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParConventionPs']['CodeGrilleT'.$this->_secteurTarifaire]);
           }
           // application coeff majoration DOM
           if(isset($dataYaml['majorationsDom'][$this->_secteurTarifaireGeo])) {
@@ -460,9 +460,9 @@ class msReglement
           }
         } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
           if($v['tarifUnit']=='euro') {
-            $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+            $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
           } else {
-            $v['tarif']=$dataYaml['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+            $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'];
           }
         } elseif($v['type']=='NGAP') {
           $v['tarif']=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
@@ -500,11 +500,11 @@ class msReglement
           if($modifs=msSQL::sql2tabKey("select * from actes_base where type = 'mCCAM' ", 'code')) {
            foreach($modifs as $k=>$v) {
              $modifs[$k]['dataYaml']=Spyc::YAMLLoad($v['dataYaml']);
-             if(isset($modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire])) {
+             if(isset($modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire])) {
                if($v['tarifUnit']=='euro') {
-                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
                } else {
-                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'];
+                 $modifs[$k]['tarif']=$modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'];
                }
              } else {
                //unset($modifs[$k]);
@@ -529,9 +529,9 @@ class msReglement
         $modifs = str_split($modifsString);
         foreach ($modifs as $modif) {
           if ($this->_modifsCCAM[$modif]['dataYaml']['tarifUnit'] == 'euro') {
-            $modifsCcamSum = $modifsCcamSum + $this->_modifsCCAM[$modif]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['forfait'];
+            $modifsCcamSum = $modifsCcamSum + $this->_modifsCCAM[$modif]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
           } else if ($this->_modifsCCAM[$modif]['dataYaml']['tarifUnit'] == 'pourcent') {
-            $modifsCcamSum = $modifsCcamSum + ($tarifBase * $this->_modifsCCAM[$modif]['dataYaml']['tarifParConventionPs']['CodePs'.$this->_secteurTarifaire]['coef'] / 100);
+            $modifsCcamSum = $modifsCcamSum + ($tarifBase * $this->_modifsCCAM[$modif]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'] / 100);
           }
         }
         return $modifsCcamSum;
