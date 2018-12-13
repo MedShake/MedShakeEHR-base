@@ -153,6 +153,18 @@ class msData
     }
 
 /**
+ * Sortir les infos d'un type à partir de son name
+ * @param  string $name  name du type
+ * @param  array $col colonnes SQL à retourner
+ * @return array      array
+ */
+    public function getDataTypeByName($name, $col=['*'])
+    {
+        return msSQL::sqlUnique("select ".implode(', ', $col)." from data_types where name='".$name."'");
+
+    }
+
+/**
  * Obtenir les Labels des typeID à partir d'un array de typeID
  * @param  array $ar array de typeID
  * @return array     array typeID=>label
