@@ -213,6 +213,12 @@ class msSqlGenerate
     $types=$form->formExtractDistinctTypes();
 
     if($typesData=msSQL::sql2tab("select * from data_types where id in ('".implode("', '", $types)."')")) {
+
+      // ajout du porteur de cs pour le form
+      if($typesDataCompCs=msSQL::sql2tab("select * from data_types where groupe='typecs' and formValues='".$name."'")) {
+        $typesData=array_merge($typesData,$typesDataCompCs);
+      }
+
       $cat=array_unique(array_column($typesData, 'cat'));
       $catData=msSQL::sql2tab("select * from data_cat where id in ('".implode("', '", $cat)."')");
 
