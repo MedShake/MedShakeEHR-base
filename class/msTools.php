@@ -122,6 +122,29 @@ class msTools
   }
 
 /**
+ * Obtenir toutes les values d'un tableau multidimensionnel
+ * @param  array  $array le tableau
+ * @return array        les values
+ */
+  public static function array_values_multi(array $array)
+  {
+      $values = array();
+
+      foreach ($array as $key => $value) {
+
+
+          if (is_array($value)) {
+              $values = array_merge($values, msTools::array_values_multi($value));
+          } else {
+            $values[] = $value;
+          }
+      }
+
+      return $values;
+  }
+
+
+/**
  * Valider une date du calendrier
  * @param  string $date   la date
  * @param  string $format son format
