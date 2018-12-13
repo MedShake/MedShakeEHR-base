@@ -953,6 +953,36 @@ class msForm
     }
 
 /**
+ * Obtenir les paramètres d'utilisation d'un data type dans le form
+ * @param  string $typeName data type name
+ * @return array           array des paramètres
+ */
+    public function getDataTypeFormParams($typeName) {
+      if(!isset($this->_formYamlStructure)) {
+        $this->getFormFromDb();
+      }
+      preg_match("# - (".$typeName.".*)\s*\#.*#i", $this->_formYamlStructure, $match);
+      if(isset($match[1]) and !empty($match[1])) {
+        $params = explode(',', $match[1]);
+        unset($params[0]);
+        if(!empty($params)) {
+          foreach($params as $k=>$v) {
+            if(strpos($v,'=')) {
+              $pp=explode('=', $v);
+              $params[$pp[0]]=$pp[1];
+            } else {
+              $params[$v]=$v;
+            }
+            unset($params[$k]);
+          }
+        }
+        return $params;
+      }
+      return false;
+    }
+
+
+/**
  * Tester la présence de blocs numériques dans un form
  * @param string $formyaml formulaire au formt yaml
  * @return bool true or false
