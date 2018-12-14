@@ -66,99 +66,100 @@ associer patient
 <h1>Associer un patient externe à un patient MedShakeEHR</h1>
 {% endif %}
 
+<div class="card card-body bg-light my-4">
+	<div class="row ">
 
-<div class="row" style="margin-top : 40px;">
+	  <form class="form-inline col-12 col-lg-9 mx-0 row" data-dataset="data_types">
+	    <div class="form-group col-12 m-0 p-0 col-lg-3">
+	      {{ f.input ({
+		      'input' : {
+			      'type' : 'text',
+			      'id' : 'd2',
+			      'name' : 'lastname',
+	          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
+			      'placeholder' : 'Nom',
+			      'class' : 'form-control col-12 searchupdate jqautocomplete',
+			      'autocomplete' : 'off',
+			      'dataAcTypeID' : 'data-acTypeID="2:1:3"',
+			      'datatypeid' : '2'
+		      },
+		      'label' : {
+			      'position' : 'before',
+		      }
+	      }) }}
+	    </div>
 
-  <form class="form-inline col-12 col-lg-9 mx-0 row" data-dataset="data_types">
-    <div class="form-group col-12 m-0 p-0 col-lg-3">
-      {{ f.input ({
-	      'input' : {
-		      'type' : 'text',
-		      'id' : 'd2',
-		      'name' : 'lastname',
-          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
-		      'placeholder' : 'Nom',
-		      'class' : 'form-control col-12 searchupdate jqautocomplete',
-		      'autocomplete' : 'off',
-		      'dataAcTypeID' : 'data-acTypeID="2:1:3"',
-		      'datatypeid' : '2'
-	      },
-	      'label' : {
-		      'position' : 'before',
-	      }
-      }) }}
-    </div>
-
-		<div class="form-group col-12 my-2 my-lg-0 m-0 p-0 pl-lg-3 col-lg-3">
-			{{ f.input ({
-				'input' : {
-					'type' : 'text',
-					'id' : 'd3',
-					'name' : 'firstname',
-					'value' : page.patient.administrativeDatas.firstname|default(''),
-					'placeholder' : 'Prénom',
-					'class' : 'form-control col-12 searchupdate jqautocomplete',
-					'autocomplete' : 'off',
-					'dataAcTypeID' : 'data-acTypeID="3"',
-					'datatypeid' : '2'
-				},
-				'label' : {
-					'position' : 'before',
-				}
-			}) }}
-		</div>
-
-    <div class="col-12 my-2 my-lg-0 mx-0 p-0 pl-lg-4 col-lg-6">
-      <div class="input-group mx-0">
-        {{ f.input ({
-          'input' : {
-	          'id' : 'autreCritVal',
-	          'type' : 'text',
-	          'name' : 'autre',
-            'placeholder': 'Autre critère',
-	          'class' : 'form-control searchupdate',
+			<div class="form-group col-12 my-2 my-lg-0 m-0 p-0 pl-lg-3 col-lg-3">
+				{{ f.input ({
+					'input' : {
+						'type' : 'text',
+						'id' : 'd3',
+						'name' : 'firstname',
+						'value' : page.patient.administrativeDatas.firstname|default(''),
+						'placeholder' : 'Prénom',
+						'class' : 'form-control col-12 searchupdate jqautocomplete',
 						'autocomplete' : 'off',
-          },
-          'label' : {
-	          'position' : 'before',
-	          'label' : '',
-          }
-        }) }}
-        <div class="input-group-append" style="max-width:50%">
-          {{ f.selectOptgroup ({
-            'select' : {
-	            'id' : 'autreCrit',
-	            'name' : 'autre',
-	            'class' : 'custom-select input-group-text form-control',
-	            'values' : page.tabTypes,
-        	    'valueDefaut' : 'birthdate',
+						'dataAcTypeID' : 'data-acTypeID="3"',
+						'datatypeid' : '2'
+					},
+					'label' : {
+						'position' : 'before',
+					}
+				}) }}
+			</div>
+
+	    <div class="col-12 my-2 my-lg-0 mx-0 p-0 pl-lg-4 col-lg-6">
+	      <div class="input-group mx-0">
+	        {{ f.input ({
+	          'input' : {
+		          'id' : 'autreCritVal',
+		          'type' : 'text',
+		          'name' : 'autre',
+	            'placeholder': 'Autre critère',
+		          'class' : 'form-control searchupdate',
 							'autocomplete' : 'off',
-            },
-            'label' : {
-	            'position' : 'before',
-	            'label' : '',
-            }
-          }) }}
-        </div>
-      </div>
-    </div>
-  </form>
+	          },
+	          'label' : {
+		          'position' : 'before',
+		          'label' : '',
+	          }
+	        }) }}
+	        <div class="input-group-append" style="max-width:50%">
+	          {{ f.selectOptgroup ({
+	            'select' : {
+		            'id' : 'autreCrit',
+		            'name' : 'autre',
+		            'class' : 'custom-select input-group-text form-control',
+		            'values' : page.tabTypes,
+	        	    'valueDefaut' : 'birthdate',
+								'autocomplete' : 'off',
+	            },
+	            'label' : {
+		            'position' : 'before',
+		            'label' : '',
+	            }
+	          }) }}
+	        </div>
+	      </div>
+	    </div>
+	  </form>
 
-  <div class="col-12 col-lg-3 text-right">
+	  <div class="col-12 col-lg-3 text-right">
 
-  {% if page.porp in ['patient', 'today'] %}
-		{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
-			<button type="button" class="btn btn-success my-3 lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
-		{% endif %}
-    <a class="btn btn-primary my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"><i class="fas fa-plus"></i> Nouveau patient</a>
-  {% elseif page.porp == 'pro' %}
-    <a class="btn btn-primary float-right my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/"><i class="fas fa-plus"></i> Nouveau praticien</a>
-  {% endif %}
-  </div>
+	  {% if page.porp in ['patient', 'today'] %}
+			{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
+				<button type="button" class="btn btn-success my-3 lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
+			{% endif %}
+	    <a class="btn btn-primary my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"><i class="fas fa-plus"></i> Nouveau patient</a>
+	  {% elseif page.porp == 'pro' %}
+	    <a class="btn btn-primary float-right my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/"><i class="fas fa-plus"></i> Nouveau praticien</a>
+	  {% endif %}
+	  </div>
+	</div>
 </div>
 
-<div class="row">
-	<div id="listing" data-porp="{{ page.porp }}" class="col-md-12" style="margin-top : 40px;">
+<div class="row mt-3">
+	<div id="listing" data-porp="{{ page.porp }}" class="col">
 	</div>
 </div>
 
