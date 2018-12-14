@@ -91,9 +91,12 @@
                         {% endif %}
                       </div>
                       <div class="col text-right">
-                        <button type="button" class="btn btn-primary reset-modal float-right" data-toggle="modal" data-target="#modalNewCat">
-                            Nouvel acte
+                        <button type="button" class="btn btn-primary reset-modal" data-toggle="modal" data-target="#modalNewCat">
+                            <i class="fas fa-plus"></i> Nouvel acte
                         </button>
+                        {% if config.apiCcamNgapUrl is not empty %}
+                          <a href="/configuration/actes-base/rapport-maj/" class="btn btn-outline-secondary ml-1" onclick="return confirm('L\'opération de mise à jour automatique depuis le serveur d\'actes peut être très longue.\nSouhaitez-vous poursuivre ?\nSi oui, confirmez et patientez jusqu\'au chargement du rapport de mise à jour');"><i class="fas fa-cloud-download-alt"></i> Tout mettre à jour</a>
+                        {% endif %}
                       </div>
                     </div>
 

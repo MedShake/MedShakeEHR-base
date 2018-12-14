@@ -141,6 +141,7 @@ configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configurat
 configActes: ['GET', '/configuration/actes/[i:user]?/[i:cat]?/', 'configuration/configActes']
 configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesCat']
 configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActesBase']
+configActesBaseMaj: ['GET', '/configuration/actes-base/rapport-maj/', 'configuration/configActesBaseMaj']
 configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']

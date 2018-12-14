@@ -46,7 +46,7 @@ class msCcamNgapApi
 */
   public function setActeCode($acte)
   {
-      $this->_acteCode=$acte;
+      return $this->_acteCode=$acte;
   }
 
 /**
@@ -55,7 +55,7 @@ class msCcamNgapApi
 */
   public function setActiviteCode($activiteCode)
   {
-      $this->_activiteCode=$activiteCode;
+      return $this->_activiteCode=$activiteCode;
   }
 
 /**
@@ -64,7 +64,7 @@ class msCcamNgapApi
 */
   public function setPhaseCode($phaseCode)
   {
-      $this->_phaseCode=$phaseCode;
+      return $this->_phaseCode=$phaseCode;
   }
 
 /**
@@ -73,7 +73,7 @@ class msCcamNgapApi
 */
   public function setActeType($acteType)
   {
-      $this->_acteType=$acteType;
+      return $this->_acteType=$acteType;
   }
 
 /**
@@ -187,6 +187,45 @@ class msCcamNgapApi
 
     return $data2return;
 
+  }
+
+/**
+ * Mettre à jour tous les actes de la base via data de l'API
+ * @return array tableau rapport sur la mise à jour, par acte
+ */
+  public function getAllAndUpdate() {
+    $tabr=[];
+    if($codes=msSQL::sql2tab("select code, type, phase, activite from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
+      foreach($codes as $k=>$code) {
+        $this->setActeCode($code['code']);
+        $this->setActiviteCode($code['activite']);
+        $this->setPhaseCode($code['phase']);
+        $this->setActeType($code['type']);
+        $data=$this->getActeData();
+        $tabr[$k]=array(
+          'type'=>$code['type'],
+          'code'=>$code['code'],
+          'activite'=>$code['activite'],
+          'phase'=>$code['phase'],
+        );
+        if(is_array($data)) {
+          msSQL::sqlInsert('actes_base', array(
+            'code'=>$data['acteCode'],
+            'activite'=>$data['activiteCode'],
+            'phase'=>$data['phaseCode'],
+            'type'=>$code['type'],
+            'label'=>$data['acteLabel'],
+            'dataYaml'=>$data['yaml'],
+            'tarifUnit'=>$data['tarifUnite'],
+          ));
+          $tabr[$k]['statut']='ok';
+          $tabr[$k]['label']=$data['acteLabel'];
+        } else {
+          $tabr[$k]['statut']='ko';
+        }
+      }
+    }
+    return $tabr;
   }
 
 /**
