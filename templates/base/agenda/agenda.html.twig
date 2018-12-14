@@ -179,7 +179,7 @@
                     <div class="input-group-prepend">
                       <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
                     </div>
-                    <select id="type" class="form-control form-control-sm custom-select" name="type" autocomplete="off">
+                    <select id="type" class="custom-select custom-select-sm" name="type" autocomplete="off">
                       {% for k, v in page.typeRdv if k != '[off]' %}
                         <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
                           {{ v.descriptif }}</option>

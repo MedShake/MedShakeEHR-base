@@ -134,7 +134,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                     <label for="p_module">Module</label>
-                    <select class="form-control custom-select" name="p_module">
+                    <select class="custom-select" name="p_module">
                       {% for mi,mv in page.modules %}
                         <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
                       {% endfor %}

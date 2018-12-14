@@ -36,7 +36,7 @@
           {% if cat.description %}<small class="card-subtitle mb-2 text-muted">{{ cat.description }}</small>{% endif %}
 
           {% if cat.enfants > 0 %}
-          <select class="form-control custom-select form-control-sm small presTypeSelect">
+          <select class="custom-select custom-select-sm small presTypeSelect">
             <option> </option>
             {% for k, pres in page['pres'][cat.id] %}
               <option value="{{ pres.id }}">{{ pres.label }}</option>

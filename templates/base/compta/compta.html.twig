@@ -76,7 +76,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text" style="width:45px;padding-left:15px"><i class="fa fa-user-md"></i></span>
       </div>
-      <select name="prat" class="form-control custom-select">
+      <select name="prat" class="custom-select">
         {% for prat in page.pratsAuto %}
           <option value="{{ prat.id }}" {% if prat.id in page.pratsSelect %}selected="selected"{% endif %}
           >{{ prat.prenom }} {{ prat.nom }}</option>
@@ -91,7 +91,7 @@
     <div class="input-group-prepend">
       <span class="input-group-text" style="width:45px;padding-left:17px"><i class="fa fa-bolt"></i></span>
     </div>
-    <select id="periodeQuickSelectID" name="periodeQuickSelect" class="form-control custom-select" autocomplete="off" />
+    <select id="periodeQuickSelectID" name="periodeQuickSelect" class="custom-select" autocomplete="off" />
       <option value="none" selected>Selection rapide</option>
       {% for k,v in page.periode.quickOptions %}
         <option value="{{ k }}">{{ v }}</option>

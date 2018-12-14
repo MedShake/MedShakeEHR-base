@@ -32,7 +32,7 @@
     <thead>
       <tr>
         <th>
-          <select id="selectAnneeHistoBiometrieCardio" class="form-control form-control-sm custom-select w-50 gras">
+          <select id="selectAnneeHistoBiometrieCardio" class="custom-select custom-select-sm w-50 gras">
             {% for annee in page.distinctYears %}
               <option {% if annee == page.selectedYear %} selected="selected" {% endif %}>{{ annee }}</option>
             {% endfor %}
