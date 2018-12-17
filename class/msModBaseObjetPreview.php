@@ -70,6 +70,18 @@ class msModBaseObjetPreview
   }
 
 /**
+ * Obtenir l'info sur le fait que le document puisse être signé par le patient
+ * @return bool TRUE/FALSE
+ */
+  public function getCanBeSigned() {
+    if($this->_dataObjet['placeholder'] == 'o' and $this->_dataObjet['groupe'] == 'typecs') {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+/**
  * Obtenir le HTML de prévisualisation d'un Document
  * @return string code html
  */
@@ -249,6 +261,27 @@ class msModBaseObjetPreview
       $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
       $string .=  msTools::cutHtmlHeaderAndFooter($version);
       $string .=  '</div></td>';
+      return $string;
+    }
+
+/**
+ * Obtenir le PDF embarqué
+ * @return string code html pour PDF embarqué
+ */
+    public function getGenericPreviewPDF() {
+      $doc = new msStockage();
+      $doc->setObjetID($this->_objetID);
+      if (!$doc->testDocExist()) {
+        $pdf= new msPDF();
+        $pdf->setObjetID($this->_objetID);
+        $pdf->makePDFfromObjetID();
+        $pdf->savePDF();
+      }
+      $doc->setObjetID($this->_objetID);
+      $string = '<td></td><td colspan="4" class="py-4">';
+      $string .= '<object data="'.$doc->getWebPathToDoc().'" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD">
+      </object>';
+      $string .=  '</td>';
       return $string;
     }
 
