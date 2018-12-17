@@ -59,6 +59,10 @@ if (is_numeric($_GET['objetID'])) {
           $previewExtend->setObjetID($_GET['objetID']);
           echo $previewExtend->$methode();
         }
+        // si document qui peut être signé -> affichage du PDF
+        elseif($preview->getCanBeSigned()) {
+          echo $preview->getGenericPreviewPDF();
+        }
         // sinon on tente au final avec le template impression
         else {
           echo $preview->getGenericPreviewFromPrintTemplate();

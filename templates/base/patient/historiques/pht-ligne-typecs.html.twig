@@ -44,7 +44,7 @@
       {# view / edit #}
       <button type="button" class="btn btn-light btn-sm editCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}"
         {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
-          title="Editer">
+          title="Editer" {% if cs.signaturePatient == 'o' %}onclick="alert('Si le document est déjà signé, vous perdrez la signature à la validation de l\'édition.');"{% endif %}>
           <span class="fa fa-pencil-alt fa-fw" aria-hidden="true" ></span>
         {% else %}
           title="Voir">
@@ -111,6 +111,11 @@
           <i class="far fa-image fa-fw"></i>
         </a>
       {% endif %}
+      {% if cs.signaturePatient == 'o' %}
+        <a class="btn btn-light btn-sm d-none d-lg-inline-block sendSign" data-fromID="{{ user.id }}" data-csID="{{ cs.typeCS }}" role="button" href="#">
+          <i class="fas fa-edit fa-fw"></i>
+        </a>
+      {% endif %}
 
       {# option #}
       <div class="btn-group">
@@ -175,7 +180,7 @@
               <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
             </li>
             <li>
-              <a href="#" class="dropdown-item editCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update">Forcer l'édition</a>
+              <a href="#" class="dropdown-item editCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update" {% if cs.signaturePatient == 'o' %}onclick="alert('Si le document est déjà signé, vous perdrez la signature à la validation de l\'édition.');"{% endif %}>Forcer l'édition</a>
             </li>
             <li>
               <a href="#" class="dropdown-item changeCreationDate">Modifier la date</a>
@@ -188,12 +193,14 @@
             </li>
           {% endif %}
           <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+          {% if cs.signaturePatient != 'o' %}
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/cr/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
           </li>
+          {% endif %}
           {% if user.rank == 'admin' %}
           <li>
             <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">Tags utilisables dans templates</a>
