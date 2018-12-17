@@ -43,14 +43,17 @@ if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')
 }
 
 if (!isset($p['page']['docasigner']['patientID'])) {
-    die('Le patient n\'est pas défini.');
+  die('Le patient n\'est pas défini.');
 } else {
-    if (is_numeric($p['page']['docasigner']['patientID'])) {
-        $courrier = new msCourrier();
-        $courrier->setPatientID($p['page']['docasigner']['patientID']);
-        $p['page']['courrier']=$courrier->getCourrierData();
-
-    } else {
-        die('Le patient n\'est pas défini');
-    }
+  $courrier = new msCourrier();
+  $courrier->setPatientID($p['page']['docasigner']['patientID']);
+  if(isset($p['page']['docasigner']['objetID'])) {
+    $courrier->setObjetID($p['page']['docasigner']['objetID']);
+    $p['page']['courrier']=$courrier->getDataByObjetID();
+  } elseif (is_numeric($p['page']['docasigner']['patientID'])) {
+    $courrier->setFromID($p['page']['docasigner']['fromID']);
+    $p['page']['courrier']=$courrier->getCourrierData();
+  } else {
+    die('Le patient n\'est pas défini');
+  }
 }

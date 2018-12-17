@@ -54,23 +54,28 @@ if ($signature and is_numeric($data['patientID'])) {
     //Data patient
     $courrier = new msCourrier();
     $courrier->setPatientID($data['patientID']);
-    $p['page']['courrier']=$courrier->getCourrierData();
+    if(isset($data['objetID'])) {
+      $courrier->setObjetID($data['objetID']);
+      $p['page']['courrier']=$courrier->getDataByObjetID();
+    } elseif (is_numeric($data['patientID'])) {
+      $courrier->setFromID($data['fromID']);
+      $p['page']['courrier']=$courrier->getCourrierData();
+    }
 
     $pdf= new msPDF();
     $pdfCorps = $pdf->makeWithTwig($data['template'].'.html.twig');
     $signIMG = '<img src="'.$png.'" style="height : 50pt" />';
-    $pdfCorps = str_replace('<!-- signatureIMG -->', '<br><br>'.$signIMG, $pdfCorps);
+    $pdfCorps = str_replace('<!-- signatureIMG -->', $signIMG, $pdfCorps);
     $pdfCorps = str_replace('class="tailleFont"', 'style="font-size : 9pt;"', $pdfCorps);
 
+    if(!isset($data['objetID'])) {
 
-    // nouvel objet support
-    $doc = new msObjet();
-    $doc->setFromID($data['fromID']);
-    $doc->setToID($data['patientID']);
+      // nouvel objet support
+      $doc = new msObjet();
+      $doc->setFromID($data['fromID']);
+      $doc->setToID($data['patientID']);
 
-
-    if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
-
+      if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
         //titre
         $doc->setTitleObjet($supportID, $data['label']);
 
@@ -89,7 +94,16 @@ if ($signature and is_numeric($data['patientID'])) {
 
         $pdf->makePDF();
         $pdf->savePDF();
+      }
+    } elseif(is_numeric($data['objetID'])) {
+      $pdf->setObjetID($data['objetID']);
+      $pdf->setPageHeader('');
+      $pdf->setPageFooter('');
+      $pdf->setBodyFromPost($pdfCorps);
+      $pdf->makePDFfromObjetID();
+      $pdf->savePDF();
     }
+
 }
 
 unlink($svg);

@@ -30,11 +30,6 @@
 $data = new msData;
 $data = $data->getDataType($_POST['typeID'], $col=['id','label', 'formValues as template'] );
 
-if(isset($_POST['modeSign'])) {
-  $cour= new msCourrier;
-  $data['template']=$cour->getPrintModel($data['template']);
-}
-
 // petite prévention
 $data['template']=str_replace('.html.twig','',$data['template']);
 if($_POST['signPeriphName']) {
@@ -51,5 +46,15 @@ $tab=array(
   'label'=>(string)$data['label'],
   'signPeriphName'=>(string)$signPeriphName,
 );
+
+if(isset($_POST['fromID']) and is_numeric($_POST['fromID'])) {
+  $tab['fromID']=$_POST['fromID'];
+}
+
+if(isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
+  $tab['objetID']=(int)$_POST['objetID'];
+  $cour= new msCourrier;
+  $tab['template']=$cour->getPrintModel($data['template']);
+}
 
 file_put_contents($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt', Spyc::YAMLDump($tab, false, 0, true));

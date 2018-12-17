@@ -598,7 +598,8 @@ $(document).ready(function() {
         patientID: $('#identitePatient').attr("data-patientID"),
         typeID: $(this).attr('data-csID'),
         signPeriphName: signPeriphName,
-        modeSign: 'secondaire'
+        objetID: $(this).parents('tr').attr('data-objetID'),
+        fromID: $(this).attr('data-fromID')
       },
       dataType: "html",
       success: function(data) {

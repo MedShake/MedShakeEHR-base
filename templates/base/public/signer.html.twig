@@ -80,7 +80,7 @@
   <body>
     <div class="row">
       <div class="col">
-    {% include( page.docasigner.template ~ '.html.twig') %}
+    {% include( [page.docasigner.template ~ '_signer.html.twig' , page.docasigner.template ~ '.html.twig']) %}
     </div>
   </div>
 
