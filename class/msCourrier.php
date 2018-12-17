@@ -48,6 +48,10 @@ class msCourrier
  */
     private $_patientID;
 /**
+ * @var int $_fromID précision si besoin de l'utilisateur considéré comme actif
+ */
+    private $_fromID;
+/**
  * @var int $_module du document concerné
  */
     private $_module;
@@ -98,6 +102,16 @@ class msCourrier
     public function setPatientID($data)
     {
         return $this->_patientID = $data;
+    }
+
+/**
+ * Définir l'utilisateur considéré comme actif
+ * Utilisé en partciulier pour getCourrierData à la signature numérique
+ * @param int $fromID ID de l'utilisateur actif
+ */
+    public function setFromID($fromID)
+    {
+        return $this->_fromID = $fromID;
     }
 
 /**
@@ -179,7 +193,11 @@ class msCourrier
         if($this->_objetData['byID'] > 0) $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['byID'],'DelegueA_');
 
         //data utilisateur courant
-        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        if(isset($this->_fromID)) {
+          $tabRetour=$tabRetour+$this->_getPsData($this->_fromID,'UtilisateurActif_');
+        } elseif(isset($p['user']['id'])) {
+          $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        }
 
         //examen data
         $tabRetour=$tabRetour+$this->getExamenData($this->_objetData['toID'], $this->_objetData['formValues'], $this->_objetData['id']);
@@ -232,12 +250,16 @@ class msCourrier
         $tabRetour['patientID']=$this->_patientID;
 
         //data utilisateur courant
-        if(isset($p['user']['id'])) $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        if(isset($this->_fromID)) {
+          $tabRetour=$tabRetour+$this->_getPsData($this->_fromID,'UtilisateurActif_');
+        } elseif(isset($p['user']['id'])) {
+          $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        }
 
         if (!isset($this->_modeleID)) {
-            $objetData=new msObjet();
-            $objetData=$objetData->getObjetDataByID($this->_objetID, ['typeID']);
-            $this->_modeleID=$objetData['typeID'];
+          $objetData=new msObjet();
+          $objetData=$objetData->getObjetDataByID($this->_objetID, ['typeID']);
+          $this->_modeleID=$objetData['typeID'];
         }
 
         $objetModule=new msData();
@@ -296,7 +318,11 @@ class msCourrier
         if($this->_objetData['byID'] > 0) $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['byID'],'DelegueA_');
 
         //data utilisateur courant
-        $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        if(isset($this->_fromID)) {
+          $tabRetour=$tabRetour+$this->_getPsData($this->_fromID,'UtilisateurActif_');
+        } elseif(isset($p['user']['id'])) {
+          $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        }
 
         //examen data
         $examData = new msObjet();
