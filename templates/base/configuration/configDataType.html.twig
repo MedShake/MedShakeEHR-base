@@ -414,6 +414,25 @@
 					</div>
 				{% endif %}
 
+        {% if page.groupe == "typecs" %}
+          <div class="form-group">
+          {{ f.select ({
+              'select' : {
+                'name' : 'placeholder',
+                'id' : 'placeholderID',
+                'class' : 'custom-select',
+                'values' : {'n': 'non', 'o': 'oui'} ,
+                'autocomplete' : 'off',
+                'valueDefaut': ''
+              },
+            'label' : {
+              'position' : 'before',
+              'label' : 'Peut être envoyé à la signature patient',
+            }
+          }) }}
+          </div>
+        {% endif %}
+
 				{% if page.groupe == "typecs" %}
 					<div class="form-group">
 						{{ f.input ({
