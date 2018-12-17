@@ -69,7 +69,7 @@ associer patient
 <div class="card card-body bg-light my-4">
 	<div class="row ">
 
-	  <form class="form-inline col-12 col-lg-9 mx-0 row" data-dataset="data_types">
+	  <form class="form-inline col-12 col-lg-9 mx-0 row my-lg-2" data-dataset="data_types">
 	    <div class="form-group col-12 m-0 p-0 col-lg-3">
 	      {{ f.input ({
 		      'input' : {
@@ -144,11 +144,11 @@ associer patient
 	    </div>
 	  </form>
 
-	  <div class="col-12 col-lg-3 text-right">
+	  <div class="col-12 col-lg-3 text-right my-lg-2">
 
 	  {% if page.porp in ['patient', 'today'] %}
 			{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
-				<button type="button" class="btn btn-success my-3 lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
+				<button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
 			{% endif %}
 	    <a class="btn btn-primary my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"><i class="fas fa-plus"></i> Nouveau patient</a>
 	  {% elseif page.porp == 'pro' %}
