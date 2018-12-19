@@ -45,5 +45,10 @@ ALTER TABLE `forms` ADD `javascript` TEXT NULL DEFAULT NULL AFTER `cda`;
 -- Taille du champ printModel un peu juste
 ALTER TABLE `forms` CHANGE `printModel` `printModel` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
+-- Nouvelle cat formulaires
+INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+('formsProdOrdoEtDoc', 'Formulaires de production d\'ordonnances', 'formulaires de production d\'ordonnances et de documents', 'user', 3, '2018-12-19 11:01:59');
+
+
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.0.0' WHERE `name`='base' and `groupe`='module';
