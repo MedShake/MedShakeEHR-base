@@ -70,11 +70,17 @@ foreach ($users as $userID=>$value) {
     $campaignSMS = new msSMSallMySMS();
 
     $campaignSMS->set_campaign_name("RappelsRDV".date('Ymd', $tsJourRDV));
-    $campaignSMS->set_message(str_replace("#praticien", $value['lastname']?:$value['birthname'], str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['config']['smsRappelMessage']))));
-    $campaignSMS->set_tpoa(iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', str_replace("#praticien", $value['lastname']?:$value['birthname'], $p['config']['smsTpoa'])));
+    $campaignSMS->set_message(str_replace("#praticien", $value, str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['config']['smsRappelMessage']))));
+    $campaignSMS->set_tpoa(iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', str_replace("#praticien", $value, $p['config']['smsTpoa'])));
 
-    $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
-    $patientsList=json_decode($patientsList, true);
+    // Si fonctionnement avec source externe, adapter l'url
+    // $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+    // $patientsList=json_decode($patientsList, true);
+
+    // source agenda interne
+    $events = new msAgenda();
+    $events->set_userID($userID);
+    $patientsList=$events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
 
     $campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=>$tsJourRDV));
 

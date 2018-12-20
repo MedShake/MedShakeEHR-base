@@ -123,9 +123,14 @@ foreach ($users as $userID=>$value) {
 
     $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 
-    $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
-    $patientsList=json_decode($patientsList, true);
+    // Si fonctionnement avec source externe, adapter l'url
+    // $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+    // $patientsList=json_decode($patientsList, true);
 
+    // source agenda interne
+    $events = new msAgenda();
+    $events->set_userID($userID);
+    $patientsList=$events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
 
     if (is_array($patientsList)) {
         $listeID=array_column($patientsList, 'id');
@@ -139,7 +144,7 @@ foreach ($users as $userID=>$value) {
             if (isset($listeEmail[$patient['id']])) {
                 if (!in_array($listeEmail[$patient['id']], $dejaInclus)) {
                     $detinataire=array(
-                      'praticien'=>$value['lastname']?:$value['birthname'],
+                      'praticien'=>$value,
                       'id'=>$patient['id'],
                       'typeCs'=>$patient['type'],
                       'jourRdv'=>$date_sms,

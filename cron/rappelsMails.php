@@ -114,10 +114,16 @@ foreach ($users as $userID=>$value) {
 
     $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 
-    $patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
-    $patientsList=json_decode($patientsList, true);
+    // Si fonctionnement avec source externe, adapter l'url
+    //$patientsList=file_get_contents('http://192.0.0.0/patientsDuJour.php?date='.date("Y-m-d", $tsJourRDV));
+    //$patientsList=json_decode($patientsList, true);
 
-    if (is_array($patientsList)) {
+    // source agenda interne
+    $events = new msAgenda();
+    $events->set_userID($userID);
+    $patientsList=$events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
+
+    if (is_array($patientsList) and !empty($patientsList)) {
         $listeID=array_column($patientsList, 'id');
 
         $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('personalEmail')."' and deleted='' and outdated='' ", 'toID', 'value');
@@ -131,7 +137,7 @@ foreach ($users as $userID=>$value) {
 
 
                     $detinataire=array(
-                      'praticien'=>$value['lastname']?:$value['birthname'],
+                      'praticien'=>$value,
                       'id'=>$patient['id'],
                       'typeCs'=>$patient['type'],
                       'jourRdv'=>$date_sms,
