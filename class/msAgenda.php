@@ -548,6 +548,39 @@ class msAgenda
       }
     }
 
+/**
+ * Obtenir les patients pour une date donnée
+ * Utilisée pour les crons
+ * @param  string $date date au format Y-m-d
+ * @return array
+ */
+    public function getPatientsForDate($date) {
+      $tab=array();
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
+      $this->setStartDate(date($date . " 00:00:00"));
+      $this->setEndDate(date($date . " 23:59:59"));
+      if($data=$this->getEvents()) {
+        foreach ($data as $v) {
+          if ($v['type'] != '[off]') {
+             $tab[]=array(
+              "id"=> $v['patientid'],
+              "identite"=> $v['title'],
+              "type"=> $v['type'],
+              "heure"=> date("H:i", strtotime($v['start']))
+            );
+          }
+        }
+        return $tab;
+      }
+    }
+
+/**
+ * Obtenir les types de rendez-vous
+ * @param  int $userID user ID
+ * @return array         types de rdv
+ */
     public static function getRdvTypes($userID) {
         global $p;
         if(is_file($p['homepath'].'config/agendas/typesRdv'.$userID.'.yml')) {
@@ -565,6 +598,10 @@ class msAgenda
 
     }
 
+/**
+ * Insérer dans les logs agenda
+ * @param string $action action effectuée
+ */
     private function _addToLog($action) {
       if (!isset($this->_eventID)) {
           throw new Exception('EventID n\'est pas défini');
