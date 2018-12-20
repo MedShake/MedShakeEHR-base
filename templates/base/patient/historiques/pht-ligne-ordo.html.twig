@@ -46,7 +46,7 @@
             <span class="fa fa-pencil-alt fa-fw" aria-hidden="true"></span>
           {% else %}
             title="Dupliquer">
-            <span class="far fa-clone fa-fw" aria-hidden="true"></span>
+            <span class="fas fa-clone fa-fw" aria-hidden="true"></span>
           {% endif %}
         </button>
       {% endif %}
@@ -66,39 +66,36 @@
           <ul class="dropdown-menu">
             {% if config.smtpHost %}
             <li>
-              <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
+              <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns"><i class="fas fa-at fa-fw text-muted mr-1"></i> Envoyer en clair</a>
             </li>
             {% endif %}
             {% if config.apicryptAdresse %}
               <li>
-                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
+                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt"><i class="fas fa-lock fa-fw text-muted mr-1"></i> Envoyer en apicrypt</a>
               </li>
-            {% endif %}
-            {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-              <li role="separator" class="dropdown-divider m-0"></li>
             {% endif %}
             {% if config.faxService %}
               <li>
-                <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
+                <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax"><i class="fas fa-fax fa-fw text-muted mr-1"></i> Envoyer par fax</a>
               </li>
             {% endif %}
             {% if config.transmissionsPeutCreer == 'true' %}
-              <li role="separator" class="dropdown-divider m-0"></li>
+              <li role="separator" class="dropdown-divider"></li>
               <li>
-                <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">Créer une transmission</a>
+                <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}"><i class="far fa-comments fa-fw text-muted mr-1"></i> Créer une transmission</a>
               </li>
             {% endif %}
             {% if cs.sendMail > 0 %}
-              <li role="separator" class="dropdown-divider m-0"></li>
+              <li role="separator" class="dropdown-divider"></li>
               <li>
-                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
+                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/"><i class="fas fa-history fa-fw text-muted mr-1"></i> Historique des envois</a>
               </li>
             {% endif %}
           </ul>
         </div>
       {% endif %}
       {% if cs.sendMail > 0 %}
-        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
+        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
           <span class="fa fa-envelope fa-fw" aria-hidden="true"></span>
         </a>
       {% endif %}
@@ -129,36 +126,36 @@
           {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
             {% if config.smtpHost %}
               <li class="d-inline-block d-lg-none">
-                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">Envoyer en clair</a>
+                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns"><i class="fas fa-at fa-fw text-muted mr-1"></i> Envoyer en clair</a>
               </li>
             {% endif %}
             {% if config.apicryptAdresse %}
               <li class="d-inline-block d-lg-none">
-                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">Envoyer en apicrypt</a>
+                <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt"><i class="fas fa-lock fa-fw text-muted mr-1"></i> Envoyer en apicrypt</a>
               </li>
             {% endif %}
             {% if (config.smtpHost or config.apicryptSmtpHost) and config.faxService %}
-              <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+              <li class="dropdown-divider d-inline-block d-lg-none"></li>
             {% endif %}
             {% if config.faxService %}
               <li class="d-inline-block d-lg-none">
-                <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">Envoyer par fax</a>
+                <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax"><i class="fas fa-fax fa-fw text-muted mr-1"></i> Envoyer par fax</a>
               </li>
             {% endif %}
             {% if cs.sendMail > 0 %}
-              <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+              <li class="dropdown-divider d-inline-block d-lg-none"></li>
               <li class="d-inline-block d-lg-none">
-                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique des envois</a>
+                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/"><i class="fas fa-history fa-fw text-muted mr-1"></i> Historique des envois</a>
               </li>
             {% endif %}
           {% endif %}
           <li class="d-inline-block d-lg-none">
           {% if cs.sendMail > 0 %}
-              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Envoyer</a>
+              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">Envoyer</a>
             </li>
           {% endif %}
           {% if cs.fromID == user.id or user.rank == 'admin' %}
-            <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+            <li class="dropdown-divider d-inline-block d-lg-none"></li>
             <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
                 {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
@@ -167,14 +164,14 @@
             <li>
               <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
             </li>
-            <li role="separator" class="dropdown-divider m-0"></li>
+            <li role="separator" class="dropdown-divider"></li>
           {% endif %}
           {% if cs.sendMail > 0 %}
             <li>
-              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
+              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">Historique des envois par mail</a>
             </li>
           {% endif %}
-          <li class="dropdown-divider m-0 d-block d-lg-none"></li>
+          <li class="dropdown-divider d-block d-lg-none"></li>
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
@@ -190,7 +187,7 @@
           </li>
           {% endif %}
           {% if cs.fromID == user.id or user.rank == 'admin' %}
-            <li role="separator" class="dropdown-divider m-0"></li>
+            <li role="separator" class="dropdown-divider"></li>
             <li>
               <a class="dropdown-item suppCs" href="#" data-objetID="{{ cs.id }}">Supprimer</a>
             </li>

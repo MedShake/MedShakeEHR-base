@@ -59,7 +59,7 @@
                 <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">Créer une transmission</a>
               </li>
             {% endif %}
-            <li class="dropdown-divider m-0 d-inline-block d-lg-none"></li>
+            <li class="dropdown-divider d-inline-block d-lg-none"></li>
             {% if cs.fromID == user.id or user.rank == 'admin' %}
               <li>
                   <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
@@ -69,12 +69,7 @@
               <li>
                   <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
               </li>
-              <li role="separator" class="dropdown-divider m-0"></li>
-            {% endif %}
-            {% if cs.sendMail > 0 %}
-              <li>
-                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">Historique des envois par mail</a>
-              </li>
+
             {% endif %}
           </ul>
         </div>
