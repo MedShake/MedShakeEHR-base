@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
             $template='erreur-droits';
         } else {
             file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
-            $dossier.=(strlen($dossier)-1)!='/' ? '/' : '';
+            $dossier.=($dossier[strlen($dossier)-1])!='/' ? '/' : '';
             //récupération de la dernière version release
             $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
             curl_setopt($ch, CURLOPT_USERAGENT, "linux");
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 json_encode($ret);
                 //exécution de composer pour la partie JS
                 chdir($dossierweb);
-                exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
+                exec('COMPOSER_HOME="/tmp/" php '.$dossier.'composer.phar install 2>&1', $ret);
                 //Vérifie l'absence d'erreur dans le log Composer
                 $errormatches = array_filter($ret, function ($haystack){
 					if( strpos(strtolower($haystack), 'error') === false) {return false;} else {return true;}
