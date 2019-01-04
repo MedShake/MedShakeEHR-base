@@ -144,7 +144,7 @@
                         </li>
                       {% endif %}
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
                             {% if config.designTopMenuStyle == 'icones' %}
                               <i class="fas fa-user fa-lg d-none d-lg-inline"></i>
                               <span class="d-lg-none"> Patients</span>
@@ -169,7 +169,7 @@
                           </div>
                       </li>
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/confreres/" aria-haspopup="true" aria-expanded="false">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
                             {% if config.designTopMenuStyle == 'icones' %}
                               <i class="fas fa-user-md fa-lg d-none d-lg-inline"></i>
                               <span class="d-lg-none"> Praticiens</span>
@@ -183,7 +183,7 @@
                           </div>
                       </li>
                       <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" aria-haspopup="true" aria-expanded="false">
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
                             {% if config.designTopMenuStyle == 'icones' %}
                               <i class="fas fa-euro-sign fa-lg d-none d-lg-inline"></i>
                               <span class="d-lg-none"> Comptabilité</span>
@@ -253,7 +253,7 @@
 
                       {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                       <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
                           {% if config.designTopMenuStyle == 'icones' %}
                             <i class="fas fa-toolbox fa-lg d-none d-lg-inline {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}text-danger{% endif %}"></i>
                             <span class="d-lg-none"> Outils</span>
@@ -314,7 +314,7 @@
 
                     <ul class="nav navbar-nav ml-md-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
                                 {{ user.nom }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
