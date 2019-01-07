@@ -61,12 +61,20 @@
                         </tr>
                         {% for mail in mails %}
                             <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailID="{{ mail.id }}" data-status="{{ mail.archived }}">
-                                <td class="gras">
-                                {{ mail.hprimIdentite|e }}
-                                </td>
-                                <td>
+                                {% if mail.hprimIdentite %}
+                                  <td class="gras">
+                                    {{ mail.hprimIdentite|e }}
+                                  </td>
+                                  <td>
                                     {{ mail.hprimExpediteur|e }}
-                                </td>
+                                  </td>
+                                {% else %}
+                                  <td colspan="2">
+                                    - message sans données HPRIM -
+                                  </td>
+                                {% endif %}
+
+
                                 <td>
                                     {% if mail.pjNombre > 0 %}
                                         <span class="badge badge-secondary">{{ mail.pjNombre }}</span>
