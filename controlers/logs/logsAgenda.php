@@ -80,9 +80,9 @@ CASE WHEN n1.value != '' THEN n1.value ELSE bn1.value END as auteurNom, p1.value
   left join objets_data as bn on bn.toID=a.patientid and bn.typeID='".$name2typeID['birthname']."' and bn.deleted = '' and bn.outdated = ''
   left join objets_data as n on n.toID=a.patientid and n.typeID='".$name2typeID['lastname']."' and n.deleted = '' and n.outdated = ''
   left join objets_data as p on p.toID=a.patientid and p.typeID='".$name2typeID['firstname']."' and p.deleted = '' and p.outdated = ''
-  left join objets_data as bn1 on bn1.toID=a.fromID and bn1.typeID='".$name2typeID['birthname']."' and bn1.deleted = '' and bn1.outdated = ''
-  left join objets_data as n1 on n1.toID=a.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
-  left join objets_data as p1 on p1.toID=a.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
+  left join objets_data as bn1 on bn1.toID=l.fromID and bn1.typeID='".$name2typeID['birthname']."' and bn1.deleted = '' and bn1.outdated = ''
+  left join objets_data as n1 on n1.toID=l.fromID and n1.typeID='".$name2typeID['lastname']."' and n1.deleted = '' and n1.outdated = ''
+  left join objets_data as p1 on p1.toID=l.fromID and p1.typeID='".$name2typeID['firstname']."' and p1.deleted = '' and p1.outdated = ''
   where ".implode(' and ', $whereLU)."
   group by l.id, n.value, p.value, n1.value, p1.value, bn.value, bn1.value
   order by l.id desc
