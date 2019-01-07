@@ -194,7 +194,7 @@ if ($template=='bienvenue') :
         <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
           <input name="bienvenue" type="hidden"/>
           <input id="dest" name="destination" type="text" value="/opt/MedShakeEHR" style="border:solid 1px #ccc"/>
-          <button type="submit" class="btn" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
+          <button type="submit" class="btn btn-light" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
         </form>
       </div>
       <div class="svgcontainer">
@@ -219,7 +219,7 @@ else :
 ?>
       <h1>Erreur!</h1>
       <p style="margin-top:50px;">Le dossier <?=$dossier?> n'est pas accéssible en écriture. Veuillez corriger le problème puis cliquer sur suivant.</p>
-      <a href=<?=$_SERVER['REQUEST_URI']?>><button class="btn">Suivant</button></a>
+      <a href=<?=$_SERVER['REQUEST_URI']?>><button class="btn btn-light">Suivant</button></a>
 <?php
 endif;
 ?>
