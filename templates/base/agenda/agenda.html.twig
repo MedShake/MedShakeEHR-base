@@ -71,21 +71,6 @@
 
       .ui-autocomplete{z-index:2000}
 
-      #calendar .fc-prevMonth-button,
-      #calendar .fc-prev-button,
-      #calendar .fc-synchronize-button,
-      #calendar .fc-next-button,
-      #calendar .fc-nextMonth-button
-        {color:#484848;min-width:36px;height:31px;border-color:#bbb;background-color:#fff;padding-top:0}
-      #calendar .fc-today-button {background-color:#e6eaef;border:none;color:#484848;height:31px;padding-top:0}
-
-      #calendar .fc-prevMonth-button:hover,
-      #calendar .fc-prev-button:hover,
-      #calendar .fc-synchronize-button:hover,
-      #calendar .fc-next-button:hover,
-      #calendar .fc-nextMonth-button:hover
-        {color:#181818;background-color:#ddd}
-
       .cursor-move {cursor:move}
       .cursor-copy {cursor:copy}
       .cursor-cell {cursor:cell}
@@ -109,29 +94,30 @@
 {% endblock %}
 
 {% block body %}
-{% if config.agendaModePanneauLateral == 'true' %}
-  <div class="row">
-    <div class="col-3">
-      <form id="newPatientData">
-        {% include 'inc-agenda-patient.html.twig' %}
-      </form>
-      {% include 'inc-agenda-historiquePatient.html.twig' %}
-      <button id="nettoyer" class="btn btn-light" style="display:none">Annuler</button>
-    </div>
-    <div class="col-9">
-{% endif %}
-{% if page.agendaUsers|length > 1 %}
-  <ul class="nav nav-tabs bottom-space" >
+  {% if config.agendaModePanneauLateral == 'true' %}
+    <div class="row">
+      <div class="col-3">
+        <form id="newPatientData">
+          {% include 'inc-agenda-patient.html.twig' %}
+        </form>
+        {% include 'inc-agenda-historiquePatient.html.twig' %}
+        <button id="nettoyer" class="btn btn-light" style="display:none">Annuler</button>
+      </div>
+      <div class="col-9">
+  {% endif %}
+  {% if page.agendaUsers|length > 1 %}
+    <ul class="nav nav-tabs bottom-space" >
 
-    {% for k,v in page.agendaUsers %}
-      <li role="presentation" class="nav-item">
-          <a class="nav-link{% if k == page.userID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+      {% for k,v in page.agendaUsers %}
+        <li role="presentation" class="nav-item">
+            <a class="nav-link{% if k == page.userID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-<div id="calendar" data-userID="{{ page.userID }}" data-mode="{% if config.agendaModePanneauLateral == 'true' %}lateral{% else %}modal{% endif %}"></div>
+  <div id="smallCalendar" class="position-absolute" style="z-index: 1000; margin-top: 50px; display: none;"></div>
+  <div id="calendar" data-userID="{{ page.userID }}" data-mode="{% if config.agendaModePanneauLateral == 'true' %}lateral{% else %}modal{% endif %}"></div>
 
 {% if config.agendaModePanneauLateral == 'true' %}
     </div>
@@ -140,7 +126,6 @@
 {% endblock %}
 
 {% block modals %}
-
 {# modal rdv/nouveau patient #}
 <div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog">
   <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-lg{% endif %}" role="document">

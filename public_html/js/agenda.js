@@ -36,6 +36,16 @@ var selected_action;
 
 $(document).ready(function() {
 
+  $('#smallCalendar').datepicker({
+      numberOfMonths: [3,4],
+      stepMonths: 12,
+      inline: true,
+      onSelect: function(dateText, inst) {
+          $('#calendar').fullCalendar('gotoDate', moment(dateText, "DD-MM-YYYY"));
+          $('#smallCalendar').toggle();
+      }
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Actions carte vitale
 
@@ -152,6 +162,11 @@ $(document).ready(function() {
     themeSystem: 'bootstrap4',
     hiddenDays: hiddenDays,
     customButtons: {
+      smallCalendar: {
+        click: function() {
+          $('#smallCalendar').toggle();
+        }
+      },
       nextMonth: {
         click: function() {
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
@@ -169,6 +184,7 @@ $(document).ready(function() {
       },
     },
     bootstrapFontAwesome: {
+      smallCalendar:'fa-calendar-alt',
       prevMonth: 'fa-angle-double-left',
       prev: 'fa-angle-left',
       synchronize: 'fa-sync-alt',
@@ -176,7 +192,7 @@ $(document).ready(function() {
       nextMonth: 'fa-angle-double-right',
     },
     header: {
-      left: 'prevMonth,prev,synchronize,next,nextMonth today',
+      left: 'smallCalendar prevMonth,prev,today,next,nextMonth synchronize',
       center: boutonsHeaderCenter,
       right: 'title'
     },
@@ -376,13 +392,17 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// Définition des titles boutons agenda
+  ///////// Définition des titles boutons agenda + style
 
-  $(".fc-prevMonth-button").attr("title", "Mois précédent").removeClass('btn-primary').addClass('btn-sm');
-  $(".fc-prev-button").attr("title", "Semaine précédente").removeClass('btn-primary').addClass('btn-sm');
-  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe").removeClass('btn-primary').addClass('btn-sm');
-  $(".fc-next-button").attr("title", "Semaine suivante").removeClass('btn-primary').addClass('btn-sm');
-  $(".fc-nextMonth-button").attr("title", "Mois suivant").removeClass('btn-primary').addClass('btn-sm');
+  $(".fc-smallCalendar-button").attr("title", "Accès rapide");
+  $(".fc-prevMonth-button").attr("title", "Mois précédent");
+  $(".fc-prev-button").attr("title", "Semaine précédente");
+  $(".fc-synchronize-button").attr("title", "Synchroniser le service d'agenda externe");
+  $(".fc-next-button").attr("title", "Semaine suivante");
+  $(".fc-nextMonth-button").attr("title", "Mois suivant");
+
+  // changer style par défaut
+  $(".fc-toolbar button").removeClass('btn-primary').addClass('btn-sm btn-secondary');
   $(".fc-left").addClass("pt-2");
   $(".fc-body").addClass("cursor-cell");
 
