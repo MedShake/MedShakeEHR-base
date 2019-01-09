@@ -169,11 +169,13 @@ $(document).ready(function() {
       },
       nextMonth: {
         click: function() {
+          $('div.popover').popover('hide');
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
         }
       },
       prevMonth: {
         click: function() {
+          $('div.popover').popover('hide');
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
         }
       },
@@ -389,6 +391,10 @@ $(document).ready(function() {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+  });
+
+  $(".fc-next-button, .fc-prev-button").on("click", function() {
+    $(".popover").hide();
   });
 
   ////////////////////////////////////////////////////////////////////////
