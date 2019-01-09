@@ -92,16 +92,16 @@
               </button>
               <div class="dropdown-menu mr-1">
                 <a href="#" class="dropdown-item printAndSaveOrdo">
-                  <span class="fa fa-print" aria-hidden="true"></span>
+                  <span class="fa fa-print fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Imprimer et sauvegarder</a>
                 <a href="#" class="dropdown-item printAnonymeAndSaveOrdo">
-                  <span class="fa fa-print" aria-hidden="true"></span>
+                  <span class="fa fa-print fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Imprimer sans infos prescripteur et sauvegarder</a>
                 <a href="#" class="dropdown-item saveOrdo">
-                  <span class="fa fa-save" aria-hidden="true"></span>
+                  <span class="fa fa-save fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Sauvegarder uniquement</a>
                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLapPresPreSave">
-                  <span class="fa fa-save" aria-hidden="true"></span>
+                  <span class="fa fa-save fa-fw text-muted mr-1" aria-hidden="true"></span>
                     Sauvegarder comme prescriptions types</a>
               </div>
             </div>
@@ -113,23 +113,25 @@
 
           <div class="col-md-1">
             <div class="btn-group float-right">
-              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-wrench" aria-hidden="true"></span>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
                 <a href="#" class="dropdown-item convertAllDci">
-                  <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                  <span class="fa fa-sync-alt fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Convertir l'ordonnance en DCI</a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item removeAllLignesPrescription">
-                  <span class="fa fa-trash" aria-hidden="true"></span>
+                  <span class="fa fa-trash fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Supprimer tout</a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item ordoLiveRestore">
-                  <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                  <span class="fa fa-exclamation-triangle fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Récupération d'urgence</a>
+                {% if user.rank == 'admin' %}
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
+                {% endif %}
               </div>
             </div>
           </div>

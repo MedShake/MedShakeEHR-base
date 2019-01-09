@@ -1,3 +1,5 @@
+php_value post_max_size 300M
+php_value upload_max_filesize 300M
 php_value max_input_vars 20000
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
