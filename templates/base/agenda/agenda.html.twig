@@ -101,7 +101,17 @@
           {% include 'inc-agenda-patient.html.twig' %}
         </form>
         {% include 'inc-agenda-historiquePatient.html.twig' %}
-        <button id="nettoyer" class="btn btn-light" style="display:none">Annuler</button>
+        <button id="nettoyer" class="btn btn-outline-secondary mb-4" style="display:none">Annuler</button>
+
+        <h5 class="mt-4">
+          Types de rendez-vous
+        </h5>
+        <table class="table table-sm mb-0 small">
+          {% for rac,dat in page.typeRdv %}
+            <tr><td><i class="fas fa-square-full mr-2" style="color : {{ dat.backgroundColor }}"></i> {{ dat.descriptif }}</td></tr>
+          {% endfor %}
+        </table>
+
       </div>
       <div class="col-9">
   {% endif %}
