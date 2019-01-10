@@ -23,14 +23,22 @@
  # Template > Agenda, cadre patient
  #
  # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% import "macroForm.html.twig" as f %}
-<h3>Patient</h3>
-<div id="patientSearch" class="input-group mx-0 mb-3">
-  <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
-  <div class="input-group-append">
-    <button id="newPatient" type="button" class="btn btn-outline-secondary">Créer patient</button>
+<h5>Patient</h5>
+<div id="patientSearch" class="btn-toolbar justify-content-between mb-3">
+  <div class="input-group col-10 m-0 p-0">
+    <div class="input-group-prepend">
+      <div class="input-group-text" id="btnGroupAddon"><i class="fas fa-search"></i></div>
+    </div>
+    <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
+  </div>
+  <div class="input-group">
+    <button id="newPatient" type="button" class="btn btn-outline-secondary" title="Créer un patient">
+      <i class="fas fa-user-plus"></i>
+    </button>
   </div>
 </div>
 {% if config.vitaleActiver =='true' %}

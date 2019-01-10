@@ -37,13 +37,13 @@ var selected_action;
 $(document).ready(function() {
 
   $('#smallCalendar').datepicker({
-      numberOfMonths: [3,4],
-      stepMonths: 12,
-      inline: true,
-      onSelect: function(dateText, inst) {
-          $('#calendar').fullCalendar('gotoDate', moment(dateText, "DD-MM-YYYY"));
-          $('#smallCalendar').toggle();
-      }
+    numberOfMonths: [3, 4],
+    stepMonths: 12,
+    inline: true,
+    onSelect: function(dateText, inst) {
+      $('#calendar').fullCalendar('gotoDate', moment(dateText, "DD-MM-YYYY"));
+      $('#smallCalendar').toggle();
+    }
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ $(document).ready(function() {
 
   //lire la carte vitale
   $('#lectureCpsVital').on("click", function(e) {
-    btnLec= $(this);
+    btnLec = $(this);
     $.ajax({
       url: urlBase + '/ajax/getCpsVitaleDataRappro/',
       type: 'post',
@@ -169,11 +169,13 @@ $(document).ready(function() {
       },
       nextMonth: {
         click: function() {
+          $('div.popover').popover('hide');
           $('#calendar').fullCalendar('incrementDate', moment.duration(1, 'months'));
         }
       },
       prevMonth: {
         click: function() {
+          $('div.popover').popover('hide');
           $('#calendar').fullCalendar('incrementDate', moment.duration(-1, 'months'));
         }
       },
@@ -184,7 +186,7 @@ $(document).ready(function() {
       },
     },
     bootstrapFontAwesome: {
-      smallCalendar:'fa-calendar-alt',
+      smallCalendar: 'fa-calendar-alt',
       prevMonth: 'fa-angle-double-left',
       prev: 'fa-angle-left',
       synchronize: 'fa-sync-alt',
@@ -391,6 +393,10 @@ $(document).ready(function() {
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
   });
 
+  $(".fc-next-button, .fc-prev-button").on("click", function() {
+    $(".popover").hide();
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Définition des titles boutons agenda + style
 
@@ -482,6 +488,13 @@ $(document).ready(function() {
   });
 
   $("#newPatient").on("click", function() {
+    if ($('#calendar').attr('data-mode') == 'modal') {
+      selected_patient = undefined;
+    } else {
+      nettoyer();
+      cleanSelectedVar();
+      $('#nettoyer').show();
+    }
     $("#search").val("");
     $("#patientInfo").show();
     $("#patientInfo").find("input,textarea").prop("readonly", false).val("");
@@ -489,9 +502,6 @@ $(document).ready(function() {
     $("#historiquePatient").hide();
     $('#buttonCreer').removeAttr('disabled');
     $('.lireCpsVitale').show();
-    if ($('#calendar').attr('data-mode') == 'lateral') {
-      $('#nettoyer').show();
-    }
   });
 
   $("#datepicker").on("click", function(e) {
@@ -787,6 +797,9 @@ function nettoyer() {
   $('#historiquePatient').hide();
   $('#historiquePatient ul').html('');
   $('#HistoriqueRdvResume button').html('');
+
+  // formulaire rendez-vous
+  $('#motif').val('');
 
 }
 
