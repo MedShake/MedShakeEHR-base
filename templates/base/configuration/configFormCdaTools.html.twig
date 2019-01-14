@@ -83,6 +83,7 @@
             <table id="tabAssociations" class="table table-sm table-hover">
               <thead class="thead-light">
                 <tr>
+                  <th></th>
                   {% for param in page.paramsPossiblesData %}
                     <th>{{ param.label }}</th>
                   {% endfor %}
@@ -91,6 +92,7 @@
                 <tbody>
                   {% for k, v in page.dataTab %}
                     <tr data-clef="{{ v.clef }}">
+                      <td>#{{ loop.index }}</td>
                       {% for var in v.values %}
                         <td>{{ var }}</td>
                       {% endfor %}
