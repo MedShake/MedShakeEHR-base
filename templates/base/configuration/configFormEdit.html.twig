@@ -33,6 +33,10 @@
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css">
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.js?{{ modules.base }}"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/yaml/yaml.js?{{ modules.base }}"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/javascript/javascript.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -92,7 +96,7 @@
 
 
 	<form id="formParamsEdit" class="col-md-7 ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
-    <button type="submit" class="btn btn-primary float-right m-1" style="margin-top : 25px">Enregistrer</button>
+    <button type="submit" class="btn btn-primary float-right m-1" style="margin-top : 25px"><i class="fas fa-save"></i> Enregistrer</button>
 	<h2>Édition <small>formulaire #{{ page.form.id }}</small></h2>
 
   <ul class="nav nav-tabs mb-3" id="navTab" role="tablist">
@@ -244,12 +248,13 @@
   		<div class="form-group">
   		{{ f.textarea ({
   			'textarea' : {
+          'id' : 'yamlEditor',
   				'name' : 'yamlStructure',
   				'placeholder' : 'valeurs par défaut',
   				'class' : 'form-control',
   				'autocomplete' : 'off',
   				'value' : page.form.yamlStructure,
-  				'add' : 'rows="20" style="font-family:monospace;"'
+  				'add' : 'rows="25" style="font-family:monospace;"'
   			},
   			'label' : {
   				'position' : 'before',
@@ -267,6 +272,7 @@
       <div class="form-group">
   		{{ f.textarea ({
   			'textarea' : {
+          'id' : 'cdaEditor',
   				'name' : 'cda',
   				'placeholder' : 'Code au format YAML pour la génération du document au format XML CDA R2',
   				'class' : 'form-control',
@@ -286,12 +292,13 @@
       <div class="form-group">
       {{ f.textarea ({
         'textarea' : {
+          'id' : 'javascriptEditor',
           'name' : 'javascript',
           'placeholder' : 'Le code entré ici n\'est interprété que pour les formulaires de consultation',
           'class' : 'form-control',
           'autocomplete' : 'off',
           'value' : page.form.javascript,
-          'add' : 'rows="20" style="font-family:monospace;"'
+          'add' : 'rows="25" style="font-family:monospace;"'
         },
         'label' : {
           'position' : 'before',
@@ -301,7 +308,7 @@
       </div>
     </div>
 
-		<button type="submit" class="btn btn-primary float-right m-1">Enregistrer</button>
+		<button type="submit" class="btn btn-primary float-right m-1"><i class="fas fa-save"></i> Enregistrer</button>
 
 		<p>
 		{{ page.form.yaml }}

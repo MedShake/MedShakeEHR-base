@@ -30,11 +30,9 @@ $(document).ready(function() {
 
   if (document.URL.indexOf("#ca") >= 0) {
     $($("ul.nav-tabs li")[1]).children("a")[0].click();
-  }
-  else if (document.URL.indexOf("#ap") >= 0) {
+  } else if (document.URL.indexOf("#ap") >= 0) {
     $($("ul.nav-tabs li")[3]).children("a")[0].click();
-  }
-  else if (document.URL.indexOf("#journaux") >= 0) {
+  } else if (document.URL.indexOf("#journaux") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
   }
 
@@ -254,8 +252,8 @@ $(document).ready(function() {
     }
   });
 
-//  activation de codemirror pour édition templates
-  if ($("#templateEditor").length ) {
+  //  activation de codemirror pour édition templates
+  if ($("#templateEditor").length) {
     var editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
       lineNumbers: true,
       mode: "twig",
@@ -264,28 +262,72 @@ $(document).ready(function() {
     editor.setSize(null, 500);
   }
 
-  //auto_grow pour edition de formulaires
-  $("#formParamsEdit textarea").on("keyup, focus", function() {
-    $(this).css("overflow", "hidden");
-    auto_grow(this);
+  // codemirror pour les différents éditeurs de la conception de formulaire
+  $('#structure-tab').on('shown.bs.tab', function(e) {
+    if (yamlEditor instanceof CodeMirror) {
+      yamlEditor.refresh();
+    } else {
+      // Load main editor
+      yamlEditor = CodeMirror.fromTextArea(document.getElementById("yamlEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      yamlEditor.setSize('100%', 700);
+    }
+    yamlEditor.on("change", function(yamlEditor, change) {
+      $('#yamlEditor').val(yamlEditor.getValue());
+    });
+  });
+
+  $('#cda-tab').on('shown.bs.tab', function(e) {
+    if (cdaEditor instanceof CodeMirror) {
+      cdaEditor.refresh();
+    } else {
+      // Load main editor
+      cdaEditor = CodeMirror.fromTextArea(document.getElementById("cdaEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      cdaEditor.setSize('100%', 500);
+    }
+    cdaEditor.on("change", function(cdaEditor, change) {
+      $('#cdaEditor').val(cdaEditor.getValue());
+    });
+  });
+
+  $('#javascript-tab').on('shown.bs.tab', function(e) {
+    if (javascriptEditor instanceof CodeMirror) {
+      javascriptEditor.refresh();
+    } else {
+      // Load main editor
+      javascriptEditor = CodeMirror.fromTextArea(document.getElementById("javascriptEditor"), {
+        lineNumbers: true,
+        mode: "javascript",
+      });
+      javascriptEditor.setSize('100%', 700);
+    }
+    javascriptEditor.on("change", function(javascriptEditor, change) {
+      $('#javascriptEditor').val(javascriptEditor.getValue());
+    });
+
   });
 
   // voir les mots de passe dans les paramètres par défaut
   $(".viewPassword").removeClass('viewPassword').parent()
     .css('cursor', 'pointer')
     .addClass('viewPassword')
-    .on("mousedown", function(){
-      $(this).closest('.input-group').find('input').attr('type','text');
+    .on("mousedown", function() {
+      $(this).closest('.input-group').find('input').attr('type', 'text');
     })
-    .on("mouseup", function(){
-      $(this).closest('.input-group').find('input').attr('type','password');
+    .on("mouseup", function() {
+      $(this).closest('.input-group').find('input').attr('type', 'password');
     });
 
   //Suppression d'un paramètre dans la page paramètres spécifiques
-  $('body').on('click', '.removeParam', function(){
+  $('body').on('click', '.removeParam', function() {
     var $tr = $(this).closest('tr');
     $.ajax({
-      url: urlBase+"/configuration/ajax/configUserParamDelete/",
+      url: urlBase + "/configuration/ajax/configUserParamDelete/",
       type: 'post',
       data: {
         userID: $('input[name=userID]').val(),
@@ -303,11 +345,11 @@ $(document).ready(function() {
   });
 
   //droits admin dans la page liste des utilisateurs
-  $(".changeAdmin").on("click", function(e){
+  $(".changeAdmin").on("click", function(e) {
     e.preventDefault();
     var $ca = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configGiveAdmin/",
+      url: urlBase + "/configuration/ajax/configGiveAdmin/",
       type: 'post',
       data: {
         id: $ca.attr('data-userid')
@@ -326,18 +368,17 @@ $(document).ready(function() {
   });
 
   //choix du module utilisateur dans la page liste des utilisateurs
-  $(".changeModule").on("change", function(){
+  $(".changeModule").on("change", function() {
     var $cm = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configChangeModule/",
+      url: urlBase + "/configuration/ajax/configChangeModule/",
       type: 'post',
       data: {
         id: $cm.attr('data-userid'),
         module: $cm.val()
       },
       dataType: "json",
-      success: function(data) {
-      },
+      success: function(data) {},
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
 
@@ -346,19 +387,19 @@ $(document).ready(function() {
   });
 
   //changement de mot de passe d'un utilisateur dans la page liste des utilisateurs
-  $(".changePassword").on("click", function(e){
+  $(".changePassword").on("click", function(e) {
     e.preventDefault();
     var $cp = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configChangePassword/",
+      url: urlBase + "/configuration/ajax/configChangePassword/",
       type: 'post',
       data: {
         id: $cp.attr('data-userid'),
-        password: $("input[data-userid="+$cp.attr('data-userid')+"]").val()
+        password: $("input[data-userid=" + $cp.attr('data-userid') + "]").val()
       },
       dataType: "json",
       success: function(data) {
-        alert_popup("success", 'le mot de passe de l\'utilisateur "'+ $cp.attr('data-name') + '" a été changé avec succès');
+        alert_popup("success", 'le mot de passe de l\'utilisateur "' + $cp.attr('data-name') + '" a été changé avec succès');
 
       },
       error: function() {
@@ -369,25 +410,25 @@ $(document).ready(function() {
   });
 
   //forcer le rechargement de la page sur modif du yaml agenda
-  $(".reload-on-mod").on("keyup", function(){
+  $(".reload-on-mod").on("keyup", function() {
     $(this).closest("form").addClass('reload');
   });
 
   //Révoquer un utilisateur dans la page liste des utilisateurs
-  $(".revokeUser").on("click", function(e){
+  $(".revokeUser").on("click", function(e) {
     e.preventDefault();
     var $ru = $(this);
-    if (!confirm('Etes vous sûr de vouloir supprimer l\'utilisateur "'+$ru.attr('data-name')+'" ?'))
+    if (!confirm('Etes vous sûr de vouloir supprimer l\'utilisateur "' + $ru.attr('data-name') + '" ?'))
       return;
     $.ajax({
-      url: urlBase+"/configuration/ajax/configRevokeUser/",
+      url: urlBase + "/configuration/ajax/configRevokeUser/",
       type: 'post',
       data: {
         id: $ru.attr('data-userid')
       },
       dataType: "json",
       success: function(data) {
-          $ru.closest("tr").remove();
+        $ru.closest("tr").remove();
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -397,7 +438,7 @@ $(document).ready(function() {
   });
 
   // selecteur de catégorie page SpecificUserParam
-  $('select[name=paramCat]').on('click', function(){
+  $('select[name=paramCat]').on('click', function() {
     $('.paramselect').hide();
     $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
     $('#description').html('description : ' + $('.paramselect:visible').find('option:selected').attr('data-desc'));
@@ -405,7 +446,7 @@ $(document).ready(function() {
   });
 
   // selecteur de paramètre page SpecificUserParam
-  $('.paramselect').on('click', function(){
+  $('.paramselect').on('click', function() {
     $('#description').html('description : ' + $(this).find('option:selected').attr('data-desc'));
     $('#type').html('type : ' + $(this).find('option:selected').attr('data-type'));
   });
@@ -419,14 +460,20 @@ $(document).ready(function() {
     onUploadSuccess: function() {
       console.log('fichier envoyé');
     },
-    onDragEnter: function(){
+    onDragEnter: function() {
       $(".mask").css("display", "block");
-      $(".mask").animate({opacity: 0.4}, 500);
+      $(".mask").animate({
+        opacity: 0.4
+      }, 500);
     },
-    onDragLeave: function(){
-      $(".mask").animate({opacity: 0}, 500, "linear", function(){$(".mask").css("display", "none")});
+    onDragLeave: function() {
+      $(".mask").animate({
+        opacity: 0
+      }, 500, "linear", function() {
+        $(".mask").css("display", "none")
+      });
     },
-    onFileTypeError: function(){
+    onFileTypeError: function() {
       alert_popup("danger", "Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
 
     },
@@ -435,35 +482,51 @@ $(document).ready(function() {
         $(this).dmUploader("cancel", id);
     },
     onUploadSuccess: function(id, data) {
-        if (data.indexOf("Erreur:")==0) {
-            $("#errormessage").html(data);
-            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
-        } else if (data.toLowerCase().indexOf("ok")==0) {
-          alert_popup("success", "La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+      if (data.indexOf("Erreur:") == 0) {
+        $("#errormessage").html(data);
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
+      } else if (data.toLowerCase().indexOf("ok") == 0) {
+        alert_popup("success", "La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
 
-        } else {
-          alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+      } else {
+        alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0, data.length - 2));
 
-        }
+      }
     },
     onUploadError: function(id, xhr, status, errorThrown) {
       $("#errormessage").html(errorThrown);
-      $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      $(".submit-error").animate({
+        top: "50px"
+      }, 300, "easeInOutCubic", function() {
+        setTimeout((function() {
+          $(".submit-error").animate({
+            top: "0"
+          }, 300)
+        }), 4000)
+      });
     }
   });
 
   // importer les datas d'un acte CCAM
-  $(".importFromCCAM").on("click", function(e){
+  $(".importFromCCAM").on("click", function(e) {
     e.preventDefault();
-    acteCode=$('.modal input[name="code"]').val();
+    acteCode = $('.modal input[name="code"]').val();
 
-    if(acteCode.length < 1) {
+    if (acteCode.length < 1) {
       alert('Le code inséré n\'est pas un code d\'acte valide !');
       return;
     }
 
     $.ajax({
-      url: urlBase+"/configuration/ajax/extractCcamActeData/",
+      url: urlBase + "/configuration/ajax/extractCcamActeData/",
       type: 'post',
       data: {
         acteType: $('.modal select[name="type"]').val(),
@@ -473,7 +536,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        if(!data.yaml) {
+        if (!data.yaml) {
           alert_popup("danger", data);
           return;
         }
