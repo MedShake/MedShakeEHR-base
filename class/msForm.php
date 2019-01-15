@@ -1099,8 +1099,8 @@ class msForm
     }
 
     $d['paramConditionServiceEvent']=msTools::array_values_multi($d['paramConditionServiceEvent']);
-
-    if(is_array($d['paramConditionServiceEvent'])) {
+    $r='';
+    if(is_array($d['paramConditionServiceEvent']) and !empty($d['code'])) {
       $r="$('#nouvelleCs').on('change','#id_".implode("_id, #id_", $d['paramConditionServiceEvent'])."_id', function() {\n";
       foreach($d['paramConditionServiceEvent'] as $champ) {
         $r.="val".$champ." = '".$champ."@' + $('#id_".$champ."_id').val();\n";
@@ -1108,11 +1108,11 @@ class msForm
       $i=0;
       foreach($d['code'] as $clef=>$v) {
         $vals=explode('|',$clef);
-        $tabChamps=$tabVal=[];
+        $tabChamps=[];
         foreach($vals as $val) {
-          $uval=explode('@',$val);
-          $tabChamps[]=$uval[0];
-          $tabVal[]=$uval[1];
+          if(strpos($val, '@')) {
+            $tabChamps[]=explode('@',$val)[0];
+          }
         }
         $clefc= "val".implode(" + '|' + val",   $tabChamps);
 
