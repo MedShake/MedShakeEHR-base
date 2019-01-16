@@ -29,17 +29,20 @@
 $(document).ready(function() {
   updateListingPatients();
 
+  //focus sur nom
+  $('#d2').focus();
+
   $(".searchupdate").on("keyup", function(e) {
     updateListingPatients();
   });
   $('body').on("click", ".openPatient td:nth-child(-n+6)", function(e) {
-    window.location.href = urlBase+$(this).closest('tr').attr('data-url');
+    window.location.href = urlBase + $(this).closest('tr').attr('data-url');
   });
 
 
   //lire la carte vitale
   $('body').on("click", ".lireCpsVitale", function(e) {
-    btnLec= $(this);
+    btnLec = $(this);
     $.ajax({
       url: urlBase + '/ajax/getCpsVitaleDataRappro/',
       type: 'post',
@@ -82,7 +85,7 @@ $(document).ready(function() {
     e.preventDefault();
     source = $(this);
     $.ajax({
-      url: urlBase+'/patients/ajax/patientsSendSign/',
+      url: urlBase + '/patients/ajax/patientsSendSign/',
       type: 'post',
       data: {
         patientID: $(this).attr('data-patientID'),
@@ -110,11 +113,11 @@ $(document).ready(function() {
     if (confirm("Ce dossier ne sera plus visible et sera marqué comme supprimé.\nIl pourra cependant être restauré si besoin\nSouhaitez-vous poursuivre ? ")) {
       if (confirm("Confirmez-vous le marquage comme supprimé de ce dossier ?")) {
 
-        motif=prompt("Motif de suppression ?");
+        motif = prompt("Motif de suppression ?");
 
         source = $(this);
         $.ajax({
-          url: urlBase+'/patients/ajax/markDeleted/',
+          url: urlBase + '/patients/ajax/markDeleted/',
           type: 'post',
           data: {
             patientID: $(this).attr('data-patientID'),
@@ -161,7 +164,7 @@ $(document).ready(function() {
     e.preventDefault();
     source = $(this);
     $.ajax({
-      url: urlBase+'/patients/ajax/switchPraticienListe/',
+      url: urlBase + '/patients/ajax/switchPraticienListe/',
       type: 'post',
       data: {
         patientID: $(this).attr('data-patientID')
@@ -184,12 +187,12 @@ $(document).ready(function() {
     });
   });
 
-  $('body').on("click", ".extAsPatient", function(e){
+  $('body').on("click", ".extAsPatient", function(e) {
     e.preventDefault();
     var externID = $('.extToNew').attr("data-externid");
     var patientID = $(this).attr("data-patientid");
     $.ajax({
-      url: urlBase+'/people/ajax/setExternAsPatient/',
+      url: urlBase + '/people/ajax/setExternAsPatient/',
       type: 'post',
       data: {
         externID: externID,
@@ -197,7 +200,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        window.location=urlBase+'/patient/'+patientID+'/';
+        window.location = urlBase + '/patient/' + patientID + '/';
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -206,18 +209,18 @@ $(document).ready(function() {
     });
   });
 
-  $('.extToNew').on("click", function(e){
+  $('.extToNew').on("click", function(e) {
     e.preventDefault();
     var externID = $(this).attr("data-externid");
     $.ajax({
-      url: urlBase+'/people/ajax/setExternAsNewPatient/',
+      url: urlBase + '/people/ajax/setExternAsNewPatient/',
       type: 'post',
       data: {
         externID: externID
       },
       dataType: "json",
       success: function(data) {
-        window.location=urlBase+'/patient/edit/'+externID+'/';
+        window.location = urlBase + '/patient/edit/' + externID + '/';
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -233,7 +236,7 @@ $(document).ready(function() {
 function updateListingPatients() {
 
   $.ajax({
-    url: urlBase+'/patients/ajax/patientsListByCrit/',
+    url: urlBase + '/patients/ajax/patientsListByCrit/',
     type: 'post',
     data: {
       porp: $('#listing').attr('data-porp'),
