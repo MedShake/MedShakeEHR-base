@@ -145,7 +145,7 @@
                           <span class="fa fa-pencil-alt" aria-hidden="true"></span>
                         {% endif %}
                       </a>
-                      <button class="delTemplatePDF btn btn-sm" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fa fa-times" aria-hidden="true"></span></button>
+                      <button class="delTemplatePDF btn btn-sm btn-light" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fa fa-times" aria-hidden="true"></span></button>
                     </div>
                   </td>
               </tr>
