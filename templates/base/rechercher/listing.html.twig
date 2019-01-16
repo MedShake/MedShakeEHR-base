@@ -90,7 +90,7 @@
                     <span class="fa fa-link" aria-hidden="true"></span>
                   </a>
                   {% if page.modelesDocASigner|length == 1 %}
-                    <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" data-typeID="{{ page.modelesDocASigner[0]['id'] }}" title="Faire signer {{ page.modelesDocASigner[0]['label']|e('html_attr') }}">
+                    <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ page.modelesDocASigner[0]['id'] }}" title="Faire signer {{ page.modelesDocASigner[0]['label']|e('html_attr') }}">
                       <span class="fa fa-edit" aria-hidden="true"></span>
                     </button>
                   {% elseif page.modelesDocASigner|length > 1 %}
@@ -100,7 +100,7 @@
                       </button>
                       <div class="dropdown-menu dropdown-menu-right">
                         {% for docSign in page.modelesDocASigner %}
-                        <a class="dropdown-item sendSign" href="#" data-patientID="{{ patientIDmod }}" data-typeID="{{ docSign.id }}">{{ docSign.label }}</a>
+                        <a class="dropdown-item sendSign" href="#" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ docSign.id }}">{{ docSign.label }}</a>
                         {% endfor %}
                       </div>
                     </div>
