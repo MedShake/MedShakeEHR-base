@@ -61,7 +61,7 @@
                 </a>
               {% else %}
                 <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Ouvrir le dossier">
-                  <span class="fa fa-folder-open fa-fw" aria-hidden="true"></span>
+                  <span class="fa fa-folder-open fa-fw" aria-hidden="true" {% if loop.index <= 9 %}accesskey="{{ loop.index }}"{% endif %}></span>
                 </a>
               {% endif %}
             {% else %}
