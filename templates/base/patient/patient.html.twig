@@ -34,26 +34,26 @@
     {# Onglets #}
     <ul class="nav nav-tabs gras my-3">
       <li class="nav-item">
-        <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-notes-medical mr-2"></i>Dossier médical</a>
+        <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-notes-medical mr-2"></i>Dossier médical</a>
       </li>
       <li class="nav-item">
-        <a id="ongletBio" class="nav-link" href="#tabBio"data-toggle="tab"><i class="fas fa-chart-line mr-2"></i>Biologie</a>
+        <a id="ongletBio" class="nav-link" href="#tabBio"data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-chart-line mr-2"></i>Biologie</a>
       </li>
       <li class="nav-item">
-        <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-chart-line mr-2"></i>Biométrie</a>
+        <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-chart-line mr-2"></i>Biométrie</a>
       </li>
       {% if config.utiliserLap == 'true' %}
       <li class="nav-item">
-        <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab"><i class="fas fa-pills mr-2"></i>LAP</a>
+        <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-pills mr-2"></i>LAP</a>
       </li>
       {% endif %}
       {% if config.dicomHost != '' %}
         <li class="nav-item">
-          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab"><i class="far fa-images mr-2"></i>Imagerie</a>
+          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="far fa-images mr-2"></i>Imagerie</a>
         </li>
       {% endif %}
       <li class="nav-item">
-        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab"><i class="fas fa-link mr-2"></i>Liens du patient</a>
+        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-link mr-2"></i>Liens du patient</a>
       </li>
     </ul>
 
