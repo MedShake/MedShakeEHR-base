@@ -80,7 +80,7 @@
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
 
-      var patientIdentite = '{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})';
+      var patientIdentite = '{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }} ({{ page.data.patient.dicomPatientID }})';
 
       var dicomPatientID = '{{ page.data.patient.dicomPatientID }}';
 
@@ -98,8 +98,8 @@
             <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm" style="height:100%"><i class="fa fa-sync"></i></button>
           </div>
           <div class="col-11 pl-2 pr-0">
-            Prat.: {{ page.data.prat.2|default(page.data.prat.1) }} {{ page.data.prat.3 }}<br>
-            Patient: <strong>{{ page.data.patient.2|default(page.data.patient.1) }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+            Prat.: {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }}<br>
+            Patient: <strong>{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }}</strong> ({{ page.data.patient.dicomPatientID }})
           </div>
         </div>
         <div class="row">
@@ -126,8 +126,8 @@
         <div class="row mb-2">
           <div class="col-12 p-0">
             <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm"><i class="fa fa-sync"></i></button>
-            Praticien : {{ page.data.prat.2|default(page.data.prat.1) }} {{ page.data.prat.3 }} /
-            Patient : <strong>{{ page.data.patient.2|default(page.data.patient.1) }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+            Praticien : {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }} /
+            Patient : <strong>{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }}</strong> ({{ page.data.patient.dicomPatientID }})
           </div>
         </div>
         <div class="row mb-2">

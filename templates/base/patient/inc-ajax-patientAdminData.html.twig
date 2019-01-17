@@ -77,30 +77,31 @@
 <div style="margin-bottom : 8px;">
     {# email #}
     {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
-      <div class="btn-group">
-        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-at text-muted"></i>
+      <div class="btn-group mr-3">
+        <button type="button" class="btn  btn-sm dropdown-toggle pl-0 pr-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }}
         </button>
 
         <ul class="dropdown-menu">
           <li><a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns"><i class="fas fa-at fa-fw text-muted mr-1"></i> Envoyer un mail</a></li>
           <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/"><i class="fas fa-history fa-fw text-muted mr-1"></i>  Historique des mails envoyés</a></li>
-
         </ul>
       </div>
-
-      -
 
     {% endif %}
 
     {# tel #}
-    {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
-    {% if page['patient']['administrativeDatas']['homePhone']['value'] and page['patient']['administrativeDatas']['mobilePhone']['value'] %}
-      /
+    {% if page['patient']['administrativeDatas']['homePhone']['value']  %}
+      <span class="mr-3"><i class="fas fa-phone text-muted"></i> {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}</span>
     {% endif %}
-    {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
-    -
+
+    {% if page['patient']['administrativeDatas']['mobilePhone']['value']  %}
+      <span class="mr-3"><i class="fas fa-mobile-alt text-muted"></i> {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}</span>
+    {% endif %}
+
     {# adresse #}
+    {% if page['patient']['administrativeDatas']['city']['value'] %}<i class="fas fa-home text-muted"></i>{% endif %}
     {{ page['patient']['administrativeDatas']['streetNumber']['value']|e }}
     {{ page['patient']['administrativeDatas']['street']['value']|e }}
     {{ page['patient']['administrativeDatas']['postalCodePerso']['value']|e }}
