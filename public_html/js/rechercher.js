@@ -26,19 +26,41 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
+
 $(document).ready(function() {
   updateListingPatients();
 
   //focus sur nom
   $('#d2').focus();
 
-  $(".searchupdate").on("keyup", function(e) {
-    updateListingPatients();
+  // navigation au clavier
+  var listingRow = 0;
+  $(".searchupdate").on("keypress", function(e) {
+    console.log(e.which);
+    if (e.keyCode != 13 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40) {
+      updateListingPatients();
+      listingRow = 0;
+    }
   });
+
+  $(document).on("keydown", function(e) {
+    if (e.keyCode == 40) { //down
+      listingRow++;
+      if (listingRow + 1 > $('#listing table tbody tr').length) listingRow = $('#listing table tbody tr').length - 1;
+      selectListingRow(listingRow);
+    } else if (e.keyCode == 38) { //up
+      listingRow--;
+      if (listingRow < 0) listingRow = 0;
+      selectListingRow(listingRow);
+    } else if (e.keyCode == 13) { //enter
+      $('#listing table tbody tr').eq(listingRow).find("a.ouvrirDossier").click();
+    }
+  });
+
+  // clic sur ligne
   $('body').on("click", ".openPatient td:nth-child(-n+6)", function(e) {
     window.location.href = urlBase + $(this).closest('tr').attr('data-url');
   });
-
 
   //lire la carte vitale
   $('body').on("click", ".lireCpsVitale", function(e) {
@@ -232,9 +254,21 @@ $(document).ready(function() {
 
 });
 
+/**
+ * Changer le style d'une ligne du listing patient
+ * @param  {int} listingRow index de la ligne
+ * @return {void}
+ */
+function selectListingRow(listingRow) {
+  $('#listing table tbody tr').removeClass('table-active');
+  $('#listing table tbody tr').eq(listingRow).addClass('table-active');
+}
 
+/**
+ * Obtenir le listing patient
+ * @return {void}
+ */
 function updateListingPatients() {
-
   $.ajax({
     url: urlBase + '/patients/ajax/patientsListByCrit/',
     type: 'post',
@@ -248,6 +282,8 @@ function updateListingPatients() {
     dataType: "html",
     success: function(data) {
       $('#listing').html(data);
+      listingRow = 0;
+      selectListingRow(listingRow);
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
