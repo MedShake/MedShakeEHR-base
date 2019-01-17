@@ -56,10 +56,20 @@ class msPeople
  */
     private $_birthdate;
 /**
+ * data administratives
+ * @var array
+ */
+    private $_administrativesDatas;
+/**
  * age du patient à différent format
  * @var array
  */
     private $_ageFormats;
+/**
+ * age du patient au décès
+ * @var array
+ */
+    private $_deathAgeFormats;
 
 /**
  * Définir l'individu concerné
@@ -180,7 +190,7 @@ class msPeople
               $tab[$v['typeID']]=$v;
               $tab[$v['name']]=$v;
           }
-          return $tab;
+          return $this->_administrativesDatas=$tab;
         }
 
 
@@ -597,6 +607,66 @@ class msPeople
     {
       if(isset($this->_ageFormats['ageDisplay'])) return $this->_ageFormats['ageDisplay'];
       else return $this->getAgeFormats()['ageDisplay'];
+    }
+
+/**
+ * Calcul de l'age de décès du patient
+ * @return array array de l'age au différents formats
+ */
+    public function getDeathAge() {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if(isset($this->_birthdate)) {
+        $birthdate=$this->_birthdate;
+      } else {
+        $typeID=msData::getTypeIDFromName('birthdate');
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+      }
+
+      if(isset($this->_administrativesDatas['deathdate'])) {
+        $deathdate=$this->_administrativesDatas['deathdate']['value'];
+      } else {
+        $typeID=msData::getTypeIDFromName('deathdate');
+        $deathdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+      }
+
+      if (isset($birthdate, $deathdate)) {
+
+          // age à aficher
+          $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->y;
+          $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->m;
+          $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->d;
+          if ($annees>=3) {
+            $ageDisplay = $annees.' ans';
+          } elseif (($annees*12+$mois)>=3){
+            $ageDisplay = ($annees*12+$mois).' mois';
+          } elseif (((30*$mois+$jours)/7)>=2){
+            $ageDisplay = round((30*$mois+$jours)/7).' semaines';
+          } else {
+            $ageDisplay = $jours.' jours';
+          }
+
+          // différences
+          $dtNaissance = DateTime::createFromFormat('d/m/Y', $birthdate);
+          $dtDeath = DateTime::createFromFormat('d/m/Y', $deathdate);
+          $interval = $dtNaissance->diff($dtDeath);
+
+          return $this->_deathAgeFormats = array(
+            'birthdate'=>$birthdate,
+            'ageDisplay'=>$ageDisplay,
+            'ageTotalDays'=>$interval->format('%a'),
+            'ageTotalYears'=>$interval->format('%y'),
+            'ageTotalMonths'=>$interval->m + 12*$interval->y,
+            'ageComposantes'=>array(
+              'y'=>$interval->format('%y'),
+              'm'=>$interval->format('%m'),
+              'd'=>$interval->format('%d')
+            )
+          );
+        }
+
     }
 
 /**

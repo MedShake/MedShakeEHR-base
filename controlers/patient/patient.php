@@ -48,6 +48,9 @@ if ($externe=$patient->isExterne() and
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
 $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
+  $p['page']['patient']['administrativeDatas']['deathAge']=$patient->getDeathAge();
+}
 
 //cas où le patient est externe et sans relation connue
 if ($externe and !$internePatient) {

@@ -35,6 +35,9 @@ $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
 $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
+  $p['page']['patient']['administrativeDatas']['deathAge']=$patient->getDeathAge();
+}
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();

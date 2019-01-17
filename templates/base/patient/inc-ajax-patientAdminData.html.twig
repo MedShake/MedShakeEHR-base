@@ -50,6 +50,8 @@
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
         {# date décès #}
         {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
+        - <i class="fas fa-cross fa-xs"></i>
+        <span title="{{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['deathAge']['ageDisplay']|e }}</span>
       {% else %}
         {# age #}
         <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
