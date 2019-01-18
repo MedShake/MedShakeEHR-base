@@ -622,19 +622,19 @@ class msPeople
         $birthdate=$this->_birthdate;
       } else {
         $typeID=msData::getTypeIDFromName('birthdate');
-        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
       }
 
       if(isset($this->_administrativesDatas['deathdate'])) {
         $deathdate=$this->_administrativesDatas['deathdate']['value'];
       } else {
         $typeID=msData::getTypeIDFromName('deathdate');
-        $deathdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+        $deathdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
       }
 
-      if (isset($birthdate, $deathdate)) {
+      if (msTools::validateDate($birthdate, 'd/m/Y') and msTools::validateDate($deathdate, 'd/m/Y') ) {
 
-          // age à aficher
+          // age à afficher
           $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->y;
           $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->m;
           $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->d;
@@ -665,6 +665,8 @@ class msPeople
               'd'=>$interval->format('%d')
             )
           );
+        } else {
+          return false;
         }
 
     }
@@ -687,12 +689,12 @@ class msPeople
         $birthdate=$this->_birthdate;
       } else {
         $typeID=msData::getTypeIDFromName('birthdate');
-        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
       }
 
-      if (isset($birthdate)) {
+      if (msTools::validateDate($birthdate, 'd/m/Y')) {
 
-          // age à aficher
+          // age à afficher
           $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
           $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
           $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
