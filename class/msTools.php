@@ -152,6 +152,7 @@ class msTools
  */
   public static function validateDate($date, $format = 'd/m/Y H:i:s')
   {
+      if(!is_string($date)) return false;
       $d = DateTime::createFromFormat($format, $date);
       return $d && $d->format($format) == $date;
   }
