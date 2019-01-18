@@ -1,0 +1,9 @@
+$blue: darken(#428bca, 6.5%);
+$indigo: #5bc0de;
+$red: #d9534f;
+$yellow: #f0ad4e;
+$green: #5cb85c;
+
+$yiq-contrasted-threshold: 160;
+
+@import "../thirdparty/twbs/bootstrap/scss/bootstrap";
