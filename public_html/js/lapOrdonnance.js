@@ -873,9 +873,9 @@ function makeLigneOrdo(data, mode) {
     }
     if (mode != 'voirPrescriptionType') {
       if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
-        retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+        retour += ' <small class="font-weight-normal"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
       } else {
-        retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
+        retour += ' <small class="font-weight-normal"> - le ' + data.ligneData.dateDebutPrise + '</small>';
       }
     }
     retour += '    </div>';
