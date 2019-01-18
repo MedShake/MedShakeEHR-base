@@ -42,6 +42,20 @@ if (!isset($_POST['actAsAjax'])) {
 $form = new msForm();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
+if ($match['params']['porp']=='pro' and !$actAsAjax) {
+
+  //si jeux de valeurs normées présents
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+    $optionsInject['p_PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+  }
+
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+    $optionsInject['p_PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+  }
+  if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
+}
 $validation=$form->getValidation();
 
 
