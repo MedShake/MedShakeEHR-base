@@ -726,6 +726,8 @@ class msForm
                         $type['preValue']=$this->_prevalues[$type['id']];
                     } elseif (isset($this->_prevalues[$type['name']])) {
                         $type['preValue']=$this->_prevalues[$type['name']];
+                    } elseif (isset($this->_prevalues[$type['internalName']])) {
+                        $type['preValue']=$this->_prevalues[$type['internalName']];
                     } else {
                         $type['preValue']='noPreValue';
                     }
