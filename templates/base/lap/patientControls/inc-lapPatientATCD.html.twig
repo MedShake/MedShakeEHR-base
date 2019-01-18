@@ -35,7 +35,7 @@
         <tbody>
           {% for atcdId, atc in atcd.atcd %}
             {% if atc.atcdStrucCIM10InLap.value != 'n' %}
-              <tr class="tr{{ atcdId }} table-secondary">
+              <tr class="tr{{ atcdId }} table-gray">
                 <td data-toggle="collapse" data-target="#atcdDet{{ atcdId }}lap" style="cursor: pointer">
                   {{ atc.atcdStrucCIM10Label.value }}
                   <div id="atcdDet{{ atcdId }}lap" class="collapse">

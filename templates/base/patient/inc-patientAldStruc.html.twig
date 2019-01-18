@@ -30,7 +30,7 @@
 <label>ALD</label>
 <table class="table table-sm table-hover table-bordered"><tbody>
 {% for aldId, ald in page.patient.ALD %}
-  <tr class="tr{{ aldId }} table-active small">
+  <tr class="tr{{ aldId }} table-gray small">
     <td data-toggle="collapse" data-target="#aldDet{{ aldId }}" style="cursor: pointer">
     {{ ald.aldLabel }}
 

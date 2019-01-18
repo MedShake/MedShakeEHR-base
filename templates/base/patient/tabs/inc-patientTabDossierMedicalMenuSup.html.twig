@@ -29,18 +29,18 @@
 <div class="row">
  <div class="col pl-0">
    {% if config.utiliserLap == 'true' %}
-     <div class="btn-group border rounded mr-2">
-       <button type="button" class="btn btn-light text-dark openLAP" title="Ordonnance médicamenteuse via LAP"><i class="fas fa-pills fa-lg fa-fw"></i></button>
-       <button type="button" class="btn btn-light text-dark addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Autres prescriptions"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
+     <div class="btn-group mr-2">
+       <button type="button" class="btn btn-primary openLAP" title="Ordonnance médicamenteuse via LAP"><i class="fas fa-pills fa-lg fa-fw"></i></button>
+       <button type="button" class="btn btn-primary addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Autres prescriptions"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
      </div>
    {% else %}
-     <div class="btn-group border rounded mr-2">
-       <button type="button" class="btn btn-light text-dark addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Ordonnance"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
+     <div class="btn-group mr-2">
+       <button type="button" class="btn btn-primary addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Ordonnance"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
      </div>
    {% endif %}
 
-    <div class="btn-group border rounded mr-2">
-        <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Courriers &amp; Certificats">
+    <div class="btn-group mr-2">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Courriers &amp; Certificats">
             <i class="fas fa-file-signature fa-lg fa-fw"></i>
         </button>
         <div class="dropdown-menu">
@@ -64,8 +64,8 @@
     </div>
 
     {% if page.formReglement|length > 1 %}
-      <div class="btn-group border rounded mr-2">
-        <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="Règlements">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="Règlements">
             <i class="fas fa-euro-sign fa-lg fa-fw"></i>
         </button>
         <div class="dropdown-menu">
@@ -75,24 +75,24 @@
         </div>
       </div>
     {% else %}
-      <a class="addNewReglement btn btn-light text-dark  mr-2 border rounded" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
+      <a class="addNewReglement btn btn-primary mr-2" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
     {% endif %}
 
     {% if page.patient.ALD is empty %}
-      <button class="btn btn-light text-dark addNewCS mr-2 border rounded" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create" title="Saisir une ALD"><i class="fas fa-plus fa-sm fa-fw"></i> ALD</button>
+      <button class="btn btn-outline-primary addNewCS mr-2" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create" title="Saisir une ALD"><i class="fas fa-plus fa-sm fa-fw"></i> ALD</button>
     {% endif %}
 
-    <div class="mx-4 d-inline-block">&nbsp;</div>
+    <div class="mx-3 d-inline-block">&nbsp;</div>
 
     {% if config.dicomHost!='' %}
-      <div class="btn-group border rounded mr-2">
-          <button class="btn btn-light text-dark prepareReceptionDoc dicom" title="Acquisition de photos pour ce patient via phonecapture">
+      <div class="btn-group mr-2">
+          <button class="btn btn-secondary prepareReceptionDoc dicom" title="Acquisition de photos pour ce patient via phonecapture">
             <i class="fas fa-mobile-alt fa-lg fa-fw"></i>
           </button>
-          <button type="button" class="btn btn-light text-dark catchLastDicomSrData" aria-haspopup="true" aria-expanded="false" title="Récupérer dernières mesures">
+          <button type="button" class="btn btn-secondary catchLastDicomSrData" aria-haspopup="true" aria-expanded="false" title="Récupérer dernières mesures">
             <i class="fas fa-ruler fa-lg fa-fw"></i>
           </button>
-          <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="DICOM">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="DICOM">
               <i class="far fa-images fa-lg fa-fw"></i>
           </button>
           <div class="dropdown-menu">
@@ -103,13 +103,15 @@
             <a href="#" class="dropdown-item prepareReceptionDoc dicom">Envoyer patient à phonecapture</a>
           </div>
       </div>
+
+      <div class="mx-3 d-inline-block">&nbsp;</div>
     {% endif %}
 
-    <div class="btn-group border rounded mr-2">
-      <button type="button" id="linkAddNewDoc" class="btn btn-light text-dark" aria-haspopup="true" aria-expanded="false" title="Glisser un document dans le dossier">
+    <div class="btn-group mr-2">
+      <button type="button" id="linkAddNewDoc" class="btn btn-secondary" aria-haspopup="true" aria-expanded="false" title="Glisser un document dans le dossier">
         <i class="fas fa-file-download fa-lg "></i>
       </button>
-      <button type="button" class="btn btn-light text-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="sr-only">Document</span>
       </button>
       <div class="dropdown-menu">

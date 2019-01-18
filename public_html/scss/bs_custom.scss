@@ -1,9 +1,17 @@
 $blue: darken(#428bca, 6.5%);
 $indigo: #5bc0de;
 $red: #d9534f;
+$orange: #f0ad4e;
 $yellow: #f0ad4e;
 $green: #5cb85c;
 
-$yiq-contrasted-threshold: 160;
+$light: lighten(#000000, 96%);
+
+$theme-colors: (
+  "orange": $orange,
+  "gray": lighten(#000000, 79%),
+);
+
+$yiq-contrasted-threshold: 183;
 
 @import "../thirdparty/twbs/bootstrap/scss/bootstrap";
