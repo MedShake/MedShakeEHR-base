@@ -349,7 +349,8 @@ $(document).ready(function() {
     });
   });
 
-  $("#patientPhonecapture button").on("click", function() {
+  $("#patientPhonecapture #patientPhonecaptureEndButton").on("click", function() {
+    $('#patientPhonecapture').modal('toggle');
     if (goToDicom) {
       $('#ongletDicom')[0].click();
       if ($('#tabDicom').html() != '') {

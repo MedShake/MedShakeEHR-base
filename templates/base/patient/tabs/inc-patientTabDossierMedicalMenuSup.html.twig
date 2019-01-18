@@ -27,112 +27,96 @@
  #}
 
 <div class="row">
-  <div class="col pl-0">
-    {% if page.formOrdo|length > 1 %}
-      <div class="btn-group mr-1 my-1">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Ordonnances
-        </button>
-        <ul class="dropdown-menu">
-          {% for v in page.formOrdo %}
-            <li>
-                <a class="dropdown-item addNewOrdo" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-ordoForm="{{ v.formValues }}" href="#">{{ v.label }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% else %}
-      <a class="addNewOrdo btn btn-secondary m-1" type="button" title="{{ page.formOrdo[0]['description'] }}" data-porteur="{{ page.formOrdo[0]['id'] }}" data-module="{{ page.formOrdo[0]['module'] }}" data-ordoForm="{{ page.formOrdo[0]['formValues'] }}" href="#">{{ page.formOrdo[0]['label'] }}</a>
-    {% endif %}
+ <div class="col pl-0">
+   {% if config.utiliserLap == 'true' %}
+     <div class="btn-group border rounded mr-2">
+       <button type="button" class="btn btn-light text-dark openLAP" title="Ordonnance médicamenteuse via LAP"><i class="fas fa-pills fa-lg fa-fw"></i></button>
+       <button type="button" class="btn btn-light text-dark addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Autres prescriptions"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
+     </div>
+   {% else %}
+     <div class="btn-group border rounded mr-2">
+       <button type="button" class="btn btn-light text-dark addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Ordonnance"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
+     </div>
+   {% endif %}
 
-    <div class="btn-group m-1">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Courriers &amp; Certificats
+    <div class="btn-group border rounded mr-2">
+        <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Courriers &amp; Certificats">
+            <i class="fas fa-file-signature fa-lg fa-fw"></i>
         </button>
-        <ul class="dropdown-menu">
-            <li class="dropdown-header">Certificats</li>
+        <div class="dropdown-menu">
+            <div class="dropdown-header">Certificats</div>
             {% for v in page.modelesCertif %}
-                <li>
-                    <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
-                </li>
+                <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
             {% endfor %}
-            <li role="separator" class="dropdown-divider"></li>
-            <li class="dropdown-header">Courriers</li>
+            <div role="separator" class="dropdown-divider"></div>
+            <div class="dropdown-header">Courriers</div>
             {% for v in page.modelesCourrier %}
-                <li>
-                    <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
-                </li>
+                <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
             {% endfor %}
             {% if page.modelesDocASigner|length > 0 %}
-              <li role="separator" class="dropdown-divider"></li>
-              <li class="dropdown-header">Documents à signer</li>
+              <div role="separator" class="dropdown-divider"></div>
+              <div class="dropdown-header">Documents à signer</div>
               {% for v in page.modelesDocASigner %}
-                  <li>
-                      <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
-                  </li>
+                  <a class="dropdown-item newCourrier" data-modele="{{ v.name }}" href="#">{{ v.label }}</a>
               {% endfor %}
             {% endif %}
-        </ul>
+        </div>
     </div>
 
     {% if page.formReglement|length > 1 %}
-      <div class="btn-group m-1">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %}>
-            Règlements
+      <div class="btn-group border rounded mr-2">
+        <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="Règlements">
+            <i class="fas fa-euro-sign fa-lg fa-fw"></i>
         </button>
-        <ul class="dropdown-menu">
+        <div class="dropdown-menu">
           {% for v in page.formReglement %}
-            <li>
-              <a class="dropdown-item addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.description }}</a>
-            </li>
+            <a class="dropdown-item addNewReglement" title="{{ v.description }}" data-porteur="{{ v.id }}" data-module="{{ v.module }}" data-reglementForm="{{ v.formValues }}" href="#">{{ v.description }}</a>
           {% endfor %}
-        </ul>
+        </div>
       </div>
     {% else %}
-      <a class="addNewReglement btn btn-secondary m-1" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} title="{{ page.formReglement[0]['description'] }}" data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#">Règlement</a>
-    {% endif %}
-
-    <div class="btn-group m-1">
-        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Document
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" id="linkAddNewDoc" href="#">Ajouter un document au dossier</a>
-            </li>
-            {% if config.dicomHost=='' %}
-              <li>
-                  <a class="dropdown-item prepareReceptionDoc" href="#">Ajouter des documents au dossier via phonecapture</a>
-              </li>
-            {% endif %}
-        </ul>
-    </div>
-
-    {% if config.dicomHost!='' %}
-      <div class="btn-group m-1">
-          <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              DICOM
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-                <a href="#" class="catchLastDicomSrData dropdown-item">Récupérer dernières mesures</a>
-            </li>
-            <li>
-                <a href="#" class="catchOthersDicomSrData dropdown-item">Récupérer mesures antérieures</a>
-            </li>
-            <div role="separator" class="dropdown-divider"></div>
-            <li>
-                <a href="#" class="dropdown-item prepareEcho" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">Envoyer patient à l'appareil</a>
-            </li>
-            <li>
-                <a href="#" class="dropdown-item prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via Phonecapture">Envoyer patient à phonecapture</a>
-            </li>
-          </ul>
-      </div>
+      <a class="addNewReglement btn btn-light text-dark  mr-2 border rounded" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
     {% endif %}
 
     {% if page.patient.ALD is empty %}
-      <button class="btn btn-secondary m-1 addNewCS" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create">Saisir une ALD</button>
+      <button class="btn btn-light text-dark addNewCS mr-2 border rounded" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create" title="Saisir une ALD"><i class="fas fa-plus fa-sm fa-fw"></i> ALD</button>
     {% endif %}
+
+    <div class="mx-4 d-inline-block">&nbsp;</div>
+
+    {% if config.dicomHost!='' %}
+      <div class="btn-group border rounded mr-2">
+          <button class="btn btn-light text-dark prepareReceptionDoc dicom" title="Acquisition de photos pour ce patient via phonecapture">
+            <i class="fas fa-mobile-alt fa-lg fa-fw"></i>
+          </button>
+          <button type="button" class="btn btn-light text-dark catchLastDicomSrData" aria-haspopup="true" aria-expanded="false" title="Récupérer dernières mesures">
+            <i class="fas fa-ruler fa-lg fa-fw"></i>
+          </button>
+          <button type="button" class="btn btn-light text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="DICOM">
+              <i class="far fa-images fa-lg fa-fw"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#" class="catchLastDicomSrData dropdown-item">Récupérer dernières mesures</a>
+            <a href="#" class="catchOthersDicomSrData dropdown-item">Récupérer mesures antérieures</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item prepareEcho">Envoyer patient à échographe</a>
+            <a href="#" class="dropdown-item prepareReceptionDoc dicom">Envoyer patient à phonecapture</a>
+          </div>
+      </div>
+    {% endif %}
+
+    <div class="btn-group border rounded mr-2">
+      <button type="button" id="linkAddNewDoc" class="btn btn-light text-dark" aria-haspopup="true" aria-expanded="false" title="Glisser un document dans le dossier">
+        <i class="fas fa-file-download fa-lg "></i>
+      </button>
+      <button type="button" class="btn btn-light text-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only">Document</span>
+      </button>
+      <div class="dropdown-menu">
+          <a class="dropdown-item" id="linkAddNewDoc" href="#"><i class="fas fa-file-download fa-fw text-muted mr-1"></i> Glisser un document dans le dossier</a>
+          <a class="dropdown-item prepareReceptionDoc" href="#"><i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Ajouter un document au dossier via phonecapture</a>
+      </div>
+    </div>
+
   </div>
 </div>
