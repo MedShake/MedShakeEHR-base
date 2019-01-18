@@ -37,12 +37,12 @@
 {% endblock %}
 
 {% block body %}
-  <h1 class="bottom-space">Historique rappels mail pour les consultations du
+  <h1 class="mb-4">Historique rappels mail pour les consultations du
     {{ page.dates.rdv|date("d/m/Y") }}</h1>
 
   <div class="container-fluid">
 
-    <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline bottom-space">
+    <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline mb-4">
 
       <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
         <span class="fa fa-chevron-left" aria-hidden="true"></span>
