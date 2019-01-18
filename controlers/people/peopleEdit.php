@@ -42,7 +42,7 @@ if ($p['page']['porp']=='patient') {
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
+$p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
 
 $formpatient = new msForm();

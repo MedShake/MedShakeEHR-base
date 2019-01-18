@@ -43,24 +43,25 @@
 {% endif %}
 
 <h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
-  {% if page.proData.51 %}{{ page.proData.51 }}
+  {% if page.proData.titre %}{{ page.proData.titre }}
   {% endif %}
-  {{ page.proData.3 }}
-  {% if page.proData.2 and page.proData.1 %}
-    {{ page.proData.2 }} <small>(né{% if page.proData.14 == 'F' %}e{% endif %} {{ page.proData.1 }})</small>
-  {% elseif page.proData.2 %}
-    {{ page.proData.2 }}
+  {{ page.proData.firstname }}
+  {% if page.proData.lastname and page.proData.birthname %}
+    {{ page.proData.lastname }} <small>(né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})</small>
+  {% elseif page.proData.lastname %}
+    {{ page.proData.lastname }}
   {% else %}
-    {{ page.proData.1 }}
+    {{ page.proData.birthname }}
   {% endif %}
-   <small>{{ page.proData.19 }}</small>
+   <small>{{ page.proData.job }}</small>
 </h1>
 
-  <div class="row mb-4">
-
+  <div class="row mt-3">
       <div class="col-md-6">
             <div class="card">
-              <div class="card-header font-weight-bold">Informations professionnelles</div>
+              <div class="card-header font-weight-bold">
+                <i class="fas fa-user-md fa-fw fa-lg text-danger"></i>
+                Informations professionnelles</div>
               <div class="card-body">
                 <p>Informations professionnelles sur ce praticien
                   <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
@@ -70,37 +71,37 @@
               </div>
 
               <table class="table table-sm mb-0 table-hover ">
-                {% if page.proData.249 or page.proData.250 %}<tr><td>
-                  {% if  page.proData.249 %}{{ page.proDataLabel.249 }}{% endif %}
-                  {% if page.proData.249 and page.proData.250 %} - {% endif %}
-                  {% if  page.proData.250 %}{{ page.proDataLabel.250 }}{% endif %}
+                {% if page.proData.serviceAdressePro or page.proData.etablissementAdressePro %}<tr><td>
+                  {% if  page.proData.serviceAdressePro %}{{ page.proDataLabel.serviceAdressePro }}{% endif %}
+                  {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
+                  {% if  page.proData.etablissementAdressePro %}{{ page.proDataLabel.etablissementAdressePro }}{% endif %}
                   <td><td>
-                  {% if  page.proData.249 %}{{ page.proData.249 }} {% endif %}
-                  {% if page.proData.249 and page.proData.250 %} - {% endif %}
-                  {% if  page.proData.250 %}{{ page.proData.250 }}{% endif %}
+                  {% if  page.proData.serviceAdressePro %}{{ page.proData.serviceAdressePro }} {% endif %}
+                  {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
+                  {% if  page.proData.etablissementAdressePro %}{{ page.proData.etablissementAdressePro }}{% endif %}
                 </td></tr>{% endif %} {# service / etablissement #}
-                {% if page.proData.54 or page.proData.55 or page.proData.53 or page.proData.56 %}<tr><td>Adresse professionnelle<td><td>
-                  {% if  page.proData.54 %}{{ page.proData.54 }} {% endif %}
-                  {% if  page.proData.55 %}{{ page.proData.55 }} {% endif %}
-                  {% if  page.proData.53 %}{{ page.proData.53 }} {% endif %}
-                  {% if  page.proData.56 %}{{ page.proData.56 }}{% endif %}
+                {% if page.proData.numAdressePro or page.proData.rueAdressePro or page.proData.codePostalPro or page.proData.villeAdressePro %}<tr><td>Adresse professionnelle<td><td>
+                  {% if  page.proData.numAdressePro %}{{ page.proData.numAdressePro }} {% endif %}
+                  {% if  page.proData.rueAdressePro %}{{ page.proData.rueAdressePro }} {% endif %}
+                  {% if  page.proData.codePostalPro %}{{ page.proData.codePostalPro }} {% endif %}
+                  {% if  page.proData.villeAdressePro %}{{ page.proData.villeAdressePro }}{% endif %}
                 </td></tr>{% endif %} {# Adresse pro #}
-                {% if page.proData.57 %}<tr><td>{{ page.proDataLabel.57 }}<td><td>{{ page.proData.57 }}</td></tr>{% endif %} {# tel pro #}
-                {% if page.proData.248 %}<tr><td>{{ page.proDataLabel.248 }}<td><td>{{ page.proData.248 }}</td></tr>{% endif %} {# tel pro #}
-                {% if page.proData.247 %}<tr><td>{{ page.proDataLabel.247 }}<td><td>{{ page.proData.247 }}</td></tr>{% endif %} {# tel mob pro #}
-                {% if page.proData.58 %}<tr><td>{{ page.proDataLabel.58 }}<td><td>{{ page.proData.58 }}</td></tr>{% endif %} {# fax pro #}
-                {% if page.proData.59 %}<tr><td>{{ page.proDataLabel.59 }}<td><td>{{ page.proData.59 }}</td></tr>{% endif %} {# email apicrypt #}
-                {% if page.proData.5 %}<tr><td>{{ page.proDataLabel.5 }}<td><td>{{ page.proData.5 }}</td></tr>{% endif %} {# email pro #}
-                {% if page.proData.443 %}<tr><td>{{ page.proDataLabel.443 }}<td><td>{{ page.proData.443|nl2br }}</td></tr>{% endif %} {# notes pros #}
+                {% if page.proData.telPro %}<tr><td>{{ page.proDataLabel.telPro }}<td><td>{{ page.proData.telPro }}</td></tr>{% endif %} {# tel pro #}
+                {% if page.proData.telPro2 %}<tr><td>{{ page.proDataLabel.telPro2 }}<td><td>{{ page.proData.telPro2 }}</td></tr>{% endif %} {# tel pro #}
+                {% if page.proData.mobilePhonePro %}<tr><td>{{ page.proDataLabel.mobilePhonePro }}<td><td>{{ page.proData.mobilePhonePro }}</td></tr>{% endif %} {# tel mob pro #}
+                {% if page.proData.faxPro %}<tr><td>{{ page.proDataLabel.faxPro }}<td><td>{{ page.proData.faxPro }}</td></tr>{% endif %} {# fax pro #}
+                {% if page.proData.emailApicrypt %}<tr><td>{{ page.proDataLabel.emailApicrypt }}<td><td>{{ page.proData.emailApicrypt }}</td></tr>{% endif %} {# email apicrypt #}
+                {% if page.proData.profesionnalEmail %}<tr><td>{{ page.proDataLabel.profesionnalEmail }}<td><td>{{ page.proData.profesionnalEmail }}</td></tr>{% endif %} {# email pro #}
+                {% if page.proData.notesPro %}<tr><td>{{ page.proDataLabel.notesPro }}<td><td>{{ page.proData.notesPro|nl2br }}</td></tr>{% endif %} {# notes pros #}
               </table>
 
               <div class="card-footer">&nbsp;</div>
             </div>
             {% if page.patientsConnus %}
               <div class="card mt-4 px-0 col-md-12">
-                <div class="card-header font-weight-bold">Patients connus</div>
+                <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-muted"></i> Patients connus</div>
                 <div class="card-body">
-                  <p>Patients reliés à ce praticien</p>
+                  Patients reliés à ce praticien
                 </div>
 
                 <table class="table table-sm mb-0 table-striped table-hover">
@@ -115,13 +116,11 @@
                     {% for v in page.patientsConnus %}
                     <tr style="cursor:pointer" onclick="window.location=$(this).find('a').attr('href');">
                       <td>
-                        <a title="Afficher le dossier" class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
+                        <a title="Afficher le dossier" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fa fa-folder-open" aria-hidden="true"></span></a>
                       </td>
                       <td>{{ v.nom }} {{ v.prenom }}</td>
                       <td class="text-right">
-                        <div class="btn-group">
-                          <a title="Éditer les relations du patient" class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
-                        </div>
+                        <a title="Éditer les relations du patient" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fa fa-link" aria-hidden="true"></span></a>
                       </td>
 
                     </tr>
@@ -138,7 +137,7 @@
     {% if config.PraticienPeutEtrePatient == 'true' %}
       <div class="col-md-6 mt-4 mt-md-0">
             <div class="card">
-              <div class="card-header font-weight-bold">Informations personnelles</div>
+              <div class="card-header font-weight-bold"><i class="fas fa-user fa-fw fa-lg text-primary"></i> Informations personnelles</div>
               <div class="card-body">
                 <p>Informations personnelles sur ce praticien
                   <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
@@ -148,17 +147,17 @@
               </div>
 
               <table class="table table-sm mb-0 table-hover ">
-                {% if page.proData.8 %}<tr><td>{{ page.proDataLabel.8 }}<td><td>{{ page.proData.8 }}</td></tr>{% endif %} {# ddn #}
-                {% if page.proData.9 or page.proData.11 or page.proData.13 or page.proData.12 %}<tr><td>Adresse personnelle<td><td>
-                  {% if  page.proData.9 %}{{ page.proData.9 }} {% endif %}
-                  {% if  page.proData.11 %}{{ page.proData.11 }} {% endif %}
-                  {% if  page.proData.13 %}{{ page.proData.13 }} {% endif %}
-                  {% if  page.proData.12 %}{{ page.proData.12 }}{% endif %}
+                {% if page.proData.birthdate %}<tr><td>{{ page.proDataLabel.birthdate }}<td><td>{{ page.proData.birthdate }}</td></tr>{% endif %} {# ddn #}
+                {% if page.proData.streetNumber or page.proData.street or page.proData.postalCodePerso or page.proData.city %}<tr><td>Adresse personnelle<td><td>
+                  {% if  page.proData.streetNumber %}{{ page.proData.streetNumber }} {% endif %}
+                  {% if  page.proData.street %}{{ page.proData.street }} {% endif %}
+                  {% if  page.proData.postalCodePerso %}{{ page.proData.postalCodePerso }} {% endif %}
+                  {% if  page.proData.city %}{{ page.proData.city }}{% endif %}
                 </td></tr>{% endif %} {# Adresse perso #}
-                {% if page.proData.7 %}<tr><td>{{ page.proDataLabel.7 }}<td><td>{{ page.proData.7 }}</td></tr>{% endif %} {# tel mob perso #}
-                {% if page.proData.10 %}<tr><td>{{ page.proDataLabel.10 }}<td><td>{{ page.proData.10 }}</td></tr>{% endif %} {# tel perso #}
-                {% if page.proData.4 %}<tr><td>{{ page.proDataLabel.4 }}<td><td>{{ page.proData.4 }}</td></tr>{% endif %} {# email perso #}
-                {% if page.proData.21 %}<tr><td>{{ page.proDataLabel.21 }}<td><td>{{ page.proData.21|nl2br }}</td></tr>{% endif %} {# notes perso #}
+                {% if page.proData.mobilePhone %}<tr><td>{{ page.proDataLabel.mobilePhone }}<td><td>{{ page.proData.mobilePhone }}</td></tr>{% endif %} {# tel mob perso #}
+                {% if page.proData.homePhone %}<tr><td>{{ page.proDataLabel.homePhone }}<td><td>{{ page.proData.homePhone }}</td></tr>{% endif %} {# tel perso #}
+                {% if page.proData.personalEmail %}<tr><td>{{ page.proDataLabel.personalEmail }}<td><td>{{ page.proData.personalEmail }}</td></tr>{% endif %} {# email perso #}
+                {% if page.proData.notes %}<tr><td>{{ page.proDataLabel.notes }}<td><td>{{ page.proData.notes|nl2br }}</td></tr>{% endif %} {# notes perso #}
               </table>
               <div class="card-footer">&nbsp;</div>
             </div>
