@@ -866,7 +866,7 @@ function makeLigneOrdo(data, mode) {
     }
     retour += '>';
     retour += '  <div class="row" style="margin-bottom: 12px">';
-    retour += '    <div class="col-md-11 gras">';
+    retour += '    <div class="col-md-11 font-weight-bold">';
     retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';

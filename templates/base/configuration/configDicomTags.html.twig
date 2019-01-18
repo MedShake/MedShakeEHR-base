@@ -63,7 +63,7 @@
      </tr>
      {% for k,v in page.tags %}
       <tr class="{% if v.0.typeID > 0 or v.1.typeID > 0 %}table-success{% else %}table-warning{% endif %}">
-       <td colspan="6" class="gras">
+       <td colspan="6" class="font-weight-bold">
          {{ k }}&nbsp;&nbsp;&nbsp;&nbsp;{{ v.0.dicomCodeMeaning }}
        </td>
        <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-light btn-sm float-right m-1 reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
@@ -75,7 +75,7 @@
       <tr id="typeID  {{ t.typeID }}">
         <td>&nbsp;
         </td>
-        <td class="gras">
+        <td class="font-weight-bold">
           {{ t.typeID }}
         </td>
         <td>

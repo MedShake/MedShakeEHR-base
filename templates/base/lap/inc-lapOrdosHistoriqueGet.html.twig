@@ -48,7 +48,7 @@
       <tbody>
         {% for mois, v in page.ordos %}
           <tr>
-            <td colspan="4" class="table-primary gras text-center">{{ mois|capitalize }}</td>
+            <td colspan="4" class="table-primary font-weight-bold text-center">{{ mois|capitalize }}</td>
           </tr>
           {% for ordo in v %}
             <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">

@@ -43,7 +43,7 @@ $(document).ready(function() {
   //spécifier manuellement le patientID
   $("#view").on("click", "#specifierPatientIDManu", function(e) {
     e.preventDefault();
-    $("tr.patietSelect").removeClass('table-success gras');
+    $("tr.patietSelect").removeClass('table-success font-weight-bold');
     $("#idConfirmPatientIDLabel").show();
     $("#idConfirmPatientID").attr('type', 'text');
   });
@@ -101,8 +101,8 @@ function viewMail(el) {
 
 
 function selectPatient(el) {
-  $("tr.patietSelect").removeClass('table-success gras');
-  $(el).addClass('table-success gras');
+  $("tr.patietSelect").removeClass('table-success font-weight-bold');
+  $(el).addClass('table-success font-weight-bold');
   patientID = $(el).attr('data-patientID');
   $("#idConfirmPatientID").val(patientID);
   if (patientID > 0) {

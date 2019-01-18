@@ -32,7 +32,7 @@
     <thead>
       <tr>
         <th>
-          <select id="selectAnneeHistoBiometrieCardio" class="custom-select custom-select-sm w-50 gras">
+          <select id="selectAnneeHistoBiometrieCardio" class="custom-select custom-select-sm w-50 font-weight-bold">
             {% for annee in page.distinctYears %}
               <option {% if annee == page.selectedYear %} selected="selected" {% endif %}>{{ annee }}</option>
             {% endfor %}
@@ -46,7 +46,7 @@
     </thead>
     <tbody>
       {% for mois, moisdata in page.histoData %}
-        <tr class="table-primary gras">
+        <tr class="table-primary font-weight-bold">
           <td colspan="5">{{ mois|capitalize }}</td>
         </tr>
         {% for date, datadate in moisdata %}

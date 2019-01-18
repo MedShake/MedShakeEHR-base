@@ -60,7 +60,7 @@
   <table class="table table-sm table-hover">
     <tbody>
       {% for keyTerrain, allergies in aallergies %}
-        <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyTerrain }}">
+        <tr class="danger font-weight-bold" role="button" data-toggle="collapse" data-target=".redon{{ keyTerrain }}">
           <td style="cursor: pointer">
             <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -95,7 +95,7 @@
     <tbody>
       {% for keyRedon, redon in aredondances %}
 
-        <tr class="danger gras" role="button" data-toggle="collapse" data-target=".redon{{ keyRedon }}">
+        <tr class="danger font-weight-bold" role="button" data-toggle="collapse" data-target=".redon{{ keyRedon }}">
           <td style="cursor: pointer">
             <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -122,7 +122,7 @@
   <h3>Alertes posologies</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in aposologies %}
-      <tr class="gras {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
+      <tr class="font-weight-bold {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -153,7 +153,7 @@
   <h3>Contre-indications, précautions d'emploi et mises en garde</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in acipemg %}
-      <tr class="gras {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
+      <tr class="font-weight-bold {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -199,7 +199,7 @@
   <h3>Grossesse et allaitement</h3>
   <table class="table table-sm table-hover">
     {% for ligneThe, alertes in agrossesse %}
-      <tr class="gras {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
+      <tr class="font-weight-bold {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
             <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -308,7 +308,7 @@
       </thead>
 
       {% for kinter, inter in data %}
-        <tr class="gras {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
+        <tr class="font-weight-bold {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
           <td>
             <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %} btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -333,7 +333,7 @@
     <h3>Incompatibilités</h3>
     <table class="table table-sm table-hover">
       {% for niveau, incon in aincompatibilites %}
-        <tr class="gras danger" role="button" data-toggle="collapse" data-target="#incon{{ niveau }}in">
+        <tr class="font-weight-bold danger" role="button" data-toggle="collapse" data-target="#incon{{ niveau }}in">
           <td>
             <button type="button" class="btn btn-danger btn-sm">
               <span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -368,7 +368,7 @@
             </tr>
           </thead>
           {% for c in con %}
-            <tr class="gras {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
+            <tr class="font-weight-bold {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
               <td>
                 {{ c.medicNameUtile }}
               </td>
@@ -387,7 +387,7 @@
             </tr>
           </thead>
           {% for c in con %}
-            <tr class="gras active">
+            <tr class="font-weight-bold active">
               <td>
                 {{ c.medicNameUtile }}
               </td>

@@ -38,7 +38,7 @@
 
             <div id="aldDet{{ aldId }}lap" class="collapse">
               <table class="table table-sm" style="margin-top:8px;">
-                {% if ald.aldCIM10.value is empty %}<tr><td colspan="2" class="gras">L'absence de code CIM10 lié rend impossible la prise en compte de cette ALD dans les analyses des presrciptions !</td></tr>{% endif %}
+                {% if ald.aldCIM10.value is empty %}<tr><td colspan="2" class="font-weight-bold">L'absence de code CIM10 lié rend impossible la prise en compte de cette ALD dans les analyses des presrciptions !</td></tr>{% endif %}
                 <tr>
                   <td>Code CIM 10 lié</td>
                   <td>{% if ald.aldCIM10.value %}{{ ald.aldCIM10.value }}

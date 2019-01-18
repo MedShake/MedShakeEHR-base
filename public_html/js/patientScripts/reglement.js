@@ -263,7 +263,7 @@ function construireLigneTableauActes(index, value) {
   }
 
   //acte
-  tabLigne = '<tr><td class="gras row' + index + '" >' + index + '</td>';
+  tabLigne = '<tr><td class="font-weight-bold row' + index + '" >' + index + '</td>';
   // label
   tabLigne += '<td class="small text-left">' + (value['label'] == null ? '' : value['label']) + '</td>';
   // code asso
@@ -285,7 +285,7 @@ function construireLigneTableauActes(index, value) {
   // dépassement
   tabLigne += '<td class="text-right"><div class="input-group input-group-sm"><input class="form-control text-right add2DepaSum" value="' + value['depassement'] + '"><div class="input-group-append"><span class="input-group-text">€</span></div></div></td>';
   //total ligne
-  tabLigne += '<td class="text-right gras total"><span class="totalLigne">' + value['total'] + '</span>€</td>';
+  tabLigne += '<td class="text-right font-weight-bold total"><span class="totalLigne">' + value['total'] + '</span>€</td>';
   // sup ligne
   tabLigne += '<td class="removeActe text-right"><button class="btn btn-sm btn-light"><i class="far fa-trash-alt"></i></button></td>';
   tabLigne += '</tr>';

@@ -55,7 +55,7 @@
 
             {% if dataFiche.2 is not empty %}
             <tr>
-              <td class="gras">Observations</td>
+              <td class="font-weight-bold">Observations</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.2 %}
@@ -78,7 +78,7 @@
 
             {% if dataFiche.5 is not empty %}
             <tr>
-              <td class="gras">Circonstances favorisantes</td>
+              <td class="font-weight-bold">Circonstances favorisantes</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.5 %}
@@ -91,7 +91,7 @@
 
             {% if dataFiche.4 is not empty %}
             <tr>
-              <td class="gras">Risque humain</td>
+              <td class="font-weight-bold">Risque humain</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.4 %}
@@ -111,7 +111,7 @@
 
             {% if dataFiche.9 is not empty %}
             <tr>
-              <td class="gras">Période critique</td>
+              <td class="font-weight-bold">Période critique</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.9 %}
@@ -124,7 +124,7 @@
 
             {% if dataFiche.6 is not empty %}
             <tr>
-              <td class="gras">Observations</td>
+              <td class="font-weight-bold">Observations</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.6 %}
@@ -137,7 +137,7 @@
 
             {% if dataFiche.10 is not empty %}
             <tr>
-              <td class="gras">Circonstances favorisantes</td>
+              <td class="font-weight-bold">Circonstances favorisantes</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.10 %}
@@ -160,7 +160,7 @@
 
             {% if dataFiche.8 is not empty %}
             <tr>
-              <td class="gras">Risque humain</td>
+              <td class="font-weight-bold">Risque humain</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.8 %}
@@ -175,7 +175,7 @@
               <td colspan="2">Recommandations et conduites à tenir</td>
             </tr>
             <tr>
-              <td class="gras">Type d'effet</td>
+              <td class="font-weight-bold">Type d'effet</td>
               <td>
                 {% if fiche.typeeffet == 1 %}Effet classe
                 {% elseif fiche.typeeffet == 2 %}Effet spécialité
@@ -187,7 +187,7 @@
 
             {% if dataFiche.11 is not empty %}
             <tr>
-              <td class="gras">Niveau(x) de risque</td>
+              <td class="font-weight-bold">Niveau(x) de risque</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.11 %}
@@ -211,7 +211,7 @@
             {% if dataFiche.13 is not empty or dataFiche.14 is not empty %}
             {% if dataFiche.13 is not empty %}
             <tr>
-              <td class="gras">Conduite à tenir chez la femme enceinte</td>
+              <td class="font-weight-bold">Conduite à tenir chez la femme enceinte</td>
               <td>
                 <ul class="list-unstyled">
                 {% for catf in dataFiche.13 %}
@@ -235,7 +235,7 @@
             {% if dataFiche.15 is not empty or dataFiche.16 is not empty %}
             {% if dataFiche.15 is not empty %}
             <tr>
-              <td class="gras">Conduite à tenir chez le nouveau-né</td>
+              <td class="font-weight-bold">Conduite à tenir chez le nouveau-né</td>
               <td>
                 <ul class="list-unstyled">
                 {% for catf in dataFiche.15 %}
@@ -258,7 +258,7 @@
 
             {% if dataFiche.17 is not empty %}
             <tr>
-              <td class="gras">Référence(s) officielle(s)</td>
+              <td class="font-weight-bold">Référence(s) officielle(s)</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.17 %}
@@ -292,7 +292,7 @@
             </tr>
 
             <tr>
-              <td class="gras">Type d'effet</td>
+              <td class="font-weight-bold">Type d'effet</td>
               <td>
                 {% if fiche.typeeffet == 1 %}Effet classe
                 {% elseif fiche.typeeffet == 2 %}Effet spécialité
@@ -303,7 +303,7 @@
             </tr>
 
             <tr>
-              <td class="gras">Passage dans le lait</td>
+              <td class="font-weight-bold">Passage dans le lait</td>
               <td>
                 {% if fiche.passagelait == 'O' %}Oui
                 {% elseif fiche.passagelait == 'N' %}Non
@@ -313,7 +313,7 @@
             </tr>
 
             <tr>
-              <td class="gras">Fixation protéique</td>
+              <td class="font-weight-bold">Fixation protéique</td>
               <td>
                 {% if fiche.fixprot == 'O' %}Oui
                 {% elseif fiche.fixprot == 'N' %}Non
@@ -324,7 +324,7 @@
 
             {% if fiche.fixprotmini or fiche.fixprotmaxi %}
             <tr>
-              <td class="gras">Fixation protéique</td>
+              <td class="font-weight-bold">Fixation protéique</td>
               <td>
                 <ul class="list-unstyled">
                 {% if fiche.fixprotmini %}<li>minimale : {{ fiche.fixprotmini }} %</li>{% endif %}
@@ -335,7 +335,7 @@
             {% endif %}
 
             <tr>
-              <td class="gras">Rapport concentration lait/plasma maternels</td>
+              <td class="font-weight-bold">Rapport concentration lait/plasma maternels</td>
               <td>
                 <ul class="list-unstyled">
                   {% if fiche.plasmalait == 'P' %}
@@ -351,7 +351,7 @@
             {% if dataFiche.1 is not empty or dataFiche.2 is not empty %}
             {% if dataFiche.1 is not empty %}
             <tr>
-              <td class="gras">Conduite à tenir</td>
+              <td class="font-weight-bold">Conduite à tenir</td>
               <td>
                 <ul class="list-unstyled">
                 {% for catf in dataFiche.1 %}
@@ -375,7 +375,7 @@
             {% if dataFiche.3 is not empty or dataFiche.4 is not empty %}
             {% if dataFiche.3 is not empty %}
             <tr>
-              <td class="gras">Recommandations</td>
+              <td class="font-weight-bold">Recommandations</td>
               <td>
                 <ul class="list-unstyled">
                 {% for catf in dataFiche.3 %}
@@ -404,7 +404,7 @@
 
             {% if dataFiche.6 is not empty %}
             <tr>
-              <td class="gras">Circonstances favorisantes</td>
+              <td class="font-weight-bold">Circonstances favorisantes</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.6 %}
@@ -417,7 +417,7 @@
 
             {% if dataFiche.8 is not empty %}
             <tr>
-              <td class="gras">Observations</td>
+              <td class="font-weight-bold">Observations</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.8 %}
@@ -440,7 +440,7 @@
 
             {% if dataFiche.7 is not empty %}
             <tr>
-              <td class="gras">Référence(s) officielle(s)</td>
+              <td class="font-weight-bold">Référence(s) officielle(s)</td>
               <td>
                 <ul class="list-unstyled">
                 {% for risque in dataFiche.7 %}
@@ -472,7 +472,7 @@
             {% if dataFiche.3 is not empty or dataFiche.4 is not empty %}
             {% if dataFiche.3 is not empty %}
             <tr>
-              <td class="gras">Conduite à tenir</td>
+              <td class="font-weight-bold">Conduite à tenir</td>
               <td>
                 <ul class="list-unstyled">
                 {% for catf in dataFiche.3 %}

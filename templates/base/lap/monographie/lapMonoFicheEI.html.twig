@@ -36,7 +36,7 @@
 
     {% if page.ficheEi.effindg is not empty %}
     <tr>
-      <td class="gras">Type d'effet</td>
+      <td class="font-weight-bold">Type d'effet</td>
       <td>
         <ul class="list-unstyled text-uppercase">
         {% for data in page.ficheEi.effindg %}
@@ -52,7 +52,7 @@
 
     {% if dataFiche.8 is not empty %}
     <tr>
-      <td class="gras">Nature(s) des EI cliniques</td>
+      <td class="font-weight-bold">Nature(s) des EI cliniques</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.8 %}
@@ -65,7 +65,7 @@
 
     {% if dataFiche.9 is not empty %}
     <tr>
-      <td class="gras">Nature(s) des EI paracliniques</td>
+      <td class="font-weight-bold">Nature(s) des EI paracliniques</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.9 %}
@@ -78,7 +78,7 @@
 
     {% if dataFiche.7 is not empty %}
     <tr>
-      <td class="gras">Classe pharmacologique</td>
+      <td class="font-weight-bold">Classe pharmacologique</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.7 %}
@@ -91,7 +91,7 @@
 
     {% if dataFiche.12 is not empty %}
     <tr>
-      <td class="gras">Organe cible</td>
+      <td class="font-weight-bold">Organe cible</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.12 %}
@@ -104,7 +104,7 @@
 
     {% if dataFiche.10 is not empty %}
     <tr>
-      <td class="gras">Degré(s) de sévérité</td>
+      <td class="font-weight-bold">Degré(s) de sévérité</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.10 %}
@@ -117,7 +117,7 @@
 
     {% if dataFiche.4 is not empty %}
     <tr>
-      <td class="gras">Fréquence</td>
+      <td class="font-weight-bold">Fréquence</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.4 %}
@@ -130,7 +130,7 @@
 
     {% if dataFiche.1 is not empty %}
     <tr>
-      <td class="gras">Terrain favorisant</td>
+      <td class="font-weight-bold">Terrain favorisant</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.1 %}
@@ -143,7 +143,7 @@
 
     {% if dataFiche.2 is not empty %}
     <tr>
-      <td class="gras">Autre(s) circonstance(s) favorisante(s)</td>
+      <td class="font-weight-bold">Autre(s) circonstance(s) favorisante(s)</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.2 %}
@@ -156,7 +156,7 @@
 
     {% if dataFiche.3 is not empty %}
     <tr>
-      <td class="gras">Moment(s) de survenue</td>
+      <td class="font-weight-bold">Moment(s) de survenue</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.3 %}
@@ -181,7 +181,7 @@
 
     {% if dataFiche.11 is not empty %}
     <tr>
-      <td class="gras">Conduite à tenir</td>
+      <td class="font-weight-bold">Conduite à tenir</td>
       <td>
         <ul class="list-unstyled">
         {% for data in dataFiche.11 %}
@@ -207,7 +207,7 @@
     {% if dataFiche.13 is not empty %}
     <tr>
       <td colspan="2">
-        <span class="gras">Commentaires RCP</span>
+        <span class="font-weight-bold">Commentaires RCP</span>
         <ul class="list-unstyled">
         {% for data in dataFiche.13 %}
         <li>{{ data.libind|nl2br }}</li>
@@ -220,7 +220,7 @@
     {% if dataFiche.15 is not empty %}
     <tr>
       <td colspan="2">
-        <span class="gras">Commentaires Thériaque</span>
+        <span class="font-weight-bold">Commentaires Thériaque</span>
         <ul class="list-unstyled">
         {% for data in dataFiche.15 %}
         <li>{{ data.libind|nl2br }}</li>
@@ -232,7 +232,7 @@
 
     {% if page.ficheEi.refEffind is not empty %}
     <tr>
-      <td class="gras">Référence(s) officielle(s)</td>
+      <td class="font-weight-bold">Référence(s) officielle(s)</td>
       <td>
         <ul class="list-unstyled">
         {% for data in page.ficheEi.refEffind %}

@@ -60,7 +60,7 @@
 
       <div class="col-md-6">
             <div class="card">
-              <div class="card-header gras">Informations professionnelles</div>
+              <div class="card-header font-weight-bold">Informations professionnelles</div>
               <div class="card-body">
                 <p>Informations professionnelles sur ce praticien
                   <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
@@ -98,7 +98,7 @@
             </div>
             {% if page.patientsConnus %}
               <div class="card mt-4 px-0 col-md-12">
-                <div class="card-header gras">Patients connus</div>
+                <div class="card-header font-weight-bold">Patients connus</div>
                 <div class="card-body">
                   <p>Patients reliés à ce praticien</p>
                 </div>
@@ -138,7 +138,7 @@
     {% if config.PraticienPeutEtrePatient == 'true' %}
       <div class="col-md-6 mt-4 mt-md-0">
             <div class="card">
-              <div class="card-header gras">Informations personnelles</div>
+              <div class="card-header font-weight-bold">Informations personnelles</div>
               <div class="card-body">
                 <p>Informations personnelles sur ce praticien
                   <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">

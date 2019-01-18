@@ -134,7 +134,7 @@
 
       {% if k == 0 %}
         <div class="card mb-3">
-          <div class="card-header gras">Donné actuel du rendez-vous</div>
+          <div class="card-header font-weight-bold">Donné actuel du rendez-vous</div>
           <div class="card-body">
             <p>Données actuelles présente dans l'agenda</p>
           </div>
@@ -182,7 +182,7 @@
       {% else %}
 
         <div class="card mb-3">
-          <div class="card-header gras">{% if v.operation is not defined %}
+          <div class="card-header font-weight-bold">{% if v.operation is not defined %}
             Nouveau
           {% elseif v.operation == 'missing' and v.olddata.absente == 'non' %}
             Marquage patient absent

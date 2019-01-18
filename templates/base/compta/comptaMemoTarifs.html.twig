@@ -94,7 +94,7 @@
                                         <td>
                                           {{ (w.details|keys)|join(' + ') }}
                                         </td>
-                                        <td{% if w.flagImportant == 1 %} class="gras"{% endif %}>{{ w.label }}</td>
+                                        <td{% if w.flagImportant == 1 %} class="font-weight-bold"{% endif %}>{{ w.label }}</td>
 
                                         <td class="texteadroite">{{ w.tarif|number_format(2, '.', ' ') }}</td>
                                         {% if page.secteurs[k] != '' %}

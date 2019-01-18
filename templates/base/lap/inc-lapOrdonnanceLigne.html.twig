@@ -31,7 +31,7 @@
   <div class="card bg-light mb-2 p-2 ui-sortable-handle lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row">
       <div class="col-md-7">
-        <div class="gras">
+        <div class="font-weight-bold">
           {{ page.ligne.medics.0.nomUtileFinal }}
           {% if page.ligne.medics.0. isNPS == 'true' %}
             [non substituable
@@ -100,7 +100,7 @@
 
   <div class="card bg-light mb-2 p-2 lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row" style="margin-bottom: 12px">
-      <div class="col-md-7 gras">
+      <div class="col-md-7 font-weight-bold">
         {{ page.ligne.medics.0.voieUtilisee|capitalize }}
         -
         {{ page.ligne.medics.0.dureeTotaleHuman }}
@@ -140,7 +140,7 @@
         {% for medic in page.ligne.medics %}
           <tr>
             <td class="col-md-6">
-              <div class="gras">
+              <div class="font-weight-bold">
                 {{ loop.index }}
                 -
                 {{ medic.nomUtileFinal }}
