@@ -24,18 +24,19 @@
  * Patient > ajax : générer le fichier DICOM worklist pour phonecapture
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 if(!is_numeric($_POST['patientID'])) die;
 
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
-$p['page']['prat']=$prat->getSimpleAdminDatas();
+$p['page']['prat']=$prat->getSimpleAdminDatasByName()();
 $p['page']['prat']['pratID']=$p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
+$p['page']['patient']=$patient->getSimpleAdminDatasByName()();
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
 
