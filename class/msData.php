@@ -175,6 +175,16 @@ class msData
     }
 
 /**
+ * Obtenir les Labels des type à partir d'un array de name
+ * @param  array $ar array de name
+ * @return array     array name=>label
+ */
+    public function getLabelFromTypeName($ar=['1'])
+    {
+        return msSQL::sql2tabKey("select label, name from data_types where name in ('".implode("','", $ar)."')", 'name', 'label');
+    }
+
+/**
  * Obtenir les typeID à partir d'un array de Name
  * @param  array $ar array de name
  * @return array     array name=>typeID
