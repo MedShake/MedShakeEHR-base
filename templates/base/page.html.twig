@@ -77,6 +77,7 @@
         <style>
           {% block cssEmbed %}
           #top-navbar {max-height:calc(100vh - 100px) !important}
+          {% if config.designTopMenuStyle == 'icones' %}#top-navbar .nav-item {min-width: 47px; text-align:center;}{% endif %}
           {% endblock %}
         </style>
 
@@ -154,8 +155,31 @@
                           </div>
                         </li>
                       {% endif %}
+
+                      {% if page.patientsOfTheDay %}
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+                            {% if config.designTopMenuStyle == 'icones' %}
+                              <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>
+                              <span class="d-lg-none"> Aujourd'hui</span>
+                            {% else %}
+                              Aujourd'hui
+                            {% endif %}
+                          </a>
+                          <div class="dropdown-menu">
+
+                            {% for v in page.patientsOfTheDay %}
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
+                            {% endfor %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
+                          </div>
+                      </li>
+                      {% endif %}
+
+
+                      <li class="nav-item">
+                          <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" accesskey="=">
                             {% if config.designTopMenuStyle == 'icones' %}
                               <i class="fas fa-user fa-lg d-none d-lg-inline"></i>
                               <span class="d-lg-none"> Patients</span>
@@ -163,24 +187,10 @@
                               Patients
                             {% endif %}
                           </a>
-                          <div class="dropdown-menu">
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" accesskey="=">Rechercher</a>
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"  accesskey="+">Nouveau patient</a>
-
-
-                              {% if page.patientsOfTheDay %}
-                                <div class="dropdown-divider"></div>
-                                <h6 class="dropdown-header">Patients du jour</h6>
-                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">Afficher la liste</a>
-                                {% for v in page.patientsOfTheDay %}
-                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }} <small>{{ v.type }}</small> {{ v.identite }}</a>
-                                  {% endfor %}
-
-                              {% endif %}
-                          </div>
-                      </li>
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+                          <a class="dropdown-item d-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"  accesskey="+">Nouveau patient</a>
+                        </li>
+                      <li class="nav-item">
+                          <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">
                             {% if config.designTopMenuStyle == 'icones' %}
                               <i class="fas fa-user-md fa-lg d-none d-lg-inline"></i>
                               <span class="d-lg-none"> Praticiens</span>
@@ -188,10 +198,6 @@
                               Praticiens
                             {% endif %}
                           </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pros/">Rechercher</a>
-                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/">Nouveau praticien</a>
-                          </div>
                       </li>
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
