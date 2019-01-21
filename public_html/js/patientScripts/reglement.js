@@ -374,7 +374,7 @@ function getFinalTarifTableauActes() {
 
     factureActuelle[index] = {
       'acte': $(this).children('td:first').text(),
-      'codeAsso': '',
+      'codeAsso': $(this).find('.codeAsso').val(),
       'base': $(this).find('.baseActeValue').text(),
       'ikNombre': $(this).find('.ikNombre').val(),
       'pourcents': $(this).find('.modulationActe').val(),

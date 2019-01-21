@@ -51,22 +51,34 @@ function getFseData(el) {
       // présenter les actes
       html = '<table class="table table-sm text-right">';
       html += '<thead class="thead-light"><tr> \
-      <th class="text-left">Actes - modificateurs</th> \
-      <th colspan="2">Code asso.</th> \
+      <th class="text-left" colspan="2">Actes - modificateurs</th> \
+      <th >Code asso.</th> \
       <th>P.U.</th> \
       <th>%</th> \
       <th>Dep.</th> \
       </tr></thead><tbody>';
       $.each(data.actes, function(k, v) {
-        if(!('modifsCCAM' in v)) { v.modifsCCAM =''}
+        if (!('qte' in v)) v.qte = '';
+        if (!('modifsCCAM' in v)) v.modifsCCAM = '';
+        if (!('codeAsso' in v)) v.codeAsso = '';
+        if (!('depassement' in v)) {
+          v.depassement = '';
+        } else {
+          v.depassement = v.depassement + ' €';
+        }
+        if (!('pourcents' in v)) {
+          v.pourcents = '';
+        } else {
+          v.pourcents = v.pourcents + ' %';
+        }
 
         html += '<tr> \
-        <td class="text-left">' + v.acte + '</td> \
+        <td class="text-left">' + v.qte + v.acte + '</td> \
         <td>' + v.modifsCCAM + '</td> \
         <td>' + v.codeAsso + '</td> \
         <td>' + v.base + ' €</td> \
-        <td>' + v.pourcents + ' %</td> \
-        <td>' + v.depassement + ' €</td> \
+        <td>' + v.pourcents + ' </td> \
+        <td>' + v.depassement + '</td> \
         </tr>';
       });
       html += '</tbody></table>';
@@ -86,7 +98,7 @@ function getFseData(el) {
 function doFse(el) {
   serviceVitale = el.attr('data-vitaleservice');
   $.ajax({
-    url: urlBase + '/modulesExternes/' + serviceVitale + '/faireFse.php' ,
+    url: urlBase + '/modulesExternes/' + serviceVitale + '/faireFse.php',
     type: 'post',
     data: $("#modalFaireFseStartForm").serialize(),
     dataType: "html",

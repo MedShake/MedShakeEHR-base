@@ -31,6 +31,14 @@ $paiem = new msObjet;
 $dataPaiem = $paiem->getObjetAndSons($_GET['objetID'], 'name');
 $actes = json_decode($dataPaiem['regleDetailsActes']['value'], TRUE);
 
+// modifications sur array actes
+foreach($actes as $k=>$acte) {
+  if(isset($acte['ikNombre'])) {
+    $actes[$k]['qte']=$acte['ikNombre'];
+    unset($actes[$k]['ikNombre']);
+  }
+}
+
 // data praticien
 $prat = new msPeople;
 $prat->setToID($p['user']['id']);
@@ -77,7 +85,7 @@ $data=array(
     'medecin_traitant_declare'=>$medecin_traitant_declare,
     'prenom_1180'=>$prenom_1180,
     'nom_1180'=>$nom_1180,
-    'msehrParams'=> htmlentities(json_encode($msehrJsonData))
+    'msehrParams'=> json_encode($msehrJsonData)
   ),
   'actes'=>$actes,
   'jsonMsehrParams'=>$msehrJsonData

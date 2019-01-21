@@ -25,6 +25,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+//compléter le chargement de la config
+$p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 if(!isset($_POST['objetID']) or !isset($_POST['validationHash']) or !is_numeric($_POST['objetID'])) {
   http_response_code(401);
