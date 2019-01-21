@@ -62,7 +62,6 @@ if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
     } else {
         $supportID=$patient->createNewObjet($_POST['porteur'], '');
     }
-    echo 'support : '.$supportID;
 
     $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
     $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
