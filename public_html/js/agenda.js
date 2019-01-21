@@ -408,7 +408,7 @@ $(document).ready(function() {
   $(".fc-nextMonth-button").attr("title", "Mois suivant");
 
   // changer style par défaut
-  $(".fc-toolbar button").removeClass('btn-primary').addClass('btn-sm btn-secondary');
+  $(".fc-toolbar button").removeClass('btn-primary').addClass('btn-sm btn-primary');
   $(".fc-left").addClass("pt-2");
   $(".fc-body").addClass("cursor-cell");
 

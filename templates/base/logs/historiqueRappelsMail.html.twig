@@ -40,89 +40,87 @@
   <h1 class="mb-4">Historique rappels mail pour les consultations du
     {{ page.dates.rdv|date("d/m/Y") }}</h1>
 
-  <div class="container-fluid">
+  <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline mb-4">
 
-    <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline mb-4">
+    <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
+      <span class="fa fa-chevron-left" aria-hidden="true"></span>
+      Jour précédent
+    </a>
+    <a class="btn btn-outline-secondary m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/">
+      Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
+    </a>
+    <a class="btn btn-outline-secondary m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/">
+      Jour suivant
+      <span class="fa fa-chevron-right" aria-hidden="true"></span>
+    </a>
 
-      <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
-        <span class="fa fa-chevron-left" aria-hidden="true"></span>
-        Jour précédent
-      </a>
-      <a class="btn btn-outline-secondary m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/">
-        Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
-      </a>
-      <a class="btn btn-outline-secondary m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/">
-        Jour suivant
-        <span class="fa fa-chevron-right" aria-hidden="true"></span>
-      </a>
+    <a class="btn btn-outline-secondary m-1{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
+      Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
+    </a>
 
-      <a class="btn btn-outline-secondary m-1{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
-        Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
-      </a>
+    <div id="dateSel" class="input-group date datepick" >
+      <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
+      <span class="input-group-append">
+        <span class="fa fa-calendar input-group-text"></span>
+      </span>
+    </div>
+    <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
+  </form>
 
-      <div id="dateSel" class="input-group date datepick" >
-        <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
-        <span class="input-group-append">
-          <span class="fa fa-calendar input-group-text"></span>
-        </span>
-      </div>
-      <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
-    </form>
+  {% if page.data %}
 
-    {% if page.data %}
+  <div class="row">
 
-    <div class="row">
+    <div class="col-md-8">
 
-      <div class="col-md-8">
+      <div class="card">
 
-        <div class="card">
-
-          <div class="card-header font-weight-bold">
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-secondary btn-sm float-right m-1">Voir rappels SMS</a>
-            <h3>Mails envoyés le {{ page.dates.emission|date("d/m/Y") }}</h3>
-          </div>
-
-          <table class="table table-sm mb-0 table-hover table-striped">
-            <thead>
-              <tr>
-                <th></th>
-                <th>RDV</th>
-                <th>Identité</th>
-                <th>Email</th>
-                <th>Statut</th>
-
-              </tr>
-            </thead>
-            <tbody>
-
-              {% for k, v in page.data.mails %}
-                <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
-                  <td>
-                    <div class="btn-group">
-                      <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">
-                        <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
-                      </a>
-                    </div>
-                  </td>
-                  <td>{{ v.heureRdv }}</td>
-                  <td>{{ v.identite }}</td>
-                  <td>{{ v.email }}</td>
-                  <td {% if v.mailTrackingID %}class="infos{{ v.mailTrackingID }}"{% endif %}>{{ v.status }}</td>
-                </tr>
-
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="card-header font-weight-bold">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-secondary btn-sm float-right m-1">Voir rappels SMS</a>
+          <h3>Mails envoyés le {{ page.dates.emission|date("d/m/Y") }}</h3>
         </div>
+
+        <table class="table table-sm mb-0 table-hover table-striped">
+          <thead>
+            <tr>
+              <th></th>
+              <th>RDV</th>
+              <th>Identité</th>
+              <th>Email</th>
+              <th>Statut</th>
+
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for k, v in page.data.mails %}
+              <tr {% if v.mailTrackingID %}id="mt{{ v.mailTrackingID }}" data-mailtrackingid="{{ v.mailTrackingID }}" class="trackMyMail"{% endif %}>
+                <td>
+                  <div class="btn-group">
+                    <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">
+                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                    </a>
+                  </div>
+                </td>
+                <td>{{ v.heureRdv }}</td>
+                <td>{{ v.identite }}</td>
+                <td>{{ v.email }}</td>
+                <td {% if v.mailTrackingID %}class="infos{{ v.mailTrackingID }}"{% endif %}>{{ v.status }}</td>
+              </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-
-    {% else %}
-
-    <div class="alert alert-warning" role="alert">Pas de campagne enregistrée pour cette date.</div>
-
-    {% endif %}
-
   </div>
+
+  {% else %}
+
+  <div class="alert alert-warning" role="alert">Pas de campagne enregistrée pour cette date.</div>
+
+  {% endif %}
+
+
 
 {% endblock %}
