@@ -78,7 +78,7 @@
                     <td>{% if v.registerDate != v.updateDate %}{{ v.updateDate|replace({' ':'&nbsp;'}) }}{% endif %}
                     </td>
                     <td>{% if v.creationDate != v.registerDate %}{{ v.creationDate|replace({' ':'&nbsp;'}) }}{% endif %}</td>
-                    <td>{{ v.prescripteur }}</td>
+                    <td>#{{ v.prescripteurID }} {{ v.prescripteur }}</td>
                     {% if page.patientID =='' %}<td>  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/">#{{ v.toID }}</a></td>{% endif %}
                     <td>#{{ v.instance }}</td>
                     <td>
