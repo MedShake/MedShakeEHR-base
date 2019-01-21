@@ -36,8 +36,6 @@
 
 {% block body %}
 
-<div class="container-fluid">
-
 {% if page.proData.dossierType =="deleted" %}
 <div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
 {% endif %}
@@ -99,7 +97,7 @@
             </div>
             {% if page.patientsConnus %}
               <div class="card mt-4 px-0 col-md-12">
-                <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-muted"></i> Patients connus</div>
+                <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Patients connus</div>
                 <div class="card-body">
                   Patients reliés à ce praticien
                 </div>
@@ -166,5 +164,5 @@
     {% endif %}
 </div>
 
-</div>
+
 {% endblock %}

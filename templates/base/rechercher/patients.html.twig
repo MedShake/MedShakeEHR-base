@@ -30,9 +30,9 @@
 {% import "macroForm.html.twig" as f %}
 {% block title %}MedShakeEHR :
 {% if page.porp in ['patient', 'today'] %}
-recherche patient
+patients
 {% elseif page.porp == 'pro' %}
-recherche praticien
+praticiens
 {% elseif page.porp == 'externe' %}
 associer patient
 {% endif %}{% endblock %}
@@ -57,11 +57,11 @@ associer patient
 
 
 {% if page.porp == 'patient'%}
-<h1>Recherche patient</h1>
+<h1>Patients</h1>
 {% elseif page.porp == 'today' %}
 <h1>Patients du jour</h1>
 {% elseif page.porp == 'pro' %}
-<h1>Recherche praticien</h1>
+<h1>Praticiens</h1>
 {% elseif page.porp == 'externe' %}
 <h1>Associer un patient externe à un patient MedShakeEHR</h1>
 {% endif %}
