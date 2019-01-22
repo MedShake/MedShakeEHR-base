@@ -312,6 +312,23 @@ $(document).ready(function() {
 
   });
 
+  $('#options-tab').on('shown.bs.tab', function(e) {
+    if (optionsEditor instanceof CodeMirror) {
+      optionsEditor.refresh();
+    } else {
+      // Load main editor
+      optionsEditor = CodeMirror.fromTextArea(document.getElementById("optionsEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      optionsEditor.setSize('100%', 700);
+    }
+    optionsEditor.on("change", function(optionsEditor, change) {
+      $('#optionsEditor').val(optionsEditor.getValue());
+    });
+  });
+
+
   // voir les mots de passe dans les paramètres par défaut
   $(".viewPassword").removeClass('viewPassword').parent()
     .css('cursor', 'pointer')

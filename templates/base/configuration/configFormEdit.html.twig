@@ -112,6 +112,9 @@
     <li class="nav-item">
       <a class="nav-link" id="javascript-tab" data-toggle="tab" href="#javascript-pan">JavaScript</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" id="options-tab" data-toggle="tab" href="#options-pan">Options</a>
+    </li>
   </ul>
 
   <div class="tab-content" id="navTabContent">
@@ -303,6 +306,27 @@
         'label' : {
           'position' : 'before',
           'label' : 'Javascript'
+        }
+      }) }}
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="options-pan">
+
+      <div class="form-group">
+      {{ f.textarea ({
+        'textarea' : {
+          'id' : 'optionsEditor',
+          'name' : 'options',
+          'placeholder' : 'valeurs par défaut',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'value' : page.form.options,
+          'add' : 'rows="25" style="font-family:monospace;"'
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Options (format yaml)'
         }
       }) }}
       </div>
