@@ -53,5 +53,9 @@ ALTER TABLE `forms` CHANGE `printModel` `printModel` VARCHAR(50) CHARACTER SET u
 INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
 ('formsProdOrdoEtDoc', 'Formulaires de production d\'ordonnances', 'formulaires de production d\'ordonnances et de documents', 'user', 3, '2018-12-19 11:01:59');
 
+-- Réutilisation de la colonne yamlStructureDefaut
+ALTER TABLE `forms` CHANGE `yamlStructureDefaut` `options` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+UPDATE `forms` set options = null;
+
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.0.0' WHERE `name`='base' and `groupe`='module';
