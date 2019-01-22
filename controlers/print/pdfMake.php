@@ -51,4 +51,7 @@ if (isset($match['params']['anonyme'])) {
 
 $pdf->makePDF();
 $pdf->savePDF();
-$pdf->showPDF();
+
+$doc = new msStockage;
+$doc->setObjetID($pdf->getObjetID());
+msTools::redirection('/'.$doc->getWebPathToDoc());
