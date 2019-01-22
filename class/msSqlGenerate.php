@@ -117,7 +117,7 @@ class msSqlGenerate
       foreach($catData as $v) {
         unset($v['id']);
         $v['fromID']='1';
-        $v['creationDate']=date("Y-m-d H:i:s");
+        $v['creationDate']="2019-01-01 00:00:00";
         if(!isset($this->_data_cat_fields)) $this->_data_cat_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_cat_values[$v['name']])) $this->_data_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
       }
@@ -127,7 +127,7 @@ class msSqlGenerate
         unset($v['id']);
         $catID=$v['cat'];
         $v['fromID']='1';
-        $v['creationDate']=date("Y-m-d H:i:s");
+        $v['creationDate']="2019-01-01 00:00:00";
         if(isset($v['cat'])) $v['cat']='@catID';
         if(!isset($this->_data_types_fields)) $this->_data_types_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_types_values[$catID][$v['name']])) $this->_data_types_values[$catID][$v['name']]=$this->_getSqlValuesPart($v);
@@ -148,7 +148,7 @@ class msSqlGenerate
       foreach($cats as $cat) {
         unset($cat['id']);
         $cat['fromID']=1;
-        $cat['creationDate']=date("Y-m-d H:i:s");
+        $cat['creationDate']="2019-01-01 00:00:00";
         if(!isset($this->_actes_cat_fields)) $this->_actes_cat_fields=$this->_getSqlFieldsPart($cat);
         $this->_actes_cat_values[]=$this->_getSqlValuesPart($cat);
       }
@@ -164,7 +164,7 @@ class msSqlGenerate
           $catName=$acte['catName'];
           unset($acte['id'],$acte['catName']);
           $acte['fromID']=1;
-          $acte['creationDate']=date("Y-m-d H:i:s");
+          $acte['creationDate']="2019-01-01 00:00:00";
           $acte['cat']='@catID';
           if(!isset($this->_actes_fields)) $this->_actes_fields=$this->_getSqlFieldsPart($acte);
           $this->_actes_values[$catName][]=$this->_getSqlValuesPart($acte);
@@ -192,7 +192,7 @@ class msSqlGenerate
       foreach($actesbase as $actebase) {
         unset($actebase['id']);
         $actebase['fromID']=1;
-        $actebase['creationDate']=date("Y-m-d H:i:s");
+        $actebase['creationDate']="2019-01-01 00:00:00";
         if(!isset($this->_actes_base_fields)) $this->_actes_base_fields=$this->_getSqlFieldsPart($actebase);
         $this->_actes_base_values[]=$this->_getSqlValuesPart($actebase);
     }
@@ -226,7 +226,7 @@ class msSqlGenerate
       foreach($catData as $v) {
         unset($v['id']);
         $v['fromID']='1';
-        $v['creationDate']=date("Y-m-d H:i:s");
+        $v['creationDate']="2019-01-01 00:00:00";
         if(!isset($this->_data_cat_fields)) $this->_data_cat_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_cat_values[$v['name']])) $this->_data_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
       }
@@ -236,7 +236,7 @@ class msSqlGenerate
         unset($v['id']);
         $catID=$v['cat'];
         $v['fromID']='1';
-        $v['creationDate']=date("Y-m-d H:i:s");
+        $v['creationDate']="2019-01-01 00:00:00";
         if(isset($v['cat'])) $v['cat']='@catID';
         if(!isset($this->_data_types_fields)) $this->_data_types_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_types_values[$catID][$v['name']])) $this->_data_types_values[$catID][$v['name']]=$this->_getSqlValuesPart($v);
@@ -255,7 +255,7 @@ class msSqlGenerate
       $v=msSQL::sqlUnique("select * from forms_cat where id='".$catForm."' limit 1");
       unset($v['id']);
       $v['fromID']='1';
-      $v['creationDate']=date("Y-m-d H:i:s");
+      $v['creationDate']="2019-01-01 00:00:00";
       if(!isset($this->_forms_cat_fields)) $this->_forms_cat_fields=$this->_getSqlFieldsPart($v);
       if(!isset($this->_forms_cat_values[$v['name']])) $this->_forms_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
     }
