@@ -1,5 +1,5 @@
 -- Modifications table actes_base
-ALTER TABLE `actes_base` ADD `activite` TINYINT(1) NOT NULL DEFAULT '1' AFTER `code`, ADD `phase` TINYINT(1) NOT NULL DEFAULT '0' AFTER `activite`;
+ALTER TABLE `actes_base` ADD `activite` TINYINT(1) NOT NULL DEFAULT '1' AFTER `code`, ADD `phase` TINYINT(1) NOT NULL DEFAULT '0' AFTER `activite`, ADD `dataYaml` text DEFAULT NULL AFTER `type`;
 ALTER TABLE `actes_base` DROP COLUMN tarifs1, DROP COLUMN tarifs2, DROP COLUMN F, DROP COLUMN P, DROP COLUMN S, DROP COLUMN M, DROP COLUMN R, DROP COLUMN D, DROP COLUMN E, DROP COLUMN C, DROP COLUMN U;
 ALTER TABLE `actes_base` DROP INDEX `code`;
 ALTER TABLE `actes_base` ADD UNIQUE (`code`, `activite`, `phase`, `type`);
