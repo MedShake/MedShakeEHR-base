@@ -290,6 +290,23 @@ class msForm
     }
 
 /**
+ * Extraire les options (yaml) du formulaire
+ * @return array array
+ */
+    public function getFormOptions()
+    {
+      if (!isset($this->_formID)) {
+          throw new Exception('formID is not defined');
+      }
+      if($options = msSQL::sqlUniqueChamp("select options from forms where id='".$this->_formID."' limit 1")) {
+        return Spyc::YAMLLoad($options);
+      } else {
+        return [];
+      }
+
+    }
+
+/**
  * Ajouter des champs input hidden à un form généré
  * @param array $f    formulaire u format array php
  * @param array $data array input name=> input value
