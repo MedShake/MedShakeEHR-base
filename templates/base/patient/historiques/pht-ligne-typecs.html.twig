@@ -190,10 +190,10 @@
             </li>
           {% endif %}
           <li class="dropdown-divider d-inline-block d-lg-none"></li>
-          {% if cs.signaturePatient != 'o' %}
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiquePrint/{{ cs.id }}/">Historique versions PDF générées</a>
           </li>
+          {% if cs.signaturePatient != 'o' %}
           <li>
             <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/cr/{{ cs.id }}/" target="_blank">Forcer impression par défaut</a>
           </li>
