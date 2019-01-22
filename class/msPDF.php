@@ -260,6 +260,33 @@ class msPDF
           file_put_contents($finalFile, $pdf);
         }
 
+        //si c'est un compte rendu on va rechercher les options du form générateur
+        if ($this->_type=='cr') {
+
+            $formNameOrigin = new msObjet();
+            $formNameOrigin->setID($this->_objetID);
+            $formNameOrigin = $formNameOrigin->getOriginFormNameFromObjetID();
+
+            $form = new msForm();
+            $form->setFormIDbyName($formNameOrigin);
+            $formOptions = $form->getFormOptions();
+
+            if(isset($formOptions['optionsPdf']['onSave']['append'])) {
+              $files=[];
+              foreach($formOptions['optionsPdf']['onSave']['append'] as $file) {
+                if(is_file($file)) {
+                  $files[]=$file;
+                }
+              }
+              if(!empty($files)) {
+                $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
+                copy($finalFile, $tempFile);
+                system("pdftk $tempFile ".implode(' ', $files)." output $finalFile dont_ask", $errcode);
+                unlink($tempFile);
+              }
+            }
+        }
+
         //sauver la copie en base
         $this->_savePrinted();
     }
