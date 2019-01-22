@@ -265,6 +265,15 @@ class msPDF
     }
 
 /**
+ * Retourner l'objetID courant
+ * @return int objetID
+ */
+    public function getObjetID()
+    {
+      return $this->_objetID;
+    }
+
+/**
  * Enregistrer en base l'impression
  * @return void
  */
