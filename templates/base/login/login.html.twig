@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > login  
+ # Template > login
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
@@ -30,38 +30,47 @@
 {% import "macroForm.html.twig" as f %}
 {% block title %}MedShakeEHR : login{% endblock %}
 
-{% block head %}
-{{ parent() }}
-  <style>
-    .form-signer {text-align:center;-webkit-box-align:center;-ms-flex-align:center;-ms-flex-pack:center;align-items:center;-webkit-box-pack:center;justify-content:center;}
-    .form-signin {width:100%;max-width:330px;margin:0 auto;}
-    .form-img {animation:shake 10s normal 1s infinite; margin-top:100px;}
-    @keyframes shake {
-      from {margin-left:0}
-      0.2% {margin-left:-2px}
-      0.6% {margin-left:4px}
-      1% {margin-left:-6px}
-      1.4% {margin-left:6px}
-      1.8% {margin-left:-4px}
-      2.1% {margin-left:2px}
-      2.4% {margin-left:0}
-      40% {margin-left:0}
-      40.2% {margin-left:-2px}
-      40.6% {margin-left:4px}
-      41% {margin-left:-6px}
-      41.4% {margin-left:6px}
-      41.8% {margin-left:-4px}
-      42.1% {margin-left:2px}
-      42.4% {margin-left:0}
-      80% {transform:rotate(0deg)}
-      85% {transform:rotate(360deg)}
-      to {transform:rotate(360deg)}
-    }
-  </style>
+{% block cssEmbed %}
+  {{ parent() }}
+  .form-signer {text-align:center;-webkit-box-align:center;-ms-flex-align:center;-ms-flex-pack:center;align-items:center;-webkit-box-pack:center;justify-content:center;}
+  .form-signin {width:100%;max-width:330px;margin:0 auto;}
+  .form-img {animation:shake 10s normal 1s infinite; margin-top:100px;}
+  @keyframes shake {
+    from {margin-left:0}
+    0.2% {margin-left:-2px}
+    0.6% {margin-left:4px}
+    1% {margin-left:-6px}
+    1.4% {margin-left:6px}
+    1.8% {margin-left:-4px}
+    2.1% {margin-left:2px}
+    2.4% {margin-left:0}
+    40% {margin-left:0}
+    40.2% {margin-left:-2px}
+    40.6% {margin-left:4px}
+    41% {margin-left:-6px}
+    41.4% {margin-left:6px}
+    41.8% {margin-left:-4px}
+    42.1% {margin-left:2px}
+    42.4% {margin-left:0}
+    80% {transform:rotate(0deg)}
+    85% {transform:rotate(360deg)}
+    to {transform:rotate(360deg)}
+  }
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    $('input').on('keypress', function (e) {
+      if (e.which == 13) {
+        $('#formName_baseLogin').submit();
+        return false;
+      }
+    });
+  });
 {% endblock %}
 
 {% block body %}
-
 {# validation error display bloc #}
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
@@ -75,5 +84,4 @@
       </div>
     </div>
   </div>
-
 {% endblock %}
