@@ -52,13 +52,13 @@
     {{ page.patientData.1|e }}
   {% endif %} <small>({{ page.patientData.4 }})</small></h1>
 <p>
-<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/">Retour dossier patient</a>
+<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/"><i class="fas fa-folder-open"></i> Retour dossier patient</a>
 </p>
 
 <div class="row">
   <div class="col">
-    <table class="table table-sm mb-0 table-hover ">
-        <thead>
+    <table class="table table-sm table-hover ">
+        <thead class="thead-light">
             <tr>
                 <th>Date</th>
                 <th>De</th>

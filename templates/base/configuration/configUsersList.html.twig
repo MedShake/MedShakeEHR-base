@@ -51,10 +51,16 @@
 
   <h1>Liste des utilisateurs</h1>
 
-  <button class="btn btn-primary float-right m-1 newUser" type="button" data-toggle="modal" data-target="#modalUserCreation" style="margin-bottom:10px">Nouvel utilisateur</button>
+  <div class="row mb-2">
+    <div class="col text-right">
+      <button class="btn btn-primary newUser" type="button" data-toggle="modal" data-target="#modalUserCreation">
+        <i class="fas fa-plus"></i>
+        Nouvel utilisateur</button>
+    </div>
+  </div>
 
   <table class="table table-sm mb-0 table-hover text-center table-striped">
-    <thead>
+    <thead class="thead-light">
       <tr>
         <th>#</th>
         <th>Identifiant</th>
@@ -109,7 +115,9 @@
       {% endfor %}
     </tbody>
   </table>
+{% endblock %}
 
+{% block modals %}
   <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -171,6 +179,4 @@
       </div>
     </div>
   </div>
-
-
 {% endblock %}

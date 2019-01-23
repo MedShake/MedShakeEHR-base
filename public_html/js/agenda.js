@@ -348,7 +348,7 @@ $(document).ready(function() {
           $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
         }
         $('#creerNouveau').modal('show');
-        $(".modal-title").html("Nouveau rendez-vous");
+        $(".modal-title font-weight-bold").html("Nouveau rendez-vous");
         $("#buttonAutresActions").hide();
         $('#buttonCreer').show();
         $('#buttonModifier').hide();
@@ -434,7 +434,7 @@ $(document).ready(function() {
     else
       $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
     $("#type").val(selected_event.type);
-    $(".modal-title").html("Modifier un rendez-vous");
+    $(".modal-title font-weight-bold").html("Modifier un rendez-vous");
     $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
     $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
     $("#patientInfo").show();

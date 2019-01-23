@@ -55,7 +55,8 @@
 
         <div class="col-md-12">
 
-            <table class="table table-sm mb-0 table-bordered">
+            <table class="table table-sm table-hover">
+              <thead class="thead-light">
                 <tr>
                     <th>
                         Répertoire
@@ -63,13 +64,15 @@
                     <th>
                         Chemin
                     </th>
-                    <th>
+                    <th class="w-15">
                         Existe
                     </th>
-                    <th>
+                    <th class="w-15">
                         Est accessible en écriture
                     </th>
                 </tr>
+              </thead>
+              <tbody>
                 {% for k, v in page.check %}
                     <tr>
                         <td>{{ k }}</td>
@@ -79,6 +82,7 @@
                         <td class="{% if v.is_writable == 1 %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
                     </tr>
                 {% endfor %}
+              </tbody>
             </table>
         </div>
     </div>

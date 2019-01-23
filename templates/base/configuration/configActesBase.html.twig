@@ -42,196 +42,194 @@
 
 {% block body %}
 
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
-      </li>
-      <li class="breadcrumb-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
-      </li>
-      <li class="breadcrumb-item active">
-        Actes et tarifs
-      </li>
-    </ol>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+  </li>
+  <li class="breadcrumb-item active">
+    Actes et tarifs
+  </li>
+</ol>
 
-    <h1>Gestion des actes élémentaires</h1>
-    <div>
-        <div>
+<h1>Gestion des actes élémentaires</h1>
 
-            {# Nav tabs #}
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="nav-item">
-                    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/" aria-controls="categories" role="tab">Catégories</a>
-                </li>
-                <li role="presentation" class="nav-item">
-                  <a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/" aria-controls="prescriptions" role="tab">Actes</a>
-                </li>
 
-                <li role="presentation" class="nav-item">
-                    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/0/" aria-controls="prescriptions" role="tab">Factures types communes</a>
-                </li>
-            </ul>
+{# Nav tabs #}
+<ul class="nav nav-tabs mt-3" role="tablist">
+  <li role="presentation" class="nav-item">
+    <a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/" aria-controls="prescriptions" role="tab">Actes élémentaires</a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-cat/" aria-controls="categories" role="tab">Catégories factures types</a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes/0/" aria-controls="prescriptions" role="tab">Factures types</a>
+  </li>
+</ul>
 
-            {# Tab panes #}
-            <div class="tab-content">
+{# Tab panes #}
+<div class="tab-content">
 
-                {# categories tab #}
-                <div role="tabpanel" class="tab-pane active" id="prescriptions">
+    {# categories tab #}
+    <div role="tabpanel" class="tab-pane active" id="prescriptions">
 
-                    <div class="row mt-2 ">
-                      <div class="col">
-                        {% if config.apiCcamNgapUrl is not empty %}
-                        <p class="text-muted">
-                          Le serveur d'actes est configuré à {{ config.apiCcamNgapUrl }}
-                        </p>
-                        {% else %}
-                        <p class="text-danger">
-                          Le serveur d'actes n'est pas configuré. L'import automatique du tarif des actes n'est pas fonctionnel.
-                        </p>
-                        {% endif %}
-                      </div>
-                      <div class="col text-right">
-                        <button type="button" class="btn btn-primary reset-modal" data-toggle="modal" data-target="#modalNewCat">
-                            <i class="fas fa-plus"></i> Nouvel acte
-                        </button>
-                        {% if config.apiCcamNgapUrl is not empty %}
-                          <a href="/configuration/actes-base/rapport-maj/" class="btn btn-outline-secondary ml-1" onclick="return confirm('L\'opération de mise à jour automatique depuis le serveur d\'actes peut être très longue.\nSouhaitez-vous poursuivre ?\nSi oui, confirmez et patientez jusqu\'au chargement du rapport de mise à jour');"><i class="fas fa-cloud-download-alt"></i> Tout mettre à jour</a>
-                        {% endif %}
-                      </div>
-                    </div>
-
-                    <nav>
-                      <div class="nav nav-tabs mb-4" id="nav-typesActes" role="tablist">
-                      {% for typeActe in page.typesActes %}
-                        <a class="nav-item nav-link{% if loop.index == 1 %} active{% endif %}" id="nav-typesActesTab-{{ typeActe }}" data-toggle="tab" href="#nav-typesActes-{{ typeActe }}">
-                        {% if typeActe == 'mCCAM' %}Modificateurs CCAM{% else %}{{ typeActe }}{% endif %}
-                        </a>
-                      {% endfor %}
-                      </div>
-                    </nav>
-
-                    <div class="tab-content" id="nav-tabContent">
-                    {% for typeActe in page.typesActes %}
-
-                    <div class="tab-pane fade {% if loop.index == 1 %} show active{% endif %}" id="nav-typesActes-{{ typeActe }}">
-                        <table class="table table-sm table-hover">
-                            <thead class="thead-light">
-                                <tr>
-                                  <th>#</th>
-                                    <th>Code</th>
-                                    <th>Label</th>
-                                    <th>Utilisation</th>
-                                    <th>Type</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for w in page['actesBase'][typeActe] %}
-                                    <tr>
-                                        <td>{{ w.id }}</td>
-                                        <td>{{ w.code }}</td>
-                                        <td>{{ w.label }}</td>
-                                        <td>{{ w.nbUtilisation }}</td>
-                                        <td>{{ w.type }}</td>
-
-                                        <td  class="text-right">
-                                          <div class="btn-group">
-                                            {% if w.type == 'CCAM' %}
-                                            <a class="btn btn-light btn-sm" role="button" href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}" target="CCAM" title="Voir sur le site de la CCAM">
-                                              <span class="fa fa-eye" aria-hidden="true"></span>
-                                            </a>
-                                            {% endif %}
-
-                                            <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="actes_base" data-form="formModalNewCat" data-modal="modalNewCat">
-                                                <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-                                            </button>
-
-                                            <button type="button" {% if w.nbUtilisation > 0 %} disabled{% endif %} class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes_base">
-                                                <span class="fa fa-times" aria-hidden="true"></span>
-                                            </button>
-                                          </div>
-                                        </td>
-                                    </tr>
-                                  {% endfor %}
-                            </tbody>
-                        </table>
-
-                      </div>
-                      {% endfor %}
-                    </div>
-                </div>
-            </div>
+        <div class="row my-3">
+          <div class="col">
+            {% if config.apiCcamNgapUrl is not empty %}
+            <p class="text-muted">
+              Le serveur d'actes est configuré à {{ config.apiCcamNgapUrl }}
+            </p>
+            {% else %}
+            <p class="text-danger">
+              Le serveur d'actes n'est pas configuré. L'import automatique du tarif des actes n'est pas fonctionnel.
+            </p>
+            {% endif %}
+          </div>
+          <div class="col text-right">
+            <button type="button" class="btn btn-primary reset-modal" data-toggle="modal" data-target="#modalNewCat">
+                <i class="fas fa-plus"></i> Nouvel acte
+            </button>
+            {% if config.apiCcamNgapUrl is not empty %}
+              <a href="/configuration/actes-base/rapport-maj/" class="btn btn-outline-secondary ml-1" onclick="return confirm('L\'opération de mise à jour automatique depuis le serveur d\'actes peut être très longue.\nSouhaitez-vous poursuivre ?\nSi oui, confirmez et patientez jusqu\'au chargement du rapport de mise à jour');"><i class="fas fa-cloud-download-alt"></i> Tout mettre à jour</a>
+            {% endif %}
+          </div>
         </div>
 
-        {# modal nouvel acte / edition #}
-        <div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        <nav>
+          <div class="nav nav-tabs mb-4" id="nav-typesActes" role="tablist">
+          {% for typeActe in page.typesActes %}
+            <a class="nav-item nav-link{% if loop.index == 1 %} active{% endif %}" id="nav-typesActesTab-{{ typeActe }}" data-toggle="tab" href="#nav-typesActes-{{ typeActe }}">
+            {% if typeActe == 'mCCAM' %}Modificateurs CCAM{% else %}{{ typeActe }}{% endif %}
+            </a>
+          {% endfor %}
+          </div>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent">
+        {% for typeActe in page.typesActes %}
+
+        <div class="tab-pane fade {% if loop.index == 1 %} show active{% endif %}" id="nav-typesActes-{{ typeActe }}">
+            <table class="table table-sm table-hover">
+                <thead class="thead-light">
+                    <tr>
+                      <th>#</th>
+                        <th>Code</th>
+                        <th>Label</th>
+                        <th>Utilisation</th>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in page['actesBase'][typeActe] %}
+                        <tr>
+                            <td>{{ w.id }}</td>
+                            <td>{{ w.code }}</td>
+                            <td>{{ w.label }}</td>
+                            <td>{{ w.nbUtilisation }}</td>
+                            <td>{{ w.type }}</td>
+
+                            <td  class="text-right">
+                              <div class="btn-group">
+                                {% if w.type == 'CCAM' %}
+                                <a class="btn btn-light btn-sm" role="button" href="https://www.ameli.fr/accueil-de-la-ccam/trouver-un-acte/fiche-abregee.php?code={{ w.code }}" target="CCAM" title="Voir sur le site de la CCAM">
+                                  <span class="fa fa-eye" aria-hidden="true"></span>
+                                </a>
+                                {% endif %}
+
+                                <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="actes_base" data-form="formModalNewCat" data-modal="modalNewCat">
+                                    <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                                </button>
+
+                                <button type="button" {% if w.nbUtilisation > 0 %} disabled{% endif %} class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes_base">
+                                    <span class="fa fa-times" aria-hidden="true"></span>
+                                </button>
+                              </div>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                </tbody>
+            </table>
+
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+{# modal nouvel acte / edition #}
+<div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold" id="myModalLabel">Création / édition</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="alert alert-danger" role="alert" style="display : none;">
+          Merci de considérer les informations suivantes et de corriger les champs concernés :
+          <ul></ul>
+        </div>
+
+        <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configActesBaseCreate/">
+          <div class="form-group">
+            {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'NGAP' : 'NGAP', 'CCAM' : 'CCAM', 'mCCAM' : 'Modificateur CCAM','Libre' : 'Libre'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Type du code', } }) }}
+          </div>
+          <div class="form-row align-items-end">
+            <div class="form-group col-3">
+              {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
+            </div>
+            <div class="form-group col-3">
+              {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'activite', 'value':'1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Activité', } }) }}
+            </div>
+            <div class="form-group col-3">
+              {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'phase', 'value':'0', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Phase', } }) }}
+            </div>
+
+            <div class="form-group col-3 text-right">
+              <button type="button" class="btn btn-secondary importFromCCAM" title="Importer / mettre à jour depuis le site de la CCAM">
+                <i class="fas fa-search"></i>
+                Rechercher</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'label', 'placeholder' : 'description', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label', } }) }}
+          </div>
+
+          <div class="form-group">
+            {{ f.select ({ 'select' : { 'name' : 'tarifUnit', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'euro' : '€', 'pourcent' : '%'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Unité tarif', } }) }}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-12">
+              {{ f.textarea ({
+                        'textarea' : {
+                          'name' : 'dataYaml',
+                          'id' : 'dataYamlID',
+                          'placeholder' : '',
+                          'class' : 'form-control',
+                          'autocomplete' : 'off',
+                          'rows' : '10'
+                        },
+                        'label' : {
+                          'position' : 'before',
+                          'label' : 'Données sur l\'acte',
+                        }
+                      }) }}
+                      </div>
                     </div>
-                    <div class="modal-body">
 
-                        <div class="alert alert-danger" role="alert" style="display : none;">
-                            Merci de considérer les informations suivantes et de corriger les champs concernés :
-                            <ul></ul>
-                        </div>
-
-                        <form id="formModalNewCat" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configActesBaseCreate/">
-                            <div class="form-group">
-                                {{ f.select ({ 'select' : { 'name' : 'type', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'NGAP' : 'NGAP', 'CCAM' : 'CCAM', 'mCCAM' : 'Modificateur CCAM','Libre' : 'Libre'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Type du code', } }) }}
-                            </div>
-                            <div class="form-row align-items-end">
-                              <div class="form-group col-3">
-                                  {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
-                              </div>
-                              <div class="form-group col-3">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'activite', 'value':'1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Activité', } }) }}
-                              </div>
-                              <div class="form-group col-3">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'phase', 'value':'0', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Phase', } }) }}
-                              </div>
-
-                              <div class="form-group col-3 text-right">
-                                <button type="button" class="btn btn-secondary importFromCCAM" title="Importer / mettre à jour depuis le site de la CCAM"><i class="fas fa-search"></i> Rechercher</button>
-                              </div>
-                            </div>
-
-                            <div class="form-group">
-                                {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'label', 'placeholder' : 'description', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Label', } }) }}
-                            </div>
-
-
-
-                            <div class="form-group">
-                                {{ f.select ({ 'select' : { 'name' : 'tarifUnit', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'euro' : '€', 'pourcent' : '%'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Unité tarif', } }) }}
-                            </div>
-
-
-
-                            <div class="form-row">
-                              <div class="form-group col-12">
-                              {{ f.textarea ({
-                                'textarea' : {
-                                  'name' : 'dataYaml',
-                                  'id' : 'dataYamlID',
-                                  'placeholder' : '',
-                                  'class' : 'form-control',
-                                  'autocomplete' : 'off',
-                                  'rows' : '10'
-                                },
-                                'label' : {
-                                  'position' : 'before',
-                                  'label' : 'Données sur l\'acte',
-                                }
-                              }) }}
-                              </div>
-                            </div>
-
-                          </form>
-                        </div>
-                        <div class="modal-footer"> <button type="button" class="btn btn-light" data-dismiss="modal">Fermer</button> <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button> </div> </div>
-                                </div> </div> {% endblock %}
+                  </form>
+                </div>
+                <div class="modal-footer"> <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button> <button type="button" class="btn btn-primary modal-save" data-form="formModalNewCat" data-modal="modalNewCat">Sauvegarder</button> </div> </div>
+                        </div> </div>
+{% endblock %}

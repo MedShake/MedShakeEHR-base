@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > Config : édition d'un formulaire
+ # Template > Config : aperçu des formulaires
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
@@ -31,279 +31,100 @@
 {% block title %}MedShakeEHR : configuration{% endblock %}
 
 {% block head %}
-{{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
-  </li>
-  <li class="breadcrumb-item">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
-  </li>
-  <li class="breadcrumb-item active">{{ page.form.name }}
-  </li>
-</ol>
-
-<h1>Edition de formulaire : {{ page.form.name }}</h1>
-
-<div class="row">
-	<div class="col-md-5" style="padding-right : 40px">
-	<h2>Références</h2>
-
-	<h3>Types utilisables <a class="btn btn-sm btn-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/"><i class="fas fa-pen"></i> Modifier</a></h3>
-
-		<table class="table table-sm mb-0 table-hover">
-		<tr>
-			<th>#</th>
-      <th>Tag</th>
-			<th>Label</th>
-			<th>Description</th>
-		</tr>
-		{% for k,v in page.tabTypes %}
-		<tr>
-			<th colspan="4">
-				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-light btn-sm typeToggleVisibility">
-  				<span class="fa fa-search" aria-hidden="true"></span>
-				</button> {{ v.0.catLabel }}
-			</th>
-		</tr>
-		{% for w in v %}
-			<tr class="cat{{ v.0.cat }} small" style="display : none;">
-			<td>{{ w.id }}</td>
-      <td>{{ w.name }}</td>
-			<td>{{ w.label }}</td>
-			<td>{{ w.description }}</td>
-			</tr>
-		{% endfor %}
-		{% endfor %}
-		</table>
-
-
-
-	</div>
-
-
-
-	<form id="formParamsEdit" class="col-md-7 ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
-    <button type="submit" class="btn btn-primary float-right m-1" style="margin-top : 25px">Enregistrer</button>
-	<h2>Édition <small>formulaire #{{ page.form.id }}</small></h2>
-
-  <ul class="nav nav-tabs mb-3" id="navTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="generalites-tab" data-toggle="tab" href="#generalites-pan">Généralités</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="structure-tab" data-toggle="tab" href="#structure-pan">Structure</a>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="cda-tab" data-toggle="tab" href="#cda-pan">CDA</a>
+    <li class="breadcrumb-item active">Aperçu du formulaire #{{ page.formData.id }}
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="javascript-tab" data-toggle="tab" href="#javascript-pan">JavaScript</a>
-    </li>
-  </ul>
+  </ol>
 
-  <div class="tab-content" id="navTabContent">
-    <div class="tab-pane fade show active" id="generalites-pan" >
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'hidden',
-  				'name' : 'id',
-  				'value' : page.form.id
-  			},
-  		}) }}
 
-      <div class="form-group">
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'text',
-  				'name' : 'internalName',
-  				'placeholder' : 'nom à usage interne, pas d\'espace, pas d\'accent',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.internalName,
-          'readonly' : 'readonly'
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Nom à usage interne',
-  			}
-  		}) }}
-  		</div>
+  <div class="row">
 
-      <div class="form-group">
-  		{{ f.select ({
-  			'select' : {
-  				'name' : 'module',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'values' : page.modules,
-  				'valueDefaut': page.form.module
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Module concerné',
-  			}
-  		}) }}
-  		</div>
+    <div class=" col-md-4">
+    {% for k,v in page.tabTypes %}
+      <h2 class="mb-2" id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h2>
+      <table class="table table-sm mb-0 table-hover mb-3">
+      <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Module</th>
+        <th>Nom</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for w in v %}
+        <tr {% if w.id == page.formData.id %}class="table-success"{% endif %}>
+        <td>{{ w.id }}</td>
+        <td>{{ w.module }}</td>
+        <td>{{ w.name }}</td>
 
-  		<div class="form-group">
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'text',
-  				'name' : 'name',
-  				'placeholder' : 'nom du formulaire',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.name
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Nom du formulaire',
-  			}
-  		}) }}
-  		</div>
-
-  		<div class="form-group">
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'text',
-  				'name' : 'description',
-  				'placeholder' : 'description du formulaire',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.description
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Description du formulaire',
-  			}
-  		}) }}
-  		</div>
-
-  		<div class="form-group">
-  		{{ f.select ({
-  			'select' : {
-  				'name' : 'cat',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'values' : page.tabCat,
-  				'valueDefaut': page.form.cat
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Catégorie',
-  			}
-  		}) }}
-  		</div>
-
-  		<div class="form-group">
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'text',
-  				'name' : 'printModel',
-  				'placeholder' : 'modèle pour l\'impression',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.printModel
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Modèle pour l\'impression',
-  			}
-  		}) }}
-  		</div>
-
-  		<div class="form-group">
-  		{{ f.input ({
-  			'input' : {
-  				'type' : 'text',
-  				'name' : 'formAction',
-  				'placeholder' : 'url de destination à la validation',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.formAction
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'URL de destination à la validation (action)',
-  			}
-  		}) }}
-  		</div>
-
-    </div>
-    <div class="tab-pane fade" id="structure-pan">
-
-  		<div class="form-group">
-  		{{ f.textarea ({
-  			'textarea' : {
-  				'name' : 'yamlStructure',
-  				'placeholder' : 'valeurs par défaut',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.yamlStructure,
-  				'add' : 'rows="20" style="font-family:monospace;"'
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Structure du formulaire (format yaml)'
-  			}
-  		}) }}
-  		</div>
-    </div>
-    <div class="tab-pane fade" id="cda-pan">
-      <div class="form-group">
-  		{{ f.textarea ({
-  			'textarea' : {
-  				'name' : 'cda',
-  				'placeholder' : 'Code au format YAML pour la génération du document au format XML CDA R2',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.cda,
-  				'add' : 'rows="20" style="font-family:monospace;"'
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Variables pour construction du CDA'
-  			}
-  		}) }}
-  		</div>
+        <td class="text-right">
+          <div class="btn-group">
+            <a class="btn btn-light btn-sm{% if k=='displayforms' %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+              <span class="fa fa-eye" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+              <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+            </a>
+          </div>
+        </td>
+        </tr>
+      {% endfor %}
+      </tbody></table>
+    {% endfor %}
     </div>
 
-    <div class="tab-pane fade" id="javascript-pan">
-      <div class="form-group">
-      {{ f.textarea ({
-        'textarea' : {
-          'name' : 'javascript',
-          'placeholder' : 'Le code entré ici n\'est interprété que pour les formulaires de consultation',
-          'class' : 'form-control',
-          'autocomplete' : 'off',
-          'value' : page.form.javascript,
-          'add' : 'rows="20" style="font-family:monospace;"'
-        },
-        'label' : {
-          'position' : 'before',
-          'label' : 'Javascript'
-        }
-      }) }}
+    <div class=" col-md-8">
+
+      <h1 class="mb-4">Aperçu du formulaire #{{ page.formData.id }}
+        <small>{{ page.formData.name }}</small>
+      </h1>
+
+      <div class="alert alert-warning" role="alert">Les fichiers javascript n'étant pas chargés, ce formulaire n'est pas dynamique !</div>
+
+      <div class="jumbotron col-md-12">
+        {{ f.formbuilder(page.form , page.formIN ) }}
+      </div>
+
+      <div class="card my-3">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseTemplate" style="cursor: pointer">
+          <button class="btn btn-light btn-sm"><i class="far fa-plus-square"></i></button> Template d'impression
+        </div>
+        <div id="collapseTemplate" class="collapse card-body">
+          <div class="alert alert-warning" role="alert">
+            Ce code est généré automatiquement pour servir de base à la création d'un template d'impression. Il doit être retravaillé pour obtenir un résultat correct.
+          </div>
+          <textarea class="form-control" rows="20">{{ page.basicTemplateCode }}</textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseSql" style="cursor: pointer">
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
+          Code SQL de création
+        </div>
+        <div id="collapseSql" class="collapse card-body">
+          <textarea class="form-control" rows="20">{{ page.sqlCode }}</textarea>
+        </div>
       </div>
     </div>
-
-		<button type="submit" class="btn btn-primary float-right m-1">Enregistrer</button>
-
-		<p>
-		{{ page.form.yaml }}
-		</p>
-    </div>
-	</form>
-
-</div>
+  </div>
 
 {% endblock %}

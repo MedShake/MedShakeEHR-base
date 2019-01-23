@@ -74,14 +74,16 @@
         </ul>
       </div>
       <div class="col-md-10 tab-content">
-        <div class="col-12">
-          <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>
+        <div class="row">
+          <div class="col text-right">
+            <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
+          </div>
         </div>
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
           <div class="col-12 mt-4">
             <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
-              <thead>
+              <thead class="thead-light">
                 <tr>
                   <th>Paramètre</th>
                   <th class="col-3">Valeur défaut</th>
@@ -171,7 +173,9 @@
     </div>
 
   </form>
+{% endblock %}
 
+{% block modals %}
   {# modal d'ajout de paramètres #}
   <div id="modalAddParam" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -206,8 +210,8 @@
                 {% endfor %}
               </div>
             </div>
-            <p id="description" class="py-1" style="background-color:#eee">description : {{ (page.availableParams|first).description }}</p>
-            <p id="type" class="py-1" style="background-color:#eee">type : {{ (page.availableParams|first).type }}</p>
+            <p id="description" class="p-2 bg-light" >Description : {{ (page.availableParams|first).description }}</p>
+            <p id="type" class="p-2 bg-light">type : {{ (page.availableParams|first).type }}</p>
             <div class="form-group row">
               <div class="col-12">
                 <label>Valeur</label>

@@ -12,6 +12,13 @@ $theme-colors: (
   "gray": lighten(#000000, 79%),
 );
 
+$sizes: (
+  5: 5%,
+  10: 10%,
+  15: 15%,
+  20: 20%,
+);
+
 $yiq-contrasted-threshold: 183;
 
 @import "../thirdparty/twbs/bootstrap/scss/bootstrap";

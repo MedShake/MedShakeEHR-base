@@ -60,7 +60,7 @@
 <h1>Gestion des modèles de rapports</h1>
 
 {# Nav tabs #}
-<ul class="nav nav-tabs mb-4" role="tablist">
+<ul class="nav nav-tabs mt-3 mb-4" role="tablist">
     <li role="presentation" class="nav-item">
         <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
@@ -74,37 +74,36 @@
 
 </ul>
 
+<h2>Répertoire</h2>
 
-  <h2>Répertoire</h2>
+<table class="table table-sm">
+  <thead class="thead-light">
+    <tr>
+      <th>
+        Paramètre
+      </th>
+      <th>
+        Répertoire local
+      </th>
+      <th>
+        Est accessible en lecture
+      </th>
+      <th>
+        Est accessible en écriture
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>templatesPdfFolder</td>
+      <td>{{ page.repertoireTemplatesPDF }}</td>
+      <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
 
-
-  <table class="table table-sm">
-      <tr>
-          <th>
-              Paramètre
-          </th>
-          <th>
-              Répertoire local
-          </th>
-          <th>
-              Est accessible en lecture
-          </th>
-          <th>
-              Est accessible en écriture
-          </th>
-      </tr>
-
-          <tr>
-              <td>templatesPdfFolder</td>
-              <td>{{ page.repertoireTemplatesPDF }}</td>
-              <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-              <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-          </tr>
-
-  </table>
-
-
-  <h2>Templates présents</h2>
+<h2 class="mt-4">Templates présents</h2>
 
   {% if page.templatesDirAutorisationLecture == 1 %}
 
@@ -112,6 +111,7 @@
       <div class="alert alert-danger" role="alert">Aucun template n'est disponible.</div>
     {% else %}
       <table class="table table-sm mb-0 table-hover ">
+        <thead class="thead-light">
           <tr>
               <th>
                   Fichier
@@ -123,6 +123,8 @@
                   Gérer
               </th>
           </tr>
+        </thead>
+        <tbody>
           {% for k,v in page.listeTemplates %}
             {% if v.file %}
               <tr>
@@ -151,6 +153,7 @@
               </tr>
             {% endif %}
           {% endfor %}
+        </tbody>
       </table>
     {% endif %}
 
@@ -158,7 +161,7 @@
     <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en lecture. Les templates ne peuvent être listés et gérés par cette interface.</div>
   {% endif %}
 
-  <h2>Ajouter des templates</h2>
+  <h2 class="mt-4">Ajouter des templates</h2>
 
   {% if page.templatesDirAutorisationEcriture == 1 %}
 

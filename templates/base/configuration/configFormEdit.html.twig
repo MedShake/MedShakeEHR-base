@@ -64,12 +64,15 @@
 	<h3>Types utilisables <a class="btn btn-sm btn-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/"><i class="fas fa-pen"></i> Modifier</a></h3>
 
 		<table class="table table-sm mb-0 table-hover">
-		<tr>
-			<th>#</th>
-      <th>Tag</th>
-			<th>Label</th>
-			<th>Description</th>
-		</tr>
+      <thead class="thead-light">
+    		<tr>
+    			<th>#</th>
+          <th>Tag</th>
+    			<th>Label</th>
+    			<th>Description</th>
+    		</tr>
+      </thead>
+      <tbody>
 		{% for k,v in page.tabTypes %}
 		<tr>
 			<th colspan="4">
@@ -87,6 +90,7 @@
 			</tr>
 		{% endfor %}
 		{% endfor %}
+    </tbody>
 		</table>
 
 

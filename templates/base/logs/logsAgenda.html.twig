@@ -55,9 +55,8 @@
 
 
 {% if page.agendaUsers|length > 1 %}
-  <div class="row">
-    <div class="col">
-      <ul class="nav nav-tabs mb-4" >
+
+      <ul class="nav nav-tabs mt-3" >
         <li class="nav-item">
             <a class="nav-link{% if page.agendaID is not defined %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/agenda/">Tous les agendas</a>
         </li>
@@ -67,16 +66,14 @@
           </li>
         {% endfor %}
       </ul>
-    </div>
-  </div>
+
 {% endif %}
 
 {% if page.eventID is not defined %}
 
-    <div class="row">
-      <div class="col">
-        <table class="table table-sm mb-0 table-hover ">
-            <thead>
+
+        <table class="table table-sm mb-0 table-hover mt-3">
+            <thead class="thead-light">
                 <tr>
                     <th class="">date action</th>
                     <th class="">agenda</th>
@@ -124,11 +121,9 @@
                 {% endfor %}
             </tbody>
           </table>
-        </div>
-    </div>
 
 {% else %}
-  <div class="row">
+  <div class="row mt-4">
     <div class="col-md-6">
     {% for k,v in page.rdv %}
 

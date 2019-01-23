@@ -48,11 +48,12 @@
 	  </li>
   </ol>
 
-   <h1>Tags DICOM</h1>
+  <h1>Tags DICOM</h1>
 
-   <p></p>
 
-   <table class="table table-sm">
+
+   <table class="table table-sm mt-4">
+     <thead class="thead-light">
      <tr>
        <th>Tag</th>
        <th colspan="2">Type associé</th>
@@ -61,6 +62,8 @@
        <th>Décimales</th>
        <th></th>
      </tr>
+    </thead>
+    <tbody>
      {% for k,v in page.tags %}
       <tr class="{% if v.0.typeID > 0 or v.1.typeID > 0 %}table-success{% else %}table-warning{% endif %}">
        <td colspan="6" class="font-weight-bold">
@@ -108,16 +111,18 @@
      {% endfor %}
 
      {% endfor %}
+   </tbody>
    </table>
 
+ {% endblock %}
 
-
+ {% block modals %}
    {# modal new type #}
    <div class="modal fade" id="modalNewType" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
+           <h4 class="modal-title font-weight-bold" id="myModalLabel">Création / édition</h4>
            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
@@ -216,7 +221,7 @@
    			</form>
          </div>
          <div class="modal-footer">
-           <button type="button" class="btn btn-light" data-dismiss="modal">Fermer</button>
+           <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
            <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
          </div>
        </div>

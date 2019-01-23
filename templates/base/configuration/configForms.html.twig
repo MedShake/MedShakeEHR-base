@@ -54,7 +54,7 @@
 <div>
 
 	{# Nav tabs #}
-	<ul class="nav nav-tabs" role="tablist">
+	<ul class="nav nav-tabs mt-3" role="tablist">
 		<li role="presentation" class="nav-item"><a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/" aria-controls="categories" role="tab">Catégories</a></li>
 		<li role="presentation" class="nav-item"><a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/" aria-controls="types" role="tab">Formulaires</a></li>
 	</ul>
@@ -65,18 +65,21 @@
 		{# type tab #}
 		<div role="tabpanel" class="tab-pane active" id="types">
 
-			<p></p>
-			<button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewType">
-			Nouveau formulaire
-			</button>
+      <div class="row mt-3">
+        <div class="col text-right">
+          <button type="button" class="btn btn-primary reset-modal" data-toggle="modal" data-target="#modalNewType">
+            <i class="fas fa-plus"></i> Nouveau formulaire
+          </button>
+        </div>
+      </div>
 
 			{% for k,v in page.tabTypes %}
         {% if page.groupe=='' or page.groupe==v.0.catName %}
-				  <h2 class="mb-2" id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
+				  <h2 id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
             <span class="fa fa-search-plus" aria-hidden="true"></span>
           </a></h2>
-				  <table class="table table-sm mb-0 table-hover mb-3">
-				  <thead>
+				  <table class="table table-sm table-hover mb-3">
+				  <thead class="thead-light">
 				  <tr>
 					  <th>#</th>
             <th>Module</th>
@@ -115,13 +118,15 @@
 	</div>
 
 </div>
+{% endblock %}
 
+{% block modals %}
 {# modal new type #}
 <div class="modal fade" id="modalNewType" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Création formulaire</h4>
+        <h4 class="modal-title font-weight-bold" id="myModalLabel">Création formulaire</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
@@ -219,13 +224,10 @@
 			</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
         <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
       </div>
     </div>
   </div>
 </div>
-
-
-
 {% endblock %}

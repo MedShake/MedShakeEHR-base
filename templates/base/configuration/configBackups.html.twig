@@ -53,27 +53,30 @@
   <h2 class="my-4">Répertoire</h2>
 
   <table class="table table-sm">
-    <tr>
-      <th>
-        Paramètre
-      </th>
-      <th>
-        Répertoire local
-      </th>
-      <th>
-        Est accessible en lecture
-      </th>
-      <th>
-        Est accessible en écriture
-      </th>
-    </tr>
-
-    <tr>
-      <td>backupLocation</td>
-      <td>{{ config.backupLocation }}</td>
-      <td class="{% if page.backupsDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-      <td class="{% if page.backupsDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-    </tr>
+    <thead class="thead-light">
+      <tr>
+        <th>
+          Paramètre
+        </th>
+        <th>
+          Répertoire local
+        </th>
+        <th>
+          Est accessible en lecture
+        </th>
+        <th>
+          Est accessible en écriture
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>backupLocation</td>
+        <td>{{ config.backupLocation }}</td>
+        <td class="{% if page.backupsDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        <td class="{% if page.backupsDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      </tr>
+    </tbody>
   </table>
 
   <h2 class="my-4">Backups présents</h2>
