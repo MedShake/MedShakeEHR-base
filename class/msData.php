@@ -91,7 +91,7 @@ class msData
  * @param  array $col   array des colonnes sql à retourner
  * @return array        array
  */
-    public function getDataTypesFromCatID($catID, $col=['*'])
+    public function getDataTypesFromCatID($catID, $col=['*'], $orderBy='displayOrder, label')
     {
         if(!is_numeric($catID)) throw new Exception('catID is not numeric');
 
@@ -101,7 +101,7 @@ class msData
           $where = null;
         }
 
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' ".$where." order by displayOrder, label");
+        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' ".$where." order by ".$orderBy);
     }
 
 /**
@@ -110,10 +110,10 @@ class msData
  * @param  array $col   array des colonnes sql à retourner
  * @return array        array
  */
-    public function getDataTypesFromCatName($name, $col=['*'])
+    public function getDataTypesFromCatName($name, $col=['*'], $orderBy='displayOrder, label')
     {
         $catID=$this->getCatIDFromName($name);
-        return $this->getDataTypesFromCatID($catID, $col);
+        return $this->getDataTypesFromCatID($catID, $col, $orderBy);
     }
 
 
