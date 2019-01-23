@@ -29,6 +29,7 @@
 
 $debug='';
 $template="patientReglementForm";
+$forceAllTemplates=TRUE;
 
 $hono = new msReglement;
 $hono->setPatientID($_POST['patientID']);
@@ -79,7 +80,6 @@ $hono->setSecteursTarifaires();
 $hono->setHiddenInputToReglementForm($p['page']['form']);
 
 // Data complémentaires templates
-
 $p['page']['formIN']=$hono->getReglementForm();
 $p['page']['modifcateursCcam']=$hono->getModificateursCcam();
 $p['page']['patient']['id']=$_POST['patientID'];
