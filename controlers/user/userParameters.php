@@ -156,3 +156,7 @@ $p['page']['lap']['params']=msConfiguration::getCatParametersForUser('LAP', arra
 
  // Paramètres Règlements
  $p['page']['reglement']['params']=msConfiguration::getCatParametersForUser('Règlements', array('id'=>$p['user']['id'], 'module'=>$p['user']['module']));
+ $p['page']['reglement']['params']['administratifReglementFormulaires']=explode(',',$p['page']['reglement']['params']['administratifReglementFormulaires']);
+
+ $dataReg=new msData;
+ $p['page']['reglement']['possibleForms']=$dataReg->getDataTypesFromCatName('porteursReglement', ['label', 'name', 'module', 'description'], 'module, description');

@@ -80,7 +80,15 @@
           </div>
           <div class="form-group">
             <label for="administratifReglementFormulairesID">Formulaire(s) de règlement à utiliser</label>
-            <input type="text" class="form-control form-control-sm" id="administratifReglementFormulairesID" name="administratifReglementFormulaires" value="{{ page.reglement.params.administratifReglementFormulaires }}">
+
+            <select class="custom-select" multiple id="administratifReglementFormulairesID" name="administratifReglementFormulaires[]" autocomplete="off">
+              {% for rform in page.reglement.possibleForms %}
+                <option value="{{ rform.name }}" {% if rform.name in page.reglement.params.administratifReglementFormulaires %}selected{% endif %}>{{ rform.module}} - {{ rform.description}}</option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">
+              Sélection multiple possible avec la touche contrôle enfoncée.
+            </small>
           </div>
         </div>
       </div>
