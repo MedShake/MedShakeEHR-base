@@ -29,28 +29,31 @@
  <tr class="tr{{ cs.id }}{% if cs.important == 'y' %} table-danger{% endif %} trLigneExamen trReglement collapse{% if cs.creationDate|date("Y") == "now"|date("Y") %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Règlement">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <span class="fa fa-euro-sign fa-fw" aria-hidden="true"></span>
+      <i class="fa fa-euro-sign fa-fw"></i>
     </a>
   </td>
   <td>
      <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
      <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
-    {% if cs.creationDate != cs.registerDate %}&nbsp;<button type="button" class="btn btn-light btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
-     <span class="far fa-clock fa-fw" aria-hidden="true"></span>
-    </button>{% endif %}
+    {% if cs.creationDate != cs.registerDate %}
+      <button type="button" class="btn btn-light btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
+        <i class="far fa-clock fa-fw"></i>
+      </button>
+    {% endif %}
   </td>
   <td>
     <div class="btn-group">
-      {# edit #}
-      <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button"
+      {# edit / clone #}
        {% if cs.iconeType == 'update' %}
-          title="Editer">
-         <span class="fa fa-pencil-alt fa-fw" aria-hidden="true"></span>
+          <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button"  title="Editer">
+            <i class="fa fa-pencil-alt fa-fw"></i>
+          </button>
        {% else %}
-          title="Dupliquer">
-         <span class="fa fa-share fa-fw" aria-hidden="true"></span>
+          <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button" title="Dupliquer">
+            <i class="fa fa-share fa-fw"></i>
+         </button>
        {% endif %}
-      </button>
+
       {% if config.vitaleActiver =='true' %}
         <button class="btn btn-light btn-sm d-none d-lg-inline-block newFse" type="button" title="Établir une FSE">
           <i class="far fa-address-card fa-fw fa-lg text-success"></i>
@@ -59,40 +62,61 @@
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-ellipsis-h fa-fw" aria-hidden="true"></span>
+            <i class="fa fa-ellipsis-h fa-fw"></i>
         </button>
         <ul class="dropdown-menu">
-          <li>
-            <span class="dropdown-header py-0"><i>#{{ cs.id }} Règlement</i></span>
+          <li class="d-block d-lg-none">
+           {% if cs.iconeType == 'update' %}
+             <a class="dropdown-item editReglement">
+               <i class="fa fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
+             </a>
+           {% else %}
+             <a class="dropdown-item editReglement">
+               <i class="fas fa-clone fa-fw text-muted mr-1"></i> Dupliquer
+             </a>
+           {% endif %}
           </li>
           {% if config.transmissionsPeutCreer == 'true' %}
             <li>
-              <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">Créer une transmission</a>
+              <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">
+                <i class="far fa-comments fa-fw text-muted mr-1"></i>  Créer une transmission
+              </a>
             </li>
           {% endif %}
-          <li class="d-block d-lg-none">
-           {% if cs.iconeType == 'update' %}
-             <a class="dropdown-item editReglement">Editer</a>
-           {% else %}
-             <a class="dropdown-item editReglement">Dupliquer</a>
-           {% endif %}
-          </li>
           <li class="dropdown-divider d-block d-lg-none"></li>
           <li>
               <a href="#" class="dropdown-item toggleImportant" data-objetID="{{ cs.id }}" data-importanceActu="{{ cs.important }}">
-                  {% if cs.important == 'n' %}Marquer important{% else %}Démarquer important{% endif %}
+                {% if cs.important == 'n' %}
+                  <i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"> </i> Marquer important
+                {% else %}
+                  <i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i> Rendre non important
+                {% endif %}
               </a>
           </li>
           <li>
-              <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">Compléter titre</a>
+              <a class="dropdown-item" data-toggle="modal" href="#alternatTitreModal">
+                <i class="fas fa-pen fa-fw text-muted mr-1"></i> Compléter titre
+              </a>
           </li>
           <li>
-              <a href="#" class="dropdown-item changeCreationDate">Modifier la date</a>
+              <a href="#" class="dropdown-item changeCreationDate">
+                <i class="fas fa-calendar-alt fa-fw text-muted mr-1"></i> Modifier la date
+              </a>
           </li>
           <li role="separator" class="dropdown-divider"></li>
           <li>
-              <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">Supprimer</a>
+              <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">
+                <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer
+              </a>
           </li>
+          {% if user.rank == 'admin' %}
+          <li role="separator" class="dropdown-divider"></li>
+          <li>
+            <span class="dropdown-item disabled small">
+              <i class="fas fa-hashtag fa-fw text-muted mr-1"></i>{{ cs.id }} Règlement
+            </span>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </div>

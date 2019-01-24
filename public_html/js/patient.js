@@ -1430,13 +1430,13 @@ function toogleImportant(el) {
     dataType: "html",
     success: function() {
       if (importanceActu == 'n') {
-        el.html('Démarquer important');
+        el.html('<i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i> Rendre non important');
         el.attr('data-importanceActu', 'y');
         el.closest('tr').addClass(el.closest('tr').hasClass('trReglement') ? 'table-danger' : 'table-info');
       }
       if (importanceActu == 'y') {
         el.closest('tr').removeClass('table-info').removeClass('table-danger');
-        el.html('Marquer important');
+        el.html('<i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i> Marquer important');
         el.attr('data-importanceActu', 'n');
       }
     },
