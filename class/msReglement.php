@@ -451,8 +451,8 @@ class msReglement
         $dataYaml=Spyc::YAMLLoadString($v['dataYaml']);
         if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
           $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
-          if(isset($dataYaml['modificateursParConventionPs']) and !empty($dataYaml['modificateursParConventionPs'])) {
-            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParConventionPs']['CodeGrilleT'.$this->_secteurTarifaire]);
+          if(isset($dataYaml['modificateursParGrilleTarifaire']) and !empty($dataYaml['modificateursParGrilleTarifaire'])) {
+            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]);
           }
           // application coeff majoration DOM
           if(isset($dataYaml['majorationsDom'][$this->_secteurTarifaireGeo])) {

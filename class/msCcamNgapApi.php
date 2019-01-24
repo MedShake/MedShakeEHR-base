@@ -113,7 +113,7 @@ class msCcamNgapApi
 
       $data=Spyc::YAMLDump(array(
         'tarifParGrilleTarifaire'=>$newData,
-        'modificateursParConventionPs'=>$scrap['modificateursApplicables'],
+        'modificateursParGrilleTarifaire'=>$scrap['modificateursApplicables'],
         'majorationsDom'=>$scrap['majorationsDom'],
       ), false, 0, TRUE);
       $data=preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
