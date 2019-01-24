@@ -57,7 +57,7 @@
         <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
 
       {% endif %}
-       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}&#9794;{% endif %}
+       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}<i class="fas fa-venus" title="&#9792;"></i>{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}<i class="fas fa-mars" title="&#9794;"></i>{% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
