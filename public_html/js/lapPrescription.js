@@ -228,7 +228,7 @@ $(document).ready(function() {
   });
 
   // focus sur le champ de recherche
-  $('#modalRecherche').on('show.bs.modal', function(event) {
+  $('#modalRecherche').on('shown.bs.modal', function(event) {
     $('#txtRechercheMedic').focus();
   });
 
