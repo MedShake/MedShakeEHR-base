@@ -204,7 +204,10 @@ class msCourrier
 
         //data de l'instance mère
         if ($this->_objetData['instance']>0) {
-            $tabRetour=$tabRetour+$this->_getInstanceMereData($this->_objetData['instance']);
+          $dataInstanceMere=$this->_getInstanceMereData($this->_objetData['instance']);
+          if(!empty($dataInstanceMere)) {
+            $tabRetour=$tabRetour+$dataInstanceMere;
+          }
         }
 
         ksort($tabRetour, SORT_REGULAR);
@@ -499,6 +502,7 @@ class msCourrier
  */
     private function _getInstanceMereData($instance)
     {
+        $tab=[];
         if ($data=msSQL::sql2tabKey("select dt.id, dt.name, od.value
         from objets_data as od
         join data_types as dt on dt.id=od.typeID and groupe='medical'
@@ -507,8 +511,8 @@ class msCourrier
             $tab[$k]=$v['value'];
             $tab[$v['id']]=$v['value'];
           }
-          return $tab;
         }
+        return $tab;
     }
 
 /**
