@@ -28,22 +28,22 @@
 //compléter le chargement de la config
 $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
-if(!isset($_POST['objetID']) or !isset($_POST['validationHash']) or !is_numeric($_POST['objetID'])) {
+if(!isset($_GET['objetID']) or !isset($_GET['validationHash']) or !is_numeric($_GET['objetID'])) {
   http_response_code(401);
   die();
 }
 
 $paiem = new msObjet;
-$dataPaiem = $paiem->getObjetAndSons($_POST['objetID'], 'name');
+$dataPaiem = $paiem->getObjetAndSons($_GET['objetID'], 'name');
 
 if(!isset($dataPaiem['regleDetailsActes'])) {
   http_response_code(400);
   die();
 }
 
-$validationHashExpected= md5($dataPaiem['regleDetailsActes']['registerDate'].$_POST['objetID'].$dataPaiem['regleDetailsActes']['typeID']);
+$validationHashExpected= md5($dataPaiem['regleDetailsActes']['registerDate'].$_GET['objetID'].$dataPaiem['regleDetailsActes']['typeID']);
 
-if($validationHashExpected != $_POST['validationHash']) {
+if($validationHashExpected != $_GET['validationHash']) {
   http_response_code(401);
   die();
 }
@@ -51,7 +51,7 @@ if($validationHashExpected != $_POST['validationHash']) {
 $paiem->setToID($dataPaiem['regleDetailsActes']['toID']);
 $paiem->setFromID(msUser::getUserIdFromName($p['config']['vitaleService']));
 
-if(!$paiem->createNewObjetByTypeName('regleFseData', $_POST['data'], $_POST['objetID'])) {
+if(!$paiem->createNewObjetByTypeName('regleFseData', $_GET['data'], $_GET['objetID'])) {
   http_response_code(400);
 } else {
   http_response_code(200);

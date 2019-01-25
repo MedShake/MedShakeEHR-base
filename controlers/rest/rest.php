@@ -46,7 +46,7 @@ switch ($match['params']['m']) {
         include 'inc-rest-uploadNewDoc.php';
         break;
     case 'callbackFse': // retour FSE par services tiers
-        if ($method!='POST') {
+        if ($method!='GET') {
             header('HTTP/1.1 405 Method Not Allowed');
             die;
         }
