@@ -35,8 +35,8 @@ $(document).ready(function() {
 
   // navigation au clavier
   var listingRow = 0;
-  $(".searchupdate").on("keypress", function(e) {
-    console.log(e.which);
+  $(".searchupdate").on("keyup", function(e) {
+    //console.log(e.which);
     if (e.keyCode != 13 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40) {
       updateListingPatients();
       listingRow = 0;
