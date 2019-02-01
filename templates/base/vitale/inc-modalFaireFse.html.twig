@@ -59,6 +59,8 @@
                 <option value="O">Orienté par le médecin traitant</option>
                 <option value="M">Orienté par autre que le médecin traitant</option>
                 <option value="S">Hors Parcours de soins</option>
+                <option value="D">Accès direct spécifique</option>
+                <option value="R">Médecin traitant remplacé</option>
               </select>
             </div>
             <div class="form-group col">
@@ -93,6 +95,7 @@
         <div id="modalFaireFseFinishForm" class="d-none"></div>
       </div>
       <div class="modal-footer">
+        <button id="modalFaireFseTerminer" type="button" class="btn btn-primary d-none">Terminer</button>
         <button id="modalFaireFseValider" data-vitaleservice="{{ config.vitaleService }}" type="button" class="btn btn-primary">Valider</button>
       </div>
     </div>

@@ -26,6 +26,8 @@
  */
 
 var dataVitale = [];
+var reglementObjetID;
+var originalModalBody;
 
 /**
  * Obtenir les data nécessaires pour l'envoi au module tiers
@@ -33,12 +35,13 @@ var dataVitale = [];
  * @return void
  */
 function getFseData(el) {
-  objetID = el.closest('tr').attr('data-objetID');
+  originalModalBody = $('#modalFaireFse div.modal-body').html();
+  reglementObjetID = el.closest('tr').attr('data-objetID');
   $.ajax({
     url: urlBase + '/patient/ajax/getFseData/',
     type: 'get',
     data: {
-      objetID: objetID,
+      objetID: reglementObjetID,
     },
     dataType: "json",
     success: function(data) {
@@ -52,6 +55,7 @@ function getFseData(el) {
       html = '<table class="table table-sm text-right">';
       html += '<thead class="thead-light"><tr> \
       <th class="text-left" colspan="2">Actes - modificateurs</th> \
+      <th ></th> \
       <th >Code asso.</th> \
       <th>P.U.</th> \
       <th>%</th> \
@@ -61,6 +65,7 @@ function getFseData(el) {
         if (!('qte' in v)) v.qte = '';
         if (!('modifsCCAM' in v)) v.modifsCCAM = '';
         if (!('codeAsso' in v)) v.codeAsso = '';
+        if (!('codeQualif' in v)) v.codeQualif = '';
         if (!('depassement' in v)) {
           v.depassement = '';
         } else {
@@ -74,6 +79,7 @@ function getFseData(el) {
 
         html += '<tr> \
         <td class="text-left">' + v.qte + v.acte + '</td> \
+        <td>' + v.codeQualif + '</td> \
         <td>' + v.modifsCCAM + '</td> \
         <td>' + v.codeAsso + '</td> \
         <td>' + v.base + ' €</td> \
@@ -106,11 +112,74 @@ function doFse(el) {
       console.log(data);
       $('#modalFaireFseFinishForm').html(data);
       $('#' + serviceVitale + 'ActionForm').submit();
+      fseWait();
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
     }
   });
+}
+
+/**
+ * Attente du retour des data FSE par l'API REST
+ * @return {void}
+ */
+function fseWait() {
+  $('#modalFaireFseValider').addClass('d-none');
+  waitingMsg = '<div class="text-center"><div class="spinner-grow text-success" style="width: 3rem; height: 3rem;" role="status"><span class="sr-only">Attente du retour</span></div><div>Nous attendons le retour d\'informations concernant la FSE établie.<br>Ce message sera mis à jour automatiquement.</div></div>';
+  $('#modalFaireFse div.modal-body').html(waitingMsg);
+  getFseReturnData();
+}
+
+/**
+ * Vérification récursive de la présence des data FSE de retour
+ * @return {void}
+ */
+function getFseReturnData() {
+  $.ajax({
+    url: urlBase + '/patient/ajax/getFseReturnData/',
+    type: 'get',
+    data: {
+      objetID: reglementObjetID,
+    },
+    dataType: "json",
+    success: function(data) {
+      if (data.status == 'wait') {
+        setTimeout(getFseReturnData, 2000);
+      } else if (data.status == 'end') {
+        fseEnd(data);
+      }
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
+}
+
+/**
+ * Actions quand le retour des data FSE a eu lieu via API
+ * @param  {object} data data
+ * @return {void}
+ */
+function fseEnd(data) {
+  if (data.aPayerError || data.totalError) {
+    endMsg = '<div class="text-center"> \
+    <i class="fas fa-exclamation-circle text-warning fa-4x"></i> \
+    <span class="d-block font-weight-bold mt-2">Il existe un différentiel entre le règlement enregistré et la FSE réalisée.<br>Éditez votre règlement pour corriger cette situation.</span> \
+    <table class="table table-sm table-hover my-3"> \
+      <thead class="thead-light"><tr><th></th><th>Règlement</th><th>FSE</th></tr></thead> \
+      <tbody> \
+      <tr><td class="font-weight-bold">Actes</td><td>' + data.actesEHR + '</td><td>' + data.actesFSE + '</td></tr> \
+      <tr><td class="font-weight-bold">Montant total</td><td>' + data.totalEHR + '</td><td>' + data.totalFSE + '</td></tr> \
+      <tr><td class="font-weight-bold">À régler</td><td>' + data.aPayerEHR + '</td><td>' + data.aPayerFSE + '</td></tr> \
+      </tbody></table> \
+    </div>';
+  } else {
+    endMsg = '<div class="text-center"><i class="fas fa-check-circle text-success fa-4x"></i><span class="d-block font-weight-bold mt-2">Le processus s\'est terminé correctement !</span></div>';
+  }
+  $('#modalFaireFseTerminer').removeClass('d-none');
+  $('#modalFaireFse div.modal-body').html(endMsg);
+  $('#modalFaireFseTerminer').focus();
 }
 
 /**

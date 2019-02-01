@@ -30,7 +30,7 @@
 <td colspan="4" class="py-4">
 
     <div class="card">
-      <div class="card-header">Facturation</div>
+      <div class="card-header"><i class="fa fa-euro-sign fa-fw"></i>  Facturation</div>
         <div class="card-body">
         <table class="table table-sm mb-0 table-striped table-hover">
           {% if page.acteFacture.label is not empty %}
@@ -98,4 +98,47 @@
         </table>
       </div>
     </div>
+
+    {% if page.dataregFse %}
+    <div class="card mt-3">
+      <div class="card-header"><i class="far fa-address-card fa-fw text-success"></i> Données validées pour la FSE ({{ config.vitaleService }})</div>
+      <div class="card-body">
+        <table class="table table-sm mb-0 table-striped table-hover">
+          <thead class="thead-light">
+              <tr>
+                  <th colspan="2">
+                    {{ page.dataregFse.actesOK|join(' + ') }}
+                </th>
+              </tr>
+          </thead>
+          <tbody>
+            {% if page.dataregFse.actesKO is not empty %}
+            <tr class="table-danger">
+              <td>Actes ignorés</td>
+              <td>{{ page.dataregFse.actesKO|join(' + ') }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td>Montant total de la facture</td>
+              <td>{{ page.dataregFse.montant_total_facture }} €</td>
+            </tr>
+            <tr>
+              <td>Part assuré</td>
+              <td>{{ page.dataregFse.montant_part_assure }} €</td>
+            </tr>
+            <tr>
+              <td>Montant remboursé AMO</td>
+              <td>{{ page.dataregFse.montant_remb_amo }} € - {% if page.dataregFse.is_tp_amo is empty %}pas de TP{% else %}TP{% endif %}</td>
+            </tr>
+            <tr>
+              <td>Montant remboursé AMC</td>
+              <td>{{ page.dataregFse.montant_remb_amc }} € - {% if page.dataregFse.is_tp_amc is empty %}pas de TP{% else %}TP{% endif %}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    {% endif %}
 </td>

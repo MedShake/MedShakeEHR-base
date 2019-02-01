@@ -61,6 +61,7 @@ $acceptedModes=array(
     'getGraphData', // Obtenir les data pour les graphs biométrie
     'getGraphDataCardio', // Obtenir les data pour les graphs biométrie cardio
     'getFseData', // obtenir les data nécessaires à l'établissement d'une FSE
+    'getFseReturnData', // obtenir les data nécessaires à l'établissement d'une FSE
     'getFilePreviewDocument' // obtenir le html de prévisualisation d'un fichier
 );
 

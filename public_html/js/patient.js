@@ -474,7 +474,16 @@ $(document).ready(function() {
   $('body').on("click", "#modalFaireFseValider", function(e) {
     e.preventDefault();
     doFse($(this));
+    //$('#modalFaireFse').modal('hide');
+  });
+
+  // bouton de fin FSE
+  $('body').on("click", "#modalFaireFseTerminer", function(e) {
+    e.preventDefault();
     $('#modalFaireFse').modal('hide');
+    $('#modalFaireFseTerminer').addClass('d-none');
+    $('#modalFaireFseValider').removeClass('d-none');
+    $('#modalFaireFse div.modal-body').html(originalModalBody);
   });
 
   ////////////////////////////////////////////////////////////////////////

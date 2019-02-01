@@ -70,7 +70,7 @@ class msModBaseObjetPreview
   }
 
 /**
- * Obtenir l'info sur le fait que le document puisse être signé par le patient
+ * Obtenir l'info sur le fait que le document puisse êter signé par le patient
  * @return bool TRUE/FALSE
  */
   public function getCanBeSigned() {
@@ -156,6 +156,18 @@ class msModBaseObjetPreview
       $p['page']['datareg']['regleDetailsActes']['value'] = json_decode($p['page']['datareg']['regleDetailsActes']['value'], TRUE);
       if(empty($p['page']['acteFacture']['label'])) {
         $p['page']['acteFacture']['label']=implode(' + ', array_column($p['page']['datareg']['regleDetailsActes']['value'], 'acte'));
+      }
+    }
+
+    // si retour post FSE
+    if(isset($p['page']['datareg']['regleFseData'])) {
+      $p['page']['dataregFse']=json_decode($p['page']['datareg']['regleFseData']['value'], true)[0];
+      foreach($p['page']['dataregFse']['dataDetail'] as $acte) {
+        if($acte['is_ligne_ok'] == 1) {
+          $p['page']['dataregFse']['actesOK'][]=$acte['code_prestation'];
+        } else {
+          $p['page']['dataregFse']['actesKO'][]=$acte['code_prestation'];
+        }
       }
     }
 
