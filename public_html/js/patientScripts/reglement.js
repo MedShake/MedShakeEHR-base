@@ -104,6 +104,14 @@ $(document).ready(function() {
     calcResteDu();
   });
 
+  //observer le menu de qualif de l'acte
+  $("#newReglement").on("change", "select.codeQualif", function(e) {
+    calculerTotalLigneTabActes($(this));
+    getFinalTarifTableauActes();
+    setDefautTarifEtDepa();
+    calcResteDu();
+  });
+
   //observer les modificateur CCAM acte par acte dans le tableau
   $("#newReglement").on("change, keyup", "input.modifsCCAM", function(e) {
     calculerTotalIntermedLigneTabActes($(this));
@@ -248,6 +256,7 @@ function construireLigneTableauActes(index, value) {
 
   if (!value['pourcents']) value['pourcents'] = '100';
   if (!value['modifsCCAM']) value['modifsCCAM'] = '';
+  if (!value['codeQualif']) value['codeQualif'] = '';
 
   if (RegExp('[A-Z]{4}[0-9]{3}').test(index)) {
     value['type'] = 'CCAM';
@@ -284,6 +293,15 @@ function construireLigneTableauActes(index, value) {
   tabLigne += '<td></td>';
   // dépassement
   tabLigne += '<td class="text-right"><div class="input-group input-group-sm"><input class="form-control text-right add2DepaSum" value="' + value['depassement'] + '"><div class="input-group-append"><span class="input-group-text">€</span></div></div></td>';
+  // code qualif
+  tabLigne += '<td class="text-right"' + tabColHide + '><select class="custom-select custom-select-sm codeQualif" autocomplete="off">';
+  tabLigne += '<option ' + (value['codeQualif'] == '' ? 'selected' : '') + ' title="Aucun Qualificatif" value=""></option>';
+  tabLigne += '<option ' + (value['codeQualif'] == 'A' ? 'selected' : '') + ' title="Depassement Autorise" value="A">DA</option>';
+  tabLigne += '<option ' + (value['codeQualif'] == 'E' ? 'selected' : '') + ' title="Exigence particuliere du malade" value="E">DE</option>';
+  tabLigne += '<option ' + (value['codeQualif'] == 'G' ? 'selected' : '') + ' title="Acte gratuit" value="G">AG</option>';
+  tabLigne += '<option ' + (value['codeQualif'] == 'L' ? 'selected' : '') + ' title="Prise en charge SMG" value="L">SMG</option>';
+  tabLigne += '<option ' + (value['codeQualif'] == 'N' ? 'selected' : '') + ' title="Acte a ne pas rembourser en AMO" value="N">NR</option>';
+  tabLigne += '</select></td>';
   //total ligne
   tabLigne += '<td class="text-right font-weight-bold total"><span class="totalLigne">' + value['total'] + '</span>€</td>';
   // sup ligne
@@ -340,7 +358,11 @@ function calculerTotalIntermedLigneTabActes(source) {
  * @return {void}
  */
 function calculerTotalLigneTabActes(source) {
-  totalLigne = parseFloat(source.closest('tr').find('.add2TarifSum').text()) + parseFloat(source.closest('tr').find('.add2DepaSum').val());
+  if(source.closest('tr').find('.codeQualif').val() == 'G') {
+    totalLigne = 0;
+  } else {
+    totalLigne = parseFloat(source.closest('tr').find('.add2TarifSum').text()) + parseFloat(source.closest('tr').find('.add2DepaSum').val());
+  }
   source.closest('tr').find('.totalLigne').html(totalLigne);
 }
 
@@ -354,6 +376,7 @@ function getFinalTarifTableauActes() {
   // somme tarifs
   $("#detFacturation span.add2TarifSum").each(function() {
     var value = $(this).text();
+    if ($(this).closest('tr').find('.codeQualif').val() =='G') value = 0;
     if (!isNaN(value) && value.length != 0) {
       sumTot += parseFloat(value);
     }
@@ -361,6 +384,7 @@ function getFinalTarifTableauActes() {
   // somme des dépassements
   $("#detFacturation input.add2DepaSum").each(function() {
     var value = $(this).val();
+    if ($(this).closest('tr').find('.codeQualif').val() =='G') value = 0;
     if (!isNaN(value) && value.length != 0) {
       sumDep += parseFloat(value);
     }
@@ -380,6 +404,7 @@ function getFinalTarifTableauActes() {
       'pourcents': $(this).find('.modulationActe').val(),
       'modifsCCAM': $(this).find('.modifsCCAM').val(),
       'depassement': $(this).find('.add2DepaSum').val(),
+      'codeQualif': $(this).find('.codeQualif').val(),
     };
     console.log(factureActuelle);
   });
@@ -427,14 +452,14 @@ function setDefautTarifEtDepa() {
   //tout venant
   if (cas == 'G') {
     $(".regleDepaCejour").removeAttr('readonly');
-    //CMU
+  //CMU
   } else if (cas == 'CMU') {
     $(".regleDepaCejour").attr('readonly', 'readonly');
     $(".regleDepaCejour").val('0');
-    // TP
+  // TP
   } else if (cas == 'TP') {
     $(".regleDepaCejour").removeAttr('readonly');
-    // TP ALD
+  // TP ALD
   } else if (cas == 'TP ALD') {
     $(".regleDepaCejour").attr('readonly', 'readonly');
     $(".regleDepaCejour").val('0');
