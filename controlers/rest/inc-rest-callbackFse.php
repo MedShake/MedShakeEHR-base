@@ -55,5 +55,8 @@ if(!$paiem->createNewObjetByTypeName('regleFseData', $_GET['data'], $_GET['objet
   http_response_code(400);
 } else {
   http_response_code(200);
+  header ('Content-Type: image/png');
+  $im = @imagecreatetruecolor(3, 3);
+  imagepng($im);
 }
 die();
