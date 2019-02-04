@@ -50,7 +50,10 @@ $(document).ready(function() {
       selectListingRow(listingRow);
     } else if (e.keyCode == 38) { //up
       listingRow--;
-      if (listingRow < 0) listingRow = 0;
+      if (listingRow < 0) {
+        $('#d2').focus();
+        listingRow = 0;
+      }
       selectListingRow(listingRow);
     } else if (e.keyCode == 13) { //enter
       $('#listing table tbody tr').eq(listingRow).find("a.ouvrirDossier").click();
