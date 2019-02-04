@@ -74,8 +74,8 @@
           {% endfor %}
         </div>
       </div>
-    {% else %}
-      <a class="addNewReglement btn btn-primary mr-2" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
+    {% elseif page.formReglement|length > 0 %}
+      <a class="addNewReglement btn btn-primary mr-2 {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %}" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
     {% endif %}
 
     {% if page.patient.ALD is empty %}
