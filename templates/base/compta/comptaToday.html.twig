@@ -176,82 +176,82 @@
     </div>
 
   </div>
+{% endblock %}
 
-  <div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 id="nomPatient" class="modal-title font-weight-bold"></h4>
-        </div>
-        <div class="modal-body">
-
-          <h4 id="montant"></h4>
-			    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
-		        <input title=" / " name="page" value="comptaToday" type="hidden">
-		        <input title=" / " name="formIN" value="" type="hidden">
-		        <input title=" / " name="patientID" value="" type="hidden">
-		        <input title=" / " name="porteur" value="" type="hidden">
-		        <input title=" / " name="objetID" value="" type="hidden">
-		        <input title=" / " name="apayer" value="" type="hidden">
-		        <input title=" / " name="dejaCheque" value="" type="hidden">
-		        <input title=" / " name="dejaCB" value="" type="hidden">
-		        <input title=" / " name="dejaEspeces" value="" type="hidden">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleCheque_id">Chèque
-                  </label>
-                  <div class="input-group">
-                    <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleCB_id">CB
-                  </label>
-                  <div class="input-group">
-                    <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleEspeces_id">Espèces
-                  </label>
-                  <div class="input-group">
-                    <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
-                  </label>
-                  <input title="regleIdentiteCheque / 205" id="id_regleIdentiteCheque_id" name="regleIdentiteCheque" placeholder="si différent patient" class="form-control" autocomplete="off" data-typeid="205" data-internalname="regleIdentiteCheque" type="text">
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-              <input type="submit" class="btn btn-primary" />
-            </div>
-      	  </form>
-        </div>
+{% block modals %}
+<div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="nomPatient" class="modal-title font-weight-bold"></h4>
       </div>
+      <div class="modal-body">
+
+        <h5 id="montant"></h5>
+        <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
+          <input title=" / " name="page" value="comptaToday" type="hidden">
+          <input title=" / " name="formIN" value="" type="hidden">
+          <input title=" / " name="patientID" value="" type="hidden">
+          <input title=" / " name="porteur" value="" type="hidden">
+          <input title=" / " name="objetID" value="" type="hidden">
+          <input title=" / " name="apayer" value="" type="hidden">
+          <input title=" / " name="dejaCheque" value="" type="hidden">
+          <input title=" / " name="dejaCB" value="" type="hidden">
+          <input title=" / " name="dejaEspeces" value="" type="hidden">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleCheque_id">Chèque
+                </label>
+                <div class="input-group">
+                  <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleCB_id">CB
+                </label>
+                <div class="input-group">
+                  <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleEspeces_id">Espèces
+                </label>
+                <div class="input-group">
+                  <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
+                </label>
+                <input title="regleIdentiteCheque / 205" id="id_regleIdentiteCheque_id" name="regleIdentiteCheque" placeholder="si différent patient" class="form-control" autocomplete="off" data-typeid="205" data-internalname="regleIdentiteCheque" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
     </div>
   </div>
-
-
+</div>
 {% endblock %}

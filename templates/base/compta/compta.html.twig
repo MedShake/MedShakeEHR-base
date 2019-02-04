@@ -68,7 +68,7 @@
 
 
 <form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin : 30px 0;">
-    <button class="btn refresh mr-sm-2 mb-2" type="button">
+    <button class="btn btn-light refresh mr-sm-2 mb-2" type="button">
       <span class="fa fa-sync-alt"></span>
     </button>
   {% if page.pratsAuto|length > 1 %}
@@ -147,7 +147,9 @@
       {% include('comptaTable.html.twig') %}
     </div>
 </div>
+{% endblock %}
 
+{% block modals %}
 <div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -156,17 +158,17 @@
       </div>
       <div class="modal-body">
 
-        <h4 id="montant"></h4>
-		    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
-	        <input title=" / " name="page" value="compta" type="hidden">
-	        <input title=" / " name="formIN" value="" type="hidden">
-	        <input title=" / " name="patientID" value="" type="hidden">
-	        <input title=" / " name="porteur" value="" type="hidden">
-	        <input title=" / " name="objetID" value="" type="hidden">
-	        <input title=" / " name="apayer" value="" type="hidden">
-	        <input title=" / " name="dejaCheque" value="" type="hidden">
-	        <input title=" / " name="dejaCB" value="" type="hidden">
-	        <input title=" / " name="dejaEspeces" value="" type="hidden">
+        <h5 id="montant"></h5>
+        <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
+          <input title=" / " name="page" value="compta" type="hidden">
+          <input title=" / " name="formIN" value="" type="hidden">
+          <input title=" / " name="patientID" value="" type="hidden">
+          <input title=" / " name="porteur" value="" type="hidden">
+          <input title=" / " name="objetID" value="" type="hidden">
+          <input title=" / " name="apayer" value="" type="hidden">
+          <input title=" / " name="dejaCheque" value="" type="hidden">
+          <input title=" / " name="dejaCB" value="" type="hidden">
+          <input title=" / " name="dejaEspeces" value="" type="hidden">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -214,14 +216,13 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-            <input type="submit" class="btn btn-primary" />
-          </div>
-    	  </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
-
-    {% endblock %}
+{% endblock %}
