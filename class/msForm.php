@@ -377,7 +377,12 @@ class msForm
         if (!isset($this->_formID)) {
             throw new Exception('formID is not defined');
         }
-        if ($formyaml=msSQL::sqlUnique("select yamlStructure, dataset, formMethod, formAction, cda from forms where id='".$this->_formID."' limit 1")) {
+        if($this->_formIN == 'baseLogin') {
+          $sql = "select * from forms where id='".$this->_formID."' limit 1";
+        } else {
+          $sql = "select yamlStructure, dataset, formMethod, formAction, cda from forms where id='".$this->_formID."' limit 1";
+        }
+        if ($formyaml=msSQL::sqlUnique($sql)) {
 
             if($this->_testNumericBloc($formyaml['yamlStructure'])) {
               $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure'],$formyaml['dataset']);
