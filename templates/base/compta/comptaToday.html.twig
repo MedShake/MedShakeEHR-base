@@ -39,13 +39,13 @@
 
   <h1>Règlements du jour</h1>
 
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-lg-10 col-md-12">
 
       {% if page.tabRegNC %}
-      <div class="card mt-4">
-        <div class="card-header h5">
-          Paiements à recevoir
+      <div class="card mb-4">
+        <div class="card-header h5 font-weight-bold">
+          <i class="fas fa-exclamation-circle text-warning"></i> Paiements à recevoir
         </div>
         <div class="card-body">
 
@@ -98,8 +98,8 @@
 
                   <td>{{ reg.dejaPaye|e }}€</td>
                   <td>{{ reg.resteAPaye }}€</td>
-                  <td>
-                    <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                  <td class="text-right">
+                    <button class="btn btn-danger btn-sm editReglement py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                       Saisir règlement
                     </button>
 
@@ -114,9 +114,9 @@
       {% endif %}
 
       {% if page.tabRegC %}
-      <div class="card mt-5">
-        <div class="card-header h5">
-          Paiements effectués
+      <div class="card">
+        <div class="card-header h5 font-weight-bold">
+          <i class="fas fa-check-circle text-success"></i> Paiements effectués
         </div>
         <div class="card-body">
           <table class="table table-sm mb-0 table-hover table-striped table-responsive-xl">
