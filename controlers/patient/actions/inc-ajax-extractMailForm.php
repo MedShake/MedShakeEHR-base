@@ -77,6 +77,7 @@ if (isset($_POST['objetID'])) {
     if ($doc->testDocExist()) {
         $p['page']['doc']['url']=$doc->getWebPathToDoc();
         $p['page']['doc']['filesize']=$doc->getFileSize(0);
+        $p['page']['doc']['mimetype']=msTools::getmimetype($doc->getPathToDoc());
     } else {
         $pdf= new msPDF();
         $pdf->setObjetID($_POST['objetID']);
@@ -86,6 +87,7 @@ if (isset($_POST['objetID'])) {
         if ($doc->testDocExist()) {
             $p['page']['doc']['url']=$doc->getWebPathToDoc();
             $p['page']['doc']['filesize']=$doc->getFileSize(0);
+            $p['page']['doc']['mimetype']=msTools::getmimetype($doc->getPathToDoc());
         }
     }
 }
@@ -93,7 +95,7 @@ if (isset($_POST['objetID'])) {
 //formulaire
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
-$form->setPrevalues($preValues);
+if(isset($preValues)) $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
