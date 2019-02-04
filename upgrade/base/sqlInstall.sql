@@ -737,7 +737,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('vitaleHoteLecteurIP', 'Vitale', 'default', 'texte', 'IP sur le réseau interne de la machine supportant le lecteur', ''),
 ('vitaleNomRessourcePS', 'Vitale', 'default', 'texte', 'nomRessourcePS', ''),
 ('vitaleNomRessourceLecteur', 'Vitale', 'default', 'texte', 'nomRessourceLecteur', ''),
-('designTopMenuStyle', 'Ergonomie et design', 'default', 'icones / textes', 'aspect du menu de navigation du haut de page', 'textes'),
+('designTopMenuStyle', 'Ergonomie et design', 'default', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
 ('designTopMenuInboxCountDisplay', 'Ergonomie et design', 'default', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
 ('designTopMenuTransmissionsCountDisplay', 'Ergonomie et design', 'default', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true'),
 ('designTopMenuTransmissionsColorIconeImportant', 'Ergonomie et design', 'default', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
