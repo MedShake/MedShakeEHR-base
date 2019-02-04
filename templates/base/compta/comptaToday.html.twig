@@ -91,7 +91,7 @@
                       <strong>{{ reg.regleFacture|e }}€</strong>
                     {% else %}
                       <strong>{{ reg.regleFacture }}€</strong>
-                      ({{ reg.regleTarifCejour|e }}€ +
+                      ({{ reg.regleTarifSSCejour|e }}€ +
                       {{ reg.regleDepaCejour|e }}€)
                     {% endif %}
                   </td>
@@ -154,7 +154,7 @@
                     </button>
                     {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
                     {% else %}
-                      {{ reg.regleFacture|e }}€ ({{ reg.regleTarifCejour|e }}€ +
+                      {{ reg.regleFacture|e }}€ ({{ reg.regleTarifSSCejour|e }}€ +
                       {{ reg.regleDepaCejour|e }}€)
                     {% endif %}
                   </td>
