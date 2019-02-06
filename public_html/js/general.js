@@ -201,7 +201,7 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        alert_popup("success", "L'appel téléphonique du '+ data.calledNumber +' est lancé");
+        alert_popup("success", "L'appel téléphonique du " + data.calledNumber + " est lancé");
       },
       error: function(data) {
         alert_popup("danger", "Une erreur s'est produite durant l'opération : " + data.statut);
