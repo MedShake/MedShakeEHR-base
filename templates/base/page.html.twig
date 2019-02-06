@@ -314,19 +314,6 @@
                         </div>
                       </li>
                       {% endif %}
-
-                      {% if user.rank == 'admin' %}
-                          <li class="nav-item">
-                              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">
-                                {% if config.designTopMenuStyle == 'icones' %}
-                                  <i class="fas fa-cogs fa-lg d-none d-lg-inline"></i>
-                                  <span class="d-lg-none"> Configuration</span>
-                                {% else %}
-                                  Configuration
-                                {% endif %}
-                              </a>
-                          </li>
-                      {% endif %}
                   </ul>
 
                     <ul class="nav navbar-nav ml-md-auto">
@@ -335,11 +322,25 @@
                                 {{ user.nom }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">Edition profil</a>
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">Paramètres utilisateur</a>
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">Activer PhoneCapture</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">
+                                  <i class="fas fa-user-edit fa-fw text-muted mr-1"></i> Edition profil
+                              </a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">
+                                <i class="fas fa-user-cog fa-fw text-muted mr-1"></i> Paramètres utilisateur
+                              </a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">
+                                <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i> Activer PhoneCapture
+                              </a>
+                              {% if user.rank == 'admin' %}
+                                <div role="separator" class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">
+                                  <i class="fas fa-cogs fa-fw text-muted mr-1"></i> Configuration
+                                </a>
+                              {% endif %}
                               <div role="separator" class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">Déconnexion</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">
+                                <i class="fas fa-power-off fa-fw text-muted mr-1"></i> Déconnexion
+                              </a>
                             </div>
                         </li>
                     </ul>
