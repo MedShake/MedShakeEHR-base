@@ -39,7 +39,8 @@ $acceptedModes=array(
     'mailTracking', // Retourner les infos de tracking d'un mail
     'getAutocompleteCodeNgapOrCcamData', // Retourner les infos sur un acte NGAP ou CCAM
     'getCpsVitaleData', // Obtenir les infos de la carte Vitale
-    'getCpsVitaleDataRappro' // Obtenir les infos de la carte Vitale rapprochées aux ID patients
+    'getCpsVitaleDataRappro', // Obtenir les infos de la carte Vitale rapprochées aux ID patients
+    'makeClick2Call' // lancer un appel click2call
 );
 
 if (!in_array($m, $acceptedModes)) {

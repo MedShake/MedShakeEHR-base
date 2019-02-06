@@ -1,0 +1,41 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : modal click2call
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+<div class="modal" id="click2call" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <span id="startCall2Click" style="cursor: pointer">
+          <i class="fas fa-phone fa-10x text-success d-block mb-3"></i>
+          <span id="click2callnum" class="text-success h2 font-weight-bold d-block"></span>
+        </span>
+        <span class="my-2 d-block">ou</span>
+        <button type="button" class="btn btn-sm btn-light" data-dismiss="modal"><i class="fas fa-phone-slash"></i> Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>

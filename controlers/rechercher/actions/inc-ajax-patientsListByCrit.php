@@ -131,6 +131,9 @@ if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalN
         for ($i=0;$i<=$col-1;$i++) {
             if (isset($form['col'.$i]['bloc'])) {
                 foreach ($form['col'.$i]['bloc'] as $v) {
+                    if(!isset($p['config']['click2callService']) or empty($p['config']['click2callService'])) {
+                      $v=str_replace(',click2call', '', $v);
+                    }
                     $el=explode(',', $v);
                     $id=$el[0];
 

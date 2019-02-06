@@ -358,5 +358,9 @@
         {# modals #}
         {% block modals %}{% endblock %}
 
+        {# click2call #}
+        {% if config.click2callService is not empty %}
+          {% include 'inc-modal-click2call.html.twig' %}
+        {% endif %}
     </body>
 </html>

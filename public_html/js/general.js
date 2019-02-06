@@ -81,9 +81,9 @@ $(document).ready(function() {
 
   //// datepicker bootstrap
   $("body").on("click", 'div.datepick', function() {
-    var $div=$(this).closest("div.datepick");
-    var viewMode = $div.hasClass("pick-year")?'years':($div.hasClass("pick-month")?'months':'days');
-    viewMode = $div.find("input").hasClass("pick-year")?'years':($div.find("input").hasClass("pick-month")?'months':viewMode);
+    var $div = $(this).closest("div.datepick");
+    var viewMode = $div.hasClass("pick-year") ? 'years' : ($div.hasClass("pick-month") ? 'months' : 'days');
+    viewMode = $div.find("input").hasClass("pick-year") ? 'years' : ($div.find("input").hasClass("pick-month") ? 'months' : viewMode);
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: viewMode,
@@ -166,7 +166,7 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
-  ///////// Obesrvations générales pour éléments divers
+  ///////// Observations générales pour éléments divers
 
   //alerte confirmation
   $('body').on('click', '.confirmBefore', function(e) {
@@ -177,15 +177,47 @@ $(document).ready(function() {
     }
   });
 
+  //click2call
+  $('body').on('mouseover', '.click2call', function(e) {
+    $(this).addClass('text-danger');
+    $(this).css('cursor', 'pointer');
+  });
+  $('body').on('mouseout', '.click2call', function(e) {
+    $(this).removeClass('text-danger');
+  });
+  $('body').on('click', '.click2call', function(e) {
+    e.stopPropagation();
+    $('#click2callnum').html($(this).text());
+    $('#click2call').modal('toggle');
+    return;
+  });
+  $('body').on('click', '#startCall2Click', function(e) {
+    $('#click2call').modal('toggle');
+    $.ajax({
+      url: urlBase + '/ajax/makeClick2Call/',
+      type: 'post',
+      data: {
+        'number2call': $('#click2callnum').text(),
+      },
+      dataType: "json",
+      success: function(data) {
+        alert_popup("success", "L'appel téléphonique du '+ data.calledNumber +' est lancé");
+      },
+      error: function(data) {
+        alert_popup("danger", "Une erreur s'est produite durant l'opération : " + data.statut);
+      }
+    });
+  });
+
   //enregistrement de forms en ajax
   $('body').on('click', ".ajaxForm input[type=submit],.ajaxForm button[type=submit]", function(e) {
     e.preventDefault();
     var reload = $(this).closest("form").hasClass('reload');
     var stop = false;
     $(this).closest("form").find('input[required],textarea[required]').each(function(idx, el) {
-      if (el.value==''){
+      if (el.value == '') {
         glow('danger', $(el));
-        stop=true;
+        stop = true;
       }
     });
     if (stop) {
@@ -278,8 +310,8 @@ function flashBackgroundElement(el) {
   el.removeClass('bg-light');
   el.css("background", "#efffe8");
   el.delay(700).queue(function() {
-    $(this).css("background","").dequeue();
-    $(this).attr('class' , attrInitiaux);
+    $(this).css("background", "").dequeue();
+    $(this).attr('class', attrInitiaux);
   });
 }
 
@@ -305,14 +337,17 @@ function scrollTo(element, delai) {
 
 //agrandir un élément de formulaire automatiquement
 function auto_grow(element) {
-  $(element).css('height', Math.max(16*(parseInt($(element).attr('rows')) || 1), element.scrollHeight) + 2);
+  $(element).css('height', Math.max(16 * (parseInt($(element).attr('rows')) || 1), element.scrollHeight) + 2);
 }
 
 function glow(type, $el) {
-  var colors={success:"#efffe8", danger:"#f8d7da"};
+  var colors = {
+    success: "#efffe8",
+    danger: "#f8d7da"
+  };
   $el.css("background", colors[type]);
   $el.delay(700).queue(function() {
-    $(this).css("background","").dequeue();
+    $(this).css("background", "").dequeue();
   });
 }
 
@@ -372,16 +407,23 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
 
 // affichage de messages d'alerte
 function alert_popup(severity, message) {
-  var titre = {info: 'Note: ', success: 'Succès: ', warning: 'Message: ', danger: 'Erreur: '}
+  var titre = {
+    info: 'Note: ',
+    success: 'Succès: ',
+    warning: 'Message: ',
+    danger: 'Erreur: '
+  }
   $("#alert_section").append('\
     <div class="alert alert-' + severity + ' alert-to-remove fade show col-md-auto pl-4" role="alert">\
       <strong>' + titre[severity] + ' </strong>' + message +
-      '<button type="button" class="pl-2 close" data-dismiss="alert" aria-label="Close">\
+    '<button type="button" class="pl-2 close" data-dismiss="alert" aria-label="Close">\
         <span aria-hidden="true">&times;</span>\
       </button>\
     </div>');
   if (severity == 'info' || severity == 'success') {
-    setTimeout((function(){$('.alert-to-remove').remove()}),4000);
+    setTimeout((function() {
+      $('.alert-to-remove').remove()
+    }), 4000);
   }
 }
 
@@ -392,14 +434,14 @@ function alert_popup(severity, message) {
  * @return {boolean}      true / false
  */
 function arraysEqual(arr1, arr2) {
-    if(arr1.length !== arr2.length)
-        return false;
-    for(var i = arr1.length; i--;) {
-        if(arr1[i] !== arr2[i])
-            return false;
-    }
+  if (arr1.length !== arr2.length)
+    return false;
+  for (var i = arr1.length; i--;) {
+    if (arr1[i] !== arr2[i])
+      return false;
+  }
 
-    return true;
+  return true;
 }
 
 
@@ -408,29 +450,31 @@ function arraysEqual(arr1, arr2) {
  * Thanks to codexworld <https://www.codexworld.com/export-html-table-data-to-csv-using-javascript/>
  */
 function downloadCSV(csv, filename) {
-    var csvFile;
-    var downloadLink;
+  var csvFile;
+  var downloadLink;
 
-    // CSV file
-    csvFile = new Blob([csv], {type: "text/csv"});
+  // CSV file
+  csvFile = new Blob([csv], {
+    type: "text/csv"
+  });
 
-    // Download link
-    downloadLink = document.createElement("a");
+  // Download link
+  downloadLink = document.createElement("a");
 
-    // File name
-    downloadLink.download = filename;
+  // File name
+  downloadLink.download = filename;
 
-    // Create a link to the file
-    downloadLink.href = window.URL.createObjectURL(csvFile);
+  // Create a link to the file
+  downloadLink.href = window.URL.createObjectURL(csvFile);
 
-    // Hide download link
-    downloadLink.style.display = "none";
+  // Hide download link
+  downloadLink.style.display = "none";
 
-    // Add the link to DOM
-    document.body.appendChild(downloadLink);
+  // Add the link to DOM
+  document.body.appendChild(downloadLink);
 
-    // Click download link
-    downloadLink.click();
+  // Click download link
+  downloadLink.click();
 }
 
 /**
@@ -438,15 +482,14 @@ function downloadCSV(csv, filename) {
  * @param  {string} jsonString json string à parser
  * @return {mixte}            json ou false
  */
-function tryParseJSON(jsonString){
-    try {
-        var o = JSON.parse(jsonString);
-        if (o && typeof o === "object") {
-            return o;
-        }
+function tryParseJSON(jsonString) {
+  try {
+    var o = JSON.parse(jsonString);
+    if (o && typeof o === "object") {
+      return o;
     }
-    catch (e) { }
-    return false;
+  } catch (e) {}
+  return false;
 };
 
 /**
@@ -457,20 +500,21 @@ function tryParseJSON(jsonString){
  * @return {file}          file
  */
 function exportTableToCSV(table, filename) {
-    var csv = [];
-    var rows = document.querySelectorAll(table + " tr");
+  var csv = [];
+  var rows = document.querySelectorAll(table + " tr");
 
-    for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].querySelectorAll("td, th");
+  for (var i = 0; i < rows.length; i++) {
+    var row = [],
+      cols = rows[i].querySelectorAll("td, th");
 
-        for (var j = 0; j < cols.length; j++)
-            row.push(cols[j].innerText);
+    for (var j = 0; j < cols.length; j++)
+      row.push(cols[j].innerText);
 
-        csv.push(row.join(";"));
-    }
+    csv.push(row.join(";"));
+  }
 
-    // Download CSV file
-    downloadCSV(csv.join("\n"), filename);
+  // Download CSV file
+  downloadCSV(csv.join("\n"), filename);
 }
 
 /**

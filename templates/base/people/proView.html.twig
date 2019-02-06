@@ -84,9 +84,30 @@
                   {% if  page.proData.codePostalPro %}{{ page.proData.codePostalPro }} {% endif %}
                   {% if  page.proData.villeAdressePro %}{{ page.proData.villeAdressePro }}{% endif %}
                 </td></tr>{% endif %} {# Adresse pro #}
-                {% if page.proData.telPro %}<tr><td>{{ page.proDataLabel.telPro }}<td><td>{{ page.proData.telPro }}</td></tr>{% endif %} {# tel pro #}
-                {% if page.proData.telPro2 %}<tr><td>{{ page.proDataLabel.telPro2 }}<td><td>{{ page.proData.telPro2 }}</td></tr>{% endif %} {# tel pro #}
-                {% if page.proData.mobilePhonePro %}<tr><td>{{ page.proDataLabel.mobilePhonePro }}<td><td>{{ page.proData.mobilePhonePro }}</td></tr>{% endif %} {# tel mob pro #}
+                {% if page.proData.telPro %}<tr>
+                  <td>{{ page.proDataLabel.telPro }}<td>
+                  <td>
+                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                    {{ page.proData.telPro }}
+                    {% if config.click2callService is not empty %}</span>{% endif %}
+                  </td>
+                </tr>{% endif %} {# tel pro #}
+                {% if page.proData.telPro2 %}<tr>
+                  <td>{{ page.proDataLabel.telPro2 }}<td>
+                  <td>
+                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                    {{ page.proData.telPro2 }}
+                    {% if config.click2callService is not empty %}</span>{% endif %}
+                  </td>
+                </tr>{% endif %} {# tel pro #}
+                {% if page.proData.mobilePhonePro %}<tr>
+                  <td>{{ page.proDataLabel.mobilePhonePro }}<td>
+                  <td>
+                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                    {{ page.proData.mobilePhonePro }}
+                    {% if config.click2callService is not empty %}</span>{% endif %}
+                  </td>
+                </tr>{% endif %} {# tel mob pro #}
                 {% if page.proData.faxPro %}<tr><td>{{ page.proDataLabel.faxPro }}<td><td>{{ page.proData.faxPro }}</td></tr>{% endif %} {# fax pro #}
                 {% if page.proData.emailApicrypt %}<tr><td>{{ page.proDataLabel.emailApicrypt }}<td><td>{{ page.proData.emailApicrypt }}</td></tr>{% endif %} {# email apicrypt #}
                 {% if page.proData.profesionnalEmail %}<tr><td>{{ page.proDataLabel.profesionnalEmail }}<td><td>{{ page.proData.profesionnalEmail }}</td></tr>{% endif %} {# email pro #}
@@ -152,8 +173,22 @@
                   {% if  page.proData.postalCodePerso %}{{ page.proData.postalCodePerso }} {% endif %}
                   {% if  page.proData.city %}{{ page.proData.city }}{% endif %}
                 </td></tr>{% endif %} {# Adresse perso #}
-                {% if page.proData.mobilePhone %}<tr><td>{{ page.proDataLabel.mobilePhone }}<td><td>{{ page.proData.mobilePhone }}</td></tr>{% endif %} {# tel mob perso #}
-                {% if page.proData.homePhone %}<tr><td>{{ page.proDataLabel.homePhone }}<td><td>{{ page.proData.homePhone }}</td></tr>{% endif %} {# tel perso #}
+                {% if page.proData.mobilePhone %}<tr>
+                  <td>{{ page.proDataLabel.mobilePhone }}<td>
+                  <td>
+                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                    {{ page.proData.mobilePhone }}
+                    {% if config.click2callService is not empty %}</span>{% endif %}
+                  </td>
+                </tr>{% endif %} {# tel mob perso #}
+                {% if page.proData.homePhone %}<tr>
+                  <td>{{ page.proDataLabel.homePhone }}<td>
+                  <td>
+                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                    {{ page.proData.homePhone }}
+                    {% if config.click2callService is not empty %}</span>{% endif %}
+                  </td>
+                </tr>{% endif %} {# tel perso #}
                 {% if page.proData.personalEmail %}<tr><td>{{ page.proDataLabel.personalEmail }}<td><td>{{ page.proData.personalEmail }}</td></tr>{% endif %} {# email perso #}
                 {% if page.proData.notes %}<tr><td>{{ page.proDataLabel.notes }}<td><td>{{ page.proData.notes|nl2br }}</td></tr>{% endif %} {# notes perso #}
               </table>

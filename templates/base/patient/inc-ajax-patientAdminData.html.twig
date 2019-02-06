@@ -93,11 +93,19 @@
 
     {# tel #}
     {% if page['patient']['administrativeDatas']['homePhone']['value']  %}
-      <span class="mr-3"><i class="fas fa-phone text-muted"></i> {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}</span>
+      <span class="mr-3"><i class="fas fa-phone text-muted"></i>
+      {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+      {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
+      {% if config.click2callService is not empty %}</span>{% endif %}
+      </span>
     {% endif %}
 
     {% if page['patient']['administrativeDatas']['mobilePhone']['value']  %}
-      <span class="mr-3"><i class="fas fa-mobile-alt text-muted"></i> {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}</span>
+      <span class="mr-3"><i class="fas fa-mobile-alt text-muted"></i>
+      {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+      {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
+      {% if config.click2callService is not empty %}</span>{% endif %}
+      </span>
     {% endif %}
 
     {# adresse #}

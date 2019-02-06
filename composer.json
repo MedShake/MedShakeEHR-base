@@ -7,6 +7,7 @@
         "dompdf/dompdf": "^0.8.0",
         "phpmailer/phpmailer": "^6.0",
         "atrapalo/URLcrypt": "^1.0",
-        "webit/eval-math": "^1.0"
+        "webit/eval-math": "^1.0",
+        "ovh/ovh": "^2.0"
     }
 }
