@@ -45,26 +45,26 @@
       <ul class="nav nav-pills my-3" role="tablist">
         <li class="nav-item">
           {% if page.form.addHidden.mailType == 'ecofax' %}
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-fax"></i> Destinataire</a>
+            <a class="nav-link active" id="mailRedaction-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="mailRedaction" aria-selected="true"><i class="fas fa-fax"></i> Destinataire</a>
           {% else %}
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-envelope"></i> Message</a>
+            <a class="nav-link active" id="mailRedaction-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="mailRedaction" aria-selected="true"><i class="fas fa-envelope"></i> Message</a>
           {% endif %}
         </li>
         <li class="nav-item">
           {% if page.form.addHidden.mailType == 'ecofax' %}
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="profile" aria-selected="false"><i class="fas fa-paperclip"></i> Document <small>({{ page.doc.filesize|e }})</small></a>
+            <a class="nav-link" id="mailPj-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="mailPj" aria-selected="false"><i class="fas fa-paperclip"></i> Document <small>({{ page.doc.filesize|e }})</small></a>
           {% else %}
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="profile" aria-selected="false"><i class="fas fa-paperclip"></i> Pièce jointe <small>({{ page.doc.filesize|e }})</small></a>
+            <a class="nav-link" id="mailPj-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="mailPj" aria-selected="false"><i class="fas fa-paperclip"></i> Pièce jointe <small>({{ page.doc.filesize|e }})</small></a>
           {% endif %}
         </li>
       </ul>
 
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="mailRedaction" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active" id="mailRedaction" role="tabpanel" aria-labelledby="mailRedaction-tab">
           {{ f.formbuilder(page.form , page.formIN ) }}
         </div>
 
-        <div class="tab-pane fade" id="mailPj" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="mailPj" role="tabpanel" aria-labelledby="mailPj-tab">
           <p>Document à expédier :
               {{ page.doc.label|e }}
               {{ page.doc.titre|e }}
