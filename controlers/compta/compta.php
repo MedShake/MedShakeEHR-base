@@ -161,14 +161,21 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
     }
     //tableau des totaux
     $tabTot=array(
-      'regleCheque' => '',
-      'regleCB' => '',
-      'regleEspeces' => '',
-      'regleFacture' => '',
-      'regleTiersPayeur' => '');
+      'regleCheque' => 0,
+      'regleCB' => 0,
+      'regleEspeces' => 0,
+      'regleFacture' => 0,
+      'regleTiersPayeur' => 0);
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
+
+        $v['regleCheque']=(float)$v['regleCheque'];
+        $v['regleCB']=(float)$v['regleCB'];
+        $v['regleEspeces']=(float)$v['regleEspeces'];
+        $v['regleTiersPayeur']=(float)$v['regleTiersPayeur'];
+        $v['regleFacture']=(float)$v['regleFacture'];
+
         $tabReg[$k]['dejaPaye']=$v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'];
         $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
 

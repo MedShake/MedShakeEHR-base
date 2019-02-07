@@ -37,7 +37,7 @@ if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1',
       }
 }
 
-if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
+if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     if(!is_numeric($_POST['acteID'])) $_POST['acteID']=0;
     $patient = new msObjet();
     $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
@@ -63,8 +63,8 @@ if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '');
     }
 
-    $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
-    $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
+    $paye = (float)$_POST['regleCheque'] + (float)$_POST['regleCB'] + (float)$_POST['regleEspeces'] + (float)$_POST['regleTiersPayeur'] + '0';
+    $apayer= (float)$_POST['regleTarifSSCejour'] + (float)$_POST['regleDepaCejour'] + (float)$_POST['regleTarifLibreCejour'] + (float)$_POST['regleModulCejour'] + '0';
     $important=array('id'=>$supportID, 'important'=>$paye < $apayer?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
 
