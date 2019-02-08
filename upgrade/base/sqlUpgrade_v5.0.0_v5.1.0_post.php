@@ -20,10 +20,6 @@ $typeID = $data->getTypeIDFromName('relationPatientPatient');
 $options = $data->getSelectOptionValue(array($typeID))[$typeID];
 if (!in_array('tante / oncle', $options)) {
   $options['nièce / neveu']='tante / oncle';
-  $options=Spyc::YAMLDump($options);
-  $data=[
-    'name'=>'relationPatientPatient',
-    'formValues'=>$options
-  ];
-  msSQL::sqlInsert('data_types', $data);
+  $options=Spyc::YAMLDump($options, false, 0, true);
+  msSQL::sqlQuery("update data_types set formValues='".msSQL::cleanVar($options)."' where name='relationPatientPatient' limit 1");
 }
