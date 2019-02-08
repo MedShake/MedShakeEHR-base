@@ -509,7 +509,7 @@
      }
 
      if(msSQL::sqlInsert('transmissions', $trans)) {
-       msSQL::sqlQuery("update transmissions set updateDate='".date('Y-m-d H:i:s')."' where id='".$this->_sujetID."' limit 1");
+       msSQL::sqlQuery("update transmissions set updateDate=NOW() where id='".$this->_sujetID."' limit 1");
        msSQL::sqlQuery("update transmissions_to set statut='open' where sujetID='".$this->_sujetID."' and statut='checked' and toID != '".$this->_userID."'");
        $this->setTranmissionDateLecture();
      }
