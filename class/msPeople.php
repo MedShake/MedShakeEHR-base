@@ -247,6 +247,7 @@ class msPeople
         $data = new msData();
         $name2typeID = $data->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname']);
 
+        $relations = [];
         if($relations =  msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
         from objets_data as o
         inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
@@ -324,16 +325,20 @@ class msPeople
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthdate', 'birthname']);
 
-        return msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
-      from objets_data as o
-      inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
-      left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-      left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-      left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-      left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and p.outdated='' and p.deleted=''
-      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-      group by o.value, c.id, bn.id, n.id, p.id, d.id
-      order by nom asc");
+          if($data = msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+          from objets_data as o
+          inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
+          left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
+          left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+          left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
+          left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and p.outdated='' and p.deleted=''
+          where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
+          group by o.value, c.id, bn.id, n.id, p.id, d.id
+          order by nom asc")) {
+          return $data;
+        } else {
+          return [];
+        }
     }
 
 /**
