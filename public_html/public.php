@@ -62,6 +62,11 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+/////////// Vérification de l'état de la base et sortie des versions des modules
+if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
+    msTools::redirection('/install.php');
+}
+
 /////////// Compléter le tableau des paramètres de configuration par défaut
 $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
