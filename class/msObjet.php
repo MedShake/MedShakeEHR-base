@@ -235,7 +235,7 @@ public function getToID()
         if (!is_numeric($this->_fromID)) {
             throw new Exception('FromID is not numeric');
         }
-        msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where id='".$id."' ");
+        msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."', updateDate=NOW() where id='".$id."' ");
 
         if($tab=msSQL::sql2tabSimple("select id from objets_data where instance='".$id."'")) {
           foreach($tab as $sid) {
@@ -346,7 +346,7 @@ public function getToID()
           order by id desc limit 1")) {
               if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
                   $pd['id']=$precedent['id'];
-                  $pd['updateDate'] = date("Y/m/d H:i:s");
+                  $pd['updateDate'] = date("Y-m-d H:i:s");
               }
           }
           $lastID=msSQL::sqlInsert('objets_data', $pd);
@@ -358,14 +358,14 @@ public function getToID()
 
           if (is_numeric($objetID)) {
               $pd['id']=$objetID;
-              $pd['updateDate'] = date("Y/m/d H:i:s");
+              $pd['updateDate'] = date("Y-m-d H:i:s");
           } elseif ($parentID > 0) {
               if ($precedent=msSQL::sqlUniqueChamp("select id
                 from objets_data
                 where instance='".$parentID."' and typeID = '".$typeID."' and deleted = ''
                 order by id desc limit 1")) {
                   $pd['id']=$precedent;
-                  $pd['updateDate'] = date("Y/m/d H:i:s");
+                  $pd['updateDate'] = date("Y-m-d H:i:s");
               }
           }
 
@@ -385,7 +385,7 @@ public function getToID()
           order by id desc limit 1")) {
               if ($precedent['fromID']==$this->_fromID) {
                   $pd['id']=$precedent['id'];
-                  $pd['updateDate'] = date("Y/m/d H:i:s");
+                  $pd['updateDate'] = date("Y-m-d H:i:s");
               }
           }
           if($lastID=msSQL::sqlInsert('objets_data', $pd)) {
@@ -413,7 +413,7 @@ public function getToID()
           if (isset($precedent['id'])) {
               if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
                   $pd['id']=$precedent['id'];
-                  $pd['updateDate'] = date("Y/m/d H:i:s");
+                  $pd['updateDate'] = date("Y-m-d H:i:s");
               }
           }
           $lastID=msSQL::sqlInsert('objets_data', $pd);
