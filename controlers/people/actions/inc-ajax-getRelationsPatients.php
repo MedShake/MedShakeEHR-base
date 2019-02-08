@@ -26,37 +26,28 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $name2typeID = new msData();
- $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+$term = msSQL::cleanVar($_GET['term']);
+$a_json = array();
 
- $data=msSQL::sql2tab("select p.id,
+$mss=new msPeopleSearch;
+$mss->setNameSearchMode('BnFnOrLnFn');
+$mss->setPeopleType(['pro','patient']);
+$criteres = array(
+   'birthname'=>$term,
+ );
+$mss->setCriteresRecherche($criteres);
+$mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
+$mss->setLimitNumber(20);
+if ($data=msSQL::sql2tab($mss->getSql())) {
 
- CASE
-    WHEN d1.value != '' and d2.value !='' THEN
-      trim(concat(COALESCE(d2.value, ''), ' (',COALESCE(d1.value, ''),') ', COALESCE(d3.value, '')))
-    WHEN d1.value != '' THEN
-      trim(concat(COALESCE(d1.value, ''), ' ', COALESCE(d3.value, '')))
-    ELSE
-      trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')))
-    END as value,
+	foreach ($data as $k=>$v) {
+		$a_json[]=array(
+			'label'=>trim($v['identite']).' - '.$v['birthdate'],
+			'value'=>trim($v['identite']),
+			'id'=>$v['peopleID'],
+		);
+	}
+}
 
- CASE
-    WHEN d1.value != '' and d2.value !='' THEN
-     trim(concat(COALESCE(d2.value, ''), ' (',COALESCE(d1.value, ''), ') ', COALESCE(d3.value, '')))
-    WHEN d1.value != '' THEN
-      trim(concat(COALESCE(d1.value, ''), ' ', COALESCE(d3.value, '')))
-    ELSE
-      trim(concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')))
-    END as label
-
- from objets_data as do
- left join objets_data as d1 on do.toID = d1.toID and d1.typeID='".$name2typeID['birthname']."' and d1.outdated='' and d1.deleted=''
- left join objets_data as d2 on do.toID = d2.toID and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
- left join objets_data as d3 on do.toID = d3.toID and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
- left join people as p on p.id=do.toID
- where do.typeID in ('1', '2', '3') and (concat(COALESCE(d2.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%' or concat(COALESCE(d1.value, ''), ' ', COALESCE(d3.value, '')) like '%".msSQL::cleanVar($_GET['term'])."%') and p.type not in ('deleted', 'service', 'externe')
- group by label, d1.id, d2.id, d3.id, p.id
- limit 25");
-
-
- echo json_encode($data);
+header('Content-Type: application/json');
+exit(json_encode($a_json));
