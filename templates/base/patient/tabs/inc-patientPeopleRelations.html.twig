@@ -34,20 +34,19 @@
         <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
         <form class="form-inline">
           <div class="form-group" style="width:100%">
-            <div class="input-group" style="width:100%">
-              <input class="form-control my-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
+            <div class="input-group my-1" style="width:100%">
+              <input class="form-control" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
               <div class="input-group-append">
                 {{ f.select ({
                 'select' : {
                   'name' : 'preRelationPatientPrat',
                   'id' : 'preRelationPatientPratID',
-                  'class' : 'input-group-text my-1',
+                  'class' : 'input-group-text',
                   'values' : page.preRelationPatientPrat.formValues,
                   'valueDefaut' : el.value.preValue,
                   'autocomplete' : 'off' } }) }}
-              </div>
-              <div class="input-group-append">
-                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary input-group-text my-1">Ajouter</button>
+
+                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary input-group-text">Ajouter</button>
               </div>
             </div>
           </div>
@@ -78,20 +77,18 @@
 			<div class="card-body">
 				<form class="form-inline">
 					<div class="form-group" style="width:100%">
-            <div class="input-group" style="width:100%">
-  						<input class="form-control my-1" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+            <div class="input-group my-1" style="width:100%">
+  						<input class="form-control" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
               <div class="input-group-append">
 					      {{ f.select ({
                 'select' : {
                   'name' : 'preRelationPatientPatient',
                   'id' : 'preRelationPatientPatientID',
-                  'class' : 'form-control input-group-text my-1',
+                  'class' : 'form-control input-group-text',
                   'values' : page.preRelationPatientPatient.formValues,
                   'valueDefaut' : el.value.preValue,
                   'autocomplete' : 'off' } }) }}
-				      </div>
-              <div class="input-group-append">
-					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary input-group-text my-1">Ajouter</button>
+					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary input-group-text">Ajouter</button>
 				      </div>
   					</div>
 					</div>

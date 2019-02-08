@@ -54,6 +54,18 @@ $formPro->setFormIDbyName('baseNewPro');
 if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
     $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
 }
+
+//si jeux de valeurs normées présents
+if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+  $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+  $optionsInject['p_PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+}
+if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+  $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+  $optionsInject['p_PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+}
+if(!empty($optionsInject)) $formPro->setOptionsForSelect($optionsInject);
+
 $p['page']['form']=$formPro->getForm();
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
