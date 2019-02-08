@@ -198,7 +198,7 @@ function getRelationsPatientPatientsTab() {
               </a>\
             </td>\
             <td>' + value.prenom + ' ' + value.nom + '</td>\
-            <td>' + value.ddn + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>' + value.ddn + '</td><td>' + value.typeRelation + '</td>\
             <td class="text-right">\
               <div class="btn-group">\
                 <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
@@ -236,7 +236,7 @@ function getRelationsPatientPraticiensTab() {
                 <span class="fa fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
-            <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationDisplay + '</td>\
+            <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationTxt + '</td>\
             <td class="text-right">\
               <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
                   <span class="fa fa-times" aria-hidden="true"></span>\
