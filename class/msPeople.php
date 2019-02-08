@@ -182,7 +182,7 @@ class msPeople
   			from objets_data as d
   			left join data_types as t on d.typeID=t.id
   			left join data_types as tt on d.parentTypeID=tt.id
-  			where d.toID='".$this->_toID."' and d.outdated='' and t.groupe='admin'
+  			where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'
   			order by d.parentTypeID ")) {
 
           foreach ($datas as $v) {
@@ -209,7 +209,7 @@ class msPeople
         $tab=msSQL::sql2tabKey("select d.typeID, d.value
         from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "typeID", "value");
+			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'", "typeID", "value");
 
         return $tab;
     }
@@ -227,7 +227,7 @@ class msPeople
         $tab=msSQL::sql2tabKey("select t.name, d.value
         from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "name", "value");
+			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'", "name", "value");
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
 
