@@ -268,6 +268,49 @@ class msPeople
     }
 
 /**
+ * Créer une relation patient praticien
+ * @param string $praticienStatus statut du praticien vis à vis du patient
+ * @param int $praticienID     ID du praticien
+ */
+    public function setRelationWithPro($praticienStatus, $praticienID)
+    {
+
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if (!is_numeric($this->_fromID)) {
+          throw new Exception('FromID is not numeric');
+      }
+
+      if (!is_numeric($praticienID)) {
+          throw new Exception('PraticienID is not numeric');
+      }
+
+      //sortir les choix de relations patient<->prat pour valider $praticienStatus
+      $data = new msData();
+      $typeID = $data->getTypeIDFromName('relationPatientPraticien');
+      $options = $data->getSelectOptionValue(array($typeID))[$typeID];
+      if (!array_key_exists($praticienStatus, $options)) {
+          throw new Exception('PraticienStatus is not a valid choice');
+      }
+
+      // patient -> praticien
+      $patient = new msObjet();
+      $patient->setToID($this->_toID);
+      $patient->setFromID($this->_fromID);
+      $supportID=$patient->createNewObjetByTypeName('relationID', $praticienID);
+      $patient->createNewObjetByTypeName('relationPatientPraticien', $praticienStatus, $supportID);
+
+      // praticien -> patient
+      $praticien = new msObjet();
+      $praticien->setToID($praticienID);
+      $praticien->setFromID($this->_fromID);
+      $supportID=$praticien->createNewObjetByTypeName('relationID', $this->_toID);
+      $praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $supportID);
+    }
+
+/**
  * Obtenir les autres patients liés généalogiquement avec ce patient
  * @return array array des autres patients
  *
@@ -291,6 +334,86 @@ class msPeople
       where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
       group by o.value, c.id, bn.id, n.id, p.id, d.id
       order by nom asc");
+    }
+
+/**
+ * Créer une relation patient patient
+ * @param string $toIdStatus statut familial de l'individu identifé par _toID
+ * @param int $withID     ID du 2e individu concerné
+ */
+    public function setRelationWithOtherPatient($toIdStatus, $withID)
+    {
+
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if (!is_numeric($this->_fromID)) {
+          throw new Exception('FromID is not numeric');
+      }
+
+      if (!is_numeric($withID)) {
+          throw new Exception('WithID is not numeric');
+      }
+
+      //sortir les choix de relations patient<->patient pour faire un reverse tab
+      $data = new msData();
+      $typeID = $data->getTypeIDFromName('relationPatientPatient');
+      $options = $data->getSelectOptionValue(array($typeID))[$typeID];
+      $reversOptions = array_flip($options);
+
+      if (!in_array($toIdStatus, $options)) {
+          throw new Exception('ToIdStatus is not a valid choice');
+      }
+
+      // patientPrin -> patient
+      $patient = new msObjet();
+      $patient->setToID($this->_toID);
+      $patient->setFromID($this->_fromID);
+      $supportID=$patient->createNewObjetByTypeName('relationID', $withID);
+      $patient->createNewObjetByTypeName('relationPatientPatient', $toIdStatus, $supportID);
+
+      // patient -> patientPrin
+      $patient2 = new msObjet();
+      $patient2->setToID($withID);
+      $patient2->setFromID($this->_fromID);
+      $supportID=$patient2->createNewObjetByTypeName('relationID', $this->_toID);
+      $patient2->createNewObjetByTypeName('relationPatientPatient', $reversOptions[$toIdStatus], $supportID);
+    }
+
+/**
+ * Retirer une relation entre 2 individus
+ * @param int $withID 2e individu concerné
+ */
+    public function setRelationDeleted($withID)
+    {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if (!is_numeric($this->_fromID)) {
+          throw new Exception('FromID is not numeric');
+      }
+
+      if (!is_numeric($withID)) {
+          throw new Exception('WithID is not numeric');
+      }
+
+      $typeID = msData::getTypeIDFromName('relationID');
+
+      // patient -> praticien/patient
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$this->_toID."' and value='".$withID."' and deleted='' limit 1")) {
+        $obj = new msObjet;
+        $obj->setFromID($this->_fromID);
+        $obj->setDeletedObjetAndSons($id);
+      }
+
+      // praticien/patient -> patient
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$_POST['ID2']."' and value='".$_POST['ID1']."' and deleted='' limit 1")) {
+        $obj = new msObjet;
+        $obj->setFromID($this->_fromID);
+        $obj->setDeletedObjetAndSons($id);
+      }
     }
 
 /**
