@@ -123,9 +123,9 @@ class msData
  * @param  array $col    colonnes SQL à retourner
  * @return array         array
  */
-    public function getDataTypesFromGroupe($groupe, $col=['*'])
+    public function getDataTypesFromGroupe($groupe, $col=['*'], $orderBy='displayOrder, label')
     {
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where groupe='".$groupe."' order by displayOrder, label");
+        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where groupe='".$groupe."' order by ".$orderBy);
     }
 
 /**
