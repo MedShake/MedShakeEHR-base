@@ -13,3 +13,17 @@ exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
 chdir($p['homepath']);
 exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
 chdir($initialDir);
+
+// vérifier s'il ne manque pas un choix dans les relations patient <-> patient
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationPatientPatient');
+$options = $data->getSelectOptionValue(array($typeID))[$typeID];
+if (!in_array('tante / oncle', $options)) {
+  $options['nièce / neveu']='tante / oncle';
+  $options=Spyc::YAMLDump($options);
+  $data=[
+    'name'=>'relationPatientPatient',
+    'formValues'=>$options
+  ];
+  msSQL::sqlInsert('data_types', $data);
+}
