@@ -26,24 +26,9 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+$relation = new msPeople;
+$relation->setToID($_POST['ID1']);
+$relation->setFromID($p['user']['id']);
+$relation->setRelationDeleted($_POST['ID2']);
 
-if($_POST['ID1']<1) die;
-if($_POST['ID2']<1) die;
-
-$typeID = msData::getTypeIDFromName('relationID');
-if($typeID<1) die;
-
-
-// patient -> praticien/patient
-if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$_POST['ID1']."' and value='".$_POST['ID2']."' and deleted='' limit 1")) {
-    if($id>0) msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$p['user']['id']."',  updateDate='".date("Y/m/d H:i:s")."' where id='".$id."' or instance='".$id."'");
-
-}
-
-
-// praticien/patient -> patient
-if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$_POST['ID2']."' and value='".$_POST['ID1']."' and deleted='' limit 1")) {
-    if($id>0) msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$p['user']['id']."', updateDate='".date("Y/m/d H:i:s")."' where id='".$id."' or instance='".$id."'");
-}
-
-echo json_encode(array('ok'));
+exit (json_encode(array('ok')));
