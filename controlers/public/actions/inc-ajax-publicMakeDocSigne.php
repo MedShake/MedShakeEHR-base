@@ -27,11 +27,11 @@
  */
 
 $signature=$_POST['signatureSvg'];
+$signPeriphName=$_POST['signPeriphName'];
 
 $svg=$p['config']['workingDirectory'].$signPeriphName.'signature.svg';
 $png=$p['config']['workingDirectory'].$signPeriphName.'signature.png';
 
-$signPeriphName=$_POST['signPeriphName'];
 
 if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')) {
     $data=Spyc::YAMLLoad($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');
