@@ -135,7 +135,6 @@ $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
 
 // Transmissions
 if($p['config']['transmissionsPeutCreer'] == 'true') {

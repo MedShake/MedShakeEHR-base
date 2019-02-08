@@ -43,4 +43,3 @@ if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
 
 //les correspondants et liens familiaux
 $p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
