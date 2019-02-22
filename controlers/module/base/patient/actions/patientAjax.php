@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,17 +21,20 @@
  */
 
 /**
- * Patient > ajax : générer la colonne latérale du dossier patient
+ * Patient : les requêtes ajax complémentaires du module base
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-patientLatCol";
 
-//le patient
-$patient = new msPeople();
-$patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
+$debug='';
+$m=$match['params']['m'];
 
-//les ALD du patient
-if($p['config']['utiliserLap'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}
+$acceptedModes=array(
+    'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
+);
+
+//inclusion
+if(is_file($p['homepath'].'controlers/module/base/patient/actions/inc-ajax-'.$m.'.php')) {
+   include('inc-ajax-'.$m.'.php');
+}

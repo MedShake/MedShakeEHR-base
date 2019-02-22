@@ -145,7 +145,7 @@ if (!is_file($homepath.'config/config.yml')) {
         if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
             exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/base/sqlInstall.sql');
             msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
-            ('mailRappelLogCampaignDirectory', 'default', '".$webdir."'/mailsRappelRdvArchives/'),
+            ('mailRappelLogCampaignDirectory', 'default', '".$webdir."/mailsRappelRdvArchives/'),
             ('smsLogCampaignDirectory', 'default', '".$webdir."/smsArchives/'),
             ('apicryptCheminInbox', 'default', '".$webdir."/inbox/'),
             ('apicryptCheminArchivesInbox', 'default', '".$webdir."/inboxArchives/'),
