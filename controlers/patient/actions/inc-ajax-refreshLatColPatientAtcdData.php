@@ -21,7 +21,7 @@
  */
 
 /**
- * Patient > ajax : générer le header du dossier patient (infos administratives)
+ * Patient > ajax : générer la colonne latérale du dossier patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
