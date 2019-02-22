@@ -672,7 +672,7 @@ INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`
 ('apicryptUtilisateur', 'Apicrypt', 'default', 'texte', 'nom d\'utilisateur Apicrypt (portion devant le @ de l\'adresse)', ''),
 ('apicryptAdresse', 'Apicrypt', 'default', 'texte', 'adresse complète apicrypt, ex :  prenom.NOM@medicalXX.apicrypt.org', ''),
 ('apicryptSmtpHost', 'Apicrypt', 'default', 'url/ip', 'serveur smtp pour l\'envoi des messages Apicrypt, en règle générale : smtp.intermedic.org', 'smtp.intermedic.org'),
-('apicryptSmtpPort', 'Apicrypt', 'default', 'nombre', 'port du serveur SMTP', '25'),
+('apicryptSmtpPort', 'Apicrypt', 'default', 'nombre', 'port du serveur SMTP', '587'),
 ('apicryptPopHost', 'Apicrypt', 'default', 'url/ip', 'serveur pop pour la réception des messages Apicrypt', 'pop.intermedic.org'),
 ('apicryptPopPort', 'Apicrypt', 'default', 'nombre', 'port du serveur pop', '110'),
 ('apicryptPopUser', 'Apicrypt', 'default', 'texte', 'nom d\'utilisateur pour le serveur pop : prenom.NOM', ''),
