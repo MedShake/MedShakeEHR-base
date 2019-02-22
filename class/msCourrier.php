@@ -439,7 +439,11 @@ class msCourrier
         } elseif(isset($tabPsData[$prefix.'birthname'],$tabPsData[$prefix.'firstname'])) {
           $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'birthname'];
         }
-        $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'titre'].' '.$tabPsData[$prefix.'identiteUsuelle'];
+        if(isset($tabPsData[$prefix.'titre'], $tabPsData[$prefix.'identiteUsuelle'])) {
+          $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'titre'].' '.$tabPsData[$prefix.'identiteUsuelle'];
+        } elseif(isset($tabPsData[$prefix.'identiteUsuelle'])) {
+          $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'identiteUsuelle'];
+        }
 
         return $tabPsData;
     }
