@@ -28,6 +28,12 @@
 
 {% extends "patientBase.html.twig" %}
 
+{% block jsFiles %}
+  {{ parent() }}
+  {# JS commun au formulaire de consultation du module #}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonBase.js?{{ modules.base }}"></script>
+{% endblock %}
+
 {% block body %}
     {{ parent() }}
 
