@@ -51,7 +51,7 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     }
     foreach (['regleTarifSSCejour', 'regleTarifLibreCejour', 'regleDepaCejour', 'regleModulCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
         if (!isset($_POST[$param])) {
-          $_POST[$param]='';
+          $_POST[$param]=0;
         }
     }
     //support
