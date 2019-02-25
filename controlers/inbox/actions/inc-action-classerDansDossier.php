@@ -33,6 +33,9 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
     $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
 
     $corps=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$data['txtFileName']);
+    if (!mb_detect_encoding($corps, 'utf-8', true)) {
+        $corps = utf8_encode($corps);
+    }
     $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
     if (count($pj['pjSerializeName'])>0) {
@@ -82,7 +85,15 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
                 msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 
                 $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-                copy($source, $destination);
+                if($ext=='txt') {
+                  $contenu=file_get_contents($source);
+                  if (!mb_detect_encoding($contenu, 'utf-8', true)) {
+                      $contenu = utf8_encode($contenu);
+                  }
+                  file_put_contents($destination, $contenu);
+                } else {
+                  copy($source, $destination);
+                }
 
                 ////////////////////////////
                 // stockage archives
@@ -139,7 +150,15 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 
             $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-            copy($source, $destination);
+            if($ext=='txt') {
+              $contenu=file_get_contents($source);
+              if (!mb_detect_encoding($contenu, 'utf-8', true)) {
+                  $contenu = utf8_encode($contenu);
+              }
+              file_put_contents($destination, $contenu);
+            } else {
+              copy($source, $destination);
+            }
         }
     }
 

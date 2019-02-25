@@ -48,7 +48,11 @@ if (isset($_POST['objetID'])) {
     $ext=$doc->getFileExtOfDoc();
     $mime=msTools::getmimetype($sourceFile);
     $finalname="document.".$ext;
-    $contenu=base64_encode(file_get_contents($sourceFile));
+    $contenu=file_get_contents($sourceFile);
+    if (!mb_detect_encoding($contenu, 'utf-8', true) and $mime == 'text/plain') {
+        $contenu = utf8_encode($contenu);
+    }
+    $contenu=base64_encode($contenu);
 
     $mailParams['Attachments']=[
       [
