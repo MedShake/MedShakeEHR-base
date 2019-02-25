@@ -325,7 +325,7 @@ class msForm
  * @param array $f     Formulaire au format array PHP
  * @param string $class Class à attribuer au bouton submit ajouté
  */
-    public function addSubmitToForm(&$f, $class='btn-primary')
+    public function addSubmitToForm(&$f, $class='btn-primary', $label='Valider')
     {
         $f['structure'][][1]=array(
         'size'=>'col-12',
@@ -335,7 +335,7 @@ class msForm
             'value'=> array(
               'id' => '0',
               'name' => '0',
-              'label' => 'Valider',
+              'label' => $label,
               'formType' => 'submit',
               'class' => $class
             ),
