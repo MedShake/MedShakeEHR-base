@@ -52,6 +52,11 @@ if ($_POST['mailType']=='ns') {
     $catModelesMails=false;
 }
 
+$submitLabel='Envoyer';
+if ($_POST['mailType']=='ecofax') {
+  $submitLabel='Faxer';
+}
+
 //modèles
 $lmc=new msData();
 if($catModelesMails and $lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
@@ -98,7 +103,7 @@ $form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
 if(isset($preValues)) $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
-$form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
+$form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block', $submitLabel);
 
 $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],

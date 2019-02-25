@@ -14,5 +14,8 @@ UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- mobilePhone', '- 
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- homePhone', '- homePhone,click2call') where internalName='baseListingPatients';
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- telPro', '- telPro,click2call') where internalName='baseListingPro';
 
+-- formulaire fax (on passe à 2 lignes vs 2 cols)
+UPDATE `forms` SET `yamlStructure` = 'structure:\r\n row1:\r\n  col1: \r\n    size: col\r\n    bloc: \r\n      - mailToEcofaxName,required  \n row2:\r\n   col1: \r\n    size: col\r\n    bloc: \r\n      - mailToEcofaxNumber,required   ' where internalName='baseFax';
+
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.1.0' WHERE `name`='base' and `groupe`='module';

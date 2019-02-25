@@ -42,40 +42,33 @@
     {% endif %}
 
     {% if page.doc %}
-      <ul class="nav nav-pills my-3" role="tablist">
-        <li class="nav-item">
-          {% if page.form.addHidden.mailType == 'ecofax' %}
-            <a class="nav-link active" id="mailRedaction-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="mailRedaction" aria-selected="true"><i class="fas fa-fax"></i> Destinataire</a>
-          {% else %}
-            <a class="nav-link active" id="mailRedaction-tab" data-toggle="tab" href="#mailRedaction" role="tab" aria-controls="mailRedaction" aria-selected="true"><i class="fas fa-envelope"></i> Message</a>
-          {% endif %}
-        </li>
-        <li class="nav-item">
-          {% if page.form.addHidden.mailType == 'ecofax' %}
-            <a class="nav-link" id="mailPj-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="mailPj" aria-selected="false"><i class="fas fa-paperclip"></i> Document <small>({{ page.doc.filesize|e }})</small></a>
-          {% else %}
-            <a class="nav-link" id="mailPj-tab" data-toggle="tab" href="#mailPj" role="tab" aria-controls="mailPj" aria-selected="false"><i class="fas fa-paperclip"></i> Pièce jointe <small>({{ page.doc.filesize|e }})</small></a>
-          {% endif %}
-        </li>
-      </ul>
 
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="mailRedaction" role="tabpanel" aria-labelledby="mailRedaction-tab">
+      <div class="row mt-4">
+        <div class="col-5">
           {{ f.formbuilder(page.form , page.formIN ) }}
         </div>
 
-        <div class="tab-pane fade" id="mailPj" role="tabpanel" aria-labelledby="mailPj-tab">
-          <p>Document à expédier :
+        <div class="col-7">
+          <div class="row mb-2">
+            <div class="col">
+              Document à expédier :
               {{ page.doc.label|e }}
               {{ page.doc.titre|e }}
-              <small>(Taille : {{ page.doc.filesize|e }})</small>
+              <small>(Taille :
+                {{ page.doc.filesize|e }})</small>
+            </div>
+            <div class="col-auto text-right">
               <a class="btn btn-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" target="_blank" title="Voir">
-                <span class="fa fa-external-link-alt" aria-hidden="true"></span> Voir
+                <i class="fa fa-external-link-alt"></i>
+                Voir
               </a>
-          </p>
-
-          <object data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" type="{{ page.doc.mimetype }}" width="900px" height="900px" style="border: 15px solid #DDD">
-          </object>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <object data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" type="{{ page.doc.mimetype }}" width="100%" height="900px" style="border: 15px solid #DDD"></object>
+            </div>
+          </div>
 
         </div>
       </div>
