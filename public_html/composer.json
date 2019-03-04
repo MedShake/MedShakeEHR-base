@@ -32,11 +32,11 @@
             "type": "package",
             "package": {
                 "name": "FortAwesome/Font-Awesome",
-                "version": "5.6.0",
+                "version": "5.7.2",
                 "source": {
                     "url": "https://github.com/FortAwesome/Font-Awesome.git",
                     "type": "git",
-                    "reference": "5.6.0"
+                    "reference": "5.7.2"
                 }
             }
         },
