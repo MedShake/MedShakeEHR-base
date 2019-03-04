@@ -331,7 +331,7 @@ class msPeople
           left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
           left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
           left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-          left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and p.outdated='' and p.deleted=''
+          left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and d.outdated='' and d.deleted=''
           where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
           group by o.value, c.id, bn.id, n.id, p.id, d.id
           order by nom asc")) {
