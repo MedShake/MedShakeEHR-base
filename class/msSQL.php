@@ -203,4 +203,19 @@ class msSQL
           return false;
       }
   }
+/**
+ * Obtenir un tableau des différentes valeurs d'un champ enum
+ * @param  string $table nom de la table
+ * @param  string $field nom du champ
+ * @return array        tableau des valeurs
+ */
+  public static function sqlEnumList($table, $field) {
+    if($row = self::sqlUnique("SHOW FIELDS FROM ".self::cleanVar($table)." where Field = '".self::cleanVar($field)."'")) {
+      preg_match('#^enum\((.*?)\)$#ism', $row['Type'], $matches);
+      $enum = str_getcsv($matches[1], ",", "'");
+      return $enum;
+    } else {
+      return [];
+    }
+  }
 }
