@@ -1653,7 +1653,7 @@ function getLatCol() {
  * @return {void}
  */
 function activeWatchChange(parentTarget) {
-  // la frappe sur input ou textarea
+  // frappe sur input ou textarea
   $(parentTarget + " input:not(.datepic), " + parentTarget + " textarea").typeWatch({
     wait: 1000,
     highlight: false,
@@ -1672,11 +1672,21 @@ function activeWatchChange(parentTarget) {
       }
     }
   });
-  // les selects
+  // select
   $(parentTarget + " select").on("change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).attr("data-typeID");
     value = $(this).val();
+    source = $(this);
+    instance = $(this).closest("form").attr("data-instance");
+    setPeopleData(value, patientID, typeID, source, instance);
+  });
+  // custom checkbox (type checkbox ou switch)
+  $(parentTarget + " .custom-switch, " + parentTarget + " .custom-checkbox ").on("click", function(e) {
+    patientID = $('#identitePatient').attr("data-patientID");
+    inputSource = $(this).find('input');
+    typeID = inputSource.attr("data-typeID");
+    value = inputSource.prop('checked');
     source = $(this);
     instance = $(this).closest("form").attr("data-instance");
     setPeopleData(value, patientID, typeID, source, instance);

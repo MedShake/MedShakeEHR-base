@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `data_types` (
   `description` varchar(255) DEFAULT NULL,
   `validationRules` varchar(255) DEFAULT NULL,
   `validationErrorMsg` varchar(255) DEFAULT NULL,
-  `formType` enum('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset') NOT NULL DEFAULT '',
+  `formType` enum('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset','switch') NOT NULL DEFAULT '',
   `formValues` text,
   `module` varchar(20) NOT NULL DEFAULT 'base',
   `cat` smallint(5) UNSIGNED NOT NULL,
@@ -759,4 +759,4 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v5.1.0');
+ (2, 'base', 'module', 'v5.2.0');
