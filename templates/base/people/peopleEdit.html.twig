@@ -28,7 +28,13 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : Nouveau patient{% endblock %}
+{% block title %}MedShakeEHR :
+  {% if page.porp == 'patient'%}
+    Edition des données administratives du patient
+  {% elseif page.porp == 'pro' %}
+    Edition des données professionnelles
+  {% endif %}
+{% endblock %}
 
 {% block head %}
   {{ parent() }}

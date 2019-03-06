@@ -30,7 +30,13 @@
 
   <td title="Document">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <i class="fa fa-file fa-fw"></i>
+      {% if cs.fileext == 'zip' %}
+        <i class="far fa-file-archive fa-fw"></i>
+      {% elseif cs.fileext == 'pdf' %}
+        <i class="far fa-file-pdf fa-fw"></i>
+      {% else %}
+        <i class="far fa-file fa-fw"></i>
+      {% endif %}
     </a>
   </td>
   <td>

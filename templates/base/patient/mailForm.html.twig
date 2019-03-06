@@ -64,9 +64,17 @@
               </a>
             </div>
           </div>
+
           <div class="row">
             <div class="col">
-              <object data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" type="{{ page.doc.mimetype }}" width="100%" height="900px" style="border: 15px solid #DDD"></object>
+              {% if page.doc.mimetype in ['application/zip'] %}
+                <div class="text-center text-muted">
+                  <i class="far fa-file-archive fa-7x my-4"></i><br>
+                  Fichier zip - aperçu non disponible
+                </div>
+              {% else %}
+                <object data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" type="{{ page.doc.mimetype }}" width="100%" height="900px" style="border: 15px solid #DDD"></object>
+              {% endif %}
             </div>
           </div>
 
