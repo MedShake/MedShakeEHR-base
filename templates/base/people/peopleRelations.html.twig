@@ -28,7 +28,14 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ page.patient.3 }} {{ page.patient.2 }} : relations - MedShakeEHR{% endblock %}
+{% block title %}{{ page.patient.3 }}
+      {% if page.patient.2 and page.patient.1 %}
+        {{ page.patient.2 }} <small>(né{% if page.patient.14 == 'F' %}e{% endif %} {{ page.patient.1 }})</small>
+      {% elseif page.patient.2 %}
+        {{ page.patient.2 }}
+      {% else %}
+        {{ page.patient.1 }}
+      {% endif %} : relations - MedShakeEHR{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -38,7 +45,7 @@
 {% block body %}
 
 <h1 id="identitePatient" data-patientID="{{ page.patient.id }}">
-Relations du patient       {{ page.patient.3 }}
+Relations du patient  {{ page.patient.3 }}
       {% if page.patient.2 and page.patient.1 %}
         {{ page.patient.2 }} <small>(né{% if page.patient.14 == 'F' %}e{% endif %} {{ page.patient.1 }})</small>
       {% elseif page.patient.2 %}
