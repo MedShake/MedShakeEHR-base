@@ -400,14 +400,15 @@
 
 				{% if page.groupe not in ["typecs", "courrier"] %}
 					<div class="form-group">
-					{{ f.input ({
-						'input' : {
-							'type' : 'text',
+					{{ f.select ({
+						'select' : {
 							'name' : 'formType',
 							'id' : 'formTypeID',
 							'placeholder' : 'type de formulaire',
-							'class' : 'form-control',
-							'autocomplete' : 'off'
+							'class' : 'custom-select',
+              'values' : page.typesPossibles ,
+							'autocomplete' : 'off',
+              'valueDefaut': ''
 						},
 						'label' : {
 							'position' : 'before',

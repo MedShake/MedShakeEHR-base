@@ -62,4 +62,10 @@
 
     // liste des modules
     $p['page']['modules']=msSQL::sql2tabKey("SELECT id, name AS module FROM system WHERE groupe='module'", "module", "module");
+
+    // liste des types possibles
+    $p['page']['typesPossibles']=msSQL::sqlEnumList('data_types', 'formType');
+    sort($p['page']['typesPossibles']);
+    $p['page']['typesPossibles']=array_combine($p['page']['typesPossibles'],$p['page']['typesPossibles']);
+
  }
