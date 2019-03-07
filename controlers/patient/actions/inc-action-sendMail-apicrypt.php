@@ -55,25 +55,25 @@ $mail->addAddress($_POST['mailToApicrypt']);
 
 $hprimData = new msPeople();
 $hprimData->setToID($_POST['patientID']);
-$hprimData=$hprimData->getSimpleAdminDatas();
+$hprimData=$hprimData->getSimpleAdminDatasByName();
 $hprimData=array_filter($hprimData);
 
-if (!isset($hprimData['180'])) {
-    $hprimData['180']='';
+if (!isset($hprimData['nss'])) {
+    $hprimData['nss']='';
 }
 
 $texte=$_POST['patientID']."\n";
-if(isset($hprimData['2'])) {
-  $texte.=strtoupper($hprimData['2'])."\n"; //nom d'usage
+if(isset($hprimData['lastname'])) {
+  $texte.=strtoupper($hprimData['lastname'])."\n"; //nom d'usage
 } else {
-  $texte.=strtoupper($hprimData['1'])."\n"; //nom de naissance
+  $texte.=strtoupper($hprimData['birthname'])."\n"; //nom de naissance
 }
-$texte.=$hprimData['3']."\n"; //prenom
+$texte.=$hprimData['firstname']."\n"; //prenom
 $texte.="\n"; //adresse 1
 $texte.="\n"; //adresse 2
 $texte.="\n"; //ville
-$texte.=$hprimData['8']."\n"; //naissance
-$texte.=str_replace(' ', '', $hprimData['180'])."\n";
+$texte.=$hprimData['birthdate']."\n"; //naissance
+$texte.=str_replace(' ', '', $hprimData['nss'])."\n";
 $texte.=$_POST['patientID']."\n"; //num de dossier
 $texte.="\n"; //date dossier
 $texte.='.         '.' '.strstr($p['config']['apicryptAdresse'], '@', true)."\n"; //code expediteur expediteur
