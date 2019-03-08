@@ -86,11 +86,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
 
                 $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
                 if($ext=='txt') {
-                  $contenu=file_get_contents($source);
-                  if (!mb_detect_encoding($contenu, 'utf-8', true)) {
-                      $contenu = utf8_encode($contenu);
-                  }
-                  file_put_contents($destination, $contenu);
+                  msTools::convertPlainTextFileToUtf8($source, $destination);
                 } else {
                   copy($source, $destination);
                 }
@@ -151,11 +147,7 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
 
             $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
             if($ext=='txt') {
-              $contenu=file_get_contents($source);
-              if (!mb_detect_encoding($contenu, 'utf-8', true)) {
-                  $contenu = utf8_encode($contenu);
-              }
-              file_put_contents($destination, $contenu);
+              msTools::convertPlainTextFileToUtf8($source, $destination);
             } else {
               copy($source, $destination);
             }

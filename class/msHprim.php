@@ -229,7 +229,7 @@ class msHprim
             if ($v > 1) {
                 $patient= new msPeople();
                 $patient->setToID($k);
-                $final[$k]=$patient->getSimpleAdminDatas();
+                $final[$k]=$patient->getSimpleAdminDatasByName();
                 $final[$k]['patientType']=$patient->getPeopleType();
                 $final[$k]['nbOccurence']=$v;
                 $final[$k]['id']=$k;

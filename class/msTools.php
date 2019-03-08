@@ -234,6 +234,25 @@ class msTools
   }
 
 /**
+ * Convertir un ficher texte iso en UTF8 sur lui même ou vers un autre fichier
+ * @param  string $source      fichier source
+ * @param  string $destination fichier destination
+ * @return bool              true/false
+ */
+  public static function convertPlainTextFileToUtf8($source, $destination='') {
+    if(!$destination) $destination=$source;
+    $contenu=file_get_contents($source);
+    if (!mb_detect_encoding($contenu, 'utf-8', true)) {
+      $contenu = utf8_encode($contenu);
+      return (bool)file_put_contents($destination, $contenu);
+    } elseif ($destination!=$source) {
+      return (bool)file_put_contents($destination, $contenu);
+    } else {
+      return true;
+    }
+  }
+
+/**
  * Tranformer une date d/m/Y en Ymd
  * @param  string $d la date d/m/Y
  * @return string    la date Ymd

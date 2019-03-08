@@ -90,24 +90,24 @@
                     <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}" {% if v.patientType == 'deleted' %}style="text-decoration: line-through"{% endif %}>
                         <td>#{{ v.id }}</td>
                         <td>
-                          {% if v.1 and v.2 %}
-                            {{ v.2|e }} ({{ v.1|e }})
-                          {% elseif v.2 %}
-                            {{ v.2 }}
+                          {% if v.birthname and v.lastname %}
+                            {{ v.lastname|e }} ({{ v.birthname|e }})
+                          {% elseif v.lastname %}
+                            {{ v.lastname }}
                           {% else %}
-                            {{ v.1 }}
+                            {{ v.birthname }}
                           {% endif %}
                         </td>
-                        <td>{{ v.3|e }}</td>
-                        <td>{{ v.8|e }}</td>
+                        <td>{{ v.firstname|e }}</td>
+                        <td>{{ v.birthdate|e }}</td>
                         <td>
-                            <small>{{ v.9|e }}
-                                {{ v.11|e }}
-                                {{ v.13|e }}
-                                {{ v.12|e }}</small>
+                            <small>{{ v.streetNumber|e }}
+                                {{ v.street|e }}
+                                {{ v.postalCodePerso|e }}
+                                {{ v.city|e }}</small>
                         </td>
                         <td>
-                            <small>{{ v.180|e }}</small>
+                            <small>{{ v.nss|e }}</small>
                         </td>
                         <td>
                             <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
@@ -174,12 +174,59 @@
   <div class="card mb-3">
       <div class="card-header font-weight-bold"><i class="fas fa-paperclip fa-fw fa-lg text-muted mr-1"></i> Pièces jointes</div>
       <div class="card-body">
+
+        <div class="nav nav-pills" id="attachedPjLink" role="tablist">
+          <a class="nav-link btn btn-outline-primary mr-2" id="attachedPjLink0" data-toggle="pill" href="#attachedPj0" title="Masquer les pièces jointes">
+            <span class="fas fa-angle-double-up" aria-hidden="true"></span>
+          </a>
           {% for pj in page.mail.pjSerializeName %}
-              <a class="btn btn-info" role="button" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
+              <a class="nav-link{% if loop.index == 1 %} active{% endif %}" id="attachedPjLink{{ loop.index }}" data-toggle="pill" href="#attachedPj{{ loop.index }}" >
                 <span class="fa fa-file" aria-hidden="true"></span>
                 {{ pj }}
               </a>
           {% endfor %}
+        </div>
+
+
+
+        <div class="tab-content" id="attachedPj">
+          <div class="tab-pane fade" id="attachedPj0" role="tabpanel" aria-labelledby="attachedPjLink0"></div>
+          {% for kpj, pj in page.mail.pjSerializeName %}
+            <div class="tab-pane fade{% if loop.index == 1 %} show active{% endif %}" id="attachedPj{{ loop.index }}" role="tabpanel" aria-labelledby="attachedPjLink{{ loop.index }}">
+              <div class="row">
+                <div class="col-auto">
+                  {% if page['mail']['pjData'][kpj]['object']['display'] %}
+                    <div class="d-block text-right my-2">
+                      <a class="btn btn-outline-secondary btn-sm" role="button" href="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" target="_blank">
+                      <i class="fas fa-external-link-alt"></i>
+                        Ouvrir dans un onglet
+                      </a>
+                    </div>
+                    {% if page['mail']['pjData'][kpj]['object']['displayType'] == 'object' %}
+                      <object
+                        data="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}"
+                        width="{{ page['mail']['pjData'][kpj]['object']['width'] }}"
+                        height="{{ page['mail']['pjData'][kpj]['object']['height'] }}"
+                        style="border: 15px solid #DDD"
+                        type="{{ page['mail']['pjData'][kpj]['mime'] }}">
+                      </object>
+                    {% elseif page['mail']['pjData'][kpj]['object']['displayType'] == 'img' %}
+                      <img src="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" alt="" class="img-fluid" style="border: 15px solid #DDD">
+                    {% endif %}
+                  {% else %}
+                    <div class="d-block text-left my-2">
+                      <p>Ce type de fichier n'est pas prévisualisable dans un navigateur</p>
+                      <a class="btn btn-secondary" role="button" href="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" target="_blank">
+                      <i class="fas fa-external-link-alt"></i>
+                        Télécharger / ouvrir
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
   </div>
 {% endif %}
