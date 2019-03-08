@@ -91,18 +91,14 @@ class msModBaseObjetPreview
     $doc->setObjetID($this->_objetID);
 
     if ($doc->testDocExist()) {
-        $p['page']['pj']['href']=$doc->getWebPathToDoc();
-        $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
-        $p['page']['pj']['filesize']= $doc->getFileSize(0);
-
-        if (array_key_exists($p['page']['pj']['html'], array('JPG'=>true, 'PNG'=>true))) {
-            $p['page']['pj']['view']='<img style="max-width:100%;max-height:200px" src="'.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/'.$doc->getWebPathToDoc().'"/>';
-        } elseif ($p['page']['pj']['html']=='TXT') {
-            $fn=$doc->getPathToDoc();
-            $fsz=filesize($fn);
-            $f=fopen($fn, 'r');
-            $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
-        }
+        $p['page']['doc']['id']=$this->_objetID;
+        $p['page']['doc']['uniqid']=uniqid();
+        $p['page']['doc']['href']=$doc->getWebPathToDoc();
+        $p['page']['doc']['ext']=strtoupper($doc->getFileExtOfDoc());
+        $p['page']['doc']['mime']=$doc->getFileMimeType();
+        $p['page']['doc']['filesize']= $doc->getFileSize(0);
+        $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+        $p['page']['doc']['origine']=$doc->getDocOrigin();
     }
     if (!empty($this->_dataObjet['value'])) {
         //hprim
@@ -115,6 +111,71 @@ class msModBaseObjetPreview
     $html->set_template('inc-ajax-detDoc.html.twig');
     $html = $html->genererHtmlVar($p);
     return $html;
+  }
+
+/**
+ * Obtenir les paramètres d'affichage du document de la ligne d'historique
+ * @param  string $mime mimetype du doc
+ * @param  string $file fichier
+ * @return array       tableau de paramètres
+ */
+  private function _getFilePreviewParams($mime, $file) {
+    $tab=array(
+      'display'=>false,
+      'displayType'=>'object',
+      'width'=>0,
+      'height'=>0,
+    );
+
+    // texte
+    if($mime == 'text/plain') {
+      $tab=array(
+        'display'=>true,
+        'displayType'=>'object',
+        'width'=>'900px',
+        'height'=>'900px',
+      );
+    }
+
+    // pdf
+    elseif($mime == 'application/pdf') {
+      $tab=array(
+        'display'=>true,
+        'displayType'=>'object',
+        'width'=>'900px',
+        'height'=>'1260px',
+      );
+    }
+
+    // zip
+    elseif($mime == 'application/zip') {
+      $tab=array(
+        'display'=>false,
+        'displayType'=>'object',
+        'width'=>0,
+        'height'=>0,
+      );
+    }
+
+    // image
+    elseif(explode('/', $mime)[0] == 'image') {
+      $imageInfos = getimagesize($file);
+      if($imageInfos[0]>1000) {
+        $imageInfos[0]=1000;
+        $imageInfos[1]=round($imageInfos[1]*1000/$imageInfos[0]);
+      }
+      if($imageInfos[1]>1000) {
+        $imageInfos[1]=1000;
+        $imageInfos[0]=round($imageInfos[0]*1000/$imageInfos[1]);
+      }
+      $tab=array(
+        'display'=>true,
+        'displayType'=>'img',
+        'width'=>$imageInfos[0].'px',
+        'height'=>$imageInfos[1].'px',
+      );
+    }
+    return $tab;
   }
 
 /**

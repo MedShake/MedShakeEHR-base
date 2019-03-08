@@ -128,6 +128,14 @@ class msStockage
     }
 
 /**
+ * Obtenir le mimetype du fichier
+ * @return string mimetype
+ */
+    public function getFileMimeType() {
+      return msTools::getmimetype($this->getPathToDoc());
+    }
+
+/**
  * Obtenir la taille d'un fichier
  * @param  int $decimals nombre de décimales souhaitées
  * @return string           taille du fichier
@@ -150,6 +158,21 @@ class msStockage
         } else {
             return false;
         }
+    }
+
+/**
+ * Obtenir l'origine d'un document identifié par son objetID
+ * @return string interne/externe
+ */
+    public function getDocOrigin() {
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if(msSQL::sqlUniqueChamp("select value from objets_data where typeID='".msData::getTypeIDFromName('docOrigine')."' and instance='".$this->_objetID."' limit 1") == 'interne') {
+        return 'interne';
+      } else {
+        return 'externe';
+      }
     }
 
 /**

@@ -29,48 +29,66 @@
 <td></td>
 <td colspan="4" class="py-4">
 
-    {% if page.pj.href %}
-      {% if (page.pj.detail and page.texte is empty) or page.pj.view %}
-        <div class="card mb-3">
-          <table class="table table-sm mb-0 table-striped table-hover">
-            <tbody>
-              <tr>
-                <td>{{ page.pj.view }}{{ page.pj.detail|nl2br }}</td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-                    <i class="fas fa-external-link-alt"></i>
-                    VOIR FICHIER
-                    {{ page.pj.html }} ({{ page.pj.filesize }})
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <p>
-            <a class="btn btn-info" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.pj.href }}" target="_blank">
-              <i class="fas fa-external-link-alt"></i>
-              VOIR FICHIER
-              {{ page.pj.html }} ({{ page.pj.filesize }})
-            </a>
-        </p>
-      {% endif %}
-
-      {% if page.pj.html == 'PDF' %}
-      <object data="{{ page.pj.href }}" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD">
-      </object>
-      {% endif %}
-
-
+  <div class="nav nav-pills font-weight-bold" id="docLinkBlock{{ page.doc.uniqid }}" role="tablist">
+    <a class="nav-item nav-link active" id="docViewLink{{ page.doc.uniqid }}" data-toggle="pill" href="#docViewPanel{{ page.doc.uniqid }}" >
+      <i class="fas fa-file mr-1"></i> Document {{ page.doc.ext }} ({{ page.doc.filesize }})
+    </a>
+    {% if page.bioHprim %}
+      <a class="nav-item nav-link" id="hprimViewLink{{ page.doc.uniqid }}" data-toggle="pill" href="#hprimViewPanel{{ page.doc.uniqid }}" >
+        <i class="fas fa-vial mr-1"></i> Données HPRIM
+      </a>
     {% endif %}
+    {% if page.texte %}
+      <a class="nav-item nav-link" id="msgViewLink{{ page.doc.uniqid }}" data-toggle="pill" href="#msgViewPanel{{ page.doc.uniqid }}" >
+        {% if page.doc.origine == 'externe' %}
+          <i class="fas fa-envelope-open mr-1"></i> Message associé
+        {% else %}
+          <i class="fas fa-info mr-1"></i>  Informations
+        {% endif %}
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="tab-content" id="docContentBlock{{ page.doc.uniqid }}">
+
+    <div class="tab-pane fade show active" id="docViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="docViewLink{{ page.doc.uniqid }}">
+      <div class="row">
+        <div class="col-auto">
+          {% if page.doc.displayParams.display %}
+            <div class="d-block text-right my-2">
+              <a class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" target="_blank">
+              <i class="fas fa-external-link-alt"></i>
+                Ouvrir dans un onglet
+              </a>
+            </div>
+            {% if page.doc.displayParams.displayType == 'object' %}
+              <object
+                data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}"
+                width="{{ page.doc.displayParams.width }}"
+                height="{{ page.doc.displayParams.height }}"
+                style="border: 15px solid #DDD"
+                type="{{ page.doc.displayParams.mime }}">
+              </object>
+            {% elseif page.doc.displayParams.displayType == 'img' %}
+              <img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" alt="" class="img-fluid" style="border: 15px solid #DDD">
+            {% endif %}
+          {% else %}
+            <div class="d-block text-left my-3">
+              <p>Ce type de fichier n'est pas prévisualisable dans un navigateur</p>
+              <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" target="_blank">
+              <i class="fas fa-external-link-alt"></i>
+                Télécharger / ouvrir
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
     {% if page.bioHprim %}
-
-        <div class="card mb-3">
-            <div class="card-header">Résultats biologiques extraits du corps du message</div>
+      <div class="tab-pane fade" id="hprimViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="hprimViewLink{{ page.doc.uniqid }}">
+        <div class="my-3">
+            <p>Résultats biologiques extraits du corps du message</p>
             <table class="table table-sm mb-0 table-striped table-hover">
                 <thead class="thead-light">
                     <tr>
@@ -101,15 +119,20 @@
                 </tbody>
             </table>
         </div>
+      </div>
     {% endif %}
 
     {% if page.texte %}
-        <div class="card">
-            <div class="card-header">Corps du message initial</div>
-            <div class="card-body">
-                {{ page.texte|e|nl2br }}
-            </div>
+      <div class="tab-pane fade" id="msgViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="msgViewLink{{ page.doc.uniqid }}">
+        <div class="card my-3 bg-light">
+          <div class="card-body">
+            {{ page.texte|e|nl2br }}
+          </div>
         </div>
+      </div>
     {% endif %}
+
+
+  </div>
 
 </td>
