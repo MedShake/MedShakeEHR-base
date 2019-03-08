@@ -160,8 +160,11 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
         $hprimHeader=msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$data['txtFileName']);
         $hprimHeader['dateDossier']= trim($hprimHeader['dateDossier']);
         if (strlen($hprimHeader['dateDossier']) == 10) {
-            $date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier']);
-            $date = $date->format('Y-m-d');
+            if($date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier'])) {
+              $date = $date->format('Y-m-d');
+            } else {
+              $date=date("Y-m-d");
+            }
         } else {
             $date=date("Y-m-d");
         }
