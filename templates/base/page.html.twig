@@ -209,10 +209,17 @@
                             {% endif %}
                           </a>
                           <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">Règlements du jour</a>
-                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">Recettes</a>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">
+                              <i class="fas fa-cash-register fa-fw text-muted mr-1"></i>
+                              Règlements du jour
+                            </a>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">
+                              <i class="fas fa-chart-line fa-fw text-muted mr-1"></i>
+                              Recettes</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">Mémo tarifaire</a>
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">
+                              <i class="fas fa-sticky-note fa-fw text-muted mr-1"></i> Mémo tarifaire
+                            </a>
                           </div>
                       </li>
                       {% if config.apicryptAdresse is not empty or config.apicryptInboxMailForUserID is not empty or config.apicryptInboxMailForUserID is same as(0) %}
@@ -287,30 +294,52 @@
                               <h6 class="dropdown-header">Outils</h6>
                             {% endif %}
                             {% if config.utiliserLap == 'true' %}
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/lap/">LAP et BDM</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/lap/">
+                                <i class="fas fa-pills fa-fw text-muted mr-1"></i>
+                                LAP et BDM
+                              </a>
                             {% endif %}
                             {% if config.VoirRouletteObstetricale == 'true' %}
-                              <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">Roulette obstétricale</a>
-                              <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/">Roulette obstétricale</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">
+                                <i class="fas fa-calculator fa-fw text-muted mr-1"></i>
+                                Roulette obstétricale
+                              </a>
+                            {% endif %}
+                            {% if config.utiliserLap == 'true' or  config.VoirRouletteObstetricale == 'true' %}
                               <div role="separator" class="dropdown-divider"></div>
                             {% endif %}
                             {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
                               <h6 class="dropdown-header">Historique rappels RDV</h6>
 
                               {% if config.mailRappelDaysBeforeRDV %}
-                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">Rappels email</a>
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">
+                                  <i class="fas fa-bell fa-fw text-muted mr-1"></i>
+                                  Rappels email
+                                </a>
                               {% endif %}
                               {% if config.smsProvider %}
-                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">Rappels SMS</a>
-                                <a class="dropdown-item disabled" {% if page.creditsSMS < config.smsSeuilCreditsAlerte %}style="color : red"{% endif %} href="#">Crédits : {{ page.creditsSMS }} SMS</a>
+                                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">
+                                  <i class="far fa-bell fa-fw text-muted mr-1"></i>
+                                  Rappels SMS
+                                </a>
+                                <a class="dropdown-item disabled{% if page.creditsSMS < config.smsSeuilCreditsAlerte %} text-danger font-weight-bold{% endif %}" href="#">
+                                  <i class="far fa-fw text-muted mr-1"></i>
+                                  <span class="small">Crédits : {{ page.creditsSMS }} SMS</span>
+                                </a>
                               {% endif %}
                               <div class="dropdown-divider"></div>
                             {% endif %}
                             <h6 class="dropdown-header">Patients</h6>
                             {% if config.smtpHost or config.apicryptSmtpHost %}
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">Mails envoyés</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">
+                                <i class="fas fa-paper-plane fa-fw text-muted mr-1"></i>
+                                Mails envoyés
+                              </a>
                             {% endif %}
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">Dossiers supprimés</a>
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">
+                                <i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>
+                                Dossiers supprimés
+                              </a>
                         </div>
                       </li>
                       {% endif %}
