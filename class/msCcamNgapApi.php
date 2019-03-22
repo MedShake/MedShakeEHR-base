@@ -38,6 +38,7 @@ class msCcamNgapApi
   private $_acteType='CCAM';
   private $_phaseCode=0;
   private $_activiteCode=1;
+  private $_acteCodeProf='mspe';
   private $_acteData;
 
 /**
@@ -74,6 +75,15 @@ class msCcamNgapApi
   public function setActeType($acteType)
   {
       return $this->_acteType=$acteType;
+  }
+
+/**
+ * Définir le code profession (secteur honoraires NGAP)
+ * @param string $acteCodeProf code profession pour sélection grile tarifaire NGAP
+ */
+  public function setActeCodeProf($acteCodeProf)
+  {
+      return $this->_acteCodeProf=$acteCodeProf;
   }
 
 /**
@@ -130,15 +140,16 @@ class msCcamNgapApi
     } elseif($this->_acteType == 'NGAP') {
 
       $data=Spyc::YAMLDump(array(
-        'tarifParZone'=>array(
-          'metro'=>$scrap['tarifMetro'],
-          '971'=>$scrap['tarif971'],
-          '972'=>$scrap['tarif972'],
-          '973'=>$scrap['tarif973'],
-          '974'=>$scrap['tarif974'],
-          '976'=>$scrap['tarif976']
-        )
-      ), false, 0, TRUE);
+              'tarifParZone'=>array(
+                'metro'=>$scrap['tarifMetro'],
+                '971'=>$scrap['tarif971'],
+                '972'=>$scrap['tarif972'],
+                '973'=>$scrap['tarif973'],
+                '974'=>$scrap['tarif974'],
+                '976'=>$scrap['tarif976']
+              )
+            ), false, 0, TRUE);
+
       $data=preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
 
       $data2return=array(
@@ -146,6 +157,7 @@ class msCcamNgapApi
         'acteLabel'=>$scrap['label'],
         'activiteCode'=>$this->_activiteCode,
         'phaseCode'=>$this->_phaseCode,
+        'codeProf'=>$this->_acteCodeProf,
         'yaml'=>$data,
         'tarifUnite'=>'euro'
 
@@ -195,12 +207,13 @@ class msCcamNgapApi
  */
   public function getAllAndUpdate() {
     $tabr=[];
-    if($codes=msSQL::sql2tab("select code, type, phase, activite from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
+    if($codes=msSQL::sql2tab("select code, type, phase, activite, codeProf from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
       foreach($codes as $k=>$code) {
         $this->setActeCode($code['code']);
         $this->setActiviteCode($code['activite']);
         $this->setPhaseCode($code['phase']);
         $this->setActeType($code['type']);
+        $this->setActeCodeProf($code['codeProf']);
         $data=$this->getActeData();
         $tabr[$k]=array(
           'type'=>$code['type'],
@@ -213,6 +226,7 @@ class msCcamNgapApi
             'code'=>$data['acteCode'],
             'activite'=>$data['activiteCode'],
             'phase'=>$data['phaseCode'],
+            'codeProf'=>$data['codeProf'],
             'type'=>$code['type'],
             'label'=>$data['acteLabel'],
             'dataYaml'=>$data['yaml'],
@@ -238,7 +252,7 @@ class msCcamNgapApi
       if($this->_acteType == 'CCAM') {
         $url=$p['config']['apiCcamNgapUrl']."/ccam/actes/".$this->_acteCode."/".$this->_activiteCode."/".$this->_phaseCode."/?key=".$p['config']['apiCcamNgapKey'];
       } elseif($this->_acteType == 'NGAP') {
-        $url=$p['config']['apiCcamNgapUrl']."/ngap/actes/".$this->_acteCode."/?key=".$p['config']['apiCcamNgapKey'];
+        $url=$p['config']['apiCcamNgapUrl']."/ngap/actes/".$this->_acteCode."/".$this->_acteCodeProf."/?key=".$p['config']['apiCcamNgapKey'];
       } elseif($this->_acteType == 'mCCAM') {
         $url=$p['config']['apiCcamNgapUrl']."/ccam/modificateur/".$this->_acteCode."/?key=".$p['config']['apiCcamNgapKey'];
       } else {

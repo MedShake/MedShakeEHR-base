@@ -36,7 +36,12 @@ $reglement = new msReglement();
 if($_POST['regleSecteurHonoraires']) {
   $reglement->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
 } else {
-  $reglement->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+  $reglement->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+}
+if($_POST['regleSecteurHonorairesNgap']) {
+  $reglement->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
+} else {
+  $reglement->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
 }
 if($_POST['regleSecteurGeoTarifaire']) {
   $reglement->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);

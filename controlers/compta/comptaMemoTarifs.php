@@ -51,10 +51,12 @@ if($p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoi
   $userOb = new msPeople;
   $userOb->setToID($p['page']['selectUser']);
   $module = $userOb->getModule();
-  $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>$p['page']['selectUser'], 'module'=>$module));
+  $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>$p['page']['selectUser'], 'module'=>$module));
+  $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>$p['page']['selectUser'], 'module'=>$module));
   $secteurGeo=msConfiguration::getParameterValue('administratifSecteurGeoTarifaire', array('id'=>$p['page']['selectUser'], 'module'=>$module));
   $reglement = new msReglement();
   $reglement->setSecteurTarifaire($secteur);
+  $reglement->setSecteurTarifaireNgap($secteurNgap);
   $reglement->setSecteurTarifaireGeo($secteurGeo);
 
 

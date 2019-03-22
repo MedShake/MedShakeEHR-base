@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `actes_base` (
  `code` varchar(7) NOT NULL,
  `activite` tinyint(1) NOT NULL DEFAULT '1',
  `phase` tinyint(1) NOT NULL DEFAULT '0',
+ `codeProf` varchar(7) DEFAULT NULL,
  `label` varchar(255) DEFAULT NULL,
  `type` enum('NGAP','CCAM','Libre','mCCAM') NOT NULL DEFAULT 'CCAM',
  `dataYaml` text,
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `actes_base` (
  `fromID` mediumint(7) unsigned NOT NULL DEFAULT '1',
  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
  PRIMARY KEY (`id`) USING BTREE,
- UNIQUE KEY `code` (`code`,`activite`,`phase`,`type`) USING BTREE
+ UNIQUE KEY `code` (`code`,`activite`,`phase`,`type`,`codeProf`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `actes_cat` (
@@ -456,6 +457,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (71, 'reglement', 'regleSecteurHonoraires', '', 'Secteur tarifaire', 'secteur tarifaire appliqué', '', '', 'text', '', 'base', 46, 0, '2018-12-03 15:02:36', 1576800000, 1),
 (72, 'reglement', 'regleSecteurIK', '', 'Secteur tarifaire pour IK', 'secteur tarifaire IK appliqué', '', '', 'text', '', 'base', 46, 0, '2018-12-03 15:03:20', 1576800000, 1),
 (73, 'reglement', 'regleSecteurGeoTarifaire', '', 'Secteur géographique tarifaire', 'secteur géographique tarifaire', '', '', 'text', '', 'base', 46, 0, '2018-12-03 15:04:12', 1576800000, 1),
+(74, 'reglement', 'regleSecteurHonorairesNgap', '', 'Secteur tarifaire NGAP', 'secteur tarifaire NGAP appliqué', '', '', 'text', '', 'base', 46, 0, '2018-12-03 15:02:36', 1576800000, 1),
 (103, 'admin', 'rpps', 'rpps', 'RPPS', 'rpps', 'numeric', '', 'number', '', 'base', 36, 1, '2018-01-01 00:00:00', 3600, 1),
 (104, 'admin', 'adeli', 'adeli', 'Adeli', 'n° adeli', '', '', 'text', '', 'base', 36, 1, '2018-01-01 00:00:00', 3600, 1),
 (107, 'courrier', 'modeleCourrierVierge', '', 'Courrier', 'modèle de courrier vierge', '', '', '', 'courrier-courrierVierge', 'base', 38, 1, '2018-01-01 00:00:00', 3600, 0),
@@ -755,8 +757,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('ovhTelecomServiceName', 'default', 0, 'base', 'Click2call', 'string', 'Numéro de la ligne au format international 0033xxxxxxxxxx', NULL),
 ('ovhTelecomCallingNumber', 'default', 0, 'base', 'Click2call', 'string', 'Numéro de l\'appelant au format international 0033xxxxxxxxxx', NULL),
 ('ovhTelecomIntercom', 'default', 0, 'base', 'Click2call', 'true/false', 'Activer le mode intercom', NULL),
-('click2callService', 'default', 0, 'base', 'Click2call', 'string', 'nom du service Click2call à activer (OVH)', NULL);
+('click2callService', 'default', 0, 'base', 'Click2call', 'string', 'nom du service Click2call à activer (OVH)', NULL),
+( 'administratifSecteurHonorairesNgap', 'default', '0', '', 'Règlements', 'texte', 'Code profession pour le secteur tarifaire NGAP', 'mspe');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
- (2, 'base', 'module', 'v5.2.0');
+ (2, 'base', 'module', 'v5.3.0');

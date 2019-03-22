@@ -34,4 +34,5 @@ $scrap->setActiviteCode($_POST['activiteCode']);
 if(empty($_POST['phaseCode'])) $_POST['phaseCode']=0;
 $scrap->setPhaseCode($_POST['phaseCode']);
 $scrap->setActeType($_POST['acteType']);
+$scrap->setActeCodeProf($_POST['codeProf']);
 echo json_encode($scrap->getActeData());

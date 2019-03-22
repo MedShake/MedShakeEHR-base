@@ -158,14 +158,6 @@
             <button type="button" {% if page['utilisationParFacture'][w.id] > 0 %} disabled {% endif %} class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 %} disabled {% endif %} data-id="{{ w.id }}" data-table="actes">
                 <span class="fa fa-times" aria-hidden="true"></span>
             </button>
-
-            <div class="btn-group">
-              <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-ellipsis-h" aria-hidden="true"></span>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-fsepyx/{{ w.id }}/">Générer facture type Pyxvital</a></li>
-              </ul>
-            </div>
           </div>
         </td>
       </tr>

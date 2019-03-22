@@ -69,8 +69,10 @@
 					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
-             $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>'', 'module'=>$v['catModule']));
+             $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>'', 'module'=>$v['catModule']));
              $reglement->setSecteurTarifaire($secteur);
+             $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>'', 'module'=>$v['catModule']));
+             $reglement->setSecteurTarifaireNgap($secteurNgap);
              $reglement->setFactureTypeID($v['id']);
              $reglement->setFactureTypeData($v);
              $p['page']['secteurs'][$v['catName']]=$secteur;

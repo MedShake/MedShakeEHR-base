@@ -109,7 +109,7 @@ if (isset($_POST['prat'])) {
 $prat=new msPeople();
 $prat->setToID($p['page']['pratsSelect'][0]);
 $user=array('id'=>$p['page']['pratsSelect'][0], 'module'=>$prat->getModule());
-$p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonoraires', $user);
+$p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', $user);
 
 //sortir les reglements du jour
 if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,

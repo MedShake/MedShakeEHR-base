@@ -37,11 +37,18 @@ if (!msUser::checkUserIsAdmin()) {
   $p['page']['typesActes']=msSQL::sql2tabSimple("select distinct type from actes_base order by type='NGAP' desc, type='CCAM' desc, type='Libre' asc");
 
   //actes NGAP CCAM
-  if ($actesBase=msSQL::sql2tab("select id, code, label, type from actes_base order by type='NGAP' desc, code")) {
+  if ($actesBase=msSQL::sql2tab("select id, code, phase, activite, codeProf, label, type from actes_base order by type='NGAP' desc, code")) {
     foreach ($actesBase as $k=>$v) {
-      $p['page']['actesBase'][$v['type']][$v['code']]=$v;
+      if($v['type'] == 'NGAP') {
+        $p['page']['actesBase'][$v['type']][$v['codeProf']][$v['code']]=$v;
+      } else {
+        $p['page']['actesBase'][$v['type']][$v['activite'].'-'.$v['phase']][$v['code']]=$v;
+      }
     }
   }
+
+  //Correspondances code NGAP
+  $p['page']['codeProf']=msReglementActe::getCodeProfLabel();
 
   //nombre d'utilisation de chaque
   $tab=[];

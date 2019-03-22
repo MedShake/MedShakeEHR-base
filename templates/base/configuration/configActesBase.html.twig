@@ -117,6 +117,7 @@
                     <tr>
                       <th>#</th>
                         <th>Code</th>
+                        <th>Précision</th>
                         <th>Label</th>
                         <th>Utilisation</th>
                         <th>Type</th>
@@ -124,7 +125,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for w in page['actesBase'][typeActe] %}
+                    {% for codesouscat, souscat in page['actesBase'][typeActe] %}
+                      {% if typeActe in ['NGAP', 'CCAM'] and page['actesBase'][typeActe]|length > 1 %}
+                        <tr><td class="table-info" colspan="7">
+                          {% if typeActe == 'NGAP' %}
+                            {{ page['codeProf'][codesouscat] }}
+                          {% elseif typeActe == 'CCAM' %}
+                            Activité-Phase : {{ codesouscat }}
+                          {% endif %}
+                        </td></tr>
+                      {% endif %}
+                      {% for w in souscat %}
                         <tr>
                             <td>{{ w.id }}</td>
                             <td>{{ w.code }}</td>
@@ -151,6 +162,7 @@
                             </td>
                         </tr>
                       {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
 
@@ -163,7 +175,7 @@
 
 {% block modals %}
 {# modal nouvel acte / edition #}
-<div class="modal fade" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade modalGestionActes" id="modalNewCat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -187,13 +199,15 @@
             <div class="form-group col-3">
               {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'code', 'placeholder' : 'code NGAP ou CCAM', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Code', } }) }}
             </div>
-            <div class="form-group col-3">
+            <div class="form-group col-2">
               {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'activite', 'value':'1', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Activité', } }) }}
             </div>
-            <div class="form-group col-3">
+            <div class="form-group col-2">
               {{ f.input ({ 'input' : { 'type' : 'text', 'name' : 'phase', 'value':'0', 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Phase', } }) }}
             </div>
-
+            <div class="form-group col-4">
+              {{ f.select ({ 'select' : { 'name' : 'codeProf', 'values': page.codeProf , 'class' : 'form-control', 'autocomplete' : 'off' }, 'label' : { 'position' : 'before', 'label' : 'Grille NGAP', } }) }}
+            </div>
             <div class="form-group col-3 text-right">
               <button type="button" class="btn btn-secondary importFromCCAM" title="Importer / mettre à jour depuis le site de la CCAM">
                 <i class="fas fa-search"></i>

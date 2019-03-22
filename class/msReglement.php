@@ -44,9 +44,14 @@ class msReglement
     private $_factureTypeID;
 
 /**
- * @var int  $_secteurTarifaire secteur tarifaire
+ * @var int  $_secteurTarifaire secteur tarifaire CCAM
  */
     protected $_secteurTarifaire;
+
+/**
+ * @var string  $_secteurTarifaireNgap secteur tarifaire NGAP
+ */
+    protected $_secteurTarifaireNgap;
 
 /**
  * @var string  $_secteurTarifaireGeo secteur tarifaire géographique
@@ -175,12 +180,22 @@ class msReglement
     }
 
 /**
- * Set secteur tarifaire
+ * Set secteur tarifaire CCAM
  * @param int $_secteurTarifaire secteur identifié par un int
  */
     public function setSecteurTarifaire($_secteurTarifaire)
     {
       $this->_secteurTarifaire = $_secteurTarifaire;
+      return $this;
+    }
+
+/**
+ * Set secteur tarifaire NGAP
+ * @param int $_secteurTarifaireNgap secteur identifié par un int
+ */
+    public function setSecteurTarifaireNgap($_secteurTarifaireNgap)
+    {
+      $this->_secteurTarifaireNgap = $_secteurTarifaireNgap;
       return $this;
     }
 
@@ -270,11 +285,16 @@ class msReglement
       global $p;
 
       $data=new msData();
-      $name2typeID=$data->getTypeIDsFromName(['regleSecteurGeoTarifaire', 'regleSecteurHonoraires', 'regleSecteurIK']);
+      $name2typeID=$data->getTypeIDsFromName(['regleSecteurGeoTarifaire', 'regleSecteurHonoraires', 'regleSecteurIK', 'regleSecteurHonorairesNgap']);
       if(isset($this->prevalues[$name2typeID['regleSecteurHonoraires']])) {
         $this->setSecteurTarifaire($this->prevalues[$name2typeID['regleSecteurHonoraires']]);
       } else {
-        $this->setSecteurTarifaire($p['config']['administratifSecteurHonoraires']);
+        $this->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+      }
+      if(isset($this->prevalues[$name2typeID['regleSecteurHonorairesNgap']])) {
+        $this->setSecteurTarifaireNgap($this->prevalues[$name2typeID['regleSecteurHonorairesNgap']]);
+      } else {
+        $this->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
       }
       if(isset($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']])) {
         $this->setSecteurTarifaireGeo($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']]);
@@ -290,7 +310,7 @@ class msReglement
 
 /**
  * Définir les champs cachés utiles au formulaire de règlement
- * @param array $f formualire de règlement sous forme d'aray PHP
+ * @param array $f formulaire de règlement sous forme d'array PHP
  */
     public function setHiddenInputToReglementForm(&$f) {
       $add=array(
@@ -303,6 +323,7 @@ class msReglement
         'regleDetailsActes'=>'',
         'regleSecteurGeoTarifaire'=>$this->_secteurTarifaireGeo,
         'regleSecteurHonoraires'=>$this->_secteurTarifaire,
+        'regleSecteurHonorairesNgap'=>$this->_secteurTarifaireNgap,
         'regleSecteurIK'=>$this->_secteurIK,
       );
       if ($this->_objetID > 0) {
@@ -343,22 +364,23 @@ class msReglement
         $data = $this->_factureTypeData;
       }
 
-      if (!isset($this->_tarifsNgapCcamForOneSecteur)) {
-        $dataTarifs = $this->getAllTarifsNgapCcamForOneSecteur();
-      } else {
-        $dataTarifs = $this->_tarifsNgapCcamForOneSecteur;
-      }
-
       $data['tarif']=0;
       $data['depassement']=0;
       $data['majoModifCCAM']=0;
 
       foreach($data['details'] as $key=>$val) {
+        $acte = new msReglementActe;
+        $acte->setActeCode($key);
+        $acte->setSecteurTarifaire($this->_secteurTarifaire);
+        $acte->setSecteurTarifaireNgap($this->_secteurTarifaireNgap);
+        $acte->setSecteurTarifaireGeo($this->_secteurTarifaireGeo);
+        $acteTarif = $acte->getActeTarifBase();
+
         if (!is_array($val)) {
             $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');
         }
         //sur l'acte
-        $data['details'][$key]['base']=$dataTarifs[$key]['tarif'];
+        $data['details'][$key]['base']=$acteTarif;
         if(isset($val['codeAsso'])) {
           $data['details'][$key]['codeAsso']=$val['codeAsso'];
         } else {
@@ -372,9 +394,9 @@ class msReglement
         }
 
         if(isset($val['pourcents'])) {
-            $data['details'][$key]['tarif'] = round(($dataTarifs[$key]['tarif']*$val['pourcents']/100), 2);
+            $data['details'][$key]['tarif'] = round(($acteTarif*$val['pourcents']/100), 2);
         } else {
-            $data['details'][$key]['tarif'] = $dataTarifs[$key]['tarif'];
+            $data['details'][$key]['tarif'] = $acteTarif;
         }
         if(isset($val['depassement'])) {
             $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
@@ -383,11 +405,11 @@ class msReglement
         }
 
         if(isset($val['modifsCCAM'])) {
-            $data['details'][$key]['majoModifCCAM'] = $this->_getMontantModifsCCAM($dataTarifs[$key]['tarif'], $val['modifsCCAM']);
+            $data['details'][$key]['majoModifCCAM'] = $this->_getMontantModifsCCAM($acteTarif, $val['modifsCCAM']);
             $data['details'][$key]['total'] = $data['details'][$key]['total'] + $data['details'][$key]['majoModifCCAM'];
         }
 
-        $data['details'][$key]['type'] = $dataTarifs[$key]['type'];
+        $data['details'][$key]['type'] = $acte->getActeType();
         $data['details'][$key]['tarif'] = number_format($data['details'][$key]['tarif'], 2,'.','');
         $data['details'][$key]['total'] = number_format($data['details'][$key]['total'], 2,'.','');
 
@@ -420,61 +442,6 @@ class msReglement
     }
 
 /**
- * Obtenir les tarifs des actes NGAP / CCAM pour un secteur tarifaire
- * @return array Tableau code => tarif
- */
-      public function getAllTarifsNgapCcamForOneSecteur() {
-        if (!isset($this->_secteurTarifaire)) {
-            throw new Exception('SecteurTarifaire is not set');
-        }
-
-        if($data = msSQL::sql2tabKey("select code, dataYaml, type, tarifUnit from actes_base where type!='mCCAM'", "code")) {
-          foreach($data as $k=>$v) {
-            $tarif=$this->_getTarifFromYamlData($v)['tarif'];
-            $tab[$k]=array(
-              'code'=>$k,
-              'tarif'=>$tarif,
-              'type'=>$v['type']
-            );
-          }
-        }
-        return $this->_tarifsNgapCcamForOneSecteur=$tab;
-      }
-
-
-/**
- * Obtenir le tarif d'un acte de base à partir des datas yaml en fonctions des secteurs tarifaires
- * @param  array $v données de l'acte
- * @return array    données de l'acte avec champ tarif
- */
-      private function _getTarifFromYamlData(&$v) {
-        $dataYaml=Spyc::YAMLLoadString($v['dataYaml']);
-        if($v['type']=='CCAM' and !empty($this->_secteurTarifaire)) {
-          $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
-          if(isset($dataYaml['modificateursParGrilleTarifaire']) and !empty($dataYaml['modificateursParGrilleTarifaire'])) {
-            $v['modifsCCAMpossibles']=implode('', $dataYaml['modificateursParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]);
-          }
-          // application coeff majoration DOM
-          if(isset($dataYaml['majorationsDom'][$this->_secteurTarifaireGeo])) {
-            $v['tarif']=round(($v['tarif']*$dataYaml['majorationsDom'][$this->_secteurTarifaireGeo]),2);
-          }
-        } elseif($v['type']=='mCCAM' and !empty($this->_secteurTarifaire)) {
-          if($v['tarifUnit']=='euro') {
-            $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['forfait'];
-          } else {
-            $v['tarif']=$dataYaml['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]['coef'];
-          }
-        } elseif($v['type']=='NGAP') {
-          $v['tarif']=$dataYaml['tarifParZone'][$this->_secteurTarifaireGeo];
-        } elseif($v['type']=='Libre') {
-          $v['tarif']=$dataYaml['tarifBase'];
-        } else {
-          $v['tarif']='';
-        }
-        return $v;
-      }
-
-/**
  * Obtenir les data sur les actes NGAP / CCAM trouvés par une recherche
  * @param  string $search chaine de recherche
  * @return array           tableau des data
@@ -483,9 +450,18 @@ class msReglement
         $searcho=$search;
         $search=str_replace(' ', '%', $search).'%';
         $data=[];
-        if($data =  msSQL::sql2tab("select * from actes_base where code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."' order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc limit 25")) {
+        if($data =  msSQL::sql2tab("select *
+        from actes_base
+        where (code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."') and ((type='NGAP' and codeProf='".$this->_secteurTarifaireNgap."') or type in ('CCAM', 'Libre'))
+        order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc
+        limit 25")) {
           foreach($data as $k=>$v) {
-            $data[$k]=$this->_getTarifFromYamlData($v);
+            $acte = new msReglementActe;
+            $acte->setActeCode($v['code']);
+            $acte->setSecteurTarifaire($this->_secteurTarifaire);
+            $acte->setSecteurTarifaireNgap($this->_secteurTarifaireNgap);
+            $acte->setSecteurTarifaireGeo($this->_secteurTarifaireGeo);
+            $data[$k]['tarif']=$acte->getActeTarifBase();
           }
         }
         return $data;

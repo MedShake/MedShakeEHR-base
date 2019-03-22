@@ -532,6 +532,30 @@ $(document).ready(function() {
     }
   });
 
+  $('.modalGestionActes').on('show.bs.modal', function (e) {
+    setModalGestionActes();
+  });
+
+  $('.modalGestionActes select[name="type"]').on('change', function (e) {
+    setModalGestionActes();
+  });
+
+  function setModalGestionActes() {
+    if($('.modal select[name="type"]').val() == 'NGAP') {
+      $('.modal input[name="activite"]').parent('div').addClass('d-none');
+      $('.modal input[name="phase"]').parent('div').addClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').removeClass('d-none');
+    } else if($('.modal select[name="type"]').val() == 'Libre') {
+      $('.modal input[name="activite"]').parent('div').addClass('d-none');
+      $('.modal input[name="phase"]').parent('div').addClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').addClass('d-none');
+    } else {
+      $('.modal input[name="activite"]').parent('div').removeClass('d-none');
+      $('.modal input[name="phase"]').parent('div').removeClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').addClass('d-none');
+    }
+  }
+
   // importer les datas d'un acte CCAM
   $(".importFromCCAM").on("click", function(e) {
     e.preventDefault();
@@ -549,7 +573,8 @@ $(document).ready(function() {
         acteType: $('.modal select[name="type"]').val(),
         acteCode: acteCode,
         activiteCode: $('.modal input[name="activite"]').val(),
-        phaseCode: $('.modal input[name="phase"]').val()
+        phaseCode: $('.modal input[name="phase"]').val(),
+        codeProf: $('.modal select[name="codeProf"]').val(),
       },
       dataType: "json",
       success: function(data) {
@@ -563,19 +588,6 @@ $(document).ready(function() {
         $('.modal input[name="activite"]').val(data.activiteCode);
         $('.modal input[name="phase"]').val(data.phaseCode);
         $('.modal select[name="tarifUnit"]').val(data.tarifUnite);
-        // $('.modal input[name="tarifs1"]').val(data.tarifs1);
-        // $('.modal input[name="tarifs2"]').val(data.tarifs2);
-        // $('.modal select[name="type"]').find('option[value="CCAM"]').prop("selected", "selected");
-        // console.log(data.modificateurs);
-        // $.each(['F', 'P', 'S', 'M', 'R', 'D', 'E', 'C', 'U'], function( index, value ) {
-        //   if(data.modificateurs.indexOf(value) != -1) {
-        //     console.log(value + ' applicable');
-        //     $('.modal select[name="'+ value +'"]').find('option[value="true"]').prop("selected", "selected");
-        //   } else {
-        //     console.log(value + ' non applicable');
-        //     $('.modal select[name="'+ value +'"]').find('option[value="false"]').prop("selected", "selected");
-        //   }
-        // });
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
