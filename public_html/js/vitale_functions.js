@@ -78,7 +78,7 @@ function getFseData(el) {
         }
 
         html += '<tr> \
-        <td class="text-left">' + v.qte + v.acte + '</td> \
+        <td class="text-left">' + (v.qte > 1 ? v.qte : '') + v.acte + '</td> \
         <td>' + v.codeQualif + '</td> \
         <td>' + v.modifsCCAM + '</td> \
         <td>' + v.codeAsso + '</td> \

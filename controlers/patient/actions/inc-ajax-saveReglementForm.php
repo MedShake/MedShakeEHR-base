@@ -91,7 +91,7 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
         $codes = json_decode($_POST['regleDetailsActes'], TRUE);
         if(!empty($codes)) {
           foreach($codes as $code) {
-            if($code['quantite'] > 1 ) {
+            if(isset($code['quantite']) and $code['quantite'] > 1 ) {
               $titre[] = $code['quantite'].$code['acte'];
             } else {
               $titre[] = $code['acte'];

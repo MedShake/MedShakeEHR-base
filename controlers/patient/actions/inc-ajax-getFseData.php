@@ -36,6 +36,9 @@ foreach($actes as $k=>$acte) {
   if(isset($acte['ikNombre'])) {
     $actes[$k]['qte']=$acte['ikNombre'];
     unset($actes[$k]['ikNombre']);
+  } else {
+    $actes[$k]['qte']=$acte['quantite'];
+    unset($actes[$k]['quantite']);
   }
 }
 
