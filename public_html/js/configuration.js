@@ -171,14 +171,6 @@ $(document).ready(function() {
     $(modal + ' form input[name="dicomCodeMeaning"]').val($(this).attr('data-dicomcodemeaning'));
   });
 
-
-  $("button.typeToggleVisibility").on("click", function(e) {
-
-    classToToggle = $(this).attr('id');
-    $('.' + classToToggle).toggle();
-
-  });
-
   // Upload fichier par drag@drop
   $("#dropZoneFichierZoneConfig").dmUploader({
     url: urlBase + '/configuration/ajax/configUploadFichierZoneConfig/',
