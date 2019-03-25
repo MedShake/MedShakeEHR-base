@@ -86,6 +86,6 @@
      //utilisation de chaque facture type
      $data=new msData();
      $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') group by parentTypeID", 'parentTypeID', 'nb');
+     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') and deleted='' group by parentTypeID", 'parentTypeID', 'nb');
 
  }
