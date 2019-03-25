@@ -76,13 +76,13 @@
 		{% for k,v in page.tabTypes %}
 		<tr>
 			<th colspan="4">
-				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-light btn-sm typeToggleVisibility">
+				<button id="cat{{ v.0.cat }}" type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target=".cat{{ v.0.cat }}">
   				<span class="fa fa-search" aria-hidden="true"></span>
 				</button> {{ v.0.catLabel }}
 			</th>
 		</tr>
 		{% for w in v %}
-			<tr class="cat{{ v.0.cat }} small" style="display : none;">
+			<tr class="collapse cat{{ v.0.cat }} small">
 			<td>{{ w.id }}</td>
       <td>{{ w.name }}</td>
 			<td>{{ w.label }}</td>

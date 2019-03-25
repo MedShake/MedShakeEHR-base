@@ -33,11 +33,6 @@
 {% block head %}
     {{ parent() }}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
-    <style>
-      .texteadroite {
-        text-align: right;
-      }
-    </style>
 {% endblock %}
 
 {% block body %}
