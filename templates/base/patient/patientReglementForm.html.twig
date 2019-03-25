@@ -53,7 +53,7 @@
                             {% if val.flagCmu %}background : #EEE; {% endif %}
                             {% if val.flagImportant %}font-weight : bold; {% endif %}
                             "
-                          >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ (val.details|keys)|join(' + ') }}</option>
+                          >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ val.syntheseActes }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -72,7 +72,7 @@
             <th class="text-left" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 100px;"{% endif %}>code asso.</th>
             <th class="text-center">base</th>
             {% if page.formIN != 'baseReglementLibre' %}
-              <th class="pourcents text-center" style="width : 100px;">%</th>
+              <th class="pourcents text-center" style="width : 100px;">quantité</th>
             {% endif %}
             <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 120px;"{% endif %}>modif CCAM</th>
             <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}></th>

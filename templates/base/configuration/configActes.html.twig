@@ -33,15 +33,6 @@
 {% block head %}
     {{ parent() }}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
-    <style>
-      .texteadroite {
-        text-align: right;
-      }
-
-      tr.details {
-        display: none;
-      }
-    </style>
 {% endblock %}
 
 {% block body %}
@@ -117,11 +108,11 @@
         <th>Label court</th>
         <th>Utilisation</th>
         {% if page.secteurs[k] != '' %}
-          <th class="texteadroite">Tarif&nbsp;SS</th>
-          <th class="texteadroite">Dépassement</th>
-          <th class="texteadroite">Total</th>
+          <th class="text-right">Tarif&nbsp;SS</th>
+          <th class="text-right">Dépassement</th>
+          <th class="text-right">Total</th>
         {% else %}
-          <th class="texteadroite">Tarif</th>
+          <th class="text-right">Tarif</th>
         {% endif %}
         <th></th>
       </tr>
@@ -131,19 +122,19 @@
       <tr>
         <td>{{ w.id }}</td>
         <td>
-          {{ (w.details|keys)|join(' + ') }}
+          {{ w.syntheseActes }}
         </td>
         <td{% if w.flagImportant == 1 %} class="font-weight-bold"{% endif %}>{{ w.label }}</td>
         <td>{{ w.shortLabel }}</td>
         <td>{{ page['utilisationParFacture'][w.id] }}</td>
-        <td class="texteadroite">{{ (w.tarif + w.majoModifCCAM)|number_format(2, '.', ' ') }}</td>
+        <td class="text-right">{{ (w.tarif + w.majoModifCCAM)|number_format(2, '.', ' ') }}</td>
         {% if page.secteurs[k] != '' %}
-          <td class="texteadroite">{{ w.depassement|number_format(2, '.', ' ') }}</td>
-          <td class="texteadroite">{{ w.total|number_format(2, '.', ' ') }}</td>
+          <td class="text-right">{{ w.depassement|number_format(2, '.', ' ') }}</td>
+          <td class="text-right">{{ w.total|number_format(2, '.', ' ') }}</td>
         {% endif %}
         <td  class="text-right">
           <div class="btn-group">
-            <button type="button" class="btn btn-light btn-sm typeToggleVisibility" aria-label="Editer" id="details{{ w.id }}">
+            <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target=".details{{ w.id }}" aria-label="Voir détails" id="details{{ w.id }}">
                 <span class="fa fa-search-plus" aria-hidden="true"></span>
             </button>
 
@@ -162,25 +153,30 @@
         </td>
       </tr>
       {% for key,det in w.details %}
-      <tr class="active small details details{{ w.id }}" >
+      <tr class="collapse small details{{ w.id }} table-active" >
         <td colspan="2"></td>
         <td>
-          {{ key }}{% if page.secteurs[k] != '' %} ({{ det.pourcents }}%){% endif %}
+
+          {% if det.quantite > 1 %}
+            {{ det.quantite }}{{ key }}
+          {% elseif page.secteurs[k] != '' %}
+            {{ key }} {% if det.pourcents != '100' %}({{ det.pourcents }}%){% endif %}
+          {% endif %}
           {% if det.modifsCCAM %}
-          + {{ det.modifsCCAM }}
+            + {{ det.modifsCCAM }}
           {% endif %}
         </td>
         <td></td>
         <td></td>
-        <td class="texteadroite">
+        <td class="text-right">
           {{ det.tarif|number_format(2, '.', '')  }}
           {% if det.majoModifCCAM > 0 %}
             + {{ det.majoModifCCAM }}
           {% endif %}
         </td>
         {% if page.secteurs[k] != '' %}
-          <td class="texteadroite">{{ det.depassement|number_format(2, '.', '')  }}</td>
-          <td class="texteadroite">{{ det.total|number_format(2, '.', '')  }}</td>
+          <td class="text-right">{{ det.depassement|number_format(2, '.', '')  }}</td>
+          <td class="text-right">{{ det.total|number_format(2, '.', '')  }}</td>
         {% endif %}
         <td colspan="2"></td>
       </tr>

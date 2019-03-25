@@ -132,8 +132,8 @@ $(document).ready(function() {
     calcResteDu();
   });
 
-  // observer la modulation en % d'un acte dans le tableau
-  $("#newReglement").on("change, keyup", "input.modulationActe", function(e) {
+  // observer la modulation en % ou quantité d'un acte dans le tableau
+  $("#newReglement").on("change, keyup", "input.modulationActe, input.quantiteActe", function(e) {
     calculerTotalIntermedLigneTabActes($(this))
     calculerTotalLigneTabActes($(this));
     setDefautTarifEtDepa();
@@ -256,6 +256,7 @@ function construireTableauActes(data) {
  */
 function construireLigneTableauActes(index, value) {
 
+  if (!value['quantite']) value['quantite'] = '1';
   if (!value['pourcents']) value['pourcents'] = '100';
   if (!value['modifsCCAM']) value['modifsCCAM'] = '';
   if (!value['codeQualif']) value['codeQualif'] = '';
@@ -276,19 +277,34 @@ function construireLigneTableauActes(index, value) {
   //acte
   tabLigne = '<tr><td class="font-weight-bold row' + index + '" >' + index + '</td>';
   // label
-  // tabLigne += '<td class="small text-left">' + (value['label'] == null ? '' : value['label']) + '</td>';
-
   tabLigne += '<td class="text-left text-secondary">' + (value['label'] == null ? '' : '<span title="' + value['label'] + '"><i class="far fa-question-circle"></i></span>') + '</td>';
 
   // code asso
   tabLigne += '<td' + tabColHide + '>' + (value['type'] == 'NGAP' ? '' : '<input class="form-control form-control-sm text-right codeAsso" value="' + value['codeAsso'] + '">') + '</td>';
   // valeur de base
   tabLigne += '<td class="text-center"><span class="baseActeValue">' + value['base'] + '</span>€</td>';
-  // poucents
+  // pourcents & quantité
   if (value['code'] == 'IK' || index == 'IK') {
     tabLigne += '<td class="text-right"' + tabColHide + '><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text">x</span></div><input class="form-control text-right ikNombre" value="' + value['ikNombre'] + '"></div></td>")';
+  } else if(value['type'] == 'NGAP') {
+    tabLigne += '<td class="text-right"' + tabColHide + '> \
+      <div class="input-group input-group-sm"> \
+        <div class="input-group-prepend"> \
+          <span class="input-group-text">x</span> \
+        </div>\
+        <input class="form-control text-right modulationActe d-none" value="' + value['pourcents'] + '">\
+        <input class="form-control text-right quantiteActe" value="' + value['quantite'] + '"> \
+      </div> \
+      </td>")';
   } else {
-    tabLigne += '<td class="text-right"' + tabColHide + '><div class="input-group input-group-sm"><input class="form-control text-right modulationActe" value="' + value['pourcents'] + '"><div class="input-group-append"><span class="input-group-text">%</span></div></div></td>")';
+    tabLigne += '<td class="text-right"' + tabColHide + '> \
+      <div class="input-group input-group-sm"> \
+        <input class="form-control text-right modulationActe" value="' + value['pourcents'] + '"> \
+        <input class="form-control text-right quantiteActe d-none" value="' + value['quantite'] + '"> \
+        <div class="input-group-append"> \
+          <span class="input-group-text">%</span> \
+        </div> \
+      </div></td>")';
   }
   // modifs ccam
   tabLigne += '<td class="text-right"' + tabColHide + '>' + (value['type'] == 'NGAP' ? '' : '<input class="form-control form-control-sm text-right modifsCCAM" maxlength="4" value="' + value['modifsCCAM'] + '">') + '</td>")';
@@ -325,6 +341,7 @@ function calculerTotalIntermedLigneTabActes(source) {
   // ajustement en fonction %
   base = parseFloat(source.closest('tr').find('.baseActeValue').text());
   pourcents = parseFloat(source.closest('tr').find('.modulationActe').val());
+  quantite = parseFloat(source.closest('tr').find('.quantiteActe').val());
   add2TarifSum = Math.round(base * pourcents) / 100;
 
   // ajustement en fonction modificateurs CCAM
@@ -350,7 +367,7 @@ function calculerTotalIntermedLigneTabActes(source) {
     ikNombre = source.closest('tr').find('.ikNombre').val();
     total = parseFloat(base) * parseFloat(ikNombre);
   } else {
-    total = parseFloat(add2TarifSum) + parseFloat(modifsCcamSum);
+    total = (parseFloat(add2TarifSum) * quantite) + parseFloat(modifsCcamSum);
   }
   total = Math.round(total * 100) / 100;
   source.closest('tr').find('.add2TarifSum').html(total);
@@ -406,6 +423,7 @@ function getFinalTarifTableauActes() {
       'base': $(this).find('.baseActeValue').text(),
       'ikNombre': $(this).find('.ikNombre').val(),
       'pourcents': $(this).find('.modulationActe').val(),
+      'quantite': $(this).find('.quantiteActe').val(),
       'modifsCCAM': $(this).find('.modifsCCAM').val(),
       'depassement': $(this).find('.add2DepaSum').val(),
       'codeQualif': $(this).find('.codeQualif').val(),

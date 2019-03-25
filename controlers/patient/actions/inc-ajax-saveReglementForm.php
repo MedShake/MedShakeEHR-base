@@ -84,12 +84,23 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
 
     //titre
     if($_POST['acteID'] > 0) {
-        $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");
-        $codes = Spyc::YAMLLoad($codes);
-        $codes = implode(' + ', array_keys($codes));
+        $ft = new msReglement;
+        $ft->setFactureTypeID($_POST['acteID']);
+        $codes = $ft->getFactureTypeData()['syntheseActes'];
     } else {
         $codes = json_decode($_POST['regleDetailsActes'], TRUE);
-        $codes = implode(' + ', array_column($codes, 'acte') );
+        if(!empty($codes)) {
+          foreach($codes as $code) {
+            if($code['quantite'] > 1 ) {
+              $titre[] = $code['quantite'].$code['acte'];
+            } else {
+              $titre[] = $code['acte'];
+            }
+          }
+          $codes = implode(' + ', $titre);
+        } else {
+          $codes = '';
+        }
     }
 
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
