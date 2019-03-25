@@ -211,7 +211,7 @@ class msReglement
 
 /**
  * Définir le secteur des IK
- * @param string $_secteurK sexteur IK
+ * @param string $_secteurK secteur IK
  */
     public function setSecteurIK($_secteurK)
     {
@@ -227,6 +227,9 @@ class msReglement
     {
       if(!is_array($_factureTypeData['details'])) {
         $_factureTypeData['details']=Spyc::YAMLLoad($_factureTypeData['details']);
+      }
+      if(!isset($_factureTypeData['syntheseActes'])) {
+        $_factureTypeData['syntheseActes']=$this->_getFactureTypeSyntheseActes($_factureTypeData['details']);
       }
       $this->_factureTypeData = $_factureTypeData;
       return $this;
@@ -251,6 +254,9 @@ class msReglement
 
               //on récupère détails
               $v['details']=Spyc::YAMLLoad($v['details']);
+
+              //on fabrique la syntheseActes
+              $v['syntheseActes']=$this->_getFactureTypeSyntheseActes($v['details']);
 
               $tab[$v['catLabel']][]=$v;
           }
@@ -344,6 +350,7 @@ class msReglement
         }
         $data = msSQL::sqlUnique("select id, label, details, flagCmu from actes where id='".$this->_factureTypeID."' limit 1");
         $data['details']=Spyc::YAMLLoad($data['details']);
+        $data['syntheseActes']=$this->_getFactureTypeSyntheseActes($data['details']);
         $this->_factureTypeData = $data;
         return $data;
     }
@@ -393,11 +400,14 @@ class msReglement
           $data['details'][$key]['modifsCCAM']='';
         }
 
-        if(isset($val['pourcents'])) {
+        if(isset($val['quantite']) and $val['quantite'] > 1) {
+            $data['details'][$key]['tarif'] = round(($acteTarif*$val['quantite']), 2);
+        } elseif(isset($val['pourcents'])) {
             $data['details'][$key]['tarif'] = round(($acteTarif*$val['pourcents']/100), 2);
         } else {
             $data['details'][$key]['tarif'] = $acteTarif;
         }
+
         if(isset($val['depassement'])) {
             $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
         } else {
@@ -512,5 +522,29 @@ class msReglement
         }
         return $modifsCcamSum;
       }
+
+/**
+ * Obtenir une chaine qui synthétise les actes NGAP/CCAM de la facture type
+ * @param  array $detailFactureType yaml de description de facture converti en array
+ * @return string                    string de forme qtéActeNgap + qtéActeNgap + ActeCcam
+ */
+      protected function _getFactureTypeSyntheseActes($detailFactureType) {
+        if(!empty($detailFactureType)) {
+          $syntheseActes=[];
+          foreach($detailFactureType as $acte=>$val) {
+            if(isset($val['quantite']) and $val['quantite'] > 1) {
+                $syntheseActes[]=$val['quantite'].$acte;
+            } else {
+                $syntheseActes[]=$acte;
+            }
+          }
+          if(!empty($syntheseActes)) {
+            return implode(' + ', $syntheseActes);
+          } else {
+            return '';
+          }
+        }
+      }
+
 
 }
