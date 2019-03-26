@@ -145,6 +145,26 @@ public function getDcInstanceID()
     }
 
 /**
+ * Obtenir les infos système Orthanc
+ * @return array data system Orthanc
+ */
+    public function getOrthancSystemInfo()
+    {
+      $url=$this->_baseCurlUrl.'/system';
+      return  $this->_dcGetContent($url);
+    }
+
+/**
+ * Obtenir les stats Orthanc
+ * @return array stats orthanc
+ */
+    public function getOrthancStats()
+    {
+      $url=$this->_baseCurlUrl.'/statistics';
+      return  $this->_dcGetContent($url);
+    }
+
+/**
  * Obtenir les data via un studyID Orthanc
  * @return array array
  */

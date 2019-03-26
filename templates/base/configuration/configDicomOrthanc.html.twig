@@ -1,0 +1,84 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : informations système et stats Orthanc
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% block title %}MedShakeEHR : informations Orthanc{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Informations Orthanc
+    </li>
+  </ol>
+
+  <h1>Informations Orthanc</h1>
+
+  {% if page.orthancSystemInfo.Name is not defined %}
+    <div class="alert alert-danger" role="alert">
+      L'API Orthanc n'est pas joignable. Vérifiez votre configuration !
+    </div>
+  {% else %}
+    <div class="row my-4">
+      <div class="col-12 col-lg-6 mb-4">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-info font-weight-bold"><i class="fas fa-cogs fa-lg mr-2"></i>Informations Orthanc</li>
+          {% for key, val in page.orthancSystemInfo %}
+            <li class="list-group-item">
+              <span class="font-weight-bold">{{ key }}</span>
+              :
+              {{ val }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-12 col-lg-6 mb-4">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-info font-weight-bold"><i class="fas fa-chart-bar fa-lg mr-2"></i>Statistiques Orthanc</li>
+          {% for key, val in page.orthancStats %}
+            <li class="list-group-item">
+              <span class="font-weight-bold">{{ key }}</span>
+              :
+              {{ val }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}
