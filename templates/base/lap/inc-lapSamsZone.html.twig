@@ -38,7 +38,7 @@
 
   {% for samID, sam in page.sams %}
     <div class="card mb-3">
-      <div class="card-header py-2" role="tab" id="heading{{ samID }}{{ numberrand }}" data-toggle="collapse" data-parent="#accordionaccordionSams{{ numberrand }}" data-target="#collapse{{ samID }}{{ numberrand }}" aria-expanded="true" aria-controls="collapse{{ samID }}{{ numberrand }}" style="cursor: pointer">
+      <div class="card-header py-2" role="tab" id="heading{{ samID }}{{ numberrand }}" data-toggle="collapse" data-parent="#accordionSams{{ numberrand }}" data-target="#collapse{{ samID }}{{ numberrand }}" aria-expanded="true" aria-controls="collapse{{ samID }}{{ numberrand }}" style="cursor: pointer">
         <span class="card-title"><span class="fa fa-info-circle"></span> {{ sam.titre }}</span>
       </div>
       <div id="collapse{{ samID }}{{ numberrand }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ samID }}{{ numberrand }}">
