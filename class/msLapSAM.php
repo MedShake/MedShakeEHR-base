@@ -85,7 +85,7 @@ class msLapSAM
     global $p;
     $url='https://www.has-sante.fr/portail/upload/docs/text/xml/2016-09/sam010916.xml';
     if($xml=file_get_contents($url)) {
-      $xml=str_replace('encoding="iso-8859-1"', 'encoding="UTF8"', $xml);
+      $xml=str_replace(['encoding="iso-8859-1"', 'encoding="windows-1252"'], 'encoding="UTF8"', $xml);
       $xml=utf8_encode($xml);
       msTools::checkAndBuildTargetDir($p['homepath'].'ressources/SAM/');
       return file_put_contents($p['homepath'].'ressources/SAM/SAM.xml', $xml);
@@ -175,8 +175,7 @@ class msLapSAM
     }
 
     if($nodeList->length) {
-      $node = $nodeList->item(0);
-      $sam = $node->parentNode;
+      $sam = $nodeList->item(0);
 
       $rd['titre']=$sam->getElementsByTagName('titre')->item(0)->nodeValue;
       $rd['liste_medicaments']=$sam->getElementsByTagName('liste_medicaments')->item(0)->nodeValue;
