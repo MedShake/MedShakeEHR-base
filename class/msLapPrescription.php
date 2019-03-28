@@ -667,7 +667,7 @@ class msLapPrescription extends msLap
 /**
  * Obtenir les sams concernés par le code spécialité
  * @param  int $code code spécialité
- * @return array       arrax des SAM
+ * @return array       array des SAM
  */
     public function getSamList4Spe($code) {
       global $p;
