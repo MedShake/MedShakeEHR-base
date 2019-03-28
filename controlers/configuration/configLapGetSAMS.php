@@ -30,7 +30,7 @@
  if (!msUser::checkUserIsAdmin()) {
    $template="forbidden";
  } else {
-   $debug='y';
+   $debug='';
    $template="configLapGetSAMS";
    $sam = new msLapSAM;
    $sam->getTheXmlFile();
