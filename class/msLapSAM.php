@@ -29,6 +29,7 @@
 
 class msLapSAM
 {
+  private $_xmlUrl='https://wikipe.has-sante.fr/WikiPE/PHP/SAD_medicamentsXML.php?Date=actif';
   private $_xml;
   private $_codesSpeBySam;
   private $_samID;
@@ -78,13 +79,20 @@ class msLapSAM
     }
 
 /**
+ * Obtenir l'URL du xml source pour les SAMs
+ * @return string url du xml source
+ */
+    public function getTheXmlUrl() {
+      return $this->_xmlUrl;
+    }
+
+/**
  * Sauver en local le XML de la HAS sur les SAM
  * @return boolean true / false
  */
   public function getTheXmlFile() {
     global $p;
-    $url='https://www.has-sante.fr/portail/upload/docs/text/xml/2016-09/sam010916.xml';
-    if($xml=file_get_contents($url)) {
+    if($xml=file_get_contents($this->_xmlUrl)) {
       $xml=str_replace(['encoding="iso-8859-1"', 'encoding="windows-1252"'], 'encoding="UTF8"', $xml);
       $xml=utf8_encode($xml);
       msTools::checkAndBuildTargetDir($p['homepath'].'ressources/SAM/');
@@ -113,9 +121,10 @@ class msLapSAM
     $sams = $this->_xml->getElementsByTagName('IdSAD');
     if($sams->length) {
       foreach($sams as $sam) {
-        $method='_getCodesSpe4_'.$sam->nodeValue;
+        $this->_samID=$sam->nodeValue;
+        $method='_getCodesSpe4_'.$this->_samID;
         if(method_exists('msLapSAM', $method)) {
-          $data[$sam->nodeValue]=$this->$method();
+          $data[$this->_samID]=$this->$method();
         }
       }
     }
@@ -186,28 +195,6 @@ class msLapSAM
       $rd['logoRepresentation']=$sam->getElementsByTagName('logo')->item(0)->getAttribute('representation');
     }
     return $rd;
-  }
-
-/**
- * Obtenir les codes spé pour SAM assos_beta2
- * @return array array des codes spé concernés par le SAM
- */
-  private function _getCodesSpe4_assos_beta2 () {
-    $xpath = new DOMXpath($this->_xml);
-    $nodeList = $xpath->query('//SAD_medicament[IdSAD="assos_beta2"]');
-    if($nodeList->length) {
-      $node = $nodeList->item(0);
-      $medics =$node->parentNode->getElementsByTagName('medicament');
-
-      $lap = new msLap;
-      $rd=[];
-      foreach($medics as $medic) {
-        if($data = $lap->getCodesSpesListBySub ($medic->nodeValue, 0, 3)) {
-          $rd=array_merge($rd,$data);
-        }
-      }
-      return $rd;
-    }
   }
 
 /**
@@ -376,7 +363,7 @@ class msLapSAM
     $name2typeID=$name2typeID->getTypeIDsFromName(['lapSamCommentaire']);
     $data=msSQL::sqlUnique("select pd.*
     from objets_data as pd
-    where pd.typeID = '".$name2typeID['lapSamCommentaire']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' and pd.deleted='' and pd.outdated=''
+    where pd.typeID = '".$name2typeID['lapSamCommentaire']."' and pd.toID = '".$this->_toID."' and pd.fromID = '".$this->_fromID."' and pd.instance='".$porteur['id']."' and pd.deleted='' and pd.outdated=''
     order by updateDate desc
     limit 1");
 
@@ -400,5 +387,90 @@ class msLapSAM
       }
       return $innerHTML;
   }
+
+/**
+ * Obtenir les codes spé pour les SAM qui identifient par substance
+ * @param  string $samID samID
+ * @return array   array des codes spé concernés par le SAM
+ */
+    private function _getCodesSpeBySubstance() {
+      $xpath = new DOMXpath($this->_xml);
+      $nodeList = $xpath->query('//SAD_medicament[IdSAD="'.$this->_samID.'"]');
+      if($nodeList->length) {
+        $node = $nodeList->item(0);
+        $medics =$node->getElementsByTagName('medicament');
+
+        $lap = new msLap;
+        $rd=[];
+        foreach($medics as $medic) {
+          if($data = $lap->getCodesSpesListBySub ($medic->nodeValue, 0, 3)) {
+            $rd=array_merge($rd,$data);
+          }
+        }
+        return $rd;
+      }
+    }
+
+    private function _getCodesSpe4_assos_beta2 () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Bosutinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Crizotinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Dabrafenib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Trametinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Dasatinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Erlotinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Gefinitib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Imatinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Lenalidomide_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Nilotinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Pomalidomide_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Ponatinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Ruxolitinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Vemurafenib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Vismodegib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Cobimetinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Thalidomide_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Ceritinib_INCa () {
+    return self::_getCodesSpeBySubstance();
+    }
+    private function _getCodesSpe4_Afatinib_INCa () {
+      return self::_getCodesSpeBySubstance();
+    }
+
 
 }
