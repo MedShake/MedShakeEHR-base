@@ -45,6 +45,9 @@
     {% endif %}
     <small>
       {# birthdate #}
+      {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
+        <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
+      {% endif %}
       {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
       -
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
