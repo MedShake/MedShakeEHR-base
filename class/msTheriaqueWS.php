@@ -38,8 +38,7 @@ class msTheriaqueWS {
     global $p;
     ini_set('soap.wsdl_cache_enabled', 0);
     $client = new SoapClient($p['config']['theriaqueWsURL'], array(
-      'trace' => 1,
-      'encoding' => 'UTF8'
+      'encoding' => 'UTF8',
     ));
 
     return $this->_client=$client;
@@ -60,11 +59,11 @@ class msTheriaqueWS {
   }
 
   public function get_the_specialite($codeid,$vartyp,$monovir) {
-      return $this->_client->get_the_specialite($codeid,$vartyp,$monovir);
+    return $this->_client->get_the_specialite($codeid,$vartyp,$monovir);
   }
 
   public function get_the_specialite_multi_codeid($codeid,$vartyp,$monovir) {
-      return $this->_client->get_the_specialite_multi_codeid($codeid,$vartyp,$monovir);
+    return $this->_client->get_the_specialite_multi_codeid($codeid,$vartyp,$monovir);
   }
 
   public function get_the_voie_spe($codeid) {
