@@ -695,6 +695,11 @@ class msForm
                 $this->_formBuilderColSize($rowTab['col'.$colNumber]['size'], $rowNumber, $colNumber, $r);
             }
 
+            //class colonne
+            if (isset($rowTab['col'.$colNumber]['class'])) {
+                $this->_formBuilderColClass($rowTab['col'.$colNumber]['class'], $rowNumber, $colNumber, $r);
+            }
+
             //bloc
             if (isset($rowTab['col'.$colNumber]['bloc'])) {
                 $this->_formBuilderBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r, $dataset);
@@ -920,6 +925,20 @@ class msForm
       }
     }
 
+/**
+ * Construire le tableau: définir les class de colonne
+ * @param  string $value     class
+ * @param  int $rowNumber Numéro de ligne
+ * @param  int $colNumber Numéro de colonne
+ * @param  array $r         Tableau final de résultat
+ * @return void
+ */
+    private function _formBuilderColClass($value, $rowNumber, $colNumber, &$r)
+    {
+      if(is_string($value)) {
+        $r['structure'][$rowNumber][$colNumber]['class']=$value;
+      }
+    }
 
 /**
  * Extraire les infos sur un type de données
