@@ -140,6 +140,11 @@ $(document).ready(function() {
     calcResteDu();
   });
 
+  // observer le double clic sur une case règlement
+  $("#newReglement").on("dblclick", "input.regleCB, input.regleCheque, input.regleEspeces, input.regleTiersPayeur", function(e) {
+    $(this).val($("input.regleFacture").val());
+  });
+
   //le style du champ Reste du
   $("#newReglement").on("change", ".regleFacture", function(e) {
     val = $(".regleFacture").val();
