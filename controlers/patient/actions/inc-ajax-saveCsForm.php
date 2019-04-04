@@ -92,13 +92,14 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     // générer le html de la ligne d'historique
+    $template="pht-ligne-typecs";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
     if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-      $debug='';
-      //template
-      $template="pht-ligne-typecs";
-      $patient=new msPeople();
-      $patient->setToID($_POST['patientID']);
       $p['cs']=$patient->getToday("limit 1")[0];
+    } elseif(is_numeric($_POST['objetID'])) {
+      $ligneHisto=$patient->getHistorique($_POST['objetID']);
+      $p['cs']=array_pop($ligneHisto)[0];
     }
 
 }
