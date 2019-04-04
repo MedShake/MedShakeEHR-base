@@ -33,8 +33,10 @@
     </a>
   </td>
   <td>
-   <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
-   <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
+    <span class="d-none d-md-inline histoElementHeure">{{ cs.creationDate|date('H:i:s') }}</span>
+    <span class="d-inline d-md-none histoElementHeure">{{ cs.creationDate|date('H:i') }}</span>
+    <span class="d-none d-md-inline histoElementDate">{{ cs.creationDate|date('d/m/Y') }}</span>
+    <span class="d-inline d-md-none histoElementDate">{{ cs.creationDate|date('d/m') }}</span>
   </td>
   <td>
     <div class="btn-group">

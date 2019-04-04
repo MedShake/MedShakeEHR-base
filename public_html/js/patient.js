@@ -801,9 +801,6 @@ $(document).ready(function() {
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
             </tr>' + data);
-            var regdate = $('#historique tr:nth-of-type(2)').attr('data-registerdate');
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0, 10));
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0, 5));
             refreshHistorique();
           }
 
@@ -812,12 +809,7 @@ $(document).ready(function() {
             $lt.replaceWith(data);
           else {
             $('#historiqueToday tbody').prepend(data);
-            if ($('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate').substr(0, 10) != moment().format("YYYY-MM-DD"))
-              $('#historiqueToday tbody tr:nth-of-type(1)').remove();
           }
-          var regdatet = $('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate');
-          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-none').html(regdatet.substr(11));
-          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11, 5));
           refreshHistoriqueToday();
           scrollTo('body', 2);
         }

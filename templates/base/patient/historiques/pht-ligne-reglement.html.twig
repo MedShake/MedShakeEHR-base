@@ -33,8 +33,11 @@
     </a>
   </td>
   <td>
-     <span class="d-none d-md-inline">{{ cs.creationTime }}</span>
-     <span class="d-inline d-md-none">{{ cs.creationTimeShort }}</span>
+    <span class="d-none d-md-inline histoElementHeure">{{ cs.creationDate|date('H:i:s') }}</span>
+    <span class="d-inline d-md-none histoElementHeure">{{ cs.creationDate|date('H:i') }}</span>
+    <span class="d-none d-md-inline histoElementDate">{{ cs.creationDate|date('d/m/Y') }}</span>
+    <span class="d-inline d-md-none histoElementDate">{{ cs.creationDate|date('d/m') }}</span>
+
     {% if cs.creationDate != cs.registerDate %}
       <button type="button" class="btn btn-light btn-sm changeCreationDate" title="Création réelle le {{ cs.registerDate|date("d/m/Y H:i:s") }}">
         <i class="far fa-clock fa-fw"></i>
