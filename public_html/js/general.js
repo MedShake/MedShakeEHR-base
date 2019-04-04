@@ -160,9 +160,9 @@ $(document).ready(function() {
     }
   });
 
-  // checkboxes dans les formulaires (inclus aussi switch)
+  // checkboxes dans les formulaires
   $('body').on("click", ".checkboxFixValue input[type=checkbox]", function(e) {
-    e.target.value = e.target.checked.toString();
+    chkboxClick(e.target);
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -313,6 +313,19 @@ function flashBackgroundElement(el) {
     $(this).css("background", "").dequeue();
     $(this).attr('class', attrInitiaux);
   });
+}
+
+// checkboxes dans les formulaires
+function chkboxClick(el) {
+  var hid = document.getElementById("cloned" + el.id);
+  if (hid == undefined) {
+    hid = el.cloneNode(true);
+    hid.id = "cloned" + el.id;
+    hid.type = "hidden";
+    el.parentNode.appendChild(hid);
+  }
+  hid.value = el.checked.toString();
+  el.value = el.checked.toString();
 }
 
 // scroller vers un élément de la page

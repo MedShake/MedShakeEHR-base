@@ -92,11 +92,13 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     // générer le html de la ligne d'historique
-    $debug='';
-    //template
-    $template="pht-ligne-typecs";
-    $patient=new msPeople();
-    $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
+      $debug='';
+      //template
+      $template="pht-ligne-typecs";
+      $patient=new msPeople();
+      $patient->setToID($_POST['patientID']);
+      $p['cs']=$patient->getToday("limit 1")[0];
+    }
 
 }
