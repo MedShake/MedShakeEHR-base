@@ -221,28 +221,28 @@ $(document).ready(function() {
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background') {
-        element.attr("title", event.name);
-        element.attr("data-container", "body");
-        element.attr("data-placement", 'right');
-        element.attr("data-boundary", 'viewport');
-        element.attr("data-html", "true");
-        if (event.patientid == "0") {
-          element.attr("data-content", "Fermé");
-        }
-        element.attr("data-template", '\
-<div class=\"popover\" role=\"tooltip\">\
-<h3 class=\"popover-header\">Détail</h3>\
-<div class=\"popover-body\"></div>\
-<div class=\"popover-footer btn-group m-1\">' +
-          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>') +
-          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
-          '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>' +
-          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>') +
-          (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
-          '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
-</div>\
-</div>');
-        element.popover();
+        element.popover({
+          sanitizeFn: function (content) {return content},
+          title : event.name || '',
+          container: "body",
+          placement: 'right',
+          boundary: "viewport",
+          html:   true,
+          content: (event.patientid == "0" ? "Fermé" : ""),
+          template: '\
+            <div class=\"popover\" role=\"tooltip\">\
+              <h3 class=\"popover-header\">Détail</h3>\
+              <div class=\"popover-body\"></div>\
+              <div class=\"popover-footer btn-group m-1\">' +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>' +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
+              </div>\
+            </div>'
+        });
       }
     },
     eventClick: function(eventClicked, jsEvent, view) {
