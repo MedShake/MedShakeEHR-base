@@ -234,12 +234,12 @@ $(document).ready(function() {
               <h3 class=\"popover-header\">Détail</h3>\
               <div class=\"popover-body\"></div>\
               <div class=\"popover-footer btn-group m-1\">' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fa fa-folder-open\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fa fa-wrench\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fa fa-arrows-alt\"></span></button>' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fa fa-clone\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fa fa-exclamation-triangle\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fa fa-times\"></span></button>\
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fas fa-wrench\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fas fa-arrows-alt\"></span></button>' +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fas fa-clone\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-times\"></span></button>\
               </div>\
             </div>'
         });
@@ -512,14 +512,14 @@ $(document).ready(function() {
       sideBySide: true,
       icons: {
         time: 'far fa-clock',
-        date: 'fa fa-calendar',
-        up: 'fa fa-chevron-up',
-        down: 'fa fa-chevron-down',
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-crosshairs',
-        clear: 'fa fa-trash',
-        close: 'fa fa-times'
+        date: 'fas fa-calendar',
+        up: 'fas fa-chevron-up',
+        down: 'fas fa-chevron-down',
+        previous: 'fas fa-chevron-left',
+        next: 'fas fa-chevron-right',
+        today: 'fas fa-crosshairs',
+        clear: 'fas fa-trash',
+        close: 'fas fa-times'
       }
     });
     $("#datepicker").data("DateTimePicker").toggle();
@@ -750,7 +750,7 @@ function getHistoriquePatient(patientID) {
         if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
         if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
         chaine = chaine + '">';
-        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fa fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fas fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
         chaine = chaine + dat['start'] + ' : ' + dat['type'];
         if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
         if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
