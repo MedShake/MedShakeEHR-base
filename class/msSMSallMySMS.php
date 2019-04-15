@@ -398,11 +398,14 @@ public function logCreditsRestants() {
     if(isset($data['acks'])) return $data['acks']; else return null;
   }
 
-public function getSendedCampaignData($date) {
+public function getSendedCampaignData($date, $logDir='') {
 
   global $p;
-
-  $logFile=$p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $date).'RappelsRDV.json';
+  if(empty($logDir)) {
+    $logFile=$p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $date).'RappelsRDV.json';
+  } else {
+    $logFile=$logDir.date('Y/m/d/', $date).'RappelsRDV.json';
+  }
   if(is_file($logFile)) {
     if($data=file_get_contents($logFile)) {
       $data=json_decode($data, true);

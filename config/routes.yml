@@ -91,8 +91,8 @@ historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiqueP
 historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
 historiqueMailSendGeneral: ['GET', '/logs/historiqueGeneralMailSend/[i:user]?/[i:start]?/', 'logs/historiqueMailSendGeneral']
 historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patientID]/', 'logs/historiqueMailSendToPatient']
-historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/', 'logs/historiqueRappelsSMS']
-historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'logs/historiqueRappelsMail']
+historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsSMS']
+historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsMail']
 logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
 historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 

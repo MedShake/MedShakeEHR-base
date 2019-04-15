@@ -40,22 +40,35 @@
   <h1 class="mb-4">Historique rappels mail pour les consultations du
     {{ page.dates.rdv|date("d/m/Y") }}</h1>
 
+    {# Nav tabs #}
+    {% if page.pratsInConfig is not empty %}
+      <ul class="nav nav-tabs my-3" role="tablist">
+        {% for id, user in page.pratsInConfig %}
+          <li role="presentation" class="nav-item">
+            <a class="nav-link{% if page.selectPrat == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/{{ id }}/" >
+              {{ user.identite }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
   <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/" method="post" class="form-inline mb-4">
 
-    <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/">
+    <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.precedent|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
       <span class="fa fa-chevron-left" aria-hidden="true"></span>
       Jour précédent
     </a>
-    <a class="btn btn-outline-secondary m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/">
-      Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
+    <a class="btn btn-outline-secondary m-1{% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ "now"|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
+      Envoyés ce jour (consultations du {{ page.dates.mailsEnvoyeAujour|date("d/m") }})
     </a>
-    <a class="btn btn-outline-secondary m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/">
+    <a class="btn btn-outline-secondary m-1{% if page.dates.suivant > "now"|date("U") %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.suivant|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
       Jour suivant
       <span class="fa fa-chevron-right" aria-hidden="true"></span>
     </a>
 
-    <a class="btn btn-outline-secondary m-1{% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
-      Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
+    <a class="btn btn-outline-secondary m-1{% if page.dates.mailsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.mailsPourAujour|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}" style="margin-right: 20px">
+      Envoyés le {{ page.dates.mailsPourAujour|date("d/m") }} (consultations du jour)
     </a>
 
     <div id="dateSel" class="input-group date datepick" >
@@ -64,6 +77,9 @@
         <span class="fa fa-calendar input-group-text"></span>
       </span>
     </div>
+    {% if page.selectPrat > 0 %}
+      <input type="hidden" name="pratID" value="{{ page.selectPrat }}" >
+    {% endif %}
     <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
   </form>
 
@@ -76,7 +92,7 @@
       <div class="card">
 
         <div class="card-header font-weight-bold">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-secondary btn-sm float-right m-1">Voir rappels SMS</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}" class="btn btn-secondary btn-sm float-right m-1">Voir rappels SMS</a>
           <h3>Mails envoyés le {{ page.dates.emission|date("d/m/Y") }}</h3>
         </div>
 
