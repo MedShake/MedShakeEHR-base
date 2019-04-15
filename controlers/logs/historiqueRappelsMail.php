@@ -30,7 +30,7 @@ $debug='';
 $template="historiqueRappelsMail";
 
 // prats possibles
-$p['page']['pratsInConfig']=msConfiguration::getUsersParameter('mailRappelLogCampaignDirectory');
+$p['page']['pratsInConfig']=msPeople::getUsersListForService('mailRappelActiver');
 
 // prat concerné
 if(isset($_POST['pratID']) and is_numeric($_POST['pratID']) and array_key_exists($_POST['pratID'], $p['page']['pratsInConfig'])) {

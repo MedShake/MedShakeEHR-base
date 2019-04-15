@@ -46,7 +46,7 @@
         {% for id, user in page.pratsInConfig %}
           <li role="presentation" class="nav-item">
             <a class="nav-link{% if page.selectPrat == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/{{ id }}/" >
-              {{ user.identite }}
+              {{ user }}
             </a>
           </li>
         {% endfor %}
