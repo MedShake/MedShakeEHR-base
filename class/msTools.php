@@ -431,4 +431,13 @@ class msTools
      return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
    }
 
+/**
+ * Ajouter un slash final au chemin si absent
+ * @param string $dir chemin
+ */
+   public static function setDirectoryLastSlash($dir) {
+     if(substr($dir, -1) == '/') return $dir;
+     return $dir.'/';
+   }
+
 }
