@@ -197,6 +197,22 @@ public static function getModuleDefaultParameters($module) {
       }
     }
 
+/**
+ * Obtenir pour un paramètre précisé les valeurs déterminées au niveau user par user
+ * @param  string $name paramètre
+ * @return array       tableau toID=>...
+ */
+    public static function getUsersParameter($name) {
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+
+      return msSQL::sql2tabKey("SELECT c.toID, c.value, CASE WHEN o.value != '' THEN concat(o2.value , ' ' , o.value) ELSE concat(o2.value , ' ' , bn.value) END as identite
+        FROM configuration as c
+        left join objets_data as o on o.toID=c.toID and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
+        left join objets_data as bn on bn.toID=c.toID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+        left join objets_data as o2 on o2.toID=c.toID and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
+        WHERE name='".$name."' AND level='user'", 'toID');
+    }
 
 /**
  * fixer (+ créer) un paramètre de configuration pour un user
