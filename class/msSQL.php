@@ -62,6 +62,20 @@ class msSQL
   }
 
 /**
+ * Nettoyer un array avant utilisation sur string SQL
+ * @param  array $var array
+ * @return string      variable échappée
+ */
+  public static function cleanArray($array)
+  {
+      array_map(function($v){
+        global $mysqli;
+        $mysqli->real_escape_string(trim($v));
+      }, $array);
+      return $array;
+  }
+
+/**
  * Fonction query de base
  * @param  string $sql commande SQL
  * @return resource      résultat mysql
