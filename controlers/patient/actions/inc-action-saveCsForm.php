@@ -31,7 +31,7 @@
  $dontIgnoreEmpty=true;
  if (isset($match['params']['ignoreEmpty'])) {
      $dontIgnoreEmpty = false;
-     if (isset($_POST['objetID'])) {
+     if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
          $prevData=msSQL::sql2tabKey("SELECT dt.name AS name FROM objets_data as od LEFT JOIN data_types AS dt
              ON od.typeID=dt.id and od.outdated='' and od.deleted=''
              WHERE od.instance='".$_POST['objetID']."'", "name", "name");

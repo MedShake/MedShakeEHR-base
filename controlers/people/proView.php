@@ -29,6 +29,7 @@
 $debug='';
 $template='proView';
 
+if(!is_numeric($match['params']['proID'])) die;
 $p['page']['proDataID']=$match['params']['proID'];
 
 $patient = new msPeople();
@@ -54,6 +55,6 @@ left join objets_data as c on c.instance=o.id
 left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
 left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
 left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-where o.toID='".$match['params']['proID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
+where o.toID='".$p['page']['proDataID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
 group by o.value, c.id, bn.id, n.id, p.id
 order by nom asc");

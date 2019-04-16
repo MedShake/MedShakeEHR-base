@@ -26,8 +26,10 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-msSQL::sqlQuery("DELETE FROM configuration WHERE name='".$_POST['paramName']."' AND level='user' AND toID='".$_POST['userID']."'");
+if(is_numeric($_POST['userID']) and is_string($_POST['paramName'])) {
+  msSQL::sqlQuery("DELETE FROM configuration WHERE name='".msSQL::cleanVar($_POST['paramName'])."' AND level='user' AND toID='".$_POST['userID']."' limit 1");
+}
 
 echo json_encode("ok");

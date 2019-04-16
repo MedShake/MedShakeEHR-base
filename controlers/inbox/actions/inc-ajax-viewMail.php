@@ -29,6 +29,8 @@
 $debug='';
 $template='mailView';
 
+if(!is_numeric($_POST['mailID'])) die;
+
 $p['page']['mail']=msSQL::sqlUnique("select id, txtFileName, mailHeaderInfos, txtDatetime, hprimExpediteur, hprimAllSerialize, pjNombre, pjSerializeName, archived, assoToID from inbox where id='".$_POST['mailID']."'");
 $p['page']['mail']['hprimAllSerialize']=unserialize($p['page']['mail']['hprimAllSerialize']);
 $p['page']['mail']['pjSerializeName']=unserialize($p['page']['mail']['pjSerializeName']);

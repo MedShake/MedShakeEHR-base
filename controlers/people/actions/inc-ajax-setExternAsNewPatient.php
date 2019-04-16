@@ -27,7 +27,7 @@
  */
 
 
-if($_POST['externID']<1) die;
+if($_POST['externID']<1 or !is_numeric($_POST['externID'])) die;
 
 msSQL::sqlQuery("UPDATE people SET type='patient' WHERE id='".$_POST['externID']."'");
 

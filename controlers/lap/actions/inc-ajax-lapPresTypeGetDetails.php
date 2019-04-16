@@ -21,9 +21,10 @@
  */
 
 /**
- * LAP : ajax > obtenir le json de la prescription type 
+ * LAP : ajax > obtenir le json de la prescription type
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 $debug='';
+if(!is_numeric($_POST['id'])) die;
 echo msSQL::sqlUniqueChamp("select description from prescriptions where id ='".msSQL::cleanVar($_POST['id'])."' limit 1");

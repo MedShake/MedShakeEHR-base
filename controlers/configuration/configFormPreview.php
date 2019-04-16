@@ -33,6 +33,7 @@
  } else {
      $debug='';
      $template="configFormPreview";
+     if(!is_numeric($match['params']['form'])) die();
 
      // liste des types par catégorie
      if ($tabTypes=msSQL::sql2tab("select f.id,f.name, f.description, f.module, c.name as catName, c.label as catLabel

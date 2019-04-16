@@ -28,8 +28,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['patientID'])) die;
+if(!is_numeric($_POST['mailID'])) die;
+
 //sortir data hprim
-if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id='".$_POST['mailID']."' ")) {
+if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id='".msSQL::cleanVar($_POST['mailID'])."' ")) {
     $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
 
     $corps=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$data['txtFileName']);

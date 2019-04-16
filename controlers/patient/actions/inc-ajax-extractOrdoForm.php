@@ -38,7 +38,7 @@ if (!isset($delegate)) {
   } else {
       $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
         LEFT JOIN objets_data as od ON dt.id=od.typeID
-        WHERE od.id='".$_POST['objetID']."' limit 1");
+        WHERE od.id='".msSQL::cleanVar($_POST['objetID'])."' limit 1");
       $ordoForm=$res[0]['form'];
       $porteur=$res[0]['porteur'];
       $userID=$res[0]['userID'];

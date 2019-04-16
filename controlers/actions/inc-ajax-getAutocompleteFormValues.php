@@ -21,26 +21,25 @@
  */
 
 /**
- * Requêtes AJAX > autocomplete des forms, version simple 
+ * Requêtes AJAX > autocomplete des forms, version simple
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $type=$match['params']['type'];
- $dataset=$match['params']['dataset'];
+$type=$match['params']['type'];
+$dataset=$match['params']['dataset'];
 
- $dataset2database=array(
-     'data_types'=>'objets_data'
- );
+$dataset2database=array(
+   'data_types'=>'objets_data'
+);
 
- $database=$dataset2database[$dataset];
+if (isset($match['params']['setTypes'])) {
+   $searchTypes=explode(':', $match['params']['setTypes']);
+} else {
+   $searchTypes[]=$type;
+}
 
- if (isset($match['params']['setTypes'])) {
-     $searchTypes=explode(':', $match['params']['setTypes']);
- } else {
-     $searchTypes[]=$type;
- }
-
- $data=msSQL::sql2tab("select distinct(value) from ".$database." where typeID in ('".implode("','", $searchTypes)."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
-
- echo json_encode($data);
+if($database=$dataset2database[$dataset]) {
+  $data=msSQL::sql2tab("select distinct(value) from ".$database." where typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
+}
+echo json_encode($data);

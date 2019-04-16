@@ -27,6 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ if(!is_numeric($match['params']['patientID'])) die;
  $template='inc-patientDicomStudiesList';
 
  $dc = new msDicom();

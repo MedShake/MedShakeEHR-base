@@ -30,6 +30,8 @@
 $debug='';
 $template="historiquePrint";
 
+if(!is_numeric($match['params']['objetID'])) die;
+
 $objet = new msObjet();
 $p['page']['patient'] = $objet->getObjetDataByID($match['params']['objetID'], ['toID']);
 

@@ -38,7 +38,7 @@ if (!isset($match['params']['user'])) {
     $where = null;
 } else {
     $p['page']['expediteurID']=$match['params']['user'];
-    $where = "m.fromID='".$p['page']['expediteurID']."' and";
+    if(is_numeric($p['page']['expediteurID'])) $where = "m.fromID='".$p['page']['expediteurID']."' and";
 }
 
 $nbParPage=12;

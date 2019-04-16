@@ -32,10 +32,10 @@ $formIN=$_POST['formIN'];
 $dontIgnoreEmpty=true;
 if (isset($match['params']['ignoreEmpty'])) {
     $dontIgnoreEmpty = false;
-    if (isset($_POST['objetID'])) {
+    if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
         $prevData=msSQL::sql2tabKey("SELECT dt.name AS name FROM objets_data as od LEFT JOIN data_types AS dt
             ON od.typeID=dt.id and od.outdated='' and od.deleted=''
-            WHERE od.instance='".$_POST['objetID']."'", "name", "name");
+            WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."'", "name", "name");
     }
 }
 
@@ -92,13 +92,14 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     // générer le html de la ligne d'historique
+    $template="pht-ligne-typecs";
+    $patient=new msPeople();
+    $patient->setToID($_POST['patientID']);
     if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-      $debug='';
-      //template
-      $template="pht-ligne-typecs";
-      $patient=new msPeople();
-      $patient->setToID($_POST['patientID']);
       $p['cs']=$patient->getToday("limit 1")[0];
+    } elseif(is_numeric($_POST['objetID'])) {
+      $ligneHisto=$patient->getHistorique($_POST['objetID']);
+      $p['cs']=array_pop($ligneHisto)[0];
     }
 
 }

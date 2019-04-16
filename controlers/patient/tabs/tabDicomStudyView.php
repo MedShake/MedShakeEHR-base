@@ -27,6 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($match['params']['patientID'])) die;
 $debug='';
 $template='inc-patientDicomStudyView';
 
@@ -53,7 +54,7 @@ if (count($p['page']['studyDcData']) > 0) {
     $p['page']['studyDcDataSRFull']=$dc->getSrData();
 
     //on cherche les examens EHR qui peuvent être attachés.
-    if ($d=msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' and value='".$_POST['param']['dcStudyID']."' ")) {
+    if ($d=msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' and value='".msSQL::cleanVar($_POST['param']['dcStudyID'])."' ")) {
         $ob = new msObjet();
         $p['page']['studyDcDataRapro']=$ob->getCompleteObjetDataByID($d);
     }

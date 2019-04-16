@@ -31,12 +31,14 @@
  if (!msUser::checkUserIsAdmin()) {
      $template="forbidden";
  } else {
-     $template="configDataType";
-     $p['page']['groupe']=$match['params']['groupe'];
-     $debug='';
+    $template="configDataType";
+    $debug='';
+
+    $p['page']['groupe']=$match['params']['groupe'];
+    if(!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
 
     //restriction à une cat
-    if (isset($match['params']['cat'])) {
+    if (isset($match['params']['cat']) and is_numeric($match['params']['cat'])) {
         $catRestriction= ' and t.cat = '.$match['params']['cat'];
     } else {
         $catRestriction=null;
@@ -47,7 +49,7 @@
         (select count(id) from objets_data as d where d.typeID=t.id ) as enfants
         from data_types as t
         left join data_cat as c on c.id=t.cat
-        where t.id > 0 and t.groupe='".$p['page']['groupe']."' ".$catRestriction."
+        where t.id > 0 and t.groupe='".msSQL::cleanVar($p['page']['groupe'])."' ".$catRestriction."
         group by t.id
         order by t.module, c.label asc, t.label asc, t.name")) {
 

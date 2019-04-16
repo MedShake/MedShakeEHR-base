@@ -26,7 +26,7 @@
  * @author fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 $booleans=array(
           'twigEnvironnementAutoescape',
@@ -68,7 +68,7 @@ file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($toyaml, fa
 
 $params='';
 foreach ($_POST as $param=>$value) {
-    $params.=" WHEN '".$param."' THEN '".$value."'";
+    $params.=" WHEN '".msSQL::cleanVar($param)."' THEN '".msSQL::cleanVar($value)."'";
 }
 msSQL::sqlQuery("UPDATE configuration SET value = CASE name ".$params." ELSE value END WHERE level='default' and name in ('".implode("','", array_keys($_POST))."')");
 

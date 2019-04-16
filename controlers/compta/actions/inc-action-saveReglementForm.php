@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-$data=msSQL::sqlUnique("SELECT module, formValues as reglementForm FROM data_types WHERE id=".$_POST['porteur']);
+if(is_numeric($_POST['porteur'])) $data=msSQL::sqlUnique("SELECT module, formValues as reglementForm FROM data_types WHERE id=".$_POST['porteur']);
 if (!in_array($data['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
       $hook=$p['homepath'].'/controlers/module/'.$data['module'].'/compta/actions/inc-hook-saveReglementForm.php';
       if ($data['module']!='' and $data['module']!='base' and is_file($hook)) {

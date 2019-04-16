@@ -29,10 +29,11 @@
 $debug='';
 $template="inc-patientTabBio";
 
+if(!is_numeric($match['params']['patientID'])) die;
 $p['page']['patient']['id']=$match['params']['patientID'];
 
 // sortir dates distincts
-$p['page']['datesBio']=msSQL::sql2tabSimple("select distinct(date) from hprim where toID='".$match['params']['patientID']."' order by date desc ");
+$p['page']['datesBio']=msSQL::sql2tabSimple("select distinct(date) from hprim where toID='".$p['page']['patient']['id']."' order by date desc ");
 
 // déterminer la date courante
 if (isset($_POST['param']['dateBio'])) {
@@ -48,7 +49,7 @@ if ($p['page']['dateCouranteBio'] != null) {
     //documents liés
     $p['page']['docsID']=msSQL::sql2tabKey("select h.objetID, o.titre from hprim as h
     left join objets_data as o on o.id=h.objetID
-    where h.toID='".$match['params']['patientID']."' and h.date='".$p['page']['dateCouranteBio']."'
+    where h.toID='".$p['page']['patient']['id']."' and h.date='".$p['page']['dateCouranteBio']."'
     group by objetID", 'objetID', 'titre');
 
     // next et previous
@@ -57,7 +58,7 @@ if ($p['page']['dateCouranteBio'] != null) {
     if(isset($p['page']['datesBio'][$keyDateCourante+1])) $p['page']['datePrecedBio']=$p['page']['datesBio'][$keyDateCourante+1];
 
     // sortir bio date courante
-    if ($p['page']['bio']=msSQL::sql2tab("select * from hprim where toID='".$match['params']['patientID']."' and date='".$p['page']['dateCouranteBio']."' order by id ")) {
+    if ($p['page']['bio']=msSQL::sql2tab("select * from hprim where toID='".$p['page']['patient']['id']."' and date='".$p['page']['dateCouranteBio']."' order by id ")) {
 
       // antériorités
       $analysesExtraites=array_column($p['page']['bio'], 'labelStandard');
