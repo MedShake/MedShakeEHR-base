@@ -633,7 +633,7 @@ INSERT IGNORE INTO `people` (`id`, `name`, `type`, `rank`, `module`, `pass`, `re
 INSERT IGNORE INTO `configuration`(`name`, `cat`, `level`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'Options', 'default', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'Options', 'default', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
-('administratifSecteurHonoraires', 'Règlements', 'default', 'vide/1/2', 'vide pour non conventionné', '1'),
+('administratifSecteurHonorairesCcam', 'Règlements', 'default', '', 'grille tarifaire CCAM du praticien', '9'),
 ('administratifSecteurIK', 'Règlements', 'default', 'texte', 'tarification des IK : indiquer plaine ou montagne', 'plaine'),
 ('administratifPeutAvoirFacturesTypes', 'Règlements', 'default', 'true/false', 'peut avoir des factures types à son nom', 'false'),
 ('administratifPeutAvoirPrescriptionsTypes', 'Options', 'default', 'true/false', 'peut avoir des prescriptions types à son nom', 'false'),
