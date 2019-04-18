@@ -74,10 +74,10 @@
             </thead>
             <tbody>
               {% for k,c in page.patient.historique %}
-                <tr class="table-primary anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee='{{ k }}']" aria-expanded="{% if "now"|date('Y') == k %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}">
+                <tr class="table-primary anneeHistorique" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee='{{ k }}']" aria-expanded="{% if "now"|date('Y') == k or loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="annee{{ k }}">
                   <td class="pl-3">
-                    <span class="far fa-minus-square"{% if "now"|date('Y') != k %} style="display:none"{% endif %}></span>
-                    <span class="far fa-plus-square"{% if "now"|date('Y') == k %} style="display:none"{% endif %}></span>
+                    <span class="far fa-minus-square"{% if "now"|date('Y') != k  and loop.index > 1 %} style="display:none"{% endif %}></span>
+                    <span class="far fa-plus-square"{% if "now"|date('Y') == k or loop.first %} style="display:none"{% endif %}></span>
                   </td>
                   <td colspan="4"><strong>{{ k }}</strong></td>
                 </tr>
