@@ -59,7 +59,8 @@ $acceptedModes=array(
     'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
     'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
     'configUserParamDelete', // Supprimer un paramètre dans la configuration spécifique à un utilisateur
-    'extractCcamActeData' // extraire les data sur un acte CCAM
+    'extractCcamActeData', // extraire les data sur un acte CCAM
+    'fixDisplayOrder', // fixer le displayOrder pour les data types en fonction de l'ordre dans un form
 );
 if (!in_array($m, $acceptedModes)) {
     die;

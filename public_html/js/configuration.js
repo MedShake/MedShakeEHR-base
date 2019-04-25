@@ -264,7 +264,7 @@ $(document).ready(function() {
         lineNumbers: true,
         mode: "yaml",
       });
-      yamlEditor.setSize('100%', 700);
+      yamlEditor.setSize('100%', 900);
     }
     yamlEditor.on("change", function(yamlEditor, change) {
       $('#yamlEditor').val(yamlEditor.getValue());
@@ -584,6 +584,27 @@ $(document).ready(function() {
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
 
+      }
+    });
+  });
+
+  //Fixer le displayOrder des data type en fonction de l'ordre dans un form
+  $("button.fixDisplayOrder").on("click", function(e) {
+    e.preventDefault();
+    if (!confirm('Etes vous sûr de vouloir réaliser cette action ?'))
+      return;
+    $.ajax({
+      url: urlBase + "/configuration/ajax/fixDisplayOrder/",
+      type: 'post',
+      data: {
+        formid: $(this).attr('data-formid')
+      },
+      dataType: "json",
+      success: function(data) {
+        alert_popup("success", 'Action effectuée !');
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
       }
     });
   });
