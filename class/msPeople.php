@@ -218,16 +218,22 @@ class msPeople
  * Obtenir les données administratives d'un individu avec key name
  * @return array Array name=>value
  */
-    public function getSimpleAdminDatasByName()
+    public function getSimpleAdminDatasByName($typesName=[])
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
 
+        if(!empty($typesName)) {
+          $typesSelect=" and t.name in ('".implode("', '",$typesName)."')";
+        } else {
+          $typesSelect=null;
+        }
+
         $tab=msSQL::sql2tabKey("select t.name, d.value
         from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'", "name", "value");
+			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'".$typesSelect. " order by t.displayOrder", "name", "value");
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
 

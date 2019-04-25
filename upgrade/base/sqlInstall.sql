@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `dicomTags` (
   KEY `typeID` (`typeID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `forms` (
+CREATE TABLE `forms` (
  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
  `module` varchar(20) NOT NULL DEFAULT 'base',
  `internalName` varchar(60) NOT NULL,
@@ -136,6 +136,7 @@ CREATE TABLE IF NOT EXISTS `forms` (
  `formAction` varchar(255) DEFAULT '/patient/ajax/saveCsForm/',
  `cat` smallint(4) DEFAULT NULL,
  `type` enum('public','private') NOT NULL DEFAULT 'public',
+ `exportData` enum('non','oui') NOT NULL DEFAULT 'non',
  `yamlStructure` text,
  `options` text,
  `printModel` varchar(50) DEFAULT NULL,

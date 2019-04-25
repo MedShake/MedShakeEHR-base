@@ -338,10 +338,16 @@
                                 Mails envoyés
                               </a>
                             {% endif %}
-                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">
-                                <i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>
-                                Dossiers supprimés
+                            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">
+                              <i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>
+                              Dossiers supprimés
+                            </a>
+                            {% if user.rank == 'admin' %}
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/export-data/">
+                                <i class="fas fa-database fa-fw text-muted mr-1"></i>
+                                Export de données
                               </a>
+                            {% endif %}
                         </div>
                       </li>
                       {% endif %}
