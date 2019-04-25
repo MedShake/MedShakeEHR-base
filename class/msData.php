@@ -181,7 +181,7 @@ class msData
  */
     public function getLabelFromTypeName($ar=['1'])
     {
-        return msSQL::sql2tabKey("select label, name from data_types where name in ('".implode("','", $ar)."')", 'name', 'label');
+        return msSQL::sql2tabKey("select label, name from data_types where name in ('".implode("','", $ar)."') order by displayOrder", 'name', 'label');
     }
 
 /**
@@ -261,6 +261,22 @@ class msData
         return $tab;
     }
 
+/**
+ * sortir pour les data de type select un tableau key=>$value pour chaque item option
+ * @param  array $typeIDsArray les typeID concernés
+ * @return array               Array ('name'=> 'A' : 'plus', 'B' => 'moins')
+ */
+    public function getSelectOptionValueByTypeName($typeArray)
+    {
+        $tab = msSQL::sql2tabKey("select name, formValues from data_types where formType in ('select', 'radio') and name in ('".implode("', '", msSQL::cleanArray($typeArray))."')", "name", "formValues");
+        if (is_array($tab)) {
+            foreach ($tab as $k=>$v) {
+                $tab[$k]=Spyc::YAMLLoad($v);
+            }
+        }
+
+        return $tab;
+    }
 
 /**
  * Base pour le traitement automatique avant sauvegarder, par typeID
