@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card my-3">
         <div class="card-header" data-toggle="collapse" data-target="#collapseSql" style="cursor: pointer">
           <button class="btn btn-light btn-sm">
             <i class="far fa-plus-square"></i>
@@ -124,6 +124,22 @@
           <textarea class="form-control" rows="20">{{ page.sqlCode }}</textarea>
         </div>
       </div>
+
+      <div class="card my-3">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseTools" style="cursor: pointer">
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
+          Outils
+        </div>
+        <div id="collapseTools" class="collapse card-body">
+          <p>
+            Fixer l'ordre d'affichage des types utilisés dans ce formulaire en fonction de l'ordre d'apparition dans la structure de celui-ci :
+            <button class="btn btn-danger fixDisplayOrder" data-formid="{{ page.formData.id }}"><i class="fas fa-sort-amount-down"></i> Fixer l'ordre</button>
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 

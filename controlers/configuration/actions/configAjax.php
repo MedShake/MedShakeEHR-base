@@ -38,6 +38,7 @@ $acceptedModes=array(
     'configExtractByPrimaryKey', // Effacer dans une table par l'intermédiaire de la primary key
     'configFormsCatCreate', // Création d'une cat pour les forms
     'configFormCreate', // Création d'un form
+    'configFormPreview', // Prévisu d'un form
     'configChangeModule', // Change le module d'un utilisateur
     'configChangePassword', // Change le mot de passe d'un utilisateur
     'configGiveAdmin', // Toggle droit d'admin
