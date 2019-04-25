@@ -260,9 +260,16 @@ class msForm
         return msSQL::sqlUniqueChamp("select name from forms_cat where id = '".$id."' ");
     }
 
+/**
+ * Obtenir les data types qui implémentent le formulaire
+ * @return array dataTypesID
+ */
+    public function getFormDataTypesImplementation() {
+      return msSQL::sql2tabSimple("select id from data_types where groupe='typecs' and formValues='".$this->_formIN."'");
+    }
 
 /**
- * Obtenir le formulaire sous forme d'array PHP qui sera décotiqué par une macro Twig
+ * Obtenir le formulaire sous forme d'array PHP qui sera décortiqué par une macro Twig
  * pour obtenir au final une version HTML
  * @return array Array de description du formulaire
  */
@@ -273,6 +280,15 @@ class msForm
         } else {
             throw new Exception('Form cannot be generated');
         }
+    }
+
+/**
+ * Obtenir les data brutes d'un formulaire
+ * @param  array  $fields champs de la table à retourner
+ * @return array         array champ=>value
+ */
+    public function getFormRawData($fields=['*']) {
+      return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($fields))." from forms where id='".$this->_formID."' limit 1");
     }
 
 /**
