@@ -229,7 +229,7 @@ class msForm
 /**
  * Obtenir les valeurs de remplissage d'un formulaire pour un patient donné
  * @param  int $patientID ID du patient
- * @return array            Array de type tupeID => $value
+ * @return array            Array de type typeID => $value
  */
     public function getPrevaluesForPatient($patientID)
     {
@@ -300,7 +300,7 @@ class msForm
       if (!isset($this->_formID)) {
           throw new Exception('formID is not defined');
       }
-      $jsFromBdd = msSQL::sqlUniqueChamp("select javascript from forms where id='".$this->_formID."' limit 1");
+      $jsFromBdd = $this->getFormRawData(['javascript'])['javascript'];
       $jsFromCda = $this->_getJsFromCdaRules();
       return $jsFromBdd."\n".$jsFromCda;
     }
@@ -314,7 +314,7 @@ class msForm
       if (!isset($this->_formID)) {
           throw new Exception('formID is not defined');
       }
-      if($options = msSQL::sqlUniqueChamp("select options from forms where id='".$this->_formID."' limit 1")) {
+      if($options = $this->getFormRawData(['options'])['options']) {
         return Spyc::YAMLLoad($options);
       } else {
         return [];
@@ -971,20 +971,20 @@ class msForm
         }
     }
 
-  /**
-   * Extraire les infos sur un type de données par son name
-   * @param  string $name      name du type
-   * @param  string $dataset Jeu de données
-   * @return array          Infos sur le type
-   */
-      private function _formExtractTypeByName($name, $dataset)
-      {
-          if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
-              return $typeData;
-          } else {
-              throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name : '.$name);
-          }
-      }
+/**
+ * Extraire les infos sur un type de données par son name
+ * @param  string $name      name du type
+ * @param  string $dataset Jeu de données
+ * @return array          Infos sur le type
+ */
+    private function _formExtractTypeByName($name, $dataset)
+    {
+        if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
+            return $typeData;
+        } else {
+            throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name : '.$name);
+        }
+    }
 
 /**
  * Extraire tous les typeID présents dans un form
@@ -1022,7 +1022,7 @@ class msForm
  */
     public function getDataTypeFormParams($typeName) {
       if(!isset($this->_formYamlStructure)) {
-        $this->getFormFromDb();
+        $this->_formYamlStructure=$this->getFormRawData(['yamlStructure'])['yamlStructure'];
       }
       preg_match("# - (".$typeName.".*)\s*\#.*#i", $this->_formYamlStructure, $match);
       if(isset($match[1]) and !empty($match[1])) {
@@ -1032,16 +1032,16 @@ class msForm
           foreach($params as $k=>$v) {
             if(strpos($v,'=')) {
               $pp=explode('=', $v);
-              $params[$pp[0]]=$pp[1];
+              $params[$pp[0]]=trim($pp[1]);
             } else {
-              $params[$v]=$v;
+              $params[$v]=trim($v);
             }
             unset($params[$k]);
           }
         }
         return $params;
       }
-      return false;
+      return [];
     }
 
 
@@ -1117,7 +1117,7 @@ class msForm
           foreach($type as $ID=>$el) {
             if(isset($el['type']) and $el['type'] == 'form') {
               if($el['value']['formType'] == 'radio' or $el['value']['formType'] == 'select') {
-                $string.=$el['value']['label'].' : ';
+                if(isset($el['value']['label'])) $string.=$el['value']['label'].' : ';
                 $i=0;
                 foreach($el['value']['formValues'] as $repId=>$rep) {
                   if($i==0) {
@@ -1129,10 +1129,11 @@ class msForm
                 }
                 $string.="{% else %}- non renseigné -{% endif %}<br>\n";
               } elseif($el['value']['formType'] == 'textarea' ) {
-                $string.=$el['value']['label'].' :<p>{{ tag.'.$el['value']['internalName']."|nl2br }}</p>\n";
+                if(isset($el['value']['label'])) $string.=$el['value']['label'].' : ';
+                $string.='<p>{{ tag.'.$el['value']['internalName']."|nl2br }}</p>\n";
               } else {
-              if(!isset($el['value']['label'])) $el['value']['label']='';
-                $string.=$el['value']['label'].' : {{ tag.'.$el['value']['internalName']." }}<br>\n";
+                if(isset($el['value']['label'])) $string.=$el['value']['label'].' : ';
+                $string.='{{ tag.'.$el['value']['internalName']." }}<br>\n";
               }
             } elseif($el['type'] == 'head' and !empty(trim(str_replace('&nbsp;','',$el['value'])))) {
               $string.="\n<h3>".$el['value']."</h3>\n";
