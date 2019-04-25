@@ -440,4 +440,18 @@ class msTools
      return $dir.'/';
    }
 
+/**
+ * Obtenir un tableau ou les clefs sont préfixées
+ * @param  array $tab    tableau 2 dimensions
+ * @param  string $prefix préfixe
+ * @return array         tableau avec clefs préfixées
+ */
+   public static function getPrefixKeyArray($tab, $prefix) {
+     if(empty($tab)) return [];
+     foreach($tab as $k=>$v) {
+       $prefixTab[$prefix.$k]=$v;
+     }
+     return $prefixTab;
+   }
+
 }
