@@ -36,7 +36,7 @@ function treatDataType(&$t) {
   } elseif($t['formType'] == 'number') {
     $padat=$formc->getDataTypeFormParams($t['name']);
     if(isset($padat['min'],$padat['max'],$padat['step'])) {
-      for($i=$padat['min'];$i<=$padat['max'];$i=$i+$padat['step']) {
+      for($i=(float)$padat['min'];$i<=(float)$padat['max'];$i=$i+(float)$padat['step']) {
         $tab[$i]=$i;
       }
       $t['formValues']=(array)$tab;

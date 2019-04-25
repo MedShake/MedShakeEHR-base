@@ -58,7 +58,7 @@
 					{% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 					{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
 					{{ v.input.add }} >
-	      <label class="custom-control-label {{ v.label.class }}" for="{{ v.input.id }}">{{ v.label.label|e }}</label>
+	      <label class="custom-control-label {{ v.label.class }}" for="{{ v.input.id }}" title="{{ v.input.name }}">{{ v.label.label|e }}</label>
 	    </div>
 
 			{% if v.input.after %}
