@@ -203,6 +203,7 @@ function sendMedicRecherche(term) {
     dataType: "html",
     beforeSend: function() {
       $('#txtRechercheMedicHB').html("Recherche en cours ...");
+      $('#rechercheResultats').html('<div class="text-center p-4"><i class="fas fa-spinner fa-4x fa-spin text-warning"></i></div>');
     },
     success: function(data) {
       $('#rechercheResultats').html(data);

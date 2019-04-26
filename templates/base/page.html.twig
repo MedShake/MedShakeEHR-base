@@ -399,5 +399,19 @@
         {% if config.click2callService is not empty %}
           {% include 'inc-modal-click2call.html.twig' %}
         {% endif %}
+
+        {# modal avec spinner #}
+        <div class="modal" id="waitingModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center border-0 bg-transparent">
+              <div class="modal-body">
+                <div class=" text-center text-warning">
+                  <i class="fas fa-spinner fa-10x fa-spin"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </body>
 </html>

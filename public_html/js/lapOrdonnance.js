@@ -313,7 +313,11 @@ function analyserPrescription() {
       patientID: $('#identitePatient').attr("data-patientID"),
     },
     dataType: "json",
+    beforeSend: function() {
+      $('#waitingModal').modal('toggle');
+    },
     success: function(data) {
+      $('#waitingModal').modal('toggle');
       console.log("Analyse ordonnance : OK");
       $('#modalLapAlerte div.modal-body').html(data['html']);
       $('#modAlerteImprimer, #modAlerteModifier').show();
