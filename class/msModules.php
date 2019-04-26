@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,20 +21,27 @@
  */
 
 /**
- * Config : lister les utilisateurs
+ * Modules
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configUsersList";
-     $debug='';
+class msModules
+{
 
-     $p['page']['modules']=msModules::getInstalledModulesNames();
-     $p['page']['userid']=$p['user']['id'];
-     $p['page']['users']=msPeopleSearch::getUsersList();
- }
+/**
+ * Obtenir une liste des modules installés
+ * @return array array moduleName=>moduleName
+ */
+  public static function getInstalledModulesNames() {
+    return msSQL::sql2tabKey("SELECT name FROM system WHERE groupe='module' order by name", "name", "name");
+  }
+
+/**
+ * Obtenir une liste des modules et versions
+ * @return array k=>['module','version']
+ */
+  public static function getInstalledModulesNamesAndVersions() {
+    return msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+  }
+}

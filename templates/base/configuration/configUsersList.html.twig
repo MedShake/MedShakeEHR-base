@@ -79,7 +79,7 @@
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>
              <select class="changeModule" data-userid="{{ v.id }}">
-              {% for mi,mv in page.modules %}
+              {% for mv in page.modules %}
                 <option value="{{ mv }}" {% if mv==v.module %}selected{% endif %}>{{ mv }}</option>
               {% endfor %}
             </select>
@@ -143,7 +143,7 @@
                 <div class="form-group">
                     <label for="p_module">Module</label>
                     <select class="custom-select" name="p_module">
-                      {% for mi,mv in page.modules %}
+                      {% for mv in page.modules %}
                         <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
                       {% endfor %}
                     </select>

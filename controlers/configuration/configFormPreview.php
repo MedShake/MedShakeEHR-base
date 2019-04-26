@@ -21,7 +21,7 @@
  */
 
 /**
- * Config : aperçu des formulaires
+ * Config : aperçu des formulaires DEPRECATED
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -43,7 +43,7 @@
      $p['page']['catList']=$listForms->getCatListByID();
 
      //liste des modules
-     $p['page']['modules']=msSQL::sql2tabKey("SELECT name AS module FROM system WHERE groupe='module' order by name", "module", "module");
+     $p['page']['modules']=msModules::getInstalledModulesNames();
 
 
      //sortie du formulaire et préparation à son exploitation par le templates

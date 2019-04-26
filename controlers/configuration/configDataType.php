@@ -60,10 +60,10 @@
     }
 
     // liste des catégories
-    if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label'));
+    $p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label');
 
     // liste des modules
-    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, name AS module FROM system WHERE groupe='module'", "module", "module");
+    $p['page']['modules']=msModules::getInstalledModulesNames();
 
     // liste des types possibles
     $p['page']['typesPossibles']=msSQL::sqlEnumList('data_types', 'formType');

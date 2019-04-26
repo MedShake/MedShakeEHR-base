@@ -41,5 +41,5 @@
 			order by c.displayOrder, c.label asc", 'id');
 
       //liste des modules
-      $p['page']['modules']=msSQL::sql2tabKey("SELECT name AS module FROM system WHERE groupe='module' order by name", "module", "module");
+      $p['page']['modules']=msModules::getInstalledModulesNames();
  }

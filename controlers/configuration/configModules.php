@@ -24,11 +24,12 @@
  * Config : modules
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 $debug='';
 $template='configModules';
 
-$p['page']['modules']=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+$p['page']['modules']=msModules::getInstalledModulesNamesAndVersions();
 
 $config = new msConfiguration;
 foreach($p['page']['modules'] as $k=>$v) {
