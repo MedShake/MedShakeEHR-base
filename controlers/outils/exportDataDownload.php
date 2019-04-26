@@ -37,9 +37,10 @@ if (!msUser::checkUserIsAdmin()) {
   $formExport = new msExportData;
   if(!empty($_POST)) {
 
-    $form=new msForm;
-    $form->setFormID($_POST['formID']);
-    if($form->getFormRawData(['exportData'])['exportData'] != 'oui') die("Ce formulaire n'autorise pas l'export de données");
+    $data=new msData;
+    $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType']);
+
+    if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
     $sortTab=array('id','patient_id', 'praticien_id', 'date_saisie', 'date_effective', 'date_modification');
 
@@ -49,7 +50,10 @@ if (!msUser::checkUserIsAdmin()) {
       unset($kParts[0]);
       $kKey=implode('_', $kParts);
 
-      if($k=='formID' and is_numeric($v)) {
+      if($k=='dataTypeID' and is_numeric($v)) {
+        $formExport->setDataTypeIDs($v);
+      }
+      elseif($k=='formID' and is_numeric($v)) {
         $formExport->setFormID($v);
       }
       elseif($kType=='patient') {

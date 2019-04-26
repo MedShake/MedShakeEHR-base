@@ -39,6 +39,7 @@
 {% set valeurParDefaut='Valeur par défaut' %}
 {% set labelDefaut='Label' %}
 {% set nomUsageInterneDefaut='Nom à usage interne ' %}
+{% set labelFormType='Type&nbsp;formulaire' %}
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">
@@ -81,6 +82,7 @@
 {% elseif page.groupe == "typecs" %}
 	<h1>Types des données de consultations</h1>
 	{% set valeurParDefaut='Nom du formulaire associé' %}
+  {% set labelFormType='Données exportables' %}
 {% elseif page.groupe == "courrier" %}
 	<h1>Types des données courrier</h1>
 	{% set valeurParDefaut='Courrier : nom du template associé / Mail : texte par défaut' %}
@@ -141,7 +143,7 @@
         <th>Label</th>
         <th>Utilisé</th>
 				{% if page.groupe not in ["courrier"] %}<th>Validation</th>{% endif %}
-				<th>Type&nbsp;formulaire</th>
+				<th>{{ labelFormType }}</th>
 				<th>Vie</th>
 				<th>Description</th>
 				<th></th>
@@ -156,7 +158,13 @@
         <td>{{ w.label }}</td>
 				<td>{{ w.enfants }}</td>
 				{% if page.groupe not in ["courrier"] %}<td>{{ w.validationRules }}</td>{% endif %}
-				<td>{{ w.formType }}</td>
+				<td>
+          {% if page.groupe == "typecs" and w.formType == 'select' %}
+            oui
+          {% else %}
+            {{ w.formType }}
+          {% endif %}
+        </td>
 				<td>{{ w.durationLife }}</td>
 				<td>{{ w.description }}</td>
 				<td class="text-right">
@@ -416,6 +424,24 @@
 						}
 					}) }}
 					</div>
+        {% elseif page.groupe == "typecs" %}
+          <div class="form-group">
+          {{ f.select ({
+            'select' : {
+              'name' : 'formType',
+              'id' : 'formTypeID',
+              'placeholder' : 'type de formulaire',
+              'class' : 'custom-select',
+              'values' : {'' : 'non', 'select' : 'oui'} ,
+              'autocomplete' : 'off',
+              'valueDefaut': ''
+            },
+            'label' : {
+              'position' : 'before',
+              'label' : 'Export des données générées',
+            }
+          }) }}
+          </div>
 				{% endif %}
 
         {% if page.groupe == "typecs" %}

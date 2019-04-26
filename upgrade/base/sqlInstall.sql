@@ -136,7 +136,6 @@ CREATE TABLE `forms` (
  `formAction` varchar(255) DEFAULT '/patient/ajax/saveCsForm/',
  `cat` smallint(4) DEFAULT NULL,
  `type` enum('public','private') NOT NULL DEFAULT 'public',
- `exportData` enum('non','oui') NOT NULL DEFAULT 'non',
  `yamlStructure` text,
  `options` text,
  `printModel` varchar(50) DEFAULT NULL,

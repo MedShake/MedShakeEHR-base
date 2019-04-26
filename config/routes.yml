@@ -128,7 +128,7 @@ transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmiss
 
 #outils
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
-outilsExportData: ['POST|GET', '/outils/export-data/[i:formID]?/', 'outils/exportData']
+outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
 outilsExportDataDownload: ['POST|GET', '/outils/export-data/download/', 'outils/exportDataDownload']
 
 #configuration

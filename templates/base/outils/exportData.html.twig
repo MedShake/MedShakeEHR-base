@@ -78,9 +78,9 @@
           <div class="form-group col-10">
             <select autocomplete="off" id="formID" name="formID" class="custom-select">
               {% for catID, forms in page.listeForms %}
-                <optgroup label="{{ page['listeCats'][catID]|e('html_attr') }}">
+                <optgroup label="{{ page['listeCats'][catID]['label']|e('html_attr') }}">
                   {% for form in forms %}
-                    <option value="{{ form.id }}">{{ form.name|e('html_attr') }}</option>
+                    <option value="{{ form.id }}">{{ form.label|e('html_attr') }}</option>
                   {% endfor %}
                 </optgroup>
               {% endfor %}
@@ -95,16 +95,17 @@
   {% elseif page.formInfos.id > 0 %}
 
     <form class="checkboxFixValue" action="/outils/export-data/download/" method="post">
+      <input type="hidden" name="dataTypeID" value="{{ page.dataTypeinfos.id }}">
       <input type="hidden" name="formID" value="{{ page.formInfos.id }}">
       <div class="row">
 
         <div class="col-4">
 
           <div class="card my-4 bg-secondary text-white">
-            <div class="card-header font-weight-bold">Formulaire #{{ page.formInfos.id }}</div>
+            <div class="card-header font-weight-bold">{{ page.dataTypeinfos.label }}</div>
             <div class="card-body">
-              <span class="font-weight-bold">{{ page.formInfos.name }}</span><br>
-              {{ page.formInfos.description }}
+              Formulaire source : {{ page.formInfos.name }} (#{{ page.formInfos.id }})<br>
+              Exploité sous : {{ page.dataTypeinfos.catLabel }} > {{ page.dataTypeinfos.label }}
               <button type="submit" class="btn btn-warning btn-block mt-4">Exporter</button>
             </div>
           </div>

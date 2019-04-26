@@ -34,11 +34,6 @@ class msForms
  */
   private $_formsType='public';
 /**
- * Export data
- * @var string
- */
-  private $_exportData;
-/**
  * Catégorie du formulaire
  * @var int
  */
@@ -53,17 +48,6 @@ class msForms
       throw new Exception('FormsType n\'a pas une valeur correcte');
     }
     return $this->_formsType=$formsType;
-  }
-
-/**
- * Définir le exportData
- * @param string $exportData oui/non
- */
-  public function setExportData($exportData) {
-    if(!in_array($exportData, ['oui', 'non'])) {
-      throw new Exception('ExportData n\'a pas une valeur correcte');
-    }
-    $this->_exportData=$exportData;
   }
 
 /**
@@ -103,11 +87,7 @@ class msForms
  */
   private function _getFormsListByCat($type, $orderBy = 'c.label asc, f.module, f.id asc') {
     $tab=[];
-    if(isset($this->_exportData)) {
-      $exportData=" and f.exportData = '".$this->_exportData."'";
-    } else {
-      $exportData=null;
-    }
+
     if(isset($this->_catID)) {
       $catID=" and f.cat = '".$this->_catID."'";
     } else {
@@ -116,7 +96,7 @@ class msForms
     if ($tabTypes=msSQL::sql2tab("select f.id, f.internalName, f.name, f.description, f.module, c.name as catName, c.label as catLabel, c.id as catID
         from forms as f
         left join forms_cat as c on c.id=f.cat
-        where f.id > 0 and f.type='".$this->_formsType."' ".$exportData.$catID."
+        where f.id > 0 and f.type='".$this->_formsType."' ".$catID."
         group by f.id
         order by ".$orderBy)) {
         foreach ($tabTypes as $v) {
@@ -140,7 +120,7 @@ class msForms
 
 /**
  * Obtenir la liste des catégories par name
- * @return array cat par name 
+ * @return array cat par name
  */
   public function getCatListByName() {
     return msSQL::sql2tabKey("select internalName, label from forms_cat order by label", 'internalName', 'label');

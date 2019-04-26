@@ -47,7 +47,6 @@ $data=array(
     'cda'=>$_POST['cda'],
     'javascript'=>$_POST['javascript'],
     'options'=>$_POST['options'],
-    'exportData'=>$_POST['exportData'],
 );
 
 msSQL::sqlInsert('forms', $data);

@@ -36,7 +36,7 @@ class msExportData
  * Id du/des data types qui implémentent le formulaire
  * @var array
  */
-  private $_formDataTypesImplementation;
+  private $_dataTypeIDs;
 /**
  * Date de début pour l'export
  * @var string
@@ -97,6 +97,17 @@ class msExportData
 
   private $_tabCorrespondances;
 
+
+/**
+ * Définir les instance du formulaire à exporter
+ * @param int $dataTypeID ID objet
+ */
+    public function setDataTypeIDs($dataTypeID) {
+      if(!is_numeric($dataTypeID)) throw new Exception('dataTypeID is not numeric');
+      $this->_dataTypeIDs[]=$dataTypeID;
+    }
+
+
 /**
  * Définir le numéro du formulaire
  * @param int $formID L'ID du formulaire
@@ -104,9 +115,7 @@ class msExportData
     public function setFormID($formID)
     {
       if (is_numeric($formID)) {
-        $this->_formID = $formID;
-        $this->_getFormDataTypesImplementation();
-        return $this->_formID;
+        return $this->_formID = $formID;
       } else {
         throw new Exception('formID is not numeric');
       }
@@ -199,6 +208,21 @@ class msExportData
     }
 
 /**
+ * Obtenir la liste des instances de formulaires exportables
+ * @return array tableau par catID
+ */
+    public function getExportabledList() {
+      if($data =  msSQL::sql2tab("select id, label, cat, formValues from data_types where groupe='typecs' and formType='select' order by displayOrder")) {
+        foreach($data as $k=>$v) {
+          $tab[$v['cat']][]=$v;
+        }
+        return $tab;
+      } else {
+        return [];
+      }
+    }
+
+/**
  * Obtenir les champs administratifs patient à exporter
  * @return array data type names
  */
@@ -266,7 +290,7 @@ class msExportData
  * @return array objetID
  */
     private function _getAllObjetsID() {
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_formDataTypesImplementation)."') and fromID in ('".implode("', '", $this->_pratList)."')  ".$this->_formatDateParameters()." ");
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."')  ".$this->_formatDateParameters()." ");
     }
 
 /**
@@ -330,7 +354,7 @@ class msExportData
       where (o.id in ('".implode("', '", $this->_allObjetsID)."') or (o.instance in ('".implode("', '", $this->_allObjetsID)."') and t.name in ('".implode("', '", $this->getFormFieldList())."'))) and o.outdated='' and o.deleted='' ", 'id');
       if($data) {
         foreach($data as $k=>$v) {
-          if(in_array($v['typeID'], $this->_formDataTypesImplementation)) {
+          if(in_array($v['typeID'], $this->_dataTypeIDs)) {
             $tab[$k]['id']=$k;
             $tab[$k]['praticien_id']=$v['fromID'];
             $tab[$k]['patient_id']=$v['toID'];
@@ -358,16 +382,6 @@ class msExportData
         }
       }
       return $tab;
-    }
-
-/**
- * Obtenir les ID des data types qui implémentent le formulaire
- * @return array data type ID
- */
-    private function _getFormDataTypesImplementation() {
-      $form = new msForm;
-      $form->setFormID($this->_formID);
-      return $this->_formDataTypesImplementation = $form->getFormDataTypesImplementation();
     }
 
 /**

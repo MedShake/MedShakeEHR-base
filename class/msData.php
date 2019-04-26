@@ -225,6 +225,18 @@ class msData
     }
 
 /**
+ * Obtenir une liste des catégories correspondant au(x) groupe(s)
+ * @param  array  $groupe  tableau des groupes concernés
+ * @param  array  $cols    champs à retourner
+ * @param  string $orderBy ordonner par
+ * @return array          tableau
+ */
+    public static function getCatListFromGroupe($groupe=['*'], $cols=['*'], $orderBy='label')
+    {
+        return msSQL::sql2tabKey("select id, ".implode(', ', $cols)." from data_cat where groupe in ('".implode(', ', $groupe)."') order by ".$orderBy, 'id');
+    }
+
+/**
  * Obtenir le catID à partir de son nom
  * @param  string $name nom du type
  * @return int     catID
@@ -242,6 +254,16 @@ class msData
     public static function getCatNameFromCatID($id)
     {
         return msSQL::sqlUniqueChamp("select name from data_cat where id = '".$id."' ");
+    }
+
+/**
+ * Obtenir le cat label à partir du cat id
+ * @param  int $id de la catégorie
+ * @return string     label
+ */
+    public static function getCatLabelFromCatID($id)
+    {
+        return msSQL::sqlUniqueChamp("select label from data_cat where id = '".$id."' ");
     }
 
 /**

@@ -33,21 +33,25 @@
   $template="exportData";
   $debug='';
 
-  if(!isset($match['params']['formID'])) {
-    $listForms=new msForms;
-    $listForms->setExportData('oui');
-    $p['page']['listeForms']=$listForms->getFormsListByCatID();
-    $p['page']['listeCats']=$listForms->getCatListByID();
+  if(!isset($match['params']['dataTypeID'])) {
+    $listForms=new msExportData;
+    $p['page']['listeForms']=$listForms->getExportabledList();
+    $p['page']['listeCats']=msData::getCatListFromGroupe(['typecs'],['id','label']);
   }
 
-  elseif(isset($match['params']['formID']) and is_numeric($match['params']['formID'])) {
-    $data=new msData;
+  elseif(isset($match['params']['dataTypeID']) and is_numeric($match['params']['dataTypeID'])) {
 
-    // informations et champs dans le form
-    $form=new msForm;
-    $form->setFormID($match['params']['formID']);
-    $p['page']['formInfos']=$form->getFormRawData(['id','name', 'description', 'exportData']);
-    if($p['page']['formInfos']['exportData'] == 'oui') {
+    $data=new msData;
+    $p['page']['dataTypeinfos']=$data->getDataType($match['params']['dataTypeID']);
+    $p['page']['dataTypeinfos']['catLabel']=$data->getCatLabelFromCatID($p['page']['dataTypeinfos']['cat']);
+
+    if($p['page']['dataTypeinfos']['groupe']=='typecs' and $p['page']['dataTypeinfos']['formType']=='select') {
+
+      // informations et champs dans le form
+      $form=new msForm;
+      $form->setFormIDbyName($p['page']['dataTypeinfos']['formValues']);
+      $p['page']['formInfos']=$form->getFormRawData(['id','name', 'description']);
+
       $p['page']['dataFields']=$form->formExtractDistinctTypes();
       $p['page']['dataFields']=$data->getLabelFromTypeName(array_keys($p['page']['dataFields']));
 
@@ -65,8 +69,8 @@
 
       //liste praticiens
       $p['page']['prat']=msPeopleSearch::getUsersList();
+
     } else {
-      unset($p['page']['formInfos']);
       msTools::redirection('/outils/export-data/', '401');
     }
   }
