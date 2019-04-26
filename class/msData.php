@@ -22,7 +22,7 @@
 
 /**
  *
- * Interogation du modèle de données
+ * Interogation du modèle de données : data types
  * Traitement d'une donnée avant enregistrement pour formatage
  *
  *
@@ -30,7 +30,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-class msData
+class msData extends msDataCat
 {
 
 /**
@@ -86,7 +86,7 @@ class msData
     }
 
 /**
- * Obtenir toutes les données types d'une catégorie
+ * Obtenir tous les data types d'une catégorie à partir de l'ID de la catégorie
  * @param  int $catID ID de la catégorie
  * @param  array $col   array des colonnes sql à retourner
  * @return array        array
@@ -105,7 +105,7 @@ class msData
     }
 
 /**
- * Obtenir toutes les données types d'une catégorie
+ * Obtenir tous les data types d'une catégorie à partir du nom de la catégorie
  * @param  string $name name de la catégorie
  * @param  array $col   array des colonnes sql à retourner
  * @return array        array
@@ -116,9 +116,8 @@ class msData
         return $this->getDataTypesFromCatID($catID, $col, $orderBy);
     }
 
-
 /**
- * Obtenir toutes les données types à partir d'un groupe
+ * Obtenir tous les data types d'un groupe à partir du nom du groupe
  * @param  string $groupe groupe
  * @param  array $col    colonnes SQL à retourner
  * @return array         array
@@ -129,7 +128,7 @@ class msData
     }
 
 /**
- * Obtenir les données de data types à partir d'une liste de name passés dans un array
+ * Obtenir les data types à partir d'une liste de name passés dans un array
  * @param  array $listArray liste des types souhaités, par nom
  * @param  array  $col       colonnes SQL à retourner
  * @return array            array
@@ -141,7 +140,7 @@ class msData
 
 
 /**
- * Sortir les infos d'un type à partir de son ID
+ * Sortir les infos d'un data type à partir de son ID
  * @param  int $id  ID du type
  * @param  array $col colonnes SQL à retourner
  * @return array      array
@@ -153,7 +152,7 @@ class msData
     }
 
 /**
- * Sortir les infos d'un type à partir de son name
+ * Sortir les infos d'un data type à partir de son name
  * @param  string $name  name du type
  * @param  array $col colonnes SQL à retourner
  * @return array      array
@@ -225,49 +224,7 @@ class msData
     }
 
 /**
- * Obtenir une liste des catégories correspondant au(x) groupe(s)
- * @param  array  $groupe  tableau des groupes concernés
- * @param  array  $cols    champs à retourner
- * @param  string $orderBy ordonner par
- * @return array          tableau
- */
-    public static function getCatListFromGroupe($groupe=['*'], $cols=['*'], $orderBy='label')
-    {
-        return msSQL::sql2tabKey("select id, ".implode(', ', $cols)." from data_cat where groupe in ('".implode(', ', $groupe)."') order by ".$orderBy, 'id');
-    }
-
-/**
- * Obtenir le catID à partir de son nom
- * @param  string $name nom du type
- * @return int     catID
- */
-    public static function getCatIDFromName($name)
-    {
-        return msSQL::sqlUniqueChamp("select id from data_cat where name = '".$name."' ");
-    }
-
-/**
- * Obtenir le cat name à partir du cat id
- * @param  int $id de la catégorie
- * @return string     name
- */
-    public static function getCatNameFromCatID($id)
-    {
-        return msSQL::sqlUniqueChamp("select name from data_cat where id = '".$id."' ");
-    }
-
-/**
- * Obtenir le cat label à partir du cat id
- * @param  int $id de la catégorie
- * @return string     label
- */
-    public static function getCatLabelFromCatID($id)
-    {
-        return msSQL::sqlUniqueChamp("select label from data_cat where id = '".$id."' ");
-    }
-
-/**
- * sortir pour les data de type select un tableau key=>$value pour chaque item option
+ * sortir pour les data types de type select un tableau key=>$value pour chaque item option
  * @param  array $typeIDsArray les typeID concernés
  * @return array               Array ('720'=> 'A' : 'plus', 'B' => 'moins')
  */
