@@ -73,7 +73,20 @@ if ($validation === false) {
           $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
         }
       }
+    }
 
+    // si on a un champ qui est déclaré pour l'autoDate
+    if(isset($_POST['autoDate'])) {
+      if(isset($_POST['p_'.$_POST['autoDate']])) {
+        if(!empty($_POST['p_'.$_POST['autoDate']]) and msTools::validateDate($_POST['p_'.$_POST['autoDate']],'d/m/Y')) {
+          $objet=new msObjet();
+          $objet->setID($supportID);
+          $newDate = DateTime::createFromFormat('d/m/Y', $_POST['p_'.$_POST['autoDate']]);
+          $newDate = $newDate->format('Y-m-d 00:00:00');
+          $objet->setCreationDate($newDate);
+          $objet->changeCreationDate();
+        }
+      }
     }
 
     //on traite chaque POST

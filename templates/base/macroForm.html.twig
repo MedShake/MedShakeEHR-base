@@ -422,6 +422,17 @@
 		}) }}
 	{% endif %}
 
+	{# form autoDate : name du data_type dont la valeur déterminera la date effective (creationDate) de l'objet créé #}
+	{% if t.global.autoDate %}
+		{{ f.input ({
+			'input' : {
+				'type' : 'hidden',
+				'name' : 'autoDate',
+				'value' : t.global.autoDate
+			}
+		}) }}
+	{% endif %}
+
 	{# form number #}
 	{{ f.input ({
 		'input' : {
