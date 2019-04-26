@@ -121,7 +121,7 @@ if (count($_POST)>2) {
     $template="pht-ligne-ordo";
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    $p['cs']=$patient->getHistoriqueObjet($supportID);
 
 } else {
     die('Avertissement: Ordonnance vide !');

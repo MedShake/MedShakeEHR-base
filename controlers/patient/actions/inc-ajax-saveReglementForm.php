@@ -111,12 +111,7 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     $template="pht-ligne-reglement";
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
-    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
-        $ligneHisto=$patient->getHistorique($_POST['objetID']);
-        $p['cs']=array_pop($ligneHisto)[0];
-    } else {
-        $p['cs']=$patient->getToday("limit 1")[0];
-    }
+    $p['cs']=$patient->getHistoriqueObjet($supportID);
 
 } else {
     die('Avertissement: Formulaire vide !');

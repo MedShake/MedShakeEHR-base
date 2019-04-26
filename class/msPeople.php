@@ -650,87 +650,92 @@ class msPeople
     }
 
 /**
- * Historique complet des actes pour un individu
- * @return array Array multi avec année en clef de 1er niveau
+ * Obtenir les data pour l'historique des actes du jour pour un individu
+ * @return array Array multi.
  */
-    public function getHistorique($objetID='')
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-
-        $data = new msData();
-        $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
-        $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
-
-        if ($data = msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
-        CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
-        from objets_data as p
-        left join data_types as t on p.typeID=t.id
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
-        left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
-        left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
-        left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
-        left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier')
-              or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
-              or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
-              or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."')
-              or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
-              or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')
-              )
-        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".
-        ($objetID ? (" and p.id=".$objetID) : "").
-        " group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
-        order by p.creationDate desc")) {
-              foreach ($data as $v) {
-                  $return[$v['creationYear']][]=$v;
-            }
-
-            return $return;
-        }
+    public function getToday() {
+      return $this->_getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
     }
 
 /**
- * Historique des actes du jour pour un individu
- * @return array Array multi.
+ * Obtenir les data pour l'historique complet des actes pour un individu
+ * @return array Array multi avec année en clef de 1er niveau
  */
-    public function getToday($limit='')
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
+    public function getHistorique() {
+      $tab=[];
+      if($data = $this->_getHistoriqueData()) {
+        foreach ($data as $v) {
+            $tab[$v['creationYear']][]=$v;
         }
+      }
+      return $tab;
+    }
 
-        $data = new msData();
-        $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
-        $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
+/**
+ * Obtenir les data pour l'historique d'un objetID spécique
+ * @param  int $objetID objetID
+ * @return array          data historique de l'objetID
+ */
+    public function getHistoriqueObjet($objetID) {
+      if($data = $this->_getHistoriqueData(0, 1, '', (array)$objetID)) {
+        return $data[0];
+      } else {
+        return [];
+      }
+    }
 
-        return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, p.updateDate, t.id as typeCS, t.name, t.groupe, t.label, t.module as module, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
-        CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
-        from objets_data as p
-        left join data_types as t on p.typeID=t.id
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
-        left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
-        left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
-        left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
-        left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier')
-          or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
-          or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
-          or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."')
-          or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
-          or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE() and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
-        group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
-        order by p.creationDate desc ".$limit);
+/**
+ * Obtenir un historique suivant paramètres
+ * @param  integer $limitStart      premier argument pour limit sql
+ * @param  integer $limitNb         second argument pour limit sql
+ * @param  string  $datesPrecisions string sql pour restriction plage dates
+ * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
+ * @return array                   data d'historique
+ */
+    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[]) {
+
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if($limitNb > 0) {
+        $limitSql = 'limit '.$limitStart.','.$limitNb;
+      } else {
+        $limitSql = '';
+      }
+
+      if(isset($objetIDs) and is_array($objetIDs) and !empty($objetIDs)) {
+        $objetIDsSql = " and p.id in ('".implode("', '",$objetIDs)."')";
+      } else {
+        $objetIDsSql = '';
+      }
+
+      $data = new msData();
+      $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
+      $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+      $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
+
+      return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+      CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
+      from objets_data as p
+      left join data_types as t on p.typeID=t.id
+      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
+      left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
+      left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
+      left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
+      left join forms as f on f.internalName=t.formValues
+      where (t.groupe in ('typeCS', 'courrier')
+        or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
+        or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
+        or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."')
+        or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
+        or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql."
+      group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
+      order by p.creationDate desc ".$limitSql);
     }
 
 /**

@@ -37,5 +37,5 @@ $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
 $p['page']['patient']['id']=$_POST['patientID'];
 
-//historique complet des consultation du patient
+//historique du jour du dossier du patient
 $p['page']['patient']['today']=$patient->getToday();
