@@ -105,14 +105,26 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
 
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    // générer le retour
-    $debug='';
-    //template
-    $template="pht-ligne-reglement";
+    // générer le retour, dont html
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
 
+    $html = new msGetHtml;
+    $html->set_template('pht-ligne-reglement');
+    $html=$html->genererHtml();
+
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'ok',
+      'html'=>$html,
+    ]));
+
 } else {
-    die('Avertissement: Formulaire vide !');
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'avertissement',
+      'msg'=>'Attention : formulaire vide !',
+      'html'=>'',
+    ]));
 }

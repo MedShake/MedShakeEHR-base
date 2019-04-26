@@ -116,13 +116,25 @@ if (count($_POST)>2) {
     $pdf->makePDF();
     $pdf->savePDF();
 
-    $debug='';
-    //template
-    $template="pht-ligne-ordo";
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
 
+    $html = new msGetHtml;
+    $html->set_template('pht-ligne-ordo');
+    $html=$html->genererHtml();
+
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'ok',
+      'html'=>$html,
+    ]));
+
 } else {
-    die('Avertissement: Ordonnance vide !');
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'avertissement',
+      'msg'=>'Attention : ordonnance vide !',
+      'html'=>'',
+    ]));
 }

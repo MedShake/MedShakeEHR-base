@@ -28,6 +28,7 @@
  */
 
 $formIN=$_POST['formIN'];
+$finalStatut='ok';
 
 $dontIgnoreEmpty=true;
 if (isset($match['params']['ignoreEmpty'])) {
@@ -85,6 +86,8 @@ if ($validation === false) {
           $newDate = $newDate->format('Y-m-d 00:00:00');
           $objet->setCreationDate($newDate);
           $objet->changeCreationDate();
+
+          $finalStatut='ok-fullrefresh';
         }
       }
     }
@@ -104,10 +107,19 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formIN]);
 
-    // générer le html de la ligne d'historique
-    $template="pht-ligne-typecs";
+    // générer le retour, dont html
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
+
+    $html = new msGetHtml;
+    $html->set_template('pht-ligne-typecs');
+    $html=$html->genererHtml();
+
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>$finalStatut,
+      'html'=>$html,
+    ]));
 
 }

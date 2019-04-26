@@ -757,19 +757,23 @@ $(document).ready(function() {
       url: form.attr("action"),
       type: 'post',
       data: form.serialize(),
-      dataType: "html",
+      dataType: "json",
       success: function(data) {
         // on recharge la colonne lat
         getLatCol();
 
         // on agit sur historiques
-        if (!data.length || form.hasClass('ignoreReturn')) {
+        if (!data.html.length || form.hasClass('ignoreReturn')) {
           return;
-        } else if (data.substr(0, 7) == "Erreur:") {
-          alert_popup("danger", data);
-        } else if (data.substr(0, 14) == "Avertissement:") {
-          alert_popup("warning", data);
-        } else {
+        } else if (data.statut == "erreur") {
+          alert_popup("danger", data.msg);
+        } else if (data.statut == "avertissement") {
+          alert_popup("warning", data.msg);
+        } else if (data.statut == "ok-fullrefresh") {
+          getHistoriqueToday();
+          getHistorique();
+          scrollTo('body', 2);
+        } else if (data.statut == "ok") {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
             $tr.find('.fa-minus-square').show();
@@ -777,9 +781,9 @@ $(document).ready(function() {
             $($tr.attr('data-target')).collapse('show');
             var $l = $("#historique tr.tr" + objetid);
             if (objetid && $l.length)
-              $l.replaceWith(data);
+              $l.replaceWith(data.html);
             else
-              $tr.after(data);
+              $tr.after(data.html);
           } else {
             $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
@@ -787,15 +791,15 @@ $(document).ready(function() {
                 <span class="far fa-plus-square" style="display:none"></span>\
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
-            </tr>' + data);
+            </tr>' + data.html);
             refreshHistorique();
           }
 
           var $lt = $("#historiqueToday tr.tr" + objetid);
           if (objetid && $lt.length)
-            $lt.replaceWith(data);
+            $lt.replaceWith(data.html);
           else {
-            $('#historiqueToday tbody').prepend(data);
+            $('#historiqueToday tbody').prepend(data.html);
           }
           refreshHistoriqueToday();
           scrollTo('body', 2);
