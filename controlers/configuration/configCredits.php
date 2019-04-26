@@ -153,6 +153,25 @@ $p['page']['thanks'][
   'description'=>'This is a stupid jQuery table sorting plugin',
   'url'=>'https://github.com/joequery/Stupid-Table-Plugin'
 );
-
+$p['page']['thanks'][
+  'Spout']=array(
+  'description'=>'Spout is a PHP library to read and write spreadsheet files',
+  'url'=>'https://github.com/box/spout'
+);
+$p['page']['thanks'][
+  'EvalMath']=array(
+  'description'=>'Safely evaluate math expressions',
+  'url'=>'https://github.com/dbojdo/eval-math'
+);
+$p['page']['thanks'][
+  'CodeMirror']=array(
+  'description'=>'CodeMirror is a versatile text editor implemented in JavaScript for the browser',
+  'url'=>'https://codemirror.net/'
+);
+$p['page']['thanks'][
+  'Font Awesome']=array(
+  'description'=>'Font Awesome, the web\'s most popular icon set and toolkit',
+  'url'=>'https://fontawesome.com/'
+);
 
 uksort($p['page']['thanks'], 'strcasecmp');
