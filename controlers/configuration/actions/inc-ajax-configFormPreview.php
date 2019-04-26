@@ -29,35 +29,30 @@
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 if(!is_numeric($_POST['formID'])) die();
 
-//sortie du formulaire et préparation à son exploitation par le templates
-if ($p['page']['formData']=msSQL::sqlUnique("select * from forms where id='".$_POST['formID']."' limit 1")) {
+//formulaire
+$forceAllTemplates="oui";
+$form = new msForm();
+$form->setFormID($_POST['formID']);
+$p['page']['form']=$form->getForm();
 
-    //formulaire
-    $forceAllTemplates="oui";
-    $form = new msForm();
-    $form->setFormID($_POST['formID']);
-    $p['page']['form']=$form->getForm();
+if(!empty($p['page']['form'])) {
+  $sqlGen = new msSqlGenerate;
+  $sqlGen=$sqlGen->getSqlForForm($form->getFormIN());
+  $basicTemplateCode=$form->getFlatBasicTemplateCode();
 
-    if(!empty($p['page']['form'])) {
-      $sqlGen = new msSqlGenerate;
-      $sqlGen=$sqlGen->getSqlForForm($form->getFormIN());
-      $basicTemplateCode=$form->getFlatBasicTemplateCode();
-
-      $html = new msGetHtml;
-      $html->set_template('configFormPreviewAjax.html.twig');
-      $html = $html->genererHtmlVar($p);
-    } else {
-      $sqlGen="Formulaire d'affichage - données non disponibles";
-      $basicTemplateCode="Formulaire d'affichage - données non disponibles";
-      $html='<div class="alert alert-info" role="alert">
-          Formulaire d\'affichage - aperçu non disponible !
-          </div>';
-    }
-
-    exit(json_encode(array(
-      'htmlFormPreview'=>$html,
-      'basicTemplateCode'=>$basicTemplateCode,
-      'sqlGen'=>$sqlGen
-    )));
-
+  $html = new msGetHtml;
+  $html->set_template('configFormPreviewAjax.html.twig');
+  $html = $html->genererHtmlVar($p);
+} else {
+  $sqlGen="Formulaire d'affichage - données non disponibles";
+  $basicTemplateCode="Formulaire d'affichage - données non disponibles";
+  $html='<div class="alert alert-info" role="alert">
+      Formulaire d\'affichage - aperçu non disponible !
+      </div>';
 }
+
+exit(json_encode(array(
+  'htmlFormPreview'=>$html,
+  'basicTemplateCode'=>$basicTemplateCode,
+  'sqlGen'=>$sqlGen
+)));

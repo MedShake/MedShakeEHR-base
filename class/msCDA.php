@@ -129,7 +129,7 @@ class msCDA
       $ob=new msObjet();
       $ob->setID($this->_objetID);
       if($formIN = $ob->getOriginFormNameFromObjetID()) {
-        if($datYaml=msSQL::sqlUniqueChamp("select cda from forms where internalName='".$formIN."' limit 1")) {
+        if($datYaml=msForm::getFormUniqueRawField($formIN, 'cda')) {
           $d = Spyc::YAMLLoad($datYaml);
 
           $this->_template=$d['template'];

@@ -40,11 +40,10 @@
 
 
     //sortie du formulaire et préparation à son exploitation par le templates
-    if ($p['page']['form']=msSQL::sqlUnique("select * from forms where id='".$p['page']['formID']."' limit 1")) {
-        if ($p['page']['tabCat']=msSQL::sql2tabKey("select c.id, c.label
-    		from forms_cat as c
-    		order by c.label asc", 'id', 'label')) {
-        }
+    $form = new msForm;
+    $form->setFormID($p['page']['formID']);
+    if ($p['page']['form']=$form->getFormRawData()) {
+        $p['page']['tabCat']=msForms::getCatListByID();
 
         // liste des types par catégorie
         if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel

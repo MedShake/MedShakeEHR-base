@@ -292,6 +292,26 @@ class msForm
     }
 
 /**
+ * Obtenir un champ unique brut de la table forms via formIN
+ * @param  string $formIN internalName
+ * @param  string $field  champ
+ * @return string         valeur du champ
+ */
+    public static function getFormUniqueRawField($formIN, $field) {
+      return msSQL::sqlUniqueChamp("select ".$field." from forms where internalName='".$formIN."' limit 1");
+    }
+
+/**
+ * Obtenir un champ unique brut de la table forms via formID
+ * @param  string $formID id
+ * @param  string $field  champ
+ * @return string         valeur du champ
+ */
+    public static function getFormUniqueRawFieldByFormID($formID, $field) {
+      return msSQL::sqlUniqueChamp("select ".$field." from forms where id='".$formID."' limit 1");
+    }
+
+/**
  * Extraire le code javascript accompagnant le formulaire
  * @return string code javascript
  */

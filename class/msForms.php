@@ -114,7 +114,7 @@ class msForms
  * Obtenir la liste des catégories par ID
  * @return array cat par ID
  */
-  public function getCatListByID() {
+  public static function getCatListByID() {
     return msSQL::sql2tabKey("select id, label from forms_cat order by label", 'id', 'label');
   }
 
@@ -122,7 +122,7 @@ class msForms
  * Obtenir la liste des catégories par name
  * @return array cat par name
  */
-  public function getCatListByName() {
+  public static function getCatListByName() {
     return msSQL::sql2tabKey("select internalName, label from forms_cat order by label", 'internalName', 'label');
   }
 

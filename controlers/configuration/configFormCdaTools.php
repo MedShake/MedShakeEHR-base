@@ -66,77 +66,72 @@ function concat(array $array, $clef) {
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
+  $template="forbidden";
 } else {
-   $debug='';
-   $template="configFormCdaTools";
-   $p['page']['formID']=$match['params']['form'];
-   if (!is_numeric($p['page']['formID'])) {
-       die();
-   }
+  $debug='';
+  $template="configFormCdaTools";
+  $p['page']['formID']=$match['params']['form'];
+  if (!is_numeric($p['page']['formID'])) {
+     die();
+  }
 
+  $formc = new msForm;
+  $formc->setFormID($p['page']['formID']);
+  $formCda=$formc->getFormRawData(['cda'])['cda'];
+  $formCda=Spyc::YAMLLoad($formCda);
 
-  //sortie du formulaire et préparation
-  if ($formData=msSQL::sqlUnique("select * from forms where id='".$p['page']['formID']."' limit 1")) {
+  if(isset($formCda['actesPossibles'],$formCda['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'])) {
 
-    $formc= new msForm;
-    $formc->setFormID($p['page']['formID']);
+    // associations déjà en place
+    $p['page']['deja']=$formCda['clinicalDocument']['documentationOf']['serviceEvent']['code'];
 
-    $formData['cda']=Spyc::YAMLLoad($formData['cda']);
+    // actes possibles définis
+    $p['page']['actesPossibles']=$formCda['actesPossibles'];
 
-    if(isset($formData['cda']['actesPossibles'],$formData['cda']['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'])) {
+    // paramètres concernés
+    $p['page']['paramsPossibles']=(array)$formCda['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'];
 
-      // associations déjà en place
-      $p['page']['deja']=$formData['cda']['clinicalDocument']['documentationOf']['serviceEvent']['code'];
-
-      // actes possibles définis
-      $p['page']['actesPossibles']=$formData['cda']['actesPossibles'];
-
-      // paramètres concernés
-      $p['page']['paramsPossibles']=(array)$formData['cda']['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'];
-
-      // sortie data de chaque param
-      $data = new msData;
-      foreach($p['page']['paramsPossibles'] as $k=>$pa) {
-        if(is_string($pa)) {
-          $p['page']['paramsPossiblesData'][$k]=$data->getDataTypeByName($pa);
-          treatDataType($p['page']['paramsPossiblesData'][$k]);
-        } elseif (is_array($pa)) {
-          foreach($pa as $sk=>$spa) {
-            $p['page']['paramsPossiblesData'][$k][$sk]=$data->getDataTypeByName($spa);
-            treatDataType($p['page']['paramsPossiblesData'][$k][$sk]);
-          }
+    // sortie data de chaque param
+    $data = new msData;
+    foreach($p['page']['paramsPossibles'] as $k=>$pa) {
+      if(is_string($pa)) {
+        $p['page']['paramsPossiblesData'][$k]=$data->getDataTypeByName($pa);
+        treatDataType($p['page']['paramsPossiblesData'][$k]);
+      } elseif (is_array($pa)) {
+        foreach($pa as $sk=>$spa) {
+          $p['page']['paramsPossiblesData'][$k][$sk]=$data->getDataTypeByName($spa);
+          treatDataType($p['page']['paramsPossiblesData'][$k][$sk]);
         }
       }
-
-      // on regroupe
-      foreach($p['page']['paramsPossiblesData'] as $k=>$v) {
-          if(isset($v['label'])) {
-            foreach($v['keyValues'] as $kv) {
-              $tab[$k]['asso'][$v['name'].'@'.$kv]=$v['formValues'][$kv];
-            }
-          } else {
-            foreach($v as $k2=>$v2)
-              foreach($v2['keyValues'] as $kv2) {
-                $tab[$k]['asso'][$v2['name'].'@'.$kv2]=$v2['formValues'][$kv2];
-            }
-          }
-          $tab[$k]['clefs']=array_keys($tab[$k]['asso']);
-          $tab[$k]['values']=array_values($tab[$k]['asso']);
-      }
-
-      $tabclefs=concat($tab, 'clefs');
-      $tablabel=concat($tab, 'values');
-      foreach($tablabel as $k=>$v) {
-        $tabr[$k]['clef']=$tabclefs[$k];
-        $tabr[$k]['values']=explode('|', $v);
-      }
-      sort($tabr);
-      $p['page']['dataTab']=$tabr;
     }
 
-    // jeux de valeurs
-    $p['page']['jdvClinicalDocumentCode']=msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
+    // on regroupe
+    foreach($p['page']['paramsPossiblesData'] as $k=>$v) {
+        if(isset($v['label'])) {
+          foreach($v['keyValues'] as $kv) {
+            $tab[$k]['asso'][$v['name'].'@'.$kv]=$v['formValues'][$kv];
+          }
+        } else {
+          foreach($v as $k2=>$v2)
+            foreach($v2['keyValues'] as $kv2) {
+              $tab[$k]['asso'][$v2['name'].'@'.$kv2]=$v2['formValues'][$kv2];
+          }
+        }
+        $tab[$k]['clefs']=array_keys($tab[$k]['asso']);
+        $tab[$k]['values']=array_values($tab[$k]['asso']);
+    }
 
+    $tabclefs=concat($tab, 'clefs');
+    $tablabel=concat($tab, 'values');
+    foreach($tablabel as $k=>$v) {
+      $tabr[$k]['clef']=$tabclefs[$k];
+      $tabr[$k]['values']=explode('|', $v);
+    }
+    sort($tabr);
+    $p['page']['dataTab']=$tabr;
   }
+
+  // jeux de valeurs
+  $p['page']['jdvClinicalDocumentCode']=msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
+
 }

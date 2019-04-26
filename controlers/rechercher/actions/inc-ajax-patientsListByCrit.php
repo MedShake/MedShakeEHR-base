@@ -47,7 +47,7 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
 $p['page']['porp']=$_POST['porp'];
 
 
-if ($form=msSQL::sqlUniqueChamp("select yamlStructure from forms where internalName='".$formIN."' limit 1")) {
+if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $form=Spyc::YAMLLoad($form);
 
     $form['col0'] = array(

@@ -520,13 +520,13 @@ class msCourrier
     }
 
 /**
- * Obtenir le template à utiliser pour l'mpression
+ * Obtenir le template à utiliser pour l'impression
  * @param  int $formIN internalName du formulaire
  * @return string          nom du template (sans extension)
  */
     public function getPrintModel($formIN)
     {
-        return msSQL::sqlUniqueChamp("select printModel from forms where internalName='".$formIN."' limit 1");
+        return msForm::getFormUniqueRawField($formIN, 'printModel');
     }
 
 /**
@@ -536,7 +536,7 @@ class msCourrier
  */
     private function _getModuleOrigine($formIN)
     {
-        return msSQL::sqlUniqueChamp("select module from forms where internalName='".$formIN."' limit 1");
+        return msForm::getFormUniqueRawField($formIN, 'module');
     }
 
 /**
