@@ -796,9 +796,9 @@ $(document).ready(function() {
           }
 
           var $lt = $("#historiqueToday tr.tr" + objetid);
-          if (objetid && $lt.length)
+          if (objetid && $lt.length) {
             $lt.replaceWith(data.html);
-          else {
+          } else if (data.today == 'oui') {
             $('#historiqueToday tbody').prepend(data.html);
           }
           refreshHistoriqueToday();

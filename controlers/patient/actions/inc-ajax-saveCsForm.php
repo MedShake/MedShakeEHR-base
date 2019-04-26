@@ -111,6 +111,7 @@ if ($validation === false) {
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
+    $datCrea = new DateTime($p['cs']['creationDate']);
 
     $html = new msGetHtml;
     $html->set_template('pht-ligne-typecs');
@@ -119,6 +120,7 @@ if ($validation === false) {
     header('Content-Type: application/json');
     exit(json_encode([
       'statut'=>$finalStatut,
+      'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
       'html'=>$html,
     ]));
 

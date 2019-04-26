@@ -109,6 +109,7 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
+    $datCrea = new DateTime($p['cs']['creationDate']);
 
     $html = new msGetHtml;
     $html->set_template('pht-ligne-reglement');
@@ -117,6 +118,7 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     header('Content-Type: application/json');
     exit(json_encode([
       'statut'=>'ok',
+      'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
       'html'=>$html,
     ]));
 
