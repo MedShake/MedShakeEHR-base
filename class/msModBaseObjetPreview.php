@@ -193,7 +193,16 @@ class msModBaseObjetPreview
     }
 
     if($p['page']['pj']['html'] == 'PDF') {
-      $html = '<object data="'.$p['page']['pj']['href'].'" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD"></object>';
+      $p['page']['doc']['mime']=$doc->getFileMimeType();
+      $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+
+      $html = '<object
+        data="'.$p['page']['pj']['href'].'"
+        width="'.$p['page']['doc']['displayParams']['width'].'"
+        height="'.$p['page']['doc']['displayParams']['height'].'"
+        style="border: 15px solid #DDD"
+        type="'.$p['page']['doc']['mime'].'">
+      </object>';
     } elseif($p['page']['pj']['html'] == 'TXT') {
       $html = nl2br(file_get_contents($doc->getPathToDoc()));
     }
@@ -285,6 +294,9 @@ class msModBaseObjetPreview
           $p['page']['courrier']['modeprint']=$modePrint;
       }
 
+      //version pdf
+      $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
       $html = new msGetHtml;
       $html->set_template('inc-ajax-detOrdo.html.twig');
       $html = $html->genererHtmlVar($p);
@@ -303,11 +315,16 @@ class msModBaseObjetPreview
         $fakePDF->setObjetID($this->_objetID);
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
+        $p['page']['txtVersion']=  msTools::cutHtmlHeaderAndFooter($version);
 
-        $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
-        $string .=  msTools::cutHtmlHeaderAndFooter($version);
-        $string .=  '</div></td>';
-        return $string;
+        //version pdf
+        $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
+        $html = new msGetHtml;
+        $html->set_template('inc-ajax-detCourrier.html.twig');
+        $html = $html->genererHtmlVar($p);
+        return $html;
+
       }
 
 /**
@@ -327,14 +344,23 @@ class msModBaseObjetPreview
         $fakePDF->setObjetID($this->_objetID);
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
-
-      } else {
-        $version = "Pas d'aperçu disponible pour cet élément";
+        $p['page']['txtVersion'] = msTools::cutHtmlHeaderAndFooter($version);
       }
-      $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
-      $string .=  msTools::cutHtmlHeaderAndFooter($version);
-      $string .=  '</div></td>';
-      return $string;
+      // si pdf existant
+      $stockage = new msStockage;
+      $stockage->setObjetID($this->_objetID);
+      if($stockage->testDocExist()) {
+        $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
+      }
+      // si rien
+      if (!isset($p['page']['txtVersion']) and !isset($p['page']['pdfVersion'])) {
+        $p['page']['txtVersion'] = "Pas d'aperçu disponible pour cet élément";
+      }
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detGenericPreview.html.twig');
+      $html = $html->genererHtmlVar($p);
+      return $html;
     }
 
 /**
@@ -350,12 +376,12 @@ class msModBaseObjetPreview
         $pdf->makePDFfromObjetID();
         $pdf->savePDF();
       }
-      $doc->setObjetID($this->_objetID);
-      $string = '<td></td><td colspan="4" class="py-4">';
-      $string .= '<object data="'.$doc->getWebPathToDoc().'" type="application/pdf" width="900px" height="900px" style="border: 15px solid #DDD">
-      </object>';
-      $string .=  '</td>';
-      return $string;
+      $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detGenericPreview.html.twig');
+      $html = $html->genererHtmlVar($p);
+      return $html;
     }
 
 /**

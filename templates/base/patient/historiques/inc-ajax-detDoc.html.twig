@@ -29,7 +29,7 @@
 <td></td>
 <td colspan="4" class="py-4">
 
-  <div class="nav nav-pills font-weight-bold" id="docLinkBlock{{ page.doc.uniqid }}" role="tablist">
+  <div class="nav nav-tabs font-weight-bold" id="docLinkBlock{{ page.doc.uniqid }}" role="tablist">
     <a class="nav-item nav-link active" id="docViewLink{{ page.doc.uniqid }}" data-toggle="pill" href="#docViewPanel{{ page.doc.uniqid }}" >
       <i class="fas fa-file mr-1"></i> Document {{ page.doc.ext }} ({{ page.doc.filesize }})
     </a>
@@ -49,7 +49,7 @@
     {% endif %}
   </div>
 
-  <div class="tab-content" id="docContentBlock{{ page.doc.uniqid }}">
+  <div class="tab-content  border-left p-4" id="docContentBlock{{ page.doc.uniqid }}">
 
     <div class="tab-pane fade show active" id="docViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="docViewLink{{ page.doc.uniqid }}">
       <div class="row">
@@ -87,7 +87,7 @@
 
     {% if page.bioHprim %}
       <div class="tab-pane fade" id="hprimViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="hprimViewLink{{ page.doc.uniqid }}">
-        <div class="my-3">
+        <div class="my-3" style="min-height: {{ page.doc.displayParams.height }};">
             <p>Résultats biologiques extraits du corps du message</p>
             <table class="table table-sm mb-0 table-striped table-hover">
                 <thead class="thead-light">
@@ -124,7 +124,7 @@
 
     {% if page.texte %}
       <div class="tab-pane fade" id="msgViewPanel{{ page.doc.uniqid }}" role="tabpanel" aria-labelledby="msgViewLink{{ page.doc.uniqid }}">
-        <div class="card my-3 bg-light">
+        <div class="card my-3 bg-light" style="min-height: {{ page.doc.displayParams.height }};">
           <div class="card-body">
             {{ page.texte|e|nl2br }}
           </div>
