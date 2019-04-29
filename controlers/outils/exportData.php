@@ -27,7 +27,7 @@
  */
 
  //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
+ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
      $template="forbidden";
  } else {
   $template="exportData";

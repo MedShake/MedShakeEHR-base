@@ -30,7 +30,7 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
 
 //admin uniquement
-if (!msUser::checkUserIsAdmin()) {
+if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
   $template="forbidden";
 } else {
 
@@ -69,7 +69,9 @@ if (!msUser::checkUserIsAdmin()) {
         $sortTab[]='data_'.$kKey;
       }
       elseif($kType=='pratliste' and is_numeric($kKey)) {
-        $formExport->addToPratList($kKey);
+        if ($p['config']['droitExportPeutExporterAutresData'] == 'true' or $p['user']['id'] == $kKey) {
+          $formExport->addToPratList($kKey);
+        }
       }
       elseif($k=='date_start') {
         $formExport->setDateStart($v);
@@ -99,8 +101,12 @@ if (!msUser::checkUserIsAdmin()) {
   }
   $datasheet = $writer->getCurrentSheet();
   $datasheet->setName('Data');
-  $writer->addRow(array_keys($data[key($data)]));
-  $writer->addRows($data);
+  if(!empty($data)) {
+    $writer->addRow(array_keys($data[key($data)]));
+    $writer->addRows($data);
+  } else {
+    $writer->addRow(['Aucune donnée trouvée']);
+  }
 
   $corressheet = $writer->addNewSheetAndMakeItCurrent();
   $corressheet->setName('Corespondances');

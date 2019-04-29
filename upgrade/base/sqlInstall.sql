@@ -758,7 +758,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('ovhTelecomCallingNumber', 'default', 0, 'base', 'Click2call', 'string', 'Numéro de l\'appelant au format international 0033xxxxxxxxxx', NULL),
 ('ovhTelecomIntercom', 'default', 0, 'base', 'Click2call', 'true/false', 'Activer le mode intercom', NULL),
 ('click2callService', 'default', 0, 'base', 'Click2call', 'string', 'nom du service Click2call à activer (OVH)', NULL),
-( 'administratifSecteurHonorairesNgap', 'default', '0', '', 'Règlements', 'texte', 'Code profession pour le secteur tarifaire NGAP', 'mspe');
+( 'administratifSecteurHonorairesNgap', 'default', '0', '', 'Règlements', 'texte', 'Code profession pour le secteur tarifaire NGAP', 'mspe'),
+('droitExportPeutExporterPropresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter ses propres datas', 'true'),
+( 'droitExportPeutExporterAutresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens', 'false');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
