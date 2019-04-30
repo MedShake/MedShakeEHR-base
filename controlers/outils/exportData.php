@@ -26,10 +26,10 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
-     $template="forbidden";
- } else {
+//vérification droits
+if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
+  $template="forbidden";
+} else {
   $template="exportData";
   $debug='';
 

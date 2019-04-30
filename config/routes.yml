@@ -130,6 +130,7 @@ transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmiss
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
 outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
 outilsExportDataDownload: ['POST|GET', '/outils/export-data/download/', 'outils/exportDataDownload']
+outilsStatsGenerales: ['POST|GET', '/outils/statistiques/', 'outils/statsGenerales']
 
 #configuration
 configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']

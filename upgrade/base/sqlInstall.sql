@@ -760,7 +760,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('click2callService', 'default', 0, 'base', 'Click2call', 'string', 'nom du service Click2call à activer (OVH)', NULL),
 ( 'administratifSecteurHonorairesNgap', 'default', '0', '', 'Règlements', 'texte', 'Code profession pour le secteur tarifaire NGAP', 'mspe'),
 ('droitExportPeutExporterPropresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter ses propres datas', 'true'),
-( 'droitExportPeutExporterAutresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens', 'false');
+( 'droitExportPeutExporterAutresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens', 'false'),
+( 'droitStatsPeutVoirStatsGenerales', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir les statistiques générales', 'true'),
+( 'statsExclusionPatients', 'default', '0', '', 'Statistiques', 'liste', 'liste des ID des dossiers tests à exclure des statistiques ', ''),
+( 'statsExclusionCats', 'default', '0', '', 'Statistiques', 'liste', 'liste des noms des catégories de formulaires à exclure des statistiques ', 'catTypeCsATCD,csAutres,declencheur');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),
