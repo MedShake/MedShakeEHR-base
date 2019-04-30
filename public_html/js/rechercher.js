@@ -196,13 +196,19 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        el = source.closest('tr');
+        el = source.closest('tr').find('a.ouvrirDossier');
         if (data.type == 'pro') {
-          source.html('Retirer de la liste Praticiens');
-          el.addClass('table-info')
+          source.html('<i class="fas fa-user-slash fa-fw text-muted mr-1"></i> Retirer de la liste Praticiens');
+          el.addClass('btn-info');
+          el.removeClass('btn-secondary');
+          el.find('i.fas').removeClass('fa-user');
+          el.find('i.fas').addClass('fa-user-md');
         } else {
-          el.removeClass('table-info')
-          source.html('Ajouter de la liste Praticiens');
+          el.removeClass('btn-info');
+          el.addClass('btn-secondary');
+          source.html('<i class="fas fa-user-md fa-fw text-muted mr-1"></i> Ajouter de la liste Praticiens');
+          el.find('i.fas').addClass('fa-user');
+          el.find('i.fas').removeClass('fa-user-md');
         };
       },
       error: function() {
@@ -212,6 +218,11 @@ $(document).ready(function() {
     });
   });
 
+/**
+ * Associer un patient externe à un patient interne trouvé via la recherche
+ * @param  {object} e event
+ * @return {void}
+ */
   $('body').on("click", ".extAsPatient", function(e) {
     e.preventDefault();
     var externID = $('.extToNew').attr("data-externid");
@@ -229,11 +240,15 @@ $(document).ready(function() {
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
-
       }
     });
   });
 
+/**
+ * Associer un patient externe à nouveau patient
+ * @param  {object} e event
+ * @return {void}
+ */
   $('.extToNew').on("click", function(e) {
     e.preventDefault();
     var externID = $(this).attr("data-externid");

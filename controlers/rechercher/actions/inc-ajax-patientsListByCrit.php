@@ -178,6 +178,7 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
             foreach ($v as $k=>$q) {
                 $p['page']['outputTableRow'][$patientID][]=implode($separator[$k], array_filter($q));
                 $p['page']['outputType'][$patientID]['type']=$data[$patientID]['type'];
+                $p['page']['outputType'][$patientID]['isUser']=$data[$patientID]['isUser'];
             }
         }
     }

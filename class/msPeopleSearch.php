@@ -101,7 +101,8 @@ class msPeopleSearch
  */
   public function getSql() {
 
-    return $sql='select p.type, p.id as peopleID, '.implode(', ', $this->_makeSqlSelect()).'
+    return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
+    '.implode(', ', $this->_makeSqlSelect()).'
     from people as p
     '.implode(' ', $this->_makeSqlJoin()). '
     where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).'

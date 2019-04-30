@@ -37,13 +37,11 @@ $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 
 //si patient externe, on cherche une relation avec un patient, et si on trouve, on permute
-if ($externe=$patient->isExterne() and
-    ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
-        ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
-        WHERE od.toID='".$p['page']['patient']['id']."'"))) {
-     $patient->setToID($internePatient);
-     $p['page']['patient']['id']=$internePatient;
-    }
+if ($externe=$patient->isExterne() and ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
+  ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
+  WHERE od.toID='".$p['page']['patient']['id']."'"))) {
+    msTools::redirection('/patient/'.$internePatient.'/');
+}
 
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
@@ -61,7 +59,7 @@ if ($externe and !$internePatient) {
     $keys=['mobilePhone', 'homePhone', 'telPro', 'personalEmail', 'profesionnalEmail'];
     foreach($keys as $v) {
         if(!array_key_exists($v, $data)) {
-          $data[$v]='**********';
+          $data[$v]['value']='**********';
         }
     }
     $name2typeID = new msData();
@@ -70,12 +68,12 @@ if ($externe and !$internePatient) {
     $candidats=array();
     $candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']."')
-               OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']."')");
+               WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']['value']."')
+               OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']['value']."')");
 
     $candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']."'");
+               WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']['value']."'");
 
     // si on a pu identifier le patient de façon unique, on associe directement et on charge les données du patient interne
     if ((($candidats['phone'] and ($c1=count($candidats['phone']))==1) or ($candidats['email'] and ($c2=count($candidats['email']))==1)) and
@@ -85,9 +83,7 @@ if ($externe and !$internePatient) {
         $obj->setToID($p['page']['patient']['id']);
         $obj->setFromID($p['user']['id']);
         $obj->createNewObjetByTypeName('relationExternePatient', $internePatient);
-        $patient->setToID($internePatient);
-        $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-        $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+        msTools::redirection('/patient/'.$internePatient.'/');
     } else {
         //sinon, on affiche la page de recherche patient
         $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
