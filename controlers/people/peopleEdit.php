@@ -42,6 +42,13 @@ if ($p['page']['porp']=='patient') {
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
+
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
 

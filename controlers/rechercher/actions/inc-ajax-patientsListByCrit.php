@@ -112,6 +112,11 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
         $mss->setPeopleType(['patient']);
     }
 
+    //restrictions sur retours
+    if($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+      $mss->setRestricDossiersPropres(true);
+    }
+
     $criteres = array(
         'firstname'=>$_POST['d3'],
         'lastname'=>$_POST['d2'],

@@ -151,7 +151,7 @@ associer patient
 				<button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
 			{% endif %}
 	    <a class="btn btn-primary my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"><i class="fas fa-plus"></i> Nouveau patient</a>
-	  {% elseif page.porp == 'pro' %}
+	  {% elseif page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true' %}
 	    <a class="btn btn-primary float-right my-lg-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/"><i class="fas fa-plus"></i> Nouveau praticien</a>
 	  {% endif %}
 	  </div>
@@ -164,9 +164,9 @@ associer patient
 </div>
 
 {% if page.porp == 'externe' %}
-<div>
-  <a class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button" href="javascript:void(0)">Créer nouveau patient</a>
-</div>
+	<div>
+	  <button class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button"><i class="fas fa-plus"></i> Créer nouveau patient</button>
+	</div>
 {% endif %}
 
 {% endblock %}

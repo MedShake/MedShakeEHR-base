@@ -38,6 +38,11 @@ if (!isset($_POST['actAsAjax'])) {
     $match['params']['porp']=$_POST['porp'];
 }
 
+// vérification des droits
+if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien']!='true') {
+  die("Action interdite");
+}
+
 //definition formulaire de travail
 $form = new msForm();
 $form->setFormIDbyName($formIN);

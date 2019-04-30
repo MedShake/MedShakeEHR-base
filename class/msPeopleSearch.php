@@ -21,7 +21,7 @@
  */
 
 /**
- * Reherche des individus ou des utilisateurs 
+ * Reherche des individus ou des utilisateurs
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
@@ -34,6 +34,16 @@ class msPeopleSearch
   private $_whereClauses = [];
   private $_limitStart = 0;
   private $_limitNumber = 50;
+  private $_restricDossiersPropres = false;
+
+/**
+ * Définir une restriction pour ne retourner que ses propres dossiers patients
+ * @param bool $restricDossiersPropres true/false
+ */
+  public function setRestricDossiersPropres($restricDossiersPropres) {
+    if(!is_bool($restricDossiersPropres)) throw new Exception('RestricDossiersPropres is not bool');
+    return $this->_restricDossiersPropres=$restricDossiersPropres;
+  }
 
 /**
  * Définir le tableau de critères de recherche
@@ -100,12 +110,19 @@ class msPeopleSearch
  * @return string requète sql
  */
   public function getSql() {
+    global $p;
+
+    if($this->_restricDossiersPropres=='true') {
+      $restrictionUser = ' and p.fromID = "'.$p['user']['id'].'"';
+    } else {
+      $restrictionUser = '';
+    }
 
     return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
     '.implode(', ', $this->_makeSqlSelect()).'
     from people as p
     '.implode(' ', $this->_makeSqlJoin()). '
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).'
+    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).' '.$restrictionUser.'
     order by trim(identite)
     limit '.$this->_limitStart.','.$this->_limitNumber;
   }

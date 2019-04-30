@@ -73,7 +73,9 @@ Relations du patient  {{ page.patient.3 }}
     <div class="card col-md-12 p-0">
       <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-danger"></i> Praticiens</div>
       <div class="card-body">
-        <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
+        {% if config.droitDossierPeutCreerPraticien == 'true' %}
+          <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
+        {% endif %}
         <form class="form-inline">
           <div class="form-group" style="width:100%">
             <div class="input-group" style="width:100%">
@@ -160,6 +162,7 @@ Relations du patient  {{ page.patient.3 }}
 </div>
 
 {# modal creation nouveau praticien #}
-{% include 'inc-patientModal-newPrat.html.twig' %}
-
+{% if config.droitDossierPeutCreerPraticien == 'true' %}
+  {% include 'inc-patientModal-newPrat.html.twig' %}
+{% endif %}
 {% endblock %}

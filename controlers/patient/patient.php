@@ -36,6 +36,12 @@ $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 //si patient externe, on cherche une relation avec un patient, et si on trouve, on permute
 if ($externe=$patient->isExterne() and ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
   ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
