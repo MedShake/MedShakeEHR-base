@@ -38,25 +38,25 @@
 {% block body %}
   <h1>Configuration</h1>
 
-  <ul class="nav nav-tabs mb-3" role="tablist">
+  <ul class="nav nav-tabs mt-3 font-weight-bold" role="tablist">
     <li role="presentation" class="nav-item">
-      <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab">Paramètres courants</a>
+      <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab"><i class="fas fa-cog fa-fw"></i> Paramètres courants</a>
     </li>
     <li role="presentation" class="nav-item">
-      <a href="#ca" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Paramètres avancés</a>
+      <a href="#ca" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab"><i class="fas fa-cogs fa-fw"></i> Paramètres avancés</a>
     </li>
     <li role="presentation" class="nav-item">
-      <a href="#journaux" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab">Journaux et informations techniques</a>
+      <a href="#journaux" class="nav-link" aria-controls="ca" role="tab" data-toggle="tab"><i class="far fa-newspaper fa-fw"></i> Journaux et informations techniques</a>
     </li>
     <li role="presentation" class="nav-item">
-      <a href="#ap" class="nav-link" aria-controls="licence" role="tab" data-toggle="tab">A propos</a>
+      <a href="#ap" class="nav-link" aria-controls="licence" role="tab" data-toggle="tab"><i class="fas fa-info-circle fa-fw"></i> A propos</a>
     </li>
   </ul>
 
-  <div class="tab-content">
+  <div class="tab-content border-left p-4">
 
     <div role="tabpanel" class="tab-pane active" id="cc">
-      <h2 class="mt-4 mb-2">Configuration générale</h2>
+      <h2 class=" mb-2">Configuration générale</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configuration-globale/">Paramètres globaux
@@ -98,7 +98,7 @@
 
     <div role="tabpanel" class="tab-pane" id="ca">
 
-      <h2 class="mt-4 mb-2">Formulaires et modèles</h2>
+      <h2 class="mb-2">Formulaires et modèles</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/">Edition des formulaires</a>
@@ -153,7 +153,7 @@
 
     <div role="tabpanel" class="tab-pane" id="journaux">
 
-      <h2 class="mt-4 mb-2">Ressources externes</h2>
+      <h2 class="mb-2">Ressources externes</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/refreshSams/">Rafraichir le XML HAS des SAMs
@@ -210,7 +210,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="ap">
-      <h2 class="mt-4 mb-2">Licence et crédits</h2>
+      <h2 class="mb-2">Licence et crédits</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/licence/">Licence</a>

@@ -118,65 +118,65 @@
 {% endblock %}
 
 {% block modals %}
-  <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title font-weight-bold">Nouvel utilisateur</h4>
-        </div>
-        <div class="modal-body">
-          <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_username">Identifiant (*)</label>
-                    <input class="form-control" name="p_username" required type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_password">Mot de passe (*)</label>
-                    <input class="form-control" name="p_password" required type="password" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_module">Module</label>
-                    <select class="custom-select" name="p_module">
-                      {% for mv in page.modules %}
-                        <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
-                      {% endfor %}
-                    </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_birthname">Nom de naissance</label>
-                    <input class="form-control" name="p_birthname" type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_lastname">Nom d'usage</label>
-                    <input class="form-control" name="p_lastname" type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_firstname">Prénom (*)</label>
-                    <input class="form-control" name="p_firstname" required type="text" value="" />
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-              <button type="submit" class="btn btn-primary">Valider</button>
-            </div>
-          </form>
-        </div>
+<div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold">Nouvel utilisateur</h4>
       </div>
+      <div class="modal-body">
+        <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_username">Identifiant (*)</label>
+                <input class="form-control" name="p_username" required="required" type="text" value=""/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_password">Mot de passe (*)</label>
+                <input class="form-control" name="p_password" required="required" type="password" value=""/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_module">Module</label>
+                <select class="custom-select" name="p_module">
+                  {% for mv in page.modules %}
+                    <option value="{{ mv }}" {% if mv=='base' %} selected="selected{% endif %}">{{ mv }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_birthname">Nom de naissance</label>
+                <input class="form-control" name="p_birthname" type="text" value=""/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_lastname">Nom d'usage</label>
+                <input class="form-control" name="p_lastname" type="text" value=""/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_firstname">Prénom (*)</label>
+                <input class="form-control" name="p_firstname" required="required" type="text" value=""/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 {% endblock %}
