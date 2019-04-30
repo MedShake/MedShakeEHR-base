@@ -158,6 +158,18 @@ class msPeople
     }
 
 /**
+ * Obtenir le fromID pour un people
+ * @return int fromID
+ */
+    public function getFromID() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        if(isset($this->_fromID)) return $this->_fromID;
+        return msSQL::sqlUniqueChamp("SELECT fromID FROM people WHERE id='".$this->_toID."' limit 1");
+    }
+
+/**
  * Obtenir le type du dossier
  * @return string patient / pro / deleted / externe ...
  */
