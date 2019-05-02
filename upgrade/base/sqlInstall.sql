@@ -768,7 +768,8 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ( 'droitDossierPeutVoirTousPatients', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les dossiers créés par les autres praticiens', 'true'),
 ( 'optionGeAdminActiverLiensRendreUtilisateur', 'default', '0', '', 'Options', 'true/false', 'si true, l\'administrateur peut transformer des patients ou praticiens en utilisateur via les listings publiques', 'false'),
 ('droitDossierPeutSupPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers praticiens (non définitivement)', 'true'),
-('droitDossierPeutSupPatient', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers patients (non définitivement)', 'true');
+('droitDossierPeutSupPatient', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers patients (non définitivement)', 'true'),
+('droitDossierPeutRetirerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut retirer le statut praticien à un dossier (retour à patient, réciproque de droitDossierPeutCreerPraticien)', 'true');
 
 INSERT IGNORE INTO `system` (`id`,`name`, `groupe`,`value`) VALUES
  (1, 'state', 'system', 'normal'),

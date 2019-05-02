@@ -136,7 +136,7 @@
                         <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
                           <i class="fas fa-user-md fa-fw text-muted mr-1"></i> Ajouter à la liste Praticiens
                         </a>
-                      {% else %}
+                      {% elseif config.droitDossierPeutRetirerPraticien == 'true' %}
                         <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
                           <i class="fas fa-user-slash fa-fw text-muted mr-1"></i> Retirer de la liste Praticiens
                         </a>
