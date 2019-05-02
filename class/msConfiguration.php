@@ -230,4 +230,22 @@ public static function getModuleDefaultParameters($module) {
         return msSQL::sqlQuery("INSERT INTO configuration (name, level, toID, value) VALUES ('".msSQL::cleanVar($name)."', 'user', '".msSQL::cleanVar($userID)."', '".msSQL::cleanVar($value)."')
         ON DUPLICATE KEY UPDATE value='".$value."'");
     }
+
+/**
+ * Obtenir la liste des user templates
+ * @return array liste des user templates
+ */
+    public static function getUserTemplatesList() {
+      global $homepath;
+      $tab=[];
+      if ($listeTemplates=array_diff(scandir($homepath.'config/userTemplates/'), array('..', '.'))) {
+        foreach($listeTemplates as $k=>$tp) {
+          if(pathinfo($tp, PATHINFO_EXTENSION) == 'yml') {
+            $tab[]=basename($tp, '.yml');
+          }
+        }
+        return $tab;
+      }
+      return $tab;
+    }
 }
