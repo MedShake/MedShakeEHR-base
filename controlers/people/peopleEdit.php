@@ -34,20 +34,27 @@ $template="peopleEdit";
 
 $p['page']['porp']=$match['params']['porp'];
 
-if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']='baseNewPatient';
-} elseif ($p['page']['porp']=='pro') {
-    $p['page']['formIN']='baseNewPro';
-}
-
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 
-//vérifier les droits
-if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
-  $template="forbidden";
-  return;
+if ($p['page']['porp']=='patient') {
+    $p['page']['formIN']='baseNewPatient';
+
+    //vérifier les droits
+    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
+} elseif ($p['page']['porp']=='pro') {
+    $p['page']['formIN']='baseNewPro';
+
+    //vérifier les droits
+    if($p['config']['droitDossierPeutCreerPraticien'] != 'true' and $match['params']['patient']!=$p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
 }
+
 
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];

@@ -51,7 +51,7 @@
           <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
         {% else %}
           {% set patientIDmod = page['outputType'][patientID]['type']=='externe' and patientID in page.extToInt|keys ? page.extToInt[patientID] : patientID %}
-          <tr class="openPatient {% if page['outputType'][patientID]['type'] == 'dcd' %} dcd{% endif %}{% if loop.index == 1 %} table-active{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/">
+          <tr class="openPatient {% if page['outputType'][patientID]['type'] == 'dcd' %} dcd{% endif %}{% if loop.index == 1 %} table-active{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/" data-patientid="{{ patientID }}">
         {% endif %}
           <td class="d-none d-sm-table-cell">
 
@@ -86,7 +86,7 @@
             <div class="btn-group">
               {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
 
-                {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' %}
+                {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
                   <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
                     <i class="fas fa-pencil-alt"></i>
                   </a>
@@ -121,7 +121,7 @@
                     <i class="fas fa-ellipsis-h"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' %}
+                    {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
                       <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
                         <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Éditer
                       </a>
@@ -147,10 +147,16 @@
                           <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des mails envoyés
                       </a>
                     {% endif %}
-                    <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">
-                      <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer ce dossier
-                    </a>
+                    {% if user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isNotUser' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
+                      <a class="dropdown-item rendreUtilisateur" href="#" data->
+                          <i class="fas fa-user fa-fw text-muted mr-1"></i> Rendre utilisateur
+                      </a>
+                    {% endif %}
+                    {% if (config.droitDossierPeutSupPatient =='true' and page['outputType'][patientID]['type'] == 'patient') or (config.droitDossierPeutSupPraticien =='true' and page['outputType'][patientID]['type'] == 'pro') %}
+                      <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">
+                        <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer ce dossier
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
               {% endif %}

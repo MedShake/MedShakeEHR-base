@@ -28,23 +28,26 @@
 
 if(is_numeric($_POST['patientID'])) {
 
-
   // création d'un marqueur pour sauvegarde de l'info
   // on place en valeur le type du dossier + motif converti en yaml
 
   $value['typeDossier']=msSQL::sqlUniqueChamp("select type from people where id='".$_POST['patientID']."' limit 1");
-  $value['motif']=$_POST['motif'];
-  $value = Spyc::YAMLDump($value);
 
-  $marqueur=new msObjet();
-  $marqueur->setFromID($p['user']['id']);
-  $marqueur->setToID($_POST['patientID']);
-  $marqueur->createNewObjetByTypeName('administratifMarqueurSuppression', $value);
+  if (($p['config']['droitDossierPeutSupPatient'] == 'true' and $value['typeDossier'] == 'patient') or ($p['config']['droitDossierPeutSupPraticien'] == 'true' and $value['typeDossier'] == 'pro')) {
 
-  // on marque le dossier dans people
-  $data=array(
-    'id'=>$_POST['patientID'],
-    'type'=>'deleted'
-  );
-  msSQL::sqlInsert('people', $data);
+    $value['motif']=$_POST['motif'];
+    $value = Spyc::YAMLDump($value);
+
+    $marqueur=new msObjet();
+    $marqueur->setFromID($p['user']['id']);
+    $marqueur->setToID($_POST['patientID']);
+    $marqueur->createNewObjetByTypeName('administratifMarqueurSuppression', $value);
+
+    // on marque le dossier dans people
+    $data=array(
+      'id'=>$_POST['patientID'],
+      'type'=>'deleted'
+    );
+    msSQL::sqlInsert('people', $data);
+  }
 }
