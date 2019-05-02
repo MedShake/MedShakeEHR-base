@@ -27,23 +27,21 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-//accès par admin uniquement
-if (!msUser::checkUserIsAdmin()) {
-    die;
-}
 // si pas de fichier à supprimer
 if (!isset($_POST['file'])) {
     die;
 }
 
+$fichier=basename($_POST['file']);
+
 // détermination du répertoire
 $user=array('id'=>$_POST['userID'], 'module'=>'');
 $directory=msConfiguration::getParameterValue('templatesPdfFolder', $user);
 
-if (is_file($directory.'/'.$_POST['file'])) {
-    if (unlink($directory.'/'.$_POST['file'])) {
+if (is_file($directory.'/'.$fichier)) {
+    if (unlink($directory.'/'.$fichier)) {
         echo json_encode(array('ok'));
     } else {
         header("HTTP/1.0 404 Not Found");
