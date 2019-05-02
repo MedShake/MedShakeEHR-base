@@ -30,18 +30,26 @@
 class msStockage
 {
 
-    /**
-     * @var int ID de l'objet
-     */
+/**
+ * @var int ID de l'objet
+ */
     private $_objetID;
-    /**
-     * @var string extension du fichier (pdf, txt)
-     */
+/**
+ * @var string extension du fichier (pdf, txt)
+ */
     private $_fileExt;
-    /**
-     * @var string chemin vers le fichier
-     */
+/**
+ * @var string chemin vers le fichier
+ */
     private $_pathToDoc;
+/**
+ * @var int fromID de l'objet porteur du doc
+ */
+    private $_fromID;
+/**
+ * @var int toID de l'objet porteur du doc
+ */
+    private $_toID;
 
 /**
  * Définir l'ID de l'objet
@@ -54,6 +62,40 @@ class msStockage
         } else {
             throw new Exception('ObjetID is not numeric');
         }
+    }
+
+/**
+ * Obtenir le fromID de l'objet porteur du doc
+ * @return int fromID
+ */
+    public function getFromID() {
+      if(isset($this->_fromID)) return $this->_fromID;
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if($d=msSQL::sqlUnique("select toID, fromID from objets_data where id='".$this->_objetID."' limit 1")) {
+        $this->_fromID=$d['fromID'];
+        $this->_toID=$d['toID'];
+        return $this->_fromID;
+      }
+      return false;
+    }
+
+/**
+ * Obtenir le toID de l'objet porteur du doc
+ * @return int toID
+ */
+    public function getToID() {
+      if(isset($this->_toID)) return $this->_toID;
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if($d=msSQL::sqlUnique("select toID, fromID from objets_data where id='".$this->_objetID."' limit 1")) {
+        $this->_fromID=$d['fromID'];
+        $this->_toID=$d['toID'];
+        return $this->_toID;
+      }
+      return false;
     }
 
 /**
