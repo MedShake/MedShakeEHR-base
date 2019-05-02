@@ -31,6 +31,13 @@ $debug='';
 $fichier=new msStockage();
 $fichier->setObjetID($match['params']['fichierID']);
 if ($fichier->testDocExist()) {
+
+    //vérification droits
+    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $fichier->getFromID() != $p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
+
     $mimetype=msTools::getmimetype($fichier->getPathToDoc());
     header("Content-type: ".$mimetype);
     if($mimetype == 'text/plain') {
