@@ -52,3 +52,9 @@ if($p['config']['transmissionsPeutCreer'] == 'true') {
   $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
   $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
 }
+
+// Modules
+if (msUser::checkUserIsAdmin()) {
+  $p['page']['modules']=msModules::getInstalledModulesNames();
+  $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
+}

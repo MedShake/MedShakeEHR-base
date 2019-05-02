@@ -1,0 +1,85 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > listing patient / prat : rendre utilisateur
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+<div id="modalRendreUtilisateur" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog  modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold">Rendre utilisateur du logiciel</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
+        <div class="modal-body">
+          <input name="preUserID" type="hidden" value=""/>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_username">Identifiant</label>
+                <input class="form-control" name="p_username" required="required" type="text" value="" autocomplete="off"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_password">Mot de passe</label>
+                <input class="form-control" name="p_password" required="required" type="password" value="" autocomplete="off"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_module">Module</label>
+                <select class="custom-select" name="p_module">
+                  {% for mv in page.modules %}
+                    <option value="{{ mv }}" {% if mv=='base' %} selected="selected{% endif %}" autocomplete="off">{{ mv }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_birthname">Template utilisateur à appliquer</label>
+                <select class="custom-select" name="p_userTemplate" autocomplete="off">
+                    <option selected value="">aucun</option>
+                  {% for tp in page.userTemplates %}
+                    <option value="{{ tp }}">{{ tp }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

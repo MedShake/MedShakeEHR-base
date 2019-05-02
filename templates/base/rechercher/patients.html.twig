@@ -183,4 +183,9 @@ associer patient
 		{% include 'inc-modalLectureCpsVitale.html.twig' %}
 	{% endif %}
 
+	{# modal rendre utilisateur #}
+	{% if user.rank == 'admin' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
+		{% include 'inc-modalRendreUtilisateur.html.twig' %}
+	{% endif %}
+
 {% endblock %}

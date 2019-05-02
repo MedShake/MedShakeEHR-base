@@ -167,6 +167,14 @@ $(document).ready(function() {
     }
   });
 
+  //rendre utilisateur
+  $('body').on("click", "a.rendreUtilisateur", function(e) {
+    e.preventDefault();
+    patientID = $(this).parents('tr').attr('data-patientID');
+    $('#modalRendreUtilisateur').modal('toggle');
+    $('#modalRendreUtilisateur input[name="preUserID"]').val(patientID);
+  });
+
   // bouton de nouvelle transmission
   $('body').on("click", ".newTransmission", function(e) {
     e.preventDefault();
