@@ -41,6 +41,9 @@ if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => $user
     );
+
+    if(isset($_POST['preUserID']) and is_numeric($_POST['preUserID'])) $data['id']=$_POST['preUserID'];
+
     if($id=msSQL::sqlInsert('people', $data)) {
       msUser::setUserNewPassword($id, $_POST['p_password']);
 
@@ -55,6 +58,22 @@ if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
       }
       if (isset($_POST['p_lastname'])) {
           $obj->createNewObjetByTypeName('lastname', $_POST['p_lastname']);
+      }
+
+      // application du template si précisé
+      if(isset($_POST['p_userTemplate']) and !empty($_POST['p_userTemplate'])) {
+        $directory=$homepath.'config/userTemplates/';
+        $fichier=basename($_POST['p_userTemplate']).'.yml';
+        if(is_file($directory.$fichier)) {
+          $dataTp = Spyc::YAMLLoad($directory.$fichier);
+          if(is_array($dataTp) and !empty($dataTp)) {
+            foreach($dataTp as $k=>$v) {
+              if(array_key_exists($k, $p['config'])) {
+                msConfiguration::setUserParameterValue($k, $v, $id);
+              }
+            }
+          }
+        }
       }
     }
 }

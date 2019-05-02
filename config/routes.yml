@@ -179,6 +179,8 @@ configDicomOrthanc: ['GET', '/configuration/orthancInfos/', 'configuration/confi
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
+configUserTemplate: ['GET', '/configuration/user-templates/', 'configuration/configUserTemplate']
+configUserTemplatesEdit: ['GET', '/configuration/user-templates/edit/[*:fichier]/', 'configuration/configUserTemplatesEdit']
 
 # configuration crons
 configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']

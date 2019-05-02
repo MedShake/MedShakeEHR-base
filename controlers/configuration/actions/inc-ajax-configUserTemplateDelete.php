@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,28 +21,27 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Configuration > ajax : suppression d'un user template
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'configUserCreate', //Créer un user
-    'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave', // sauvegarder un template PDF
-    'configUserTemplatesSave' // sauver un template user
-);
-
-if (!in_array($m, $acceptedModes)) {
-  die;
-} else {
-  include('inc-action-'.$m.'.php');
+// si pas de fichier à supprimer
+if (!isset($_POST['file'])) {
+    die;
 }
 
-die();
+$directory=$homepath.'config/userTemplates/';
+$fichier=basename($_POST['file']);
+
+if (is_file($directory.'/'.$fichier)) {
+    if (unlink($directory.'/'.$fichier)) {
+        echo json_encode(array('ok'));
+    } else {
+        header("HTTP/1.0 404 Not Found");
+    }
+} else {
+    header("HTTP/1.0 404 Not Found");
+}

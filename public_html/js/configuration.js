@@ -244,6 +244,28 @@ $(document).ready(function() {
     }
   });
 
+  //delete user template
+  $(".delUserTemplate").on("click", function(e) {
+    e.preventDefault();
+    var file = $(this).attr("data-file");
+    if (confirm("Êtes-vous certain ?")) {
+      $.ajax({
+        url: urlBase + '/configuration/ajax/configUserTemplateDelete/',
+        type: 'post',
+        data: {
+          file: file
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
+  });
+
   //  activation de codemirror pour édition templates
   if ($("#templateEditor").length) {
     var editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {

@@ -170,6 +170,19 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_birthname">Template utilisateur à appliquer</label>
+                <select class="custom-select" name="p_userTemplate" autocomplete="off">
+                    <option selected value="">aucun</option>
+                  {% for tp in page.userTemplates %}
+                    <option value="{{ tp }}">{{ tp }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>

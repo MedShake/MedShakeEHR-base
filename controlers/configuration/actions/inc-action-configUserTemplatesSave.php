@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,28 +21,28 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Config > action : sauver un template utilisateur dans un fichier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-header('Content-Type: application/json');
+$directory=$homepath.'config/userTemplates/';
+$fichier=basename($_POST['fichier'],'.yml');
+$fichier=$fichier.'.yml';
 
-$m=$match['params']['m'];
+$gotoSaveOnly='/configuration/user-templates/edit/'.$fichier.'/';
+$gotoSaveAndEnd='/configuration/user-templates/';
 
-$acceptedModes=array(
-    'configUserCreate', //Créer un user
-    'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave', // sauvegarder un template PDF
-    'configUserTemplatesSave' // sauver un template user
-);
+//construction du répertoire si besoin
+msTools::checkAndBuildTargetDir($directory);
 
-if (!in_array($m, $acceptedModes)) {
-  die;
+file_put_contents($directory.$fichier, $_POST['code']);
+
+if (isset($_POST['saveAndEnd'])) {
+    $goto=$gotoSaveAndEnd;
 } else {
-  include('inc-action-'.$m.'.php');
+    $goto=$gotoSaveOnly;
 }
-
-die();
+msTools::redirection($goto);
