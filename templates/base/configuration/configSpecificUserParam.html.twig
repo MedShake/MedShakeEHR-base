@@ -61,6 +61,12 @@
     {{ page.userData.1 }}
   {% endif %}</h1>
 
+  {% if page.userParams|length < 1 %}
+    <div class="alert alert-info mt-4 mb-3" role="alert">
+      Aucun paramètre spécifique n'est défini pour le moment pour cet utilisateur.
+    </div>
+  {% endif %}
+
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
     <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
     <div class="row mt-3">
@@ -79,6 +85,8 @@
             <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
           </div>
         </div>
+
+
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
           <div class="col-12 mt-4">
@@ -159,13 +167,7 @@
               </tbody>
             </table>
 
-            {{ f.input ({
-              'input' : {
-                'type' : 'submit',
-                'value' : 'Enregistrer',
-                'class' : 'btn btn-primary mt-3'
-              }
-            }) }}
+            <button class="btn btn-primary mt-3" type="submit"><i class="fas fa-save"></i> Enregistrer</button>
           </div>
         </div>
       {% endfor %}
@@ -183,8 +185,8 @@
         <div class="modal-header">
           <h4 class="modal-title font-weight-bold">Nouveau paramètre</h4>
         </div>
-        <div class="modal-body">
           <form id="formNewParam" class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserParamCreate/" method="post">
+           <div class="modal-body">
             <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
             <div class="row">
               <div class="col-md-6">
@@ -218,12 +220,12 @@
                 <input class="form-control" type="text" name="paramValue" autocomplete="off"/>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-              <button type="submit" class="btn btn-primary">Valider</button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Valider</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
