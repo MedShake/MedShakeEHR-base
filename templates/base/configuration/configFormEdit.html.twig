@@ -52,6 +52,11 @@
       dataType: "json",
       success: function(data) {
         $('#formPreview').html(data.htmlFormPreview);
+        {# prévenir les problèmes car le form est inclus entre les balises form pour l'édition #}
+        $('#formPreview').find('input, select, textarea').removeAttr('required');
+        $('#formPreview').find('input, select, textarea').removeAttr('name');
+        $('#formPreview').find('input, select, textarea').removeAttr('id');
+        $('#formPreview').find('input, select, textarea').removeAttr('value');
         $('#basicTemplateCode').val(data.basicTemplateCode);
         $('#sqlGen').val(data.sqlGen);
       },
