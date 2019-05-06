@@ -193,6 +193,8 @@ class msPDF
             $this->_type="cr";
         } elseif ($data['groupe']=="ordo") {
             $this->_type="ordo";
+        } elseif ($data['groupe']=="reglement") {
+            $this->_type="reglement";
         }
         $this->makePDF();
     }
@@ -378,6 +380,10 @@ class msPDF
             //si c'est une ordo LAP
             elseif ($this->_type=='ordoLAP') {
                 $this->_makeBodyForOrdoLAP();
+            }
+            //si c'est un règlement
+            elseif ($this->_type=='reglement') {
+                $this->_makeBodyForReglement();
             }
         }
     }
@@ -613,6 +619,36 @@ class msPDF
             $p['page']['courrier']['printModel']='defaut.html.twig';
         }
     }
+
+
+/**
+ * Construire le corps du PDF pour un règlement
+ * @return void
+ */
+    private function _makeBodyForReglement()
+    {
+        global $p;
+        $courrier = new msCourrier();
+        $courrier->setObjetID($this->_objetID);
+        $p['page']['courrier']=$courrier->getCrData();
+        if($tagsValuesRD = $courrier->getReglementDetailsData()) {
+          $p['page']['courrier'] = $p['page']['courrier'] + $tagsValuesRD;
+        }
+
+        //on déclare le modèle de page
+        // soit il remonte des data de msCourrier (via msModuleDataCourrier)
+        if(isset($p['page']['courrier']['templateCrHeadAndFoot'])) {
+            $this->_pageHeader = $this->makeWithTwig($p['page']['courrier']['templateCrHeadAndFoot']);
+        }
+        // soit on prend le modèle par défaut de la config
+        elseif (!isset($this->_pageHeader)) {
+            $this->_pageHeader = $this->makeWithTwig($p['config']['templateCrHeadAndFoot']);
+        }
+
+        //on génère le body avec twig
+        $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+    }
+
 
 /**
  * Utiliser Twig pour obtenir du HTML à partir des templates et l'injecter dans dompdf

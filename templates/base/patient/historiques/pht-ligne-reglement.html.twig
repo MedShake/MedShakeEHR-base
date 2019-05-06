@@ -56,7 +56,9 @@
             <i class="fa fa-share fa-fw"></i>
          </button>
        {% endif %}
-
+       <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank" title="Imprimer">
+         <i class="fa fa-print fa-fw"></i>
+       </a>
       {% if config.vitaleActiver =='true' %}
         <button class="btn btn-light btn-sm d-none d-lg-inline-block newFse" type="button" title="Établir une FSE">
           <i class="far fa-address-card fa-fw fa-lg text-success"></i>
@@ -106,6 +108,20 @@
                 <i class="far fa-calendar-alt fa-fw text-muted mr-1"></i> Modifier la date
               </a>
           </li>
+          <li role="separator" class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/reglement/{{ cs.id }}/" target="_blank">
+              <i class="fas fa-print fa-fw text-muted mr-1"></i> Forcer impression par défaut
+            </a>
+          </li>
+          {% if user.rank == 'admin' %}
+            <li>
+              <a class="dropdown-item" target="_blank" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configShowTagsForCr/{{ cs.id }}/">
+                <i class="fas fa-code fa-fw text-muted mr-1"></i> Tags utilisables dans templates
+              </a>
+            </li>
+          {% endif %}
+          <li>
           <li role="separator" class="dropdown-divider"></li>
           <li>
               <a href="#" class="dropdown-item suppCs" data-objetID="{{ cs.id }}">

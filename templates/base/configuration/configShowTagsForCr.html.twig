@@ -71,11 +71,11 @@
             </td>
             <td>
               {% if w.value is not iterable %}
-              {{ w.value|nl2br }}
-              {% if page['tagsValues']['val_'~l] %}<br>{{ page['tagsValues']['val_'~l] }}{% endif %}
-              {% if page['tagsValues']['pct_'~l] %}<br>{{ page['tagsValues']['pct_'~l] }}{% endif %}
+                {{ w.value|nl2br }}
+                {% if page['tagsValues']['val_'~l] %}<br>{{ page['tagsValues']['val_'~l] }}{% endif %}
+                {% if page['tagsValues']['pct_'~l] %}<br>{{ page['tagsValues']['pct_'~l] }}{% endif %}
               {% else %}
-                - tableau de valeurs -
+                - tableau de valeurs ({{ w.value|length }}) -
               {% endif %}
             </td>
           </tr>

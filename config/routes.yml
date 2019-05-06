@@ -97,7 +97,7 @@ logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
 historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 
 #pdf
-makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
+makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP|reglement:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 duplicataPDF: ['GET|POST', '/duplicata/[i:objetID]/', 'print/pdfDuplicata']
