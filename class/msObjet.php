@@ -225,6 +225,24 @@ public function getToID()
         where (o.id='".$id."' or o.instance='".$id."') and o.outdated='' and o.deleted='' ", $by);
     }
 
+
+/**
+ * Obtenir certains enfants d'un objet en spécifiant le nom des types concernés
+ * @param  array  $names tableau de types
+ * @param  string $by    clef du tableau à retourner
+ * @return array        tableau name=>
+ */
+    public function getObjetChildsByNames($names=[], $by='name') {
+        $data = new msData;
+        $name2typeID=$data->getTypeIDsFromName($names);
+        if(!empty($name2typeID)) {
+          return msSQL::sql2tabKey("select o.*, t.name
+          from objets_data as o
+          left join data_types as t on o.typeID=t.id
+          where o.typeID in ('".implode(', ', $name2typeID)."') and o.instance='".$this->_ID."' and o.outdated='' and o.deleted='' ", $by);
+        }
+    }
+
 /**
  * Marquer DELETED l'objet ainsi que ses enfants
  * @param  int $id ID de l'objet
