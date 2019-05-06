@@ -26,7 +26,6 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
- * 
  */
 
 class msCourrier
@@ -159,10 +158,7 @@ class msCourrier
         } elseif ($this->_objetData['groupe']=="ordo") {
             $tagsValues=$this->getOrdoData();
         } elseif($this->_objetData['groupe']=="reglement") {
-            $tagsValues=$this->getCrData();
-            if($tagsValuesRD = $this->getReglementDetailsData()) {
-              $tagsValues = $tagsValues + $tagsValuesRD;
-            }
+            $tagsValues=$this->getReglementData();
         }
         return $tagsValues;
     }
@@ -231,6 +227,82 @@ class msCourrier
         if (method_exists($moduleClass, $methodToCall)) {
             $moduleClass::$methodToCall($tabRetour);
         }
+
+        //calcules complémentaires sur les data si le type rencontré l'implique
+        foreach ($tabRetour as $k=>$v) {
+          $methodToCall = "type_".$k."_CompleteData";
+          if (method_exists($moduleClass, $methodToCall)) {
+              $moduleClass::$methodToCall($tabRetour);
+          }
+        }
+        ksort($tabRetour, SORT_REGULAR);
+        return $tabRetour;
+    }
+
+/**
+ * Sortir tous les data d'un examen à partir du $_objetID pour rédaction de compte rendu examen
+ * @return array tableau avec 3 clefs principales au 1er niveau : examenData, grossesseData, patientData
+ */
+    public function getReglementData()
+    {
+        global $p;
+        if (!is_numeric($this->_objetID)) {
+            throw new Exception('ObjetID is not numeric');
+        }
+        if(!isset($this->_objetData)) {
+          $this->_getObjetData();
+        }
+
+        //ajout
+        $tabRetour['date']=$this->_objetData['creationDate'];
+        $tabRetour['objetID']=$this->_objetData['id'];
+        $tabRetour['patientID']=$this->_objetData['toID'];
+        $tabRetour['instance']=$this->_objetData['instance'];
+        if($printModel = $this->getPrintModel($this->_objetData['formValues'])) {
+          $tabRetour['printModel']=$printModel.'.html.twig';
+        } else {
+          $tabRetour['printModel']='facture.html.twig';
+        }
+        $tabRetour['module']=$this->_getModuleOrigine($this->_objetData['formValues']);
+
+        //patient data
+        $tabRetour=$tabRetour+$this->_getPatientData($this->_objetData['toID']);
+
+        //auteur initial data
+        $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['fromID'],'AuteurInitial_');
+
+        //utilisateur qui a effectué la tâche si délégation
+        if($this->_objetData['byID'] > 0) $tabRetour=$tabRetour+$this->_getPsData($this->_objetData['byID'],'DelegueA_');
+
+        //data utilisateur courant
+        if(isset($this->_fromID)) {
+          $tabRetour=$tabRetour+$this->_getPsData($this->_fromID,'UtilisateurActif_');
+        } elseif(isset($p['user']['id'])) {
+          $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
+        }
+
+        //règlement data
+        $reg = new msObjet;
+        if($tabReg = $reg->getObjetAndSons($this->_objetID, 'name')) {
+          foreach($tabReg as $name=>$val) {
+            $tabReg[$name]=$val['value'];
+          }
+          if($tabRegDet = json_decode($tabReg['regleDetailsActes'], TRUE)) {
+            foreach($tabRegDet as $k=>$v) {
+              foreach($v as $k2=>$v2) {
+                $tabRegDet[$k][$k2] = $v2;
+              }
+              $tabReg['regleDetailsActes']=$tabRegDet;
+            }
+          }
+          $tabRetour=$tabRetour + $tabReg;
+        }
+
+
+        ksort($tabRetour, SORT_REGULAR);
+
+        //la class spécifique au module
+        $moduleClass="msMod".ucfirst($tabRetour['module'])."DataCourrier";
 
         //calcules complémentaires sur les data si le type rencontré l'implique
         foreach ($tabRetour as $k=>$v) {
@@ -622,26 +694,6 @@ class msCourrier
         }
         $objetData=new msObjet();
         return $this->_objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
-    }
-
-/**
- * Obtenir les détails des actes d'un règlement
- * @return array détails des actes
- */
-    public function getReglementDetailsData() {
-      $tab = [];
-      $data = new msObjet;
-      $data->setID($this->_objetID);
-      if($data = $data->getObjetChildsByNames(['regleDetailsActes'])) {
-        if($data = json_decode($data['regleDetailsActes']['value'], TRUE)) {
-          foreach($data as $k=>$v) {
-            foreach($v as $k2=>$v2) {
-              $tab['regleDetailsActes'][$k][$k2] = $v2;
-            }
-          }
-        }
-      }
-      return $tab;
     }
 
 }

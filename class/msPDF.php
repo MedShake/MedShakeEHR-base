@@ -30,7 +30,6 @@ use Dompdf\Dompdf;
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
- * 
  */
 
 
@@ -631,10 +630,7 @@ class msPDF
         global $p;
         $courrier = new msCourrier();
         $courrier->setObjetID($this->_objetID);
-        $p['page']['courrier']=$courrier->getCrData();
-        if($tagsValuesRD = $courrier->getReglementDetailsData()) {
-          $p['page']['courrier'] = $p['page']['courrier'] + $tagsValuesRD;
-        }
+        $p['page']['courrier']=$courrier->getReglementData();
 
         //on déclare le modèle de page
         // soit il remonte des data de msCourrier (via msModuleDataCourrier)
