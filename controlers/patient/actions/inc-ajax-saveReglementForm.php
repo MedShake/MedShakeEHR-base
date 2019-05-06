@@ -57,6 +57,11 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     //support
     if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
+
+        //par précaution on supprime le pdf antérieur
+        $doc= new msStockage();
+        $doc->setObjetID($supportID);
+        $doc->deleteDoc();
     } elseif($_POST['acteID']>0) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID']);
     } else {

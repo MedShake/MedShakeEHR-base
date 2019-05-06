@@ -157,6 +157,11 @@ class msCourrier
             $tagsValues=$this->getCrData();
         } elseif ($this->_objetData['groupe']=="ordo") {
             $tagsValues=$this->getOrdoData();
+        } elseif($this->_objetData['groupe']=="reglement") {
+            $tagsValues=$this->getCrData();
+            if($tagsValuesRD = $this->_getReglementDetailsData()) {
+              $tagsValues = $tagsValues + $tagsValuesRD;
+            }
         }
         return $tagsValues;
     }
@@ -616,6 +621,26 @@ class msCourrier
         }
         $objetData=new msObjet();
         return $this->_objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
+    }
+
+/**
+ * Obtenir les détails des actes d'un règlement
+ * @return array détails des actes
+ */
+    private function _getReglementDetailsData() {
+      $tab = [];
+      $data = new msObjet;
+      $data->setID($this->_objetID);
+      if($data = $data->getObjetChildsByNames(['regleDetailsActes'])) {
+        if($data = json_decode($data['regleDetailsActes']['value'], TRUE)) {
+          foreach($data as $k=>$v) {
+            foreach($v as $k2=>$v2) {
+              $tab['regleDetailsActes.'.$k.'.'.$k2] = $v2;
+            }
+          }
+        }
+      }
+      return $tab;
     }
 
 }
