@@ -25,6 +25,7 @@
  * Config : montrer les tags utilisables dans un templates pour un objetID donné
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * 
  */
 
 $debug='';
