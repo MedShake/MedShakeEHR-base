@@ -39,7 +39,7 @@ $(document).ready(function() {
   $('body').on("change", "select[name='mailModeles']", function(e) {
     modeleID = $("select[name='mailModeles'] option:selected").val();
     $.ajax({
-      url: urlBase+'/patient/ajax/extractMailModele/',
+      url: urlBase + '/patient/ajax/extractMailModele/',
       type: 'post',
       data: {
         modeleID: modeleID,
@@ -63,7 +63,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToApicrypt"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/59/59/2:3:59/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/59/59/1:2:3:59/',
       autoFocus: true
     });
   });
@@ -72,7 +72,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailTo"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/5/5/2:3:5/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/5/5/1:2:3:5/',
       autoFocus: true
     });
   });
@@ -81,9 +81,9 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToEcofaxName"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/2:3/2:3:58/',
-      select: function( event, ui ) {
-        $( 'input[name="mailToEcofaxNumber"]' ).val( ui.item.d58 );
+      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/58/1:2:3/1:2:3:58/',
+      select: function(event, ui) {
+        $('input[name="mailToEcofaxNumber"]').val(ui.item.d58);
       }
     });
   });
@@ -92,9 +92,16 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToEcofaxNumber"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase+'/ajax/getAutocompleteLinkType/data_types/58/58/2:3:58/',
-      select: function( event, ui ) {
-        $( 'input[name="mailToEcofaxName"]' ).val( ui.item.d2 + ' ' + ui.item.d3 );
+      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/58/58/1:2:3:58/',
+      select: function(event, ui) {
+        if (ui.item.d1 && ui.item.d2) {
+          $('input[name="mailToEcofaxName"]').val(ui.item.d2 + ' (' + ui.item.d1 + ') ' + ui.item.d3);
+        } else if (ui.item.d1) {
+          $('input[name="mailToEcofaxName"]').val(ui.item.d1 + ' ' + ui.item.d3);
+        } else {
+          $('input[name="mailToEcofaxName"]').val(ui.item.d2 + ' ' + ui.item.d3);
+        }
+
       }
     });
   });
