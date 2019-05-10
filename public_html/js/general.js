@@ -104,6 +104,18 @@ $(document).ready(function() {
     $div.data("DateTimePicker").toggle();
   });
 
+  /// copier vers au clic
+  $("body").on("click", '.copyValueTo', function() {
+    if ($(this).is("[data-copyvalto]") && $(this).is("[data-copyval]")) {
+      $($(this).attr('data-copyvalto')).val($(this).attr('data-copyval'));
+      $($(this).attr('data-copyvalto')).trigger('change, keyup');
+    }
+    if ($(this).is("[data-copylabto]") && $(this).is("[data-copylab]")) {
+      $($(this).attr('data-copylabto')).val($(this).attr('data-copylab'));
+      $($(this).attr('data-copylabto')).trigger('change, keyup');
+    }
+  });
+
   // age affiché en label de l'input date de naissance
   $(".datepick[data-typeid='8']").on("dp.change", function(e) {
     bd = moment(e.date);

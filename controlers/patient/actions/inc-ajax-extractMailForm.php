@@ -43,11 +43,18 @@ if ($_POST['mailType']=='ns') {
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
     $catModelesMails='catModelesMailsToPatient';
+    //les correspondants
+    $p['page']['correspondants']=$to->getRelationsWithPros();
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['mailFrom']=$p['config']['apicryptAdresse'];
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
     $catModelesMails='catModelesMailsToApicrypt';
+    //les correspondants et liens familiaux
+    $p['page']['correspondants']=$to->getRelationsWithPros(['emailApicrypt'], ['emailApicrypt']);
+} elseif ($_POST['mailType']=='ecofax') {
+    $catModelesMails=false;
+    $p['page']['correspondants']=$to->getRelationsWithPros(['faxPro'], ['faxPro']);
 } else {
     $catModelesMails=false;
 }
