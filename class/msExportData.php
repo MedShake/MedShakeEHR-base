@@ -290,7 +290,14 @@ class msExportData
  * @return array objetID
  */
     private function _getAllObjetsID() {
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."')  ".$this->_formatDateParameters()." ");
+      global $p;
+      if(!empty($p['config']['statsExclusionPatients'])) {
+        $statsExclusionPatients=msSQL::cleanArray(explode(',',$p['config']['statsExclusionPatients']));
+        $toIdToExclude = " and toID not in ('".implode("', '", $statsExclusionPatients)."') ";
+      } else {
+        $toIdToExclude = '';
+      }
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."') ".$toIdToExclude." ".$this->_formatDateParameters()." ");
     }
 
 /**
