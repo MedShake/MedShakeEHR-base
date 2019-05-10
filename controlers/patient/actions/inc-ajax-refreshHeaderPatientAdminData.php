@@ -31,6 +31,13 @@ $template="inc-ajax-patientAdminData";
 //le patient
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
+
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
