@@ -135,8 +135,8 @@ $docAsSigner = new msSignatureNumerique;
 $docAsSigner->setFromID($p['user']['id']);
 $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
-//les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
+//les correspondants
+$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
 
 // Transmissions
 if($p['config']['transmissionsPeutCreer'] == 'true') {
