@@ -254,27 +254,49 @@ class msPeople
 
 /**
  * Obtenir les pros en relation avec ce patient
- * @return array array des pros en relation
+ * @param  array  $dataComp         data types sup à extraire
+ * @param  array  $dataCompNotEmpty data types qui ne doivent pas être null (filtre)
+ * @return array                   tableau des pros
  */
-    public function getRelationsWithPros()
+    public function getRelationsWithPros($dataComp=[], $dataCompNotEmpty=[])
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
 
         $data = new msData();
-        $name2typeID = $data->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname']);
+        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname'], $dataComp));
+
+        $champsSql=[];
+        $tablesSql=[];
+        $groupBy=[];
+        $notEmpty=[];
+        if(!empty($dataComp)) {
+          $i=1;
+          foreach($dataComp as $k=>$v) {
+            if(key_exists($v,$name2typeID)) {
+              $champsSql[] = ', co'.$i.'.value as '.$v;
+              $tablesSql[] = " left join objets_data as co".$i." on co".$i.".toID=o.value and co".$i.".typeID='".$name2typeID[$v]."' and co".$i.".outdated='' and co".$i.".deleted='' ";
+              $groupBy[]= ', co'.$i.'.id';
+
+              if(in_array($v,$dataCompNotEmpty)) {
+                $notEmpty[]=' and co'.$i.'.value is not null';
+              }
+            }
+            $i++;
+          }
+        }
 
         $relations = [];
-        if($relations =  msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+        if($relations =  msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom ".implode(" ", $champsSql)."
         from objets_data as o
         inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
         left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
         left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
         left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-        left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted=''
-        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-        group by o.value, c.id, bn.id, n.id, p.id, t.id
+        left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted='' ".implode(" ", $tablesSql)."
+        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
+        group by o.value, c.id, bn.id, n.id, p.id, t.id".implode("", $groupBy)."
         order by typeRelation = 'MT' desc, nom asc")) {
 
           $typeID = $data->getTypeIDFromName('relationPatientPraticien');
