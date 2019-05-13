@@ -56,11 +56,6 @@ $(document).ready(function() {
     }, 500);
   });
 
-  //autogrow sur la ligne d'ordo
-  $('#newOrdo').on("keyup", "textarea", function(e) {
-    autoGrowOrdo(this);
-  });
-
 
   autoGrowOrdo();
 });
@@ -92,11 +87,8 @@ function ajouterLigneOrdo(selecteur) {
 }
 
 //auto_grow
-
 function autoGrowOrdo() {
-  $("#ordoComposer textarea").each(function(index) {
-    $(this).css("height", "10px");
-    $(this).css("overflow", "hidden");
-    auto_grow(this);
+  $("#ordoComposer textarea").each(function() {
+    autosize(this);
   });
 }
