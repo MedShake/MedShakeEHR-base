@@ -27,14 +27,12 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-// liste des formulaires fixes au 1er affichage dossier patient pour JS
-$p['page']['listeForms']=array('baseATCD','baseSynthese');
-
 // le formulaire latéral ATCD
 $form_baseATCD = new msForm();
 $form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
 $form_baseATCD->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
+$p['page']['formJavascript']['baseATCD']=$form_baseATCD->getFormJavascript();
 
 // si LAP activé : allergie et atcd structurés
 if($p['config']['utiliserLap'] == 'true') {
@@ -67,6 +65,8 @@ $form_baseSynthese = new msForm();
 $form_baseSynthese->setFormIDbyName($p['page']['formName_baseSynthese']='baseSynthese');
 $form_baseSynthese->getPrevaluesForPatient($p['page']['patient']['id']);
 $p['page']['formData_baseSynthese']=$form_baseSynthese->getForm();
+$p['page']['formJavascript']['baseSynthese']=$form_baseSynthese->getFormJavascript();
+
 
 $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
