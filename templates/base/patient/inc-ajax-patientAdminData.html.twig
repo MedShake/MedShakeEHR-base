@@ -45,11 +45,13 @@
     {% endif %}
     <small>
       {# birthdate #}
-      {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
-        <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
+      {%  if page['patient']['administrativeDatas']['birthdate']['value'] is not empty %}
+        {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
+          <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
+        {% endif %}
+        {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        -
       {% endif %}
-      {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
-      -
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
         {# date décès #}
         {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
@@ -60,7 +62,12 @@
         <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
 
       {% endif %}
-       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}<i class="fas fa-venus text-muted" title="&#9792;"></i>{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}<i class="fas fa-mars text-muted" title="&#9794;"></i>{% endif %}
+       -
+      {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}
+        <i class="fas fa-venus text-muted" title="&#9792;"></i>
+      {% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}
+        <i class="fas fa-mars text-muted" title="&#9794;"></i>
+      {% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
@@ -124,11 +131,63 @@
           <span class="fa fa-link" aria-hidden="true"></span>
         </button>
         {% for v in page.correspondants %}
+        <div class="btn-group">
           <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
 
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
-            {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm text-secondary"></i></sup>{% endif %}
+            {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm"></i></sup>{% endif %}
           </a>
+          <button type="button" class="btn btn-sm btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-header">Téléphones / fax pros</div>
+            {% if v.telPro %}
+              <div class="dropdown-item">
+                <i class="fas fa-phone fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.telPro }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.telPro2 %}
+              <div class="dropdown-item">
+                <i class="fas fa-phone fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.telPro2 }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.mobilePhonePro %}
+              <div class="dropdown-item">
+                <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.mobilePhonePro }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.faxPro %}
+              <div class="dropdown-item">
+                <i class="fas fa-fax fa-fw text-muted mr-1"></i>
+                {{ v.faxPro }}
+              </div>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-header">Emails pros</div>
+            {% if v.profesionnalEmail %}
+              <div class="dropdown-item">
+                <i class="fas fa-at fa-fw text-muted mr-1"></i>
+                {{ v.profesionnalEmail }}
+              </div>
+            {% endif %}
+            {% if v.emailApicrypt %}
+              <div class="dropdown-item">
+                <i class="fas fa-lock fa-fw text-muted mr-1"></i>
+                {{ v.emailApicrypt }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
         {% endfor %}
       </div>
     {% endif %}
