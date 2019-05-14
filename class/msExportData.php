@@ -281,7 +281,7 @@ class msExportData
       return $this->_tabCorrespondances=array_merge(
         msTools::getPrefixKeyArray($corrPatient, 'patient_'),
         msTools::getPrefixKeyArray($corrPrat, 'praticien_'),
-        msTools::getPrefixKeyArray($corrForm, 'data_'),
+        msTools::getPrefixKeyArray($corrForm, 'data_')
       );
     }
 
