@@ -173,5 +173,10 @@ $p['page']['thanks'][
   'description'=>'Font Awesome, the web\'s most popular icon set and toolkit',
   'url'=>'https://fontawesome.com/'
 );
+$p['page']['thanks'][
+  'Autosize']=array(
+  'description'=>'A small, stand-alone script to automatically adjust textarea height',
+  'url'=>'http://www.jacklmoore.com/autosize/'
+);
 
 uksort($p['page']['thanks'], 'strcasecmp');
