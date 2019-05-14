@@ -81,18 +81,29 @@ $msehrJsonData=array(
   )
 );
 
-$data=array(
-  'formFields'=>array(
-    'ips'=>$ips,
-    'numero_rpps'=>$pratData['rpps'],
-    'medecin_traitant_declare'=>$medecin_traitant_declare,
-    'prenom_1180'=>$prenom_1180,
-    'nom_1180'=>$nom_1180,
-    'msehrParams'=> json_encode($msehrJsonData)
-  ),
-  'actes'=>$actes,
-  'jsonMsehrParams'=>$msehrJsonData
-);
+if($_GET['mode'] == "simple") {
+  $data=array(
+    'formFields'=>[
+        'msehrParams'=> json_encode($msehrJsonData),
+        'numero_rpps'=>$pratData['rpps'],
+    ],
+    'actes'=>$actes,
+    'jsonMsehrParams'=>$msehrJsonData
+  );
+} else {
+  $data=array(
+    'formFields'=>array(
+      'ips'=>$ips,
+      'numero_rpps'=>$pratData['rpps'],
+      'medecin_traitant_declare'=>$medecin_traitant_declare,
+      'prenom_1180'=>$prenom_1180,
+      'nom_1180'=>$nom_1180,
+      'msehrParams'=> json_encode($msehrJsonData)
+    ),
+    'actes'=>$actes,
+    'jsonMsehrParams'=>$msehrJsonData
+  );
+}
 
 header('Content-Type: application/json');
 exit(json_encode($data));

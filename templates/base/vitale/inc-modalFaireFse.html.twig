@@ -38,47 +38,48 @@
         <form id="modalFaireFseStartForm" class="card card-body bg-light mb-3">
           <input type="hidden" class="form-control" name="numero_rpps">
           <input type="hidden" class="form-control" name="msehrParams">
-
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="contexte_facturation">Contexte de facturation</label>
-              <select name='contexte_facturation' class="custom-select custom-select-sm">
-                <option value="ML">Maladie</option>
-                <option value="MT">Matérnité</option>
-                <option value="AT">Accident du travail</option>
-                <option value="SG">Soins médicaux gratuit</option>
-              </select>
+          <div id="fseRetirerSiModeSimple">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="contexte_facturation">Contexte de facturation</label>
+                <select name='contexte_facturation' class="custom-select custom-select-sm">
+                  <option value="ML">Maladie</option>
+                  <option value="MT">Matérnité</option>
+                  <option value="AT">Accident du travail</option>
+                  <option value="SG">Soins médicaux gratuit</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="ips">Parcours de soins</label>
-              <select name='ips' class="custom-select custom-select-sm">
-                <option value="N">Nouveau médécin traitant</option>
-                <option value="T">Je suis le médecin traitant</option>
-                <option value="O">Orienté par le médecin traitant</option>
-                <option value="M">Orienté par autre que le médecin traitant</option>
-                <option value="S">Hors Parcours de soins</option>
-                <option value="D">Accès direct spécifique</option>
-                <option value="R">Médecin traitant remplacé</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="ips">Parcours de soins</label>
+                <select name='ips' class="custom-select custom-select-sm">
+                  <option value="N">Nouveau médécin traitant</option>
+                  <option value="T">Je suis le médecin traitant</option>
+                  <option value="O">Orienté par le médecin traitant</option>
+                  <option value="M">Orienté par autre que le médecin traitant</option>
+                  <option value="S">Hors Parcours de soins</option>
+                  <option value="D">Accès direct spécifique</option>
+                  <option value="R">Médecin traitant remplacé</option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label for="medecin_traitant_declare">Médecin traitant déclaré ?</label>
+                <select name='medecin_traitant_declare' class="custom-select custom-select-sm">
+                  <option value="true">Oui</option>
+                  <option value="false">Non</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group col">
-              <label for="medecin_traitant_declare">Médecin traitant déclaré ?</label>
-              <select name='medecin_traitant_declare' class="custom-select custom-select-sm">
-                <option value="true">Oui</option>
-                <option value="false">Non</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="prenom_1180">Prénom du médecin traitant déclaré</label>
-              <input type="text" class="form-control form-control-sm" name="prenom_1180">
-            </div>
-            <div class="form-group col">
-              <label for="nom_1180">Nom du médecin traitant déclaré</label>
-              <input type="text" class="form-control form-control-sm" name="nom_1180">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="prenom_1180">Prénom du médecin traitant déclaré</label>
+                <input type="text" class="form-control form-control-sm" name="prenom_1180">
+              </div>
+              <div class="form-group col">
+                <label for="nom_1180">Nom du médecin traitant déclaré</label>
+                <input type="text" class="form-control form-control-sm" name="nom_1180">
+              </div>
             </div>
           </div>
         </form>

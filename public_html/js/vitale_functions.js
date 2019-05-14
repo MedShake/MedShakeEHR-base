@@ -37,11 +37,13 @@ var originalModalBody;
 function getFseData(el) {
   originalModalBody = $('#modalFaireFse div.modal-body').html();
   reglementObjetID = el.closest('tr').attr('data-objetID');
+  mode = el.attr('data-mode');
   $.ajax({
     url: urlBase + '/patient/ajax/getFseData/',
     type: 'get',
     data: {
       objetID: reglementObjetID,
+      mode: mode
     },
     dataType: "json",
     success: function(data) {
@@ -51,6 +53,14 @@ function getFseData(el) {
       $.each(data.formFields, function(key, value) {
         $('#modalFaireFseStartForm [name="' + key + '"]').val(value);
       });
+
+      // si mode simple
+      if(mode == 'simple') {
+        $('#fseRetirerSiModeSimple').html('');
+        doFse(el);
+        return;
+      }
+
       // présenter les actes
       html = '<table class="table table-sm text-right">';
       html += '<thead class="thead-light"><tr> \

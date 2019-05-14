@@ -60,7 +60,7 @@
          <i class="fa fa-print fa-fw"></i>
        </a>
       {% if config.vitaleActiver =='true' %}
-        <button class="btn btn-light btn-sm d-none d-lg-inline-block newFse" type="button" title="Établir une FSE">
+        <button class="btn btn-light btn-sm d-none d-lg-inline-block newFse" data-mode="{{ config.vitaleMode }}" data-vitaleservice="{{ config.vitaleService }}" type="button" title="Établir une FSE">
           <i class="far fa-address-card fa-fw fa-lg text-success"></i>
         </button>
       {% endif %}

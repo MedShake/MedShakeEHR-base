@@ -56,8 +56,8 @@ if(isset($dataPaiem['regleFseData'])) {
   }
 
   // montant total
-  $data['totalFSE'] = $dataregFse['montant_total_facture'];
-  $data['totalEHR'] = $dataPaiem['regleFacture']['value'];
+  $data['totalFSE'] = (float)$dataregFse['montant_total_facture'];
+  $data['totalEHR'] = (float)$dataPaiem['regleFacture']['value'];
   if(($data['totalFSE'] - $data['totalEHR']) != 0) {
     $data['totalError']=true;
   } else {
@@ -65,8 +65,8 @@ if(isset($dataPaiem['regleFseData'])) {
   }
 
   // à payer :
-  $data['aPayerFSE'] = $dataregFse['montant_part_assure'];
-  $data['aPayerEHR'] = $dataPaiem['regleFacture']['value']-$dataPaiem['regleTiersPayeur']['value'];
+  $data['aPayerFSE'] = (float)$dataregFse['montant_part_assure'];
+  $data['aPayerEHR'] = (float)$dataPaiem['regleFacture']['value']-(float)$dataPaiem['regleTiersPayeur']['value'];
   if(($data['aPayerFSE'] - $data['aPayerEHR']) != 0) {
     $data['aPayerError']=true;
   } else {

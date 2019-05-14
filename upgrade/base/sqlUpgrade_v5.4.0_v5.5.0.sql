@@ -1,7 +1,10 @@
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.5.0' WHERE `name`='base' and `groupe`='module';
 
--- -- Modification types pour autosize
+-- Mode vitale
+INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple');
+
+-- Modification types pour autosize
 UPDATE `data_types` SET `formType` = 'textarea' WHERE `name` = 'job';
 UPDATE `data_types` SET `formType` = 'textarea' WHERE `name` = 'toxiques';
 
