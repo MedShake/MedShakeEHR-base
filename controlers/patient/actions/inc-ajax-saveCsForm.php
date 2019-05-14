@@ -111,17 +111,27 @@ if ($validation === false) {
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
     $p['cs']=$patient->getHistoriqueObjet($supportID);
-    $datCrea = new DateTime($p['cs']['creationDate']);
+    if(isset($p['cs']['creationDate'])) {
+      $datCrea = new DateTime($p['cs']['creationDate']);
+      $html = new msGetHtml;
+      $html->set_template('pht-ligne-typecs');
+      $html=$html->genererHtml();
 
-    $html = new msGetHtml;
-    $html->set_template('pht-ligne-typecs');
-    $html=$html->genererHtml();
+      $tabReturn = [
+        'statut'=>$finalStatut,
+        'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
+        'html'=>$html,
+      ];
+
+    } else {
+      $tabReturn = [
+        'statut'=>$finalStatut,
+        'today'=>'non',
+        'html'=>'',
+      ];
+    }
 
     header('Content-Type: application/json');
-    exit(json_encode([
-      'statut'=>$finalStatut,
-      'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
-      'html'=>$html,
-    ]));
+    exit(json_encode($tabReturn));
 
 }
