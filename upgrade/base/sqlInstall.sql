@@ -356,7 +356,7 @@ INSERT IGNORE INTO `actes` (`id`, `cat`, `label`, `shortLabel`, `details`, `flag
 (2, 1, 'Consultation de base CMU', 'Cs CMU', 'CS:\n  pourcents: 100\n  depassement: 0 \nMCS:\n  pourcents: 100\n  depassement: 0\nMPC:\n  pourcents: 100\n  depassement: 0', 0, 1, 1, 0, '2018-01-01 00:00:00');
 
 INSERT INTO `actes_base` (`id`, `code`, `activite`, `phase`, `label`, `type`, `dataYaml`, `tarifUnit`, `fromID`, `creationDate`) VALUES
-(1, 'Consultation libre', 1, 0, 'Consultation libre exemple', 'Libre', 'tarifBase: 50', 'euro', 1, '2018-11-29 13:22:22');
+(1, 'Consult', 1, 0, 'Consultation libre exemple', 'Libre', 'tarifBase: 50', 'euro', 1, '2018-11-29 13:22:22');
 
 INSERT IGNORE INTO `actes_cat` (`id`, `name`, `label`, `description`, `module`, `fromID`, `creationDate`, `displayOrder`) VALUES
 (1, 'catConsult', 'Consultations', '', 'base', 1, '2018-01-01 00:00:00', 1);
@@ -545,8 +545,7 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (539, 'typecs', 'csAtcdStrucDeclaration', NULL, 'Ajout d\'antécédent', 'support parent pour déclaration d\'antécédent structuré', NULL, NULL, '', 'atcdStrucDeclaration', 'base', 70, 1, '2018-01-01 00:00:00', 84600, 1),
 (540, 'typecs', 'csAldDeclaration', NULL, 'Déclaration ALD', 'support parent pour déclaration ALD', NULL, NULL, '', 'aldDeclaration', 'base', 70, 1, '2018-01-01 00:00:00', 84600, 1),
 (541, 'relation', 'allergieLibelleTheriaque', '', 'Libelle Thériaque de l\'allergie', 'libelle Thériaque de l\'allergie', '', '', 'text', '', 'base', 71, 1, '2018-01-01 00:00:00', 3600, 0),
-(542, 'relation', 'allergieCodeTheriaque', '', 'Code Thériaque de l\'allergie', 'codee Thériaque de l\'allergie', '', '', 'text', '', 'base', 71, 1, '2018-01-01 00:00:00', 3600, 0),
-(542, 'ordo', 'lapMedicamentEstPrescriptibleEnDC', '', 'Médicament prescriptible en DC', 'médicament prescriptible en DC', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
+(542, 'relation', 'allergieCodeTheriaque', '', 'Code Thériaque de l\'allergie', 'code Thériaque de l\'allergie', '', '', 'text', '', 'base', 71, 1, '2018-01-01 00:00:00', 3600, 0),
 (543, 'ordo', 'lapMedicamentDC', '', 'DC du médicament', 'DC du médicament', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
 (544, 'ordo', 'lapMedicamentCodeATC', '', 'Code ATC du médicament', 'code ATC du médicament', '', '', '', '', 'base', 86, 1, '2018-01-01 00:00:00', 3600, 1),
 (545, 'ordo', 'lapMedicamentPresentationCodeTheriaque', '', 'Code Thériaque de la présentation', 'code Thériaque de la présentation (a priori le CIP7)', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1),
@@ -570,7 +569,8 @@ INSERT IGNORE INTO `data_types` (`id`, `groupe`, `name`, `placeholder`, `label`,
 (563, 'medical', 'taSystolique', '', 'TAS', 'tension artérielle systolique en mm Hg', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:48', 60, 1),
 (564, 'medical', 'taDiastolique', '', 'TAD', 'tension artérielle diastolique en mm Hg', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:54', 60, 1),
 (565, 'medical', 'freqCardiaque', '', 'FC', 'fréquence cardiaque en bpm', '', '', 'text', '', 'base', 28, 1, '2018-05-14 13:41:42', 60, 1),
-(565, 'medical', 'spO2', '', 'SpO2', 'saturation en oxygène', '', '', 'text', '', 'base', 28, 1, '2018-05-15 10:08:20', 60, 1);
+(566, 'medical', 'spO2', '', 'SpO2', 'saturation en oxygène', '', '', 'text', '', 'base', 28, 1, '2018-05-15 10:08:20', 60, 1),
+(567, 'ordo', 'lapMedicamentEstPrescriptibleEnDC', '', 'Médicament prescriptible en DC', 'médicament prescriptible en DC', '', '', '', '', 'base', 75, 1, '2018-01-01 00:00:00', 3600, 1);
 
 INSERT INTO `forms` (`id`, `module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
 (1, 'base', 'baseNewPatient', 'Formulaire nouveau patient', 'formulaire d\'enregistrement d\'un nouveau patient', 'data_types', 'admin', 'post', '/patient/register/', 1, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - birthname,required,autocomplete,data-acTypeID=lastname:birthname 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,required,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n        - birthdate,class=pick-year                		#8    Date de naissance\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\n        - nss                                      		#180  Numéro de sécu\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    n°\n        - street,autocomplete,data-acTypeID=street:rueAdressePro 		#11   Voie\n        - postalCodePerso                          		#13   Code postal\n        - city,autocomplete,data-acTypeID=city:villeAdressePro 		#12   Ville\n        - deathdate                                		#516  Date de décès\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=5                             		#21   Notes', NULL, '', NULL, NULL),
