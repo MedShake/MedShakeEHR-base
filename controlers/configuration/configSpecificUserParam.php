@@ -38,7 +38,7 @@ $template='configSpecificUserParam';
 $p['page']['userID']=$match['params']['userID'];
 $prat=new msPeople();
 $prat->setToID($p['page']['userID']);
-$p['page']['userData']=$prat->getSimpleAdminDatas();
+$p['page']['userData']=$prat->getSimpleAdminDatasByName();
 $module=$prat->getModule();
 
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {

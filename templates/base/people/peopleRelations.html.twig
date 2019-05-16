@@ -28,13 +28,13 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ page.patient.3 }}
-      {% if page.patient.2 and page.patient.1 %}
-        {{ page.patient.2 }} <small>(né{% if page.patient.14 == 'F' %}e{% endif %} {{ page.patient.1 }})</small>
-      {% elseif page.patient.2 %}
-        {{ page.patient.2 }}
+{% block title %}{{ page.patient.firstname }}
+      {% if page.patient.lastname and page.patient.birthname %}
+        {{ page.patient.lastname }} (né{% if page.patient.administrativeGenderCode == 'F' %}e{% endif %} {{ page.patient.birthname }})
+      {% elseif page.patient.lastname %}
+        {{ page.patient.lastname }}
       {% else %}
-        {{ page.patient.1 }}
+        {{ page.patient.birthname }}
       {% endif %} : relations - MedShakeEHR{% endblock %}
 
 {% block head %}
@@ -45,13 +45,13 @@
 {% block body %}
 
 <h1 id="identitePatient" data-patientID="{{ page.patient.id }}">
-Relations du patient  {{ page.patient.3 }}
-      {% if page.patient.2 and page.patient.1 %}
-        {{ page.patient.2 }} <small>(né{% if page.patient.14 == 'F' %}e{% endif %} {{ page.patient.1 }})</small>
-      {% elseif page.patient.2 %}
-        {{ page.patient.2 }}
+Relations du patient  {{ page.patient.firstname }}
+      {% if page.patient.lastname and page.patient.birthname %}
+        {{ page.patient.lastname }} <small>(né{% if page.patient.administrativeGenderCode == 'F' %}e{% endif %} {{ page.patient.birthname }})</small>
+      {% elseif page.patient.lastname %}
+        {{ page.patient.lastname }}
       {% else %}
-        {{ page.patient.1 }}
+        {{ page.patient.birthname }}
       {% endif %}
       <small>#{{ page.patient.id }}</small>
 </h1>

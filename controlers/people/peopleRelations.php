@@ -33,7 +33,7 @@ $template="peopleRelations";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
+$p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
 
 //sortir les choix de relations patient<->prat

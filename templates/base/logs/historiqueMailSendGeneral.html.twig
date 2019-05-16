@@ -95,13 +95,13 @@
                           <span class="fa fa-folder-open" aria-hidden="true"></span>
                         </a>
                       </div>
-                      {{ v.patient.3 }}
-                      {% if v.patient.1 and v.patient.2 %}
-                        {{ v.patient.2|e }} ({{ v.patient.1|e }})
-                      {% elseif v.patient.2 %}
-                        {{ v.patient.2 }}
+                      {{ v.patient.firstname }}
+                      {% if v.patient.birthname and v.patient.lastname %}
+                        {{ v.patient.lastname|e }} ({{ v.patient.birthname|e }})
+                      {% elseif v.patient.lastname %}
+                        {{ v.patient.lastname }}
                       {% else %}
-                        {{ v.patient.1 }}
+                        {{ v.patient.birthname }}
                       {% endif %}
                     </td>
 

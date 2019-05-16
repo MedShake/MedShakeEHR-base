@@ -47,18 +47,18 @@
     <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options</a>
     </li>
-    <li class="breadcrumb-item active">Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
-      {{ page.userData.2 }}
+    <li class="breadcrumb-item active">Paramètres spécifiques à {{ page.userData.firstname }} {% if page.userData.lastname %}
+      {{ page.userData.lastname }}
     {% else %}
-      {{ page.userData.1 }}
+      {{ page.userData.birthname }}
     {% endif %}
     </li>
   </ol>
 
-  <h1>Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
-    {{ page.userData.2 }}
+  <h1>Paramètres spécifiques à {{ page.userData.firstname }} {% if page.userData.lastname %}
+    {{ page.userData.lastname }}
   {% else %}
-    {{ page.userData.1 }}
+    {{ page.userData.birthname }}
   {% endif %}</h1>
 
   {% if page.userParams|length < 1 %}

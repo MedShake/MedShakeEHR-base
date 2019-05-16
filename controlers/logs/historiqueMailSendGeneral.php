@@ -71,7 +71,7 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
         if(isset($v[$name2typeID['mailTo']]['toID'])){
           $patient = new msPeople();
           $patient->setToID($v[$name2typeID['mailTo']]['toID']);
-          $patientData = $patient->getSimpleAdminDatas();
+          $patientData = $patient->getSimpleAdminDatasByName();
         } else {
           $patientData = null;
         }

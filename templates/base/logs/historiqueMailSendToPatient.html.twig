@@ -28,13 +28,13 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}Historique des mails envoyés à {{ page.patientData.3 }}
-  {% if page.patientData.1 and page.patientData.2 %}
-    {{ page.patientData.2|e }} ({{ page.patientData.1|e }})
-  {% elseif page.patientData.2 %}
-    {{ page.patientData.2|e }}
+{% block title %}Historique des mails envoyés à {{ page.patientData.firstname }}
+  {% if page.patientData.birthname and page.patientData.lastname %}
+    {{ page.patientData.lastname|e }} ({{ page.patientData.birthname|e }})
+  {% elseif page.patientData.lastname %}
+    {{ page.patientData.lastname|e }}
   {% else %}
-    {{ page.patientData.1|e }}
+    {{ page.patientData.birthname|e }}
   {% endif %}
 {% endblock %}
 
@@ -43,14 +43,14 @@
 {% endblock %}
 
 {% block body %}
-<h1>Historique des mails envoyés à {{ page.patientData.3 }}
-{% if page.patientData.1 and page.patientData.2 %}
-    {{ page.patientData.2|e }} ({{ page.patientData.1|e }})
-  {% elseif page.patientData.2 %}
-    {{ page.patientData.2|e }}
+<h1>Historique des mails envoyés à {{ page.patientData.firstname }}
+{% if page.patientData.birthname and page.patientData.lastname %}
+    {{ page.patientData.lastname|e }} ({{ page.patientData.birthname|e }})
+  {% elseif page.patientData.lastname %}
+    {{ page.patientData.lastname|e }}
   {% else %}
-    {{ page.patientData.1|e }}
-  {% endif %} <small>({{ page.patientData.4 }})</small></h1>
+    {{ page.patientData.birthname|e }}
+  {% endif %} <small>({{ page.patientData.personalEmail }})</small></h1>
 <p>
 <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientData.id }}/"><i class="fas fa-folder-open"></i> Retour dossier patient</a>
 </p>
@@ -75,7 +75,7 @@
                   {% elseif v.Status in ["spam" ] %}class="table-warning"{% endif %}>
                     <td>{{ v.ArrivedAt|date("Y-m-d H:i:s") }}</td>
                     <td>{{ v.CampaignData.FromEmail|e }}</td>
-                    <td>{{ page.patientData.4 }}</td>
+                    <td>{{ page.patientData.personalEmail }}</td>
                     <td>{{ v.CampaignData.Subject|e }}</td>
                     <td>{{ v.Status|e }}</td>
                 </tr>
