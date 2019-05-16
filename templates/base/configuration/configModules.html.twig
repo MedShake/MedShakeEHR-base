@@ -81,39 +81,35 @@
               <td>{{ m.name }}</td>
               <td>{{ m.version }}</td>
               <td class="text-right">
-                {% if m.name != 'base' %}
-                  <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}"><i class="fas fa-search-plus"></i></button>
-                {% endif %}
+                <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}"><i class="fas fa-search-plus"></i></button>
               </td>
             </tr>
-            {% if m.name != 'base' %}
-              <tr class="collapse" id="{{ m.name }}">
-                <td colspan="3" class="p-3 bg-white">
-                  <h5>Paramètres de configuration spécifiques au module {{ m.name }}</h5>
-                  {% if page.modulesConfig[m.name]|length > 0 %}
-                  <table class="table table-sm small">
-                    <thead class="thead-light">
-                      <th>nom</th>
-                      <th>catégorie</th>
-                      <th>valeur</th>
-                    </thead>
-                    <tbody>
-                      {% for c in page.modulesConfig[m.name] %}
-                      <tr>
-                        <td>{{ c.name }}</td>
-                        <td>{{ c.cat }}</td>
-                        <td>{{ c.value }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                  {% else %}
-                    <p>Pas de paramètres spécifiques.</p>
-                  {% endif %}
-                  <a class="btn btn-sm btn-success" data-module="m.name" href="/configuration/modules/export/{{ m.name }}/" role="button">Exporter le module en SQL</a>
-                </td>
-              </tr>
-            {% endif %}
+            <tr class="collapse" id="{{ m.name }}">
+              <td colspan="3" class="p-3 bg-white">
+                <h5>Paramètres de configuration spécifiques au module {{ m.name }}</h5>
+                {% if page.modulesConfig[m.name]|length > 0 %}
+                <table class="table table-sm small">
+                  <thead class="thead-light">
+                    <th>nom</th>
+                    <th>catégorie</th>
+                    <th>valeur</th>
+                  </thead>
+                  <tbody>
+                    {% for c in page.modulesConfig[m.name] %}
+                    <tr>
+                      <td>{{ c.name }}</td>
+                      <td>{{ c.cat }}</td>
+                      <td>{{ c.value }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+                  <p>Pas de paramètres spécifiques.</p>
+                {% endif %}
+                <a class="btn btn-sm btn-success" data-module="m.name" href="/configuration/modules/export/{{ m.name }}/" role="button">Exporter le module en SQL</a>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
