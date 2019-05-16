@@ -1,6 +1,9 @@
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.5.0' WHERE `name`='base' and `groupe`='module';
 
+-- modification table data_cat
+ALTER TABLE `data_cat` CHANGE `type` `type` ENUM('base','module', 'user') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
+
 -- Mode vitale
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple');
 
