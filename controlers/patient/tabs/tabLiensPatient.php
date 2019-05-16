@@ -31,8 +31,6 @@ $template="inc-patientPeopleRelations";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
-$p['page']['patient']['id']=$match['params']['patientID'];
 
 //sortir les choix de relations patient<->prat
 $data = new msData();
