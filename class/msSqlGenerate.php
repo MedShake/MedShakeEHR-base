@@ -26,9 +26,10 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
 class msSqlGenerate
 {
+
+  protected $_bdd;
   protected $_actes_fields;
   protected $_actes_values;
   protected $_actes_base_fields;
@@ -45,8 +46,31 @@ class msSqlGenerate
   protected $_forms_values;
   protected $_forms_cat_fields;
   protected $_forms_cat_values;
+  protected $_form_basic_fields;
+  protected $_form_basic_values;
+  protected $_people_fields;
+  protected $_people_values;
+  protected $_prescriptions_cat_fields;
+  protected $_prescriptions_cat_values;
+  protected $_prescriptions_fields;
+  protected $_prescriptions_values;
   protected $_system_fields;
   protected $_system_values;
+  protected $_tablesSql=[];
+
+
+  public function __construct() {
+      global $p;
+      $this->_bdd = $p['config']['sqlBase'];
+  }
+
+/**
+ * Définir la base de données sur laquelle extraire
+ * @param string $bdd nom de la base de données
+ */
+  public function setBdd($bdd) {
+    return $this->_bdd=$bdd;
+  }
 
 /**
  * Obtenir le SQL complet d'un module
@@ -56,13 +80,13 @@ class msSqlGenerate
   public function getSqlForModule($name) {
 
     //system
-    $system=msSQL::sqlUnique("select * from system where name='".$name."'");
+    $system=msSQL::sqlUnique("select * from $this->_bdd.system where name='".$name."'");
     unset($system['id']);
     $this->_system_fields=$this->_getSqlFieldsPart($system);
     $this->_system_values[]=$this->_getSqlValuesPart($system);
 
     //configuration
-    if($configurations=msSQL::sql2tab("select * from configuration where module='".$name."' and level='module'")) {
+    if($configurations=msSQL::sql2tab("select * from $this->_bdd.configuration where module='".$name."' and level='module'")) {
       foreach($configurations as $configuration) {
         unset($configuration['id']);
         if(!isset($this->_configuration_fields)) $this->_configuration_fields=$this->_getSqlFieldsPart($configuration);
@@ -74,14 +98,15 @@ class msSqlGenerate
     $this->_prepareSqlForActes($name);
 
     //formulaires
-    if($listesForms=msSQL::sql2tabSimple("select internalName from forms where module='".$name."'")) {
+    if($listesForms=msSQL::sql2tabSimple("select internalName from $this->_bdd.forms where module='".$name."'")) {
       foreach($listesForms as $formName) {
         $this->_prepareSqlForForm($formName);
       }
     }
 
     //autres data_type
-    $this->_prepareSqlForDataTypes ($name, ['admin', 'medical']);
+    if($name != 'base') {$notInGroup=['admin', 'medical'];} else {$notInGroup=[];}
+    $this->_prepareSqlForDataTypes ($name, $notInGroup);
 
     //extension par module
     if(method_exists('msMod'.ucfirst($name).'SqlGenerate', '_getSpecifSql')) {
@@ -109,9 +134,9 @@ class msSqlGenerate
  * @return void
  */
   public function _prepareSqlForDataTypes ($module, $notInGroupe=['']) {
-    if($typesData=msSQL::sql2tab("select * from data_types where module='".$module."' and  groupe not in ('".implode("', '", $notInGroupe)."')")) {
+    if($typesData=msSQL::sql2tab("select * from $this->_bdd.data_types where module='".$module."' and  groupe not in ('".implode("', '", $notInGroupe)."')")) {
       $cat=array_unique(array_column($typesData, 'cat'));
-      $catData=msSQL::sql2tab("select * from data_cat where id in ('".implode("', '", $cat)."')");
+      $catData=msSQL::sql2tab("select * from $this->_bdd.data_cat where id in ('".implode("', '", $cat)."')");
 
       // data_cat
       foreach($catData as $v) {
@@ -144,7 +169,7 @@ class msSqlGenerate
   public function _prepareSqlForActes($name) {
     $collecteCcamNgap=[];
 
-    if($cats=msSQL::sql2tab("select * from actes_cat where module='".$name."'")) {
+    if($cats=msSQL::sql2tab("select * from $this->_bdd.actes_cat where module='".$name."'")) {
       foreach($cats as $cat) {
         unset($cat['id']);
         $cat['fromID']=1;
@@ -155,8 +180,8 @@ class msSqlGenerate
     }
 
     if($actes=msSQL::sql2tab("select a.* , c.name as catName
-      from actes as a
-      left join actes_cat as c on c.id=a.cat
+      from $this->_bdd.actes as a
+      left join $this->_bdd.actes_cat as c on c.id=a.cat
       where c.module='".$name."' and a.toID='0'
       group by a.id")) {
         $collecteCcamNgap=[];
@@ -188,7 +213,7 @@ class msSqlGenerate
 
     // extraction finale des actes NGAP / CCAM nécessaires
     $collecteCcamNgap=array_unique(array_merge($collecteCcamNgap, $listFromModule));
-    if($actesbase=msSQL::sql2tab("select * from actes_base where code in ('".implode("', '", $collecteCcamNgap)."') order by type, code")) {
+    if($actesbase=msSQL::sql2tab("select * from $this->_bdd.actes_base where code in ('".implode("', '", $collecteCcamNgap)."') order by type, code")) {
       foreach($actesbase as $actebase) {
         unset($actebase['id']);
         $actebase['fromID']=1;
@@ -207,31 +232,54 @@ class msSqlGenerate
  * @return void
  */
   protected function _prepareSqlForForm($name) {
-    $form = new msForm();
-    $form->setFormIDbyName($name);
+    $formID = msSQL::sqlUniqueChamp("select id from $this->_bdd.forms where internalName='".msSQL::cleanVar($name)."' limit 1");
+
+    // form
+    $v=msSQL::sqlUnique("select * from $this->_bdd.forms where id='".$formID."' limit 1");
+    $catForm = $v['cat'];
+    unset($v['id']);
+    $catID=$v['cat'];
+    if(isset($v['cat'])) $v['cat']='@catID';
+    if(!isset($this->_forms_fields)) $this->_forms_fields=$this->_getSqlFieldsPart($v);
+    if(!isset($this->_forms_values[$catID][$v['internalName']])) $this->_forms_values[$catID][$v['internalName']]=$this->_getSqlValuesPart($v);
+
+    // form cat
+    $v=msSQL::sqlUnique("select * from $this->_bdd.forms_cat where id='".$catForm."' limit 1");
+    unset($v['id']);
+    $v['fromID']='1';
+    $v['creationDate']="2019-01-01 00:00:00";
+    if(!isset($this->_forms_cat_fields)) $this->_forms_cat_fields=$this->_getSqlFieldsPart($v);
+    if(!isset($this->_forms_cat_values[$v['name']])) $this->_forms_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
+
+    $typesData=[];
+    $cats=[];
     //extraire tous les types du form
-    $types=$form->formExtractDistinctTypes();
+    $formyaml=msSQL::sqlUniqueChamp("select yamlStructure from $this->_bdd.forms where id='".$formID."' limit 1");
+    preg_match_all("# - (?!template|label)([\w]+)#i", $formyaml, $matchIN);
+    if($typesDataInForm=msSQL::sql2tab("select * from $this->_bdd.data_types where name in ('".implode("', '", $matchIN[1])."')")) {
+      $typesData=array_merge($typesData,$typesDataInForm);
+      $cats=array_merge($cats, array_unique(array_column($typesData, 'cat')));
+    }
 
-    if($typesData=msSQL::sql2tab("select * from data_types where id in ('".implode("', '", $types)."')")) {
+    // ajout du porteur de cs pour le form
+    if($typesDataCompCs=msSQL::sql2tab("select * from $this->_bdd.data_types where groupe='typecs' and formValues='".$name."'")) {
+      $typesData=array_merge($typesData,$typesDataCompCs);
+      $cats=array_merge($cats, array_unique(array_column($typesData, 'cat')));
+    }
 
-      // ajout du porteur de cs pour le form
-      if($typesDataCompCs=msSQL::sql2tab("select * from data_types where groupe='typecs' and formValues='".$name."'")) {
-        $typesData=array_merge($typesData,$typesDataCompCs);
-      }
-
-      $cat=array_unique(array_column($typesData, 'cat'));
-      $catData=msSQL::sql2tab("select * from data_cat where id in ('".implode("', '", $cat)."')");
-
-      // data_cat
-      foreach($catData as $v) {
+    // data_cat
+    if($catsData=msSQL::sql2tab("select * from $this->_bdd.data_cat where id in ('".implode("', '", $cats)."')")) {
+      foreach($catsData as $v) {
         unset($v['id']);
         $v['fromID']='1';
         $v['creationDate']="2019-01-01 00:00:00";
         if(!isset($this->_data_cat_fields)) $this->_data_cat_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_cat_values[$v['name']])) $this->_data_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
       }
+    }
 
-      // data
+    // data
+    if(!empty($typesData)) {
       foreach($typesData as $v) {
         unset($v['id']);
         $catID=$v['cat'];
@@ -241,24 +289,8 @@ class msSqlGenerate
         if(!isset($this->_data_types_fields)) $this->_data_types_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_types_values[$catID][$v['name']])) $this->_data_types_values[$catID][$v['name']]=$this->_getSqlValuesPart($v);
       }
-
-      // form
-      $v=msSQL::sqlUnique("select * from forms where id='".$form->getFormID()."' limit 1");
-      $catForm = $v['cat'];
-      unset($v['id']);
-      $catID=$v['cat'];
-      if(isset($v['cat'])) $v['cat']='@catID';
-      if(!isset($this->_forms_fields)) $this->_forms_fields=$this->_getSqlFieldsPart($v);
-      if(!isset($this->_forms_values[$catID][$v['internalName']])) $this->_forms_values[$catID][$v['internalName']]=$this->_getSqlValuesPart($v);
-
-      // form cat
-      $v=msSQL::sqlUnique("select * from forms_cat where id='".$catForm."' limit 1");
-      unset($v['id']);
-      $v['fromID']='1';
-      $v['creationDate']="2019-01-01 00:00:00";
-      if(!isset($this->_forms_cat_fields)) $this->_forms_cat_fields=$this->_getSqlFieldsPart($v);
-      if(!isset($this->_forms_cat_values[$v['name']])) $this->_forms_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
     }
+
   }
 
 /**
@@ -267,6 +299,14 @@ class msSqlGenerate
  */
   protected function _composeSql() {
     $string='';
+
+    //tables
+    if(!empty($this->_tablesSql)) {
+      foreach($this->_tablesSql as $table=>$sql) {
+        $string.="-- création de la table ".$table."\n";
+        $string.=$sql."\n\n";
+      }
+    }
 
     //actes_cat
     if(isset($this->_actes_cat_values)) {
@@ -303,8 +343,12 @@ class msSqlGenerate
     if(isset($this->_data_types_values)) {
       $string.="-- data_types\n";
       foreach($this->_data_types_values as $cat=>$values) {
-        $catName = msData::getCatNameFromCatID($cat);
-        $string.="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
+        $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.data_cat where id = '".$cat."' ");
+        if(empty($catName)) {
+          $string.="SET @catID = 0;\n";
+        } else {
+          $string.="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
+        }
         $string.="INSERT IGNORE INTO `data_types` ".$this->_data_types_fields." VALUES\n";
         $string.=implode(",\n", $this->_data_types_values[$cat]).";\n\n";
       }
@@ -328,10 +372,42 @@ class msSqlGenerate
     if(isset($this->_forms_values)) {
       $string.="-- forms\n";
       foreach($this->_forms_values as $cat=>$values) {
-        $catName = msForm::getCatNameFromCatID($cat);
+        $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.forms_cat where id = '".$cat."' ");
         $string.="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$catName."');\n";
         $string.="INSERT IGNORE INTO `forms` ".$this->_forms_fields." VALUES\n";
         $string.=implode(",\n", $this->_forms_values[$cat]).";\n\n";
+      }
+    }
+
+    //form_basic_types
+    if(isset($this->_form_basic_values) and !empty($this->_form_basic_values)) {
+      $string.="-- form_basic_types\n";
+      $string.="INSERT IGNORE INTO `form_basic_types` ".$this->_form_basic_fields." VALUES\n";
+      $string.=implode(",\n", $this->_form_basic_values).";\n\n";
+    }
+
+    //people
+    if(isset($this->_people_values) and !empty($this->_people_values)) {
+      $string.="-- people\n";
+      $string.="INSERT IGNORE INTO `people` ".$this->_people_fields." VALUES\n";
+      $string.=implode(",\n", $this->_people_values).";\n\n";
+    }
+
+    //prescriptions_cat
+    if(isset($this->_prescriptions_cat_values)) {
+      $string.="-- prescriptions_cat\n";
+      $string.="INSERT IGNORE INTO `prescriptions_cat` ".$this->_prescriptions_cat_fields." VALUES\n";
+      $string.=implode(",\n", $this->_prescriptions_cat_values).";\n\n";
+    }
+
+    //prescriptions
+    if(isset($this->_prescriptions_values)) {
+      $string.="-- prescriptions\n";
+      foreach($this->_prescriptions_values as $cat=>$values) {
+        $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.prescriptions_cat where id = '".$cat."' ");
+        $string.="SET @catID = (SELECT prescriptions_cat.id FROM prescriptions_cat WHERE prescriptions_cat.name='".$catName."');\n";
+        $string.="INSERT IGNORE INTO `prescriptions` ".$this->_prescriptions_fields." VALUES\n";
+        $string.=implode(",\n", $this->_prescriptions_values[$cat]).";\n\n";
       }
     }
 
@@ -384,4 +460,17 @@ class msSqlGenerate
   protected function _getSqlFieldsPart($a) {
     return "(`".implode("`, `", array_keys($a))."`)";
   }
+
+/**
+ * Générer le code de création d'une table
+ * @param  string $t nom de la table
+ * @return string    sql de création
+ */
+  protected function _getTableStructure($t) {
+    $tab=msSQL::sqlUnique("SHOW CREATE TABLE $this->_bdd.".msSQL::cleanVar($t));
+    $tab['Create Table'] = preg_replace('#AUTO_INCREMENT=[0-9]+ #i', '', $tab['Create Table'] );
+    $tab['Create Table'] = str_replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', $tab['Create Table']);
+    $this->_tablesSql[$tab['Table']]=$tab['Create Table'].';';
+  }
+
 }
