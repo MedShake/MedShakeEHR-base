@@ -127,9 +127,10 @@ transmissionsIndex: ['GET', '/transmissions/[recues|envoyees:transBox]?/', 'tran
 transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmissions/transmissionsTransmission']
 
 #outils
+outilsAjax: ['POST', '/outils/ajax/[a:m]/', 'outils/actions/outilsAjax']
+outilsActions: ['POST|GET', '/outils/actions/[a:m]/', 'outils/actions/outilsActions']
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
 outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
-outilsExportDataDownload: ['POST|GET', '/outils/export-data/download/', 'outils/exportDataDownload']
 outilsStatsGenerales: ['POST|GET', '/outils/statistiques/', 'outils/statsGenerales']
 
 #configuration

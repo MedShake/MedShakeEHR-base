@@ -5,3 +5,5 @@
 @unlink($p['config']['webDirectory'].'/js/module/formsScripts/baseSynthese.js');
 
 @unlink($p['config']['webDirectory'].'/bower.json');
+
+@unlink($p['homepath'].'controlers/outils/exportDataDownload.php');

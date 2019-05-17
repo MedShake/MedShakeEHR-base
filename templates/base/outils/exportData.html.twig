@@ -94,7 +94,7 @@
     </div>
   {% elseif page.formInfos.id > 0 %}
 
-    <form class="checkboxFixValue" action="/outils/export-data/download/" method="post">
+    <form class="checkboxFixValue" action="/outils/actions/exportDataDownload/" method="post">
       <input type="hidden" name="dataTypeID" value="{{ page.dataTypeinfos.id }}">
       <input type="hidden" name="formID" value="{{ page.formInfos.id }}">
       <div class="row">
