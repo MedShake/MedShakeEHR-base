@@ -190,7 +190,7 @@ class msData extends msDataCat
  */
     public function getTypeIDsFromName($ar=['1'])
     {
-        return msSQL::sql2tabKey("select name, id from data_types where name in ('".implode("','", $ar)."')", 'name', 'id');
+        return msSQL::sql2tabKey("select name, id from data_types where name in ('".implode("','", msSQL::cleanArray($ar))."')", 'name', 'id');
     }
 
 /**
