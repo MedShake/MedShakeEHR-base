@@ -134,9 +134,9 @@ $(document).ready(function() {
 
   //autocomplete pour la liaison code postal - > ville
   $('body').delegate('#id_postalCodePerso_id, #id_codePostalPro_id', 'focusin', function() {
-    type = $(this).attr('data-typeID');
-    if (type == 53) dest = 56;
-    else if (type == 13) dest = 12;
+    type = $(this).attr('data-internalname');
+    if (type == 'codePostalPro') dest = 'villeAdressePro';
+    else if (type == 'postalCodePerso') dest = 'city';
 
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
@@ -144,18 +144,18 @@ $(document).ready(function() {
       autoFocus: true,
       minLength: 3,
       select: function(event, ui) {
-        sourceval = eval('ui.item.d' + type);
-        destival = eval('ui.item.d' + dest);
-        $('input[data-typeid="' + dest + '"]').val(destival);
-        $('input[data-typeid="' + type + '"]').val(sourceval);
+        sourceval = eval('ui.item.' + type);
+        destival = eval('ui.item.' + dest);
+        $('input[data-internalname="' + dest + '"]').val(destival);
+        $('input[data-internalname="' + type + '"]').val(sourceval);
 
         //si contexte de mise à jour automatique
         patientID = $('#identitePatient').attr("data-patientID");
-        if ($('input[data-typeid="' + dest + '"]').parents('.changeObserv').length) {
-          setPeopleData(destival, patientID, dest, 'input[data-typeid="' + dest + '"]', '0');
+        if ($('input[data-internalname="' + dest + '"]').parents('.changeObserv').length) {
+          setPeopleDataByTypeName(destival, patientID, dest, 'input[data-internalname="' + dest + '"]', '0');
         }
-        if ($('input[data-typeid="' + type + '"]').parents('.changeObserv').length) {
-          setPeopleData(sourceval, patientID, type, 'input[data-typeid="' + type + '"]', '0');
+        if ($('input[data-internalname="' + type + '"]').parents('.changeObserv').length) {
+          setPeopleDataByTypeName(sourceval, patientID, type, 'input[data-internalname="' + type + '"]', '0');
         }
 
       }

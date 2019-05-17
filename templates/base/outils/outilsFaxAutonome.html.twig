@@ -69,9 +69,9 @@
     $('body').on('focusin', 'input[name="mailToEcofaxName"]', function() {
       if ($(this).is(':data(autocomplete)')) return;
       $(this).autocomplete({
-        source: urlBase + '/ajax/getAutocompleteLinkType/data_types/58/1:2:3/1:2:3:58/',
+        source: urlBase + '/ajax/getAutocompleteLinkType/data_types/faxPro/birthname:lastname:firstname/birthname:lastname:firstname:faxPro/',
         select: function(event, ui) {
-          $('input[name="mailToEcofaxNumber"]').val(ui.item.d58);
+          $('input[name="mailToEcofaxNumber"]').val(ui.item.faxPro);
         }
       });
     });

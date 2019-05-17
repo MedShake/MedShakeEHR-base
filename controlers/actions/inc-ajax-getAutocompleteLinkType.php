@@ -26,9 +26,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$type=$match['params']['type'];
-$dataset=$match['params']['dataset'];
+$data = new msData();
+$name2typeId=$data->getTypeIDsFromName([$match['params']['type']]);
+$type=$name2typeId[$match['params']['type']];
 
+$dataset=$match['params']['dataset'];
 $dataset2database=array(
    'data_types'=>'objets_data'
 );
@@ -36,7 +38,7 @@ if(!isset($dataset2database[$dataset])) die;
 $database=$dataset2database[$dataset];
 
 if (isset($match['params']['setTypes'])) {
-   $searchTypes=explode(':', $match['params']['setTypes']);
+   $searchTypes=$data->getTypeIDsFromName(explode(':', $match['params']['setTypes']));
    foreach ($searchTypes as $v) {
       if(is_numeric($v)) $concatValue[]= " COALESCE(d".$v.".value, '')";
    }
@@ -48,16 +50,21 @@ $joinleft=[];
 $concat=[];
 $groupby=array('label');
 if (isset($match['params']['linkedTypes'])) {
-   $linkedTypes=explode(':', $match['params']['linkedTypes']);
+   $originalOrderLabel=explode(':', $match['params']['linkedTypes']);
+   $linkedTypes=$data->getTypeIDsFromName($originalOrderLabel);
 
-   foreach ($linkedTypes as $v) {
+   foreach ($linkedTypes as $k=>$v) {
      if(is_numeric($v)) {
-       $sel[]= " d".$v.".value as d".$v;
-       $concatLabel[]= " COALESCE(d".$v.".value, '')";
+       $sel[]= " d".$v.".value as ".$k;
+       $concatLabel[$k]= " COALESCE(d".$v.".value, '')";
        $joinleft[]=" left join ".$database." as d".$v." on do.toID = d".$v.".toID and d".$v.".typeID='".$v."' and d".$v.".outdated='' and d".$v.".deleted='' ";
        $groupby[]='d'.$v.'.value';
      }
    }
+}
+// remettre dans l'ordre original de l'url
+if(!empty($concatLabel)) {
+  $concatLabel=array_replace(array_flip($originalOrderLabel), $concatLabel);
 }
 
 if($database) {
