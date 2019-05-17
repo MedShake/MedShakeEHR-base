@@ -39,6 +39,12 @@
             <ul></ul>
         </div>
         {{ f.formbuilder(page.form , 'baseNewPro' , session) }}
+
+        {% if page.formJavascript.baseNewPro is not empty %}
+          <script>
+           {{ page.formJavascript.baseNewPro }}
+          </script>
+        {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>

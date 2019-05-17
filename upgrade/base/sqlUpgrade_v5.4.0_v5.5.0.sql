@@ -16,7 +16,7 @@ UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'baseSynthese,rows=8
 
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '- job,autocomplete', '- job,autocomplete,rows=1') where internalName = 'baseNewPro';
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'notesPro,rows=5', 'notesPro,rows=3') where internalName = 'baseNewPro';
-UPDATE `forms` set `javascript`='$(document).ready(function() {\r\n\r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPro textarea\')); \r\n\r\n});' where internalName = 'baseNewPro';
+UPDATE `forms` set `javascript`='$(document).ready(function() {\r\n\r\n   // modal edit data admin patient\r\n  $(\'#newPro\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#newPro textarea\'));\r\n  });\r\n  \r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPro textarea\')); \r\n\r\n});' where internalName = 'baseNewPro';
 
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'notes,rows=5', 'notes,rows=3') where internalName = 'baseNewPatient';
 UPDATE `forms` SET `javascript`='$(document).ready(function() {\r\n\r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPatient textarea\')); \r\n\r\n  // modal edit data admin patient\r\n  $(\'#editAdmin\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#editAdmin textarea\'));\r\n  });\r\n  \r\n});' where internalName = 'baseNewPatient';

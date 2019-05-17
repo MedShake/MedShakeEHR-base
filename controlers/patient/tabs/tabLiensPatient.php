@@ -65,6 +65,7 @@ if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-
 if(!empty($optionsInject)) $formPro->setOptionsForSelect($optionsInject);
 
 $p['page']['form']=$formPro->getForm();
+$p['page']['formJavascript']['baseNewPro']=$formPro->getFormJavascript();
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
   'actAsAjax'=>'true',

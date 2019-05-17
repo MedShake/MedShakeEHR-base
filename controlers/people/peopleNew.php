@@ -67,5 +67,6 @@ if($template != "forbidden") {
   }
 
   $p['page']['form']=$formpatient->getForm();
+  $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
   $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 }
