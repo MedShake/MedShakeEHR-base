@@ -132,6 +132,7 @@ outilsActions: ['POST|GET', '/outils/actions/[a:m]/', 'outils/actions/outilsActi
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
 outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
 outilsStatsGenerales: ['POST|GET', '/outils/statistiques/', 'outils/statsGenerales']
+outilsFaxAutonome: ['POST|GET', '/outils/envoyer-fax/', 'outils/outilsFaxAutonome']
 
 #configuration
 configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']

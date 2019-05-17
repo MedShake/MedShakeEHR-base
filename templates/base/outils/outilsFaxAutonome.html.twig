@@ -1,0 +1,152 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Outils > fax autonome
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}Envoyer un fax - MedShakeEHR{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    $("#dropZoneEnvoyerFax").dmUploader({
+      url: urlBase + '/outils/ajax/outilsFaxUploadDoc/',
+      extraData: {
+      },
+      dataType: 'html',
+      maxFiles: 1,
+      onUploadSuccess: function(id, data) {
+        $(".progress-bar").css('width', '0%');
+        location.reload();
+      },
+      onUploadProgress: function(id, percent) {
+        $(".progress-bar").css('width', percent + '%');
+      }
+    });
+
+    $("#supPdf2Fax").on("click", function(e) {
+      $.ajax({
+        url: urlBase + '/outils/ajax/outilsFaxRemoveDoc/',
+        type: 'post',
+        dataType: "html",
+        success: function() {
+          location.reload();
+        },
+        error: function() {
+          location.reload();
+        }
+      });
+    });
+
+    //autocomplete pour le destinataire ecofax
+    $('body').on('focusin', 'input[name="mailToEcofaxName"]', function() {
+      if ($(this).is(':data(autocomplete)')) return;
+      $(this).autocomplete({
+        source: urlBase + '/ajax/getAutocompleteLinkType/data_types/58/1:2:3/1:2:3:58/',
+        select: function(event, ui) {
+          $('input[name="mailToEcofaxNumber"]').val(ui.item.d58);
+        }
+      });
+    });
+
+    $('#id_mailToEcofaxName_id').removeAttr('required');
+  });
+{% endblock %}
+
+{% block body %}
+  <h1>Envoyer un fax</h1>
+
+  {% if config.faxService == 'ecofaxOVH' and config.ecofaxMyNumber is not empty and config.ecofaxPassword is not empty %}
+
+    <div class="alert alert-info my-4">
+      Cette page permet d'envoyer un fax via Écofax sans que le document expédié soit attaché à un dossier patient.<br>
+      Attention, aucun historique n'est conservé.
+    </div>
+
+    <div class="row">
+      <div class="col-5">
+        <div id="dropZoneEnvoyerFax" class="card card-body bg-light mb-4">
+          Déposer ici le fichier PDF ou sélectionnez-le avec le bouton ci-dessous<br/>
+          <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
+          <div class="progress my-3">
+            <div class="progress-bar" role="progressbar" style="width: 00%;">
+              <span class="sr-only"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="jumbotron">
+          <form action="/outils/actions/outilsFaxSend/" method="post">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="id_mailToEcofaxName_id">Destinataire du fax
+                  </label>
+                  <input type="text" title="mailToEcofaxName / 484" id="id_mailToEcofaxName_id" name="mailToEcofaxName" class="form-control form-control-sm " autocomplete="off" required="required" data-typeid="484" data-internalname="mailToEcofaxName"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="id_mailToEcofaxNumber_id">Numéro de fax du destinataire
+                  </label>
+                  <input type="text" title="mailToEcofaxNumber / 481" id="id_mailToEcofaxNumber_id" name="mailToEcofaxNumber" class="form-control form-control-sm " autocomplete="off" required="required" data-typeid="481" data-internalname="mailToEcofaxNumber"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="actionAfterSend">Action après l'envoi
+                  </label>
+                  <select name="actionAfterSend" class="custom-select custom-select-sm" autocomplete="off">
+                    <option value="cleanDoc">Envoyer un autre document</option>
+                    <option value="sameDoc">Envoyer le même document</option>
+                  </select>
+                </div>
+
+                {% if page.destination_file_present %}
+                  <input type="submit" class="btn btn-warning btn-lg btn-block mt-4" value="Faxer"/>
+                {% endif %}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-7">
+        {% if page.destination_file_present %}
+          <button id="supPdf2Fax" class="btn btn-lg btn-danger  align-top"><i class="fas fa-trash-alt"></i></button>
+          <object data="{{ page.destination_file }}" style="border: 15px solid #DDD" type="application/pdf" width="900px" height="1260px">
+          </object>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning my-4">
+      Cette page permet d'envoyer un fax via OVH Écofax sans que le document expédié soit attaché à un dossier patient.<br>
+      Il semble cependant que votre configuration soit incomplète et ne permette pas d'utiliser cet outil pour le moment.
+    </div>
+  {% endif %}
+{% endblock %}

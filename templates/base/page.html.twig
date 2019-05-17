@@ -308,6 +308,12 @@
                                 Roulette obstétricale
                               </a>
                             {% endif %}
+                            {% if config.faxService == 'ecofaxOVH' %}
+                              <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/envoyer-fax/">
+                                <i class="fas fa-fax fa-fw text-muted mr-1"></i>
+                                Envoyer un fax
+                              </a>
+                            {% endif %}
                             {% if config.utiliserLap == 'true' or  config.VoirRouletteObstetricale == 'true' %}
                               <div role="separator" class="dropdown-divider"></div>
                             {% endif %}
