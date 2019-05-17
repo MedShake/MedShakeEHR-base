@@ -124,6 +124,12 @@
       <div class="card bg-light card-body">
       {{ f.formbuilder(page.form , page.formIN , session) }}
       </div>
+
+      {% if page['formJavascript'][page.formIN] is not empty %}
+        <script>
+         {{ page['formJavascript'][page.formIN] }}
+        </script>
+      {% endif %}
     </div>
   </div>
 

@@ -105,6 +105,7 @@ $formpatient = new msForm();
 $formpatient->setFormIDbyName('baseNewPatient');
 $formpatient->setPrevalues($patient->getSimpleAdminDatas());
 $p['page']['formEditAdmin']=$formpatient->getForm();
+$p['page']['formJavascript']['baseNewPatient']=$formpatient->getFormJavascript();
 
 //type du dossier
 $p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");

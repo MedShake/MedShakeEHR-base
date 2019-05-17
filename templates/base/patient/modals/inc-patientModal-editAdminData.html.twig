@@ -36,6 +36,12 @@
       </div>
       <div class="modal-body changeObserv">
         {{ f.formbuilder(page.formEditAdmin , 'baseNewPatient' , session) }}
+
+        {% if page.formJavascript.baseNewPatient is not empty %}
+          <script>
+           {{ page.formJavascript.baseNewPatient }}
+          </script>
+        {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>

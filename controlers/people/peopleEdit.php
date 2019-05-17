@@ -55,7 +55,6 @@ if ($p['page']['porp']=='patient') {
     }
 }
 
-
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
 
@@ -82,7 +81,7 @@ if ($p['page']['porp']=='pro') {
 }
 
 $p['page']['form']=$formpatient->getForm();
-
+$p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
 //ajout au form
 $p['page']['form']['addHidden']=array(
   'patientID'=>$match['params']['patient']
