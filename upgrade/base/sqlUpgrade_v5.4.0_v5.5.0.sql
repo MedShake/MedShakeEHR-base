@@ -1,11 +1,20 @@
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v5.5.0' WHERE `name`='base' and `groupe`='module';
 
+-- table DICOM Tags : retrait typeID et ajout TypeName
+ALTER TABLE `dicomTags` ADD `typeName` VARCHAR(60) DEFAULT NULL AFTER `typeID`;
+ALTER TABLE `dicomTags` DROP INDEX `dicomTag`;
+ALTER TABLE `dicomTags` DROP INDEX `typeID`;
+update `dicomTags` as dc left join data_types as d on dc.typeID=d.id set dc.typeName = d.name where dc.typeID > 0;
+CREATE INDEX `typeName` ON `dicomTags` (`typeName`);
+CREATE UNIQUE INDEX `dicomTag` ON `dicomTags` (`dicomTag`, `typeName`);
+ALTER TABLE `dicomTags` DROP `typeID`;
+
 -- modification table data_cat
 ALTER TABLE `data_cat` CHANGE `type` `type` ENUM('base','module', 'user') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'base';
 
 -- Mode vitale
-INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple');
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple');
 
 -- Modification types pour autosize
 UPDATE `data_types` SET `formType` = 'textarea' WHERE `name` = 'job';

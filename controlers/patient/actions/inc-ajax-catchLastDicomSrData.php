@@ -49,7 +49,10 @@ if ($dataSR=$dc->getSrData()) {
     }
 
 
-    if ($corres=msSQL::sql2tabKey("select typeID, dicomTag, returnValue, roundDecimal from dicomTags where dicomTag in ('".implode("','", $keysSR)."') and typeID>0", 'typeID')) {
+    if ($corres=msSQL::sql2tabKey("select d.id, dc.dicomTag, dc.returnValue, dc.roundDecimal
+      from dicomTags as dc
+      left join data_types as d on d.name = dc.typeName
+      where dc.dicomTag in ('".implode("','", $keysSR)."') and dc.typeName !=''", 'id')) {
         foreach ($corres as $k=>$v) {
             if ($k>0) {
                 if (isset($tabSR[$v['dicomTag'].'.'.$v['returnValue']])) {

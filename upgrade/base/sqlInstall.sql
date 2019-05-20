@@ -137,18 +137,18 @@ CREATE TABLE IF NOT EXISTS `data_types` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- création de la table dicomTags
-CREATE TABLE IF NOT EXISTS `dicomTags` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `dicomTag` varchar(150) NOT NULL,
-  `typeID` mediumint(5) unsigned NOT NULL DEFAULT '0',
-  `dicomCodeMeaning` varchar(255) DEFAULT NULL,
-  `dicomUnits` varchar(255) DEFAULT NULL,
-  `returnValue` enum('min','max','avg') NOT NULL DEFAULT 'avg',
-  `roundDecimal` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `dicomTag` (`dicomTag`,`typeID`),
-  KEY `dicomTag_2` (`dicomTag`),
-  KEY `typeID` (`typeID`)
+CREATE TABLE `dicomTags` (
+ `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+ `dicomTag` varchar(150) NOT NULL,
+ `typeName` varchar(60) DEFAULT NULL,
+ `dicomCodeMeaning` varchar(255) DEFAULT NULL,
+ `dicomUnits` varchar(255) DEFAULT NULL,
+ `returnValue` enum('min','max','avg') NOT NULL DEFAULT 'avg',
+ `roundDecimal` tinyint(1) unsigned NOT NULL DEFAULT '0',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `dicomTag` (`dicomTag`,`typeName`),
+ KEY `dicomTag_2` (`dicomTag`),
+ KEY `typeName` (`typeName`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- création de la table forms

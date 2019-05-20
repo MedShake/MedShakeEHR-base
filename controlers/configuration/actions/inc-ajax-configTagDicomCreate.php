@@ -21,12 +21,12 @@
  */
 
 /**
- * Config > ajax : associer un tag Dicom à un typeID
+ * Config > ajax : associer un tag Dicom à un typeName
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 //check & validate datas
 $gump=new GUMP();
@@ -37,14 +37,14 @@ if (isset($_POST['id'])) {
     $gump->validation_rules(array(
             'id'=> 'required|numeric',
             'dicomTag'=> 'required',
-            'typeID'=> 'required',
+            'typeName'=> 'required',
             'returnValue' => 'required',
             'roundDecimal' => 'required|numeric'
         ));
 } else {
     $gump->validation_rules(array(
             'dicomTag'=> 'required',
-            'typeID'=> 'required',
+            'typeName'=> 'required',
             'returnValue' => 'required',
             'roundDecimal' => 'required|numeric'
         ));
