@@ -201,26 +201,11 @@ if ($template!=''): ?>
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <i class="fa fa-bars" aria-hidden="true"></i>
-            </button>
-            <a href="" class="navbar-brand">MedShakeEHR</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="top-navbar">
-          <ul class="nav navbar-nav">
-          </ul>
-        </div>
-      </div>
+    <nav class="navbar navbar-dark bg-dark mb-3">
+      <a class="navbar-brand" href="#">MedShakeEHR</a>
     </nav>
 
-    <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
+    <div class="container-fluid" role="main">
 <?php
 if ($template=='bienvenue') :
 ?>

@@ -186,9 +186,9 @@ if ($template=='bienvenue') :
 ?>
       <h1>Installateur de MedShakeEHR</h1>
       <div id="inst">
-        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Celà peut prendre plusieurs minutes.<br>
+        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
           <strong>Ne fermez pas cette page, et ne la rechargez pas non plus!</strong></p>
-        <p>Définissez ci dessous le dossier où MedShakeEHR doit être installé.<br>
+        <p>Définissez ci-dessous le dossier où MedShakeEHR doit être installé.<br>
           <strong> - Cet emplacement ne doit pas être accessible au réseau</strong><br>
           <strong> - L'utilisateur www-data doit avoir les droits d'écriture sur cet emplacement, ainsi que sur le dossier <code><?=getcwd()?></code>.</p>
         <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
