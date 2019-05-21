@@ -223,8 +223,8 @@ if ($template=='bienvenue') :
 elseif ($template=='configForm') :
 ?>
       <h2>Configuration rapide</h2>
-      <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.</p>
-      <form	action="<?=$_SERVER['REQUEST_URI']?>" 		method="post">
+      <p>Nous allons créer le fichier de configuration nécessaire au démarrage.</p>
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" class="mb-4" method="post">
         <input name="configForm" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -288,7 +288,7 @@ elseif ($template=='configForm') :
 else :
 ?>
       <h2>Installation de la base de données</h2>
-      <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
+      <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons maintenant installer la base de données.</p>
       <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="baseInstall" type="hidden"/>
         <div class="row">
