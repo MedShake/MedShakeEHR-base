@@ -488,9 +488,6 @@ $(document).ready(function() {
     maxFiles: 1,
     allowedTypes: "application/(zip|x-zip-compressed)",
     dataType: 'html',
-    onUploadSuccess: function() {
-      console.log('fichier envoyé');
-    },
     onDragEnter: function() {
       $(".mask").css("display", "block");
       $(".mask").animate({

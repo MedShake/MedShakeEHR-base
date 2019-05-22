@@ -1,0 +1,7 @@
+nom: 'MedShakeEHR Base'
+auteurs:
+  'Bertrand Boutillier': 'https://www.medshake.net/membre/1/'
+licence: 'GPL v3'
+description: 'Base pour l'utilisation de MedShakeEHR'
+documentation: 'https://www.logiciel-cabinet-medical.fr/'
+sources: 'https://github.com/MedShake/MedShakeEHR-base'

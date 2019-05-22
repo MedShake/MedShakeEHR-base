@@ -44,4 +44,19 @@ class msModules
   public static function getInstalledModulesNamesAndVersions() {
     return msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
   }
+
+/**
+ * Obtenir les infos génériques sur un module à partir du fichier aboutMod*Module*.yml
+ * @param  string $name nom cours du module
+ * @return array       paramètres extraits
+ */
+  public static function getModuleInfosGen($name) {
+      global $p;
+      $file=$p['homepath'].'aboutMod'.ucfirst($name).'.yml';
+      if(is_file($file)) {
+        return Spyc::YAMLLoad($file);
+      }
+      return [];
+  }
+
 }

@@ -33,7 +33,8 @@ $p['page']['modules']=msModules::getInstalledModulesNamesAndVersions();
 
 $config = new msConfiguration;
 foreach($p['page']['modules'] as $k=>$v) {
-  if($v['name'] != 'base') {
-    $p['page']['modulesConfig'][$v['name']]=$config->getModuleDefaultParameters($v['name']);
-  }
+  // paramètres spécifiques
+  $p['page']['modulesConfig'][$v['name']]=$config->getModuleDefaultParameters($v['name']);
+  // infos génériques
+  $p['page']['modulesInfosGen'][$v['name']]=msModules::getModuleInfosGen($v['name']);
 }
