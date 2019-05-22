@@ -339,8 +339,11 @@
 
     </form>
   {% else %}
-    <div class="alert alert-warning my-4" role="alert">
-      Aucun formulaire n'est configuré pour autoriser l'export de données.
+
+    </div>
+    <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 500px); min-height: 250px">
+      <div class="mb-3"><i class="fas fa-database fa-10x text-light"></i></div>
+      <div class="text-muted">Aucun formulaire n'est configuré pour autoriser l'export de données.</div>
     </div>
 
   {% endif %}
