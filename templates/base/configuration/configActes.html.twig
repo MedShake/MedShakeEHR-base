@@ -160,7 +160,7 @@
           {% if det.quantite > 1 %}
             {{ det.quantite }}{{ key }}
           {% elseif page.secteurs[k] != '' %}
-            {{ key }} {% if det.pourcents != '100' %}({{ det.pourcents }}%){% endif %}
+            {{ key }} {% if det.pourcents is defined and det.pourcents != '100' %}({{ det.pourcents }}%){% endif %}
           {% endif %}
           {% if det.modifsCCAM %}
             + {{ det.modifsCCAM }}

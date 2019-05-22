@@ -388,7 +388,7 @@ class msReglement
         }
         //sur l'acte
         $data['details'][$key]['base']=$acteTarif;
-        if(isset($val['codeAsso'])) {
+        if(isset($val['codeAsso']) and is_numeric($val['codeAsso'])) {
           $data['details'][$key]['codeAsso']=$val['codeAsso'];
         } else {
           $data['details'][$key]['codeAsso']='';
@@ -400,15 +400,15 @@ class msReglement
           $data['details'][$key]['modifsCCAM']='';
         }
 
-        if(isset($val['quantite']) and $val['quantite'] > 1) {
+        if(isset($val['quantite']) and is_numeric($val['quantite']) and $val['quantite'] > 1) {
             $data['details'][$key]['tarif'] = round(($acteTarif*$val['quantite']), 2);
-        } elseif(isset($val['pourcents'])) {
+        } elseif(isset($val['pourcents']) and is_numeric($val['pourcents'])) {
             $data['details'][$key]['tarif'] = round(($acteTarif*$val['pourcents']/100), 2);
         } else {
             $data['details'][$key]['tarif'] = $acteTarif;
         }
 
-        if(isset($val['depassement'])) {
+        if(isset($val['depassement'])  and is_numeric($val['depassement'])) {
             $data['details'][$key]['total'] = $data['details'][$key]['tarif'] + $val['depassement'];
         } else {
             $data['details'][$key]['total'] = $data['details'][$key]['tarif'];
@@ -427,7 +427,7 @@ class msReglement
         if(isset($data['details'][$key]['tarif'])) {
             $data['tarif']=$data['tarif']+$data['details'][$key]['tarif'];
         }
-        if(isset($val['depassement'])) {
+        if(isset($val['depassement']) and is_numeric($val['depassement'])) {
             $data['depassement']=$data['depassement']+$val['depassement'];
         }
         if(isset($val['modifsCCAM'])) {
