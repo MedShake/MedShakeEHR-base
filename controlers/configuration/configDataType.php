@@ -51,7 +51,7 @@
         left join data_cat as c on c.id=t.cat
         where t.id > 0 and t.groupe='".msSQL::cleanVar($p['page']['groupe'])."' ".$catRestriction."
         group by t.id
-        order by t.module, c.label asc, t.label asc, t.name")) {
+        order by t.module, t.displayOrder, c.label asc, t.label asc, t.name")) {
 
 
         foreach ($tabTypes as $v) {
