@@ -52,23 +52,33 @@
     <div class="tab-pane fade p-4 border-left" id="nav-forms" role="tabpanel" aria-labelledby="nav-patients-tab">
       <div class="row">
         <div class="col-12 col-md-6">
+          <div class="alert alert-info mb-4">
+            Les statistiques n'incluent pas les dossiers tests.
+          </div>
           <table class="table table-sm table-hover">
             <thead class="thead-light">
               <tr>
                 <th>Formulaires</th>
-                <th class="text-right">En base - actifs</th>
+                <th colspan="2" class="text-center">En base - actifs</th>
                 <th class="text-right">En base - supprimés</th>
               </tr>
             </thead>
             <tbody>
               {% for catName, forms in page.forms %}
-                <tr class="table-info">
-                  <td colspan="3">{{ forms[0]['catLabel'] }}</td>
+                <tr class="table-primary">
+                  <td colspan="4">{{ forms[0]['catLabel'] }}</td>
                 </tr>
                 {% for form in forms %}
                   <tr>
                     <td>{{ form.label }}</td>
-                    <td class="text-right">{{ form.actifs }}</td>
+                    <td class="text-right">
+                      {{ form.actifs }}
+                    </td class="text-right">
+                    <td>
+                      {% if form.actifs > 0 %}
+                      <a href="/logs/historique/{{ form.name }}/" type="button" class="btn btn-light btn-sm" title="Afficher l'historique"><i class="fas fa-history"></i></a>
+                      {% endif %}
+                    </td>
                     <td class="text-right">{{ form.deleted }}</td>
                   </tr>
                 {% endfor %}
