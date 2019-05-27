@@ -581,4 +581,101 @@ public function getToID()
       }
       return false;
     }
+
+/**
+ * Obtenir l'historique de création d'un data type particulier, tout patient
+ * @param  string  $name  data type name
+ * @param  integer $start start sql
+ * @param  integer $limit limit sql
+ * @return array         tableau de résultat
+ */
+    public function getHistoriqueDataType($name, $start=0, $limit=50)
+    {
+
+        $data = new msData();
+        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance', $name]);
+
+        $data = msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, t.formValues as formName, n1.value as pratPrenom,
+        CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as pratNom,
+
+        n1b.value as patientPrenom,
+        CASE WHEN n2b.value != '' and bnb.value != '' THEN CONCAT(n2b.value, ' (', bnb.value , ')')
+        WHEN n2b.value != '' THEN n2b.value
+        ELSE bnb.value END as patientNom
+
+        from objets_data as p
+        left join data_types as t on p.typeID=t.id
+        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+
+        left join objets_data as n1b on n1b.toID=p.toID and n1b.typeID='".$name2typeID['firstname']."' and n1b.outdated='' and n1b.deleted=''
+        left join objets_data as n2b on n2b.toID=p.toID and n2b.typeID='".$name2typeID['lastname']."' and n2b.outdated='' and n2b.deleted=''
+        left join objets_data as bnb on bnb.toID=p.toID and bnb.typeID='".$name2typeID['birthname']."' and bnb.outdated='' and bnb.deleted=''
+
+        where p.typeID ='".$name2typeID[$name]."' and p.outdated='' and p.deleted=''
+        group by p.id, bn.value, n1.value, n2.value, bnb.value, n1b.value, n2b.value
+        order by p.creationDate desc
+        limit ".$start.",".$limit);
+
+        return $data;
+
+    }
+
+/**
+ * Obtenir le nombre total d'objets d'un type particulier
+ * @param  string  $name           data type name
+ * @param  string  $outdated       '' ou 'y'
+ * @param  string  $deleted        '' ou 'y'
+ * @param  boolean $noTestPatients pas les patients tests
+ * @return array                  tableau de retour
+ */
+    public function getNumberOfObjetOfType($name, $outdated='', $deleted='', $noTestPatients=true ) {
+      global $p;
+      if (!in_array($outdated, ['','y'])) {
+          throw new Exception('Outdated wrong value');
+      }
+      if (!in_array($deleted, ['','y'])) {
+          throw new Exception('Deleted wrong value');
+      }
+      if (!is_bool($noTestPatients)) {
+          throw new Exception('NoTestPatient wrong value');
+      }
+      if($noTestPatients) {
+        $statsExclusionPatients=msSQL::cleanArray(explode(',',$p['config']['statsExclusionPatients']));
+      } else {
+        $statsExclusionPatients=[];
+      }
+
+      $typeID=msData::getTypeIDFromName($name);
+
+      return msSQL::sqlUniqueChamp("select count(id) from objets_data as d where d.typeID='".$typeID."' and d.toID not in ('".implode("', '", $statsExclusionPatients)."') and d.outdated='".$outdated."' and d.deleted='".$deleted."'");
+    }
+
+/**
+ * Obtenir l'évolution contextuelle (patient, instance) des valeurs d'un data type
+ * @param  string  $name     nom du data type
+ * @param  integer $instance instance
+ * @return array             array registerDate desc.
+ */
+    public function getDataTypeContextualHistoric($name, $instance=0) {
+      if (!isset($this->_toID)) {
+          throw new Exception('toID is not defined');
+      }
+      $typeID=msData::getTypeIDFromName($name);
+
+      $data = new msData();
+      $name2typeID=$data->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
+
+      return msSQL::sql2tab("SELECT o.*, n1.value as pratPrenom,
+      CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as pratNom
+        FROM objets_data as o
+
+        left join objets_data as n1 on n1.toID=o.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+        left join objets_data as n2 on n2.toID=o.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+        left join objets_data as bn on bn.toID=o.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+
+        WHERE o.toID = '".$this->_toID."' AND o.typeID = '".$typeID."' and o.instance='".$instance."'
+        order by o.registerDate desc");
+    }
 }
