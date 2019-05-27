@@ -281,6 +281,18 @@ class msCourrier
           $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
         }
 
+        // n° de facture YYYMMDDxxx
+        // le dev de cette fonctionnalité a été financée par Mallaury T. (France)
+        $data=new msData();
+        $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+        if($factureID = msSQL::sqlUniqueChamp("select count(id) from objets_data
+        where typeID in ('".implode("','", $porteursReglementIds)."') and DATE(creationDate) = DATE('".$this->_objetData['creationDate']."') and id <= '".$this->_objetData['id']."' and fromID = '".$this->_objetData['fromID']."'")) {
+          $factureID=str_pad($factureID, 3, "0", STR_PAD_LEFT);
+          $tabRetour['factureID']=$factureID;
+          $dateF = DateTime::createFromFormat('Y-m-d H:i:s', $this->_objetData['creationDate']);
+          $tabRetour['factureNumero']=$dateF->format('Ymd').$factureID;
+        }
+
         //règlement data
         $reg = new msObjet;
         if($tabReg = $reg->getObjetAndSons($this->_objetID, 'name')) {
