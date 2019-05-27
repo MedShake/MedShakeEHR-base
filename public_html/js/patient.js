@@ -667,6 +667,17 @@ $(document).ready(function() {
     $('#ongletLAP').tab('show');
   });
 
+  // Observation ctrl + click pour historique
+  $('body').on("click", "textarea, input, select", function(e) {
+    if(e.ctrlKey){
+      e.preventDefault();
+      patientID = $('#identitePatient').attr('data-patientid');
+      instance = $(this).parents('form').attr('data-instance');
+      dataType = $(this).attr('data-internalName');
+      window.location.href = urlBase + '/logs/historique/' + patientID + '/' + dataType + '/' + instance + '/';
+    }
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Changer la date de création d'une ligne d'historique
 

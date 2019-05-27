@@ -94,6 +94,7 @@ historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patie
 historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsSMS']
 historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsMail']
 logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
+historiqueContextDataType: ['GET', '/logs/historique/[i:patientID]/[a:dataType]/[i:instance]?/', 'logs/historiqueContextDataType']
 historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 
 #pdf
