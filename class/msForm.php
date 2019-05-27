@@ -809,9 +809,16 @@ class msForm
                         $type['required']='required';
                     }
                     $type['class']='';
+                    $type['classLabel']='';
                     foreach ($bloc as $h) {
-                        if (preg_match('/^class=(.+)/', $h, $match)) {
+                        if (preg_match('/^class=(?!{)(.+)/', $h, $match)) {
                             $type['class'].=' '.$match[1];
+                        }
+                        if (preg_match('#^class={(.*)}$#i', $h, $match)) {
+                            $type['class'].=' '.$match[1];
+                        }
+                        if (preg_match('#^classLabel={(.*)}$#i', $h, $match)) {
+                            $type['classLabel'].=' '.$match[1];
                         }
                         if (preg_match('#plus={(.*)}#i', $h, $match)) {
                             $type['plus']=$match[1];
