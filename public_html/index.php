@@ -105,6 +105,13 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
+// simplification pour étiquetage des dossiers patients test
+if(!empty($p['config']['statsExclusionPatients'])) {
+  $p['config']['statsExclusionPatientsArray']=explode(',', $p['config']['statsExclusionPatients']);
+} else {
+  $p['config']['statsExclusionPatientsArray']=[];
+}
+
 ///////// Controler
 if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
 

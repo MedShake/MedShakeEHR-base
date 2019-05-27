@@ -82,7 +82,12 @@
           {% endif %}
         </div>
 
+        {% if page.patient.id in config.statsExclusionPatientsArray %}
+          <span class="badge badge-danger float-right">Patient test</span>
+        {% endif %}
+
    </small>
+
 </h1>
 <div style="margin-bottom : 8px;">
     {# email #}
