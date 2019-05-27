@@ -238,15 +238,20 @@
 			</div>
 		{% endfor %}
 
+
 	{% else %}
+		{% if v.label.label != '' and 'brAfter' in v.label.class %}
+			<div class="mb-1 {% if v.label.class %}{{ v.label.class }}{% endif %}"
+			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
+			</div>
+		{% endif %}
 		<div class="d-flex">
 		{# si un label existe #}
-		{% if v.label.label != '' %}
+		{% if v.label.label != '' and 'brAfter' not in v.label.class %}
 		  <div class="flex-grow-1 {% if v.label.class %}{{ v.label.class }}{% endif %} mr-2"
 			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
 		  </div>
 		{% endif %}
-
 
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio custom-control-inline">
