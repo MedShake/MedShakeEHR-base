@@ -197,10 +197,15 @@ class msPeople
   			where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'
   			order by d.parentTypeID ")) {
 
+          $dataGet = new msData;
+          $selectConversions = $dataGet->getSelectOptionValueByTypeName(array_column($datas, 'name'));
+
+
           foreach ($datas as $v) {
               if($v['name']=='birthdate') $this->_birthdate=$v['value'];
               $tab[$v['typeID']]=$v;
               $tab[$v['name']]=$v;
+              if(isset($selectConversions[$v['name']][$v['value']])) $tab[$v['name']]['value_label']=$selectConversions[$v['name']][$v['value']];
           }
           return $this->_administrativesDatas=$tab;
         }
@@ -249,6 +254,21 @@ class msPeople
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
 
+        return $tab;
+    }
+
+/**
+ * Obtenir les labels des champs select / radio sur les data admin simples
+ * @param  array $tab data admin simples
+ * @return array      data damin avec label (typeName_label)
+ */
+    public function getLabelForSimpleAdminDatas($tab) {
+        $dataGet = new msData;
+        if($selectConversions = $dataGet->getSelectOptionValueByTypeName(array_keys($tab))) {
+          foreach($tab as $k=>$v) {
+            if(isset($selectConversions[$k][$v])) $tab[$k.'_label']=$selectConversions[$k][$v];
+          }
+        }
         return $tab;
     }
 
