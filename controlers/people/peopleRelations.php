@@ -52,9 +52,9 @@ foreach($options[$typeID] as $k=>$v) {
 
 //formulaire de création praticien en modal
 $formPro = new msForm();
-$formPro->setFormIDbyName('baseNewPro');
-if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
-    $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
+$formPro->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+if (isset($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues'])) {
+    $formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
 }
 $p['page']['form']=$formPro->getForm();
 //ajout champs cachés au form

@@ -37,9 +37,9 @@ $docAsSigner->setFromID($p['user']['id']);
 $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
-    $formIN='baseListingPatients';
+    $formIN=$p['config']['formFormulaireListingPatients'];
 } elseif ($_POST['porp']=='pro') {
-    $formIN='baseListingPro';
+    $formIN=$p['config']['formFormulaireListingPraticiens'];
 } else {
     die();
 }

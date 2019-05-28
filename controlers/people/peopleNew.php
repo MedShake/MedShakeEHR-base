@@ -22,8 +22,8 @@
 
 /**
  * people :  créer un individus
- * soit en mode patient -> formulaire baseNewPatient
- * soit en mode pro -> formualire baseNewPro
+ * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
+ * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -35,9 +35,9 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']='baseNewPatient';
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 } elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
-    $p['page']['formIN']='baseNewPro';
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
 } else {
   $template="forbidden";
   return;

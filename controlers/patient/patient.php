@@ -102,10 +102,10 @@ if ($externe and !$internePatient) {
 
 // le formulaire d'édition de ses données admin
 $formpatient = new msForm();
-$formpatient->setFormIDbyName('baseNewPatient');
+$formpatient->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 $formpatient->setPrevalues($patient->getSimpleAdminDatas());
 $p['page']['formEditAdmin']=$formpatient->getForm();
-$p['page']['formJavascript']['baseNewPatient']=$formpatient->getFormJavascript();
+$p['page']['formJavascript'][$p['config']['formFormulaireNouveauPatient']]=$formpatient->getFormJavascript();
 
 //type du dossier
 $p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");

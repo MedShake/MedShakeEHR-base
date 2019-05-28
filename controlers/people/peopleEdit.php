@@ -22,8 +22,8 @@
 
 /**
  * people : editer les données d'un individus
- * soit en mode patient -> formulaire baseNewPatient
- * soit en mode pro -> formualire baseNewPro
+ * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
+ * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -38,7 +38,7 @@ $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']='baseNewPatient';
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 
     //vérifier les droits
     if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
@@ -46,7 +46,7 @@ if ($p['page']['porp']=='patient') {
       return;
     }
 } elseif ($p['page']['porp']=='pro') {
-    $p['page']['formIN']='baseNewPro';
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
 
     //vérifier les droits
     if($p['config']['droitDossierPeutCreerPraticien'] != 'true' and $match['params']['patient']!=$p['user']['id']) {

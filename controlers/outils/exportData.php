@@ -57,13 +57,13 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 
       //champs dans les data administratives patient
       $form=new msForm;
-      $form->setFormIDbyName('baseNewPatient');
+      $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
       $p['page']['dataFieldsAdmin']=$form->formExtractDistinctTypes();
       $p['page']['dataFieldsAdmin']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdmin']));
 
       //champs dans les data administratives praticien
       $form=new msForm;
-      $form->setFormIDbyName('baseNewPro');
+      $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
       $p['page']['dataFieldsAdminPro']=$form->formExtractDistinctTypes();
       $p['page']['dataFieldsAdminPro']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdminPro']));
 

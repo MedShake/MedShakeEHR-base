@@ -48,9 +48,9 @@ foreach($options[$typeID] as $k=>$v) {
 
 //formulaire de création praticien en modal
 $formPro = new msForm();
-$formPro->setFormIDbyName('baseNewPro');
-if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
-    $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
+$formPro->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+if (isset($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues'])) {
+    $formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
 }
 
 //si jeux de valeurs normées présents
@@ -65,7 +65,7 @@ if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-
 if(!empty($optionsInject)) $formPro->setOptionsForSelect($optionsInject);
 
 $p['page']['form']=$formPro->getForm();
-$p['page']['formJavascript']['baseNewPro']=$formPro->getFormJavascript();
+$p['page']['formJavascript'][$p['config']['formFormulaireNouveauPraticien']]=$formPro->getFormJavascript();
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
   'actAsAjax'=>'true',
