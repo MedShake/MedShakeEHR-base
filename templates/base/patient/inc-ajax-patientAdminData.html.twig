@@ -129,6 +129,7 @@
     {{ page['patient']['administrativeDatas']['street']['value']|e }}
     {{ page['patient']['administrativeDatas']['postalCodePerso']['value']|e }}
     {{ page['patient']['administrativeDatas']['city']['value']|e }}
+    {% if  page['patient']['administrativeDatas']['country']['value_label'] is defined %} - {{ page['patient']['administrativeDatas']['country']['value_label']|e }}{% endif %}
 
     {% if page.correspondants %}
       <div class="d-inline ml-4">

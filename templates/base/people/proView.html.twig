@@ -83,6 +83,7 @@
                   {% if  page.proData.rueAdressePro %}{{ page.proData.rueAdressePro }} {% endif %}
                   {% if  page.proData.codePostalPro %}{{ page.proData.codePostalPro }} {% endif %}
                   {% if  page.proData.villeAdressePro %}{{ page.proData.villeAdressePro }}{% endif %}
+                  {% if  page.proData.paysAdressePro_label %} - {{ page.proData.paysAdressePro_label }}{% endif %}
                 </td></tr>{% endif %} {# Adresse pro #}
                 {% if page.proData.telPro %}<tr>
                   <td>{{ page.proDataLabel.telPro }}<td>
@@ -172,6 +173,7 @@
                   {% if  page.proData.street %}{{ page.proData.street }} {% endif %}
                   {% if  page.proData.postalCodePerso %}{{ page.proData.postalCodePerso }} {% endif %}
                   {% if  page.proData.city %}{{ page.proData.city }}{% endif %}
+                  {% if  page.proData.country_label %} - {{ page.proData.country_label }}{% endif %}
                 </td></tr>{% endif %} {# Adresse perso #}
                 {% if page.proData.mobilePhone %}<tr>
                   <td>{{ page.proDataLabel.mobilePhone }}<td>
