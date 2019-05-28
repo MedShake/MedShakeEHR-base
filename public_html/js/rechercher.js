@@ -61,7 +61,7 @@ $(document).ready(function() {
   });
 
   // clic sur ligne
-  $('body').on("click", ".openPatient td:nth-child(-n+6)", function(e) {
+  $('body').on("click", ".openPatient td:not(:last-child)", function(e) {
     window.location.href = urlBase + $(this).closest('tr').attr('data-url');
   });
 
