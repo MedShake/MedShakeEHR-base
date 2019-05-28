@@ -130,6 +130,10 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $colRetour = array_merge(['deathdate'] ,array_keys($listeTypes));
     $mss->setColonnesRetour($colRetour);
 
+    // on sort les label correspondant au val si champs select/radio
+    $dataGet = new msData;
+    $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
+
     $p['page']['sqlString']=$sql=$mss->getSql();
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
@@ -162,6 +166,7 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
         foreach ($data as $k=>$v) {
             $row[$k]=array();
             foreach ($v as $l=>$w) {
+                if(isset($selectConversions[$l][$w])) $w=$selectConversions[$l][$w];
                 if (empty($w)) {
                     if(isset($modele[$l])) $row[$k][$modele[$l]][]='';
                 } elseif (isset($modele[$l])) {
