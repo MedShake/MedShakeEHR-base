@@ -36,6 +36,12 @@ $patient->setToID($match['params']['patient']);
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
 
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 //sortir les choix de relations patient<->prat
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationPatientPraticien');

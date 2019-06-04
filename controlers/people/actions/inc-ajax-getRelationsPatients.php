@@ -38,6 +38,12 @@ $criteres = array(
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
+
+//restrictions sur retours si droits limités
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+  $mss->setRestricDossiersPropres(true);
+}
+
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
 	foreach ($data as $k=>$v) {
