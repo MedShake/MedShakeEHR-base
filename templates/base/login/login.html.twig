@@ -76,10 +76,12 @@
 
   <div class="form-signer">
     {# form display #}
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center align-items-center" style="height: calc(100vh - 300px); min-height: 250px">
       <div class="col-md-4">
+        {% if config.designAppName == 'MedShakeEHR' %}
         <img class="form-img" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/logo.svg" width=128 height=128/>
-        <h3>Identifiez vous</h3>
+        {% endif %}
+        <h3>Identifiez-vous</h3>
         {{ f.formbuilder(page.form , page.formIN , session) }}
       </div>
     </div>
