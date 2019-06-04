@@ -162,6 +162,13 @@ associer patient
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-12 text-right pt-3">
+		<hr>
+		<a class="btn btn-sm btn-outline-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/"><i class="fas fa-trash-restore mr-1"></i> Dossiers supprimés</a>
+	</div>
+</div>
+
 {% if page.porp == 'externe' %}
 	<div>
 	  <button class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button"><i class="fas fa-plus"></i> Créer nouveau patient</button>
