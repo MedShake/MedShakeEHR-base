@@ -1560,9 +1560,11 @@ function showObjetDet(element, timed) {
 function refreshHistorique() {
   if (!$('.historiqueMedicalComplet .trLigneExamen').length) {
     $('.historiqueMedicalComplet').hide();
+    $('.noticeDossierPatientVide').removeClass('d-none');
     return;
   }
   $('.historiqueMedicalComplet').show();
+  $('.noticeDossierPatientVide').addClass('d-none');
 }
 
 /**
