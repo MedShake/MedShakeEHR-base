@@ -10,6 +10,9 @@ INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('formFormulaireNouveauPatient', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau patient', 'baseNewPatient');
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('formFormulaireNouveauPraticien', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau praticien', 'baseNewPro');
 
+-- redirection après création nouveau patient 
+INSERT INTO `configuration` ( `name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGePatientOuvrirApresCreation', 'default', '0', '', 'Options', 'dossier / liens', 'où rediriger après création d\'un nouveau patient', 'liens');
+
 -- nom de l'application
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('designAppName', 'default', '0', '', 'Ergonomie et design', 'texte', 'nom de l\'application', 'MedShakeEHR');
 

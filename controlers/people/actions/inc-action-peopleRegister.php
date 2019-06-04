@@ -107,8 +107,10 @@ if ($validation === false) {
     } else {
         if ($match['params']['porp']=='pro') {
             msTools::redirection('/pro/'.$patient->getToID().'/');
-        } else {
+        } elseif($p['config']['optionGePatientOuvrirApresCreation'] == 'liens') {
             msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+        } else {
+            msTools::redirection('/patient/'.$patient->getToID().'/');
         }
     }
 }
