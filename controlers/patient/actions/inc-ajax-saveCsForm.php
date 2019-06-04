@@ -70,9 +70,7 @@ if ($validation === false) {
     // si on a un champ qui est déclaré pour l'autoTitle
     if(isset($_POST['autoTitle'])) {
       if(isset($_POST['p_'.$_POST['autoTitle']])) {
-        if(!empty($_POST['p_'.$_POST['autoTitle']])) {
-          $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
-        }
+        $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
       }
     }
 
