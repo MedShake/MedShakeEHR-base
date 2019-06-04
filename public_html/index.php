@@ -102,7 +102,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msTools::redirRoute('userLogIn');
     }
     // compléter la config par défaut
-    array_merge($p['config'], msConfiguration::getAllParametersForUser());
+    $p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
 }
 
 // simplification pour étiquetage des dossiers patients test
