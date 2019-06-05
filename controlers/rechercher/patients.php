@@ -34,11 +34,18 @@ if (isset($match['params']['porp'])) {
     $p['page']['porp']=$match['params']['porp'];
 }
 
-// liste des types par catégorie
+// liste des types par catégorie avec retriction aux types employés dans le form de création
+$form = new msForm;
+if($p['page']['porp'] == 'pro') {
+   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+} else {
+    $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+}
+
 if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
   from data_types as t
   left join data_cat as c on c.id=t.cat
-  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group'
+  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in ('".implode("', '", $form->formExtractDistinctTypes())."')
   order by c.label asc, t.label asc")) {
     foreach ($tabTypes as $v) {
         $p['page']['tabTypes'][$v['catName']][]=$v;
