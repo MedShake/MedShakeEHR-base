@@ -117,10 +117,11 @@ $(document).ready(function() {
   });
 
   // age affiché en label de l'input date de naissance
-  $(".datepick[data-typeid='8']").on("dp.change", function(e) {
+  $(".datepick[data-internalname='birthdate']").on("dp.change", function(e) {
     bd = moment(e.date);
     age = moment().diff(bd, 'years');
-    if (age > 0) $(this).prev('label').append(' - ' + age + ' ans');
+    $(this).prev('label').find('span.ageDynamique').remove();
+    if (age > 0) $(this).prev('label').append('<span class="ageDynamique"> - ' + age + ' ans</span>');
   });
 
   // autocomplete simple
