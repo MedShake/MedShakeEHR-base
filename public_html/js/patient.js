@@ -392,7 +392,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau document importé
-  $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
+  $(".linkAddNewDoc, .cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
     $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.docupload);
