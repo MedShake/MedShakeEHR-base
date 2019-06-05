@@ -44,6 +44,7 @@
     $form->setFormID($p['page']['formID']);
     if ($p['page']['form']=$form->getFormRawData()) {
         $p['page']['tabCat']=msForms::getCatListByID();
+        $p['page']['form']['catName']=$form->getCatNameFromCatID($p['page']['form']['cat']);
 
         // liste des types par catégorie
         if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel

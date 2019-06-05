@@ -88,6 +88,9 @@
   <li class="breadcrumb-item">
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
   </li>
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ page.form.catName }}/">{{ page.tabCat[page.form.cat] }}</a>
+  </li>
   <li class="breadcrumb-item active">{{ page.form.name }}
   </li>
 </ol>

@@ -45,11 +45,18 @@
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
 	<li class="breadcrumb-item active">
-			Formulaires
+			  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
 	</li>
+  {% if page.groupe is not empty %}
+  <li class="breadcrumb-item active">
+		  {{ page.tabTypes[page.groupe]['0']['catLabel'] }}
+	</li>
+  {% endif %}
 </ol>
 
-<h1>Liste des formulaires</h1>
+<h1>Liste des formulaires
+  {% if page.groupe is not empty %}<small> - {{ page.tabTypes[page.groupe]['0']['catLabel'] }}</small>{% endif %}
+</h1>
 
 <div>
 
@@ -74,7 +81,7 @@
       </div>
 
 			{% for k,v in page.tabTypes %}
-        {% if page.groupe=='' or page.groupe==v.0.catName %}
+        {% if page.groupe == '' or page.groupe == v.0.catName %}
 				  <h2 id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
             <span class="fa fa-search-plus" aria-hidden="true"></span>
           </a></h2>
