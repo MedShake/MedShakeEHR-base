@@ -73,7 +73,7 @@
         <td>{{ v.registerDate }}</td>
         <td>
           <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/" title="Ouvrir le dossier">
-            <span class="fa fa-folder-open" aria-hidden="true"></span>
+            <span class="fas fa-folder-open" aria-hidden="true"></span>
           </a>
           {{ v.patientPrenom }} {{ v.patientNom }}
           {% if v.toID in config.statsExclusionPatientsArray %}

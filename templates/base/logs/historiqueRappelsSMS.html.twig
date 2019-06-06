@@ -55,7 +55,7 @@
   <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline mb-4">
 
     <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
-      <span class="fa fa-step-backward" aria-hidden="true"></span>
+      <span class="fas fa-step-backward" aria-hidden="true"></span>
       Jour précédent
     </a>
     <a class="btn btn-outline-secondary {% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
@@ -63,7 +63,7 @@
     </a>
     <a class="btn btn-outline-secondary {% if page.dates.suivant > "now"|date("U") %} disabled{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
       Jour suivant
-      <span class="fa fa-step-forward" aria-hidden="true"></span>
+      <span class="fas fa-step-forward" aria-hidden="true"></span>
     </a>
 
     <a class="btn btn-outline-secondary {% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}" style="margin-right: 20px">
@@ -73,7 +73,7 @@
     <div id="dateSel" class="input-group date datepick" >
       <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
       <span class="input-group-append">
-        <span class="fa fa-calendar input-group-text"></span>
+        <span class="fas fa-calendar input-group-text"></span>
       </span>
     </div>
     {% if page.selectPrat > 0 %}
@@ -130,7 +130,7 @@
                   Statut
                   <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
                   <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
-                  <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fa fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
+                  <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fas fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
                 </form>
               </th>
             </tr>

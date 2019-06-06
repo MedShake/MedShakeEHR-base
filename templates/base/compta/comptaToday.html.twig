@@ -73,7 +73,7 @@
                 <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                   <td>
                     <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                      <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                     </a>
                     {{ reg.prenom|e }}
                     {{ reg.nom|e }}
@@ -92,7 +92,7 @@
                   {% endif %}
                   <td>
                     <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                      <span class="fas fa-question-circle" aria-hidden="true"></span>
                     </button>
                     {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
                       <strong>{{ reg.regleFacture|e }}€</strong>
@@ -142,7 +142,7 @@
                 <tr>
                   <td>
                     <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                      <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                     </a>
                     {{ reg.prenom|e }}
                     {{ reg.nom|e }}
@@ -157,7 +157,7 @@
                   </td>
                   <td>
                     <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                      <span class="fas fa-question-circle" aria-hidden="true"></span>
                     </button>
                     {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
                     {% else %}

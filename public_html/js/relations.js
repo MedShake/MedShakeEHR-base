@@ -194,14 +194,14 @@ function getRelationsPatientPatientsTab() {
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
               <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
-                <span class="fa fa-folder-open" aria-hidden="true"></span>\
+                <span class="fas fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
             <td>' + value.prenom + ' ' + value.nom + '</td>\
             <td>' + value.ddn + '</td><td>' + value.typeRelation + '</td>\
             <td class="text-right">\
               <div class="btn-group">\
-                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fa fa-times" aria-hidden="true"></span>\
+                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.patientID + '"><span class="fas fa-times" aria-hidden="true"></span>\
                 </button>\
               </div>\
             </td>\
@@ -233,13 +233,13 @@ function getRelationsPatientPraticiensTab() {
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
               <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
-                <span class="fa fa-folder-open" aria-hidden="true"></span>\
+                <span class="fas fa-folder-open" aria-hidden="true"></span>\
               </a>\
             </td>\
             <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationTxt + '</td>\
             <td class="text-right">\
               <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-peopleID="' + value.pratID + '">\
-                  <span class="fa fa-times" aria-hidden="true"></span>\
+                  <span class="fas fa-times" aria-hidden="true"></span>\
               </button>\
             </td>\
           </tr>');

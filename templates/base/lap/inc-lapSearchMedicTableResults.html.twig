@@ -63,13 +63,13 @@
               <tr data-speThe="{{ medic.sp_code_sq_pk }}" data-presThe="{{ pres.pre_code_pk }}" data_prixucd="{{ medic.prixEstim }}" data-tauxrbt="{{ pres.rbtVille }}" style="cursor: pointer">
                 <td>
                   <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/{{ medic.sp_code_sq_pk }}/" target="_blank">
-                    <span class="fa fa-book" aria-hidden="true"></span>
+                    <span class="fas fa-book" aria-hidden="true"></span>
                   </a>
                 </td>
                 <td class="sendToPrescription">
                   {{ medic.sp_nom|trim('§') }}
                   {% if medic.statutDelivrance.rh == 'OUI' or medic.statutDelivrance.ph == 'OUI' or  medic.statutDelivrance.puh == 'OUI' or medic.statutDelivrance.sp == 'OUI' or medic.statutDelivrance.ps == 'OUI' or medic.statutDelivrance.prep_h == 'OUI' or medic.statutDelivrance.atu == 'OUI' %}
-                    <span class="badge badge-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="fa fa-exclamation-triangle"></span></span>
+                    <span class="badge badge-warning" title="Ce médicament est à prescription / délivrance restreinte, consultez la monographie pour les détails"><span class="fas fa-exclamation-triangle"></span></span>
                   {% endif %}
                   {% if pres.reservhop != 'NON' %}
                     <span class="badge badge-primary" title="Ce médicament est à prescription hospitalière, consultez la monographie pour les détails">H</span>

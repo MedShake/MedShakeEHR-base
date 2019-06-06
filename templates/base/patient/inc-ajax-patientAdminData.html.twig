@@ -76,7 +76,7 @@
             </button>
           {% endif %}
 
-          <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
           {% if config.transmissionsPeutCreer == 'true' %}
             <button type="button" class="btn btn-light btn-sm newTransmission" data-toggle="modal" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
           {% endif %}
@@ -134,14 +134,14 @@
     {% if page.correspondants %}
       <div class="d-inline ml-4">
         <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
-          <span class="fa fa-link" aria-hidden="true"></span>
+          <span class="fas fa-link" aria-hidden="true"></span>
         </button>
         {% for v in page.correspondants %}
         <div class="btn-group">
           <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
 
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
-            {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm"></i></sup>{% endif %}
+            {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
           </a>
           <button type="button" class="btn btn-sm btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
               <span class="sr-only">Toggle Dropdown</span>

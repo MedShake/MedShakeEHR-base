@@ -29,7 +29,7 @@
 <tr class="tr{{ cs.id }} trLigneExamen{% if cs.important == 'y' %} table-info{% endif %} collapse{% if cs.creationDate|date("Y") == "now"|date("Y") or loop.parent.loop.index == 1 %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}"  data-groupe="{{ cs.groupe|e('html_attr') }}" data-creationDate="{{ cs.creationDate }}">
     <td title="Mail">
       <a class="btn btn-light btn-sm showDetDoc" role="button">
-        <i class="fa fa-at fa-fw"></i>
+        <i class="fas fa-at fa-fw"></i>
       </a>
     </td>
     <td>
@@ -42,17 +42,17 @@
       <div class="btn-group">
         {# voir #}
         <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank" title="Voir">
-          <i class="fa fa-eye fa-fw"></i>
+          <i class="fas fa-eye fa-fw"></i>
         </a>
         {# option #}
         <div class="btn-group">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-ellipsis-h fa-fw"></i>
+              <i class="fas fa-ellipsis-h fa-fw"></i>
           </button>
           <ul class="dropdown-menu">
             <li class="d-block d-lg-none">
               <a class="dropdown-item showDetDoc" href="#" target="_blank">
-                <i class="fa fa-eye fa-fw text-muted mr-1"></i> Voir
+                <i class="fas fa-eye fa-fw text-muted mr-1"></i> Voir
               </a>
             </li>
             {% if config.transmissionsPeutCreer == 'true' %}

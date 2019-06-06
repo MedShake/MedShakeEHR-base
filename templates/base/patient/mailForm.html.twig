@@ -52,7 +52,7 @@
           {% for v in page.correspondants %}
             <button class="btn btn-outline-secondary btn-sm copyValueTo" role="button" title="{{ v.typeRelationTxt|e('html_attr') }}" data-copyval="{{ v.emailApicrypt }}" data-copyvalto="#id_mailToApicrypt_id">
               {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
-              {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm"></i></sup>{% endif %}
+              {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
             </button>
           {% endfor %}
         {% elseif page.form.addHidden.mailType == 'ecofax' %}
@@ -60,7 +60,7 @@
           {% for v in page.correspondants %}
             <button class="btn btn-outline-secondary btn-sm copyValueTo" role="button" title="{{ v.typeRelationTxt|e('html_attr') }}" data-copylab="{% if v.titre %}{{ v.titre|e('html_attr') }} {% endif %}{{ v.prenom|e('html_attr') }} {{ v.nom|e('html_attr') }}" data-copylabto="#id_mailToEcofaxName_id" data-copyval="{{ v.faxPro }}" data-copyvalto="#id_mailToEcofaxNumber_id">
               {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
-              {% if v.typeRelation == 'MTD' %}<sup><i class="fa fa-star fa-sm"></i></sup>{% endif %}
+              {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
             </button>
           {% endfor %}
         {% endif %}
@@ -84,7 +84,7 @@
             </div>
             <div class="col-auto text-right">
               <a class="btn btn-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" target="_blank" title="Voir">
-                <i class="fa fa-external-link-alt"></i>
+                <i class="fas fa-external-link-alt"></i>
                 Voir
               </a>
             </div>

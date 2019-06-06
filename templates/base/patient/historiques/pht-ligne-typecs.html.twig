@@ -29,7 +29,7 @@
  <tr id="lh{{ cs.id }}" class="tr{{ cs.id }}{% if cs.important == 'y' %} table-info{% endif %} trLigneExamen collapse{% if cs.creationDate|date("Y") == "now"|date("Y") or loop.parent.loop.index == 1 %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Consultation">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <i class="fa fa-stethoscope fa-fw"></i>
+      <i class="fas fa-stethoscope fa-fw"></i>
     </a>
   </td>
   <td>
@@ -48,11 +48,11 @@
       {# edit / view #}
       {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
         <button type="button" class="btn btn-light btn-sm editCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}" title="Editer" {% if cs.signaturePatient == 'o' %}onclick="alert('Si le document est déjà signé, vous perdrez la signature à la validation de l\'édition.');"{% endif %}>
-          <i class="fa fa-pencil-alt fa-fw"></i>
+          <i class="fas fa-pencil-alt fa-fw"></i>
         </button>
       {% else %}
         <button type="button" class="btn btn-light btn-sm editCS d-none d-lg-inline-block" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="{{ cs.iconeType }}" title="Voir">
-          <i class="fa fa-eye fa-fw"></i>
+          <i class="fas fa-eye fa-fw"></i>
         </button>
       {% endif %}
 
@@ -60,14 +60,14 @@
       {% if cs.printModel %}
 
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank" title="Imprimer">
-          <i class="fa fa-print fa-fw"></i>
+          <i class="fas fa-print fa-fw"></i>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
             <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-              <i class="fa fa-paper-plane fa-fw"></i>
+              <i class="fas fa-paper-plane fa-fw"></i>
             </button>
             <ul class="dropdown-menu">
               {% if config.smtpHost %}
@@ -113,7 +113,7 @@
       {% endif %}
       {% if cs.sendMail > 0 %}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-          <i class="fa fa-envelope fa-fw"></i>
+          <i class="fas fa-envelope fa-fw"></i>
         </a>
       {% endif %}
 
@@ -132,17 +132,17 @@
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-ellipsis-h fa-fw"></i>
+          <i class="fas fa-ellipsis-h fa-fw"></i>
         </button>
         <ul class="dropdown-menu">
           <li class="d-block d-lg-none">
             {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
               <a class="dropdown-item editCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="update">
-                <i class="fa fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
+                <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
               </a>
             {% else %}
               <a class="dropdown-item editCS" data-parentID="{{ cs.parentID }}" data-objetID="{{ cs.id }}" data-formtocall="{{ cs.formName }}" data-csID="{{ cs.typeCS }}" data-prevalues="yes" data-mode="view">
-                <i class="fa fa-eye fa-fw text-muted mr-1"></i> Voir
+                <i class="fas fa-eye fa-fw text-muted mr-1"></i> Voir
               </a>
             {% endif %}
           </li>
@@ -224,7 +224,7 @@
           {% if cs.sendMail > 0 %}
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-                <i class="fa fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
+                <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
               </a>
             </li>
           {% endif %}

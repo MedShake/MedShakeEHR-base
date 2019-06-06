@@ -49,14 +49,14 @@
     <div class="btn-group">
       {# voir #}
       <a class="btn btn-light btn-sm showDetDoc d-none d-lg-inline-block" role="button" href="#" target="_blank" title="Voir">
-        <i class="fa fa-eye fa-fw"></i>
+        <i class="fas fa-eye fa-fw"></i>
       </a>
 
       {# send #}
       {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
         <div class="btn-group d-none d-lg-inline-flex">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-            <i class="fa fa-paper-plane fa-fw"></i>
+            <i class="fas fa-paper-plane fa-fw"></i>
           </button>
           <ul class="dropdown-menu">
             {% if config.smtpHost %}
@@ -101,19 +101,19 @@
       {% endif %}
       {% if cs.sendMail > 0 %}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-          <i class="fa fa-envelope fa-fw"></i>
+          <i class="fas fa-envelope fa-fw"></i>
         </a>
       {% endif %}
 
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-ellipsis-h fa-fw"></i>
+          <i class="fas fa-ellipsis-h fa-fw"></i>
         </button>
         <ul class="dropdown-menu">
           <li class="d-block d-lg-none">
             <a class="dropdown-item showDetDoc" href="#" target="_blank">
-              <i class="fa fa-eye fa-fw text-muted mr-1"></i> Voir
+              <i class="fas fa-eye fa-fw text-muted mr-1"></i> Voir
             </a>
           </li>
           {% if config.smtpHost or config.apicryptSmtpHost or config.faxService or config.transmissionsPeutCreer %}
@@ -168,7 +168,7 @@
             <li role="separator" class="dropdown-divider"></li>
             <li>
               <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-                <i class="fa fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
+                <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
               </a>
             </li>
           {% endif %}

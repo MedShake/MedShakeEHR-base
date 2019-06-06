@@ -83,7 +83,7 @@
 			{% for k,v in page.tabTypes %}
         {% if page.groupe == '' or page.groupe == v.0.catName %}
 				  <h2 id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
-            <span class="fa fa-search-plus" aria-hidden="true"></span>
+            <span class="fas fa-search-plus" aria-hidden="true"></span>
           </a></h2>
 				  <table class="table table-sm table-hover mb-3">
 				  <thead class="thead-light">
@@ -107,7 +107,7 @@
             <td class="text-right">
               <div class="btn-group">
                 <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-                  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                  <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                 </a>
               </div>
 					  </td>

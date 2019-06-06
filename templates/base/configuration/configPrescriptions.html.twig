@@ -90,7 +90,7 @@
       <h2 id="cat{{ v.0.cat }}">{{ v.0.catLabel }}
         <small>
           <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/prescriptions/{{ page.selectUser }}/{{ v.0.cat }}/">
-            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="fas fa-search" aria-hidden="true"></span>
           </a>
         </small>
       </h2>
@@ -112,15 +112,15 @@
               <td class="text-right">
                 <div class="btn-group">
                   <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
-                    <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                    <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                   </button>
 
                   <button type="button" class="btn btn-light btn-sm duplicate" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewCat" data-modal="modalNewCat">
-                    <span class="fa fa-copy" aria-hidden="true"></span>
+                    <span class="fas fa-copy" aria-hidden="true"></span>
                   </button>
 
                   <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.module=="base" %} disabled="disabled" {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
-                    <span class="fa fa-times" aria-hidden="true"></span>
+                    <span class="fas fa-times" aria-hidden="true"></span>
                   </button>
                 </div>
               </td>

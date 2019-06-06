@@ -163,7 +163,7 @@ function displayListSamPatients(el) {
         html += '<thead><tr><th class="col-auto"></th><th class="col-auto">Identité</th><th class="col-auto">Date de la prescription</th></tr></thead><tbody>';
         $.each(data.patientsList, function(index, ligne) {
           html += '<tr>';
-          html += '<td><a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+          html += '<td><a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier"><span class="fas fa-folder-open" aria-hidden="true"></span></a></td>';
           html += '<td>' + ligne.identiteDossier + '</td>';
           html += '<td>' + ligne.registerDate + '</td>';
           html += '</tr>';

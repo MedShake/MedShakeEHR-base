@@ -29,7 +29,7 @@
  <tr class="tr{{ cs.id }}{% if cs.important == 'y' %} table-danger{% endif %} trLigneExamen trReglement collapse{% if cs.creationDate|date("Y") == "now"|date("Y") or loop.parent.loop.index == 1 %} show{% endif %}" data-annee="{{ cs.creationDate|date("Y") }}" data-objetID="{{ cs.id }}" data-alternatTitre="{{ cs.titre|e('html_attr') }}" data-registerDate="{{ cs.registerDate }}" data-creationDate="{{ cs.creationDate }}" data-groupe="{{ cs.groupe|e('html_attr') }}">
   <td title="Règlement">
     <a class="btn btn-light btn-sm showDetDoc" role="button">
-      <i class="fa fa-euro-sign fa-fw"></i>
+      <i class="fas fa-euro-sign fa-fw"></i>
     </a>
   </td>
   <td>
@@ -49,15 +49,15 @@
       {# edit / clone #}
        {% if cs.iconeType == 'update' %}
           <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button"  title="Editer">
-            <i class="fa fa-pencil-alt fa-fw"></i>
+            <i class="fas fa-pencil-alt fa-fw"></i>
           </button>
        {% else %}
           <button class="btn btn-light btn-sm editReglement d-none d-lg-inline-block" type="button" title="Dupliquer">
-            <i class="fa fa-share fa-fw"></i>
+            <i class="fas fa-share fa-fw"></i>
          </button>
        {% endif %}
        <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank" title="Imprimer">
-         <i class="fa fa-print fa-fw"></i>
+         <i class="fas fa-print fa-fw"></i>
        </a>
       {% if config.vitaleActiver =='true' %}
         <button class="btn btn-light btn-sm d-none d-lg-inline-block newFse" data-mode="{{ config.vitaleMode }}" data-vitaleservice="{{ config.vitaleService }}" type="button" title="Établir une FSE">
@@ -67,13 +67,13 @@
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-ellipsis-h fa-fw"></i>
+            <i class="fas fa-ellipsis-h fa-fw"></i>
         </button>
         <ul class="dropdown-menu">
           <li class="d-block d-lg-none">
            {% if cs.iconeType == 'update' %}
              <a class="dropdown-item editReglement">
-               <i class="fa fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
+               <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
              </a>
            {% else %}
              <a class="dropdown-item editReglement">

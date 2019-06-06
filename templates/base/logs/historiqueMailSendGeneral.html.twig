@@ -57,12 +57,12 @@
   <div class="col text-right">
       <div class="btn-group" role="group" aria-label="...">
         <a class="btn btn-secondary" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
-          <span class="fa fa-chevron-left" aria-hidden="true"></span>
+          <span class="fas fa-chevron-left" aria-hidden="true"></span>
           Plus récents
         </a>
         <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
           Plus anciens
-          <span class="fa fa-chevron-right" aria-hidden="true"></span>
+          <span class="fas fa-chevron-right" aria-hidden="true"></span>
         </a>
       </div>
   </div>
@@ -92,7 +92,7 @@
                     <td>
                       <div class="btn-group">
                         <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
-                          <span class="fa fa-folder-open" aria-hidden="true"></span>
+                          <span class="fas fa-folder-open" aria-hidden="true"></span>
                         </a>
                       </div>
                       {{ v.patient.firstname }}

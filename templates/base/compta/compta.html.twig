@@ -69,12 +69,12 @@
 
 <form id="periodeForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/" method="post" class="form-inline" style="margin : 30px 0;">
     <button class="btn btn-light refresh mr-sm-2 mb-2" type="button">
-      <span class="fa fa-sync-alt"></span>
+      <span class="fas fa-sync-alt"></span>
     </button>
   {% if page.pratsAuto|length > 1 %}
     <div class="input-group mr-sm-2 mb-2">
       <div class="input-group-prepend">
-        <span class="input-group-text" style="width:45px;padding-left:15px"><i class="fa fa-user-md"></i></span>
+        <span class="input-group-text" style="width:45px;padding-left:15px"><i class="fas fa-user-md"></i></span>
       </div>
       <select name="prat" class="custom-select">
         {% for prat in page.pratsAuto %}
@@ -89,7 +89,7 @@
 
   <div class="input-group mr-sm-2 mb-2">
     <div class="input-group-prepend">
-      <span class="input-group-text" style="width:45px;padding-left:17px"><i class="fa fa-bolt"></i></span>
+      <span class="input-group-text" style="width:45px;padding-left:17px"><i class="fas fa-bolt"></i></span>
     </div>
     <select id="periodeQuickSelectID" name="periodeQuickSelect" class="custom-select" autocomplete="off" />
       <option value="none" selected>Selection rapide</option>
@@ -105,7 +105,7 @@
     </div>
     <input type="text" id="beginPeriodeID" name="beginPeriode" class="form-control" autocomplete="off" value="{{ page.periode.begin }}"/>
     <div class="input-group-append">
-      <span class="fa fa-calendar input-group-text"></span>
+      <span class="fas fa-calendar input-group-text"></span>
     </div>
   </div>
 
@@ -115,7 +115,7 @@
     </div>
     <input type="text" id="endPeriodeID" name="endPeriode" class="form-control" autocomplete="off" value="{{ page.periode.end }}"/>
     <div class="input-group-append">
-      <span class="fa fa-calendar input-group-text"></span>
+      <span class="fas fa-calendar input-group-text"></span>
     </div>
   </div>
 

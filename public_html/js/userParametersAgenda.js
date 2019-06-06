@@ -92,7 +92,7 @@ $(document).ready(function() {
               <tr>\
                 <td>\
                   <a class="delConsult" href="javascript:void(0)">\
-                    <span class="fa fa-minus"></span>\
+                    <span class="fas fa-minus"></span>\
                   </a>\
                 </td>\
                 <td>\

@@ -39,7 +39,7 @@
   {% for samID, sam in page.sams %}
     <div class="card">
       <div class="card-header py-2" role="tab" id="heading{{ samID }}{{ numberrand }}" data-toggle="collapse" data-parent="#accordionSams{{ numberrand }}" data-target="#collapse{{ samID }}{{ numberrand }}" aria-expanded="true" aria-controls="collapse{{ samID }}{{ numberrand }}" style="cursor: pointer">
-        <span class="card-title"><span class="fa fa-info-circle"></span> {{ sam.titre }}</span>
+        <span class="card-title"><span class="fas fa-info-circle"></span> {{ sam.titre }}</span>
       </div>
       <div id="collapse{{ samID }}{{ numberrand }}" class="collapse" aria-labelledby="heading{{ samID }}{{ numberrand }}" data-parent="#accordionSams{{ numberrand }}">
         <div class="card-body">

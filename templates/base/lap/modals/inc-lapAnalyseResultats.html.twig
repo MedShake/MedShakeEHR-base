@@ -63,7 +63,7 @@
         <tr class="danger font-weight-bold" role="button" data-toggle="collapse" data-target=".redon{{ keyTerrain }}">
           <td style="cursor: pointer">
             <button type="button" class="btn btn-danger btn-sm">
-              <span class="fa fa-plus" aria-hidden="true"></span></button>
+              <span class="fas fa-plus" aria-hidden="true"></span></button>
             {{ allergies['0']['alerte']['lib_ter'] }}
           </td>
         </tr>
@@ -72,7 +72,7 @@
           <tr class="redon{{ keyTerrain }} collapse">
             <td>
               <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}l{{ keyLigne }}">
-                <span class="fa fa-book" aria-hidden="true"></span></button>
+                <span class="fas fa-book" aria-hidden="true"></span></button>
               {{ ligne.medic.nomUtileFinal }}
               <small>{{ ligne['medic']['posoHumanCompleteTab'][corLi[ligne['alerte']['indiceligneprescription']]['poso']] }}</small>
               {% if corLi[ligne['alerte']['indiceligneprescription']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
@@ -98,7 +98,7 @@
         <tr class="danger font-weight-bold" role="button" data-toggle="collapse" data-target=".redon{{ keyRedon }}">
           <td style="cursor: pointer">
             <button type="button" class="btn btn-danger btn-sm">
-              <span class="fa fa-plus" aria-hidden="true"></span></button>
+              <span class="fas fa-plus" aria-hidden="true"></span></button>
             {{ redon['0']['alerte']['texte'] }}
           </td>
         </tr>
@@ -125,7 +125,7 @@
       <tr class="font-weight-bold {% if alertes['1'] is not empty %}table-danger{% else %}table-ctive{% endif %}" role="button" data-toggle="collapse" data-target=".poso{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
-            <span class="fa fa-plus" aria-hidden="true"></span></button>
+            <span class="fas fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
@@ -156,7 +156,7 @@
       <tr class="font-weight-bold {% if alertes['C'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".cipemg{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['C'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
-            <span class="fa fa-plus" aria-hidden="true"></span></button>
+            <span class="fas fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
@@ -168,7 +168,7 @@
         <tr class="cipemg{{ ligneThe }} collapse">
           <td class="text-danger" style="padding-left :20px">
             <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}c{{ keyLigne }}">
-              <span class="fa fa-book" aria-hidden="true"></span></button>
+              <span class="fas fa-book" aria-hidden="true"></span></button>
             Contre-indication :
             {{ alerte.lib_ter }}
           </td>
@@ -182,7 +182,7 @@
         <tr class="cipemg{{ ligneThe }} collapse">
           <td style="padding-left :20px">
             <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}p{{ keyLigne }}">
-              <span class="fa fa-book" aria-hidden="true"></span></button>
+              <span class="fas fa-book" aria-hidden="true"></span></button>
             Précautions d'emploi :
             {{ alerte.lib_ter }}
           </td>
@@ -202,7 +202,7 @@
       <tr class="font-weight-bold {% if alertes['1'] is not empty or alertes['2'] is not empty %}table-danger{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target=".gro{{ ligneThe }}">
         <td>
           <button type="button" class="btn {% if alertes['1'] is empty and alertes['2'] is empty %}btn-warning{% else %}btn-danger{% endif %} btn-sm">
-            <span class="fa fa-plus" aria-hidden="true"></span></button>
+            <span class="fas fa-plus" aria-hidden="true"></span></button>
           {{ alertes.medic.nomUtileFinal }}
           -
           <small style="font-weight : normal;">{{ alertes['medic']['posoHumanCompleteTab'][corLi[ligneThe]['poso']] }}</small>
@@ -216,7 +216,7 @@
           <td class="text-danger" style="padding-left :20px">
             {% if alerte.texte %}
               <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ci{{ keyLigne }}">
-                <span class="fa fa-book" aria-hidden="true"></span></button>
+                <span class="fas fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
             :
@@ -235,7 +235,7 @@
           <td style="padding-left :20px">
             {% if alerte.texte %}
               <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}d{{ keyLigne }}">
-                <span class="fa fa-book" aria-hidden="true"></span></button>
+                <span class="fas fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
             :
@@ -254,7 +254,7 @@
           <td style="padding-left :20px">
             {% if alerte.texte %}
               <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}e{{ keyLigne }}">
-                <span class="fa fa-book" aria-hidden="true"></span></button>
+                <span class="fas fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
             :
@@ -273,7 +273,7 @@
           <td style="padding-left :20px">
             {% if alerte.texte %}
               <button type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target="#texte{{ keyTerrain }}ee{{ keyLigne }}">
-                <span class="fa fa-book" aria-hidden="true"></span></button>
+                <span class="fas fa-book" aria-hidden="true"></span></button>
             {% endif %}
             {{ alerte.lib_ter_per }}
             :
@@ -311,7 +311,7 @@
         <tr class="font-weight-bold {% if niveau in [1, 2] %}table-danger{% elseif niveau in [3, 4] %}table-warning{% else %}table-active{% endif %}" role="button" data-toggle="collapse" data-target="#inter{{ niveau }}i{{ kinter }}">
           <td>
             <button type="button" class="btn {% if niveau in [1, 2] %}btn-danger{% elseif niveau in [3, 4] %}btn-warning{% endif %} btn-sm">
-              <span class="fa fa-plus" aria-hidden="true"></span></button>
+              <span class="fas fa-plus" aria-hidden="true"></span></button>
             {{ inter.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
               <span class="badge badge-info">TT en cours</span>{% endif %}
@@ -336,7 +336,7 @@
         <tr class="font-weight-bold danger" role="button" data-toggle="collapse" data-target="#incon{{ niveau }}in">
           <td>
             <button type="button" class="btn btn-danger btn-sm">
-              <span class="fa fa-plus" aria-hidden="true"></span></button>
+              <span class="fas fa-plus" aria-hidden="true"></span></button>
             {{ incon.medic1.nomUtileFinal }}
             {% if corLi[inter['infos']['indiceligneprescription_1']]['zone'] in ['TTPonctuels', 'TTChroniques'] %}
               <span class="badge badge-info">TT en cours</span>{% endif %}

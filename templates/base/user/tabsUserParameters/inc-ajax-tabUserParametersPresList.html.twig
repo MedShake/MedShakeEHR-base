@@ -54,15 +54,15 @@
                      <td class="text-right">
                        <div class="btn-group">
                          <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ w.id }}" {% if w.toID == 0 %} disabled {% endif %} data-table="prescriptions" data-form="formModalNewPres" data-modal="modalNewPres">
-                             <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                             <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                          </button>
 
                          <button type="button" class="btn btn-light btn-sm duplicate" data-id="{{ w.id }}" data-table="prescriptions" data-form="formModalNewPres" data-modal="modalNewPres">
-           						  <span class="fa fa-copy" aria-hidden="true"></span>
+           						  <span class="fas fa-copy" aria-hidden="true"></span>
            						  </button>
 
                          <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" {% if w.enfants > 0 or w.toID == 0 %} disabled {% endif %} data-id="{{ w.id }}" data-table="prescriptions">
-                             <span class="fa fa-times" aria-hidden="true"></span>
+                             <span class="fas fa-times" aria-hidden="true"></span>
                          </button>
                        </div>
                      </td>

@@ -44,7 +44,7 @@
         <button class="btn btn-light btn-sm newCourrier d-none d-lg-inline-block" type="button" data-modele="{{ cs.name }}" data-objetID="{{ cs.id }}"
         {% if cs.iconeType == 'update' and ( cs.fromID == user.id  or user.rank == 'admin') %}
           title="Editer">
-          <i class="fa fa-pencil-alt fa-fw"></i>
+          <i class="fas fa-pencil-alt fa-fw"></i>
         {% else %}
           title="Dupliquer">
           <i class="fas fa-clone fa-fw"></i>
@@ -53,14 +53,14 @@
 
         {# print #}
         <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/showpdf/{{ cs.id }}/" target="_blank">
-          <span class="fa fa-print fa-fw" aria-hidden="true" title="Imprimer"></span>
+          <span class="fas fa-print fa-fw" aria-hidden="true" title="Imprimer"></span>
         </a>
 
         {# send #}
         {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
           <div class="btn-group d-none d-lg-inline-flex">
             <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
-              <i class="fa fa-paper-plane fa-fw"></i>
+              <i class="fas fa-paper-plane fa-fw"></i>
 
             </button>
             <ul class="dropdown-menu">
@@ -106,20 +106,20 @@
         {% endif %}
         {% if cs.sendMail > 0 %}
           <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-            <i class="fa fa-envelope fa-fw"></i>
+            <i class="fas fa-envelope fa-fw"></i>
           </a>
         {% endif %}
         {# option #}
         <div class="btn-group">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-ellipsis-h fa-fw"></i>
+            <i class="fas fa-ellipsis-h fa-fw"></i>
 
           </button>
           <ul class="dropdown-menu">
             <li class="d-block d-lg-none">
               <a class="dropdown-item newCourrier" data-modeleID="{{ cs.typeCS }}" data-objetID="{{ cs.id }}">
                 {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
-                  <i class="fa fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
+                  <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Editer
                 {% else %}
                   <i class="fas fa-clone fa-fw text-muted mr-1"></i> Dupliquer
                 {% endif %}
@@ -187,7 +187,7 @@
             {% if cs.sendMail > 0 %}
               <li>
                 <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
-                  <i class="fa fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
+                  <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des envois par mail
                 </a>
               </li>
             {% endif %}
