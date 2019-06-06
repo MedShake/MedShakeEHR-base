@@ -27,9 +27,9 @@
  #}
 {% import "macroForm.html.twig" as f %}
 <div class="row">
-  <div class=" col-md-6 px-0">
-    <div class="card col-md-12 p-0">
-      <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-danger"></i> Praticiens</div>
+  <div class="col-12 col-xl-6 mb-4 p-0 pl-xl-0 pr-xl-3">
+    <div class="card col-12 p-0">
+      <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens</div>
       <div class="card-body">
         {% if config.droitDossierPeutCreerPraticien == 'true' %}
           <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
@@ -73,9 +73,9 @@
   </div>
 
 
-	<div class=" col-md-6 pr-0">
-		<div class="card col-md-12 p-0">
-			<div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Liens familiaux</div>
+	<div class="col-12 col-xl-6 mb-4 p-0 pr-xl-0 pl-xl-3">
+		<div class="card col-12 p-0">
+			<div class="card-header font-weight-bold"><i class="fas fa-sitemap fa-fw fa-lg text-secondary mr-1"></i> Liens familiaux</div>
 			<div class="card-body">
 				<form class="form-inline">
 					<div class="form-group" style="width:100%">

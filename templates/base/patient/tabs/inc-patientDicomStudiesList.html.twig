@@ -30,31 +30,30 @@
 <div class="row mb-4">
   <div class="col-10 pl-0">
     <span class="mr-2">Préparer une acquisition</span>
-    <button class="btn btn-light text-dark border rounded prepareEcho mr-2" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
+    <button class="btn btn-outline-secondary prepareEcho mr-2" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
       <i class="fas fa-radiation fa-lg fa-fw"></i> Appareil
     </button>
-    <button class="btn btn-light text-dark border rounded prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture">
+    <button class="btn btn-outline-secondary prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture">
       <i class="fa fa-mobile-alt fa-lg fa-fw"></i> Phonecapture
     </button>
 
   </div>
+    <div class="col-2 text-right pr-0">
+      <button class="btn btn-outline-secondary tabDicomRefresh" title="Rafraîchir la liste"><i class="fa fa-sync-alt"></i> Rafraîchir</button>
+    </div>
 
 </div>
 
-<div class="row">
-  <div class="col-10 px-0">
-    <div class="card">
-      <div class="card-header font-weight-bold"><i class="fas fa-portrait fa-lg fa-fw text-secondary"></i> Imagerie du patient
-        <button class="btn btn-gray btn-sm ml-3 tabDicomRefresh float-right" title="Rafraîchir la liste"><i class="fa fa-sync-alt"></i></button>
-      </div>
-      <div class="card-body py-1">
-        {% if not page.studiesDcData %}
-          <p><i>Aucune étude référencée pour ce patient.</i></p>
-        {% endif %}
-      </div>
-      {% if page.studiesDcData %}
+{% if not page.studiesDcData %}
+  <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 350px); min-height: 250px">
+    <div class="mb-3"><i class="fas fa-portrait fa-10x text-light"></i></div>
+    <div class="text-muted">Aucune étude référencée pour ce patient.</div>
+  </div>
+{% else %}
+  <div class="row">
+    <div class="col-12 px-0">
         <table id="listeExamens" class="table table-sm table-striped table-hover">
-          <thead>
+          <thead class="thead-light">
             <th></th>
             <th>Date</th>
             <th>Opérateur</th>
@@ -65,8 +64,8 @@
             {% for v in page.studiesDcData %}
               <tr data-study="{{ v.ID }}" class="viewStudy" style="cursor: pointer">
                 <td>
-                  <button class="btn btn-light btn-sm"  role="button">
-                    <span class="fa fa-eye" aria-hidden="true"></span>
+                  <button class="btn btn-outline-secondary btn-sm"  role="button">
+                    <span class="far fa-images" aria-hidden="true"></span>
                   </buttom>
                 </td>
                 <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>
@@ -83,7 +82,6 @@
             {% endfor %}
           </tbody>
         </table>
-      {% endif %}
+      </div>
     </div>
-  </div>
-</div>
+{% endif %}

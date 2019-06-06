@@ -62,8 +62,10 @@ $(document).ready(function() {
 
     if (status == 'unchecked') {
       $(this).attr('data-status', 'checked');
+      $(this).html('<i class="fas fa-square mr-1"></i> Tout déselectionner');
     } else {
       $(this).attr('data-status', 'unchecked');
+      $(this).html('<i class="fas fa-check-square mr-1"></i> Tout sélectionner');
     }
 
   });

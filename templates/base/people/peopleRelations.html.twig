@@ -57,21 +57,23 @@ Relations du patient  {{ page.patient.firstname }}
 </h1>
 
 
-<p>
-<a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
-  <span class="fa fa-folder-open" aria-hidden="true"></span>
-  Dossier patient
-</a>
-<a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.patient.id }}/">
-  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-  Editer infos administratives
-</a>
-</p>
+<div class="row my-4">
+  <div class="col-12">
+    <a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
+      <i class="fa fa-folder-open" aria-hidden="true"></i>
+      Dossier patient
+    </a>
+    <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.patient.id }}/">
+      <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+      Editer infos administratives
+    </a>
+  </div>
+</div>
 
 <div class="row">
-  <div class=" col-md-6">
-    <div class="card col-md-12 p-0">
-      <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-danger"></i> Praticiens</div>
+  <div class="col-12 col-xl-6 mb-4">
+    <div class="card col-12 p-0">
+      <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens</div>
       <div class="card-body">
         {% if config.droitDossierPeutCreerPraticien == 'true' %}
           <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
@@ -116,9 +118,9 @@ Relations du patient  {{ page.patient.firstname }}
   </div>
 
 
-	<div class=" col-md-6">
-		<div class="card col-md-12 p-0">
-			<div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Liens familiaux</div>
+	<div class="col-12 col-xl-6 mb-4">
+		<div class="card col-12 p-0">
+			<div class="card-header font-weight-bold"><i class="fas fa-sitemap fa-fw fa-lg text-secondary mr-1"></i> Liens familiaux</div>
 			<div class="card-body">
 				<form class="form-inline">
 					<div class="form-group" style="width:100%">
