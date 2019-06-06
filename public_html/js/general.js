@@ -348,10 +348,6 @@ function scrollTo(element, delai) {
   }, delai == undefined ? 2 : delai);
 }
 
-//agrandir un élément de formulaire automatiquement
-function auto_grow(element) {
-  $(element).css('height', Math.max(16 * (parseInt($(element).attr('rows')) || 1), element.scrollHeight) + 2);
-}
 
 function glow(type, $el) {
   var colors = {
