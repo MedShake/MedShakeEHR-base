@@ -358,19 +358,20 @@ public function getToID()
           // but : générer des versions sucessives toutes visibles à partir du moment où la durée de vie
           // (temps autorisé d'édition) est dépassée ou que l'auteur n'est pas le même.
 
-          //recup le titre
-          if (is_numeric($objetID)) {
-              $pd['titre']=msSQL::sqlUniqueChamp("select titre from objets_data where id='".$objetID."' limit 1");
-          }
 
-          //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
-          if ($precedent=msSQL::sqlUnique("select id, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
-          from objets_data
-          where id = '".$objetID."' and deleted = ''
-          order by id desc limit 1")) {
-              if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
-                  $pd['id']=$precedent['id'];
-                  $pd['updateDate'] = date("Y-m-d H:i:s");
+          if (is_numeric($objetID)) {
+              //recup le titre
+              $pd['titre']=msSQL::sqlUniqueChamp("select titre from objets_data where id='".$objetID."' limit 1");
+
+              //on regarde le précédent enregistrement pour l'objet et on update si durationLife ok ou si editeur n'est pas le même.
+              if ($precedent=msSQL::sqlUnique("select id, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
+              from objets_data
+              where id = '".$objetID."' and deleted = ''
+              order by id desc limit 1")) {
+                  if ($precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
+                      $pd['id']=$precedent['id'];
+                      $pd['updateDate'] = date("Y-m-d H:i:s");
+                  }
               }
           }
           $lastID=msSQL::sqlInsert('objets_data', $pd);
