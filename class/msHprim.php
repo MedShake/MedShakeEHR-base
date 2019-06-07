@@ -178,6 +178,7 @@ class msHprim
     public static function getPossiblePatients($hprimData, $patientID='')
     {
         $hprimData=array_map('trim', $hprimData);
+        $hprimData=msSQL::cleanArray($hprimData);
         $nom=$ddn=$nss=$cp=array(''=>'');
 
         if(is_numeric($patientID)) {
