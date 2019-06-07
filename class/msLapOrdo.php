@@ -318,9 +318,9 @@ class msLapOrdo extends msLap
         left join objets_data as df on df.instance=lp.id and df.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinAvecRenouv']."'
         left join objets_data as dfe on dfe.instance=lp.id and dfe.typeID='".$name2typeID['lapLignePrescriptionDatePriseFinEffective']."'
         where lp.typeID='".$name2typeID['lapLignePrescription']."' and lp.toID='".$this->_toID."' and lp.outdated='' and lp.deleted=''
-        and (YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) = '".$year."'
-        or YEAR(STR_TO_DATE(df.value, '%d/%m/%Y')) = '".$year."'
-        or YEAR(STR_TO_DATE(dfe.value, '%d/%m/%Y')) = '".$year."')
+        and (YEAR(STR_TO_DATE(dd.value, '%d/%m/%Y')) = '".msSQL::cleanVar($year)."'
+        or YEAR(STR_TO_DATE(df.value, '%d/%m/%Y')) = '".msSQL::cleanVar($year)."'
+        or YEAR(STR_TO_DATE(dfe.value, '%d/%m/%Y')) = '".msSQL::cleanVar($year)."')
         ", 'id')) {
 
           if ($lignesMedics=msSQL::sql2tab("select id, value, instance from objets_data where typeID='".$name2typeID['lapLigneMedicament']."' and instance in (".implode(',', array_column($lignesPres, 'id')).") and outdated='' and deleted='' ")) {

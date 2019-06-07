@@ -207,7 +207,7 @@ class msLapSAM
     $name2typeID=$name2typeID->getTypeIDsFromName(['lapSam']);
     return $data=msSQL::sqlUnique("select pd.*
     from objets_data as pd
-    where pd.typeID = '".$name2typeID['lapSam']."' and pd.value='".$this->_samID."' and pd.deleted='' and pd.outdated=''
+    where pd.typeID = '".$name2typeID['lapSam']."' and pd.value='".msSQL::cleanVar($this->_samID)."' and pd.deleted='' and pd.outdated=''
     order by updateDate desc
     limit 1");
   }

@@ -106,15 +106,19 @@ public function getDcInstanceID()
     }
 
 /**
- * Definri l'ID patient
+ * Definir l'ID patient
  * Definir l'ID Orthanc via l'ID patient MedShakeEHR
  * @param [type] $v [description]
  */
     public function setToID($v)
     {
-        $this->_toID = $v;
-        $this->_makeDcPatientID();
-        return $this->_toID;
+      if (is_numeric($v)) {
+          $this->_toID = $v;
+          $this->_makeDcPatientID();
+          return $this->_toID;
+      } else {
+          throw new Exception('ToID is not numeric');
+      }
     }
 
 /**

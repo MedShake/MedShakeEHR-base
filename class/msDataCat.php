@@ -37,7 +37,7 @@ class msDataCat
  */
     public static function getCatIDFromName($name)
     {
-        return msSQL::sqlUniqueChamp("select id from data_cat where name = '".$name."' ");
+        return msSQL::sqlUniqueChamp("select id from data_cat where name = '".msSQL::cleanVar($name)."' ");
     }
 
 /**
@@ -47,6 +47,7 @@ class msDataCat
  */
     public static function getCatNameFromCatID($id)
     {
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
         return msSQL::sqlUniqueChamp("select name from data_cat where id = '".$id."' ");
     }
 
@@ -57,6 +58,7 @@ class msDataCat
  */
     public static function getCatLabelFromCatID($id)
     {
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
         return msSQL::sqlUniqueChamp("select label from data_cat where id = '".$id."' ");
     }
 
@@ -69,7 +71,7 @@ class msDataCat
  */
     public static function getCatListFromGroupe($groupe=['*'], $cols=['*'], $orderBy='label')
     {
-        return msSQL::sql2tabKey("select id, ".implode(', ', $cols)." from data_cat where groupe in ('".implode(', ', $groupe)."') order by ".$orderBy, 'id');
+        return msSQL::sql2tabKey("select id, ".implode(', ', msSQL::cleanArray($cols))." from data_cat where groupe in ('".implode(', ', msSQL::cleanArray($groupe))."') order by ".$orderBy, 'id');
     }
 
 }

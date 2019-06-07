@@ -90,6 +90,7 @@ class msAgenda
     */
     public function set_patientID($_patientID)
     {
+        if(!is_numeric($_patientID)) throw new Exception('PatientID is not numeric');
         $this->_patientID = $_patientID;
         return $this;
     }
@@ -97,7 +98,7 @@ class msAgenda
 
     /**
     * set motif
-    * @param string $_motif motid de rendez-vous
+    * @param string $_motif motif de rendez-vous
     */
     public function set_motif($_motif)
     {
@@ -132,6 +133,7 @@ class msAgenda
     */
     public function set_eventID($_eventID)
     {
+        if(!is_numeric($_eventID)) throw new Exception('EventID is not numeric');
         $this->_eventID = $_eventID;
         return $this;
     }
@@ -142,6 +144,7 @@ class msAgenda
     */
     public function set_externID($_externID)
     {
+        if(!is_numeric($_externID)) throw new Exception('ExternID is not numeric');
         $this->_externID = $_externID;
         return $this;
     }
@@ -152,6 +155,7 @@ class msAgenda
     */
     public function set_userID($_userID)
     {
+        if(!is_numeric($_userID)) throw new Exception('UserID is not numeric');
         $this->_userID = $_userID;
         return $this;
     }
@@ -162,6 +166,7 @@ class msAgenda
     */
     public function set_fromID($_fromID)
     {
+        if(!is_numeric($_fromID)) throw new Exception('FromID is not numeric');
         $this->_fromID = $_fromID;
         return $this;
     }
@@ -250,7 +255,7 @@ class msAgenda
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
           left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
-          where a.userid='".$this->_userID."' and a.statut in ('".implode("','", $statut)."') and a.start >= '".$this->_startDate."' and a.end <= '".$this->_endDate."'
+          where a.userid='".$this->_userID."' and a.statut in ('".implode("','", msSQL::cleanArray($statut))."') and a.start >= '".msSQL::cleanVar($this->_startDate)."' and a.end <= '".msSQL::cleanVar($this->_endDate)."'
           group by a.id, bn.value, n.value, p.value order by a.start asc")) {
               foreach ($events as $e) {
                   $formatedEvents[]=$this->_formatEvent($e);
@@ -481,6 +486,8 @@ class msAgenda
     */
     public function getHistoriquePatient($limit=10)
     {
+        if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
+
         $data['stats']['total']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."'");
         $data['stats']['ok']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut!='deleted' and  absente!='oui'");
         $data['stats']['annule']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut='deleted'");

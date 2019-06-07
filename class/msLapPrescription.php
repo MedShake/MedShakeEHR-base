@@ -506,12 +506,12 @@ class msLapPrescription extends msLap
 
 
       // on cherche d'abord pour le patient en cours, même prat
-      if($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and toID='".$this->_toID."' and fromID='".$this->_fromID."' and value='".$this->_speThe."' order by id desc limit 1")) {}
+      if($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and toID='".$this->_toID."' and fromID='".$this->_fromID."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1")) {}
       // autre patient même prat
-      elseif($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and fromID='".$this->_fromID."' and value='".$this->_speThe."' order by id desc limit 1")) {}
+      elseif($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and fromID='".$this->_fromID."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1")) {}
       // autre prat
       else {
-        $idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and value='".$this->_speThe."' order by id desc limit 1");
+        $idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1");
       }
 
       if($idLigneMedic > 0) {

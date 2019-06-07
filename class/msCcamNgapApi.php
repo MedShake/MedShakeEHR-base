@@ -47,6 +47,7 @@ class msCcamNgapApi
 */
   public function setActeCode($acte)
   {
+      if(!is_numeric($acte) and !is_string($acte)) throw new Exception('Acte has wrong value');
       return $this->_acteCode=$acte;
   }
 
@@ -56,6 +57,7 @@ class msCcamNgapApi
 */
   public function setActiviteCode($activiteCode)
   {
+      if(!is_numeric($activiteCode)) throw new Exception('ActiviteCode is not numeric');
       return $this->_activiteCode=$activiteCode;
   }
 
@@ -65,6 +67,7 @@ class msCcamNgapApi
 */
   public function setPhaseCode($phaseCode)
   {
+      if(!is_numeric($phaseCode)) throw new Exception('PhaseCode is not numeric');
       return $this->_phaseCode=$phaseCode;
   }
 
@@ -74,6 +77,7 @@ class msCcamNgapApi
 */
   public function setActeType($acteType)
   {
+      if(!is_string($acteType)) throw new Exception('ActeType is not string');
       return $this->_acteType=$acteType;
   }
 
@@ -207,7 +211,7 @@ class msCcamNgapApi
  */
   public function getAllAndUpdate() {
     $tabr=[];
-    if($codes=msSQL::sql2tab("select code, type, phase, activite, codeProf from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
+    if($codes=msSQL::sql2tab("select id, code, type, phase, activite, codeProf from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
       foreach($codes as $k=>$code) {
         $this->setActeCode($code['code']);
         $this->setActiviteCode($code['activite']);
@@ -222,16 +226,19 @@ class msCcamNgapApi
           'phase'=>$code['phase'],
         );
         if(is_array($data)) {
-          msSQL::sqlInsert('actes_base', array(
+          $tabup=array(
+            'id'=>$code['id'],
             'code'=>$data['acteCode'],
             'activite'=>$data['activiteCode'],
             'phase'=>$data['phaseCode'],
-            'codeProf'=>$data['codeProf'],
+            'codeProf'=>$code['codeProf'],
             'type'=>$code['type'],
             'label'=>$data['acteLabel'],
             'dataYaml'=>$data['yaml'],
             'tarifUnit'=>$data['tarifUnite'],
-          ));
+          );
+          if(empty($code['codeProf'])) unset($tabup['codeProf']);
+          msSQL::sqlInsert('actes_base', $tabup);
           $tabr[$k]['statut']='ok';
           $tabr[$k]['label']=$data['acteLabel'];
         } else {

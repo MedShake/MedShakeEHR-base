@@ -182,7 +182,8 @@ public function getToID()
  */
     public function getObjetDataByID($id, $col=['*'])
     {
-        return msSQL::sqlUnique("select ".implode(', ', $col)." from objets_data where id='".$id."'");
+        if(!is_numeric($id)) throw new Exception('ID is not numeric');
+        return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from objets_data where id='".$id."'");
     }
 
 /**
@@ -203,6 +204,7 @@ public function getToID()
  */
     public function getCompleteObjetDataByID($id)
     {
+        if(!is_numeric($id)) throw new Exception('ID is not numeric');
         $docTypeID = msData::getTypeIDFromName('docType');
         return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, t.module, t.placeholder, doc.value as ext
         from objets_data as pd
@@ -219,6 +221,7 @@ public function getToID()
  */
     public function getObjetAndSons($id, $by='typeID')
     {
+        if(!is_numeric($id)) throw new Exception('ID is not numeric');
         return msSQL::sql2tabKey("select o.*, t.name
         from objets_data as o
         left join data_types as t on o.typeID=t.id
@@ -250,9 +253,9 @@ public function getToID()
  */
     public function setDeletedObjetAndSons($id)
     {
-        if (!is_numeric($this->_fromID)) {
-            throw new Exception('FromID is not numeric');
-        }
+        if (!is_numeric($this->_fromID)) throw new Exception('FromID is not numeric');
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
+
         msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."', updateDate=NOW() where id='".$id."' ");
 
         if($tab=msSQL::sql2tabSimple("select id from objets_data where instance='".$id."'")) {
@@ -309,6 +312,9 @@ public function getToID()
         }
         if (!is_numeric($typeID)) {
             throw new Exception('TypeID is not numeric');
+        }
+        if (!is_numeric($parentID)) {
+            throw new Exception('ParentID is not numeric');
         }
 
       //infos déterminées par le type et traitement de la value
@@ -453,10 +459,11 @@ public function getToID()
  */
     public static function setTitleObjet($id, $title)
     {
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
         $data=array(
-        'id'=>$id,
-        'titre'=>$title
-      );
+          'id'=>$id,
+          'titre'=>$title
+        );
         msSQL::sqlInsert('objets_data', $data);
     }
 
@@ -475,7 +482,7 @@ public function getToID()
         'id'=>$this->_ID,
         'creationDate'=>$this->_creationDate
       );
-      msSQL::sqlQuery("update objets_data set creationDate='".$this->_creationDate."' where instance='".$this->_ID."' ");
+      msSQL::sqlQuery("update objets_data set creationDate='".msSQL::cleanVar($this->_creationDate)."' where instance='".$this->_ID."' ");
       return msSQL::sqlInsert('objets_data', $data);
 
     }
@@ -592,33 +599,39 @@ public function getToID()
     public function getHistoriqueDataType($name, $start=0, $limit=50)
     {
 
+        if (!is_numeric($start)) throw new Exception('Start is not numeric');
+        if (!is_numeric($limit)) throw new Exception('Limit is not numeric');
+
         $data = new msData();
         $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance', $name]);
+        if(isset($name2typeID[$name])) {
+          $data = msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, t.formValues as formName, n1.value as pratPrenom,
+          CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as pratNom,
 
-        $data = msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, t.formValues as formName, n1.value as pratPrenom,
-        CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as pratNom,
+          n1b.value as patientPrenom,
+          CASE WHEN n2b.value != '' and bnb.value != '' THEN CONCAT(n2b.value, ' (', bnb.value , ')')
+          WHEN n2b.value != '' THEN n2b.value
+          ELSE bnb.value END as patientNom
 
-        n1b.value as patientPrenom,
-        CASE WHEN n2b.value != '' and bnb.value != '' THEN CONCAT(n2b.value, ' (', bnb.value , ')')
-        WHEN n2b.value != '' THEN n2b.value
-        ELSE bnb.value END as patientNom
+          from objets_data as p
+          left join data_types as t on p.typeID=t.id
+          left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+          left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+          left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
 
-        from objets_data as p
-        left join data_types as t on p.typeID=t.id
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+          left join objets_data as n1b on n1b.toID=p.toID and n1b.typeID='".$name2typeID['firstname']."' and n1b.outdated='' and n1b.deleted=''
+          left join objets_data as n2b on n2b.toID=p.toID and n2b.typeID='".$name2typeID['lastname']."' and n2b.outdated='' and n2b.deleted=''
+          left join objets_data as bnb on bnb.toID=p.toID and bnb.typeID='".$name2typeID['birthname']."' and bnb.outdated='' and bnb.deleted=''
 
-        left join objets_data as n1b on n1b.toID=p.toID and n1b.typeID='".$name2typeID['firstname']."' and n1b.outdated='' and n1b.deleted=''
-        left join objets_data as n2b on n2b.toID=p.toID and n2b.typeID='".$name2typeID['lastname']."' and n2b.outdated='' and n2b.deleted=''
-        left join objets_data as bnb on bnb.toID=p.toID and bnb.typeID='".$name2typeID['birthname']."' and bnb.outdated='' and bnb.deleted=''
+          where p.typeID ='".$name2typeID[$name]."' and p.outdated='' and p.deleted=''
+          group by p.id, bn.value, n1.value, n2.value, bnb.value, n1b.value, n2b.value
+          order by p.creationDate desc
+          limit ".$start.",".$limit);
 
-        where p.typeID ='".$name2typeID[$name]."' and p.outdated='' and p.deleted=''
-        group by p.id, bn.value, n1.value, n2.value, bnb.value, n1b.value, n2b.value
-        order by p.creationDate desc
-        limit ".$start.",".$limit);
-
-        return $data;
+          return $data;
+        } else {
+          return [];
+        }
 
     }
 
@@ -659,9 +672,10 @@ public function getToID()
  * @return array             array registerDate desc.
  */
     public function getDataTypeContextualHistoric($name, $instance=0) {
-      if (!isset($this->_toID)) {
-          throw new Exception('toID is not defined');
-      }
+
+      if (!isset($this->_toID)) throw new Exception('toID is not defined');
+      if (!is_numeric($instance)) throw new Exception('Instance is not numeric');
+
       $typeID=msData::getTypeIDFromName($name);
 
       $data = new msData();

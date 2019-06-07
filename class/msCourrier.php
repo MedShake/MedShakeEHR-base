@@ -63,7 +63,7 @@ class msCourrier
 
 /**
  * Définir l'objetID
- * @param int $data objetId du document concerné
+ * @param int $objetID objetId du document concerné
  */
     public function setObjetID($objetID)
     {
@@ -77,31 +77,34 @@ class msCourrier
 
 /**
  * Définir le modeleID
- * @param int $data modeleID du document concerné
+ * @param int $modeleID modeleID du document concerné
  */
-    public function setModeleID($data)
+    public function setModeleID($modeleID)
     {
-        return $this->_modeleID = $data;
+        if(!is_numeric($modeleID)) throw new Exception('modeleID is not numeric');
+        return $this->_modeleID = $modeleID;
     }
 
 /**
  * Définir le modeleID par le nom du modèle
- * @param int $data modeleID du document concerné
+ * @param int $name modeleID du document concerné
  */
     public function setModeleIDByName($name)
     {
         $id = msData::getTypeIDFromName($name);
+        if(!is_numeric($id)) throw new Exception('modeleName is wrong');
         $this->_modele = $name;
         return $this->_modeleID = $id;
     }
 
 /**
  * Définir le patientID
- * @param int $data patientID du document concerné
+ * @param int $patientID patientID du document concerné
  */
-    public function setPatientID($data)
+    public function setPatientID($patientID)
     {
-        return $this->_patientID = $data;
+        if(!is_numeric($patientID)) throw new Exception('patientID is not numeric');
+        return $this->_patientID = $patientID;
     }
 
 /**
@@ -111,16 +114,18 @@ class msCourrier
  */
     public function setFromID($fromID)
     {
+        if(!is_numeric($fromID)) throw new Exception('fromID is not numeric');
         return $this->_fromID = $fromID;
     }
 
 /**
  * Définir le module
- * @param int $data module du document concerné
+ * @param int $module module du document concerné
  */
-    public function setModule($data)
+    public function setModule($module)
     {
-        return $this->_module = $data;
+        if(!in_array($module, msModules::getInstalledModulesNames())) throw new Exception('Module has wrong value');
+        return $this->_module = $module;
     }
 
 /**
@@ -548,12 +553,9 @@ class msCourrier
  */
     public function getExamenData($patientID, $formIN, $instance)
     {
-        if (!isset($patientID)) {
-            throw new Exception('PatientID is not defined');
-        }
-        if (!isset($formIN)) {
-            throw new Exception('formIN is not defined');
-        }
+        if (!is_numeric($patientID)) throw new Exception('PatientID is not numeric');
+        if (!is_string($formIN)) throw new Exception('formIN is not string');
+        if (!is_numeric($instance)) throw new Exception('instance is not numeric');
 
         $examenFormData = new msForm();
         $examenFormData->setformIDbyName($formIN);

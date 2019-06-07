@@ -96,12 +96,12 @@ class msData extends msDataCat
         if(!is_numeric($catID)) throw new Exception('catID is not numeric');
 
         if(isset($this->_modules)) {
-          $where ="and module in ('".implode("', '", $this->_modules)."')";
+          $where ="and module in ('".implode("', '", msSQL::cleanArray($this->_modules))."')";
         } else {
           $where = null;
         }
 
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where cat='".$catID."' ".$where." order by ".$orderBy);
+        return msSQL::sql2tab("select ".implode(', ', msSQL::cleanArray($col))." from data_types where cat='".$catID."' ".$where." order by ".$orderBy);
     }
 
 /**
@@ -124,7 +124,7 @@ class msData extends msDataCat
  */
     public function getDataTypesFromGroupe($groupe, $col=['*'], $orderBy='displayOrder, label')
     {
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where groupe='".$groupe."' order by ".$orderBy);
+        return msSQL::sql2tab("select ".implode(', ', msSQL::cleanArray($col))." from data_types where groupe='".msSQL::cleanVar($groupe)."' order by ".$orderBy);
     }
 
 /**
@@ -135,7 +135,7 @@ class msData extends msDataCat
  */
     public function getDataTypesFromNameList($listArray, $col=['*'])
     {
-        return msSQL::sql2tab("select ".implode(', ', $col)." from data_types where name in ('".implode("','", $listArray)."') order by displayOrder, label");
+        return msSQL::sql2tab("select ".implode(', ', msSQL::cleanArray($col))." from data_types where name in ('".implode("','", msSQL::cleanArray($listArray))."') order by displayOrder, label");
     }
 
 
@@ -147,7 +147,8 @@ class msData extends msDataCat
  */
     public function getDataType($id, $col=['*'])
     {
-        return msSQL::sqlUnique("select ".implode(', ', $col)." from data_types where id='".$id."'");
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
+        return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from data_types where id='".$id."'");
 
     }
 
@@ -159,7 +160,7 @@ class msData extends msDataCat
  */
     public function getDataTypeByName($name, $col=['*'])
     {
-        return msSQL::sqlUnique("select ".implode(', ', $col)." from data_types where name='".$name."'");
+        return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from data_types where name='".msSQL::cleanVar($name)."'");
 
     }
 
@@ -170,7 +171,7 @@ class msData extends msDataCat
  */
     public function getLabelFromTypeID($ar=['1'])
     {
-        return msSQL::sql2tabKey("select label, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'label');
+        return msSQL::sql2tabKey("select label, id from data_types where id in ('".implode("','", msSQL::cleanArray($ar))."')", 'id', 'label');
     }
 
 /**
@@ -180,7 +181,7 @@ class msData extends msDataCat
  */
     public function getLabelFromTypeName($ar=['1'])
     {
-        return msSQL::sql2tabKey("select label, name from data_types where name in ('".implode("','", $ar)."') order by displayOrder", 'name', 'label');
+        return msSQL::sql2tabKey("select label, name from data_types where name in ('".implode("','", msSQL::cleanArray($ar))."') order by displayOrder", 'name', 'label');
     }
 
 /**
@@ -200,7 +201,7 @@ class msData extends msDataCat
  */
     public function getNamesFromTypeIDs($ar=['-1'])
     {
-        return msSQL::sql2tabKey("select name, id from data_types where id in ('".implode("','", $ar)."')", 'id', 'name');
+        return msSQL::sql2tabKey("select name, id from data_types where id in ('".implode("','", msSQL::cleanArray($ar))."')", 'id', 'name');
     }
 
 /**
@@ -210,6 +211,7 @@ class msData extends msDataCat
  */
     public static function getNameFromTypeID($typeID)
     {
+        if (!is_numeric($typeID)) throw new Exception('TypeID is not numeric');
         return msSQL::sqlUniqueChamp("select name from data_types where id = '".$typeID."' ");
     }
 
@@ -220,7 +222,7 @@ class msData extends msDataCat
  */
     public static function getTypeIDFromName($name)
     {
-        return msSQL::sqlUniqueChamp("select id from data_types where name = '".$name."' ");
+        return msSQL::sqlUniqueChamp("select id from data_types where name = '".msSQL::cleanVar($name)."' ");
     }
 
 /**
@@ -230,7 +232,7 @@ class msData extends msDataCat
  */
     public function getSelectOptionValue($typeIDsArray)
     {
-        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in ('".implode("', '", $typeIDsArray)."')", "id", "formValues");
+        $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in ('".implode("', '", msSQL::cleanArray($typeIDsArray))."')", "id", "formValues");
         if (is_array($tab)) {
             foreach ($tab as $k=>$v) {
                 $tab[$k]=Spyc::YAMLLoad($v);

@@ -86,6 +86,7 @@ class msPDF
  */
     public function setObjetID($v)
     {
+        if (!is_numeric($v)) throw new Exception('ObjetID is not numeric');
         return $this->_objetID = $v;
     }
 
@@ -95,7 +96,7 @@ class msPDF
  */
     public function setFromID($v)
     {
-
+        if (!is_numeric($v)) throw new Exception('FromID is not numeric');
         $this->_templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', $user=array('id'=>$v, 'module'=>''));
         return $this->_fromID = $v;
     }
@@ -106,6 +107,7 @@ class msPDF
  */
     public function setToID($v)
     {
+        if (!is_numeric($v)) throw new Exception('ToID is not numeric');
         return $this->_toID = $v;
     }
 
@@ -124,6 +126,7 @@ class msPDF
  */
     public function setModeleID($v)
     {
+        if (!is_numeric($v)) throw new Exception('ModeleID is not numeric');
         return $this->_modeleID = $v;
     }
 
@@ -176,8 +179,8 @@ class msPDF
  */
     public function makePDFfromObjetID()
     {
-        if (!isset($this->_objetID)) {
-            throw new Exception('ObjetID is not defined');
+        if (!is_numeric($this->_objetID)) {
+            throw new Exception('ObjetID is not numeric');
         }
         $doc = new msObjet();
         $data=$doc->getCompleteObjetDataByID($this->_objetID);

@@ -39,6 +39,7 @@ class msModBaseObjetPreview
  * @param int $id objetID
  */
   public function setObjetID($id) {
+    if(!is_numeric($id)) throw new Exception('ID is not numeric');
     $this->_objetID = $id;
     $data = new msObjet();
     $data->setToID($id); //fake

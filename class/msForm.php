@@ -257,6 +257,7 @@ class msForm
  */
     public static function getCatNameFromCatID($id)
     {
+        if (!is_numeric($id)) throw new Exception('ID is not numeric');
         return msSQL::sqlUniqueChamp("select name from forms_cat where id = '".$id."' ");
     }
 
@@ -298,7 +299,7 @@ class msForm
  * @return string         valeur du champ
  */
     public static function getFormUniqueRawField($formIN, $field) {
-      return msSQL::sqlUniqueChamp("select ".$field." from forms where internalName='".$formIN."' limit 1");
+      return msSQL::sqlUniqueChamp("select ".msSQL::cleanVar($field)." from forms where internalName='".msSQL::cleanVar($formIN)."' limit 1");
     }
 
 /**
@@ -308,7 +309,8 @@ class msForm
  * @return string         valeur du champ
  */
     public static function getFormUniqueRawFieldByFormID($formID, $field) {
-      return msSQL::sqlUniqueChamp("select ".$field." from forms where id='".$formID."' limit 1");
+      if (!is_numeric($formID)) throw new Exception('FormID is not numeric');
+      return msSQL::sqlUniqueChamp("select ".msSQL::cleanVar($field)." from forms where id='".$formID."' limit 1");
     }
 
 /**

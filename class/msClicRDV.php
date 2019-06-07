@@ -24,6 +24,7 @@
  * Gestion de l'agenda et des rendez-vous clicRDV
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 class msClicRDV
@@ -63,6 +64,7 @@ class msClicRDV
     }
 
     public function setUserID($userID) {
+        if (!is_numeric($userID)) throw new Exception('UserID is not numeric');
         $this->_userID = $userID;
     }
 
@@ -77,7 +79,7 @@ class msClicRDV
 
 
     public function getGroups() {
-        return $this->_sendCurl('GET', 'groups'); 
+        return $this->_sendCurl('GET', 'groups');
     }
 
     public function getCalendars($group='') {
@@ -99,7 +101,7 @@ class msClicRDV
     private function _getLocalPatients() {
         $ret=array();
         //ret[0]=array(idMedShake=>idClicRDV)
-        $ret[0]=msSQL::sql2tabKey("SELECT od.toID, od.value 
+        $ret[0]=msSQL::sql2tabKey("SELECT od.toID, od.value
               FROM objets_data AS od left join data_types AS dt
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='clicRdvPatientId'", 'toID', 'value');
@@ -112,11 +114,11 @@ class msClicRDV
     }
 
     // liste des patients qui sont sous un id externe et un interne
-    // survient quand créés dans MedShake puis ont pris rdv sur clic 
+    // survient quand créés dans MedShake puis ont pris rdv sur clic
     private function _getRelatedPatients() {
         $ret=array();
         // array(idPatientExterne=>idPatientInterne)
-        $ret[0]=msSQL::sql2tabKey("SELECT od.toID, od.value 
+        $ret[0]=msSQL::sql2tabKey("SELECT od.toID, od.value
               FROM objets_data AS od left join data_types AS dt
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='relationExternePatient'", 'toID', 'value');
@@ -210,7 +212,7 @@ class msClicRDV
             //envoi de l'événement et récupération de la réponse
             if ($evtc=json_decode($this->_sendCurl('POST', 'vevents', $this->_groupID, '', json_encode($eventClic)), true)) {
                 //enregistrement de son ID externe dans la base et dans les événements
-                msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$event['id']."'");
+                msSQL::sqlQuery("UPDATE agenda SET externid='".msSQL::cleanVar($evtc['id'])."' WHERE id='".msSQL::cleanVar($event['id'])."'");
             } else {
                 msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'false'));
                 return "Erreur lors de la création d'un événement";
@@ -423,7 +425,7 @@ class msClicRDV
                 //envoi de l'événement et récupération de la réponse
                 if ($evtc=json_decode($this->_sendCurl('POST', 'vevents', $this->_groupID, '', json_encode($eventClic)), true)) {
                     //enregistrement de son ID externe dans la base et dans les événements
-                    msSQL::sqlQuery("UPDATE agenda SET externid='".$evtc['id']."' WHERE id='".$vlocal['id']."'");
+                    msSQL::sqlQuery("UPDATE agenda SET externid='".msSQL::cleanVar($evtc['id'])."' WHERE id='".msSQL::cleanVar($vlocal['id'])."'");
                     $events[$k]['externid']=$evtc['id'];
                     $knownEvents[$evtc['id']]=$k;
                 } else {
@@ -434,7 +436,7 @@ class msClicRDV
 
             //sens clicRDV => local
             foreach($rdvClic as $vclic) {
-                //événement inconnu en local, et non supprimé sur clic 
+                //événement inconnu en local, et non supprimé sur clic
                 if (!$vclic['deleted'] and !array_key_exists($vclic['id'], $knownEvents)) {
                     //patient 0 (fermetures)
                     if (!$vclic['fiche_id']) {
@@ -507,7 +509,7 @@ class msClicRDV
                             $agenda->undelEvent();
                         } elseif ($evt['statut']!='deleted' and $vclic['deleted']) {
                             $agenda->delEvent();
-                        } 
+                        }
                         //cas où l'evénement a été modifié sur clic
                         if ($vclic['start'] != $evt['start'] or $vclic['end'] != $evt['end']) {
                             $agenda->setStartDate($vclic['start']);

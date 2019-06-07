@@ -88,6 +88,7 @@ class msReglement
  * @param int $patientID patientID
  */
     public function setPatientID($patientID) {
+      if(!is_numeric($patientID)) throw new Exception('PatientID is not numeric');
       return $this->_patientID=$patientID;
     }
 
@@ -118,6 +119,7 @@ class msReglement
  * @param string $module module
  */
     public function setModule($module) {
+      if(!in_array($module, msModules::getInstalledModulesNames())) throw new Exception('Module has wrong value');
       return $this->_module=$module;
     }
 
@@ -134,6 +136,7 @@ class msReglement
  * @param int $userID userID
  */
     public function setUserID($userID) {
+      if(!is_numeric($userID)) throw new Exception('UserID is not numeric');
       return $this->_userID=$userID;
     }
 
@@ -142,6 +145,7 @@ class msReglement
  * @param int $asUserID asUserID
  */
     public function setAsUserID($asUserID) {
+      if(!is_numeric($asUserID)) throw new Exception('AsUserID is not numeric');
       return $this->_asUserID=$asUserID;
     }
 
@@ -150,6 +154,7 @@ class msReglement
  * @param int $porteur porteur du règlement (ID du dataType porteur)
  */
     public function setPorteur($porteur) {
+      if(!is_numeric($porteur)) throw new Exception('Porteur is not numeric');
       return $this->_porteur=$porteur;
     }
 
@@ -158,11 +163,12 @@ class msReglement
  * @param string $reglementForm nom du formaulaire de réglèment
  */
     public function setReglementForm($reglementForm) {
+      if(!is_string($reglementForm)) throw new Exception('ReglementForm is not string');
       return $this->_reglementForm=$reglementForm;
     }
 
 /**
- * Obtneir le nom courant du formulaire de règlement
+ * Obtenir le nom courant du formulaire de règlement
  * @return string nom courant formulaire de règlement
  */
     public function getReglementForm() {
@@ -171,67 +177,72 @@ class msReglement
 
 /**
  * Set factureTypeID
- * @param int $_factureTypeID ID d'une facture type
+ * @param int $factureTypeID ID d'une facture type
  */
-    public function setFactureTypeID($_factureTypeID)
+    public function setFactureTypeID($factureTypeID)
     {
-        $this->_factureTypeID = $_factureTypeID;
+        if(!is_numeric($factureTypeID)) throw new Exception('FactureTypeID is not numeric');
+        $this->_factureTypeID = $factureTypeID;
         return $this;
     }
 
 /**
  * Set secteur tarifaire CCAM
- * @param int $_secteurTarifaire secteur identifié par un int
+ * @param int $secteurTarifaire secteur identifié par un int
  */
-    public function setSecteurTarifaire($_secteurTarifaire)
+    public function setSecteurTarifaire($secteurTarifaire)
     {
-      $this->_secteurTarifaire = $_secteurTarifaire;
+      if(!is_numeric($secteurTarifaire)) throw new Exception('SecteurTarifaire is not numeric');
+      $this->_secteurTarifaire = $secteurTarifaire;
       return $this;
     }
 
 /**
  * Set secteur tarifaire NGAP
- * @param int $_secteurTarifaireNgap secteur identifié par un int
+ * @param int $secteurTarifaireNgap secteur
  */
-    public function setSecteurTarifaireNgap($_secteurTarifaireNgap)
+    public function setSecteurTarifaireNgap($secteurTarifaireNgap)
     {
-      $this->_secteurTarifaireNgap = $_secteurTarifaireNgap;
+      if(!is_string($secteurTarifaireNgap)) throw new Exception('SecteurTarifaireNgap is not string');
+      $this->_secteurTarifaireNgap = $secteurTarifaireNgap;
       return $this;
     }
 
 /**
  * Set secteur tarifaire géographique
- * @param int $_secteurTarifaireGeo secteur tarifaire géographique
+ * @param int $secteurTarifaireGeo secteur tarifaire géographique
  */
-    public function setSecteurTarifaireGeo($_secteurTarifaireGeo)
+    public function setSecteurTarifaireGeo($secteurTarifaireGeo)
     {
-      $this->_secteurTarifaireGeo = $_secteurTarifaireGeo;
+      if(!is_string($secteurTarifaireGeo)) throw new Exception('SecteurTarifaireGeo is not string');
+      $this->_secteurTarifaireGeo = $secteurTarifaireGeo;
       return $this;
     }
 
 /**
  * Définir le secteur des IK
- * @param string $_secteurK secteur IK
+ * @param string $secteurK secteur IK
  */
-    public function setSecteurIK($_secteurK)
+    public function setSecteurIK($secteurIK)
     {
-      $this->_secteurIK = $_secteurK;
+      if(!is_string($secteurIK)) throw new Exception('SecteurIK is not string');
+      $this->_secteurIK = $secteurIK;
       return $this;
     }
 
 /**
  * Set facture type pre calculated data
- * @param array $_factureTypeData tableau brut des données d'une facture type
+ * @param array $factureTypeData tableau brut des données d'une facture type
  */
-    public function setFactureTypeData($_factureTypeData)
+    public function setFactureTypeData($factureTypeData)
     {
-      if(!is_array($_factureTypeData['details'])) {
-        $_factureTypeData['details']=Spyc::YAMLLoad($_factureTypeData['details']);
+      if(!is_array($factureTypeData['details'])) {
+        $factureTypeData['details']=Spyc::YAMLLoad($factureTypeData['details']);
       }
-      if(!isset($_factureTypeData['syntheseActes'])) {
-        $_factureTypeData['syntheseActes']=$this->_getFactureTypeSyntheseActes($_factureTypeData['details']);
+      if(!isset($factureTypeData['syntheseActes'])) {
+        $factureTypeData['syntheseActes']=$this->_getFactureTypeSyntheseActes($factureTypeData['details']);
       }
-      $this->_factureTypeData = $_factureTypeData;
+      $this->_factureTypeData = $factureTypeData;
       return $this;
     }
 
@@ -462,7 +473,7 @@ class msReglement
         $data=[];
         if($data =  msSQL::sql2tab("select *
         from actes_base
-        where (code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."') and ((type='NGAP' and codeProf='".$this->_secteurTarifaireNgap."') or type in ('CCAM', 'Libre'))
+        where (code like '".msSQL::cleanVar($search)."' or label like '%".msSQL::cleanVar($search)."') and ((type='NGAP' and codeProf='".msSQL::cleanVar($this->_secteurTarifaireNgap)."') or type in ('CCAM', 'Libre'))
         order by code = '".msSQL::cleanVar($searcho)."' desc, code like '".msSQL::cleanVar($search)."' desc
         limit 25")) {
           foreach($data as $k=>$v) {
