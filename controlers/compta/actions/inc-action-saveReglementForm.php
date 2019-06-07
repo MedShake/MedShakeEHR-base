@@ -38,7 +38,7 @@ if (!in_array($data['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 
       }
 }
 
-if (count($_POST)>0) {
+if (count($_POST)>0 and is_numeric($_POST['objetID'])) {
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
     $patient->setToID($_POST['patientID']);

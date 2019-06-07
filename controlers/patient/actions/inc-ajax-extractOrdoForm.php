@@ -68,7 +68,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as catLabel
   from prescriptions as p
   left join prescriptions_cat as c on c.id=p.cat
-  where p.toID in ('0','".$userID."') and c.type='nonlap'
+  where p.toID in ('0','".msSQL::cleanVar($userID)."') and c.type='nonlap'
   group by p.id
   order by c.displayOrder, p.id in (1,2) desc, c.label asc, p.label asc")) {
     foreach ($tabTypes as $v) {
