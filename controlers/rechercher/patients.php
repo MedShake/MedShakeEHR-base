@@ -37,9 +37,9 @@ if (isset($match['params']['porp'])) {
 // liste des types par catégorie avec retriction aux types employés dans le form de création
 $form = new msForm;
 if($p['page']['porp'] == 'pro') {
-   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
 } else {
-    $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 }
 
 if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel

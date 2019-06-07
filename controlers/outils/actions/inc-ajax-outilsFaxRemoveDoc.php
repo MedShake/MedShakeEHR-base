@@ -28,7 +28,6 @@
 
 $destination_file=$p['config']['workingDirectory'].$p['user']['id'].'/pdf2fax.pdf';
 if(is_file($destination_file)) {
-  echo 'ok';
   @unlink($destination_file);
 }
 die();
