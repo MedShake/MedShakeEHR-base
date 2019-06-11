@@ -1073,6 +1073,17 @@ class msForm
       return [];
     }
 
+/**
+ * Obtenir les data type utilisés dans un formulaire qui ne doivent pas être sauvés vides
+ * @return array array des types names
+ */
+    public function getDoNotSaveEmptyDataInForm() {
+      if(!isset($this->_formYamlStructure)) {
+        $this->_formYamlStructure=$this->getFormRawData(['yamlStructure'])['yamlStructure'];
+      }
+      preg_match_all("# - (\w+),.*donotsaveempty.*\s*\#.*#i", $this->_formYamlStructure, $match);
+      return $match[1];
+    }
 
 /**
  * Tester la présence de blocs numériques dans un form
