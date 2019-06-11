@@ -243,7 +243,7 @@ class msForm
             $where=null;
         }
 
-        if ($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' ".$where, "typeID", "value")) {
+        if ($this->_prevalues = msSQL::sql2tabKey("select typeID, value from objets_data where typeID in ('".implode("','", $this->formExtractDistinctTypes())."') and toID='".$patientID."' and outdated='' and deleted='' ".$where, "typeID", "value")) {
             return $this->_prevalues;
         } else {
             return $this->_prevalues=array();
