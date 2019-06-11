@@ -353,9 +353,17 @@ class msModBaseObjetPreview
       if($stockage->testDocExist()) {
         $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
       }
-      // si rien
+      // si rien on va utiliser le template automatique.
       if (!isset($p['page']['txtVersion']) and !isset($p['page']['pdfVersion'])) {
-        $p['page']['txtVersion'] = "Pas d'aperçu disponible pour cet élément";
+        $form = new msForm;
+        $form->setFormIDbyName($this->_dataObjet['formValues']);
+        $form->getForm();
+        $courrier->setObjetID($this->_objetID);
+        $tag['tag']=$courrier->getDataByObjetID();
+        $p['page']['txtVersion'] = msGetHtml::genererHtmlFromString($form->getFlatBasicTemplateCode(), $tag );
+
+        // et si vraiment rien, message impossibilité
+        if(empty($p['page']['txtVersion'])) $p['page']['txtVersion'] = "Pas d'aperçu disponible pour cet élément";
       }
 
       $html = new msGetHtml;
