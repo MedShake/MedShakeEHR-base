@@ -101,7 +101,7 @@
          }
          if (isset($in)) {
              if (!empty($in)) {
-               if(!empty(trim($v))) {
+               if(!empty(trim($v)) or $v == '0') {
                  $patient->createNewObjetByTypeName($in, $v, $supportID);
                } else {
                  if(!in_array($in, $tabDoNotSaveEmpty)) {
