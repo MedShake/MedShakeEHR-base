@@ -54,6 +54,7 @@ if ($zip->open($fichier['tmp_name'])) {
                 exec('cp -r '.$p['homepath'].'public_html/* '.$p['config']['webDirectory']);
                 exec('rm -rf '.$p['homepath'].'public_html/');
             }
+            @unlink($p['homepath'].'public_html/install.php');
             die("ok");
         }
         $zip->close();

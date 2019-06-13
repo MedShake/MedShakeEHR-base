@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,29 +21,13 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Config : supprimer les fichiers d'installation
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+// on ne ferme pas à l'admin stricte car c'est un bienfait général de supprimer ces fichiers :D
+@unlink($homepath.'public_html/install.php');
+@unlink($homepath.'public_html/self-installer.php');
 
-header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'configUserCreate', //Créer un user
-    'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave', // sauvegarder un template PDF
-    'configUserTemplatesSave', // sauver un template user
-    'configRemoveInstallFiles' // supprimer les fichies d'installation
-);
-
-if (!in_array($m, $acceptedModes)) {
-  die;
-} else {
-  include('inc-action-'.$m.'.php');
-}
-
-die();
+msTools::redirection('/configuration/');

@@ -38,6 +38,26 @@
 {% block body %}
   <h1>Configuration</h1>
 
+  {% if page.alerteInstall or page.alerteInstallSelf %}
+  <div class="alert alert-danger my-4" role="alert">
+    <div class="d-inline-block mr-4 align-top">
+      <i class="fas fa-exclamation-triangle fa-5x"></i>
+    </div>
+    <div  class="d-inline-block">
+      Attention ! Des fichiers d'installation sont toujours présents et accessibles dans {{ config.webDirectory }} :<br>
+      <ul>
+        {% if page.alerteInstall %}
+        <li>install.php : {% if page.alerteInstallW %}peut être effacé{% else %}ne peut être effacé via le navigateur{% endif %}</li>
+        {% endif %}
+        {% if page.alerteInstallSelf %}
+        <li>self-installer.php : {% if page.alerteInstallSelfW %}peut être effacé{% else %}ne peut être effacé via le navigateur{% endif %}</li>
+        {% endif %}
+      </ul>
+      {% if page.alerteInstallW or page.alerteInstallSelfW %}<a class="btn btn-sm btn-danger" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configRemoveInstallFiles/"><i class="fas fa-trash-alt"></i> Effacer si possible</a>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
   <ul class="nav nav-tabs mt-3 font-weight-bold" role="tablist">
     <li role="presentation" class="nav-item">
       <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab"><i class="fas fa-cog fa-fw"></i> Paramètres courants</a>
