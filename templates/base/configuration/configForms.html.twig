@@ -30,9 +30,18 @@
 {% import "macroForm.html.twig" as f %}
 {% block title %}MedShakeEHR : configuration{% endblock %}
 
-{% block head %}
+{% block jsFiles %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block jsEmbed %}
+{{ parent() }}
+$(document).ready(function() {
+  $("tr.btn-edit").on("click", function() {
+    window.location.href = $(this).find("a.btn-edit").attr('href');
+  });
+});
 {% endblock %}
 
 {% block body %}
@@ -98,7 +107,7 @@
 				  </thead>
 				  <tbody>
 				  {% for w in v %}
-					  <tr>
+					  <tr class="btn-edit" style="cursor: pointer;">
 					  <td>{{ w.id }}</td>
             <td>{{ w.module }}</td>
             <td>{{ w.internalName }}</td>
@@ -106,7 +115,7 @@
             <td>{{ w.description }}</td>
             <td class="text-right">
               <div class="btn-group">
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+                <a class="btn btn-light btn-sm btn-edit" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
                   <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                 </a>
               </div>
