@@ -166,7 +166,7 @@ class msConfiguration
     public static function getParameterValue($name, $user=array('id'=>'','module'=>'')) {
 
         if (!is_string($name)) throw new Exception('Name is not sting');
-        if (isset($user['id']) and !is_numeric($user['id'])) throw new Exception('UserID is not numeric');
+        if (!empty($user['id']) and !is_numeric($user['id'])) throw new Exception('UserID is not numeric');
 
         if (strpos(strtolower($name), 'password')!==false) {
             $param=msSQL::sql2tabKey("SELECT level, CONVERT(AES_DECRYPT(UNHEX(value),@password), CHAR) AS value FROM configuration WHERE name='".msSQL::cleanVar($name)."' AND
