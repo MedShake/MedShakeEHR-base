@@ -91,9 +91,11 @@ if ($p['page']['templatesDirAutorisationLecture']) {
 
         //recherche de template lié à un paramètre de config (niveau config par défaut)
         foreach ($p['config'] as $k=>$v) {
+          if(is_string($v)) {
             if (isset($p['page']['listeTemplates'][$v])) {
                 $p['page']['listeTemplates'][$v]['linkedTo'][]=array('type'=>'Paramètre de la configuration de base', 'name'=>$k);
             }
+          }
         }
         // templates liés aux certificats
         $certificats=new msData();
