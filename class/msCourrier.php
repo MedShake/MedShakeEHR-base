@@ -245,7 +245,7 @@ class msCourrier
     }
 
 /**
- * Sortir tous les data d'un examen à partir du $_objetID pour rédaction de compte rendu examen
+ * Sortir tous les data d'un examen à partir du $_objetID pour rédaction règlement
  * @return array tableau avec 3 clefs principales au 1er niveau : examenData, grossesseData, patientData
  */
     public function getReglementData()
