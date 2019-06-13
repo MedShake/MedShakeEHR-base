@@ -70,7 +70,7 @@
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
              $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>'', 'module'=>$v['catModule']));
-             $reglement->setSecteurTarifaire($secteur);
+             $reglement->setSecteurTarifaire((int)$secteur);
              $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>'', 'module'=>$v['catModule']));
              $reglement->setSecteurTarifaireNgap($secteurNgap);
              $reglement->setFactureTypeID($v['id']);
