@@ -330,10 +330,13 @@ class msSqlGenerate
       $string.="-- actes\n";
       foreach($this->_actes_values as $catName=>$values) {
         asort($this->_actes_values[$catName]);
-        $string.="SET @catID = (SELECT actes_cat.id FROM actes_cat WHERE actes_cat.name='".$catName."');\n";
-        $string.="INSERT IGNORE INTO `actes` ".$this->_actes_fields." VALUES\n";
-        $string.=implode(",\n", $this->_actes_values[$catName]).";\n\n";
+        $tabActes[$catName]="SET @catID = (SELECT actes_cat.id FROM actes_cat WHERE actes_cat.name='".$catName."');\n";
+        $tabActes[$catName].="INSERT IGNORE INTO `actes` ".$this->_actes_fields." VALUES\n";
+        $tabActes[$catName].=implode(",\n", $this->_actes_values[$catName]).";\n\n";
       }
+      ksort($tabActes);
+      $string.=implode("\n", $tabActes);
+      unset($tabActes);
     }
 
     //data_cat
@@ -351,14 +354,18 @@ class msSqlGenerate
       foreach($this->_data_types_values as $cat=>$values) {
         asort($this->_data_types_values[$cat]);
         $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.data_cat where id = '".$cat."' ");
+        $tabTypes[$catName]='';
         if(empty($catName)) {
-          $string.="SET @catID = 0;\n";
+          $tabTypes[$catName].="SET @catID = 0;\n";
         } else {
-          $string.="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
+          $tabTypes[$catName].="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
         }
-        $string.="INSERT IGNORE INTO `data_types` ".$this->_data_types_fields." VALUES\n";
-        $string.=implode(",\n", $this->_data_types_values[$cat]).";\n\n";
+        $tabTypes[$catName].="INSERT IGNORE INTO `data_types` ".$this->_data_types_fields." VALUES\n";
+        $tabTypes[$catName].=implode(",\n", $this->_data_types_values[$cat]).";\n\n";
       }
+      ksort($tabTypes);
+      $string.=implode("\n", $tabTypes);
+      unset($tabTypes);
     }
 
     //configuration
@@ -384,10 +391,13 @@ class msSqlGenerate
       foreach($this->_forms_values as $cat=>$values) {
         asort($this->_forms_values[$cat]);
         $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.forms_cat where id = '".$cat."' ");
-        $string.="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$catName."');\n";
-        $string.="INSERT IGNORE INTO `forms` ".$this->_forms_fields." VALUES\n";
-        $string.=implode(",\n", $this->_forms_values[$cat]).";\n\n";
+        $tabForms[$catName]="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$catName."');\n";
+        $tabForms[$catName].="INSERT IGNORE INTO `forms` ".$this->_forms_fields." VALUES\n";
+        $tabForms[$catName].=implode(",\n", $this->_forms_values[$cat]).";\n\n";
       }
+      ksort($tabForms);
+      $string.=implode("\n", $tabForms);
+      unset($tabForms);
     }
 
     //form_basic_types
@@ -421,10 +431,13 @@ class msSqlGenerate
       foreach($this->_prescriptions_values as $cat=>$values) {
         asort($this->_prescriptions_values[$cat]);
         $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.prescriptions_cat where id = '".$cat."' ");
-        $string.="SET @catID = (SELECT prescriptions_cat.id FROM prescriptions_cat WHERE prescriptions_cat.name='".$catName."');\n";
-        $string.="INSERT IGNORE INTO `prescriptions` ".$this->_prescriptions_fields." VALUES\n";
-        $string.=implode(",\n", $this->_prescriptions_values[$cat]).";\n\n";
+        $tabPres[$catName]="SET @catID = (SELECT prescriptions_cat.id FROM prescriptions_cat WHERE prescriptions_cat.name='".$catName."');\n";
+        $tabPres[$catName].="INSERT IGNORE INTO `prescriptions` ".$this->_prescriptions_fields." VALUES\n";
+        $tabPres[$catName].=implode(",\n", $this->_prescriptions_values[$cat]).";\n\n";
       }
+      ksort($tabPres);
+      $string.=implode("\n", $tabPres);
+      unset($tabPres);
     }
 
     //system
