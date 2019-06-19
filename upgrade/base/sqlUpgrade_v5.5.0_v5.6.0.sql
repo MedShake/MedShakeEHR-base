@@ -27,3 +27,18 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 -- coquille
 UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, 'bloc-separator:', 'blocseparator:');
+
+-- correction class fontawesome
+UPDATE `forms` SET `yamlStructure` = replace(yamlStructure, '"fa ', '"fas ');
+
+-- pour la forme
+UPDATE `data_cat` set name='ordoItems' where name='OrdoItems';
+
+-- ménage et corrections
+DELETE from `data_types` where name in ('lapAlertPatientAllaitementSup3Ans', 'lapAlertPatientTermeGrossesseSup46', 'theriaqueShowMedicHospi', 'theriaqueShowMedicNonComer') and groupe='user';
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catAtcdStruc');
+UPDATE `data_types` set cat=@catID where name='atcdStrucDateDebutMois';
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapCatMedicament');
+UPDATE `data_types` set cat=@catID where name='lapMedicamentCodeATC';
