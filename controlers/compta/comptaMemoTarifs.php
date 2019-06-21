@@ -63,7 +63,7 @@ if($p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoi
   if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
   		from actes as a
   		left join actes_cat as c on c.id=a.cat
-      where (".implode(' or ', $where).") and c.module='".$module."'
+      where (".implode(' or ', $where).") and c.module='".$module."' and a.active='oui'
   		group by a.id
   		order by c.displayOrder, c.label asc, a.label asc")) {
      foreach ($tabTypes as $v) {

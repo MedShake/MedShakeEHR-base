@@ -1,18 +1,19 @@
 -- création de la table actes
-CREATE TABLE IF NOT EXISTS `actes` (
-  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
-  `cat` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `label` varchar(250) NOT NULL,
-  `shortLabel` varchar(255) DEFAULT NULL,
-  `details` text NOT NULL,
-  `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
-  `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(6) NOT NULL DEFAULT '0',
-  `creationDate` datetime NOT NULL DEFAULT '2018-01-01 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `toID` (`toID`),
-  KEY `cat` (`cat`)
+CREATE TABLE `actes` (
+ `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+ `cat` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `label` varchar(250) NOT NULL,
+ `shortLabel` varchar(255) DEFAULT NULL,
+ `details` text NOT NULL,
+ `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
+ `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
+ `fromID` smallint(5) unsigned NOT NULL,
+ `toID` mediumint(6) NOT NULL DEFAULT '0',
+ `creationDate` datetime NOT NULL DEFAULT '2018-01-01 00:00:00',
+ `active` enum('oui','non') NOT NULL DEFAULT 'oui',
+ PRIMARY KEY (`id`),
+ KEY `toID` (`toID`),
+ KEY `cat` (`cat`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- création de la table actes_base
@@ -999,5 +1000,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v5.6.0'),
+('base', 'module', 'v5.7.0'),
 ('state', 'system', 'normal');

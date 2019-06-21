@@ -124,7 +124,10 @@
         <td>
           {{ w.syntheseActes }}
         </td>
-        <td{% if w.flagImportant == 1 %} class="font-weight-bold"{% endif %}>{{ w.label }}</td>
+        <td{% if w.flagImportant == 1 %} class="font-weight-bold"{% endif %}>
+          {{ w.label }}
+          {% if w.active == 'non' %}<span class="badge badge-danger ml-2">off</span>{% endif %}
+        </td>
         <td>{{ w.shortLabel }}</td>
         <td>{{ page['utilisationParFacture'][w.id] }}</td>
         <td class="text-right">{{ (w.tarif + w.majoModifCCAM)|number_format(2, '.', ' ') }}</td>
@@ -235,6 +238,10 @@
 
           <div class="form-group">
             {{ f.select ({ 'select' : { 'name' : 'flagImportant', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'0' : 'Non', '1' : 'Oui'}, 'valueDefaut': '' }, 'label' : { 'position' : 'before', 'label' : 'Acte important', } }) }}
+          </div>
+
+          <div class="form-group">
+            {{ f.select ({ 'select' : { 'name' : 'active', 'class' : 'form-control', 'autocomplete' : 'off', 'values' : {'oui' : 'Oui', 'non' : 'Non'}, 'valueDefaut': 'oui' }, 'label' : { 'position' : 'before', 'label' : 'Facture active pour utilisateurs', } }) }}
           </div>
 
         </form>

@@ -255,7 +255,7 @@ class msReglement
       if ($tabTypes=msSQL::sql2tab("select a.* , c.label as catLabel
         from actes as a
         left join actes_cat as c on c.id=a.cat
-        where a.toID in ('0','".$this->_userID."') and c.module='".$this->_module."'
+        where a.toID in ('0','".$this->_userID."') and c.module='".$this->_module."' and a.active='oui'
         group by a.id
         order by c.displayOrder, c.label asc, a.label asc")) {
           foreach ($tabTypes as $k=>$v) {
