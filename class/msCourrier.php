@@ -354,16 +354,21 @@ class msCourrier
           $tabRetour=$tabRetour+$this->_getPsData($p['user']['id'],'UtilisateurActif_');
         }
 
-        if (!isset($this->_modeleID)) {
+        if (!isset($this->_modeleID) and is_numeric($this->_objetID)) {
           $objetData=new msObjet();
           $objetData=$objetData->getObjetDataByID($this->_objetID, ['typeID']);
           $this->_modeleID=$objetData['typeID'];
         }
 
-        $objetModule=new msData();
-        $objetModule=$objetModule->getDataType($this->_modeleID, ['module','name']);
-        $tabRetour['module']=$objetModule['module'];
-        $tabRetour['modeleName']=$objetModule['name'];
+        if (isset($this->_modeleID)) {
+          $objetModule=new msData();
+          $objetModule=$objetModule->getDataType($this->_modeleID, ['module','name']);
+          $tabRetour['module']=$objetModule['module'];
+          $tabRetour['modeleName']=$objetModule['name'];
+        } else {
+          $tabRetour['module']='';
+          $tabRetour['modeleName']='';
+        }
 
 
         $moduleClass="msMod".ucfirst($tabRetour['module'])."DataCourrier";
