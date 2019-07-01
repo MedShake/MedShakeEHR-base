@@ -46,7 +46,11 @@
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
   </li>
     <li class="breadcrumb-item">
+      {% if page.groupe == "courrier" %}
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+      {% else %}
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
+      {% endif %}
     </li>
 	  <li class="breadcrumb-item active">
       {% if page.groupe == "admin" %}
