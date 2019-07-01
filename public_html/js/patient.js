@@ -669,7 +669,7 @@ $(document).ready(function() {
 
   // Observation ctrl + click pour historique
   $('body').on("click", "textarea, input, select", function(e) {
-    if(e.ctrlKey){
+    if(e.shiftKey){
       e.preventDefault();
       patientID = $('#identitePatient').attr('data-patientid');
       instance = $(this).parents('form').attr('data-instance');
