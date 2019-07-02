@@ -298,7 +298,6 @@ class msData extends msDataCat
     {
         global $p, $mysqli;
         $gump=new GUMP();
-        $d = $gump->sanitize($d);
 
         if (isset($d['id'])) {
             $gump->validation_rules(array(
