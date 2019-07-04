@@ -58,7 +58,7 @@ class msPDF
     /** @var string lap : mode d'impression anonyme */
     private $_anonymeMode=FALSE;
     /** @var string optimiser (reduction de taille) avec GhostScript */
-    private $_optimizeWihtGS=FALSE;
+    private $_optimizeWithGS=FALSE;
     /** @var string dossier de template à utiliser */
     private $_templatesPdfFolder;
 
@@ -170,7 +170,7 @@ class msPDF
  * @param boolean $v FALSE/TRUE
  */
     public function setOptimizeWithGS($v) {
-      return $this->_optimizeWihtGS = $v;
+      return $this->_optimizeWithGS = $v;
     }
 
 /**
@@ -256,7 +256,7 @@ class msPDF
         msTools::checkAndBuildTargetDir($p['config']['stockageLocation'].$folder.'/');
         $finalFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
 
-        if($this->_optimizeWihtGS == TRUE and msTools::commandExist('gs')) {
+        if($this->_optimizeWithGS == TRUE and msTools::commandExist('gs')) {
           $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
           file_put_contents($tempFile, $pdf);
           exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$finalFile.' '.$tempFile);
