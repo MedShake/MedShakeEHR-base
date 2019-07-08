@@ -27,7 +27,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : transmissions{% endblock %}
+{% block title %}{{ config.designAppName }} : transmissions{% endblock %}
 
 {% block head %}
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>

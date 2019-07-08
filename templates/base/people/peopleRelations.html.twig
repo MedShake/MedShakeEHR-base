@@ -28,14 +28,14 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ page.patient.firstname }}
+{% block title %}{{ config.designAppName }} : {{ page.patient.firstname }}
       {% if page.patient.lastname and page.patient.birthname %}
         {{ page.patient.lastname }} (né{% if page.patient.administrativeGenderCode == 'F' %}e{% endif %} {{ page.patient.birthname }})
       {% elseif page.patient.lastname %}
         {{ page.patient.lastname }}
       {% else %}
         {{ page.patient.birthname }}
-      {% endif %} : relations - MedShakeEHR{% endblock %}
+      {% endif %} - relations{% endblock %}
 
 {% block head %}
 {{ parent() }}

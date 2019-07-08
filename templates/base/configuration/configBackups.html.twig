@@ -27,7 +27,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : backups SQL{% endblock %}
+{% block title %}{{ config.designAppName }} : backups SQL{% endblock %}
 
 {% block head %}
   {{ parent() }}
