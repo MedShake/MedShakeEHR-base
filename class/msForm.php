@@ -767,11 +767,14 @@ class msForm
                             'value'=>$match[1]
                         );
                 //label
-                } else if (preg_match('#label{(.*)}#i', $v, $match)) {
+              } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
+                    if(!isset($match[3])) $match[3]='';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'label',
-                            'value'=>$match[1]
+                            'value'=>$match[1],
+                            'class'=>$match[3],
                         );
+
                 // sinon c'est un bloc standard (ID ou internalName)
                 } else {
                     $bloc=explode(',', $v);
