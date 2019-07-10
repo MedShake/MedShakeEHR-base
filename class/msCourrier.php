@@ -184,6 +184,10 @@ class msCourrier
 
         //ajout
         $tabRetour['date']=$this->_objetData['creationDate'];
+        // ajouter tags date
+        if($dataDate=$this->_formatDate($tabRetour)) {
+          $tabRetour=$tabRetour+$dataDate;
+        }
         $tabRetour['objetID']=$this->_objetData['id'];
         $tabRetour['patientID']=$this->_objetData['toID'];
         $tabRetour['instance']=$this->_objetData['instance'];
@@ -260,6 +264,10 @@ class msCourrier
 
         //ajout
         $tabRetour['date']=$this->_objetData['creationDate'];
+        // ajouter tags date
+        if($dataDate=$this->_formatDate($tabRetour)) {
+          $tabRetour=$tabRetour+$dataDate;
+        }
         $tabRetour['objetID']=$this->_objetData['id'];
         $tabRetour['patientID']=$this->_objetData['toID'];
         $tabRetour['instance']=$this->_objetData['instance'];
@@ -345,6 +353,10 @@ class msCourrier
 
         $tabRetour = $this->_getPatientData($this->_patientID);
         $tabRetour['date']=date('Y-m-d H:i:s');
+        // ajouter tags date
+        if($dataDate=$this->_formatDate($tabRetour)) {
+          $tabRetour=$tabRetour+$dataDate;
+        }
         $tabRetour['patientID']=$this->_patientID;
 
         //data utilisateur courant
@@ -496,6 +508,11 @@ class msCourrier
           $tabPatientData=$tabPatientData+$dataIdentite;
         }
 
+        // ajouter tag adresse
+        if($dataAdresse=$this->_formatAdresse($tabPatientData)) {
+          $tabPatientData=$tabPatientData+$dataAdresse;
+        }
+
         return $tabPatientData;
     }
 
@@ -534,15 +551,31 @@ class msCourrier
         // ajouter tags identité
         if(isset($tabPsData[$prefix.'lastname'],$tabPsData[$prefix.'birthname'],$tabPsData[$prefix.'firstname']) and $tabPsData[$prefix.'lastname']!=$tabPsData[$prefix.'birthname']) {
           $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'lastname'];
+          $tabPsData[$prefix.'nomUsuel'] = $tabPsData[$prefix.'lastname'];
         } elseif(isset($tabPsData[$prefix.'lastname'],$tabPsData[$prefix.'firstname'])) {
           $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'lastname'];
+          $tabPsData[$prefix.'nomUsuel'] = $tabPsData[$prefix.'lastname'];
         } elseif(isset($tabPsData[$prefix.'birthname'],$tabPsData[$prefix.'firstname'])) {
           $tabPsData[$prefix.'identiteUsuelle'] = $tabPsData[$prefix.'firstname'].' '.$tabPsData[$prefix.'birthname'];
+          $tabPsData[$prefix.'nomUsuel'] = $tabPsData[$prefix.'birthname'];
         }
         if(isset($tabPsData[$prefix.'titre'], $tabPsData[$prefix.'identiteUsuelle'])) {
           $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'titre'].' '.$tabPsData[$prefix.'identiteUsuelle'];
         } elseif(isset($tabPsData[$prefix.'identiteUsuelle'])) {
           $tabPsData[$prefix.'identiteUsuelleTitre'] = $tabPsData[$prefix.'identiteUsuelle'];
+        }
+
+        // adresse pro
+        if(isset($tabPsData[$prefix.'numAdressePro'], $tabPsData[$prefix.'rueAdressePro'])) {
+          $tabPsData[$prefix.'adresseProLigne1'] = $tabPsData[$prefix.'numAdressePro'].' '.$tabPsData[$prefix.'rueAdressePro'];
+        } else if(isset($tabPsData[$prefix.'rueAdressePro'])) {
+          $tabPsData[$prefix.'adresseProLigne1'] = $tabPsData[$prefix.'rueAdressePro'];
+        }
+
+        if(isset($tabPsData[$prefix.'codePostalPro'], $tabPsData[$prefix.'villeAdressePro'])) {
+          $tabPsData[$prefix.'adresseProLigne2'] = $tabPsData[$prefix.'codePostalPro'].' '.$tabPsData[$prefix.'villeAdressePro'];
+        } else if(isset($tabPsData[$prefix.'villeAdressePro'])) {
+          $tabPsData[$prefix.'adresseProLigne2'] = $tabPsData[$prefix.'villeAdressePro'];
         }
 
         return $tabPsData;
@@ -702,6 +735,44 @@ class msCourrier
       }
       if(isset($rdata)) return $rdata;
     }
+
+/**
+ * Générer des tags adresse complémentaires
+ * @param  array $data data existantes
+ * @return array       data à ajouter
+ */
+    private function _formatAdresse($data) {
+      if(isset($data['streetNumber'], $data['street'])) {
+        $rdata['adressePersoLigne1'] = $data['streetNumber'].' '.$data['street'];
+      } else if(isset($data['street'])) {
+        $rdata['adressePersoLigne1'] = $data['street'];
+      }
+
+      if(isset($data['postalCodePerso'], $data['city'])) {
+        $rdata['adressePersoLigne2'] = $data['postalCodePerso'].' '.$data['city'];
+      } else if(isset($data['city'])) {
+        $rdata['adressePersoLigne2'] = $data['city'];
+      }
+
+      if(isset($rdata)) return $rdata;
+    }
+
+/**
+ * Générer des tags date complémentaires
+ * @param  array $data data existantes
+ * @return array       data à ajouter
+ */
+    private function _formatDate($data) {
+      $date = DateTime::createFromFormat('Y-m-d H:i:s', $data['date']);
+      $rdata['dateDateSeule']=$date->format('d/m/Y');
+      $rdata['dateHeureSeule']=$date->format('H:i:s');
+      $rdata['dateYYYY']=$date->format('Y');
+      $rdata['dateMM']=$date->format('m');
+      $rdata['dateDD']=$date->format('d');
+
+      if(isset($rdata)) return $rdata;
+    }
+
 
 /**
  * Obtenir les données complètes sur l'objet porteur
