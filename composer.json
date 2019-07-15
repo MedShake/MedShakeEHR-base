@@ -9,6 +9,7 @@
         "atrapalo/URLcrypt": "^1.0",
         "webit/eval-math": "^1.0",
         "ovh/ovh": "^2.0",
-        "box/spout": "^2.7"
+        "box/spout": "^2.7",
+        "setasign/fpdi-fpdf": "^2.2"
     }
 }

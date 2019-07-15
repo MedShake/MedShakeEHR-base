@@ -21,6 +21,8 @@
  */
 
 use Dompdf\Dompdf;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfReader;
 
 /**
  * Générer du PDF
@@ -277,6 +279,10 @@ class msPDF
             $formOptions = $form->getFormOptions();
 
             if(isset($formOptions['optionsPdf']['onSave']['append'])) {
+            // Construction d'un PDF complémentaire concaténé ou en remplacement via un PDF utilisé comme template (fpdf)
+            if(isset($this->_formOptions['optionsPdf']['templatePdf']['source']) and is_file($this->_formOptions['optionsPdf']['templatePdf']['source'])) {
+              $this->_savePdfFromTemplatePdf();
+            }
               $files=[];
               foreach($formOptions['optionsPdf']['onSave']['append'] as $file) {
                 if(is_file($file)) {
@@ -703,4 +709,156 @@ class msPDF
       unlink($tempfile);
     }
 
+/**
+ * Générer et sauver un PDF basé sur un PDF tiers utilisé comme template de fond de page
+ * Le PDF généré peut être concaténé au PDF standard généré par le formulaire (dompdf) ou le remplacer
+ * @return void
+ */
+    private function _savePdfFromTemplatePdf() {
+      global $p;
+
+      $pdfDat = $this->_formOptions['optionsPdf']['templatePdf'];
+
+      if(is_file($pdfDat['source'])) {
+        $pdfDat['source']=$pdfDat['source'];
+      } elseif(is_file($p['config']['templatesPdfFolder'].$pdfDat['source'])) {
+        $pdfDat['source']=$p['config']['templatesPdfFolder'].$pdfDat['source'];
+      } elseif(is_file($p['homepath'].'templates/PDF/'.$pdfDat['source'])) {
+        $pdfDat['source']=$p['homepath'].'templates/PDF/'.$pdfDat['source'];
+      } else {
+        return;
+      }
+
+      $pdf = new FPDI('P','mm','A4');
+
+      $pages = $pdf->setSourceFile($pdfDat['source']);
+
+      if(isset($pdfDat['defautFontSize'])) $defautFontSize=$pdfDat['defautFontSize']; else $defautFontSize=10;
+      if(isset($pdfDat['defautTextColor'])) $defautTextColor=explode(',' , $pdfDat['defautTextColor']); else $defautTextColor=[0,0,0];
+      if(isset($pdfDat['defautFont'])) $defautFont=$pdfDat['defautFont']; else $defautFont='Arial';
+
+      for($i=1;$i<=$pages;$i++) {
+        $pdf->AddPage();
+        $tplIdx = $pdf->importPage($i);
+        $pdf->useTemplate($tplIdx, 0, 0);
+
+        if(isset($pdfDat['pagesTxtMapping']['page'.$i])) {
+          $data2write = $this->_getDataToWriteOnTemplate($pdfDat['pagesTxtMapping']['page'.$i]);
+          foreach($data2write as $param) {
+            $dataName=$param['dataName'];
+            $param=$param['param'];
+            if(isset($param[2]) and !empty($param[2])) $pdf->SetFontSize((int)$param[2]); else $pdf->SetFontSize((int)$defautFontSize);
+            if(isset($param[3]) and !empty($param[3])) {
+              $param[3]=explode(',', $param[3]);
+              $pdf->SetTextColor($param[3][0], $param[3][1], $param[3][2]);
+            } else {
+              $pdf->SetTextColor($defautTextColor[0], $defautTextColor[1], $defautTextColor[2]);
+            }
+            if(isset($param[4]) and !empty($param[4])) $pdf->SetFont($param[4]); else $pdf->SetFont($defautFont);
+            if(isset($param[0], $param[1]) and is_numeric($param[0]) and is_numeric($param[1])) {
+              $pdf->SetXY($param[0], $param[1]);
+              if(isset($param[5])) $toWrite=$param[5]; elseif(isset($this->_courrierData[$dataName])) $toWrite=$this->_courrierData[$dataName];
+              if(!empty($toWrite)) $pdf->Write(0, iconv('UTF-8', 'windows-1252', $toWrite));
+            }
+          }
+        }
+
+        if(isset($pdfDat['pagesImgMapping']['page'.$i])) {
+          $data2write = $this->_getImgToWriteOnTemplate($pdfDat['pagesImgMapping']['page'.$i]);
+          foreach($data2write as $param) {
+            $imgPath=$param['imgPath'];
+            $param=$param['param'];
+            if(!isset($param[0]) or empty($param[0])) $param[0]=0;
+            if(!isset($param[1]) or empty($param[1])) $param[1]=0;
+            if(!isset($param[2]) or empty($param[2])) $param[2]=0;
+            if(!isset($param[3]) or empty($param[3])) $param[3]=0;
+            if(!isset($param[4]) or empty($param[4])) $param[4]='';
+            if(is_file($imgPath)) {
+              $imgPath=$imgPath;
+            } elseif(is_file($p['config']['templatesPdfFolder'].$imgPath)) {
+              $imgPath=$p['config']['templatesPdfFolder'].$imgPath;
+            } else {
+              $imgPath=null;
+            }
+
+            if($imgPath) $pdf->Image($imgPath,$param[0],$param[1],$param[2],$param[3],$param[4]);
+          }
+        }
+      }
+
+      if($pdfDat['mode'] == 'replace') {
+        @unlink($this->_finalPdfFile);
+        file_put_contents($this->_finalPdfFile, $pdf->Output('S'));
+      } elseif($pdfDat['mode'] == 'concat') {
+        $pagesComp = $pdf->setSourceFile($this->_finalPdfFile);
+        for($i=1;$i<=$pagesComp;$i++) {
+          $pdf->AddPage();
+          $tplIdx = $pdf->importPage($i);
+          $pdf->useTemplate($tplIdx, 0, 0);
+          @unlink($this->_finalPdfFile);
+          file_put_contents($this->_finalPdfFile, $pdf->Output('S'));
+        }
+      }
+    }
+
+/**
+ * Obtenir les data txt à écrire sur le PDF template
+ * @param  array $arrayFromYaml data entrées en options du formulaire
+ * @return array                data transformées
+ */
+    private function _getDataToWriteOnTemplate($arrayFromYaml) {
+      global $p;
+      $tabReturn=[];
+      foreach($arrayFromYaml as $dataName=>$params) {
+        if(array_key_first($arrayFromYaml[$dataName]) === 0) {
+          $params2use = $arrayFromYaml[$dataName];
+        } elseif(isset($this->_courrierData[$dataName], $params[$this->_courrierData[$dataName]])) {
+          $params2use = $params[$this->_courrierData[$dataName]];
+        }
+
+        if(is_array($params2use[array_key_first($params2use)])) {
+          foreach($params2use as $pa) {
+            $tabReturn[] = array(
+              'dataName' => $dataName,
+              'param' => $pa
+            );
+          }
+        } else {
+          $tabReturn[] = array(
+            'dataName' => $dataName,
+            'param' => $params2use
+          );
+        }
+      }
+      return $tabReturn;
+    }
+
+/**
+ * Obtenir les data image à écrire sur le PDF template
+ * @param  array $arrayFromYaml data entrées en options du formulaire
+ * @return array                data transformées
+ */
+    private function _getImgToWriteOnTemplate($arrayFromYaml) {
+      global $p;
+      $tabReturn=[];
+      foreach($arrayFromYaml as $imgPath=>$params) {
+        if(array_key_first($arrayFromYaml[$imgPath]) === 0) {
+          $params2use = $arrayFromYaml[$imgPath];
+        }
+        if(is_array($params2use[array_key_first($params2use)])) {
+          foreach($params2use as $pa) {
+            $tabReturn[] = array(
+              'imgPath' => $imgPath,
+              'param' => $pa
+            );
+          }
+        } else {
+          $tabReturn[] = array(
+            'imgPath' => $imgPath,
+            'param' => $params2use
+          );
+        }
+      }
+      return $tabReturn;
+    }
 }
