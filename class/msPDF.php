@@ -815,22 +815,27 @@ class msPDF
       foreach($arrayFromYaml as $dataName=>$params) {
         if(array_key_first($arrayFromYaml[$dataName]) === 0) {
           $params2use = $arrayFromYaml[$dataName];
+        } elseif(isset($this->_courrierData[$dataName], $params[$this->_courrierData['val_'.$dataName]])) {
+          $params2use = $params[$this->_courrierData['val_'.$dataName]];
         } elseif(isset($this->_courrierData[$dataName], $params[$this->_courrierData[$dataName]])) {
           $params2use = $params[$this->_courrierData[$dataName]];
+        } else {
+          unset($params2use);
         }
-
-        if(is_array($params2use[array_key_first($params2use)])) {
-          foreach($params2use as $pa) {
+        if(isset($params2use)) {
+          if(is_array($params2use[array_key_first($params2use)])) {
+            foreach($params2use as $pa) {
+              $tabReturn[] = array(
+                'dataName' => $dataName,
+                'param' => $pa
+              );
+            }
+          } else {
             $tabReturn[] = array(
               'dataName' => $dataName,
-              'param' => $pa
+              'param' => $params2use
             );
           }
-        } else {
-          $tabReturn[] = array(
-            'dataName' => $dataName,
-            'param' => $params2use
-          );
         }
       }
       return $tabReturn;
