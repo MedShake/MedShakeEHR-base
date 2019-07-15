@@ -63,6 +63,10 @@ class msPDF
     private $_optimizeWithGS=FALSE;
     /** @var string dossier de template à utiliser */
     private $_templatesPdfFolder;
+    /** @var string chemin final du PDF construit */
+    private $_finalPdfFile;
+    /** @var string data courrier */
+    private $_courrierData=[];
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -204,7 +208,6 @@ class msPDF
         $this->makePDF();
     }
 
-
 /**
  * Construire un PDF : header + body + footer
  * @return void
@@ -248,6 +251,7 @@ class msPDF
             throw new Exception('ObjetID is not defined');
         }
 
+        // PDF issu de la construction HTML (dompdf)
         $dompdf = new Dompdf();
         $dompdf->loadHtml($this->_contenuFinalPDF);
         $dompdf->setPaper('A4', 'portrait');
@@ -256,18 +260,10 @@ class msPDF
 
         $folder=msStockage::getFolder($this->_objetID);
         msTools::checkAndBuildTargetDir($p['config']['stockageLocation'].$folder.'/');
-        $finalFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
+        $this->_finalPdfFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
+        file_put_contents($this->_finalPdfFile, $pdf);
 
-        if($this->_optimizeWithGS == TRUE and msTools::commandExist('gs')) {
-          $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
-          file_put_contents($tempFile, $pdf);
-          exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$finalFile.' '.$tempFile);
-          unlink($tempFile);
-        } else {
-          file_put_contents($finalFile, $pdf);
-        }
-
-        //si c'est un compte rendu on va rechercher les options du form générateur
+        //si c'est un compte rendu on va rechercher les options du form
         if ($this->_type=='cr') {
 
             $formNameOrigin = new msObjet();
@@ -276,29 +272,39 @@ class msPDF
 
             $form = new msForm();
             $form->setFormIDbyName($formNameOrigin);
-            $formOptions = $form->getFormOptions();
+            $this->_formOptions = $form->getFormOptions();
 
-            if(isset($formOptions['optionsPdf']['onSave']['append'])) {
             // Construction d'un PDF complémentaire concaténé ou en remplacement via un PDF utilisé comme template (fpdf)
             if(isset($this->_formOptions['optionsPdf']['templatePdf']['source']) and is_file($this->_formOptions['optionsPdf']['templatePdf']['source'])) {
               $this->_savePdfFromTemplatePdf();
             }
+
+            // Concaténation avec PDF fixe existant
+            if(isset($this->_formOptions['optionsPdf']['onSave']['append'])) {
               $files=[];
-              foreach($formOptions['optionsPdf']['onSave']['append'] as $file) {
+              foreach($this->_formOptions['optionsPdf']['onSave']['append'] as $file) {
                 if(is_file($file)) {
                   $files[]=$file;
                 }
               }
               if(!empty($files)) {
                 $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
-                copy($finalFile, $tempFile);
-                system("pdftk $tempFile ".implode(' ', $files)." output $finalFile dont_ask", $errcode);
+                copy($this->_finalPdfFile, $tempFile);
+                system("pdftk $tempFile ".implode(' ', $files)." output $this->_finalPdfFile dont_ask", $errcode);
                 unlink($tempFile);
               }
             }
         }
 
-        //sauver la copie en base
+        // Optimisation du PDF final si demandée
+        if($this->_optimizeWithGS == TRUE and msTools::commandExist('gs')) {
+          $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
+          rename($this->_finalPdfFile,$tempFile);
+          exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$this->_finalPdfFile.' '.$tempFile);
+          unlink($tempFile);
+        }
+
+        //sauver la copie en base (ne concerne que ce qui est généré par dompdf)
         $this->_savePrinted();
     }
 
@@ -330,8 +336,8 @@ class msPDF
       if($this->_anonymeMode) $data['anonyme'] = 'y';
 
       // test préalable car pour courrier dont le body est injecté en POST, ca ne fonctionne pas.
-      if(isset($p['page']['courrier'])) {
-        $data['serializedTags']=serialize($p['page']['courrier']);
+      if(isset($this->_courrierData)) {
+        $data['serializedTags']=serialize($this->_courrierData);
       }
 
         msSQL::sqlInsert('printed', $data, false);
@@ -374,24 +380,32 @@ class msPDF
         }
         //sinon
         else {
+            $courrier = new msCourrier();
+            $courrier->setObjetID($this->_objetID);
+
             //si c'est un compte rendu
             if ($this->_type=='cr') {
+                $this->_courrierData=$courrier->getCrData();
                 $this->_makeBodyForCr();
             }
             //si c'est un courrier
             elseif ($this->_type=='courrier') {
+                $this->_courrierData=$courrier->getCourrierData();
                 $this->_makeBodyForCourrier();
             }
             //si c'est une ordo
             elseif ($this->_type=='ordo') {
+                $this->_courrierData=$courrier->getOrdoData();
                 $this->_makeBodyForOrdo();
             }
             //si c'est une ordo LAP
             elseif ($this->_type=='ordoLAP') {
+                $this->_courrierData=$courrier->getOrdoData();
                 $this->_makeBodyForOrdoLAP();
             }
             //si c'est un règlement
             elseif ($this->_type=='reglement') {
+                $this->_courrierData=$courrier->getReglementData();
                 $this->_makeBodyForReglement();
             }
         }
@@ -405,11 +419,6 @@ class msPDF
     {
       global $p;
 
-      // sortir les infos patient
-      $courrier = new msCourrier();
-      $courrier->setObjetID($this->_objetID);
-      $p['page']['courrier']=$courrier->getOrdoData();
-
       // sortir data ordonnance
       $ordo = new msLapOrdo;
       $ordo->setOrdonnanceID($this->_objetID);
@@ -420,37 +429,37 @@ class msPDF
         $modePrint='ald';
         foreach($tabOrdo['ordoMedicsALD'] as $k=>$l) {
           if(count($l['medics']) > 1) {
-            $p['page']['courrier']['medoc']['ald'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
+            $this->_courrierData['medoc']['ald'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
             foreach($l['medics'] as $km=>$m) {
-              $p['page']['courrier']['medoc']['ald'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
+              $this->_courrierData['medoc']['ald'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
               if($m['isNPS'] == 'true') {
-                $p['page']['courrier']['medoc']['ald'][$k].= ' [non substituable';
-                if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
-                $p['page']['courrier']['medoc']['ald'][$k].= ']';
+                $this->_courrierData['medoc']['ald'][$k].= ' [non substituable';
+                if($m['motifNPS'] != '') $this->_courrierData['medoc']['ald'][$k].=' - '.$m['motifNPS'];
+                $this->_courrierData['medoc']['ald'][$k].= ']';
               }
-              $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+              $this->_courrierData['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
               if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
-                if($m['risqueAllergique']) $p['page']['courrier']['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+                if($m['risqueAllergique']) $this->_courrierData['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
               }
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
+              $this->_courrierData['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
-            $p['page']['courrier']['medoc']['ald'][$k]=$m['nomUtileFinal'];
-            $p['page']['courrier']['medoc']['ald'][$k].=" - ".$l['ligneData']['voieUtilisee'];
+            $this->_courrierData['medoc']['ald'][$k]=$m['nomUtileFinal'];
+            $this->_courrierData['medoc']['ald'][$k].=" - ".$l['ligneData']['voieUtilisee'];
             if($m['isNPS'] == 'true') {
-              $p['page']['courrier']['medoc']['ald'][$k].= ' - [non substituable';
-              if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['ald'][$k].=' - '.$m['motifNPS'];
-              $p['page']['courrier']['medoc']['ald'][$k].= ']';
+              $this->_courrierData['medoc']['ald'][$k].= ' - [non substituable';
+              if($m['motifNPS'] != '') $this->_courrierData['medoc']['ald'][$k].=' - '.$m['motifNPS'];
+              $this->_courrierData['medoc']['ald'][$k].= ']';
             }
-            $p['page']['courrier']['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            $this->_courrierData['medoc']['ald'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
             if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
-              if($m['risqueAllergique']) $p['page']['courrier']['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+              if($m['risqueAllergique']) $this->_courrierData['medoc']['ald'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
+              $this->_courrierData['medoc']['ald'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           }
         }
@@ -459,37 +468,37 @@ class msPDF
       if(isset($tabOrdo['ordoMedicsG'])) {
         foreach($tabOrdo['ordoMedicsG'] as $k=>$l) {
           if(count($l['medics']) > 1) {
-            $p['page']['courrier']['medoc']['standard'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
+            $this->_courrierData['medoc']['standard'][$k]=$l['ligneData']['voieUtilisee'].' - '.$l['ligneData']['dureeTotaleHuman']."\n";
             foreach($l['medics'] as $km=>$m) {
-              $p['page']['courrier']['medoc']['standard'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
+              $this->_courrierData['medoc']['standard'][$k].= ($km+1) .'- '.$m['nomUtileFinal'];
               if($m['isNPS'] == 'true') {
-                $p['page']['courrier']['medoc']['standard'][$k].= ' [non substituable';
-                if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
-                $p['page']['courrier']['medoc']['standard'][$k].= ']';
+                $this->_courrierData['medoc']['standard'][$k].= ' [non substituable';
+                if($m['motifNPS'] != '') $this->_courrierData['medoc']['standard'][$k].=' - '.$m['motifNPS'];
+                $this->_courrierData['medoc']['standard'][$k].= ']';
               }
-              $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+              $this->_courrierData['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
               if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
-                if($m['risqueAllergique']) $p['page']['courrier']['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+                if($m['risqueAllergique']) $this->_courrierData['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
               }
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
+              $this->_courrierData['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           } else {
             $m=$l['medics'][0];
-            $p['page']['courrier']['medoc']['standard'][$k]=$m['nomUtileFinal'];
-            $p['page']['courrier']['medoc']['standard'][$k].=" - ".$l['ligneData']['voieUtilisee'];
+            $this->_courrierData['medoc']['standard'][$k]=$m['nomUtileFinal'];
+            $this->_courrierData['medoc']['standard'][$k].=" - ".$l['ligneData']['voieUtilisee'];
             if($m['isNPS'] == 'true') {
-              $p['page']['courrier']['medoc']['standard'][$k].= ' - [non substituable';
-              if($m['motifNPS'] != '') $p['page']['courrier']['medoc']['standard'][$k].=' - '.$m['motifNPS'];
-              $p['page']['courrier']['medoc']['standard'][$k].= ']';
+              $this->_courrierData['medoc']['standard'][$k].= ' - [non substituable';
+              if($m['motifNPS'] != '') $this->_courrierData['medoc']['standard'][$k].=' - '.$m['motifNPS'];
+              $this->_courrierData['medoc']['standard'][$k].= ']';
             }
-            $p['page']['courrier']['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
+            $this->_courrierData['medoc']['standard'][$k].= "\n".implode("\n", $m['posoHumanCompleteTab'])."\n";
             if($p['config']['lapPrintAllergyRisk'] == 'true' and isset($m['risqueAllergique'])) {
-              if($m['risqueAllergique']) $p['page']['courrier']['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
+              if($m['risqueAllergique']) $this->_courrierData['medoc']['standard'][$k].= "Un risque théorique d'allergie ou d'intolérance vous concernant est connu pour ce traitement.\n";
             }
             if(!empty(trim($l['ligneData']['consignesPrescription']))) {
-              $p['page']['courrier']['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
+              $this->_courrierData['medoc']['standard'][$k].= $l['ligneData']['consignesPrescription']."\n";
             }
           }
         }
@@ -499,22 +508,22 @@ class msPDF
       if ($modePrint=='ald') {
         $this->_pageHeader=$this->_pageFooter='';
         if($this->_anonymeMode) {
-          $p['page']['courrier']['printModel']='ordonnanceAnonymeALD.html.twig';
+          $this->_courrierData['printModel']='ordonnanceAnonymeALD.html.twig';
         } else {
-          $p['page']['courrier']['printModel']=$p['config']['templateOrdoALD'];
+          $this->_courrierData['printModel']=$p['config']['templateOrdoALD'];
         }
       } else {
         if($this->_anonymeMode) {
           $this->_pageHeader=$this->_pageFooter='';
-          $p['page']['courrier']['printModel']='ordonnanceAnonyme.html.twig';
+          $this->_courrierData['printModel']='ordonnanceAnonyme.html.twig';
         } else {
           $this->_pageHeader= $this->makeWithTwig($p['config']['templateOrdoHeadAndFoot']);
-          $p['page']['courrier']['printModel']=$p['config']['templateOrdoBody'];
+          $this->_courrierData['printModel']=$p['config']['templateOrdoBody'];
         }
       }
 
       //on génère le body avec twig
-      $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+      $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
 
     }
 
@@ -536,12 +545,6 @@ class msPDF
           group by p.id, ald.value
           order by p.id asc")) {
 
-            // sortir les infos
-            $courrier = new msCourrier();
-            $courrier->setObjetID($this->_objetID);
-            $p['page']['courrier']=$courrier->getOrdoData();
-
-
             $modePrint='standard';
 
             foreach ($ordoData as $v) {
@@ -558,21 +561,21 @@ class msPDF
                     } else {
                         $key='standard';
                     }
-                    $p['page']['courrier']['medoc'][$key][]=$v['value'];
+                    $this->_courrierData['medoc'][$key][]=$v['value'];
                 }
             }
 
             //si on sort en mode ald alors on va annuler les header et footer standard
             if ($modePrint=='ald') {
                 $this->_pageHeader=$this->_pageFooter='';
-                $p['page']['courrier']['printModel']=$p['config']['templateOrdoALD'];
+                $this->_courrierData['printModel']=$p['config']['templateOrdoALD'];
             } else {
                 $this->_pageHeader= $this->makeWithTwig($p['config']['templateOrdoHeadAndFoot']);
-                $p['page']['courrier']['printModel']=$p['config']['templateOrdoBody'];
+                $this->_courrierData['printModel']=$p['config']['templateOrdoBody'];
             }
 
             //on génère le body avec twig
-            $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+            $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
         }
     }
 
@@ -583,14 +586,11 @@ class msPDF
     private function _makeBodyForCr()
     {
         global $p;
-        $courrier = new msCourrier();
-        $courrier->setObjetID($this->_objetID);
-        $p['page']['courrier']=$courrier->getCrData();
 
         //on déclare le modèle de page
         // soit il remonte des data de msCourrier (via msModuleDataCourrier)
-        if(isset($p['page']['courrier']['templateCrHeadAndFoot'])) {
-            $this->_pageHeader = $this->makeWithTwig($p['page']['courrier']['templateCrHeadAndFoot']);
+        if(isset($this->_courrierData['templateCrHeadAndFoot'])) {
+            $this->_pageHeader = $this->makeWithTwig($this->_courrierData['templateCrHeadAndFoot']);
         }
         // soit on prend le modèle par défaut de la config
         elseif (!isset($this->_pageHeader)) {
@@ -598,7 +598,7 @@ class msPDF
         }
 
         //on génère le body avec twig
-        $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+        $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
     }
 
 /**
@@ -608,9 +608,6 @@ class msPDF
     private function _makeBodyForCourrier()
     {
         global $p;
-        $courrier = new msCourrier();
-        $courrier->setPatientID($this->_toID);
-        $p['page']['courrier']=$courrier->getCourrierData();
 
         $dataform = new msObjet();
         $dataform=$dataform->getObjetDataByID($this->_objetID, ['value']);
@@ -623,9 +620,9 @@ class msPDF
 
         $data=new msData();
         if ($printModel=$data->getDataType($this->_modeleID, ['formValues'])) {
-            $p['page']['courrier']['printModel']=$printModel['formValues'].'.html.twig';
+            $this->_courrierData['printModel']=$printModel['formValues'].'.html.twig';
         } else {
-            $p['page']['courrier']['printModel']='defaut.html.twig';
+            $this->_courrierData['printModel']='defaut.html.twig';
         }
     }
 
@@ -637,14 +634,11 @@ class msPDF
     private function _makeBodyForReglement()
     {
         global $p;
-        $courrier = new msCourrier();
-        $courrier->setObjetID($this->_objetID);
-        $p['page']['courrier']=$courrier->getReglementData();
 
         //on déclare le modèle de page
         // soit il remonte des data de msCourrier (via msModuleDataCourrier)
-        if(isset($p['page']['courrier']['templateCrHeadAndFoot'])) {
-            $this->_pageHeader = $this->makeWithTwig($p['page']['courrier']['templateCrHeadAndFoot']);
+        if(isset($this->_courrierData['templateCrHeadAndFoot'])) {
+            $this->_pageHeader = $this->makeWithTwig($this->_courrierData['templateCrHeadAndFoot']);
         }
         // soit on prend le modèle par défaut de la config
         elseif (!isset($this->_pageHeader)) {
@@ -652,7 +646,7 @@ class msPDF
         }
 
         //on génère le body avec twig
-        $this->_body =  $this->makeWithTwig($p['page']['courrier']['printModel']);
+        $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
     }
 
 
@@ -664,6 +658,15 @@ class msPDF
     public function makeWithTwig($template)
     {
         global $p;
+
+        //on agrège les data courrier qui peuvent provenir d'en dehors de la class avec celles de la class
+        if(isset($p['page']['courrier']) and !empty($p['page']['courrier'])) {
+          $p['page']['courrier']=array_merge($this->_courrierData, $p['page']['courrier']);
+          $this->_courrierData=$p['page']['courrier'];
+        } else {
+          $p['page']['courrier']=$this->_courrierData;
+        }
+
         if(isset($this->_templatesPdfFolder)) {
           $templatesPdfFolder=$this->_templatesPdfFolder;
         } else {
