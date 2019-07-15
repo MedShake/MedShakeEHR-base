@@ -81,7 +81,6 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
 
     $pdf->makePDF();
     $pdf->savePDF();
-    //$pdf->showPDF();
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');
 }
