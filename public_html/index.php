@@ -51,6 +51,9 @@ spl_autoload_register(function ($class) {
     }
 });
 
+/////////// Compatibilité versions antérieures PHP
+require $homepath.'fonctions/compatibilite.php';
+
 /////////// Vérification de l'état d'installation
 if (!is_file($homepath.'config/config.yml')) {
     msTools::redirection('/install.php');
