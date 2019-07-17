@@ -263,7 +263,7 @@ class msPDF
         $this->_finalPdfFile = $p['config']['stockageLocation'].$folder.'/'.$this->_objetID.'.pdf';
         file_put_contents($this->_finalPdfFile, $pdf);
 
-        //si c'est un compte rendu on va rechercher les options du form
+        //si c'est un compte rendu on va rechercher les options du form et on agit
         if ($this->_type=='cr') {
 
             $formNameOrigin = new msObjet();
@@ -273,6 +273,10 @@ class msPDF
             $form = new msForm();
             $form->setFormIDbyName($formNameOrigin);
             $this->_formOptions = $form->getFormOptions();
+
+            if(isset($this->_formOptions['optionsPdf']['onSave']['optimizeWithGS']) and $this->_formOptions['optionsPdf']['onSave']['optimizeWithGS'] == true) {
+              $this->_optimizeWithGS = TRUE;
+            }
 
             // Construction d'un PDF complémentaire concaténé ou en remplacement via un PDF utilisé comme template (fpdf)
             if(isset($this->_formOptions['optionsPdf']['templatePdf']['source']) and is_file($this->_formOptions['optionsPdf']['templatePdf']['source'])) {
