@@ -154,6 +154,7 @@ configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDico
 configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
 configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
 configBackups: ['GET', '/configuration/configBackups/', 'configuration/configBackups']
+configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
