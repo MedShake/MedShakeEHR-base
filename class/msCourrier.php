@@ -170,7 +170,7 @@ class msCourrier
 
 /**
  * Sortir tous les data d'un examen à partir du $_objetID pour rédaction de compte rendu examen
- * @return array tableau avec 3 clefs principales au 1er niveau : examenData, grossesseData, patientData
+ * @return array tableau key=>value
  */
     public function getCrData()
     {
@@ -250,7 +250,7 @@ class msCourrier
 
 /**
  * Sortir tous les data d'un examen à partir du $_objetID pour rédaction règlement
- * @return array tableau avec 3 clefs principales au 1er niveau : examenData, grossesseData, patientData
+ * @return array tableau key=>value
  */
     public function getReglementData()
     {
