@@ -50,30 +50,52 @@
 
 <h1>Gestion des modèles de configurations utilisateurs</h1>
 
-<h2 class="mt-4">Répertoire</h2>
+<div class="row">
+  <div class="col-12 col-xl-6">
+    <h2 class="mt-4">Répertoire</h2>
 
-<table class="table table-sm">
-  <thead class="thead-light">
-    <tr>
-      <th>
-        Répertoire local
-      </th>
-      <th>
-        Est accessible en lecture
-      </th>
-      <th>
-        Est accessible en écriture
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{ page.repertoireUserTemplates }}</td>
-      <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-      <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-    </tr>
-  </tbody>
-</table>
+    <table class="table table-sm">
+      <tbody>
+        <tr>
+          <td>
+            Répertoire local
+          </td>
+          <td>{{ page.repertoireUserTemplates }}</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en lecture
+          </td>
+          <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en écriture
+          </td>
+          <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 col-xl-6">
+    <h2 class="mt-4">Ajouter des templates</h2>
+
+    {% if page.templatesDirAutorisationEcriture == 1 %}
+        <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireUserTemplates }}" class="col-12 bg-light center-block" style="padding : 30px; border-radius : 6px">
+            Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
+            <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
+            <div class="progress" style="margin-top : 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 00%;">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+        </div>
+
+    {% else %}
+      <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en écriture. Les fichiers ne peuvent être ajoutés via cette interface.</div>
+    {% endif %}
+  </div>
+</div>
 
 <h2 class="mt-4">Modèles présents</h2>
 
@@ -88,7 +110,7 @@
               <th>
                   Fichier
               </th>
-              <th>
+              <th class="text-right">
                   Gérer
               </th>
           </tr>
@@ -122,31 +144,5 @@
   {% else %}
     <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en lecture. Les templates ne peuvent être listés et gérés par cette interface.</div>
   {% endif %}
-
-  <h2 class="mt-4">Ajouter des templates</h2>
-
-  {% if page.templatesDirAutorisationEcriture == 1 %}
-
-
-      <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireUserTemplates }}" class="col-md-9 bg-warning center-block" style="padding : 30px; border-radius : 6px">
-          Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
-          <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
-
-
-          <div class="progress" style="margin-top : 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 00%;">
-              <span class="sr-only"></span>
-            </div>
-          </div>
-      </div>
-
-
-  {% else %}
-    <div class="alert alert-danger" role="alert">Le répertoire de clefs n'est pas accessible en écriture. Les clefs ne peuvent être ajoutées via cette interface.</div>
-  {% endif %}
-
-
-
-
 
 {% endblock %}
