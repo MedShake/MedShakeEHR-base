@@ -43,11 +43,96 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
       </li>
 	    <li class="breadcrumb-item active">
-			    Vérifications des répertoires de stockage
+			    Vérifications techniques
 	    </li>
     </ol>
+    <h1>Informations et vérifications techniques</h1>
 
-    <h1>Accessibilité en écriture des répertoires généraux</h1>
+    <div class="row">
+      <div class="col-12 col-xl-6">
+
+        <h2>Binaires</h2>
+
+        <table class="table table-sm table-hover">
+          <thead class="thead-light">
+            <tr>
+                <th>
+                    Binaire
+                </th>
+                <th class="w-15">
+                    Est présent
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for bin, val in page.commands %}
+            <tr>
+                <td>{{ bin }}</td>
+                <td class="{% if val %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+      <div class="col-12 col-xl-6">
+
+        <h2 class="d-flex justify-content-between">
+          <span>PHP</span>
+          <small>
+            <a class="btn btn-sm btn-outline-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/phpinfo/" target="_blank">
+              <i class="fas fa-external-link-alt"></i> phpinfo()
+            </a>
+          </small>
+        </h2>
+
+        <table class="table table-sm table-hover mb-3">
+          <thead class="thead-light">
+            <tr>
+                <th>
+                    Variable
+                </th>
+                <th class="text-right">
+                    Valeur
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for var, val in page.varPHP %}
+            <tr>
+                <td>{{ var }}</td>
+                <td class="text-right">{{ val }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+
+        <table class="table table-sm table-hover">
+          <thead class="thead-light">
+            <tr>
+                <th>
+                    Module
+                </th>
+                <th class="w-15">
+                    Est présent
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for mod, val in page.modulesPHP %}
+            <tr>
+                <td>{{ mod }}</td>
+                <td class="{% if val %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <h2>Accessibilité en écriture des répertoires généraux</h2>
 
     <p>Les répertoires testés sont ceux de la configuration générale.</p>
 
@@ -86,4 +171,69 @@
             </table>
         </div>
     </div>
+
+    <h2>Packages tiers</h2>
+
+    <h3>Back-end</h3>
+
+    <table class="table table-sm table-hover table-striped">
+      <thead class="thead-light">
+        <tr>
+            <th>
+                Nom
+            </th>
+            <th>
+                Version
+            </th>
+            <th>
+                Homepage
+            </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k, v in page.composerBack.packages %}
+            <tr>
+                <td class="w-25">{{ v.name }}</td>
+                <td>{{ v.version }}
+                </td>
+                <td class="small w-50">
+                  {% if v.homepage %}{% set lien = v.homepage %}{% else %}{% set lien = v.source.url %}{% endif %}
+                  <a href="{{ lien }}">{{ lien}}</a>
+                </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Front-end</h3>
+
+    <table class="table table-sm table-hover table-striped">
+      <thead class="thead-light">
+        <tr>
+            <th>
+                Nom
+            </th>
+            <th>
+                Version
+            </th>
+            <th>
+                Homepage
+            </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k, v in page.composerFront.packages %}
+            <tr>
+                <td class="w-25">{{ v.name }}</td>
+                <td>{{ v.version }}
+                </td>
+                <td class="small w-50">
+                  {% if v.homepage %}{% set lien = v.homepage %}{% else %}{% set lien = v.source.url %}{% endif %}
+                  <a href="{{ lien }}">{{ lien}}</a>
+                </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
 {% endblock %}

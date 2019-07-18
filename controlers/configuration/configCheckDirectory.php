@@ -109,7 +109,7 @@
           $p['page']['check']['templatesPdfFolder']['is_dir']=false;
           $p['page']['check']['templatesPdfFolder']['is_writable']=false;
       }
- 
+
       //repertoire de backup
       if (is_dir($p['config']['backupLocation'])) {
           $p['page']['check']['backupLocation']['is_dir']=true;
@@ -120,5 +120,48 @@
           $p['page']['check']['backupLocation']['is_dir']=false;
           $p['page']['check']['backupLocation']['is_writable']=false;
       }
+
+      // Détection des bin nécessaires
+      $com=[
+        'gs',
+        'awk',
+        'mysql',
+        'mysqldump',
+        'dump2dcm',
+        'img2dcm',
+        'storescu',
+        'convert',
+        'git',
+        'pdftk',
+      ];
+      sort($com);
+      foreach($com as $co) {
+        $p['page']['commands'][$co]=msTools::commandExist($co);
+      }
+
+      // modules php
+      $modulesPHP = get_loaded_extensions();
+      $modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'soap', 'dom'];
+      sort($modulesPHPrequis);
+      foreach($modulesPHPrequis as $mod) {
+        if(in_array($mod, $modulesPHP)) {
+          $p['page']['modulesPHP'][$mod]=true;
+        } else {
+          $p['page']['modulesPHP'][$mod]=false;
+        }
+      }
+
+      // var PHP
+      $varPHP = ['upload_max_filesize', 'post_max_size', 'max_input_vars'];
+      sort($varPHP);
+      foreach($varPHP as $var) {
+        $p['page']['varPHP'][$var]=ini_get($var);
+      }
+
+      // composer
+      $p['page']['composerBack'] = msExternalData::jsonFileToPhpArray($homepath.'composer.lock');
+      $p['page']['composerFront'] = msExternalData::jsonFileToPhpArray($p['config']['webDirectory'].'composer.lock');
+
+
 
 }
