@@ -76,52 +76,49 @@
 
 <div class="row">
   <div class="col-12 col-xl-6">
-<h2>Répertoire</h2>
+    <h2>Répertoire</h2>
 
-<table class="table table-sm">
-  <tbody>
-    <tr>
-      <td>Répertoire <small>(templatesPdfFolder)</small></td>
-      <td>{{ page.repertoireTemplatesPDF }}</td>
-    </tr>
-    <tr>
-      <td>
-        Est accessible en lecture
-      </td>
-      <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-    </tr>
-    <tr>
-      <td>
-        Est accessible en écriture
-      </td>
-      <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-    </tr>
-  </tbody>
-</table>
+    <table class="table table-sm">
+      <tbody>
+        <tr>
+          <td>Répertoire <small>(templatesPdfFolder)</small></td>
+          <td>{{ page.repertoireTemplatesPDF }}</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en lecture
+          </td>
+          <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en écriture
+          </td>
+          <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
 
-</div>
+  </div>
   <div class="col-12 col-xl-6">
 
-<h2 class="mt-4 mt-xl-0">Ajouter des templates ou des images</h2>
+    <h2 class="mt-4 mt-xl-0">Ajouter des templates ou des images</h2>
 
-{% if page.templatesDirAutorisationEcriture == 1 %}
+    {% if page.templatesDirAutorisationEcriture == 1 %}
+        <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireTemplatesPDF }}" class="col-12 bg-light center-block" style="padding : 30px; border-radius : 6px">
+            Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
+            <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
 
-    <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireTemplatesPDF }}" class="col-12 bg-light center-block" style="padding : 30px; border-radius : 6px">
-        Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
-        <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
-
-
-        <div class="progress" style="margin-top : 20px;">
-          <div class="progress-bar" role="progressbar" style="width: 00%;">
-            <span class="sr-only"></span>
-          </div>
+            <div class="progress" style="margin-top : 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 00%;">
+                <span class="sr-only"></span>
+              </div>
+            </div>
         </div>
-    </div>
-
-{% else %}
-  <div class="alert alert-danger" role="alert">Le répertoire n'est pas accessible en écriture. Les fichiers ne peuvent être ajoutés via cette interface.</div>
-{% endif %}
-</div>
+    {% else %}
+      <div class="alert alert-danger" role="alert">Le répertoire n'est pas accessible en écriture. Les fichiers ne peuvent être ajoutés via cette interface.</div>
+    {% endif %}
+  </div>
 </div>
 
 <h2 class="mt-4">Fichiers présents</h2>
