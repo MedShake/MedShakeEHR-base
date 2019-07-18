@@ -1,15 +1,15 @@
 {
-    "require": {
-        "twig/twig": "^2.0",
-        "altorouter/altorouter": "^1.2",
-        "mustangostang/spyc": "^0.6.1",
-        "wixel/gump": "^1.4",
-        "dompdf/dompdf": "^0.8.0",
-        "phpmailer/phpmailer": "^6.0",
-        "atrapalo/URLcrypt": "^1.0",
-        "webit/eval-math": "^1.0",
-        "ovh/ovh": "^2.0",
-        "box/spout": "^2.7",
-        "setasign/fpdi-fpdf": "^2.2"
-    }
+  "require": {
+    "twig/twig": "2.11.3",
+    "altorouter/altorouter": "1.2.0",
+    "mustangostang/spyc": "0.6.2",
+    "wixel/gump": "1.5.7",
+    "dompdf/dompdf": "0.8.3",
+    "phpmailer/phpmailer": "6.0.7",
+    "atrapalo/URLcrypt": "1.0.1",
+    "webit/eval-math": "1.0.1",
+    "ovh/ovh": "v2.0.1",
+    "box/spout": "2.7.3",
+    "setasign/fpdi-fpdf": "v2.2.0"
+  }
 }
