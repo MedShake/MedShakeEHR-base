@@ -68,24 +68,32 @@ if ($p['page']['templatesDirAutorisationLecture']) {
      //scan du répertoire
     if ($listeTemplates=array_diff(scandir($p['page']['repertoireTemplatesPDF']), array('..', '.'))) {
         foreach ($listeTemplates as $k=>$tptes) {
-            $p['page']['listeTemplates'][$tptes]['file']=$tptes;
-            if (is_readable($p['page']['repertoireTemplatesPDF'].$tptes)) {
-                $p['page']['listeTemplates'][$tptes]['autorisationLecture'] = true;
+            if(pathinfo($tptes)['extension'] == "twig") {
+              $typeFichier = 'listeTemplates';
             } else {
-                $p['page']['listeTemplates'][$tptes]['autorisationLecture'] = false;
+              $typeFichier = 'listeAutres';
+            }
+
+            $p['page'][$typeFichier][$tptes]['file']=$tptes;
+            if (is_readable($p['page']['repertoireTemplatesPDF'].$tptes)) {
+                $p['page'][$typeFichier][$tptes]['autorisationLecture'] = true;
+            } else {
+                $p['page'][$typeFichier][$tptes]['autorisationLecture'] = false;
             }
             if (is_writable($p['page']['repertoireTemplatesPDF'].$tptes)) {
-                $p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = true;
+                $p['page'][$typeFichier][$tptes]['autorisationEcriture'] = true;
             } else {
-                $p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = false;
+                $p['page'][$typeFichier][$tptes]['autorisationEcriture'] = false;
             }
         }
 
         //extraction des forms liés à un templates
         if ($formsWithTemplates=msSQL::sql2tabKey("select concat(printModel, '.html.twig') as fichier, name, id from forms where printModel!='' ", 'fichier')) {
             foreach ($formsWithTemplates as $k=>$v) {
-                $v['type']='Formulaire';
-                $p['page']['listeTemplates'][$k]['linkedTo'][]=$v;
+                if (isset($p['page']['listeTemplates'][$k])) {
+                  $v['type']='Formulaire';
+                  $p['page']['listeTemplates'][$k]['linkedTo'][]=$v;
+                }
             }
         }
 

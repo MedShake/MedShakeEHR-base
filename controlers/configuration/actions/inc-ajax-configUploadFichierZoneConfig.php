@@ -37,7 +37,7 @@ if(strpos($_POST['destination'], $homepath) !== 0) die();
 msTools::checkAndBuildTargetDir($_POST['destination']);
 if(!is_dir($_POST['destination'])) die;
 
-$destination_file = $_POST['destination'].$fichier['name'];
+$destination_file = $_POST['destination'].basename($fichier['name']);
 move_uploaded_file($fichier['tmp_name'], $destination_file);
 
 die();
