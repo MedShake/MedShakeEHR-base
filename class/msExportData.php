@@ -297,7 +297,7 @@ class msExportData
       } else {
         $toIdToExclude = '';
       }
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."') ".$toIdToExclude." ".$this->_formatDateParameters()." ");
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."') ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
     }
 
 /**
