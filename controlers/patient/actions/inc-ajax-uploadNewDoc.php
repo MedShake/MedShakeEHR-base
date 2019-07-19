@@ -72,7 +72,7 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     if(msTools::commandExist('gs') and $ext=='pdf') {
       $tempFile = $p['config']['workingDirectory'].$supportID.'.pdf';
       move_uploaded_file($fichier['tmp_name'], $tempFile);
-      exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$destination_file.' '.$tempFile);
+      msPDF::optimizeWithGS($tempFile, $destination_file);
       unlink($tempFile);
     } else {
       move_uploaded_file($fichier['tmp_name'], $destination_file);

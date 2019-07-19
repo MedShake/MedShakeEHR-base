@@ -304,7 +304,7 @@ class msPDF
         if($this->_optimizeWithGS == TRUE and msTools::commandExist('gs')) {
           $tempFile = $p['config']['workingDirectory'].$this->_objetID.'.pdf';
           rename($this->_finalPdfFile,$tempFile);
-          exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.$this->_finalPdfFile.' '.$tempFile);
+          self::optimizeWithGS($tempFile, $this->_finalPdfFile);
           unlink($tempFile);
         }
 
@@ -685,6 +685,16 @@ class msPDF
         $twigPDF->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
         $twigPDF->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
         return $twigPDF->render($template, $p);
+    }
+
+/**
+ * Optimisation du PDF avec ghostscript
+ * @param  string $source      fichier source
+ * @param  string $destination fichier destination
+ * @return void
+ */
+    public static function optimizeWithGS($source, $destination) {
+        exec('gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -sOutputFile='.escapeshellarg($destination).' '.escapeshellarg($source));
     }
 
 /**
