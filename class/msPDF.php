@@ -761,20 +761,33 @@ class msPDF
 
         if(isset($pdfDat['pagesTxtMapping']['page'.$i])) {
           $data2write = $this->_getDataToWriteOnTemplate($pdfDat['pagesTxtMapping']['page'.$i]);
+
           foreach($data2write as $param) {
-            $dataName=$param['dataName'];
-            $param=$param['param'];
-            if(isset($param[2]) and !empty($param[2])) $pdf->SetFontSize((int)$param[2]); else $pdf->SetFontSize((int)$defautFontSize);
-            if(isset($param[3]) and !empty($param[3])) {
-              $param[3]=explode(',', $param[3]);
-              $pdf->SetTextColor($param[3][0], $param[3][1], $param[3][2]);
+            if(isset($param['param'][2]) and !empty($param['param'][2])) {
+              $pdf->SetFontSize((int)$param['param'][2]);
+            } else {
+              $pdf->SetFontSize((int)$defautFontSize);
+            }
+            if(isset($param['param'][3]) and !empty($param['param'][3])) {
+              $param['param'][3]=explode(',', $param['param'][3]);
+              $pdf->SetTextColor($param['param'][3][0], $param['param'][3][1], $param['param'][3][2]);
             } else {
               $pdf->SetTextColor($defautTextColor[0], $defautTextColor[1], $defautTextColor[2]);
             }
-            if(isset($param[4]) and !empty($param[4])) $pdf->SetFont($param[4]); else $pdf->SetFont($defautFont);
-            if(isset($param[0], $param[1]) and is_numeric($param[0]) and is_numeric($param[1])) {
-              $pdf->SetXY($param[0], $param[1]);
-              if(isset($param[5])) $toWrite=$param[5]; elseif(isset($this->_courrierData[$dataName])) $toWrite=$this->_courrierData[$dataName];
+            if(isset($param['param'][4]) and !empty($param['param'][4])) {
+              $pdf->SetFont($param['param'][4]);
+            } else {
+              $pdf->SetFont($defautFont);
+            }
+            if(isset($param['param'][0], $param['param'][1]) and is_numeric($param['param'][0]) and is_numeric($param['param'][1])) {
+              $pdf->SetXY($param['param'][0], $param['param'][1]);
+              if(isset($param['param'][5])) {
+                $toWrite=$param['param'][5];
+              } elseif(isset($this->_courrierData[$param['dataName']])) {
+                $toWrite=$this->_courrierData[$param['dataName']];
+              } else {
+                $toWrite=null;
+              }
               if(!empty($toWrite)) $pdf->Write(0, iconv('UTF-8', 'windows-1252', $toWrite));
             }
           }
