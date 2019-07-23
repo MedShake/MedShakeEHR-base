@@ -63,6 +63,7 @@ $acceptedModes=array(
     'configUserTemplateDelete', // Supp d'un template user
     'extractCcamActeData', // extraire les data sur un acte CCAM
     'fixDisplayOrder', // fixer le displayOrder pour les data types en fonction de l'ordre dans un form
+    'configUncryptApicryptKey', //déchiffrer une clef Apicrypt
 );
 if (!in_array($m, $acceptedModes)) {
     die;

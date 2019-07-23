@@ -32,6 +32,41 @@
 
 {% block head %}
 {{ parent() }}
+{% endblock %}
+
+{% block jsEmbed %}
+{{ parent() }}
+$(document).ready(function() {
+  $("button.dechiffrer").on("click", function(e) {
+
+    code = window.prompt('Entrez le code LONG figurant sur le courrier Apycript');
+    if (code) {
+      source = $(this).attr('data-source');
+      destination = $(this).attr('data-destination');
+
+      $.ajax({
+        url: urlBase + '/configuration/ajax/configUncryptApicryptKey/',
+        type: 'post',
+        data: {
+          source: source,
+          destination: destination,
+          code: code
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
+    });
+});
+{% endblock %}
+
+{% block jsFiles %}
+{{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
@@ -109,7 +144,7 @@
       <table class="table table-sm mb-0 table-hover ">
         <thead class="thead-light">
           <tr>
-              <th>
+              <th colspan="2">
                   Fichier
               </th>
               <th>
@@ -123,7 +158,15 @@
           <tbody>
           {% for k,v in page.listeClefs %}
               <tr>
-                  <td>{{ v.file }}</td>
+                  <td>
+                    {{ v.file }}
+                    {% if v.fileInfo.extension == 'aes' %}
+                      <button class="btn btn-sm btn-danger ml-3 dechiffrer" data-source="{{ page.repertoireClefs }}{{ v.file }}" data-destination="{{ page.repertoireClefs }}{{ v.fileInfo.filename }}">
+                        <i class="fas fa-lock"></i> Cliquez pour déchiffrer et utiliser
+                      </button>
+                    {% endif %}
+                  </td>
+                  <td class="text-right">{{ v.filesize }}</td>
                   <td>{{ page.repertoireClefs }}{{ v.file }}</td>
                   <td class="text-right">
                     <div class="btn-group">
