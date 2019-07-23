@@ -1,3 +1,6 @@
+-- Mise à jour n° de version
+UPDATE `system` SET `value`='v5.9.0' WHERE `name`='base' and `groupe`='module';
+
 ALTER TABLE `inbox` CHANGE `txtNumOrdre` `txtNumOrdre` INT(9) UNSIGNED NOT NULL; 
 
 
