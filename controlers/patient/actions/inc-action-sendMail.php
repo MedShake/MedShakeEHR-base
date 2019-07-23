@@ -27,9 +27,13 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- // Apicrypt
+ // Apicrypt 1 & 2
  if ($_POST['mailType']=='apicrypt') {
+   if(isset($p['config']['apicryptVersion']) and $p['config']['apicryptVersion']==2) {
+     $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'2.php';
+   } else {
      $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'.php';
+   }
  }
 
  // Mail non sécurisé
