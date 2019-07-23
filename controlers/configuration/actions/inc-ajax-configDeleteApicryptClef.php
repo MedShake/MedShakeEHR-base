@@ -29,10 +29,6 @@
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-//accès par admin uniquement
-if (!msUser::checkUserIsAdmin()) {
-    die;
-}
 // si pas de fichier à supprimer
 if (!isset($_POST['file'])) {
     die;
