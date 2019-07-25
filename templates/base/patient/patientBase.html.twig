@@ -29,8 +29,9 @@
 
 {% extends "page.html.twig" %}
 
-{% block title %}{{ config.designAppName }} : {{ page.patient.administrativeDatas.firstname.value|e }}
+{% block title %}{{ page.patient.administrativeDatas.firstname.value|e }}
     {{ (page.patient.administrativeDatas.lastname.value|default(page.patient.administrativeDatas.birthname.value))|e }}
+     - {{ config.designAppName }}
 {% endblock %}
 
 {% block cssEmbed %}
