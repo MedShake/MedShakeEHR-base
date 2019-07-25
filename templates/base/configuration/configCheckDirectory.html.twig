@@ -74,6 +74,21 @@
           </tbody>
         </table>
 
+        {% if page.apicrypt2present %}
+          <h2>Apicrypt 2</h2>
+
+          <table class="table table-sm table-hover">
+            <tbody>
+              <tr>
+                  <td>Réponse du service au ping</td>
+                  <td class="w-15 {% if page.apicrypt2ping %}bg-success{% else %}bg-danger{% endif %}">&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+
+        {% endif %}
+
+
       </div>
       <div class="col-12 col-xl-6">
 

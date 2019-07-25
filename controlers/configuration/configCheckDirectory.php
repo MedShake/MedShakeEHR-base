@@ -163,5 +163,14 @@
       $p['page']['composerFront'] = msExternalData::jsonFileToPhpArray($p['config']['webDirectory'].'composer.lock');
 
 
+      // apicrypt 2
+      if(class_exists('msApicrypt2')) {
+        $p['page']['apicrypt2present'] = true;
+        $apicrypt2 = new msApicrypt2;
+        $ping = $apicrypt2->global_tic();
+        if(isset($ping->reply) and $ping->reply == 'toc' and $apicrypt2->isHealthy()) $p['page']['apicrypt2ping'] = true;
+
+      }
+
 
 }
