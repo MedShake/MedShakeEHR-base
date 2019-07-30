@@ -814,6 +814,11 @@ $(document).ready(function() {
           }
           refreshHistoriqueToday();
           scrollTo('body', 2);
+
+          // construire immédiatement le PDF si demandé dans les options du formulaire
+          if(data.buildPdfNow) {
+            buildPdfForObjet(data.objetID);
+          }
         }
       },
       error: function() {
@@ -1638,8 +1643,26 @@ function getLatCol() {
   });
 }
 
+/**
+ * Construire le PDF à partir de l'objetID
+ * @param  {int} objetID objetID
+ * @return {void}
+ */
+function buildPdfForObjet(objetID) {
+  $.ajax({
+    url: urlBase + '/print/ajax/buildPdfForObjet/',
+    type: 'post',
+    data: {
+      objetID: objetID
+    },
+    dataType: "html",
+    success: function() {},
+    error: function() {}
+  });
+}
+
 ////////////////////////////////////////////////////////////////////////
-///////// Fonctions relatives à la surveillance de changeemnt dans
+///////// Fonctions relatives à la surveillance de changement dans
 ///////// formulaires pour enregistrement automatique
 
 /**

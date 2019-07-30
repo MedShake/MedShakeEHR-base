@@ -99,6 +99,7 @@ historiqueContextDataType: ['GET', '/logs/historique/[i:patientID]/[a:dataType]/
 historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 
 #pdf
+printAjax: ['GET|POST', '/print/ajax/[a:m]/', 'print/actions/printAjax']
 makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP|reglement:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']

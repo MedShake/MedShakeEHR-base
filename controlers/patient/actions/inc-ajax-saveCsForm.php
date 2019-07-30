@@ -36,6 +36,15 @@ $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
+// construction du PDF immédiatement après le retour du JS
+$optionsFormulaire=$form->getFormOptions();
+if(isset($optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit']) and $optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit'] == true) {
+  $buildPdfNow = true;
+} else {
+  $buildPdfNow = false;
+}
+
+
 if ($validation === false) {
     // pas d'exploitation car pas de champ required
     // utilisés ici.
@@ -139,6 +148,8 @@ if ($validation === false) {
         'statut'=>$finalStatut,
         'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
         'html'=>$html,
+        'objetID'=>$supportID,
+        'buildPdfNow'=> $buildPdfNow
       ];
 
     } else {
@@ -146,6 +157,8 @@ if ($validation === false) {
         'statut'=>$finalStatut,
         'today'=>'non',
         'html'=>'',
+        'objetID'=>$supportID,
+        'buildPdfNow'=> $buildPdfNow
       ];
     }
 
