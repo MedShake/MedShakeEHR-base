@@ -152,10 +152,16 @@
       }
 
       // var PHP
-      $varPHP = ['upload_max_filesize', 'post_max_size', 'max_input_vars'];
+      $varPHP = ['memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size', 'max_input_vars'];
+      $p['page']['recoVarPHP'] = ['memory_limit'=>128, 'max_execution_time'=>30, 'upload_max_filesize'=>20, 'post_max_size'=>20, 'max_input_vars'=>20000];
       sort($varPHP);
       foreach($varPHP as $var) {
-        $p['page']['varPHP'][$var]=ini_get($var);
+        $p['page']['varPHP'][$var]['val']=ini_get($var);
+        if(strpos($p['page']['varPHP'][$var]['val'],'G') > 1) {
+          $p['page']['varPHP'][$var]['valBrute'] = (int)$p['page']['varPHP'][$var]['val'] * 1000;
+        } else {
+          $p['page']['varPHP'][$var]['valBrute'] = (int)$p['page']['varPHP'][$var]['val'];
+        }
       }
 
       // composer
