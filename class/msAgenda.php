@@ -627,10 +627,10 @@ class msAgenda
  * @param  int $userID user ID
  * @return array         types de rdv
  */
-    public static function getRdvTypes($userID) {
+    public function getRdvTypes() {
         global $p;
-        if(is_file($p['homepath'].'config/agendas/typesRdv'.$userID.'.yml')) {
-          return Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$userID.'.yml');
+        if(is_file($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml')) {
+          return Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml');
         } else {
           return array(
             '[C]'=> array(

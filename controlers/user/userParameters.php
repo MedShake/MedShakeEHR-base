@@ -89,7 +89,9 @@ if(is_file($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml')) {
 $p['page']['useClicRDV']=$p['config']['agendaService'] == 'clicRDV';
 
 if ($p['page']['useClicRDV']) {
-    $consults=msAgenda::getRdvTypes($p['user']['id']);
+    $typesRdv = new msAgenda;
+    $typesRdv->set_userID($p['user']['id']);
+    $consults=$typesRdv->getRdvTypes();
     $p['page']['clicRdvConsultsRel']='[]';
     if (count($consults)) {
         $p['page']['clicRdvConsults']=json_encode($consults);

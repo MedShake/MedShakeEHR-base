@@ -42,7 +42,9 @@ if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.j
 }
 
 // types de rendez-vous
-$p['page']['typeRdv']=msAgenda::getRdvTypes($match['params']['userID']);
+$typesRdv = new msAgenda;
+$typesRdv->set_userID($match['params']['userID']);
+$p['page']['typeRdv']=$typesRdv->getRdvTypes();
 
 //formulaire prise rdv
 $formPriseRdv = new msForm();
