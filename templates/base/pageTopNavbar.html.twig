@@ -94,7 +94,7 @@
           {% endif %}
 
           {% if page.patientsOfTheDay %}
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" id="patientsOfTheDayMenu">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
                 {% if config.designTopMenuStyle == 'icones' %}
                   <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>
@@ -105,17 +105,7 @@
                 {% endif %}
               </a>
               <div class="dropdown-menu">
-
-                {% for v in page.patientsOfTheDay %}
-                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">{{ v.heure }}
-                    <small>{{ v.type }}</small>
-                    {{ v.identite }}</a>
-                {% endfor %}
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">
-                  <i class="fas fa-list-ul fa-fw text-muted mr-1"></i>
-                  Afficher la liste
-                </a>
+                {% include('pageTopNavbarPatientsOfTheDay.html.twig') %}
               </div>
             </li>
           {% endif %}

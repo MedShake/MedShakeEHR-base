@@ -40,7 +40,8 @@ $acceptedModes=array(
     'getAutocompleteCodeNgapOrCcamData', // Retourner les infos sur un acte NGAP ou CCAM
     'getCpsVitaleData', // Obtenir les infos de la carte Vitale
     'getCpsVitaleDataRappro', // Obtenir les infos de la carte Vitale rapprochées aux ID patients
-    'makeClick2Call' // lancer un appel click2call
+    'makeClick2Call', // lancer un appel click2call
+    'getPatientsOfTheDay' // obtenir le html pour le menu patients of the day
 );
 
 if (!in_array($m, $acceptedModes)) {

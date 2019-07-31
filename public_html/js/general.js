@@ -179,6 +179,35 @@ $(document).ready(function() {
   });
 
   ////////////////////////////////////////////////////////////////////////
+  /////////Rafraichir le menu POTD
+  if(refreshDelayPOTD > 0) {
+    setInterval(getPOTDmenuContent, refreshDelayPOTD * 1000);
+  }
+
+  function getPOTDmenuContent() {
+    $.ajax({
+      url: urlBase + '/ajax/getPatientsOfTheDay/',
+      type: 'post',
+      dataType: "json",
+      success: function(data) {
+        if(data.displayMenu) {
+          $('#patientsOfTheDayMenu').removeClass('d-none');
+        } else {
+          $('#patientsOfTheDayMenu').addClass('d-none');
+        }
+        if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
+          console.log('refresh POTD menu');
+          $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
+        }
+
+      },
+      error: function() {}
+    });
+  }
+
+
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Observations générales pour éléments divers
 
   //alerte confirmation

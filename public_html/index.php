@@ -161,17 +161,8 @@ if (isset($template)) {
       }
 
       // patients of the day
-      if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
-          $events = new msAgenda();
-          $events->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
-          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      } elseif ($p['config']['administratifPeutAvoirAgenda']=='true') {
-          $events = new msAgenda();
-          $events->set_userID($p['user']['id']);
-          $p['page']['patientsOfTheDay']=$events->getPatientsOfTheDay();
-      } elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
-          $p['page']['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-      }
+      $events = new msAgenda();
+      $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
 
       // crédits SMS
       if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {

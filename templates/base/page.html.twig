@@ -71,6 +71,7 @@
           {% block jsEmbed %}
           var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
           var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
+          var refreshDelayPOTD = parseInt({{ config.agendaRefreshDelayMenuPOTD }});
           {% endblock %}
         </script>
 

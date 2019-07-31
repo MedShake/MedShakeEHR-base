@@ -786,6 +786,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('agendaModePanneauLateral', 'default', '0', '', 'Agenda', 'true/false', 'Utilisation du panneau latéral (true) ou d\'une fenêtre contextuelle (false)', 'true'),
 ('agendaNumberForPatientsOfTheDay', 'default', '0', '', 'Agenda', 'nombre', 'Numéro d\'agenda pour générer à partir de l\'agenda interne concerné une liste des patients du jour pour le menu Patients', '0'),
 ('agendaPremierJour', 'default', '0', '', 'Agenda', 'vide/nombre', 'vide pour roulant, 0 pour dimanche, 1 pour lundi, etc...', '1'),
+('agendaRefreshDelayMenuPOTD', 'default', '0', '', 'Agenda', 'nombre', 'délai en secondes du rafraîchissement du menu Patients du jour - 0 pour jamais', '5'),
 ('agendaService', 'default', '0', '', 'Agenda', 'vide/clicRDV', 'si non vide, active le service tiers concerné', ''),
 ('allMySmsApiKey', 'default', '0', '', 'Rappels SMS', 'texte', 'API key allMySMS', ''),
 ('allMySmsLogin', 'default', '0', '', 'Rappels SMS', 'texte', 'login allMySMS', ''),

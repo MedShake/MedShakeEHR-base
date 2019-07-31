@@ -484,58 +484,56 @@ class msAgenda
           msSQL::sqlInsert('agenda', $data);
 
       }
-    /**
-    * Obtenir l'historique de rdv du patient
-    * @param  int $limit nombe max de résultats
-    * @return array tableau des data d'historique
-    */
-    public function getHistoriquePatient($limit=10)
-    {
-        if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
+/**
+* Obtenir l'historique de rdv du patient
+* @param  int $limit nombe max de résultats
+* @return array tableau des data d'historique
+*/
+  public function getHistoriquePatient($limit=10)
+  {
+      if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
 
-        $data['stats']['total']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."'");
-        $data['stats']['ok']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut!='deleted' and  absente!='oui'");
-        $data['stats']['annule']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut='deleted'");
-        $data['stats']['absent']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and absente='oui'");
-        $data['historique']=msSQL::sql2tab("select DATE_FORMAT(start, '%Y %m %d - %H:%i') as start, DATE_FORMAT(start, '%Y-%m-%dT%TZ') as dateiso, type, statut, absente, motif from agenda where patientid='".$this->_patientID."' order by start desc limit $limit");
+      $data['stats']['total']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."'");
+      $data['stats']['ok']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut!='deleted' and  absente!='oui'");
+      $data['stats']['annule']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut='deleted'");
+      $data['stats']['absent']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and absente='oui'");
+      $data['historique']=msSQL::sql2tab("select DATE_FORMAT(start, '%Y %m %d - %H:%i') as start, DATE_FORMAT(start, '%Y-%m-%dT%TZ') as dateiso, type, statut, absente, motif from agenda where patientid='".$this->_patientID."' order by start desc limit $limit");
 
-        return $data;
-    }
+      return $data;
+  }
 
-    /**
-    * Marquer un rendez-vous comme non honoré
-    */
-    public function setPasVenu()
-    {
-        if (!isset($this->_eventID)) {
-            throw new Exception('EventID n\'est pas défini');
-        }
-        if (!isset($this->_userID)) {
-            throw new Exception('UserID n\'est pas défini');
-        }
+/**
+* Marquer un rendez-vous comme non honoré
+*/
+  public function setPasVenu()
+  {
+      if (!isset($this->_eventID)) {
+          throw new Exception('EventID n\'est pas défini');
+      }
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
 
 
-        $actuel=$this->getEventByID();
+      $actuel=$this->getEventByID();
 
-        if ($actuel['absent']=='oui') {
-            $absent='non';
-        } else {
-            $absent='oui';
-        }
       if ($actuel['absent']=='oui') {
           $absent='non';
       } else {
           $absent='oui';
       }
 
-        $this->_addToLog('missing');
+      $this->_addToLog('missing');
 
-        $data=array(
-          'id'=>$this->_eventID,
-          'userid'=>$this->_userID,
-          'absente'=>$absent
-        );
-        msSQL::sqlInsert('agenda', $data);
+      $data=array(
+        'id'=>$this->_eventID,
+        'userid'=>$this->_userID,
+        'absente'=>$absent
+      );
+      msSQL::sqlInsert('agenda', $data);
+
+  }
+
 /**
 * Marquer un rendez-vous patient en salle d'attente
 */
@@ -592,6 +590,27 @@ class msAgenda
         }
         return $tab;
       }
+    }
+
+/**
+ * Obtenir les datas pour la construction du menu POTD
+ * @return array array
+ */
+    public function getDataForPotdMenu() {
+      global $p;
+      $ret=[];
+      if ($p['config']['agendaNumberForPatientsOfTheDay'] > 0) {
+          $this->set_userID($p['config']['agendaNumberForPatientsOfTheDay']);
+          $ret['patientsOfTheDay']=$this->getPatientsOfTheDay();
+          $ret['typesRdv']=$this->getRdvTypes();
+      } elseif ($p['config']['administratifPeutAvoirAgenda']=='true') {
+          $this->set_userID($p['user']['id']);
+          $ret['patientsOfTheDay']=$this->getPatientsOfTheDay();
+          $ret['typesRdv']=$this->getRdvTypes();
+      } elseif (trim($p['config']['agendaLocalPatientsOfTheDay']) !=='') {
+          $ret['patientsOfTheDay']=msExternalData::jsonFileToPhpArray($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+      }
+      return $ret;
     }
 
 /**
