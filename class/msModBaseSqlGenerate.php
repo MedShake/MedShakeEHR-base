@@ -108,6 +108,16 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'droitDossierPeutSupPatient'=>'true',
     'droitDossierPeutRetirerPraticien'=>'true',
     'vitaleMode'=>'simple',
+    'formFormulaireListingPatients'=>'baseListingPatients',
+    'formFormulaireListingPraticiens'=>'baseListingPro',
+    'formFormulaireNouveauPatient'=>'baseNewPatient',
+    'formFormulaireNouveauPraticien'=>'baseNewPro',
+    'designAppName'=>'MedShakeEHR',
+    'optionGePatientOuvrirApresCreation'=>'liens',
+    'transmissionsPeutCreer'=>'true',
+    'administratifSecteurHonorairesCcam'=>'0',
+    'apicryptVersion'=>'1',
+    'agendaRefreshDelayMenuPOTD'=>'5',
   ];
 
   protected function _getSpecifSql() {
