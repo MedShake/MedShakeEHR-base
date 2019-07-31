@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,31 +21,24 @@
  */
 
 /**
- * Agenda : les requêtes ajax
+ * Agenda : marquer un rendez-vous patient en salle d'attente
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$event = new msAgenda();
+$event->set_fromID($p['user']['id']);
+$event->set_userID($match['params']['userID']);
+$event->set_eventID($_POST['eventID']);
+$event->setEnAttente();
 
-
-$acceptedModes=array(
-    'getEvents', // Obtenir le json des events
-    'delEvent', // effacer un rdv
-    'moveEvent', // déplacer un rdv
-    'searchPatient', //chercher patient
-    'getPatientAdminData', //obetnir les data patient
-    'setNewRdv', // ajouter ou updater un rdv
-    'synchronizeEvents', // synchroniser les événements (internes et externes)
-    'setEventPasVenu', // marquer rendez-vous non honoré / honoré
-    'getHistoriquePatient', // obtenir l'historique de rendez-vous d'un patient
-    'setEventEnAttente', // marquer patient en salle d'attente
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
-} else {
-  include('inc-ajax-'.$m.'.php');
+//hook pour service externe
+if (isset($p['config']['agendaService'])) {
+    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-setEventEnAttente.php';
+    if (is_file($hook)) {
+        include($hook);
+    }
 }
+
+header('Content-Type: application/json');
+echo json_encode(array("status"=>"ok"));

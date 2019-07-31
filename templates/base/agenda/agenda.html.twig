@@ -46,6 +46,14 @@
       a.eventAbsent .fc-title {
         text-decoration: line-through;
       }
+
+      a.eventEnAttente .fc-title::before {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f4b8";
+        margin-right: 3px;
+      }
+
       .selected {
         border: solid 3px #4399e4;
         opacity: 0.8;

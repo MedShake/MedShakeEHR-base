@@ -110,6 +110,12 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
 
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
+    // faire le ménage dans la salle d'attente (si si ... !)
+    $agenda=new msAgenda;
+    $agenda->set_userID($p['user']['id']);
+    $agenda->set_patientID($_POST['patientID']);
+    $agenda->cleanEnAttente();
+
     // générer le retour, dont html
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);

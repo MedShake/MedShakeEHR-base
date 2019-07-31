@@ -239,6 +239,7 @@ $(document).ready(function() {
                 '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fas fa-arrows-alt\"></span></button>' +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fas fa-clone\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
                 '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-times\"></span></button>\
               </div>\
             </div>'
@@ -466,6 +467,13 @@ $(document).ready(function() {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     setPasVenu();
+  });
+
+  $("body").on("click", ".fc-enattente-button", function(e) {
+    e.stopImmediatePropagation();
+    $(".fc-event").popover('hide');
+    $(".fc-bg.selected").removeClass("selected");
+    setEnAttente();
   });
 
   $("body").on("click", ".fc-supprimer-button", function(e) {
@@ -927,6 +935,30 @@ function deleteEvent() {
 function setPasVenu() {
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventPasVenu/',
+    type: "post",
+    data: {
+      eventID: selected_event.id,
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#calendar').fullCalendar('refetchEvents');
+      nettoyer();
+      cleanSelectedVar();
+    },
+    error: function() {
+      alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
+      nettoyer();
+      cleanSelectedVar();
+    },
+  });
+}
+
+/**
+ * Marquer un rendez-vous comme patient en salle d'attente
+ */
+function setEnAttente() {
+  $.ajax({
+    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventEnAttente/',
     type: "post",
     data: {
       eventID: selected_event.id,

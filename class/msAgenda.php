@@ -250,7 +250,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.lastModified, a.type, a.patientid, a.externid, a.statut, a.absente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($events=msSQL::sql2tab("select a.id, a.start, a.end, a.lastModified, a.type, a.patientid, a.externid, a.statut, a.absente, a.attente, a.motif, a.fromID, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -291,7 +291,7 @@ class msAgenda
           $name2typeID = new msData();
           $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
+          if ($event=msSQL::sqlUnique("select a.id, a.start, a.end, a.type, a.patientid, a.externid, a.statut, a.absente, a.attente, a.fromID, a.motif, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name
           from agenda as a
           left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
           left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
@@ -354,6 +354,10 @@ class msAgenda
               $class=array('hasmenu');
           }
 
+          if ($e['attente']=='oui') {
+              $class[]=array('eventEnAttente');
+          }
+
           if ($e['type']=='[off]') {
               $re=@array(
               'id'=>$e['id'],
@@ -392,7 +396,8 @@ class msAgenda
               'lastModified'=>$e['lastModified'],
               'patientid'=>$e['patientid'],
               'externid'=>$e['externid'],
-              'absent'=>$e['absente']
+              'absent'=>$e['absente'],
+              'attente'=>$e['attente']
               );
           }
 
@@ -517,6 +522,11 @@ class msAgenda
         } else {
             $absent='oui';
         }
+      if ($actuel['absent']=='oui') {
+          $absent='non';
+      } else {
+          $absent='oui';
+      }
 
         $this->_addToLog('missing');
 
@@ -526,8 +536,36 @@ class msAgenda
           'absente'=>$absent
         );
         msSQL::sqlInsert('agenda', $data);
+/**
+* Marquer un rendez-vous patient en salle d'attente
+*/
+  public function setEnAttente()
+  {
+      if (!isset($this->_eventID)) {
+          throw new Exception('EventID n\'est pas défini');
+      }
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
 
-    }
+      $actuel=$this->getEventByID();
+
+      if ($actuel['attente']=='oui') {
+          $attente='non';
+      } else {
+          $attente='oui';
+      }
+
+      $this->_addToLog('waiting');
+
+      $data=array(
+        'id'=>$this->_eventID,
+        'userid'=>$this->_userID,
+        'attente'=>$attente
+      );
+      msSQL::sqlInsert('agenda', $data);
+
+  }
 
 /**
  * Obtenir un array des patients du jour
@@ -547,7 +585,8 @@ class msAgenda
               "id"=> $v['patientid'],
               "identite"=> $v['title'],
               "type"=> $v['type'],
-              "heure"=> date("H:i", strtotime($v['start']))
+              "heure"=> date("H:i", strtotime($v['start'])),
+              "attente"=>$v['attente'],
             );
           }
         }
@@ -637,11 +676,31 @@ class msAgenda
           'type'=>$oldEventData['type'],
           'statut'=>$oldEventData['statut'],
           'absente'=>$oldEventData['absente'],
+          'attente'=>$oldEventData['attente'],
           'motif'=>$oldEventData['motif']
         ));
       }
 
       msSQL::sqlInsert('agenda_changelog', $data);
+    }
+
+/**
+ * Nettoyer le statut en salle d'attente des RDV du patient et des patients antérieurs
+ * @return void
+ */
+    public function cleanEnAttente() {
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
+      if (!isset($this->_patientID)) {
+          throw new Exception('PaientID n\'est pas défini');
+      }
+
+      //retirer pour le patient lui même en considérant une avance potentielle du rdv (2h)
+      msSQL::sqlQuery("UPDATE agenda set attente='non' where patientid='".$this->_patientID."' and attente='oui' and DATE(start)=DATE(NOW())");
+
+      //retirer pour les patients précédents avec délai de 2h
+      msSQL::sqlQuery("UPDATE agenda set attente='non' where attente='oui' and end < DATE_SUB(NOW(), INTERVAL 2 HOUR) and DATE(start) > DATE_SUB(NOW(), INTERVAL 3 DAY )");
     }
 
 }

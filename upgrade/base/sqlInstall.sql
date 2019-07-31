@@ -62,12 +62,14 @@ CREATE TABLE IF NOT EXISTS `agenda` (
   `fromID` mediumint(6) unsigned DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
   `absente` enum('non','oui') DEFAULT 'non',
+  `attente` enum('non','oui') NOT NULL DEFAULT 'non',
   `motif` text,
   PRIMARY KEY (`id`),
   KEY `patientid` (`patientid`),
   KEY `externid` (`externid`),
   KEY `userid` (`userid`),
-  KEY `typeEtUserid` (`type`,`userid`)
+  KEY `typeEtUserid` (`type`,`userid`),
+  KEY `start` (`start`,`userid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- création de la table agenda_changelog
@@ -77,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `agenda_changelog` (
   `userID` smallint(5) unsigned NOT NULL,
   `fromID` smallint(5) unsigned NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `operation` enum('edit','move','delete','missing') NOT NULL,
+  `operation` enum('edit','move','delete','missing','waiting') NOT NULL,
   `olddata` mediumblob,
   PRIMARY KEY (`id`),
   KEY `eventID` (`eventID`)
