@@ -585,6 +585,7 @@ class msAgenda
               "type"=> $v['type'],
               "heure"=> date("H:i", strtotime($v['start'])),
               "attente"=>$v['attente'],
+              "absent"=>$v['absent'],
             );
           }
         }
