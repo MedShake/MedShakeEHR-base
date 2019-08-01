@@ -185,26 +185,26 @@ $(document).ready(function() {
   }
 
   function getPOTDmenuContent() {
-    $.ajax({
-      url: urlBase + '/ajax/getPatientsOfTheDay/',
-      type: 'post',
-      dataType: "json",
-      success: function(data) {
-        if(data.displayMenu) {
-          $('#patientsOfTheDayMenu').removeClass('d-none');
-        } else {
-          $('#patientsOfTheDayMenu').addClass('d-none');
-        }
-        if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
-          console.log('refresh POTD menu');
-          $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
-        }
-
-      },
-      error: function() {}
-    });
+    if(document.visibilityState == "visible") {
+      $.ajax({
+        url: urlBase + '/ajax/getPatientsOfTheDay/',
+        type: 'post',
+        dataType: "json",
+        success: function(data) {
+          if(data.displayMenu) {
+            $('#patientsOfTheDayMenu').removeClass('d-none');
+          } else {
+            $('#patientsOfTheDayMenu').addClass('d-none');
+          }
+          if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
+            console.log('refresh POTD menu');
+            $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
+          }
+        },
+        error: function() {}
+      });
+    }
   }
-
 
 
   ////////////////////////////////////////////////////////////////////////
