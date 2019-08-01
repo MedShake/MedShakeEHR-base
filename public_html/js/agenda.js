@@ -234,13 +234,13 @@ $(document).ready(function() {
               <h3 class=\"popover-header\">Détail</h3>\
               <div class=\"popover-body\"></div>\
               <div class=\"popover-footer btn-group m-1\">' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Editer\"><span class=\"fas fa-wrench\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"déplacer\"><span class=\"fas fa-arrows-alt\"></span></button>' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"cloner\"><span class=\"fas fa-clone\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Présent' : 'Absent') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-times\"></span></button>\
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Ouvrir le dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"Déplacer ce rendez-vous\"><span class=\"fas fa-arrows-alt\"></span></button>' +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"Cloner ce rendez-vous\"><span class=\"fas fa-clone\"></span></button>') +
+                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Marquer ce rendez-vous comme honoré' : 'Marquer ce rendez-vous comme non honoré') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
+                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-trash\"></span></button>\
               </div>\
             </div>'
         });
