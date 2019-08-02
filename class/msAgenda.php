@@ -723,4 +723,56 @@ class msAgenda
       msSQL::sqlQuery("UPDATE agenda set attente='non' where attente='oui' and end < DATE_SUB(NOW(), INTERVAL 2 HOUR) and DATE(start) > DATE_SUB(NOW(), INTERVAL 3 DAY )");
     }
 
+/**
+ * Obtenir l'agenda d'un utilisateur sous forme d'un texte chapitré Année > Semaine > Jour
+ * @return string agenda sous forme de texte
+ */
+    public function getAgendaInFlatHumanTxt() {
+      if (!isset($this->_startDate)) {
+          throw new Exception('StartDate n\'est pas définie');
+      }
+      if (!isset($this->_endDate)) {
+          throw new Exception('EndDate n\'est pas définie');
+      }
+      if (!isset($this->_userID)) {
+          throw new Exception('UserID n\'est pas défini');
+      }
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname', 'mobilePhone', 'homePhone']);
+
+      $s="";
+
+      if ($events=msSQL::sql2tab("select a.id, a.type, a.patientid, CASE WHEN n.value != '' THEN concat(n.value, ' ', p.value) ELSE concat(bn.value, ' ', p.value) END as name, DATE_FORMAT(a.start, '%H:%i') as heure, YEAR(a.start) as annee, WEEKOFYEAR(a.start) as semaine,  DAYOFWEEK(a.start) as joursemaine, DATE_FORMAT(a.end, '%d/%m/%Y') as datejour, tel.value as homePhone, mob.value as mobilePhone
+      from agenda as a
+      left join objets_data as n on n.toID=a.patientid and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+      left join objets_data as bn on bn.toID=a.patientid and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
+      left join objets_data as p on p.toID=a.patientid and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
+      left join objets_data as tel on tel.toID=a.patientid and tel.outdated='' and tel.deleted='' and tel.typeID='".$name2typeID['homePhone']."'
+      left join objets_data as mob on mob.toID=a.patientid and mob.outdated='' and mob.deleted='' and mob.typeID='".$name2typeID['mobilePhone']."'
+      where a.userid='".$this->_userID."' and a.statut = 'actif' and a.start >= '".msSQL::cleanVar($this->_startDate)."' and a.end <= '".msSQL::cleanVar($this->_endDate)."'
+      group by a.id, bn.value, n.value, p.value, tel.value, mob.value order by a.start asc")) {
+
+      	foreach ($events as $v) {
+      		$d[$v['annee']][$v['semaine']][$v['joursemaine']][]=$v;
+      	}
+
+      	foreach ($d as $k=>$v) {
+      		$s.="\n\n".$k."";
+
+      		foreach ($v as $l=>$w) {
+      			$s.="\n\nSEMAINE N°".$l."";
+
+      			foreach ($w as $m=>$x) {
+      				$s.="\n\n".$x[0]['datejour']."\n";
+
+      				foreach ($x as $n=>$y) {
+      					$s.='- '.$y['heure'].' : '.$y['name'].' ('.$y['patientid'].') '.$y['type'].'  '.implode(' / ',[$y['mobilePhone'],$y['homePhone']])."\n";
+      				}
+      			}
+      		}
+      	}
+      }
+      return $s;
+    }
+
 }
