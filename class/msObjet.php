@@ -535,7 +535,7 @@ public function getToID()
 * Obtenir la valeur du dernier objet d'un type particulier pour un patient particulier
 * @param  string $name nom du type de l'objet
 * @param  string $instance int de l'instance de l'objet
-* @return array tableau avec information sur l'objet
+* @return string chaine avec la valeur de l'objet
 */
     public function getLastObjetValueByTypeName($name, $instance=false) {
       if (!isset($this->_toID)) {
