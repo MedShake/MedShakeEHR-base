@@ -2,7 +2,8 @@ ALTER TABLE `agenda` ADD `attente` ENUM('non','oui') NOT NULL DEFAULT 'non' AFTE
 ALTER TABLE `agenda_changelog` CHANGE `operation` `operation` ENUM('edit','move','delete','missing','waiting') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `agenda` ADD INDEX (`start`, `userid`);
 
-INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaRefreshDelayMenuPOTD', 'default', '0', '', 'Agenda', 'nombre', 'délai en secondes du rafraîchissement du menu Patients du jour - 0 pour jamais', '5');
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaRefreshDelayMenuPOTD', 'default', '0', '', 'Agenda', 'nombre', 'délai en secondes du rafraîchissement du menu Patients du jour - 0 pour jamais', '5');
+
 -- Envoyer l'agenda chiffré
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaEnvoyerChiffreParMail', 'default', '0', '', 'Agenda', 'true/false', 'activer le service d\'envoi par mail de l\'agenda futur chiffré GPG', 'false');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaEnvoyerChiffreTo', 'default', '0', '', 'Agenda', 'texte', 'adresse email à laquelle envoyer l\'agenda chiffré GPG - séparer par virgule si plusieurs ', '');
