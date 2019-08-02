@@ -30,7 +30,7 @@
  */
 
 $debug='';
-$template="peopleEdit";
+
 
 $p['page']['porp']=$match['params']['porp'];
 
@@ -38,6 +38,7 @@ $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 
 if ($p['page']['porp']=='patient') {
+    $template="patientEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 
     //vérifier les droits
@@ -46,6 +47,7 @@ if ($p['page']['porp']=='patient') {
       return;
     }
 } elseif ($p['page']['porp']=='pro') {
+    $template="proEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
 
     //vérifier les droits
