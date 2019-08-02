@@ -88,3 +88,15 @@ $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascri
 $p['page']['form']['addHidden']=array(
   'patientID'=>$match['params']['patient']
 );
+
+// Formulaire complémentaire
+$p['page']['formIN2']='basePeopleComplement';
+$formpatient2 = new msForm();
+$formpatient2->setFormIDbyName($p['page']['formIN2']);
+$formpatient2->setPrevalues($p['page']['patient']);
+$p['page']['form2']=$formpatient2->getForm();
+$p['page']['formJavascript'][$p['page']['formIN2']]=$formpatient2->getFormJavascript();
+//ajout au form
+$p['page']['form2']['addHidden']=array(
+  'patientID'=>$match['params']['patient']
+);
