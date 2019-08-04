@@ -38,7 +38,7 @@ class msConfiguration
  * @return array tableau des paramètres
  */
     public static function getDefaultParameters() {
-        return msSQL::sql2tab("SELECT cat, type, name, value, description FROM configuration WHERE level='default'");
+        return msSQL::sql2tab("SELECT cat, type, name, value, description FROM configuration WHERE level='default' order by name");
     }
 
 /**
