@@ -93,22 +93,22 @@
             </li>
           {% endif %}
 
-          {% if page.patientsOfTheDay %}
-            <li class="nav-item dropdown" id="patientsOfTheDayMenu">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
-                {% if config.designTopMenuStyle == 'icones' %}
-                  <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>
-                  <span class="d-lg-none">
-                    Aujourd'hui</span>
-                {% else %}
-                  Aujourd'hui
-                {% endif %}
-              </a>
-              <div class="dropdown-menu">
-                {% include('pageTopNavbarPatientsOfTheDay.html.twig') %}
-              </div>
-            </li>
-          {% endif %}
+
+          <li class="nav-item dropdown {% if page.patientsOfTheDay is empty %}d-none{% endif %}" id="patientsOfTheDayMenu" >
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+              {% if config.designTopMenuStyle == 'icones' %}
+                <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>
+                <span class="d-lg-none">
+                  Aujourd'hui</span>
+              {% else %}
+                Aujourd'hui
+              {% endif %}
+            </a>
+            <div class="dropdown-menu">
+              {% include('pageTopNavbarPatientsOfTheDay.html.twig') %}
+            </div>
+          </li>
+
 
           <li class="nav-item">
             <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" accesskey="=">
