@@ -192,14 +192,15 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
           if(data.displayMenu) {
+            if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
+              console.log('refresh POTD menu');
+              $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
+            }
             $('#patientsOfTheDayMenu').removeClass('d-none');
           } else {
             $('#patientsOfTheDayMenu').addClass('d-none');
           }
-          if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
-            console.log('refresh POTD menu');
-            $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
-          }
+
         },
         error: function() {}
       });
