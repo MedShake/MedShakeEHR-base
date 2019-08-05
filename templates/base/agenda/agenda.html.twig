@@ -29,80 +29,88 @@
 {% extends "page.html.twig" %}
 {% block title %}{{ config.designAppName }} : Agenda{% endblock %}
 
+{% block jsFiles %}
+  {{ parent() }}
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
+  {% if config.vitaleActiver =='true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  var boutonsHeaderCenter;
+  var hiddenDays;
+  var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};
+  var minTime;
+  var maxTime;
+  var businessHours;
+  var slotDuration;
+  var slotLabelInterval;
+  var eventTextColor;
+  var eventSources;
+  var viewRender;
+  {{ page.configAgenda }}
+{% endblock %}
+
+{% block cssFiles %}
+  {{ parent() }}
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
+{% endblock %}
+
+{% block cssEmbed %}
+  {{ parent() }}
+  a.eventAbsent .fc-title {
+    text-decoration: line-through;
+  }
+
+  a.eventEnAttente .fc-title::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f4b8";
+    margin-right: 3px;
+  }
+
+  .selected {
+    border: solid 3px #4399e4;
+    opacity: 0.8;
+  }
+
+  .fc-event {
+    font-size: 1em;
+    border-radius: 0;
+    border-width: 1px 0;
+    padding-left: 5px;
+  }
+
+  .fc-title, .fc-time {
+    font-size: 14px !important;
+  }
+
+  .fc-nonbusiness {
+    background: #607d8b;
+  }
+
+  th.fc-day-header a {
+    color : black;
+  }
+  {% if (config.agendaService in ['clicRDV'])==false %}
+    .fc-synchronize-button {display:none !important}
+  {% endif %}
+
+  .ui-autocomplete{z-index:2000}
+
+  .cursor-move {cursor:move}
+  .cursor-copy {cursor:copy}
+  .cursor-cell {cursor:cell}
+{% endblock %}
+
 {% block head %}
     {{ parent() }}
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
-
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
-    {% if config.vitaleActiver =='true' %}
-    	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
-    {% endif %}
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
-
-    <style>
-      a.eventAbsent .fc-title {
-        text-decoration: line-through;
-      }
-
-      a.eventEnAttente .fc-title::before {
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        content: "\f4b8";
-        margin-right: 3px;
-      }
-
-      .selected {
-        border: solid 3px #4399e4;
-        opacity: 0.8;
-      }
-
-      .fc-event {
-        font-size: 1em;
-        border-radius: 0;
-        border-width: 1px 0;
-        padding-left: 5px;
-      }
-
-      .fc-title, .fc-time {
-        font-size: 14px !important;
-      }
-
-      .fc-nonbusiness {
-      	background: #607d8b;
-      }
-
-      th.fc-day-header a {
-        color : black;
-      }
-      {% if (config.agendaService in ['clicRDV'])==false %}
-        .fc-synchronize-button {display:none !important}
-      {% endif %}
-
-      .ui-autocomplete{z-index:2000}
-
-      .cursor-move {cursor:move}
-      .cursor-copy {cursor:copy}
-      .cursor-cell {cursor:cell}
-    </style>
-
-    <script>
-    var boutonsHeaderCenter;
-    var hiddenDays;
-    var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};
-    var minTime;
-    var maxTime;
-    var businessHours;
-    var slotDuration;
-    var slotLabelInterval;
-    var eventTextColor;
-    var eventSources;
-    var viewRender;
-    {{ page.configAgenda }}
-    </script>
-
 {% endblock %}
 
 {% block body %}

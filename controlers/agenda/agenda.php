@@ -39,6 +39,8 @@ if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.j
   if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
     $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
   }
+} else {
+  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agendaDefault.js');
 }
 
 // types de rendez-vous
