@@ -22,7 +22,7 @@
 
 /**
  *
- * Envoyer : EN TRAVAUX ! NON UTILISÉE POUR LE MOMENT 
+ * Envoyer : EN TRAVAUX ! NON UTILISÉE POUR LE MOMENT
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -323,7 +323,7 @@ class msSend
  * @return boolean true/false
  */
   private function _send_ns_Mailjet() {
-
+    global $p;
     $mailParams=array(
       "FromEmail"=>$this->_from,
       "FromName"=>$p['config']['smtpFromName'],
@@ -337,9 +337,20 @@ class msSend
     }
 
     foreach ($this->_attachments as $k=>$attachment) {
-      $ext=pathinfo($attachment, PATHINFO_EXTENSION);
+
+      if(isset($this->_attachmentsBaseName[$k]) and !empty($this->_attachmentsBaseName[$k])) {
+        $docName=$this->_attachmentsBaseName[$k].'.'.pathinfo($attachment, PATHINFO_EXTENSION);
+      } elseif(isset($this->_attachmentsBaseName) and !empty($this->_attachmentsBaseName)) {
+        if(count($this->_attachments) > 1) {
+          $docName=$this->_attachmentsBaseName[0].$k.'.'.pathinfo($attachment, PATHINFO_EXTENSION);
+        } else {
+          $docName=$this->_attachmentsBaseName[0].'.'.pathinfo($attachment, PATHINFO_EXTENSION);
+        }
+      } else {
+        $docName='document.'.pathinfo($attachment, PATHINFO_EXTENSION);
+      }
+
       $mime=msTools::getmimetype($attachment);
-      $finalname="document".($k+1).".".$ext;
       $contenu=file_get_contents($attachment);
       if (!mb_detect_encoding($contenu, 'utf-8', true) and $mime == 'text/plain') {
           $contenu = utf8_encode($contenu);
@@ -349,7 +360,7 @@ class msSend
       $mailParams['Attachments'][]=
       [
         'Content-type' => $mime,
-        'Filename' => $finalname,
+        'Filename' => $docName,
         'content' => $contenu
       ];
     }
