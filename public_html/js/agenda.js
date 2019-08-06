@@ -556,6 +556,7 @@ $(document).ready(function() {
 
   $("#historiquePatient").on("click", "button.moveToDate", function(e) {
     e.preventDefault();
+    $(".fc-event").popover('hide');
     $('#calendar').fullCalendar('gotoDate', $(this).attr('data-date'));
   });
 
