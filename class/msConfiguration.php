@@ -135,7 +135,7 @@ class msConfiguration
 
         if (!is_numeric($userID)) throw new Exception('UserID is not numeric');
 
-        $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='user' AND toID='".$userID."'", 'name');
+        $userParams=msSQL::sql2tabKey("SELECT name, value FROM configuration WHERE level='user' AND toID='".$userID."' order by name", 'name');
         if (!is_array($userParams)) {
             return array();
         }

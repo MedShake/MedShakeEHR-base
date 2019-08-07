@@ -59,6 +59,7 @@ if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
         $p['page']['userParams'][$v['cat']][]=$v;
     }
 }
+ksort($p['page']['userParams']);
 
 $p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
 foreach($p['page']['availableParams'] as $k=>$v) {
