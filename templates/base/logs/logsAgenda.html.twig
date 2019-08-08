@@ -108,7 +108,7 @@
                           {% elseif v.operation == 'waiting' and v.olddata.attente == 'non' %}
                             marquage patient présent en salle d'attente
                           {% elseif v.operation == 'waiting' and v.olddata.attente == 'oui' %}
-                            marquage patient non présent en salle d'attente
+                            retrait présence en salle d'attente
                           {% elseif v.operation == 'edit' %}
                             édition
                           {% elseif v.operation == 'move' %}
@@ -187,6 +187,10 @@
             Marquage patient absent
           {% elseif v.operation == 'missing' and v.olddata.absente == 'oui' %}
             Marquage patient présent
+          {% elseif v.operation == 'waiting' and v.olddata.attente == 'non' %}
+            Marquage patient présent en salle d'attente
+          {% elseif v.operation == 'waiting' and v.olddata.attente == 'oui' %}
+            Retrait présence en salle d'attente
           {% elseif v.operation == 'edit' %}
             Édition
           {% elseif v.operation == 'move' %}
