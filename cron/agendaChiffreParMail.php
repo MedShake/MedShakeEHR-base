@@ -90,10 +90,10 @@ foreach ($users as $userID=>$value) {
     $send->setTo(explode(',', $p['config']['agendaEnvoyerChiffreTo']));
     $send->setFrom($p['config']['smtpFrom']);
     $send->setFromName($p['config']['smtpFromName']);
-    $send->setSubject("Agenda de secours au ".date("d/m/Y"));
+    $send->setSubject("Agenda de secours au ".date("d/m/Y H:i:s"));
     $send->setAttachments($tempfile);
     $send->setAttachmentsBaseName('agendaDeSecours');
-    $send->setBody("Agenda de secours au ".date("d/m/Y"));
+    $send->setBody("Agenda de secours au ".date("d/m/Y H:i:s"));
     $send->send();
 
     unlink($tempfile);
