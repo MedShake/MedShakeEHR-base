@@ -716,7 +716,7 @@ class msAgenda
           throw new Exception('PaientID n\'est pas défini');
       }
 
-      //retirer pour le patient lui même en considérant une avance potentielle du rdv (2h)
+      //retirer pour le patient lui même
       msSQL::sqlQuery("UPDATE agenda set attente='non' where patientid='".$this->_patientID."' and attente='oui' and DATE(start)=DATE(NOW())");
 
       //retirer pour les patients précédents avec délai de 2h
