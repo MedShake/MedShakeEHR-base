@@ -162,7 +162,7 @@
     <div class="modal-content">
       <form id="formRdv">
         <div class="modal-header">
-          <h4 class="modal-title font-weight-bold"></h4>
+          <h4 id="titreRdv" class="modal-title font-weight-bold"></h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -176,10 +176,10 @@
                 {% include 'inc-agenda-patient.html.twig' %}
               </div>
               <div class="col-md-6">
+              <h5>Rendez-vous</h5>
             {% else %}
               <div class="col-12">
             {% endif %}
-              <h5 id="titreRdv">Rendez-vous</h5>
               <div class="card bg-light p-2">
                 <div class="form-group">
                   <div id="datepicker" class="input-group mx-0 mb-3">
@@ -221,10 +221,19 @@
               Autres actions
             </button>
             <div class="dropdown-menu" aria-labelledby="buttonAutresActions">
-              <a class="dropdown-item" id="buttonMark" href="#">Non honoré</a>
-              <a class="dropdown-item" id="buttonClone" href="#">Cloner</a>
+              <a class="dropdown-item" id="buttonMark" href="#">
+                <i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i>
+                Non honoré
+              </a>
+              <a class="dropdown-item" id="buttonClone" href="#">
+                <i class="fas fa-clone fa-fw text-muted mr-1"></i>
+                Cloner
+              </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" id="buttonRemove" href="#">Supprimer</a>
+              <a class="dropdown-item" id="buttonRemove" href="#">
+                <i class="fas fa-trash fa-fw text-muted mr-1"></i>
+                Supprimer
+              </a>
             </div>
           </div>
           <button id="buttonCancel" class="btn btn-light float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
