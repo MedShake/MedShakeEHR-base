@@ -562,6 +562,7 @@ $(document).ready(function() {
   $("#buttonCancel").on("click", function(e) {
     $('#creerNouveau').modal('hide');
     nettoyer();
+    cleanSelectedVar();
   });
 
   $("#creerNouveau").on("click", function(e) {
