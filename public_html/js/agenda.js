@@ -188,7 +188,7 @@ $(document).ready(function() {
             <div class=\"popover\" role=\"tooltip\">\
               <h3 class=\"popover-header\">Détail</h3>\
               <div class=\"popover-body\"></div>\
-              <div class=\"popover-footer btn-group m-1\">' +
+              <div class=\"popover-footer btn-group m-1 d-none\">' +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Ouvrir le dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
@@ -201,7 +201,25 @@ $(document).ready(function() {
         });
       }
     },
+    eventMouseover: function(eventOver, jsEvent, view) {
+      if(selected_event) return;
+
+      $(".fc-event").popover('hide');
+      $('.popover-footer').addClass('d-none');
+      $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
+        '<strong>' + eventOver.title + '</strong>' + (eventOver.patientid == '0' ? '' : '<br>' +
+        $("#type option[value='" + eventOver.type + "']").html() + '<br>' + (eventOver.patientid == '0' ? '' : eventOver.motif) + (eventOver.absent == "oui" ? '<br><strong>Absent(e)</strong>' : ''))
+      );
+      $(".fc-event[data-eventid=" + eventOver.id + "]").popover('show');
+    },
+    eventMouseout: function(eventOut, jsEvent, view) {
+      if(selected_event) return;
+
+      $('.popover-footer').addClass('d-none');
+      $(".fc-event").popover('hide');
+    },
     eventClick: function(eventClicked, jsEvent, view) {
+      $('.popover-footer').removeClass('d-none');
       jsEvent.stopPropagation();
       selected_patient = eventClicked.patientid;
       selected_period = {
@@ -238,7 +256,6 @@ $(document).ready(function() {
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
       $(".fc-event[data-eventid=" + eventClicked.id + "]").popover('show');
-
       $(".fc-bg.selected").removeClass("selected");
       setTimeout(function() {
         $(jsEvent.currentTarget).find(".fc-bg").addClass("selected");
