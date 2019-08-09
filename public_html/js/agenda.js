@@ -702,14 +702,29 @@ function getHistoriquePatient(patientID) {
     success: function(data) {
       $('#historiquePatient ul').html('');
       $.each(data['historique'], function(index, dat) {
+
+        var duration = moment.duration(moment(dat['dateiso']).startOf('day').diff(moment().endOf('day')));
+        var days = Math.ceil(duration.asDays());
+
         chaine = '<li class="list-group-item p-1'
         if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
         if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
+        if(moment(dat['dateiso']).isAfter()) chaine = chaine + ' font-weight-bold';
         chaine = chaine + '">';
-        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fas fa-calendar" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fas ';
+        if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
+        chaine = chaine + '" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
+
         chaine = chaine + dat['start'] + ' : ' + dat['type'];
         if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
         if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
+        if(days > 1 && dat['statut'] == 'actif') {
+          chaine = chaine + ' dans ' + days + ' jours';
+        } else if(days == 0 && dat['statut'] == 'actif') {
+          chaine = chaine + ' aujourd\'hui';
+        } else if(days == 1 && dat['statut'] == 'actif') {
+          chaine = chaine + ' demain';
+        }
         chaine = chaine + '</li>';
 
         $('#historiquePatient ul').append(chaine);
