@@ -100,6 +100,14 @@ $(document).ready(function() {
   /// cf config/agendas/agendaDefault.js
 
   ////////////////////////////////////////////////////////////////////////
+  ////////// On oblige les ouvertures de lien de la navbar sup à ouvrir sur un target _blank
+
+  $('#top-navbar a').attr('target', '_blank');
+  $('#patientsOfTheDayMenu .dropdown-menu').on("DOMSubtreeModified", function(e) {
+    $('#patientsOfTheDayMenu .dropdown-menu a').attr('target', '_blank');
+  });
+
+  ////////////////////////////////////////////////////////////////////////
   ///////// Construction agenda
 
   $('#calendar').fullCalendar({
