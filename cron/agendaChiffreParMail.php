@@ -82,6 +82,7 @@ foreach ($users as $userID=>$value) {
     if(empty($blocGPG)) continue;
 
     $tempfile=$p['config']['workingDirectory'].$userID.'/agendaSecours.txt.gpg';
+    msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$userID);
     file_put_contents($tempfile, $blocGPG);
 
     $send = new msSend;
