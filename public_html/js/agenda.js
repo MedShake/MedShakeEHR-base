@@ -46,6 +46,8 @@ $(document).ready(function() {
     }
   });
 
+  autosize($('#id_notes_id'));
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Actions carte vitale
 
@@ -306,8 +308,9 @@ $(document).ready(function() {
         cleanSelectedVar();
         return;
       } else if (end.diff(start) == moment.duration(slotDuration, "HH:mm:ss").as('milliseconds')) {
-        if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden'))
+        if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden')) {
           return alert_popup('warning', 'Sélectionnez ou créez d\'abord un patient');
+        }
         var duree = $("#type option:first").attr('data-duree');
         $("#duree").html(" " + duree + "mn");
         selected_period.end = moment(start).add(duree, 'm');
@@ -571,7 +574,8 @@ $(document).ready(function() {
       $("#buttonAutresActions").dropdown('toggle');
   });
 
-  $('#nettoyer').on("click", function() {
+  $('#nettoyer').on("click", function(e) {
+    e.preventDefault();
     nettoyer();
     cleanSelectedVar();
   });
@@ -702,6 +706,7 @@ function getPatientAdminData(patientID) {
       $.each(data, function(index, value) {
         if ($("#id_" + index + "_id").length) $("#id_" + index + "_id").val(value);
       });
+      autosize.update($('#id_notes_id'));
       getHistoriquePatient(patientID);
     },
     error: function() {

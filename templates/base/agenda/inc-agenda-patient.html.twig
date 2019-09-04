@@ -28,24 +28,31 @@
 
 {% import "macroForm.html.twig" as f %}
 <h5>Patient</h5>
-<div id="patientSearch" class="btn-toolbar justify-content-between mb-3">
-  <div class="input-group col-10 m-0 p-0">
-    <div class="input-group-prepend">
-      <div class="input-group-text" id="btnGroupAddon"><i class="fas fa-search"></i></div>
+<div id="patientSearch">
+  <div class="d-flex mb-4">
+    <div class="input-group flex-grow-1">
+      <div class="input-group-prepend">
+        <div class="input-group-text" id="btnGroupAddon"><i class="fas fa-search"></i></div>
+      </div>
+      <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
+
     </div>
-    <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
-  </div>
-  <div class="input-group">
-    <button id="newPatient" type="button" class="btn btn-outline-secondary" title="Créer un patient">
-      <i class="fas fa-user-plus"></i>
+
+    <button id="newPatient" type="button" class="btn btn-secondary ml-3" title="Créer un patient">
+      <i class="fas fa-user-plus fa-fw"></i>
     </button>
   </div>
 </div>
-{% if config.vitaleActiver =='true' %}
-<div class="text-left">
-  <button id="lectureCpsVital" type="button" class="btn btn-success mb-2 lireCpsVitale" style="display: none;"><i class="fas fa-user"></i> Vitale</button>
+
+
+<div class="d-flex justify-content-between mb-3">
+  {% if config.vitaleActiver =='true' %}
+    <button id="lectureCpsVital" type="button" class="btn btn-success lireCpsVitale" title="Créer à partir des données carte vitale" style="display: none;"><i class="fas fa-user"></i> Vitale</button>
+  {% endif %}
+
+  <button id="nettoyer" class="btn btn-danger ml-auto" title="Revenir à l'état initial" style="display:none"><i class="fas fa-times fa-fw"></i>Annuler</button>
 </div>
-{% endif %}
+
 <div id="patientInfo" style="display: none">
   {{ f.formbuilder(page.formNewPatient , config.formFormulaireNouveauPatient, session) }}
 </div>

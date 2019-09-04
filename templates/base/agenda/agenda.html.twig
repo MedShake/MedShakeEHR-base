@@ -120,7 +120,6 @@
         <form id="newPatientData">
           {% include 'inc-agenda-patient.html.twig' %}
         </form>
-        <button id="nettoyer" class="btn btn-secondary btn-block my-3" style="display:none">Annuler</button>
 
         {% include 'inc-agenda-historiquePatient.html.twig' %}
 
@@ -159,7 +158,7 @@
 {% block modals %}
 {# modal rdv/nouveau patient #}
 <div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-lg{% endif %}" role="document">
+  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-xl{% endif %}" role="document">
     <div class="modal-content">
       <form id="formRdv">
         <div class="modal-header">
