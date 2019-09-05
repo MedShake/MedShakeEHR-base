@@ -158,7 +158,7 @@
 {% block modals %}
 {# modal rdv/nouveau patient #}
 <div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-xl{% endif %}" role="document">
+  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-xl{% else %}{% endif %}" role="document">
     <div class="modal-content">
       <form id="formRdv">
         <div class="modal-header">
@@ -194,7 +194,7 @@
                     <div class="input-group-prepend">
                       <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
                     </div>
-                    <select id="type" class="custom-select custom-select-sm" name="type" autocomplete="off">
+                    <select id="type" class="custom-select" name="type" autocomplete="off">
                       {% for k, v in page.typeRdv if k != '[off]' %}
                         <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
                           {{ v.descriptif }}</option>
@@ -237,6 +237,30 @@
             </div>
           </div>
           <button id="buttonCancel" class="btn btn-light float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{# modal éditer off #}
+<div id="editerOff" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form id="formEditerOff">
+        <div class="modal-header">
+          <h4 id="titreRdv" class="modal-title font-weight-bold"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <textarea id="motifOff" class="form-control" placeholder="Commentaire" rows="3" autocomplete="off"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="buttonValiderOff" class="btn btn-primary" type="button" data-dismiss="modal">Valider</button>
+          <button id="buttonCancelOff" class="btn btn-light float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
         </div>
       </form>
     </div>

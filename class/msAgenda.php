@@ -367,7 +367,7 @@ class msAgenda
               'end'=>$e['end'],
               'editable'=>true,
               'className'=>'fc-nonbusiness',
-              'motif'=>'',
+              'motif'=>$e['motif'],
               'type'=>$e['type'],
               'statut'=>$e['statut'],
               'lastModified'=>$e['lastModified'],

@@ -193,7 +193,7 @@ $(document).ready(function() {
               <div class=\"popover-footer btn-group m-1 d-none\">' +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Ouvrir le dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
+                (event.patientid == '0' ? '<button class=\"btn btn-light btn-sm fc-editer-off-button\" title=\"Éditer\"><span class=\"fas fa-pencil-alt\"></span></button>' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
                 '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"Déplacer ce rendez-vous\"><span class=\"fas fa-arrows-alt\"></span></button>' +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"Cloner ce rendez-vous\"><span class=\"fas fa-clone\"></span></button>') +
                 (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Marquer ce rendez-vous comme honoré' : 'Marquer ce rendez-vous comme non honoré') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
@@ -208,10 +208,16 @@ $(document).ready(function() {
 
       $(".fc-event").popover('hide');
       $('.popover-footer').addClass('d-none');
-      $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
-        '<strong>' + eventOver.title + '</strong>' + (eventOver.patientid == '0' ? '' : '<br>' +
-        $("#type option[value='" + eventOver.type + "']").html() + '<br>' + (eventOver.patientid == '0' ? '' : eventOver.motif) + (eventOver.absent == "oui" ? '<br><strong>Absent(e)</strong>' : ''))
-      );
+      if(eventOver.patientid == '0') {
+        $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
+          '<strong>' + eventOver.title + '</strong>' + '<br>' + eventOver.motif);
+      } else {
+        $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
+          '<strong>' + eventOver.title + '</strong>' + '<br>' +
+          $("#type option[value='" + eventOver.type + "']").html() + '<br>' + eventOver.motif + (eventOver.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
+        );
+      }
+
       $(".fc-event[data-eventid=" + eventOver.id + "]").popover('show');
     },
     eventMouseout: function(eventOut, jsEvent, view) {
@@ -249,11 +255,6 @@ $(document).ready(function() {
           $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + eventClicked.motif +
           (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
-      } else {
-        nettoyer();
-        selected_patient = undefined;
-        selected_action = undefined;
-        selected_period = undefined;
       }
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
@@ -331,13 +332,11 @@ $(document).ready(function() {
         $('div.popover').popover('hide');
         $('#datepicker input').val(start.format('DD/MM/YYYY à HH:mm'));
       } else {
-        if (confirm("Souhaitez-vous fermer cette période ?")) {
-          closePeriod();
-        } else {
-          $('#calendar').fullCalendar('unselect');
-          nettoyer();
-          cleanSelectedVar();
-        }
+        $(".fc-event").popover('hide');
+        $(".fc-bg.selected").removeClass("selected");
+        $('#editerOff h4').html('Souhaitez-vous fermer cette période ?');
+        $("#editerOff textarea").val('');
+        $('#editerOff').modal('show');
       }
     },
     unselect: function(jsEvent, view) {
@@ -349,16 +348,15 @@ $(document).ready(function() {
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
       jsEvent.stopImmediatePropagation();
-      if (confirm("Souhaitez-vous fermer cette journée ?")) {
-        selected_period = {
-          start: moment(date.format('YYYY-MM-DD') + ' ' + minTime),
-          end: moment(date.format('YYYY-MM-DD') + ' ' + maxTime)
-        };
-        closePeriod();
-      } else {
-        nettoyer();
-        cleanSelectedVar();
-      }
+      selected_period = {
+        start: moment(date.format('YYYY-MM-DD') + ' ' + minTime),
+        end: moment(date.format('YYYY-MM-DD') + ' ' + maxTime)
+      };
+      $(".fc-event").popover('hide');
+      $(".fc-bg.selected").removeClass("selected");
+      $('#editerOff h4').html('Souhaitez-vous fermer cette journée ?');
+      $("#editerOff textarea").val('');
+      $('#editerOff').modal('show');
     }
   })
 
@@ -420,6 +418,16 @@ $(document).ready(function() {
 
     $('div.popover').popover('hide');
     $('#datepicker input').val(selected_event.start.format('DD/MM/YYYY à HH:mm'));
+    selected_action = undefined;
+  });
+
+  $("body").on("click", ".fc-editer-off-button", function(e) {
+    e.stopImmediatePropagation();
+    $(".fc-event").popover('hide');
+    $(".fc-bg.selected").removeClass("selected");
+    $('#editerOff h4').html('Éditer le commentaire de la plage horaire fermée');
+    $("#editerOff textarea").val(selected_event.motif);
+    $('#editerOff').modal('show');
     selected_action = undefined;
   });
 
@@ -568,6 +576,12 @@ $(document).ready(function() {
     cleanSelectedVar();
   });
 
+  $("#buttonCancelOff").on("click", function(e) {
+    $('#editerOff').modal('hide');
+    nettoyer();
+    cleanSelectedVar();
+  });
+
   $("#creerNouveau").on("click", function(e) {
     e.stopPropagation();
     if ($("#buttonAutresActions").attr("aria-expanded") == "true")
@@ -588,6 +602,11 @@ $(document).ready(function() {
     e.preventDefault();
     $(".fc-event").popover('hide');
     $('#calendar').fullCalendar('gotoDate', $(this).attr('data-date'));
+  });
+
+  $("#buttonValiderOff").on("click", function(e) {
+    $('#editerOff').modal('hide');
+    closePeriod();
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -629,16 +648,6 @@ $(document).ready(function() {
     $(".fc-event").popover('hide');
     $(".fc-bg.selected").removeClass("selected");
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
-    if (e.currentTarget.id in {
-        'creerNouveau': 0,
-        'calendar': 0
-      }) {
-      e.stopPropagation();
-      return;
-    }
-    selected_action = undefined;
-    selected_event = undefined;
-    selected_period = undefined;
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -803,6 +812,10 @@ function nettoyer() {
   // formulaire rendez-vous
   $('#motif').val('');
 
+  // modal éditer off
+  $('#motifOff').val('');
+  $('#editerOff h4').html('');
+
 }
 
 /**
@@ -868,20 +881,33 @@ function setEvent(id) {
  * @return {void}
  */
 function closePeriod() {
+
+  if (selected_event) {
+    start = selected_event.start.format("YYYY-MM-DD HH:mm:SS");
+    end = selected_event.end.format("YYYY-MM-DD HH:mm:SS");
+    id = selected_event.id;
+  } else  if(selected_period) {
+    start = selected_period.start.format("YYYY-MM-DD HH:mm:SS");
+    end = selected_period.end.format("YYYY-MM-DD HH:mm:SS");
+    id= '';
+  } else {
+    return;
+  }
+
   $.ajax({
     url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setNewRdv/',
     type: "post",
     data: {
-      eventID: '',
+      eventID: id,
       patientID: '0',
       userID: $('#calendar').attr('data-userID'),
-      start: selected_period.start.format("YYYY-MM-DD HH:mm:SS"),
-      end: selected_period.end.format("YYYY-MM-DD HH:mm:SS"),
+      start: start,
+      end: end,
       type: '[off]',
-      motif: 'Fermé',
+      motif: $('#motifOff').val(),
     },
     dataType: "json",
-    success: function(data) {
+    success: function() {
       $('#calendar').fullCalendar('refetchEvents');
       nettoyer();
       cleanSelectedVar();
