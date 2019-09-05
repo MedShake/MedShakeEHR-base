@@ -235,7 +235,9 @@ $(document).ready(function() {
         end: eventClicked.end
       };
       selected_event = eventClicked;
-      if (eventClicked.patientid != "0") {
+      if(jsEvent.shiftKey){
+        window.open(urlBase + '/logs/agenda/' + $('#calendar').attr('data-userID') + '/' + eventClicked.id + '/', '_blank');
+      } else if (eventClicked.patientid != "0") {
         getPatientAdminData(eventClicked.patientid);
         $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
         $("#patientInfo").find("select").prop("disabled", true);
