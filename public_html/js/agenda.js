@@ -178,6 +178,9 @@ $(document).ready(function() {
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background') {
+        if(event.icon){
+          element.find(".fc-content").after("<div class='faicon d-flex h-100 align-items-center justify-content-center'><i class='fa fa-10x fa-"+event.icon+"'></i></div>");
+        }
         element.popover({
           sanitizeFn: function (content) {return content},
           title : event.name || '',
@@ -205,6 +208,7 @@ $(document).ready(function() {
     },
     eventMouseover: function(eventOver, jsEvent, view) {
       if(selected_event) return;
+      if(eventOver.type == 'publicHoliday') return;
 
       $(".fc-event").popover('hide');
       $('.popover-footer').addClass('d-none');
@@ -222,6 +226,7 @@ $(document).ready(function() {
     },
     eventMouseout: function(eventOut, jsEvent, view) {
       if(selected_event) return;
+      if(eventOut.type == 'publicHoliday') return;
 
       $('.popover-footer').addClass('d-none');
       $(".fc-event").popover('hide');
@@ -235,6 +240,7 @@ $(document).ready(function() {
         end: eventClicked.end
       };
       selected_event = eventClicked;
+      if(eventClicked.type == 'publicHoliday') return;
       if(jsEvent.shiftKey){
         window.open(urlBase + '/logs/agenda/' + $('#calendar').attr('data-userID') + '/' + eventClicked.id + '/', '_blank');
       } else if (eventClicked.patientid != "0") {

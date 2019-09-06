@@ -1,0 +1,2 @@
+Les documents jours-feries-seuls-alsace-moselle.csv et jours-feries-seuls.csv sont issus du travail d'Antoine Augusti et distribués sous licence ouverte <https://www.etalab.gouv.fr/wp-content/uploads/2014/05/Licence_Ouverte.pdf> sur le site data.gouv.fr à l'adresse <https://www.data.gouv.fr/fr/datasets/jours-feries-en-france/>
+La version utilisée ici est en date du 11/01/2019

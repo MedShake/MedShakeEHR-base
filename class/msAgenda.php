@@ -83,6 +83,11 @@ class msAgenda
     * @var array
     */
     private $_tabTypesRdv;
+    /**
+     * Ajouter les jours fériés aux events
+     * @var boolean
+     */
+    private $_addPublicHolidaysToEvents=false;
 
     /**
     * set patientID
@@ -182,6 +187,15 @@ class msAgenda
     }
 
     /**
+     * Définir s'il faut ajouter les fériés à la sortie des events
+     * @param boolean $addPublicHolidaysToEvents true/false
+     */
+    public function set_addPublicHolidaysToEvents($addPublicHolidaysToEvents) {
+      if(!is_bool($addPublicHolidaysToEvents)) throw new Exception('addPublicHolidaysToEvents is not booleanc');
+      $this->_addPublicHolidaysToEvents = $addPublicHolidaysToEvents;
+    }
+
+    /**
     * Ajouter ou update un rendez-vous en fonction de la présente ou non
     * de l'eventID
     */
@@ -261,8 +275,62 @@ class msAgenda
                   $formatedEvents[]=$this->_formatEvent($e);
               }
           }
+          // ajouter les jours fériés
+          if($this->_addPublicHolidaysToEvents and $he = $this->_getPublicHolidaysEvents()) {
+            $formatedEvents = array_merge($formatedEvents,$he);
+          }
+
           return $formatedEvents;
       }
+
+    /**
+     * Obtenir les events jours fériés
+     * @return array events jours fériés
+     */
+      private function _getPublicHolidaysEvents() {
+        global $p;
+        $tab=[];
+        $events=[];
+        $fileCsv=$p['homepath'].'ressources/agenda/'.$p['config']['agendaJoursFeriesFichier'];
+
+        if(is_file($fileCsv)) {
+          $start = new DateTime($this->_startDate);
+          $end = new DateTime($this->_endDate);
+          $startYear = $start->format("Y");
+          $endYear = $end->format("Y");
+
+          $file = new SplFileObject($fileCsv);
+          while (!$file->eof()) {
+              $line = $file->fgets();
+              if(in_array(substr($line,0,4), [$startYear, $endYear])){
+                $lineCSV = str_getcsv($line);
+                $tab[$lineCSV[0]]=$lineCSV;
+              }
+          }
+          unset($file);
+
+          if(!empty($tab)) {
+          $interval = DateInterval::createFromDateString('1 day');
+          $period = new DatePeriod($start, $interval, $end->add(new DateInterval('P1D')));
+          foreach ($period as $dt) {
+              $searchDate = $dt->format("Y-m-d");
+              if(array_key_exists($searchDate, $tab)) {
+                $events[]=array(
+                  'type'=>'publicHoliday',
+                  'title'=>$tab[$searchDate][2],
+                  'start'=>$searchDate.' 00:00:00',
+                  'end'=>$searchDate.' 23:59:59',
+                  'className'=> 'hideCalendarTime fc-nonbusiness',
+                  'icon'=> 'exclamation-triangle'
+                );
+              }
+            }
+          }
+        }
+
+        return $events;
+      }
+
 /**
  * Obtenir les data brute d'un rendez-vous par son ID
  * @return array tableau des data

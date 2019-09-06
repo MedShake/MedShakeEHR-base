@@ -118,6 +118,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'administratifSecteurHonorairesCcam'=>'0',
     'apicryptVersion'=>'1',
     'agendaRefreshDelayMenuPOTD'=>'5',
+    'agendaJoursFeriesFichier'=>'jours-feries-seuls.csv',
+    'agendaJoursFeriesAfficher'=>'true',
   ];
 
   protected function _getSpecifSql() {

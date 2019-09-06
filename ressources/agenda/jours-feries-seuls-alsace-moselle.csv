@@ -1,0 +1,1310 @@
+date,est_jour_ferie,nom_jour_ferie
+1950-01-01,True,Jour de l'an
+1950-04-07,True,Vendredi Saint
+1950-04-10,True,Lundi de Pâques
+1950-05-01,True,Fête du travail
+1950-05-08,True,Victoire des alliés
+1950-05-18,True,Ascension
+1950-05-29,True,Lundi de Pentecôte
+1950-07-14,True,Fête Nationale
+1950-08-15,True,Assomption
+1950-11-01,True,Toussaint
+1950-11-11,True,Armistice
+1950-12-25,True,Noël
+1950-12-26,True,Saint Étienne
+1951-01-01,True,Jour de l'an
+1951-03-23,True,Vendredi Saint
+1951-03-26,True,Lundi de Pâques
+1951-05-01,True,Fête du travail
+1951-05-03,True,Ascension
+1951-05-08,True,Victoire des alliés
+1951-05-14,True,Lundi de Pentecôte
+1951-07-14,True,Fête Nationale
+1951-08-15,True,Assomption
+1951-11-01,True,Toussaint
+1951-11-11,True,Armistice
+1951-12-25,True,Noël
+1951-12-26,True,Saint Étienne
+1952-01-01,True,Jour de l'an
+1952-04-11,True,Vendredi Saint
+1952-04-14,True,Lundi de Pâques
+1952-05-01,True,Fête du travail
+1952-05-08,True,Victoire des alliés
+1952-05-22,True,Ascension
+1952-06-02,True,Lundi de Pentecôte
+1952-07-14,True,Fête Nationale
+1952-08-15,True,Assomption
+1952-11-01,True,Toussaint
+1952-11-11,True,Armistice
+1952-12-25,True,Noël
+1952-12-26,True,Saint Étienne
+1953-01-01,True,Jour de l'an
+1953-04-03,True,Vendredi Saint
+1953-04-06,True,Lundi de Pâques
+1953-05-01,True,Fête du travail
+1953-05-08,True,Victoire des alliés
+1953-05-14,True,Ascension
+1953-05-25,True,Lundi de Pentecôte
+1953-07-14,True,Fête Nationale
+1953-08-15,True,Assomption
+1953-11-01,True,Toussaint
+1953-11-11,True,Armistice
+1953-12-25,True,Noël
+1953-12-26,True,Saint Étienne
+1954-01-01,True,Jour de l'an
+1954-04-16,True,Vendredi Saint
+1954-04-19,True,Lundi de Pâques
+1954-05-01,True,Fête du travail
+1954-05-08,True,Victoire des alliés
+1954-05-27,True,Ascension
+1954-06-07,True,Lundi de Pentecôte
+1954-07-14,True,Fête Nationale
+1954-08-15,True,Assomption
+1954-11-01,True,Toussaint
+1954-11-11,True,Armistice
+1954-12-25,True,Noël
+1954-12-26,True,Saint Étienne
+1955-01-01,True,Jour de l'an
+1955-04-08,True,Vendredi Saint
+1955-04-11,True,Lundi de Pâques
+1955-05-01,True,Fête du travail
+1955-05-08,True,Victoire des alliés
+1955-05-19,True,Ascension
+1955-05-30,True,Lundi de Pentecôte
+1955-07-14,True,Fête Nationale
+1955-08-15,True,Assomption
+1955-11-01,True,Toussaint
+1955-11-11,True,Armistice
+1955-12-25,True,Noël
+1955-12-26,True,Saint Étienne
+1956-01-01,True,Jour de l'an
+1956-03-30,True,Vendredi Saint
+1956-04-02,True,Lundi de Pâques
+1956-05-01,True,Fête du travail
+1956-05-08,True,Victoire des alliés
+1956-05-10,True,Ascension
+1956-05-21,True,Lundi de Pentecôte
+1956-07-14,True,Fête Nationale
+1956-08-15,True,Assomption
+1956-11-01,True,Toussaint
+1956-11-11,True,Armistice
+1956-12-25,True,Noël
+1956-12-26,True,Saint Étienne
+1957-01-01,True,Jour de l'an
+1957-04-19,True,Vendredi Saint
+1957-04-22,True,Lundi de Pâques
+1957-05-01,True,Fête du travail
+1957-05-08,True,Victoire des alliés
+1957-05-30,True,Ascension
+1957-06-10,True,Lundi de Pentecôte
+1957-07-14,True,Fête Nationale
+1957-08-15,True,Assomption
+1957-11-01,True,Toussaint
+1957-11-11,True,Armistice
+1957-12-25,True,Noël
+1957-12-26,True,Saint Étienne
+1958-01-01,True,Jour de l'an
+1958-04-04,True,Vendredi Saint
+1958-04-07,True,Lundi de Pâques
+1958-05-01,True,Fête du travail
+1958-05-08,True,Victoire des alliés
+1958-05-15,True,Ascension
+1958-05-26,True,Lundi de Pentecôte
+1958-07-14,True,Fête Nationale
+1958-08-15,True,Assomption
+1958-11-01,True,Toussaint
+1958-11-11,True,Armistice
+1958-12-25,True,Noël
+1958-12-26,True,Saint Étienne
+1959-01-01,True,Jour de l'an
+1959-03-27,True,Vendredi Saint
+1959-03-30,True,Lundi de Pâques
+1959-05-01,True,Fête du travail
+1959-05-07,True,Ascension
+1959-05-08,True,Victoire des alliés
+1959-05-18,True,Lundi de Pentecôte
+1959-07-14,True,Fête Nationale
+1959-08-15,True,Assomption
+1959-11-01,True,Toussaint
+1959-11-11,True,Armistice
+1959-12-25,True,Noël
+1959-12-26,True,Saint Étienne
+1960-01-01,True,Jour de l'an
+1960-04-15,True,Vendredi Saint
+1960-04-18,True,Lundi de Pâques
+1960-05-01,True,Fête du travail
+1960-05-08,True,Victoire des alliés
+1960-05-26,True,Ascension
+1960-06-06,True,Lundi de Pentecôte
+1960-07-14,True,Fête Nationale
+1960-08-15,True,Assomption
+1960-11-01,True,Toussaint
+1960-11-11,True,Armistice
+1960-12-25,True,Noël
+1960-12-26,True,Saint Étienne
+1961-01-01,True,Jour de l'an
+1961-03-31,True,Vendredi Saint
+1961-04-03,True,Lundi de Pâques
+1961-05-01,True,Fête du travail
+1961-05-08,True,Victoire des alliés
+1961-05-11,True,Ascension
+1961-05-22,True,Lundi de Pentecôte
+1961-07-14,True,Fête Nationale
+1961-08-15,True,Assomption
+1961-11-01,True,Toussaint
+1961-11-11,True,Armistice
+1961-12-25,True,Noël
+1961-12-26,True,Saint Étienne
+1962-01-01,True,Jour de l'an
+1962-04-20,True,Vendredi Saint
+1962-04-23,True,Lundi de Pâques
+1962-05-01,True,Fête du travail
+1962-05-08,True,Victoire des alliés
+1962-05-31,True,Ascension
+1962-06-11,True,Lundi de Pentecôte
+1962-07-14,True,Fête Nationale
+1962-08-15,True,Assomption
+1962-11-01,True,Toussaint
+1962-11-11,True,Armistice
+1962-12-25,True,Noël
+1962-12-26,True,Saint Étienne
+1963-01-01,True,Jour de l'an
+1963-04-12,True,Vendredi Saint
+1963-04-15,True,Lundi de Pâques
+1963-05-01,True,Fête du travail
+1963-05-08,True,Victoire des alliés
+1963-05-23,True,Ascension
+1963-06-03,True,Lundi de Pentecôte
+1963-07-14,True,Fête Nationale
+1963-08-15,True,Assomption
+1963-11-01,True,Toussaint
+1963-11-11,True,Armistice
+1963-12-25,True,Noël
+1963-12-26,True,Saint Étienne
+1964-01-01,True,Jour de l'an
+1964-03-27,True,Vendredi Saint
+1964-03-30,True,Lundi de Pâques
+1964-05-01,True,Fête du travail
+1964-05-07,True,Ascension
+1964-05-08,True,Victoire des alliés
+1964-05-18,True,Lundi de Pentecôte
+1964-07-14,True,Fête Nationale
+1964-08-15,True,Assomption
+1964-11-01,True,Toussaint
+1964-11-11,True,Armistice
+1964-12-25,True,Noël
+1964-12-26,True,Saint Étienne
+1965-01-01,True,Jour de l'an
+1965-04-16,True,Vendredi Saint
+1965-04-19,True,Lundi de Pâques
+1965-05-01,True,Fête du travail
+1965-05-08,True,Victoire des alliés
+1965-05-27,True,Ascension
+1965-06-07,True,Lundi de Pentecôte
+1965-07-14,True,Fête Nationale
+1965-08-15,True,Assomption
+1965-11-01,True,Toussaint
+1965-11-11,True,Armistice
+1965-12-25,True,Noël
+1965-12-26,True,Saint Étienne
+1966-01-01,True,Jour de l'an
+1966-04-08,True,Vendredi Saint
+1966-04-11,True,Lundi de Pâques
+1966-05-01,True,Fête du travail
+1966-05-08,True,Victoire des alliés
+1966-05-19,True,Ascension
+1966-05-30,True,Lundi de Pentecôte
+1966-07-14,True,Fête Nationale
+1966-08-15,True,Assomption
+1966-11-01,True,Toussaint
+1966-11-11,True,Armistice
+1966-12-25,True,Noël
+1966-12-26,True,Saint Étienne
+1967-01-01,True,Jour de l'an
+1967-03-24,True,Vendredi Saint
+1967-03-27,True,Lundi de Pâques
+1967-05-01,True,Fête du travail
+1967-05-04,True,Ascension
+1967-05-08,True,Victoire des alliés
+1967-05-15,True,Lundi de Pentecôte
+1967-07-14,True,Fête Nationale
+1967-08-15,True,Assomption
+1967-11-01,True,Toussaint
+1967-11-11,True,Armistice
+1967-12-25,True,Noël
+1967-12-26,True,Saint Étienne
+1968-01-01,True,Jour de l'an
+1968-04-12,True,Vendredi Saint
+1968-04-15,True,Lundi de Pâques
+1968-05-01,True,Fête du travail
+1968-05-08,True,Victoire des alliés
+1968-05-23,True,Ascension
+1968-06-03,True,Lundi de Pentecôte
+1968-07-14,True,Fête Nationale
+1968-08-15,True,Assomption
+1968-11-01,True,Toussaint
+1968-11-11,True,Armistice
+1968-12-25,True,Noël
+1968-12-26,True,Saint Étienne
+1969-01-01,True,Jour de l'an
+1969-04-04,True,Vendredi Saint
+1969-04-07,True,Lundi de Pâques
+1969-05-01,True,Fête du travail
+1969-05-08,True,Victoire des alliés
+1969-05-15,True,Ascension
+1969-05-26,True,Lundi de Pentecôte
+1969-07-14,True,Fête Nationale
+1969-08-15,True,Assomption
+1969-11-01,True,Toussaint
+1969-11-11,True,Armistice
+1969-12-25,True,Noël
+1969-12-26,True,Saint Étienne
+1970-01-01,True,Jour de l'an
+1970-03-27,True,Vendredi Saint
+1970-03-30,True,Lundi de Pâques
+1970-05-01,True,Fête du travail
+1970-05-07,True,Ascension
+1970-05-08,True,Victoire des alliés
+1970-05-18,True,Lundi de Pentecôte
+1970-07-14,True,Fête Nationale
+1970-08-15,True,Assomption
+1970-11-01,True,Toussaint
+1970-11-11,True,Armistice
+1970-12-25,True,Noël
+1970-12-26,True,Saint Étienne
+1971-01-01,True,Jour de l'an
+1971-04-09,True,Vendredi Saint
+1971-04-12,True,Lundi de Pâques
+1971-05-01,True,Fête du travail
+1971-05-08,True,Victoire des alliés
+1971-05-20,True,Ascension
+1971-05-31,True,Lundi de Pentecôte
+1971-07-14,True,Fête Nationale
+1971-08-15,True,Assomption
+1971-11-01,True,Toussaint
+1971-11-11,True,Armistice
+1971-12-25,True,Noël
+1971-12-26,True,Saint Étienne
+1972-01-01,True,Jour de l'an
+1972-03-31,True,Vendredi Saint
+1972-04-03,True,Lundi de Pâques
+1972-05-01,True,Fête du travail
+1972-05-08,True,Victoire des alliés
+1972-05-11,True,Ascension
+1972-05-22,True,Lundi de Pentecôte
+1972-07-14,True,Fête Nationale
+1972-08-15,True,Assomption
+1972-11-01,True,Toussaint
+1972-11-11,True,Armistice
+1972-12-25,True,Noël
+1972-12-26,True,Saint Étienne
+1973-01-01,True,Jour de l'an
+1973-04-20,True,Vendredi Saint
+1973-04-23,True,Lundi de Pâques
+1973-05-01,True,Fête du travail
+1973-05-08,True,Victoire des alliés
+1973-05-31,True,Ascension
+1973-06-11,True,Lundi de Pentecôte
+1973-07-14,True,Fête Nationale
+1973-08-15,True,Assomption
+1973-11-01,True,Toussaint
+1973-11-11,True,Armistice
+1973-12-25,True,Noël
+1973-12-26,True,Saint Étienne
+1974-01-01,True,Jour de l'an
+1974-04-12,True,Vendredi Saint
+1974-04-15,True,Lundi de Pâques
+1974-05-01,True,Fête du travail
+1974-05-08,True,Victoire des alliés
+1974-05-23,True,Ascension
+1974-06-03,True,Lundi de Pentecôte
+1974-07-14,True,Fête Nationale
+1974-08-15,True,Assomption
+1974-11-01,True,Toussaint
+1974-11-11,True,Armistice
+1974-12-25,True,Noël
+1974-12-26,True,Saint Étienne
+1975-01-01,True,Jour de l'an
+1975-03-28,True,Vendredi Saint
+1975-03-31,True,Lundi de Pâques
+1975-05-01,True,Fête du travail
+1975-05-08,True,Victoire des alliés
+1975-05-19,True,Lundi de Pentecôte
+1975-07-14,True,Fête Nationale
+1975-08-15,True,Assomption
+1975-11-01,True,Toussaint
+1975-11-11,True,Armistice
+1975-12-25,True,Noël
+1975-12-26,True,Saint Étienne
+1976-01-01,True,Jour de l'an
+1976-04-16,True,Vendredi Saint
+1976-04-19,True,Lundi de Pâques
+1976-05-01,True,Fête du travail
+1976-05-08,True,Victoire des alliés
+1976-05-27,True,Ascension
+1976-06-07,True,Lundi de Pentecôte
+1976-07-14,True,Fête Nationale
+1976-08-15,True,Assomption
+1976-11-01,True,Toussaint
+1976-11-11,True,Armistice
+1976-12-25,True,Noël
+1976-12-26,True,Saint Étienne
+1977-01-01,True,Jour de l'an
+1977-04-08,True,Vendredi Saint
+1977-04-11,True,Lundi de Pâques
+1977-05-01,True,Fête du travail
+1977-05-08,True,Victoire des alliés
+1977-05-19,True,Ascension
+1977-05-30,True,Lundi de Pentecôte
+1977-07-14,True,Fête Nationale
+1977-08-15,True,Assomption
+1977-11-01,True,Toussaint
+1977-11-11,True,Armistice
+1977-12-25,True,Noël
+1977-12-26,True,Saint Étienne
+1978-01-01,True,Jour de l'an
+1978-03-24,True,Vendredi Saint
+1978-03-27,True,Lundi de Pâques
+1978-05-01,True,Fête du travail
+1978-05-04,True,Ascension
+1978-05-08,True,Victoire des alliés
+1978-05-15,True,Lundi de Pentecôte
+1978-07-14,True,Fête Nationale
+1978-08-15,True,Assomption
+1978-11-01,True,Toussaint
+1978-11-11,True,Armistice
+1978-12-25,True,Noël
+1978-12-26,True,Saint Étienne
+1979-01-01,True,Jour de l'an
+1979-04-13,True,Vendredi Saint
+1979-04-16,True,Lundi de Pâques
+1979-05-01,True,Fête du travail
+1979-05-08,True,Victoire des alliés
+1979-05-24,True,Ascension
+1979-06-04,True,Lundi de Pentecôte
+1979-07-14,True,Fête Nationale
+1979-08-15,True,Assomption
+1979-11-01,True,Toussaint
+1979-11-11,True,Armistice
+1979-12-25,True,Noël
+1979-12-26,True,Saint Étienne
+1980-01-01,True,Jour de l'an
+1980-04-04,True,Vendredi Saint
+1980-04-07,True,Lundi de Pâques
+1980-05-01,True,Fête du travail
+1980-05-08,True,Victoire des alliés
+1980-05-15,True,Ascension
+1980-05-26,True,Lundi de Pentecôte
+1980-07-14,True,Fête Nationale
+1980-08-15,True,Assomption
+1980-11-01,True,Toussaint
+1980-11-11,True,Armistice
+1980-12-25,True,Noël
+1980-12-26,True,Saint Étienne
+1981-01-01,True,Jour de l'an
+1981-04-17,True,Vendredi Saint
+1981-04-20,True,Lundi de Pâques
+1981-05-01,True,Fête du travail
+1981-05-08,True,Victoire des alliés
+1981-05-28,True,Ascension
+1981-06-08,True,Lundi de Pentecôte
+1981-07-14,True,Fête Nationale
+1981-08-15,True,Assomption
+1981-11-01,True,Toussaint
+1981-11-11,True,Armistice
+1981-12-25,True,Noël
+1981-12-26,True,Saint Étienne
+1982-01-01,True,Jour de l'an
+1982-04-09,True,Vendredi Saint
+1982-04-12,True,Lundi de Pâques
+1982-05-01,True,Fête du travail
+1982-05-08,True,Victoire des alliés
+1982-05-20,True,Ascension
+1982-05-31,True,Lundi de Pentecôte
+1982-07-14,True,Fête Nationale
+1982-08-15,True,Assomption
+1982-11-01,True,Toussaint
+1982-11-11,True,Armistice
+1982-12-25,True,Noël
+1982-12-26,True,Saint Étienne
+1983-01-01,True,Jour de l'an
+1983-04-01,True,Vendredi Saint
+1983-04-04,True,Lundi de Pâques
+1983-05-01,True,Fête du travail
+1983-05-08,True,Victoire des alliés
+1983-05-12,True,Ascension
+1983-05-23,True,Lundi de Pentecôte
+1983-07-14,True,Fête Nationale
+1983-08-15,True,Assomption
+1983-11-01,True,Toussaint
+1983-11-11,True,Armistice
+1983-12-25,True,Noël
+1983-12-26,True,Saint Étienne
+1984-01-01,True,Jour de l'an
+1984-04-20,True,Vendredi Saint
+1984-04-23,True,Lundi de Pâques
+1984-05-01,True,Fête du travail
+1984-05-08,True,Victoire des alliés
+1984-05-31,True,Ascension
+1984-06-11,True,Lundi de Pentecôte
+1984-07-14,True,Fête Nationale
+1984-08-15,True,Assomption
+1984-11-01,True,Toussaint
+1984-11-11,True,Armistice
+1984-12-25,True,Noël
+1984-12-26,True,Saint Étienne
+1985-01-01,True,Jour de l'an
+1985-04-05,True,Vendredi Saint
+1985-04-08,True,Lundi de Pâques
+1985-05-01,True,Fête du travail
+1985-05-08,True,Victoire des alliés
+1985-05-16,True,Ascension
+1985-05-27,True,Lundi de Pentecôte
+1985-07-14,True,Fête Nationale
+1985-08-15,True,Assomption
+1985-11-01,True,Toussaint
+1985-11-11,True,Armistice
+1985-12-25,True,Noël
+1985-12-26,True,Saint Étienne
+1986-01-01,True,Jour de l'an
+1986-03-28,True,Vendredi Saint
+1986-03-31,True,Lundi de Pâques
+1986-05-01,True,Fête du travail
+1986-05-08,True,Victoire des alliés
+1986-05-19,True,Lundi de Pentecôte
+1986-07-14,True,Fête Nationale
+1986-08-15,True,Assomption
+1986-11-01,True,Toussaint
+1986-11-11,True,Armistice
+1986-12-25,True,Noël
+1986-12-26,True,Saint Étienne
+1987-01-01,True,Jour de l'an
+1987-04-17,True,Vendredi Saint
+1987-04-20,True,Lundi de Pâques
+1987-05-01,True,Fête du travail
+1987-05-08,True,Victoire des alliés
+1987-05-28,True,Ascension
+1987-06-08,True,Lundi de Pentecôte
+1987-07-14,True,Fête Nationale
+1987-08-15,True,Assomption
+1987-11-01,True,Toussaint
+1987-11-11,True,Armistice
+1987-12-25,True,Noël
+1987-12-26,True,Saint Étienne
+1988-01-01,True,Jour de l'an
+1988-04-01,True,Vendredi Saint
+1988-04-04,True,Lundi de Pâques
+1988-05-01,True,Fête du travail
+1988-05-08,True,Victoire des alliés
+1988-05-12,True,Ascension
+1988-05-23,True,Lundi de Pentecôte
+1988-07-14,True,Fête Nationale
+1988-08-15,True,Assomption
+1988-11-01,True,Toussaint
+1988-11-11,True,Armistice
+1988-12-25,True,Noël
+1988-12-26,True,Saint Étienne
+1989-01-01,True,Jour de l'an
+1989-03-24,True,Vendredi Saint
+1989-03-27,True,Lundi de Pâques
+1989-05-01,True,Fête du travail
+1989-05-04,True,Ascension
+1989-05-08,True,Victoire des alliés
+1989-05-15,True,Lundi de Pentecôte
+1989-07-14,True,Fête Nationale
+1989-08-15,True,Assomption
+1989-11-01,True,Toussaint
+1989-11-11,True,Armistice
+1989-12-25,True,Noël
+1989-12-26,True,Saint Étienne
+1990-01-01,True,Jour de l'an
+1990-04-13,True,Vendredi Saint
+1990-04-16,True,Lundi de Pâques
+1990-05-01,True,Fête du travail
+1990-05-08,True,Victoire des alliés
+1990-05-24,True,Ascension
+1990-06-04,True,Lundi de Pentecôte
+1990-07-14,True,Fête Nationale
+1990-08-15,True,Assomption
+1990-11-01,True,Toussaint
+1990-11-11,True,Armistice
+1990-12-25,True,Noël
+1990-12-26,True,Saint Étienne
+1991-01-01,True,Jour de l'an
+1991-03-29,True,Vendredi Saint
+1991-04-01,True,Lundi de Pâques
+1991-05-01,True,Fête du travail
+1991-05-08,True,Victoire des alliés
+1991-05-09,True,Ascension
+1991-05-20,True,Lundi de Pentecôte
+1991-07-14,True,Fête Nationale
+1991-08-15,True,Assomption
+1991-11-01,True,Toussaint
+1991-11-11,True,Armistice
+1991-12-25,True,Noël
+1991-12-26,True,Saint Étienne
+1992-01-01,True,Jour de l'an
+1992-04-17,True,Vendredi Saint
+1992-04-20,True,Lundi de Pâques
+1992-05-01,True,Fête du travail
+1992-05-08,True,Victoire des alliés
+1992-05-28,True,Ascension
+1992-06-08,True,Lundi de Pentecôte
+1992-07-14,True,Fête Nationale
+1992-08-15,True,Assomption
+1992-11-01,True,Toussaint
+1992-11-11,True,Armistice
+1992-12-25,True,Noël
+1992-12-26,True,Saint Étienne
+1993-01-01,True,Jour de l'an
+1993-04-09,True,Vendredi Saint
+1993-04-12,True,Lundi de Pâques
+1993-05-01,True,Fête du travail
+1993-05-08,True,Victoire des alliés
+1993-05-20,True,Ascension
+1993-05-31,True,Lundi de Pentecôte
+1993-07-14,True,Fête Nationale
+1993-08-15,True,Assomption
+1993-11-01,True,Toussaint
+1993-11-11,True,Armistice
+1993-12-25,True,Noël
+1993-12-26,True,Saint Étienne
+1994-01-01,True,Jour de l'an
+1994-04-01,True,Vendredi Saint
+1994-04-04,True,Lundi de Pâques
+1994-05-01,True,Fête du travail
+1994-05-08,True,Victoire des alliés
+1994-05-12,True,Ascension
+1994-05-23,True,Lundi de Pentecôte
+1994-07-14,True,Fête Nationale
+1994-08-15,True,Assomption
+1994-11-01,True,Toussaint
+1994-11-11,True,Armistice
+1994-12-25,True,Noël
+1994-12-26,True,Saint Étienne
+1995-01-01,True,Jour de l'an
+1995-04-14,True,Vendredi Saint
+1995-04-17,True,Lundi de Pâques
+1995-05-01,True,Fête du travail
+1995-05-08,True,Victoire des alliés
+1995-05-25,True,Ascension
+1995-06-05,True,Lundi de Pentecôte
+1995-07-14,True,Fête Nationale
+1995-08-15,True,Assomption
+1995-11-01,True,Toussaint
+1995-11-11,True,Armistice
+1995-12-25,True,Noël
+1995-12-26,True,Saint Étienne
+1996-01-01,True,Jour de l'an
+1996-04-05,True,Vendredi Saint
+1996-04-08,True,Lundi de Pâques
+1996-05-01,True,Fête du travail
+1996-05-08,True,Victoire des alliés
+1996-05-16,True,Ascension
+1996-05-27,True,Lundi de Pentecôte
+1996-07-14,True,Fête Nationale
+1996-08-15,True,Assomption
+1996-11-01,True,Toussaint
+1996-11-11,True,Armistice
+1996-12-25,True,Noël
+1996-12-26,True,Saint Étienne
+1997-01-01,True,Jour de l'an
+1997-03-28,True,Vendredi Saint
+1997-03-31,True,Lundi de Pâques
+1997-05-01,True,Fête du travail
+1997-05-08,True,Victoire des alliés
+1997-05-19,True,Lundi de Pentecôte
+1997-07-14,True,Fête Nationale
+1997-08-15,True,Assomption
+1997-11-01,True,Toussaint
+1997-11-11,True,Armistice
+1997-12-25,True,Noël
+1997-12-26,True,Saint Étienne
+1998-01-01,True,Jour de l'an
+1998-04-10,True,Vendredi Saint
+1998-04-13,True,Lundi de Pâques
+1998-05-01,True,Fête du travail
+1998-05-08,True,Victoire des alliés
+1998-05-21,True,Ascension
+1998-06-01,True,Lundi de Pentecôte
+1998-07-14,True,Fête Nationale
+1998-08-15,True,Assomption
+1998-11-01,True,Toussaint
+1998-11-11,True,Armistice
+1998-12-25,True,Noël
+1998-12-26,True,Saint Étienne
+1999-01-01,True,Jour de l'an
+1999-04-02,True,Vendredi Saint
+1999-04-05,True,Lundi de Pâques
+1999-05-01,True,Fête du travail
+1999-05-08,True,Victoire des alliés
+1999-05-13,True,Ascension
+1999-05-24,True,Lundi de Pentecôte
+1999-07-14,True,Fête Nationale
+1999-08-15,True,Assomption
+1999-11-01,True,Toussaint
+1999-11-11,True,Armistice
+1999-12-25,True,Noël
+1999-12-26,True,Saint Étienne
+2000-01-01,True,Jour de l'an
+2000-04-21,True,Vendredi Saint
+2000-04-24,True,Lundi de Pâques
+2000-05-01,True,Fête du travail
+2000-05-08,True,Victoire des alliés
+2000-06-01,True,Ascension
+2000-06-12,True,Lundi de Pentecôte
+2000-07-14,True,Fête Nationale
+2000-08-15,True,Assomption
+2000-11-01,True,Toussaint
+2000-11-11,True,Armistice
+2000-12-25,True,Noël
+2000-12-26,True,Saint Étienne
+2001-01-01,True,Jour de l'an
+2001-04-13,True,Vendredi Saint
+2001-04-16,True,Lundi de Pâques
+2001-05-01,True,Fête du travail
+2001-05-08,True,Victoire des alliés
+2001-05-24,True,Ascension
+2001-06-04,True,Lundi de Pentecôte
+2001-07-14,True,Fête Nationale
+2001-08-15,True,Assomption
+2001-11-01,True,Toussaint
+2001-11-11,True,Armistice
+2001-12-25,True,Noël
+2001-12-26,True,Saint Étienne
+2002-01-01,True,Jour de l'an
+2002-03-29,True,Vendredi Saint
+2002-04-01,True,Lundi de Pâques
+2002-05-01,True,Fête du travail
+2002-05-08,True,Victoire des alliés
+2002-05-09,True,Ascension
+2002-05-20,True,Lundi de Pentecôte
+2002-07-14,True,Fête Nationale
+2002-08-15,True,Assomption
+2002-11-01,True,Toussaint
+2002-11-11,True,Armistice
+2002-12-25,True,Noël
+2002-12-26,True,Saint Étienne
+2003-01-01,True,Jour de l'an
+2003-04-18,True,Vendredi Saint
+2003-04-21,True,Lundi de Pâques
+2003-05-01,True,Fête du travail
+2003-05-08,True,Victoire des alliés
+2003-05-29,True,Ascension
+2003-06-09,True,Lundi de Pentecôte
+2003-07-14,True,Fête Nationale
+2003-08-15,True,Assomption
+2003-11-01,True,Toussaint
+2003-11-11,True,Armistice
+2003-12-25,True,Noël
+2003-12-26,True,Saint Étienne
+2004-01-01,True,Jour de l'an
+2004-04-09,True,Vendredi Saint
+2004-04-12,True,Lundi de Pâques
+2004-05-01,True,Fête du travail
+2004-05-08,True,Victoire des alliés
+2004-05-20,True,Ascension
+2004-05-31,True,Lundi de Pentecôte
+2004-07-14,True,Fête Nationale
+2004-08-15,True,Assomption
+2004-11-01,True,Toussaint
+2004-11-11,True,Armistice
+2004-12-25,True,Noël
+2004-12-26,True,Saint Étienne
+2005-01-01,True,Jour de l'an
+2005-03-25,True,Vendredi Saint
+2005-03-28,True,Lundi de Pâques
+2005-05-01,True,Fête du travail
+2005-05-05,True,Ascension
+2005-05-08,True,Victoire des alliés
+2005-05-16,True,Lundi de Pentecôte
+2005-07-14,True,Fête Nationale
+2005-08-15,True,Assomption
+2005-11-01,True,Toussaint
+2005-11-11,True,Armistice
+2005-12-25,True,Noël
+2005-12-26,True,Saint Étienne
+2006-01-01,True,Jour de l'an
+2006-04-14,True,Vendredi Saint
+2006-04-17,True,Lundi de Pâques
+2006-05-01,True,Fête du travail
+2006-05-08,True,Victoire des alliés
+2006-05-25,True,Ascension
+2006-06-05,True,Lundi de Pentecôte
+2006-07-14,True,Fête Nationale
+2006-08-15,True,Assomption
+2006-11-01,True,Toussaint
+2006-11-11,True,Armistice
+2006-12-25,True,Noël
+2006-12-26,True,Saint Étienne
+2007-01-01,True,Jour de l'an
+2007-04-06,True,Vendredi Saint
+2007-04-09,True,Lundi de Pâques
+2007-05-01,True,Fête du travail
+2007-05-08,True,Victoire des alliés
+2007-05-17,True,Ascension
+2007-05-28,True,Lundi de Pentecôte
+2007-07-14,True,Fête Nationale
+2007-08-15,True,Assomption
+2007-11-01,True,Toussaint
+2007-11-11,True,Armistice
+2007-12-25,True,Noël
+2007-12-26,True,Saint Étienne
+2008-01-01,True,Jour de l'an
+2008-03-21,True,Vendredi Saint
+2008-03-24,True,Lundi de Pâques
+2008-05-01,True,Fête du travail
+2008-05-08,True,Victoire des alliés
+2008-05-12,True,Lundi de Pentecôte
+2008-07-14,True,Fête Nationale
+2008-08-15,True,Assomption
+2008-11-01,True,Toussaint
+2008-11-11,True,Armistice
+2008-12-25,True,Noël
+2008-12-26,True,Saint Étienne
+2009-01-01,True,Jour de l'an
+2009-04-10,True,Vendredi Saint
+2009-04-13,True,Lundi de Pâques
+2009-05-01,True,Fête du travail
+2009-05-08,True,Victoire des alliés
+2009-05-21,True,Ascension
+2009-06-01,True,Lundi de Pentecôte
+2009-07-14,True,Fête Nationale
+2009-08-15,True,Assomption
+2009-11-01,True,Toussaint
+2009-11-11,True,Armistice
+2009-12-25,True,Noël
+2009-12-26,True,Saint Étienne
+2010-01-01,True,Jour de l'an
+2010-04-02,True,Vendredi Saint
+2010-04-05,True,Lundi de Pâques
+2010-05-01,True,Fête du travail
+2010-05-08,True,Victoire des alliés
+2010-05-13,True,Ascension
+2010-05-24,True,Lundi de Pentecôte
+2010-07-14,True,Fête Nationale
+2010-08-15,True,Assomption
+2010-11-01,True,Toussaint
+2010-11-11,True,Armistice
+2010-12-25,True,Noël
+2010-12-26,True,Saint Étienne
+2011-01-01,True,Jour de l'an
+2011-04-22,True,Vendredi Saint
+2011-04-25,True,Lundi de Pâques
+2011-05-01,True,Fête du travail
+2011-05-08,True,Victoire des alliés
+2011-06-02,True,Ascension
+2011-06-13,True,Lundi de Pentecôte
+2011-07-14,True,Fête Nationale
+2011-08-15,True,Assomption
+2011-11-01,True,Toussaint
+2011-11-11,True,Armistice
+2011-12-25,True,Noël
+2011-12-26,True,Saint Étienne
+2012-01-01,True,Jour de l'an
+2012-04-06,True,Vendredi Saint
+2012-04-09,True,Lundi de Pâques
+2012-05-01,True,Fête du travail
+2012-05-08,True,Victoire des alliés
+2012-05-17,True,Ascension
+2012-05-28,True,Lundi de Pentecôte
+2012-07-14,True,Fête Nationale
+2012-08-15,True,Assomption
+2012-11-01,True,Toussaint
+2012-11-11,True,Armistice
+2012-12-25,True,Noël
+2012-12-26,True,Saint Étienne
+2013-01-01,True,Jour de l'an
+2013-03-29,True,Vendredi Saint
+2013-04-01,True,Lundi de Pâques
+2013-05-01,True,Fête du travail
+2013-05-08,True,Victoire des alliés
+2013-05-09,True,Ascension
+2013-05-20,True,Lundi de Pentecôte
+2013-07-14,True,Fête Nationale
+2013-08-15,True,Assomption
+2013-11-01,True,Toussaint
+2013-11-11,True,Armistice
+2013-12-25,True,Noël
+2013-12-26,True,Saint Étienne
+2014-01-01,True,Jour de l'an
+2014-04-18,True,Vendredi Saint
+2014-04-21,True,Lundi de Pâques
+2014-05-01,True,Fête du travail
+2014-05-08,True,Victoire des alliés
+2014-05-29,True,Ascension
+2014-06-09,True,Lundi de Pentecôte
+2014-07-14,True,Fête Nationale
+2014-08-15,True,Assomption
+2014-11-01,True,Toussaint
+2014-11-11,True,Armistice
+2014-12-25,True,Noël
+2014-12-26,True,Saint Étienne
+2015-01-01,True,Jour de l'an
+2015-04-03,True,Vendredi Saint
+2015-04-06,True,Lundi de Pâques
+2015-05-01,True,Fête du travail
+2015-05-08,True,Victoire des alliés
+2015-05-14,True,Ascension
+2015-05-25,True,Lundi de Pentecôte
+2015-07-14,True,Fête Nationale
+2015-08-15,True,Assomption
+2015-11-01,True,Toussaint
+2015-11-11,True,Armistice
+2015-12-25,True,Noël
+2015-12-26,True,Saint Étienne
+2016-01-01,True,Jour de l'an
+2016-03-25,True,Vendredi Saint
+2016-03-28,True,Lundi de Pâques
+2016-05-01,True,Fête du travail
+2016-05-05,True,Ascension
+2016-05-08,True,Victoire des alliés
+2016-05-16,True,Lundi de Pentecôte
+2016-07-14,True,Fête Nationale
+2016-08-15,True,Assomption
+2016-11-01,True,Toussaint
+2016-11-11,True,Armistice
+2016-12-25,True,Noël
+2016-12-26,True,Saint Étienne
+2017-01-01,True,Jour de l'an
+2017-04-14,True,Vendredi Saint
+2017-04-17,True,Lundi de Pâques
+2017-05-01,True,Fête du travail
+2017-05-08,True,Victoire des alliés
+2017-05-25,True,Ascension
+2017-06-05,True,Lundi de Pentecôte
+2017-07-14,True,Fête Nationale
+2017-08-15,True,Assomption
+2017-11-01,True,Toussaint
+2017-11-11,True,Armistice
+2017-12-25,True,Noël
+2017-12-26,True,Saint Étienne
+2018-01-01,True,Jour de l'an
+2018-03-30,True,Vendredi Saint
+2018-04-02,True,Lundi de Pâques
+2018-05-01,True,Fête du travail
+2018-05-08,True,Victoire des alliés
+2018-05-10,True,Ascension
+2018-05-21,True,Lundi de Pentecôte
+2018-07-14,True,Fête Nationale
+2018-08-15,True,Assomption
+2018-11-01,True,Toussaint
+2018-11-11,True,Armistice
+2018-12-25,True,Noël
+2018-12-26,True,Saint Étienne
+2019-01-01,True,Jour de l'an
+2019-04-19,True,Vendredi Saint
+2019-04-22,True,Lundi de Pâques
+2019-05-01,True,Fête du travail
+2019-05-08,True,Victoire des alliés
+2019-05-30,True,Ascension
+2019-06-10,True,Lundi de Pentecôte
+2019-07-14,True,Fête Nationale
+2019-08-15,True,Assomption
+2019-11-01,True,Toussaint
+2019-11-11,True,Armistice
+2019-12-25,True,Noël
+2019-12-26,True,Saint Étienne
+2020-01-01,True,Jour de l'an
+2020-04-10,True,Vendredi Saint
+2020-04-13,True,Lundi de Pâques
+2020-05-01,True,Fête du travail
+2020-05-08,True,Victoire des alliés
+2020-05-21,True,Ascension
+2020-06-01,True,Lundi de Pentecôte
+2020-07-14,True,Fête Nationale
+2020-08-15,True,Assomption
+2020-11-01,True,Toussaint
+2020-11-11,True,Armistice
+2020-12-25,True,Noël
+2020-12-26,True,Saint Étienne
+2021-01-01,True,Jour de l'an
+2021-04-02,True,Vendredi Saint
+2021-04-05,True,Lundi de Pâques
+2021-05-01,True,Fête du travail
+2021-05-08,True,Victoire des alliés
+2021-05-13,True,Ascension
+2021-05-24,True,Lundi de Pentecôte
+2021-07-14,True,Fête Nationale
+2021-08-15,True,Assomption
+2021-11-01,True,Toussaint
+2021-11-11,True,Armistice
+2021-12-25,True,Noël
+2021-12-26,True,Saint Étienne
+2022-01-01,True,Jour de l'an
+2022-04-15,True,Vendredi Saint
+2022-04-18,True,Lundi de Pâques
+2022-05-01,True,Fête du travail
+2022-05-08,True,Victoire des alliés
+2022-05-26,True,Ascension
+2022-06-06,True,Lundi de Pentecôte
+2022-07-14,True,Fête Nationale
+2022-08-15,True,Assomption
+2022-11-01,True,Toussaint
+2022-11-11,True,Armistice
+2022-12-25,True,Noël
+2022-12-26,True,Saint Étienne
+2023-01-01,True,Jour de l'an
+2023-04-07,True,Vendredi Saint
+2023-04-10,True,Lundi de Pâques
+2023-05-01,True,Fête du travail
+2023-05-08,True,Victoire des alliés
+2023-05-18,True,Ascension
+2023-05-29,True,Lundi de Pentecôte
+2023-07-14,True,Fête Nationale
+2023-08-15,True,Assomption
+2023-11-01,True,Toussaint
+2023-11-11,True,Armistice
+2023-12-25,True,Noël
+2023-12-26,True,Saint Étienne
+2024-01-01,True,Jour de l'an
+2024-03-29,True,Vendredi Saint
+2024-04-01,True,Lundi de Pâques
+2024-05-01,True,Fête du travail
+2024-05-08,True,Victoire des alliés
+2024-05-09,True,Ascension
+2024-05-20,True,Lundi de Pentecôte
+2024-07-14,True,Fête Nationale
+2024-08-15,True,Assomption
+2024-11-01,True,Toussaint
+2024-11-11,True,Armistice
+2024-12-25,True,Noël
+2024-12-26,True,Saint Étienne
+2025-01-01,True,Jour de l'an
+2025-04-18,True,Vendredi Saint
+2025-04-21,True,Lundi de Pâques
+2025-05-01,True,Fête du travail
+2025-05-08,True,Victoire des alliés
+2025-05-29,True,Ascension
+2025-06-09,True,Lundi de Pentecôte
+2025-07-14,True,Fête Nationale
+2025-08-15,True,Assomption
+2025-11-01,True,Toussaint
+2025-11-11,True,Armistice
+2025-12-25,True,Noël
+2025-12-26,True,Saint Étienne
+2026-01-01,True,Jour de l'an
+2026-04-03,True,Vendredi Saint
+2026-04-06,True,Lundi de Pâques
+2026-05-01,True,Fête du travail
+2026-05-08,True,Victoire des alliés
+2026-05-14,True,Ascension
+2026-05-25,True,Lundi de Pentecôte
+2026-07-14,True,Fête Nationale
+2026-08-15,True,Assomption
+2026-11-01,True,Toussaint
+2026-11-11,True,Armistice
+2026-12-25,True,Noël
+2026-12-26,True,Saint Étienne
+2027-01-01,True,Jour de l'an
+2027-03-26,True,Vendredi Saint
+2027-03-29,True,Lundi de Pâques
+2027-05-01,True,Fête du travail
+2027-05-06,True,Ascension
+2027-05-08,True,Victoire des alliés
+2027-05-17,True,Lundi de Pentecôte
+2027-07-14,True,Fête Nationale
+2027-08-15,True,Assomption
+2027-11-01,True,Toussaint
+2027-11-11,True,Armistice
+2027-12-25,True,Noël
+2027-12-26,True,Saint Étienne
+2028-01-01,True,Jour de l'an
+2028-04-14,True,Vendredi Saint
+2028-04-17,True,Lundi de Pâques
+2028-05-01,True,Fête du travail
+2028-05-08,True,Victoire des alliés
+2028-05-25,True,Ascension
+2028-06-05,True,Lundi de Pentecôte
+2028-07-14,True,Fête Nationale
+2028-08-15,True,Assomption
+2028-11-01,True,Toussaint
+2028-11-11,True,Armistice
+2028-12-25,True,Noël
+2028-12-26,True,Saint Étienne
+2029-01-01,True,Jour de l'an
+2029-03-30,True,Vendredi Saint
+2029-04-02,True,Lundi de Pâques
+2029-05-01,True,Fête du travail
+2029-05-08,True,Victoire des alliés
+2029-05-10,True,Ascension
+2029-05-21,True,Lundi de Pentecôte
+2029-07-14,True,Fête Nationale
+2029-08-15,True,Assomption
+2029-11-01,True,Toussaint
+2029-11-11,True,Armistice
+2029-12-25,True,Noël
+2029-12-26,True,Saint Étienne
+2030-01-01,True,Jour de l'an
+2030-04-19,True,Vendredi Saint
+2030-04-22,True,Lundi de Pâques
+2030-05-01,True,Fête du travail
+2030-05-08,True,Victoire des alliés
+2030-05-30,True,Ascension
+2030-06-10,True,Lundi de Pentecôte
+2030-07-14,True,Fête Nationale
+2030-08-15,True,Assomption
+2030-11-01,True,Toussaint
+2030-11-11,True,Armistice
+2030-12-25,True,Noël
+2030-12-26,True,Saint Étienne
+2031-01-01,True,Jour de l'an
+2031-04-11,True,Vendredi Saint
+2031-04-14,True,Lundi de Pâques
+2031-05-01,True,Fête du travail
+2031-05-08,True,Victoire des alliés
+2031-05-22,True,Ascension
+2031-06-02,True,Lundi de Pentecôte
+2031-07-14,True,Fête Nationale
+2031-08-15,True,Assomption
+2031-11-01,True,Toussaint
+2031-11-11,True,Armistice
+2031-12-25,True,Noël
+2031-12-26,True,Saint Étienne
+2032-01-01,True,Jour de l'an
+2032-03-26,True,Vendredi Saint
+2032-03-29,True,Lundi de Pâques
+2032-05-01,True,Fête du travail
+2032-05-06,True,Ascension
+2032-05-08,True,Victoire des alliés
+2032-05-17,True,Lundi de Pentecôte
+2032-07-14,True,Fête Nationale
+2032-08-15,True,Assomption
+2032-11-01,True,Toussaint
+2032-11-11,True,Armistice
+2032-12-25,True,Noël
+2032-12-26,True,Saint Étienne
+2033-01-01,True,Jour de l'an
+2033-04-15,True,Vendredi Saint
+2033-04-18,True,Lundi de Pâques
+2033-05-01,True,Fête du travail
+2033-05-08,True,Victoire des alliés
+2033-05-26,True,Ascension
+2033-06-06,True,Lundi de Pentecôte
+2033-07-14,True,Fête Nationale
+2033-08-15,True,Assomption
+2033-11-01,True,Toussaint
+2033-11-11,True,Armistice
+2033-12-25,True,Noël
+2033-12-26,True,Saint Étienne
+2034-01-01,True,Jour de l'an
+2034-04-07,True,Vendredi Saint
+2034-04-10,True,Lundi de Pâques
+2034-05-01,True,Fête du travail
+2034-05-08,True,Victoire des alliés
+2034-05-18,True,Ascension
+2034-05-29,True,Lundi de Pentecôte
+2034-07-14,True,Fête Nationale
+2034-08-15,True,Assomption
+2034-11-01,True,Toussaint
+2034-11-11,True,Armistice
+2034-12-25,True,Noël
+2034-12-26,True,Saint Étienne
+2035-01-01,True,Jour de l'an
+2035-03-23,True,Vendredi Saint
+2035-03-26,True,Lundi de Pâques
+2035-05-01,True,Fête du travail
+2035-05-03,True,Ascension
+2035-05-08,True,Victoire des alliés
+2035-05-14,True,Lundi de Pentecôte
+2035-07-14,True,Fête Nationale
+2035-08-15,True,Assomption
+2035-11-01,True,Toussaint
+2035-11-11,True,Armistice
+2035-12-25,True,Noël
+2035-12-26,True,Saint Étienne
+2036-01-01,True,Jour de l'an
+2036-04-11,True,Vendredi Saint
+2036-04-14,True,Lundi de Pâques
+2036-05-01,True,Fête du travail
+2036-05-08,True,Victoire des alliés
+2036-05-22,True,Ascension
+2036-06-02,True,Lundi de Pentecôte
+2036-07-14,True,Fête Nationale
+2036-08-15,True,Assomption
+2036-11-01,True,Toussaint
+2036-11-11,True,Armistice
+2036-12-25,True,Noël
+2036-12-26,True,Saint Étienne
+2037-01-01,True,Jour de l'an
+2037-04-03,True,Vendredi Saint
+2037-04-06,True,Lundi de Pâques
+2037-05-01,True,Fête du travail
+2037-05-08,True,Victoire des alliés
+2037-05-14,True,Ascension
+2037-05-25,True,Lundi de Pentecôte
+2037-07-14,True,Fête Nationale
+2037-08-15,True,Assomption
+2037-11-01,True,Toussaint
+2037-11-11,True,Armistice
+2037-12-25,True,Noël
+2037-12-26,True,Saint Étienne
+2038-01-01,True,Jour de l'an
+2038-04-23,True,Vendredi Saint
+2038-04-26,True,Lundi de Pâques
+2038-05-01,True,Fête du travail
+2038-05-08,True,Victoire des alliés
+2038-06-03,True,Ascension
+2038-06-14,True,Lundi de Pentecôte
+2038-07-14,True,Fête Nationale
+2038-08-15,True,Assomption
+2038-11-01,True,Toussaint
+2038-11-11,True,Armistice
+2038-12-25,True,Noël
+2038-12-26,True,Saint Étienne
+2039-01-01,True,Jour de l'an
+2039-04-08,True,Vendredi Saint
+2039-04-11,True,Lundi de Pâques
+2039-05-01,True,Fête du travail
+2039-05-08,True,Victoire des alliés
+2039-05-19,True,Ascension
+2039-05-30,True,Lundi de Pentecôte
+2039-07-14,True,Fête Nationale
+2039-08-15,True,Assomption
+2039-11-01,True,Toussaint
+2039-11-11,True,Armistice
+2039-12-25,True,Noël
+2039-12-26,True,Saint Étienne
+2040-01-01,True,Jour de l'an
+2040-03-30,True,Vendredi Saint
+2040-04-02,True,Lundi de Pâques
+2040-05-01,True,Fête du travail
+2040-05-08,True,Victoire des alliés
+2040-05-10,True,Ascension
+2040-05-21,True,Lundi de Pentecôte
+2040-07-14,True,Fête Nationale
+2040-08-15,True,Assomption
+2040-11-01,True,Toussaint
+2040-11-11,True,Armistice
+2040-12-25,True,Noël
+2040-12-26,True,Saint Étienne
+2041-01-01,True,Jour de l'an
+2041-04-19,True,Vendredi Saint
+2041-04-22,True,Lundi de Pâques
+2041-05-01,True,Fête du travail
+2041-05-08,True,Victoire des alliés
+2041-05-30,True,Ascension
+2041-06-10,True,Lundi de Pentecôte
+2041-07-14,True,Fête Nationale
+2041-08-15,True,Assomption
+2041-11-01,True,Toussaint
+2041-11-11,True,Armistice
+2041-12-25,True,Noël
+2041-12-26,True,Saint Étienne
+2042-01-01,True,Jour de l'an
+2042-04-04,True,Vendredi Saint
+2042-04-07,True,Lundi de Pâques
+2042-05-01,True,Fête du travail
+2042-05-08,True,Victoire des alliés
+2042-05-15,True,Ascension
+2042-05-26,True,Lundi de Pentecôte
+2042-07-14,True,Fête Nationale
+2042-08-15,True,Assomption
+2042-11-01,True,Toussaint
+2042-11-11,True,Armistice
+2042-12-25,True,Noël
+2042-12-26,True,Saint Étienne
+2043-01-01,True,Jour de l'an
+2043-03-27,True,Vendredi Saint
+2043-03-30,True,Lundi de Pâques
+2043-05-01,True,Fête du travail
+2043-05-07,True,Ascension
+2043-05-08,True,Victoire des alliés
+2043-05-18,True,Lundi de Pentecôte
+2043-07-14,True,Fête Nationale
+2043-08-15,True,Assomption
+2043-11-01,True,Toussaint
+2043-11-11,True,Armistice
+2043-12-25,True,Noël
+2043-12-26,True,Saint Étienne
+2044-01-01,True,Jour de l'an
+2044-04-15,True,Vendredi Saint
+2044-04-18,True,Lundi de Pâques
+2044-05-01,True,Fête du travail
+2044-05-08,True,Victoire des alliés
+2044-05-26,True,Ascension
+2044-06-06,True,Lundi de Pentecôte
+2044-07-14,True,Fête Nationale
+2044-08-15,True,Assomption
+2044-11-01,True,Toussaint
+2044-11-11,True,Armistice
+2044-12-25,True,Noël
+2044-12-26,True,Saint Étienne
+2045-01-01,True,Jour de l'an
+2045-04-07,True,Vendredi Saint
+2045-04-10,True,Lundi de Pâques
+2045-05-01,True,Fête du travail
+2045-05-08,True,Victoire des alliés
+2045-05-18,True,Ascension
+2045-05-29,True,Lundi de Pentecôte
+2045-07-14,True,Fête Nationale
+2045-08-15,True,Assomption
+2045-11-01,True,Toussaint
+2045-11-11,True,Armistice
+2045-12-25,True,Noël
+2045-12-26,True,Saint Étienne
+2046-01-01,True,Jour de l'an
+2046-03-23,True,Vendredi Saint
+2046-03-26,True,Lundi de Pâques
+2046-05-01,True,Fête du travail
+2046-05-03,True,Ascension
+2046-05-08,True,Victoire des alliés
+2046-05-14,True,Lundi de Pentecôte
+2046-07-14,True,Fête Nationale
+2046-08-15,True,Assomption
+2046-11-01,True,Toussaint
+2046-11-11,True,Armistice
+2046-12-25,True,Noël
+2046-12-26,True,Saint Étienne
+2047-01-01,True,Jour de l'an
+2047-04-12,True,Vendredi Saint
+2047-04-15,True,Lundi de Pâques
+2047-05-01,True,Fête du travail
+2047-05-08,True,Victoire des alliés
+2047-05-23,True,Ascension
+2047-06-03,True,Lundi de Pentecôte
+2047-07-14,True,Fête Nationale
+2047-08-15,True,Assomption
+2047-11-01,True,Toussaint
+2047-11-11,True,Armistice
+2047-12-25,True,Noël
+2047-12-26,True,Saint Étienne
+2048-01-01,True,Jour de l'an
+2048-04-03,True,Vendredi Saint
+2048-04-06,True,Lundi de Pâques
+2048-05-01,True,Fête du travail
+2048-05-08,True,Victoire des alliés
+2048-05-14,True,Ascension
+2048-05-25,True,Lundi de Pentecôte
+2048-07-14,True,Fête Nationale
+2048-08-15,True,Assomption
+2048-11-01,True,Toussaint
+2048-11-11,True,Armistice
+2048-12-25,True,Noël
+2048-12-26,True,Saint Étienne
+2049-01-01,True,Jour de l'an
+2049-04-16,True,Vendredi Saint
+2049-04-19,True,Lundi de Pâques
+2049-05-01,True,Fête du travail
+2049-05-08,True,Victoire des alliés
+2049-05-27,True,Ascension
+2049-06-07,True,Lundi de Pentecôte
+2049-07-14,True,Fête Nationale
+2049-08-15,True,Assomption
+2049-11-01,True,Toussaint
+2049-11-11,True,Armistice
+2049-12-25,True,Noël
+2049-12-26,True,Saint Étienne
+2050-01-01,True,Jour de l'an
+2050-04-08,True,Vendredi Saint
+2050-04-11,True,Lundi de Pâques
+2050-05-01,True,Fête du travail
+2050-05-08,True,Victoire des alliés
+2050-05-19,True,Ascension
+2050-05-30,True,Lundi de Pentecôte
+2050-07-14,True,Fête Nationale
+2050-08-15,True,Assomption
+2050-11-01,True,Toussaint
+2050-11-11,True,Armistice
+2050-12-25,True,Noël
+2050-12-26,True,Saint Étienne

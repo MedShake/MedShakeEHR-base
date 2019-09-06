@@ -785,6 +785,8 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('agendaDistantPatientsOfTheDay', 'default', '0', '', 'Agenda', 'url', 'url distante où l’on peut récupérer une liste horodatée des patients du jour', ''),
 ('agendaEnvoyerChiffreParMail', 'default', '0', '', 'Agenda', 'true/false', 'activer le service d\'envoi par mail de l\'agenda futur chiffré GPG', ''),
 ('agendaEnvoyerChiffreTo', 'default', '0', '', 'Agenda', 'texte', 'adresse email à laquelle envoyer l\'agenda chiffré GPG - séparer par virgule si plusieurs ', ''),
+('agendaJoursFeriesAfficher', 'default', '0', '', 'Agenda', 'true/false', 'afficher les jours fériés sur l\'agenda', 'true'),
+('agendaJoursFeriesFichier', 'default', '0', '', 'Agenda', 'fichier', 'fichier csv à considérer dans ressources/agenda/ soit jours-feries-seuls.csv ou jours-feries-seuls-alsace-moselle.csv', 'jours-feries-seuls.csv'),
 ('agendaLocalPatientsOfTheDay', 'default', '0', '', 'Agenda', 'fichier', 'fichier json de la liste horodatée des patients du jour', 'patientsOfTheDay.json'),
 ('agendaModePanneauLateral', 'default', '0', '', 'Agenda', 'true/false', 'Utilisation du panneau latéral (true) ou d\'une fenêtre contextuelle (false)', 'true'),
 ('agendaNumberForPatientsOfTheDay', 'default', '0', '', 'Agenda', 'nombre', 'Numéro d\'agenda pour générer à partir de l\'agenda interne concerné une liste des patients du jour pour le menu Patients', '0'),
