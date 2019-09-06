@@ -312,7 +312,7 @@ $(document).ready(function() {
         return;
       } else if (end.diff(start) == moment.duration(slotDuration, "HH:mm:ss").as('milliseconds')) {
         if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden')) {
-          return alert_popup('warning', 'Sélectionnez ou créez d\'abord un patient');
+          return alert_popup('info', 'Sélectionnez ou créez d\'abord un patient');
         }
         var duree = $("#type option:first").attr('data-duree');
         $("#duree").html(" " + duree + "mn");
