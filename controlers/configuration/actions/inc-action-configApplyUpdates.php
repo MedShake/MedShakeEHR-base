@@ -65,7 +65,7 @@ foreach ($modules as $module) {
     }
     $updateFiles=glob($p['homepath'].'upgrade/'.$module['name'].'/sqlUpgrade_*.sql');
     foreach ($updateFiles as $k=>$file) {
-        if (preg_match('/sqlUpgrade_(.+)_(.+)/', $file, $matches) and $matches[1] >= $module['version']) {
+        if (preg_match('/sqlUpgrade_(.+)_(.+)/', $file, $matches) and version_compare($matches[1],  $module['version'], '>=')) {
             $moduleUpdateFiles[$module['name']][]=$updateFiles[$k];
         }
     }
