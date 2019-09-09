@@ -222,11 +222,11 @@ $(document).ready(function() {
       $('.popover-footer').addClass('d-none');
       if(eventOver.patientid == '0') {
         $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
-          '<strong>' + eventOver.title + '</strong>' + '<br>' + eventOver.motif);
+          '<strong>' + eventOver.title + '</strong>' + '<br>' + nl2br(eventOver.motif));
       } else {
         $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
           '<strong>' + eventOver.title + '</strong>' + '<br>' +
-          $("#type option[value='" + eventOver.type + "']").html() + '<br>' + eventOver.motif + (eventOver.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
+          $("#type option[value='" + eventOver.type + "']").html() + '<br>' + nl2br(eventOver.motif) + (eventOver.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
       }
 
@@ -268,7 +268,7 @@ $(document).ready(function() {
         $('#datepicker input').val(eventClicked.start.format('DD/MM/YYYY à HH:mm'));
         $(".fc-event[data-eventid=" + eventClicked.id + "]").attr('data-content',
           '<strong>' + eventClicked.title + '</strong><br>' +
-          $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + eventClicked.motif +
+          $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + nl2br(eventClicked.motif) +
           (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
       }
