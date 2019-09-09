@@ -48,7 +48,16 @@ $(document).ready(function() {
     }
   });
 
+  // Autosize pour textarea
   autosize($('#id_notes_id'));
+  autosize($('#motif'));
+  autosize($('#motifOff'));
+  $('#creerNouveau').on('shown.bs.modal', function (e) {
+    autosize.update($('#motif'));
+  })
+  $('#editerOff').on('shown.bs.modal', function (e) {
+    autosize.update($('#motifOff'));
+  })
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Actions carte vitale
