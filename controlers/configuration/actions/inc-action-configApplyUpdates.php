@@ -24,6 +24,7 @@
  * Config : Appliquer les mises à jour
  *
  * @author fr33z00 <https://github.com/fr33z00
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
