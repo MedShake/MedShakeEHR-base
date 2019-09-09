@@ -34,6 +34,8 @@ var selected_period;
 var selected_event;
 var selected_action;
 
+var targetMenuPOTD = '_blank';
+
 $(document).ready(function() {
 
   $('#smallCalendar').datepicker({
@@ -105,9 +107,6 @@ $(document).ready(function() {
   ////////// On oblige les ouvertures de lien de la navbar sup à ouvrir sur un target _blank
 
   $('#top-navbar a').attr('target', '_blank');
-  $('#patientsOfTheDayMenu .dropdown-menu').on("DOMSubtreeModified", function(e) {
-    $('#patientsOfTheDayMenu .dropdown-menu a').attr('target', '_blank');
-  });
 
   ////////////////////////////////////////////////////////////////////////
   ///////// Construction agenda

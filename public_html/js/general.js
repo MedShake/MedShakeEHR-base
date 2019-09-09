@@ -189,6 +189,9 @@ $(document).ready(function() {
       $.ajax({
         url: urlBase + '/ajax/getPatientsOfTheDay/',
         type: 'post',
+        data: {
+          targetMenuPOTD: targetMenuPOTD,
+        },
         dataType: "json",
         success: function(data) {
           if(data.displayMenu) {

@@ -27,7 +27,7 @@
 
 
 {% for v in page.patientsOfTheDay %}
-  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">
+  <a {% if page.targetMenuPOTD == '_blank' %}target="_blank" {% endif %}class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">
     {% if page.typesRdv[v.type]['backgroundColor'] %}
       <i class="fas {% if v.attente == 'oui' %}fa-couch{% else %}fa-circle{% endif %} fa-fw" style="color: {{ page.typesRdv[v.type]['backgroundColor'] }}" title="{{ page.typesRdv[v.type]['descriptif'] }}"></i>
       {% if v.absent == 'oui' %}<s>{% endif %}
@@ -42,7 +42,7 @@
   </a>
 {% endfor %}
 <div class="dropdown-divider"></div>
-<a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">
+<a {% if page.targetMenuPOTD == '_blank' %}target="_blank"{% endif %} class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">
   <i class="fas fa-list-ul fa-fw text-muted mr-1"></i>
   Afficher la liste
 </a>

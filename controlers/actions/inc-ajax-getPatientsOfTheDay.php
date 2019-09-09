@@ -31,6 +31,10 @@ $events = new msAgenda();
 $p['page']=[];
 $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
 
+if($_POST['targetMenuPOTD']=='_blank') {
+  $p['page']['targetMenuPOTD']='_blank';
+}
+
 $html = new msGetHtml;
 $html->set_template('pageTopNavbarPatientsOfTheDay.html.twig');
 $html = $html->genererHtmlVar($p);
