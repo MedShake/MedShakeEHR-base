@@ -181,6 +181,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   /////////Rafraichir le menu POTD
   if(refreshDelayPOTD > 0) {
+    var lastHtmlDataMenuPOTD = '';
     setInterval(getPOTDmenuContent, refreshDelayPOTD * 1000);
   }
 
@@ -195,7 +196,7 @@ $(document).ready(function() {
         dataType: "json",
         success: function(data) {
           if(data.displayMenu) {
-            if( data.html != $('#patientsOfTheDayMenu div.dropdown-menu').html()) {
+            if( data.html != lastHtmlDataMenuPOTD) {
               console.log('refresh POTD menu');
               $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
             }
@@ -203,7 +204,7 @@ $(document).ready(function() {
           } else {
             $('#patientsOfTheDayMenu').addClass('d-none');
           }
-
+          lastHtmlDataMenuPOTD = data.html;
         },
         error: function() {}
       });
