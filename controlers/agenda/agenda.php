@@ -33,6 +33,14 @@ $template="agenda";
 // userID
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
+// date d'ouverture
+$p['page']['dateToGo']=date('Y-m-d');
+if(isset($match['params']['dateToGo'])) {
+  if(msTools::validateDate($match['params']['dateToGo'], $format = 'Ymd')) {
+    $p['page']['dateToGo'] = DateTime::createFromFormat('Ymd', $match['params']['dateToGo'])->format('Y-m-d');
+  }
+}
+
 //paramètres de l'agenda
 if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
   $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js');

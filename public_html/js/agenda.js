@@ -163,6 +163,7 @@ $(document).ready(function() {
       center: boutonsHeaderCenter,
       right: 'title'
     },
+    defaultDate: dateToGo,
     minTime: minTime,
     maxTime: maxTime,
     firstDay: firstDay,
@@ -771,11 +772,16 @@ function getHistoriquePatient(patientID) {
         if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
         if(moment(dat['dateiso']).isAfter()) chaine = chaine + ' font-weight-bold';
         chaine = chaine + '">';
-        chaine = chaine + '<button type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="fas ';
-        if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
-        chaine = chaine + '" aria-hidden="true"></span></button>&nbsp;&nbsp;&nbsp;';
-
-        chaine = chaine + dat['start'] + ' : ' + dat['type'];
+        if(dat['agendaID'] == $('#calendar').attr('data-userID')) {
+          chaine = chaine + '<button title="Voir" type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="far ';
+          if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
+          chaine = chaine + '" aria-hidden="true"></span></button>';
+        } else {
+          chaine = chaine + '<a title="Voir - rdv sur un autre agenda" href="'+ urlBase +'/agenda/'+ dat['agendaID'] +'/'+ dat['dateJump'] +'/" class="btn btn-light btn-sm" data-date="' + dat['dateiso'] + '"><span class="fas ';
+          if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
+          chaine = chaine + '" aria-hidden="true"></span></a>';
+        }
+        chaine = chaine + '&nbsp;&nbsp;&nbsp;' + dat['start'] + ' : ' + dat['type'];
         if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
         if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
         if(days > 1 && dat['statut'] == 'actif') {

@@ -44,7 +44,7 @@ ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
 
 #agenda
 agendaAjax: ['GET|POST', '/agenda/[i:userID]/ajax/[a:m]/', 'agenda/actions/agendaAjax']
-agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
+agenda: ['GET', '/agenda/[i:userID]/[i:dateToGo]?/', 'agenda/agenda']
 agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
 
 #chercher patients / pros
