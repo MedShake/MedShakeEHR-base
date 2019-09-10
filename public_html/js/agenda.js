@@ -647,6 +647,10 @@ $(document).ready(function() {
     source: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
     select: function(event, ui) {
       event.stopPropagation();
+      if ($('#calendar').attr('data-mode') == 'lateral') {
+        cleanSelectedVar();
+        nettoyer();
+      }
       $("#patientInfo").show();
       $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
       $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
