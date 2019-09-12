@@ -1,0 +1,1 @@
+INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaRefreshDelayEvents', 'default', '0', '', 'Agenda', 'int', 'délai en secondes du rafraîchissement live de l\'agenda - 0 pour jamais', '10');

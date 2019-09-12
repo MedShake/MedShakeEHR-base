@@ -120,6 +120,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaRefreshDelayMenuPOTD'=>'5',
     'agendaJoursFeriesFichier'=>'jours-feries-seuls.csv',
     'agendaJoursFeriesAfficher'=>'true',
+    'agendaRefreshDelayEvents'=>'10',
   ];
 
   protected function _getSpecifSql() {

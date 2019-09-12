@@ -416,26 +416,17 @@ $(document).ready(function() {
     }
   })
 
-  // $("#calendar").on("click", function(e) {
-  //   e.stopImmediatePropagation();
-  //   $(".fc-event").popover('hide');
-  //   $(".fc-bg.selected").removeClass("selected");
-  //   $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
-  // });
-
   $(".fc-next-button, .fc-prev-button").on("click", function() {
     $(".popover").hide();
   });
 
   //auto rafraichir les rdv agenda
-  setInterval(autoRefreshEvents, 5000);
-
+  if(agendaRefreshDelayEvents > 0) setInterval(autoRefreshEvents, agendaRefreshDelayEvents * 1000);
   function autoRefreshEvents() {
     if (document.visibilityState != "visible" || canRefreshEvents) {
       $('#calendar').fullCalendar('refetchEvents');
     }
   }
-
 
   $('#patientLinksPro').on("click", "#addCorrespondant", function(e) {
     $("#patientLinksProTab thead").toggle();
