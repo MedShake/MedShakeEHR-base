@@ -41,7 +41,7 @@
     </li>
   </ul>
   <div id="patientFormTab" class="border-right border-left border-bottom bg-light">
-    <form id="newPatientData" class="card-body">
+    <form id="newPatientData" data-dataset="data_types" class="card-body">
         {{ f.formbuilder(page.formNewPatient , config.formFormulaireNouveauPatient, session) }}
     </form>
   </div>
