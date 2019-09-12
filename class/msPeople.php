@@ -325,7 +325,7 @@ class msPeople
             $relations[$k]['typeRelationTxt']=$options[$relations[$k]['typeRelation']];
           }
         }
-        return $relations;
+        return (array)$relations;
     }
 
 /**
