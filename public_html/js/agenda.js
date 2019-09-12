@@ -33,8 +33,11 @@ var selected_patient;
 var selected_period;
 var selected_event;
 var selected_action;
+var selected_calendar = parseInt($('#calendar').attr('data-userID'));
+var calendar_mode = $('#calendar').attr('data-mode');
 
 var targetMenuPOTD = '_blank';
+var canRefreshEvents = true;
 
 $(document).ready(function() {
 
@@ -52,10 +55,11 @@ $(document).ready(function() {
   autosize($('#id_notes_id'));
   autosize($('#motif'));
   autosize($('#motifOff'));
-  $('#creerNouveau').on('shown.bs.modal', function (e) {
+  $('#creerNouveau').on('shown.bs.modal', function(e) {
     autosize.update($('#motif'));
+    autosize.update($('#id_notes_id'));
   })
-  $('#editerOff').on('shown.bs.modal', function (e) {
+  $('#editerOff').on('shown.bs.modal', function(e) {
     autosize.update($('#motifOff'));
   })
 
@@ -79,7 +83,7 @@ $(document).ready(function() {
         btnLec.find('i').removeClass('fa-spin');
       },
       success: function(data) {
-        if ($('#calendar').attr('data-mode') != 'lateral') $('#creerNouveau').modal('hide');
+        if (calendar_mode != 'lateral') $('#creerNouveau').modal('hide');
         console.log(vitaleToEhrTypeName(data));
         $('#lectureCpsVitale div.modal-body').html(ehrTypeDataToHtml('prevenirDossierExistant'));
         $('#lectureCpsVitale').modal('show');
@@ -104,7 +108,7 @@ $(document).ready(function() {
       $('#id_' + key + '_id').val(value);
     });
     $('#lectureCpsVitale').modal('hide');
-    if ($('#calendar').attr('data-mode') != 'lateral') $('#creerNouveau').modal('show');
+    if (calendar_mode != 'lateral') $('#creerNouveau').modal('show');
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -174,7 +178,7 @@ $(document).ready(function() {
     allDayText: '-',
     longPressDelay: 300,
     selectable: true,
-    unselectCancel: '.fc-deplacer-button,.fc-cloner-button',
+    unselectCancel: '.fc-deplacer-button,.fc-cloner-button, div.alert',
     slotLabelFormat: 'H:mm',
     slotLabelInterval: slotLabelInterval,
     nowIndicator: true,
@@ -187,41 +191,46 @@ $(document).ready(function() {
     eventRender: function(event, element) {
       element.attr('data-eventid', event.id);
       if (event.rendering != 'background') {
-        if(event.icon){
-          element.find(".fc-content").after("<div class='faicon d-flex h-100 align-items-center justify-content-center'><i class='fa fa-10x fa-"+event.icon+"'></i></div>");
+        if (event.icon) {
+          element.find(".fc-content").after("<div class='faicon d-flex h-100 align-items-center justify-content-center'><i class='fa fa-10x fa-" + event.icon + "'></i></div>");
+        }
+        if (selected_event && event.id == selected_event.id) {
+          element.find(".fc-bg").addClass("selected");
         }
         element.popover({
-          sanitizeFn: function (content) {return content},
-          title : event.name || '',
+          sanitizeFn: function(content) {
+            return content
+          },
+          title: event.name || '',
           container: "body",
           placement: 'right',
           boundary: "viewport",
-          html:   true,
+          html: true,
           content: (event.patientid == "0" ? "Fermé" : ""),
           template: '\
             <div class=\"popover\" role=\"tooltip\">\
               <h3 class=\"popover-header\">Détail</h3>\
               <div class=\"popover-body\"></div>\
               <div class=\"popover-footer btn-group m-1 d-none\">' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Ouvrir le dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
-                (event.patientid == '0' ? '<button class=\"btn btn-light btn-sm fc-editer-off-button\" title=\"Éditer\"><span class=\"fas fa-pencil-alt\"></span></button>' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"Déplacer ce rendez-vous\"><span class=\"fas fa-arrows-alt\"></span></button>' +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"Cloner ce rendez-vous\"><span class=\"fas fa-clone\"></span></button>') +
-                (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Marquer ce rendez-vous comme honoré' : 'Marquer ce rendez-vous comme non honoré') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
-                '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-trash\"></span></button>\
+            (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-enattente-button\" title=\"' + (event.attente == "oui" ? 'Marquer non présent en salle d\'attente' : 'Marquer présent en salle d\'attente') + '\"><span class=\"fas fa-couch\"></span></button>') +
+            (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-dossier-button\" title=\"Ouvrir le dossier\"><span class=\"fas fa-folder-open\"></span></button>') +
+            (event.patientid == '0' ? '<button class=\"btn btn-light btn-sm fc-editer-off-button\" title=\"Éditer\"><span class=\"fas fa-pencil-alt\"></span></button>' : '<button class=\"btn btn-light btn-sm fc-editer-button\" title=\"Éditer ce rendez-vous\"><span class=\"fas fa-pencil-alt\"></span></button>') +
+            '<button class=\"btn btn-light btn-sm fc-deplacer-button\" title=\"Déplacer ce rendez-vous\"><span class=\"fas fa-arrows-alt\"></span></button>' +
+            (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-cloner-button\" title=\"Cloner ce rendez-vous\"><span class=\"fas fa-clone\"></span></button>') +
+            (event.patientid == '0' ? '' : '<button class=\"btn btn-light btn-sm fc-honorer-button\" title=\"' + (event.absent == "oui" ? 'Marquer ce rendez-vous comme honoré' : 'Marquer ce rendez-vous comme non honoré') + '\"><span class=\"fas fa-exclamation-triangle\"></span></button>') +
+            '<button class=\"btn btn-light btn-sm fc-supprimer-button\" title=\"Supprimer\"><span class=\"fas fa-trash\"></span></button>\
               </div>\
             </div>'
         });
       }
     },
     eventMouseover: function(eventOver, jsEvent, view) {
-      if(selected_event) return;
-      if(eventOver.type == 'publicHoliday') return;
+      if (selected_event) return;
+      if (eventOver.type == 'publicHoliday') return;
 
       $(".fc-event").popover('hide');
       $('.popover-footer').addClass('d-none');
-      if(eventOver.patientid == '0') {
+      if (eventOver.patientid == '0') {
         $(".fc-event[data-eventid=" + eventOver.id + "]").attr('data-content',
           '<strong>' + eventOver.title + '</strong>' + '<br>' + nl2br(eventOver.motif));
       } else {
@@ -234,13 +243,16 @@ $(document).ready(function() {
       $(".fc-event[data-eventid=" + eventOver.id + "]").popover('show');
     },
     eventMouseout: function(eventOut, jsEvent, view) {
-      if(selected_event) return;
-      if(eventOut.type == 'publicHoliday') return;
+      if (selected_event) return;
+      if (eventOut.type == 'publicHoliday') return;
 
       $('.popover-footer').addClass('d-none');
       $(".fc-event").popover('hide');
     },
     eventClick: function(eventClicked, jsEvent, view) {
+      nettoyer();
+      cleanSelectedVar();
+      canRefreshEvents = false;
       $('.popover-footer').removeClass('d-none');
       jsEvent.stopPropagation();
       selected_patient = eventClicked.patientid;
@@ -249,29 +261,37 @@ $(document).ready(function() {
         end: eventClicked.end
       };
       selected_event = eventClicked;
-      if(eventClicked.type == 'publicHoliday') return;
-      if(jsEvent.shiftKey){
+      if (eventClicked.type == 'publicHoliday') return;
+      if (jsEvent.shiftKey) {
         window.open(urlBase + '/logs/agenda/' + $('#calendar').attr('data-userID') + '/' + eventClicked.id + '/', '_blank');
       } else if (eventClicked.patientid != "0") {
+        //panel patient
         getPatientAdminData(eventClicked.patientid);
         $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
         $("#patientInfo").find("select").prop("disabled", true);
-        $("#patientInfo").show();
-        if ($('#calendar').attr('data-mode') == 'lateral') {
-          $('#nettoyer').show();
-          $('.lireCpsVitale').hide();
-        }
-        $('#buttonModifier').prop('disabled', false);
-        $('#buttonAutresActions').prop('disabled', false);
         $("#motif").val(eventClicked.motif);
         $("#type").val(eventClicked.type);
-        $("#duree").html(" " + $("#type").children("option:selected").attr("data-duree") + "mn");
+        $("#duree").html('<i class="far fa-clock mr-2"></i>' + $("#type").children("option:selected").attr("data-duree") + "mn");
+        $("#eventColor").css('color', $("#type").children("option:selected").attr("data-color"));
         $('#datepicker input').val(eventClicked.start.format('DD/MM/YYYY à HH:mm'));
+        $('#nettoyer').show();
+        $('.lireCpsVitale').hide();
+        $("#patientInfo").show();
+
+        // panel links pro
+        getRelationsPatientPraticiensTab(eventClicked.patientid);
+        $("#patientLinksPro").show();
+
+        // type rdv
+        $('#typesRdv').hide();
+
         $(".fc-event[data-eventid=" + eventClicked.id + "]").attr('data-content',
           '<strong>' + eventClicked.title + '</strong><br>' +
           $("#type option[value='" + eventClicked.type + "']").html() + '<br>' + nl2br(eventClicked.motif) +
           (eventClicked.absent == "oui" ? '<br><strong>Absent(e)</strong>' : '')
         );
+      } else if (eventClicked.patientid == "0") {
+        nettoyer();
       }
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").removeClass("cursor-cell");
       $(".fc-event").popover('hide');
@@ -282,6 +302,12 @@ $(document).ready(function() {
       }, 10);
 
     },
+    eventDragStart: function(event, jsEvent, ui, view) {
+      canRefreshEvents = false;
+    },
+    eventDragStop: function(event, jsEvent, ui, view) {
+      canRefreshEvents = true;
+    },
     eventDrop: function(event, delta, revertFunc) {
       $('div.popover').popover('hide');
       if (confirm("Confirmez-vous le déplacement de cet événement ?")) {
@@ -290,9 +316,16 @@ $(document).ready(function() {
       } else {
         revertFunc();
       }
+      canRefreshEvents = true;
     },
-
+    eventResizeStart: function(event, jsEvent, ui, view) {
+      canRefreshEvents = false;
+    },
+    eventResizeStop: function(event, jsEvent, ui, view) {
+      canRefreshEvents = true;
+    },
     eventResize: function(event, delta, revertFunc) {
+      canRefreshEvents = true;
       $('div.popover').popover('hide');
       if (confirm("Confirmez-vous le changement de durée de cet événement ?")) {
         selected_event = event;
@@ -302,6 +335,7 @@ $(document).ready(function() {
       }
     },
     select: function(start, end, jsEvent, view) {
+      canRefreshEvents = false;
       jsEvent.stopImmediatePropagation();
       selected_period = {
         start: start,
@@ -310,10 +344,10 @@ $(document).ready(function() {
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
       $(".fc-bg.selected").removeClass("selected");
       if (selected_action == "clone") {
+        selected_period.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
         if (selected_patient != "0") {
           setEvent();
         } else {
-          selected_period.end = moment(selected_period.start).add(moment(selected_event.end).diff(selected_event.start));
           closePeriod();
         }
       } else if (selected_action == "move") {
@@ -326,28 +360,33 @@ $(document).ready(function() {
         cleanSelectedVar();
         return;
       } else if (end.diff(start) == moment.duration(slotDuration, "HH:mm:ss").as('milliseconds')) {
-        if ($('#calendar').attr('data-mode') == 'lateral' && $("#patientInfo").is(':hidden')) {
+        if (calendar_mode == 'lateral' && $("#patientInfo").is(':hidden')) {
           return alert_popup('info', 'Sélectionnez ou créez d\'abord un patient');
         }
+        $('div.popover').popover('hide');
+
         var duree = $("#type option:first").attr('data-duree');
-        $("#duree").html(" " + duree + "mn");
         selected_period.end = moment(start).add(duree, 'm');
+        $("#duree").html('<i class="far fa-clock mr-2"></i> ' + duree + "mn");
+
+        $("#eventColor").css('color', $("#type option:first").attr("data-color"));
+        $('#titreRdv').html('Nouveau rendez-vous');
         $("#type").val($("#type option")[0].value);
-        if ($('#calendar').attr('data-mode') == 'modal') {
+
+        $('#datepicker input').val(start.format('DD/MM/YYYY à HH:mm'));
+
+        if (calendar_mode == 'modal') {
           $("#patientSearch").show();
           $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
           $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
           $("#patientInfo").hide();
-        } else {
-          $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
+          $("#patientLinksPro").hide();
         }
-        $('#creerNouveau').modal('show');
-        $(".modal-title font-weight-bold").html("Nouveau rendez-vous");
-        $("#buttonAutresActions").hide();
+
         $('#buttonCreer').show();
         $('#buttonModifier').hide();
-        $('div.popover').popover('hide');
-        $('#datepicker input').val(start.format('DD/MM/YYYY à HH:mm'));
+
+        $('#creerNouveau').modal('show');
       } else {
         $(".fc-event").popover('hide');
         $(".fc-bg.selected").removeClass("selected");
@@ -357,13 +396,13 @@ $(document).ready(function() {
       }
     },
     unselect: function(jsEvent, view) {
-      if (jsEvent)
-        jsEvent.stopImmediatePropagation();
+      canRefreshEvents = true;
       $(".fc-event").popover('hide');
       $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
     },
     navLinks: true,
     navLinkDayClick: function(date, jsEvent) {
+      canRefreshEvents = false;
       jsEvent.stopImmediatePropagation();
       selected_period = {
         start: moment(date.format('YYYY-MM-DD') + ' ' + minTime),
@@ -377,15 +416,38 @@ $(document).ready(function() {
     }
   })
 
-  $("#calendar").on("click", function(e) {
-    e.stopImmediatePropagation();
-    $(".fc-event").popover('hide');
-    $(".fc-bg.selected").removeClass("selected");
-    $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
-  });
+  // $("#calendar").on("click", function(e) {
+  //   e.stopImmediatePropagation();
+  //   $(".fc-event").popover('hide');
+  //   $(".fc-bg.selected").removeClass("selected");
+  //   $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+  // });
 
   $(".fc-next-button, .fc-prev-button").on("click", function() {
     $(".popover").hide();
+  });
+
+  //auto rafraichir les rdv agenda
+  setInterval(autoRefreshEvents, 5000);
+
+  function autoRefreshEvents() {
+    if (document.visibilityState != "visible" || canRefreshEvents) {
+      $('#calendar').fullCalendar('refetchEvents');
+    }
+  }
+
+
+  $('#patientLinksPro').on("click", "#addCorrespondant", function(e) {
+    $("#patientLinksProTab thead").toggle();
+  });
+
+  //ajouter une relation patient <-> praticien
+  $('#patientLinksPro').on("click", "#addRelationPatientPratAgenda", function(e) {
+    e.preventDefault();
+    praticienID = $('#searchPratID').attr('data-id');
+    patientID = selected_patient;
+    preRelationPatientPrat = $('#preRelationPatientPratID').val();
+    setRelationPatientPrat(patientID, praticienID, preRelationPatientPrat);
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -400,7 +462,6 @@ $(document).ready(function() {
 
   // changer style par défaut
   $(".fc-toolbar button").removeClass('btn-primary').addClass('btn-sm btn-primary');
-  $(".fc-left").addClass("pt-2");
   $(".fc-body").addClass("cursor-cell");
 
   ////////////////////////////////////////////////////////////////////////
@@ -417,24 +478,25 @@ $(document).ready(function() {
 
   $("body").on("click", ".fc-editer-button", function(e) {
     e.stopImmediatePropagation();
+    // mise off des popover
     $(".fc-event").popover('hide');
+
     $(".fc-bg.selected").removeClass("selected");
-    $('#creerNouveau').modal('show');
-    if ($('#calendar').attr('data-mode') == 'modal')
+
+    // actions sur modal
+    if (calendar_mode == 'modal') {
       $("#patientSearch").hide();
-    else
+      $("#nettoyer, #lectureCpsVital").hide();
+      $('#titreRdv').html('Édition du rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
+    } else {
       $('#titreRdv').html('Rendez-vous de ' + $('input[name=p_firstname]').val() + ' ' + ($('input[name=p_lastname]').val() || $('input[name=p_birthname]').val()));
-    $("#type").val(selected_event.type);
-    $(".modal-title font-weight-bold").html("Modifier un rendez-vous");
-    $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
-    $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
-    $("#patientInfo").show();
-    $("#buttonAutresActions").show();
+      $("#lectureCpsVital").hide();
+    }
     $('#buttonCreer').hide();
     $('#buttonModifier').show();
 
-    $('div.popover').popover('hide');
-    $('#datepicker input').val(selected_event.start.format('DD/MM/YYYY à HH:mm'));
+    $('#creerNouveau').modal('show');
+
     selected_action = undefined;
   });
 
@@ -487,7 +549,8 @@ $(document).ready(function() {
   ///////// modal : observation des actions
 
   $("#type").on("change", function(e) {
-    $("#duree").html(" " + $(this).children("option:selected").attr("data-duree") + "mn");
+    $("#duree").html('<i class="far fa-clock mr-2"></i>' + $(this).children("option:selected").attr("data-duree") + "mn");
+    $("#eventColor").css('color', $(this).children("option:selected").attr("data-color"));
     selected_period.end = getEnd(selected_period.start);
     if (selected_event) {
       selected_event.start = selected_period.start;
@@ -496,7 +559,7 @@ $(document).ready(function() {
   });
 
   $("#newPatient").on("click", function() {
-    if ($('#calendar').attr('data-mode') == 'modal') {
+    if (calendar_mode == 'modal') {
       selected_patient = undefined;
     } else {
       nettoyer();
@@ -505,6 +568,8 @@ $(document).ready(function() {
     }
     $("#search").val("");
     $("#patientInfo").show();
+    $("#patientLinksPro").hide();
+    $('#typesRdv').hide();
     $("#patientInfo").find("input,textarea").prop("readonly", false).val("");
     $("#patientInfo").find("select").prop("disabled", false);
     $("#historiquePatient").hide();
@@ -542,41 +607,6 @@ $(document).ready(function() {
     }
   });
 
-  $("body").on("click", function(e) {
-    if ($("#datepicker").data("DateTimePicker"))
-      $("#datepicker").data("DateTimePicker").hide();
-  });
-
-  $("#buttonAutresActions").on("click", function(e) {
-    e.stopImmediatePropagation();
-    e.preventDefault();
-    $(this).dropdown('toggle');
-  });
-
-  $("#buttonClone").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#buttonAutresActions").dropdown('toggle');
-    $('#creerNouveau').modal('hide');
-    setEvent();
-  });
-
-  $("#buttonMark").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#buttonAutresActions").dropdown('toggle');
-    $('#creerNouveau').modal('hide');
-    setPasVenu();
-  });
-
-  $("#buttonRemove").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#buttonAutresActions").dropdown('toggle');
-    $('#creerNouveau').modal('hide');
-    deleteEvent();
-  });
-
   $("#buttonCreer").on("click", function(e) {
     $('#creerNouveau').modal('hide');
     setEvent();
@@ -599,16 +629,16 @@ $(document).ready(function() {
     cleanSelectedVar();
   });
 
-  $("#creerNouveau").on("click", function(e) {
-    e.stopPropagation();
-    if ($("#buttonAutresActions").attr("aria-expanded") == "true")
-      $("#buttonAutresActions").dropdown('toggle');
-  });
-
   $('#nettoyer').on("click", function(e) {
     e.preventDefault();
     nettoyer();
-    cleanSelectedVar();
+    if (calendar_mode == "modal") {
+      selected_patient = undefined;
+      selected_action = undefined;
+      selected_event = undefined;
+    } else {
+      cleanSelectedVar();
+    }
   });
 
   $("#formRdv").on("click", ".donothing", function(e) {
@@ -648,27 +678,38 @@ $(document).ready(function() {
     source: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
     select: function(event, ui) {
       event.stopPropagation();
-      if ($('#calendar').attr('data-mode') == 'lateral') {
+      if (calendar_mode == 'lateral') {
         cleanSelectedVar();
         nettoyer();
       }
-      $("#patientInfo").show();
+      $('#typesRdv').hide();
       $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
       $("#patientInfo").find("select:not(.updatable)").prop("disabled", true);
       $('#nettoyer').show();
+      $('#lectureCpsVital').hide();
       getPatientAdminData(ui.item.patientID);
+      getRelationsPatientPraticiensTab(ui.item.patientID);
       selected_patient = ui.item.patientID;
       $('#buttonCreer').removeAttr('disabled');
+      $("#patientInfo").show();
+      $("#patientLinksPro").show();
     }
   });
 
   ////////////////////////////////////////////////////////////////////////
   ///////// action par défaut sur clic
 
-  $("body").on("click", function(e) {
+  $("body").on("click", function(event) {
+    $target = $(event.target);
+    if (!$target.closest('div.fc-view-container').length && !$target.closest('div.modal').length && !$target.closest('div.nePasNettoyer').length && !$target.closest('div.fc-left').length && !$target.closest('div.alert').length) {
+      $(".fc-bg.selected").removeClass("selected");
+      nettoyer();
+      cleanSelectedVar();
+    }
     $(".fc-event").popover('hide');
-    $(".fc-bg.selected").removeClass("selected");
     $(".fc-body").removeClass("cursor-move").removeClass("cursor-copy").addClass("cursor-cell");
+    if ($("#datepicker").data("DateTimePicker"))
+      $("#datepicker").data("DateTimePicker").hide();
   });
 
   ////////////////////////////////////////////////////////////////////////
@@ -736,8 +777,8 @@ function getPatientAdminData(patientID) {
       $.each(data, function(index, value) {
         if ($("#id_" + index + "_id").length) $("#id_" + index + "_id").val(value);
       });
-      autosize.update($('#id_notes_id'));
       getHistoriquePatient(patientID);
+      autosize.update($('#id_notes_id'));
     },
     error: function() {
       alert_popup('error', "Des données n'ont pas pu être récupérées.");
@@ -761,41 +802,46 @@ function getHistoriquePatient(patientID) {
     },
     dataType: "json",
     success: function(data) {
-      $('#historiquePatient ul').html('');
-      $.each(data['historique'], function(index, dat) {
+      $('#historiquePatientList').html('');
+      if (data['historique'].length > 0) {
+        $.each(data['historique'], function(index, dat) {
+          var duration = moment.duration(moment(dat['dateiso']).startOf('day').diff(moment().endOf('day')));
+          var days = Math.ceil(duration.asDays());
 
-        var duration = moment.duration(moment(dat['dateiso']).startOf('day').diff(moment().endOf('day')));
-        var days = Math.ceil(duration.asDays());
+          chaine = '<li class="list-group-item p-1'
+          if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
+          if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
+          if (moment(dat['dateiso']).isAfter()) chaine = chaine + ' font-weight-bold';
+          chaine = chaine + '">';
+          if (dat['agendaID'] == $('#calendar').attr('data-userID')) {
+            chaine = chaine + '<button title="Voir" type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="far ';
+            if (moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus';
+            else chaine = chaine + 'fa-calendar';
+            chaine = chaine + '" aria-hidden="true"></span></button>';
+          } else {
+            chaine = chaine + '<a title="Voir - rdv sur un autre agenda" href="' + urlBase + '/agenda/' + dat['agendaID'] + '/' + dat['dateJump'] + '/" class="btn btn-light btn-sm" data-date="' + dat['dateiso'] + '"><span class="fas ';
+            if (moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus';
+            else chaine = chaine + 'fa-calendar';
+            chaine = chaine + '" aria-hidden="true"></span></a>';
+          }
+          chaine = chaine + '&nbsp;&nbsp;&nbsp;' + dat['start'] + ' : ' + dat['type'];
+          if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
+          if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
+          if (days > 1 && dat['statut'] == 'actif') {
+            chaine = chaine + ' dans ' + days + ' jours';
+          } else if (days == 0 && dat['statut'] == 'actif') {
+            chaine = chaine + ' aujourd\'hui';
+          } else if (days == 1 && dat['statut'] == 'actif') {
+            chaine = chaine + ' demain';
+          }
+          chaine = chaine + '</li>';
+          $('#historiquePatientList').append(chaine);
+        });
+      } else {
+        chaine = '<li class="list-group-item p-1 text-muted">Pas de rendez-vous connus</li>';
+        $('#historiquePatientList').append(chaine);
+      }
 
-        chaine = '<li class="list-group-item p-1'
-        if (dat['absente'] == 'oui') chaine = chaine + ' list-group-item-danger';
-        if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
-        if(moment(dat['dateiso']).isAfter()) chaine = chaine + ' font-weight-bold';
-        chaine = chaine + '">';
-        if(dat['agendaID'] == $('#calendar').attr('data-userID')) {
-          chaine = chaine + '<button title="Voir" type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="far ';
-          if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
-          chaine = chaine + '" aria-hidden="true"></span></button>';
-        } else {
-          chaine = chaine + '<a title="Voir - rdv sur un autre agenda" href="'+ urlBase +'/agenda/'+ dat['agendaID'] +'/'+ dat['dateJump'] +'/" class="btn btn-light btn-sm" data-date="' + dat['dateiso'] + '"><span class="fas ';
-          if(moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus'; else chaine = chaine + 'fa-calendar';
-          chaine = chaine + '" aria-hidden="true"></span></a>';
-        }
-        chaine = chaine + '&nbsp;&nbsp;&nbsp;' + dat['start'] + ' : ' + dat['type'];
-        if (dat['statut'] == 'deleted') chaine = chaine + ' [annulé]';
-        if (dat['absente'] == 'oui') chaine = chaine + ' [non honoré]';
-        if(days > 1 && dat['statut'] == 'actif') {
-          chaine = chaine + ' dans ' + days + ' jours';
-        } else if(days == 0 && dat['statut'] == 'actif') {
-          chaine = chaine + ' aujourd\'hui';
-        } else if(days == 1 && dat['statut'] == 'actif') {
-          chaine = chaine + ' demain';
-        }
-        chaine = chaine + '</li>';
-
-        $('#historiquePatient ul').append(chaine);
-
-      });
       $('#HistoriqueRdvResume button[title=total]').html(data['stats']['total']);
       $('#HistoriqueRdvResume button[title=honorés]').html(data['stats']['ok']);
       $('#HistoriqueRdvResume button[title=annulés]').html(data['stats']['annule']);
@@ -822,6 +868,7 @@ function nettoyer() {
 
   //formulaire patient
   $("#patientInfo").hide();
+  $("#patientLinksPro").hide();
   $('#nettoyer').hide();
   $("#patientInfo input[name!='userid'], #patientInfo textarea").val('');
   $("#patientInfo").find("input:not(.updatable),textarea:not(.updatable)").prop("readonly", true);
@@ -832,7 +879,7 @@ function nettoyer() {
 
   // historique patient
   $('#historiquePatient').hide();
-  $('#historiquePatient ul').html('');
+  $('#historiquePatientList').html('');
   $('#HistoriqueRdvResume button').html('');
 
   // formulaire rendez-vous
@@ -842,6 +889,13 @@ function nettoyer() {
   $('#motifOff').val('');
   $('#editerOff h4').html('');
 
+  $('#typesRdv').show();
+
+  //gestion correspondants
+  $('#searchPratID').val('');
+  $('#searchPratID').attr('data-id', '');
+
+  $(".fc-bg.selected").removeClass("selected");
 }
 
 /**
@@ -853,6 +907,7 @@ function cleanSelectedVar() {
   selected_action = undefined;
   selected_event = undefined;
   selected_period = undefined;
+  canRefreshEvents = true;
 }
 
 /**
@@ -860,13 +915,22 @@ function cleanSelectedVar() {
  * @param {int} id id du rdv
  */
 function setEvent(id) {
+  var stop = false;
   var data;
   // si patient inconnu on utilise les data latéral et on en crée un nouveau
   if (!selected_patient) {
-    if ($('#calendar').attr('data-mode') == 'lateral')
-      data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
-    else
-      data += $('#formRdv').serialize();
+    $('#newPatientData').find('input[required],textarea[required]').each(function(idx, el) {
+      if (el.value == '') {
+        console.log(el);
+        glow('danger', $(el));
+        stop = true;
+      }
+    });
+    if (stop) {
+      alert_popup("danger", "Certains champs requis n'ont pas été remplis.");
+      return;
+    }
+    data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
     data += '&userID=' + $('#calendar').attr('data-userID');
     data += '&start=' + selected_period.start.format("YYYY-MM-DD%20HH:mm:SS");
     data += '&end=' + selected_period.end.format("YYYY-MM-DD%20HH:mm:SS");
@@ -912,10 +976,10 @@ function closePeriod() {
     start = selected_event.start.format("YYYY-MM-DD HH:mm:SS");
     end = selected_event.end.format("YYYY-MM-DD HH:mm:SS");
     id = selected_event.id;
-  } else  if(selected_period) {
+  } else if (selected_period) {
     start = selected_period.start.format("YYYY-MM-DD HH:mm:SS");
     end = selected_period.end.format("YYYY-MM-DD HH:mm:SS");
-    id= '';
+    id = '';
   } else {
     return;
   }

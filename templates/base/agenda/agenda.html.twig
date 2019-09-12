@@ -37,7 +37,8 @@
   {% if config.vitaleActiver =='true' %}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
   {% endif %}
-  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js?{{ modules.base }}'></script>
 {% endblock %}
 
 {% block jsEmbed %}
@@ -92,6 +93,10 @@
     font-size: 14px !important;
   }
 
+  .fc-right h2 {
+    font-size: 1.8em !important;
+  }
+
   .fc-nonbusiness {
     background: #607d8b;
   }
@@ -120,6 +125,8 @@
   .faicon {
     opacity: 0.15
   }
+
+  #patientLinksProTab td:first-child { display: none; }
 {% endblock %}
 
 {% block head %}
@@ -130,26 +137,33 @@
   {% if config.agendaModePanneauLateral == 'true' %}
     <div class="row">
       <div class="col-3">
-        <form id="newPatientData">
+
+        {% include 'inc-agenda-patientSearch.html.twig' %}
+
+        <div class="nePasNettoyer">
           {% include 'inc-agenda-patient.html.twig' %}
-        </form>
 
-        {% include 'inc-agenda-historiquePatient.html.twig' %}
+          {% include 'inc-agenda-patientLinksPro.html.twig' %}
 
-        <h5 class="mt-4">
-          Types de rendez-vous
-        </h5>
-        <table class="table table-sm mb-0 small">
-          {% for rac,dat in page.typeRdv %}
-            <tr><td><i class="fas fa-square-full mr-2" style="color : {{ dat.backgroundColor }}"></i> {{ dat.descriptif }}</td></tr>
-          {% endfor %}
-        </table>
+          {% include 'inc-agenda-historiquePatient.html.twig' %}
+        </div>
+
+        <div id="typesRdv">
+          <h5 class="mt-4">
+            Types de rendez-vous
+          </h5>
+          <table class="table table-sm mb-0 small">
+            {% for rac,dat in page.typeRdv %}
+              <tr><td><i class="fas fa-square-full mr-2" style="color : {{ dat.backgroundColor }}"></i> {{ dat.descriptif }}</td></tr>
+            {% endfor %}
+          </table>
+        </div>
 
       </div>
       <div class="col-9">
   {% endif %}
   {% if page.agendaUsers|length > 1 %}
-    <ul class="nav nav-tabs mb-4 font-weight-bold" >
+    <ul class="nav nav-tabs mb-3 font-weight-bold" >
 
       {% for k,v in page.agendaUsers %}
         <li role="presentation" class="nav-item">
@@ -173,85 +187,79 @@
 <div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog" data-backdrop="static">
   <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-xl{% else %}{% endif %}" role="document">
     <div class="modal-content">
-      <form id="formRdv">
-        <div class="modal-header">
-          <h4 id="titreRdv" class="modal-title font-weight-bold"></h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-header">
+        <h5 id="titreRdv" class="modal-title font-weight-bold"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" role="alert" style="display : none;">
+            Merci de considérer les informations suivantes et de corriger les champs concernés :
+            <ul></ul>
         </div>
-        <div class="modal-body">
-          <div class="alert alert-danger" role="alert" style="display : none;">
-              Merci de considérer les informations suivantes et de corriger les champs concernés :
-              <ul></ul>
-          </div>
-          <div class="row">
-            {% if config.agendaModePanneauLateral != 'true' %}
-              <div class="col-md-6 border-right">
-                {% include 'inc-agenda-patient.html.twig' %}
-              </div>
-              <div class="col-md-6">
-              <h5>Rendez-vous</h5>
-            {% else %}
-              <div class="col-12">
-            {% endif %}
-              <div class="card bg-light p-2">
-                <div class="form-group">
-                  <div id="datepicker" class="input-group mx-0 mb-3">
-                    <input class="form-control" />
-                    <div class="input-group-append">
-                      <span class="fas fa-calendar input-group-text" aria-hidden="true"></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group mb-2">
-                  <div class="input-group mx-0">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
-                    </div>
-                    <select id="type" class="custom-select" name="type" autocomplete="off">
-                      {% for k, v in page.typeRdv if k != '[off]' %}
-                        <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
-                          {{ v.descriptif }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <textarea id="motif" class="form-control mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
-                </div>
-              </div>
+        <div class="row">
+          {% if config.agendaModePanneauLateral != 'true' %}
+            <div class="col-md-6 border-right">
+              {% include 'inc-agenda-patientSearch.html.twig' %}
+              {% include 'inc-agenda-patient.html.twig' %}
+              {% include 'inc-agenda-patientLinksPro.html.twig' %}
+            </div>
+            <div class="col-md-6">
+          {% else %}
+            <div class="col-12">
+          {% endif %}
+            <div class="{% if config.agendaModePanneauLateral != 'true' %}mb-3{% endif %}">
               {% if config.agendaModePanneauLateral != 'true' %}
-                {% include 'inc-agenda-historiquePatient.html.twig' %}
+                <ul class="nav nav-tabs">
+                  <li class="nav-item font-weight-bold">
+                    <span class="nav-link active bg-light" style="border-bottom-color : #f5f5f5"><i class="fas fa-calendar-day fa-fw mr-1"></i> Rendez-vous</span>
+                  </li>
+                </ul>
               {% endif %}
+              <div class="bg-light {% if config.agendaModePanneauLateral != 'true' %}border-left border-right border-bottom{% else %}border{% endif %}" class="">
+                <form id="formRdv" class="card-body">
+                  <div class="form-group">
+                    <div id="datepicker" class="input-group input-group-sm mx-0 mb-3">
+                      <input class="form-control" />
+                      <div class="input-group-append">
+                        <span class="fas fa-calendar input-group-text" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-2">
+                    <div class="input-group input-group-sm mx-0">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text bg-white"><i id="eventColor" class="fas fa-circle"></i></div>
+                      </div>
+                      <select id="type" class="custom-select border-left-0" name="type" autocomplete="off">
+                        {% for k, v in page.typeRdv if k != '[off]' %}
+                          <option value="{{ k }}" style="color: #FFF; background-color: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %} data-color="{{ v.backgroundColor }}">
+                            {{ v.descriptif }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      <div class="input-group-append">
+                        <div class="input-group-text" id="duree"><i class="far fa-clock mr-2"></i> {{ (page.typeRdv|first).duree }}mn</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea id="motif" class="form-control form-control-sm mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
+                  </div>
+                </form>
+              </div>
             </div>
+            {% if config.agendaModePanneauLateral != 'true' %}
+              {% include 'inc-agenda-historiquePatient.html.twig' %}
+            {% endif %}
           </div>
         </div>
-        <div class="modal-footer">
-          <button id="buttonCreer" class="btn btn-primary" disabled="disabled" type="button" data-dismiss="modal">Créer</button>
-          <button id="buttonModifier" class="btn btn-primary" type="button" data-dismiss="modal">Modifier</button>
-          <div class="dropdown">
-            <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Autres actions
-            </button>
-            <div class="dropdown-menu" aria-labelledby="buttonAutresActions">
-              <a class="dropdown-item" id="buttonMark" href="#">
-                <i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i>
-                Non honoré
-              </a>
-              <a class="dropdown-item" id="buttonClone" href="#">
-                <i class="fas fa-clone fa-fw text-muted mr-1"></i>
-                Cloner
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" id="buttonRemove" href="#">
-                <i class="fas fa-trash fa-fw text-muted mr-1"></i>
-                Supprimer
-              </a>
-            </div>
-          </div>
-          <button id="buttonCancel" class="btn btn-light float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
-        </div>
-      </form>
+      </div>
+      <div class="modal-footer">
+        <button id="buttonCreer" class="btn btn-primary" type="button" data-dismiss="modal">Créer</button>
+        <button id="buttonModifier" class="btn btn-primary" type="button" data-dismiss="modal">Modifier</button>
+        <button id="buttonCancel" class="btn btn-light" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
+      </div>
     </div>
   </div>
 </div>

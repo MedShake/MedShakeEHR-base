@@ -26,15 +26,21 @@
  # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-<div id="historiquePatient" class="card col-md-12 my-3 p-0" style="display: none;">
-  <div class="card-header font-weight-bold d-flex justify-content-between">
-    Rendez-vous attribués
-    <div id="HistoriqueRdvResume" class="btn-group" role="group">
-      <button title="total" type="button" disabled class="btn btn-secondary btn-sm donothing font-weight-bold px-2 py-0">0</button>
-      <button title="honorés" type="button" disabled class="btn btn-success btn-sm donothing font-weight-bold px-2 py-0">0</button>
-      <button title="annulés" type="button" disabled class="btn btn-warning btn-sm donothing font-weight-bold px-2 py-0">0</button>
-      <button title="absent" type="button" disabled class="btn btn-danger btn-sm donothing font-weight-bold px-2 py-0">0</button>
-    </div>
-  </div>
-  <ul class="list-group list-sm small"></ul>
+<div id="historiquePatient" class="mb-3 p-0" style="display: none;">
+ <ul class="nav nav-tabs">
+   <li class="nav-item font-weight-bold">
+     <span class="nav-link active"><i class="fas fa-calendar-alt fa-fw mr-1"></i> RDV déjà attribués</span>
+   </li>
+   <li class="nav-item ml-auto pt-1">
+     <div id="HistoriqueRdvResume" class="btn-group" role="group">
+       <button title="total" type="button" disabled class="btn btn-secondary btn-sm donothing font-weight-bold px-2 py-0">0</button>
+       <button title="honorés" type="button" disabled class="btn btn-success btn-sm donothing font-weight-bold px-2 py-0">0</button>
+       <button title="annulés" type="button" disabled class="btn btn-warning btn-sm donothing font-weight-bold px-2 py-0">0</button>
+       <button title="absent" type="button" disabled class="btn btn-danger btn-sm donothing font-weight-bold px-2 py-0">0</button>
+     </div>
+   </li>
+ </ul>
+ <div class="border-right border-left border-bottom">
+   <ul id="historiquePatientList" class="list-group list-group-flush list-sm small "></ul>
+ </div>
 </div>
