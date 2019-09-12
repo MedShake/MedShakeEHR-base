@@ -75,28 +75,28 @@ Relations du patient  {{ page.patient.firstname }}
     <div class="card col-12 p-0">
       <div class="card-header font-weight-bold"><i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens</div>
       <div class="card-body">
-        {% if config.droitDossierPeutCreerPraticien == 'true' %}
-          <button type="button" class="btn btn-outline-secondary float-right ml-2 mt-1" data-toggle="modal" data-target="#newPro">Nouveau praticien</button>
-        {% endif %}
-        <form class="form-inline">
-          <div class="form-group" style="width:100%">
-            <div class="input-group" style="width:100%">
-              <input class="form-control my-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
+        <form class="form-inline my-2 d-flex">
+          <div class="form-group flex-grow-1">
+            <div class="input-group flex-grow-1">
+              <input class="form-control flex-grow-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
+              {{ f.select ({
+              'select' : {
+                'name' : 'preRelationPatientPrat',
+                'id' : 'preRelationPatientPratID',
+                'class' : '',
+                'values' : page.preRelationPatientPrat.formValues,
+                'valueDefaut' : el.value.preValue,
+                'autocomplete' : 'off' } }) }}
               <div class="input-group-append">
-                {{ f.select ({
-                'select' : {
-                  'name' : 'preRelationPatientPrat',
-                  'id' : 'preRelationPatientPratID',
-                  'class' : 'input-group-text my-1',
-                  'values' : page.preRelationPatientPrat.formValues,
-                  'valueDefaut' : el.value.preValue,
-                  'autocomplete' : 'off' } }) }}
-              </div>
-              <div class="input-group-append">
-                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary input-group-text my-1">Ajouter</button>
+                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
               </div>
             </div>
           </div>
+          {% if config.droitDossierPeutCreerPraticien == 'true' %}
+          <div class="form-group">
+            <button type="button" class="btn btn-outline-secondary float-right ml-4" data-toggle="modal" data-target="#newPro"><i class="fas fa-user-md mr-1"></i> Nouveau praticien</button>
+          </div>
+          {% endif %}
         </form>
       </div>
 
@@ -121,28 +121,24 @@ Relations du patient  {{ page.patient.firstname }}
 	<div class="col-12 col-xl-6 mb-4">
 		<div class="card col-12 p-0">
 			<div class="card-header font-weight-bold"><i class="fas fa-sitemap fa-fw fa-lg text-secondary mr-1"></i> Liens familiaux</div>
-			<div class="card-body">
-				<form class="form-inline">
-					<div class="form-group" style="width:100%">
-            <div class="input-group" style="width:100%">
-  						<input class="form-control my-1" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+      <div class="card-body">
+        <form class="form-inline d-flex">
+            <div class="input-group my-2 flex-grow-1">
+              <input class="form-control" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+              {{ f.select ({
+              'select' : {
+                'name' : 'preRelationPatientPatient',
+                'id' : 'preRelationPatientPatientID',
+                'class' : 'form-control',
+                'values' : page.preRelationPatientPatient.formValues,
+                'valueDefaut' : el.value.preValue,
+                'autocomplete' : 'off' } }) }}
               <div class="input-group-append">
-					      {{ f.select ({
-                'select' : {
-                  'name' : 'preRelationPatientPatient',
-                  'id' : 'preRelationPatientPatientID',
-                  'class' : 'form-control input-group-text my-1',
-                  'values' : page.preRelationPatientPatient.formValues,
-                  'valueDefaut' : el.value.preValue,
-                  'autocomplete' : 'off' } }) }}
-				      </div>
-              <div class="input-group-append">
-					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary input-group-text my-1">Ajouter</button>
-				      </div>
-  					</div>
-					</div>
-				</form>
-			</div>
+                <button type="submit" id="addRelationPatientPatients" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+              </div>
+            </div>
+        </form>
+      </div>
 
       <table class="table table-sm mb-0 table-striped">
 				<thead>
