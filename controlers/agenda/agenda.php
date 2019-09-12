@@ -71,3 +71,9 @@ if (isset($_SESSION['form']['baseModalNewPatient']['formValues'])) {
 $p['page']['formNewPatient']=$formpatient->getForm();
 //modifier action pour url ajax
 $p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
+
+//sortir les choix de relations patient<->prat
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationPatientPraticien');
+$options = $data->getSelectOptionValue(array($typeID));
+$p['page']['preRelationPatientPrat']['formValues']=$options[$typeID];

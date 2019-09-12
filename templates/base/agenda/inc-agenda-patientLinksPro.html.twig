@@ -1,0 +1,67 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Agenda, cadre correspondants pros du patient
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% import "macroForm.html.twig" as f %}
+
+<div id="patientLinksPro"  class="mb-3" style="display: none;">
+  <ul class="nav nav-tabs">
+    <li class="nav-item font-weight-bold">
+      <span class="nav-link active"><i class="fas fa-users fa-fw mr-1"></i> Correspondants</span>
+    </li>
+    <li class="nav-item ml-auto pt-1">
+      <button id="addCorrespondant" class="btn btn-light btn-sm" title="Ajouter un correspondant"><i class="fas fa-user-plus fa-fw"></i></button>
+    </li>
+  </ul>
+  <div id="patientLinksProTab" class="border-right border-left border-bottom">
+    <table class="table table-sm table-borderless mb-0">
+      <thead style="display: none">
+        <tr>
+          <th colspan="4">
+            <form class="form-inline my-2">
+              <div class="input-group input-group-sm w-100">
+                <input class="form-control" type="text" placeholder="chercher praticien" id="searchPratID" autocomplete="off"/>
+                {{ f.select ({
+                'select' : {
+                  'name' : 'preRelationPatientPrat',
+                  'id' : 'preRelationPatientPratID',
+                  'class' : 'custom-select-sm',
+                  'values' : page.preRelationPatientPrat.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+                <div class="input-group-append">
+                  <button title="Ajouter ce correspondant" type="submit" id="addRelationPatientPratAgenda" class="btn btn-secondary"><i class="fas fa-plus"></i></button>
+                </div>
+              </div>
+            </form>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="bodyTabRelationPatientPrat" class="small">
+      </tbody>
+    </table>
+  </div>
+</div>
