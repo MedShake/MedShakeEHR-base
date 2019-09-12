@@ -608,7 +608,6 @@ $(document).ready(function() {
   });
 
   $("#buttonCreer").on("click", function(e) {
-    $('#creerNouveau').modal('hide');
     setEvent();
   });
 
@@ -921,13 +920,13 @@ function setEvent(id) {
   if (!selected_patient) {
     $('#newPatientData').find('input[required],textarea[required]').each(function(idx, el) {
       if (el.value == '') {
-        console.log(el);
         glow('danger', $(el));
         stop = true;
       }
     });
     if (stop) {
       alert_popup("danger", "Certains champs requis n'ont pas été remplis.");
+      if(calendar_mode == "lateral") $('#creerNouveau').modal('hide');
       return;
     }
     data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
@@ -957,6 +956,7 @@ function setEvent(id) {
       $('#calendar').fullCalendar('refetchEvents');
       nettoyer();
       cleanSelectedVar();
+      $('#creerNouveau').modal('hide');
     },
     error: function() {
       alert_popup('error', "Les modifications n'ont pas pu être appliquées.");
