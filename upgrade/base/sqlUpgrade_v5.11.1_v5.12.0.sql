@@ -1,3 +1,6 @@
+-- Mise à jour n° de version
+UPDATE `system` SET `value`='v5.12.0' WHERE `name`='base' and `groupe`='module';
+
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('agendaRefreshDelayEvents', 'default', '0', '', 'Agenda', 'int', 'délai en secondes du rafraîchissement live de l\'agenda - 0 pour jamais', '10');
 
 -- Mise à jour formulaire agenda
