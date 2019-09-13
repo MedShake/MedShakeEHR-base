@@ -28,7 +28,21 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ config.designAppName }}{% endblock %}
+{% block title %}
+{% if page.proData.titre %}
+  {{ page.proData.titre }}
+{% endif %}
+{{ page.proData.firstname }}
+{% if page.proData.lastname and page.proData.birthname %}
+  {{ page.proData.lastname }} <small>(né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})</small>
+{% elseif page.proData.lastname %}
+  {{ page.proData.lastname }}
+{% else %}
+  {{ page.proData.birthname }}
+{% endif %}
+ {{ page.proData.job }}
+ - {{ config.designAppName }}
+{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -41,7 +55,8 @@
 {% endif %}
 
 <h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
-  {% if page.proData.titre %}{{ page.proData.titre }}
+  {% if page.proData.titre %}
+    {{ page.proData.titre }}
   {% endif %}
   {{ page.proData.firstname }}
   {% if page.proData.lastname and page.proData.birthname %}
@@ -51,7 +66,7 @@
   {% else %}
     {{ page.proData.birthname }}
   {% endif %}
-   <small>{{ page.proData.job }}</small>
+   <small class="text-muted">{{ page.proData.job }}</small>
 </h1>
 
   <div class="row mt-3">
@@ -60,12 +75,14 @@
               <div class="card-header font-weight-bold">
                 <i class="fas fa-user-md fa-fw fa-lg text-danger"></i>
                 Informations professionnelles</div>
-              <div class="card-body">
-                <p>Informations professionnelles sur ce praticien
-                  <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/">
-                    Editer infos pros
+              <div class="card-body d-flex justify-content-between">
+                <span>
+                  Informations professionnelles sur ce praticien
+                </span>
+                <span>
+                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"><i class="fas fa-pencil-alt"></i> Infos pros
                   </a>
-                </p>
+                </span>
               </div>
 
               <table class="table table-sm mb-0 table-hover ">
@@ -158,12 +175,13 @@
       <div class="col-md-6 mt-4 mt-md-0">
             <div class="card">
               <div class="card-header font-weight-bold"><i class="fas fa-user fa-fw fa-lg text-primary"></i> Informations personnelles</div>
-              <div class="card-body">
-                <p>Informations personnelles sur ce praticien
-                  <a class="btn btn-outline-secondary float-right m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
-                    Editer infos persos
+              <div class="card-body d-flex justify-content-between">
+                <span>Informations personnelles sur ce praticien</span>
+                <span>
+                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
+                    <i class="fas fa-pencil-alt"></i> Infos persos
                   </a>
-                </p>
+                </span>
               </div>
 
               <table class="table table-sm mb-0 table-hover ">
