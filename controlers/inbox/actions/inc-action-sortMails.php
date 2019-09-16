@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,23 +21,17 @@
  */
 
 /**
- * Inbox : les actions avec reload de page
+ * Inbox > inverser l'ordre de tri des mails
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//$debug='';
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'classerDansDossier', // Classer comme document dans un dossier patient
-    'suppSansClasser', //supprimer un message sans le classer
-    'suppInbox', //supprimer un message déjà classé
-    'sortMails' // inverser l'ordre de tri chronologique des mails
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
+if($p['config']['designInboxMailsSortOrder'] == 'desc') {
+ $p['page']['sort']='asc';
 } else {
-    include('inc-action-'.$m.'.php');
+ $p['page']['sort']='desc';
 }
+$conf= msConfiguration::setUserParameterValue('designInboxMailsSortOrder', $p['page']['sort'], $p['user']['id']);
+
+
+msTools::redirection('/inbox/');

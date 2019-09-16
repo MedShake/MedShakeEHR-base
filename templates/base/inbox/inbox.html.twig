@@ -52,20 +52,45 @@
     </div>
   {% else %}
 
+    {% set trans_mois = {
+          "01": "janvier",
+          "02": "février",
+          "03": "mars",
+          "04": "avril",
+          "05": "mai",
+          "06": "juin",
+          "07": "juillet",
+          "08": "août",
+          "09": "septembre",
+          "10": "octobre",
+          "11": "novembre",
+          "12": "décembre"
+      }
+    %}
+
     <div class="row mt-4">
 
       <div class="col-3">
-        <table class="table table-sm mb-0 table-hover small">
+        <table class="table table-sm mb-0 table-hover">
 
           {% for k, mails in page.inbox.mails %}
             {% set parentLoop = loop.index %}
             <tr>
-              <td class="table-primary" colspan="3">
-                <strong>{{ k }}</strong>
+              <td class="bg-primary text-white" colspan="3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <strong>{{ k|date('j') }}{% if k|date('j') == 1 %}er{% endif %} {{ trans_mois[k|date('m')] }} {{ k|date('Y') }}</strong>
+                  {% if loop.index == 1 %}
+                    {% if page.sort == 'asc' %}
+                      <a title="Inverser l'ordre chronologique d'affichage" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/sortMails/" class="btn btn-sm btn-primary"><i class="fas fa-arrow-down"></i></a>
+                    {% else %}
+                      <a title="Inverser l'ordre chronologique d'affichage" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/sortMails/" class="btn btn-sm btn-primary"><i class="fas fa-arrow-up"></i></i></a>
+                    {% endif %}
+                  {% endif %}
+                </div>
               </td>
             </tr>
             {% for mail in mails %}
-              <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailid="{{ mail.id }}" data-status="{{ mail.archived }}">
+              <tr class="small mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailid="{{ mail.id }}" data-status="{{ mail.archived }}">
                 {% if mail.hprimIdentite %}
                   <td class="font-weight-bold">
                     {{ mail.hprimIdentite|e }}
@@ -81,7 +106,7 @@
 
                 <td>
                   {% if mail.pjNombre > 0 %}
-                    <span class="badge badge-secondary">{{ mail.pjNombre }}</span>
+                    <span class="badge badge-primary">{{ mail.pjNombre }}</span>
                   {% endif %}
                 </td>
               </tr>

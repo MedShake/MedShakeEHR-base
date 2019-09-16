@@ -121,6 +121,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaJoursFeriesFichier'=>'jours-feries-seuls.csv',
     'agendaJoursFeriesAfficher'=>'true',
     'agendaRefreshDelayEvents'=>'10',
+    'designInboxMailsSortOrder'=>'desc',
   ];
 
   protected function _getSpecifSql() {

@@ -37,10 +37,16 @@ if(!empty($p['config']['apicryptInboxMailForUserID'])) {
   $apicryptInboxMailForUserID=$p['user']['id'];
 }
 
-if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%d/%m/%y') as day, hprimIdentite, hprimExpediteur, pjNombre, archived
+if($p['config']['designInboxMailsSortOrder'] == 'asc') {
+  $p['page']['sort']='asc';
+} else {
+  $p['page']['sort']='desc';
+}
+
+if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%Y-%m-%d') as day, hprimIdentite, hprimExpediteur, pjNombre, archived
 from inbox
 where archived!='y' and mailForUserID in ('".$apicryptInboxMailForUserID."')
-order by txtDatetime desc, txtNumOrdre desc")) {
+order by txtDatetime ".$p['page']['sort'].", txtNumOrdre ".$p['page']['sort'])) {
     foreach ($mails as $mail) {
         $p['page']['inbox']['mails'][$mail['day']][]=$mail;
     }
