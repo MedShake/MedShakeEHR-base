@@ -107,10 +107,10 @@ $(document).ready(function() {
   });
 
   //retirer une relation patient <-> praticien/patient
-  $('#bodyTabRelationPatientPrat').on("click", ".removeRelationPatient", function(e) {
-    deleteRelationPatient($(this).attr("data-patientID"), $(this).attr('data-peopleID'));
+  $('body').on("click", ".removeRelationPatient", function(e) {
     e.preventDefault();
     e.stopPropagation();
+    deleteRelationPatient($(this).attr("data-patientID"), $(this).attr('data-peopleID'));
   });
 
   //ajax save form in modal
