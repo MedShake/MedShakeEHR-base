@@ -691,7 +691,7 @@ $(document).ready(function() {
 
   $("body").on("click", function(event) {
     $target = $(event.target);
-    if (!$target.closest('div.fc-view-container').length && !$target.closest('div.modal').length && !$target.closest('div.nePasNettoyer').length && !$target.closest('div.fc-left').length && !$target.closest('div.alert').length) {
+    if (!$target.closest('div.fc-view-container').length && !$target.closest('div.modal').length && !$target.closest('div.nePasNettoyer').length && !$target.closest('div.fc-left').length && !$target.closest('div.alert').length && !$target.closest('.ui-autocomplete').length) {
       $(".fc-bg.selected").removeClass("selected");
       nettoyer();
       cleanSelectedVar();
