@@ -78,7 +78,9 @@
             <tr>
               <td class="bg-primary text-white" colspan="3">
                 <div class="d-flex justify-content-between align-items-center">
-                  <strong>{{ k|date('j') }}{% if k|date('j') == 1 %}er{% endif %} {{ trans_mois[k|date('m')] }} {{ k|date('Y') }}</strong>
+                  <span><i class="fas fa-calendar-day mr-2"></i>
+                    <strong>{{ k|date('j') }}{% if k|date('j') == 1 %}er{% endif %} {{ trans_mois[k|date('m')] }} {{ k|date('Y') }}</strong>
+                  </span>
                   {% if loop.index == 1 %}
                     {% if page.sort == 'asc' %}
                       <a title="Inverser l'ordre chronologique d'affichage" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/sortMails/" class="btn btn-sm btn-primary"><i class="fas fa-arrow-down"></i></a>
