@@ -712,13 +712,21 @@ class msAgenda
 
 /**
  * Obtenir les types de rendez-vous
- * @param  int $userID user ID
+ * @param  boolean $all si true, lister aussi les rdv marqués non utilisables
  * @return array         types de rdv
  */
-    public function getRdvTypes() {
+    public function getRdvTypes($all=false) {
         global $p;
         if(is_file($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml')) {
-          return Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml');
+          $typesRdv = Spyc::YAMLLoad($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml');
+          if($all == true) {
+            return $typesRdv;
+          } else {
+            foreach($typesRdv as $k=>$v) {
+              if(isset($v['utilisable']) and $v['utilisable']=="non") unset($typesRdv[$k]);
+            }
+            return $typesRdv;
+          }
         } else {
           return array(
             '[C]'=> array(

@@ -60,6 +60,11 @@ $(document).ready(function() {
 
   //pour les consultations
 
+
+  $( "#formName_ConfConsults tbody" ).sortable();
+  $( "#formName_ConfConsults tbody" ).disableSelection();
+
+
   $('body').on("click", ".colorpicker", function(e) {
     e.stopPropagation();
     $(".colorpicker").each(function(idx, el) {
@@ -84,15 +89,19 @@ $(document).ready(function() {
     $(this).parent().parent().remove();
   });
 
+  $("body").on("change", "select.utilisable", function(e) {
+    $(this).closest("tr").toggleClass("bg-light");
+  });
+
   $("body").on("click", ".addConsult", function(e) {
     e.preventDefault();
     e.stopPropagation();
     var id = (Math.random() * 100000) >> 0;
-    $(".adder").before('\
+    $("#formName_ConfConsults tbody").append('\
               <tr>\
                 <td>\
-                  <a class="delConsult" href="javascript:void(0)">\
-                    <span class="fas fa-minus"></span>\
+                  <a class="btn btn-sm btn-light delConsult" href="javascript:void(0)" title="Retirer ce type">\
+                    <i class="fas fa-minus"></i>\
                   </a>\
                 </td>\
                 <td>\
@@ -115,6 +124,15 @@ $(document).ready(function() {
                 </td>\
                 <td>\
                   <input class="form-control form-control-sm" name="duree_new' + id + '" type="text" value="" placeholder="ex: 20" autocomplete="off">\
+                </td>\
+                <td>\
+                  <select name="utilisable_new' + id + '" class="custom-select custom-select-sm utilisable">\
+                    <option value="oui" selected>oui</option>\
+                    <option value="non">non</option>\
+                  </select>\
+                </td>\
+                <td class="text-muted text-right">\
+                  <i class="fas fa-arrows-alt" title="Attraper pour déplacer et ordonner"></i>\
                 </td>\
               </tr>\
       ');

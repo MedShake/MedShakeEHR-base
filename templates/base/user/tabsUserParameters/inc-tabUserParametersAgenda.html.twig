@@ -52,9 +52,8 @@
 
     {# plages de l'agenda #}
     <div role="tabpanel" class="tab-pane active" id="pa">
-      <h3>Paramétrage des jours et horaires dans l'agenda MedShakeEHR</h3>
+      <h3 class="mb-3">Paramétrage des jours et horaires dans l'agenda MedShakeEHR</h3>
       <form id="formName_ConfAgenda" class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersAgenda/">
-      <div class="col-md-12">
         <table class="table" style="width:340px">
           <tr>
             <td>
@@ -150,31 +149,40 @@
             </tr>
           {% endfor %}
         </table>
-        <input class="btn btn-primary mt-2" type="submit" value="Valider">
-      </div>
+        <p class="text-right">
+          <input class="btn btn-primary mt-2" type="submit" value="Valider">
+        </p>
     </form>
     </div>
 
     {# types de consultations dan l'agenda MedShake #}
     <div role="tabpanel" class="tab-pane" id="pt">
-      <h3>Gestion des types de consultations disponibles dans l'agenda</h3>
+      <h3 class="mb-3">Gestion des types de consultations disponibles dans l'agenda</h3>
       <form id="formName_ConfConsults" class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersConsultations/">
-        <div class="col-md-12">
-          <table class="table table-sm mb-0 table-hover  consult">
-            <tr>
-              <th></th>
-              <th>Code</th>
-              <th>Descriptif</th>
-              <th>Couleur d'arrière plan</th>
-              <th>Couleur de bordure</th>
-              <th>Durée (min)</th>
-            </tr>
+          <table class="table table-sm mb-2 table-hover consult">
+            <thead>
+              <tr>
+                <th>
+                  <a class="btn btn-sm btn-primary addConsult" href="javascript:void(0)">
+                    <i class="fas fa-plus"></i> Nouveau
+                  </a>
+                </th>
+                <th>Code</th>
+                <th>Descriptif</th>
+                <th>Couleur d'arrière plan</th>
+                <th>Couleur de bordure</th>
+                <th>Durée (min)</th>
+                <th style="width: 5em;" >Utilisable</th>
+                <th style="width: 2em;"></th>
+              </tr>
+            </thead>
+            <tbody>
             {% for k,v in page.consultations %}
-            <tr>
+            <tr{% if v.utilisable == 'non' %} class="bg-light"{% endif %}>
               <td>
                 {% if v.readonly is defined == false %}
-                  <a class="delConsult" href="javascript:void(0)">
-                    <span class="fas fa-minus"></span>
+                  <a class="btn btn-sm btn-light delConsult" href="javascript:void(0)" title="Retirer ce type">
+                    <i class="fas fa-minus"></i>
                   </a>
                 {% endif %}
               </td>
@@ -203,23 +211,22 @@
               <td>
                 <input class="form-control form-control-sm" name="duree_{{ k }}" type="text" value="{{ v.duree }}" autocomplete="off">
               </td>
+              <td>
+                <select name="utilisable_{{ k }}" class="custom-select custom-select-sm utilisable">
+                  <option value="oui" {% if v.utilisable is not defined or v.utilisable == 'oui' %}selected{% endif %}>oui</option>
+                  <option value="non" {% if v.utilisable == 'non' %}selected{% endif %}>non</option>
+                </select>
+              </td>
+              <td class="text-muted text-right">
+                <i class="fas fa-arrows-alt" title="Attraper pour déplacer et ordonner"></i>
+              </td>
             </tr>
             {% endfor %}
-            <tr class="adder">
-              <td>
-                <a class="addConsult" href="javascript:void(0)">
-                  <span class="fas fa-plus"></span>
-                </a>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+            </tbody>
           </table>
-          <input class="btn btn-primary mt-2" type="submit" value="Valider">
-        </div>
+          <p class="text-right">
+            <input class="btn btn-primary mt-2" type="submit" value="Valider">
+          </p>
       </form>
     </div>
 
