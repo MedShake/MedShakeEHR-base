@@ -266,12 +266,8 @@ class msCcamNgapApi
         return;
       }
 
-      $agent= 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:58.0) Gecko/20100101 Firefox/58.0';
-
       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_USERAGENT, $agent);
       curl_setopt($ch, CURLOPT_URL, $url);
       $result=json_decode(curl_exec($ch), TRUE);
       $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
