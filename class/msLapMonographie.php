@@ -80,7 +80,6 @@ class msLapMonographie extends msLap
     $t['presdel']=@$this->_prepareData($this->_the->get_the_presdel($this->_spe, 0))[0];
     return $t;
 
-    return $t;
   }
 
 /**
