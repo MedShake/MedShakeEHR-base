@@ -258,7 +258,6 @@ public function ajoutDestinataire($tel, $params=[]) {
         foreach ($fields as $key=>$value) {
             $fieldsString .= $key.'='.$value.'&';
         }
-        rtrim($fieldsString, '&');
 
         //open connection
         $ch = curl_init();
@@ -375,7 +374,6 @@ public function logCreditsRestants() {
     foreach ($fields as $key=>$value) {
         $fieldsString .= $key.'='.$value.'&';
     }
-    rtrim($fieldsString, '&');
 
     //open connection
     $ch = curl_init();
