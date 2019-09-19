@@ -34,6 +34,6 @@
    $template='historiqueAccesHttp';
 
    if (($p['page']['MEDSHAKEEHRLOGFILE']=getenv("MEDSHAKEEHRLOGFILE"))===false) {
-     $p['page']['MEDSHAKEEHRLOGFILE']==FALSE;
+     $p['page']['MEDSHAKEEHRLOGFILE']=false;
    }
 }
