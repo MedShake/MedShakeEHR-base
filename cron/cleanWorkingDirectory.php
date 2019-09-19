@@ -60,7 +60,7 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-array_merge($p['config'], msConfiguration::getAllParametersForUser());
+$p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// utilisateurs potentiels et leur répertoire
 if ($usersTab= msSQL::sql2tabSimple("select p.id from people as p where p.pass!='' order by p.id")) {
