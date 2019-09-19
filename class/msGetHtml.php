@@ -182,6 +182,7 @@ class msGetHtml
  * @return string         chaine interprétée
  */
     public static function genererHtmlFromString($string, $var) {
+        global $p;
         // les variables d'environnement twig
         if (isset($p['config']['twigEnvironnementCache'])) {
             $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
