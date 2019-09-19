@@ -206,7 +206,7 @@ class msLapPrescription extends msLap
     public function setVersionInterpreteur($v)
     {
         if (is_numeric($v)) {
-            return $this->$_versionInterpreteur = $v;
+            return $this->_versionInterpreteur = $v;
         } else {
             throw new Exception('VersionInterpreteur is not string');
         }
