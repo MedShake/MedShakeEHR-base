@@ -283,9 +283,9 @@ class msUser
         }
         global $p;
         $userPass=password_hash($this->_userPass,PASSWORD_DEFAULT);
-        setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
-        setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
-        setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain']);
+        setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
+        setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
+        setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
     }
 
 /**
