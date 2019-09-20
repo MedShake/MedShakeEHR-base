@@ -42,8 +42,7 @@ class msSQL
       if (mysqli_connect_errno()) {
           die('Echec de connexion à la base de données');
       } else {
-          $mysqli->query('SELECT @password:="'.$p['config']['sqlVarPassword'].'"');
-          //$mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+          $mysqli->query('SELECT @password:="'.$mysqli->real_escape_string($p['config']['sqlVarPassword']).'"');
           return $mysqli;
       }
   }
