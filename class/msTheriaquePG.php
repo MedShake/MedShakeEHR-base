@@ -36,7 +36,7 @@ class msTheriaquePG {
   public function __construct()
   {
     global $p;
-    $this->_client = pg_pconnect("dbname=".$p['config']['theriaquePgDbName']." user=".$p['config']['theriaquePgDbUser']." password=".$p['config']['theriaquePgDbPassword']);
+    $this->_client = pg_pconnect("dbname=".pg_escape_string($p['config']['theriaquePgDbName'])." user=".pg_escape_string($p['config']['theriaquePgDbUser'])." password=".pg_escape_string($p['config']['theriaquePgDbPassword']));
     @pg_query($this->_client, "set search_path to theriaque, public;");
     return $this->_client;
   }
@@ -446,9 +446,9 @@ class msTheriaquePG {
     $data = $this->get_data_from_pg("get_analyse_ordonnance($id_analyse, '$typeAlerteSortie', '$natureAlerteCipemg', '$niveauGraviteInteraction')");
 
     // vider les tables
-    pg_query($this->_client, "delete from patient where id_analyse='".$id_analyse."'");
-    pg_query($this->_client, "delete from prescriptions where id_analyse='".$id_analyse."'");
-    pg_query($this->_client, "delete from posologies where id_analyse='".$id_analyse."'");
+    pg_query($this->_client, "delete from patient where id_analyse='".pg_escape_string($id_analyse)."'");
+    pg_query($this->_client, "delete from prescriptions where id_analyse='".pg_escape_string($id_analyse)."'");
+    pg_query($this->_client, "delete from posologies where id_analyse='".pg_escape_string($id_analyse)."'");
 
     // on reformate facon webservice
     if(!empty($data)) {
