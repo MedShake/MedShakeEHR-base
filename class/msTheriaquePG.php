@@ -36,7 +36,7 @@ class msTheriaquePG {
   public function __construct()
   {
     global $p;
-    $this->_client = pg_pconnect("dbname=theriaque user=theriaque password=theriaque");
+    $this->_client = pg_pconnect("dbname=".$p['config']['theriaquePgDbName']." user=".$p['config']['theriaquePgDbUser']." password=".$p['config']['theriaquePgDbPassword']);
     @pg_query($this->_client, "set search_path to theriaque, public;");
     return $this->_client;
   }
