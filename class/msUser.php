@@ -71,7 +71,6 @@ class msUser
         $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank, module from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
         if(password_verify($user['pass'],$_COOKIE['userPass'])) {
-        //if(md5(sha1($user['pass'])) == $_COOKIE['userPass']) {
 
             $name2typeID = new msData();
             $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
