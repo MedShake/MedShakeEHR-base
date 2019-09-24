@@ -52,6 +52,11 @@ if ($validation === false) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
+
+        // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
+        openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        syslog(LOG_WARNING, "MedShakeEHR - echec de connexion depuis {$_SERVER['REMOTE_ADDR']}");
+        closelog();
     }
 
     //do login

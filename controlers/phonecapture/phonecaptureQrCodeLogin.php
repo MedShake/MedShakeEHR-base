@@ -48,6 +48,11 @@ if (isset($match['params']['key'])) {
     if(count($error)>0) {
       $p['page']['error']=$error;
       $template='phonecaptureError';
+
+      // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
+      openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+      syslog(LOG_WARNING, "MedShakeEHR - echec de connexion phonecapture depuis {$_SERVER['REMOTE_ADDR']}");
+      closelog();
     } else {
       //mdp de l'utilisateur
       $userPass=msUser::getUserPassByUserID($params[0]);
