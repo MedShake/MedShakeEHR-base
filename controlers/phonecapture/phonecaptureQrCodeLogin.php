@@ -60,11 +60,10 @@ if (isset($match['params']['key'])) {
       //recherche de fingeprint specifique utilisateur
       $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', msSQL::cleanVar($params[0]));
 
-      //$userPass=md5(md5(sha1(md5($userPass.$p['config']['phonecaptureFingerprint']))));
       $userPass=password_hash($userPass.$p['config']['phonecaptureFingerprint'],PASSWORD_DEFAULT);
 
-      setcookie("userIdPc", $params[0], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
-      setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+      setcookie("userIdPc", $params[0], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain'], false, true);
+      setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain'], false, true);
 
       msTools::redirection('/phonecapture/');
 
