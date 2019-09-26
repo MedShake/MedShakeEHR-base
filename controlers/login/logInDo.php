@@ -52,11 +52,22 @@ if ($validation === false) {
             $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
+    }
 
-        // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
-        openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-        syslog(LOG_WARNING, "MedShakeEHR - echec de connexion depuis {$_SERVER['REMOTE_ADDR']}");
-        closelog();
+    //vérifier 2fa
+    if($validation != false and $p['config']['optionGeLogin2FA'] == 'true') {
+      if(!$user->check2faValidKey()) {
+        // redirection vers création de la clef et affichage
+        $user->doLogin();
+        unset($_SESSION['form'][$formIN]);
+        msTools::redirection('/login/set2fa/');
+      } else {
+        if(!$user->check2fa((string)$_POST['p_otpCode'])) {
+          $message="L'authentification OTP a échoué";
+          if(!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
+          $validation = false;
+        }
+      }
     }
 
     //do login
@@ -71,6 +82,11 @@ if ($validation === false) {
         }
         msTools::redirection('/patients/');
     } else {
+        // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
+        openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        syslog(LOG_WARNING, "MedShakeEHR - echec de connexion depuis {$_SERVER['REMOTE_ADDR']}");
+        closelog();
+
         $form->savePostValues2Session();
         msTools::redirRoute('userLogIn');
     }

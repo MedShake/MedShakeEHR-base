@@ -34,6 +34,7 @@ userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
 userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 userLogInFirst: ['GET', '/login/logInFirst/', 'login/logInFirst']
 userLogInFirstDo: ['POST', '/login/logInFirstDo/', 'login/logInFirstDo']
+userLogInSet2fa: ['GET', '/login/set2fa/', 'login/logInSet2fa']
 
 #RESTful interface
 restGeneral: ['GET|POST|PUT|DELETE', '/rest/[a:m]/', 'rest/rest']

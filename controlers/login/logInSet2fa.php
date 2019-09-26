@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,19 +21,16 @@
  */
 
 /**
- * Login : page de login
+ * Login : mettre en place 2fa
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $debug='';
-$template="login";
+$template="logInSet2fa";
 
-$formLogin = new msForm();
-$formLogin->setFormIDbyName($p['page']['formIN']='baseLogin');
-$p['page']['form']=$formLogin->getForm();
-
-if($p['config']['optionGeLogin2FA'] == 'false') {
-  $formLogin->removeFieldFromForm($p['page']['form'], 'otpCode');
+if($p['user']['secret2fa'] == NULL) {
+  $p['user']['secret2fa']=$iUser->set2fa()['uri'];
+} else {
+  $p['user']['secret2fa']=$iUser->get2faUri();
 }

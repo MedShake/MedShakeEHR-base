@@ -101,6 +101,10 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
     if (isset($p['user']['id'])) {
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
+    if ($p['config']['optionGeLogin2FA'] == 'true' and !$iUser->check2faValidKey() and $match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest' and $match['target']!='login/logInSet2fa') {
+      $iUser->doLogout();
+      msTools::redirRoute('userLogIn');
+    }
 } else {
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirRoute('userLogIn');
