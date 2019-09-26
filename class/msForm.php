@@ -203,6 +203,23 @@ class msForm
     }
 
 /**
+ * Définir les attributs d'un champ de formulaire après sa génération
+ * @param array $form    formulaire
+ * @param string $name    nom du champ
+ * @param array $changes array attr=>value
+ */
+    public function setFieldAttrAfterwards(&$form, $name, $changes) {
+      if(isset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]])) {
+        foreach($changes as $k=>$v) {
+          $form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value'][$k]=$v;
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+/**
  * Retirer un champ du formulaire après sa création
  * @param  array $form formulaire
  * @param  string $name nom du champ à retirer
