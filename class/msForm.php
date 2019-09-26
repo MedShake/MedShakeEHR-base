@@ -201,6 +201,22 @@ class msForm
             }
         }
     }
+
+/**
+ * Retirer un champ du formulaire après sa création
+ * @param  array $form formulaire
+ * @param  string $name nom du champ à retirer
+ * @return boolean true si valeur existe / false sinon
+ */
+    public function removeFieldFromForm(&$form, $name) {
+      if(isset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]])) {
+        unset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]);
+        return true;
+      } else {
+        return false;
+      }
+    }
+
 /**
  * Remplacer les valeurs de remplissage des selects du form par défaut
  * @param array $v Array des valeurs array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
