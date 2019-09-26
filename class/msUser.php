@@ -56,7 +56,7 @@ class msUser
  * Indentification de l'utilisateur
  * @return bool|array Si succès renvoie array avec données utilisateur
  */
-    public static function userIdentification()
+    public function userIdentification()
     {
         global $p;
         if (!isset($_COOKIE['userName'])) {

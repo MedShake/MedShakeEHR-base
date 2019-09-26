@@ -93,7 +93,8 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msTools::redirRoute('userLogInFirst');
     }
 } elseif (isset($_COOKIE['userName'])) {
-    $p['user']=msUser::userIdentification();
+    $iUser = new msUser;
+    $p['user']=$iUser->userIdentification();
     if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
