@@ -225,6 +225,17 @@ class msUser
     }
 
 /**
+ * Revoquer la clef utilisateur de double authentification
+ * @return boolean true/false
+ */
+    public function set2faUserKeyRevoked($uid) {
+      if (!is_numeric($uid)) {
+          throw new Exception("UserID n'est pas numérique");
+      }
+      return msSQL::sqlQuery("UPDATE people set secret2fa = null WHERE id='".$uid."' limit 1");
+    }
+
+/**
  * Obtenir l'URI à partir de la clef de l'utilisateur courant
  * @return string URI (NON url encodée)
  */
