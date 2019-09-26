@@ -417,6 +417,26 @@ $(document).ready(function() {
     });
   });
 
+  // révoquer la clef 2FA d'un utilisateur
+  $(".revoke2faKey").on("click", function(e) {
+    e.preventDefault();
+    var $cm = $(this);
+    $.ajax({
+      url: urlBase + "/configuration/ajax/configRevoke2faKey/",
+      type: 'post',
+      data: {
+        uid: $cm.attr('data-userid'),
+      },
+      dataType: "json",
+      success: function(data) {
+        alert_popup("success", 'La clef a été supprimée');
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+      }
+    });
+  });
+
   //changement de mot de passe d'un utilisateur dans la page liste des utilisateurs
   $(".changePassword").on("click", function(e) {
     e.preventDefault();
