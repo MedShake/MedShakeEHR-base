@@ -38,6 +38,7 @@ $formPassword=new msForm();
 $formPassword->setFormIDbyName($p['page']['formIN']='baseUserParametersPassword');
 $p['page']['formPassword']=$formPassword->getForm();
 $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
+$p['page']['secret2faUri'] = $iUser->get2faUri();
 
 
 $p['page']['hasAgenda']=false;

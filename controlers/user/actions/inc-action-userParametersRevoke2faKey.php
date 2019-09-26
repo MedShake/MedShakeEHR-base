@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2019
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,26 +21,11 @@
  */
 
 /**
- * User : les actions avec reload de page
+ * révoquation de la clef 2fa par l'utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 
-//$debug='';
-$m=$match['params']['m'];
-
-//modes acceptés et die() si non connu
-$acceptedModes=array(
-    'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
-    'userParametersPassword', // changer le mot de passe de l'utilisateur courant
-    'userParametersErgonomie', // changer param ergonomie et design
-    'userParametersRevoke2faKey' //
-);
-if (!in_array($m, $acceptedModes)) {
-    die;
-}
-
-//inclusion
-include('inc-action-'.$m.'.php');
+$iUser->set2faUserKeyRevoked($p['user']['id']);
+msTools::redirRoute('userLogOutDo');
