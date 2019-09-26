@@ -38,6 +38,9 @@ $formPassword=new msForm();
 $formPassword->setFormIDbyName($p['page']['formIN']='baseUserParametersPassword');
 $p['page']['formPassword']=$formPassword->getForm();
 $formPassword->addSubmitToForm($p['page']['formPassword'], $class='btn-primary insertBefore');
+$formPassword->setFieldAttrAfterwards($p['page']['formPassword'], 'password', ['label'=>'Nouveau mot de passe']);
+$formPassword->setFieldAttrAfterwards($p['page']['formPassword'], 'verifPassword', ['label'=>'Confirmation du nouveau mot de passe']);
+
 $p['page']['secret2faUri'] = $iUser->get2faUri();
 
 
