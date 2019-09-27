@@ -15,3 +15,6 @@ UPDATE `forms` set `name`='Changement mot de passe utilisateur', `description`='
 
  -- longueur minimale du password utilisateur 
  INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginPassMinLongueur', 'default', '0', '', 'Options', 'int', 'longueur minimale autorisée du mot de passe utilisateur', '10');
+
+-- pour la forme : formulaire de 1er login
+UPDATE `forms` set `yamlStructure` = 'structure:\r\n row1:\r\n  col1: \r\n    head: \"Premier utilisateur\"\r\n    size: 3\r\n    bloc:\r\n      - username,required                          		#1    Identifiant\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit,Valider,class={btn-primary}         		#3    Valider' where `internalName` = 'baseFirstLogin';
