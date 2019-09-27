@@ -32,7 +32,7 @@ $_POST = $gump->sanitize($_POST);
 
 $gump->validation_rules(array(
 	'p_currentPassword' => 'required|checkPasswordValidity,'.$p['user']['id'],
-	'p_password' => 'required|max_len,40|min_len,'.$p['config']['optionGeLoginPassMinLongueur'],
+	'p_password' => 'required|max_len,40|checkPasswordLength',
 	'p_verifPassword' => 'equalsfield,p_password',
 ));
 
