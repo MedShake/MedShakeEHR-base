@@ -36,7 +36,7 @@ $acceptedModes=array(
     'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
     'userParametersPassword', // changer le mot de passe de l'utilisateur courant
     'userParametersErgonomie', // changer param ergonomie et design
-    'userParametersRevoke2faKey' //
+    'userParametersRevoke2faKey', // révoquer sa clef 2FA
 );
 if (!in_array($m, $acceptedModes)) {
     die;

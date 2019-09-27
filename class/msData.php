@@ -297,7 +297,7 @@ class msData extends msDataCat
     public function createOrUpdateDataType($d)
     {
         global $p, $mysqli;
-        $gump=new GUMP();
+        $gump=new GUMP('fr');
 
         if (isset($d['id'])) {
             $gump->validation_rules(array(
