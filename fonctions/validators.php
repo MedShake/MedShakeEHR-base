@@ -56,5 +56,10 @@ GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
 		msTools::validateDate($input[$field], $param);
 	}, 'Cette date n\'est pas valide !');
 
+GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return FALSE;
+		$checkLogin = new msUser;
+		return $checkLogin->checkLoginByUserID($param, $input[$field]);
+	}, 'Le champ {field} n\'est pas correct');
 
 ?>
