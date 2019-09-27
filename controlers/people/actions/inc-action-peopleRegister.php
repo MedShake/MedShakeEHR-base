@@ -44,10 +44,13 @@ if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPrati
 }
 
 //definition formulaire de travail
-$form = new msForm();
 $form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
+$form->setContextualValidationErrorsMsg(false);
+$form->setContextualValidationRule('birthname',['checkNoName']);
+
+
 if ($match['params']['porp']=='pro' and !$actAsAjax) {
 
   //si jeux de valeurs normées présents
@@ -62,8 +65,8 @@ if ($match['params']['porp']=='pro' and !$actAsAjax) {
   }
   if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
 }
-$validation=$form->getValidation();
 
+$validation=$form->getValidation();
 
 if ($validation === false) {
     if ($actAsAjax) {
