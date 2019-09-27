@@ -397,6 +397,9 @@
 	    {% if message %}<li>{{ message }}</li>{% endif %}
 		{% endfor %}
 		</ul>
+		<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
 	</div>
 	{% endif %}
 {% endmacro %}

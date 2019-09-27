@@ -178,6 +178,14 @@ $(document).ready(function() {
     chkboxClick(e.target);
   });
 
+  // enlever les erreurs en session en fermant l'alerte
+  $('body').on('click', '.cleanSessionFormWarning', function () {
+    $.ajax({
+      url: urlBase + '/user/ajax/cleanSessionFormWarning/',
+      type: 'post',
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////
   /////////Rafraichir le menu POTD
   if(refreshDelayPOTD > 0) {
