@@ -27,7 +27,6 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 $formIN=$_POST['formIN'];
 

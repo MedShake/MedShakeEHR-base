@@ -30,8 +30,6 @@ if ($p['config']['agendaService'] != 'clicRDV') {
     return;
 }
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
-
 $formIN=$_POST['formIN'];
 
 //construc validation rules

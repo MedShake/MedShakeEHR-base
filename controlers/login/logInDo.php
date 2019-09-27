@@ -27,7 +27,6 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 $formIN=$_POST['formIN'];
 
@@ -36,8 +35,6 @@ $form = new msForm();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
-
-
 
 if ($validation === false) {
 

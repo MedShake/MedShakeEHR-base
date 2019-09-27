@@ -27,7 +27,6 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
 
 $formIN=$_POST['formIN'];
 
@@ -36,8 +35,6 @@ $form = new msForm();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
-
-
 
 if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
     msTools::redirRoute('userLogIn');
