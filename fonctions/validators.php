@@ -33,28 +33,28 @@ GUMP::add_validator("identite", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\-\'\ ])+$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce champ a une mauvaise syntaxe !');
+	}, 'Le champ {field} a une mauvaise syntaxe');
 
 GUMP::add_validator("mobilphone", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^0[6-7]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce numéro de téléphone mobile n\'est pas valide !');
+	}, 'Le champ {field} n\'est pas un numéro de téléphone mobile valide');
 
 GUMP::add_validator("phone", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^0[1-6]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce numéro de téléphone n\'est pas valide !');
+	}, 'Le champ {field} n\'est pas un numéro de téléphone valide');
 
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		if (msSQL::sqlUniqueChamp("select $field from $param where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
-	}, 'Ce nom est déjà utilisé !');
+	}, 'Le champ {field} contient une valeur déjà utilisée');
 
 GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
 		msTools::validateDate($input[$field], $param);
-	}, 'Cette date n\'est pas valide !');
+	}, 'Le champ {field} ne contient pas une date valide');
 
 GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return FALSE;
