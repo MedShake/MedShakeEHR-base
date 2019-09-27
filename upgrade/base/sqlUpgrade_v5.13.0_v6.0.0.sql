@@ -12,3 +12,6 @@ UPDATE forms set `yamlStructure` = 'global:\r\n  formClass: \'form-signin\' \r\n
 
 -- révision du form utilisateur modification password
 UPDATE `forms` set `name`='Changement mot de passe utilisateur', `description`='Changement mot de passe utilisateur',  `yamlStructure` = 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - currentPassword,required                   		#6    Mot de passe actuel\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe' where `internalName` = 'baseUserParametersPassword';
+
+ -- longueur minimale du password utilisateur 
+ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginPassMinLongueur', 'default', '0', '', 'Options', 'int', 'longueur minimale autorisée du mot de passe utilisateur', '10');
