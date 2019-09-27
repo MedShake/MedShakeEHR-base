@@ -45,6 +45,7 @@ if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPrati
 
 //definition formulaire de travail
 $form = new msForm();
+$form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 if ($match['params']['porp']=='pro' and !$actAsAjax) {

@@ -33,7 +33,7 @@ if ($p['config']['agendaService'] != 'clicRDV') {
 $formIN=$_POST['formIN'];
 
 //construc validation rules
-$form = new msForm();
+$form = new msFormValidation();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 //$validation=$form->getValidation();

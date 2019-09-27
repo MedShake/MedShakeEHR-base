@@ -23,7 +23,6 @@
 /**
  * Les questionnaires
  * - construction à partir du modèle yaml (macro Twig termine le travail ensuite)
- * - obtention des règles de validation à patir du modèle yaml
  * - obtention des valeurs pour un individu particulier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
@@ -38,52 +37,49 @@ class msForm
     /**
      * @var int Le numéro du questionnaire
      */
-    private $_formID;
+    protected $_formID;
     /**
      * @var array Les datas envoyées en $_POST quand le questionnaire est rempli
      */
-    private $_postdatas;
+    protected $_postdatas;
     /**
     * @var int Le nom interne du questionnaire
     */
-    private $_formIN;
-    /**
-     * @var array Les règles de validation d'un questionnaire
-     */
-    private $_validationrules;
+    protected $_formIN;
+
     /**
      * @var array Les valeur pré calculées à injecter dans le form comme valeurs défaut
      */
-    private $_prevalues;
+    protected $_prevalues;
     /**
      * @var array valeurs des <option> à injecter dans les selects du form en lieu de celles par défaut
      * array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
      */
-    private $_optionsForSelect;
+    protected $_optionsForSelect;
     /**
      * @var int Le numéro d'instance du questionnaire
      */
-    private $_instance=0;
+    protected $_instance=0;
     /**
      * @var string Le type de nomage des champs du formulaire (byID / byName)
      */
-    private $_typeForNameInForm='byID';
+    protected $_typeForNameInForm='byID';
     /**
      * @var array log des row et col du form pour pouvoir mettre une preValue après coup
      */
-    private $_log;
+    protected $_log;
     /**
      * @var array array PHP du formulaire construit
      */
-    private $_builtForm;
+    protected $_builtForm;
    /**
     * @var array tableau de type à extraire dans la recherche de prevalues
     */
-    private $_typesSupForPrevaluesExtraction=[];
+    protected $_typesSupForPrevaluesExtraction=[];
 
-    private $_cdaData=[];
+    protected $_cdaData=[];
 
-    private $_formYamlStructure;
+    protected $_formYamlStructure;
 
 /**
  * Définir le numéro du formulaire
@@ -134,6 +130,9 @@ class msForm
  */
     public function setFormIDbyName($formName)
     {
+        if(!is_string($formName)) {
+          throw new Exception('FormName is not string');
+        }
         if ($formID=msSQL::sqlUniqueChamp("select id from forms where internalName='".msSQL::cleanVar($formName)."' limit 1")) {
             $this->_formIN=$formName;
             return $this->_formID = $formID;
@@ -414,18 +413,7 @@ class msForm
         ),
       );
     }
-/**
- * Obtenir les règles de validation du formulaire
- * @return array Array des règles de validation pour GUMP
- */
-    public function getValidation()
-    {
-        if ($formYaml=$this->getFormFromDb($this->_formID)) {
-            return $this->_formValidation($formYaml);
-        } else {
-            throw new Exception('Validations cannot be done');
-        }
-    }
+
 /**
  * Enregistrer les valeurs envoyées en POST en session
  * @return void
@@ -478,182 +466,13 @@ class msForm
     }
 
 
-/**
- * Traiter le form pour obtenir les règles de validation et valider
- * @param  array $t Le form au format PHP
- * @return bool    True ou false en fonction du résultat de validation
- */
-    private function _formValidation($t)
-    {
-        $r=array();
-
-        //nb of rows
-        $rowTotal=count($t['structure']);
-
-        //dataset
-        $dataset=$t['global']['dataset'];
-
-        for ($rowNumber=1;$rowNumber<=$rowTotal;$rowNumber++) {
-            //row by row
-            if (isset($t['structure']['row'.$rowNumber])) {
-                $this->_formValidationRow($t['structure']['row'.$rowNumber], $rowNumber, $r, $dataset);
-            }
-        }
-
-        //implode final validation rules
-        if (!empty($r['validation'])) {
-            foreach ($r['validation'] as $k=>$v) {
-                $r['validation'][$k]=implode('|', $v);
-            }
-        }
-
-        //stock validation rules
-        $this->_validationrules=$r;
-
-        //check and validate datas
-        $gump=new GUMP();
-        $flatPOST = $gump->sanitize($this->_postdatas);
-
-        if (!empty($r['validation'])) {
-            $gump->validation_rules($r['validation']);
-        }
-        if (!empty($r['filter'])) {
-            $gump->filter_rules($r['filter']);
-        }
-
-        $validated_data = $gump->run($flatPOST);
-
-        if ($validated_data === false) {
-            $errors=$gump->get_errors_array();
-            $_SESSION['form'][$this->_formIN]['validationErrors']=array();
-            $_SESSION['form'][$this->_formIN]['validationErrorsMsg']=array();
-            foreach ($errors as $k=>$v) {
-                $correctName=str_replace(' ', '_', $k);
-                if (!in_array($correctName, $_SESSION['form'][$this->_formIN]['validationErrors'])) {
-                    $_SESSION['form'][$this->_formIN]['validationErrors'][]=$correctName;
-
-                    if (!in_array($r['errormsg'][$correctName], $_SESSION['form'][$this->_formIN]['validationErrorsMsg'])) {
-                        $_SESSION['form'][$this->_formIN]['validationErrorsMsg'][]=$r['errormsg'][$correctName];
-                    }
-                }
-                $this->savePostValues2Session();
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-/**
- * Traiter un ligne du form pour en extraire les règles de validation
- * @param  array $rowTab    Le tableau de la ligne
- * @param  int $rowNumber Le numero de ligne
- * @param  array $r         Le tableau général final
- * @param  string $dataset   Le jeu de data impliqué dans le form
- * @return void
- */
-    private function _formValidationRow($rowTab, $rowNumber, &$r, $dataset)
-    {
-        $col=count($rowTab);
-        for ($colNumber=1;$colNumber<=$col;$colNumber++) {
-            if (isset($rowTab['col'.$colNumber]['bloc'])) {
-                $this->_formValidationBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r, $dataset);
-            }
-        }
-    }
-
-/**
- * Traiter un bloc du form pour en extraire les règles de validation
- * @param  array $blocs      Array du bloc
- * @param  int $rowNumber Numéro de ligne
- * @param  int $colNumber Numéro de colonne
- * @param  array $r         Le tableau général final
- * @param  string $dataset   Le jeu de données impliqué dans le form
- * @return void
- */
-    private function _formValidationBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
-    {
-        if (is_array($blocs)) {
-            foreach ($blocs as $k=>$v) {
-                $bloc=explode(',', $v);
-                if (preg_match('#(template{|label{).*#i', $bloc[0])) {
-                    continue;
-                }
-                if (is_numeric($bloc[0]) or preg_match('#[\w]+#i', $bloc[0])) {
-                    if (is_numeric($bloc[0])) {
-                        $type=$this->_formExtractType($bloc[0], $dataset);
-                    } else {
-                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
-                    }
-
-                    //$type['originalname']=$type['name'];
-                    //$type['name']='p_'.$type['id'];
-
-                    $type['internalName']=$type['name'];
-                    if ($this->_typeForNameInForm !='byName') {
-                        $type['name']='p_'.$type['name'];
-                    }
-
-                    //post name -> type name
-                    $r['postname2typename'][$type['name']]=$type['internalName'];
-
-
-                    // si de type select
-                    if ($type['formType']=="select") {
-
-                        //validation
-                        if (!empty($type['validationRules'])) {
-                            $r['validation'][$type['name']][]=$type['validationRules'];
-                        }
-                        if (in_array('required', $bloc)) {
-                            $r['validation'][$type['name']][]='required';
-                        }
-                        //forcage des <option>
-                        if(isset($this->_optionsForSelect[$type['name']])) {
-                            $type['formValues']=$this->_optionsForSelect[$type['name']];
-                        }
-                        // ou valeur par défaut du type
-                        else {
-                            $type['formValues']=Spyc::YAMLLoad($type['formValues']);
-                        }
-                        if (!empty($type['formValues'])) {
-                            $r['validation'][$type['name']][]='contains_list,'.implode(';', array_keys($type['formValues']));
-                        }
-                        //filter
-                        $r['filter'][$type['name']]='trim';
-                        //error msg
-                        if (!empty($type['validationErrorMsg'])) {
-                            $r['errormsg'][$type['name']]=$type['validationErrorMsg'];
-                        }
-                    }
-
-                    // si le reste
-                    else {
-                        //validation
-                        if (!empty($type['validationRules'])) {
-                            $r['validation'][$type['name']][]=$type['validationRules'];
-                        }
-                        if (in_array('required', $bloc)) {
-                            $r['validation'][$type['name']][]='required';
-                        }
-                        //filter
-                        $r['filter'][$type['name']]='trim';
-                        //error msg
-                        if (!empty($type['validationErrorMsg'])) {
-                            $r['errormsg'][$type['name']]=$type['validationErrorMsg'];
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 /**
  * Construire le formulaire pour le passer ensuite à macro Twig
  * @param  array $t Array PHP du formulaire
  * @return array    array PHP pour maco Twig
  */
-    private function _formBuilder($t)
+    protected function _formBuilder($t)
     {
         global $p;
         $r=array();
@@ -710,7 +529,7 @@ class msForm
  * @param  array $cda data CDA issue du formulaire
  * @return void
  */
-    private function _formBuilderAddSelectForServiceEventCode(&$r,$cda) {
+    protected function _formBuilderAddSelectForServiceEventCode(&$r,$cda) {
 
       foreach($cda['actesPossibles'] as $code=>$v) {
         $formValues[$code]=$code.': '.$v['serviceEventCode']['displayName'];
@@ -750,7 +569,7 @@ class msForm
  * @param  string $dataset   Jeu de donnéés concerné par le form
  * @return void
  */
-    private function _formBuilderRow($rowTab, $rowNumber, &$r, $dataset)
+    protected function _formBuilderRow($rowTab, $rowNumber, &$r, $dataset)
     {
         $col=count($rowTab);
 
@@ -787,7 +606,7 @@ class msForm
  * @param  string $dataset   Jeu de données concerné par le form
  * @return void
  */
-    private function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
+    protected function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
     {
         if (is_array($blocs)) {
             if(!isset($r['structure'][$rowNumber][$colNumber]['elements'])) $r['structure'][$rowNumber][$colNumber]['elements']=array();
@@ -936,7 +755,7 @@ class msForm
  * @param  string $stringTypes typeID ou typeName séparés par :
  * @return string              typeID séparés par :
  */
-    private function _traiterListeTypesAutocomplete($stringTypes) {
+    protected function _traiterListeTypesAutocomplete($stringTypes) {
       $finalTab=[];
       if(!empty($stringTypes)) {
         $typesTab=explode(':', $stringTypes);
@@ -959,7 +778,7 @@ class msForm
  * @param  array $r         Tableau final de résultat
  * @return void
  */
-    private function _formBuilderHeadRow($value, $rowNumber, $colNumber, &$r)
+    protected function _formBuilderHeadRow($value, $rowNumber, $colNumber, &$r)
     {
         if (empty(trim($value))) {
             $value='&nbsp;';
@@ -978,7 +797,7 @@ class msForm
  * @param  array $r         Tableau final de résultat
  * @return void
  */
-    private function _formBuilderHead($value, $rowNumber, $colNumber, &$r)
+    protected function _formBuilderHead($value, $rowNumber, $colNumber, &$r)
     {
         if (empty(trim($value))) {
             $value='&nbsp;';
@@ -997,7 +816,7 @@ class msForm
  * @param  array $r         Tableau final de résultat
  * @return void
  */
-    private function _formBuilderColSize($value, $rowNumber, $colNumber, &$r)
+    protected function _formBuilderColSize($value, $rowNumber, $colNumber, &$r)
     {
       if(is_numeric(trim($value){0})) {
         $r['structure'][$rowNumber][$colNumber]['size']='col-md-'.$value;
@@ -1014,7 +833,7 @@ class msForm
  * @param  array $r         Tableau final de résultat
  * @return void
  */
-    private function _formBuilderColClass($value, $rowNumber, $colNumber, &$r)
+    protected function _formBuilderColClass($value, $rowNumber, $colNumber, &$r)
     {
       if(is_string($value)) {
         $r['structure'][$rowNumber][$colNumber]['class']=$value;
@@ -1027,7 +846,7 @@ class msForm
  * @param  string $dataset Jeu de données
  * @return array          Infos sur le type
  */
-    private function _formExtractType($id, $dataset)
+    protected function _formExtractType($id, $dataset)
     {
         if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where id='".msSQL::cleanVar($id)."' limit 1")) {
             return $typeData;
@@ -1042,7 +861,7 @@ class msForm
  * @param  string $dataset Jeu de données
  * @return array          Infos sur le type
  */
-    private function _formExtractTypeByName($name, $dataset)
+    protected function _formExtractTypeByName($name, $dataset)
     {
         if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
             return $typeData;
@@ -1126,7 +945,7 @@ class msForm
  * @param string $formyaml formulaire au formt yaml
  * @return bool true or false
  */
-    private function _testNumericBloc($formyaml)
+    protected function _testNumericBloc($formyaml)
     {
         preg_match_all("# - ([0-9]+)#i", $formyaml, $matches);
         if(count($matches[1]) > 0) return true; else return false;
@@ -1226,7 +1045,7 @@ class msForm
  * Obtenir le code javascript de sélection automatique de l'acte effectué en fonction des règles CDA en yaml
  * @return string javascript
  */
-  private function _getJsFromCdaRules() {
+  protected function _getJsFromCdaRules() {
     if(empty($this->_cdaData)) return;
 
     $d=$this->_cdaData['clinicalDocument']['documentationOf']['serviceEvent'];

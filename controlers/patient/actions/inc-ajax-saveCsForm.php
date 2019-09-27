@@ -31,7 +31,7 @@ $formIN=$_POST['formIN'];
 $finalStatut='ok';
 
 //definition formulaire de travail
-$form = new msForm();
+$form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();

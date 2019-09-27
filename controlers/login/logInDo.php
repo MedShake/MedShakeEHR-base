@@ -31,7 +31,7 @@
 $formIN=$_POST['formIN'];
 
 //construc validation rules
-$form = new msForm();
+$form = new msFormValidation();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
@@ -39,6 +39,7 @@ $validation=$form->getValidation();
 if ($validation === false) {
 
     msTools::redirRoute('userLogIn');
+
 } else {
 
     //check login
