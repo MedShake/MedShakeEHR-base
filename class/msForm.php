@@ -439,18 +439,17 @@ class msForm
         if($this->_formIN == 'baseLogin') {
           $sql = "select * from forms where id='".$this->_formID."' limit 1";
         } else {
-          $sql = "select yamlStructure, dataset, formMethod, formAction, cda from forms where id='".$this->_formID."' limit 1";
+          $sql = "select yamlStructure, formMethod, formAction, cda from forms where id='".$this->_formID."' limit 1";
         }
         if ($formyaml=msSQL::sqlUnique($sql)) {
 
             if($this->_testNumericBloc($formyaml['yamlStructure'])) {
-              $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure'],$formyaml['dataset']);
+              $formyaml['yamlStructure']=$this->cleanForm($formyaml['yamlStructure']);
             }
 
             $this->_formYamlStructure=$formyaml['yamlStructure'];
 
             $form = Spyc::YAMLLoad($formyaml['yamlStructure']);
-            $form['global']['dataset']=$formyaml['dataset'];
             $form['global']['formAction']=$formyaml['formAction'];
             $form['global']['formMethod']=$formyaml['formMethod'];
             if(!empty($formyaml['cda'])) {
@@ -485,12 +484,8 @@ class msForm
             $r['global']=$t['global'];
         }
 
-        //dataset
-        $dataset=$t['global']['dataset'];
-
         //instance
         $r['global']['instance']=$this->_instance;
-
 
         // structure
         // on sort si pas de structure (on est dans un formulaire affichage)
@@ -513,7 +508,7 @@ class msForm
 
             //on passe au colonne
             if (isset($t['structure']['row'.$rowNumber])) {
-                $this->_formBuilderRow($t['structure']['row'.$rowNumber], $rowNumber, $r, $dataset);
+                $this->_formBuilderRow($t['structure']['row'.$rowNumber], $rowNumber, $r);
             }
         }
 
@@ -566,10 +561,9 @@ class msForm
  * @param  array $rowTab    Array de la ligne
  * @param  int $rowNumber Numéro de ligne
  * @param  array $r         Array final de résultat
- * @param  string $dataset   Jeu de donnéés concerné par le form
  * @return void
  */
-    protected function _formBuilderRow($rowTab, $rowNumber, &$r, $dataset)
+    protected function _formBuilderRow($rowTab, $rowNumber, &$r)
     {
         $col=count($rowTab);
 
@@ -592,7 +586,7 @@ class msForm
 
             //bloc
             if (isset($rowTab['col'.$colNumber]['bloc'])) {
-                $this->_formBuilderBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r, $dataset);
+                $this->_formBuilderBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r);
             }
         }
     }
@@ -603,10 +597,9 @@ class msForm
  * @param  int $rowNumber Numéro de la ligne
  * @param  int $colNumber Numéro de la colonne
  * @param  array $r         Array final de résultat
- * @param  string $dataset   Jeu de données concerné par le form
  * @return void
  */
-    protected function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
+    protected function _formBuilderBloc($blocs, $rowNumber, $colNumber, &$r)
     {
         if (is_array($blocs)) {
             if(!isset($r['structure'][$rowNumber][$colNumber]['elements'])) $r['structure'][$rowNumber][$colNumber]['elements']=array();
@@ -631,9 +624,9 @@ class msForm
                 } else {
                     $bloc=explode(',', $v);
                     if (is_numeric($bloc[0])) {
-                        $type=$this->_formExtractType($bloc[0], $dataset);
+                        $type=$this->_formExtractType($bloc[0]);
                     } else {
-                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
+                        $type=$this->_formExtractTypeByName($bloc[0]);
                     }
 
                     $type['internalName']=$type['name'];
@@ -843,12 +836,11 @@ class msForm
 /**
  * Extraire les infos sur un type de données
  * @param  int $id      ID du type
- * @param  string $dataset Jeu de données
  * @return array          Infos sur le type
  */
-    protected function _formExtractType($id, $dataset)
+    protected function _formExtractType($id)
     {
-        if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where id='".msSQL::cleanVar($id)."' limit 1")) {
+        if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from data_types where id='".msSQL::cleanVar($id)."' limit 1")) {
             return $typeData;
         } else {
             throw new Exception('Le type de donnée '.$id.' n\'a pas pu être extrait de la base de données');
@@ -858,12 +850,11 @@ class msForm
 /**
  * Extraire les infos sur un type de données par son name
  * @param  string $name      name du type
- * @param  string $dataset Jeu de données
  * @return array          Infos sur le type
  */
-    protected function _formExtractTypeByName($name, $dataset)
+    protected function _formExtractTypeByName($name)
     {
-        if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from ".$dataset." where name='".msSQL::cleanVar($name)."' limit 1")) {
+        if ($typeData=msSQL::sqlUnique("select id, name, label, validationRules, validationErrorMsg, formType, formValues, placeholder from data_types where name='".msSQL::cleanVar($name)."' limit 1")) {
             return $typeData;
         } else {
             throw new Exception('Le type de donnée n\'a pas pu être extrait de la base de données par son name : '.$name);
@@ -954,10 +945,9 @@ class msForm
 /**
  * Transformer les blocs numériques d'un formulaire en bloc name
  * @param string $formyaml formulaire au formt yaml
- * @param string $dataset dataset du formulaire
  * @return string formulaire nettoyé
  */
-  public function cleanForm($formyaml, $dataset)
+  public function cleanForm($formyaml)
   {
       if($form=explode("\n", $formyaml)) {
         foreach ($form as $ligne) {
@@ -975,9 +965,9 @@ class msForm
               $ligne=$ligne[0];
 
               if (preg_match("#(\s+)- ([0-9]+)(.*)#i", $ligne, $match)) {
-                  $type=$this->_formExtractType($match[2], $dataset);
+                  $type=$this->_formExtractType($match[2]);
               } elseif(preg_match("#(\s+)- ([\w]+)(.*)#i", $ligne, $match)) {
-                  $type=$this->_formExtractTypeByName($match[2], $dataset);
+                  $type=$this->_formExtractTypeByName($match[2]);
               }
 
               $cleanform[]=str_pad($match[1].'- '.$type['name'].trim($match[3]),50)." \t\t#".str_pad($type['id'],4).' '.str_replace("'", " ", $type['label']);

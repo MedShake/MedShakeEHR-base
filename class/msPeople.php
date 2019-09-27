@@ -39,10 +39,6 @@ class msPeople
  */
     private $_fromID;
 /**
- * @var int $_dataset Le jeu de data concerné
- */
-    private $_dataset;
-/**
  * @var int $_type Type : patient ou pro
  */
     private $_type='patient';
@@ -122,19 +118,7 @@ class msPeople
             throw new Exception('Type n\'est pas d\'une valeur autorisée');
         }
     }
-/**
- * Définir le jeu de données
- * @param string $v jeu de données
- * @return string Dataset
- */
-    public function setDataset($v)
-    {
-        if (is_string($v)) {
-            return $this->_dataset = $v;
-        } else {
-            throw new Exception('Dataset is not string');
-        }
-    }
+
 /**
  * Est-ce un patient externe?
  * @return value true/false

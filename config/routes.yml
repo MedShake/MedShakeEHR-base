@@ -40,7 +40,7 @@ userLogInSet2fa: ['GET', '/login/set2fa/', 'login/logInSet2fa']
 restGeneral: ['GET|POST|PUT|DELETE', '/rest/[a:m]/', 'rest/rest']
 
 #Ajax general
-ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
+ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
 
 #agenda

@@ -63,7 +63,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToApicrypt"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/emailApicrypt/emailApicrypt/birthname:lastname:firstname:emailApicrypt/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/emailApicrypt/emailApicrypt/birthname:lastname:firstname:emailApicrypt/',
       autoFocus: true
     });
   });
@@ -72,7 +72,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailTo"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/profesionnalEmail/profesionnalEmail/birthname:lastname:firstname:profesionnalEmail/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/profesionnalEmail/profesionnalEmail/birthname:lastname:firstname:profesionnalEmail/',
       autoFocus: true
     });
   });
@@ -81,7 +81,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToEcofaxName"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/faxPro/birthname:lastname:firstname/birthname:lastname:firstname:faxPro/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/faxPro/birthname:lastname:firstname/birthname:lastname:firstname:faxPro/',
       select: function(event, ui) {
         $('input[name="mailToEcofaxNumber"]').val(ui.item.faxPro);
       }
@@ -92,7 +92,7 @@ $(document).ready(function() {
   $('body').on('focusin', 'input[name="mailToEcofaxNumber"]', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteLinkType/data_types/faxPro/faxPro/birthname:lastname:firstname:faxPro/',
+      source: urlBase + '/ajax/getAutocompleteLinkType/faxPro/faxPro/birthname:lastname:firstname:faxPro/',
       select: function(event, ui) {
         if (ui.item.birthname && ui.item.lastname) {
           $('input[name="mailToEcofaxName"]').val(ui.item.lastname + ' (' + ui.item.birthname + ') ' + ui.item.firstname);

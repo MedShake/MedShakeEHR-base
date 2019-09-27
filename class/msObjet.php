@@ -47,10 +47,6 @@ class msObjet
      */
     private $_byID;
     /**
-     * @var string jeu de données
-     */
-    private $_dataset;
-    /**
      * @var string type de l'individu
      */
     private $_type='patient';
@@ -158,19 +154,6 @@ public function getToID()
             return $this->_type = $t;
         } else {
             throw new Exception('Type n\'est pas d\'une valeur autorisée');
-        }
-    }
-
-/**
- * Définir le jeu de données
- * @param string $v dataset utilisé
- */
-    public function setDataset($v)
-    {
-        if (is_string($v)) {
-            return $this->_dataset = $v;
-        } else {
-            throw new Exception('Dataset is not string');
         }
     }
 

@@ -65,8 +65,8 @@ if ($match['params']['porp']=='pro' and !$actAsAjax) {
   }
   if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
 }
-
 $validation=$form->getValidation();
+
 
 if ($validation === false) {
     if ($actAsAjax) {
@@ -90,8 +90,6 @@ if ($validation === false) {
     } else {
         $patient->setToID($_POST['patientID']);
     }
-    $patient->setDataset('admin');
-
 
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {

@@ -102,13 +102,10 @@ class msFormValidation extends msForm
         //nb of rows
         $rowTotal=count($t['structure']);
 
-        //dataset
-        $dataset=$t['global']['dataset'];
-
         for ($rowNumber=1;$rowNumber<=$rowTotal;$rowNumber++) {
             //row by row
             if (isset($t['structure']['row'.$rowNumber])) {
-                $this->_formValidationRow($t['structure']['row'.$rowNumber], $rowNumber, $r, $dataset);
+                $this->_formValidationRow($t['structure']['row'.$rowNumber], $rowNumber, $r);
             }
         }
 
@@ -166,15 +163,14 @@ class msFormValidation extends msForm
  * @param  array $rowTab    Le tableau de la ligne
  * @param  int $rowNumber Le numero de ligne
  * @param  array $r         Le tableau général final
- * @param  string $dataset   Le jeu de data impliqué dans le form
  * @return void
  */
-    private function _formValidationRow($rowTab, $rowNumber, &$r, $dataset)
+    private function _formValidationRow($rowTab, $rowNumber, &$r)
     {
         $col=count($rowTab);
         for ($colNumber=1;$colNumber<=$col;$colNumber++) {
             if (isset($rowTab['col'.$colNumber]['bloc'])) {
-                $this->_formValidationBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r, $dataset);
+                $this->_formValidationBloc($rowTab['col'.$colNumber]['bloc'], $rowNumber, $colNumber, $r);
             }
         }
     }
@@ -185,10 +181,9 @@ class msFormValidation extends msForm
  * @param  int $rowNumber Numéro de ligne
  * @param  int $colNumber Numéro de colonne
  * @param  array $r         Le tableau général final
- * @param  string $dataset   Le jeu de données impliqué dans le form
  * @return void
  */
-    private function _formValidationBloc($blocs, $rowNumber, $colNumber, &$r, $dataset)
+    private function _formValidationBloc($blocs, $rowNumber, $colNumber, &$r)
     {
         if (is_array($blocs)) {
             foreach ($blocs as $k=>$v) {
@@ -198,9 +193,9 @@ class msFormValidation extends msForm
                 }
                 if (is_numeric($bloc[0]) or preg_match('#[\w]+#i', $bloc[0])) {
                     if (is_numeric($bloc[0])) {
-                        $type=$this->_formExtractType($bloc[0], $dataset);
+                        $type=$this->_formExtractType($bloc[0]);
                     } else {
-                        $type=$this->_formExtractTypeByName($bloc[0], $dataset);
+                        $type=$this->_formExtractTypeByName($bloc[0]);
                     }
 
                     $type['internalName']=$type['name'];
