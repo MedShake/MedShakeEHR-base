@@ -57,4 +57,4 @@ if ($validated_data === false) {
   msUser::setUserNewPassword($p['user']['id'], $_POST['p_password']);
 }
 
-msTools::redirRoute('userParameters');
+msTools::redirection('/user/userParameters/#pmdp');
