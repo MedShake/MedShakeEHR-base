@@ -62,4 +62,15 @@ GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = N
 		return $checkLogin->checkLoginByUserID($param, $input[$field]);
 	}, 'Le champ {field} n\'est pas correct');
 
+GUMP::add_validator("checkPasswordLength", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return FALSE;
+		if (mb_strlen($input[$field]) < PASSWORDLENGTH) return FALSE;
+		return TRUE;
+	}, 'Le champ {field} doit avoir un nombre de caract&#232;res de '. PASSWORDLENGTH.' ou plus');
+
+GUMP::add_validator("checkNoName", function($field, $input, $param = NULL) {
+		if (empty($input['p_birthname']) and empty($input['p_lastname'])) return FALSE;
+		return TRUE;
+	}, 'Le champ Nom de naissance et Nom d\'usage ne peuvent être vides en même temps');
+
 ?>
