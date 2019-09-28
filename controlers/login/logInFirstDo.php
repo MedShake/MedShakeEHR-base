@@ -29,6 +29,10 @@
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
+  msTools::redirRoute('userLogIn');
+}
+
 //construc validation rules
 $form = new msFormValidation();
 $form->setformIDbyName($_POST['formIN']);
@@ -39,9 +43,7 @@ $form->setContextualValidationRule('password',['checkPasswordLength']);
 $form->setContextualValidationRule('verifPassword',['equalsfield,p_password']);
 $validation=$form->getValidation();
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
-  msTools::redirRoute('userLogIn');
-} elseif ($validation === false) {
+if ($validation === false) {
   msTools::redirRoute('userLogInFirst');
 } else {
     $data=array(
