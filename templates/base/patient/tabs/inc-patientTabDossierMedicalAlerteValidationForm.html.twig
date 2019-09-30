@@ -20,25 +20,15 @@
  #/
 
 /##
- # Template > patient : zone d'alerte validation formulaire 
+ # Template > patient : zone d'alerte validation formulaire
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
+{% import "macroForm.html.twig" as f %}
+
  <div class="row">
    <div class="col-12 px-0">
-     <div class="alert alert-danger alert-dismissible d-none" role="alert">
-       <div class="d-flex align-items-center">
-         <i class="fas fa-exclamation fa-fw fa-3x"></i>
-         <div class="ml-4">
-           Merci de considérer les informations suivantes et de corriger les champs concernés :
-           <ul class="my-0 pl-0" style="list-style-position: inside;">
-           </ul>
-         </div>
-       </div>
-       <button type="button" onclick="$('div.alert').toggleClass('d-none')" class="close cleanSessionFormWarning" aria-label="Close">
-         <span aria-hidden="true">&times;</span>
-       </button>
-     </div>
+     {{ f.errorsBloc() }}
    </div>
  </div>

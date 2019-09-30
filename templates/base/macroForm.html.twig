@@ -394,29 +394,7 @@
 {% endmacro %}
 
 
-{# form errors bloc #}
-{% macro errorFormDiv( validationErrorsMsg, display='', dismiss=true ) %}
-	{% if validationErrorsMsg %}
-	<div class="alert alert-danger alert-dismissible" role="alert" {% if display == 'none' %}style="display: none"{% endif %}>
-		<div class="d-flex align-items-center">
-			<i class="fas fa-exclamation fa-fw fa-3x"></i>
-			<div class="ml-4">
-				Merci de considérer les informations suivantes et de corriger les champs concernés :
-				<ul class="my-0 pl-0" style="list-style-position: inside;">
-					{% for message in validationErrorsMsg %}
-				    {% if message %}<li>{{ message }}</li>{% endif %}
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-		{% if dismiss %}
-			<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		{% endif %}
-	</div>
-	{% endif %}
-{% endmacro %}
+
 
 {# formBuilder #}
 {% macro formbuilder(t , formIN, prevalue ) %}
@@ -454,7 +432,7 @@
 		}) }}
 	{% endif %}
 
-	{# form number #}
+	{# form name #}
 	{{ f.input ({
 		'input' : {
 			'type' : 'hidden',
@@ -680,4 +658,47 @@
 
 	{% if t.global.noFormTags is not defined %}</form>{% endif %}
 
+{% endmacro %}
+
+{# form errors bloc #}
+{% macro errorFormDiv( validationErrorsMsg, display='', dismiss=true ) %}
+	{% if validationErrorsMsg %}
+	<div class="alert alert-danger alert-dismissible" role="alert" {% if display == 'none' %}style="display: none"{% endif %}>
+		<div class="d-flex align-items-center">
+			<i class="fas fa-exclamation fa-fw fa-3x"></i>
+			<div class="ml-4">
+				Merci de considérer les informations suivantes et de corriger les champs concernés :
+				<ul class="my-0 pl-0" style="list-style-position: inside;">
+					{% for message in validationErrorsMsg %}
+				    {% if message %}<li>{{ message }}</li>{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		{% if dismiss %}
+			<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
+	</div>
+	{% endif %}
+{% endmacro %}
+
+{# simple ajax form errors bloc #}
+{% macro errorsBloc(dismiss=true) %}
+	<div class="alert alert-danger alert-dismissible d-none" role="alert">
+		<div class="d-flex align-items-center">
+			<i class="fas fa-exclamation fa-3x"></i>
+			<div class="ml-4">
+				Merci de considérer les informations suivantes et de corriger les champs concernés :
+				<ul class="my-0 pl-0" style="list-style-position: inside;">
+				</ul>
+			</div>
+		</div>
+		{% if dismiss %}
+			<button type="button" class="close cleanSessionFormWarning" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
+	</div>
 {% endmacro %}
