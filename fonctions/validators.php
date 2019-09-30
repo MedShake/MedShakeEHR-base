@@ -73,4 +73,9 @@ GUMP::add_validator("checkNoName", function($field, $input, $param = NULL) {
 		return TRUE;
 	}, 'Le champ Nom de naissance et Nom d\'usage ne peuvent être vides en même temps');
 
+GUMP::add_validator("checkUniqueUsername", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return TRUE;
+		if (msSQL::sqlUniqueChamp("select name from people where name='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
+	}, 'Ce nom d\'utilisateur est déjà existant');
+
 ?>

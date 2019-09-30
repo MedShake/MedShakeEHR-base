@@ -58,6 +58,7 @@ $acceptedModes=array(
     'configCronJobs', //Configurer les crons
     'configInstallModule', // Installer un module
     'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
+    'configUserCreate', // créer un utilisateur
     'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
     'configUserParamDelete', // Supprimer un paramètre dans la configuration spécifique à un utilisateur
     'configUserTemplateDelete', // Supp d'un template user
