@@ -492,7 +492,7 @@
 
 
 							{% if el.value.formType in ['text','email','tel','password', 'number', 'hidden','range','reset'] %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.input ({
 									'input' : {
 										'type' : el.value.formType,
@@ -525,7 +525,7 @@
 								</div>
 
 								{% elseif el.value.formType in ['checkbox', 'switch'] %}
-									<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+									<div class="form-group">
 									{{ f.input ({
 										'input' : {
 											'type' : el.value.formType,
@@ -550,7 +550,7 @@
 									</div>
 
 							{% elseif el.value.formType == "textarea" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.textarea ({
 									'textarea' : {
 										'name' : el.value.name,
@@ -576,7 +576,7 @@
 								</div>
 
 							{% elseif el.value.formType == "select" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.select ({
 									'select' : {
 										'name' : el.value.name,
@@ -602,7 +602,7 @@
 								</div>
 
 								{% elseif el.value.formType == "radio" %}
-									<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+									<div class="form-group">
 									{{ f.radio ({
 										'radio' : {
 											'name' : el.value.name,
@@ -626,7 +626,7 @@
 									</div>
 
 							{% elseif el.value.formType == "date" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.input ({
 									'input' : {
 										'type' : 'text',

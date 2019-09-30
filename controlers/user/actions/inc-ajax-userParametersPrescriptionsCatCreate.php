@@ -27,7 +27,7 @@
  */
 
 //check & validate datas
-$gump=new GUMP();
+$gump=new GUMP('fr');
 $_POST = $gump->sanitize($_POST);
 
 unset($_POST['groupe']);
@@ -49,7 +49,9 @@ $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
     $return['status']='failed';
-    $return['msg']=$gump->get_errors_array();
+    $errors = $gump->get_errors_array();
+    $return['msg']=$errors;
+    $return['code']=array_keys($errors);
 } else {
     $validated_data['fromID']=$p['user']['id'];
     $validated_data['creationDate']=date("Y-m-d H:i:s");

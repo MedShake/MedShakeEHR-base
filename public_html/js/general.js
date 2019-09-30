@@ -180,11 +180,14 @@ $(document).ready(function() {
 
   // enlever les erreurs en session en fermant l'alerte
   $('body').on('click', '.cleanSessionFormWarning', function () {
+    $(this).closest('div.alert').addClass('d-none');
+    $('.is-invalid').removeClass('is-invalid');
     $.ajax({
       url: urlBase + '/user/ajax/cleanSessionFormWarning/',
       type: 'post',
     });
   });
+
 
   ////////////////////////////////////////////////////////////////////////
   /////////Rafraichir le menu POTD

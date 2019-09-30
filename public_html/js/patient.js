@@ -746,7 +746,7 @@ $(document).ready(function() {
   //enregistrement de forms en ajax
   $('body').on('click', "#tabDossierMedical form input[type=submit], #tabDossierMedical button[type=submit]", function(e) {
 
-    $('#tabDossierMedical *[name="' + value + '"]').removeClass('is-invalid');
+    $('#tabDossierMedical .is-invalid').removeClass('is-invalid');
     if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };
@@ -776,7 +776,6 @@ $(document).ready(function() {
           $('div.alert ul').html('');
           $.each(data.msg, function(index, value) {
             $(' div.alert ul').append('<li>' + value + '</li>');
-            $('#' + index + 'ID').parent('div').addClass('has-error');
           });
           $.each(data.code, function(index, value) {
             $('#tabDossierMedical *[name="' + value + '"]').addClass('is-invalid');

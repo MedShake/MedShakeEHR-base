@@ -151,6 +151,7 @@ class msFormValidation extends msForm
                     }
                 }
             }
+            $_SESSION['form'][$this->_formIN]['validationErrorsMsg']=array_unique($_SESSION['form'][$this->_formIN]['validationErrorsMsg']);
             $this->savePostValues2Session();
             return false;
         } else {
