@@ -1,5 +1,8 @@
 -- Mise à jour n° de version
 UPDATE `system` SET `value`='v6.0.0' WHERE `name`='base' and `groupe`='module';
+
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false');
+
 -- login double facteur authentification
 
 ALTER TABLE `people` ADD `secret2fa` VARBINARY(1000) NULL AFTER `pass`;
@@ -21,17 +24,31 @@ UPDATE `forms` set `yamlStructure` = 'structure:\r\n row1:\r\n  col1: \r\n    he
 
 
 -- modifications pour la sup de dataset et double table de types
+ALTER TABLE `data_cat` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
+
 ALTER TABLE `data_types` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
 
 DROP TABLE `form_basic_types`;
 
 DELETE from `data_types` where name = 'submit';
 
-INSERT IGNORE INTO `data_types` (groupe ,`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `module`, `cat`) VALUES
-('system', 'username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', 'base', 0),
-('system','password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', 'base', 0),
-('system','submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', 'base', 0),
-('system','date', '', 'Début de période', '', '', '', 'date', 'base', 0),
-('system','verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', 'base', 0),
-('system','currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', 'base', 0),
-('system','otpCode', 'code otp', 'code otp', 'code otp', '', 'Le code otp est manquant', 'text', 'base', 0);
+INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+('system', 'catTypesUsageSystem', 'Types à usage system', 'types à usage system', 'base', 1, '2019-09-27 21:42:35');
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catTypesUsageSystem');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('system', 'currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'date', '', 'Début de période', '', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'modules', '', 'Modules', 'modules utilisables', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'otpCode', 'code otp', 'code otp', 'code otp', '', 'Le code otp est manquant', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'templates', '', 'Templates utilisables', 'template utilisables', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'username', 'nom d\'utilisateur', 'Nom d\'utilisateur', 'nom d\'utilisateur', 'required', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1');
+
+-- Formulaires pour nouvel utilisateur, depuis config ou listes publiques 
+SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
+INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
+('base', 'baseNewUser', 'Formulaire nouvel utilisateur', 'formulaire nouvel utilisateur', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - birthname,tabindex=4                       		#1    Nom de naissance\n      - templates,tabindex=7                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n      - lastname,tabindex=5                        		#2    Nom d usage\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules\n      - firstname,required,tabindex=6              		#3    Prénom', '', '', '', ''),
+('base', 'baseNewUserFromPeople', 'Formulaire nouvel utilisateur pour un individu déjà existant', 'formulaire nouvel utilisateur pour un individu déjà existant', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - templates,tabindex=4                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules', '', '', '', '');
