@@ -70,14 +70,14 @@ if ($p['page']['porp']=='pro') {
   //si jeux de valeurs normées présents
   if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
     $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-    $optionsInject['p_PSCodeProSpe']=array_column($codes, 'displayName', 'code');
-    $optionsInject['p_PSCodeProSpe']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['p_PSCodeProSpe'];
+    $optionsInject['PSCodeProSpe']=array_column($codes, 'displayName', 'code');
+    $optionsInject['PSCodeProSpe']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['PSCodeProSpe'];
   }
 
   if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
     $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-    $optionsInject['p_PSCodeStructureExercice']=array_column($codes, 'displayName', 'code');
-    $optionsInject['p_PSCodeStructureExercice']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['p_PSCodeStructureExercice'];
+    $optionsInject['PSCodeStructureExercice']=array_column($codes, 'displayName', 'code');
+    $optionsInject['PSCodeStructureExercice']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['PSCodeStructureExercice'];
   }
   if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
 }

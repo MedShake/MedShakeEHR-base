@@ -685,8 +685,8 @@ class msForm
                     if ($type['formType']=="select") {
 
                         //forcage des <option> du type
-                        if(isset($this->_optionsForSelect[$type['name']])) {
-                          $type['formValues']=$this->_optionsForSelect[$type['name']];
+                        if(isset($this->_optionsForSelect[$type['internalName']])) {
+                          $type['formValues']=$this->_optionsForSelect[$type['internalName']];
                         }
                         // sinon valeur du type
                         else {

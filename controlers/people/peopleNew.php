@@ -56,12 +56,12 @@ if($template != "forbidden") {
     //si jeux de valeurs normées présents
     if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
       $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-      $optionsInject['p_PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+      $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
     }
 
     if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
       $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-      $optionsInject['p_PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+      $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
     }
     if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
   }
