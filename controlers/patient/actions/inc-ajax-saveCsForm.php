@@ -29,6 +29,7 @@
 
 $formIN=$_POST['formIN'];
 $finalStatut='ok';
+unset($_SESSION['form'][$formIN]);
 
 //definition formulaire de travail
 $form = new msFormValidation();
@@ -36,19 +37,24 @@ $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
-// construction du PDF immédiatement après le retour du JS
-$optionsFormulaire=$form->getFormOptions();
-if(isset($optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit']) and $optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit'] == true) {
-  $buildPdfNow = true;
-} else {
-  $buildPdfNow = false;
-}
-
-
 if ($validation === false) {
-    // pas d'exploitation car pas de champ required
-    // utilisés ici.
+  exit(json_encode(array(
+    'statut'=>'erreur',
+    'form'=>$formIN,
+    'msg'=>$_SESSION['form'][$formIN]['validationErrorsMsg'],
+    'code'=>$_SESSION['form'][$formIN]['validationErrors']
+  )));
+
 } else {
+
+    // construction du PDF immédiatement après le retour du JS
+    $optionsFormulaire=$form->getFormOptions();
+    if(isset($optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit']) and $optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit'] == true) {
+      $buildPdfNow = true;
+    } else {
+      $buildPdfNow = false;
+    }
+
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
     $patient->setToID($_POST['patientID']);

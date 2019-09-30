@@ -1,0 +1,44 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : zone d'alerte validation formulaire 
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ <div class="row">
+   <div class="col-12 px-0">
+     <div class="alert alert-danger alert-dismissible d-none" role="alert">
+       <div class="d-flex align-items-center">
+         <i class="fas fa-exclamation fa-fw fa-3x"></i>
+         <div class="ml-4">
+           Merci de considérer les informations suivantes et de corriger les champs concernés :
+           <ul class="my-0 pl-0" style="list-style-position: inside;">
+           </ul>
+         </div>
+       </div>
+       <button type="button" onclick="$('div.alert').toggleClass('d-none')" class="close cleanSessionFormWarning" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+       </button>
+     </div>
+   </div>
+ </div>

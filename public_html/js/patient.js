@@ -669,7 +669,7 @@ $(document).ready(function() {
 
   // Observation ctrl + click pour historique
   $('body').on("click", "textarea, input, select", function(e) {
-    if(e.shiftKey){
+    if (e.shiftKey) {
       e.preventDefault();
       patientID = $('#identitePatient').attr('data-patientid');
       instance = $(this).parents('form').attr('data-instance');
@@ -745,6 +745,8 @@ $(document).ready(function() {
 
   //enregistrement de forms en ajax
   $('body').on('click', "#tabDossierMedical form input[type=submit], #tabDossierMedical button[type=submit]", function(e) {
+
+    $('#tabDossierMedical *[name="' + value + '"]').removeClass('is-invalid');
     if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };
@@ -761,7 +763,6 @@ $(document).ready(function() {
       return;
     }
     $(window).unbind("beforeunload");
-    $(this).closest(".toclear").html("");
     var form = $(this).closest("form");
     var objetid = form.find("input[name=objetID]").val();
     $.ajax({
@@ -770,14 +771,31 @@ $(document).ready(function() {
       data: form.serialize(),
       dataType: "json",
       success: function(data) {
+
+        if (data.statut == "erreur") {
+          $('div.alert ul').html('');
+          $.each(data.msg, function(index, value) {
+            $(' div.alert ul').append('<li>' + value + '</li>');
+            $('#' + index + 'ID').parent('div').addClass('has-error');
+          });
+          $.each(data.code, function(index, value) {
+            $('#tabDossierMedical *[name="' + value + '"]').addClass('is-invalid');
+          });
+          $('div.alert').removeClass('d-none');
+          scrollTo('body', 2);
+          return;
+        }
+
+        // on remet au propre
+        form.closest(".toclear").html("");
+        $('div.alert').addClass('d-none');
+
         // on recharge la colonne lat
         getLatCol();
 
         // on agit sur historiques
         if (!data.html.length || form.hasClass('ignoreReturn')) {
           return;
-        } else if (data.statut == "erreur") {
-          alert_popup("danger", data.msg);
         } else if (data.statut == "avertissement") {
           alert_popup("warning", data.msg);
         } else if (data.statut == "ok-fullrefresh") {
@@ -816,7 +834,7 @@ $(document).ready(function() {
           scrollTo('body', 2);
 
           // construire immédiatement le PDF si demandé dans les options du formulaire
-          if(data.buildPdfNow) {
+          if (data.buildPdfNow) {
             buildPdfForObjet(data.objetID);
           }
         }
