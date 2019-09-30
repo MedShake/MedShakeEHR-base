@@ -119,8 +119,9 @@ $(document).ready(function() {
   $("button.modal-save").on("click", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
-    ajaxModalFormSave(form, modal);
-
+    ajaxModalSave(form, modal, function() {
+      location.reload();
+    });
   });
 
   //delete by primary key
@@ -563,20 +564,20 @@ $(document).ready(function() {
     }
   });
 
-  $('.modalGestionActes').on('show.bs.modal', function (e) {
+  $('.modalGestionActes').on('show.bs.modal', function(e) {
     setModalGestionActes();
   });
 
-  $('.modalGestionActes select[name="type"]').on('change', function (e) {
+  $('.modalGestionActes select[name="type"]').on('change', function(e) {
     setModalGestionActes();
   });
 
   function setModalGestionActes() {
-    if($('.modal select[name="type"]').val() == 'NGAP') {
+    if ($('.modal select[name="type"]').val() == 'NGAP') {
       $('.modal input[name="activite"]').parent('div').addClass('d-none');
       $('.modal input[name="phase"]').parent('div').addClass('d-none');
       $('.modal select[name="codeProf"]').parent('div').removeClass('d-none');
-    } else if($('.modal select[name="type"]').val() == 'Libre') {
+    } else if ($('.modal select[name="type"]').val() == 'Libre') {
       $('.modal input[name="activite"]').parent('div').addClass('d-none');
       $('.modal input[name="phase"]').parent('div').addClass('d-none');
       $('.modal select[name="codeProf"]').parent('div').addClass('d-none');
@@ -649,39 +650,3 @@ $(document).ready(function() {
   });
 
 });
-
-function ajaxModalFormSave(form, modal) {
-  var data = {};
-  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
-    var input = $(this);
-    data[input.attr('name')] = input.val();
-  });
-
-  var url = $(form).attr('action');
-  data["groupe"] = $(form).attr('data-groupe');
-
-  $.ajax({
-    url: url,
-    type: 'post',
-    data: data,
-    dataType: "json",
-    success: function(data) {
-      if (data.status == 'ok') {
-        $(modal).modal('hide');
-        location.reload();
-      } else {
-        $(modal + ' div.alert').show();
-        $(modal + ' div.alert ul').html('');
-        $.each(data.msg, function(index, value) {
-          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
-          $('#' + index + 'ID').parent('div').addClass('has-error');
-
-        });
-      }
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
-  });
-}

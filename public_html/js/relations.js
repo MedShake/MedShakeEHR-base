@@ -117,8 +117,7 @@ $(document).ready(function() {
   $('body').on("click", "#newPro button.modal-save", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
-    ajaxModalFormSave(form, modal);
-
+    ajaxModalSave(form, modal);
   });
 
   $('body').on('click', '.voirDossier', function() {
@@ -290,47 +289,4 @@ function deleteRelationPatient(patientID, peopleID) {
   } else {
     alert_popup("danger", "Le praticien n'est pas correctement sélectionné");
   }
-}
-
-/**
- * Sauvergarder nouveau praticien
- * @param  {string} form  selecteur du form
- * @param  {string} modal selecteur de la modal concerné
- * @return {void}
- */
-function ajaxModalFormSave(form, modal) {
-  var data = {};
-  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
-    var input = $(this);
-    data[input.attr('name')] = input.val();
-  });
-
-  var url = $(form).attr('action');
-  data["groupe"] = $(form).attr('data-groupe');
-
-  $.ajax({
-    url: url,
-    type: 'post',
-    data: data,
-    dataType: "json",
-    success: function(data) {
-      if (data.status == 'ok') {
-        $(modal).modal('hide');
-
-      } else {
-        $(modal + ' div.alert').show();
-        $(modal + ' div.alert ul').html('');
-        $.each(data.msg, function(index, value) {
-          $(modal + ' div.alert ul').append('<li>' + value + '</li>');
-        });
-        $.each(data.code, function(index, value) {
-          $(modal + ' #' + value + 'ID').closest("div.form-group").addClass('has-error');
-        });
-      }
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
-  });
 }
