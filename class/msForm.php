@@ -681,6 +681,12 @@ class msForm
                         }
                     }
 
+                    if(isset($_SESSION['form'][$this->_formIN]['validationErrors'])) {
+                      if(in_array($type['name'], $_SESSION['form'][$this->_formIN]['validationErrors'])) {
+                        $type['class'].=' is-invalid';
+                      }
+                    }
+
                     //traitement spécifique au select
                     if ($type['formType']=="select") {
 
