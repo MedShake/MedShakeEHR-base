@@ -54,6 +54,7 @@
 					autocomplete="off"
 					{% if v.input.disabled %} disabled {% endif %}
 					{% if v.input.readonly %} readonly {% endif %}
+					{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
 					{% if v.input.required == 'required' %} required {% endif %}
 					{% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 					{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
@@ -71,7 +72,7 @@
 				{{ v.input.before }}
 			{% endif %}
 
-			<input type="{{ v.input.type }}" class="btn {{ v.input.class }}" value="{{ v.input.value|e('html_attr') }}" {% if v.input.disabled %} disabled {% endif %} />
+			<input type="{{ v.input.type }}" class="btn {{ v.input.class }}" value="{{ v.input.value|e('html_attr') }}" {% if v.input.disabled %} disabled {% endif %} {% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %} />
 
 			{% if v.input.after %}
 				{{ v.input.after }}
@@ -124,6 +125,7 @@
 		{% if v.input.disabled %} disabled {% endif %}
 		{% if v.input.readonly %} readonly {% endif %}
     {% if v.input.required == 'required' %} required {% endif %}
+		{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
 		{{ v.input.add }} />
@@ -187,6 +189,7 @@
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
 	{{ v.select.add }}
 	{% if v.select.valueDefaut is not iterable %}data-defautValue="{{ v.select.valueDefaut|e('html_attr') }}"{% endif %}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
 	>
 	{% if v.select.valueDefaut is iterable %}
 		{% for key,value in v.select.valueDefaut %}
@@ -233,7 +236,7 @@
 
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio">
-				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 				<label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
@@ -255,7 +258,7 @@
 
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 			  <label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
@@ -290,7 +293,9 @@
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
-	{{ v.select.add }} multiple>
+	{{ v.select.add }}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
+	multiple>
 	{% for key,value in v.select.values %}
 		<option
 		{% if key in v.select.valueDefaut %} selected="selected" {% endif %}
@@ -330,6 +335,7 @@
 	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
 	{{ v.select.add }}>
 	{% for key,options in v.select.values %}
 	 	<optgroup label="{{ key|e('html_attr') }}">
@@ -376,6 +382,7 @@
 	{% if v.textarea.class %} class="{{ v.textarea.class }}{% if v.textareaerror %} textareaErreur{% endif %}" {% endif %}
 	{% if v.textarea.rows %} rows="{{ v.textarea.rows }}" {% endif %}
 	{% if v.textarea.internalName %} data-internalName="{{ v.textarea.internalName }}" {% endif %}
+	{% if v.textarea.tabindex is not empty %} tabindex="{{ v.textarea.tabindex }}" {% endif %}
 	{{ v.textarea.add }}
 
 	>{% if v.textarea.value != 'noPreValue' %}{{ v.textarea.value|e }}{% elseif v.textarea.value == 'noPreValue' and  v.textarea.defaut != '' %}{{ v.textarea.defaut|e }}{% endif %}</textarea>
@@ -494,6 +501,7 @@
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
 										'required' : el.value.required,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'datatypeid' : el.value.id,
@@ -525,6 +533,7 @@
 											'value' : el.value.preValue,
 											'defaut' : el.value.formValues,
 											'required' : el.value.required,
+											'tabindex' : el.value.tabindex,
 											'disabled' : el.value.disabled,
 											'readonly' : el.value.readonly,
 											'datatypeid' : el.value.id,
@@ -547,6 +556,7 @@
 										'class' : 'form-control form-control-sm' ~ el.value.class,
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
@@ -573,6 +583,7 @@
 										'values' : el.value.formValues,
 										'valueDefaut' : el.value.preValue,
 										'readonly' : el.value.readonly,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
@@ -598,6 +609,7 @@
 											'values' : el.value.formValues,
 											'valueDefaut' : el.value.preValue,
 											'readonly' : el.value.readonly,
+											'tabindex' : el.value.tabindex,
 											'disabled' : el.value.disabled,
 											'datatypeid' : el.value.id,
 											'autocomplete' : 'off',
@@ -621,6 +633,7 @@
 										'placeholder' : el.value.placeholder,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'required' : el.value.required,
@@ -646,6 +659,7 @@
 									'input' : {
 										'type' : 'submit',
 										'value' : el.value.label,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'class' : el.value.class
 									}

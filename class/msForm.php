@@ -190,7 +190,7 @@ class msForm
 /**
  * Définir des valeurs de remplissage du formulaire après sa création
  * @param array $form formulaire
- * @param array($name=>$value) $table array des noms et valeurs à remplir
+ * @param array $table ($name=>$value) $table array des noms et valeurs à remplir
  */
     public function setPrevaluesAfterwards(&$form, $table)
     {
@@ -675,6 +675,9 @@ class msForm
                         }
                         if (preg_match('#plusg={(.*)}#i', $h, $match)) {
                             $type['plusg']=$match[1];
+                        }
+                        if (preg_match('#tabindex=([0-9]+)#i', $h, $match)) {
+                            $type['tabindex']=$match[1];
                         }
                     }
 
