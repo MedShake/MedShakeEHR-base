@@ -206,15 +206,15 @@ class msFormValidation extends msForm
                     //post name -> type name
                     $r['postname2typename'][$type['name']]=$type['internalName'];
 
-                    //validation
-                    if (!empty($type['validationRules'])) {
-                        $r['validation'][$type['name']][]=$type['validationRules'];
-                    }
+                    //validation rules
                     if (in_array('required', $bloc)) {
                         $r['validation'][$type['name']][]='required';
                     }
+                    if (!empty($type['validationRules'])) {
+                        $r['validation'][$type['name']][]=$type['validationRules'];
+                    }
 
-                    // si de type select
+                    // validation rules : complément si de type select
                     if ($type['formType']=="select") {
 
                         //forcage des <option>
@@ -230,10 +230,17 @@ class msFormValidation extends msForm
                         }
                     }
 
-                    //filter
+                    // ajout des règles contextuelles hard-codées de validation
+                    if(isset($this->_contextualValidationRules[$type['internalName']])) {
+                        foreach($this->_contextualValidationRules[$type['internalName']] as $rule) {
+                          $r['validation'][$type['name']][]=$rule;
+                        }
+                    }
+
+                    //validation filter
                     $r['filter'][$type['name']]='trim';
 
-                    //error msg
+                    //validation error msg
                     if (!empty($type['validationErrorMsg'])) {
                         $r['errormsg'][$type['name']]=$type['validationErrorMsg'];
                     }
@@ -241,12 +248,14 @@ class msFormValidation extends msForm
                     //correspondance name=>label
                     $r['correspondances'][$type['name']]=$type['label'];
 
-                    // ajout des règles contextuelles de validation
-                    if(isset($this->_contextualValidationRules[$type['internalName']])) {
-                        foreach($this->_contextualValidationRules[$type['internalName']] as $rule) {
-                          $r['validation'][$type['name']][]=$rule;
-                        }
+                    //traitement des ajustements passés dans le formulaire lui même
+                    foreach ($bloc as $h) {
+                      if (preg_match('#^vr={(.*)}$#i', $h, $match)) {
+                          // validation rules (on revient à la syntaxe correcte de gump avec le replace)
+                          $r['validation'][$type['name']][]=str_replace(':', ',', $match[1]);
+                      }
                     }
+
                 }
             }
         }
