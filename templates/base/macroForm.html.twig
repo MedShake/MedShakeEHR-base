@@ -395,7 +395,7 @@
 
 
 {# form errors bloc #}
-{% macro errorFormDiv( validationErrorsMsg, display='' ) %}
+{% macro errorFormDiv( validationErrorsMsg, display='', dismiss=true ) %}
 	{% if validationErrorsMsg %}
 	<div class="alert alert-danger alert-dismissible" role="alert" {% if display == 'none' %}style="display: none"{% endif %}>
 		<div class="d-flex align-items-center">
@@ -409,9 +409,11 @@
 				</ul>
 			</div>
 		</div>
-		<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
+		{% if dismiss %}
+			<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
 	</div>
 	{% endif %}
 {% endmacro %}
