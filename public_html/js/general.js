@@ -147,21 +147,16 @@ $(document).ready(function() {
       select: function(event, ui) {
         sourceval = eval('ui.item.' + type);
         destival = eval('ui.item.' + dest);
-        $('input[data-internalname="' + dest + '"]').val(destival);
-        $('input[data-internalname="' + type + '"]').val(sourceval);
-
-        //si contexte de mise à jour automatique
-        patientID = $('#identitePatient').attr("data-patientID");
-        if ($('input[data-internalname="' + dest + '"]').parents('.changeObserv').length) {
-          setPeopleDataByTypeName(destival, patientID, dest, 'input[data-internalname="' + dest + '"]', '0');
-        }
-        if ($('input[data-internalname="' + type + '"]').parents('.changeObserv').length) {
-          setPeopleDataByTypeName(sourceval, patientID, type, 'input[data-internalname="' + type + '"]', '0');
-        }
+        $('input[data-internalname="' + dest + '"]').val(destival).trigger('paste');
+        $('input[data-internalname="' + type + '"]').val(sourceval).trigger('paste');
 
       }
     });
     $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
+  });
+
+  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
+    $(this).trigger("paste");
   });
 
   //prévention du form submit sur la touche enter
