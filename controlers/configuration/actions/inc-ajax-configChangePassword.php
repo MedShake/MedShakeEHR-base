@@ -29,8 +29,30 @@
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-if(!is_numeric($_POST['id']) or !isset($_POST['password'])) die;
+//check & validate datas
+$gump=new GUMP('fr');
+$_POST = $gump->sanitize($_POST);
+$gump->validation_rules(array(
+  'id'=> 'required|numeric',
+  'password'=> 'required|checkPasswordLength',
+));
 
-msUser::setUserNewPassword($_POST['id'], $_POST['password']);
+$gump->filter_rules(array(
+  'id'=> 'trim',
+  'password'=> 'trim',
+));
 
-echo json_encode(array('ok'));
+$validated_data = $gump->run($_POST);
+
+if ($validated_data === false) {
+  exit(json_encode([
+    'status'=>'erreur',
+    'msg'=>implode('; ',$gump->get_errors_array())
+  ]));
+} else {
+  msUser::setUserNewPassword($_POST['id'], $_POST['password']);
+  exit(json_encode([
+    'status'=>'ok',
+    'msg'=>''
+  ]));
+}

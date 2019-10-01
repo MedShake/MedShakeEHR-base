@@ -451,12 +451,15 @@ $(document).ready(function() {
       },
       dataType: "json",
       success: function(data) {
-        alert_popup("success", 'le mot de passe de l\'utilisateur "' + $cp.attr('data-name') + '" a été changé avec succès');
-
+        if (data.status == "ok") {
+          alert_popup("success", 'le mot de passe de l\'utilisateur "' + $cp.attr('data-name') + '" a été changé avec succès');
+          $("input[data-userid=" + $cp.attr('data-userid') + "]").val('');
+        } else {
+          alert_popup("danger", data.msg);
+        }
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
-
       }
     });
   });
