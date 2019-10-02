@@ -144,10 +144,6 @@ $(document).ready(function() {
     setPeopleData(value, patientID, typeID, source, instance);
   });
 
-  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
-    $(this).trigger("paste");
-  });
-
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations touch pour vue mobile
   if ($('.swipable').length) {
