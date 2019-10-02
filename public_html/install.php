@@ -186,7 +186,6 @@ if ($template!=''): ?>
     <link type="text/css" href="<?=$webpath?>/scss/bs_custom.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-    <link type="text/css" href="<?=$webpath?>/css/general.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>

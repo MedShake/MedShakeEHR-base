@@ -1,4 +1,8 @@
 <?php
+// sup fichiers inutiles
+@unlink($p['homepath'].'public_html/css/general.css');
+@rmdir($p['homepath'].'public_html/css/');
+
 // composer
 $initialDir=getcwd();
 
