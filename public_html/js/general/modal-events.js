@@ -30,8 +30,8 @@ $(document).ready(function() {
   // nettoyage du bloc alerte sur fermeture de modal
   $('body').on('hidden.bs.modal', 'div.modal', function (e) {
     $(this).find('.is-invalid').removeClass('is-invalid');
-    $(this).find('div.alert').addClass('d-none');
-    $(this).find('div.alert ul').html('');
+    $(this).find('div.cleanAndHideOnModalHide').addClass('d-none');
+    $(this).find('div.cleanAndHideOnModalHide ul').html('');
   });
 
 });
