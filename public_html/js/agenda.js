@@ -421,7 +421,8 @@ $(document).ready(function() {
   });
 
   //auto rafraichir les rdv agenda
-  if(agendaRefreshDelayEvents > 0) setInterval(autoRefreshEvents, agendaRefreshDelayEvents * 1000);
+  if (agendaRefreshDelayEvents > 0) setInterval(autoRefreshEvents, agendaRefreshDelayEvents * 1000);
+
   function autoRefreshEvents() {
     if (document.visibilityState != "visible" || canRefreshEvents) {
       $('#calendar').fullCalendar('refetchEvents');
@@ -649,7 +650,7 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Mettre à jour les infos patient
 
-  $(".updatable").typeWatch({
+  $(".updatable:not([type='.custom-switch']):not([type='.custom-checkbox '])").typeWatch({
     wait: 1000,
     highlight: false,
     allowSubmit: false,
@@ -657,6 +658,17 @@ $(document).ready(function() {
     callback: function(value) {
       if (selected_patient)
         setPeopleData($(this).val(), selected_patient, $(this).attr("data-typeID"), $(this), 0);
+    }
+  });
+
+  $(" .custom-switch, .custom-checkbox ").on("click", function(e) {
+    if (selected_patient) {
+      inputSource = $(this).find('input');
+      typeID = inputSource.attr("data-typeID");
+      value = inputSource.prop('checked');
+      source = $(this);
+      instance = $(this).closest("form").attr("data-instance");
+      setPeopleData(value, selected_patient, typeID, source, 0);
     }
   });
 
@@ -766,6 +778,14 @@ function getPatientAdminData(patientID) {
       $("#patientInfo input[name!='userid'], #patientInfo textarea").val('');
       $.each(data, function(index, value) {
         if ($("#id_" + index + "_id").length) $("#id_" + index + "_id").val(value);
+
+        if ($("#id_" + index + "_id").hasClass('custom-control-input') && $("#id_" + index + "_id").attr('type') == 'checkbox') {
+          if (value == "true") {
+            $("#id_" + index + "_id").prop('checked', 'checked');
+          } else {
+            $("#id_" + index + "_id").prop('checked', false);
+          }
+        }
       });
       getHistoriquePatient(patientID);
       autosize.update($('#id_notes_id'));
@@ -866,6 +886,7 @@ function nettoyer() {
   $("#patientInfo select")[0].selectedIndex = 0;
   $('#buttonCreer').attr('disabled', 'disabled');
   $('.lireCpsVitale').hide();
+  $("#patientInfo input.custom-control-input").prop('checked', false);
 
   // historique patient
   $('#historiquePatient').hide();
@@ -917,7 +938,7 @@ function setEvent(id) {
     });
     if (stop) {
       alert_popup("danger", "Certains champs requis n'ont pas été remplis.");
-      if(calendar_mode == "lateral") $('#creerNouveau').modal('hide');
+      if (calendar_mode == "lateral") $('#creerNouveau').modal('hide');
       return;
     }
     data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
