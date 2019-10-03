@@ -33,11 +33,11 @@ class msPeople
 /**
  * @var int $_toID ID de l'individus concerné
  */
-    public $_toID;
+    protected $_toID;
 /**
  * @var int $_fromID ID de l'utilisteur enregistrant la donnée
  */
-    private $_fromID;
+    protected $_fromID;
 /**
  * @var int $_type Type : patient ou pro
  */
