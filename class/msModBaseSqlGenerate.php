@@ -123,7 +123,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaRefreshDelayEvents'=>'10',
     'designInboxMailsSortOrder'=>'desc',
     'optionGeLogin2FA'=>'false',
-    'optionGeLoginPassMinLongueur'=>'10'
+    'optionGeLoginPassMinLongueur'=>'10',
+    'optionGeDestructionDataDossierPatient'=>'false',
   ];
 
   protected function _getSpecifSql() {

@@ -36,6 +36,7 @@ if(isset($match['params']['porp'])) $m='peopleRegister';
 //modes acceptés et die() si non connu
 $acceptedModes=array(
     'peopleRegister', // sauver un nouveau patient / pro
+    'peopleDestroy', //détruire un dossier
 );
 if (!in_array($m, $acceptedModes)) {
     die;

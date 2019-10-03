@@ -47,8 +47,22 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('system', 'username', 'nom d\'utilisateur', 'Nom d\'utilisateur', 'nom d\'utilisateur', 'required', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1');
 
--- Formulaires pour nouvel utilisateur, depuis config ou listes publiques 
+-- Formulaires pour nouvel utilisateur, depuis config ou listes publiques
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
 ('base', 'baseNewUser', 'Formulaire nouvel utilisateur', 'formulaire nouvel utilisateur', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - birthname,tabindex=4                       		#1    Nom de naissance\n      - templates,tabindex=7                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n      - lastname,tabindex=5                        		#2    Nom d usage\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules\n      - firstname,required,tabindex=6              		#3    Prénom', '', '', '', ''),
 ('base', 'baseNewUserFromPeople', 'Formulaire nouvel utilisateur pour un individu déjà existant', 'formulaire nouvel utilisateur pour un individu déjà existant', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - templates,tabindex=4                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules', '', '', '', '');
+
+-- Marqueur
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catMarqueursAdminDossiers');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'administratifMarqueurDestruction', '', 'Dossier détruit', 'marqueur pour la destruction d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '11'),
+('admin', 'administratifMarqueurPasRdv', '', 'Ne pas donner de rendez-vous', '', '', '', 'switch', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+
+-- Ajout de types à people
+ALTER TABLE `people` CHANGE `type` `type` ENUM('patient','pro','externe','service','deleted','groupe','destroyed') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'patient';
+
+-- Formulaire demande de password
+SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
+INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
+('base', 'baseAskUserPassword', 'Demande du mot de passe', 'demande du mot de passe à l\'utilisateur courant', 'data_types', 'medical', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:\r\n    col1:\r\n      size: col\r\n      bloc:\r\n        - password,required                        		#1789 Mot de passe', '', '', '', '');
