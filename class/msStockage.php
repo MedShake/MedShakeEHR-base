@@ -58,6 +58,10 @@ class msStockage
     public function setObjetID($v)
     {
         if (is_numeric($v)) {
+            $this->_fileExt=null;
+            $this->_pathToDoc=null;
+            $this->_fromID=null;
+            $this->_toID=null;
             return $this->_objetID = $v;
         } else {
             throw new Exception('ObjetID is not numeric');
@@ -99,7 +103,7 @@ class msStockage
     }
 
 /**
- * Définir un chemin de sous-dossier de stockage à partir de l'ID objet
+ * Obtenir un chemin de sous-dossier de stockage à partir de l'ID objet
  * @param  int $objetID ID de l'objet
  * @return string          chemin de sous dossiers (numérique)
  */
@@ -125,7 +129,7 @@ class msStockage
             throw new Exception('ObjetID is not numeric');
         }
 
-        if(isset($this->_pathToDoc)) return $this->_pathToDoc;
+        if(isset($this->_pathToDoc) and !is_null($this->_pathToDoc)) return $this->_pathToDoc;
 
         global $p;
         $ext=$this->getFileExtOfDoc($this->_objetID);
@@ -157,7 +161,7 @@ class msStockage
             throw new Exception('ObjetID is not numeric');
         }
 
-        if(isset($this->_fileExt)) return $this->_fileExt;
+        if(isset($this->_fileExt) and !is_null($this->_fileExt)) return $this->_fileExt;
 
         $docTypeID = msData::getTypeIDFromName('docType');
 
