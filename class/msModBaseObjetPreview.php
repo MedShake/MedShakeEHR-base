@@ -42,7 +42,6 @@ class msModBaseObjetPreview
     if(!is_numeric($id)) throw new Exception('ID is not numeric');
     $this->_objetID = $id;
     $data = new msObjet();
-    $data->setToID($id); //fake
     $this->_dataObjet = $data->getCompleteObjetDataByID($id);
   }
 
