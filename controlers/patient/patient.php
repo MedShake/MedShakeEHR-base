@@ -143,7 +143,9 @@ $docAsSigner->setFromID($p['user']['id']);
 $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 //les correspondants
-$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+$correspondants = new msPeopleRelations;
+$correspondants->setToID($match['params']['patient']);
+$p['page']['correspondants']=$correspondants->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
 
 // Transmissions
 if($p['config']['transmissionsPeutCreer'] == 'true') {

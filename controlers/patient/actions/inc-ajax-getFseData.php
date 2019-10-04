@@ -48,7 +48,7 @@ $prat->setToID($p['user']['id']);
 $pratData = $prat->getSimpleAdminDatasByName();
 
 // data patient
-$patient = new msPeople;
+$patient = new msPeopleRelations;
 $patient->setToID($paiem->getObjetDataByID($_GET['objetID'], ['toID'])['toID']);
 
 // relation pour recherche du médecin traitant déclaré

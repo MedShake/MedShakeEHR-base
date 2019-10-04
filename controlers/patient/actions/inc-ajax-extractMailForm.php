@@ -32,7 +32,7 @@ $debug='';
 $template="mailForm";
 
 //recupére les administrative data
-$to=new msPeople();
+$to=new msPeopleRelations();
   $to->setToID($_POST['patientID']);
   $toAdminData=$to->getSimpleAdminDatasByName();
 

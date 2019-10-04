@@ -27,8 +27,12 @@
  */
 
 
-if(isset($_POST['patientID'])) $patientID=$_POST['patientID']; elseif(isset($_GET['patientID'])) $patientID=$_GET['patientID'];
-$liensFam = new msPeople();
+if(isset($_POST['patientID'])) {
+  $patientID=$_POST['patientID'];
+} elseif(isset($_GET['patientID'])) {
+  $patientID=$_GET['patientID'];
+}
+$liensFam = new msPeopleRelations();
 $liensFam->setToID($patientID);
 
 header('Content-Type: application/json');

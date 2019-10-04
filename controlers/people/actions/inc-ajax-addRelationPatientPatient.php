@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$relation = new msPeople;
+$relation = new msPeopleRelations;
 $relation->setToID($_POST['patientID']);
 $relation->setFromID($p['user']['id']);
 $relation->setRelationWithOtherPatient($_POST['preRelationPatientPatient'], $_POST['patient2ID']);
