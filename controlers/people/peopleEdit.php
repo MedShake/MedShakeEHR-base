@@ -37,6 +37,11 @@ $p['page']['porp']=$match['params']['porp'];
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 
+if(!in_array($patient->getType(), ['patient', 'pro'])) {
+  $template = "404";
+  return;
+}
+
 if ($p['page']['porp']=='patient') {
     $template="patientEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
