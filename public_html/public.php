@@ -73,6 +73,7 @@ if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'na
 $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// Validators loader
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
