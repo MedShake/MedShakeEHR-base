@@ -75,7 +75,7 @@ if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'na
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
-define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur')); 
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
@@ -132,7 +132,7 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     }
     // si c'est l'interface RESTful qui était visée et qu'on est ici, c'est que l'instruction n'est pas supportée
     if ($match['target']=='rest/rest') {
-        header('HTTP/1.1 404 Not Found');
+        http_response_code(404);
         die;
     }
 } elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {

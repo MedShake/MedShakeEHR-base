@@ -33,21 +33,21 @@ parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $parameters);
 switch ($match['params']['m']) {
     case 'getPatientInfo': // obtenir les infos sur le patient dans la workList
         if ($method!='GET') {
-            header('HTTP/1.1 405 Method Not Allowed');
+            http_response_code(405);
             die;
         }
         include 'inc-rest-getPatientInfo.php';
         break;
     case 'uploadNewDoc': // Uploader un document dans dossier patient
         if ($method!='POST') {
-            header('HTTP/1.1 405 Method Not Allowed');
+            http_response_code(405);
             die;
         }
         include 'inc-rest-uploadNewDoc.php';
         break;
     case 'callbackFse': // retour FSE par services tiers
         if ($method!='GET') {
-            header('HTTP/1.1 405 Method Not Allowed');
+            http_response_code(405);
             die;
         }
         include 'inc-rest-callbackFse.php';

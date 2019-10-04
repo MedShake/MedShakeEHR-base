@@ -34,6 +34,6 @@ if (is_file($_POST['destination'])) {
     echo json_encode(array('ok'));
     @unlink($_POST['source']);
 } else {
-    header("HTTP/1.0 404 Not Found");
+    http_response_code(404);
 }
 die;

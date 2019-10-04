@@ -30,7 +30,7 @@
 
 $user=new msUser();
 if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$user->checkLogin($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-   header('HTTP/1.1 401 Unauthorized');
+   http_response_code(401);
    die;
 }
 $userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
@@ -40,7 +40,7 @@ $userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanV
 $data=json_decode(file_get_contents($p['config']['workingDirectory'].$userID.'/workList.json'), true);
 
 if(!is_array($data)) {
-    header('HTTP/1.1 204 No Content');
+    http_response_code(204);
     die;
 }
 
