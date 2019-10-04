@@ -95,6 +95,7 @@ class msPeopleDestroy extends msPeople
     $this->_hprim();
     $this->_inbox();
     $this->_objets();
+    $this->_destroyRelations();
     $this->_printed();
     $this->_transmissions();
     $this->_people();
@@ -218,5 +219,19 @@ class msPeopleDestroy extends msPeople
     $marqueur->setToID($this->_toID);
     $marqueur->createNewObjetByTypeName('administratifMarqueurDestruction', $value);
 
+  }
+
+/**
+ * Détruire les relations (enregistrements croisés)
+ * @return void
+ */
+  private function _destroyRelations() {
+      if($porteurRelationID = msData::getTypeIDFromName('relationID')) {
+        if($ids=msSQL::sql2tabSimple("SELECT id from objets_data where typeID='".$porteurRelationID."' and value='".$this->_toID."'")) {
+            foreach($ids as $id) {
+              msSQL::sqlQuery("DELETE from objets_data where id='".$id."' or instance='".$id."'");
+            }
+        }
+      }
   }
 }
