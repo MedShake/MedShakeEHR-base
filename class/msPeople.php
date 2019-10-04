@@ -120,6 +120,17 @@ class msPeople
     }
 
 /**
+ * Obtenir le type de people à partir de l'id
+ * @return string type ou null
+ */
+    public function getType() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        return $this->_type = msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
+    }
+
+/**
  * Est-ce un patient externe?
  * @return value true/false
  */
