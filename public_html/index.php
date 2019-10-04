@@ -183,7 +183,12 @@ if (isset($template)) {
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-
+    if($template=='404') {
+      http_response_code(404);
+    }
+    if($template=='forbidden') {
+      http_response_code(403);
+    }
 
     //générer et sortir le html
     $getHtml = new msGetHtml();
