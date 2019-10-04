@@ -103,7 +103,9 @@ class msCourrier
  */
     public function setPatientID($patientID)
     {
-        if(!is_numeric($patientID)) throw new Exception('patientID is not numeric');
+        if(!msPeople::checkPeopleExist($patientID)) {
+          throw new Exception('patientID does not exist');
+        }
         return $this->_patientID = $patientID;
     }
 
@@ -114,7 +116,9 @@ class msCourrier
  */
     public function setFromID($fromID)
     {
-        if(!is_numeric($fromID)) throw new Exception('fromID is not numeric');
+        if(!msPeople::checkPeopleExist($fromID)) {
+          throw new Exception('fromID does not exist');
+        }
         return $this->_fromID = $fromID;
     }
 

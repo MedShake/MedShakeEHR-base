@@ -102,7 +102,9 @@ class msPDF
  */
     public function setFromID($v)
     {
-        if (!is_numeric($v)) throw new Exception('FromID is not numeric');
+        if (!msPeople::checkPeopleExist($v)) {
+          throw new Exception('FromID does not exist');
+        }
         $this->_templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', $user=array('id'=>$v, 'module'=>''));
         return $this->_fromID = $v;
     }
@@ -113,7 +115,9 @@ class msPDF
  */
     public function setToID($v)
     {
-        if (!is_numeric($v)) throw new Exception('ToID is not numeric');
+        if (!msPeople::checkPeopleExist($v)) {
+          throw new Exception('ToID does not exist');
+        }
         return $this->_toID = $v;
     }
 

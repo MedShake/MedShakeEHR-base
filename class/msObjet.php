@@ -80,10 +80,10 @@ class msObjet
  */
     public function setToID($v)
     {
-        if (is_numeric($v)) {
+        if (msPeople::checkPeopleExist($v)) {
             return $this->_toID = $v;
         } else {
-            throw new Exception('ToID is not numeric');
+            throw new Exception('ToID does not exist');
         }
     }
 
@@ -103,10 +103,10 @@ public function getToID()
  */
     public function setFromID($v)
     {
-        if (is_numeric($v)) {
+        if (msPeople::checkPeopleExist($v)) {
             return $this->_fromID = $v;
         } else {
-            throw new Exception('FromID is not numeric');
+            throw new Exception('FromID does not exist');
         }
     }
 
@@ -117,10 +117,10 @@ public function getToID()
  */
     public function setByID($v)
     {
-        if (is_numeric($v)) {
+        if (msPeople::checkPeopleExist($v)) {
             return $this->_byID = $v;
         } else {
-            throw new Exception('byID is not numeric');
+            throw new Exception('byID does not exist');
         }
     }
 

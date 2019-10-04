@@ -95,11 +95,12 @@ class msAgenda
     */
     public function set_patientID($_patientID)
     {
-        if(!is_numeric($_patientID)) throw new Exception('PatientID is not numeric');
+        if(!msPeople::checkPeopleExist($_patientID)) {
+          throw new Exception('PatientID does not exist');
+        }
         $this->_patientID = $_patientID;
         return $this;
     }
-
 
     /**
     * set motif
@@ -149,7 +150,9 @@ class msAgenda
     */
     public function set_externID($_externID)
     {
-        if(!is_numeric($_externID)) throw new Exception('ExternID is not numeric');
+        if(!msPeople::checkPeopleExist($_externID)) {
+          throw new Exception('ExternID does not exist');
+        }
         $this->_externID = $_externID;
         return $this;
     }
@@ -160,7 +163,9 @@ class msAgenda
     */
     public function set_userID($_userID)
     {
-        if(!is_numeric($_userID)) throw new Exception('UserID is not numeric');
+        if(!msPeople::checkPeopleExist($_userID)) {
+          throw new Exception('UserID does not exist');
+        }
         $this->_userID = $_userID;
         return $this;
     }
@@ -171,7 +176,9 @@ class msAgenda
     */
     public function set_fromID($_fromID)
     {
-        if(!is_numeric($_fromID)) throw new Exception('FromID is not numeric');
+        if(!msPeople::checkPeopleExist($_fromID)) {
+          throw new Exception('FromID does not exist');
+        }
         $this->_fromID = $_fromID;
         return $this;
     }

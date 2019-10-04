@@ -68,16 +68,30 @@ class msPeople
     private $_deathAgeFormats;
 
 /**
+ * Vérifier que le people existe
+ * @param  int $id ID du people
+ * @return boolean     true/false
+ */
+    public static function checkPeopleExist($id) {
+      if(!is_numeric($id)) return false;
+      if(msSQL::sqlUniqueChamp("SELECT id FROM people WHERE id='".$id."' limit 1")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+/**
  * Définir l'individu concerné
  * @param int $v ID de l'individu concerné
  * @return int toID
  */
     public function setToID($v)
     {
-        if (is_numeric($v)) {
+        if ($this->checkPeopleExist($v)) {
             return $this->_toID = $v;
         } else {
-            throw new Exception('ToID is not numeric');
+            throw new Exception('ToID does not exist');
         }
     }
 
@@ -88,10 +102,10 @@ class msPeople
  */
     public function setFromID($v)
     {
-        if (is_numeric($v)) {
+        if ($this->checkPeopleExist($v)) {
             return $this->_fromID = $v;
         } else {
-            throw new Exception('FromID is not numeric');
+            throw new Exception('FromID does not exist');
         }
     }
 

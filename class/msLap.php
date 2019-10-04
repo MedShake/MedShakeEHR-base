@@ -73,14 +73,14 @@ class msLap
   */
      public function setToID($v)
      {
-         if (is_numeric($v)) {
+         if (msPeople::checkPeopleExist($v)) {
              $patient= new msPeople;
              $patient->setToID($v);
              $this->_patientAdminData=$patient->getSimpleAdminDatasByName();
              $this->_patientAdminData['age'] = DateTime::createFromFormat('d/m/Y', $this->_patientAdminData['birthdate'])->diff(new DateTime('now'))->y;
              return $this->_toID = $v;
          } else {
-             throw new Exception('ToID is not numeric');
+             throw new Exception('ToID does not exist');
          }
      }
 
@@ -91,10 +91,10 @@ class msLap
   */
      public function setFromID($v)
      {
-         if (is_numeric($v)) {
+         if (msPeople::checkPeopleExist($v)) {
              return $this->_fromID = $v;
          } else {
-             throw new Exception('FromID is not numeric');
+             throw new Exception('FromID does not exist');
          }
      }
 
