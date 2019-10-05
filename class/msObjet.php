@@ -47,10 +47,6 @@ class msObjet
      */
     private $_byID;
     /**
-     * @var string type de l'individu
-     */
-    private $_type='patient';
-    /**
      * @var string date au format mySQL
      */
     private $_creationDate;
@@ -149,26 +145,13 @@ public function getToID()
 
 /**
  * Définir la registerDate
- * uniquement pour des besoins spéciifques (import)
+ * uniquement pour des besoins spécifiques (import)
  * utiliser la creationDate pour changer la date affichée
  * @param string $v date au format mysql (Y-m-d H:i:s)
  */
     public function setRegisterDate($v)
     {
         $this->_registerDate=$v;
-    }
-
-/**
- * Définir le type de l'objet
- * @param string $t TypeID
- */
-    public function setType($t)
-    {
-        if (in_array($t, array('patient', 'pro'))) {
-            return $this->_type = $t;
-        } else {
-            throw new Exception('Type n\'est pas d\'une valeur autorisée');
-        }
     }
 
 /**
