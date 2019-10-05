@@ -60,16 +60,30 @@ class msObjet
     private $_registerDate;
 
 /**
+ * Vérifier que l'objet ID existe
+ * @param  int $id ID de l'objet
+ * @return boolean     true/false
+ */
+    public static function checkObjetExist($id) {
+      if(!is_numeric($id)) return false;
+      if(msSQL::sqlUniqueChamp("SELECT id FROM objets_data WHERE id='".$id."' limit 1")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+/**
  * Définir l'objet concerné
  * @param int $v ID de l'objet
  * @return int ID
  */
-    public function setID($v)
+    public function setObjetID($v)
     {
-        if (is_numeric($v)) {
+        if ($this->checkObjetExist($v)) {
             return $this->_ID = $v;
         } else {
-            throw new Exception('ID is not numeric');
+            throw new Exception('Objet do not exist');
         }
     }
 
@@ -159,14 +173,13 @@ public function getToID()
 
 /**
  * Obtenir les data de base de l'objet à partir de son ID
- * @param  int $id  ID de l'objet
  * @param  array $col colonnes SQL à rapatrier
  * @return array      Array
  */
-    public function getObjetDataByID($id, $col=['*'])
+    public function getObjetDataByID($col=['*'])
     {
-        if(!is_numeric($id)) throw new Exception('ID is not numeric');
-        return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from objets_data where id='".$id."'");
+        if(!isset($this->_ID)) throw new Exception('ID is not set');
+        return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from objets_data where id='".$this->_ID."'");
     }
 
 /**
@@ -182,33 +195,31 @@ public function getToID()
 
 /**
  * Obtenir toutes les datas sur l'objet à partir de son ID
- * @param  int $id ID de l'objet
  * @return array     Array
  */
-    public function getCompleteObjetDataByID($id)
+    public function getCompleteObjetDataByID()
     {
-        if(!is_numeric($id)) throw new Exception('ID is not numeric');
+        if(!isset($this->_ID)) throw new Exception('ID is not set');
         $docTypeID = msData::getTypeIDFromName('docType');
         return msSQL::sqlUnique("select pd.* , t.name, t.label, t.groupe, t.formValues, t.module, t.placeholder, doc.value as ext
         from objets_data as pd
         left join data_types as t on t.id=pd.typeID
         left join objets_data as doc on doc.instance=pd.id and doc.typeID='".$docTypeID."'
-        where pd.id='".$id."'");
+        where pd.id='".$this->_ID."'");
     }
 
 /**
  * Obtenir les datas de l'objet ainsi que celles de ses enfants
- * @param  int $id ID de l'objet
  * @param  string $by clef du tableau
  * @return array     Array avec datas objet et de ses enfants
  */
-    public function getObjetAndSons($id, $by='typeID')
+    public function getObjetAndSons($by='typeID')
     {
-        if(!is_numeric($id)) throw new Exception('ID is not numeric');
+        if(!is_numeric($this->_ID)) throw new Exception('ID is not set');
         return msSQL::sql2tabKey("select o.*, t.name
         from objets_data as o
         left join data_types as t on o.typeID=t.id
-        where (o.id='".$id."' or o.instance='".$id."') and o.outdated='' and o.deleted='' ", $by);
+        where (o.id='".$this->_ID."' or o.instance='".$this->_ID."') and o.outdated='' and o.deleted='' ", $by);
     }
 
 
@@ -231,19 +242,19 @@ public function getToID()
 
 /**
  * Marquer DELETED l'objet ainsi que ses enfants
- * @param  int $id ID de l'objet
  * @return string résultat sql
  */
-    public function setDeletedObjetAndSons($id)
+    public function setDeletedObjetAndSons()
     {
-        if (!is_numeric($this->_fromID)) throw new Exception('FromID is not numeric');
-        if (!is_numeric($id)) throw new Exception('ID is not numeric');
+        if (!isset($this->_fromID)) throw new Exception('FromID is not set');
+        if (!isset($this->_ID)) throw new Exception('ID is not set');
 
-        msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."', updateDate=NOW() where id='".$id."' ");
+        msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."', updateDate=NOW() where id='".$this->_ID."' ");
 
-        if($tab=msSQL::sql2tabSimple("select id from objets_data where instance='".$id."'")) {
+        if($tab=msSQL::sql2tabSimple("select id from objets_data where instance='".$this->_ID."'")) {
           foreach($tab as $sid) {
-            $this->setDeletedObjetAndSons($sid);
+            $this->_ID = $sid;
+            $this->setDeletedObjetAndSons();
           }
         }
 
@@ -443,7 +454,7 @@ public function getToID()
  */
     public static function setTitleObjet($id, $title)
     {
-        if (!is_numeric($id)) throw new Exception('ID is not numeric');
+        if (!self::checkObjetExist($id)) throw new Exception('ID do not exist');
         $data=array(
           'id'=>$id,
           'titre'=>$title
@@ -471,48 +482,48 @@ public function getToID()
 
     }
 
-  /**
-  * Obtenir le dernier objet d'un type particulier pour un patient particulier
-  * @param  string $name nom du type de l'objet
-  * @param  string $instance int de l'instance de l'objet
-  * @return array tableau avec information sur l'objet
-  */
-      public function getLastObjetByTypeName($name, $instance=false) {
-        if (!isset($this->_toID)) {
-            throw new Exception('toID is not defined');
-        }
+/**
+* Obtenir le dernier objet d'un type particulier pour un patient particulier
+* @param  string $name nom du type de l'objet
+* @param  string $instance int de l'instance de l'objet
+* @return array tableau avec information sur l'objet
+*/
+    public function getLastObjetByTypeName($name, $instance=false) {
+      if (!isset($this->_toID)) {
+          throw new Exception('toID is not defined');
+      }
 
-        if(is_numeric($instance)) {
-          $where = " and pd.instance='".$instance."'";
-        } else {
-          $where = null;
-        }
+      if(is_numeric($instance)) {
+        $where = " and pd.instance='".$instance."'";
+      } else {
+        $where = null;
+      }
 
-        $name2typeID=new msData;
+      $name2typeID=new msData;
 
-        if($name2typeID=$name2typeID->getTypeIDsFromName([$name, 'lastname', 'firstname', 'birthname'])) {
-          if(isset($name2typeID[$name])) {
-            if($data=msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, p.value as prenom,
-            CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
-            from objets_data as pd
-            left join data_types as t on t.id=pd.typeID
-            left join objets_data as n on n.toID=pd.fromID and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
-            left join objets_data as p on p.toID=pd.fromID and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
-            left join objets_data as bn on bn.toID=pd.fromID and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
-            where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated='' $where
-            order by updateDate desc
-            limit 1")) {
-              return $data;
-            } else {
-              return false;
-            }
+      if($name2typeID=$name2typeID->getTypeIDsFromName([$name, 'lastname', 'firstname', 'birthname'])) {
+        if(isset($name2typeID[$name])) {
+          if($data=msSQL::sqlUnique("select pd.* , t.label, t.groupe, t.formValues, p.value as prenom,
+          CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+          from objets_data as pd
+          left join data_types as t on t.id=pd.typeID
+          left join objets_data as n on n.toID=pd.fromID and n.outdated='' and n.deleted='' and n.typeID='".$name2typeID['lastname']."'
+          left join objets_data as p on p.toID=pd.fromID and p.outdated='' and p.deleted='' and p.typeID='".$name2typeID['firstname']."'
+          left join objets_data as bn on bn.toID=pd.fromID and bn.outdated='' and bn.deleted='' and bn.typeID='".$name2typeID['birthname']."'
+          where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated='' $where
+          order by updateDate desc
+          limit 1")) {
+            return $data;
           } else {
             return false;
           }
+        } else {
+          return false;
         }
-
-        return false;
       }
+
+      return false;
+    }
 
 /**
 * Obtenir la valeur du dernier objet d'un type particulier pour un patient particulier

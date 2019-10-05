@@ -83,7 +83,7 @@ if ($validation === false) {
       if(isset($_POST['p_'.$_POST['autoDate']])) {
         if(!empty($_POST['p_'.$_POST['autoDate']]) and msTools::validateDate($_POST['p_'.$_POST['autoDate']],'d/m/Y')) {
           $objet=new msObjet();
-          $objet->setID($supportID);
+          $objet->setObjetID($supportID);
           $newDate = DateTime::createFromFormat('d/m/Y', $_POST['p_'.$_POST['autoDate']]);
           $newDate = $newDate->format('Y-m-d 00:00:00');
           $objet->setCreationDate($newDate);
@@ -125,10 +125,20 @@ if ($validation === false) {
                   if($dontIgnoreEmpty) {
                     $patient->createNewObjetByTypeName($in, '', $supportID);
                   } else {
-                    if(isset($prevData[$in])) $patient->setDeletedObjetAndSons($prevData[$in]);
+                    if(isset($prevData[$in])) {
+                      $objDel = new msObjet;
+                      $objDel->setFromID($p['user']['id']);
+                      $objDel->setObjetID($prevData[$in]);
+                      $objDel->setDeletedObjetAndSons();
+                    }
                   }
                 } else {
-                    if(isset($prevData[$in])) $patient->setDeletedObjetAndSons($prevData[$in]);
+                    if(isset($prevData[$in])) {
+                      $objDel = new msObjet;
+                      $objDel->setFromID($p['user']['id']);
+                      $objDel->setObjetID($prevData[$in]);
+                      $objDel->setDeletedObjetAndSons();
+                    }
                 }
 
               }

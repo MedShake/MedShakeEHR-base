@@ -96,7 +96,10 @@ if (count($_POST)>2) {
 
             if ($postObjetId>0) {
                 if($v=='' and $modeAction == 'edition') {
-                  $patient->setDeletedObjetAndSons($postObjetId);
+                  $objDel = new msObjet;
+                  $objDel->setFromID($_POST['asUserID']?:$p['user']['id']);
+                  $objDel->setObjetID($postObjetId);
+                  $objDel->setDeletedObjetAndSons();
                 } else {
                   msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
                 }

@@ -286,7 +286,8 @@ class msLapSAM
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setToID($this->_toID);
-        $obj->setDeletedObjetAndSons($dataID);
+        $obj->setObjetID($dataID);
+        $obj->setDeletedObjetAndSons();
 
       }
     }

@@ -31,7 +31,8 @@ if(!is_numeric($_POST['objetID'])) die;
 
 $patient = new msObjet();
 $patient->setFromID($p['user']['id']);
-if ($patient->setDeletedObjetAndSons($_POST['objetID'])) {
+$patient->setObjetID($_POST['objetID']);
+if ($patient->setDeletedObjetAndSons()) {
     echo json_encode(array("statut"=>'ok'));
 } else {
     echo json_encode(array("statut"=>'error'));

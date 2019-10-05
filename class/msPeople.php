@@ -372,7 +372,8 @@ class msPeople
       where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAldDeclaration']."' and p.deleted='' and p.outdated=''", 'id')) {
         foreach($csAldID as $id=>$v) {
             $ald=new msObjet;
-            $rd[$id]=$ald->getObjetAndSons($id, 'name');
+            $ald->setObjetID($id);
+            $rd[$id]=$ald->getObjetAndSons('name');
             $rd[$id]['fromName']=$v['prenom'].' '.$v['nom'];
             $selectedAldLabel=new msData;
             $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$rd[$id]['aldNumber']['typeID']]);
@@ -413,8 +414,9 @@ class msPeople
       left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
       where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAtcdStrucDeclaration']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id')) {
         foreach($csAldID as $id=>$v) {
-            $ald=new msObjet;
-            $rd['atcd'][$id]=$ald->getObjetAndSons($id, 'name');
+            $atcd=new msObjet;
+            $atcd->setObjetID($id);
+            $rd['atcd'][$id]=$atcd->getObjetAndSons('name');
             $rd['atcd'][$id]['fromName']=$v['prenom'].' '.$v['nom'];
         }
 

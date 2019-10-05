@@ -46,7 +46,8 @@
 
  if (isset($_POST['objetID'])) {
      $dataform = new msObjet();
-     $dataform=$dataform->getObjetDataByID($_POST['objetID'], ['value']);
+     $dataform->setObjetID($_POST['objetID']);
+     $dataform=$dataform->getObjetDataByID(['value']);
      $p['page']['courrier']['pre']=msTools::unbbcodifier($dataform['value']);
  } elseif (isset($_POST['modele'])) {
 

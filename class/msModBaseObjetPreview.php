@@ -42,7 +42,8 @@ class msModBaseObjetPreview
     if(!is_numeric($id)) throw new Exception('ID is not numeric');
     $this->_objetID = $id;
     $data = new msObjet();
-    $this->_dataObjet = $data->getCompleteObjetDataByID($id);
+    $data->setObjetID($id);
+    $this->_dataObjet = $data->getCompleteObjetDataByID();
   }
 
 /**
@@ -216,7 +217,8 @@ class msModBaseObjetPreview
   public function getGenericPreviewReglement() {
     global $p;
     $data = new msObjet();
-    $p['page']['datareg'] = $data->getObjetAndSons($this->_objetID, 'name');
+    $data->setObjetID($this->_objetID);
+    $p['page']['datareg'] = $data->getObjetAndSons('name');
     $p['page']['typeFormHonoraires']=msSQL::sqlUniqueChamp("SELECT dt.formValues AS form FROM data_types as dt
     LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$this->_objetID."' limit 1");
     $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$this->_objetID."')");
@@ -255,7 +257,8 @@ class msModBaseObjetPreview
     global $p;
 
     $data = new msObjet();
-    $p['page']['dataMail'] = $data->getObjetAndSons($this->_objetID, 'name');
+    $data->setObjetID($this->_objetID);
+    $p['page']['dataMail'] = $data->getObjetAndSons('name');
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detMail.html.twig');
@@ -400,7 +403,8 @@ class msModBaseObjetPreview
         global $p;
 
         $data = new msObjet();
-        $p['page']['dataAld'] = $data->getObjetAndSons($this->_objetID, 'name');
+        $data->setObjetID($this->_objetID);
+        $p['page']['dataAld'] = $data->getObjetAndSons('name');
         $selectedAldLabel=new msData;
         $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$p['page']['dataAld']['aldNumber']['typeID']]);
 

@@ -312,7 +312,8 @@ class msCourrier
 
         //règlement data
         $reg = new msObjet;
-        if($tabReg = $reg->getObjetAndSons($this->_objetID, 'name')) {
+        $reg->setObjetID($this->_objetID);
+        if($tabReg = $reg->getObjetAndSons('name')) {
           foreach($tabReg as $name=>$val) {
             $tabReg[$name]=$val['value'];
           }
@@ -372,7 +373,8 @@ class msCourrier
 
         if (!isset($this->_modeleID) and is_numeric($this->_objetID)) {
           $objetData=new msObjet();
-          $objetData=$objetData->getObjetDataByID($this->_objetID, ['typeID']);
+          $objetData->setObjetID($this->_objetID);
+          $objetData=$objetData->getObjetDataByID(['typeID']);
           $this->_modeleID=$objetData['typeID'];
         }
 
@@ -445,7 +447,8 @@ class msCourrier
 
         //examen data
         $examData = new msObjet();
-        $tabRetour=$tabRetour+$examData->getObjetDataByID($this->_objetID, ['creationDate as date']);
+        $examData->setObjetID($this->_objetID);
+        $tabRetour=$tabRetour+$examData->getObjetDataByID(['creationDate as date']);
 
         ksort($tabRetour, SORT_REGULAR);
 
@@ -787,7 +790,8 @@ class msCourrier
             throw new Exception('ObjetID is not numeric');
         }
         $objetData=new msObjet();
-        return $this->_objetData=$objetData->getCompleteObjetDataByID($this->_objetID);
+        $objetData->setObjetID($this->_objetID);
+        return $this->_objetData=$objetData->getCompleteObjetDataByID();
     }
 
 }
