@@ -46,6 +46,34 @@ class msData extends msDataCat
  */
     private $_modules;
 
+/**
+ * Vérifier que le type ID existe
+ * @param  int $id ID du type
+ * @return boolean     true/false
+ */
+    public static function checkDataTypeExist($id) {
+      if(!is_numeric($id)) return false;
+      if(msSQL::sqlUniqueChamp("SELECT id FROM data_types WHERE id='".$id."' limit 1")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+/**
+ * Vérifier l'existence d'un data_type par son nom
+ * @param  string $name nom du data_type
+ * @return bool       true/false
+ */
+    public function checkDataTypeExistByName($name)
+    {
+        if ($typeID=msSQL::sqlUniqueChamp("select id from data_types where name='".msSQL::cleanVar($name)."' limit 1")) {
+            $this->_typeID=$typeID;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 /**
  * Définir la valeur
@@ -64,7 +92,7 @@ class msData extends msDataCat
  */
     public function setTypeID($typeID)
     {
-        if (is_numeric($typeID)) {
+        if ($this->checkDataTypeExist($typeID)) {
             return $this->_typeID = $typeID;
         } else {
             throw new Exception('typeID is not numeric');
@@ -334,21 +362,6 @@ class msData extends msDataCat
             }
         }
         return $return;
-    }
-
-/**
- * Vérifier l'existence d'un data_type par son nom
- * @param  string $name nom du data_type
- * @return bool       true/false
- */
-    public function checkDataTypeExistByName($name)
-    {
-        if ($typeID=msSQL::sqlUniqueChamp("select id from data_types where name='".msSQL::cleanVar($name)."' limit 1")) {
-            $this->_typeID=$typeID;
-            return true;
-        } else {
-            return false;
-        }
     }
 
 /**
