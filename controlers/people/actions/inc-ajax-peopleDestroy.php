@@ -21,7 +21,7 @@
  */
 
 /**
- * people : action > détruire un dossier
+ * people : ajax > détruire un dossier
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -41,10 +41,15 @@ $gump->filter_rules(array(
   'p_password'=> 'trim',
 ));
 
+$gump->set_field_name("p_password", "Mot de passe");
+
 $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
-  exit("Mot de passe incorrect ");
+  $return['status']='failed';
+  $errors = $gump->get_errors_array();
+  $return['msg']=$errors;
+  $return['code']=array_keys($errors);
 } else {
 
   $peopleDel = new msPeopleDestroy();
@@ -52,9 +57,11 @@ if ($validated_data === false) {
   $peopleDel->setFromID($p['user']['id']);
   if($peopleDel->getDestroyAutorisation()) {
     $peopleDel->destroyPeopleData();
-    $p['page']['destroyeStatus'] = 'ok';
+    $return['status']='ok';
   } else {
-    $p['page']['destroyeStatus'] = 'ko';
-    $p['page']['blockingReasons'] = $peopleDel->getBlockingReasons();
+    $return['status']='failed';
+    $return['msg'] = $peopleDel->getBlockingReasons();
   }
 }
+
+exit(json_encode($return));

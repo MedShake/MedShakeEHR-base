@@ -45,9 +45,16 @@
 
       $('#peopleIdentity').html(peopleIdentity);
       $('#peopleNumber').html(peopleID);
-      $('#modalPeopleDelete input[name="peopleID"]').val(peopleID);
-
+      $('#modalpeopleDestroy input[name="peopleID"]').val(peopleID);
     });
+
+    $('body').on('click', '#formDestroyePeople button[type="submit"]', function (e) {
+      e.preventDefault();
+      ajaxModalSave('#formDestroyePeople', '#modalpeopleDestroy' , function(){ $('#modalpeopleDestroy').modal('hide');
+      window.location.reload();});
+    });
+
+
   });
 
 {% endblock %}
@@ -95,7 +102,7 @@
                 <i class="fas fa-trash-restore"></i>
               </button>
               {% if config.optionGeDestructionDataDossierPatient == 'true' %}
-                <button type="button" class="btn btn-danger btn-sm destroyPeople" data-patientID="{{ v.id }}" data-patientIdentite="{{ v.identiteDossier|e }}" title="Suppression totale et irréversible de ce dossier" data-toggle="modal" data-target="#modalPeopleDelete">
+                <button type="button" class="btn btn-danger btn-sm destroyPeople" data-patientID="{{ v.id }}" data-patientIdentite="{{ v.identiteDossier|e }}" title="Suppression totale et irréversible de ce dossier" data-toggle="modal" data-target="#modalpeopleDestroy">
                   <i class="fas fa-trash"></i>
                 </button>
               {% endif %}
@@ -112,10 +119,10 @@
 {% endblock %}
 
 {% block modals %}
-  <div id="modalPeopleDelete" class="modal" tabindex="-1" role="dialog">
+  <div id="modalpeopleDestroy" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/actions/peopleDelete/" method="post">
+        <form id="formDestroyePeople" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/peopleDestroy/" method="post">
           <div class="modal-header">
             <h5 class="modal-title font-weight-bold">Détruire un dossier</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -123,6 +130,7 @@
             </button>
           </div>
           <div class="modal-body">
+            {{ f.errorsBloc }}
             <div class="alert alert-danger" role="alert">
               <p class="font-weight-bold">Vous demandez la destruction du dossier #<span id="peopleNumber"></span>  - <span id="peopleIdentity"></span></p>
               <div class="d-flex justify-content-between align-items-center">
