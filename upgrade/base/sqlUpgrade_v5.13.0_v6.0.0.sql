@@ -66,3 +66,7 @@ ALTER TABLE `people` CHANGE `type` `type` ENUM('patient','pro','externe','servic
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
 ('base', 'baseAskUserPassword', 'Demande du mot de passe', 'demande du mot de passe à l\'utilisateur courant', 'data_types', 'medical', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:\r\n    col1:\r\n      size: col\r\n      bloc:\r\n        - password,required                        		#1789 Mot de passe', '', '', '', '');
+
+-- base url Orthanc API : protocol et port 
+INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('dicomProtocol', 'default', '0', '', 'DICOM', 'texte', 'http:// ou https:// ', 'http://');
+INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('dicomPort', 'default', '0', '', 'DICOM', 'nombre', 'port de l\'API Orthanc (défaut 8042)', '8042');

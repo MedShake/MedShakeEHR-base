@@ -102,7 +102,7 @@ public function getDcInstanceID()
     public function __construct()
     {
         global $p;
-        $this->_baseCurlUrl='http://'.$p['config']['dicomHost'].':8042';
+        $this->_baseCurlUrl=$p['config']['dicomProtocol'].$p['config']['dicomHost'].':'.$p['config']['dicomPort'];
     }
 
 /**
