@@ -117,7 +117,9 @@ $(document).ready(function() {
   $('body').on("click", "#newPro button.modal-save", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
-    ajaxModalSave(form, modal);
+    ajaxModalSave(form, modal, function() {
+      $(modal).modal('hide');
+    });
   });
 
   $('body').on('click', '.voirDossier', function() {

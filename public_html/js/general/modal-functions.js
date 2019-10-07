@@ -49,13 +49,14 @@
      success: function(data) {
        if (data.status == 'ok') {
          success();
-         $(modal).modal('hide');
+
        } else {
-         $(modal + ' div.alert').removeClass('d-none');
-         $(modal + ' div.alert ul').html('');
+         $(modal + ' div.alert.cleanAndHideOnModalHide').removeClass('d-none');
+         $(modal + ' div.alert.cleanAndHideOnModalHide ul').html('');
          $.each(data.msg, function(index, value) {
-           $(modal + ' div.alert ul').append('<li>' + value + '</li>');
+           $(modal + ' div.alert.cleanAndHideOnModalHide ul').append('<li>' + value + '</li>');
          });
+         $(modal + ' .is-invalid').removeClass('is-invalid');
          $.each(data.code, function(index, value) {
            $(modal + ' *[name="' + value + '"]').addClass('is-invalid');
          });

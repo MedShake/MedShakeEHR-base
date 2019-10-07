@@ -128,6 +128,7 @@ $(document).ready(function() {
     ajaxModalSave(form, modal, function() {
       userParametersPrescriptionsCatList();
       userParametersPrescriptionsList();
+      $(modal).modal('hide');
     });
 
   });
