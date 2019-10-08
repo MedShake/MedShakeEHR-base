@@ -69,6 +69,10 @@ if (!is_file($homepath.'config/config.yml')) {
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
+
+        $_POST['stockageLocation'] = msTools::setDirectoryLastSlash($_POST['stockageLocation']);
+        $_POST['backupLocation'] = msTools::setDirectoryLastSlash($_POST['backupLocation']);
+
         $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
         $mysqli->set_charset("utf8");
         if (mysqli_connect_errno()) {
@@ -262,8 +266,8 @@ elseif ($template=='configForm') :
             </div>
             <div class="form-group">
               <label class="control-label">Nom de la base à créer</label>
-              <input name="sqlBase" type="text" class="form-control" autocomplete="off" required="required"
-              value="medshakeehr"/>
+              <input name="sqlBase" type="text" pattern="[a-zA-Z0-9–]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr"/>
+              <small class="form-text text-muted">Caractères alphanumériques et underscore uniquement</small>
             </div>
             <div class="form-group">
               <label class="control-label">Nom d'utilisateur de la base à créer</label>
