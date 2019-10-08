@@ -33,7 +33,6 @@ var selected_patient;
 var selected_period;
 var selected_event;
 var selected_action;
-var selected_calendar = parseInt($('#calendar').attr('data-userID'));
 var calendar_mode = $('#calendar').attr('data-mode');
 
 var targetMenuPOTD = '_blank';
@@ -263,7 +262,7 @@ $(document).ready(function() {
       selected_event = eventClicked;
       if (eventClicked.type == 'publicHoliday') return;
       if (jsEvent.shiftKey) {
-        window.open(urlBase + '/logs/agenda/' + $('#calendar').attr('data-userID') + '/' + eventClicked.id + '/', '_blank');
+        window.open(urlBase + '/logs/agenda/' + selected_calendar + '/' + eventClicked.id + '/', '_blank');
       } else if (eventClicked.patientid != "0") {
         //panel patient
         getPatientAdminData(eventClicked.patientid);
@@ -677,7 +676,7 @@ $(document).ready(function() {
 
   //chercher patient : porte d'entrée d'un nouveau rdv
   $('#search').autocomplete({
-    source: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/searchPatient/',
+    source: urlBase + '/agenda/' + selected_calendar + '/ajax/searchPatient/',
     select: function(event, ui) {
       event.stopPropagation();
       if (calendar_mode == 'lateral') {
@@ -746,7 +745,7 @@ function getEnd(start) {
 function synchronizeEvents() {
   $(".fc-synchronize-button").attr("disabled", "");
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/synchronizeEvents/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/synchronizeEvents/',
     type: "post",
     data: {},
     dataType: "json",
@@ -768,7 +767,7 @@ function synchronizeEvents() {
  */
 function getPatientAdminData(patientID) {
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getPatientAdminData/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/getPatientAdminData/',
     type: "post",
     data: {
       patientID: patientID,
@@ -805,7 +804,7 @@ function getPatientAdminData(patientID) {
  */
 function getHistoriquePatient(patientID) {
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getHistoriquePatient/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/getHistoriquePatient/',
     type: "post",
     data: {
       patientID: patientID,
@@ -823,7 +822,7 @@ function getHistoriquePatient(patientID) {
           if (dat['statut'] == 'deleted') chaine = chaine + ' list-group-item-warning';
           if (moment(dat['dateiso']).isAfter()) chaine = chaine + ' font-weight-bold';
           chaine = chaine + '">';
-          if (dat['agendaID'] == $('#calendar').attr('data-userID')) {
+          if (dat['agendaID'] == selected_calendar) {
             chaine = chaine + '<button title="Voir" type="button" class="btn btn-light btn-sm moveToDate" data-date="' + dat['dateiso'] + '"><span class="far ';
             if (moment(dat['dateiso']).isAfter()) chaine = chaine + 'fa-calendar-plus';
             else chaine = chaine + 'fa-calendar';
@@ -942,7 +941,7 @@ function setEvent(id) {
       return;
     }
     data += $('#newPatientData').serialize() + '&' + $('#formRdv').serialize();
-    data += '&userID=' + $('#calendar').attr('data-userID');
+    data += '&userID=' + selected_calendar;
     data += '&start=' + selected_period.start.format("YYYY-MM-DD%20HH:mm:SS");
     data += '&end=' + selected_period.end.format("YYYY-MM-DD%20HH:mm:SS");
   }
@@ -950,7 +949,7 @@ function setEvent(id) {
   else {
     data = {
       patientID: selected_patient,
-      userID: $('#calendar').attr('data-userID'),
+      userID: selected_calendar,
       start: selected_period.start.format("YYYY-MM-DD HH:mm:SS"),
       end: selected_period.end.format("YYYY-MM-DD HH:mm:SS"),
       type: (selected_patient == '0' ? '[off]' : $('#type').val()),
@@ -960,7 +959,7 @@ function setEvent(id) {
       data.eventID = id;
   }
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setNewRdv/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/setNewRdv/',
     type: "post",
     data: data,
     dataType: "json",
@@ -997,12 +996,12 @@ function closePeriod() {
   }
 
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setNewRdv/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/setNewRdv/',
     type: "post",
     data: {
       eventID: id,
       patientID: '0',
-      userID: $('#calendar').attr('data-userID'),
+      userID: selected_calendar,
       start: start,
       end: end,
       type: '[off]',
@@ -1031,7 +1030,7 @@ function deleteEvent() {
   var id = selected_event.id;
   if (confirm("Confirmez-vous la suppression de cet événement ?")) {
     $.ajax({
-      url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/delEvent/',
+      url: urlBase + '/agenda/' + selected_calendar + '/ajax/delEvent/',
       type: "post",
       data: {
         eventid: selected_event.id,
@@ -1056,7 +1055,7 @@ function deleteEvent() {
  */
 function setPasVenu() {
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventPasVenu/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/setEventPasVenu/',
     type: "post",
     data: {
       eventID: selected_event.id,
@@ -1080,7 +1079,7 @@ function setPasVenu() {
  */
 function setEnAttente() {
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/setEventEnAttente/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/setEventEnAttente/',
     type: "post",
     data: {
       eventID: selected_event.id,
@@ -1107,7 +1106,7 @@ function setEnAttente() {
 function modEvent(refetch) {
 
   $.ajax({
-    url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/moveEvent/',
+    url: urlBase + '/agenda/' + selected_calendar + '/ajax/moveEvent/',
     type: "post",
     data: {
       eventid: selected_event.id,

@@ -32,7 +32,7 @@ if (!eventTextColor) {
 }
 if (!eventSources) {
   var eventSources = [{
-      url: urlBase + '/agenda/' + $('#calendar').attr('data-userID') + '/ajax/getEvents/'
+      url: urlBase + '/agenda/' + selected_calendar + '/ajax/getEvents/'
     },
     {
       events: [{
