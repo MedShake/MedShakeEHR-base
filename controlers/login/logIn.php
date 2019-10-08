@@ -30,7 +30,10 @@
 $debug='';
 $template="login";
 
+$formLogin = new msForm();
+$formLogin->setFormIDbyName($p['page']['formIN']='baseLogin');
+$p['page']['form']=$formLogin->getForm();
 
-$formpatient = new msForm();
-$formpatient->setFormIDbyName($p['page']['formIN']='baseLogin');
-$p['page']['form']=$formpatient->getForm();
+if($p['config']['optionGeLogin2FA'] == 'false') {
+  $formLogin->removeFieldFromForm($p['page']['form'], 'otpCode');
+}

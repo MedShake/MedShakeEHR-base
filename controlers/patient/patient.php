@@ -36,6 +36,12 @@ $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 
+// vérifier si correspond à un patient existant
+if(!in_array($patient->getType(), ['patient', 'pro', 'externe'])) {
+  $template = "404";
+  return;
+}
+
 //vérifier les droits
 if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
   $template="forbidden";
@@ -137,7 +143,9 @@ $docAsSigner->setFromID($p['user']['id']);
 $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
 //les correspondants
-$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+$correspondants = new msPeopleRelations;
+$correspondants->setToID($match['params']['patient']);
+$p['page']['correspondants']=$correspondants->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
 
 // Transmissions
 if($p['config']['transmissionsPeutCreer'] == 'true') {

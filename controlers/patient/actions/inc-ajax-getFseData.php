@@ -28,7 +28,8 @@
 
 // objet paiement
 $paiem = new msObjet;
-$dataPaiem = $paiem->getObjetAndSons($_GET['objetID'], 'name');
+$paiem->setObjetID($_GET['objetID']);
+$dataPaiem = $paiem->getObjetAndSons('name');
 $actes = json_decode($dataPaiem['regleDetailsActes']['value'], TRUE);
 
 // modifications sur array actes
@@ -48,8 +49,8 @@ $prat->setToID($p['user']['id']);
 $pratData = $prat->getSimpleAdminDatasByName();
 
 // data patient
-$patient = new msPeople;
-$patient->setToID($paiem->getObjetDataByID($_GET['objetID'], ['toID'])['toID']);
+$patient = new msPeopleRelations;
+$patient->setToID($paiem->getObjetDataByID(['toID'])['toID']);
 
 // relation pour recherche du médecin traitant déclaré
 $ips='';

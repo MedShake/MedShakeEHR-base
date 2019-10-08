@@ -58,12 +58,14 @@ $acceptedModes=array(
     'configCronJobs', //Configurer les crons
     'configInstallModule', // Installer un module
     'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
+    'configUserCreate', // créer un utilisateur
     'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
     'configUserParamDelete', // Supprimer un paramètre dans la configuration spécifique à un utilisateur
     'configUserTemplateDelete', // Supp d'un template user
     'extractCcamActeData', // extraire les data sur un acte CCAM
     'fixDisplayOrder', // fixer le displayOrder pour les data types en fonction de l'ordre dans un form
     'configUncryptApicryptKey', //déchiffrer une clef Apicrypt
+    'configRevoke2faKey'  // révoquer la clef 2FA d'un utilisateur
 );
 if (!in_array($m, $acceptedModes)) {
     die;

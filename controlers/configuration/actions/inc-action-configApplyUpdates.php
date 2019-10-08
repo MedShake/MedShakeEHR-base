@@ -43,7 +43,7 @@ function includePhp($file, $suffixe) {
   }
 }
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
+
 $formIN=$_POST['formIN'];
 unset($_SESSION['form'][$formIN]);
 

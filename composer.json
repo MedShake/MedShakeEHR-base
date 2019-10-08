@@ -10,6 +10,7 @@
     "webit/eval-math": "1.0.1",
     "ovh/ovh": "v2.0.1",
     "box/spout": "2.7.3",
-    "setasign/fpdi-fpdf": "v2.2.0"
+    "setasign/fpdi-fpdf": "v2.2.0",
+    "spomky-labs/otphp": "^10.0"
   }
 }

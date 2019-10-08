@@ -65,6 +65,7 @@ $p['homepath']=$homepath;
 $mysqli=msSQL::sqlConnect();
 
 /////////// Validators loader
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router

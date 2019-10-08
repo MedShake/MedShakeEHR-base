@@ -32,7 +32,7 @@ $debug='';
 $template="mailForm";
 
 //recupére les administrative data
-$to=new msPeople();
+$to=new msPeopleRelations();
   $to->setToID($_POST['patientID']);
   $toAdminData=$to->getSimpleAdminDatasByName();
 
@@ -80,7 +80,8 @@ if($catModelesMails and $lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id
 //sur le doc à joindre
 if (isset($_POST['objetID'])) {
     $doc = new msObjet();
-    $p['page']['doc']=$doc->getCompleteObjetDataByID($_POST['objetID']);
+    $doc->setObjetID($_POST['objetID']);
+    $p['page']['doc']=$doc->getCompleteObjetDataByID();
 
     //make URL
     $doc = new msStockage;

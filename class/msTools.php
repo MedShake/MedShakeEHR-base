@@ -59,16 +59,16 @@ class msTools
       }
 
       if ($type=='301') {
-          header('HTTP/1.1 301 Moved Permanently');
+          http_response_code(301);
       }
       if ($type=='401') {
-          header('HTTP/1.1 401 Unauthorized');
+          http_response_code(401);
       }
       if ($type=='403') {
-          header('HTTP/1.1 403 Forbidden');
+          http_response_code(403);
       }
       if ($type=='404') {
-          header('HTTP/1.1 404 Not Found');
+          http_response_code(404);
       }
       header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$routes[$routeAbrev][1]);
       die;
@@ -85,16 +85,16 @@ class msTools
       global $p;
 
       if ($type=='301') {
-          header('HTTP/1.1 301 Moved Permanently');
+          http_response_code(301);
       }
       if ($type=='401') {
-          header('HTTP/1.1 401 Unauthorized');
+          http_response_code(401);
       }
       if ($type=='403') {
-          header('HTTP/1.1 403 Forbidden');
+          http_response_code(403);
       }
       if ($type=='404') {
-          header('HTTP/1.1 404 Not Found');
+          http_response_code(404);
       }
       header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$url);
       die;

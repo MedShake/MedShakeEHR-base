@@ -102,7 +102,7 @@ public function getDcInstanceID()
     public function __construct()
     {
         global $p;
-        $this->_baseCurlUrl='http://'.$p['config']['dicomHost'].':8042';
+        $this->_baseCurlUrl=$p['config']['dicomProtocol'].$p['config']['dicomHost'].':'.$p['config']['dicomPort'];
     }
 
 /**
@@ -112,12 +112,12 @@ public function getDcInstanceID()
  */
     public function setToID($v)
     {
-      if (is_numeric($v)) {
+      if (msPeople::checkPeopleExist($v)) {
           $this->_toID = $v;
           $this->_makeDcPatientID();
           return $this->_toID;
       } else {
-          throw new Exception('ToID is not numeric');
+          throw new Exception('ToID does not exist');
       }
     }
 

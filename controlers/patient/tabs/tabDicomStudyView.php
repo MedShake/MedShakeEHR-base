@@ -56,7 +56,8 @@ if (count($p['page']['studyDcData']) > 0) {
     //on cherche les examens EHR qui peuvent être attachés.
     if ($d=msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' and value='".msSQL::cleanVar($_POST['param']['dcStudyID'])."' ")) {
         $ob = new msObjet();
-        $p['page']['studyDcDataRapro']=$ob->getCompleteObjetDataByID($d);
+        $ob->setObjetID($d);
+        $p['page']['studyDcDataRapro']=$ob->getCompleteObjetDataByID();
     }
 } else {
     die("Cette page n'existe pas");

@@ -40,49 +40,13 @@ $acceptedModes=array(
     'addRelationPatientPatient', //Ajouter une reelation patient <-> patient
     'getRelationsPatientPatientsTab', // Obtenir le tableau de relations patient <-> patients
     'setExternAsPatient', //relier un externe à un patient
-    'setExternAsNewPatient' //transformer un externe en patient
+    'setExternAsNewPatient', //transformer un externe en patient
+    'peopleDestroy', //détruire un dossier
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
 }
 
-
-// Autocomplete : obtenir le json des praticiens
-if ($m=='getRelationsPraticiens') {
-    include('inc-ajax-getRelationsPraticiens.php');
-}
-// Ajouter une reelation patient <-> praticien
-elseif ($m=='addRelationPatientPraticien') {
-    include('inc-ajax-addRelationPatientPraticien.php');
-}
-// Obtenir le tableau de relations patient <-> praticiens
-elseif ($m=='getRelationsPatientPraticiensTab') {
-    include('inc-ajax-getRelationsPatientPraticiensTab.php');
-}
-// Retirer une reelation du patient 
-elseif ($m=='removeRelationPatient') {
-    include('inc-ajax-removeRelationPatient.php');
-}
-
-
-// Autocomplete : obtenir le json des patients
-elseif ($m=='getRelationsPatients') {
-    include('inc-ajax-getRelationsPatients.php');
-}
-// Autocomplete : obtenir le json des patients
-elseif ($m=='addRelationPatientPatient') {
-    include('inc-ajax-addRelationPatientPatient.php');
-}
-// Obtenir le tableau de relations patient <-> patients
-elseif ($m=='getRelationsPatientPatientsTab') {
-    include('inc-ajax-getRelationsPatientPatientsTab.php');
-}
-
-//relier un externe à un patient
-elseif ($m=='setExternAsPatient') {
-    include('inc-ajax-setExternAsPatient.php');
-}
-elseif ($m=='setExternAsNewPatient') {
-    include('inc-ajax-setExternAsNewPatient.php');
-}
+//inclusion
+include('inc-ajax-'.$m.'.php');

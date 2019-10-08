@@ -83,7 +83,7 @@ if ($signature and is_numeric($data['patientID'])) {
         $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
         $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
-        $pdf->setFromID('0');
+        $pdf->setFromID($data['fromID']);
         $pdf->setToID($data['patientID']);
         $pdf->setType('doc');
         $pdf->setObjetID($supportID);

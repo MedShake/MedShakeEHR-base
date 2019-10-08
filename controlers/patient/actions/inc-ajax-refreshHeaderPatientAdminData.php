@@ -29,7 +29,7 @@
 $template="inc-ajax-patientAdminData";
 
 //le patient
-$patient = new msPeople();
+$patient = new msPeopleRelations();
 $patient->setToID($_POST['patientID']);
 
 //vérifier les droits

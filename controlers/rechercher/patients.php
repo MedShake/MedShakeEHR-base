@@ -60,8 +60,18 @@ if($p['config']['transmissionsPeutCreer'] == 'true') {
   $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
 }
 
-// Modules
+// Modules & templates
 if (msUser::checkUserIsAdmin()) {
   $p['page']['modules']=msModules::getInstalledModulesNames();
   $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
 }
+
+// Formulaire nouvel utilisateur
+$formModal = new msForm;
+$formModal->setFormIDbyName($p['page']['formModalIN']='baseNewUserFromPeople');
+$formModal->setOptionsForSelect(array(
+  'templates'=>[''=>'aucun'] + $p['page']['userTemplates'],
+  'modules'=>$p['page']['modules'],
+));
+$p['page']['formModal']=$formModal->getForm();
+$formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);

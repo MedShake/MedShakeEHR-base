@@ -30,30 +30,30 @@
 class msInbox
 {
 
-  /**
-   * Parser le nom d'un fichier txt de la inbox pour extraire datetime et num ordre
-   * Pas de rapport réel avec HPRIM
-   * @param  string $filename Nom du fichier
-   * @return array           Array avec datetime=> et numOrdre=>
-   */
-      public static function getFileDataFromName($filename)
-      {
-          $data=array();
-          $Y=substr($filename, 0, 4);
-          $m=substr($filename, 4, 2);
-          $d=substr($filename, 6, 2);
-          $H=substr($filename, 9, 2);
-          $i=substr($filename, 11, 2);
-          $s=substr($filename, 13, 2);
+/**
+ * Parser le nom d'un fichier txt de la inbox pour extraire datetime et num ordre
+ * Pas de rapport réel avec HPRIM
+ * @param  string $filename Nom du fichier
+ * @return array           Array avec datetime=> et numOrdre=>
+ */
+    public static function getFileDataFromName($filename)
+    {
+        $data=array();
+        $Y=substr($filename, 0, 4);
+        $m=substr($filename, 4, 2);
+        $d=substr($filename, 6, 2);
+        $H=substr($filename, 9, 2);
+        $i=substr($filename, 11, 2);
+        $s=substr($filename, 13, 2);
 
-          $data['numOrdre']=explode('-', $filename);
-          $data['numOrdre']=explode('.',$data['numOrdre'][2]);
-          $data['numOrdre']=$data['numOrdre'][0];
+        $data['numOrdre']=explode('-', $filename);
+        $data['numOrdre']=explode('.',$data['numOrdre'][2]);
+        $data['numOrdre']=$data['numOrdre'][0];
 
-          $data['datetime']=$Y.'-'.$m.'-'.$d.' '.$H.':'.$m.':'.$s;
+        $data['datetime']=$Y.'-'.$m.'-'.$d.' '.$H.':'.$m.':'.$s;
 
-          return $data;
-      }
+        return $data;
+    }
 
 /**
  * Obtenir le contenu d'un fichier txt

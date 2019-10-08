@@ -26,60 +26,22 @@
  #
 #}
 
+{% import "macroForm.html.twig" as f %}
+
 <div id="modalRendreUtilisateur" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog  modal-lg">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title font-weight-bold">Rendre utilisateur du logiciel</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
       </div>
-      <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
-        <div class="modal-body">
-          <input name="preUserID" type="hidden" value=""/>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_username">Identifiant</label>
-                <input class="form-control" name="p_username" required="required" type="text" value="" autocomplete="off"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_password">Mot de passe</label>
-                <input class="form-control" name="p_password" required="required" type="password" value="" autocomplete="off"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_module">Module</label>
-                <select class="custom-select" name="p_module">
-                  {% for mv in page.modules %}
-                    <option value="{{ mv }}" {% if mv=='base' %} selected="selected{% endif %}" autocomplete="off">{{ mv }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_birthname">Template utilisateur à appliquer</label>
-                <select class="custom-select" name="p_userTemplate" autocomplete="off">
-                    <option selected value="">aucun</option>
-                  {% for tp in page.userTemplates %}
-                    <option value="{{ tp }}">{{ tp }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-          <button type="submit" class="btn btn-primary">Valider</button>
-        </div>
-      </form>
+      <div class="modal-body">
+        {{ f.errorsBloc(false) }}
+        {{ f.formbuilder(page.formModal , page.formModalIN , session) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary modal-save" data-form="formName_{{ page.formModalIN }}" data-modal="modalRendreUtilisateur">Valider</button>
+      </div>
     </div>
   </div>
 </div>

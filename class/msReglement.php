@@ -88,7 +88,9 @@ class msReglement
  * @param int $patientID patientID
  */
     public function setPatientID($patientID) {
-      if(!is_numeric($patientID)) throw new Exception('PatientID is not numeric');
+      if(!msPeople::checkPeopleExist($patientID)) {
+        throw new Exception('PatientID does not exist');
+      }
       return $this->_patientID=$patientID;
     }
 
@@ -136,7 +138,9 @@ class msReglement
  * @param int $userID userID
  */
     public function setUserID($userID) {
-      if(!is_numeric($userID)) throw new Exception('UserID is not numeric');
+      if(!msPeople::checkPeopleExist($userID)) {
+        throw new Exception('UserID does not exist');
+      }
       return $this->_userID=$userID;
     }
 
@@ -145,7 +149,9 @@ class msReglement
  * @param int $asUserID asUserID
  */
     public function setAsUserID($asUserID) {
-      if(!is_numeric($asUserID)) throw new Exception('AsUserID is not numeric');
+      if(!msPeople::checkPeopleExist($asUserID)) {
+        throw new Exception('AsUserID is not numeric');
+      }
       return $this->_asUserID=$asUserID;
     }
 

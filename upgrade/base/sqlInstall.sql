@@ -1,19 +1,20 @@
+
 -- création de la table actes
-CREATE TABLE `actes` (
- `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
- `cat` tinyint(3) unsigned NOT NULL DEFAULT '0',
- `label` varchar(250) NOT NULL,
- `shortLabel` varchar(255) DEFAULT NULL,
- `details` text NOT NULL,
- `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
- `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
- `fromID` smallint(5) unsigned NOT NULL,
- `toID` mediumint(6) NOT NULL DEFAULT '0',
- `creationDate` datetime NOT NULL DEFAULT '2018-01-01 00:00:00',
- `active` enum('oui','non') NOT NULL DEFAULT 'oui',
- PRIMARY KEY (`id`),
- KEY `toID` (`toID`),
- KEY `cat` (`cat`)
+CREATE TABLE IF NOT EXISTS `actes` (
+  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `cat` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `label` varchar(250) NOT NULL,
+  `shortLabel` varchar(255) DEFAULT NULL,
+  `details` text NOT NULL,
+  `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
+  `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
+  `fromID` smallint(5) unsigned NOT NULL,
+  `toID` mediumint(6) NOT NULL DEFAULT '0',
+  `creationDate` datetime NOT NULL DEFAULT '2018-01-01 00:00:00',
+  `active` enum('oui','non') NOT NULL DEFAULT 'oui',
+  PRIMARY KEY (`id`),
+  KEY `toID` (`toID`),
+  KEY `cat` (`cat`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- création de la table actes_base
@@ -103,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
 -- création de la table data_cat
 CREATE TABLE IF NOT EXISTS `data_cat` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
+  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `data_cat` (
 -- création de la table data_types
 CREATE TABLE IF NOT EXISTS `data_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation') NOT NULL DEFAULT 'admin',
+  `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `placeholder` varchar(255) DEFAULT NULL,
   `label` text,
@@ -128,8 +129,8 @@ CREATE TABLE IF NOT EXISTS `data_types` (
   `formValues` text,
   `module` varchar(20) NOT NULL DEFAULT 'base',
   `cat` smallint(5) unsigned NOT NULL,
-  `fromID` smallint(5) unsigned NOT NULL,
-  `creationDate` datetime NOT NULL,
+  `fromID` smallint(5) unsigned DEFAULT NULL,
+  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `durationLife` int(9) unsigned NOT NULL DEFAULT '86400',
   `displayOrder` tinyint(3) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -185,27 +186,6 @@ CREATE TABLE IF NOT EXISTS `forms_cat` (
   `type` enum('base','user') NOT NULL DEFAULT 'user',
   `fromID` smallint(5) unsigned NOT NULL,
   `creationDate` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- création de la table form_basic_types
-CREATE TABLE IF NOT EXISTS `form_basic_types` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) NOT NULL,
-  `placeholder` varchar(255) NOT NULL,
-  `label` varchar(60) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `validationRules` varchar(255) NOT NULL,
-  `validationErrorMsg` varchar(255) NOT NULL,
-  `formType` varchar(255) NOT NULL,
-  `formValues` text NOT NULL,
-  `type` enum('base','user') NOT NULL DEFAULT 'user',
-  `cat` smallint(5) unsigned NOT NULL,
-  `fromID` smallint(5) unsigned NOT NULL,
-  `creationDate` datetime NOT NULL,
-  `deleteByID` smallint(5) unsigned NOT NULL,
-  `deleteDate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -286,10 +266,11 @@ CREATE TABLE IF NOT EXISTS `objets_data` (
 CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
-  `type` enum('patient','pro','externe','service','deleted') NOT NULL DEFAULT 'patient',
+  `type` enum('patient','pro','externe','service','deleted','groupe','destroyed') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `module` varchar(20) DEFAULT 'base',
   `pass` varbinary(1000) DEFAULT NULL,
+  `secret2fa` varbinary(1000) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
   `fromID` smallint(5) DEFAULT NULL,
   `lastLogIP` varchar(50) DEFAULT NULL,
@@ -395,8 +376,8 @@ INSERT IGNORE INTO `actes_base` (`code`, `activite`, `phase`, `codeProf`, `label
 
 -- actes
 SET @catID = (SELECT actes_cat.id FROM actes_cat WHERE actes_cat.name='catConsult');
-INSERT IGNORE INTO `actes` (`cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`) VALUES
-(@catID, 'Consultation de base', 'Cs base', 'Consult:\r\n  pourcents: 100\r\n  depassement: 15 \r\n', '1', '0', 1, '0', '2019-01-01 00:00:00');
+INSERT IGNORE INTO `actes` (`cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`, `active`) VALUES
+(@catID, 'Consultation de base', 'Cs base', 'Consult:\r\n  pourcents: 100\r\n  depassement: 15 \r\n', '1', '0', 1, '0', '2019-01-01 00:00:00', 'oui');
 
 -- data_cat
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
@@ -438,17 +419,13 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('reglement', 'reglementItems', 'Règlement', 'items d\'un réglement', 'base', '1', '2019-01-01 00:00:00'),
 ('relation', 'catAllergiesStruc', 'Allergies structurées', 'données pour allergies structurées', 'base', '1', '2019-01-01 00:00:00'),
 ('relation', 'relationRelations', 'Relations', 'types permettant de définir une relation', 'base', '1', '2019-01-01 00:00:00'),
+('system', 'catTypesUsageSystem', 'Types à usage system', 'types à usage system', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csAutres', 'Autres', 'autres', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csBase', 'Consultations', 'consultations possibles', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'declencheur', 'Déclencheur', '', 'base', '1', '2019-01-01 00:00:00');
 
 -- data_types
-SET @catID = 0;
-INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('admin', 'submit', '', '', '', '', '', 'submit', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
-
-
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='activity');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('admin', 'job', 'activité professionnelle', 'Activité professionnelle', 'Activité professionnelle', '', 'L\'activité professionnelle n\'est pas correcte', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
@@ -523,6 +500,8 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catMarqueursAdminDossiers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'administratifMarqueurDestruction', '', 'Dossier détruit', 'marqueur pour la destruction d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '11'),
+('admin', 'administratifMarqueurPasRdv', '', 'Ne pas donner de rendez-vous', '', '', '', 'switch', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'administratifMarqueurSuppression', '', 'Dossier supprimé', 'marqueur pour la suppression d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
@@ -546,6 +525,19 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catTypeCsATC
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('typecs', 'csAldDeclaration', NULL, 'Déclaration ALD', 'support parent pour déclaration ALD', NULL, NULL, '', 'aldDeclaration', 'base', @catID, '1', '2019-01-01 00:00:00', '84600', '1'),
 ('typecs', 'csAtcdStrucDeclaration', NULL, 'Ajout d\'antécédent', 'support parent pour déclaration d\'antécédent structuré', NULL, NULL, '', 'atcdStrucDeclaration', 'base', @catID, '1', '2019-01-01 00:00:00', '84600', '1');
+
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catTypesUsageSystem');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('system', 'currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'date', '', 'Début de période', '', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'modules', '', 'Modules', 'modules utilisables', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'otpCode', 'code otp', 'code otp', 'code otp', '', 'Le code otp est manquant', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'templates', '', 'Templates utilisables', 'template utilisables', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'username', 'nom d\'utilisateur', 'Nom d\'utilisateur', 'nom d\'utilisateur', 'required', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='contact');
@@ -778,7 +770,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('administratifPeutAvoirRecettes', 'default', '0', '', 'Règlements', 'true/false', 'peut enregistrer des recettes à son nom', 'true'),
 ('administratifReglementFormulaires', 'default', '0', '', 'Règlements', 'liste', 'liste des formulaires de règlement disponible dans le dossier patient ', 'reglePorteurS1,reglePorteurS2,reglePorteurLibre'),
 ('administratifSecteurGeoTarifaire', 'default', '0', '', 'Règlements', 'dossier', 'zone géographique tarifaire (metro, 971, 972 ...)', 'metro'),
-('administratifSecteurHonorairesCcam', 'default', '0', '', 'Règlements', '', 'grille tarifaire CCAM du praticien', '9'),
+('administratifSecteurHonorairesCcam', 'default', '0', '', 'Règlements', '', 'grille tarifaire CCAM du praticien', '0'),
 ('administratifSecteurHonorairesNgap', 'default', '0', '', 'Règlements', 'texte', 'Code profession pour le secteur tarifaire NGAP', 'mspe'),
 ('administratifSecteurIK', 'default', '0', '', 'Règlements', 'texte', 'tarification des IK : indiquer plaine ou montagne', 'plaine'),
 ('agendaDistantLink', 'default', '0', '', 'Agenda', 'url', 'lien à appliquer à Agenda sur les pages MedShakeEHR. Si agendaService est configuré, alors agendaDistantLink doit être vide', ''),
@@ -834,7 +826,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('dicomAutoSendPatient', 'default', '0', '', 'DICOM', 'true/false', 'générer automatiquement le fichier worklist pour Orthanc à l\'ouverture d’un dossier patient. Ne pas mettre à true pour une secrétaire par exemple !', 'false'),
 ('dicomDiscoverNewTags', 'default', '0', '', 'DICOM', 'true/false', 'enregistrer automatiquement dans la base de données les nouveaux tags dicom rencontrés lors de la visualisation d\'études afin de pouvoir les associer par la suite automatiquement avec des données de formulaire MedShakeEHR', 'true'),
 ('dicomHost', 'default', '0', '', 'DICOM', 'url/ip', 'IP du serveur Orthanc', ''),
+('dicomPort', 'default', '0', '', 'DICOM', 'nombre', 'port de l\'API Orthanc (défaut 8042)', '8042'),
 ('dicomPrefixIdPatient', 'default', '0', '', 'DICOM', 'texte', 'prefix à appliquer à l\'identifiant numérique MedShakeEHR pour en faire un identifiant DICOM unique', '1.100.100'),
+('dicomProtocol', 'default', '0', '', 'DICOM', 'texte', 'http:// ou https:// ', 'http://'),
 ('dicomWorkListDirectory', 'default', '0', '', 'DICOM', 'dossier', 'chemin du répertoire où Orthanc va récupérer le fichier dicom worklist généré par MedShakeEHR pour le passer à l\'appareil d\'imagerie', ''),
 ('dicomWorkingDirectory', 'default', '0', '', 'DICOM', 'dossier', 'répertoire de travail local où on peut rapatrier des images à partir d\'Orthanc pour les parcourir ou les traiter (pdf, zip ...). Utiliser en général le même répertoire que celui indiqué dans workingDirectory des paramètres généraux. Doit être en zone web accessible', ''),
 ('droitDossierPeutCreerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des dossiers praticiens', 'true'),
@@ -866,6 +860,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('mailRappelLogCampaignDirectory', 'default', '0', '', 'Rappels mail', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par mail', ''),
 ('mailRappelMessage', 'default', '0', '', 'Rappels mail', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\\n\\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\\n\\nMerci de votre confiance,\\nÀ bientôt !\\n\\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
 ('optionGeAdminActiverLiensRendreUtilisateur', 'default', '0', '', 'Options', 'true/false', 'si true, l\'administrateur peut transformer des patients ou praticiens en utilisateur via les listings publiques', 'false'),
+('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false'),
+('optionGeLogin2FA', 'default', '0', '', 'Options', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false'),
+('optionGeLoginPassMinLongueur', 'default', '0', '', 'Options', 'int', 'longueur minimale autorisée du mot de passe utilisateur', '10'),
 ('optionGePatientOuvrirApresCreation', 'default', '0', '', 'Options', 'dossier / liens', 'où rediriger après création d\'un nouveau patient', 'liens'),
 ('ovhApplicationKey', 'default', '0', '', 'Click2call', 'string', 'OVH Application Key', ''),
 ('ovhApplicationSecret', 'default', '0', '', 'Click2call', 'string', 'OVH Application Secret', ''),
@@ -969,35 +966,30 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 ('base', 'baseNewPro', 'Formulaire nouveau pro', 'formulaire d\'enregistrement d\'un nouveau pro', 'data_types', 'admin', 'post', '/pro/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      head: \'Etat civil\'            \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - job,autocomplete,rows=1                         		#19   Activité professionnelle\n        - titre,autocomplete                       		#51   Titre\n        - birthname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n\r\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - profesionnalEmail                        		#5    Email professionnelle\n        - personalEmail                            		#4    Email personnelle\n        - telPro                                   		#57   Téléphone professionnel\n        - telPro2                                  		#248  Téléphone professionnel 2\n        - mobilePhonePro                           		#247  Téléphone mobile pro.\n        - faxPro                                   		#58   Fax professionnel\n    col3:\r\n      head: \'Adresse professionnelle\'\r\n      size: 4\r\n      bloc: \r\n        - numAdressePro                            		#54   Numéro\n        - rueAdressePro,autocomplete,data-acTypeID=street:rueAdressePro 		#55   Rue\n        - codePostalPro                            		#53   Code postal\n        - villeAdressePro,autocomplete,data-acTypeID=city:villeAdressePro 		#56   Ville\n        - serviceAdressePro,autocomplete           		#249  Service\n        - etablissementAdressePro,autocomplete     		#250  Établissement\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notesPro,rows=3                          		#443  Notes pros\n\r\n  row3:\r\n    col1:\r\n      size: 4\r\n      bloc:\r\n        - rpps                                     		#103  RPPS\n        - PSIdNat                                  		#1602 Identifiant national praticien santé\n    col2:\r\n      size: 4\r\n      bloc:\r\n        - adeli                                    		#104  Adeli\n        - PSCodeProSpe,plus={<i class=\"fas fa-pen\"></i>} 		#1603 Code normé de la profession/spécialité du praticien\n    col3:\r\n      size: 4\r\n      bloc:\r\n        - nReseau                                  		#477  Numéro de réseau\n        - PSCodeStructureExercice,plus={<i class=\"fas fa-pen\"></i>} 		#1604 Code normé de la structure d exercice du praticien', NULL, '', '', '$(document).ready(function() {\r\n\r\n   // modal edit data admin patient\r\n  $(\'#newPro\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#newPro textarea\'));\r\n  });\r\n  \r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPro textarea\')); \r\n\r\n});'),
 ('base', 'basePeopleComplement', 'Formulaire patient/pro complémentaire', 'formulaire patient/pro complémentaire', 'data_types', 'admin', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - pgpPublicKey,rows=20,class={text-monospace} 		#1787 Clef publique PGP', '', '', '', '');
 
+
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='systemForm');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
 ('base', 'baseAgendaPriseRDV', 'Agenda prise rdv', 'formulaire latéral de prise de rdv', 'data_types', 'admin', 'post', '', @catID, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - birthname,readonly                       		#1    Nom de naissance\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - firstname,readonly                       		#3    Prénom\n  row2:\r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - lastname,readonly                        		#2    Nom d usage\n    col2:                              \r\n      size: 6\r\n      bloc: \r\n        - birthdate,readonly                       		#8    Date de naissance\n  row3:\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n         - personalEmail                           		#4    Email personnelle\n\r\n  row4:                              \r\n    col1:                              \r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone                              		#7    Téléphone mobile\n    col2:                              \r\n      size: 6\r\n      bloc:                          \r\n        - homePhone                                		#10   Téléphone domicile', NULL, '', NULL, NULL),
+('base', 'baseAskUserPassword', 'Demande du mot de passe', 'demande du mot de passe à l\'utilisateur courant', 'data_types', 'medical', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:\r\n    col1:\r\n      size: col\r\n      bloc:\r\n        - password,required                        		#1789 Mot de passe', '', '', '', ''),
 ('base', 'baseFax', 'Formulaire écofax', 'formulaire pour ecofax OVH', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col\r\n    bloc: \r\n      - mailToEcofaxName,required                  		#484  Destinataire du fax\n row2:\r\n   col1: \r\n    size: col\r\n    bloc: \r\n      - mailToEcofaxNumber,required                		#481  Numéro de fax du destinataire', NULL, '', NULL, NULL),
-('base', 'baseFirstLogin', 'Premier utilisateur', 'Création du premier utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInFirstDo/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: \"Premier utilisateur\"\r\n    size: 3\r\n    bloc:\r\n      - username,required                            		#1    Identifiant\r\n\r\n      - password,required                          		#2    Mot de passe\r\n      - verifPassword,required                     		#5    Confirmation du mot de passe\r\n      - submit,Créer,class=btn-primary,class=btn-sm             #3    Valider', NULL, NULL, NULL, NULL),
+('base', 'baseFirstLogin', 'Premier utilisateur', 'Création du premier utilisateur', 'data_types', 'admin', 'post', '/login/logInFirstDo/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: \"Premier utilisateur\"\r\n    size: 3\r\n    bloc:\r\n      - username,required                          		#1    Identifiant\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe\n      - submit,Valider,class={btn-primary}         		#3    Valider', NULL, NULL, NULL, NULL),
 ('base', 'baseImportExternal', 'Import', 'formulaire pour consultation importée d\'une source externe', 'data_types', 'medical', 'post', '', @catID, 'public', 'global:\r\n  formClass: \'newCS\' \r\nstructure:\r\n####### INTRODUCTION ######\r\n  row1:                              \r\n    head: \'Consultation importée\'\r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - dataImport,rows=10                       		#252  Import', NULL, 'csImportee', NULL, NULL),
-('base', 'baseLogin', 'Login', 'formulaire login utilisateur', 'form_basic_types', 'admin', 'post', '/login/logInDo/', @catID, 'public', 'global:\r\n  formClass: \'form-signin\' \r\nstructure:\r\n row1:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - username,required,nolabel                            		#1    Identifiant\n      - password,required,nolabel                          		#2    Mot de passe\n      - submit,Connexion,class=btn-primary,class=btn-block                                     		#3    Valider', NULL, '', NULL, NULL),
+('base', 'baseLogin', 'Login', 'formulaire login utilisateur', 'data_types', 'admin', 'post', '/login/logInDo/', @catID, 'public', 'global:\r\n  formClass: \'form-signin\' \r\nstructure:\r\n row1:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - username,required,nolabel                  		#1    Identifiant\n      - password,required,nolabel                  		#2    Mot de passe\n      - otpCode,nolabel                            		#7    code otp\n      - submit,Connexion,class=btn-primary,class=btn-block 		#3    Valider', NULL, '', NULL, NULL),
+('base', 'baseNewUser', 'Formulaire nouvel utilisateur', 'formulaire nouvel utilisateur', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - birthname,tabindex=4                       		#1    Nom de naissance\n      - templates,tabindex=7                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n      - lastname,tabindex=5                        		#2    Nom d usage\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules\n      - firstname,required,tabindex=6              		#3    Prénom', '', '', '', ''),
+('base', 'baseNewUserFromPeople', 'Formulaire nouvel utilisateur pour un individu déjà existant', 'formulaire nouvel utilisateur pour un individu déjà existant', 'data_types', 'admin', 'post', '/configuration/ajax/configUserCreate/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-4\r\n    bloc:\r\n      - username,required,tabindex=1               		#1788 Nom d utilisateur\n      - templates,tabindex=4                       		#1796 Templates utilisables\n  col2: \r\n    size: col-4\r\n    bloc:\r\n      - password,required,tabindex=2               		#1789 Mot de passe\n  col3: \r\n    size: col-4\r\n    bloc:\r\n      - modules,tabindex=3                         		#1795 Modules', '', '', '', ''),
 ('base', 'baseReglementLibre', 'Formulaire règlement', 'formulaire pour le règlement d\'honoraires libres', 'data_types', 'reglement', 'post', '/patient/ajax/saveReglementForm/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 4\r\n    bloc: \r\n      - regleTarifLibreCejour,readonly,plus={€},class=regleTarifCejour  		#199  Tarif\n  col2: \r\n    size: 4\r\n    bloc: \r\n      - regleModulCejour,plus={€},class=regleDepaCejour                 		#201  Dépassement\n  col3: \r\n    size: 4\r\n    bloc: \r\n      - regleFacture,readonly,plus={€},class=regleFacture           		#196  Facturé\n row2:\r\n  col1: \r\n    size: 4\r\n    bloc: \r\n      - regleCB,plus={€},class=regleCB                         		#194  CB\n  col2: \r\n    size: 4\r\n    bloc: \r\n      - regleCheque,plus={€},class=regleCheque                     		#193  Chèque\n  col3: \r\n    size: 4\r\n    bloc: \r\n      - regleEspeces,plus={€},class=regleEspeces                    		#195  Espèces\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - regleIdentiteCheque,class=regleIdentiteCheque                        		#205  Identité payeur', NULL, '', NULL, NULL),
 ('base', 'baseReglementS1', 'Règlement conventionné S1', 'Formulaire pour le règlement d\'honoraires conventionnés secteur 1', 'data_types', 'reglement', 'post', '/patient/ajax/saveReglementForm/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleSituationPatient,class=regleSituationPatient                      		#197  Situation du patient\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleTarifSSCejour,required,readonly,plus={€},class=regleTarifCejour       		#198  Tarif SS\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleDepaCejour,plus={€},class=regleDepaCejour                 		#200  Dépassement\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleFacture,readonly,plus={€},class=regleFacture           		#196  Facturé\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleCB,plus={€},class=regleCB                         		#194  CB\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleCheque,plus={€},class=regleCheque                     		#193  Chèque\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleEspeces,plus={€},class=regleEspeces                    		#195  Espèces\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleTiersPayeur,plus={€},class=regleTiersPayeur                		#202  Tiers\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - regleIdentiteCheque,class=regleIdentiteCheque                        		#205  Identité payeur', NULL, '', NULL, NULL),
 ('base', 'baseReglementS2', 'Règlement conventionné S2', 'Formulaire pour le règlement d\'honoraires conventionnés secteur 2', 'data_types', 'reglement', 'post', '/patient/ajax/saveReglementForm/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleSituationPatient,class=regleSituationPatient                      		#197  Situation du patient\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleTarifSSCejour,required,readonly,plus={€},class=regleTarifCejour       		#198  Tarif SS\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleDepaCejour,plus={€},class=regleDepaCejour                 		#200  Dépassement\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleFacture,readonly,plus={€},class=regleFacture           		#196  Facturé\n row2:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - regleCB,plus={€},class=regleCB                         		#194  CB\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - regleCheque,plus={€},class=regleCheque                     		#193  Chèque\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - regleEspeces,plus={€},class=regleEspeces                    		#195  Espèces\n  col4: \r\n    size: 3\r\n    bloc: \r\n      - regleTiersPayeur,plus={€},class=regleTiersPayeur                		#202  Tiers\n row3:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - regleIdentiteCheque,class=regleIdentiteCheque                        		#205  Identité payeur', NULL, '', NULL, NULL),
-('base', 'baseReglementSearch', 'Recherche règlements', 'formulaire recherche règlement', 'form_basic_types', 'admin', 'post', '', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - date                                       		#4    Début de période\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - date                                       		#4    Début de période\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - submit                                     		#3    Valider', NULL, '', NULL, NULL),
+('base', 'baseReglementSearch', 'Recherche règlements', 'formulaire recherche règlement', 'data_types', 'admin', 'post', '', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 3\r\n    bloc: \r\n      - date                                       		#4    Début de période\n  col2: \r\n    size: 3\r\n    bloc: \r\n      - date                                       		#4    Début de période\n  col3: \r\n    size: 3\r\n    bloc: \r\n      - submit                                     		#3    Valider', NULL, '', NULL, NULL),
 ('base', 'baseSendMail', 'Formulaire mail', 'formulaire pour mail', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - mailFrom,required                          		#109  De\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - mailTo,required                            		#110  A\n row2:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailSujet,required                         		#112  Sujet\n row3:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailModeles                                		#446  Modèle\n row4:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailBody,rows=10                           		#111  Message', NULL, '', NULL, NULL),
 ('base', 'baseSendMailApicrypt', 'Formulaire mail Apicrypt', 'formulaire pour expédier un mail vers un correspondant apicrypt', 'data_types', 'mail', 'post', '/patient/actions/sendMail/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: 6\r\n    bloc: \r\n      - mailFrom,required                          		#109  De\n  col2: \r\n    size: 6\r\n    bloc: \r\n      - mailToApicrypt,required                    		#179  A (correspondant apicrypt)\n row2:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailSujet,required                         		#112  Sujet\n row3:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailModeles                                		#446  Modèle\n row4:\r\n  col1: \r\n    size: 12\r\n    bloc: \r\n      - mailBody,rows=10                           		#111  Message', NULL, '', NULL, NULL),
 ('base', 'baseUserParametersClicRdv', 'Paramètres utilisateur clicRDV', 'Paramètres utilisateur clicRDV', 'data_types', 'admin', 'post', '/user/ajax/userParametersClicRdv/', @catID, 'public', 'global:\n  formClass:\'ajaxForm\'\nstructure:\n row1:\n  col1: \n    head: \"Compte clicRDV\"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL, NULL, NULL, NULL),
-('base', 'baseUserParametersPassword', 'Paramètres utilisateur MedShakeEHR', 'Paramètres utilisateur MedShakeEHR', 'form_basic_types', 'admin', 'post', '/user/actions/userParametersPassword/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    head: \"Paramètres MedShakeEHR\"\r\n    size: 3\r\n    bloc:\r\n      - currentPassword,required                            		#6    Mot de passe actuel\n\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe', NULL, NULL, NULL, NULL);
-
--- form_basic_types
-INSERT IGNORE INTO `form_basic_types` (`name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `type`, `cat`, `fromID`, `creationDate`, `deleteByID`, `deleteDate`) VALUES
-('currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00'),
-('date', '', 'Début de période', '', '', '', 'date', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00'),
-('password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', 'required', 'Le mot de passe est manquant', 'password', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00'),
-('submit', '', 'Valider', 'bouton submit de validation', '', '', 'submit', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00'),
-('username', 'identifiant', 'Identifiant', 'identifiant utilisateur', 'required', 'L\'identifiant utilisateur est manquant', 'text', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00'),
-('verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', '0', 1, '2019-01-01 00:00:00', '0', '2019-01-01 00:00:00');
+('base', 'baseUserParametersPassword', 'Changement mot de passe utilisateur', 'Changement mot de passe utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersPassword/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - currentPassword,required                   		#6    Mot de passe actuel\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe', NULL, NULL, NULL, NULL);
 
 -- people
-INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
-('clicRDV', 'service', '', 'base', '', '2019-01-01 00:00:00', 1, '', '2019-01-01 00:00:00', ''),
-('medshake', 'service', '', 'base', '', '2019-01-01 00:00:00', 1, '', '2019-01-01 00:00:00', '');
+INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `secret2fa`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`) VALUES
+('clicRDV', 'service', '', 'base', '', NULL, '2019-01-01 00:00:00', 1, '', '2019-01-01 00:00:00', ''),
+('medshake', 'service', '', 'base', '', NULL, '2019-01-01 00:00:00', 1, '', '2019-01-01 00:00:00', '');
 
 -- prescriptions_cat
 INSERT IGNORE INTO `prescriptions_cat` (`name`, `label`, `description`, `type`, `fromID`, `toID`, `creationDate`, `displayOrder`) VALUES
@@ -1016,5 +1008,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v5.13.0'),
+('base', 'module', 'v6.0.0'),
 ('state', 'system', 'normal');

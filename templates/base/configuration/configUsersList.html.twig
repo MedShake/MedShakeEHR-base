@@ -78,7 +78,7 @@
           <td>{{ v.name }}</td>
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>
-             <select class="changeModule" data-userid="{{ v.id }}">
+             <select class="custom-select custom-select-sm changeModule" data-userid="{{ v.id }}">
               {% for mv in page.modules %}
                 <option value="{{ mv }}" {% if mv==v.module %}selected{% endif %}>{{ mv }}</option>
               {% endfor %}
@@ -101,14 +101,32 @@
           </td>
           <td class="text-right">
             <div class="btn-group">
-              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/" title="Paramètres spécifiques">
-                  <span class="fas fa-wrench" aria-hidden="true"></span>
-              </a>
-              {% if v.id!=page.userid %}
-                <button class="btn btn-light btn-sm" type="button" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)">
-                  <span class="fas fa-times revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true"></span>
+              <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
+                  <i class="fas fa-wrench"></i>
                 </button>
-              {% endif %}
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/">
+                    <i class="fas fa-cogs fa-fw text-muted mr-1"></i>
+                    Paramètres spécifiques de configuration
+                  </a>
+                  {% if v.id!=page.userid or config.optionGeLogin2FA == 'true' %}
+                    <div class="dropdown-divider"></div>
+                  {% endif %}
+                  {% if v.id!=page.userid %}
+                    <a class="dropdown-item  revokeUser" href="#" title="Révoquer cet identifiant utilisateur (ne supprime pas les fiches pro/patient)" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                      <i class="fas fa-user-minus fa-fw text-muted mr-1"></i>
+                      Révoquer cet utilisateur
+                    </a>
+                  {% endif %}
+                  {% if config.optionGeLogin2FA == 'true' %}
+                    <a class="dropdown-item revoke2faKey" data-userid="{{ v.id }}" href="#">
+                      <i class="fas fa-qrcode fa-fw text-muted mr-1"></i>
+                      Révoquer la clef 2FA de cet utilisateur
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
             </div>
           </td>
         </tr>
@@ -125,70 +143,13 @@
         <h4 class="modal-title font-weight-bold">Nouvel utilisateur</h4>
       </div>
       <div class="modal-body">
-        <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_username">Identifiant (*)</label>
-                <input class="form-control" name="p_username" required="required" type="text" value=""/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_password">Mot de passe (*)</label>
-                <input class="form-control" name="p_password" required="required" type="password" value=""/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_module">Module</label>
-                <select class="custom-select" name="p_module">
-                  {% for mv in page.modules %}
-                    <option value="{{ mv }}" {% if mv=='base' %} selected="selected{% endif %}">{{ mv }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_birthname">Nom de naissance</label>
-                <input class="form-control" name="p_birthname" type="text" value=""/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_lastname">Nom d'usage</label>
-                <input class="form-control" name="p_lastname" type="text" value=""/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_firstname">Prénom (*)</label>
-                <input class="form-control" name="p_firstname" required="required" type="text" value=""/>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_birthname">Template utilisateur à appliquer</label>
-                <select class="custom-select" name="p_userTemplate" autocomplete="off">
-                    <option selected value="">aucun</option>
-                  {% for tp in page.userTemplates %}
-                    <option value="{{ tp }}">{{ tp }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
-          <button type="submit" class="btn btn-primary">Valider</button>
-        </div>
-      </form>
+        {{ f.errorsBloc(false) }}
+        {{ f.formbuilder(page.formModal , page.formIN , session) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary modal-save" data-form="formName_{{ page.formIN }}" data-modal="modalUserCreation">Valider</button>
+      </div>
     </div>
   </div>
 </div>

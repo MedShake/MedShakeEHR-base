@@ -29,18 +29,18 @@
 
 $user=new msUser();
 if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$user->checkLogin($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-   header('HTTP/1.1 401 Unauthorized');
+   http_response_code(401);
    die;
 }
 $userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
 
 if ((!array_key_exists('timestamp', $parameters) or $parameters['timestamp'] < date_sub(new Datetime(), new Dateinterval("PT0H15M0S"))->format("Y-m-d H:i:s"))) {
-   header('HTTP/1.1 401 Unauthorized');
+   http_response_code(401);
    die;
 }
 
 if (!is_array($parameters) or !array_key_exists('filename', $parameters)) {
-    header('HTTP/1.1 400 Bad Request');
+    http_response_code(400);
     die;
 }
 $filename=basename($parameters['filename']);
@@ -58,7 +58,7 @@ $acceptedtypes=array(
     );
 if (!array_key_exists($mimetype, $acceptedtypes)) {
     unlink($fichier);
-    header('HTTP/1.1 403 Forbidden');
+    http_response_code(403);
     die;
 }
 
@@ -90,5 +90,5 @@ msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 $destination_file=$p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
 rename($fichier, $destination_file);
 
-header('HTTP/1.1 201 Created');
+http_response_code(201);
 die;

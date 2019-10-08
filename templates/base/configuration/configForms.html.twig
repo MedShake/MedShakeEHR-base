@@ -144,11 +144,7 @@ $(document).ready(function() {
       </div>
       <div class="modal-body">
 
-	  		<div class="alert alert-danger" role="alert" style="display : none;">
-				Problèmes rencontrés :
-				<ul>
-				</ul>
-			</div>
+	  		{{ f.errorsBloc() }}
 
 			<form id="formModalNewType" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormCreate/">
 

@@ -44,20 +44,24 @@ if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPrati
 }
 
 //definition formulaire de travail
-$form = new msForm();
+$form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
+$form->setContextualValidationErrorsMsg(false);
+$form->setContextualValidationRule('birthname',['checkNoName']);
+
+
 if ($match['params']['porp']=='pro' and !$actAsAjax) {
 
   //si jeux de valeurs normées présents
   if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
     $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-    $optionsInject['p_PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+    $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
   }
 
   if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
     $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-    $optionsInject['p_PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+    $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
   }
   if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
 }
@@ -86,8 +90,6 @@ if ($validation === false) {
     } else {
         $patient->setToID($_POST['patientID']);
     }
-    $patient->setDataset('admin');
-
 
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {

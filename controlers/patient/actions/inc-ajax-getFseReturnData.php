@@ -28,7 +28,8 @@
 
 // objet paiement
 $paiem = new msObjet;
-$dataPaiem = $paiem->getObjetAndSons($_GET['objetID'], 'name');
+$paiem->setObjetID($_GET['objetID']);
+$dataPaiem = $paiem->getObjetAndSons('name');
 
 
 if(isset($dataPaiem['regleFseData'])) {

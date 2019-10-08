@@ -43,6 +43,7 @@
 
 {% block jsEmbed %}
   {{ parent() }}
+  var selected_calendar = {{ page.userID }};
   var boutonsHeaderCenter;
   var hiddenDays;
   var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};

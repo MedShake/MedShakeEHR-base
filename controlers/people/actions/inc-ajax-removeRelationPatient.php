@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$relation = new msPeople;
+$relation = new msPeopleRelations;
 $relation->setToID($_POST['ID1']);
 $relation->setFromID($p['user']['id']);
 $relation->setRelationDeleted($_POST['ID2']);

@@ -38,4 +38,14 @@
      $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
      $p['page']['userid']=$p['user']['id'];
      $p['page']['users']=msPeopleSearch::getUsersList();
+
+     $formModal = new msForm;
+     $formModal->setFormIDbyName($p['page']['formIN']='baseNewUser');
+     $formModal->setOptionsForSelect(array(
+       'templates'=>[''=>'aucun'] + $p['page']['userTemplates'],
+       'modules'=>$p['page']['modules'],
+     ));
+     $p['page']['formModal']=$formModal->getForm();
+
+
  }

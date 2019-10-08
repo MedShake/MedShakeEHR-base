@@ -35,7 +35,8 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'changeUserPhoneCaptureFingerprint', // changer phonecaptureFingerprint de l'utilisateur courant
     'userParametersPassword', // changer le mot de passe de l'utilisateur courant
-    'userParametersErgonomie' // changer param ergonomie et design
+    'userParametersErgonomie', // changer param ergonomie et design
+    'userParametersRevoke2faKey', // révoquer sa clef 2FA
 );
 if (!in_array($m, $acceptedModes)) {
     die;

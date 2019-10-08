@@ -127,7 +127,7 @@ $(document).ready(function() {
   // autocomplete simple
   $("body").delegate('input.jqautocomplete', "focusin", function() {
     $(this).autocomplete({
-      source: urlBase + '/ajax/getAutocompleteFormValues/' + $(this).closest('form').attr('data-dataset') + '/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
+      source: urlBase + '/ajax/getAutocompleteFormValues/' + parseInt($(this).attr('data-typeid')) + '/' + $(this).attr('data-acTypeID') + '/',
       autoFocus: false
     });
     $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
@@ -141,7 +141,7 @@ $(document).ready(function() {
 
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: '/ajax/getAutocompleteLinkType/data_types/' + type + '/' + type + '/' + type + ':' + dest + '/',
+      source: '/ajax/getAutocompleteLinkType/' + type + '/' + type + '/' + type + ':' + dest + '/',
       autoFocus: true,
       minLength: 3,
       select: function(event, ui) {
@@ -149,13 +149,12 @@ $(document).ready(function() {
         destival = eval('ui.item.' + dest);
         $('input[data-internalname="' + dest + '"]').val(destival).trigger('paste');
         $('input[data-internalname="' + type + '"]').val(sourceval).trigger('paste');
-
       }
     });
     $(this).autocomplete("option", "appendTo", "#" + $(this).closest('form').attr('id'));
   });
 
-  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
+  $('body').on("autocompleteselect", 'input.jqautocomplete', function(event, ui) {
     $(this).trigger("paste");
   });
 
@@ -172,6 +171,17 @@ $(document).ready(function() {
   $('body').on("click", ".checkboxFixValue input[type=checkbox]", function(e) {
     chkboxClick(e.target);
   });
+
+  // enlever les erreurs en session en fermant l'alerte
+  $('body').on('click', '.cleanSessionFormWarning', function () {
+    $(this).closest('div.alert').addClass('d-none');
+    $('.is-invalid').removeClass('is-invalid');
+    $.ajax({
+      url: urlBase + '/user/ajax/cleanSessionFormWarning/',
+      type: 'post',
+    });
+  });
+
 
   ////////////////////////////////////////////////////////////////////////
   /////////Rafraichir le menu POTD

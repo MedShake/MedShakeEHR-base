@@ -67,4 +67,11 @@ order by p.id")) {
     if(isset($value['motif'])) $p['page']['users'][$k]['motif']=$value['motif'];
   }
 
+
+  $formDel = new msForm();
+  $formDel->setFormIDbyName($p['page']['formIN']='baseAskUserPassword');
+  $p['page']['formDel']=$formDel->getForm();
+  $formDel->setFieldAttrAfterwards($p['page']['formDel'], 'password', ['label'=>'Saisissez votre mot de passe pour valider l\'action']);
+  $formDel->addHiddenInput($p['page']['formDel'], ['peopleID'=>'']);
+
 }

@@ -48,7 +48,7 @@
 
         // liste des types par catégorie
         if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel
-    		from ".$p['page']['form']['dataset']." as t
+    		from data_types as t
     		left join data_cat as c on c.id=t.cat
     		where t.id > 0 and t.groupe = '".$p['page']['form']['groupe']."'
     		order by c.label asc, t.label asc")) {

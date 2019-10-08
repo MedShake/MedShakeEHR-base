@@ -49,7 +49,9 @@
 * @param int $id ID de l'utilisateur
 */
   public function setUserID($userID) {
-    if (!is_numeric($userID)) throw new Exception('UserID is not numeric');
+    if (!msPeople::checkPeopleExist($userID)) {
+      throw new Exception('UserID does not exist');
+    }
     $this->_userID=$userID;
   }
 
@@ -94,7 +96,9 @@
  * @param int $fromID ID de l'auteur de la transmission
  */
    public function setFromID($fromID) {
-     if (!is_numeric($fromID)) throw new Exception('FromID is not numeric');
+     if (!msPeople::checkPeopleExist($fromID)) {
+       throw new Exception('FromID does not exist');
+     }
      $this->_fromID=$fromID;
    }
 
@@ -103,7 +107,9 @@
  * @param array $toID array d'ID
  */
    public function setToID($toID) {
-     if (!is_numeric($toID)) throw new Exception('ToID is not numeric');
+     if (!msPeople::checkPeopleExist($toID)) {
+       throw new Exception('ToID does not exist');
+     }
      $this->_toID[]=$toID;
    }
 
@@ -121,7 +127,9 @@
  * @param int $aboutID ID du patient
  */
    public function setAboutID($aboutID) {
-     if (!is_numeric($aboutID)) throw new Exception('AboutID is not numeric');
+     if (!msPeople::checkPeopleExist($aboutID)) {
+       throw new Exception('AboutID does not exist');
+     }
      $this->_aboutID=$aboutID;
    }
 

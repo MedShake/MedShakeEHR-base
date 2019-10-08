@@ -21,48 +21,40 @@
  */
 
 /**
- * enregistrement des paramètres utilisateur
+ * enregistrement des paramètres utilisateur : nouveau mot de passe
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
+$gump = new GUMP('fr');
+$_POST = $gump->sanitize($_POST);
 
-$formIN=$_POST['formIN'];
+$gump->validation_rules(array(
+	'p_currentPassword' => 'required|checkPasswordValidity,'.$p['user']['id'],
+	'p_password' => 'required|max_len,40|checkPasswordLength',
+	'p_verifPassword' => 'equalsfield,p_password',
+));
 
-//construc validation rules
-$form = new msForm();
-$form->setformIDbyName($formIN);
-$form->setPostdatas($_POST);
+$gump->filter_rules(array(
+	'p_currentPassword' => 'trim',
+	'p_password' => 'trim',
+	'p_verifPassword' => 'trim',
+));
 
-$changeMdp=false;
+$gump->set_field_names(array(
+  'p_currentPassword' => 'mot de passe actuel',
+  'p_password' => 'nouveau mot de passe',
+  'p_verifPassword' => 'copie du nouveau mot de passe',
+));
 
-if (!empty($_POST['p_password']) or !empty($_POST['p_verifPassword'])) {
-    unset($_SESSION['form'][$formIN]);
-    if (empty($_POST['p_currentPassword'])) {
-        unset($_SESSION['form'][$formIN]);
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Pour changer le mot de passe de votre compte MedShakeEHR, vous devez entrer votre mot de passe actuel.';
-        msTools::redirRoute('userParameters');
-    } elseif ($_POST['p_password'] != $_POST['p_verifPassword']) {
-        unset($_SESSION['form'][$formIN]);
-        $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de nouveau mot de passe de façon identique.';
-        msTools::redirRoute('userParameters');
-    }
-    else {
-        $checkLogin = new msUser;
-        if ($checkLogin->checkLoginByUserID($p['user']['id'], $_POST['p_currentPassword'])) {
-            $changeMdp=true;
-        } else {
-            unset($_SESSION['form'][$formIN]);
-            $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Le champ de mot de passe actuel du compte MedShakeEHR n\'est pas correct.';
-            msTools::redirRoute('userParameters');
-        }
-    }
+$validated_data = $gump->run($_POST);
+
+unset($_SESSION['form'][$_POST['formIN']]);
+if ($validated_data === false) {
+  $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg']=$gump->get_readable_errors();
+} else {
+  msUser::setUserNewPassword($p['user']['id'], $_POST['p_password']);
 }
 
-if ($changeMdp) {
-    msUser::setUserNewPassword($p['user']['id'], $_POST['p_password']);
-}
-
-msTools::redirRoute('userParameters');
+msTools::redirection('/user/userParameters/#pmdp');

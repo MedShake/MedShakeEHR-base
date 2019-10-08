@@ -218,8 +218,8 @@ class msLapSAM
  */
   public function setSamPorteur($samID) {
     $obj = new msObjet();
-    $obj->setToID(0);
-    $obj->setFromID(0);
+    $obj->setToID(msPeopleSearch::getServiceID('medshake'));
+    $obj->setFromID(msPeopleSearch::getServiceID('medshake'));
     return $obj->createNewObjetByTypeName('lapSam', $samID);
   }
 
@@ -286,7 +286,8 @@ class msLapSAM
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setToID($this->_toID);
-        $obj->setDeletedObjetAndSons($dataID);
+        $obj->setObjetID($dataID);
+        $obj->setDeletedObjetAndSons();
 
       }
     }

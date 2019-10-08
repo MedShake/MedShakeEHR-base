@@ -36,7 +36,6 @@ if (!isset($_POST['patientID'])) {
     $newpatient->setType('patient');
 
     $patient->setToID($_POST['patientID']=$newpatient->createNew());
-    $patient->setDataset('admin');
 
     foreach ($_POST as $k=>$v) {
         if (array_search($k, ['eventID', 'userID', 'eventStartID', 'eventEndID', 'start', 'end', 'motif', 'type'])!==FALSE) {

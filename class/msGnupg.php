@@ -48,7 +48,9 @@ class msGnupg
  * @param int $peopleID ID utilisateur
  */
     public function setPeopleID($peopleID) {
-      if(!is_numeric($peopleID)) throw new Exception("PeopleID is not numeric");
+      if(!msPeople::checkPeopleExist($peopleID)) {
+        throw new Exception("PeopleID does not exist");
+      }
       $this->_peopleID=$peopleID;
       $this->_getPublicKey();
       $this->_getKeyFingerprint();

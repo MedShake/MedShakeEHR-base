@@ -278,6 +278,18 @@ $(document).ready(function() {
 
   });
 
+  //nouvel utilisateur
+  $("button.modal-save").on("click", function(e) {
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalSave(form, modal, function() {
+      updateListingPatients();
+      $(modal).modal('hide');
+    });
+
+  });
+
+
 });
 
 /**

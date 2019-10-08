@@ -69,6 +69,10 @@ if (!is_file($homepath.'config/config.yml')) {
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
+
+        $_POST['stockageLocation'] = msTools::setDirectoryLastSlash($_POST['stockageLocation']);
+        $_POST['backupLocation'] = msTools::setDirectoryLastSlash($_POST['backupLocation']);
+
         $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
         $mysqli->set_charset("utf8");
         if (mysqli_connect_errno()) {
@@ -133,6 +137,7 @@ if (!is_file($homepath.'config/config.yml')) {
         $mysqli=msSQL::sqlConnect();
 
         /////////// Validators loader
+        define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
         require $homepath.'fonctions/validators.php';
 
         /////////// Router
@@ -186,7 +191,6 @@ if ($template!=''): ?>
     <link type="text/css" href="<?=$webpath?>/scss/bs_custom.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-    <link type="text/css" href="<?=$webpath?>/css/general.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -262,8 +266,8 @@ elseif ($template=='configForm') :
             </div>
             <div class="form-group">
               <label class="control-label">Nom de la base à créer</label>
-              <input name="sqlBase" type="text" class="form-control" autocomplete="off" required="required"
-              value="medshakeehr"/>
+              <input name="sqlBase" type="text" pattern="[a-zA-Z0-9_]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr"/>
+              <small class="form-text text-muted">Caractères alphanumériques et underscore uniquement</small>
             </div>
             <div class="form-group">
               <label class="control-label">Nom d'utilisateur de la base à créer</label>

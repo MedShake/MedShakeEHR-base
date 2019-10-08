@@ -43,7 +43,7 @@ $acceptedTables=array(
 $table=msSQL::cleanVar($_POST['table']);
 $id=msSQL::cleanVar($_POST['id']);
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
-    header('HTTP/1.1 401 Unauthorized');
+    http_response_code(401);
     die();
 }
 
@@ -96,5 +96,5 @@ if ($do) {
     $return['status']='ok';
     echo json_encode($return);
 } else {
-    header('HTTP/1.1 401 Unauthorized');
+    http_response_code(401);
 }

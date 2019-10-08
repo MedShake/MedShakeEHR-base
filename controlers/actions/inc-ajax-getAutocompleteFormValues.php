@@ -27,11 +27,6 @@
  */
 
 $type=$match['params']['type'];
-$dataset=$match['params']['dataset'];
-
-$dataset2database=array(
-   'data_types'=>'objets_data'
-);
 
 if (isset($match['params']['setTypes'])) {
    $searchTypes=explode(':', $match['params']['setTypes']);
@@ -39,7 +34,6 @@ if (isset($match['params']['setTypes'])) {
    $searchTypes[]=$type;
 }
 
-if($database=$dataset2database[$dataset]) {
-  $data=msSQL::sql2tab("select distinct(value) from ".$database." where typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
-}
+$data=msSQL::sql2tab("select distinct(value) from objets_data where typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
+
 echo json_encode($data);

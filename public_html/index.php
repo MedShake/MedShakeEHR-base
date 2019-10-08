@@ -75,6 +75,7 @@ if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'na
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
@@ -93,12 +94,17 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name
         msTools::redirRoute('userLogInFirst');
     }
 } elseif (isset($_COOKIE['userName'])) {
-    $p['user']=msUser::userIdentification();
+    $iUser = new msUser;
+    $p['user']=$iUser->userIdentification();
     if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
     if (isset($p['user']['id'])) {
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
+    }
+    if ($p['config']['optionGeLogin2FA'] == 'true' and !$iUser->check2faValidKey() and $match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest' and $match['target']!='login/logInSet2fa') {
+      $iUser->doLogout();
+      msTools::redirRoute('userLogIn');
     }
 } else {
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
@@ -126,7 +132,7 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     }
     // si c'est l'interface RESTful qui était visée et qu'on est ici, c'est que l'instruction n'est pas supportée
     if ($match['target']=='rest/rest') {
-        header('HTTP/1.1 404 Not Found');
+        http_response_code(404);
         die;
     }
 } elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
@@ -177,7 +183,12 @@ if (isset($template)) {
 
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-
+    if($template=='404') {
+      http_response_code(404);
+    }
+    if($template=='forbidden') {
+      http_response_code(403);
+    }
 
     //générer et sortir le html
     $getHtml = new msGetHtml();

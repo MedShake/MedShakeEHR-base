@@ -27,28 +27,24 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-unset($_SESSION['formErreursReadable'], $_SESSION['formErreurs'], $_SESSION['formValues']);
-
-$formIN=$_POST['formIN'];
-
-//construc validation rules
-$form = new msForm();
-$form->setformIDbyName($formIN);
-$form->setPostdatas($_POST);
-$validation=$form->getValidation();
-
-
+unset($_SESSION['form'][$_POST['formIN']]);
 
 if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
-    msTools::redirRoute('userLogIn');
-} else if ($validation === false) {
-    unset($_SESSION['form'][$formIN]);
-    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir l\'identifiant et les deux champs de mot de passe.';
-    msTools::redirRoute('userLogInFirst');
-} else if ($_POST['p_password'] != $_POST['p_verifPassword']) {
-    unset($_SESSION['form'][$formIN]);
-    $_SESSION['form'][$formIN]['validationErrorsMsg'][]='Veillez à bien remplir les deux champs de mot de passe de façon identique.';
-    msTools::redirRoute('userLogInFirst');
+  msTools::redirRoute('userLogIn');
+}
+
+//construc validation rules
+$form = new msFormValidation();
+$form->setformIDbyName($_POST['formIN']);
+$form->setPostdatas($_POST);
+$form->setContextualValidationErrorsMsg(false);
+$form->setContextualValidationRule('username',['alpha_dash','max_len,25']);
+$form->setContextualValidationRule('password',['checkPasswordLength']);
+$form->setContextualValidationRule('verifPassword',['equalsfield,p_password']);
+$validation=$form->getValidation();
+
+if ($validation === false) {
+  msTools::redirRoute('userLogInFirst');
 } else {
     $data=array(
         'name' => $_POST['p_username'],
@@ -64,14 +60,14 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0"
       $obj->setToID($id);
       $obj->setFromID(1);
       $obj->createNewObjetByTypeName('firstname', $_POST['p_username']);
-      $obj->createNewObjetByTypeName('lastname', 'ADMIN');
+      $obj->createNewObjetByTypeName('birthname', 'ADMIN');
     }
     $user = new msUser();
     if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-        unset($_SESSION['form'][$formIN]);
+        unset($_SESSION['form'][$_POST['formIN']]);
         $message='Un problème est survenu lors de la création de l\'utilisateur.';
-        if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
-            $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
+        if (!in_array($message, $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'])) {
+            $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'][]=$message;
         }
         $validation = false;
     }
@@ -79,7 +75,7 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0"
     //do login
     if ($validation != false) {
         $user-> doLogin();
-        unset($_SESSION['form'][$formIN]);
+        unset($_SESSION['form'][$_POST['formIN']]);
         msTools::redirRoute('configDefaultParams');
     } else {
         msTools::redirRoute('userLogIn');

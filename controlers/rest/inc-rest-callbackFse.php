@@ -34,7 +34,8 @@ if(!isset($_GET['objetID']) or !isset($_GET['validationHash']) or !is_numeric($_
 }
 
 $paiem = new msObjet;
-$dataPaiem = $paiem->getObjetAndSons($_GET['objetID'], 'name');
+$paiem->setObjetID($_GET['objetID']);
+$dataPaiem = $paiem->getObjetAndSons('name');
 
 if(!isset($dataPaiem['regleDetailsActes'])) {
   http_response_code(400);

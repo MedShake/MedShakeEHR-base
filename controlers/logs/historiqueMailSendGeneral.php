@@ -64,7 +64,8 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
   order by m.creationDate desc limit $startSQL,$nbParPage")) {
     foreach ($mails as $mail) {
         $ob = new msObjet();
-        $objs[$mail['id']] = $ob->getObjetAndSons($mail['id']);
+        $ob->setObjetID($mail['id']);
+        $objs[$mail['id']] = $ob->getObjetAndSons();
     }
 
     foreach ($objs as $k=>$v) {

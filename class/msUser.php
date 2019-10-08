@@ -27,6 +27,8 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+use OTPHP\TOTP;
+
 class msUser
 {
 
@@ -50,13 +52,16 @@ class msUser
  * @var int $_nowUnixTimestamp Fixe le timestamp unix
  */
     private $_nowUnixTimestamp;
-
+/**
+ * @var string $_userSecret2fa clef 2fa décodée
+ */
+    private $_userSecret2fa=null;
 
 /**
  * Indentification de l'utilisateur
  * @return bool|array Si succès renvoie array avec données utilisateur
  */
-    public static function userIdentification()
+    public function userIdentification()
     {
         global $p;
         if (!isset($_COOKIE['userName'])) {
@@ -67,11 +72,11 @@ class msUser
         }
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
-
-        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank, module from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
+        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank, module,
+         CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa
+         from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
         if(password_verify($user['pass'],$_COOKIE['userPass'])) {
-        //if(md5(sha1($user['pass'])) == $_COOKIE['userPass']) {
 
             $name2typeID = new msData();
             $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
@@ -81,6 +86,11 @@ class msUser
             if(!$user['nom']) {
                 $user['nom']=msSQL::sqlUniqueChamp("select value from objets_data where typeID='".$name2typeID['birthname']."' and toID='".$user['id']."' and outdated='' and deleted='' limit 1");
             }
+
+            $this->_userID = $user['id'];
+            $this->_userName = $user['name'];
+            $this->_userSecret2fa = $user['secret2fa'];
+
             return $user;
         } else {
             return msUser::cleanBadAuth();
@@ -139,12 +149,14 @@ class msUser
  */
     public function checkLogin($userName, $pass)
     {
-        $userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass from people where name='".msSQL::cleanVar($userName)."' limit 1");
+        $userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass,
+        CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa from people where name='".msSQL::cleanVar($userName)."' limit 1");
         if (password_verify($pass, $userlogin['pass'])) {
             $this->_userID=$userlogin['id'];
             $this->_userName=$userlogin['name'];
             $this->_userPass=$userlogin['pass'];
             $this->_loginChecked=true;
+            $this->_userSecret2fa=$userlogin['secret2fa'];
             return true;
         } else {
             if($this->_checkPasswordFormatAndUpdate()) {
@@ -153,6 +165,91 @@ class msUser
             $this->_loginChecked=false;
             return false;
         }
+    }
+
+/**
+ * Vérifier la présence d'une clef OTP pour l'utilisateur courant
+ * @return boolean true/false
+ */
+    public function check2faValidKey() {
+      if($this->_userSecret2fa != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+/**
+ * Vérifier le code OTP fourni à la connexion du membre
+ * @param  int $code integral 6 chiffres
+ * @return boolean       true/false
+ */
+    public function check2fa($code) {
+      $otp = TOTP::create(
+        $this->_userSecret2fa,
+        30,     // période (30s)
+        'sha1', // algo
+        6       // nombre de chiffres
+      );
+      return $otp->verify($code);
+    }
+
+/**
+ * Créer une clef OTP en base pour l'utilisateur courant
+ * @return array secret2fa => clef, uri => utl pour QR code
+ */
+    public function set2fa() {
+      if (!is_numeric($this->_userID)) {
+          throw new Exception("UserId n'est pas numérique");
+      }
+      if (!is_string($this->_userName)) {
+          throw new Exception("UserId n'est pas une chaine");
+      }
+
+      global $p;
+      $otp = TOTP::create(
+        null,
+        30,     // période (30s)
+        'sha1', // algo
+        6       // nombre de chiffres
+      );
+      $otp->setLabel($this->_userName);
+      $otp->setIssuer($p['config']['designAppName']);
+
+      msSQL::sqlQuery("UPDATE people set secret2fa=AES_ENCRYPT('".msSQL::cleanVar($otp->getSecret())."',@password) WHERE id='".$this->_userID."' limit 1");
+
+      return array(
+        'secret2fa'=>$otp->getSecret(),
+        'uri'=>urldecode($otp->getProvisioningUri())
+      );
+    }
+
+/**
+ * Revoquer la clef utilisateur de double authentification
+ * @return boolean true/false
+ */
+    public function set2faUserKeyRevoked($uid) {
+      if (!is_numeric($uid)) {
+          throw new Exception("UserID n'est pas numérique");
+      }
+      return msSQL::sqlQuery("UPDATE people set secret2fa = null WHERE id='".$uid."' limit 1");
+    }
+
+/**
+ * Obtenir l'URI à partir de la clef de l'utilisateur courant
+ * @return string URI (NON url encodée)
+ */
+    public function get2faUri() {
+      global $p;
+      $otp = TOTP::create(
+        $this->_userSecret2fa,
+        30,     // période (30s)
+        'sha1', // algo
+        6       // nombre de chiffres
+      );
+      $otp->setLabel($this->_userName);
+      $otp->setIssuer($p['config']['designAppName']);
+      return urldecode($otp->getProvisioningUri());
     }
 
 /**

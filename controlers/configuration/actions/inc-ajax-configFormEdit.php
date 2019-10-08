@@ -32,7 +32,7 @@ if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur")
 $form=new msForm();
 $form->setFormID($_POST['id']);
 $formdata=$form->getFormFromDb();
-$cleanForm=$form->cleanForm($_POST['yamlStructure'],$formdata['global']['dataset']);
+$cleanForm=$form->cleanForm($_POST['yamlStructure']);
 
 $data=array(
     'id'=>$_POST['id'],

@@ -30,13 +30,6 @@ $data = new msData();
 $name2typeId=$data->getTypeIDsFromName([$match['params']['type']]);
 $type=$name2typeId[$match['params']['type']];
 
-$dataset=$match['params']['dataset'];
-$dataset2database=array(
-   'data_types'=>'objets_data'
-);
-if(!isset($dataset2database[$dataset])) die;
-$database=$dataset2database[$dataset];
-
 if (isset($match['params']['setTypes'])) {
    $searchTypes=$data->getTypeIDsFromName(explode(':', $match['params']['setTypes']));
    foreach ($searchTypes as $v) {
@@ -57,7 +50,7 @@ if (isset($match['params']['linkedTypes'])) {
      if(is_numeric($v)) {
        $sel[]= " d".$v.".value as ".$k;
        $concatLabel[$k]= " COALESCE(d".$v.".value, '')";
-       $joinleft[]=" left join ".$database." as d".$v." on do.toID = d".$v.".toID and d".$v.".typeID='".$v."' and d".$v.".outdated='' and d".$v.".deleted='' ";
+       $joinleft[]=" left join objets_data as d".$v." on do.toID = d".$v.".toID and d".$v.".typeID='".$v."' and d".$v.".outdated='' and d".$v.".deleted='' ";
        $groupby[]='d'.$v.'.value';
      }
    }
@@ -67,13 +60,12 @@ if(!empty($concatLabel)) {
   $concatLabel=array_replace(array_flip($originalOrderLabel), $concatLabel);
 }
 
-if($database) {
-  $data=msSQL::sql2tab("select trim(concat(".implode(', " ",', $concatValue).")) as value, trim(concat(".implode(', " ",', $concatLabel).")) as label, ".implode(",", $sel)."
-  from ".$database." as do
-  ".implode(" ", $joinleft)."
-  where do.typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and trim(concat(".implode(', " ",', $concatLabel).")) like '%".msSQL::cleanVar($_GET['term'])."%'
-  and d".msSQL::cleanVar($type).".value is not null
-  group by ".implode(",", $groupby)." limit 25");
-}
+$data=msSQL::sql2tab("select trim(concat(".implode(', " ",', $concatValue).")) as value, trim(concat(".implode(', " ",', $concatLabel).")) as label, ".implode(",", $sel)."
+from objets_data as do
+".implode(" ", $joinleft)."
+where do.typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and trim(concat(".implode(', " ",', $concatLabel).")) like '%".msSQL::cleanVar($_GET['term'])."%'
+and d".msSQL::cleanVar($type).".value is not null
+group by ".implode(",", $groupby)." limit 25");
+
 
 echo json_encode($data);

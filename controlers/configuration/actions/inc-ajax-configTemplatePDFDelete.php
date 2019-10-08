@@ -44,8 +44,8 @@ if (is_file($directory.'/'.$fichier)) {
     if (unlink($directory.'/'.$fichier)) {
         echo json_encode(array('ok'));
     } else {
-        header("HTTP/1.0 404 Not Found");
+        http_response_code(404);
     }
 } else {
-    header("HTTP/1.0 404 Not Found");
+    http_response_code(404);
 }

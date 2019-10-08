@@ -31,7 +31,7 @@ $(document).ready(function() {
   $('a[href="#prescriptionsTypes"], a[href="#presType"]').on('shown.bs.tab', function(e) {
     userParametersPrescriptionsCatList();
   })
-  if($('#prescriptionsTypesButton').hasClass('active')) userParametersPrescriptionsCatList();
+  if ($('#prescriptionsTypesButton').hasClass('active')) userParametersPrescriptionsCatList();
 
   // afficher les prescriptions types quand l'onglet devient visible
   $('a[href="#presType"]').on('shown.bs.tab', function(e) {
@@ -125,7 +125,11 @@ $(document).ready(function() {
   $('body').on("click", "button.modal-save", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
-    ajaxModalFormSave(form, modal);
+    ajaxModalSave(form, modal, function() {
+      userParametersPrescriptionsCatList();
+      userParametersPrescriptionsList();
+      $(modal).modal('hide');
+    });
 
   });
 
@@ -285,49 +289,6 @@ function removePatientFromDisabledSamList(source) {
     },
     error: function() {
       alert_popup("danger", 'La réactivation de ce SAM pour ce patient a échoué');
-    }
-  });
-}
-
-/**
- * Sauver le form du modal
- * @param  {string} form  form
- * @param  {string} modal modal
- * @return {void}
- */
-function ajaxModalFormSave(form, modal) {
-  var data = {};
-  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
-    var input = $(this);
-    data[input.attr('name')] = input.val();
-  });
-
-  var url = $(form).attr('action');
-  data["groupe"] = $(form).attr('data-groupe');
-
-  $.ajax({
-    url: url,
-    type: 'post',
-    data: data,
-    dataType: "json",
-    success: function(data) {
-      if (data.status == 'ok') {
-        userParametersPrescriptionsCatList();
-        userParametersPrescriptionsList();
-        $(modal).modal('hide');
-      } else {
-        $(modal + ' div.alert').show();
-        $(modal + ' div.alert ul').html('');
-        $.each(data.msg, function(index, value) {
-          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
-          $('#' + index + 'ID').parent('div').addClass('has-error');
-
-        });
-      }
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
     }
   });
 }

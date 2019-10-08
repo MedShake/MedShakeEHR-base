@@ -41,11 +41,10 @@
 
         {# css #}
         {% block cssFiles %}
-        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FortAwesome/Font-Awesome/css/all.min.css" rel="stylesheet">
+        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
         {% if user.module %}
           <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/{{ user.module }}.css" rel="stylesheet"/>
         {% endif %}
@@ -60,6 +59,8 @@
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general/modal-functions.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general/modal-events.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js?{{ modules.base }}"></script>
@@ -80,7 +81,6 @@
           {% block cssEmbed %}
           #top-navbar {max-height:calc(100vh - 100px) !important}
           {% if config.designTopMenuStyle == 'icones' %}#top-navbar .nav-item {min-width: 47px; text-align:center;}{% endif %}
-          .cursor-pointer {cursor: pointer;}
           {% endblock %}
         </style>
 

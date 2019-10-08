@@ -122,6 +122,11 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaJoursFeriesAfficher'=>'true',
     'agendaRefreshDelayEvents'=>'10',
     'designInboxMailsSortOrder'=>'desc',
+    'optionGeLogin2FA'=>'false',
+    'optionGeLoginPassMinLongueur'=>'10',
+    'optionGeDestructionDataDossierPatient'=>'false',
+    'dicomPort'=>'8042',
+    'dicomProtocol'=>'http://'
   ];
 
   protected function _getSpecifSql() {
@@ -139,7 +144,6 @@ class msModBaseSqlGenerate extends msSqlGenerate
       'dicomTags',
       'forms',
       'forms_cat',
-      'form_basic_types',
       'hprim',
       'inbox',
       'objets_data',
@@ -194,18 +198,6 @@ class msModBaseSqlGenerate extends msSqlGenerate
     unset($system['id']);
     if(isset($this->_system_fields)) $this->_system_fields=$this->_getSqlFieldsPart($system);
     $this->_system_values[]=$this->_getSqlValuesPart($system);
-
-    //form basic type
-    if($fbts=msSQL::sql2tab("select * from $this->_bdd.form_basic_types")) {
-      foreach($fbts as $fbt) {
-        unset($fbt['id']);
-        $fbt['fromID']=1;
-        $fbt['creationDate']="2019-01-01 00:00:00";
-        $fbt['deleteDate']="2019-01-01 00:00:00";
-        if(!isset($this->_form_basic_fields)) $this->_form_basic_fields=$this->_getSqlFieldsPart($fbt);
-        $this->_form_basic_values[]=$this->_getSqlValuesPart($fbt);
-      }
-    }
 
     // people services
     if($services=msSQL::sql2tab("select * from $this->_bdd.people where type='service' and module='base'")) {

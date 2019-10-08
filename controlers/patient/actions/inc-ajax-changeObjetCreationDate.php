@@ -36,7 +36,7 @@ if (isset($_POST['objetID']) and isset($_POST['newCreationDate'])) {
     }
 
     $objet=new msObjet();
-    $objet->setID($_POST['objetID']);
+    $objet->setObjetID($_POST['objetID']);
     $objet->setCreationDate($_POST['newCreationDate']);
     $objet->changeCreationDate();
 

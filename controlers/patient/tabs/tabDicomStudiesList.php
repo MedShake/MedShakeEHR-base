@@ -46,7 +46,8 @@
    if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' ", 'instance', 'value')) {
        foreach ($d as $k=>$v) {
            $ob = new msObjet();
-           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID($k);
+           $ob->setObjetID($k);
+           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
        }
    }
  } else {

@@ -205,11 +205,11 @@ class msPeopleSearch
 
   }
 
-  /**
-   * Obtenir la liste des utilisateurs
-   * @param  string $orderBy paramètres order by
-   * @return array
-   */
+/**
+ * Obtenir la liste des utilisateurs
+ * @param  string $orderBy paramètres order by
+ * @return array
+ */
     public static function getUsersList($orderBy='') {
       if(empty($orderBy)) {
         $orderBy='pp.id';
@@ -225,6 +225,15 @@ class msPeopleSearch
        left join objets_data as bn on bn.toID=pp.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
        left join objets_data as p on p.toID=pp.id and p.typeID='".$name2typeID['firstname']."' and p.outdated=''  and p.deleted=''
        where pp.name!='' and pp.pass!='' order by ".$orderBy);
+    }
+
+/**
+ * Obtenir l'ID d'un service à partir de son nom
+ * @param  string $name name du service
+ * @return int       ID du service
+ */
+    public static function getServiceID($name) {
+      return msSQL::sqlUniqueChamp("SELECT id from people where name = '".cleanVar($name)."' and type = 'service' limit 1");
     }
 
 

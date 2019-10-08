@@ -33,7 +33,8 @@ $template="historiquePrint";
 if(!is_numeric($match['params']['objetID'])) die;
 
 $objet = new msObjet();
-$p['page']['patient'] = $objet->getObjetDataByID($match['params']['objetID'], ['toID']);
+$objet->setObjetID($match['params']['objetID']);
+$p['page']['patient'] = $objet->getObjetDataByID(['toID']);
 
 $name2typeID = new msData();
 $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
