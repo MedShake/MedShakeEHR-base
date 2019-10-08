@@ -266,7 +266,7 @@ elseif ($template=='configForm') :
             </div>
             <div class="form-group">
               <label class="control-label">Nom de la base à créer</label>
-              <input name="sqlBase" type="text" pattern="[a-zA-Z0-9–]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr"/>
+              <input name="sqlBase" type="text" pattern="[a-zA-Z0-9_]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr"/>
               <small class="form-text text-muted">Caractères alphanumériques et underscore uniquement</small>
             </div>
             <div class="form-group">
