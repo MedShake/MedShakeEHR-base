@@ -157,7 +157,7 @@ function getRelationsPatientPatientsTab(patientID) {
               </a>\
             </td>\
             <td>' + value.prenom + ' ' + value.nom + '</td>\
-            <td>' + value.ddn + '</td><td>' + value.typeRelation + '</td>\
+            <td>' + value.ddn + ' - ' + value.age + ' an' + ((value.age > 1)?'s':'') +'</td><td>' + value.typeRelation + '</td>\
             <td class="text-right">\
               <div class="btn-group">\
                 <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-patientID="' + patientID + '" data-peopleID="' + value.patientID + '"><i class="fas fa-times"></i>\
