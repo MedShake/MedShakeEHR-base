@@ -1,4 +1,4 @@
-Header always set X-Frame-Options "SAMEORIGIN"
+#Header always set X-Frame-Options "SAMEORIGIN"
 
 # url rewriting
 # s'assurer que la valeur de AllowOverride du virtualhost permet bien la prise

@@ -4,8 +4,8 @@ UPDATE `system` SET `value`='v6.0.0' WHERE `name`='base' and `groupe`='module';
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false');
 
 -- login double facteur authentification
-
-ALTER TABLE `people` ADD `secret2fa` VARBINARY(1000) NULL AFTER `pass`;
+-- anticipée en PHP
+-- ALTER TABLE `people` ADD `secret2fa` VARBINARY(1000) NULL AFTER `pass`;
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLogin2FA', 'default', '0', '', 'Options', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false');
 
@@ -22,15 +22,17 @@ UPDATE `forms` set `yamlStructure` = 'structure:\r\n row1:\r\n  col1: \r\n    he
 
 
 -- modifications pour la sup de dataset et double table de types
-ALTER TABLE `data_cat` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
+-- anticipée en PHP
+-- ALTER TABLE `data_cat` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
 
-ALTER TABLE `data_types` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
+-- anticipée en PHP
+-- ALTER TABLE `data_types` CHANGE `groupe` `groupe` ENUM('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'admin';
 
 DROP TABLE `form_basic_types`;
 
 DELETE from `data_types` where name = 'submit';
 
-INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
 ('system', 'catTypesUsageSystem', 'Types à usage system', 'types à usage system', 'base', 1, '2019-09-27 21:42:35');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catTypesUsageSystem');
