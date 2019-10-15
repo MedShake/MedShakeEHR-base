@@ -142,7 +142,10 @@ class msPeopleRelations extends msPeople
         $name2typeID = new msData();
         $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthdate', 'birthname']);
 
-          if($data = msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
+          if($data = msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom,
+          TIMESTAMPDIFF(YEAR, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageAnnees,
+          TIMESTAMPDIFF(MONTH, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageMois,
+          TIMESTAMPDIFF(DAY, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageJours
           from objets_data as o
           inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
           left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
@@ -151,7 +154,7 @@ class msPeopleRelations extends msPeople
           left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and d.outdated='' and d.deleted=''
           where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
           group by o.value, c.id, bn.id, n.id, p.id, d.id
-          order by nom asc")) {
+          order by STR_TO_DATE(d.value, '%d/%m/%Y') desc, nom asc")) {
           return $data;
         } else {
           return [];

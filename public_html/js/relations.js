@@ -149,6 +149,14 @@ function getRelationsPatientPatientsTab(patientID) {
       $('#bodyTabRelationPatientPatients').html('');
       if (data.length > 0) {
         $.each(data, function(index, value) {
+          if(value.ageAnnees > 1) {
+            strAge = value.ageAnnees + ' ans';
+          } else if( value.ageJours < 30 ) {
+            strAge = value.ageJours + ' jours';
+          } else {
+            strAge = value.ageMois + ' mois';
+          }
+
           $('#bodyTabRelationPatientPatients').append('\
           <tr class="voirDossier" style="cursor:pointer">\
             <td>\
@@ -157,7 +165,7 @@ function getRelationsPatientPatientsTab(patientID) {
               </a>\
             </td>\
             <td>' + value.prenom + ' ' + value.nom + '</td>\
-            <td>' + value.ddn + '</td><td>' + value.typeRelation + '</td>\
+            <td>' + value.ddn + ' - ' + strAge +'</td><td>' + value.typeRelation + '</td>\
             <td class="text-right">\
               <div class="btn-group">\
                 <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-patientID="' + patientID + '" data-peopleID="' + value.patientID + '"><i class="fas fa-times"></i>\

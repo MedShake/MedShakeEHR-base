@@ -320,13 +320,26 @@ public function getToID()
 
       //////mode à adopter en fonction du type d'objet
 
-      if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc' or $d['groupe']=='relation') {
+      if ($d['groupe']=='typecs' or $d['groupe']=='mail' or $d['groupe']=='doc') {
 
           // création d'un nouvel objet sans considération des objets antérieurs
           // but : enregistrement d'objets qui n'ont pas vocation a être édités secondairement,
           // uniquement marqués "deleted" si besoin.
 
           $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+      }    elseif($d['groupe']=='relation') {
+
+          //Idem précédent mais on vérifie si l'enregistrement n'existe pas déjà avec mêmes caractéristiques pour ne pas dupliquer.
+          $where = [];
+          foreach($pd as $k=>$v){
+            $where[$k]=$k."='".msSQL::cleanVar($v)."'";
+          }
+          unset($where['fromID']);
+          $lastID=msSQL::sqlUniqueChamp("SELECT id from objets_data where ".implode(' and ', $where)." and deleted='' and outdated='' limit 1");
+          if(empty($lastID)) {
+            $lastID=msSQL::sqlInsert('objets_data', $pd);
+          }
 
       } elseif ($d['groupe']=='ordo' or $d['groupe']=='courrier') {
 

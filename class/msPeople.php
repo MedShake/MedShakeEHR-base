@@ -733,11 +733,12 @@ class msPeople
  * Créer un nouvel individu
  * @return int ID du nouvel individu
  */
-    public function createNew()
+    public function createNew($id='')
     {
         if (!is_numeric($this->_fromID)) {
             throw new Exception('FromID is not numeric');
         } else {
+            if(is_numeric($id)) $this->_toID=$id;
             $data=array(
                 'pass' => '',
                 'type' => $this->_type,

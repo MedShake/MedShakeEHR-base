@@ -136,6 +136,9 @@ class msPeopleSearch
     if(!in_array('lastname', $this->_colonnesRetour)) $this->_colonnesRetour[]='lastname';
     if(!in_array('birthname', $this->_colonnesRetour)) $this->_colonnesRetour[]='birthname';
     if(!in_array('firstname', $this->_colonnesRetour)) $this->_colonnesRetour[]='firstname';
+    if(in_array('ageCalcule', $this->_colonnesRetour) and !in_array('birthdate', $this->_colonnesRetour)) {
+      $this->_colonnesRetour[]='birthdate';
+    }
 
     $name2typeID = new msData();
     $name2typeID = $name2typeID->getTypeIDsFromName($this->_colonnesRetour);
@@ -148,6 +151,17 @@ class msPeopleSearch
         WHEN d'.$name2typeID['lastname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         ELSE concat("(inconnu) ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         END as identite';
+      } elseif($v=='ageCalcule')  {
+        if(isset($name2typeID[$v])) $sp[]= '
+        CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) >= 1
+        THEN
+          CONCAT(TIMESTAMPDIFF(YEAR, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), IF(TIMESTAMPDIFF(YEAR, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) > 1, " ans", " an") )
+        WHEN TIMESTAMPDIFF(DAY, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) <= 31
+        THEN
+          CONCAT(TIMESTAMPDIFF(DAY, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " jours")
+        ELSE
+          CONCAT(TIMESTAMPDIFF(MONTH, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " mois")
+        END as '.$v;
       } else {
         if(isset($name2typeID[$v])) $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
       }
