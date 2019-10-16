@@ -95,7 +95,7 @@ class msAgenda
     */
     public function set_patientID($_patientID)
     {
-        if(!msPeople::checkPeopleExist($_patientID)) {
+        if(!msPeople::checkPeopleExist($_patientID) and $_patientID != '0') {
           throw new Exception('PatientID does not exist');
         }
         $this->_patientID = $_patientID;
