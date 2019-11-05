@@ -37,5 +37,7 @@
      $p['page']['orthancSystemInfo'] = $dc->getOrthancSystemInfo();
      $p['page']['orthancStats'] = $dc->getOrthancStats();
 
+     // fichiers worklist présents
+     $p['page']['wlfiles']=array_diff(scandir($p['config']['dicomWorkListDirectory']), array('..', '.'));
 
  }
