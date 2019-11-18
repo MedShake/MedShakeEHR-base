@@ -178,7 +178,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and  type='CCAM' and activite='".$this->_acteActivite."' and phase='".$this->_actePhase."'")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and  type='CCAM' and activite='".$this->_acteActivite."' and phase='".$this->_actePhase."' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
