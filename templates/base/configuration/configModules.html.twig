@@ -116,7 +116,12 @@
                       <li>
                         Auteur{% if page.modulesInfosGen[m.name]['auteurs']|length > 1 %}s{% endif %} :
                         {% for auteur, lien in page.modulesInfosGen[m.name]['auteurs'] %}
-                        <a href="{{ lien }}" target="_blank">{{ auteur }}</a>
+                          {% if lien is not empty %}
+                            <a href="{{ lien }}" target="_blank">{{ auteur }}</a>
+                          {% else %}
+                            {{ auteur }}
+                          {% endif %}
+                          {% if loop.index0 >= 0 and loop.revindex0 > 0 %} - {% endif %}
                         {% endfor %}
                       </li>
                     {% endif %}
