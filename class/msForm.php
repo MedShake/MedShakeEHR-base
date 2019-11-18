@@ -557,7 +557,7 @@ class msForm
     }
 
 /**
- * Construire le formualire : analyser une ligne
+ * Construire le formulaire : analyser une ligne
  * @param  array $rowTab    Array de la ligne
  * @param  int $rowNumber Numéro de ligne
  * @param  array $r         Array final de résultat
@@ -614,6 +614,7 @@ class msForm
                 //label
               } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
                     if(!isset($match[3])) $match[3]='';
+                    if(empty(trim($match[1]))) $match[1]='&nbsp;';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
                             'type'=>'label',
                             'value'=>$match[1],

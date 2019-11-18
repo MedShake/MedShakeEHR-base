@@ -5,6 +5,10 @@
 }
 .cursor-pointer {cursor: pointer;}
 
+.fakeFormBloc {
+  height: calc(1.5em + .5rem + 2px);
+}
+
 // Bootstrap
 
 $blue: darken(#428bca, 6.5%);
