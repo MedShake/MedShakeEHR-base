@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `actes_base` (
   `activite` tinyint(1) NOT NULL DEFAULT '1',
   `phase` tinyint(1) NOT NULL DEFAULT '0',
   `codeProf` varchar(7) DEFAULT NULL,
-  `label` varchar(255) DEFAULT NULL,
+  `label` text,
   `type` enum('NGAP','CCAM','Libre','mCCAM') NOT NULL DEFAULT 'CCAM',
   `dataYaml` text,
   `tarifUnit` enum('euro','pourcent') NOT NULL DEFAULT 'euro',
