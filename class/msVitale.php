@@ -39,7 +39,19 @@ class msVitale
     global $p;
     $file=$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/modulesExternes/'.$p['config']['vitaleService'].'/lireCpsEtVitale.php?hoteLecteurIp='.$p['config']['vitaleHoteLecteurIP'].'&nomRessourcePS='.$p['config']['vitaleNomRessourcePS'].'&nomRessourceLecteur='.$p['config']['vitaleNomRessourceLecteur'];
 
-    return $this->_jsonCpsVitaleDataFromExternalMod=file_get_contents($file);
+    if($p['config']['protocol'] == "https://") {
+      $arrContextOptions=array(
+        "ssl"=>array(
+            "verify_peer"=>false,
+            "verify_peer_name"=>false,
+        ),
+      );
+
+      return $this->_jsonCpsVitaleDataFromExternalMod=file_get_contents($file, false, stream_context_create($arrContextOptions));
+    } else {
+      return $this->_jsonCpsVitaleDataFromExternalMod=file_get_contents($file);
+    }
+
   }
 
 /**
