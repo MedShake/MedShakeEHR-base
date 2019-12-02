@@ -112,9 +112,11 @@ class msLapPatient extends msLap
           $data['poids']=$this->_checkPoids();
           $data['taillePatient']=$this->_checkTaillePatient();
           $data['clairanceCreatinine']=$this->_checkClairanceCreatinine();
+          $data['creatinine']=$this->_checkCreatinine();
           $data['allaitement']=$this->_checkAllaitement();
           $data['grossesse']=$this->_checkGrossesse();
           $data['statutHepatique']=$this->_checkStatutHepatique();
+          $data['statutFxRenale']=$this->_checkInsuffisanceRenale();
 
           return $data;
       }
@@ -191,6 +193,47 @@ private function _checkTaillePatient()
     }
 }
 
+
+ /**
+  * Sortir et vérifier le stade insuffisance rénale
+  * @return array array sur infos insuffisance rénale
+  */
+  private function _checkInsuffisanceRenale()
+  {
+      $data=new msObjet;
+      $data->setToID($this->_toID);
+      $statut='statutIRInconnu';
+      if ($data=$data->getLastObjetByTypeName('insuffisanceRenale')) {
+          if ($data['value'] == 'z') {
+              $statut='statutIRInconnu';
+          } elseif ($data['value'] == 'n') {
+              $statut='statutIROk';
+          } elseif ($data['value'] == '1') {
+              $statut='statutIRStade1';
+          } elseif ($data['value'] == '2') {
+              $statut='statutIRStade2';
+          } elseif ($data['value'] == '3') {
+              $statut='statutIRStade3';
+          } elseif ($data['value'] == '4') {
+              $statut='statutIRStade4';
+          } elseif ($data['value'] == '5') {
+              $statut='statutIRStade5';
+          }
+
+          $rd=array(
+           'statut'=>$statut,
+           'date'=>$data['updateDate'],
+           'from'=>$data['prenom'].' '.$data['nom'],
+           'fromID'=>$data['fromID'],
+           'value'=>$data['value']
+         );
+
+          return $rd;
+      } else {
+          return $rd=array('statut'=>'missingValue');
+      }
+  }
+
 /**
  * Sortir et vérifier clairance créatinine patient
  * @return array array sur infos clairance créatinine patient
@@ -221,9 +264,75 @@ private function _checkTaillePatient()
      }
  }
 
+/**
+* Sortir et vérifier créatinine patient (2 unités gérées)
+* @return array array sur infos créatinine patient
+*/
+ private function _checkCreatinine()
+ {
+   $data=new msObjet;
+   $data->setToID($this->_toID);
+
+   $creatinineMgL=$data->getLastObjetByTypeName('creatinineMgL');
+   $creatinineMicroMolL=$data->getLastObjetByTypeName('creatinineMicroMolL');
+
+   if(isset($creatinineMgL['updateDate']) and isset($creatinineMicroMolL['updateDate'])) {
+     if( $creatinineMgL['updateDate'] > $creatinineMgL['updateDate'] ) {
+
+       $rd=array(
+         'statut'=>'ok',
+         'date'=>$creatinineMgL['updateDate'],
+         'from'=>$creatinineMgL['prenom'].' '.$creatinineMgL['nom'],
+         'fromID'=>$creatinineMgL['fromID'],
+         'value'=>$creatinineMgL['value'],
+         'units'=>'mg/L'
+       );
+
+     } else {
+
+       $rd=array(
+         'statut'=>'ok',
+         'date'=>$creatinineMicroMolL['updateDate'],
+         'from'=>$creatinineMicroMolL['prenom'].' '.$creatinineMicroMolL['nom'],
+         'fromID'=>$creatinineMicroMolL['fromID'],
+         'value'=>$creatinineMicroMolL['value'],
+         'units'=>'µmol/L'
+       );
+
+     }
+   } elseif(isset($creatinineMgL['updateDate'])) {
+
+     $rd=array(
+       'statut'=>'ok',
+       'date'=>$creatinineMgL['updateDate'],
+       'from'=>$creatinineMgL['prenom'].' '.$creatinineMgL['nom'],
+       'fromID'=>$creatinineMgL['fromID'],
+       'value'=>$creatinineMgL['value'],
+       'units'=>'mg/L'
+     );
+
+   } elseif(isset($creatinineMicroMolL['updateDate'])) {
+
+     $rd=array(
+       'statut'=>'ok',
+       'date'=>$creatinineMicroMolL['updateDate'],
+       'from'=>$creatinineMicroMolL['prenom'].' '.$creatinineMicroMolL['nom'],
+       'fromID'=>$creatinineMicroMolL['fromID'],
+       'value'=>$creatinineMicroMolL['value'],
+       'units'=>'µmol/L'
+     );
+
+   } else {
+     $rd=array(
+       'statut'=>'missingValue',
+     );
+   }
+   return $rd;
+ }
+
  /**
   * Sortir et vérifier le statut hépatique
-  * @return array array sur infos statit hépatique
+  * @return array array sur infos statut hépatique
   */
   private function _checkStatutHepatique()
   {
