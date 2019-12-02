@@ -356,43 +356,47 @@
     {% if adopageconduc.aconducteur %}
       <h3>Alertes pour la conduite</h3>
       <table class="table table-sm table-hover">
-        {% for niveau, con in adopageconduc.aconducteur  if niveau in ['1', '2', '3'] %}
-          <thead>
-            <tr>
-              <th>
-                {% if niveau == '1' %}Niveau 1 ("soyez prudent")
-                {% elseif niveau == '2' %}Niveau 2 ("soyez très prudent")
-                {% elseif niveau == '3' %}Niveau 3 ("attention danger : ne pas conduire")
-                {% endif %}
-              </th>
-            </tr>
-          </thead>
-          {% for c in con %}
-            <tr class="font-weight-bold {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
-              <td>
-                {{ c.medicNameUtile }}
-              </td>
-            </tr>
-          {% endfor %}
+        {% for niveau, con in adopageconduc.aconducteur %}
+          {% if niveau in ['1', '2', '3'] %}
+            <thead>
+              <tr>
+                <th>
+                  {% if niveau == '1' %}Niveau 1 ("soyez prudent")
+                  {% elseif niveau == '2' %}Niveau 2 ("soyez très prudent")
+                  {% elseif niveau == '3' %}Niveau 3 ("attention danger : ne pas conduire")
+                  {% endif %}
+                </th>
+              </tr>
+            </thead>
+            {% for c in con %}
+              <tr class="font-weight-bold {% if niveau == 3 %}table-danger{% elseif niveau == '2' %}table-warning{% else %}table-active{% endif %}">
+                <td>
+                  {{ c.medicNameUtile }}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
         {% endfor %}
 
-        {% for niveau, con in adopageconduc.aconducteur  if niveau in ['4', '5'] %}
-          <thead>
-            <tr>
-              <th>
-                {% if niveau == '4' %}Niveau non précisé
-                {% elseif niveau == '5' %}Recommandations hors pictogramme
-                {% endif %}
-              </th>
-            </tr>
-          </thead>
-          {% for c in con %}
-            <tr class="font-weight-bold active">
-              <td>
-                {{ c.medicNameUtile }}
-              </td>
-            </tr>
-          {% endfor %}
+        {% for niveau, con in adopageconduc.aconducteur %}
+          {% if niveau in ['4', '5'] %}
+            <thead>
+              <tr>
+                <th>
+                  {% if niveau == '4' %}Niveau non précisé
+                  {% elseif niveau == '5' %}Recommandations hors pictogramme
+                  {% endif %}
+                </th>
+              </tr>
+            </thead>
+            {% for c in con %}
+              <tr class="font-weight-bold active">
+                <td>
+                  {{ c.medicNameUtile }}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
         {% endfor %}
       </table>
     {% endif %}

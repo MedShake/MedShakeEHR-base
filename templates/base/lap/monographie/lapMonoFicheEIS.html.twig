@@ -54,8 +54,10 @@
       <td class="font-weight-bold">Classe chimique</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '0.1' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '0.1' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>
@@ -67,8 +69,10 @@
       <td class="font-weight-bold">Classe pharmaco-thérapeutique</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '0.2' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '0.2' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>
@@ -80,8 +84,10 @@
       <td class="font-weight-bold">Nature(s) des EI cliniques</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '1.0.' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '1.0.' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>
@@ -93,8 +99,10 @@
       <td class="font-weight-bold">Nature(s) des EI paracliniques</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '1.1.' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '1.1.' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>
@@ -106,8 +114,10 @@
       <td class="font-weight-bold">Degré(s) de sévérité</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '1.2.' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '1.2.' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>
@@ -119,8 +129,10 @@
       <td class="font-weight-bold">Commentaire(s) conduite à tenir</td>
       <td>
         <ul class="list-unstyled">
-        {% for data in dataFiche.1 if data.grp starts with '1.3.' %}
-        <li>{{ data.info_01 }}</li>
+        {% for data in dataFiche.1 %}
+          {% if data.grp starts with '1.3.' %}
+            <li>{{ data.info_01 }}</li>
+          {% endif %}
         {% endfor %}
         </ul>
       </td>

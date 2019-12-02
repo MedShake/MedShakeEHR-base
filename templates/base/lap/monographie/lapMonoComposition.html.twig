@@ -31,17 +31,21 @@
   {% for subSpe4 in page.composition.subSpe4 %}
     <h4 class="text-uppercase">{{ subSpe4.libsubst }} :</h4>
     <ul>
-        {% for subSpe3 in page.composition.subSpe3 if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst != 'E' %}
+        {% for subSpe3 in page.composition.subSpe3 %}
+          {% if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst != 'E' %}
             {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="font-weight-bold">Substance(s) active(s) :</li>{% endif %}
             <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/1/" target="_blank" class="font-weight-bold">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst > 0 %}{{ subSpe3.dosesubst|number_format(2, ',', '') }} {{ subSpe3.udosesubst }}{% endif %}</li>
+          {% endif %}
         {% endfor %}
 
-        {% for subSpe3 in page.composition.subSpe3 if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst == 'E' %}
+        {% for subSpe3 in page.composition.subSpe3 %}
+          {% if subSpe3.compordre == subSpe4.numordre and subSpe3.typsubst == 'E' %}
             {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="font-weight-bold">Excipient(s) :</li>{% endif %}
             <li>
               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/2/" target="_blank" class="font-weight-bold">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst %}{{ subSpe3.dosesubst|number_format(2, ',', '') }} {{ subSpe3.udosesubst }}{% endif %}
               {% if subSpe3.effetnotoire in ['o', 'O'] %} <span class="small font-weight-bold">excipient à effet notoire</span>{% endif %}
             </li>
+          {% endif %}
         {% endfor %}
     </ul>
   {% endfor %}
@@ -51,17 +55,21 @@
 
     <h4 class="text-uppercase">Composition :</h4>
     <ul>
-        {% for subSpe3 in page.composition.subSpe3 if subSpe3.typsubst != 'E' %}
+        {% for subSpe3 in page.composition.subSpe3 %}
+          {% if subSpe3.typsubst != 'E' %}
             {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="font-weight-bold">Substance(s) active(s) :</li>{% endif %}
             <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/1/" target="_blank" class="font-weight-bold">{{ subSpe3.libsubst }}</a> {{ subSpe3.dosesubst }} {{ subSpe3.udosesubst }}</li>
+          {% endif %}
         {% endfor %}
 
-        {% for subSpe3 in page.composition.subSpe3 if subSpe3.typsubst == 'E' %}
+        {% for subSpe3 in page.composition.subSpe3 %}
+          {% if subSpe3.typsubst == 'E' %}
             {% if loop.index == 1 %}<li style="list-style-type: none; margin-top : 1em" class="font-weight-bold">Excipient(s) :</li>{% endif %}
             <li>
               <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ subSpe3.codesubst }}/2/" target="_blank" class="font-weight-bold">{{ subSpe3.libsubst }}</a> {% if subSpe3.dosesubst %}{{ subSpe3.dosesubst }} {{ subSpe3.udosesubst }}{% endif %}
               {% if subSpe3.effetnotoire in ['o', 'O'] %} <span class="small font-weight-bold">excipient à effet notoire</span>{% endif %}
             </li>
+          {% endif %}
         {% endfor %}
 
         {% if page.composition.speData.sp_ph is not empty %}

@@ -30,18 +30,20 @@ $tab['lap']=[];
 $tab['nonlap']=[];
 
 // Catégories des prescriptions types
-if($p['page']['tabCatPres']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
+if($tabCatPres=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
 from prescriptions_cat as c
 left join prescriptions as p on c.id=p.cat
 where c.toID in ('0','".$p['user']['id']."')
 group by c.id
 order by c.displayOrder asc, c.label asc", 'id')) {
 
-  foreach($p['page']['tabCatPres'] as $k=>$v) {
+  foreach($tabCatPres as $k=>$v) {
     $tab[$v['type']][]=$v;
-
   }
-
+  $p['page']['tabCatPres']=array(
+    'nonlap'=>$tab['nonlap'],
+    'lap'=>$tab['lap']
+  );
 }
 
 $html = new msGetHtml;

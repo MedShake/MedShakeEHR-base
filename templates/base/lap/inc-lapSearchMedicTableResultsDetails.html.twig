@@ -78,8 +78,10 @@
               </td>
               <td >
                 <ul class="list-unstyled small">
-                {% for sube in medic.sube if sube.effetnotoire == 'O' %}
+                {% for sube in medic.sube %}
+                 {% if sube.effetnotoire == 'O' %}
                     <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ sube.codesubst }}/1/" target="_blank" class="font-weight-bold">{{ sube.libsubst }}</a> {% if sube.dosesubst > 0 %}{{ sube.dosesubst|number_format(2, ',', '') }} {{ sube.udosesubst }}{% endif %}</li>
+                  {% endif %}
                 {% endfor %}
                 </ul>
               </td>

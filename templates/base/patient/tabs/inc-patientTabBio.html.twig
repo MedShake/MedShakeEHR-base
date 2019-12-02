@@ -80,19 +80,20 @@
           </tr>
         </thead>
         <tbody>
-          {% for v in page.bio if v.typeResultat == 'N' %}
-            <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="table-danger"{% endif %}>
-              <td class="border-left">{{ v.label }}</td>
-              <td class="border-left border-right text-right">{{ v.resultat }} {{ v.unite }}</td>
-              <td class="text-right border-right">{{ v.normaleInf }}</td>
-              <td class="border-right text-right">{{ v.normaleSup }}</td>
-              {% if page.bioAnt %}
-                {% for antDate, ante in page.bioAnt %}
-                  <td class="border-right text-right">{{ ante[v.labelStandard]['resultat'] }} {{ ante[v.labelStandard]['unite'] }}</td>
-                {% endfor %}
-              {% endif %}
-            </tr>
-
+          {% for v in page.bio %}
+            {% if v.typeResultat == 'N' %}
+              <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="table-danger"{% endif %}>
+                <td class="border-left">{{ v.label }}</td>
+                <td class="border-left border-right text-right">{{ v.resultat }} {{ v.unite }}</td>
+                <td class="text-right border-right">{{ v.normaleInf }}</td>
+                <td class="border-right text-right">{{ v.normaleSup }}</td>
+                {% if page.bioAnt %}
+                  {% for antDate, ante in page.bioAnt %}
+                    <td class="border-right text-right">{{ ante[v.labelStandard]['resultat'] }} {{ ante[v.labelStandard]['unite'] }}</td>
+                  {% endfor %}
+                {% endif %}
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>

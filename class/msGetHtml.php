@@ -129,10 +129,10 @@ class msGetHtml
       }
 
       // Lancer Twig
-      $loader = new Twig_Loader_Filesystem($this->_templatesDirectories);
-      $twig = new Twig_Environment($loader, $twigEnvironment);
-      $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-      $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+      $loader = new \Twig\Loader\FilesystemLoader($this->_templatesDirectories);
+      $twig = new \Twig\Environment($loader, $twigEnvironment);
+      $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+      $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
       return $twig->render($this->_template.$this->_templateFileExt, $p);
   }
@@ -166,10 +166,10 @@ class msGetHtml
         }
 
         // Lancer Twig
-        $loader = new Twig_Loader_Filesystem($this->_templatesDirectories);
-        $twig = new Twig_Environment($loader, $twigEnvironment);
-        $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-        $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+        $loader = new \Twig\Loader\FilesystemLoader($this->_templatesDirectories);
+        $twig = new \Twig\Environment($loader, $twigEnvironment);
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
         return $twig->render($this->_template.$this->_templateFileExt, $var);
     }

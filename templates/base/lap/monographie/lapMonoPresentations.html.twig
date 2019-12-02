@@ -92,22 +92,28 @@
              <tr>
                <td>Dose totale contenue dans l'unité commune de dispensation (UCD)</td>
                <td>
-                 {% for condi in conditio if condi.type == '1' %}
-                 {{ condi.valeur_1|number_format(2, ',', '') }} {{ condi.info_1 }} {{ condi.info_2 }}
+                 {% for condi in conditio %}
+                   {% if condi.type == '1' %}
+                    {{ condi.valeur_1|number_format(2, ',', '') }} {{ condi.info_1 }} {{ condi.info_2 }}
+                   {% endif %}
                  {% endfor %}
                </td>
              </tr>
              <tr>
                <td>Conditionnement primaire</td>
                <td>
-                 {% for condi in conditio if condi.type starts with '2.' and condi.valeur_1 > 0 %}
-                 {{ condi.info_1 }} ({{ condi.valeur_1|number_format(2, ',', '') }})
-                    {# matériaux #}
-                    <p class="small">matériaux :
-                   {% for materiaux in conditio if materiaux.type starts with condi.type ~ '.' %}
-                    {{ materiaux.info_1 }}
-                   {% endfor %}
-                    </p>
+                 {% for condi in conditio %}
+                   {% if condi.type starts with '2.' and condi.valeur_1 > 0 %}
+                    {{ condi.info_1 }} ({{ condi.valeur_1|number_format(2, ',', '') }})
+                      {# matériaux #}
+                      <p class="small">matériaux :
+                     {% for materiaux in conditio %}
+                       {% if materiaux.type starts with condi.type ~ '.' %}
+                        {{ materiaux.info_1 }}
+                       {% endif %}
+                     {% endfor %}
+                      </p>
+                   {% endif %}
                  {% endfor %}
                </td>
              </tr>
@@ -115,8 +121,10 @@
                <td>Caractéristique(s) de l'emballage</td>
                <td>
                  <ul class="list-unstyled">
-                 {% for condi in conditio if condi.type == '' %}
-                 <li>{{ condi.info_1 }}</li>
+                 {% for condi in conditio %}
+                   {% if condi.type == '' %}
+                    <li>{{ condi.info_1 }}</li>
+                   {% endif %}
                  {% endfor %}
                </ul>
                </td>
@@ -131,8 +139,10 @@
                <td>Référence(s) officielle(s)</td>
                <td>
                  <ul class="list-unstyled">
-                 {% for condi in conditio if condi.type == '4' %}
-                 <li>{{ condi.info_1 }} {{ condi.info_2 }}</li>
+                 {% for condi in conditio %}
+                   {% if condi.type == '4' %}
+                    <li>{{ condi.info_1 }} {{ condi.info_2 }}</li>
+                   {% endif %}
                  {% endfor %}
                </ul>
                </td>
@@ -144,8 +154,10 @@
              <tr>
                <td>Liste</td>
                <td>
-                 {% for dispen in dispensia if dispen.typ == '4' %}
-                 {{ dispen.info_1 }}
+                 {% for dispen in dispensia %}
+                   {% if dispen.typ == '4' %}
+                    {{ dispen.info_1 }}
+                   {% endif %}
                  {% endfor %}
                </td>
              </tr>
@@ -178,8 +190,10 @@
              <tr>
                <td class="pl-5">Prix de cette présentation (CIP) / date JO</td>
                <td>
-                 {% for pri in prix if pri.grp == 'A.0' %}
-                  {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                 {% for pri in prix %}
+                  {% if pri.grp == 'A.0' %}
+                    {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                  {% endif %}
                 {% else %}
                   Non concerné
                 {% endfor %}
@@ -188,8 +202,10 @@
              <tr>
                <td class="pl-5">Tarif forfaitaire de responsabilité / date JO (génériques)</td>
                <td>
-                 {% for pri in prix if pri.grp == 'A.1' %}
-                  {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                 {% for pri in prix %}
+                  {% if pri.grp == 'A.1' %}
+                    {{ pri.valeur_1 }} {{ pri.nature_1 }} {% if pri.date_1 %}({{ pri.date_1 }}){% endif %}
+                  {% endif %}
                 {% else %}
                   Non concerné
                 {% endfor %}
@@ -201,8 +217,10 @@
              <tr>
                <td class="pl-5">Prix de vente aux établissements de santé par UCD/date JO (rétrocession - vente au public)</td>
                <td>
-                 {% for pri in prix if pri.grp == 'B.0' %}
-                  {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                 {% for pri in prix %}
+                  {% if pri.grp == 'B.0' %}
+                    {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                  {% endif %}
                 {% else %}
                   Non concerné
                 {% endfor %}
@@ -211,8 +229,10 @@
              <tr>
                <td class="pl-5">Tarif de responsabilité par UCD (tarification à l'activité)</td>
                <td>
-                 {% for pri in prix if pri.grp == 'B.1' %}
-                  {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                 {% for pri in prix %}
+                  {% if pri.grp == 'B.1' %}
+                    {{ pri.valeur_1 }} {{ pri.nature_1 }} ({{ pri.date_1 }})
+                  {% endif %}
                 {% else %}
                   Non concerné
                 {% endfor %}
@@ -230,12 +250,14 @@
                <td class="pl-5">Taux de remboursement / date JO</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for rb in rbt if rb.type == '1' %}
-                    <li>{{ rb.info_1 }}
-                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
-                      {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
-                      {% if rb.texte %}<p>{{ rb.texte }}</p>{% endif %}
-                    </li>
+                  {% for rb in rbt %}
+                    {% if rb.type == '1' %}
+                      <li>{{ rb.info_1 }}
+                        {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                        {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
+                        {% if rb.texte %}<p>{{ rb.texte }}</p>{% endif %}
+                      </li>
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -249,11 +271,13 @@
                <td class="pl-5">Taux de remboursement</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for rb in rbt if rb.type == '1.1' %}
-                    <li>{{ rb.info_1 }}
-                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
-                      {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
-                    </li>
+                  {% for rb in rbt %}
+                    {% if rb.type == '1.1' %}
+                      <li>{{ rb.info_1 }}
+                        {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                        {% if rb.date_2 %} - date d'application ({{ rb.date_2 }}){% endif %}
+                      </li>
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -263,10 +287,12 @@
                <td>Tarif forfaitaire de remboursement</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for rb in rbt if rb.type == 2 %}
-                    <li>{{ rb.valeur_1 }}
-                      {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
-                    </li>
+                  {% for rb in rbt %}
+                    {% if rb.type == 2 %}
+                      <li>{{ rb.valeur_1 }}
+                        {% if rb.date_1 %} le {{ rb.date_1 }}{% endif %}
+                      </li>
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -276,8 +302,10 @@
                <td>Statut(s) du remboursement</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for rb in rbt if rb.type == '3' %}
-                    <li>{{ rb.info_1 }}</li>
+                  {% for rb in rbt %}
+                    {% if rb.type == '3' %}
+                      <li>{{ rb.info_1 }}</li>
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -290,11 +318,15 @@
                <td>Modalité(s) de dispensation</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for dispen in dispensia if dispen.typ == '1' %}
-                    <li>{{ dispen.info_1 }}</li>
-                    {% for dis in dispensia if dis.typ == '2' and dis.valeur_1 == dispen.valeur_1  %}
-                      <li class="pl-5">{{ dis.info_1 }}</li>
-                    {% endfor %}
+                  {% for dispen in dispensia %}
+                    {% if dispen.typ == '1' %}
+                      <li>{{ dispen.info_1 }}</li>
+                      {% for dis in dispensia %}
+                        {% if dis.typ == '2' and dis.valeur_1 == dispen.valeur_1  %}
+                          <li class="pl-5">{{ dis.info_1 }}</li>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -308,11 +340,15 @@
                <td>Durée(s) et condition(s) de conservation</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for conserva in conservatio if conserva.type starts with '1.' and conserva.valeur_1 %}
-                    <li>{{ conserva.valeur_1 }} {{ conserva.info_1 }}</li>
-                    {% for conserva2 in conservatio if conserva2.type starts with conserva.type and conserva2.type|length > conserva.type|length  %}
-                      <li class="pl-5">{{ conserva2.info_1 }}</li>
-                    {% endfor %}
+                  {% for conserva in conservatio %}
+                    {% if conserva.type starts with '1.' and conserva.valeur_1 %}
+                      <li>{{ conserva.valeur_1 }} {{ conserva.info_1 }}</li>
+                      {% for conserva2 in conservatio %}
+                        {% if conserva2.type starts with conserva.type and conserva2.type|length > conserva.type|length  %}
+                          <li class="pl-5">{{ conserva2.info_1 }}</li>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>
@@ -320,8 +356,10 @@
 
              <tr>
                <td colspan="2">
-                  {% for conserva in conservatio if conserva.type == '2' %}
-                    {{ conserva.texte|nl2br }}
+                  {% for conserva in conservatio %}
+                    {% if conserva.type == '2' %}
+                      {{ conserva.texte|nl2br }}
+                    {% endif %}
                   {% endfor %}
               </td>
              </tr>
@@ -330,8 +368,10 @@
                <td>Référence(s) officielles(s)</td>
                <td>
                   <ul class="list-unstyled">
-                  {% for conserva in conservatio if conserva.type == 3 and conserva.info_1 %}
-                    <li>{{ conserva.info_1 }} ({{ conserva.date_1 }})</li>
+                  {% for conserva in conservatio %}
+                    {% if conserva.type == 3 and conserva.info_1 %}
+                      <li>{{ conserva.info_1 }} ({{ conserva.date_1 }})</li>
+                    {% endif %}
                   {% endfor %}
                   </ul>
               </td>

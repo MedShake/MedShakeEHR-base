@@ -233,10 +233,12 @@
                         <div class="input-group-text bg-white"><i id="eventColor" class="fas fa-circle"></i></div>
                       </div>
                       <select id="type" class="custom-select border-left-0" name="type" autocomplete="off">
-                        {% for k, v in page.typeRdv if k != '[off]' %}
-                          <option value="{{ k }}" style="color: #FFF; background-color: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %} data-color="{{ v.backgroundColor }}">
-                            {{ v.descriptif }}
-                          </option>
+                        {% for k, v in page.typeRdv %}
+                          {%  if k != '[off]' %}
+                            <option value="{{ k }}" style="color: #FFF; background-color: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %} data-color="{{ v.backgroundColor }}">
+                              {{ v.descriptif }}
+                            </option>
+                          {% endif %}
                         {% endfor %}
                       </select>
                       <div class="input-group-append">

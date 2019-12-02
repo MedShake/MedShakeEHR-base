@@ -204,9 +204,11 @@
                 {% for saniCat,cat in page.availableCats %}
                   <select class="custom-select paramselect" name="paramNameInCat{{ saniCat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
                     {% set first = true %}
-                    {% for p in page.availableParams if p.saniCat == saniCat %}
-                      <option value="{{ p.name }}" {% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
-                      {% set first = false %}
+                    {% for p in page.availableParams %}
+                      {% if p.saniCat == saniCat %}
+                        <option value="{{ p.name }}" {% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
+                        {% set first = false %}
+                      {% endif %}
                     {% endfor %}
                   </select>
                 {% endfor %}
