@@ -173,6 +173,14 @@ class msModBaseDataSave
       {
           return $this->formatDecimalNumber($value);
       }
+      public function tbs_creatinineMgL($value)
+      {
+          return $this->formatDecimalNumber($value);
+      }
+      public function tbs_creatinineMicroMolL($value)
+      {
+          return $this->formatDecimalNumber($value);
+      }
       public function tbs_poids($value)
       {
           return $this->formatDecimalNumber($value);
