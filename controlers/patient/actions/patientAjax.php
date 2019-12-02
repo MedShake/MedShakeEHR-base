@@ -62,7 +62,9 @@ $acceptedModes=array(
     'getGraphDataCardio', // Obtenir les data pour les graphs biométrie cardio
     'getFseData', // obtenir les data nécessaires à l'établissement d'une FSE
     'getFseReturnData', // obtenir les data nécessaires à l'établissement d'une FSE
-    'getFilePreviewDocument' // obtenir le html de prévisualisation d'un fichier
+    'getFilePreviewDocument', // obtenir le html de prévisualisation d'un fichier
+    'lapExternePrepare', // préparer le LAP externe
+    'lapExterneCheckOrdo', // vérifier la dispo d'une ordo produite par le LAP externe
 );
 
 

@@ -41,7 +41,7 @@
   <td>
     <div class="btn-group">
       {# edit / clone #}
-      {% if cs.name != 'lapOrdonnance' %}
+      {% if cs.name != 'lapOrdonnance' and cs.name != 'lapExtOrdonnance'%}
         {% if cs.iconeType == 'update' and ( cs.fromID == user.id or user.rank == 'admin' ) %}
           <button class="btn btn-light btn-sm editOrdo d-none d-lg-inline-block" type="button" title="Editer">
             <i class="fas fa-pencil-alt fa-fw"></i>
@@ -197,12 +197,12 @@
             </a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/" target="_blank">
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% elseif cs.name == 'lapExtOrdonnance' %}ordoLapExt{% else %}ordo{% endif %}/{{ cs.id }}/" target="_blank">
               <i class="fas fa-print fa-fw text-muted mr-1"></i> Forcer impression par défaut
             </a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% else %}ordo{% endif %}/{{ cs.id }}/anonyme/" target="_blank">
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ cs.toID }}/{% if cs.name == 'lapOrdonnance' %}ordoLAP{% elseif cs.name == 'lapExtOrdonnance' %}ordoLapExt{% else %}ordo{% endif %}/{{ cs.id }}/anonyme/" target="_blank">
               <i class="fas fa-print fa-fw text-muted mr-1"></i>  Forcer impression par défaut avec auteur anonyme
             </a>
           </li>
@@ -225,7 +225,7 @@
           <li role="separator" class="dropdown-divider"></li>
           <li>
             <span class="dropdown-item disabled small">
-              <i class="fas fa-hashtag fa-fw text-muted mr-1"></i>{{ cs.id }} Ordonnance
+              <i class="fas fa-hashtag fa-fw text-muted mr-1"></i>{{ cs.id }} Ordonnance {% if cs.name == 'lapOrdonnance' %} LAP{% elseif cs.name == 'lapExtOrdonnance' %}LAP externe{% endif %}
             </span>
           </li>
           {% endif %}
@@ -234,7 +234,12 @@
     </div>
   </td>
   <td>
-    <span class="d-none d-lg-inline">{% if cs.name == 'lapOrdonnance' %}Ordonnance LAP{% else %}{{ cs.label }}{% endif %}</span>
+    <span class="d-none d-lg-inline">
+      {% if cs.name == 'lapOrdonnance' %}Ordonnance LAP
+      {% elseif cs.name == 'lapExtOrdonnance' %}Ordonnance LAP
+      {% else %}{{ cs.label }}
+      {% endif %}
+    </span>
     <span class="alternatTitre{{ cs.id }}">{% if cs.titre is not empty %} : {{ cs.titre|e }}{% endif %}</span>
   </td>
   <td class="d-none d-lg-table-cell">{{ cs.prenom|e }} {{ cs.nom|e }}</td>

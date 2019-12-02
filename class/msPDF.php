@@ -197,7 +197,9 @@ class msPDF
         $data=$doc->getCompleteObjetDataByID();
         $this->setFromID($data['fromID']);
         $this->_toID=$data['toID'];
-        if($data['name'] == 'lapOrdonnance') {
+        if($data['name'] == 'lapExtOrdonnance') {
+            $this->_type="ordoLapExt";
+        } elseif($data['name'] == 'lapOrdonnance') {
             $this->_type="ordoLAP";
         } elseif ($data['groupe']=="courrier") {
             $this->_body=msTools::unbbcodifier($data['value']);
@@ -332,8 +334,8 @@ class msPDF
  */
     private function _savePrinted()
     {
-        global $p;
-        $data=array(
+      global $p;
+      $data=array(
         'fromID'=>$this->_fromID,
         'toID'=>$this->_toID,
         'type'=>$this->_type,
@@ -349,8 +351,9 @@ class msPDF
         $data['serializedTags']=serialize($this->_courrierData);
       }
 
-        msSQL::sqlInsert('printed', $data, false);
+      msSQL::sqlInsert('printed', $data, false);
     }
+
 /**
  * Construire le corps de PDF suivant le type de document
  * @return void
@@ -411,6 +414,11 @@ class msPDF
             elseif ($this->_type=='ordoLAP') {
                 $this->_courrierData=$courrier->getOrdoData();
                 $this->_makeBodyForOrdoLAP();
+            }
+            //si c'est une ordo LAP Externe
+            elseif ($this->_type=='ordoLapExt') {
+                $this->_courrierData=$courrier->getOrdoData();
+                $this->_makeBodyForOrdoLapExt();
             }
             //si c'est un règlement
             elseif ($this->_type=='reglement') {
@@ -536,6 +544,52 @@ class msPDF
 
     }
 
+/**
+ * Construire le corps du PDF pour une ordonnance LAP Externe
+ * @return void
+ */
+    private function _makeBodyForOrdoLapExt()
+    {
+      global $p;
+
+      $classLapExt = 'msLapExt'.ucfirst($p['config']['utiliserLapExterneName']);
+
+      if(method_exists($classLapExt, 'makeBodyForOrdo')) {
+
+        $lapExt = new $classLapExt;
+        $this->_courrierData['medoc'] = $lapExt->makeBodyForOrdo($this->_objetID);
+
+        if(!empty($this->_courrierData['medoc']['ald'])) {
+          $modePrint='ald';
+        } else {
+          $modePrint='';
+        }
+
+        //si on sort en mode ald alors on va annuler les header et footer standard
+        if ($modePrint=='ald') {
+          $this->_pageHeader=$this->_pageFooter='';
+          if($this->_anonymeMode) {
+            $this->_courrierData['printModel']='ordonnanceAnonymeALD.html.twig';
+          } else {
+            $this->_courrierData['printModel']=$p['config']['templateOrdoALD'];
+          }
+        } else {
+          if($this->_anonymeMode) {
+            $this->_pageHeader=$this->_pageFooter='';
+            $this->_courrierData['printModel']='ordonnanceAnonyme.html.twig';
+          } else {
+            $this->_pageHeader= $this->makeWithTwig($p['config']['templateOrdoHeadAndFoot']);
+            $this->_courrierData['printModel']=$p['config']['templateOrdoBody'];
+          }
+        }
+
+        //on génère le body avec twig
+        $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
+      } else {
+        $this->_body = "La configuration du LAP externe est incomplète ou défaillante.";
+      }
+
+    }
 /**
  * Construire le corps du PDF pour une ordonnance
  * @return void

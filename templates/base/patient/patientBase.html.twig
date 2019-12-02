@@ -108,6 +108,11 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescriptionsTypes.js?{{ modules.base }}"></script>
   {% endif %}
 
+  {# JS LAP Externe #}
+  {% if config.utiliserLapExterne == 'true' and config.utiliserLapExterneName is not empty %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/patientLapExt{{ config.utiliserLapExterneName[:1]|upper ~ config.utiliserLapExterneName[1:] }}.js?{{ modules.base }}"></script>
+  {% endif %}
+
   {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
   {% for i in page.listeForms %}
     <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js?{{ modules.base }}"></script>

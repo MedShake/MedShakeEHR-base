@@ -307,6 +307,20 @@ class msModBaseObjetPreview
     }
 
 /**
+ * Obtenir le HTML de prévisualisation d'une Ordo LAP Externe
+ * @return string code html
+ */
+    public function getGenericPreviewOrdoLapExt() {
+      //version pdf
+      $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detOrdoLapExt.html.twig');
+      $html = $html->genererHtmlVar($p);
+      return $html;
+    }
+
+/**
  * Obtenir le HTML de prévisualisation d'un Courrier
  * @return string code html
  */

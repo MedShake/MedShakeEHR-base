@@ -126,7 +126,9 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeLoginPassMinLongueur'=>'10',
     'optionGeDestructionDataDossierPatient'=>'false',
     'dicomPort'=>'8042',
-    'dicomProtocol'=>'http://'
+    'dicomProtocol'=>'http://',
+    'utiliserLapExterne'=>'false',
+    'utiliserLapExterneName'=>'',
   ];
 
   protected function _getSpecifSql() {

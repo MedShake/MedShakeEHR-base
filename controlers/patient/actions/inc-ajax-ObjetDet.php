@@ -41,15 +41,19 @@ if (is_numeric($_GET['objetID'])) {
         echo $preview->getGenericPreviewReglement();
     } elseif ($objetGroupe=="mail") {
         echo $preview->getGenericPreviewMail();
+    } elseif ($objetGroupe=="ordo" and $objetName="lapExtOrdonnance") {
+        echo $preview->getGenericPreviewOrdoLapExt();
     } elseif ($objetGroupe=="ordo") {
         echo $preview->getGenericPreviewOrdo();
     } elseif ($objetGroupe=="courrier") {
-          echo $preview->getGenericPreviewCourrier();
+        echo $preview->getGenericPreviewCourrier();
     } elseif($objetGroupe=="typecs") {
 
-        //si méthode existe dans base
+
         $classModuleObjet = 'msMod'.ucfirst($objetModule).'ObjetPreview';
         $methode = 'getPreview'.ucfirst($objetName);
+
+        //si méthode existe dans base
         if(method_exists('msModBaseObjetPreview',$methode)) {
           echo $preview->$methode();
         }
