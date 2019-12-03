@@ -198,10 +198,10 @@ class msGetHtml
         if(empty($string)) return;
 
         $tplName = uniqid( 'string_template_', true );
-        $loader = new Twig_Loader_Array( [ $tplName => $string ]);
-        $twig = new Twig_Environment($loader, $twigEnvironment);
-        $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-        $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+        $loader = new \Twig\Loader\ArrayLoader([ $tplName => $string ]);
+        $twig = new \Twig\Environment($loader, $twigEnvironment);
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
         return $twig->render($tplName, $var);
     }
 
