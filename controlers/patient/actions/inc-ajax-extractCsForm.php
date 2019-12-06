@@ -68,3 +68,15 @@ if (isset($_POST['objetID'])) {
 }
 
 $p['page']['formJavascript']=$form->getFormJavascript();
+
+// module du formulaire
+$p['page']['formInfos']['module']=$form->getFormUniqueRawField($formIN, 'module');
+
+// extraction complémentaire via class du module
+$class='msMod'.ucfirst($p['page']['formInfos']['module']).'Forms';
+$method='getDataSupForForm_'.$formIN;
+
+if(method_exists($class,$method)) {
+  $dataSup = new $class;
+  $dataSup->$method($p);
+}
