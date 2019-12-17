@@ -158,6 +158,19 @@ class msTools
   }
 
 /**
+ * Formater une date sortie dun champ datetime SQL
+ * @param  string $dateSQL      date Y-m-d H:i:s
+ * @param  string $outputFormat format de date souhaité
+ * @return string               date formatée
+ */
+  public static function sqlDateToDisplayDate($dateSQL, $outputFormat = 'd/m/Y')
+  {
+    if(!is_string($dateSQL)) return false;
+    $d = DateTime::createFromFormat('Y-m-d H:i:s', $dateSQL);
+    return $d->format($outputFormat);
+  }
+
+/**
  * Valider une chaîne comme étant une expression régulière
  * @param  string  $string expression
  * @return boolean         TRUE / FALSE
