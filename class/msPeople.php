@@ -574,6 +574,8 @@ class msPeople
       $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
       $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance', 'lapExtOrdonnance']);
 
+      $catIdHorsHistoriques = msDataCat::getCatIDFromName('declencheursHorsHistoriques');
+
       $lapCompSql = '';
       $lapExtCompSql = '';
 
@@ -596,7 +598,7 @@ class msPeople
       left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
       left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
       left join forms as f on f.internalName=t.formValues
-      where (t.groupe in ('typeCS', 'courrier')
+      where ((t.groupe in ('typeCS', 'courrier') and t.cat != '".$catIdHorsHistoriques."' )
         or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
         or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
         ".$lapCompSql."
