@@ -3,7 +3,7 @@
  * This file is part of MedShakeEHR.
  *
  * Copyright (c) 2019
- * fr33z00 <https://github.com/fr33z00>
+ * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
