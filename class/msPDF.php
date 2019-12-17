@@ -57,16 +57,23 @@ class msPDF
     private $_pageHeader;
     /** @var string footer du pdf */
     private $_pageFooter;
-    /** @var string lap : mode d'impression anonyme */
-    private $_anonymeMode=FALSE;
-    /** @var string optimiser (reduction de taille) avec GhostScript */
-    private $_optimizeWithGS=FALSE;
     /** @var string dossier de template à utiliser */
     private $_templatesPdfFolder;
     /** @var string chemin final du PDF construit */
     private $_finalPdfFile;
-    /** @var string data courrier */
+    /** @var array data courrier */
     private $_courrierData=[];
+
+    /** @var array options du formulaire source (si type = cr) */
+    private $_formOptions;
+    /** @var string taille du papier */
+    private $_paperSize='A4';
+    /** @var string orientation du papier  portrait / landscape */
+    private $_paperOrientation='portrait';
+    /** @var string optimiser (reduction de taille) avec GhostScript */
+    private $_optimizeWithGS=FALSE;
+    /** @var string lap : mode d'impression anonyme */
+    private $_anonymeMode=FALSE;
 
 /**
  * Définir le corps du PDF : datas envoyées en POST
@@ -222,6 +229,25 @@ class msPDF
     public function makePDF()
     {
         global $p;
+
+        // remonter aux options du form d'origine si compte rendu et ajuster.
+        if($this->_type=='cr') {
+          $this->_getOriginFormOptions();
+
+          if (isset($this->_formOptions['optionsPdf']['onMake']['paperSize'])) {
+            $this->_paperSize = $this->_formOptions['optionsPdf']['onMake']['paperSize'];
+          }
+          if (isset($this->_formOptions['optionsPdf']['onMake']['paperOrientation'])) {
+            $this->_paperOrientation = $this->_formOptions['optionsPdf']['onMake']['paperOrientation'];
+          }
+          if (isset($this->_formOptions['optionsPdf']['onMake']['pageHeaderTemplate'])) {
+            $this->_pageHeader = $this->_formOptions['optionsPdf']['onMake']['pageHeaderTemplate'];
+          }
+          if (isset($this->_formOptions['optionsPdf']['onMake']['pageFooterTemplate'])) {
+            $this->_pageFooter = $this->_formOptions['optionsPdf']['onMake']['pageFooterTemplate'];
+          }
+        }
+
         if (!isset($this->_body)) {
             $this->_makeBody();
         }
@@ -242,7 +268,7 @@ class msPDF
     {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($this->_contenuFinalPDF);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper($this->_paperSize, $this->_paperOrientation);
         $dompdf->render();
         $dompdf->stream('document.pdf', array('Attachment'=>0));
     }
@@ -261,7 +287,7 @@ class msPDF
         // PDF issu de la construction HTML (dompdf)
         $dompdf = new Dompdf();
         $dompdf->loadHtml($this->_contenuFinalPDF);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper($this->_paperSize, $this->_paperOrientation);
         $dompdf->render();
         $pdf = $dompdf->output();
 
@@ -272,14 +298,6 @@ class msPDF
 
         //si c'est un compte rendu on va rechercher les options du form et on agit
         if ($this->_type=='cr') {
-
-            $formNameOrigin = new msObjet();
-            $formNameOrigin->setObjetID($this->_objetID);
-            $formNameOrigin = $formNameOrigin->getOriginFormNameFromObjetID();
-
-            $form = new msForm();
-            $form->setFormIDbyName($formNameOrigin);
-            $this->_formOptions = $form->getFormOptions();
 
             if(isset($this->_formOptions['optionsPdf']['onSave']['optimizeWithGS']) and $this->_formOptions['optionsPdf']['onSave']['optimizeWithGS'] == true) {
               $this->_optimizeWithGS = TRUE;
@@ -806,7 +824,7 @@ class msPDF
         return;
       }
 
-      $pdf = new FPDI('P','mm','A4');
+      $pdf = new FPDI('P','mm', $this->_paperSize);
 
       $pages = $pdf->setSourceFile($pdfDat['source']);
 
@@ -955,5 +973,18 @@ class msPDF
         }
       }
       return $tabReturn;
+    }
+
+/**
+ * Obtenir les options du formulaire d'origine d'un compte-rendu
+ * @return array array des options
+ */
+    private function _getOriginFormOptions() {
+      $formNameOrigin = new msObjet();
+      $formNameOrigin->setObjetID($this->_objetID);
+      $formNameOrigin = $formNameOrigin->getOriginFormNameFromObjetID();
+      $form = new msForm();
+      $form->setFormIDbyName($formNameOrigin);
+      return $this->_formOptions = $form->getFormOptions();
     }
 }
