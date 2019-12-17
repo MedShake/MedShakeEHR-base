@@ -22,3 +22,6 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('medical', 'creatinineMicroMolL', '', 'Créatinine', 'créatinine en μmol/l', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 ALTER TABLE `data_types` CHANGE `displayOrder` `displayOrder` SMALLINT(4) NOT NULL DEFAULT '1';
+
+INSERT INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
+('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', 1, '2019-01-01 00:00:00');
