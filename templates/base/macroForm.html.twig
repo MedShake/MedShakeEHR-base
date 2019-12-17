@@ -455,8 +455,8 @@
 	{% for row in t.structure %}
 	<div class="row{% if row.elements.class %} {{ row.elements.class }}{% endif %}">
 		{% for keycol, col in row %}
-			{% if keycol == "elements" %}
-				<div class="col-md-12"><h3>{{ col.value }}</h3></div>
+			{% if keycol == "elements" and col.value is defined %}
+				<div class="col-12"><h3>{{ col.value }}</h3></div>
 			{% else %}
 				<div class="{{ (col.size|e('html_attr') ~ ' ' ~ col.class|e('html_attr'))|trim() }}">
 					{% for el in col.elements %}
