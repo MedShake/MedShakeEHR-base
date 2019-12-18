@@ -33,6 +33,7 @@ class msModBaseObjetPreview
 {
   protected $_objetID;
   protected $_dataObjet;
+  protected $_pdfOrientation;
 
 /**
  * Définir l'ID de l'objet
@@ -97,6 +98,9 @@ class msModBaseObjetPreview
         $p['page']['doc']['href']=$doc->getWebPathToDoc();
         $p['page']['doc']['ext']=strtoupper($doc->getFileExtOfDoc());
         $p['page']['doc']['mime']=$doc->getFileMimeType();
+        if($p['page']['doc']['mime'] == 'application/pdf') {
+          $this->_pdfOrientation = $doc->getPdfOrientation();
+        }
         $p['page']['doc']['filesize']= $doc->getFileSize(0);
         $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
         $p['page']['doc']['origine']=$doc->getDocOrigin();
@@ -140,12 +144,21 @@ class msModBaseObjetPreview
 
     // pdf
     elseif($mime == 'application/pdf') {
-      $tab=array(
-        'display'=>true,
-        'displayType'=>'object',
-        'width'=>'900px',
-        'height'=>'1260px',
-      );
+      if($this->_pdfOrientation == "landscape") {
+        $tab=array(
+          'display'=>true,
+          'displayType'=>'object',
+          'width'=>'1250px',
+          'height'=>'1000px',
+        );
+      } else {
+        $tab=array(
+          'display'=>true,
+          'displayType'=>'object',
+          'width'=>'900px',
+          'height'=>'1260px',
+        );
+      }
     }
 
     // zip
@@ -195,6 +208,9 @@ class msModBaseObjetPreview
 
     if($p['page']['pj']['html'] == 'PDF') {
       $p['page']['doc']['mime']=$doc->getFileMimeType();
+      if(!isset($this->_pdfOrientation)) {
+        $this->_pdfOrientation = $doc->getPdfOrientation();
+      }
       $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
 
       $html = '<object
@@ -401,6 +417,7 @@ class msModBaseObjetPreview
         $pdf->makePDFfromObjetID();
         $pdf->savePDF();
       }
+      $this->_pdfOrientation = $doc->getPdfOrientation();
       $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
 
       $html = new msGetHtml;

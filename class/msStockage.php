@@ -191,6 +191,22 @@ class msStockage
     }
 
 /**
+ * Obtenir l'orientation d'un PDF via pdftk en se basant sur ses dimensions
+ * @return string landscape ou portait ou false si pb
+ */
+    public function getPdfOrientation() {
+      exec('pdftk '.$this->getPathToDoc().' dump_data | grep "PageMediaDimensions"' ,$output);
+      $dim = explode(" ", $output[0]);
+      if($dim[1] > $dim[2]) {
+        return 'landscape';
+      } elseif($dim[1] <= $dim[2]) {
+        return 'portrait';
+      } else {
+        return false;
+      }
+    }
+
+/**
  * test si un doc existe à partir de objetID
  * @return bool true or false
  */
