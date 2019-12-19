@@ -788,6 +788,30 @@ class msAgenda
     }
 
 /**
+ * Obtenir les derniers rendez-vous actifs d'un patient
+ * @param  integer $limit   nombre de rendez-vous
+ * @param  array   $inTypes types de rdv autorisés
+ * @return array           data rdv
+ */
+
+    public function getLastActiveEventsForPatient($limit=1, $inTypes=[]) {
+      if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
+      if (!msTools::validateDate($this->_startDate, "Y-m-d H:i:s")) throw new Exception('StartDate n\'est pas valide');
+      if (!msTools::validateDate($this->_endDate, "Y-m-d H:i:s")) throw new Exception('EndDate n\'est pas valide');
+
+      if(!empty($inTypes)) {
+        $whereIn = " and type in ('".implode("', '", msSQL::cleanArray($inTypes))."') ";
+      } else {
+        $whereIn = '';
+      }
+
+      return (array)msSQL::sql2tab("select *
+      from agenda
+      where patientid='".$this->_patientID."' and start >= '".$this->_startDate."' and start <='".$this->_endDate."' and statut = 'actif' ".$whereIn."
+      order by start asc limit $limit");
+    }
+
+/**
  * Nettoyer le statut en salle d'attente des RDV du patient et des patients antérieurs
  * @return void
  */
