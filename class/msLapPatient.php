@@ -115,6 +115,7 @@ class msLapPatient extends msLap
           $data['creatinine']=$this->_checkCreatinine();
           $data['allaitement']=$this->_checkAllaitement();
           $data['grossesse']=$this->_checkGrossesse();
+          $data['grossesseSimple']=$this->_checkGrossesseSimple();
           $data['statutHepatique']=$this->_checkStatutHepatique();
           $data['statutFxRenale']=$this->_checkInsuffisanceRenale();
 
@@ -463,4 +464,36 @@ private function _checkAllaitement()
          }
      }
  }
+
+ /**
+ * Sortir et vérifier grossesse sur simple switch on/off
+ * @return array array sur infos grossesse patient
+ */
+ private function _checkGrossesseSimple()
+ {
+     if ($this->_patientAdminData['administrativeGenderCode']!='F') {
+         return $rd=array('statut'=>'notConcerned');
+     } else {
+         $data=new msObjet;
+         $data->setToID($this->_toID);
+         $data->getLastObjetByTypeName('grossesseActuelle');
+         if ($data=$data->getLastObjetByTypeName('grossesseActuelle')) {
+           if($data['value']=='true') {
+             $rd['statut']='grossesseEnCours';
+           } else {
+             $rd['statut']='absenceGrossesse';
+           }
+           $rd['date']=$data['creationDate'];
+           $rd['from']=$data['prenom'].' '.$data['nom'];
+           $rd['fromID']=$data['fromID'];
+           $rd['basedOn']='value';
+         } else {
+           $rd['statut']='absenceGrossesse';
+           $rd['basedOn']='missingValue';
+         }
+         return $rd;
+     }
+ }
+
+
 }
