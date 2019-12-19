@@ -90,7 +90,7 @@ if (isset($_POST['objetID'])) {
 $p['page']['formJavascript']=$form->getFormJavascript();
 
 
-// méthode sépcifique au module et form : post
+// méthode spécifique au module et form : post
 if(method_exists($class,$method_post)) {
   $form->$method_post();
 }
