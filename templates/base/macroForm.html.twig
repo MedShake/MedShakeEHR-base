@@ -399,7 +399,9 @@
 {# formBuilder #}
 {% macro formbuilder(t , formIN, prevalue ) %}
 	{% import _self as f %}
-
+	{% if t.global.formCss is defined and t.global.formCss is not empty %}
+		<style>{{ t.global.formCss }}</style>
+	{% endif %}
 	{% if t.global.noFormTags is not defined %}
 		<form
 		{% if t.global.formAction %}action="{{ t.config.protocol }}{{ t.config.host }}{{ t.config.urlHostSuffixe }}{{ t.global.formAction }}" {% endif %}
