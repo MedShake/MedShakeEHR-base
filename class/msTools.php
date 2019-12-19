@@ -171,6 +171,19 @@ class msTools
   }
 
 /**
+ * Convertisseur générique de date
+ * @param  string $dateIn        date
+ * @param  string $dateInFormat  format date en entrée
+ * @param  string $dateOutFormat format date en sortie
+ * @return string                date convertie
+ */
+  public static function dateConverter($dateIn, $dateInFormat, $dateOutFormat) {
+    if(!msTools::validateDate($dateIn, $dateInFormat)) return false;
+    $d = DateTime::createFromFormat($dateInFormat, $dateIn);
+    return $d->format($dateOutFormat);
+  }
+
+/**
  * Valider une chaîne comme étant une expression régulière
  * @param  string  $string expression
  * @return boolean         TRUE / FALSE
