@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `data_types` (
   `fromID` smallint(5) unsigned DEFAULT NULL,
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `durationLife` int(9) unsigned NOT NULL DEFAULT '86400',
-  `displayOrder` tinyint(3) NOT NULL DEFAULT '1',
+  `displayOrder` smallint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `groupe` (`groupe`),
@@ -316,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `printed` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `fromID` int(11) unsigned NOT NULL,
   `toID` int(11) unsigned NOT NULL,
-  `type` enum('cr','ordo','courrier','ordoLAP') NOT NULL DEFAULT 'cr',
+  `type` enum('cr','ordo','courrier','ordoLAP','ordoLapExt') NOT NULL DEFAULT 'cr',
   `objetID` int(11) unsigned DEFAULT NULL,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
@@ -413,6 +413,7 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('ordo', 'lapCatMedicament', 'LAP médicament', 'data pour les médicaments', 'base', '1', '2019-01-01 00:00:00'),
 ('ordo', 'lapCatPorteurs', 'LAP porteurs', 'data pour les porteurs LAP', 'base', '1', '2019-01-01 00:00:00'),
 ('ordo', 'lapCatSams', 'LAP SAMs', 'data pour SAMs LAP', 'base', '1', '2019-01-01 00:00:00'),
+('ordo', 'lapExterne', 'LAP Externe', '', 'base', '1', '2019-01-01 00:00:00'),
 ('ordo', 'ordoItems', 'Ordo', 'items d\'une ordonnance', 'base', '1', '2019-01-01 00:00:00'),
 ('ordo', 'porteursOrdo', 'Porteurs', 'porteurs ordonnance', 'base', '1', '2019-01-01 00:00:00'),
 ('reglement', 'porteursReglement', 'Porteurs', 'porteur d\'un règlement', 'base', '1', '2019-01-01 00:00:00'),
@@ -423,7 +424,8 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('typecs', 'catTypeCsATCD', 'Antécédents et allergies', 'antécédents et allergies', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csAutres', 'Autres', 'autres', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csBase', 'Consultations', 'consultations possibles', 'base', '1', '2019-01-01 00:00:00'),
-('typecs', 'declencheur', 'Déclencheur', '', 'base', '1', '2019-01-01 00:00:00');
+('typecs', 'declencheur', 'Déclencheur', '', 'base', '1', '2019-01-01 00:00:00'),
+('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', '1', '2019-01-01 00:00:00');
 
 -- data_types
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='activity');
@@ -463,12 +465,13 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='atcd');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('medical', 'allaitementActuel', '', 'Allaitement', 'allaitement actuel', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'allaitementActuel', '', 'Allaitement', 'allaitement actuel', '', '', 'switch', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'allergies', 'allergies et intolérances', 'Allergies', 'Allergies et intolérances du patient', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'atcdFamiliaux', 'Antécédents familiaux', 'Antécédents familiaux', 'Antécédents familiaux', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'atcdMedicChir', 'Antécédents médico-chirurgicaux personnels', 'Antécédents médico-chirurgicaux', 'Antécédents médico-chirurgicaux personnels', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'baseSynthese', 'synthèse sur le patient', 'Synthèse patient', 'Synthèse sur le patient', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'dataImport', '', 'Import', 'support pour consultations importées', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '84600', '1'),
+('medical', 'grossesseActuelle', '', 'Grossesse en cours', 'grossesse actuelle (gestion ON/OFF de la grossesse)', '', '', 'switch', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'insuffisanceHepatique', '', 'Insuffisance hépatique', 'degré d\'insuffisance hépatique', '', '', 'select', '\'z\': \"?\"\n\'n\': \"Pas d\'insuffisance hépatique connue\"\n\'1\': \'Légère\'\n\'2\': \'Modérée\'\n\'3\': \'Sévère\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('medical', 'toxiques', 'tabac et drogues', 'Toxiques', 'habitudes de consommation', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
@@ -567,7 +570,9 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='dataBio');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('medical', 'clairanceCreatinine', '', 'Clairance créatinine', 'clairance de la créatinine en mL/min', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+('medical', 'clairanceCreatinine', '', 'Clairance créatinine', 'clairance de la créatinine en mL/min', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'creatinineMgL', '', 'Créatinine', 'créatinine en mg/l', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('medical', 'creatinineMicroMolL', '', 'Créatinine', 'créatinine en μmol/l', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='dataCliniques');
@@ -680,6 +685,11 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('ordo', 'lapLignePrescription', '', 'Ligne de prescription', 'ligne de prescription LAP', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('ordo', 'lapOrdonnance', '', 'Ordonnance', 'ordonnance LAP', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('ordo', 'lapSam', '', 'SAM', 'porteur SAM LAP', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
+
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='lapExterne');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('ordo', 'lapExtOrdonnance', '', 'Porteur', '', '', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='mailForm');
@@ -919,6 +929,8 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('transmissionsPeutVoir', 'default', '0', '', 'Transmissions', 'true/false', 'peut accéder aux transmissions', 'true'),
 ('transmissionsPurgerNbJours', 'default', '0', '', 'Transmissions', 'nombre entier', 'nombre de jours sans update après lequel une transmission sera supprimée de la base de données (0 = jamais)', '365'),
 ('utiliserLap', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver le LAP', 'false'),
+('utiliserLapExterne', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver l\'utilisation d\'un LAP externe', 'false'),
+('utiliserLapExterneName', 'default', '0', '', 'LAP', 'texte', 'nom du LAP externe', ''),
 ('vitaleActiver', 'default', '0', '', 'Vitale', 'true/false', 'activer / désactiver les services liés à la carte vitale', 'false'),
 ('vitaleHoteLecteurIP', 'default', '0', '', 'Vitale', 'texte', 'IP sur le réseau interne de la machine supportant le lecteur', ''),
 ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple'),
@@ -1009,5 +1021,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v6.2.0'),
+('base', 'module', 'v6.3.0'),
 ('state', 'system', 'normal');
