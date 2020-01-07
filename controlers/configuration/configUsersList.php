@@ -42,8 +42,8 @@
      $formModal = new msForm;
      $formModal->setFormIDbyName($p['page']['formIN']='baseNewUser');
      $formModal->setOptionsForSelect(array(
-       'templates'=>[''=>'aucun'] + $p['page']['userTemplates'],
-       'modules'=>$p['page']['modules'],
+       'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
+       'module'=>$p['page']['modules'],
      ));
      $p['page']['formModal']=$formModal->getForm();
 

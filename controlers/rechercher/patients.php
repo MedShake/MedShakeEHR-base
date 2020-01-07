@@ -69,8 +69,8 @@ if (msUser::checkUserIsAdmin()) {
   $formModal = new msForm;
   $formModal->setFormIDbyName($p['page']['formModalIN']='baseNewUserFromPeople');
   $formModal->setOptionsForSelect(array(
-    'templates'=>[''=>'aucun'] + $p['page']['userTemplates'],
-    'modules'=>$p['page']['modules'],
+    'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
+    'module'=>$p['page']['modules'],
   ));
   $p['page']['formModal']=$formModal->getForm();
   $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
