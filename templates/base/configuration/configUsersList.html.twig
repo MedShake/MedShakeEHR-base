@@ -62,7 +62,7 @@
   <table class="table table-sm mb-0 table-hover text-center table-striped">
     <thead class="thead-light">
       <tr>
-        <th>#</th>
+        <th class="text-left">#</th>
         <th>Identifiant</th>
         <th>Identité</th>
         <th>Module</th>
@@ -74,7 +74,11 @@
     <tbody>
       {% for v in page.users %}
         <tr>
-          <td>{{ v.id }}</td>
+          <td class="text-left">
+            <a class="btn btn-light btn-sm mr-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.id }}/" title="Voir fiche pro" target="_blank">
+              <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+            </a>
+          #{{ v.id }}</td>
           <td>{{ v.name }}</td>
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>
