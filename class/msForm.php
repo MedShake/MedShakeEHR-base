@@ -234,6 +234,24 @@ class msForm
     }
 
 /**
+ * Retirer des attributs d'un champ de formulaire après sa génération
+ * @param array $form    formulaire
+ * @param string $name    nom du champ
+ * @param array $attr array attr
+ */
+    public function removeFieldAttrAfterwards(&$form, $name, $attr) {
+      if(isset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]])) {
+        foreach($attr as $v) {
+          unset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value'][$v]);
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+/**
  * Remplacer les valeurs de remplissage des selects du form par défaut
  * @param array $v Array des valeurs array('typeName1'=>array('value1'=>'label1', 'value2'=>'label2' ...), ...)
  */
