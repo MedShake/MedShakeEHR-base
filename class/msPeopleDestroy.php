@@ -62,7 +62,7 @@ class msPeopleDestroy extends msPeople
     $dossier = new msPeopleDroits($this->_toID);
     if($dossier->checkIsUser()) $this->_blockingReasons[]="Le dossier à détruire est celui d'un utilisateur";
     if($dossier->checkIsAdmin()) $this->_blockingReasons[]="Le dossier à détruire est celui d'un administrateur";
-    if($dossier->checkIsDetroye()) $this->_blockingReasons[]="Le dossier est déjà détruit";
+    if($dossier->checkIsDestroyed()) $this->_blockingReasons[]="Le dossier est déjà détruit";
 
     if(empty($this->_blockingReasons)) {
       return $this->_autorisationDestroy=true;
