@@ -318,6 +318,18 @@ class msUser
     }
 
 /**
+ * Obtenir le username à partir de l'id
+ * @param  int $name userID
+ * @return string       username
+ */
+    public static function getUsernameFromId($id) {
+        if (!is_numeric($id)) {
+            throw new Exception('Id is not numeric');
+        }
+        return msSQL::sqlUniqueChamp("SELECT name FROM people WHERE id='".msSQL::cleanVar($id)."' limit 1");
+    }
+
+/**
  * Obtenir le password d'un utilisateur via son ID
  * @param  int $userID userID
  * @return string         password
