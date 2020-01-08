@@ -130,6 +130,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'utiliserLapExterne'=>'false',
     'utiliserLapExterneName'=>'',
     'optionGeLoginPassAttribution'=>'admin',
+    'optionGeLoginPassOnlineRecovery'=>'false',
   ];
 
   protected function _getSpecifSql() {

@@ -57,6 +57,20 @@ class msUser
  */
     private $_userSecret2fa=null;
 
+    private $_userPasswordRecoveryStr;
+
+/**
+ * Définir le userID
+ * @param int $userID userID
+ */
+    public function setUserID($userID) {
+      if(msPeople::checkPeopleExist($userID)) {
+        $this->_userID = $userID;
+      } else {
+        throw new Exception('UserID does not exist');
+      }
+    }
+
 /**
  * Indentification de l'utilisateur
  * @return bool|array Si succès renvoie array avec données utilisateur
@@ -481,6 +495,51 @@ class msUser
        $mail->setFromName($p['config']['smtpFromName']);
        $mail->setSubject("Votre compte ".$p['config']['designAppName']);
        $mail->setBody("Bonjour\n\nVoici votre mot de passe pour ".$p['config']['designAppName']." : ".$password."\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
+     }
+
+/**
+ * Initialiser un nouveau processus de recouvrement de password
+ * @return bool           true/false
+ */
+     public function setUserAccountToNewPasswordRecoveryProcess() {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+
+       $this->_userPasswordRecoveryStr = msTools::getRandomStr(25);
+       return msSQL::sqlQuery("UPDATE people set lastLostPassDate=NOW(), lastLostPassRandStr='".$this->_userPasswordRecoveryStr."'  WHERE id='".$this->_userID."' limit 1");
+     }
+
+/**
+ * Fermer le processus de recouvrement de password
+ * @return bool           true/false
+ */
+     public function setUserAccountPasswordRecoveryProcessClosed() {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+       return msSQL::sqlQuery("UPDATE people set lastLostPassRandStr=NULL  WHERE id='".$this->_userID."' limit 1");
+     }
+
+/**
+ * Envoyer l'email de modification du mot de passe
+ * @param  string $email email
+ * @return bool        true/false suivant résultat expédition mail
+ */
+     public function mailUserPasswordRecoveryProcess($email) {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+       if(!isset($this->_userPasswordRecoveryStr)) throw new Exception('UserPasswordRecoveryStr is not defined');
+       global $p;
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($email);
+       $mail->setBodyHtml(FALSE);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+
+       $link = $p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe']."/public/lostPassword/setNew/".$this->_userPasswordRecoveryStr."/";
+
+       $mail->setBody("Bonjour\n\nVoici un lien pour recouvrer l'usage de votre compte  ".$p['config']['designAppName']." :\n".$link."\n\nCe lien est valable 10 minutes\n\nBien cordialement,\n\nL'administrateur");
        return $mail->send();
      }
 
