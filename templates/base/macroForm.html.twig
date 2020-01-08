@@ -108,7 +108,8 @@
 		{% endif %}
 
 		{# input #}
-    <input type="{{ v.input.type }}" title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"
+    <input type="{{ v.input.type }}"
+		{% if v.input.type != "hidden" %} title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"{% endif %}
 		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
 		{% if v.input.name %} name="{{ v.input.name }}" {% endif %}
     {% if v.input.value != 'noPreValue' %} value="{{ v.input.value|e('html_attr') }}"
