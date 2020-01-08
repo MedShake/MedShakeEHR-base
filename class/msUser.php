@@ -417,4 +417,71 @@ class msUser
        }
      }
 
+/**
+ * Envoyer un mail de création de compte utilisateur
+ * @param  int $userID ID utilisateur
+ * @return bool         true/false
+ */
+     public static function mailUserNewAccount($userID) {
+       global $p;
+       if (!is_numeric($userID)) {
+           throw new Exception('UserID is not numeric');
+       }
+       $people = new msPeople();
+       $people->setToID($userID);
+       $people->setFromID($p['user']['id']);
+       $peopleData = $people->getSimpleAdminDatasByName();
+
+       $mailTo='';
+       if(isset($peopleData['profesionnalEmail']) and !empty($peopleData['profesionnalEmail'])) {
+         $mailTo = $peopleData['profesionnalEmail'];
+       } elseif(isset($peopleData['personalEmail'])  and !empty($peopleData['personalEmail'])) {
+         $mailTo = $peopleData['personalEmail'];
+       }
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($mailTo);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+       $mail->setBody("Bonjour\n\nVoici votre nom d'utilisateur pour ".$p['config']['designAppName']." : ".msUser::getUsernameFromId($userID)."\nLe mot de passe correspondant sera délivré dans un second mail.\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
+     }
+
+/**
+ * Envoyer le mot de passe initial par mail
+ * @param  int $userID   ID user
+ * @param  string $password mot de passe
+ * @return bool           true/false
+ */
+     public static function mailUserNewPassword($userID, $password) {
+       global $p;
+       if (!is_numeric($userID)) {
+           throw new Exception('UserID is not numeric');
+       }
+       $people = new msPeople();
+       $people->setToID($userID);
+       $people->setFromID($p['user']['id']);
+       $peopleData = $people->getSimpleAdminDatasByName();
+
+       $mailTo='';
+       if(isset($peopleData['profesionnalEmail']) and !empty($peopleData['profesionnalEmail'])) {
+         $mailTo = $peopleData['profesionnalEmail'];
+       } elseif(isset($peopleData['personalEmail'])  and !empty($peopleData['personalEmail'])) {
+         $mailTo = $peopleData['personalEmail'];
+       }
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($mailTo);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+       $mail->setBody("Bonjour\n\nVoici votre mot de passe pour ".$p['config']['designAppName']." : ".$password."\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
+     }
+
 }
