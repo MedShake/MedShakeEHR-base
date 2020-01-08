@@ -72,6 +72,12 @@ if (msUser::checkUserIsAdmin()) {
     'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
     'module'=>$p['page']['modules'],
   ));
+
   $p['page']['formModal']=$formModal->getForm();
+  if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
+  } else {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
+  }
   $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
 }

@@ -36,7 +36,12 @@ $form->setformIDbyName($_POST['formIN']);
 $form->setPostdatas($_POST);
 $form->setContextualValidationErrorsMsg(false);
 $form->setContextualValidationRule('username',['checkUniqueUsername','alpha_dash','max_len,25']);
-$form->setContextualValidationRule('password',['checkPasswordLength']);
+if($p['config']['optionGeLoginPassAttribution'] == 'admin') {
+  $form->setContextualValidationRule('password',['checkPasswordLength']);
+} elseif($p['config']['optionGeLoginPassAttribution'] == 'random' and $_POST['formIN'] =="baseNewUser") {
+  $form->setContextualValidationRule('profesionnalEmail',['checkNotAllEmpty,personalEmail']);
+  $form->setContextualValidationRule('personalEmail',['checkNotAllEmpty,profesionnalEmail']);
+}
 $form->setContextualValidationRule('birthname',['checkNoName']);
 $form->setContextualValidationRule('lastname',['checkNoName']);
 $validation=$form->getValidation();
@@ -64,11 +69,13 @@ if ($validation === false) {
   if(isset($_POST['preUserID']) and is_numeric($_POST['preUserID'])) $data['id']=$_POST['preUserID'];
 
   if($id=msSQL::sqlInsert('people', $data)) {
-    msUser::setUserNewPassword($id, $_POST['p_password']);
 
     $obj = new msObjet();
     $obj->setFromID($p['user']['id']);
     $obj->setToID($id);
+    if (isset($_POST['p_administrativeGenderCode'])) {
+        $obj->createNewObjetByTypeName('administrativeGenderCode', $_POST['p_administrativeGenderCode']);
+    }
     if (isset($_POST['p_firstname'])) {
         $obj->createNewObjetByTypeName('firstname', $_POST['p_firstname']);
     }
@@ -77,6 +84,23 @@ if ($validation === false) {
     }
     if (isset($_POST['p_lastname'])) {
         $obj->createNewObjetByTypeName('lastname', $_POST['p_lastname']);
+    }
+    if (isset($_POST['p_profesionnalEmail'])) {
+        $obj->createNewObjetByTypeName('profesionnalEmail', $_POST['p_profesionnalEmail']);
+    }
+    if (isset($_POST['p_personalEmail'])) {
+        $obj->createNewObjetByTypeName('personalEmail', $_POST['p_personalEmail']);
+    }
+
+    // mot de passe
+    if($p['config']['optionGeLoginPassAttribution'] == 'admin') {
+      msUser::setUserNewPassword($id, $_POST['p_password']);
+    } elseif($p['config']['optionGeLoginPassAttribution'] == 'random') {
+      $randomPassword = msTools::getRandomStr($p['config']['optionGeLoginPassMinLongueur']);
+      msUser::setUserNewPassword($id, $randomPassword);
+      if(msUser::mailUserNewAccount($id)) {
+        msUser::mailUserNewPassword($id, $randomPassword);
+      }
     }
 
     // application du template si précisé

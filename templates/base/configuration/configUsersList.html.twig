@@ -67,7 +67,7 @@
         <th>Identité</th>
         <th>Module</th>
         <th>Administrateur</th>
-        <th>Mot de passe</th>
+        {% if config.optionGeLoginPassAttribution == 'admin' %}<th>Mot de passe</th>{% endif %}
         <th></th>
       </tr>
     </thead>
@@ -85,12 +85,13 @@
             </select>
          </td>
           <td>
-            <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
+            <a {% if v.id != page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
               <span class="far fa-{% if v.rank =='' %}square{% else %}check-square{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
             </a>
           </td>
+          {% if config.optionGeLoginPassAttribution == 'admin' %}
           <td>
-            {% if v.id!=page.userid %}
+            {% if v.id != page.userid %}
               <div class="input-group my-0 input-group-sm">
                 <input title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value="" class="form-control" type="password"/>
                 <div class="input-group-append changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}">
@@ -99,6 +100,7 @@
               </div>
             {% endif %}
           </td>
+          {% endif %}
           <td class="text-right">
             <div class="btn-group">
               <div class="dropdown">
@@ -110,10 +112,16 @@
                     <i class="fas fa-cogs fa-fw text-muted mr-1"></i>
                     Paramètres spécifiques de configuration
                   </a>
-                  {% if v.id!=page.userid or config.optionGeLogin2FA == 'true' %}
+                  {% if v.id != page.userid or config.optionGeLogin2FA == 'true' or config.optionGeLoginPassAttribution == 'random' %}
                     <div class="dropdown-divider"></div>
                   {% endif %}
-                  {% if v.id!=page.userid %}
+                  {% if config.optionGeLoginPassAttribution == 'random' %}
+                    <a class="dropdown-item changePassword" href="#" title="Envoyer un nouveau mot de passe aléatoire par mail" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                      <i class="fas fa-paper-plane fa-fw text-muted mr-1"></i>
+                      Envoyer un nouveau mot de passe par mail
+                    </a>
+                  {% endif %}
+                  {% if v.id != page.userid %}
                     <a class="dropdown-item  revokeUser" href="#" title="Révoquer cet identifiant utilisateur (ne supprime pas les fiches pro/patient)" data-userid="{{ v.id }}" data-name="{{ v.name }}">
                       <i class="fas fa-user-minus fa-fw text-muted mr-1"></i>
                       Révoquer cet utilisateur
@@ -137,7 +145,7 @@
 
 {% block modals %}
 <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title font-weight-bold">Nouvel utilisateur</h4>

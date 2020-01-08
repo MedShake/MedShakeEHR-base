@@ -129,6 +129,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'dicomProtocol'=>'http://',
     'utiliserLapExterne'=>'false',
     'utiliserLapExterneName'=>'',
+    'optionGeLoginPassAttribution'=>'admin',
   ];
 
   protected function _getSpecifSql() {

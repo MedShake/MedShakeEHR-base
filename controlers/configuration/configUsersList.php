@@ -47,5 +47,10 @@
      ));
      $p['page']['formModal']=$formModal->getForm();
 
-
+     if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
+       $formModal->removeFieldAttrAfterwards($p['page']['formModal'], 'password', ['tabindex']);
+     } else {
+       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
+     }
  }
