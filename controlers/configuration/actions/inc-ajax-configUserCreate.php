@@ -49,7 +49,7 @@ if ($validation === false) {
   )));
 
 } else {
-  $module=isset($_POST['p_module'])?$_POST['p_module']:'base';
+  $module=isset($_POST['p_modules'])?$_POST['p_modules']:'base';
   $user=$p['user']['id']?:1;
 
   $data=array(
