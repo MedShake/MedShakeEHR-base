@@ -1,3 +1,6 @@
+-- Mise à jour n° de version
+UPDATE `system` SET `value`='v6.4.0' WHERE `name`='base' and `groupe`='module';
+
 -- update de la table people pour gestion du password recovery
 ALTER TABLE `people` ADD `lastLostPassDate` DATETIME NULL AFTER `lastLogFingerprint`, ADD `lastLostPassRandStr` VARCHAR(25) NULL AFTER `lastLostPassDate`;
 
