@@ -455,13 +455,13 @@
  }) }}
  {% endfor %}
 
-	{% for row in t.structure %}
-	<div class="row{% if row.elements.class %} {{ row.elements.class }}{% endif %}">
+	{% for keyrow, row in t.structure %}
+		<div data-numrow="{{ keyrow }}" class="row{% if row.elements.class %} {{ row.elements.class }}{% endif %}">
 		{% for keycol, col in row %}
-			{% if keycol == "elements" and col.value is defined %}
-				<div class="col-12"><h3>{{ col.value }}</h3></div>
+			{% if keycol == "elements" %}
+				{% if col.value is defined %}<div class="col-12"><h3>{{ col.value }}</h3></div>{% endif %}
 			{% else %}
-				<div class="{{ (col.size|e('html_attr') ~ ' ' ~ col.class|e('html_attr'))|trim() }}">
+				<div data-numrow="{{ keyrow }}" data-numcol="{{ keycol }}" class="{{ (col.size|e('html_attr') ~ ' ' ~ col.class|e('html_attr'))|trim() }}">
 					{% for el in col.elements %}
 						{% if el.type == "head" %}
 							<h4 class="my-2">{{ el.value }}</h4>
