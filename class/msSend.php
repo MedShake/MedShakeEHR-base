@@ -22,7 +22,7 @@
 
 /**
  *
- * Envoyer : EN TRAVAUX ! NON UTILISÉE POUR LE MOMENT
+ * Envoyer : EN TRAVAUX !
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -100,6 +100,13 @@ class msSend
 
   public function setBody($body) {
     $this->_body=$body;
+  }
+
+  public function setBodyHtml($bodyHtml) {
+    if(!is_bool($bodyHtml)) {
+      throw new Exception('BodyHtml is not bool');
+    }
+    $this->_bodyHtml=$bodyHtml;
   }
 
   public function setAttachments($attachments) {
@@ -231,8 +238,13 @@ class msSend
         }
         $mail->addAttachment($attachment, $docName);
     }
-    $mail->Body = nl2br($this->_body);
-    $mail->AltBody = $this->_body;
+
+    if($this->_bodyHtml) {
+      $mail->Body = nl2br($this->_body);
+      $mail->AltBody = $this->_body;
+    } else {
+      $mail->Body = $this->_body;
+    }
 
     return $mail->send();
   }

@@ -75,7 +75,7 @@ class msPeopleDroits extends msPeople
  * Vérifier si le people est de type destroyed
  * @return bool true/false
  */
-  public function checkIsDetroye() {
+  public function checkIsDestroyed() {
     if($this->_basicUserData['type'] == 'destroyed') {
       return true;
     } else {

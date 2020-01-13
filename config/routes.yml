@@ -215,6 +215,8 @@ userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhone
 publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
 publicSigner: ['GET', '/public/signer/[a:signPeriphName]?/', 'public/signer']
 publicSignerMerci: ['GET', '/public/signer-merci/', 'public/signerMerci']
+publicLostPasswordEmailAsk: ['GET', '/public/lostPassword/emailAsk/', 'public/lostPassword/emailAsk']
+publicLostPasswordNewSet: ['GET', '/public/lostPassword/setNew/[a:str]/', 'public/lostPassword/newSet']
 
 #routes pour le module (! on part de controlers/module/ cette fois !)
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'actions/moduleAjax']

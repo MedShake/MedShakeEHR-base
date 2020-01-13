@@ -69,9 +69,15 @@ if (msUser::checkUserIsAdmin()) {
   $formModal = new msForm;
   $formModal->setFormIDbyName($p['page']['formModalIN']='baseNewUserFromPeople');
   $formModal->setOptionsForSelect(array(
-    'templates'=>[''=>'aucun'] + $p['page']['userTemplates'],
-    'modules'=>$p['page']['modules'],
+    'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
+    'module'=>$p['page']['modules'],
   ));
+
   $p['page']['formModal']=$formModal->getForm();
+  if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
+  } else {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
+  }
   $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
 }

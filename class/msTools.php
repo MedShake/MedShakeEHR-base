@@ -480,4 +480,20 @@ class msTools
      return $prefixTab;
    }
 
+/**
+ * Générer une chaine aléatoire de caractères
+ * @param  integer $length longueur de la chaine
+ * @param  string  $chars  caractères éligibles
+ * @return string          chaine aléatoire
+ */
+   public static function getRandomStr($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789') {
+     $count = mb_strlen($chars);
+     for ($i = 0, $result = ''; $i < $length; $i++) {
+         $index = rand(0, $count - 1);
+         $result .= mb_substr($chars, $index, 1);
+     }
+     return $result;
+   }
+
+
 }

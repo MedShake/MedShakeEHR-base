@@ -83,6 +83,12 @@
         {% endif %}
         <h3>Identifiez-vous</h3>
         {{ f.formbuilder(page.form , page.formIN , session) }}
+
+        {% if config.optionGeLoginPassOnlineRecovery == 'true' %}
+        <div class="mt-3 small">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/public/lostPassword/emailAsk/" >Mot de passe perdu ?</a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

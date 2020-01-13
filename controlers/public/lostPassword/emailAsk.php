@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2020
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,25 +21,14 @@
  */
 
 /**
- * Public : les requêtes ajax
+ * Public : procédure lost password, demande de l'email
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//header('Content-Type: application/json');
-
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'publicMakeDocSigne', // Créer le document signé.
-    'publicLostPasswordEmailTreat', // Traiter l'email de recouvrement de password
-    'publicLostPasswordNewPassTreat' // Traiter le nouveau mot de passe souhaité
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
+if($p['config']['optionGeLoginPassOnlineRecovery'] != "true") {
+ $template="forbidden";
+ return;
 }
 
-include('inc-ajax-'.$m.'.php');
-
-die();
+$template="lostPasswordEmailAsk";

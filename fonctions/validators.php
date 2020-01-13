@@ -78,4 +78,15 @@ GUMP::add_validator("checkUniqueUsername", function($field, $input, $param = NUL
 		if (msSQL::sqlUniqueChamp("select name from people where name='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
 	}, 'Ce nom d\'utilisateur est déjà existant');
 
+GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) {
+		if(!empty($input[$field])) return TRUE;
+		$params = explode(';', $param);
+		if(!empty($params)) {
+			foreach($params as $pa) {
+				if(!empty($input['p_'.$pa])) return TRUE;
+			}
+		}
+		return FALSE;
+	}, 'Le champ {field} ne peut être vide en même temps que certains autres');
+
 ?>

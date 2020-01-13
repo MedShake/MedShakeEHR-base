@@ -57,6 +57,20 @@ class msUser
  */
     private $_userSecret2fa=null;
 
+    private $_userPasswordRecoveryStr;
+
+/**
+ * Définir le userID
+ * @param int $userID userID
+ */
+    public function setUserID($userID) {
+      if(msPeople::checkPeopleExist($userID)) {
+        $this->_userID = $userID;
+      } else {
+        throw new Exception('UserID does not exist');
+      }
+    }
+
 /**
  * Indentification de l'utilisateur
  * @return bool|array Si succès renvoie array avec données utilisateur
@@ -318,6 +332,18 @@ class msUser
     }
 
 /**
+ * Obtenir le username à partir de l'id
+ * @param  int $name userID
+ * @return string       username
+ */
+    public static function getUsernameFromId($id) {
+        if (!is_numeric($id)) {
+            throw new Exception('Id is not numeric');
+        }
+        return msSQL::sqlUniqueChamp("SELECT name FROM people WHERE id='".msSQL::cleanVar($id)."' limit 1");
+    }
+
+/**
  * Obtenir le password d'un utilisateur via son ID
  * @param  int $userID userID
  * @return string         password
@@ -403,6 +429,118 @@ class msUser
        } else {
          return false;
        }
+     }
+
+/**
+ * Envoyer un mail de création de compte utilisateur
+ * @param  int $userID ID utilisateur
+ * @return bool         true/false
+ */
+     public static function mailUserNewAccount($userID) {
+       global $p;
+       if (!is_numeric($userID)) {
+           throw new Exception('UserID is not numeric');
+       }
+       $people = new msPeople();
+       $people->setToID($userID);
+       $people->setFromID($p['user']['id']);
+       $peopleData = $people->getSimpleAdminDatasByName();
+
+       $mailTo='';
+       if(isset($peopleData['profesionnalEmail']) and !empty($peopleData['profesionnalEmail'])) {
+         $mailTo = $peopleData['profesionnalEmail'];
+       } elseif(isset($peopleData['personalEmail'])  and !empty($peopleData['personalEmail'])) {
+         $mailTo = $peopleData['personalEmail'];
+       }
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($mailTo);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+       $mail->setBody("Bonjour\n\nVoici votre nom d'utilisateur pour ".$p['config']['designAppName']." : ".msUser::getUsernameFromId($userID)."\nLe mot de passe correspondant sera délivré dans un second mail.\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
+     }
+
+/**
+ * Envoyer le mot de passe initial par mail
+ * @param  int $userID   ID user
+ * @param  string $password mot de passe
+ * @return bool           true/false
+ */
+     public static function mailUserNewPassword($userID, $password) {
+       global $p;
+       if (!is_numeric($userID)) {
+           throw new Exception('UserID is not numeric');
+       }
+       $people = new msPeople();
+       $people->setToID($userID);
+       $people->setFromID($p['user']['id']);
+       $peopleData = $people->getSimpleAdminDatasByName();
+
+       $mailTo='';
+       if(isset($peopleData['profesionnalEmail']) and !empty($peopleData['profesionnalEmail'])) {
+         $mailTo = $peopleData['profesionnalEmail'];
+       } elseif(isset($peopleData['personalEmail'])  and !empty($peopleData['personalEmail'])) {
+         $mailTo = $peopleData['personalEmail'];
+       }
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($mailTo);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+       $mail->setBody("Bonjour\n\nVoici votre mot de passe pour ".$p['config']['designAppName']." : ".$password."\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
+     }
+
+/**
+ * Initialiser un nouveau processus de recouvrement de password
+ * @return bool           true/false
+ */
+     public function setUserAccountToNewPasswordRecoveryProcess() {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+
+       $this->_userPasswordRecoveryStr = msTools::getRandomStr(25);
+       return msSQL::sqlQuery("UPDATE people set lastLostPassDate=NOW(), lastLostPassRandStr='".$this->_userPasswordRecoveryStr."'  WHERE id='".$this->_userID."' limit 1");
+     }
+
+/**
+ * Fermer le processus de recouvrement de password
+ * @return bool           true/false
+ */
+     public function setUserAccountPasswordRecoveryProcessClosed() {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+       return msSQL::sqlQuery("UPDATE people set lastLostPassRandStr=NULL  WHERE id='".$this->_userID."' limit 1");
+     }
+
+/**
+ * Envoyer l'email de modification du mot de passe
+ * @param  string $email email
+ * @return bool        true/false suivant résultat expédition mail
+ */
+     public function mailUserPasswordRecoveryProcess($email) {
+       if(!isset($this->_userID)) throw new Exception('UserID is not defined');
+       if(!isset($this->_userPasswordRecoveryStr)) throw new Exception('UserPasswordRecoveryStr is not defined');
+       global $p;
+
+       $mail = new msSend();
+       $mail->setSendType('ns');
+       $mail->setSendService($p['config']['smtpTracking']);
+       $mail->setTo($email);
+       $mail->setBodyHtml(FALSE);
+       $mail->setFrom($p['config']['smtpFrom']);
+       $mail->setFromName($p['config']['smtpFromName']);
+       $mail->setSubject("Votre compte ".$p['config']['designAppName']);
+
+       $link = $p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe']."/public/lostPassword/setNew/".$this->_userPasswordRecoveryStr."/";
+
+       $mail->setBody("Bonjour\n\nVoici un lien pour recouvrer l'usage de votre compte  ".$p['config']['designAppName']." :\n".$link."\n\nCe lien est valable 10 minutes\n\nBien cordialement,\n\nL'administrateur");
+       return $mail->send();
      }
 
 }
