@@ -557,6 +557,9 @@ class msPDF
         }
       }
 
+      // choix impression du nombre de lignes de prescriptions forcé à oui
+      $this->_courrierData['ordoImpressionNbLignes'] = 'o';
+
       //on génère le body avec twig
       $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
 
@@ -600,6 +603,8 @@ class msPDF
             $this->_courrierData['printModel']=$p['config']['templateOrdoBody'];
           }
         }
+        // choix impression du nombre de lignes de prescriptions forcé à oui
+        $this->_courrierData['ordoImpressionNbLignes'] = 'o';
 
         //on génère le body avec twig
         $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
@@ -628,6 +633,12 @@ class msPDF
 
             $modePrint='standard';
             $this->_courrierData['ordoImpressionNbLignes']='o';
+
+            if($p['config']['utiliserLap'] == 'true' or $p['config']['utiliserLapExterne'] == 'true' ) {
+              $this->_courrierData['ordoImpressionNbLignes'] = 'n';
+            } else {
+              $this->_courrierData['ordoImpressionNbLignes'] = 'o';
+            }
 
             foreach ($ordoData as $v) {
                 //on chope au passage l'impression on non du nombre de lignes de pres

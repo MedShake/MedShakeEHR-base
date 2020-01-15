@@ -76,6 +76,13 @@ if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as ca
     }
 }
 
+// impression par défaut nb lignes prescriptions
+if($p['config']['utiliserLap'] == 'true' or $p['config']['utiliserLapExterne'] == 'true' ) {
+  $p['page']['courrier']['ordoImpressionNbLignes'] = 'n';
+} else {
+  $p['page']['courrier']['ordoImpressionNbLignes'] = 'o';
+}
+
 //si edition, on sort les datas et on ajoute un hidden avec objetID
 if (is_numeric($_POST['objetID'])) {
     $p['page']['courrier']['objetID']=$_POST['objetID'];
@@ -90,8 +97,8 @@ if (is_numeric($_POST['objetID'])) {
     where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."','".$name2typeID['ordoImpressionNbLignes']."')
     group by p.id, ald.id
     order by p.id asc")) {
+
         $modePrint='standard';
-        $p['page']['courrier']['ordoImpressionNbLignes'] = 'o';
 
         foreach ($ordoData as $v) {
             if ($v['typeID']==$name2typeID['ordoImpressionNbLignes']) {
