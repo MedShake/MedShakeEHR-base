@@ -150,6 +150,12 @@ $(document).ready(function() {
               <th>
                   Chemin complet
               </th>
+              <th>
+                Est accessible en lecture
+              </th>
+              <th>
+                Est accessible en écriture
+              </th>
               <th class="text-right">
                   Gérer
               </th>
@@ -168,6 +174,8 @@ $(document).ready(function() {
                   </td>
                   <td class="text-right">{{ v.filesize }}</td>
                   <td>{{ page.repertoireClefs }}{{ v.file }}</td>
+                  <td class="{% if v.autorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+                  <td class="{% if v.autorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
                   <td class="text-right">
                     <div class="btn-group">
                       <button class="delApicryptClef btn btn-sm btn-light" type="button" data-file="{{ v.file }}" data-user="{{ page.selectUser }}" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
