@@ -617,7 +617,7 @@ class msPDF
         global $p;
 
         $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression']);
+        $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression', 'ordoImpressionNbLignes']);
 
         if ($ordoData=msSQL::sql2tab("select p.*, ald.value as ald
           from objets_data as p
@@ -627,10 +627,15 @@ class msPDF
           order by p.id asc")) {
 
             $modePrint='standard';
+            $this->_courrierData['ordoImpressionNbLignes']='o';
 
             foreach ($ordoData as $v) {
+                //on chope au passage l'impression on non du nombre de lignes de pres
+                if ($v['typeID']==$name2typeID['ordoImpressionNbLignes']) {
+                    $this->_courrierData['ordoImpressionNbLignes']=$v['value'];
+                }
                 //on chope au passage le mode d'impression
-                if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
+                elseif ($v['typeID']==$name2typeID['ordoTypeImpression']) {
                     $modePrint=$v['value'];
                 }
 
