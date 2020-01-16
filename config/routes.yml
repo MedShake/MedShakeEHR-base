@@ -121,9 +121,14 @@ compta: ['GET|POST', '/compta/', 'compta/compta']
 comptaMemoTarif: ['GET', '/compta/memo-tarifs/[i:user]?/', 'compta/comptaMemoTarifs']
 
 #inbox
-inboxAjax: ['POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
+inboxAjax: ['GET|POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
 inboxActions: ['POST|GET', '/inbox/actions/[a:m]/[i:mailID]?/', 'inbox/actions/inboxActions']
 inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
+
+#dropbox
+dropboxAjax: ['GET|POST', '/dropbox/ajax/[a:m]/', 'dropbox/actions/dropboxAjax']
+dropboxActions: ['POST|GET', '/dropbox/actions/[a:m]/', 'dropbox/actions/dropboxActions']
+dropbox: ['GET|POST', '/dropbox/', 'dropbox/dropbox']
 
 #transmissions
 transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']

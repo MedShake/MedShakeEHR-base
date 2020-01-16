@@ -159,6 +159,12 @@ if (isset($template)) {
         $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in ('".$apicryptInboxMailForUserID."') ");
       }
 
+      // dropbox
+      if($p['config']['dropboxActiver'] == 'true') {
+        if(!isset($dropbox) or !is_a($dropbox, 'msDropbox')) $dropbox = new msDropbox;
+        $p['page']['dropboxNbFiles'] = $dropbox->getTotalFilesInBoxes();
+      }
+
       //transmissions non lues
       if($p['config']['transmissionsPeutVoir'] == 'true') {
         $transCompter=new msTransmissions;

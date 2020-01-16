@@ -62,6 +62,21 @@
             <label class="custom-control-label" for="designTopMenuTransmissionsCountDisplayID">Afficher le nombre de transmissions non lues</label>
           </div>
 
+          {% if config.dropboxActiver == 'true' %}
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox" value="true"
+              class="custom-control-input"
+              id="designTopMenuDropboxCountDisplayID"
+              name="designTopMenuDropboxCountDisplay"
+              {% if page.ergonomie.params.designTopMenuDropboxCountDisplay == 'true' %}
+              checked="checked"
+              {% endif %}
+              autocomplete="off">
+            <label class="custom-control-label" for="designTopMenuDropboxCountDisplayID">Afficher le nombre de fichiers dans la boite de dépôt</label>
+          </div>
+          {% endif %}
+
           <div class="custom-control custom-checkbox">
             <input
               type="checkbox" value="true"

@@ -131,6 +131,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'utiliserLapExterneName'=>'',
     'optionGeLoginPassAttribution'=>'admin',
     'optionGeLoginPassOnlineRecovery'=>'false',
+    'dropboxActiver'=>'false',
+    'designTopMenuDropboxCountDisplay'=>'true',
   ];
 
   protected function _getSpecifSql() {

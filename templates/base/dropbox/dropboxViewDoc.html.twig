@@ -1,0 +1,150 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > dropbox : voir doc
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<div class="card mb-3">
+  <div class="card-header font-weight-bold">
+    <i class="fas fa-user fa-fw fa-lg text-muted mr-1"></i>
+    Patient</div>
+  <div class="card-body">
+
+    <table id="tabPatients" class="table table-sm mb-0 table-hover ">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Date de naissance</th>
+          <th>Adresse</th>
+          <th>NIR</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Fichier</th>
+          <td>
+            {% if page.dataFromFilename.birthname and page.dataFromFilename.lastname %}
+              {{ page.dataFromFilename.lastname|e|upper }} ({{ page.dataFromFilename.birthname|e|upper }})
+            {% elseif page.dataFromFilename.lastname %}
+              {{ page.dataFromFilename.lastname|e|upper }}
+            {% else %}
+              {{ page.dataFromFilename.birthname|e|upper }}
+            {% endif %}
+
+          </td>
+          <td>{{ page.dataFromFilename.firstname|e|capitalize }}</td>
+          <td>{{ page.dataFromFilename.birthdate|e|capitalize }}</td>
+          <td></td>
+          <td>
+            <small>{{ page.dataFromFilename.nss|e }}</small>
+          </td>
+          <td></td>
+        </tr>
+        {% for k, v in page.patientsPossibles %}
+
+          <tr class="patientSelect {% if loop.index0 == 0 %} table-success gras{% endif %} cursor-pointer" data-patientid="{{ v.id }}" {% if v.patientType == 'deleted' %} style="text-decoration: line-through" {% endif %}>
+            <td>#{{ v.id }}</td>
+            <td>
+              {% if v.birthname and v.lastname %}
+                {{ v.lastname|e|upper }} ({{ v.birthname|e|upper }})
+              {% elseif v.lastname %}
+                {{ v.lastname }}
+              {% else %}
+                {{ v.birthname }}
+              {% endif %}
+            </td>
+            <td>{{ v.firstname|e }}</td>
+            <td>{{ v.birthdate|e }}</td>
+            <td class="small">
+              {{ v.streetNumber|e }}
+              {{ v.street|e }}
+              {{ v.postalCodePerso|e }}
+              {{ v.city|e }}
+            </td>
+            <td class="small">
+              {{ v.nss|e }}
+            </td>
+            <td>
+              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
+                <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+              </a>
+            </td>
+
+          </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <form class="form-inline">
+      <div class="input-group my-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+        </div>
+        <input class="form-control" type="text" placeholder="Rechercher un autre patient" id="searchPatientID" autocomplete="off"/>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<form id="classerDansDossier" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dropbox/actions/classerDansDossier/" {% if page.boxParams.endTarget == 'patient' %} target="_blank"{% endif %} method="post">
+  <div class="row mb-1">
+    <input type="hidden" name="filename" value="{{ page.fileData.filename }}"/>
+    <input type="hidden" name="box" value="{{ page.boxParams.id }}"/>
+    <input type="hidden" class="form-control" id="idConfirmPatientID" name="patientID" value="{{ page.patientsPossibles.0.id }}">
+
+    <div class="form-group col-9 offset-3">
+      <label for="titreOptionnel">Titre (optionnel)</label>
+      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.boxParams.filesDefaultTitle }}">
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col text-right">
+      <button type="submit" id="submitBoutonClasser" class="btn btn-danger m-1{% if page.patientsPossibles.0.id <= 0 %} d-none{% endif %}">Classer dans le dossier #<span id="submitIndicID">{{ page.patientsPossibles.0.id }}</span>
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="card mb-3">
+  <div class="card-header font-weight-bold">
+    <i class="fas fa-user fa-fw fa-lg text-muted mr-1"></i>
+    Document</div>
+  <div class="card-body">
+    {% if page.fileData.display == '1' %}
+    <object
+      data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.fileData.webpath }}"
+      width="{{ page.fileData.width }}"
+      height="{{ page.fileData.height }}"
+      style="border: 15px solid #DDD; max-width: 100%"
+      type="{{ page.fileData.mimetype }}"></object>
+  {% else %}
+      Ce document n'est pas prévisalisable.
+  {% endif %}
+  </div>
+</div>

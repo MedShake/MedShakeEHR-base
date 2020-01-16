@@ -178,6 +178,26 @@
             </li>
           {% endif %}
 
+          {% if config.dropboxActiver == 'true' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dropbox/">
+                {% if config.designTopMenuStyle == 'icones' %}
+                  <i class="fas fa-inbox fa-lg d-none d-lg-inline"></i>
+                  <span class="d-lg-none">
+                    Boite de dépôt</span>
+                  {% if page.dropboxNbFiles > 0 and config.designTopMenuDropboxCountDisplay == 'true' %}
+                    <span class="badge text-white badgeBoiteDepot" style="margin-left: -5px">{{ page.dropboxNbFiles }}</span>
+                  {% endif %}
+                {% else %}
+                  Boite de dépôt
+                  {% if page.dropboxNbFiles > 0 and config.designTopMenuDropboxCountDisplay == 'true' %}
+                    <span class="badge badge-light badgeBoiteDepot">{{ page.dropboxNbFiles }}</span>
+                  {% endif %}
+                {% endif %}
+              </a>
+            </li>
+          {% endif %}
+
           {% if config.transmissionsPeutVoir == 'true' %}
             <li class="nav-item">
               <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">
