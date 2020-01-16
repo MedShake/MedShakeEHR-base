@@ -89,7 +89,7 @@ $(document).ready(function() {
 
 function viewMail(el) {
   $.ajax({
-    url: urlBase+'/inbox/ajax/viewMail/',
+    url: urlBase + '/inbox/ajax/viewMail/',
     type: 'post',
     data: {
       mailID: el.attr('data-mailID'),
@@ -97,9 +97,9 @@ function viewMail(el) {
     dataType: "html",
     success: function(data) {
 
-      $("tr.mailClicView").each(function( index ) {
+      $("tr.mailClicView").each(function(index) {
         $(this).removeClass('table-success');
-        if($(this).attr('data-status') == 'c') $(this).addClass('table-warning');
+        if ($(this).attr('data-status') == 'c') $(this).addClass('table-warning');
       });
 
       $(el).removeClass('table-warning').addClass('table-success');
@@ -126,6 +126,13 @@ function selectPatient(el) {
 }
 
 function constructPatientLine(data) {
+  if (data.birthname == null) {
+    data.birthname = '';
+  }
+  if (data.lastname == null) {
+    data.lastname = '';
+  }
+
   if (data.birthname.length > 0 && data.lastname.length > 0) {
     identiteNom = data.lastname + ' (' + data.birthname + ')';
   } else if (data.lastname.length > 0) {

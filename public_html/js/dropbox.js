@@ -100,6 +100,13 @@ function selectPatient(el) {
 }
 
 function constructPatientLine(data) {
+  if (data.birthname == null) {
+    data.birthname = '';
+  }
+  if (data.lastname == null) {
+    data.lastname = '';
+  }
+
   if (data.birthname.length > 0 && data.lastname.length > 0) {
     identiteNom = data.lastname + ' (' + data.birthname + ')';
   } else if (data.lastname.length > 0) {
