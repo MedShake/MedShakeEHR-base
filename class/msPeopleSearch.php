@@ -250,5 +250,52 @@ class msPeopleSearch
       return msSQL::sqlUniqueChamp("SELECT id from people where name = '".cleanVar($name)."' and type = 'service' limit 1");
     }
 
+/**
+ * Méthode alternative de recherche de patient avec retour immédiat
+ * @return array retour people
+ */
+    public function getSimpleSearchPeople()
+    {
+        $data=array_map('trim', $this->_criteresRecherche);
+        $data=msSQL::cleanArray($data);
+
+        $name2typeID = new msData();
+        $name2typeID = $name2typeID->getTypeIDsFromName(array_keys($this->_criteresRecherche));
+        $res=[];
+        $final=[];
+
+        foreach($data as $k=>$v) {
+          if(!empty($v)) {
+            if($res=msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID[$k]."' and value like '".$v."' and outdated='' and deleted=''")) {
+              $final = array_merge($final, $res);
+            }
+          }
+        }
+
+        $final=array_count_values($final);
+        arsort($final);
+        $final=array_slice($final, $this->_limitStart, $this->_limitNumber, true);
+
+        foreach ($final as $k=>$v) {
+            if ($v > 1) {
+                $patient= new msPeople();
+                $patient->setToID($k);
+                $peopleType = $patient->getPeopleType();
+                if(in_array($peopleType, $this->_peopleType)) {
+                  $final[$k]=$patient->getSimpleAdminDatasByName($this->_colonnesRetour);
+                  $final[$k]['patientType']=$peopleType;
+                  $final[$k]['nbOccurence']=$v;
+                  $final[$k]['id']=$k;
+                } else {
+                  unset($final[$k]);
+                }
+            } else {
+                unset($final[$k]);
+            }
+        }
+
+        return array_values($final);
+    }
+
 
 }
