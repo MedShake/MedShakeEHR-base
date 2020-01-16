@@ -65,7 +65,6 @@ $(document).ready(function() {
 
   // tab changement
   $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-    console.log(e.target);
     viewDoc($(e.target.hash).find('li.list-group-item').first());
     $(e.relatedTarget.hash).find('li.list-group-item').removeClass('list-group-item-success'); // previous active tab
   });
