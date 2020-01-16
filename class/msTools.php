@@ -378,7 +378,7 @@ class msTools
 
 
 /**
- * Obtenir tous les sous repertoires d'un répertoire, avec récusrsivité
+ * Obtenir tous les sous repertoires d'un répertoire, avec récursivité
  * @param  string $directory           répertoire racine
  * @param  string $directory_seperator séparateur de répertoire dans le chemin (/)
  * @return array                      array des répertoires et sous répertoires
@@ -448,10 +448,20 @@ class msTools
  * Obtenir la taille d'un fichier en version lisible simple
  * @param  string  $file     fichier (dont chemin)
  * @param  integer $decimals nombre de décimales
- * @return string            taille
+ * @return string            taille lisible
  */
    public static function getFileSize($file, $decimals = 2) {
      $bytes=filesize($file);
+     return self::readabledSize($bytes, $decimals);
+   }
+
+/**
+ * Obtenir une taille en bytes en unitées plus lisibles
+ * @param  int  $bytes    taille en bytes
+ * @param  integer $decimals décimales pour arrondi
+ * @return string            taille lisible
+ */
+   public static function readabledSize($bytes, $decimals = 2) {
      $sz = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po'];
      $factor = floor((strlen($bytes) - 1) / 3);
      return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
