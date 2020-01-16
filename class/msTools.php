@@ -495,5 +495,25 @@ class msTools
      return $result;
    }
 
+/**
+* Obtenir l'orientation d'un PDF via pdftk en se basant sur ses dimensions
+* @return string landscape ou portait ou false si pb
+*/
+   public static function getPdfOrientation($fileFullPath) {
+     if(!is_file($fileFullPath)) return $false;
+     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return $false;
+
+     exec('pdftk '.escapeshellarg($fileFullPath).' dump_data | grep "PageMediaDimensions"' ,$output);
+     if(!isset($output[0])) return false;
+     $dim = explode(" ", $output[0]);
+     if(!isset($dim[2])) return false;
+     if($dim[1] > $dim[2]) {
+       return 'landscape';
+     } elseif($dim[1] <= $dim[2]) {
+       return 'portrait';
+     } else {
+       return false;
+     }
+   }
 
 }

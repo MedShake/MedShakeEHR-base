@@ -195,15 +195,7 @@ class msStockage
  * @return string landscape ou portait ou false si pb
  */
     public function getPdfOrientation() {
-      exec('pdftk '.$this->getPathToDoc().' dump_data | grep "PageMediaDimensions"' ,$output);
-      $dim = explode(" ", $output[0]);
-      if($dim[1] > $dim[2]) {
-        return 'landscape';
-      } elseif($dim[1] <= $dim[2]) {
-        return 'portrait';
-      } else {
-        return false;
-      }
+      return msTools::getPdfOrientation($this->getPathToDoc());
     }
 
 /**
