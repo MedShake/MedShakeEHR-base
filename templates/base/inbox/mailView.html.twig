@@ -54,7 +54,7 @@
     <div class="card-header font-weight-bold"><i class="fas fa-user fa-fw fa-lg text-muted mr-1"></i> Patient</div>
     <div class="card-body">
 
-        <table class="table table-sm mb-0 table-hover ">
+        <table id="tabPatients" class="table table-sm mb-0 table-hover ">
             <thead>
                 <tr>
                     <th></th>
@@ -120,6 +120,17 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if page.mail.archived == 'n' %}
+        <form class="form-inline">
+          <div class="input-group my-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+            <input class="form-control" type="text" placeholder="Rechercher un autre patient" id="searchPatientID" autocomplete="off"/>
+          </div>
+        </form>
+        {% endif %}
 
     </div>
 </div>

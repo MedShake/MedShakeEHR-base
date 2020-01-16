@@ -31,17 +31,12 @@ $m=$match['params']['m'];
 
 
 $acceptedModes=array(
-    'viewMail' // Voir un mail
+    'viewMail', // Voir un mail
+    'getPatients',
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
 }
 
-
-// Voir un mail
-if ($m=='viewMail' and isset($_POST['mailID'])) {
-    if (is_numeric($_POST['mailID']) and $_POST['mailID']>0) {
-        include('inc-ajax-viewMail.php');
-    }
-}
+include('inc-ajax-'.$m.'.php');
