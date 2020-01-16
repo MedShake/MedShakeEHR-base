@@ -102,7 +102,7 @@ class msModBaseObjetPreview
           $this->_pdfOrientation = $doc->getPdfOrientation();
         }
         $p['page']['doc']['filesize']= $doc->getFileSize(0);
-        $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+        $p['page']['doc']['displayParams']=$this->getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
         $p['page']['doc']['origine']=$doc->getDocOrigin();
     }
     if (!empty($this->_dataObjet['value'])) {
@@ -124,7 +124,7 @@ class msModBaseObjetPreview
  * @param  string $file fichier
  * @return array       tableau de paramètres
  */
-  private function _getFilePreviewParams($mime, $file) {
+  public function getFilePreviewParams($mime, $file) {
     $tab=array(
       'display'=>false,
       'displayType'=>'object',
@@ -144,12 +144,16 @@ class msModBaseObjetPreview
 
     // pdf
     elseif($mime == 'application/pdf') {
+      if(!isset($this->_pdfOrientation)) {
+        $this->_pdfOrientation = msTools::getPdfOrientation($file);
+      }
       if($this->_pdfOrientation == "landscape") {
         $tab=array(
           'display'=>true,
           'displayType'=>'object',
           'width'=>'1250px',
           'height'=>'1000px',
+          'orientation'=> $this->_pdfOrientation
         );
       } else {
         $tab=array(
@@ -157,6 +161,7 @@ class msModBaseObjetPreview
           'displayType'=>'object',
           'width'=>'900px',
           'height'=>'1260px',
+          'orientation'=> $this->_pdfOrientation
         );
       }
     }
@@ -211,7 +216,7 @@ class msModBaseObjetPreview
       if(!isset($this->_pdfOrientation)) {
         $this->_pdfOrientation = $doc->getPdfOrientation();
       }
-      $p['page']['doc']['displayParams']=$this->_getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+      $p['page']['doc']['displayParams']=$this->getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
 
       $html = '<object
         data="'.$p['page']['pj']['href'].'"
