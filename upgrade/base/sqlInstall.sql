@@ -721,6 +721,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='ordoItems');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('ordo', 'ordoImpressionNbLignes', '', 'Imprimer le nombre de lignes de prescription', 'imprimer le nombre de lignes de prescription', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('ordo', 'ordoLigneOrdo', '', 'Ligne d\'ordonnance', 'porteur pour une ligne d\'ordo', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('ordo', 'ordoLigneOrdoALDouPas', '', 'Ligne d\'ordonnance : ald', '1 si ald', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('ordo', 'ordoTypeImpression', '', 'Type ordonnance impression', 'type d\'ordonnance pour impression', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
@@ -831,6 +832,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('click2callService', 'default', '0', '', 'Click2call', 'string', 'nom du service Click2call à activer (OVH)', ''),
 ('designAppName', 'default', '0', '', 'Ergonomie et design', 'texte', 'nom de l\'application', 'MedShakeEHR'),
 ('designInboxMailsSortOrder', 'default', '0', '', 'Ergonomie et design', 'texte', 'sens du tri des mails en colonne latérale : date ascendante (asc) ou descendante (desc) ', 'desc'),
+('designTopMenuDropboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de fichier dans la boite de dépôt', 'true'),
 ('designTopMenuInboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
 ('designTopMenuStyle', 'default', '0', '', 'Ergonomie et design', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
 ('designTopMenuTransmissionsColorIconeImportant', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
@@ -852,6 +854,8 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('droitExportPeutExporterAutresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens', 'false'),
 ('droitExportPeutExporterPropresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter ses propres datas', 'true'),
 ('droitStatsPeutVoirStatsGenerales', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir les statistiques générales', 'true'),
+('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false'),
+('dropboxOptions', 'default', '0', '', 'Dropbox', 'texte', 'permet d\'activer les fonctions de dropbox externe', ''),
 ('ecofaxMyNumber', 'default', '0', '', 'Fax', 'n° fax', 'numéro du fax en réception, ex: 0900000000', ''),
 ('ecofaxPassword', 'default', '0', '', 'Fax', 'texte', 'mot de passe du service de fax', ''),
 ('faxService', 'default', '0', '', 'Fax', 'vide/ecofaxOVH', 'si non vide, active le service tiers concerné', ''),
@@ -1026,5 +1030,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v6.4.0'),
+('base', 'module', 'v6.5.0'),
 ('state', 'system', 'normal');

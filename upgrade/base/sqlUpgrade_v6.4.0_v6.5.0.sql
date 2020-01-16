@@ -1,3 +1,6 @@
+-- Mise à jour n° de version
+UPDATE `system` SET `value`='v6.5.0' WHERE `name`='base' and `groupe`='module';
+
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false');
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('dropboxOptions', 'default', '0', '', 'Dropbox', 'texte', 'permet d\'activer les fonctions de dropbox externe', '');
 INSERT INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('designTopMenuDropboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de fichier dans la boite de dépôt', 'true');
