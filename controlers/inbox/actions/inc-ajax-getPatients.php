@@ -47,6 +47,9 @@ if($p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
 	foreach ($data as $k=>$v) {
+    foreach($v as $clef=>$val) {
+      if($val == null) $v[$clef] = '';
+    }
 		$a_json[]=array(
 			'label'=>trim($v['identite']).' - '.$v['birthdate'],
 			'value'=>trim($v['identite']),
