@@ -58,8 +58,6 @@ if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
   //type
   $patient->createNewObjetByTypeName('docType', $p['page']['fileData']['ext'], $supportID);
 
-  ////////////////////////////
-  // stockage actif
   //folder
   $folder=msStockage::getFolder($supportID);
 
@@ -69,6 +67,8 @@ if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
   $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$p['page']['fileData']['ext'];
   if($p['page']['fileData']['ext']=='txt') {
     msTools::convertPlainTextFileToUtf8($source, $destination);
+  } elseif(msTools::commandExist('gs') and $p['page']['fileData']['ext']=='pdf') {
+    msPDF::optimizeWithGS($source, $destination);
   } else {
     copy($source, $destination);
   }
