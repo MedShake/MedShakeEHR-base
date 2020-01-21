@@ -855,7 +855,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('droitExportPeutExporterPropresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter ses propres datas', 'true'),
 ('droitStatsPeutVoirStatsGenerales', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir les statistiques générales', 'true'),
 ('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false'),
-('dropboxOptions', 'default', '0', '', 'Dropbox', 'texte', 'permet d\'activer les fonctions de dropbox externe', ''),
+('dropboxOptions', 'default', '0', '', 'Dropbox', 'textarea', 'options pour les fonctions de dropbox externe', ''),
 ('ecofaxMyNumber', 'default', '0', '', 'Fax', 'n° fax', 'numéro du fax en réception, ex: 0900000000', ''),
 ('ecofaxPassword', 'default', '0', '', 'Fax', 'texte', 'mot de passe du service de fax', ''),
 ('faxService', 'default', '0', '', 'Fax', 'vide/ecofaxOVH', 'si non vide, active le service tiers concerné', ''),
