@@ -153,7 +153,7 @@ if (!is_file($homepath.'config/config.yml')) {
             ('mailRappelLogCampaignDirectory', 'default', '".$webdir."/mailsRappelRdvArchives/'),
             ('smsLogCampaignDirectory', 'default', '".$webdir."/smsArchives/'),
             ('apicryptCheminInbox', 'default', '".$webdir."/inbox/'),
-            ('apicryptCheminArchivesInbox', 'default', '".$webdir."/inboxArchives/'),
+            ('apicryptCheminArchivesInbox', 'default', '".$homepath."inboxArchives/'),
             ('apicryptCheminFichierNC', 'default', '".$webdir."/workingDirectory/NC/'),
             ('apicryptCheminFichierC', 'default', '".$webdir."/workingDirectory/C/'),
             ('apicryptCheminVersClefs', 'default', '".$homepath."apicrypt/'),
