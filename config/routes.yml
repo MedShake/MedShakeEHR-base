@@ -56,7 +56,7 @@ patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
 peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/actions/peopleActions']
-peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
+peopleNew: ['GET|POST', '/[patient|pro:porp]/create/', 'people/peopleNew']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
