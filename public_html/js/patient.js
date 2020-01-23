@@ -568,6 +568,16 @@ $(document).ready(function() {
     showObjetDet($(this));
   });
 
+  // réduire la taille d'une image pour aperçu dans historique
+  $("body").on("click", "button.reduceImagePreviewSize", function(e) {
+    reduceImagePreviewSize($(this))
+  });
+
+  // rotation (définitive) d'une image via aperçu historiques
+  $("body").on("click", ".rotationImage90", function(e) {
+    rotateImage90($(this));
+  });
+
   // voir étude dicom correspondant à l'examen
   $('#tabDossierMedical').on("click", "a.viewStudy", function(e) {
     e.preventDefault();
@@ -1569,6 +1579,52 @@ function showObjetDet(element, timed) {
     destination.toggle();
   }
 
+}
+
+/**
+ * Réduction à w-50 d'une image dans apercu lignes d'historiques
+ * @param  {object} el objet cliqué
+ * @return {void}
+ */
+function reduceImagePreviewSize(el) {
+  cible = $('#' + el.attr('data-cible'));
+  if (cible.hasClass('w-50')) {
+    cible.removeClass('w-50');
+    el.find('i').addClass('fa-search-minus').removeClass('fa-search-plus');
+  } else {
+    cible.addClass('w-50');
+    el.find('i').addClass('fa-search-plus').removeClass('fa-search-minus');
+  }
+}
+
+/**
+ * Rotation d'une image de 90° à droite ou à gauche
+ * @param  {object} el objet cliqué
+ * @return {void}
+ */
+function rotateImage90(el) {
+  fichierID = el.attr('data-doc');
+  cible = $('#' + el.attr('data-cible'));
+  direction = el.attr('data-direction');
+  el.find('i').addClass('fa-spin');
+  $.ajax({
+    url: urlBase + '/patient/ajax/rotateDoc/',
+    type: 'post',
+    data: {
+      fichierID: fichierID,
+      direction: direction,
+    },
+    dataType: "html",
+    success: function(data) {
+      d = new Date();
+
+      cible.attr("src", cible.attr('src') + "?" + d.getTime());
+      el.find('i').removeClass('fa-spin');
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
 }
 
 /**

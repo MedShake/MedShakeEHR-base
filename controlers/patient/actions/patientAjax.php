@@ -65,6 +65,7 @@ $acceptedModes=array(
     'getFilePreviewDocument', // obtenir le html de prévisualisation d'un fichier
     'lapExternePrepare', // préparer le LAP externe
     'lapExterneCheckOrdo', // vérifier la dispo d'une ordo produite par le LAP externe
+    'rotateDoc', // rotation image dans aperçu ligne historique
 );
 
 

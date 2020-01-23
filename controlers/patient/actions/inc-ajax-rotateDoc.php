@@ -21,22 +21,25 @@
  */
 
 /**
- * Outils pour les images
+ * Dossier patient > action : faire une rotation du document image depuis aperçu historique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 
-class msImageTools
-{
+$fichier=new msStockage();
+$fichier->setObjetID($_POST['fichierID']);
+if ($fichier->testDocExist()) {
+  $source = $fichier->getPathToDoc();
+  $mimetype=msTools::getmimetype($source);
+  if(explode('/', $mimetype)[0] == 'image') {
 
-  public static function rotate90($source, $dest, $direction='right') {
-    if(!is_file($source)) return false;
-    $image = new Imagick($source);
-    if($direction == 'left') {$angle=-90;} else {$angle=90;}
-    $image->rotateimage("#000", $angle);
-    $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
-    return $image->writeImage($dest);
+    if(isset($_POST['direction']) and $_POST['direction'] == 'left' ) {
+      msImageTools::rotate90($source, $source, 'left');
+    } else {
+      msImageTools::rotate90($source, $source);
+    }
   }
+  exit();
 
 }
