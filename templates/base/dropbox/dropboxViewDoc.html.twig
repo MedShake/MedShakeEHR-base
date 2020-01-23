@@ -137,12 +137,29 @@
     Document</div>
   <div class="card-body">
     {% if page.fileData.display == '1' %}
-    <object
-      data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.fileData.webpath }}"
-      width="{{ page.fileData.width }}"
-      height="{{ page.fileData.height }}"
-      style="border: 15px solid #DDD; max-width: 100%"
-      type="{{ page.fileData.mimetype }}"></object>
+      {% if page.fileData.displayType == 'img' %}
+        <div class="row">
+          <div class="col">
+            <img id="docImageView" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.fileData.webpath }}" style="border: 15px solid #DDD; max-width: 100%; height: auto;">
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-sm btn-secondary rotationImage90 btn-block" data-box="{{ page.boxParams.id }}" data-filename="{{ page.fileData.filename }}" data-direction="left" title="Faire une rotation anti-horaire de 90° de l'image">
+              <i class="fas fa-level-down-alt fa-fw fa-flip-horizontal"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary rotationImage90 btn-block" data-box="{{ page.boxParams.id }}" data-filename="{{ page.fileData.filename }}" data-direction="right" title="Faire une rotation horaire de 90° de l'image">
+              <i class="fas fa-level-down-alt fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      {% else %}
+        <object
+          data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.fileData.webpath }}"
+          width="{{ page.fileData.width }}"
+          height="{{ page.fileData.height }}"
+          style="border: 15px solid #DDD; max-width: 100%;"
+          type="{{ page.fileData.mimetype }}">
+        </object>
+      {% endif %}
   {% else %}
       Ce document n'est pas prévisalisable.
   {% endif %}
