@@ -39,7 +39,7 @@ foreach($datas as $dat) {
     $d[$dat] = $data->getDataHistoricalValues($dat, $_POST['year'].'-01-01 00:00:00', $_POST['year'].'-12-31 23:59:59');
     if(!empty($d[$dat])) {
         foreach($d[$dat] as $date=>$v) {
-          $mois=strftime('%B', mktime(0, 0, 0, explode('-',$v['dateonly']){1}, 1, 2018));
+          $mois=strftime('%B', mktime(0, 0, 0, explode('-',$v['dateonly'])[1], 1, 2018));
           $p['page']['histoData'][$mois][$v['dateonly']][$dat][$v['timeonly']]=$v;
         }
     }

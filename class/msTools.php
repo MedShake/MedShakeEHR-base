@@ -285,7 +285,7 @@ class msTools
  */
   public static function readableDate2Reverse($d)
   {
-      return $d{6}.$d{7}.$d{8}.$d{9}.$d{3}.$d{4}.$d{0}.$d{1};
+      return $d[6].$d[7].$d[8].$d[9].$d[3].$d[4].$d[0].$d[1];
   }
 
 /**
