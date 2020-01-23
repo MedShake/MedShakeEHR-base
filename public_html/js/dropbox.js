@@ -53,6 +53,17 @@ $(document).ready(function() {
     selectPatient($(this));
   });
 
+  //taille prévisu image
+  $("#view").on("click", ".reduceImagePreviewSize", function(e) {
+    if ($('#docImageView').hasClass('w-50')) {
+      $('#docImageView').removeClass('w-50');
+      $('button.reduceImagePreviewSize i').addClass('fa-search-minus').removeClass('fa-search-plus');
+    } else {
+      $('#docImageView').addClass('w-50');
+      $('button.reduceImagePreviewSize i').addClass('fa-search-plus').removeClass('fa-search-minus');
+    }
+  });
+
   // mettre à la poubelle
   $("li.selectFile div.poubelle").on("click", function(e) {
     e.preventDefault();
@@ -85,7 +96,7 @@ $(document).ready(function() {
     $($(location).attr('hash') + '-tab').trigger('click');
   }
 
-
+  //rotation de l'image
   $("#view").on("click", ".rotationImage90", function(e) {
     rotateImage90($(this));
   });
