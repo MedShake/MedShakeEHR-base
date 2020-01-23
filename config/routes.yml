@@ -129,6 +129,7 @@ inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 dropboxAjax: ['GET|POST', '/dropbox/ajax/[a:m]/', 'dropbox/actions/dropboxAjax']
 dropboxActions: ['POST|GET', '/dropbox/actions/[a:m]/', 'dropbox/actions/dropboxActions']
 dropbox: ['GET|POST', '/dropbox/', 'dropbox/dropbox']
+dropboxSendFileToNav: ['GET', '/dropbox/[a:box]/[*:filename]/', 'dropbox/dropboxSendFileToNav']
 
 #transmissions
 transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']
