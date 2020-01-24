@@ -89,7 +89,7 @@
                     type="{{ page.doc.displayParams.mime }}">
                   </object>
                 {% elseif page.doc.displayParams.displayType == 'img' %}
-                  <img id="image{{ page.doc.uniqid }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" alt="" class="img-fluid" style="border: 15px solid #DDD; max-width: 100%; height: auto; image-orientation: from-image;">
+                  <img id="image{{ page.doc.uniqid }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" alt="" class="img-fluid" style="border: 15px solid #DDD; max-width: 100%; height: auto;">
                 {% endif %}
               </div>
             </div>
