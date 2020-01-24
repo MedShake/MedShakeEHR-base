@@ -167,8 +167,9 @@ configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
 
-# Configuration Apicrypt clefs
+# Configuration Apicrypt 
 configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
+configApicrypt2Infos: ['GET', '/configuration/apicrypt2-infos/', 'configuration/configApicrypt2Infos']
 
 # Configuration Templates PDF edit
 configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'configuration/configTemplatesPDF']
