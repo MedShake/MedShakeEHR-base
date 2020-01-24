@@ -103,6 +103,10 @@ if (isset($_POST['objetID'])) {
             $p['page']['doc']['mimetype']=msTools::getmimetype($doc->getPathToDoc());
         }
     }
+
+    if(isset($p['page']['doc']['mimetype'])) {
+      $p['page']['doc']['mimetypeParts'] = explode('/', $p['page']['doc']['mimetype']);
+    }
 }
 
 //formulaire
