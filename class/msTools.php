@@ -510,8 +510,8 @@ class msTools
 * @return string landscape ou portait ou false si pb
 */
    public static function getPdfOrientation($fileFullPath) {
-     if(!is_file($fileFullPath)) return $false;
-     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return $false;
+     if(!is_file($fileFullPath)) return false;
+     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return false;
 
      exec('pdftk '.escapeshellarg($fileFullPath).' dump_data | grep "PageMediaDimensions"' ,$output);
      if(!isset($output[0])) return false;
