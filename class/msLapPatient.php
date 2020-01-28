@@ -278,7 +278,7 @@ private function _checkTaillePatient()
    $creatinineMicroMolL=$data->getLastObjetByTypeName('creatinineMicroMolL');
 
    if(isset($creatinineMgL['updateDate']) and isset($creatinineMicroMolL['updateDate'])) {
-     if( $creatinineMgL['updateDate'] > $creatinineMgL['updateDate'] ) {
+     if( $creatinineMgL['updateDate'] > $creatinineMicroMolL['updateDate'] ) {
 
        $rd=array(
          'statut'=>'ok',
