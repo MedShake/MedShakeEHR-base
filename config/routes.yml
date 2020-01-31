@@ -167,7 +167,7 @@ configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
 
-# Configuration Apicrypt 
+# Configuration Apicrypt
 configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
 configApicrypt2Infos: ['GET', '/configuration/apicrypt2-infos/', 'configuration/configApicrypt2Infos']
 
@@ -205,6 +205,10 @@ configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configAppl
 # configuration modules
 configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
 configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/', 'configuration/configExportModuleToSQL']
+
+# configuration plugins
+configPlugins: ['GET', '/configuration/plugins/', 'configuration/configPlugins']
+
 
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
