@@ -71,7 +71,7 @@ $p['homepath']=$homepath;
 $mysqli=msSQL::sqlConnect();
 
 /////////// Vérification de l'état de la base et sortie des versions des modules
-if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
+if (is_null($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
