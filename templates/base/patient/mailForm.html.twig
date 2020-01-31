@@ -97,6 +97,8 @@
                   <i class="far fa-file-archive fa-7x my-4"></i><br>
                   Fichier zip - aperçu non disponible
                 </div>
+              {% elseif page.doc.mimetypeParts[0] == 'image' %}
+                <img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}?t={{ "now"|date('U') }}" alt="" style="border: 15px solid #DDD; max-width: 100%; height: auto;">
               {% else %}
                 <object data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.url }}" type="{{ page.doc.mimetype }}" width="100%" height="900px" style="border: 15px solid #DDD"></object>
               {% endif %}

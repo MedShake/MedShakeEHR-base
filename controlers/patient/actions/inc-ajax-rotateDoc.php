@@ -21,23 +21,25 @@
  */
 
 /**
- * Dropbox : les requêtes ajax
+ * Dossier patient > action : faire une rotation du document image depuis aperçu historique
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$m=$match['params']['m'];
 
-$acceptedModes=array(
-    'viewDoc', // Voir un doc
-    'getPatients', // Obtenir liste patients sur recherche
-    'delDoc',
-    'rotateDoc',
-);
+$fichier=new msStockage();
+$fichier->setObjetID($_POST['fichierID']);
+if ($fichier->testDocExist()) {
+  $source = $fichier->getPathToDoc();
+  $mimetype=msTools::getmimetype($source);
+  if(explode('/', $mimetype)[0] == 'image') {
 
-if (!in_array($m, $acceptedModes)) {
-    die;
+    if(isset($_POST['direction']) and $_POST['direction'] == 'left' ) {
+      msImageTools::rotate90($source, $source, 'left');
+    } else {
+      msImageTools::rotate90($source, $source);
+    }
+  }
+  exit();
+
 }
-
-include('inc-ajax-'.$m.'.php');

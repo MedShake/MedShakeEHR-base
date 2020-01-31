@@ -99,8 +99,18 @@ $(document).ready(function() {
     indexVitale = $(this).attr('data-indexVitale');
 
     dataVitale[indexVitale]['firstname'] = ucfirst(dataVitale[indexVitale]['firstname']);
-    $('#autreCritVal').val(dataVitale[indexVitale]['nss']);
-    $('#autreCrit').val('nss');
+    //$('#autreCritVal').val(dataVitale[indexVitale]['nss']);
+    if(dataVitale[indexVitale]['birthname'] && dataVitale[indexVitale]['lastname']) {
+      $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['lastname']);
+    } else if (dataVitale[indexVitale]['birthname']) {
+      console.log($('input[name="lastname"]'));
+      $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['birthname']);
+    } else if (dataVitale[indexVitale]['lastname']) {
+      $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['lastname']);
+    }
+    $('#formRecherchePatients input[name="firstname"]').val(dataVitale[indexVitale]['firstname']);
+
+    //$('#autreCrit').val('nss');
     $('#autreCritVal').trigger('keyup');
 
   });

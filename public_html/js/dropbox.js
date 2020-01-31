@@ -53,6 +53,17 @@ $(document).ready(function() {
     selectPatient($(this));
   });
 
+  //taille prévisu image
+  $("#view").on("click", ".reduceImagePreviewSize", function(e) {
+    if ($('#docImageView').hasClass('w-50')) {
+      $('#docImageView').removeClass('w-50');
+      $('button.reduceImagePreviewSize i').addClass('fa-search-minus').removeClass('fa-search-plus');
+    } else {
+      $('#docImageView').addClass('w-50');
+      $('button.reduceImagePreviewSize i').addClass('fa-search-plus').removeClass('fa-search-minus');
+    }
+  });
+
   // mettre à la poubelle
   $("li.selectFile div.poubelle").on("click", function(e) {
     e.preventDefault();
@@ -85,19 +96,49 @@ $(document).ready(function() {
     $($(location).attr('hash') + '-tab').trigger('click');
   }
 
+  //rotation de l'image
+  $("#view").on("click", ".rotationImage90", function(e) {
+    rotateImage90($(this));
+  });
+
+  function selectPatient(el) {
+    $("tr.patientSelect").removeClass('table-success font-weight-bold');
+    $(el).addClass('table-success font-weight-bold');
+    patientID = $(el).attr('data-patientID');
+    $("#idConfirmPatientID").val(patientID);
+    if (patientID > 0) {
+      $("#submitIndicID").html(patientID);
+      $("#submitBoutonClasser").removeClass('d-none');
+
+    }
+  }
 });
 
-function selectPatient(el) {
-  $("tr.patientSelect").removeClass('table-success font-weight-bold');
-  $(el).addClass('table-success font-weight-bold');
-  patientID = $(el).attr('data-patientID');
-  $("#idConfirmPatientID").val(patientID);
-  if (patientID > 0) {
-    $("#submitIndicID").html(patientID);
-    $("#submitBoutonClasser").removeClass('d-none');
-
-  }
+function rotateImage90(el) {
+  box = el.attr('data-box');
+  filename = el.attr('data-filename');
+  direction = el.attr('data-direction');
+  el.find('i').addClass('fa-spin');
+  $.ajax({
+    url: urlBase + '/dropbox/ajax/rotateDoc/',
+    type: 'post',
+    data: {
+      box: box,
+      filename: filename,
+      direction: direction,
+    },
+    dataType: "html",
+    success: function(data) {
+      d = new Date();
+      $("#docImageView").attr("src", $("#docImageView").attr('src') + "?" + d.getTime());
+      el.find('i').removeClass('fa-spin');
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
 }
+
 
 function constructPatientLine(data) {
   if (data.birthname == null) {

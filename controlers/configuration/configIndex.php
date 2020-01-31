@@ -54,4 +54,8 @@ if (!msUser::checkUserIsAdmin()) {
     } else {
       $p['page']['alerteInstallSelf']=false;
     }
+
+    if(class_exists('msApicrypt2')) {
+      $p['page']['apicrypt2present'] = true;
+    }
 }

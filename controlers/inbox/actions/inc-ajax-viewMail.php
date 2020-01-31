@@ -94,12 +94,12 @@ if(!empty($p['page']['mail']['pjSerializeName'])) {
     elseif(explode('/', $p['page']['mail']['pjData'][$k]['mime'])[0] == 'image') {
       $imageInfos = getimagesize($p['page']['mail']['pjData'][$k]['filePath']);
       if($imageInfos[0]>1000) {
-        $imageInfos[0]=1000;
         $imageInfos[1]=round($imageInfos[1]*1000/$imageInfos[0]);
+        $imageInfos[0]=1000;
       }
       if($imageInfos[1]>1000) {
-        $imageInfos[1]=1000;
         $imageInfos[0]=round($imageInfos[0]*1000/$imageInfos[1]);
+        $imageInfos[1]=1000;
       }
       $p['page']['mail']['pjData'][$k]['object']=array(
         'display'=>true,

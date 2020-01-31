@@ -65,7 +65,8 @@ $acceptedModes=array(
     'extractCcamActeData', // extraire les data sur un acte CCAM
     'fixDisplayOrder', // fixer le displayOrder pour les data types en fonction de l'ordre dans un form
     'configUncryptApicryptKey', //déchiffrer une clef Apicrypt
-    'configRevoke2faKey'  // révoquer la clef 2FA d'un utilisateur
+    'configRevoke2faKey',  // révoquer la clef 2FA d'un utilisateur
+    'configInstallPlugin' // installation de plugin
 );
 if (!in_array($m, $acceptedModes)) {
     die;

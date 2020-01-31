@@ -21,24 +21,36 @@
  */
 
 /**
- * Dropbox
+ * Dropbox > action : faire une rotation du document image
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
 
-if($p['config']['dropboxActiver'] != 'true') {
-  $template="forbidden";
-  return;
-}
-$template="dropbox";
+if($p['config']['dropboxActiver'] != 'true') die;
+if(!isset($_POST['box']) or !isset($_POST['filename'])) die;
+if(!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
 
 $dropbox = new msDropbox;
+$dropbox->setCurrentBoxId($_POST['box']);
+$p['page']['boxParams'] = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['box']];
 
-$p['page']['dropBoxesParams'] = $dropbox->getAllBoxesParametersCurrentUser();
-foreach($p['page']['dropBoxesParams'] as $box=>$params) {
-  $dropbox->setCurrentBoxId($box);
-  $p['page']['dropBoxesContent'] = $dropbox->getAllAllowedFilesInBoxes();
+if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
+  $dropbox->setCurrentFilename($_POST['filename']);
+  $p['page']['fileData'] = $dropbox->getCurrentFileData();
 
+  //source
+  $source=$p['page']['fileData']['fullpath'];
+
+  if(isset($_POST['direction']) and $_POST['direction'] == 'left' ) {
+    msImageTools::rotate90($source, $source, 'left');
+  } else {
+    msImageTools::rotate90($source, $source);
+  }
+
+  exit();
+
+
+} else {
+  die("Ce fichier n'existe pas dans la boite de dépôt");
 }

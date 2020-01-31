@@ -1,0 +1,174 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : plugins
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : plugins{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+  <style>
+    .uploader {
+      min-height: 100vh;
+    }
+    .mask {
+      display: none;
+      background-color: #000;
+      opacity: 0;
+      position: fixed;
+      z-index: 10;
+      width: 100vw;
+      height: 100vh;
+      top:0;
+      left: 0;
+    }
+  </style>
+{% endblock %}
+
+{% block bodyTagAdd %}class="uploaderPlugin"{% endblock %}
+{% block body %}
+  <div class="mask"></div>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Plugins
+    </li>
+  </ol>
+
+  <div class="row">
+    <div class="col-12 col-xl-8 mb-4">
+      <h1>Plugins installés</h1>
+      {% if page.plugins|length() > 0 %}
+      <table class="table table-sm mb-0 table-striped table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>Nom</th>
+            <th>Nom court</th>
+            <th>Version</th>
+            <th class="col-auto"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in page.plugins %}
+            <tr data-toggle="collapse" data-target="#{{ m.name }}">
+              <td>
+                {% if page.pluginsInfosGen[m.name]['nom'] %}
+                  {{ page.pluginsInfosGen[m.name]['nom'] }}
+                {% endif %}
+              </td>
+              <td>
+                {{ m.name }}
+              </td>
+              <td>{{ m.version }}</td>
+              <td class="text-right">
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}">
+                  <i class="fas fa-info fa-fw"></i>
+                </button>
+              </td>
+            </tr>
+            <tr class="collapse" id="{{ m.name }}">
+              <td colspan="4" class="p-3 bg-white">
+                {% if page.pluginsInfosGen[m.name]['nom'] %}
+                  <h5>Informations sur ce plugin</h5>
+
+                  <div class="card card-body my-3 bg-light">
+
+                    <ul class="list-unstyled mb-0">
+                    {% if page.pluginsInfosGen[m.name]['nom'] %}
+                      <li>
+                        <strong>{{ page.pluginsInfosGen[m.name]['nom'] }}</strong>
+                        {% if page.pluginsInfosGen[m.name]['description'] is not empty %}
+                          <p class="mb-0">{{ page.pluginsInfosGen[m.name]['description'] }}</p>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                    {% if page.pluginsInfosGen[m.name]['auteurs'] is not empty %}
+                      <li>
+                        Auteur{% if page.pluginsInfosGen[m.name]['auteurs']|length > 1 %}s{% endif %} :
+                        {% for auteur, lien in page.pluginsInfosGen[m.name]['auteurs'] %}
+                          {% if lien is not empty %}
+                            <a href="{{ lien }}" target="_blank">{{ auteur }}</a>
+                          {% else %}
+                            {{ auteur }}
+                          {% endif %}
+                          {% if loop.index0 >= 0 and loop.revindex0 > 0 %} - {% endif %}
+                        {% endfor %}
+                      </li>
+                    {% endif %}
+                    {% if page.pluginsInfosGen[m.name]['licence'] %}
+                      <li>
+                        Licence : {{ page.pluginsInfosGen[m.name]['licence'] }}
+                      </li>
+                    {% endif %}
+                    {% if page.pluginsInfosGen[m.name]['documentation'] or page.pluginsInfosGen[m.name]['sources'] %}
+                      <li>
+                        {% if page.pluginsInfosGen[m.name]['documentation'] %}
+                          <a href="{{ page.pluginsInfosGen[m.name]['documentation'] }}" target="_blank">Documentation</a>
+                        {% endif %}
+                        {% if page.pluginsInfosGen[m.name]['documentation'] and page.pluginsInfosGen[m.name]['sources'] %} - {% endif %}
+                        {% if page.pluginsInfosGen[m.name]['sources'] %}
+                          <a href="{{ page.pluginsInfosGen[m.name]['sources'] }}" target="_blank">Code source</a>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                    </ul>
+                  </div>
+
+                {% endif %}
+
+
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <div class="alert alert-info mt-3" role="alert">
+          Aucun plugin n'est installé.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <h1>Installer un nouveau plugin ou une mise à jour de plugin</h1>
+      <div class="card card-body">
+        <div class="text-center my-4">
+          <i class="fas fa-file-archive text-light fa-8x"></i>
+        </div>
+
+        <p>Glissez-déposez le fichier zip d'un nouveau plugin MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

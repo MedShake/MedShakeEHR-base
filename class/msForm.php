@@ -839,7 +839,7 @@ class msForm
  */
     protected function _formBuilderColSize($value, $rowNumber, $colNumber, &$r)
     {
-      if(is_numeric(trim($value){0})) {
+      if(is_numeric(trim($value)[0])) {
         $r['structure'][$rowNumber][$colNumber]['size']='col-md-'.$value;
       } else {
         $r['structure'][$rowNumber][$colNumber]['size']=$value;

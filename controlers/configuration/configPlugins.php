@@ -21,23 +21,16 @@
  */
 
 /**
- * Dropbox : les requêtes ajax
+ * Config : plugins
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-
 $debug='';
-$m=$match['params']['m'];
+$template='configPlugins';
 
-$acceptedModes=array(
-    'viewDoc', // Voir un doc
-    'getPatients', // Obtenir liste patients sur recherche
-    'delDoc',
-    'rotateDoc',
-);
-
-if (!in_array($m, $acceptedModes)) {
-    die;
+if($p['page']['plugins']=msPlugins::getInstalledPluginsNamesAndVersions()) {
+  foreach($p['page']['plugins'] as $k=>$v) {
+    // infos génériques
+    $p['page']['pluginsInfosGen'][$v['name']]=msPlugins::getPluginInfosGen($v['name']);
+  }
 }
-
-include('inc-ajax-'.$m.'.php');

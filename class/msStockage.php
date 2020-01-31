@@ -111,9 +111,9 @@ class msStockage
     {
         $chaine = strval($objetID);
         if($objetID<10) {
-          $first=$chaine{0}.'0';
+          $first=$chaine[0].'0';
         } else {
-          $first=$chaine{0}.$chaine{1};
+          $first=$chaine[0].$chaine[1];
         }
 
         return $first.'/'.floor($objetID/1000);

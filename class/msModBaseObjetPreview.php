@@ -180,12 +180,12 @@ class msModBaseObjetPreview
     elseif(explode('/', $mime)[0] == 'image') {
       $imageInfos = getimagesize($file);
       if($imageInfos[0]>1000) {
-        $imageInfos[0]=1000;
         $imageInfos[1]=round($imageInfos[1]*1000/$imageInfos[0]);
+        $imageInfos[0]=1000;
       }
       if($imageInfos[1]>1000) {
-        $imageInfos[1]=1000;
         $imageInfos[0]=round($imageInfos[0]*1000/$imageInfos[1]);
+        $imageInfos[1]=1000;
       }
       $tab=array(
         'display'=>true,

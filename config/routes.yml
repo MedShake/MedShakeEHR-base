@@ -56,7 +56,7 @@ patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
 peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/actions/peopleActions']
-peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
+peopleNew: ['GET|POST', '/[patient|pro:porp]/create/', 'people/peopleNew']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
@@ -129,6 +129,7 @@ inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 dropboxAjax: ['GET|POST', '/dropbox/ajax/[a:m]/', 'dropbox/actions/dropboxAjax']
 dropboxActions: ['POST|GET', '/dropbox/actions/[a:m]/', 'dropbox/actions/dropboxActions']
 dropbox: ['GET|POST', '/dropbox/', 'dropbox/dropbox']
+dropboxSendFileToNav: ['GET', '/dropbox/[a:box]/[*:filename]/', 'dropbox/dropboxSendFileToNav']
 
 #transmissions
 transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']
@@ -166,8 +167,9 @@ configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
 
-# Configuration Apicrypt clefs
+# Configuration Apicrypt
 configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
+configApicrypt2Infos: ['GET', '/configuration/apicrypt2-infos/', 'configuration/configApicrypt2Infos']
 
 # Configuration Templates PDF edit
 configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'configuration/configTemplatesPDF']
@@ -203,6 +205,10 @@ configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configAppl
 # configuration modules
 configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
 configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/', 'configuration/configExportModuleToSQL']
+
+# configuration plugins
+configPlugins: ['GET', '/configuration/plugins/', 'configuration/configPlugins']
+
 
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']

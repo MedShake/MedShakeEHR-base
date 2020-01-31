@@ -86,6 +86,9 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/modules/">Modules</a>
         </li>
         <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/plugins/">Plugins</a>
+        </li>
+        <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
         </li>
       </ul>
@@ -177,14 +180,26 @@
 
     <div role="tabpanel" class="tab-pane" id="journaux">
 
-      <h2 class="mb-2">Ressources externes</h2>
+      <h2 class="mb-2">Informations techniques</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/refreshSams/">Rafraichir le XML HAS des SAMs
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Informations système
           </a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configJdvShow/">Jeux de valeurs normées
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/orthancInfos/">Informations et statistiques Orthanc
+          </a>
+        </li>
+        {% if page.apicrypt2present %}
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt2-infos/">Informations boites Apicrypt 2
+          </a>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          Données de session
+          <a class="btn btn-outline-secondary px-1 py-0 ml-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
+            Supprimer
           </a>
         </li>
       </ul>
@@ -213,20 +228,14 @@
         </li>
       </ul>
 
-      <h2 class="mt-4 mb-2">Informations techniques</h2>
+      <h2 class="mt-4 mb-2">Ressources externes</h2>
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/check-directory/">Informations système
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/refreshSams/">Rafraichir le XML HAS des SAMs
           </a>
         </li>
         <li class="list-group-item">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/orthancInfos/">Informations et statistiques Orthanc
-          </a>
-        </li>
-        <li class="list-group-item">
-          Données de session
-          <a class="btn btn-outline-secondary px-1 py-0 ml-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cleanSession/" target="_blank">
-            Supprimer
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configJdvShow/">Jeux de valeurs normées
           </a>
         </li>
       </ul>

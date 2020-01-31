@@ -142,7 +142,7 @@ class msDropbox
     if(is_file($filepath)) {
       $fileinfos =  array(
         'fullpath'=>$filepath,
-        'webpath'=>str_replace($p['config']['webDirectory'] ,'', $filepath),
+        'webpath'=>'dropbox/'.$this->_currentBoxId.'/'.$this->_currentFilename.'/',
         'ext'=>pathinfo($filepath,  PATHINFO_EXTENSION),
         'mimetype'=>msTools::getmimetype($filepath),
       );

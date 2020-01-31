@@ -285,7 +285,7 @@ class msTools
  */
   public static function readableDate2Reverse($d)
   {
-      return $d{6}.$d{7}.$d{8}.$d{9}.$d{3}.$d{4}.$d{0}.$d{1};
+      return $d[6].$d[7].$d[8].$d[9].$d[3].$d[4].$d[0].$d[1];
   }
 
 /**
@@ -510,8 +510,8 @@ class msTools
 * @return string landscape ou portait ou false si pb
 */
    public static function getPdfOrientation($fileFullPath) {
-     if(!is_file($fileFullPath)) return $false;
-     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return $false;
+     if(!is_file($fileFullPath)) return false;
+     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return false;
 
      exec('pdftk '.escapeshellarg($fileFullPath).' dump_data | grep "PageMediaDimensions"' ,$output);
      if(!isset($output[0])) return false;

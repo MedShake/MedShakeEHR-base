@@ -42,7 +42,7 @@ class msModBaseDataSave
         $value=trim($value);
         // si absence de slash
         if(is_numeric($value) and strlen($value)==8) {
-          $value=$value{0}.$value{1}.'/'.$value{2}.$value{3}.'/'.$value{4}.$value{5}.$value{6}.$value{7};
+          $value=$value[0].$value[1].'/'.$value[2].$value[3].'/'.$value[4].$value[5].$value[6].$value[7];
         // si année sur 2 chiffres au lieu de 4
         } elseif(strlen($value)==8 and substr_count($value, '/') == 2 ) {
           $decompoDate=explode('/', $value);

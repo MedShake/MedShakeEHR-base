@@ -55,7 +55,7 @@ function getFseData(el) {
       });
 
       // si mode simple
-      if(mode == 'simple') {
+      if (mode == 'simple') {
         $('#fseRetirerSiModeSimple').html('');
         doFse(el);
         return;
@@ -295,12 +295,29 @@ function ehrTypeDataToHtml(mode) {
     html += '</small> \
       </div> \
       <div>';
+
     if (mode == "classique") {
       if (dat.correspondances && dat.correspondances.length == 1) {
-        html += '<a href="/patient/' + dat['correspondances'][0] + '/" class="btn btn-sm btn-primary ml-1 goToPatientFromVitaleData"><i class="fas fa-folder-open"></i></a>';
+        html += '<a href="/patient/' + dat['correspondances'][0] + '/" class="btn btn-sm btn-danger ml-1 goToPatientFromVitaleData" title="Ouvrir le dossier"><i class="fas fa-folder-open"></i></a>';
       }
-      if (dat.correspondances && dat.correspondances.length >= 1) {
-        html += '<button type="button" data-indexVitale="' + index + '" class="btn btn-sm btn-secondary ml-1 searchPatientFromVitaleDataNss"><i class="fas fa-search"></i></button>';
+
+      if (!dat.correspondances) {
+        html += '<form class="d-inline" action="' + urlBase + '/patient/create/" method="post">';
+
+        $.each(dataVitale[index], function(key, value) {
+          html += '<input type="hidden" name="' + key + '" value="' + value + '">';
+        });
+        html += '<button type="submit" class="btn btn-sm btn-warning ml-1" title="Créer le dossier"><i class="fas fa-user-plus"></i></button>';
+        html += '</form>';
+      }
+
+      html += '<button type="button" data-indexVitale="' + index + '" class="btn btn-sm btn-secondary ml-1 searchPatientFromVitaleDataNss" title="Rechercher le dossier avec nom et prénom"><i class="fas fa-search"></i></button>';
+
+    } else {
+      if (dat.correspondances && dat.correspondances.length == 1) {
+        html += '<a href="/patient/' + dat['correspondances'][0] + '/" class="btn btn-sm btn-danger ml-1 goToPatientFromVitaleData" title="Ouvrir le dossier"><i class="fas fa-folder-open"></i></a>';
+      } else {
+        html += '<button type="button" class="btn btn-sm btn-warning ml-1" title="Créer le dossier"><i class="fas fa-user-plus"></i></button>';
       }
     }
     html += '</div>\

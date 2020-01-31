@@ -55,23 +55,44 @@
       <div class="row">
         <div class="col-auto">
           {% if page.doc.displayParams.display %}
-            <div class="d-block text-right my-2">
-              <a class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" target="_blank">
-              <i class="fas fa-external-link-alt"></i>
-                Ouvrir dans un onglet
-              </a>
+            <div class="row">
+              {% if page.doc.displayParams.displayType == 'img' %}
+              <div class="col">
+                <div class="btn-group" role="group" >
+                  <button data-cible="image{{ page.doc.uniqid }}" class="btn btn-sm btn-light reduceImagePreviewSize"  title="Ajuster la taille de prévisualisation (original non modifié)">
+                    <i class="fas fa-search-minus"></i>
+                  </button>
+                  <button data-doc="{{ page.doc.id }}" data-cible="image{{ page.doc.uniqid }}" class="btn btn-sm btn-light rotationImage90" data-direction="left" title="Faire une rotation anti-horaire de 90° de l'image">
+                    <i class="fas fa-level-down-alt fa-fw fa-flip-horizontal"></i>
+                  </button>
+                  <button data-doc="{{ page.doc.id }}" data-cible="image{{ page.doc.uniqid }}" class="btn btn-sm btn-light rotationImage90" data-direction="right" title="Faire une rotation horaire de 90° de l'image">
+                    <i class="fas fa-level-down-alt fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+              {% endif %}
+              <div class="col text-right my-2">
+                <a class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                  Ouvrir dans un onglet
+                </a>
+              </div>
             </div>
-            {% if page.doc.displayParams.displayType == 'object' %}
-              <object
-                data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}"
-                width="{{ page.doc.displayParams.width }}"
-                height="{{ page.doc.displayParams.height }}"
-                style="border: 15px solid #DDD"
-                type="{{ page.doc.displayParams.mime }}">
-              </object>
-            {% elseif page.doc.displayParams.displayType == 'img' %}
-              <img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" alt="" class="img-fluid" style="border: 15px solid #DDD">
-            {% endif %}
+            <div class="row">
+              <div class="col">
+                {% if page.doc.displayParams.displayType == 'object' %}
+                  <object
+                    data="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}"
+                    width="{{ page.doc.displayParams.width }}"
+                    height="{{ page.doc.displayParams.height }}"
+                    style="border: 15px solid #DDD"
+                    type="{{ page.doc.displayParams.mime }}">
+                  </object>
+                {% elseif page.doc.displayParams.displayType == 'img' %}
+                  <img id="image{{ page.doc.uniqid }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ page.doc.href }}" alt="" class="img-fluid" style="border: 15px solid #DDD; max-width: 100%; height: auto;">
+                {% endif %}
+              </div>
+            </div>
           {% else %}
             <div class="d-block text-left my-3">
               <p>Ce type de fichier n'est pas prévisualisable dans un navigateur</p>

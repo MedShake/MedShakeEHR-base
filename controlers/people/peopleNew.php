@@ -49,6 +49,9 @@ if($template != "forbidden") {
   if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
       $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
   }
+  if (isset($_POST)) {
+      $formpatient->setPrevalues($_POST);
+  }
 
   //si formulaire pro
   if ($p['page']['porp']=='pro') {
