@@ -42,7 +42,7 @@ class msPlugins
  * @return array k=>['plugin','version']
  */
   public static function getInstalledPluginsNamesAndVersions() {
-    return msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='plugin'");
+    return msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='plugin' order by name");
   }
 
 /**
