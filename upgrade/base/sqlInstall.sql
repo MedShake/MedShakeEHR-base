@@ -334,7 +334,7 @@ CREATE TABLE IF NOT EXISTS `printed` (
 CREATE TABLE IF NOT EXISTS `system` (
   `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
-  `groupe` enum('system','module','cron','lock') DEFAULT 'system',
+  `groupe` enum('system','module','cron','lock','plugin') DEFAULT 'system',
   `value` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nameGroupe` (`name`,`groupe`)
@@ -1030,5 +1030,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v6.5.0'),
+('base', 'module', 'v6.6.0'),
 ('state', 'system', 'normal');
