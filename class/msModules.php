@@ -46,6 +46,18 @@ class msModules
   }
 
 /**
+ * Obtenir une liste des versions des modules
+ * @return array module => 'version'
+ */
+  public static function getInstalledModulesVersions() {
+    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM system WHERE groupe='module'", "name", "version")) {
+      return $r;
+    } else {
+      return [];
+    }
+  }
+
+/**
  * Obtenir les infos génériques sur un module à partir du fichier aboutMod*Module*.yml
  * @param  string $name nom cours du module
  * @return array       paramètres extraits
