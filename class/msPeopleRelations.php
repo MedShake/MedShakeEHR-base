@@ -235,7 +235,7 @@ class msPeopleRelations extends msPeople
       }
 
       // praticien/patient -> patient
-      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$_POST['ID2']."' and value='".$_POST['ID1']."' and deleted='' limit 1")) {
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$withID."' and value='".$this->_toID."' and deleted='' limit 1")) {
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setObjetID($id);
