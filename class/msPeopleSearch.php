@@ -292,7 +292,11 @@ class msPeopleSearch
         $final=array_slice($final, $this->_limitStart, $this->_limitNumber, true);
 
         foreach ($final as $k=>$v) {
-            if ($v > 1) {
+            // number of criteria requided for matching this people
+            $nbforvalid = count($data)-1;
+            // lastname and birthname count for the same criteria
+            if(!empty($data['lastname']) && !empty($data['birthname'])) $nbforvalid--;
+            if ($v > $nbforvalid) {
                 $patient= new msPeople();
                 $patient->setToID($k);
                 $peopleType = $patient->getPeopleType();
