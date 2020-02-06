@@ -816,4 +816,15 @@ class msCourrier
         return $this->_objetData=$objetData->getCompleteObjetDataByID();
     }
 
+/**
+ * Obtenir les tags identités dans un autre context que prod courrier
+ * @param  array $data tableau des datas nécessaires
+ * @return array       tableau des identités formatées
+ */
+    public static function getIdentiteTags($data) {
+      if(isset($data['administrativeGenderCode'])) {
+        $data['val_administrativeGenderCode']=$data['administrativeGenderCode'];
+      }
+      return self::_formatIdentites($data);
+    }
 }
