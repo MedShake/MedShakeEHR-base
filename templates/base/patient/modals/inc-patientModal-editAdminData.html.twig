@@ -34,7 +34,9 @@
         <h4 class="modal-title font-weight-bold">Edition des informations administratives du patient</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
-      <div class="modal-body changeObserv">
+      <div class="modal-body checkboxFixValue">
+        {{ f.errorsBloc() }}
+
         {{ f.formbuilder(page.formEditAdmin , config.formFormulaireNouveauPatient , session) }}
 
         {% if page.formJavascript[config.formFormulaireNouveauPatient] is not empty %}
@@ -44,7 +46,8 @@
         {% endif %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-light cleanSessionFormWarning" data-dismiss="modal">Abandonner</button>
+        <button type="button" class="btn btn-primary modal-save" data-modal="editAdmin" data-form="formName_{{ config.formFormulaireNouveauPatient }}">Valider</button>
       </div>
     </div>
   </div>

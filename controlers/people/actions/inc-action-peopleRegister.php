@@ -76,7 +76,11 @@ if ($validation === false) {
         'code'=>$_SESSION['form'][$formIN]['validationErrors']
       ));
     } else {
-        msTools::redirection('/'.$match['params']['porp'].'/create/');
+        if (isset($_POST['patientID'])) {
+          msTools::redirection('/'.$match['params']['porp'].'/edit/'.$_POST['patientID'].'/');
+        } else {
+          msTools::redirection('/'.$match['params']['porp'].'/create/');
+        }
     }
 } else {
     $patient = new msObjet();

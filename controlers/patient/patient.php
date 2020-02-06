@@ -112,6 +112,11 @@ $formpatient->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 $formpatient->setPrevalues($patient->getSimpleAdminDatas());
 $p['page']['formEditAdmin']=$formpatient->getForm();
 $p['page']['formJavascript'][$p['config']['formFormulaireNouveauPatient']]=$formpatient->getFormJavascript();
+$p['page']['formEditAdmin']['addHidden']=array(
+  'patientID'=>$p['page']['patient']['id'],
+  'actAsAjax'=>'true',
+  'porp'=>'patient'
+);
 
 //type du dossier
 $p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");
