@@ -31,15 +31,23 @@ $debug='';
 
 $template="listing";
 
-// liste des documents pouvant être envoyés à la signature par l'utilisateur courant
-$docAsSigner = new msSignatureNumerique;
-$docAsSigner->setFromID($p['user']['id']);
-$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+// si groupe, on vérifie que l'option générale est ON et on termine sinon
+if($_POST['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 'true') {
+    die();
+}
 
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN=$p['config']['formFormulaireListingPatients'];
+
+    // liste des documents pouvant être envoyés à la signature par l'utilisateur courant
+    $docAsSigner = new msSignatureNumerique;
+    $docAsSigner->setFromID($p['user']['id']);
+    $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
+} elseif ($_POST['porp']=='groupe') {
+    $formIN=$p['config']['formFormulaireListingGroupes'];
 } else {
     die();
 }
@@ -91,7 +99,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
 
 
     //patient ou pro en fonction
-    if($_POST['porp']=='pro') {
+    if($_POST['porp']=='groupe') {
+        $mss->setPeopleType(['groupe']);
+    } elseif($_POST['porp']=='pro') {
         $mss->setPeopleType(['pro']);
     } elseif($_POST['porp']=='today') {
         $mss->setPeopleType(['pro', 'patient', 'externe']);
@@ -110,11 +120,17 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
       $mss->setRestricDossiersPropres(true);
     }
 
-    $criteres = array(
-        'firstname'=>$_POST['d3'],
-        'lastname'=>$_POST['d2'],
-        'birthname'=>$_POST['d2']
+    if($_POST['porp']=='groupe') {
+      $criteres = array(
+          'groupname'=>$_POST['d2'].'%',
+        );
+    } else {
+      $criteres = array(
+          'firstname'=>$_POST['d3'],
+          'lastname'=>$_POST['d2'],
+          'birthname'=>$_POST['d2']
       );
+    }
     if(!empty($_POST['autreCritVal'])) {
       $criteres[$_POST['autreCrit']]=$_POST['autreCritVal'];
     }

@@ -126,7 +126,7 @@ class msPeople
  */
     public function setType($t)
     {
-        if (in_array($t, array('patient', 'pro', 'externe'))) {
+        if (in_array($t, array('patient', 'pro', 'externe', 'groupe'))) {
             return $this->_type = $t;
         } else {
             throw new Exception('Type n\'est pas d\'une valeur autorisée');

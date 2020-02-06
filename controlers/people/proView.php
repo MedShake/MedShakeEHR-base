@@ -34,33 +34,33 @@ $p['page']['proDataID']=$match['params']['proID'];
 
 $patient = new msPeople();
 $patient->setToID($p['page']['proDataID']);
+$p['page']['proData']['dossierType']=$patient->getType();
 
-if($patient->getType() != 'pro') {
+if($p['page']['proData']['dossierType'] != 'pro') {
   $template = "404";
   return;
 }
 
 $p['page']['proData']=$patient->getLabelForSimpleAdminDatas($patient->getSimpleAdminDatasByName());
 
-//type du dossier (pour deleted en particulier)
-$p['page']['proData']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$match['params']['proID']."' limit 1");
-
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['proData']));
 
 //les patients connus
-$name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'firstname', 'lastname','birthname']);
-$p['page']['patientsConnus']=msSQL::sql2tab("select o.value as patientID, c.value as typeRelation,  p.value as prenom,
-CASE
-  WHEN n.value != '' and bn.value != '' THEN concat(n.value, ' (', bn.value, ')')
-  WHEN n.value != '' THEN n.value
-  ELSE bn.value END as nom
-from objets_data as o
-left join objets_data as c on c.instance=o.id
-left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-where o.toID='".$p['page']['proDataID']."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-group by o.value, c.id, bn.id, n.id, p.id
-order by nom asc");
+$patients = new msPeopleRelations;
+$patients->setToID($p['page']['proDataID']);
+$p['page']['patientsConnus'] = $patients->getRelations('relationPatientPraticien', ['identite', 'ageCalcule']);
+msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
+
+// gestion groupe
+if($p['config']['optionGeGroupesActiver'] == 'true') {
+
+  //sortir les choix de relations praticien <-> groupe
+  $data = new msData();
+  $typeID = $data->getTypeIDFromName('relationPraticienGroupe');
+  $options = $data->getSelectOptionValue(array($typeID));
+  foreach($options[$typeID] as $k=>$v) {
+    $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
+  }
+
+}

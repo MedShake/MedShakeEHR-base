@@ -35,9 +35,11 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 } elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
-    $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
+} elseif ($p['page']['porp']=='groupe' and $p['config']['droitDossierPeutCreerGroupe'] == 'true') {
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
 } else {
   $template="forbidden";
   return;

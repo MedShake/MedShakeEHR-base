@@ -133,6 +133,19 @@
               {% endif %}
             </a>
           </li>
+          {% if config.optionGeGroupesActiver == 'true' %}
+            <li class="nav-item">
+              <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupes/">
+                {% if config.designTopMenuStyle == 'icones' %}
+                  <i class="fas fa-hospital-alt fa-lg d-none d-lg-inline"></i>
+                  <span class="d-lg-none">
+                    Groupes</span>
+                {% else %}
+                  Groupes
+                {% endif %}
+              </a>
+            </li>
+          {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
               {% if config.designTopMenuStyle == 'icones' %}

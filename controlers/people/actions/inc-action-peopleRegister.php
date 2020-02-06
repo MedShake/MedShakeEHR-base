@@ -107,7 +107,9 @@ if ($validation === false) {
     if ($actAsAjax) {
         echo json_encode(array('status'=>'ok', 'toID'=>$patient->getToID()));
     } else {
-        if ($match['params']['porp']=='pro') {
+        if ($match['params']['porp']=='groupe') {
+            msTools::redirection('/groupe/'.$patient->getToID().'/');
+        } elseif ($match['params']['porp']=='pro') {
             msTools::redirection('/pro/'.$patient->getToID().'/');
         } elseif($p['config']['optionGePatientOuvrirApresCreation'] == 'liens') {
             msTools::redirection('/patient/relations/'.$patient->getToID().'/');

@@ -133,6 +133,9 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeLoginPassOnlineRecovery'=>'false',
     'dropboxActiver'=>'false',
     'designTopMenuDropboxCountDisplay'=>'true',
+    'formFormulaireListingGroupes'=>'baseListingGroupes',
+    'droitDossierPeutCreerGroupe'=>'false',
+    'formFormulaireNouveauGroupe'=>'baseNewGroupe'
   ];
 
   protected function _getSpecifSql() {

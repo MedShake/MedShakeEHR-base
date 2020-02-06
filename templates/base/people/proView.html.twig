@@ -44,8 +44,18 @@
  - {{ config.designAppName }}
 {% endblock %}
 
-{% block head %}
+{% block jsFiles %}
   {{ parent() }}
+  {% if config.optionGeGroupesActiver == 'true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    if ($('#bodyTabRelationPratGroupes').length) setTimeout(getRelationsPraticienGroupesTab($('#identitePatient').attr("data-patientID")), 200);
+  });
 {% endblock %}
 
 {% block body %}
@@ -54,7 +64,7 @@
 <div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
 {% endif %}
 
-<h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
+<h1 id="identitePatient" data-patientID="{{ page.proDataID }}">
   {% if page.proData.titre %}
     {{ page.proData.titre }}
   {% endif %}
@@ -80,7 +90,7 @@
                   Informations professionnelles sur ce praticien
                 </span>
                 <span>
-                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"><i class="fas fa-pencil-alt"></i> Infos pros
+                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"><i class="fas fa-pencil-alt fa-fw"></i>
                   </a>
                 </span>
               </div>
@@ -134,6 +144,66 @@
 
               <div class="card-footer">&nbsp;</div>
             </div>
+
+            {% if config.optionGeGroupesActiver == 'true' %}
+              <div class="card mt-4">
+                <div class="card-header font-weight-bold">
+                  <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i>
+                  Groupes</div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <span>
+                      Groupes intégrés par ce praticien
+
+                    </span>
+                    <span>
+                      <button class="btn btn-sm btn-outline-secondary" data-toggle="collapse" data-target=".collapseGroupeGestion">
+                        <i class="fas fa-pencil-alt fa-fw"></i>
+                      </button>
+                    </span>
+                  </div>
+                  <div class="collapseGroupeGestion collapse">
+                    {% if config.groupesNbMaxGroupesParPro > 0 %}
+                      <div class="alert alert-info mt-2" role="alert">
+                        <i class="fas fa-exclamation-circle fa-lg mr-2"></i> Limité à {{ config.groupesNbMaxGroupesParPro }} groupe{% if config.groupesNbMaxGroupesParPro > 1 %}s{% endif %} par praticien
+                      </div>
+                    {% endif %}
+                    <form class="form-inline my-2 d-flex">
+                      <div class="form-group flex-grow-1">
+                        <div class="input-group input-group-sm flex-grow-1">
+                          <input class="form-control form-control-sm flex-grow-1" type="text" placeholder="nom du groupe" id="searchGroupID" autocomplete="off"/>
+                          {{ f.select ({
+                          'select' : {
+                            'name' : 'preRelationPraticienGroupe',
+                            'id' : 'preRelationPraticienGroupeID',
+                            'class' : '',
+                            'values' : page.preRelationPraticienGroupe.formValues,
+                            'valueDefaut' : el.value.preValue,
+                            'autocomplete' : 'off' } }) }}
+                          <div class="input-group-append">
+                            <button type="submit" id="addRelationPraticienGroupe" class="btn btn-sm btn-secondary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                          </div>
+                        </div>
+                      </div>
+                      {% if config.droitDossierPeutCreerPraticien == 'true' %}
+
+                        <a class="btn btn-sm btn-outline-secondary ml-4" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/create/"><i class="fas fa-hospital-alt mr-1"></i> Nouveau groupe</a>
+
+                      {% endif %}
+                    </form>
+                  </div>
+
+                </div>
+
+                <table class="table table-sm mb-0 table-hover">
+                  <tbody id="bodyTabRelationPratGroupes">
+                  </tbody>
+                </table>
+
+                <div class="card-footer">&nbsp;</div>
+              </div>
+            {% endif %}
+
             {% if page.patientsConnus %}
               <div class="card mt-4 px-0 col-md-12">
                 <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Patients connus</div>
@@ -141,23 +211,20 @@
                   Patients reliés à ce praticien
                 </div>
 
-                <table class="table table-sm mb-0 table-striped table-hover">
-          				<thead>
-          					<tr>
-          						<th></th>
-          						<th class="col-md-10">Identité</th>
-          						<th></th>
-          					</tr>
-          				</thead>
+                <table class="table table-sm mb-0 table-hover">
           				<tbody>
                     {% for v in page.patientsConnus %}
                     <tr style="cursor:pointer" onclick="window.location=$(this).find('a').attr('href');">
                       <td>
-                        <a title="Afficher le dossier" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fas fa-folder-open" aria-hidden="true"></span></a>
-                      </td>
-                      <td>{{ v.nom }} {{ v.prenom }}</td>
+                        <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.peopleID }}/">
+                          <i class="fas fa-user fa-fw"></i>
+                        </a>
+                      {{ v.identiteComplete }} - {{ v.ageCalcule }}</td>
+
                       <td class="text-right">
-                        <a title="Éditer les relations du patient" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fas fa-link" aria-hidden="true"></span></a>
+                        <a title="Éditer les relations du patient" class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.peopleID }}/">
+                          <i class="fas fa-link fa-fw"></i>
+                        </a>
                       </td>
 
                     </tr>
@@ -179,7 +246,7 @@
                 <span>Informations personnelles sur ce praticien</span>
                 <span>
                   <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
-                    <i class="fas fa-pencil-alt"></i> Infos persos
+                    <i class="fas fa-pencil-alt fa-fw"></i>
                   </a>
                 </span>
               </div>
