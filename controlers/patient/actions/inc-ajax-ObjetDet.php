@@ -41,7 +41,7 @@ if (is_numeric($_GET['objetID'])) {
         echo $preview->getGenericPreviewReglement();
     } elseif ($objetGroupe=="mail") {
         echo $preview->getGenericPreviewMail();
-    } elseif ($objetGroupe=="ordo" and $objetName="lapExtOrdonnance") {
+    } elseif ($objetGroupe=="ordo" and $objetName=="lapExtOrdonnance") {
         echo $preview->getGenericPreviewOrdoLapExt();
     } elseif ($objetGroupe=="ordo") {
         echo $preview->getGenericPreviewOrdo();
