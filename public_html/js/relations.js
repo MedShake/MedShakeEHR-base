@@ -30,19 +30,19 @@
 $(document).ready(function() {
 
   // reset recherche patient
-  $('body').on("click", "#searchPatientID", function(e) {
-    $('#searchPatientID').val('');
-    $('#searchPatientID').attr('data-id', '');
+  $('body').on("click", "#searchPeopleID, #searchPratID, #searchGroupID", function(e) {
+    $(this).val('');
+    $(this).attr('data-id', '');
   });
 
   //autocomplete pour la relation patient <-> patient
-  $('body').delegate('#searchPatientID', 'focusin', function() {
+  $('body').delegate('#searchPeopleID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase + '/people/ajax/getRelationsPatients/',
       select: function(event, ui) {
-        $('#searchPatientID').val(ui.item.label);
-        $('#searchPatientID').attr('data-id', ui.item.id);
+        $('#searchPeopleID').val(ui.item.label);
+        $('#searchPeopleID').attr('data-id', ui.item.id);
       }
     });
   });
@@ -50,33 +50,10 @@ $(document).ready(function() {
   //ajouter une relation patient <-> patient
   $('body').on("click", "#addRelationPatientPatients", function(e) {
     e.preventDefault();
-    patient2ID = $('#searchPatientID').attr('data-id');
+    patient2ID = $('#searchPeopleID').attr('data-id');
     patientID = $('#identitePatient').attr("data-patientID");
-    preRelationPatientPatient = $('#preRelationPatientPatientID').val();
-
-    if (patient2ID > 0) {
-      $.ajax({
-        url: urlBase + '/people/ajax/addRelationPatientPatient/',
-        type: 'post',
-        data: {
-          patientID: patientID,
-          patient2ID: patient2ID,
-          preRelationPatientPatient: preRelationPatientPatient
-        },
-        dataType: "html",
-        success: function(data) {
-          getRelationsPatientPatientsTab($('#identitePatient').attr("data-patientID"));
-        },
-        error: function() {
-          alert_popup("danger", 'Problème, rechargez la page !');
-
-        }
-      });
-    } else {
-      alert_popup("danger", "Le patient n'est pas correctement sélectionné");
-
-    }
-
+    toStatus = $('#preRelationPatientPatientID').val();
+    setRelation('relationPatientPatient', patientID, patient2ID, toStatus);
   });
 
   // reset recherche praticien
@@ -102,15 +79,36 @@ $(document).ready(function() {
     e.preventDefault();
     praticienID = $('#searchPratID').attr('data-id');
     patientID = $('#identitePatient').attr("data-patientID");
-    preRelationPatientPrat = $('#preRelationPatientPratID').val();
-    setRelationPatientPrat(patientID, praticienID, preRelationPatientPrat);
+    toStatus = $('#preRelationPatientPratID').val();
+    setRelation('relationPatientPraticien', patientID, praticienID, toStatus);
+  });
+
+  //autocomplete pour la relation praticien <-> groupes
+  $('body').delegate('#searchGroupID', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: urlBase + '/people/ajax/getRelationsGroupes/',
+      select: function(event, ui) {
+        $('#searchGroupID').val(ui.item.label);
+        $('#searchGroupID').attr('data-id', ui.item.id);
+      }
+    });
+  });
+
+  //ajouter une relation praticien <-> groupe
+  $('body').on("click", "#addRelationPraticienGroupe", function(e) {
+    e.preventDefault();
+    groupeID = $('#searchGroupID').attr('data-id');
+    pratID = $('#identitePatient').attr("data-patientID");
+    toStatus = $('#preRelationPraticienGroupeID').val();
+    setRelation('relationPraticienGroupe', pratID, groupeID, toStatus);
   });
 
   //retirer une relation patient <-> praticien/patient
   $('body').on("click", ".removeRelationPatient", function(e) {
     e.preventDefault();
     e.stopPropagation();
-    deleteRelationPatient($(this).attr("data-patientID"), $(this).attr('data-peopleID'));
+    deleteRelation($(this).attr("data-peopleID"), $(this).attr('data-withID'));
   });
 
   //ajax save form in modal
@@ -126,10 +124,51 @@ $(document).ready(function() {
     window.location = $(this).find('a.btn').attr('href');
   });
 
-  setTimeout(getRelationsPatientPraticiensTab($('#identitePatient').attr("data-patientID")), 500);
-  setTimeout(getRelationsPatientPatientsTab($('#identitePatient').attr("data-patientID")), 500);
-
 });
+
+
+/**
+ * Définir une relation
+ * @param {string} relationType type de la relation
+ * @param {int} peopleID     peopleID principal
+ * @param {int} withID       second peopleID
+ * @param {string} toStatus     statut du peopleID (extrait du menu)
+ */
+function setRelation(relationType, peopleID, withID, toStatus) {
+  if (withID > 0) {
+    $.ajax({
+      url: urlBase + '/people/ajax/setRelation/',
+      type: 'post',
+      data: {
+        peopleID: peopleID,
+        withID: withID,
+        toStatus: toStatus,
+        relationType: relationType
+      },
+      dataType: "json",
+      success: function(data) {
+        if (data.status == 'ok') {
+          if (relationType == 'relationPatientPraticien') getRelationsPatientPraticiensTab(peopleID);
+          if (relationType == 'relationPatientPatient') getRelationsPatientPatientsTab(peopleID);
+          if (relationType == 'relationPraticienGroupe') getRelationsPraticienGroupesTab(peopleID);
+          if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
+        } else if (data.status == 'exist') {
+          alert_popup("info", 'Cette association existe déjà !');
+        } else if (data.status == 'ko') {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        } else if (data.status == 'reachmaxgroups') {
+          alert_popup("info", 'Nombre maximal de groupes atteint !');
+        }
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+      }
+    });
+  } else {
+    alert_popup("danger", "La sélection n'est pas correctement effectuée");
+  }
+}
+
 
 /**
  * Obtenir et afficher le tableau de relations patient / patient
@@ -138,6 +177,8 @@ $(document).ready(function() {
  */
 function getRelationsPatientPatientsTab(patientID) {
   if (!patientID) return;
+  console.log($('#bodyTabRelationPatientPatients').length);
+  if (!$('#bodyTabRelationPatientPatients').length) return;
   $.ajax({
     url: urlBase + '/people/ajax/getRelationsPatientPatientsTab/',
     type: 'post',
@@ -149,26 +190,18 @@ function getRelationsPatientPatientsTab(patientID) {
       $('#bodyTabRelationPatientPatients').html('');
       if (data.length > 0) {
         $.each(data, function(index, value) {
-          if(value.ageAnnees > 1) {
-            strAge = value.ageAnnees + ' ans';
-          } else if( value.ageJours < 30 ) {
-            strAge = value.ageJours + ' jours';
-          } else {
-            strAge = value.ageMois + ' mois';
-          }
-
           $('#bodyTabRelationPatientPatients').append('\
-          <tr class="voirDossier" style="cursor:pointer">\
+          <tr class="voirDossier cursor-pointer">\
             <td>\
-              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + value.patientID + '/">\
-                <i class="fas fa-folder-open fa-fw"></i>\
+              <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + value.peopleID + '/">\
+                <i class="fas fa-user fa-fw"></i>\
               </a>\
             </td>\
-            <td>' + value.prenom + ' ' + value.nom + '</td>\
-            <td>' + value.ddn + ' - ' + strAge +'</td><td>' + value.typeRelation + '</td>\
+            <td>' + value.identiteComplete + '</td>\
+            <td>' + value.birthdate + ' - ' + value.ageCalcule + '</td><td>' + value.typeRelation + '</td>\
             <td class="text-right">\
               <div class="btn-group">\
-                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-patientID="' + patientID + '" data-peopleID="' + value.patientID + '"><i class="fas fa-times"></i>\
+                <button class="btn btn-light btn-sm removeRelationPatient" type="button" data-peopleID="' + patientID + '" data-withID="' + value.peopleID + '"><i class="fas fa-times fa-fw"></i>\
                 </button>\
               </div>\
             </td>\
@@ -213,14 +246,14 @@ function getRelationsPatientPraticiensTab(patientID) {
           $('#bodyTabRelationPatientPrat').append('\
             <tr class="voirDossier" style="cursor:pointer">\
               <td>\
-                <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/pro/' + value.pratID + '/">\
+                <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/pro/' + value.peopleID + '/">\
                   <i class="fas fa-user-md fa-fw"></i>\
                 </a>\
               </td>\
-              <td>' + (value.prenom ? value.prenom : '') + ' ' + value.nom + '</td><td>' + value.typeRelationTxt + '</td>\
+              <td>' + ((value.titre) ? (value.titre + ' ') : '') + value.identiteUsuelle + '</td><td>' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
-                <button class="btn btn-light btn-sm removeRelationPatient" style="cursor:pointer" type="button" data-patientID="' + patientID + '" data-peopleID="' + value.pratID + '">\
-                    <i class="fas fa-times"></i>\
+                <button class="btn btn-light btn-sm removeRelationPatient" type="button" data-peopleID="' + patientID + '" data-withID="' + value.peopleID + '">\
+                    <i class="fas fa-times fa-fw"></i>\
                 </button>\
               </td>\
             </tr>');
@@ -242,33 +275,50 @@ function getRelationsPatientPraticiensTab(patientID) {
 }
 
 /**
- * Définir une relation entre un patient et un praticien
- * @param {int} patientID              patientID
- * @param {int} praticienID            praticienID
- * @param {string} preRelationPatientPrat code relation
+ * Obtenir le tableau de relation praticien / groupes
+ * @param  {int} pratID ID praticien
  */
-function setRelationPatientPrat(patientID, praticienID, preRelationPatientPrat) {
-  if (praticienID > 0) {
-    $.ajax({
-      url: urlBase + '/people/ajax/addRelationPatientPraticien/',
-      type: 'post',
-      data: {
-        patientID: patientID,
-        praticienID: praticienID,
-        preRelationPatientPrat: preRelationPatientPrat
-      },
-      dataType: "html",
-      success: function(data) {
-        getRelationsPatientPraticiensTab(patientID);
-        if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
-      },
-      error: function() {
-        alert_popup("danger", 'Problème, rechargez la page !');
+function getRelationsPraticienGroupesTab(pratID) {
+  if (!pratID) return;
+  $.ajax({
+    url: urlBase + '/people/ajax/getRelationsPraticienGroupesTab/',
+    type: 'post',
+    data: {
+      pratID: pratID,
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#bodyTabRelationPratGroupes').html('');
+      console.log(data);
+      if (data.length > 0) {
+        $.each(data, function(index, value) {
+          $('#bodyTabRelationPratGroupes').append('\
+            <tr class="voirDossier cursor-pointer">\
+              <td>\
+                <a class="btn btn-light btn-sm mr-3" role="button" href="' + urlBase + '/groupe/' + value.peopleID + '/">\
+                  <i class="fas fa-hospital-alt fa-fw"></i>\
+                </a>\
+              ' + value.groupname + '</td><td class="small">' + value.city + ' (' + value.country + ')</td><td class="small">' + value.typeRelationTxt + '</td>\
+              <td class="text-right">\
+                <button class="btn btn-light btn-sm removeRelationPatient collapseGroupeGestion collapse" type="button" data-peopleID="' + pratID + '" data-withID="' + value.peopleID + '">\
+                    <i class="fas fa-times fa-fw"></i>\
+                </button>\
+              </td>\
+            </tr>');
+        });
+      } else {
+        $('#bodyTabRelationPratGroupes').append('\
+          <tr class="bg-transparent text-muted">\
+            <td class="pl-3">\
+              Ce praticien n\'intègre aucun groupe\
+            </td>\
+          </tr>');
       }
-    });
-  } else {
-    alert_popup("danger", "Le praticien n'est pas correctement sélectionné");
-  }
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
 }
 
 /**
@@ -277,19 +327,20 @@ function setRelationPatientPrat(patientID, praticienID, preRelationPatientPrat) 
  * @param  {int} peopleID  peopleID
  * @return {void}
  */
-function deleteRelationPatient(patientID, peopleID) {
-  if (patientID > 0 && peopleID > 0) {
+function deleteRelation(peopleID, withID) {
+  if (peopleID > 0 && withID > 0) {
     $.ajax({
-      url: urlBase + '/people/ajax/removeRelationPatient/',
+      url: urlBase + '/people/ajax/removeRelation/',
       type: 'post',
       data: {
-        ID1: patientID,
-        ID2: peopleID,
+        ID1: peopleID,
+        ID2: withID,
       },
       dataType: "html",
       success: function(data) {
-        getRelationsPatientPraticiensTab(patientID);
-        getRelationsPatientPatientsTab(patientID);
+        if ($('#bodyTabRelationPatientPrat').length) getRelationsPatientPraticiensTab(peopleID);
+        if ($('#bodyTabRelationPatientPatients').length) getRelationsPatientPatientsTab(peopleID);
+        if ($('#bodyTabRelationPratGroupes').length) getRelationsPraticienGroupesTab(peopleID);
         if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
       },
       error: function() {

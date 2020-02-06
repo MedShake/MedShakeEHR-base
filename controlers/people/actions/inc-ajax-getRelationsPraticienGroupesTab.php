@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2020
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,19 +21,25 @@
  */
 
 /**
- * People : ajax > obtenir le tableau de relation patient <-> praticiens
+ * People : ajax > obtenir le tableau de relation praticien <-> groupes
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ if($p['config']['optionGeGroupesActiver'] != 'true') {
+   die();
+ }
 
-if(isset($_POST['patientID'])) {
-  $patientID=$_POST['patientID'];
-} elseif(isset($_GET['patientID'])) {
-  $patientID=$_GET['patientID'];
+if(isset($_POST['pratID'])) {
+  $pratID=$_POST['pratID'];
+} elseif(isset($_GET['pratID'])) {
+  $pratID=$_GET['pratID'];
 }
 $liensPrat = new msPeopleRelations();
-$liensPrat->setToID($patientID);
+$liensPrat->setToID($pratID);
 
 header('Content-Type: application/json');
-exit(json_encode($liensPrat->getRelations('relationPatientPraticien', ['identite','titre'])));
+$groupes = $liensPrat->getRelations('relationPraticienGroupe', ['groupname', 'city','country']);
+msTools::array_unatsort_by('groupname', $groupes);
+
+exit(json_encode(array_merge($groupes)));

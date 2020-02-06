@@ -21,7 +21,8 @@
  */
 
 /**
- * People : ajax > retirer une relation patient <-> praticien
+ * People : ajax > retirer une relation entre 2 peopleID
+ *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */

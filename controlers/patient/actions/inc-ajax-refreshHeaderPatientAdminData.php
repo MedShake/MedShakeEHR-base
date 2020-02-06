@@ -49,4 +49,4 @@ if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
 }
 
 //les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+$p['page']['correspondants']=$patient->getRelations('relationPatientPraticien', ['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);

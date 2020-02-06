@@ -138,9 +138,8 @@
         </button>
         {% for v in page.correspondants %}
         <div class="btn-group">
-          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
-
-            {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.peopleID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
+            {% if v.titre %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}
             {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
           </a>
           <button type="button" class="btn btn-sm btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">

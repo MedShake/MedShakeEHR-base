@@ -57,7 +57,7 @@
       </div>
 
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0">
 				<thead>
 					<tr>
 						<th></th>
@@ -68,8 +68,8 @@
 				</thead>
 				<tbody id="bodyTabRelationPatientPrat">
 				</tbody>
-
 			</table>
+      <script>setTimeout(getRelationsPatientPraticiensTab($('#identitePatient').attr("data-patientID")), 200);</script>
     </div>
   </div>
 
@@ -80,7 +80,7 @@
 			<div class="card-body">
 				<form class="form-inline d-flex">
             <div class="input-group my-2 flex-grow-1">
-  						<input class="form-control" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+  						<input class="form-control" type="text" placeholder="Identité" id="searchPeopleID" autocomplete="off"/>
 				      {{ f.select ({
               'select' : {
                 'name' : 'preRelationPatientPatient',
@@ -96,7 +96,7 @@
 				</form>
 			</div>
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0">
 				<thead>
 					<tr>
 						<th></th>
@@ -106,10 +106,9 @@
 						<th></th>
 					</tr>
 				</thead>
-				<tbody id="bodyTabRelationPatientPatients">
-				</tbody>
-
+				<tbody id="bodyTabRelationPatientPatients"> </tbody>
 			</table>
+      <script>setTimeout(getRelationsPatientPatientsTab($('#identitePatient').attr("data-patientID")), 200);</script>
 		</div>
 	</div>
 

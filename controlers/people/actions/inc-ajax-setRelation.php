@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2020
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,15 +21,28 @@
  */
 
 /**
- * People : ajax > ajouter une relation patient <-> patient
+ * People : ajax > définir une relation entre 2 peopleID
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$relation = new msPeopleRelations;
-$relation->setToID($_POST['patientID']);
-$relation->setFromID($p['user']['id']);
-$relation->setRelationWithOtherPatient($_POST['preRelationPatientPatient'], $_POST['patient2ID']);
 
-exit (json_encode(array('ok')));
+$relation = new msPeopleRelations;
+$relation->setToID($_POST['peopleID']);
+$relation->setToStatus($_POST['toStatus']);
+$relation->setFromID($p['user']['id']);
+$relation->setWithID($_POST['withID']);
+$relation->setRelationType($_POST['relationType']);
+
+header('Content-Type: application/json');
+if($relation->checkRelationExist()) {
+  exit(json_encode(array('status'=>'exist')));
+}
+if($relation->checkMaxGroupeRestriction()) {
+  exit(json_encode(array('status'=>'reachmaxgroups')));
+}
+if($relation->setRelation()) {
+  exit(json_encode(array('status'=>'ok')));
+} else {
+  exit(json_encode(array('status'=>'ko')));
+}
