@@ -406,9 +406,43 @@ public function getToID()
           if($lastID=msSQL::sqlInsert('objets_data', $pd)) {
               msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID);
           }
+
+      } elseif ($d['groupe']=='admin') {
+
+          // création d'un nouvel enregistrement uniquement si la valeur est modifiée ou si elle est inexistante. Les auteurs de mise à jour ne sont donc pas consignés tant que la valeur est identique.
+          // but : ne pas loguer de simples données administratives si elles n'évoluent pas véritablement
+
+          //on regarde le précédent du même parent
+          $precedent=msSQL::sqlUnique("select id, value, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
+          from objets_data
+          where typeID='".$typeID."'
+          and toID = '".$this->_toID."'
+          and instance = '".$parentID."'
+          and outdated = '' and deleted = ''
+          order by id desc limit 1");
+
+          // insert si
+          if ((isset($precedent['id']) and msSQL::cleanVar($value) != $precedent['value']) or !isset($precedent['id'])) {
+
+            // on met jour si on est dans la période de durée de vie et auteur identique
+            if (isset($precedent['id']) and $precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
+                $pd['id']=$precedent['id'];
+                $pd['updateDate'] = date("Y-m-d H:i:s");
+            }
+
+            $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+            msSQL::sqlQuery("update objets_data set outdated='y' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID." and instance='".$parentID."' ");
+          }
+
+          if (isset($precedent['id']) and !isset($lastID)) {
+            $lastID = $precedent['id'];
+          }
+
+
       }
 
-      // types : admin / medical / dicom
+      // types : medical / dicom
       else {
 
           // cas général : création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
