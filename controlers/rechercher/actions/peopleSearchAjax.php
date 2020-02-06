@@ -26,8 +26,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-
-
 $debug='';
 $m=$match['params']['m'];
 
@@ -43,28 +41,4 @@ if (!in_array($m, $acceptedModes)) {
     die;
 }
 
-
-// Générer liste des patients
-if ($m=='patientsListByCrit') {
-  include('inc-ajax-patientsListByCrit.php');
-}
-
-// envoyer à la signature sur tablette
-elseif ($m=='patientsSendSign') {
-  include('inc-ajax-patientsSendSign.php');
-}
-
-// ajouter/ retirer de la liste des praticiens
-elseif ($m=='switchPraticienListe') {
-  include('inc-ajax-switchPraticienListe.php');
-}
-
-// marquer un dossier comme effacé
-elseif ($m=='markDeleted') {
-  include('inc-ajax-markDeleted.php');
-}
-
-// marquer un dossier comme à nouveau utilisable
-elseif ($m=='unmarkDeleted') {
-  include('inc-ajax-unmarkDeleted.php');
-}
+include('inc-ajax-'.$m.'.php');

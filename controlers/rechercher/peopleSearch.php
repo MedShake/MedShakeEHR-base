@@ -28,18 +28,28 @@
  */
 
 $debug='';
-$template="patients";
 
 if (isset($match['params']['porp'])) {
     $p['page']['porp']=$match['params']['porp'];
 }
 
-// liste des types par catégorie avec retriction aux types employés dans le form de création
+// si groupe, on vérifie que l'option générale est ON et on 404 sinon
+if($p['page']['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 'true') {
+    $template="404";
+    return;
+}
+
+// Template et liste des types par catégorie avec retriction aux types employés dans le form de création
 $form = new msForm;
 if($p['page']['porp'] == 'pro') {
+  $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-} else {
+} elseif($p['page']['porp'] == 'patient') {
+  $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+} elseif($p['page']['porp'] == 'groupe') {
+  $template="searchPeopleGroupes";
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauGroupe']);
 }
 
 if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
@@ -53,15 +63,15 @@ if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, 
 }
 
 // Transmissions
-if($p['config']['transmissionsPeutCreer'] == 'true') {
+if($p['config']['transmissionsPeutCreer'] == 'true'  and in_array($p['page']['porp'], ['patient', 'pro'])) {
   $trans = new msTransmissions();
   $trans->setUserID($p['user']['id']);
   $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
   $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
 }
 
-// Modules & templates
-if (msUser::checkUserIsAdmin()) {
+// Modules & templates nouvel utilisateur
+if (msUser::checkUserIsAdmin() and in_array($p['page']['porp'], ['patient', 'pro'])) {
   $p['page']['modules']=msModules::getInstalledModulesNames();
   $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
 
