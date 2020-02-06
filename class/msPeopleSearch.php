@@ -118,12 +118,16 @@ class msPeopleSearch
       $restrictionUser = '';
     }
 
+    $orderBy='';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $orderBy = 'order by trim(identite)';
+    }
+
     return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
     '.implode(', ', $this->_makeSqlSelect()).'
     from people as p
     '.implode(' ', $this->_makeSqlJoin()). '
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).' '.$restrictionUser.'
-    order by trim(identite)
+    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
     limit '.$this->_limitStart.','.$this->_limitNumber;
   }
 
@@ -133,20 +137,22 @@ class msPeopleSearch
  */
   private function _makeSqlSelect () {
 
-    if(!in_array('lastname', $this->_colonnesRetour)) $this->_colonnesRetour[]='lastname';
-    if(!in_array('birthname', $this->_colonnesRetour)) $this->_colonnesRetour[]='birthname';
-    if(!in_array('firstname', $this->_colonnesRetour)) $this->_colonnesRetour[]='firstname';
     if(in_array('ageCalcule', $this->_colonnesRetour) and !in_array('birthdate', $this->_colonnesRetour)) {
       $this->_colonnesRetour[]='birthdate';
     }
 
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName($this->_colonnesRetour);
+    $name2type = new msData();
+    $name2typeID = $name2type->getTypeIDsFromName($this->_colonnesRetour);
 
-    $sp[0]='';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $name2typeID = array_merge($name2typeID, $name2type->getTypeIDsFromName(['lastname','birthname','firstname']));
+    }
+
+    $sp=[];
     foreach($this->_colonnesRetour as $v) {
+
       if($v=='identite') {
-        $sp[0]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""), " (", COALESCE(d'.$name2typeID['birthname'].'.value,"") ,")")
+        $sp[]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""), " (", COALESCE(d'.$name2typeID['birthname'].'.value,"") ,")")
         WHEN d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['birthname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         WHEN d'.$name2typeID['lastname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         ELSE concat("(inconnu) ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
@@ -163,10 +169,12 @@ class msPeopleSearch
           CONCAT(TIMESTAMPDIFF(MONTH, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " mois")
         END as '.$v;
       } else {
-        if(isset($name2typeID[$v])) $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
+        if(isset($name2typeID[$v])) {
+          $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
+        }
       }
     }
-    return $sp;
+    return array_filter($sp);
   }
 
 /**
@@ -177,9 +185,11 @@ class msPeopleSearch
 
     $tab=array_unique(array_merge(array_keys($this->_criteresRecherche) , $this->_colonnesRetour));
 
-    if(!in_array('lastname', $tab)) $tab[]='lastname';
-    if(!in_array('birthname', $tab)) $tab[]='birthname';
-    if(!in_array('firstname', $tab)) $tab[]='firstname';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      if(!in_array('lastname', $tab)) $tab[]='lastname';
+      if(!in_array('birthname', $tab)) $tab[]='birthname';
+      if(!in_array('firstname', $tab)) $tab[]='firstname';
+    }
 
     $name2typeID = new msData();
     $name2typeID = $name2typeID->getTypeIDsFromName($tab);
@@ -196,12 +206,17 @@ class msPeopleSearch
  * @return array conditions where
  */
   private function _makeSqlWhere() {
-    if(!array_key_exists('lastname', $this->_criteresRecherche)) $this->_criteresRecherche['lastname']='';
-    if(!array_key_exists('birthname', $this->_criteresRecherche)) $this->_criteresRecherche['birthname']='';
-    if(!array_key_exists('firstname', $this->_criteresRecherche)) $this->_criteresRecherche['firstname']='';
 
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName(array_keys($this->_criteresRecherche));
+
+    $name2type = new msData();
+    $name2typeID = $name2type->getTypeIDsFromName(array_keys($this->_criteresRecherche));
+
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $name2typeID = array_merge($name2typeID, $name2type->getTypeIDsFromName(['lastname','birthname','firstname']));
+      if(!array_key_exists('lastname', $this->_criteresRecherche)) $this->_criteresRecherche['lastname']='';
+      if(!array_key_exists('birthname', $this->_criteresRecherche)) $this->_criteresRecherche['birthname']='';
+      if(!array_key_exists('firstname', $this->_criteresRecherche)) $this->_criteresRecherche['firstname']='';
+    }
 
     foreach($this->_criteresRecherche as $k=>$v) {
         if(in_array($k, ['birthname', 'lastname']) and $this->_nameSearchMode == 'BnFnOrLnFn') {

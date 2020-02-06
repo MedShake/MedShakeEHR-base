@@ -50,12 +50,6 @@ $p['page']['porp']=$_POST['porp'];
 if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $form=Spyc::YAMLLoad($form);
 
-    $form['col0'] = array(
-      'head' => 'Identité',
-      'bloc' => array( 'identite')
-    );
-    ksort($form);
-
     //all type
     $col=count($form);
     $listeTypes=array();
@@ -76,7 +70,6 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
             }
         }
     }
-    $listeTypes['identite']=0;
     $listeTypes=array_unique($listeTypes);
 
     $mss=new msPeopleSearch;
@@ -137,7 +130,7 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $p['page']['sqlString']=$sql=$mss->getSql();
 
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
-        for ($i=0;$i<=$col-1;$i++) {
+        for ($i=1;$i<=$col;$i++) {
             if (isset($form['col'.$i]['bloc'])) {
                 foreach ($form['col'.$i]['bloc'] as $v) {
                     if(!isset($p['config']['click2callService']) or empty($p['config']['click2callService'])) {
