@@ -76,7 +76,12 @@ $p['page']['patient']['id']=$match['params']['patient'];
 
 $formpatient = new msForm();
 $formpatient->setFormIDbyName($p['page']['formIN']);
-$formpatient->setPrevalues($p['page']['patient']);
+
+if(isset($_SESSION['form'][$p['page']['formIN']]['formValues']) and !empty($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
+  $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
+} else {
+  $formpatient->setPrevalues($p['page']['patient']);
+}
 
 //si formulaire pro
 if ($p['page']['porp']=='pro') {
@@ -102,6 +107,7 @@ $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascri
 $p['page']['form']['addHidden']=array(
   'patientID'=>$match['params']['patient']
 );
+$formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 
 // Formulaire complémentaire
 $p['page']['formIN2']='basePeopleComplement';

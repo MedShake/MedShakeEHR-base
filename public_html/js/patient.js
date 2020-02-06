@@ -662,9 +662,14 @@ $(document).ready(function() {
     $('#ongletLiensPatient').tab('show');
   });
 
-  //fermeture modal data admin patient
-  $("button.modalAdminClose").on("click", function(e) {
-    ajaxModalPatientAdminCloseAndRefreshHeader();
+  //changer les infos admin patient en modal
+  $('body').on("click", "#editAdmin button.modal-save", function(e) {
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalSave(form, modal, function() {
+      $(modal).modal('hide');
+      ajaxModalPatientAdminCloseAndRefreshHeader();
+    });
   });
 
   //Ouvrir le LAP
