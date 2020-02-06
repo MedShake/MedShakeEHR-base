@@ -695,6 +695,9 @@ class msCourrier
 
       $data=array_filter($data);
 
+      // si birthdate absent
+      if(!isset($data['birthdate'])) $data['birthdate']='';
+
       //accord en fonction du genre
       $motNe='né';
       $titreCourt="";
@@ -714,9 +717,12 @@ class msCourrier
       $rdata['mOuMmeCourt']=$titreCourt;
       $rdata['mOuMmeLong']=$titreLong;
 
+      if(isset($data['firstname'])) $rdata['prenom']=$data['firstname'];
+
       if(isset($data['lastname'],$data['birthname'],$data['firstname']) and $data['lastname']!=$data['birthname']) {
 
-        $rdata['nomsUsageNaissance'] = $data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
+        $rdata['nom'] = $data['lastname'];
+        $rdata['nomUsageNaissance'] = $rdata['nomsUsageNaissance'] = $data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
 
         $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['lastname'];
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].')';
@@ -726,9 +732,11 @@ class msCourrier
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' '.$data['birthname'].' le '.$data['birthdate'].')';
 
+        $rdata['identiteChainePourTri'] = $data['lastname'].' '.$data['firstname'].' '.$data['birthname'];
+
       } elseif(isset($data['lastname'],$data['firstname'])) {
 
-        $rdata['nomsUsageNaissance'] = $data['lastname'];
+        $rdata['nom'] = $rdata['nomUsageNaissance'] = $rdata['nomsUsageNaissance'] = $data['lastname'];
 
         $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['lastname'];
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['lastname'];
@@ -738,9 +746,11 @@ class msCourrier
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['lastname'].' ('.$motNe.' le '.$data['birthdate'].')';
 
+        $rdata['identiteChainePourTri'] = $data['lastname'].' '.$data['firstname'];
+
       } elseif(isset($data['birthname'],$data['firstname'])) {
 
-        $rdata['nomsUsageNaissance'] = $data['birthname'];
+        $rdata['nom'] = $rdata['nomUsageNaissance'] = $rdata['nomsUsageNaissance'] = $data['birthname'];
 
         $rdata['identiteUsuelle'] = $data['firstname'].' '.$data['birthname'];
         $rdata['identiteComplete'] = $data['firstname'].' '.$data['birthname'];
@@ -749,6 +759,8 @@ class msCourrier
         $rdata['identiteCompleteTitreCourt'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'];
         $rdata['identiteUsuelleTitreCourtDdn'] = $titreCourt.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
         $rdata['identiteCompleteTitreLongDdn'] = $titreLong.' '.$data['firstname'].' '.$data['birthname'].' ('.$motNe.' le '.$data['birthdate'].')';
+
+        $rdata['identiteChainePourTri'] = $data['birthname'].' '.$data['firstname'];
       }
       if(isset($rdata)) return $rdata;
     }
