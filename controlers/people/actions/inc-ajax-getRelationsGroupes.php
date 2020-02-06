@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2020
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,15 +21,38 @@
  */
 
 /**
- * People : ajax > ajouter une relation patient <-> praticien
+ * People : ajax > obtenir la liste des groupes pour l'autocomplete Relations
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$relation = new msPeopleRelations;
-$relation->setToID($_POST['patientID']);
-$relation->setFromID($p['user']['id']);
-$relation->setRelationWithPro($_POST['preRelationPatientPrat'], $_POST['praticienID']);
+ if($p['config']['optionGeGroupesActiver'] != 'true') {
+   die();
+ }
 
-exit (json_encode(array('ok')));
+$term = msSQL::cleanVar($_GET['term']);
+$a_json = array();
+
+$mss=new msPeopleSearch;
+$mss->setNameSearchMode('BnFnOrLnFn');
+$mss->setPeopleType(['groupe']);
+$criteres = array(
+  'groupname'=>$term,
+);
+$mss->setCriteresRecherche($criteres);
+$mss->setColonnesRetour(['groupname', 'city', 'country']);
+$mss->setLimitNumber(20);
+if ($data=msSQL::sql2tab($mss->getSql())) {
+
+	foreach ($data as $k=>$v) {
+    $label = $v['groupname'].' ('.$v['city'].' - '.$v['country'].')';
+		$a_json[]=array(
+			'label'=>trim($label),
+			'value'=>trim($label),
+			'id'=>$v['peopleID'],
+		);
+	}
+}
+
+header('Content-Type: application/json');
+exit(json_encode($a_json));

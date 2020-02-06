@@ -42,6 +42,15 @@
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
 {% endblock %}
 
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    if ($('#bodyTabRelationPatientPrat').length) setTimeout(getRelationsPatientPraticiensTab($('#identitePatient').attr("data-patientID")), 200);
+    if ($('#bodyTabRelationPatientPatients').length) setTimeout(getRelationsPatientPatientsTab($('#identitePatient').attr("data-patientID")), 200);
+
+  });
+{% endblock %}
+
 {% block body %}
 
 <h1 id="identitePatient" data-patientID="{{ page.patient.id }}">
@@ -101,7 +110,7 @@ Relations du patient  {{ page.patient.firstname }}
       </div>
 
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0 table-hover">
 				<thead>
 					<tr>
 						<th></th>
@@ -124,7 +133,7 @@ Relations du patient  {{ page.patient.firstname }}
       <div class="card-body">
         <form class="form-inline d-flex">
             <div class="input-group my-2 flex-grow-1">
-              <input class="form-control" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+              <input class="form-control" type="text" placeholder="Identité" id="searchPeopleID" autocomplete="off"/>
               {{ f.select ({
               'select' : {
                 'name' : 'preRelationPatientPatient',
@@ -140,7 +149,7 @@ Relations du patient  {{ page.patient.firstname }}
         </form>
       </div>
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0 table-hover">
 				<thead>
 					<tr>
 						<th></th>

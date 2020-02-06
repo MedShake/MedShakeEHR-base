@@ -33,15 +33,16 @@ $debug='';
 $m=$match['params']['m'];
 $acceptedModes=array(
     'getRelationsPraticiens', // autocomplete : obtenir le json des praticiens
-    'addRelationPatientPraticien', //Ajouter une reelation patient <-> praticien
-    'removeRelationPatient', // Retirer une reelation patient
+    'removeRelation', // Retirer une relation entre 2 peopleID
     'getRelationsPatientPraticiensTab', // Obtenir le tableau de relations patient <-> praticiens
     'getRelationsPatients', //Autocomplete : obtenir le json des patients
-    'addRelationPatientPatient', //Ajouter une reelation patient <-> patient
     'getRelationsPatientPatientsTab', // Obtenir le tableau de relations patient <-> patients
     'setExternAsPatient', //relier un externe à un patient
     'setExternAsNewPatient', //transformer un externe en patient
     'peopleDestroy', //détruire un dossier
+    'getRelationsGroupes', // autocomplete : obtenir le json des groupes
+    'getRelationsPraticienGroupesTab', // obtenir le tableau relations praticien <-> groupes
+    'setRelation', // définir une relation entre 2 peopleID
 );
 
 if (!in_array($m, $acceptedModes)) {

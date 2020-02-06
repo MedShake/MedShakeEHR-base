@@ -28,187 +28,191 @@
 
 class msPeopleRelations extends msPeople
 {
+  private $_toStatus='';
+  private $_withID;
+  private $_withIdType;
+  private $_relationType;
+
 
 /**
- * Obtenir les pros en relation avec ce patient
- * @param  array  $dataComp         data types sup à extraire
- * @param  array  $dataCompNotEmpty data types qui ne doivent pas être null (filtre)
- * @return array                   tableau des pros
+ * Définir le second peopleID concerné
+ * @param int $v ID du people concerné
+ * @return int withID
  */
-    public function getRelationsWithPros($dataComp=[], $dataCompNotEmpty=[])
+    public function setWithID($v)
     {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-
-        $data = new msData();
-        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname'], $dataComp));
-
-        $champsSql=[];
-        $tablesSql=[];
-        $groupBy=[];
-        $notEmpty=[];
-        if(!empty($dataComp)) {
-          $i=1;
-          foreach($dataComp as $k=>$v) {
-            if(key_exists($v,$name2typeID)) {
-              $champsSql[] = ', co'.$i.'.value as '.$v;
-              $tablesSql[] = " left join objets_data as co".$i." on co".$i.".toID=o.value and co".$i.".typeID='".$name2typeID[$v]."' and co".$i.".outdated='' and co".$i.".deleted='' ";
-              $groupBy[]= ', co'.$i.'.id';
-
-              if(in_array($v,$dataCompNotEmpty)) {
-                $notEmpty[]=' and co'.$i.'.value is not null';
-              }
-            }
-            $i++;
-          }
-        }
-
-        $relations = [];
-        if($relations =  msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom ".implode(" ", $champsSql)."
-        from objets_data as o
-        inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
-        left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-        left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-        left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted='' ".implode(" ", $tablesSql)."
-        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
-        group by o.value, c.id, bn.id, n.id, p.id, t.id".implode("", $groupBy)."
-        order by typeRelation = 'MT' desc, nom asc")) {
-
-          $typeID = $data->getTypeIDFromName('relationPatientPraticien');
-          $options = $data->getSelectOptionValue(array($typeID))[$typeID];
-          foreach($relations as $k=>$v) {
-            $relations[$k]['typeRelationTxt']=$options[$relations[$k]['typeRelation']];
-          }
-        }
-        return (array)$relations;
+      if ($this->checkPeopleExist($v)) {
+        $withID = new msPeople();
+        $withID->setToID($v);
+        $this->_withIdType = $withID->getType();
+        return $this->_withID = $v;
+      } else {
+        throw new Exception('WithID does not exist');
+      }
+    }
+/**
+ * Définir le statut de toID
+ * @param string $v statut de toId par rapport à withID
+ */
+    public function setToStatus($v)
+    {
+      if (!is_string($v)) {
+        throw new Exception('ToStatus is not valid');
+      } else {
+        return $this->_toStatus = $v;
+      }
     }
 
 /**
- * Créer une relation patient praticien
- * @param string $praticienStatus statut du praticien vis à vis du patient
- * @param int $praticienID     ID du praticien
+ * Définir le type de relation
+ * @param string $v type de relation
  */
-    public function setRelationWithPro($praticienStatus, $praticienID)
+    public function setRelationType($v)
     {
-
-      if (!is_numeric($this->_toID)) {
-          throw new Exception('ToID is not numeric');
+      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient'];
+      if(!in_array($v, $relationPossibleTypes)) {
+        throw new Exception('RelationType is not valid');
+      } else {
+        return $this->_relationType = $v;
       }
-
-      if (!is_numeric($this->_fromID)) {
-          throw new Exception('FromID is not numeric');
-      }
-
-      if (!is_numeric($praticienID)) {
-          throw new Exception('PraticienID is not numeric');
-      }
-
-      //sortir les choix de relations patient<->prat pour valider $praticienStatus
-      $data = new msData();
-      $typeID = $data->getTypeIDFromName('relationPatientPraticien');
-      $options = $data->getSelectOptionValue(array($typeID))[$typeID];
-      if (!array_key_exists($praticienStatus, $options)) {
-          throw new Exception('PraticienStatus is not a valid choice');
-      }
-
-      // patient -> praticien
-      $patient = new msObjet();
-      $patient->setToID($this->_toID);
-      $patient->setFromID($this->_fromID);
-      $supportID=$patient->createNewObjetByTypeName('relationID', $praticienID);
-      $patient->createNewObjetByTypeName('relationPatientPraticien', $praticienStatus, $supportID);
-
-      // praticien -> patient
-      $praticien = new msObjet();
-      $praticien->setToID($praticienID);
-      $praticien->setFromID($this->_fromID);
-      $supportID=$praticien->createNewObjetByTypeName('relationID', $this->_toID);
-      $praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $supportID);
     }
 
 /**
- * Obtenir les autres patients liés généalogiquement avec ce patient
- * @return array array des autres patients
- *
- */
-    public function getRelationsWithOtherPatients()
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthdate', 'birthname']);
-
-          if($data = msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom,
-          TIMESTAMPDIFF(YEAR, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageAnnees,
-          TIMESTAMPDIFF(MONTH, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageMois,
-          TIMESTAMPDIFF(DAY, STR_TO_DATE(d.value, '%d/%m/%Y'), CURDATE()) AS ageJours
-          from objets_data as o
-          inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
-          left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-          left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-          left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-          left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and d.outdated='' and d.deleted=''
-          where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-          group by o.value, c.id, bn.id, n.id, p.id, d.id
-          order by STR_TO_DATE(d.value, '%d/%m/%Y') desc, nom asc")) {
-          return $data;
-        } else {
-          return [];
-        }
-    }
-
-/**
- * Créer une relation patient patient
+ * DEPRECATED Créer une relation patient patient
  * @param string $toIdStatus statut familial de l'individu identifé par _toID
  * @param int $withID     ID du 2e individu concerné
  */
     public function setRelationWithOtherPatient($toIdStatus, $withID)
     {
-
-      if (!is_numeric($this->_toID)) {
-          throw new Exception('ToID is not numeric');
-      }
-
-      if (!is_numeric($this->_fromID)) {
-          throw new Exception('FromID is not numeric');
-      }
-
-      if (!is_numeric($withID)) {
-          throw new Exception('WithID is not numeric');
-      }
-
-      //sortir les choix de relations patient<->patient pour faire un reverse tab
-      $data = new msData();
-      $typeID = $data->getTypeIDFromName('relationPatientPatient');
-      $options = $data->getSelectOptionValue(array($typeID))[$typeID];
-      $reversOptions = array_flip($options);
-
-      if (!in_array($toIdStatus, $options)) {
-          throw new Exception('ToIdStatus is not a valid choice');
-      }
-
-      // patientPrin -> patient
-      $patient = new msObjet();
-      $patient->setToID($this->_toID);
-      $patient->setFromID($this->_fromID);
-      $supportID=$patient->createNewObjetByTypeName('relationID', $withID);
-      $patient->createNewObjetByTypeName('relationPatientPatient', $toIdStatus, $supportID);
-
-      // patient -> patientPrin
-      $patient2 = new msObjet();
-      $patient2->setToID($withID);
-      $patient2->setFromID($this->_fromID);
-      $supportID=$patient2->createNewObjetByTypeName('relationID', $this->_toID);
-      $patient2->createNewObjetByTypeName('relationPatientPatient', $reversOptions[$toIdStatus], $supportID);
+      return $this->setRelation('relationPatientPatient', $toStatus, $withID);
     }
 
 /**
- * Retirer une relation entre 2 individus
- * @param int $withID 2e individu concerné
+ * DEPRECATED Créer une relation patient praticien
+ * @param string $praticienStatus statut du praticien vis à vis du patient
+ * @param int $praticienID     ID du praticien
+ */
+    public function setRelationWithPro($praticienStatus, $praticienID)
+    {
+      return $this->setRelation('relationPatientPraticien', $praticienStatus, $praticienID);
+    }
+
+/**
+ * Vérifier si une relation existe déjà
+ * @return boolean true/false
+ */
+    public function checkRelationExist() {
+      if (!isset($this->_toID)) {
+          throw new Exception('ToID is not defined');
+      }
+      if (!isset($this->_withID)) {
+          throw new Exception('WithID is not defined');
+      }
+      $typeID = msData::getTypeIDFromName('relationID');
+      if($id = msSQL::sqlUniqueChamp("select id from objets_data where toID = '".$this->_toID."' and typeID='".$typeID."' and value='".$this->_withID."' and outdated='' and deleted='' limit 1")) {
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+    public function checkMaxGroupeRestriction() {
+      global $p;
+      if($this->_relationType != 'relationPraticienGroupe') {
+        return false;
+      }
+      if($p['config']['groupesNbMaxGroupesParPro'] < 1) {
+        return false;
+      }
+
+      $typeID = msData::getTypeIDFromName('relationPraticienGroupe');
+      $nb = msSQL::sqlUniqueChamp("select count(id) from objets_data where toID = '".$this->_toID."' and typeID='".$typeID."' and outdated='' and deleted='' ");
+      if($nb >= $p['config']['groupesNbMaxGroupesParPro']) {
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+
+/**
+ * Définir une relation entre 2 peopleID
+ * @param string $toStatus     statut s'appliquant à toID
+ * @param int $withID       peopleID du sujet en relation avec toID
+ */
+    public function setRelation() {
+
+      if (!isset($this->_toID)) {
+          throw new Exception('ToID is not defined');
+      }
+
+      if (!isset($this->_fromID)) {
+          throw new Exception('FromID is not defined');
+      }
+
+      if (!isset($this->_withID)) {
+          throw new Exception('WithID is not defined');
+      }
+
+      if (!isset($this->_toStatus)) {
+          throw new Exception('ToStatus is not defined');
+      }
+
+      // valider l'opération
+      $toIdType = $this->getType();
+
+      if($this->_relationType == 'relationPatientPraticien' and ($toIdType!='patient' or $this->_withIdType != 'pro')) {
+        throw new Exception('Action non valide');
+      }
+      if($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
+        throw new Exception('Action non valide');
+      }
+      if($this->_relationType == 'relationPraticienGroupe' and ($toIdType!='pro' or $this->_withIdType != 'groupe')) {
+        throw new Exception('Action non valide');
+      }
+
+      //sortir les choix de relations pour valider $this->_toStatus
+      $data = new msData();
+      $typeID = $data->getTypeIDFromName($this->_relationType);
+      $options = $data->getSelectOptionValue(array($typeID))[$typeID];
+      if (!array_key_exists($this->_toStatus, $options)) {
+          throw new Exception('ToStatus is not a valid choice');
+      }
+
+      if($this->_relationType == 'relationPraticienGroupe') {
+        $withStatus = $this->_toStatus;
+      } elseif($this->_relationType == 'relationPatientPraticien') {
+        $withStatus = 'patient';
+      } elseif($this->_relationType == 'relationPatientPatient') {
+        $reversOptions = array_flip($options);
+        $withStatus = $reversOptions[$this->_toStatus];
+      }
+
+      $first = new msObjet();
+      $first->setToID($this->_toID);
+      $first->setFromID($this->_fromID);
+      $supportID=$first->createNewObjetByTypeName('relationID', $this->_withID);
+      $first->createNewObjetByTypeName($this->_relationType, $this->_toStatus, $supportID);
+
+      $second = new msObjet();
+      $second->setToID($this->_withID);
+      $second->setFromID($this->_fromID);
+      $supportID2=$second->createNewObjetByTypeName('relationID', $this->_toID);
+      $second->createNewObjetByTypeName($this->_relationType, $withStatus, $supportID2);
+
+      if(is_int($supportID) and is_int($supportID2)) {
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+/**
+ * Retirer une relation entre 2 peopleID
+ * @param int $withID 2e peopleID concerné
  */
     public function setRelationDeleted($withID)
     {
@@ -235,12 +239,110 @@ class msPeopleRelations extends msPeople
       }
 
       // praticien/patient -> patient
-      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$_POST['ID2']."' and value='".$_POST['ID1']."' and deleted='' limit 1")) {
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$withID."' and value='".$this->_toID."' and deleted='' limit 1")) {
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setObjetID($id);
         $obj->setDeletedObjetAndSons();
       }
     }
+
+/**
+ * Obtenir pour le peopleID concerné les relations du type demandé
+ * @param  string $relationType     type de relation
+ * @param  array  $dataComp         typeName à retourner
+ * @param  array  $dataCompNotEmpty typeName qui ne doivent pas être vide
+ * @return array                   tableau des infos sur peopleID
+ */
+    public function getRelations($relationType, $dataComp=[], $dataCompNotEmpty=[])
+    {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        if(!in_array('birthdate', $dataComp)) $dataComp[]='birthdate';
+
+        $generateIdentityTags = false;
+        if(in_array('identite', $dataComp)) {
+          if(!in_array('lastname', $dataComp)) $dataComp[]='lastname';
+          if(!in_array('birthname', $dataComp)) $dataComp[]='birthname';
+          if(!in_array('firstname', $dataComp)) $dataComp[]='firstname';
+          if(!in_array('administrativeGenderCode', $dataComp)) $dataComp[]='administrativeGenderCode';
+
+          if (($key = array_search('identite', $dataComp)) !== false) {
+            unset($dataComp[$key]);
+          }
+          $generateIdentityTags = true;
+        }
+
+        if(in_array('ageCalcule', $dataComp)) {
+          if(!in_array('birthdate', $dataComp)) $dataComp[]='birthdate';
+        }
+
+        $data = new msData();
+        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', $relationType,  'groupname'], $dataComp));
+
+        $champsSql=[];
+        $tablesSql=[];
+        $groupBy=[];
+        $notEmpty=[];
+        if(!empty($dataComp)) {
+          foreach($dataComp as $k=>$v) {
+            if(key_exists($v,$name2typeID)) {
+              if($v == 'ageCalcule') {
+                $champsSql[] = ',
+                CASE WHEN TIMESTAMPDIFF(YEAR, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) >= 1
+                THEN
+                  CONCAT(TIMESTAMPDIFF(YEAR, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), IF(TIMESTAMPDIFF(YEAR, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) > 1, " ans", " an") )
+                WHEN TIMESTAMPDIFF(DAY, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()) <= 31
+                THEN
+                  CONCAT(TIMESTAMPDIFF(DAY, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " jours")
+                ELSE
+                  CONCAT(TIMESTAMPDIFF(MONTH, STR_TO_DATE(co'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " mois")
+                END as '.$v;
+              } else {
+                $champsSql[] = ', co'.$name2typeID[$v].'.value as '.$v;
+              }
+              $tablesSql[] = " left join objets_data as co".$name2typeID[$v]." on co".$name2typeID[$v].".toID=o.value and co".$name2typeID[$v].".typeID='".$name2typeID[$v]."' and co".$name2typeID[$v].".outdated='' and co".$name2typeID[$v].".deleted='' ";
+              $groupBy[]= ', co'.$name2typeID[$v].'.id';
+
+              if(in_array($v,$dataCompNotEmpty)) {
+                $notEmpty[]=' and co'.$name2typeID[$v].'.value is not null';
+              }
+            }
+          }
+        }
+
+        // tris par défaut, l'ordre peut être remanié a posteriori
+        $orderBy = '';
+        if($relationType == 'relationPraticienGroupe') {
+        } elseif($relationType == 'relationPatientPraticien') {
+          $orderBy = "order by typeRelation ='MTD' desc, trim(concat(lastname,birthname,firstname))";
+        } elseif($relationType == 'relationPatientPatient') {
+          $orderBy = "order by STR_TO_DATE(co".$name2typeID['birthdate'].".value, '%d/%m/%Y') desc, trim(concat(lastname,birthname,firstname))";
+        }
+
+        $relations = [];
+        if($relations =  msSQL::sql2tab("select o.value as peopleID, c.value as typeRelation ".implode(" ", $champsSql)."
+        from objets_data as o
+        inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID[$relationType]."'
+        ".implode(" ", $tablesSql)."
+        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
+        group by o.value, c.id ".implode("", $groupBy).' '.$orderBy )) {
+
+          $typeID = $data->getTypeIDFromName($relationType);
+          $options = $data->getSelectOptionValue(array($typeID))[$typeID];
+          foreach($relations as $k=>$v) {
+            if(isset($options[$relations[$k]['typeRelation']])) {
+              $relations[$k]['typeRelationTxt']=$options[$relations[$k]['typeRelation']];
+            }
+            if($generateIdentityTags) {
+              $relations[$k] = array_merge($relations[$k], msCourrier::getIdentiteTags($relations[$k]));
+            }
+          }
+        }
+        return (array)$relations;
+    }
+
 
 }
