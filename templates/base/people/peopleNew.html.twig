@@ -28,7 +28,15 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ config.designAppName }} : nouveau patient{% endblock %}
+{% block title %}{{ config.designAppName }} :
+{% if page.porp == 'patient'%}
+patient
+{% elseif page.porp == 'pro' %}
+praticien
+{% elseif page.porp == 'groupe' %}
+groupe
+{% endif %}
+{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -40,11 +48,15 @@
 
 {% block body %}
 
+<h1>
 {% if page.porp == 'patient'%}
-<h1>Nouveau patient</h1>
+Nouveau patient
 {% elseif page.porp == 'pro' %}
-<h1>Nouveau praticien</h1>
+Nouveau praticien
+{% elseif page.porp == 'groupe' %}
+Nouveau groupe
 {% endif %}
+</h1>
 
 {% if page.porp == 'patient' and config.vitaleActiver =='true' %}
 <div class="row mb-3">

@@ -24,6 +24,8 @@
  * people : editer les données d'un individus
  * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
  * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
+ * soit en mode groupe -> formulaire $p['config']['formFormulaireNouveauGroupe']
+ *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -36,8 +38,12 @@ $p['page']['porp']=$match['params']['porp'];
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-
-if(!in_array($patient->getType(), ['patient', 'pro'])) {
+$peolpleIdType = $patient->getType();
+if(!in_array($peolpleIdType, ['patient', 'pro', 'groupe'])) {
+  $template = "404";
+  return;
+}
+if($peolpleIdType == 'groupe' and $p['page']['porp']!= 'groupe') {
   $template = "404";
   return;
 }
@@ -60,6 +66,9 @@ if ($p['page']['porp']=='patient') {
       $template="forbidden";
       return;
     }
+} elseif ($p['page']['porp']=='groupe') {
+    $template="groupeEdit";
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
 }
 
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
