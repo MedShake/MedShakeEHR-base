@@ -50,14 +50,14 @@ agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/
 
 #chercher patients / pros / groupes
 peopleSearchAjax: ['GET|POST', '/[today|patient|pro|groupe:porp]s/ajax/[a:m]/', 'rechercher/actions/peopleSearchAjax']
-peopleSearch: ['GET', '/[today|patient|pro|groupe:porp]s/', 'rechercher/peopleSearch']
+peopleSearch: ['GET', '/[today|patient|pro|groupe|registre:porp]s/', 'rechercher/peopleSearch']
 
 #créer / éditer patient/pros
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
-peopleRegister: ['GET|POST', '/[patient|pro|groupe:porp]/register/', 'people/actions/peopleActions']
-peopleNew: ['GET|POST', '/[patient|pro|groupe:porp]/create/', 'people/peopleNew']
-peopleEdit: ['GET', '/[patient|pro|groupe:porp]/edit/[i:patient]/', 'people/peopleEdit']
+peopleRegister: ['GET|POST', '/[patient|pro|groupe|registre:porp]/register/', 'people/actions/peopleActions']
+peopleNew: ['GET|POST', '/[patient|pro|groupe|registre:porp]/create/', 'people/peopleNew']
+peopleEdit: ['GET', '/[patient|pro|groupe|registre:porp]/edit/[i:patient]/', 'people/peopleEdit']
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
 # relations
@@ -68,6 +68,9 @@ proView: ['GET', '/pro/[i:proID]/', 'people/proView']
 
 # groupe : voir fiche groupe
 groupeView: ['GET', '/groupe/[i:groupeID]/', 'people/groupeView']
+
+# registre : voir fiche registre
+registreView: ['GET', '/registre/[i:registreID]/', 'people/registreView']
 
 # lap
 lapAjax: ['GET|POST', '/lap/ajax/[a:m]/', 'lap/actions/lapAjax']

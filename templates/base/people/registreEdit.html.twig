@@ -1,7 +1,7 @@
 {#
  # This file is part of MedShakeEHR.
  #
- # Copyright (c) 2017
+ # Copyright (c) 2020
  # Bertrand Boutillier <b.boutillier@gmail.com>
  # http://www.medshake.net
  #
@@ -20,16 +20,14 @@
  #/
 
 /##
- # Template > people : editer un patient
+ # Template > people : editer un registre
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}{{ config.designAppName }} : édition des données administratives du patient
-{% endblock %}
+{% block title %}{{ config.designAppName }} : édition des données d'un registre{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -40,39 +38,24 @@
 {% block body %}
 
   <h1 id="identitePatient" data-patientid="{{ page.patient.id }}">
-      Edition des données administratives du patient
-      {{ page.patient.firstname }}
-      {% if page.patient.lastname and page.patient.birthname %}
-        {{ page.patient.lastname }}
-        <small>(né{% if page.patient.administrativeGenderCode == 'F' %}e{% endif %}
-          {{ page.patient.birthname }})</small>
-      {% elseif page.patient.lastname %}
-        {{ page.patient.lastname }}
-      {% else %}
-        {{ page.patient.birthname }}
-      {% endif %}
-      <small>#{{ page.patient.id }}</small>
+    Édition des données administratives de
+    {{ page.patient.registryname }}
+
+    <small>(#{{ page.patient.id }})</small>
   </h1>
+
 
 
   <div class="row my-4">
     <div class="col-xl-5 col-6">
-      <a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
-        <span class="fas fa-folder-open" aria-hidden="true"></span>
-        Dossier patient
-      </a>
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
-        <span class="fas fa-link" aria-hidden="true"></span>
-        Éditer les relations
-      </a>
-    </div>
-    <div class="col-xl-5 col-6 text-right">
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.patient.id }}/">
-        <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-        Editer infos pros
+      <a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registre/{{ page.patient.id }}/">
+        <i class="fas fa-archive"></i>
+        Voir fiche
       </a>
     </div>
   </div>
+
+
 
   <ul class="nav nav-tabs col-xl-10 col-12" id="infosTab" role="tablist">
     <li class="nav-item">
@@ -86,15 +69,15 @@
   <div class="tab-content border-left border-bottom border-right col-xl-10 col-12 p-4  bg-light" id="myTabContent">
     <div class="tab-pane fade show active checkboxFixValue" id="principales" role="tabpanel">
 
-        {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
+      {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 
-        {{ f.formbuilder(page.form , page.formIN , session) }}
+      {{ f.formbuilder(page.form , page.formIN , session) }}
 
-        {% if page['formJavascript'][page.formIN] is not empty %}
-          <script>
-           {{ page['formJavascript'][page.formIN] }}
-          </script>
-        {% endif %}
+      {% if page['formJavascript'][page.formIN] is not empty %}
+        <script>
+         {{ page['formJavascript'][page.formIN] }}
+        </script>
+      {% endif %}
     </div>
 
     <div class="tab-pane fade changeObserv" id="autres" role="tabpanel" aria-labelledby="profile-tab">
@@ -106,7 +89,6 @@
         </script>
       {% endif %}
     </div>
-
   </div>
 
 {% endblock %}

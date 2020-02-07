@@ -25,6 +25,7 @@
  * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
  * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
  * soit en mode groupe -> formulaire $p['config']['formFormulaireNouveauGroupe']
+ * soit en mode registre -> formulaire $p['config']['formFormulaireNouveauRegistre']
  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
@@ -33,17 +34,20 @@
 
 $debug='';
 
-
 $p['page']['porp']=$match['params']['porp'];
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 $peolpleIdType = $patient->getType();
-if(!in_array($peolpleIdType, ['patient', 'pro', 'groupe'])) {
+if(!in_array($peolpleIdType, ['patient', 'pro', 'groupe', 'registre'])) {
   $template = "404";
   return;
 }
 if($peolpleIdType == 'groupe' and $p['page']['porp']!= 'groupe') {
+  $template = "404";
+  return;
+}
+if($peolpleIdType == 'registre' and $p['page']['porp']!= 'registre') {
   $template = "404";
   return;
 }
@@ -69,6 +73,10 @@ if ($p['page']['porp']=='patient') {
 } elseif ($p['page']['porp']=='groupe') {
     $template="groupeEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
+
+} elseif ($p['page']['porp']=='registre') {
+    $template="registreEdit";
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
 }
 
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();

@@ -26,7 +26,9 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-{% if page.porp == 'groupe' %}
+{% if page.porp == 'registre' %}
+  {% set porpurl = 'registre' %}
+{% elseif page.porp == 'groupe' %}
   {% set porpurl = 'groupe' %}
 {% else %}
   {% set porpurl = page.porp in ['patient', 'today'] ? 'patient' : 'pro' %}
@@ -75,6 +77,10 @@
               <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Groupe praticiens">
                 <i class="fas fa-hospital-alt fa-fw"  aria-hidden="true"></i>
               </a>
+            {% elseif page['outputType'][patientID]['type']=='registre' %}
+              <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Registre">
+                <i class="fas fa-archive fa-fw"  aria-hidden="true"></i>
+              </a>
             {% else %}
               <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="{% if page['outputType'][patientID]['type'] == 'dcd' %}Patient décédé{% else %}Patient{% endif %}">
                 <i class="fas {% if page['outputType'][patientID]['type'] == 'dcd' %}fa-cross{% else %}fa-user{% endif %} fa-fw" {% if loop.index <= 9 %}accesskey="{{ loop.index }}"{% endif %}></i>
@@ -91,10 +97,12 @@
           {% endfor %}
 
           <td class="text-right">
-            {% if page['outputType'][patientID]['type'] != 'groupe' %}
-              {% include('inc-listing-patient&pro.html.twig') %}
-            {% else %}
+            {% if page['outputType'][patientID]['type'] == 'registre' %}
+              {% include('inc-listing-registre.html.twig') %}
+            {% elseif page['outputType'][patientID]['type'] == 'groupe' %}
               {% include('inc-listing-groupe.html.twig') %}
+            {% else %}
+              {% include('inc-listing-patient&pro.html.twig') %}
             {% endif %}
           </td>
         </tr>

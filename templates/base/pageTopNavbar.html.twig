@@ -146,6 +146,19 @@
               </a>
             </li>
           {% endif %}
+          {% if config.optionGeRegistresActiver == 'true' %}
+            <li class="nav-item">
+              <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registres/">
+                {% if config.designTopMenuStyle == 'icones' %}
+                  <i class="fas fa-archive fa-lg d-none d-lg-inline"></i>
+                  <span class="d-lg-none">
+                    Registres</span>
+                {% else %}
+                  Registres
+                {% endif %}
+              </a>
+            </li>
+          {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
               {% if config.designTopMenuStyle == 'icones' %}

@@ -69,7 +69,7 @@ class msPeopleRelations extends msPeople
  */
     public function setRelationType($v)
     {
-      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient'];
+      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre'];
       if(!in_array($v, $relationPossibleTypes)) {
         throw new Exception('RelationType is not valid');
       } else {
@@ -188,6 +188,10 @@ class msPeopleRelations extends msPeople
       } elseif($this->_relationType == 'relationPatientPatient') {
         $reversOptions = array_flip($options);
         $withStatus = $reversOptions[$this->_toStatus];
+      } elseif($this->_relationType == 'relationGroupeRegistre') {
+        $withStatus = $this->_toStatus;
+      } else {
+        $withStatus = $this->_toStatus;
       }
 
       $first = new msObjet();
@@ -260,10 +264,10 @@ class msPeopleRelations extends msPeople
             throw new Exception('ToID is not numeric');
         }
 
-        if(!in_array('birthdate', $dataComp)) $dataComp[]='birthdate';
 
         $generateIdentityTags = false;
         if(in_array('identite', $dataComp)) {
+          if(!in_array('birthdate', $dataComp)) $dataComp[]='birthdate';
           if(!in_array('lastname', $dataComp)) $dataComp[]='lastname';
           if(!in_array('birthname', $dataComp)) $dataComp[]='birthname';
           if(!in_array('firstname', $dataComp)) $dataComp[]='firstname';
@@ -280,7 +284,7 @@ class msPeopleRelations extends msPeople
         }
 
         $data = new msData();
-        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', $relationType,  'groupname'], $dataComp));
+        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', $relationType], $dataComp));
 
         $champsSql=[];
         $tablesSql=[];

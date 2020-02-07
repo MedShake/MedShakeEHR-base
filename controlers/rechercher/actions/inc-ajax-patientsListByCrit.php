@@ -36,6 +36,11 @@ if($_POST['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 'tru
     die();
 }
 
+// si registre, on vérifie que l'option générale est ON et on termine sinon
+if($_POST['porp'] == 'registre' and $p['config']['optionGeRegistresActiver'] != 'true') {
+    die();
+}
+
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN=$p['config']['formFormulaireListingPatients'];
 
@@ -48,6 +53,8 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
     $formIN=$p['config']['formFormulaireListingPraticiens'];
 } elseif ($_POST['porp']=='groupe') {
     $formIN=$p['config']['formFormulaireListingGroupes'];
+} elseif ($_POST['porp']=='registre') {
+    $formIN=$p['config']['formFormulaireListingRegistres'];
 } else {
     die();
 }
@@ -99,7 +106,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
 
 
     //patient ou pro en fonction
-    if($_POST['porp']=='groupe') {
+    if($_POST['porp']=='registre') {
+        $mss->setPeopleType(['registre']);
+    } elseif($_POST['porp']=='groupe') {
         $mss->setPeopleType(['groupe']);
     } elseif($_POST['porp']=='pro') {
         $mss->setPeopleType(['pro']);
@@ -120,7 +129,11 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
       $mss->setRestricDossiersPropres(true);
     }
 
-    if($_POST['porp']=='groupe') {
+    if($_POST['porp']=='registre') {
+      $criteres = array(
+          'registryname'=>$_POST['d2'].'%',
+        );
+    } elseif($_POST['porp']=='groupe') {
       $criteres = array(
           'groupname'=>$_POST['d2'].'%',
         );
@@ -144,7 +157,6 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
 
     $p['page']['sqlString']=$sql=$mss->getSql();
-
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
             if (isset($form['col'.$i]['bloc'])) {

@@ -35,6 +35,8 @@ patient
 praticien
 {% elseif page.porp == 'groupe' %}
 groupe
+{% elseif page.porp == 'registre' %}
+registre
 {% endif %}
 {% endblock %}
 
@@ -55,6 +57,8 @@ Nouveau patient
 Nouveau praticien
 {% elseif page.porp == 'groupe' %}
 Nouveau groupe
+{% elseif page.porp == 'registre' %}
+Nouveau registre
 {% endif %}
 </h1>
 
