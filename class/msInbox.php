@@ -21,7 +21,7 @@
  */
 
 /**
- * Manipulations sur les fichiers dans la inbox
+ * Inbox mail
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -29,6 +29,23 @@
 
 class msInbox
 {
+
+/**
+ * Nombre de messages non lus dans la inbox utilisateur
+ * @return int nombre de messages non lus
+ */
+  public static function getInboxUnreadMessages() {
+    global $p;
+    if(!empty($p['config']['apicryptInboxMailForUserID'])) {
+      $apicryptInboxMailForUserID=explode(',', $p['config']['apicryptInboxMailForUserID']);
+      $apicryptInboxMailForUserID[]=$p['user']['id'];
+      $apicryptInboxMailForUserID=implode("','", $apicryptInboxMailForUserID);
+    } else {
+      $apicryptInboxMailForUserID=$p['user']['id'];
+    }
+    return (int) msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in ('".$apicryptInboxMailForUserID."') ");
+  }
+
 
 /**
  * Parser le nom d'un fichier txt de la inbox pour extraire datetime et num ordre
