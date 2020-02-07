@@ -83,6 +83,11 @@ $router->addRoutes($routes);
 $router->setBasePath($p['config']['urlHostSuffixe']);
 $match = $router->match();
 
+///////// Maintenance
+if (msSystem::getSystemState()=='maintenance') {
+    msTools::redirection('/maintenancePublic.html');
+}
+
 ///////// Controler else -> 404
 if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     include $homepath.'controlers/'.$match['target'].'.php';
