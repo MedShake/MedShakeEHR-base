@@ -295,7 +295,7 @@ class msPeopleSearch
             if ($v > 1) {
                 $patient= new msPeople();
                 $patient->setToID($k);
-                $peopleType = $patient->getPeopleType();
+                $peopleType = $patient->getType();
                 if(in_array($peopleType, $this->_peopleType)) {
                   $final[$k]=$patient->getSimpleAdminDatasByName($this->_colonnesRetour);
                   $final[$k]['patientType']=$peopleType;
