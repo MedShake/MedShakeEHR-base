@@ -31,8 +31,20 @@
   {{ page.groupeData.groupname }}
 {% endblock %}
 
-{% block head %}
+{% block jsFiles %}
   {{ parent() }}
+  {% if config.optionGeRegistresActiver == 'true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    if ($('#bodyTabRelationGroupeRegistres').length) {
+      setTimeout(getRelationsGroupeRegistresTab({{ page.groupeDataID }}), 200);
+    }
+  });
 {% endblock %}
 
 {% block body %}
@@ -41,65 +53,136 @@
 <div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
 {% endif %}
 
-<h1 id="identitePatient" data-patientID="{{ page.groupeData.id }}">
+<h1 id="identitePatient" data-patientID="{{ page.groupeDataID }}">
   {{ page.groupeData.groupname }}
 </h1>
 
-  <div class="row mt-3">
-      <div class="col-12 col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">
-                <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i>
-                Informations groupe</div>
-              <div class="card-body d-flex justify-content-between">
-                <span>
-                  Informations sur ce groupe de praticiens
-                </span>
-                <span>
-                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/edit/{{ page.groupeDataID }}/"><i class="fas fa-pencil-alt fa-fw"></i>
-                  </a>
-                </span>
-              </div>
+<div class="row mt-3">
+  <div class="col-12 col-md-6">
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <div class=" font-weight-bold">
+          <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i>
+          Informations groupe
+        </div>
+        <div>
+          <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/edit/{{ page.groupeDataID }}/" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i>
+          </a>
+        </div>
 
-              <table class="table table-sm mb-0 table-hover ">
-                {% for  k,label in page.groupeDataLabel %}
-                <tr><td>{{ label }}</td><td>{% if k == 'country' %}{{ page.groupeData['country_label'] }}{% else %}{{ page.groupeData[k] }}{% endif %}</td></tr>
-                {% endfor %}
-              </table>
-
-              <div class="card-footer">&nbsp;</div>
-            </div>
-            {% if page.praticiensConnus %}
-              <div class="card mt-4 px-0 col-md-12">
-                <div class="card-header font-weight-bold">
-                  <i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens
-                </div>
-                <div class="card-body">
-                  <span>Praticiens du groupe ({{ page.praticiensConnus|length() }})</span>
-                </div>
-
-                <table class="table table-sm mb-0 table-hover">
-          				<tbody>
-                    {% for v in page.praticiensConnus %}
-                    <tr class="cursor-pointer"  onclick="window.location=$(this).find('a').attr('href');">
-                      <td>
-                        <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.peopleID }}/">
-                          <i class="fas fa-user-md fa-fw"></i>
-                        </a>
-                        {% if v.titre is not empty %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}</td>
-                      <td>
-                        {{ v.typeRelationTxt }}
-                      </td>
-                    </tr>
-                    {% endfor %}
-          				</tbody>
-
-          			</table>
-
-                <div class="card-footer">&nbsp;</div>
-              </div>
-            {% endif %}
       </div>
+      <div class="card-body">
+        Informations sur ce groupe de praticiens
+      </div>
+
+      <table class="table table-sm mb-0 table-hover ">
+        {% for  k,label in page.groupeDataLabel %}
+        <tr><td>{{ label }}</td><td>{% if k == 'country' %}{{ page.groupeData['country_label'] }}{% else %}{{ page.groupeData[k] }}{% endif %}</td></tr>
+        {% endfor %}
+      </table>
+
+      <div class="card-footer">&nbsp;</div>
+    </div>
+
+    {% if page.praticiensConnus %}
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between">
+          <div class="font-weight-bold">
+            <i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens
+          </div>
+          <div>
+            {% if user.rank == 'admin' %}
+            <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.groupeDataID }}/" title="Historique">
+              <i class="fas fa-history fa-fw"></i>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+          Praticiens du groupe ({{ page.praticiensConnus|length() }})
+        </div>
+
+        <table class="table table-sm mb-0 table-hover">
+  				<tbody>
+            {% for v in page.praticiensConnus %}
+            <tr class="cursor-pointer"  onclick="window.location=$(this).find('a').attr('href');">
+              <td>
+                <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.peopleID }}/">
+                  <i class="fas fa-user-md fa-fw"></i>
+                </a>
+                {% if v.titre is not empty %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}</td>
+              <td>
+                {{ v.typeRelationTxt }}
+              </td>
+            </tr>
+            {% endfor %}
+  				</tbody>
+  			</table>
+
+        <div class="card-footer text-right">
+          &nbsp;
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-12 col-md-6">
+    {% if config.optionGeRegistresActiver == 'true' %}
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between">
+          <div class="font-weight-bold">
+            <i class="fas fa-archive fa-fw fa-lg text-secondary"></i>
+            Registres
+          </div>
+          <div>
+            <a href="#" class="text-muted" data-toggle="collapse" data-target=".collapseRegistreGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+            {% if user.rank == 'admin' %}
+            <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationGroupeRegistre/{{ page.groupeDataID }}/" title="Historique">
+              <i class="fas fa-history fa-fw"></i>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="">
+            <span>
+              Registres autorisés pour ce groupe
+            </span>
+            <span>
+
+            </span>
+          </div>
+          <div class="collapseRegistreGestion collapse">
+            <form class="form-inline my-2 d-flex">
+              <div class="form-group flex-grow-1">
+                <div class="input-group input-group-sm flex-grow-1">
+                  <input class="form-control form-control-sm flex-grow-1" type="text" placeholder="nom du registre" id="searchRegistreID" autocomplete="off"/>
+                  {{ f.select ({
+                  'select' : {
+                    'name' : 'preRelationGroupeRegistre',
+                    'id' : 'preRelationGroupeRegistreID',
+                    'class' : '',
+                    'values' : page.preRelationGroupeRegistre.formValues,
+                    'valueDefaut' : el.value.preValue,
+                    'autocomplete' : 'off' } }) }}
+                  <div class="input-group-append">
+                    <button type="submit" id="addRelationGroupeRegistre" class="btn btn-sm btn-secondary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <table class="table table-sm mb-0 table-hover">
+          <tbody id="bodyTabRelationGroupeRegistres">
+          </tbody>
+        </table>
+        <div class="card-footer text-right">
+          &nbsp;
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </div>
 
 

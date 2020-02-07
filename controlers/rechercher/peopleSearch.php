@@ -39,6 +39,12 @@ if($p['page']['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 
     return;
 }
 
+// si registre, on vérifie que l'option générale est ON et on 404 sinon
+if($p['page']['porp'] == 'registre' and $p['config']['optionGeRegistresActiver'] != 'true') {
+    $template="404";
+    return;
+}
+
 // Template et liste des types par catégorie avec retriction aux types employés dans le form de création
 $form = new msForm;
 if($p['page']['porp'] == 'pro') {
@@ -50,6 +56,9 @@ if($p['page']['porp'] == 'pro') {
 } elseif($p['page']['porp'] == 'groupe') {
   $template="searchPeopleGroupes";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauGroupe']);
+} elseif($p['page']['porp'] == 'registre') {
+  $template="searchPeopleRegistres";
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauRegistre']);
 }
 
 if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel

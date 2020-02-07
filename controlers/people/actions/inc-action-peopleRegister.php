@@ -111,7 +111,9 @@ if ($validation === false) {
     if ($actAsAjax) {
         echo json_encode(array('status'=>'ok', 'toID'=>$patient->getToID()));
     } else {
-        if ($match['params']['porp']=='groupe') {
+        if ($match['params']['porp']=='registre') {
+            msTools::redirection('/registre/'.$patient->getToID().'/');
+        } elseif ($match['params']['porp']=='groupe') {
             msTools::redirection('/groupe/'.$patient->getToID().'/');
         } elseif ($match['params']['porp']=='pro') {
             msTools::redirection('/pro/'.$patient->getToID().'/');
