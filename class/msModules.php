@@ -49,13 +49,8 @@ class msModules
  * Obtenir une liste des versions des modules
  * @return array module => 'version'
  */
-  public static function getInstalledModulesVersions($withState=false) {
-    if($withState == true) {
-      $where = "WHERE groupe='module' or (name='state' and groupe = 'system')";
-    } else {
-      $where = "WHERE groupe='module'";
-    }
-    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM system ".$where, "name", "version")) {
+  public static function getInstalledModulesVersions() {
+    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM system WHERE groupe='module' ", "name", "version")) {
       return $r;
     } else {
       return [];

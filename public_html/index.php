@@ -70,8 +70,8 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base et sortie des versions des modules
-if (empty($p['modules']=msModules::getInstalledModulesVersions(true))) {
+/////////// Sortie des versions des modules
+if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
