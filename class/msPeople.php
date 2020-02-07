@@ -239,6 +239,14 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
+        if(in_array('identite', $typesName)) {
+          if(!in_array('birthname', $typesName)) $typesName[]='birthname';
+          if(!in_array('lastname', $typesName)) $typesName[]='lastname';
+          if(!in_array('firstname', $typesName)) $typesName[]='firstname';
+          if(!in_array('administrativeGenderCode', $typesName)) $typesName[]='administrativeGenderCode';
+          if(!in_array('birthdate', $typesName)) $typesName[]='birthdate';
+        }
+
         if(!empty($typesName)) {
           $typesSelect=" and t.name in ('".implode("', '",$typesName)."')";
         } else {
@@ -251,6 +259,11 @@ class msPeople
 			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'".$typesSelect. " order by t.displayOrder", "name", "value");
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
+
+        if(in_array('identite', $typesName)) {
+          unset($tab['identite']);
+          $tab = array_merge($tab, msCourrier::getIdentiteTags($tab));
+        }
 
         return $tab;
     }
