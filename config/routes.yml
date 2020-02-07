@@ -101,6 +101,7 @@ logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
 historiqueDataType: ['GET', '/logs/historique/[a:dataType]/[i:page]?/', 'logs/historiqueDataType']
 historiqueContextDataType: ['GET', '/logs/historique/[i:patientID]/[a:dataType]/[i:instance]?/', 'logs/historiqueContextDataType']
 historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
+historiqueRelations: ['GET', '/logs/historiqueRelations/[a:type]/[i:peopleID]/', 'logs/historiqueRelations']
 
 #pdf
 printAjax: ['GET|POST', '/print/ajax/[a:m]/', 'print/actions/printAjax']
