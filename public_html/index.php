@@ -89,14 +89,15 @@ $match = $router->match();
 $p['user']=null;
 $p['user']['id']=null;
 $p['user']['module']='base';
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name!=''") == "0") {
+
+if (msSystem::getProUserCount() == 0) {
     if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
         msTools::redirRoute('userLogInFirst');
     }
 } elseif (isset($_COOKIE['userName'])) {
     $iUser = new msUser;
     $p['user']=$iUser->userIdentification();
-    if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
+    if ($p['user']['rank']!='admin' and msSystem::getSystemState()=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
     if (isset($p['user']['id'])) {
@@ -203,12 +204,8 @@ if (!isset($debug)) {
     $debug=null;
 }
 
-//and $p['user']['id']=='1'
-
 if ($debug=='y' and $p['user']['id']=='3') {
     echo '<pre style="margin-top : 50px;">';
-    //echo '$p[\'config\'] :';
-    //print_r($p['config']);
     echo '$p[\'page\'] :';
     print_r($p['page']);
     echo '$p[\'user\'] :';
