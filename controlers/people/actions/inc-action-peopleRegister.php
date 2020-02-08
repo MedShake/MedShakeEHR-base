@@ -83,15 +83,17 @@ if ($validation === false) {
         }
     }
 } else {
-    $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
+    $objet = new msObjet();
+    $objet->setFromID($p['user']['id']);
 
     if (!isset($_POST['patientID'])) {
         $newpatient = new msPeople();
         $newpatient->setFromID($p['user']['id']);
         $newpatient->setType($match['params']['porp']);
-        $patient->setToID($newpatient->createNew());
+        $objet->setToID($newpatient->createNew());
     } else {
+        $objet->setToID($_POST['patientID']);
+        $patient = new msPeople();
         $patient->setToID($_POST['patientID']);
     }
 
@@ -100,7 +102,11 @@ if ($validation === false) {
             $in = substr($k, $pos+1);
             if (isset($in)) {
                 if (!empty(trim($v)) and !empty(trim($in))) {
-                    $patient->createNewObjetByTypeName($in, $v);
+                    $objet->createNewObjetByTypeName($in, $v);
+                } elseif (isset($_POST['patientID']) and empty(trim($v)) and !empty(trim($in))) {
+                    if(isset($patient->getSimpleAdminDatasByName([$in])[$in])) {
+                      $objet->createNewObjetByTypeName($in, $v);
+                    }
                 }
             }
         }
@@ -109,18 +115,18 @@ if ($validation === false) {
     unset($_SESSION['form'][$formIN]);
 
     if ($actAsAjax) {
-        echo json_encode(array('status'=>'ok', 'toID'=>$patient->getToID()));
+        echo json_encode(array('status'=>'ok', 'toID'=>$objet->getToID()));
     } else {
         if ($match['params']['porp']=='registre') {
-            msTools::redirection('/registre/'.$patient->getToID().'/');
+            msTools::redirection('/registre/'.$objet->getToID().'/');
         } elseif ($match['params']['porp']=='groupe') {
-            msTools::redirection('/groupe/'.$patient->getToID().'/');
+            msTools::redirection('/groupe/'.$objet->getToID().'/');
         } elseif ($match['params']['porp']=='pro') {
-            msTools::redirection('/pro/'.$patient->getToID().'/');
+            msTools::redirection('/pro/'.$objet->getToID().'/');
         } elseif($p['config']['optionGePatientOuvrirApresCreation'] == 'liens') {
-            msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+            msTools::redirection('/patient/relations/'.$objet->getToID().'/');
         } else {
-            msTools::redirection('/patient/'.$patient->getToID().'/');
+            msTools::redirection('/patient/'.$objet->getToID().'/');
         }
     }
 }
