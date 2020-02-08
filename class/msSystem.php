@@ -39,9 +39,35 @@ class msSystem
 
 /**
  * Obtenir le nombre de pro utilisateurs
- * @return int nombre de pros utilisateurs 
+ * @return int nombre de pros utilisateurs
  */
   public static function getProUserCount() {
     return (int) msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name!=''");
   }
+
+/**
+ * Permuter l'état du système entre normal et maintenance
+ * @return string   état du système ou false si pb
+ */
+  public static function toggleSystemState() {
+    global $p;
+    if ($p['user']['rank']!='admin') return false;
+
+    if($p['config']['systemState'] == 'normal') {
+      $statut = 'maintenance';
+    } else {
+      $statut = 'normal';
+    }
+    $data=[
+      'name'=>'state',
+      'groupe'=>'system',
+      'value'=>$statut
+    ];
+    if(msSQL::sqlInsert("system", $data)) {
+      return $statut;
+    } else {
+      return false;
+    }
+  }
+
 }

@@ -70,6 +70,9 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+/////////// État système
+$p['config']['systemState']=msSystem::getSystemState();
+
 /////////// Sortie des versions des modules
 if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
     msTools::redirection('/install.php');
@@ -97,7 +100,7 @@ if (msSystem::getProUserCount() == 0) {
 } elseif (isset($_COOKIE['userName'])) {
     $iUser = new msUser;
     $p['user']=$iUser->userIdentification();
-    if ($p['user']['rank']!='admin' and msSystem::getSystemState()=='maintenance') {
+    if ($p['user']['rank']!='admin' and $p['config']['systemState']=='maintenance') {
         msTools::redirection('/maintenance.html');
     }
     if (isset($p['user']['id'])) {

@@ -99,6 +99,16 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options
           </a>
         </li>
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configToggleSystemState/">
+            {% if config.systemState == "maintenance" %}
+              Désactiver
+            {% else %}
+              Activer
+            {% endif %}
+             le mode maintenance
+          </a> <span class="text-muted">(accès aux administrateurs seuls)</span>
+        </li>
       </ul>
 
       <h2 class="mt-4 mb-2">Paramètres courants</h2>
