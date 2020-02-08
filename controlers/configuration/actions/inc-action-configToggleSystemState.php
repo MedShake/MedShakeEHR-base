@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2020
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -21,31 +21,13 @@
  */
 
 /**
- * Config : les actions avec reload de page
+ * Config : activer / désactiver l'état de maintenance;
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-header('Content-Type: application/json');
+msSystem::toggleSystemState();
 
-$m=$match['params']['m'];
-
-$acceptedModes=array(
-    'configUserCreate', //Créer un user
-    'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave', // sauvegarder un template PDF
-    'configUserTemplatesSave', // sauver un template user
-    'configRemoveInstallFiles', // supprimer les fichies d'installation
-    'configDicomRmWl', // supprimer tous les fichiers worklist actifs
-    'configToggleSystemState' // activer / désactiver le mode maintenance
-);
-
-if (!in_array($m, $acceptedModes)) {
-  die;
-} else {
-  include('inc-action-'.$m.'.php');
-}
-
-die();
+msTools::redirection('/');
