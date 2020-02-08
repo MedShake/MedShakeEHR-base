@@ -69,7 +69,7 @@ $users=msPeople::getUsersWithSpecificParam('agendaDistantPatientsOfTheDay');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
 
     /// enregistre le fichier sous le nom déterminé en config
     if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
