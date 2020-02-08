@@ -650,12 +650,6 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations diverses dont celles concernant la partie identité patient
 
-  //Voir les notes sur le patient
-  $('body').on("click", "#voirNotesPatient", function(e) {
-    e.preventDefault();
-    $('#notesPatient').toggle();
-  });
-
   //Editer relation patient
   $('body').on("click", "button.editerRelationsPatient", function(e) {
     e.preventDefault();
