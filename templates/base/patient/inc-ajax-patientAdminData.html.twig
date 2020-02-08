@@ -71,7 +71,7 @@
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
-            <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
+            <button data-toggle="collapse" data-target="#notesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
                 <i class="far fa-comment-alt text-danger"></i>
             </button>
           {% endif %}
@@ -198,9 +198,8 @@
     {% endif %}
   </div>
 </div>
-<div class="col-12">
-  <div id="notesPatient" class="card bg-light p-2" style="display: none;">
+<div id="notesPatient" class="col-12 collapse">
+  <div class="card bg-light p-2">
     {{ page['patient']['administrativeDatas']['notes']['value']|e|nl2br }}
   </div>
-
 </div>
