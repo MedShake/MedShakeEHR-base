@@ -422,7 +422,7 @@ public function getToID()
           order by id desc limit 1");
 
           // insert si
-          if ((isset($precedent['id']) and msSQL::cleanVar($value) != $precedent['value']) or !isset($precedent['id'])) {
+          if ((isset($precedent['id']) and $value != $precedent['value']) or !isset($precedent['id'])) {
 
             // on met jour si on est dans la période de durée de vie et auteur identique
             if (isset($precedent['id']) and $precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
