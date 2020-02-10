@@ -40,8 +40,10 @@ $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
 
 //restrictions sur retours si droits limités
-if($p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
   $mss->setRestricDossiersPropres(true);
+} elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+  $mss->setRestricDossiersGroupes(true);
 }
 
 if ($data=msSQL::sql2tab($mss->getSql())) {

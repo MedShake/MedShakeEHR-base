@@ -35,6 +35,7 @@ class msPeopleSearch
   private $_limitStart = 0;
   private $_limitNumber = 50;
   private $_restricDossiersPropres = false;
+  private $_restricDossiersGroupes = false;
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -44,6 +45,17 @@ class msPeopleSearch
     if(!is_bool($restricDossiersPropres)) throw new Exception('RestricDossiersPropres is not bool');
     return $this->_restricDossiersPropres=$restricDossiersPropres;
   }
+
+/**
+ * Définir une restriction pour ne retourner que les dossiers créer par praticiens des groupes
+ * auxquels l'utilisateur est affilié
+ * @param bool $restricDossiersGroupes true/false
+ */
+  public function setRestricDossiersGroupes($restricDossiersGroupes) {
+    if(!is_bool($restricDossiersGroupes)) throw new Exception('RestricDossiersPropres is not bool');
+    return $this->_restricDossiersGroupes=$restricDossiersGroupes;
+  }
+
 
 /**
  * Définir le tableau de critères de recherche
@@ -114,6 +126,14 @@ class msPeopleSearch
 
     if($this->_restricDossiersPropres=='true') {
       $restrictionUser = ' and p.fromID = "'.$p['user']['id'].'"';
+    } elseif($this->_restricDossiersGroupes=='true') {
+      // fratrie praticiens
+      $frat = new msPeopleRelations;
+      $frat->setToID($p['user']['id']);
+      $frat->setRelationType('relationPraticienGroupe');
+      $ids = $frat->getSiblingIDs();
+      $ids[] = $p['user']['id'];
+      $restrictionUser = " and p.fromID in ('".implode("', '", $ids)."')";
     } else {
       $restrictionUser = '';
     }

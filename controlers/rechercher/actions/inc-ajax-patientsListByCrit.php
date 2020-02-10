@@ -125,8 +125,10 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     }
 
     //restrictions sur retours
-    if($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+    if($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
       $mss->setRestricDossiersPropres(true);
+    } elseif($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+      $mss->setRestricDossiersGroupes(true);
     }
 
     if($_POST['porp']=='registre') {
