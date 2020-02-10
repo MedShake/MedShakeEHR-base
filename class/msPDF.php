@@ -667,6 +667,11 @@ class msPDF
                 }
             }
 
+            // génère le code barr rpps et adelie en fonction du des infos du praticien
+            $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+            $p['page']['courrier']['rppsbarcode'] = base64_encode($generator->getBarcode($this->_courrierData['AuteurInitial_rpps'], $generator::TYPE_CODE_128));
+            $p['page']['courrier']['adelibarcode'] = base64_encode($generator->getBarcode($this->_courrierData['AuteurInitial_adeli'], $generator::TYPE_CODE_128));
+
             //si on sort en mode ald alors on va annuler les header et footer standard
             if ($modePrint=='ald') {
                 $this->_pageHeader=$this->_pageFooter='';
@@ -679,6 +684,7 @@ class msPDF
             //on génère le body avec twig
             $this->_body =  $this->makeWithTwig($this->_courrierData['printModel']);
         }
+
     }
 
 /**
