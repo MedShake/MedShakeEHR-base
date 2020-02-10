@@ -57,10 +57,13 @@ if ($p['page']['porp']=='patient') {
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 
     //vérifier les droits
-    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+    $droits = new msPeopleDroits($p['user']['id']);
+    if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
       $template="forbidden";
       return;
     }
+
+
 } elseif ($p['page']['porp']=='pro') {
     $template="proEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
@@ -70,6 +73,7 @@ if ($p['page']['porp']=='patient') {
       $template="forbidden";
       return;
     }
+
 } elseif ($p['page']['porp']=='groupe') {
     $template="groupeEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];

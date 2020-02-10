@@ -33,7 +33,8 @@ $fichier->setObjetID($match['params']['fichierID']);
 if ($fichier->testDocExist()) {
 
     //vérification droits
-    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $fichier->getFromID() != $p['user']['id']) {
+    $droits = new msPeopleDroits($p['user']['id']);
+    if(!$droits->checkUserCanSeePatientsUser($fichier->getFromID())) {
       $template="forbidden";
       return;
     }
