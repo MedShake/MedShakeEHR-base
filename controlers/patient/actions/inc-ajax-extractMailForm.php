@@ -44,17 +44,20 @@ if ($_POST['mailType']=='ns') {
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
     $catModelesMails='catModelesMailsToPatient';
     //les correspondants
-    $p['page']['correspondants']=$to->getRelations('relationPatientPraticien', ['identite']);
+    $to->setRelationType('relationPatientPraticien');
+    $p['page']['correspondants']=$to->getRelations(['identite']);
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['mailFrom']=$p['config']['apicryptAdresse'];
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
     $catModelesMails='catModelesMailsToApicrypt';
     //les correspondants et liens familiaux
-    $p['page']['correspondants']=$to->getRelations('relationPatientPraticien', ['identite', 'emailApicrypt'], ['emailApicrypt']);
+    $to->setRelationType('relationPatientPraticien');
+    $p['page']['correspondants']=$to->getRelations(['identite', 'emailApicrypt'], ['emailApicrypt']);
 } elseif ($_POST['mailType']=='ecofax') {
     $catModelesMails=false;
-    $p['page']['correspondants']=$to->getRelations('relationPatientPraticien', ['identite', 'faxPro'], ['faxPro']);
+    $to->setRelationType('relationPatientPraticien');
+    $p['page']['correspondants']=$to->getRelations(['identite', 'faxPro'], ['faxPro']);
 } else {
     $catModelesMails=false;
 }

@@ -36,4 +36,5 @@ $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($patientID);
 
 header('Content-Type: application/json');
-exit(json_encode($liensPrat->getRelations('relationPatientPraticien', ['identite','titre'])));
+$liensPrat->setRelationType('relationPatientPraticien');
+exit(json_encode($liensPrat->getRelations(['identite','titre'])));

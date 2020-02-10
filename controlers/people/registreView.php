@@ -47,4 +47,5 @@ $labels = new msData();
 $p['page']['registreDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['registreData']));
 
 //les groupes connus
-$p['page']['groupesConnus'] = $registre->getRelations('relationGroupeRegistre', ['groupname']);
+$registre->setRelationType('relationGroupeRegistre');
+$p['page']['groupesConnus'] = $registre->getRelations(['groupname']);

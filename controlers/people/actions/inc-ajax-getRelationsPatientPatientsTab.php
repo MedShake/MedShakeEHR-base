@@ -36,4 +36,5 @@ $liensFam = new msPeopleRelations();
 $liensFam->setToID($patientID);
 
 header('Content-Type: application/json');
-exit(json_encode($liensFam->getRelations('relationPatientPatient', ['identite', 'ageCalcule'])));
+$liensFam->setRelationType('relationPatientPatient');
+exit(json_encode($liensFam->getRelations(['identite', 'ageCalcule'])));
