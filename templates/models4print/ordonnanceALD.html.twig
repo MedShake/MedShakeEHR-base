@@ -99,15 +99,18 @@
             </style>
             <body>
 
+                {% set tag = page.courrier %}
+
                 <div id="header">
                     <div class="centrer t8" style="display : inline-block; width : 45%;vertical-align : top; border : 1px solid #000;height : 110pt">
-                        <span class="gras t10">Docteur Stephen STRANGE</span><br>
-                        Conventionnée secteur 2<br>
-                        N°ADELI : <br>
-                        RPPS : <br>
-                        Stephen.STANGE@medical.apicrypt.org<br>
-                        177 A, Bleecker Street, New York<br>
-                        Consultations sur RDV : 02 00 00 00 00<br>
+                        <span class="gras t10">{{ tag.UtilisateurActif_identiteUsuelleTitre	}}</span><br>
+                        Conventionnée secteur 1<br>
+                        N°ADELI : {{ tag.UtilisateurActif_adeli }} <br>
+                        RPPS : {{ tag.UtilisateurActif_rpps }} <br>
+                        {{ tag.UtilisateurActif_etablissementAdressePro }}<br>
+                        {{ tag.UtilisateurActif_rueAdressePro }}<br>
+                        {{ tag.UtilisateurActif_adresseProLigne2 }}<br>
+                        Consultations sur RDV : {{ tag.UtilisateurActif_telPro }}<br>
                         En cas d’urgence, composez le 15
                     </div>
 
@@ -120,13 +123,13 @@
 
                 <!-- footer standard -->
                 <div id="footer">
-                    <p>RPPS<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/rpps.jpg" style="width : 130px; height : 40px"></p>
-                    <p>ADELI<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/adeli.jpg" style="width : 130px; height : 40px"></p>
+                    <p>RPPS<br><img src="data:image/png;base64,{{ tag.rppsbarcode }}" style="width : 130px; height : 40px"><figcaption>{{ tag.AuteurInitial_rpps  }}</figcaption></p>
+                    <p>ADELI<br><img src="data:image/png;base64,{{ tag.rppsbarcode }}" style="width : 130px; height : 40px"><figcaption>{{ tag.AuteurInitial_adeli  }}</figcaption></p>
                     <p><br>Membre d’une AGA, règlement par chèque accepté.</p>
                 </div>
                 <!-- stop head -->
                 <div class="t10">
-                    <p style="text-align : right;">New York, le
+                    <p style="text-align : right;">{{ tag.UtilisateurActif_villeAdressePro }}, le
                         {{ tag.date|date("d/m/Y") }}</p>
 
                     <div>

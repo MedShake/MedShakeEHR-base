@@ -31,7 +31,7 @@
 {% set ma = page.courrier.medoc.ald %}
 
 
-<p style="text-align : right;">New York, le {{ tag.date|date("d/m/Y") }}</p>
+<p style="text-align : right;">{{ tag. UtilisateurActif_villeAdressePro}}, le {{ tag.date|date("d/m/Y") }}</p>
 
 <h2 style="text-align : center; margin-bottom : 30pt;">{{ tag.identiteCompleteTitreLongDdn }} - {{ tag.age }}</h2>
 
@@ -46,4 +46,4 @@
 
 <br><br><br><br>
 
-<p style="text-align:right">Docteur Stephen STRANGE</p>
+<p style="text-align:right">{{ tag.UtilisateurActif_identiteUsuelleTitre	}}</p>
