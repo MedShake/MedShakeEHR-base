@@ -43,7 +43,8 @@ if(!in_array($patient->getType(), ['patient', 'pro', 'externe'])) {
 }
 
 //vérifier les droits
-if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+$droits = new msPeopleDroits($p['user']['id']);
+if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
   $template="forbidden";
   return;
 }

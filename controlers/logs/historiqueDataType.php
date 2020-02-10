@@ -28,7 +28,7 @@
  */
 
 //vérification droits
-if ($p['config']['droitStatsPeutVoirStatsGenerales'] != 'true' or $p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+if ($p['config']['droitStatsPeutVoirStatsGenerales'] != 'true' or $p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
  $template="forbidden";
  return;
 }

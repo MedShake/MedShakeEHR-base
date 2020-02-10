@@ -30,7 +30,7 @@ class msPeopleDroits extends msPeople
 {
 
 /**
- * Data d'un ligne de la tbale people
+ * Data d'une ligne de la table people
  * @var array
  */
   private $_basicUserData;
@@ -40,7 +40,7 @@ class msPeopleDroits extends msPeople
         throw new Exception('ToID is not set');
     }
     $this->setToID($toID);
-    if($basicUserData = msSQL::sqlUnique("SELECT type, rank, pass FROM people WHERE id='".$toID."' limit 1")) {
+    if($basicUserData = msSQL::sqlUnique("SELECT type, rank, CASE WHEN length(pass) = 0 THEN null ELSE 1 END as pass FROM people WHERE id='".$toID."' limit 1")) {
       $this->_basicUserData = $basicUserData;
     } else {
       throw new Exception("This people don't exist");
@@ -81,6 +81,31 @@ class msPeopleDroits extends msPeople
     } else {
       return false;
     }
+  }
+
+/**
+ * Vérifier si un utilisateur pro peut voir les pièces (dossier, stockage ..) d'un autre utilisateur pro
+ * @param  int $userSeeID peopleID cible
+ * @return bool            true : si peut voir / false
+ */
+  public function checkUserCanSeePatientsUser($userSeeID) {
+    if(!$this->checkIsUser()) return;
+    global $p;
+    if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true' and $userSeeID != $this->_toID) {
+      return false;
+    } elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+      $frat = new msPeopleRelations;
+      $frat->setToID($this->_toID);
+      $frat->setRelationType('relationPraticienGroupe');
+      if(!in_array($this->_toID, $frat->getSiblingIDs())) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+
   }
 
 }
