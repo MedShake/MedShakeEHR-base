@@ -36,6 +36,7 @@ class msPeopleSearch
   private $_limitNumber = 50;
   private $_restricDossiersPropres = false;
   private $_restricDossiersGroupes = false;
+  private $_restricDossiersPratGroupes = false;
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -56,6 +57,14 @@ class msPeopleSearch
     return $this->_restricDossiersGroupes=$restricDossiersGroupes;
   }
 
+/**
+ * Définir une restriction pour ne retourner que les dossiers praticiens affiliés aux mêmes groupes que l'utilisateur
+ * @param bool $restricDossiersPratGroupes true/false
+ */
+  public function setRestricDossiersPratGroupes($restricDossiersPratGroupes) {
+    if(!is_bool($restricDossiersPratGroupes)) throw new Exception('RestricDossiersPratGroupes is not bool');
+    return $this->_restricDossiersPratGroupes=$restricDossiersPratGroupes;
+  }
 
 /**
  * Définir le tableau de critères de recherche
@@ -124,18 +133,27 @@ class msPeopleSearch
   public function getSql() {
     global $p;
 
-    if($this->_restricDossiersPropres=='true') {
-      $restrictionUser = ' and p.fromID = "'.$p['user']['id'].'"';
-    } elseif($this->_restricDossiersGroupes=='true') {
-      // fratrie praticiens
+    $restrictionUser = '';
+    if(in_array('patient',$this->_peopleType )) {
+      if($this->_restricDossiersPropres==true) {
+        $restrictionUser .= ' and p.fromID = "'.$p['user']['id'].'"';
+      } elseif($this->_restricDossiersGroupes==true) {
+        $frat = new msPeopleRelations;
+        $frat->setToID($p['user']['id']);
+        $frat->setRelationType('relationPraticienGroupe');
+        $ids = $frat->getSiblingIDs();
+        $ids[] = $p['user']['id'];
+        $restrictionUser .= " and p.fromID in ('".implode("', '", $ids)."')";
+      }
+    }
+
+    if(in_array('pro', $this->_peopleType ) and $this->_restricDossiersPratGroupes==true) {
       $frat = new msPeopleRelations;
       $frat->setToID($p['user']['id']);
       $frat->setRelationType('relationPraticienGroupe');
       $ids = $frat->getSiblingIDs();
       $ids[] = $p['user']['id'];
-      $restrictionUser = " and p.fromID in ('".implode("', '", $ids)."')";
-    } else {
-      $restrictionUser = '';
+      $restrictionUser .= " and p.id in ('".implode("', '", $ids)."')";
     }
 
     $orderBy='';

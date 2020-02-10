@@ -35,6 +35,11 @@ $mss->setPeopleType(['pro']);
 $criteres = array(
   'birthname'=>$term,
 );
+
+if($p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
+  $mss->setRestricDossiersPratGroupes(true);
+}
+
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['identite']);
 $mss->setLimitNumber(20);
