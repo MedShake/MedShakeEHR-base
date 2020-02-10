@@ -136,7 +136,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'formFormulaireListingGroupes'=>'baseListingGroupes',
     'droitDossierPeutCreerGroupe'=>'false',
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
-    'droitDossierPeutVoirUniquementPatientsGroupes'=>'true'
+    'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
+    'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
   ];
 
   protected function _getSpecifSql() {
