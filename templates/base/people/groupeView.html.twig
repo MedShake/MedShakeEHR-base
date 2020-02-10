@@ -91,10 +91,11 @@
             <i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens
           </div>
           <div>
+            {% if config.droitDossierPeutCreerPraticien == 'true' %}
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" title="Créer praticien"><i class="fas fa-plus fa-fw"></i></a>
+            {% endif %}
             {% if user.rank == 'admin' %}
-            <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.groupeDataID }}/" title="Historique">
-              <i class="fas fa-history fa-fw"></i>
-            </a>
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.groupeDataID }}/" title="Historique"><i class="fas fa-history fa-fw"></i></a>
             {% endif %}
           </div>
         </div>
@@ -111,7 +112,7 @@
                   <i class="fas fa-user-md fa-fw"></i>
                 </a>
                 {% if v.titre is not empty %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}</td>
-              <td>
+              <td class="small">
                 {{ v.typeRelationTxt }}
               </td>
             </tr>
