@@ -354,5 +354,35 @@ class msPeopleRelations extends msPeople
         return (array)$relations;
     }
 
+/**
+ * Obtenir la liste des peopleID de la fratrie
+ * Exemple : pour un pro, donne la liste des pros associés dans l'ensemble des groupes
+ * auxquels le pro est intégré
+ * @return array peopleIDs
+ */
+    public function getSiblingIDs() {
 
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if (!isset($this->_relationType)) {
+          throw new Exception('RelationType is not defined');
+      }
+
+      $in = new msPeopleRelations;
+      $in->setToID($this->_toID);
+      $in->setRelationType($this->_relationType);
+      $inIds=array_column($in->getRelations(),'peopleID');
+
+      $r=[];
+      foreach($inIds as $id) {
+        $in->setToID($id);
+        $tab = array_column($in->getRelations(),'peopleID');
+        $r = array_merge($r, $tab);
+      }
+
+      return array_unique($r);
+
+    }
 }
