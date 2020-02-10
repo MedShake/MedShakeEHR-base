@@ -134,7 +134,7 @@ $(document).ready(function() {
   activeWatchChange('.changeObserv');
   activeWatchChange('.changeObservByTypeName');
 
-  $(".datepick").on("dp.change", function(e) {
+  $(".changeObserv .datepick, .changeObservByTypeName .datepick").on("dp.change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).children('input').attr("data-typeID");
     if (e.date) value = e.date.format('L');
