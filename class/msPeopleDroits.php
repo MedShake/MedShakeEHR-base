@@ -97,7 +97,9 @@ class msPeopleDroits extends msPeople
       $frat = new msPeopleRelations;
       $frat->setToID($this->_toID);
       $frat->setRelationType('relationPraticienGroupe');
-      if(!in_array($this->_toID, $frat->getSiblingIDs())) {
+      $autoID = $frat->getSiblingIDs();
+      $authorisedID[] = $this->_toID;
+      if(!in_array($this->_toID, $authorisedID)) {
         return false;
       } else {
         return true;
