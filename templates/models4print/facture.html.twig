@@ -27,11 +27,11 @@
 
  {% set tag = page.courrier %}
 
-<p style="text-align : right;">{{ tag.UtilisateurActif_villeAdressePro }}, le {{ tag.date|date("d/m/Y") }}</p>
+<p style="text-align : right;">{{ tag.AuteurInitial_villeAdressePro }}, le {{ tag.date|date("d/m/Y") }}</p>
 
  <h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
  <br><br><br>
- <p>Je soussigné {{ tag.UtilisateurActif_identiteUsuelleTitre	}} certifie avoir reçu ce jour de {{ tag.identiteCompleteTitreLongDdn }} la somme de {{ tag.regleFacture }}€ en règlement des honoraires de consultation.<br><br>
+ <p>Je soussigné {{ tag.AuteurInitial_identiteUsuelleTitre	}} certifie avoir reçu ce jour de {{ tag.identiteCompleteTitreLongDdn }} la somme de {{ tag.regleFacture }}€ en règlement des honoraires de consultation.<br><br>
 
  </p>
 
@@ -39,4 +39,4 @@
 
  <br><br><br><br><br><br>
 
- <p style="text-align:right">{{ tag.UtilisateurActif_identiteUsuelleTitre	}}</p>
+ <p style="text-align:right">{{ tag.AuteurInitial_identiteUsuelleTitre	}}</p>
