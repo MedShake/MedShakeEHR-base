@@ -117,6 +117,10 @@ class msPeopleRelations extends msPeople
 
     }
 
+/**
+ * Vérifier s'il existe une restriction liée au nombre maximal de groupes attribué à un pro
+ * @return bool true (si restriction atteinte)/false
+ */
     public function checkMaxGroupeRestriction() {
       global $p;
       if($this->_relationType != 'relationPraticienGroupe') {
@@ -253,17 +257,19 @@ class msPeopleRelations extends msPeople
 
 /**
  * Obtenir pour le peopleID concerné les relations du type demandé
- * @param  string $relationType     type de relation
  * @param  array  $dataComp         typeName à retourner
  * @param  array  $dataCompNotEmpty typeName qui ne doivent pas être vide
  * @return array                   tableau des infos sur peopleID
  */
-    public function getRelations($relationType, $dataComp=[], $dataCompNotEmpty=[])
+    public function getRelations($dataComp=[], $dataCompNotEmpty=[])
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
 
+        if (!isset($this->_relationType)) {
+            throw new Exception('RelationType is not defined');
+        }
 
         $generateIdentityTags = false;
         if(in_array('identite', $dataComp)) {
@@ -284,7 +290,7 @@ class msPeopleRelations extends msPeople
         }
 
         $data = new msData();
-        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', $relationType], $dataComp));
+        $name2typeID = $data->getTypeIDsFromName(array_merge(['relationID', $this->_relationType], $dataComp));
 
         $champsSql=[];
         $tablesSql=[];
@@ -319,22 +325,22 @@ class msPeopleRelations extends msPeople
 
         // tris par défaut, l'ordre peut être remanié a posteriori
         $orderBy = '';
-        if($relationType == 'relationPraticienGroupe') {
-        } elseif($relationType == 'relationPatientPraticien') {
+        if($this->_relationType == 'relationPraticienGroupe') {
+        } elseif($this->_relationType == 'relationPatientPraticien') {
           $orderBy = "order by typeRelation ='MTD' desc, trim(concat(lastname,birthname,firstname))";
-        } elseif($relationType == 'relationPatientPatient') {
+        } elseif($this->_relationType == 'relationPatientPatient') {
           $orderBy = "order by STR_TO_DATE(co".$name2typeID['birthdate'].".value, '%d/%m/%Y') desc, trim(concat(lastname,birthname,firstname))";
         }
 
         $relations = [];
         if($relations =  msSQL::sql2tab("select o.value as peopleID, c.value as typeRelation ".implode(" ", $champsSql)."
         from objets_data as o
-        inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID[$relationType]."'
+        inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID[$this->_relationType]."'
         ".implode(" ", $tablesSql)."
         where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
         group by o.value, c.id ".implode("", $groupBy).' '.$orderBy )) {
 
-          $typeID = $data->getTypeIDFromName($relationType);
+          $typeID = $data->getTypeIDFromName($this->_relationType);
           $options = $data->getSelectOptionValue(array($typeID))[$typeID];
           foreach($relations as $k=>$v) {
             if(isset($options[$relations[$k]['typeRelation']])) {

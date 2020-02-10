@@ -47,7 +47,8 @@ $labels = new msData();
 $p['page']['groupeDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['groupeData']));
 
 //les praticiens connus
-$p['page']['praticiensConnus'] = $groupe->getRelations('relationPraticienGroupe', ['identite', 'titre']);
+$groupe->setRelationType('relationPraticienGroupe');
+$p['page']['praticiensConnus'] = $groupe->getRelations(['identite', 'titre']);
 
 // gestion groupe
 if($p['config']['optionGeRegistresActiver'] == 'true') {

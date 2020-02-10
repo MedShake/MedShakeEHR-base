@@ -39,7 +39,8 @@ $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($groupeID);
 
 header('Content-Type: application/json');
-$registres = $liensPrat->getRelations('relationGroupeRegistre', ['registryname']);
+$liensPrat->setRelationType('relationGroupeRegistre');
+$registres = $liensPrat->getRelations(['registryname']);
 msTools::array_unatsort_by('registryname', $registres);
 
 exit(json_encode(array_merge($registres)));

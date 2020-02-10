@@ -49,7 +49,8 @@ $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']
 //les patients connus
 $patients = new msPeopleRelations;
 $patients->setToID($p['page']['proDataID']);
-$p['page']['patientsConnus'] = $patients->getRelations('relationPatientPraticien', ['identite', 'ageCalcule']);
+$patients->setRelationType('relationPatientPraticien');
+$p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
 msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
 
 // gestion groupe
