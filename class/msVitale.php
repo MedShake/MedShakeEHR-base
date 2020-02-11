@@ -65,9 +65,15 @@ class msVitale
 
     $name2typeID = new msData();
     $name2typeID = $name2typeID->getTypeIDsFromName(['nss']);
-    if(!empty($data['vitale']['data'])) {
-      foreach($data['vitale']['data'] as $index=>$dat) {
-        if($toID = msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['nss']."' and value = '".$dat[9].$dat[10]."' group by toID ")) {
+    if(!empty($data['vitale']['data'][104])) {
+      foreach($data['vitale']['data'][104] as $index=>$dat) {
+
+        if(empty($dat[9]) and !empty($data['vitale']['data'][101][0][8]) and $dat[14] == '0') {
+          $dat[9] = $data['vitale']['data'][104][$index][9] = $data['vitale']['data'][101][0][8];
+          $dat[10] = $data['vitale']['data'][104][$index][10] = $data['vitale']['data'][101][0][9];
+        }
+
+        if($toID = msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['nss']."' and value = '".$dat[9].$dat[10]."' and deleted = '' and outdate = '' group by toID ")) {
           $data['vitale']['correspondances'][$index]=$toID;
         } else {
           $data['vitale']['correspondances'][$index]='';

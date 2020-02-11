@@ -199,7 +199,7 @@ function fseEnd(data) {
  */
 function vitaleToEhrTypeName(data) {
   dataVitale = [];
-  $(data.vitale.data).each(function(index, dat) {
+  $(data.vitale.data[104]).each(function(index, dat) {
 
     if (mNumEtRue = dat[5].match(/([0-9a-z]+) (.*)/)) {
       streetNumber = mNumEtRue[1];
