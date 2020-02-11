@@ -157,7 +157,7 @@ if (isset($template)) {
       }
 
       // dropbox
-      if($p['config']['dropboxActiver'] == 'true') {
+      if($p['config']['optionGeActiverDropbox'] == 'true') {
         if(!isset($dropbox) or !is_a($dropbox, 'msDropbox')) $dropbox = new msDropbox;
         $p['page']['dropboxNbFiles'] = $dropbox->getTotalFilesInBoxes();
       }
