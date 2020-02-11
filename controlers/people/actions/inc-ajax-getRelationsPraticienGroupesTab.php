@@ -26,9 +26,9 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if($p['config']['optionGeGroupesActiver'] != 'true') {
-   die();
- }
+if($p['config']['optionGeGroupesActiver'] != 'true') {
+ die();
+}
 
 if(isset($_POST['pratID'])) {
   $pratID=$_POST['pratID'];

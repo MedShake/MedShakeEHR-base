@@ -65,3 +65,11 @@ if($p['config']['optionGeGroupesActiver'] == 'true') {
   }
 
 }
+
+//Poste admin registre connus
+if($p['config']['optionGeRegistresActiver'] == 'true') {
+  $registres = new msPeopleRelations;
+  $registres->setToID($p['page']['proDataID']);
+  $registres->setRelationType('relationRegistrePraticien');
+  $p['page']['posteAdminRegistre'] = $registres->getRelations(['registryname']);
+}

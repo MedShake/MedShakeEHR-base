@@ -21,17 +21,13 @@
  */
 
 /**
- * People : ajax > obtenir le tableau de relation groupe <-> registres
+ * People : ajax > obtenir le tableau de relation groupe <-> praticiens
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeRegistresActiver'] != 'true') {
- die();
-}
-
 if($p['config']['optionGeGroupesActiver'] != 'true') {
-die();
+ die();
 }
 
 if(isset($_POST['groupeID'])) {
@@ -43,8 +39,7 @@ $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($groupeID);
 
 header('Content-Type: application/json');
-$liensPrat->setRelationType('relationGroupeRegistre');
-$registres = $liensPrat->getRelations(['registryname']);
-msTools::array_unatsort_by('registryname', $registres);
+$liensPrat->setRelationType('relationPraticienGroupe');
+$praticiens = $liensPrat->getRelations(['identite','titre']);
 
-exit(json_encode(array_merge($registres)));
+exit(json_encode(array_merge($praticiens)));

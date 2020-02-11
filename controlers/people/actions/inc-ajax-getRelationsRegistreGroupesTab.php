@@ -21,30 +21,30 @@
  */
 
 /**
- * People : ajax > obtenir le tableau de relation groupe <-> registres
+ * People : ajax > obtenir le tableau de relation registre <-> groupes
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 if($p['config']['optionGeRegistresActiver'] != 'true') {
- die();
+die();
 }
 
 if($p['config']['optionGeGroupesActiver'] != 'true') {
 die();
 }
 
-if(isset($_POST['groupeID'])) {
-  $groupeID=$_POST['groupeID'];
-} elseif(isset($_GET['groupeID'])) {
-  $groupeID=$_GET['groupeID'];
+if(isset($_POST['registreID'])) {
+  $registreID=$_POST['registreID'];
+} elseif(isset($_GET['registreID'])) {
+  $registreID=$_GET['registreID'];
 }
 $liensPrat = new msPeopleRelations();
-$liensPrat->setToID($groupeID);
+$liensPrat->setToID($registreID);
 
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationGroupeRegistre');
-$registres = $liensPrat->getRelations(['registryname']);
-msTools::array_unatsort_by('registryname', $registres);
+$groupes = $liensPrat->getRelations(['groupname', 'city','country']);
+msTools::array_unatsort_by('groupname', $groupes);
 
-exit(json_encode(array_merge($registres)));
+exit(json_encode(array_merge($groupes)));

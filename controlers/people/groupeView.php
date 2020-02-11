@@ -46,9 +46,13 @@ $p['page']['groupeData']=$groupe->getLabelForSimpleAdminDatas($groupe->getSimple
 $labels = new msData();
 $p['page']['groupeDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['groupeData']));
 
-//les praticiens connus
-$groupe->setRelationType('relationPraticienGroupe');
-$p['page']['praticiensConnus'] = $groupe->getRelations(['identite', 'titre']);
+//sortir les choix de relations praticien <-> groupe
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationPraticienGroupe');
+$options = $data->getSelectOptionValue(array($typeID));
+foreach($options[$typeID] as $k=>$v) {
+  $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
+}
 
 // gestion groupe
 if($p['config']['optionGeRegistresActiver'] == 'true') {

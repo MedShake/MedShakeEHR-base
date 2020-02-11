@@ -62,6 +62,16 @@ if($relationType == 'relationPraticienGroupe') {
     $p['page']['titreRelation'] = "Historique d'ajout / suppression des groupes au registre ".$people->getSimpleAdminDatasByName(['registryname'])['registryname'].' <small class="text-muted">#'.$match['params']['peopleID'].'</small>';
   }
 } elseif($relationType == 'relationPatientPatient') {
+} elseif($relationType == 'relationRegistrePraticien') {
+  if($peopleType == 'registre') {
+    $dataComp=['birthname', 'lastname', 'firstname'];
+    $dataCompReverse=['registryname'];
+    $p['page']['titreRelation'] = "Historique des postes d'administrateur du registre ".$people->getSimpleAdminDatasByName(['registryname'])['registryname'].' <small class="text-muted">#'.$match['params']['peopleID'].'</small>';
+  } else {
+    $dataComp=['registryname'];
+    $dataCompReverse=['birthname', 'lastname', 'firstname'];
+    $p['page']['titreRelation'] = "Historique des postes d'administrateur registre de ".$people->getSimpleAdminDatasByName(['identite'])['identiteUsuelle'].' <small class="text-muted">#'.$match['params']['peopleID'].'</small>';
+  }
 }
 
 $data = new msData();

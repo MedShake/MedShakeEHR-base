@@ -43,17 +43,15 @@
           <th colspan="4">
             <form class="form-inline my-2">
               <div class="input-group input-group-sm w-100">
-                <input class="form-control" type="text" placeholder="chercher praticien" id="searchPratID" autocomplete="off"/>
+                <input class="form-control searchPeopleID" type="text" placeholder="chercher praticien" data-ajax="getRelationsPraticiens" autocomplete="off"/>
                 {{ f.select ({
                 'select' : {
-                  'name' : 'preRelationPatientPrat',
-                  'id' : 'preRelationPatientPratID',
-                  'class' : 'custom-select-sm',
+                  'class' : 'custom-select-sm toStatutRelation',
                   'values' : page.preRelationPatientPrat.formValues,
                   'valueDefaut' : el.value.preValue,
                   'autocomplete' : 'off' } }) }}
                 <div class="input-group-append">
-                  <button title="Ajouter ce correspondant" type="submit" id="addRelationPatientPratAgenda" class="btn btn-secondary"><i class="fas fa-plus"></i></button>
+                  <button type="submit" class="btn btn-primary addRelation" data-typeRelation="relationPatientPraticien" data-peopleID=""><i class="fas fa-plus"></i></button>
                 </div>
               </div>
             </form>

@@ -31,8 +31,19 @@
   {{ page.registreData.registryname }}
 {% endblock %}
 
-{% block head %}
+{% block jsFiles %}
   {{ parent() }}
+  {% if config.optionGeGroupesActiver == 'true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    if ($('#bodyTabRelationRegistrePraticiens').length) setTimeout(getRelationsRegistrePraticiensTab({{ page.registreDataID }}), 200);
+    if ($('#bodyTabRelationRegistreGroupes').length) setTimeout(getRelationsRegistreGroupesTab({{ page.registreDataID }}), 200);
+  });
 {% endblock %}
 
 {% block body %}
@@ -72,43 +83,110 @@
       <div class="card-footer">&nbsp;</div>
     </div>
 
-    {% if page.groupesConnus %}
+
+    {% if config.optionGeGroupesActiver == 'true' %}
       <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between">
-          <div class="font-weight-bold">
-            <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i> Groupes
+          <div class="card-header font-weight-bold d-flex justify-content-between">
+            <div  class="font-weight-bold">
+              <i class="fas fa-user-graduate fa-fw fa-lg text-secondary"></i>
+              Administrateurs
+            </div>
+            <div>
+              <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapseGroupeGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+
+              {% if user.rank == 'admin' %}
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationRegistrePraticien/{{ page.registreDataID }}/" title="Historique">
+                <i class="fas fa-history fa-fw"></i>
+              </a>
+              {% endif %}
+            </div>
           </div>
-          <div>
-            {% if user.rank == 'admin' %}
-            <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationGroupeRegistre/{{ page.registreDataID }}/" title="Historique">
-              <i class="fas fa-history fa-fw"></i>
-            </a>
-            {% endif %}
+          <div class="card-body">
+            Administrateurs du registre
+            <div class="collapseGroupeGestion collapse">
+              <form class="form-inline my-2 d-flex">
+                <div class="form-group flex-grow-1">
+                  <div class="input-group input-group-sm flex-grow-1">
+                    <input class="form-control form-control-sm flex-grow-1 searchPeopleID" type="text" placeholder="nom du groupe" data-ajax="getRelationsPraticiens" autocomplete="off"/>
+                    {{ f.select ({
+                    'select' : {
+                      'class' : 'toStatutRelation',
+                      'values' : page.preRelationRegistrePraticien.formValues,
+                      'valueDefaut' : el.value.preValue,
+                      'autocomplete' : 'off' } }) }}
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-sm btn-secondary addRelation" data-typeRelation="relationRegistrePraticien" data-peopleID="{{ page.registreDataID }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                    </div>
+                  </div>
+                </div>
+                {% if config.droitDossierPeutCreerPraticien == 'true' %}
+                  <a class="btn btn-sm btn-outline-secondary ml-4" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/create/"><i class="fas fa-user-md mr-1"></i> Nouvel utilisateur</a>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+
+          <table class="table table-sm mb-0 table-hover">
+            <tbody id="bodyTabRelationRegistrePraticiens">
+            </tbody>
+          </table>
+
+          <div class="card-footer text-right">
+            &nbsp;
           </div>
         </div>
-        <div class="card-body">
-          Groupes participant au registre ({{ page.groupesConnus|length() }})
+    {% endif %}
+
+
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <div class="font-weight-bold">
+          <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i> Groupes
         </div>
-
-        <table class="table table-sm mb-0 table-hover">
-  				<tbody>
-            {% for v in page.groupesConnus %}
-            <tr class="cursor-pointer"  onclick="window.location=$(this).find('a').attr('href');">
-              <td>
-                <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/{{ v.peopleID }}/">
-                  <i class="fas fa-hospital-alt fa-fw"></i>
-                </a>
-                {{ v.groupname }}</td>
-            </tr>
-            {% endfor %}
-  				</tbody>
-  			</table>
-
-        <div class="card-footer text-right">
-          &nbsp;
+        <div>
+          <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapseGroupesGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+          {% if user.rank == 'admin' %}
+          <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationGroupeRegistre/{{ page.registreDataID }}/" title="Historique">
+            <i class="fas fa-history fa-fw"></i>
+          </a>
+          {% endif %}
         </div>
       </div>
-    {% endif %}
+      <div class="card-body">
+        Groupes participant au registre
+        <div class="collapseGroupesGestion collapse">
+          <form class="form-inline my-2 d-flex">
+            <div class="form-group flex-grow-1">
+              <div class="input-group input-group-sm flex-grow-1">
+                <input class="form-control form-control-sm flex-grow-1 searchPeopleID" type="text" placeholder="nom du groupe" data-ajax="getRelationsGroupes" autocomplete="off"/>
+                {{ f.select ({
+                'select' : {
+                  'class' : 'toStatutRelation',
+                  'values' : page.preRelationRegistreGroupe.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-sm btn-secondary addRelation" data-typeRelation="relationGroupeRegistre" data-peopleID="{{ page.registreDataID }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                </div>
+              </div>
+            </div>
+            {% if config.droitDossierPeutCreerPraticien == 'true' %}
+              <a class="btn btn-sm btn-outline-secondary ml-4" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/create/"><i class="fas fa-hospital-alt mr-1"></i> Nouveau groupe</a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      <table class="table table-sm mb-0 table-hover">
+        <tbody id="bodyTabRelationRegistreGroupes">
+        </tbody>
+      </table>
+
+      <div class="card-footer text-right">
+        &nbsp;
+      </div>
+    </div>
+
   </div>
 </div>
 
