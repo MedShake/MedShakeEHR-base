@@ -36,7 +36,7 @@ $registre = new msPeopleRelations;
 $registre->setToID($p['page']['registreDataID']);
 $p['page']['registreData']['dossierType']=$registre->getType();
 
-if($p['page']['registreData']['dossierType'] != 'registre' or $p['config']['optionGeRegistresActiver'] != 'true') {
+if($p['page']['registreData']['dossierType'] != 'registre' or $p['config']['optionGeActiverRegistres'] != 'true') {
   $template = "404";
   return;
 }

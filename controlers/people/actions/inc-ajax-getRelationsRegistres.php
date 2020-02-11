@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if($p['config']['optionGeRegistresActiver'] != 'true') {
+ if($p['config']['optionGeActiverRegistres'] != 'true') {
    die();
  }
 

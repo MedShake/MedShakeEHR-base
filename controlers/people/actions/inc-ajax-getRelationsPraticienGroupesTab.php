@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeGroupesActiver'] != 'true') {
+if($p['config']['optionGeActiverGroupes'] != 'true') {
  die();
 }
 

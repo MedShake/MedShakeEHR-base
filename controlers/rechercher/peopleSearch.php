@@ -34,13 +34,13 @@ if (isset($match['params']['porp'])) {
 }
 
 // si groupe, on vérifie que l'option générale est ON et on 404 sinon
-if($p['page']['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 'true') {
+if($p['page']['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
     $template="404";
     return;
 }
 
 // si registre, on vérifie que l'option générale est ON et on 404 sinon
-if($p['page']['porp'] == 'registre' and $p['config']['optionGeRegistresActiver'] != 'true') {
+if($p['page']['porp'] == 'registre' and $p['config']['optionGeActiverRegistres'] != 'true') {
     $template="404";
     return;
 }

@@ -36,7 +36,7 @@ $groupe = new msPeopleRelations;
 $groupe->setToID($p['page']['groupeDataID']);
 $p['page']['groupeData']['dossierType']=$groupe->getType();
 
-if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGeGroupesActiver'] != 'true') {
+if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGeActiverGroupes'] != 'true') {
   $template = "404";
   return;
 }
@@ -55,7 +55,7 @@ foreach($options[$typeID] as $k=>$v) {
 }
 
 // gestion groupe
-if($p['config']['optionGeRegistresActiver'] == 'true') {
+if($p['config']['optionGeActiverRegistres'] == 'true') {
 
   //sortir les choix de relations groupe <-> registre
   $data = new msData();
