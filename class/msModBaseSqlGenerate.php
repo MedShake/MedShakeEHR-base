@@ -70,7 +70,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaLocalPatientsOfTheDay'=>'patientsOfTheDay.json',
     'agendaNumberForPatientsOfTheDay'=>'0',
     'agendaModePanneauLateral'=>'true',
-    'mailRappelActiver'=>'false',
+    'optionGeActiverRappelsRdvSMS'=>'false',
     'mailRappelDaysBeforeRDV'=>'3',
     'mailRappelMessage'=>'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.',
     'smsRappelActiver'=>'false',
