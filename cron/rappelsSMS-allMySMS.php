@@ -60,7 +60,7 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-$users=msPeople::getUsersListForService('smsRappelActiver');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvSMS');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné

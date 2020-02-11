@@ -73,7 +73,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeActiverRappelsRdvMail'=>'false',
     'mailRappelDaysBeforeRDV'=>'3',
     'mailRappelMessage'=>'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.',
-    'smsRappelActiver'=>'false',
+    'optionGeActiverRappelsRdvSMS'=>'false',
     'smsRappelMessage'=>'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien',
     'smsDaysBeforeRDV'=>'3',
     'smsCreditsFile'=>'creditsSMS.txt',
