@@ -138,6 +138,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
     'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
     'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
+    'designTopMenuSections'=>"agenda\npatients\npraticiens\ngroupes\nregistres\ncompta\ninbox\ndropbox\ntransmissions\noutils"
   ];
 
   protected function _getSpecifSql() {
