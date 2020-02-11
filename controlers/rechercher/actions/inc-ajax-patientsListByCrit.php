@@ -32,12 +32,12 @@ $debug='';
 $template="listing";
 
 // si groupe, on vérifie que l'option générale est ON et on termine sinon
-if($_POST['porp'] == 'groupe' and $p['config']['optionGeGroupesActiver'] != 'true') {
+if($_POST['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
     die();
 }
 
 // si registre, on vérifie que l'option générale est ON et on termine sinon
-if($_POST['porp'] == 'registre' and $p['config']['optionGeRegistresActiver'] != 'true') {
+if($_POST['porp'] == 'registre' and $p['config']['optionGeActiverRegistres'] != 'true') {
     die();
 }
 

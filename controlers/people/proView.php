@@ -54,7 +54,7 @@ $p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule'
 msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
 
 // gestion groupe
-if($p['config']['optionGeGroupesActiver'] == 'true') {
+if($p['config']['optionGeActiverGroupes'] == 'true') {
 
   //sortir les choix de relations praticien <-> groupe
   $data = new msData();
@@ -67,7 +67,7 @@ if($p['config']['optionGeGroupesActiver'] == 'true') {
 }
 
 //Poste admin registre connus
-if($p['config']['optionGeRegistresActiver'] == 'true') {
+if($p['config']['optionGeActiverRegistres'] == 'true') {
   $registres = new msPeopleRelations;
   $registres->setToID($p['page']['proDataID']);
   $registres->setRelationType('relationRegistrePraticien');

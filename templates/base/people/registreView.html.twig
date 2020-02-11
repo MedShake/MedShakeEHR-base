@@ -33,7 +33,7 @@
 
 {% block jsFiles %}
   {{ parent() }}
-  {% if config.optionGeGroupesActiver == 'true' %}
+  {% if config.optionGeActiverGroupes == 'true' %}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
   {% endif %}
 {% endblock %}
@@ -84,7 +84,7 @@
     </div>
 
 
-    {% if config.optionGeGroupesActiver == 'true' %}
+    {% if config.optionGeActiverGroupes == 'true' %}
       <div class="card mb-4">
           <div class="card-header font-weight-bold d-flex justify-content-between">
             <div  class="font-weight-bold">
