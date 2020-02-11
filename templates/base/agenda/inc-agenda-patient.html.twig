@@ -34,7 +34,7 @@
       <span class="nav-link active bg-light" style="border-bottom-color : #f5f5f5"><i class="fas fa-user fa-fw mr-1"></i> Patient</span>
     </li>
     <li class="nav-item ml-auto pt-1">
-      {% if config.vitaleActiver =='true' %}
+      {% if config.optionGeActiverVitaleLecture =='true' %}
         <button id="lectureCpsVital" type="button" class="btn btn-success btn-sm lireCpsVitale" title="Créer à partir des données carte vitale" style="display: none;"><i class="fas fa-user"></i> Vitale</button>
       {% endif %}
       <button id="nettoyer" class="btn btn-danger btn-sm" title="Revenir à l'état initial" style="display:none"><i class="fas fa-times fa-fw"></i></button>

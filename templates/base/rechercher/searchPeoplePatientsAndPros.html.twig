@@ -43,7 +43,7 @@ associer patient
 	{% if config.transmissionsPeutCreer == 'true' %}
 		<script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
 	{% endif %}
-	{% if config.vitaleActiver =='true' %}
+	{% if config.optionGeActiverVitaleLecture =='true' %}
 		<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
 	{% endif %}
 	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js?{{ modules.base }}"></script>
@@ -146,7 +146,7 @@ associer patient
 	  <div class="col-12 col-lg-3 text-right my-lg-2">
 
 	  {% if page.porp in ['patient', 'today'] %}
-			{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
+			{% if page.porp == 'patient' and config.optionGeActiverVitaleLecture =='true' %}
 				<button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
 			{% endif %}
 			<div class="btn-group  my-lg-1">
@@ -198,7 +198,7 @@ associer patient
 	{% endif %}
 
 	{# modal résultat lecture CPS Vitale  #}
-	{% if config.vitaleActiver =='true' %}
+	{% if config.optionGeActiverVitaleLecture =='true' %}
 		{% include 'inc-modalLectureCpsVitale.html.twig' %}
 	{% endif %}
 
