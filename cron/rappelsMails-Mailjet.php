@@ -115,7 +115,7 @@ function sendmailjet($pa)
     return $pa;
 }
 
-$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvSMS');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvMail');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
