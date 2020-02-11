@@ -29,6 +29,8 @@ update `configuration` set name = 'droitDossierPeutVoirUniquementPatientsPropres
 update `configuration` set value = 'false' WHERE `name` LIKE 'droitDossierPeutVoirTousPatients' and value='true';
 update `configuration` set name = 'droitDossierPeutVoirUniquementPatientsPropres' WHERE `name` LIKE 'droitDossierPeutVoirTousPatients' and value = 'false';
 
+update `configuration` set name = 'optionGeActiverDropbox' WHERE `name` LIKE 'dropboxActiver';
+
 -- configuration : registres
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutCreerRegistre', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des registres', 'false');
