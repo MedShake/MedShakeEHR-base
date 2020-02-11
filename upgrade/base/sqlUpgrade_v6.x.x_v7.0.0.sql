@@ -21,6 +21,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutVoirUniquementPraticiensGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir uniquement les praticiens appartenant aux mêmes groupes', 'true');
 
+-- configuration : changer de catégorie variables d'activation
+
+UPDATE `configuration` set cat = 'Activation services' WHERE `name` in ('utiliserLap', 'utiliserLapExterne', 'dropboxActiver','mailRappelActiver','smsRappelActiver','vitaleActiver');
 
 -- configuration : changement de nom de variable
 
@@ -30,7 +33,7 @@ update `configuration` set value = 'false' WHERE `name` LIKE 'droitDossierPeutVo
 update `configuration` set name = 'droitDossierPeutVoirUniquementPatientsPropres' WHERE `name` LIKE 'droitDossierPeutVoirTousPatients' and value = 'false';
 
 update `configuration` set name = 'optionGeActiverDropbox' WHERE `name` LIKE 'dropboxActiver';
-update `configuration` set name = 'optionGeActiverRappelsRdvSMS' WHERE `name` LIKE 'mailRappelActiver';
+update `configuration` set name = 'optionGeActiverRappelsRdvMail' WHERE `name` LIKE 'mailRappelActiver';
 
 -- configuration : registres
 
