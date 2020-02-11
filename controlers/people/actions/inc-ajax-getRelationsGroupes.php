@@ -26,9 +26,9 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if($p['config']['optionGeGroupesActiver'] != 'true') {
-   die();
- }
+if($p['config']['optionGeGroupesActiver'] != 'true') {
+ die();
+}
 
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();

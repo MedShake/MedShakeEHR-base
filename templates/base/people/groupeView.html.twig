@@ -44,6 +44,10 @@
     if ($('#bodyTabRelationGroupeRegistres').length) {
       setTimeout(getRelationsGroupeRegistresTab({{ page.groupeDataID }}), 200);
     }
+
+    if ($('#bodyTabRelationGroupePraticiens').length) {
+      setTimeout(getRelationsGroupePraticiensTab({{ page.groupeDataID }}), 200);
+    }
   });
 {% endblock %}
 
@@ -84,47 +88,54 @@
       <div class="card-footer">&nbsp;</div>
     </div>
 
-    {% if page.praticiensConnus %}
-      <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between">
-          <div class="font-weight-bold">
-            <i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens
-          </div>
-          <div>
-            {% if config.droitDossierPeutCreerPraticien == 'true' %}
-              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/" title="Créer praticien"><i class="fas fa-plus fa-fw"></i></a>
-            {% endif %}
-            {% if user.rank == 'admin' %}
-              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.groupeDataID }}/" title="Historique"><i class="fas fa-history fa-fw"></i></a>
-            {% endif %}
-          </div>
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <div class="font-weight-bold">
+          <i class="fas fa-user-md fa-fw fa-lg text-secondary"></i> Praticiens
         </div>
-        <div class="card-body">
-          Praticiens du groupe ({{ page.praticiensConnus|length() }})
-        </div>
-
-        <table class="table table-sm mb-0 table-hover">
-  				<tbody>
-            {% for v in page.praticiensConnus %}
-            <tr class="cursor-pointer"  onclick="window.location=$(this).find('a').attr('href');">
-              <td>
-                <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.peopleID }}/">
-                  <i class="fas fa-user-md fa-fw"></i>
-                </a>
-                {% if v.titre is not empty %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}</td>
-              <td class="small">
-                {{ v.typeRelationTxt }}
-              </td>
-            </tr>
-            {% endfor %}
-  				</tbody>
-  			</table>
-
-        <div class="card-footer text-right">
-          &nbsp;
+        <div>
+          <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapsePraticiensGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+          {% if user.rank == 'admin' %}
+            <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.groupeDataID }}/" title="Historique"><i class="fas fa-history fa-fw"></i></a>
+          {% endif %}
         </div>
       </div>
-    {% endif %}
+      <div class="card-body">
+        Praticiens du groupe
+
+        <div class="collapsePraticiensGestion collapse">
+          <form class="form-inline my-2 d-flex">
+            <div class="form-group flex-grow-1">
+              <div class="input-group input-group-sm flex-grow-1">
+                <input class="form-control form-control-sm flex-grow-1 searchPeopleID" type="text" placeholder="nom du praticien" data-ajax="getRelationsPraticiens" autocomplete="off"/>
+                {{ f.select ({
+                'select' : {
+                  'class' : 'toStatutRelation',
+                  'values' : page.preRelationPraticienGroupe.formValues,
+                  'valueDefaut' : el.value.preValue,
+                  'autocomplete' : 'off' } }) }}
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-sm btn-secondary addRelation" data-typeRelation="relationPraticienGroupe" data-peopleID="{{ page.groupeDataID }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                </div>
+              </div>
+            </div>
+            {% if config.droitDossierPeutCreerPraticien == 'true' %}
+              <a class="btn btn-sm btn-outline-secondary ml-4" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/"><i class="fas fa-user-md mr-1"></i> Nouveau praticien</a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      <table class="table table-sm mb-0 table-hover">
+				<tbody id="bodyTabRelationGroupePraticiens">
+				</tbody>
+			</table>
+
+      <div class="card-footer text-right">
+        &nbsp;
+      </div>
+    </div>
+
   </div>
   <div class="col-12 col-md-6">
     {% if config.optionGeRegistresActiver == 'true' %}
@@ -156,17 +167,15 @@
             <form class="form-inline my-2 d-flex">
               <div class="form-group flex-grow-1">
                 <div class="input-group input-group-sm flex-grow-1">
-                  <input class="form-control form-control-sm flex-grow-1" type="text" placeholder="nom du registre" id="searchRegistreID" autocomplete="off"/>
+                  <input class="form-control form-control-sm flex-grow-1 searchPeopleID" type="text" placeholder="nom du registre" data-ajax="getRelationsRegistres"  autocomplete="off"/>
                   {{ f.select ({
                   'select' : {
-                    'name' : 'preRelationGroupeRegistre',
-                    'id' : 'preRelationGroupeRegistreID',
-                    'class' : '',
+                    'class' : 'toStatutRelation',
                     'values' : page.preRelationGroupeRegistre.formValues,
                     'valueDefaut' : el.value.preValue,
                     'autocomplete' : 'off' } }) }}
                   <div class="input-group-append">
-                    <button type="submit" id="addRelationGroupeRegistre" class="btn btn-sm btn-secondary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                    <button type="submit" class="btn btn-sm btn-secondary addRelation" data-typeRelation="relationGroupeRegistre" data-peopleID="{{ page.groupeDataID }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
                   </div>
                 </div>
               </div>

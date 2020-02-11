@@ -41,14 +41,19 @@ if($p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
 }
 
 $mss->setCriteresRecherche($criteres);
-$mss->setColonnesRetour(['identite']);
+$mss->setColonnesRetour(['identite', 'titre']);
 $mss->setLimitNumber(20);
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
 	foreach ($data as $k=>$v) {
+    if(!empty($v['titre'])) {
+      $label = $v['titre'].' '.$v['identite'];
+    } else {
+      $label = $v['identite'];
+    }
 		$a_json[]=array(
-			'label'=>trim($v['identite']),
-			'value'=>trim($v['identite']),
+			'label'=>trim($label),
+			'value'=>trim($label),
 			'id'=>$v['peopleID'],
 		);
 	}

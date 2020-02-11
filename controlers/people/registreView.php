@@ -46,6 +46,20 @@ $p['page']['registreData']=$registre->getLabelForSimpleAdminDatas($registre->get
 $labels = new msData();
 $p['page']['registreDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['registreData']));
 
-//les groupes connus
-$registre->setRelationType('relationGroupeRegistre');
-$p['page']['groupesConnus'] = $registre->getRelations(['groupname']);
+
+
+//sortir les choix de relations registre <-> praticiens
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationRegistrePraticien');
+$options = $data->getSelectOptionValue(array($typeID));
+foreach($options[$typeID] as $k=>$v) {
+  $p['page']['preRelationRegistrePraticien']['formValues'][$k]=$v;
+}
+
+//sortir les choix de relations groupe <-> registre
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationGroupeRegistre');
+$options = $data->getSelectOptionValue(array($typeID));
+foreach($options[$typeID] as $k=>$v) {
+  $p['page']['preRelationRegistreGroupe']['formValues'][$k]=$v;
+}

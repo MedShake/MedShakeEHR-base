@@ -279,6 +279,7 @@ $(document).ready(function() {
 
         // panel links pro
         getRelationsPatientPraticiensTab(eventClicked.patientid);
+        $('button.addRelation').attr('data-peopleID', eventClicked.patientid);
         $("#patientLinksPro").show();
 
         // type rdv
@@ -690,6 +691,7 @@ $(document).ready(function() {
       $('#lectureCpsVital').hide();
       getPatientAdminData(ui.item.patientID);
       getRelationsPatientPraticiensTab(ui.item.patientID);
+      $('button.addRelation').attr('data-peopleID', ui.item.patientID);
       selected_patient = ui.item.patientID;
       $('#buttonCreer').removeAttr('disabled');
       $("#patientInfo").show();
@@ -904,6 +906,7 @@ function nettoyer() {
   //gestion correspondants
   $('#searchPratID').val('');
   $('#searchPratID').attr('data-id', '');
+  $('button.addRelation').attr('data-peopleID', '');
 
   $(".fc-bg.selected").removeClass("selected");
 }

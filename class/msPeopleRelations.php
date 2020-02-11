@@ -69,32 +69,12 @@ class msPeopleRelations extends msPeople
  */
     public function setRelationType($v)
     {
-      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre'];
+      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre', 'relationRegistrePraticien'];
       if(!in_array($v, $relationPossibleTypes)) {
         throw new Exception('RelationType is not valid');
       } else {
         return $this->_relationType = $v;
       }
-    }
-
-/**
- * DEPRECATED Créer une relation patient patient
- * @param string $toIdStatus statut familial de l'individu identifé par _toID
- * @param int $withID     ID du 2e individu concerné
- */
-    public function setRelationWithOtherPatient($toIdStatus, $withID)
-    {
-      return $this->setRelation('relationPatientPatient', $toStatus, $withID);
-    }
-
-/**
- * DEPRECATED Créer une relation patient praticien
- * @param string $praticienStatus statut du praticien vis à vis du patient
- * @param int $praticienID     ID du praticien
- */
-    public function setRelationWithPro($praticienStatus, $praticienID)
-    {
-      return $this->setRelation('relationPatientPraticien', $praticienStatus, $praticienID);
     }
 
 /**
@@ -129,9 +109,16 @@ class msPeopleRelations extends msPeople
       if($p['config']['groupesNbMaxGroupesParPro'] < 1) {
         return false;
       }
+      if($this->getType() == 'pro') {
+        $pratID = $this->_toID;
+      } elseif($this->getType() == 'groupe') {
+        $pratID = $this->_withID;
+      } else {
+        return false;
+      }
 
       $typeID = msData::getTypeIDFromName('relationPraticienGroupe');
-      $nb = msSQL::sqlUniqueChamp("select count(id) from objets_data where toID = '".$this->_toID."' and typeID='".$typeID."' and outdated='' and deleted='' ");
+      $nb = msSQL::sqlUniqueChamp("select count(id) from objets_data where toID = '".$pratID."' and typeID='".$typeID."' and outdated='' and deleted='' ");
       if($nb >= $p['config']['groupesNbMaxGroupesParPro']) {
         return true;
       } else {
@@ -173,7 +160,14 @@ class msPeopleRelations extends msPeople
       if($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
         throw new Exception('Action non valide');
       }
-      if($this->_relationType == 'relationPraticienGroupe' and ($toIdType!='pro' or $this->_withIdType != 'groupe')) {
+      if($this->_relationType == 'relationPraticienGroupe') {
+        if ($toIdType == 'pro' and $this->_withIdType != 'groupe') {
+          throw new Exception('Action non valide');
+        } elseif ($toIdType == 'groupe' and $this->_withIdType != 'pro') {
+          throw new Exception('Action non valide');
+        }
+      }
+      if($this->_relationType == 'relationPraticienRegistre' and ($toIdType!='pro' or $this->_withIdType != 'registre')) {
         throw new Exception('Action non valide');
       }
 

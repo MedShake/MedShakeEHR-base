@@ -45,6 +45,9 @@ $acceptedModes=array(
     'setRelation', // définir une relation entre 2 peopleID
     'getRelationsRegistres', // autocomplete : obtenir le json registres
     'getRelationsGroupeRegistresTab', // obtenir tableau de relation groupe <-> registres
+    'getRelationsRegistrePraticiensTab', // obtenir le tableau de relation registre <-> praticiens
+    'getRelationsGroupePraticiensTab', // obtenir le tableau de relation groupe <-> praticiens
+    'getRelationsRegistreGroupesTab', // obtenir le tableau de relation registre <-> groupes
 );
 
 if (!in_array($m, $acceptedModes)) {
