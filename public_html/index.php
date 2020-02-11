@@ -181,6 +181,9 @@ if (isset($template)) {
       //utilisateurs pouvant avoir un agenda
       $agendaUsers= new msPeople();
       $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+
+      // barre de navigation sup.
+      $p['page']['topNavBarSections'] = Spyc::YAMLLoadString($p['config']['designTopMenuSections']);
     }
 
 
