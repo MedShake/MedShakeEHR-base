@@ -43,7 +43,7 @@ registre
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
-{% if config.vitaleActiver =='true' %}
+{% if config.optionGeActiverVitaleLecture =='true' %}
 	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
 {% endif %}
 {% endblock %}
@@ -62,7 +62,7 @@ Nouveau registre
 {% endif %}
 </h1>
 
-{% if page.porp == 'patient' and config.vitaleActiver =='true' %}
+{% if page.porp == 'patient' and config.optionGeActiverVitaleLecture =='true' %}
 <div class="row mb-3">
 	<div class="col">
 		<button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
@@ -98,7 +98,7 @@ Nouveau registre
 {% block modals %}
 
 {# modal résultat lecture CPS Vitale  #}
-{% if config.vitaleActiver =='true' %}
+{% if config.optionGeActiverVitaleLecture =='true' %}
 	{% include 'inc-modalLectureCpsVitale.html.twig' %}
 {% endif %}
 

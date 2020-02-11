@@ -83,7 +83,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/mattbryson/TouchSwipe-Jquery-Plugin/jquery.touchSwipe.min.js?{{ modules.base }}"></script>
 
   {# JS fonctions pour Vitale #}
-  {% if config.vitaleActiver =='true' %}
+  {% if config.optionGeActiverVitaleLecture =='true' %}
   	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
   {% endif %}
 
@@ -209,7 +209,7 @@
 {% endif %}
 
 {# modal CPS Vitale  #}
-{% if config.vitaleActiver =='true' %}
+{% if config.optionGeActiverVitaleLecture =='true' %}
   {% include 'inc-modalFaireFse.html.twig' %}
 {% endif %}
 

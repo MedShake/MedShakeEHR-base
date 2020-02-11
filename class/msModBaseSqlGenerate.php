@@ -87,7 +87,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'lapSearchResultsSortBy'=>'nom',
     'lapSearchDefaultType'=>'dci',
     'lapPrintAllergyRisk'=>'true',
-    'vitaleActiver'=>'false',
+    'optionGeActiverVitaleLecture'=>'false',
     'designTopMenuStyle'=>'icones',
     'designTopMenuInboxCountDisplay'=>'true',
     'designTopMenuTransmissionsCountDisplay'=>'true',

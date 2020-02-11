@@ -35,6 +35,7 @@ update `configuration` set name = 'droitDossierPeutVoirUniquementPatientsPropres
 update `configuration` set name = 'optionGeActiverDropbox' WHERE `name` LIKE 'dropboxActiver';
 update `configuration` set name = 'optionGeActiverRappelsRdvMail' WHERE `name` LIKE 'mailRappelActiver';
 update `configuration` set name = 'optionGeActiverRappelsRdvSMS' WHERE `name` LIKE 'smsRappelActiver';
+update `configuration` set name = 'optionGeActiverVitaleLecture' WHERE `name` LIKE 'vitaleActiver';
 
 -- configuration : registres
 
