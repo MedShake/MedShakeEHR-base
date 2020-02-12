@@ -634,7 +634,7 @@ class msPDF
             $modePrint='standard';
             $this->_courrierData['ordoImpressionNbLignes']='o';
 
-            if($p['config']['utiliserLap'] == 'true' or $p['config']['optionGeActiverLapExterne'] == 'true' ) {
+            if($p['config']['optionGeActiverLapInterne'] == 'true' or $p['config']['optionGeActiverLapExterne'] == 'true' ) {
               $this->_courrierData['ordoImpressionNbLignes'] = 'n';
             } else {
               $this->_courrierData['ordoImpressionNbLignes'] = 'o';

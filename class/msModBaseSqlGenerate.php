@@ -79,7 +79,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'smsCreditsFile'=>'creditsSMS.txt',
     'smsSeuilCreditsAlerte'=>'150',
     'smsTpoa'=>'Dr #praticien',
-    'utiliserLap'=>'false',
+    'optionGeActiverLapInterne'=>'false',
     'theriaqueShowMedicHospi'=>'true',
     'theriaqueShowMedicNonComer'=>'false',
     'lapAlertPatientTermeGrossesseSup46'=>'true',

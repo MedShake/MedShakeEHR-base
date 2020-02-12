@@ -37,6 +37,8 @@ update `configuration` set name = 'optionGeActiverRappelsRdvMail' WHERE `name` L
 update `configuration` set name = 'optionGeActiverRappelsRdvSMS' WHERE `name` LIKE 'smsRappelActiver';
 update `configuration` set name = 'optionGeActiverVitaleLecture' WHERE `name` LIKE 'vitaleActiver';
 update `configuration` set name = 'optionGeActiverLapExterne' WHERE `name` LIKE 'utiliserLapExterne';
+update `configuration` set name = 'optionGeActiverLapInterne' WHERE `name` LIKE 'utiliserLap';
+
 -- configuration : registres
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutCreerRegistre', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des registres', 'false');
