@@ -33,7 +33,7 @@
        <button type="button" class="btn btn-primary openLapExterne" title="Ordonnance médicamenteuse via LAP externe"><i class="fas fa-pills fa-lg fa-fw"></i></button>
        <button type="button" class="btn btn-primary addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Autres prescriptions"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>
      </div>
-   {% elseif config.utiliserLap == 'true' %}
+   {% elseif config.optionGeActiverLapInterne == 'true' %}
      <div class="btn-group mr-2">
        <button type="button" class="btn btn-primary openLAP" title="Ordonnance médicamenteuse via LAP"><i class="fas fa-pills fa-lg fa-fw"></i></button>
        <button type="button" class="btn btn-primary addNewOrdo" data-porteur="{{ page.formOrdo.0.id }}" data-module="{{ page.formOrdo.0.module }}" data-ordoForm="{{ page.formOrdo.0.formValues }}" title="Autres prescriptions"><i class="fas fa-file-medical fa-lg fa-fw"></i></button>

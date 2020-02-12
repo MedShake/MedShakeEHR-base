@@ -30,7 +30,7 @@
   <div class=" col-md-2">
 
     <ul class="nav nav-pills flex-column">
-      {% if config.utiliserLap == 'true' %}
+      {% if config.optionGeActiverLapInterne == 'true' %}
       <li class="nav-item">
         <a class="nav-link  active" href="#lapMedics" data-toggle="tab">Paramétrage du LAP</a>
       </li>
@@ -40,7 +40,7 @@
       {% endif %}
       {% if config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
       <li class="nav-item">
-        <a id="prescriptionsTypesButton" class="nav-link{% if config.utiliserLap != 'true' %} active{% endif %}" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
+        <a id="prescriptionsTypesButton" class="nav-link{% if config.optionGeActiverLapInterne != 'true' %} active{% endif %}" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
       </li>
       {% endif %}
     </ul>
@@ -50,7 +50,7 @@
     <div class="tab-content">
 
       {# paramètres perso du LAP #}
-      {% if config.utiliserLap == 'true' %}
+      {% if config.optionGeActiverLapInterne == 'true' %}
       <div role="tabpanel" class="tab-pane active" id="lapMedics">
         <h3>Paramétrage du LAP</h3>
 
@@ -119,7 +119,7 @@
       {% endif %}
 
       {# paramètres perso des SAMs #}
-      {% if config.utiliserLap == 'true' %}
+      {% if config.optionGeActiverLapInterne == 'true' %}
       <div role="tabpanel" class="tab-pane" id="lapSams">
         <h3>Paramétrage des alertes SAM (Système d’Aide à la décision par Médicament)</h3>
 
@@ -149,7 +149,7 @@
       {% endif %}
 
       {# prescriptions types #}
-      <div role="tabpanel" class="tab-pane{% if config.utiliserLap != 'true' %} active{% endif %}" id="prescriptionsTypes">
+      <div role="tabpanel" class="tab-pane{% if config.optionGeActiverLapInterne != 'true' %} active{% endif %}" id="prescriptionsTypes">
         <h3>Gestion des catégories et des prescriptions types personnelles</h3>
 
         <div class="alert alert-info" role="alert">

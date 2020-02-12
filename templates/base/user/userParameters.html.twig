@@ -86,7 +86,7 @@
         <a class="nav-link" href="#pagenda" aria-controls="pagenda" role="tab" data-toggle="tab">Agenda</a>
       </li>
     {% endif %}
-    {% if config.utiliserLap == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
+    {% if config.optionGeActiverLapInterne == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
     <li class="nav-item">
       <a class="nav-link" href="#plap" aria-controls="plap" role="tab" data-toggle="tab">Prescriptions</a>
     </li>
@@ -113,7 +113,7 @@
     </div>
 
     {# LAP #}
-    {% if config.utiliserLap == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
+    {% if config.optionGeActiverLapInterne == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
       <div role="tabpanel" class="tab-pane" id="plap">
         {% include('inc-tabUserParametersLap.html.twig') %}
       </div>

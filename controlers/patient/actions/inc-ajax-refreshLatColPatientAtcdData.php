@@ -41,4 +41,4 @@ if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
 }
 
 //les ALD du patient
-if($p['config']['utiliserLap'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}
+if($p['config']['optionGeActiverLapInterne'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}

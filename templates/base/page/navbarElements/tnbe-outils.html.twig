@@ -41,10 +41,10 @@
  </a>
 
  <div class="dropdown-menu">
-   {% if config.utiliserLap == 'true' or config.VoirRouletteObstetricale == 'true' %}
+   {% if config.optionGeActiverLapInterne == 'true' or config.VoirRouletteObstetricale == 'true' %}
      <h6 class="dropdown-header">Outils</h6>
    {% endif %}
-   {% if config.utiliserLap == 'true' %}
+   {% if config.optionGeActiverLapInterne == 'true' %}
      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/lap/">
        <i class="fas fa-pills fa-fw text-muted mr-1"></i>
        LAP et BDM
@@ -62,7 +62,7 @@
        Envoyer un fax
      </a>
    {% endif %}
-   {% if config.utiliserLap == 'true' or config.VoirRouletteObstetricale == 'true' %}
+   {% if config.optionGeActiverLapInterne == 'true' or config.VoirRouletteObstetricale == 'true' %}
      <div role="separator" class="dropdown-divider"></div>
    {% endif %}
    {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}

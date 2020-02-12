@@ -69,7 +69,7 @@
   {{ parent() }}
   var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
   var signPeriphName = '{{ config.signPeriphName }}';
-  {% if config.utiliserLap == 'true' %}
+  {% if config.optionGeActiverLapInterne == 'true' %}
     lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};
     lapAlertPatientAllaitementSup3Ans = {{ config.lapAlertPatientAllaitementSup3Ans }};
   {% endif %}
@@ -96,7 +96,7 @@
   {% endif %}
 
   {# JS LAP #}
-  {% if config.utiliserLap == 'true' %}
+  {% if config.optionGeActiverLapInterne == 'true' %}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapAllergies.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js?{{ modules.base }}"></script>
@@ -170,7 +170,7 @@
 {% include 'inc-patientModal-phonecapture.html.twig' %}
 
 {# modals spécifiques LAP ON #}
-{% if config.utiliserLap == 'true' %}
+{% if config.optionGeActiverLapInterne == 'true' %}
   {# recherche CIM10 #}
   {% include 'inc-patientModal-searchCIM10.html.twig' %}
 
