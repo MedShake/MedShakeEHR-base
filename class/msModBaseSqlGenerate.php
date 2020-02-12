@@ -127,7 +127,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeDestructionDataDossierPatient'=>'false',
     'dicomPort'=>'8042',
     'dicomProtocol'=>'http://',
-    'utiliserLapExterne'=>'false',
+    'optionGeActiverLapExterne'=>'false',
     'utiliserLapExterneName'=>'',
     'optionGeLoginPassAttribution'=>'admin',
     'optionGeLoginPassOnlineRecovery'=>'false',

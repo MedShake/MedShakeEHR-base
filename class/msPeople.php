@@ -584,7 +584,7 @@ class msPeople
       if($p['config']['utiliserLap'] == 'true') {
         $lapCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."') ";
       }
-      if($p['config']['utiliserLapExterne'] == 'true') {
+      if($p['config']['optionGeActiverLapExterne'] == 'true') {
         $lapExtCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapExtOrdonnance']."') ";
       }
 
