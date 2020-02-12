@@ -24,38 +24,39 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
+{% if config.optionGeActiverTransmissions == 'true' %}
+  {% if config.transmissionsPeutVoir == 'true' %}
+   <li class="nav-item">
+     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">
+       {% if config.designTopMenuStyle == 'icones' %}
+         {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
+           {% set transCompClass = 'text-danger' %}
+         {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
+           {% set transCompClass = 'text-warning' %}
+         {% else %}
+           {% set transCompClass = '' %}
+         {% endif %}
 
-{% if config.transmissionsPeutVoir == 'true' %}
- <li class="nav-item">
-   <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">
-     {% if config.designTopMenuStyle == 'icones' %}
-       {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
-         {% set transCompClass = 'text-danger' %}
-       {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
-         {% set transCompClass = 'text-warning' %}
+         <i class="fas fa-comments fa-lg d-none d-lg-inline {{ transCompClass }}"></i>
+         <span class="d-lg-none">
+           Transmissions</span>
+         {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
+           <span class="badge text-white" style="margin-left: -5px">{{ page.transmissionsNbNonLues.toutes }}</span>
+         {% endif %}
        {% else %}
-         {% set transCompClass = '' %}
+         {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
+           {% set transCompClass = 'badge-danger' %}
+         {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
+           {% set transCompClass = 'badge-warning' %}
+         {% else %}
+           {% set transCompClass = 'badge-light' %}
+         {% endif %}
+         Transmissions
+         {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
+           <span class="badge {{ transCompClass }}">{{ page.transmissionsNbNonLues.toutes }}</span>
+         {% endif %}
        {% endif %}
-
-       <i class="fas fa-comments fa-lg d-none d-lg-inline {{ transCompClass }}"></i>
-       <span class="d-lg-none">
-         Transmissions</span>
-       {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
-         <span class="badge text-white" style="margin-left: -5px">{{ page.transmissionsNbNonLues.toutes }}</span>
-       {% endif %}
-     {% else %}
-       {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
-         {% set transCompClass = 'badge-danger' %}
-       {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
-         {% set transCompClass = 'badge-warning' %}
-       {% else %}
-         {% set transCompClass = 'badge-light' %}
-       {% endif %}
-       Transmissions
-       {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
-         <span class="badge {{ transCompClass }}">{{ page.transmissionsNbNonLues.toutes }}</span>
-       {% endif %}
-     {% endif %}
-   </a>
- </li>
+     </a>
+   </li>
+  {% endif %}
 {% endif %}

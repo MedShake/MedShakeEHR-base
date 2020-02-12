@@ -38,10 +38,12 @@
      <i class="fas fa-user-cog fa-fw text-muted mr-1"></i>
      Paramètres utilisateur
    </a>
-   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">
-     <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i>
-     Activer PhoneCapture
-   </a>
+   {% if config.optionGeActiverPhonecapture == 'true' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">
+       <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i>
+       Activer PhoneCapture
+     </a>
+   {% endif %}
    {% if user.rank == 'admin' %}
      <div role="separator" class="dropdown-divider"></div>
      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">
