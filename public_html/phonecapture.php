@@ -69,11 +69,7 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
+$match = msSystem::getRoutes(['phonecapture']);
 
 ///////// user
 if (isset($_COOKIE['userIdPc'])) {
@@ -92,7 +88,7 @@ if (isset($_COOKIE['userIdPc'])) {
 }
 
 ///////// Controler else -> 404
-if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+if ($match and is_file($homepath.'controlers/'.$match['target'].'.php') and $p['config']['optionGeActiverPhonecapture'] == 'true') {
     include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé
