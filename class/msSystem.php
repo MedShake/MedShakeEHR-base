@@ -70,4 +70,39 @@ class msSystem
     }
   }
 
+/**
+ * Routes
+ * @param  array  $preDefinedRoutes jeux prédéfinis de routes
+ * @return array                   match routeur
+ */
+  public static function getRoutes($preDefinedRoutes=[]) {
+    global $p;
+
+    if((!empty($preDefinedRoutes))) {
+      $routes = $preDefinedRoutes;
+    } else {
+      $routes[] = 'base';
+      $routes[] = 'login';
+      if(isset($p['user']['rank']) and $p['user']['rank'] == 'admin') $routes[] = 'configuration';
+
+      $inclusionsRules=Spyc::YAMLLoad($p['homepath'].'config/routes/routesInclusionRules.yml');
+      if(!empty($inclusionsRules)) {
+        foreach($inclusionsRules as $rule => $f) {
+          if(isset($p['config'][$rule]) and $p['config'][$rule] == 'true') $routes[] = $f;
+        }
+      }
+    }
+
+    $router = new AltoRouter();
+    foreach($routes as $route) {
+      $file = $p['homepath'].'config/routes/routes-'.$route.'.yml';
+      if(is_file($file)) {
+        $routes=Spyc::YAMLLoad($file);
+        $router->addRoutes($routes);
+      }
+    }
+    $router->setBasePath($p['config']['urlHostSuffixe']);
+    return $router->match();
+  }
+
 }

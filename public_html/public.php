@@ -78,11 +78,7 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
+$match = msSystem::getRoutes(['public']);
 
 ///////// Maintenance
 if (msSystem::getSystemState()=='maintenance') {

@@ -138,7 +138,14 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
     'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
     'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
-    'designTopMenuSections'=>"agenda\npatients\npraticiens\ngroupes\nregistres\ncompta\ninbox\ndropbox\ntransmissions\noutils"
+    'designTopMenuSections'=>"agenda\npatients\npraticiens\ngroupes\nregistres\ncompta\ninbox\ndropbox\ntransmissions\noutils",
+    'optionGeActiverAgenda'=>'true',
+    'optionGeActiverCompta'=>'true',
+    'optionGeActiverInboxApicrypt'=>'true',
+    'optionGeActiverApiRest'=>'true',
+    'optionGeActiverTransmissions'=>'true',
+    'optionGeActiverPhonecapture'=>'true',
+    'optionGeActiverDicom'=>'true',
   ];
 
   protected function _getSpecifSql() {

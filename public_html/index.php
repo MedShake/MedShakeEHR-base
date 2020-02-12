@@ -81,12 +81,6 @@ if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
 define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
-/////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
 
 ///////// user
 $p['user']=null;
@@ -94,28 +88,43 @@ $p['user']['id']=null;
 $p['user']['module']='base';
 
 if (msSystem::getProUserCount() == 0) {
+
+    $match = msSystem::getRoutes(['login']);
+
     if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
         msTools::redirRoute('userLogInFirst');
     }
 } elseif (isset($_COOKIE['userName'])) {
     $iUser = new msUser;
     $p['user']=$iUser->userIdentification();
-    if ($p['user']['rank']!='admin' and $p['config']['systemState']=='maintenance') {
-        msTools::redirection('/maintenance.html');
-    }
+
     if (isset($p['user']['id'])) {
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
+
+    $match = msSystem::getRoutes();
+
+    if ($p['user']['rank']!='admin' and $p['config']['systemState']=='maintenance') {
+        msTools::redirection('/maintenance.html');
+    }
+
     if ($p['config']['optionGeLogin2FA'] == 'true' and !$iUser->check2faValidKey() and $match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest' and $match['target']!='login/logInSet2fa') {
       $iUser->doLogout();
       msTools::redirRoute('userLogIn');
     }
 } else {
+    if(msConfiguration::getDefaultParameterValue('optionGeActiverApiRest') == 'true') {
+      $match = msSystem::getRoutes(['login', 'apiRest']);
+    } else {
+      $match = msSystem::getRoutes(['login']);
+    }
+
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
-        msTools::redirRoute('userLogIn');
+        msTools::redirection('/login/');
     }
     // compléter la config par défaut
     $p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
 }
 
 // simplification pour étiquetage des dossiers patients test
@@ -141,6 +150,8 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     }
 } elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
     include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif(isset($p['user']['id'])) {
+    $template ='404';
 }
 
 //////// View if defined
@@ -152,7 +163,7 @@ if (isset($template)) {
 
     if (isset($p['user']['id'])) {
       //inbox number of messages
-      if($p['config']['designTopMenuInboxCountDisplay'] == 'true') {
+      if($p['config']['optionGeActiverInboxApicrypt'] == 'true' and $p['config']['designTopMenuInboxCountDisplay'] == 'true') {
         $p['page']['inbox']['numberOfMsg']=msInbox::getInboxUnreadMessages();
       }
 
@@ -163,7 +174,7 @@ if (isset($template)) {
       }
 
       //transmissions non lues
-      if($p['config']['transmissionsPeutVoir'] == 'true') {
+      if($p['config']['optionGeActiverTransmissions'] == 'true' and $p['config']['transmissionsPeutVoir'] == 'true') {
         $transCompter=new msTransmissions;
         $transCompter->setUserID($p['user']['id']);
         $p['page']['transmissionsNbNonLues']=$transCompter->getNbTransmissionsNonLuesParPrio();
@@ -179,8 +190,10 @@ if (isset($template)) {
       }
 
       //utilisateurs pouvant avoir un agenda
-      $agendaUsers= new msPeople();
-      $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+      if($p['config']['optionGeActiverAgenda'] == 'true') {
+        $agendaUsers= new msPeople();
+        $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+      }
 
       // barre de navigation sup.
       $p['page']['topNavBarSections'] = Spyc::YAMLLoadString($p['config']['designTopMenuSections']);

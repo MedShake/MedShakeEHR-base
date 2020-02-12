@@ -140,13 +140,6 @@ if (!is_file($homepath.'config/config.yml')) {
         define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
         require $homepath.'fonctions/validators.php';
 
-        /////////// Router
-        $router = new AltoRouter();
-        $routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-        $router->addRoutes($routes);
-        $router->setBasePath($p['config']['urlHostSuffixe']);
-        $match = $router->match();
-
         if (empty(msSQL::sql2tabSimple("SHOW TABLES"))) {
             exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' -h'.escapeshellarg($p['config']['sqlServeur']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' < '.$homepath.'upgrade/base/sqlInstall.sql');
             msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
