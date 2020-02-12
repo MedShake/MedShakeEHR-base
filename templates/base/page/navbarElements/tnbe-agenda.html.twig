@@ -26,22 +26,10 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-{% if config.agendaDistantLink %}
- <li class="nav-item">
-   <a class="nav-link" href="{{ config.agendaDistantLink }}" target="agenda">
-     {% if config.designTopMenuStyle == 'icones' %}
-       <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
-       <span class="d-lg-none">
-         Agenda</span>
-     {% else %}
-       Agenda
-     {% endif %}
-   </a>
- </li>
-{% elseif page.agendaUsers|length == 1 %}
- {% for k, v in page.agendaUsers %}
+{% if config.optionGeActiverAgenda == 'true' %}
+  {% if config.agendaDistantLink %}
    <li class="nav-item">
-     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">
+     <a class="nav-link" href="{{ config.agendaDistantLink }}" target="agenda">
        {% if config.designTopMenuStyle == 'icones' %}
          <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
          <span class="d-lg-none">
@@ -51,31 +39,45 @@
        {% endif %}
      </a>
    </li>
- {% endfor %}
-{% elseif page.agendaUsers %}
- <li class="nav-item dropdown">
-   <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
-     {% if config.designTopMenuStyle == 'icones' %}
-       <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
-       <span class="d-lg-none">
-         Agenda</span>
-     {% else %}
-       Agenda
-     {% endif %}
-   </a>
-   <div class="dropdown-menu">
-     {% if user.id in page.agendaUsers | keys %}
-       <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
-       <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/">{{ page.agendaUsers[user.id] }}</a>
-
-       <div class="dropdown-divider"></div>
-     {% endif %}
-     {% for k, v in page.agendaUsers %}
-       {% if k != user.id %}
-         <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
-         <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+  {% elseif page.agendaUsers|length == 1 %}
+   {% for k, v in page.agendaUsers %}
+     <li class="nav-item">
+       <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">
+         {% if config.designTopMenuStyle == 'icones' %}
+           <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
+           <span class="d-lg-none">
+             Agenda</span>
+         {% else %}
+           Agenda
+         {% endif %}
+       </a>
+     </li>
+   {% endfor %}
+  {% elseif page.agendaUsers %}
+   <li class="nav-item dropdown">
+     <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+       {% if config.designTopMenuStyle == 'icones' %}
+         <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
+         <span class="d-lg-none">
+           Agenda</span>
+       {% else %}
+         Agenda
        {% endif %}
-     {% endfor %}
-   </div>
- </li>
+     </a>
+     <div class="dropdown-menu">
+       {% if user.id in page.agendaUsers | keys %}
+         <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
+         <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/">{{ page.agendaUsers[user.id] }}</a>
+
+         <div class="dropdown-divider"></div>
+       {% endif %}
+       {% for k, v in page.agendaUsers %}
+         {% if k != user.id %}
+           <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+           <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+         {% endif %}
+       {% endfor %}
+     </div>
+   </li>
+  {% endif %}
 {% endif %}
