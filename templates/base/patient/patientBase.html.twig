@@ -167,7 +167,9 @@
 {% include 'inc-patientModal-changerDateEffet.html.twig' %}
 
 {# modal phonecapture #}
-{% include 'inc-patientModal-phonecapture.html.twig' %}
+{% if config.optionGeActiverPhonecapture == 'true' %}
+  {% include 'inc-patientModal-phonecapture.html.twig' %}
+{% endif %}
 
 {# modals spécifiques LAP ON #}
 {% if config.optionGeActiverLapInterne == 'true' %}
