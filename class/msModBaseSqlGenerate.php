@@ -134,7 +134,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeActiverDropbox'=>'false',
     'designTopMenuDropboxCountDisplay'=>'true',
     'formFormulaireListingGroupes'=>'baseListingGroupes',
-    'droitDossierPeutCreerGroupe'=>'false',
+    'droitGroupePeutCreerGroupe'=>'false',
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
     'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
     'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
@@ -146,6 +146,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeActiverTransmissions'=>'true',
     'optionGeActiverPhonecapture'=>'true',
     'optionGeActiverDicom'=>'true',
+    'droitRegistrePeutCreerRegistre'=>'false',
   ];
 
   protected function _getSpecifSql() {

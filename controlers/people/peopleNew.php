@@ -38,9 +38,9 @@ if ($p['page']['porp']=='patient') {
   $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 } elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
   $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
-} elseif ($p['page']['porp']=='groupe' and $p['config']['droitDossierPeutCreerGroupe'] == 'true') {
+} elseif ($p['page']['porp']=='groupe' and $p['config']['droitGroupePeutCreerGroupe'] == 'true') {
   $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
-} elseif ($p['page']['porp']=='registre' and $p['config']['droitDossierPeutCreerRegistre'] == 'true') {
+} elseif ($p['page']['porp']=='registre' and $p['config']['droitRegistrePeutCreerRegistre'] == 'true') {
   $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
 } else {
   $template="forbidden";
