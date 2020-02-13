@@ -135,6 +135,11 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
       $mss->setRestricDossiersPratGroupes(true);
     }
 
+    if($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+      $mss->setRestricGroupesEstMembre(true);
+    }
+
+    // critères
     if($_POST['porp']=='registre') {
       $criteres = array(
           'registryname'=>$_POST['d2'].'%',

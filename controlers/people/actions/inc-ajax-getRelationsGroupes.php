@@ -42,6 +42,11 @@ $criteres = array(
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['groupname', 'city', 'country']);
 $mss->setLimitNumber(20);
+
+if($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+  $mss->setRestricGroupesEstMembre(true);
+}
+
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
 	foreach ($data as $k=>$v) {

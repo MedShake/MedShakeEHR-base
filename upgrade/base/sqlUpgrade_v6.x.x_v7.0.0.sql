@@ -21,6 +21,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutVoirUniquementPraticiensGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir uniquement les praticiens appartenant aux mêmes groupes', 'true');
 
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
+('droitGroupePeutVoirTousGroupes', 'default', 0, '', 'Droits', 'true/false', 'si true, peut voir tous les groupes ', 'false');
+
+
 -- configuration : changer de catégorie variables d'activation
 
 UPDATE `configuration` set cat = 'Activation services' WHERE `name` in ('utiliserLap', 'utiliserLapExterne', 'dropboxActiver','mailRappelActiver','smsRappelActiver','vitaleActiver');
@@ -62,6 +66,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeActiverTransmissions', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des transmissions', 'true');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeActiverPhonecapture', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de phonecapture (nécessite DICOM)', 'true');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeActiverDicom', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des fonctions liées au DICOM (nécessite Orthanc)', 'true');
+
+-- configuration : redirection post créa praticien
+
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGePraticienOuvrirApresCreation', 'default', '0', '', 'Options', 'text', 'où rediriger après création d\'un nouveau praticien (fichepro/crealogin/creagrouplink)', 'fichepro');
 
 -- data_cat
 

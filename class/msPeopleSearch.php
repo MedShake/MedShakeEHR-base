@@ -37,6 +37,7 @@ class msPeopleSearch
   private $_restricDossiersPropres = false;
   private $_restricDossiersGroupes = false;
   private $_restricDossiersPratGroupes = false;
+  private $_restricGroupesEstMembre = false;
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -64,6 +65,15 @@ class msPeopleSearch
   public function setRestricDossiersPratGroupes($restricDossiersPratGroupes) {
     if(!is_bool($restricDossiersPratGroupes)) throw new Exception('RestricDossiersPratGroupes is not bool');
     return $this->_restricDossiersPratGroupes=$restricDossiersPratGroupes;
+  }
+
+/**
+ * Définir une restriction de recherche aux groupes auxquels l'utilisateur est membre
+ * @param bool $restricGroupesEstMembre true/false
+ */
+  public function setRestricGroupesEstMembre($restricGroupesEstMembre) {
+    if(!is_bool($restricGroupesEstMembre)) throw new Exception('RestricGroupesEstMembre is not bool');
+    return $this->_restricGroupesEstMembre=$restricGroupesEstMembre;
   }
 
 /**
@@ -147,13 +157,27 @@ class msPeopleSearch
       }
     }
 
-    if(in_array('pro', $this->_peopleType ) and $this->_restricDossiersPratGroupes==true) {
+    if(in_array('pro', $this->_peopleType ) and $this->_restricDossiersPratGroupes == true) {
       $frat = new msPeopleRelations;
       $frat->setToID($p['user']['id']);
       $frat->setRelationType('relationPraticienGroupe');
       $ids = $frat->getSiblingIDs();
       $ids[] = $p['user']['id'];
       $restrictionUser .= " and p.id in ('".implode("', '", $ids)."')";
+    }
+
+    if(in_array('groupe', $this->_peopleType ) and $this->_restricGroupesEstMembre == true) {
+      $frat = new msPeopleRelations;
+      $frat->setToID($p['user']['id']);
+      $frat->setRelationType('relationPraticienGroupe');
+      $relations = $frat->getRelations();
+      if(!empty($relations)) {
+        $ids = array_column($relations, 'peopleID');
+        $restrictionUser .= " and p.id in ('".implode("', '", $ids)."')";
+      } else {
+        return $sql = 'SELECT NULL LIMIT 0';
+      }
+
     }
 
     $orderBy='';
