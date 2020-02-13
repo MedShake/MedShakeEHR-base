@@ -32,6 +32,7 @@ class msPeopleRelations extends msPeople
   private $_withID;
   private $_withIdType;
   private $_relationType;
+  private $_returnedPeopleTypes=[];
 
 
 /**
@@ -75,6 +76,17 @@ class msPeopleRelations extends msPeople
       } else {
         return $this->_relationType = $v;
       }
+    }
+
+/**
+ * Définir les types de people à retourner
+ * @param array $returnedPeopleType array des types de people à retourner
+ */
+    public function setReturnedPeopleTypes($returnedPeopleType) {
+      if(!is_array($returnedPeopleType)) {
+        throw new Exception('ReturnedPeopleType is not valid');
+      }
+      $this->_returnedPeopleTypes = $returnedPeopleType;
     }
 
 /**
@@ -154,7 +166,7 @@ class msPeopleRelations extends msPeople
       // valider l'opération
       $toIdType = $this->getType();
 
-      if($this->_relationType == 'relationPatientPraticien' and ($toIdType!='patient' or $this->_withIdType != 'pro')) {
+      if($this->_relationType == 'relationPatientPraticien' and (($toIdType!='patient' and $toIdType!='pro') or $this->_withIdType != 'pro')) {
         throw new Exception('Action non valide');
       }
       if($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
@@ -326,9 +338,19 @@ class msPeopleRelations extends msPeople
           $orderBy = "order by STR_TO_DATE(co".$name2typeID['birthdate'].".value, '%d/%m/%Y') desc, trim(concat(lastname,birthname,firstname))";
         }
 
+        // complément pour type de people strict à retourner
+        if(!empty($this->_returnedPeopleTypes)) {
+          $strictTable = " inner join people as p on p.id = o.value and p.type in ('".implode("', '", $this->_returnedPeopleTypes)."' )";
+        } else {
+          $strictTable = '';
+        }
+
         $relations = [];
+
+
         if($relations =  msSQL::sql2tab("select o.value as peopleID, c.value as typeRelation ".implode(" ", $champsSql)."
         from objets_data as o
+        ".$strictTable."
         inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID[$this->_relationType]."'
         ".implode(" ", $tablesSql)."
         where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."

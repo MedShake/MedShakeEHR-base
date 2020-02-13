@@ -51,4 +51,5 @@ if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
 
 //les correspondants et liens familiaux
 $patient->setRelationType('relationPatientPraticien');
+$patient->setReturnedPeopleTypes(['pro']);
 $p['page']['correspondants']=$patient->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
