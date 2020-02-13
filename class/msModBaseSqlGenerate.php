@@ -147,6 +147,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeActiverPhonecapture'=>'true',
     'optionGeActiverDicom'=>'true',
     'droitRegistrePeutCreerRegistre'=>'false',
+    'droitGroupePeutVoirTousGroupes'=>'false',
   ];
 
   protected function _getSpecifSql() {
