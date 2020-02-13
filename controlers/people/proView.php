@@ -50,6 +50,7 @@ $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']
 $patients = new msPeopleRelations;
 $patients->setToID($p['page']['proDataID']);
 $patients->setRelationType('relationPatientPraticien');
+$patients->setReturnedPeopleTypes(['patient']);
 $p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
 msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
 
