@@ -75,7 +75,12 @@
         </table>
 
         {% if page.apicrypt2present and config.apicryptVersion == '2' %}
-          <h2>Apicrypt 2</h2>
+          <h2 class="d-flex justify-content-between mt-4">
+            <span>Apicrypt 2</span>
+            <small>
+              <a class="btn btn-sm btn-outline-secondary" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configRestartApicrypt2/"><i class="fas fa-sync"></i> Relancer</a>
+            </small>
+          </h2>
 
           <table class="table table-sm table-hover">
             <tbody>

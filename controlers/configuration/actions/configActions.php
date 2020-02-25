@@ -38,7 +38,8 @@ $acceptedModes=array(
     'configTemplatePDFSave', // sauvegarder un template PDF
     'configUserTemplatesSave', // sauver un template user
     'configRemoveInstallFiles', // supprimer les fichies d'installation
-    'configDicomRmWl' // supprimer tous les fichiers worklist actifs
+    'configDicomRmWl', // supprimer tous les fichiers worklist actifs
+    'configRestartApicrypt2' // relancer le service Apicrypt2
 );
 
 if (!in_array($m, $acceptedModes)) {
