@@ -80,7 +80,7 @@ class msSqlGenerate
   public function getSqlForModule($name) {
 
     //system
-    $system=msSQL::sqlUnique("select * from $this->_bdd.system where name='".$name."'");
+    $system=msSQL::sqlUnique("select * from $this->_bdd.`system` where name='".$name."'");
     unset($system['id']);
     $this->_system_fields=$this->_getSqlFieldsPart($system);
     $this->_system_values[]=$this->_getSqlValuesPart($system);
