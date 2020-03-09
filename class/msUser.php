@@ -86,7 +86,7 @@ class msUser
         }
         $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
 
-        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank, module,
+        $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank`, module,
          CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa
          from people where name='".msSQL::cleanVar($_COOKIE['userName'])."' and lastLogFingerprint=sha1(concat('".$fingerprint_partiel."',lastLogDate)) LIMIT 1");
 
@@ -126,7 +126,7 @@ class msUser
         }
 
         $userID=msSQL::cleanVar($_COOKIE['userIdPc']);
-        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, rank from people where id='".$userID."' LIMIT 1");
+        $user=msSQL::sqlUnique("select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank` from people where id='".$userID."' LIMIT 1");
 
         //recherche clef de salage spécifique au user
         $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', $userID);

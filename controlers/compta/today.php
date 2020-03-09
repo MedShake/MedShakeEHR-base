@@ -42,7 +42,7 @@ if (isset($p['config']['administratifComptaPeutVoirRecettesDe'])) {
     $pratIdAutorises=array_merge($pratIdAutorises, explode(',', $p['config']['administratifComptaPeutVoirRecettesDe']));
     $pratIdAutorises=array_unique($pratIdAutorises);
 }
-$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as prenom, CASE WHEN o.value != '' THEN o.value  ELSE bn.value END as nom
+$p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.`rank`, o2.value as prenom, CASE WHEN o.value != '' THEN o.value  ELSE bn.value END as nom
  from people as p
  left join objets_data as o on o.toID=p.id and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
  left join objets_data as o2 on o2.toID=p.id and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''

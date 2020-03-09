@@ -40,7 +40,7 @@ class msPeopleDroits extends msPeople
         throw new Exception('ToID is not set');
     }
     $this->setToID($toID);
-    if($basicUserData = msSQL::sqlUnique("SELECT type, rank, pass FROM people WHERE id='".$toID."' limit 1")) {
+    if($basicUserData = msSQL::sqlUnique("SELECT type, `rank`, pass FROM people WHERE id='".$toID."' limit 1")) {
       $this->_basicUserData = $basicUserData;
     } else {
       throw new Exception("This people don't exist");
