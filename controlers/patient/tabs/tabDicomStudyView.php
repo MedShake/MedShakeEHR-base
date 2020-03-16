@@ -45,7 +45,7 @@ $dc->setDcStudyID($_POST['param']['dcStudyID']);
 $p['page']['studyDcData'] = $dc->getStudyDcData();
 
 if (count($p['page']['studyDcData']) > 0) {
-    $p['page']['studyDcData']['Datetime'] =  $p['page']['studyDcData']['MainDicomTags']['StudyDate'].'T'.$p['page']['studyDcData']['MainDicomTags']['StudyTime'];
+    $p['page']['studyDcData']['Datetime'] =  $p['page']['studyDcData']['MainDicomTags']['StudyDate'].'T'.round($p['page']['studyDcData']['MainDicomTags']['StudyTime']);
     $p['page']['imagesPath'] = $dc->getAllImagesFromStudy();
 
 

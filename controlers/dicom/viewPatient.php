@@ -46,7 +46,7 @@ if (!isset($p['page']['studiesDcData']['HttpError'])) {
 
   //on complète les data dicom avec un datetime facilement exploitable
   foreach ($p['page']['studiesDcData'] as $k=>$v) {
-      $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+      $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
   }
 
   //on cherche les examens EHR qui peuvent être attachés.
