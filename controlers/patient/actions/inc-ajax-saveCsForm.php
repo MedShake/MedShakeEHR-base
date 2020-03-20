@@ -28,31 +28,36 @@
  */
 
 $formIN=$_POST['formIN'];
-
-$dontIgnoreEmpty=true;
-if (isset($match['params']['ignoreEmpty'])) {
-    $dontIgnoreEmpty = false;
-    if (isset($_POST['objetID'])) {
-        $prevData=msSQL::sql2tabKey("SELECT dt.name AS name FROM objets_data as od LEFT JOIN data_types AS dt
-            ON od.typeID=dt.id and od.outdated='' and od.deleted=''
-            WHERE od.instance='".$_POST['objetID']."'", "name", "name");
-    }
-}
+$finalStatut='ok';
+unset($_SESSION['form'][$formIN]);
 
 //definition formulaire de travail
-$form = new msForm();
+$form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
 $validation=$form->getValidation();
 
 if ($validation === false) {
-    // pas d'exploitation car pas de champ required
-    // utilisés ici.
+  exit(json_encode(array(
+    'statut'=>'erreur',
+    'form'=>$formIN,
+    'msg'=>$_SESSION['form'][$formIN]['validationErrorsMsg'],
+    'code'=>$_SESSION['form'][$formIN]['validationErrors']
+  )));
+
 } else {
+
+    // construction du PDF immédiatement après le retour du JS
+    $optionsFormulaire=$form->getFormOptions();
+    if(isset($optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit']) and $optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit'] == true) {
+      $buildPdfNow = true;
+    } else {
+      $buildPdfNow = false;
+    }
+
     $patient = new msObjet();
     $patient->setFromID($p['user']['id']);
     $patient->setToID($_POST['patientID']);
-
 
     //nouvelle ou update ?
     if (isset($_POST['objetID'])) {
@@ -69,12 +74,42 @@ if ($validation === false) {
     // si on a un champ qui est déclaré pour l'autoTitle
     if(isset($_POST['autoTitle'])) {
       if(isset($_POST['p_'.$_POST['autoTitle']])) {
-        if(!empty($_POST['p_'.$_POST['autoTitle']])) {
-          $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
+        $patient->setTitleObjet($supportID,$_POST['p_'.$_POST['autoTitle']]);
+      }
+    }
+
+    // si on a un champ qui est déclaré pour l'autoDate
+    if(isset($_POST['autoDate'])) {
+      if(isset($_POST['p_'.$_POST['autoDate']])) {
+        if(!empty($_POST['p_'.$_POST['autoDate']]) and msTools::validateDate($_POST['p_'.$_POST['autoDate']],'d/m/Y')) {
+          $objet=new msObjet();
+          $objet->setObjetID($supportID);
+          $newDate = DateTime::createFromFormat('d/m/Y', $_POST['p_'.$_POST['autoDate']]);
+          $newDate = $newDate->format('Y-m-d 00:00:00');
+          $objet->setCreationDate($newDate);
+          $objet->changeCreationDate();
+
+          $finalStatut='ok-fullrefresh';
         }
       }
-
     }
+
+    // on cherche si certains champs doivent ne pas être sauvés si vide.
+    $tabDoNotSaveEmpty=$form->getDoNotSaveEmptyDataInForm();
+
+    // réglage mode ignoreEmpty
+    $dontIgnoreEmpty=true;
+    if (isset($match['params']['ignoreEmpty'])) $dontIgnoreEmpty = false;
+
+    // si édition et qu'on devra agis sur valeurs antérieures, on les sort
+    if (!$dontIgnoreEmpty or !empty($tabDoNotSaveEmpty)) {
+        if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
+            $prevData=msSQL::sql2tabKey("SELECT dt.name AS name, od.id FROM objets_data as od
+              LEFT JOIN data_types AS dt ON od.typeID=dt.id and od.outdated='' and od.deleted=''
+              WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."'", "name", "id");
+        }
+    }
+
 
     //on traite chaque POST
     foreach ($_POST as $k=>$v) {
@@ -82,8 +117,32 @@ if ($validation === false) {
             $in = substr($k, $pos+1);
         }
         if (isset($in)) {
-            if (!empty($in) and ($dontIgnoreEmpty or !empty(trim($v)) or (isset($prevData) and array_key_exists($in, $prevData)))) {
+            if (!empty($in)) {
+              if(!empty(trim($v)) or $v == '0') {
                 $patient->createNewObjetByTypeName($in, $v, $supportID);
+              } else {
+                if(!in_array($in, $tabDoNotSaveEmpty)) {
+                  if($dontIgnoreEmpty) {
+                    $patient->createNewObjetByTypeName($in, '', $supportID);
+                  } else {
+                    if(isset($prevData[$in])) {
+                      $objDel = new msObjet;
+                      $objDel->setFromID($p['user']['id']);
+                      $objDel->setObjetID($prevData[$in]);
+                      $objDel->setDeletedObjetAndSons();
+                    }
+                  }
+                } else {
+                    if(isset($prevData[$in])) {
+                      $objDel = new msObjet;
+                      $objDel->setFromID($p['user']['id']);
+                      $objDel->setObjetID($prevData[$in]);
+                      $objDel->setDeletedObjetAndSons();
+                    }
+                }
+
+              }
+
             }
         }
     }
@@ -91,12 +150,35 @@ if ($validation === false) {
 
     unset($_SESSION['form'][$formIN]);
 
-    // générer le html de la ligne d'historique
-    $debug='';
-    //template
-    $template="pht-ligne-typecs";
+    // générer le retour, dont html
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    $p['cs']=$patient->getHistoriqueObjet($supportID);
+    if(isset($p['cs']['creationDate'])) {
+      $datCrea = new DateTime($p['cs']['creationDate']);
+      $html = new msGetHtml;
+      $html->set_template('pht-ligne-typecs');
+      $html=$html->genererHtml();
+
+      $tabReturn = [
+        'statut'=>$finalStatut,
+        'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
+        'html'=>$html,
+        'objetID'=>$supportID,
+        'buildPdfNow'=> $buildPdfNow
+      ];
+
+    } else {
+      $tabReturn = [
+        'statut'=>$finalStatut,
+        'today'=>'non',
+        'html'=>'',
+        'objetID'=>$supportID,
+        'buildPdfNow'=> $buildPdfNow
+      ];
+    }
+
+    header('Content-Type: application/json');
+    exit(json_encode($tabReturn));
 
 }

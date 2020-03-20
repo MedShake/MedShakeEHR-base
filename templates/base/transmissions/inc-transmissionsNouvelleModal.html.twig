@@ -1,0 +1,91 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Transmissions, modal de création / édition d'une transmission
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<div class="modal" id="modalTransmission" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold">Nouvelle transmission</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="formModalNewTrans">
+          <input type="hidden" autocomplete="off" value="" id="transID">
+          <div class="form-group">
+            <label for="transSujet" class="font-weight-bold">Sujet</label>
+            <input type="text" class="form-control" id="transSujet" required="required" placeholder="Indiquer un sujet" autocomplete="off">
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="transDestinataires" class="font-weight-bold">Destinataires</label>
+                <select id="transDestinataires" class="custom-select" multiple="multiple" autocomplete="off">
+                  {% for id, name in page.transmissionsListeDestinatairesPossibles %}
+                  <option value="{{ id }}" {% if id in page.transmissionsListeDestinatairesDefaut %}selected{% endif %}>{{ name }}</option>
+                  {% endfor %}
+                </select>
+                <small class="form-text text-muted">Sélection multiple en maintenant la touche ctrl enfoncée.</small>
+              </div>
+            </div>
+            <div class="col">
+              <label for="transDestinataires" class="font-weight-bold">Priorité</label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio1" name="transPriorite" value="0" class="custom-control-input" autocomplete="off" checked>
+                <label class="custom-control-label" for="customRadio1">Normal</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio2" name="transPriorite" value="5" class="custom-control-input" autocomplete="off">
+                <label class="custom-control-label" for="customRadio2">Important</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio3" name="transPriorite" value="10" class="custom-control-input" autocomplete="off">
+                <label class="custom-control-label" for="customRadio3">Urgent</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="transConcerne" class="font-weight-bold">Patient concerné</label>
+            <input type="text" class="form-control mb-3" id="transConcerne" placeholder="Rechercher un patient concerné" autocomplete="off">
+            <input type="hidden" autocomplete="off" value="" id="transPatientConcID">
+            <div id="transPatientConcSel" class="d-none mb-3 bg-light p-2"></div>
+          </div>
+          <div class="form-group">
+            <label for="transTransmission" class="font-weight-bold">Transmission</label>
+            <textarea class="form-control" id="transTransmission" rows="3" autocomplete="off"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
+        <button type="button" id="transmissionEnvoyer" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>

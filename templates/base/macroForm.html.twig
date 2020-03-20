@@ -29,20 +29,64 @@
 {# input #}
 {% macro input(v) %}
 
-		{# si un label existe #}
-		{% if v.label.label != '' %}
-			{# label avant ou autour #}
-			{% if v.label.position == 'before' or v.label.position == 'around' %}
-				<label
-				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
-				>{{ v.label.label|e }}
+	{% if v.input.type in ['checkbox', 'switch'] %}
+
+			{% if v.input.before is not empty %}
+				{{ v.input.before }}
 			{% endif %}
 
-			{# label avant #}
-			{% if v.label.position == 'before' %}
-				</label>
+	    <div class="custom-control custom-{{ v.input.type }}">
+	      <input
+					type="checkbox"
+					class="custom-control-input {{ v.input.class|trim }}"
+
+					id="{{ v.input.id }}"
+					{% if v.input.value  == "true" %} checked="checked" {% endif %}
+					{% if v.input.value != 'noPreValue' %}
+						value="{{ v.input.value|e('html_attr') }}"
+					{% elseif v.input.value == 'noPreValue' and  v.input.defaut != '' %}
+						value="{{ v.input.defaut|e('html_attr') }}"
+					{% endif %}
+					title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"
+					{% if v.input.name %}
+						name="{{ v.input.name }}"
+					{% endif %}
+					autocomplete="off"
+					{% if v.input.disabled %} disabled {% endif %}
+					{% if v.input.readonly %} readonly {% endif %}
+					{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
+					{% if v.input.required == 'required' %} required {% endif %}
+					{% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
+					{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
+					{{ v.input.add }} >
+	      <label class="custom-control-label {{ v.label.class }}" for="{{ v.input.id }}" title="{{ v.input.name }}">{{ v.label.label|e }}</label>
+	    </div>
+
+			{% if v.input.after %}
+				{{ v.input.after }}
 			{% endif %}
+
+	{% elseif v.input.type == 'submit' %}
+
+			{% if v.input.before is not empty %}
+				{{ v.input.before }}
+			{% endif %}
+
+			<input type="{{ v.input.type }}" class="btn {{ v.input.class }}" value="{{ v.input.value|e('html_attr') }}" {% if v.input.disabled %} disabled {% endif %} {% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %} />
+
+			{% if v.input.after %}
+				{{ v.input.after }}
+			{% endif %}
+
+	{% else %}
+
+		{# si un label existe #}
+		{% if v.label.label != '' %}
+			<label
+			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+			{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
+			>{{ v.label.label|e }}
+			</label>
 		{% endif %}
 
 		{# insertion avant le input #}
@@ -63,22 +107,16 @@
 
 		{% endif %}
 
-		{# correction de class si checkbox #}
-		{% if v.input.type == 'checkbox' %}
-			{% set inputclass = v.input.class|replace({'form-control' : ''}) %}
-		{% else %}
-			{% set inputclass = v.input.class %}
-		{% endif %}
-
 		{# input #}
-    <input type="{{ v.input.type }}" title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"
+    <input type="{{ v.input.type }}"
+		{% if v.input.type != "hidden" %} title="{{ v.input.internalName }} / {{ v.input.datatypeid }}"{% endif %}
 		{% if v.input.id %} id="{{ v.input.id }}" {% endif %}
 		{% if v.input.name %} name="{{ v.input.name }}" {% endif %}
     {% if v.input.value != 'noPreValue' %} value="{{ v.input.value|e('html_attr') }}"
 		{% elseif v.input.value == 'noPreValue' and  v.input.defaut != '' %} value="{{ v.input.defaut|e('html_attr') }}"
 		{% endif %}
     {% if v.input.placeholder %} placeholder="{{ v.input.placeholder|e('html_attr') }}" {% endif %}
-		{% if v.input.class %} class="{{ inputclass }}{% if v.input.error %} inputErreur{% endif %}" {% endif %}
+		class="form-control {{ v.input.class }}{% if v.input.error %} inputErreur{% endif %}"
     {% if v.input.min or v.input.min == '0' %} min="{{ v.input.min }}" {% endif %}
     {% if v.input.max or v.input.max == '0' %} max="{{ v.input.max }}" {% endif %}
     {% if v.input.step or v.input.step == '0' %} step="{{ v.input.step }}" {% endif %}
@@ -88,9 +126,9 @@
 		{% if v.input.disabled %} disabled {% endif %}
 		{% if v.input.readonly %} readonly {% endif %}
     {% if v.input.required == 'required' %} required {% endif %}
+		{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
-    {% if v.input.type == "checkbox" and v.input.value == "true" %} checked {% endif %}
 		{{ v.input.add }} />
 
 		{# insertion après le input #}
@@ -107,22 +145,7 @@
 			</div>
 		{% endif %}
 
-		{# si un label existe #}
-		{% if v.label.label != '' %}
-			{# label après #}
-			{% if v.label.position == 'after' %}
-				<label
-				{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-				{% if v.input.id %} for="{{ v.input.id }}" {% endif %}
-				>{{ v.label.label|e }}
-			{% endif %}
-
-			{# label après ou autour #}
-			  {% if v.label.position == 'after' or v.label.position == 'around' %}
-			  	</label>
-		  {% endif %}
-	  {% endif %}
-
+	{% endif %}
 {% endmacro %}
 
 
@@ -132,20 +155,31 @@
 
 	{# si un label existe #}
 	{% if v.label.label != '' %}
-		{% if v.label.position == 'before' or v.label.position == 'around' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-		{% if v.label.position == 'before' %}
-			</label>
-		{% endif %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+		>{{ v.label.label|e }}
+		</label>
 	{% endif %}
 
+	{# insertion avant le select #}
 	{% if v.select.before %}
 		{{ v.select.before }}
+		{% if v.select.plusg %}
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="{{v.select.id}}AddOnG">{{ v.select.plusg }}</span>
+			</div>
+		{% endif %}
+	{% elseif v.select.plus or v.select.plusg %}
+		<div class="input-group input-group-sm mx-0">
+			{% if v.select.plusg %}
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="{{v.select.id}}AddOnG">{{ v.select.plusg }}</span>
+				</div>
+			{% endif %}
+
 	{% endif %}
+
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	class="custom-select{% if v.select.class %} {{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}{% endif %}"
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -154,7 +188,10 @@
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
-	{{ v.select.add }}>
+	{{ v.select.add }}
+	{% if v.select.valueDefaut is not iterable %}data-defautValue="{{ v.select.valueDefaut|e('html_attr') }}"{% endif %}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
+	>
 	{% if v.select.valueDefaut is iterable %}
 		{% for key,value in v.select.valueDefaut %}
 			<option value="{{ key|e('html_attr') }}">{{ value|e }}</option>
@@ -170,19 +207,19 @@
 
 	</select>
 
-	{# si un label existe #}
-	{% if v.label.label != '' %}
-		{% if v.label.position == 'after' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-
-	    {% if v.label.position == 'after' or v.label.position == 'around' %}
-	    	</label>
-	    {% endif %}
+	{% if v.select.plus %}
+		<div class="input-group-append">
+			<span class="input-group-text" id="{{v.select.id}}AddOn">{{ v.select.plus }}</span>
+		</div>
 	{% endif %}
+	{% if v.select.plus or v.select.plusg %}
+		</div>
+	{% endif %}
+
+	{% if v.select.after %}
+		{{ v.select.after }}
+	{% endif %}
+
 {% endmacro %}
 
 
@@ -198,28 +235,31 @@
 			</div>
 		{% endif %}
 
-
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio">
-				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 				<label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
 
 
 	{% else %}
-		<div class="d-flex">
+		{% if v.label.label != '' and 'brAfter' in v.label.class %}
+			<div class="mb-1 {% if v.label.class %}{{ v.label.class }}{% endif %}"
+			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
+			</div>
+		{% endif %}
+		<div class="d-flex flex-wrap">
 		{# si un label existe #}
-		{% if v.label.label != '' %}
+		{% if v.label.label != '' and 'brAfter' not in v.label.class %}
 		  <div class="flex-grow-1 {% if v.label.class %}{{ v.label.class }}{% endif %} mr-2"
 			{% if v.radio.id %} for="{{ v.radio.id }}" {% endif %}>{{ v.label.label|e }}
 		  </div>
 		{% endif %}
 
-
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off">
+			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 			  <label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
@@ -234,16 +274,17 @@
 
 	{# si un label existe #}
 	{% if v.label.label != '' %}
-		{% if v.label.position == 'before' or v.label.position == 'around' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-		{% if v.label.position == 'before' %}
-			</label>
-		{% endif %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
+		>{{ v.label.label|e }}
+		</label>
 	{% endif %}
+
+	{% if v.select.before %}
+		{{ v.select.before }}
+	{% endif %}
+
   <input type="hidden" name="{{ v.select.name }}[]" value="" />
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
@@ -253,7 +294,9 @@
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
-	{{ v.select.add }} multiple>
+	{{ v.select.add }}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
+	multiple>
 	{% for key,value in v.select.values %}
 		<option
 		{% if key in v.select.valueDefaut %} selected="selected" {% endif %}
@@ -262,21 +305,11 @@
 	{% endfor %}
 	</select>
 
-	{# si un label existe #}
-	{% if v.label.label != '' %}
-		{% if v.label.position == 'after' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-
-	    {% if v.label.position == 'after' or v.label.position == 'around' %}
-	    	</label>
-	    {% endif %}
+	{% if v.select.after %}
+		{{ v.select.after }}
 	{% endif %}
-{% endmacro %}
 
+{% endmacro %}
 
 
 {# select avec optgroup #}
@@ -284,20 +317,17 @@
 
 	{# si un label existe #}
 	{% if v.label.label != '' %}
-		{% if v.label.position == 'before' or v.label.position == 'around' %}
 			<label
 			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
 			{% if v.select.id %} for="{{ v.select.id }}" {% endif %}
 			>{{ v.label.label|e }}
-		{% endif %}
-		{% if v.label.position == 'before' %}
 			</label>
-		{% endif %}
 	{% endif %}
 
 	{% if v.select.before %}
 		{{ v.select.before }}
 	{% endif %}
+
 	<select title="{{ v.select.internalName }} / {{ v.select.datatypeid }}"
 	{% if v.select.class %} class="{{ v.select.class }}{% if v.select.error %} inputErreur{% endif %}" {% endif %}
 	{% if v.select.id %} id="{{ v.select.id }}" {% endif %}
@@ -306,6 +336,7 @@
 	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
+	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
 	{{ v.select.add }}>
 	{% for key,options in v.select.values %}
 	 	<optgroup label="{{ key|e('html_attr') }}">
@@ -319,36 +350,22 @@
 	{% endfor %}
 	</select>
 
-	{# si un label existe #}
-	{% if v.label.label != '' %}
-		{% if v.label.position == 'after' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.select.id %} for="{{ v.input.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
+	{% if v.select.after %}
+		{{ v.select.after }}
+	{% endif %}
 
-	    {% if v.label.position == 'after' or v.label.position == 'around' %}
-	    	</label>
-	    {% endif %}
-		{% endif %}
 {% endmacro %}
 
 
 {# textarea #}
 {% macro textarea(v) %}
 
-	{# si un label existe #}
 	{% if v.label.label != '' %}
-		{% if v.label.position == 'before' or v.label.position == 'around' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-		{% if v.label.position == 'before' %}
-			</label>
-		{% endif %}
+		<label
+		{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
+		{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
+		>{{ v.label.label|e }}
+		</label>
 	{% endif %}
 
 	{% if v.textarea.before %}
@@ -366,51 +383,32 @@
 	{% if v.textarea.class %} class="{{ v.textarea.class }}{% if v.textareaerror %} textareaErreur{% endif %}" {% endif %}
 	{% if v.textarea.rows %} rows="{{ v.textarea.rows }}" {% endif %}
 	{% if v.textarea.internalName %} data-internalName="{{ v.textarea.internalName }}" {% endif %}
+	{% if v.textarea.tabindex is not empty %} tabindex="{{ v.textarea.tabindex }}" {% endif %}
 	{{ v.textarea.add }}
 
 	>{% if v.textarea.value != 'noPreValue' %}{{ v.textarea.value|e }}{% elseif v.textarea.value == 'noPreValue' and  v.textarea.defaut != '' %}{{ v.textarea.defaut|e }}{% endif %}</textarea>
 
-	{# si un label existe #}
-	{% if v.label.label != '' %}
-		{% if v.label.position == 'after' %}
-			<label
-			{% if v.label.class %} class="{{ v.label.class }}" {% endif %}
-			{% if v.textarea.id %} for="{{ v.textarea.id }}" {% endif %}
-			>{{ v.label.label|e }}
-		{% endif %}
-
-    {% if v.label.position == 'after' or v.label.position == 'around' %}
-    	</label>
-    {% endif %}
+	{% if v.textarea.after %}
+		{{ v.textarea.after }}
 	{% endif %}
+
 {% endmacro %}
 
 
-{# form errors bloc #}
-{% macro errorFormDiv( validationErrorsMsg ) %}
-	{% if validationErrorsMsg %}
-	<div class="alert alert-danger" role="alert">
-		Merci de considérer les informations suivantes et de corriger les champs concernés :
-		<ul>
-		{% for message in validationErrorsMsg %}
-	    {% if message %}<li>{{ message }}</li>{% endif %}
-		{% endfor %}
-		</ul>
-	</div>
-	{% endif %}
-{% endmacro %}
+
 
 {# formBuilder #}
 {% macro formbuilder(t , formIN, prevalue ) %}
 	{% import _self as f %}
-
+	{% if t.global.formCss is defined and t.global.formCss is not empty %}
+		<style>{{ t.global.formCss }}</style>
+	{% endif %}
 	{% if t.global.noFormTags is not defined %}
 		<form
 		{% if t.global.formAction %}action="{{ t.config.protocol }}{{ t.config.host }}{{ t.config.urlHostSuffixe }}{{ t.global.formAction }}" {% endif %}
 		{% if t.global.formMethod %}method="{{ t.global.formMethod }}" {% endif %}
 		id="formName_{{ formIN }}"
 		class="{{ t.global.formClass }}"
-		data-dataset="{{ t.global.dataset }}"
 		data-instance="{{ t.global.instance }}" >
 	{% endif %}
 
@@ -426,7 +424,18 @@
 		}) }}
 	{% endif %}
 
-	{# form number #}
+	{# form autoDate : name du data_type dont la valeur déterminera la date effective (creationDate) de l'objet créé #}
+	{% if t.global.autoDate %}
+		{{ f.input ({
+			'input' : {
+				'type' : 'hidden',
+				'name' : 'autoDate',
+				'value' : t.global.autoDate
+			}
+		}) }}
+	{% endif %}
+
+	{# form name #}
 	{{ f.input ({
 		'input' : {
 			'type' : 'hidden',
@@ -446,35 +455,36 @@
  }) }}
  {% endfor %}
 
-	{% for row in t.structure %}
-	<div class="row{% if row.elements.class %} {{row.elements.class}}{% endif %}">
+	{% for keyrow, row in t.structure %}
+		<div data-numrow="{{ keyrow }}" class="row{% if row.elements.class %} {{ row.elements.class }}{% endif %}">
 		{% for keycol, col in row %}
 			{% if keycol == "elements" %}
-				<div class="col-md-12"><h3>{{ col.value }}</h3></div>
+				{% if col.value is defined %}<div class="col-12"><h3>{{ col.value }}</h3></div>{% endif %}
 			{% else %}
-				<div class="{{ col.size|e('html_attr') }}">
+				<div data-numrow="{{ keyrow }}" data-numcol="{{ keycol }}" class="{{ (col.size|e('html_attr') ~ ' ' ~ col.class|e('html_attr'))|trim() }}">
 					{% for el in col.elements %}
 						{% if el.type == "head" %}
 							<h4 class="my-2">{{ el.value }}</h4>
 						{% elseif el.type == "label" %}
-							<p>{{ el.value }}</p>
+							<p{% if el.class is not empty %} class="{{ el.class }}"{% endif %}>{{ el.value }}</p>
 						{% elseif el.type == "template" %}
 							{% include el.value ~ '.html.twig' %}
 						{% else %}
 
 
-							{% if el.value.formType in ['text','email','tel','password', 'number', 'checkbox','hidden','range','reset'] %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'hidden','range','reset'] %}
+								<div class="form-group">
 								{{ f.input ({
 									'input' : {
 										'type' : el.value.formType,
 										'name' : el.value.name,
 										'id' : 'id_' ~ el.value.internalName ~ '_id',
 										'placeholder' : el.value.placeholder,
-										'class' : 'form-control form-control-sm' ~ el.value.autocompleteclass ~ el.value.class,
+										'class' : 'form-control-sm ' ~ el.value.autocompleteclass ~ el.value.class,
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
 										'required' : el.value.required,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'datatypeid' : el.value.id,
@@ -489,15 +499,39 @@
 										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
-										'position' : 'before',
 										'label' : el.value.label,
-										'class' : 'control-label'
+										'class' : el.value.classLabel,
 									}
 								}) }}
 								</div>
 
+								{% elseif el.value.formType in ['checkbox', 'switch'] %}
+									<div class="form-group">
+									{{ f.input ({
+										'input' : {
+											'type' : el.value.formType,
+											'name' : el.value.name,
+											'id' : 'id_' ~ el.value.internalName ~ '_id',
+											'class' : el.value.autocompleteclass ~ el.value.class,
+											'value' : el.value.preValue,
+											'defaut' : el.value.formValues,
+											'required' : el.value.required,
+											'tabindex' : el.value.tabindex,
+											'disabled' : el.value.disabled,
+											'readonly' : el.value.readonly,
+											'datatypeid' : el.value.id,
+											'internalName' : el.value.internalName,
+											'before' : t['before'][el.value.internalName]
+										},
+										'label' : {
+											'label' : el.value.label,
+											'class' : el.value.classLabel,
+										}
+									}) }}
+									</div>
+
 							{% elseif el.value.formType == "textarea" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.textarea ({
 									'textarea' : {
 										'name' : el.value.name,
@@ -505,6 +539,7 @@
 										'class' : 'form-control form-control-sm' ~ el.value.class,
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
@@ -515,39 +550,40 @@
 										'before' : t['before'][el.value.internalName]
 									},
 									'label' : {
-										'position' : 'before',
 										'label' : el.value.label,
-										'class' : 'control-label'
+										'class' : el.value.classLabel,
 									}
 								}) }}
 								</div>
 
 							{% elseif el.value.formType == "select" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.select ({
 									'select' : {
 										'name' : el.value.name,
 										'id' : 'id_' ~ el.value.internalName ~ '_id',
-										'class' : 'form-control form-control-sm' ~ el.value.class,
+										'class' : 'custom-select-sm' ~ el.value.class,
 										'values' : el.value.formValues,
 										'valueDefaut' : el.value.preValue,
 										'readonly' : el.value.readonly,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
 										'internalName' : el.value.internalName,
-										'before' : t['before'][el.value.internalName]
+										'before' : t['before'][el.value.internalName],
+										'plus' : el.value.plus,
+										'plusg' : el.value.plusg
 									},
 									'label' : {
-										'position' : 'before',
 										'label' : el.value.label,
-										'class' : 'control-label'
+										'class' : el.value.classLabel,
 									}
 								}) }}
 								</div>
 
 								{% elseif el.value.formType == "radio" %}
-									<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+									<div class="form-group">
 									{{ f.radio ({
 										'radio' : {
 											'name' : el.value.name,
@@ -556,6 +592,7 @@
 											'values' : el.value.formValues,
 											'valueDefaut' : el.value.preValue,
 											'readonly' : el.value.readonly,
+											'tabindex' : el.value.tabindex,
 											'disabled' : el.value.disabled,
 											'datatypeid' : el.value.id,
 											'autocomplete' : 'off',
@@ -563,15 +600,14 @@
 											'before' : t['before'][el.value.internalName]
 										},
 										'label' : {
-											'position' : 'before',
 											'label' : el.value.label,
-											'class' : 'control-label'
+											'class' : el.value.classLabel,
 										}
 									}) }}
 									</div>
 
 							{% elseif el.value.formType == "date" %}
-								<div class="form-group{% if el.value.name in prevalue['form'][formIN]['validationErrors'] %} has-error{% endif %}">
+								<div class="form-group">
 								{{ f.input ({
 									'input' : {
 										'type' : 'text',
@@ -580,21 +616,21 @@
 										'placeholder' : el.value.placeholder,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'required' : el.value.required,
-										'class' : 'form-control form-control-sm datepic' ~ el.value.class,
-										'before' : '<div id="before_'~ el.value.internalName ~ '" class="input-group input-group-sm mx-0 date datepick" data-typeid="'~ el.value.id ~'">',
-										'after' : '<div class="input-group-append"><span class="fa fa-calendar input-group-text"></span></div></div>',
+										'class' : 'form-control-sm datepic ' ~ el.value.class,
+										'before' : '<div id="before_'~ el.value.internalName ~ '" class="input-group input-group-sm mx-0 date datepick" data-typeid="'~ el.value.id ~'" data-internalname="'~ el.value.internalName ~'">',
+										'after' : '<div class="input-group-append"><span class="fas fa-calendar input-group-text"></span></div></div>',
 										'value' : el.value.preValue,
 										'defaut' : el.value.formValues,
 										'plusg' : el.value.plusg,
 										'internalName' : el.value.internalName
 									},
 									'label' : {
-										'position' : 'before',
 										'label' : el.value.label,
-										'class' : 'control-label'
+										'class' : el.value.classLabel,
 									}
 								}) }}
 								<span id="id_{{ el.value.internalName }}_idHelp" class="help-block"></span>
@@ -606,8 +642,9 @@
 									'input' : {
 										'type' : 'submit',
 										'value' : el.value.label,
+										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
-										'class' : 'btn '~ el.value.class
+										'class' : el.value.class
 									}
 								}) }}
 
@@ -624,4 +661,47 @@
 
 	{% if t.global.noFormTags is not defined %}</form>{% endif %}
 
+{% endmacro %}
+
+{# form errors bloc #}
+{% macro errorFormDiv( validationErrorsMsg, display='', dismiss=true ) %}
+	{% if validationErrorsMsg %}
+	<div class="alert alert-danger alert-dismissible" role="alert" {% if display == 'none' %}style="display: none"{% endif %}>
+		<div class="d-flex align-items-center">
+			<i class="fas fa-exclamation fa-fw fa-3x"></i>
+			<div class="ml-4">
+				Merci de considérer les informations suivantes et de corriger les champs concernés :
+				<ul class="list-style-position-inside my-0 pl-0">
+					{% for message in validationErrorsMsg %}
+				    {% if message %}<li>{{ message }}</li>{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		{% if dismiss %}
+			<button type="button" class="close cleanSessionFormWarning" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
+	</div>
+	{% endif %}
+{% endmacro %}
+
+{# simple ajax form errors bloc #}
+{% macro errorsBloc(dismiss=true) %}
+	<div class="alert alert-danger alert-dismissible d-none cleanAndHideOnModalHide" role="alert">
+		<div class="d-flex align-items-center">
+			<i class="fas fa-exclamation fa-3x"></i>
+			<div class="ml-4">
+				Merci de considérer les informations suivantes et de corriger les champs concernés :
+				<ul class="list-style-position-inside my-0 pl-0">
+				</ul>
+			</div>
+		</div>
+		{% if dismiss %}
+			<button type="button" class="close cleanSessionFormWarning" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
+	</div>
 {% endmacro %}

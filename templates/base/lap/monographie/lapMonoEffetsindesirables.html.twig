@@ -25,7 +25,7 @@
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-<ul class="nav nav-tabs gras" role="tablist" style="margin-bottom : 2em;">
+<ul class="nav nav-tabs font-weight-bold" role="tablist" style="margin-bottom : 2em;">
   <li class="nav-item">
     <a class="nav-link active" href="#tabei" role="tab" data-toggle="tab">Dose thérapeutique</a>
   </li>
@@ -43,7 +43,7 @@
       <div class="card bg-light mb-2 p-2">
 
         {% if fiche.data.libind %}
-        <h4 class="card-title gras">
+        <h4 class="card-title font-weight-bold">
           {{ fiche.data.libind }}
           {% if fiche.liste | length > 1 %}
             <small>({{ fiche.liste|length }}
@@ -54,11 +54,11 @@
 
         <div class="row">
           <div class="col-md-6">
-            <h5 class="gras text-uppercase">Effets indésirables cliniques</h5>
+            <h5 class="font-weight-bold text-uppercase">Effets indésirables cliniques</h5>
             <ul class="list-unstyled small">
               {% for idfiche, array in fiche.liste %}
                 {% if fiche.liste[idfiche][1] | length > 0 and fiche.liste | length > 1 %}
-                  <li class="gras text-uppercase">Fiche
+                  <li class="font-weight-bold text-uppercase">Fiche
                     {{ loop.index }}
                     :</li>
                 {% endif %}
@@ -72,11 +72,11 @@
           </div>
 
           <div class="col-md-6">
-            <h5 class="gras text-uppercase">Effets indésirables paracliniques</h5>
+            <h5 class="font-weight-bold text-uppercase">Effets indésirables paracliniques</h5>
             <ul class="list-unstyled small">
               {% for idfiche, array in fiche.liste %}
                 {% if fiche.liste[idfiche][2] | length > 0 and fiche.liste | length > 1 %}
-                  <li class="gras text-uppercase">Fiche
+                  <li class="font-weight-bold text-uppercase">Fiche
                     {{ loop.index }}
                     :</li>
                 {% endif %}
@@ -98,7 +98,7 @@
 
       <div class="card bg-light mb-2 p-2">
 
-        <h4 class="card-title gras">
+        <h4 class="card-title font-weight-bold">
           {{ fiche.data.libind }}
           {% if fiche.liste | length > 1 %}
             <small>({{ fiche.liste|length }}
@@ -108,11 +108,11 @@
 
         <div class="row">
           <div class="col-md-6">
-            <h5 class="gras text-uppercase">Effets indésirables cliniques</h5>
+            <h5 class="font-weight-bold text-uppercase">Effets indésirables cliniques</h5>
             <ul class="list-unstyled small">
               {% for idfiche, array in fiche.liste %}
                 {% if fiche.liste[idfiche][3] | length > 0 and fiche.liste | length > 1 %}
-                  <li class="gras text-uppercase">Fiche
+                  <li class="font-weight-bold text-uppercase">Fiche
                     {{ loop.index }}
                     :</li>
                 {% endif %}
@@ -126,11 +126,11 @@
           </div>
 
           <div class="col-md-6">
-            <h5 class="gras text-uppercase">Effets indésirables paracliniques</h5>
+            <h5 class="font-weight-bold text-uppercase">Effets indésirables paracliniques</h5>
             <ul class="list-unstyled small">
               {% for idfiche, array in fiche.liste %}
                 {% if fiche.liste[idfiche][4] | length > 0 and fiche.liste | length > 1 %}
-                  <li class="gras text-uppercase">Fiche
+                  <li class="font-weight-bold text-uppercase">Fiche
                     {{ loop.index }}
                     :</li>
                 {% endif %}

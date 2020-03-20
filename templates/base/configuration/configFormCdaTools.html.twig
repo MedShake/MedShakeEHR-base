@@ -1,0 +1,206 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : outils CDA
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configurationCdaTools.js?{{ modules.base }}"></script>
+
+  <script>
+  var menuSelect = '<select class="custom-select custom-select-sm clinicalDocumentCode" autocomplete="off"> \
+    <option></option> \
+    {% for jdv in page.jdvClinicalDocumentCode %} \
+      <option value="{{ jdv.code }}"> \
+        {{ jdv.code|e('js') }} : {{ jdv.displayName|e('js') }} \
+      </option> \
+    {% endfor %} \
+  </select>';
+
+  </script>
+
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
+    </li>
+    <li class="breadcrumb-item active">Outils CDA
+    </li>
+  </ol>
+
+  <h1>Outils CDA formulaire #{{ page.formID }}</h1>
+
+  <ul class="nav nav-tabs" id="tabNav" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="actes-tab" data-toggle="tab" href="#actes-pan">Actes possibles</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="code-tab" data-toggle="tab" href="#code-pan">Code</a>
+    </li>
+  </ul>
+
+  {% if page.paramsPossiblesData is not empty %}
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade" id="code-pan">
+
+        <div class="row mt-4">
+          <div class="col">
+            <table id="tabAssociations" class="table table-sm table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th></th>
+                  {% for param in page.paramsPossiblesData %}
+                    <th>{{ param.label }}</th>
+                  {% endfor %}
+                  <th colspan="2">Acte associé</th>
+                </thead>
+                <tbody>
+                  {% for k, v in page.dataTab %}
+                    <tr data-clef="{{ v.clef }}">
+                      <td>#{{ loop.index }}</td>
+                      {% for var in v.values %}
+                        <td>{{ var }}</td>
+                      {% endfor %}
+                      <td>
+                        <select id="select{{ k }}" class="custom-select custom-select-sm" autocomplete="off">
+                          <option></option>
+                          {% for code, acte in page.actesPossibles %}
+                            <option value="{{ code }}" {% if page['deja'][v.clef] == code %} selected="selected" {% endif %}>
+                              {{ code }}
+                              :
+                              {{ acte.serviceEventCode.displayName }}
+                            </option>
+                          {% endfor %}
+                        </select>
+                      </td>
+                      <td>
+                        <input id="input{{ k }}" type="text" class="form-control form-control-sm" value="{{ page['deja'][v.clef] }}" autocomplete="off">
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="generatedCode" class="font-weight-bold">Code généré à copier-coller</label>
+                <textarea class="form-control" id="generatedCode" rows="25" autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tab-pane fade show active" id="actes-pan">
+          <div class="row mt-4">
+            <div class="col">
+              <table id="tabActes" class="table table-sm table-hover">
+                <thead class="thead-light">
+                  <th>Code acte</th>
+                  <th>Système</th>
+                  <th>Intitulé</th>
+                  <th>Type de document</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% for code, data in page.actesPossibles %}
+                    <tr>
+                      <td class="code">{{ code }}</td>
+                      <td class="codeSystem">{{ data.serviceEventCode.codeSystem }}</td>
+                      <td class="displayName">{{ data.serviceEventCode.displayName }}</td>
+                      <td>
+                        <select id="select{{ code }}" class="custom-select custom-select-sm clinicalDocumentCode" autocomplete="off">
+                          <option></option>
+                          {% for jdv in page.jdvClinicalDocumentCode %}
+                            <option value="{{ jdv.code }}" {% if jdv.code == data.clinicalDocumentCode %} selected="selected" {% endif %}>
+                              {{ jdv.code }}
+                              :
+                              {{ jdv.displayName }}
+                            </option>
+                          {% endfor %}
+                        </select>
+
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-light btnTrash">
+                          <i class="far fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-10 col-md-2">
+              <textarea id="searchCcam" rows="1" class="form-control form-control-sm" autocomplete="off" placeholder="Code acte CCAM (1 par ligne)"></textarea>
+            </div>
+            <div class="col-1 text-left">
+              <button class="btn btn-sm btn-primary" id="searchCcamGo">
+                <i class="fas fa-search-plus"></i> Ajouter
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="generatedCodeActes" class="font-weight-bold">Code généré à copier-coller</label>
+                <textarea class="form-control" id="generatedCodeActes" rows="25" autocomplete="off"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    {% else %}
+      <div class="alert alert-danger my-4" role="alert">
+        Les paramètres
+        <code>actesPossibles</code>
+        et
+        <code>paramConditionServiceEvent</code>
+        ne semblent pas définis correctement pour pouvoir utiliser cet outil. Consultez la documentation.
+      </div>
+
+    {% endif %}
+
+  {% endblock %}

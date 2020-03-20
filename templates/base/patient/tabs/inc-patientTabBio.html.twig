@@ -1,0 +1,130 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : tab pour données biologiques
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+
+{% if page.datesBio|length < 1 %}
+  <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 300px); min-height: 250px">
+    <div class="mb-3"><i class="fas fa-vial fa-10x text-light"></i></div>
+    <div class="text-muted">Aucune donnée HPRIM n'a été trouvée en base pour ce dossier patient.</div>
+  </div>
+{% else %}
+  <div class="row mt-4 mb-3">
+    <div class="col px-0">
+      <button class="btn btn-primary bioDateSelect" {% if page.dateSuivanteBio is not defined %}disabled{% endif %} data-dateBio="{{ page.dateSuivanteBio }}">
+        <i class="fas fa-angle-left"></i>
+      </button>
+
+      <select class="custom-select font-weight-bold text-center bioDateSelect" style="width: 200px;"> {{ dateOption }}
+        {% for dateOption in page.datesBio %}
+          <option value="{{ dateOption }}" {% if dateOption == page.dateCouranteBio %}selected{% endif %}>{{ dateOption|date("d/m/Y") }}</option>
+        {% endfor %}
+      </select>
+
+      <button class="btn btn-primary bioDateSelect" {% if page.datePrecedBio is not defined %}disabled{% endif %} data-dateBio="{{ page.datePrecedBio }}">
+        <i class="fas fa-angle-right"></i>
+      </button>
+      <p class="d-block small text-muted mt-3">NB : seule la biologie reçue par mail et contenant des données HPRIM valides est affichée ici. Les antériorités sont affichées sous réserve d'un codage cohérent entre les sources reçues.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6 pl-0">
+      <h3>Résultats HPRIM numériques</h3>
+      <table class="table table-hover border-bottom">
+        <thead class="thead-light">
+          <tr>
+            <th class="border-bottom-0 border-left">&nbsp;</th>
+            <th colspan="3" class="text-center border-left border-right border-bottom-0">{{ page.dateCouranteBio|date("d/m/Y") }}</th>
+            {% if page.bioAnt %}
+              <th colspan="3" class="border-bottom-0 border-right text-center">Antériorités <small>(3/{{ page.bioAntCount }} trouvées)</small></th>
+            {% endif %}
+          </tr>
+          <tr>
+            <th class="border-top-0 border-left">Analyse</th>
+            <th class="border-left border-top-0  text-center">Résultat</th>
+            <th class="border-top-0  text-center">Normale inf.</th>
+            <th class="border-right border-top-0  text-center">Normale sup.</th>
+            {% if page.bioAnt %}
+              {% for antDate, ante in page.bioAnt %}
+                <th class="border-right border-top-0 text-center">{{ antDate|date("d/m/Y") }}
+                  <a class="btn btn-sm btn-light bioDateSelect" href="#" data-dateBio="{{ antDate }}">
+                    <i class="fas fa-search-plus"></i>
+                  </a>
+                </th>
+              {% endfor %}
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in page.bio %}
+            {% if v.typeResultat == 'N' %}
+              <tr {% if  v.indicateurAnormal in ['L', 'H', 'LL', 'HH'] %} class="table-danger"{% endif %}>
+                <td class="border-left">{{ v.label }}</td>
+                <td class="border-left border-right text-right">{{ v.resultat }} {{ v.unite }}</td>
+                <td class="text-right border-right">{{ v.normaleInf }}</td>
+                <td class="border-right text-right">{{ v.normaleSup }}</td>
+                {% if page.bioAnt %}
+                  {% for antDate, ante in page.bioAnt %}
+                    <td class="border-right text-right">{{ ante[v.labelStandard]['resultat'] }} {{ ante[v.labelStandard]['unite'] }}</td>
+                  {% endfor %}
+                {% endif %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-6  pr-0">
+      {% if page.docsID|length > 0 %}
+        <h3>Documents correspondants</h3>
+
+        <div class="accordion" id="accordionDocs">
+        {% for objetid, titre in page.docsID %}
+          <div class="card">
+            <div class="card-header" data-objetid="{{ objetid }}" id="heading{{ objetid }}" data-toggle="collapse" data-target="#collapse{{ objetid }}" aria-expanded="true" aria-controls="collapse{{ objetid }}" style="cursor: pointer">
+              <h6 class="mb-0">
+                <button class="btn btn-sm btn-light"><i class="fas fa-plus"></i></button>
+                  Document <small>#{{ objetid }}</small>{% if titre %} : {{ titre }}{% endif %}
+              </h6>
+            </div>
+
+            <div id="collapse{{ objetid }}" class="collapse" aria-labelledby="heading{{ objetid }}" data-parent="#accordionDocs">
+              <div class="card-body"></div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+
+      {% endif %}
+
+
+
+    </div>
+
+  </div>
+{% endif %}

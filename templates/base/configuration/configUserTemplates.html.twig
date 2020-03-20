@@ -1,0 +1,148 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : gestion des templates de paramétrage utilisateur
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : gestion des modèles de configurations utilisateurs{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block body %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
+  </li>
+  <li class="breadcrumb-item active">
+    Gestion des modèles de configurations
+  </li>
+</ol>
+
+<h1>Gestion des modèles de configurations utilisateurs</h1>
+
+<div class="row">
+  <div class="col-12 col-xl-6">
+    <h2 class="mt-4">Répertoire</h2>
+
+    <table class="table table-sm">
+      <tbody>
+        <tr>
+          <td>
+            Répertoire local
+          </td>
+          <td>{{ page.repertoireUserTemplates }}</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en lecture
+          </td>
+          <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en écriture
+          </td>
+          <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-12 col-xl-6">
+    <h2 class="mt-4">Ajouter des templates</h2>
+
+    {% if page.templatesDirAutorisationEcriture == 1 %}
+        <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireUserTemplates }}" class="col-12 bg-light center-block" style="padding : 30px; border-radius : 6px">
+            Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
+            <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
+            <div class="progress" style="margin-top : 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 00%;">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+        </div>
+
+    {% else %}
+      <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en écriture. Les fichiers ne peuvent être ajoutés via cette interface.</div>
+    {% endif %}
+  </div>
+</div>
+
+<h2 class="mt-4">Modèles présents</h2>
+
+  {% if page.templatesDirAutorisationLecture == 1 %}
+
+    {% if page.listeTemplates|length < 1 %}
+      <div class="alert alert-danger" role="alert">Aucun modèle n'est disponible.</div>
+    {% else %}
+      <table class="table table-sm mb-0 table-hover ">
+        <thead class="thead-light">
+          <tr>
+              <th>
+                  Fichier
+              </th>
+              <th class="text-right">
+                  Gérer
+              </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for k,v in page.listeTemplates %}
+            {% if v.file %}
+              <tr>
+                  <td>{{ v.file }}</td>
+                  <td class="text-right">
+                    <div class="btn-group">
+                      <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-templates/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
+                        {% if page.templatesDirAutorisationEcriture == false %}
+                          <span class="fas fa-eye" aria-hidden="true"></span>
+                        {% else %}
+                          <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+                        {% endif %}
+                      </a>
+                      <button class="delUserTemplate btn btn-sm btn-light" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}">
+                        <span class="fas fa-times" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+  {% else %}
+    <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en lecture. Les templates ne peuvent être listés et gérés par cette interface.</div>
+  {% endif %}
+
+{% endblock %}

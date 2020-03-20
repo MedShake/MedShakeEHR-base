@@ -29,7 +29,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : gestions des templates PDF{% endblock %}
+{% block title %}{{ config.designAppName }} : gestions des templates PDF{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -53,14 +53,14 @@
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
   <li class="breadcrumb-item active">
-    Gestion des modèles de rapports
+    Gestion des modèles d'impression
   </li>
 </ol>
 
-<h1>Gestion des modèles de rapports</h1>
+<h1>Gestion des modèles d'impression</h1>
 
 {# Nav tabs #}
-<ul class="nav nav-tabs bottom-space" role="tablist">
+<ul class="nav nav-tabs mt-3 mb-4" role="tablist">
     <li role="presentation" class="nav-item">
         <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
@@ -74,114 +74,170 @@
 
 </ul>
 
+<div class="row">
+  <div class="col-12 col-xl-6">
+    <h2>Répertoire</h2>
 
-  <h2>Répertoire</h2>
+    <table class="table table-sm">
+      <tbody>
+        <tr>
+          <td>Répertoire <small>(templatesPdfFolder)</small></td>
+          <td>{{ page.repertoireTemplatesPDF }}</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en lecture
+          </td>
+          <td class="{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>
+            Est accessible en écriture
+          </td>
+          <td class="{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
 
+  </div>
+  <div class="col-12 col-xl-6">
 
-  <table class="table table-sm">
-      <tr>
-          <th>
-              Paramètre
-          </th>
-          <th>
-              Répertoire local
-          </th>
-          <th>
-              Est accessible en lecture
-          </th>
-          <th>
-              Est accessible en écriture
-          </th>
-      </tr>
+    <h2 class="mt-4 mt-xl-0">Ajouter des templates ou des images</h2>
 
-          <tr>
-              <td>templatesPdfFolder</td>
-              <td>{{ page.repertoireTemplatesPDF }}</td>
-              <td class="bg-{% if page.templatesDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-              <td class="bg-{% if page.templatesDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-          </tr>
+    {% if page.templatesDirAutorisationEcriture == 1 %}
+        <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireTemplatesPDF }}" class="col-12 bg-light center-block" style="padding : 30px; border-radius : 6px">
+            Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
+            <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
 
-  </table>
+            <div class="progress" style="margin-top : 20px;">
+              <div class="progress-bar" role="progressbar" style="width: 00%;">
+                <span class="sr-only"></span>
+              </div>
+            </div>
+        </div>
+    {% else %}
+      <div class="alert alert-danger" role="alert">Le répertoire n'est pas accessible en écriture. Les fichiers ne peuvent être ajoutés via cette interface.</div>
+    {% endif %}
+  </div>
+</div>
 
-
-  <h2>Templates présents</h2>
+<h2 class="mt-4">Fichiers présents</h2>
 
   {% if page.templatesDirAutorisationLecture == 1 %}
 
-    {% if page.listeTemplates|length < 1 %}
-      <div class="alert alert-danger" role="alert">Aucun template n'est disponible.</div>
+    {% if page.listeTemplates|length < 1 and page.listeAutres|length < 1  %}
+      <div class="alert alert-danger" role="alert">Aucun fichiers n'est présent ici.</div>
     {% else %}
-      <table class="table table-sm mb-0 table-hover ">
-          <tr>
-              <th>
-                  Fichier
-              </th>
-              <th>
-                  Lié à
-              </th>
-              <th>
-                  Gérer
-              </th>
-          </tr>
-          {% for k,v in page.listeTemplates %}
-            {% if v.file %}
-              <tr>
-                  <td>{{ v.file }}</td>
-                  <td>
-                    {% if v.linkedTo %}
-                      <ul class="linkedTo">
-                      {% for l,w in v.linkedTo %}
-                      <li>{{ w.type }} : {{ w.name }}</li>
-                      {% endfor %}
-                    </ul>
-                    {% endif %}
-                  </td>
-                  <td class="d-flex justify-content-end">
-                    <div class="btn-group">
-                      <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
-                        {% if page.templatesDirAutorisationEcriture == false %}
-                          <span class="fa fa-eye" aria-hidden="true"></span>
-                        {% else %}
-                          <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-                        {% endif %}
-                      </a>
-                      <button class="delTemplatePDF btn btn-sm" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fa fa-times" aria-hidden="true"></span></button>
-                    </div>
-                  </td>
-              </tr>
-            {% endif %}
-          {% endfor %}
-      </table>
+
+      <ul class="nav nav-tabs mb-4" id="tabsFiles{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="twig-tab{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" data-toggle="tab" href="#twig{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" role="tab" aria-controls="twig" aria-selected="true">
+            Templates twig
+            <span class="badge badge-secondary ml-1">{{ page.listeTemplates|length }}</span>
+          </a>
+        </li>
+        {% if page.listeAutres|length > 0  %}
+        <li class="nav-item">
+          <a class="nav-link" id="autres-tab{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" data-toggle="tab" href="#autres{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" role="tab" aria-controls="autres" aria-selected="false">
+            Autres fichiers
+            <span class="badge badge-secondary ml-1">{{ page.listeAutres|length }}</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="twig{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" role="tabpanel" aria-labelledby="twig-tab{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}">
+
+          {% if page.listeTemplates|length > 0  %}
+            <table class="table table-sm mb-0 table-hover ">
+              <thead class="thead-light">
+                <tr>
+                    <th>
+                        Fichier
+                    </th>
+                    <th>
+                        Lié à
+                    </th>
+                    <th>
+                        Gérer
+                    </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in page.listeTemplates %}
+                  {% if v.file %}
+                    <tr>
+                        <td>{{ v.file }}</td>
+                        <td>
+                          {% if v.linkedTo %}
+                            <ul class="linkedTo">
+                            {% for l,w in v.linkedTo %}
+                            <li>{{ w.type }} : {{ w.name }}</li>
+                            {% endfor %}
+                          </ul>
+                          {% endif %}
+                        </td>
+                        <td class="text-right">
+                          <div class="btn-group">
+                            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/edit/{{ v.file|url_encode }}/{% if page.selectUser > 0 %}{{ page.selectUser }}/{% endif %}">
+                              {% if page.templatesDirAutorisationEcriture == false %}
+                                <span class="fas fa-eye" aria-hidden="true"></span>
+                              {% else %}
+                                <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+                              {% endif %}
+                            </a>
+                            <button class="delTemplatePDF btn btn-sm btn-light" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fas fa-times" aria-hidden="true"></span></button>
+                          </div>
+                        </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+              <div class="alert alert-warning my-4" role="alert">Aucun template n'est présent ici.</div>
+          {% endif %}
+        </div>
+
+        {% if page.listeAutres|length > 0  %}
+          <div class="tab-pane fade" id="autres{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}" role="tabpanel" aria-labelledby="autres{% if page.selectUser > 0 %}{{ page.selectUser }}{% endif %}-tab">
+
+            <table class="table table-sm mb-0 table-hover ">
+              <thead class="thead-light">
+                <tr>
+                    <th>
+                        Fichier
+                    </th>
+                    <th class="text-right">
+                        Gérer
+                    </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in page.listeAutres %}
+                  {% if v.file %}
+                    <tr>
+                        <td>{{ v.file }}</td>
+                        <td class="text-right">
+                          <div class="btn-group">
+                            <button class="delTemplatePDF btn btn-sm btn-light" type="button" {% if v.linkedTo|length > 0 or page.templatesDirAutorisationEcriture == false %}disabled{% endif %} data-file="{{ v.file }}" data-user="{{ page.selectUser }}"><span class="fas fa-times" aria-hidden="true"></span></button>
+                          </div>
+                        </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+      </div>
+
     {% endif %}
 
   {% else %}
     <div class="alert alert-danger" role="alert">Le répertoire de templates n'est pas accessible en lecture. Les templates ne peuvent être listés et gérés par cette interface.</div>
   {% endif %}
-
-  <h2>Ajouter des templates</h2>
-
-  {% if page.templatesDirAutorisationEcriture == 1 %}
-
-
-      <div id="dropZoneFichierZoneConfig"  data-destination="{{ page.repertoireTemplatesPDF }}" class="col-md-9 bg-warning center-block" style="padding : 30px; border-radius : 6px">
-          Déposer ici le fichier ou sélectionnez-le avec le bouton ci-dessous<br/>
-          <input type="file" name="files[]" multiple="multiple" title="Cliquer pour ajouter">
-
-
-          <div class="progress" style="margin-top : 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 00%;">
-              <span class="sr-only"></span>
-            </div>
-          </div>
-      </div>
-
-
-  {% else %}
-    <div class="alert alert-danger" role="alert">Le répertoire de clefs n'est pas accessible en écriture. Les clefs ne peuvent être ajoutées via cette interface.</div>
-  {% endif %}
-
-
-
-
 
 {% endblock %}

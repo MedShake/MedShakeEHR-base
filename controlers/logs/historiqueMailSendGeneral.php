@@ -38,7 +38,7 @@ if (!isset($match['params']['user'])) {
     $where = null;
 } else {
     $p['page']['expediteurID']=$match['params']['user'];
-    $where = "m.fromID='".$p['page']['expediteurID']."' and";
+    if(is_numeric($p['page']['expediteurID'])) $where = "m.fromID='".$p['page']['expediteurID']."' and";
 }
 
 $nbParPage=12;
@@ -64,14 +64,15 @@ if ($mails=msSQL::sql2tab("select m.id from objets_data as m
   order by m.creationDate desc limit $startSQL,$nbParPage")) {
     foreach ($mails as $mail) {
         $ob = new msObjet();
-        $objs[$mail['id']] = $ob->getObjetAndSons($mail['id']);
+        $ob->setObjetID($mail['id']);
+        $objs[$mail['id']] = $ob->getObjetAndSons();
     }
 
     foreach ($objs as $k=>$v) {
         if(isset($v[$name2typeID['mailTo']]['toID'])){
           $patient = new msPeople();
           $patient->setToID($v[$name2typeID['mailTo']]['toID']);
-          $patientData = $patient->getSimpleAdminDatas();
+          $patientData = $patient->getSimpleAdminDatasByName();
         } else {
           $patientData = null;
         }

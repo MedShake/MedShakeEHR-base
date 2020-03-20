@@ -27,45 +27,33 @@
  #}
 {% import "macroForm.html.twig" as f %}
 
-<div class="row" style="margin-bottom : 20px;margin-top : 5px;">
-  <div class="col-10 py-2" style="background-color:#eee">
+<div class="row mb-4">
+  <div class="col-10 pl-0">
     <span class="mr-2">Préparer une acquisition</span>
-    <button class="btn btn-light btn-sm prepareEcho" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
-      <span class="p-0" aria-hidden="true" style="position:relative;top:2px">
-        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" style="fill:#212529" class="py-0">
-        	<g transform="matrix(0.4,0,0,0.4,-20,-33)">
-        	  <circle cx="69.41" cy="106.74" r="5.3068"></circle>
-         	  <g transform="translate(.29179 .95749)">
-              <path d="m50.105 105.77 9.7801-0.0236c0.18378 3.4505 1.6904 6.1012 4.583 7.9139l-4.9373 8.4808c-6.0344-3.8042-9.1239-9.2912-9.4258-16.371z"></path>
-              <path d="m78.499 89.223-4.8696 8.4816c-3.0801-1.5661-6.129-1.5867-9.1451 0.012l-4.876-8.5163c6.3117-3.3238 12.608-3.2559 18.891 0.0226z"></path>
-              <path d="m78.537 122.19-4.9105-8.458c2.8964-1.8844 4.4386-4.5145 4.5622-7.9259l9.8133 0.0354c-0.27733 7.128-3.4845 12.547-9.4649 16.349z"></path>
-      		  </g>
-          </g>
-        </svg>
-      </span>
-      Appareil
+    <button class="btn btn-outline-secondary prepareEcho mr-2" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
+      <i class="fas fa-radiation fa-lg fa-fw"></i> Appareil
+    </button>
+    <button class="btn btn-outline-secondary prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture">
+      <i class="fas fa-mobile-alt fa-lg fa-fw"></i> Phonecapture
     </button>
 
-    <button class="btn btn-light btn-sm prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture"><span class="fa fa-mobile-alt" aria-hidden="true"></span> Phonecapture</button>
-
   </div>
+    <div class="col-2 text-right pr-0">
+      <button class="btn btn-outline-secondary tabDicomRefresh" title="Rafraîchir la liste"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+    </div>
 
 </div>
 
-<div class="row">
-  <div class="col-10 px-0">
-    <div class="card">
-      <div class="card-header">Imagerie du patient
-        <button class="btn btn-light btn-sm ml-3 tabDicomRefresh" title="Rafraîchir la liste"><span class="fa fa-sync-alt" aria-hidden="true"></span></button>
-      </div>
-      <div class="card-body py-1">
-        {% if not page.studiesDcData %}
-          <p><i>Aucune étude référencée pour ce patient.</i></p>
-        {% endif %}
-      </div>
-      {% if page.studiesDcData %}
+{% if not page.studiesDcData %}
+  <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 350px); min-height: 250px">
+    <div class="mb-3"><i class="fas fa-portrait fa-10x text-light"></i></div>
+    <div class="text-muted">Aucune étude référencée pour ce patient.</div>
+  </div>
+{% else %}
+  <div class="row">
+    <div class="col-12 px-0">
         <table id="listeExamens" class="table table-sm table-striped table-hover">
-          <thead>
+          <thead class="thead-light">
             <th></th>
             <th>Date</th>
             <th>Opérateur</th>
@@ -76,8 +64,8 @@
             {% for v in page.studiesDcData %}
               <tr data-study="{{ v.ID }}" class="viewStudy" style="cursor: pointer">
                 <td>
-                  <button class="btn btn-light btn-sm"  role="button">
-                    <span class="fa fa-eye" aria-hidden="true"></span>
+                  <button class="btn btn-outline-secondary btn-sm"  role="button">
+                    <span class="far fa-images" aria-hidden="true"></span>
                   </buttom>
                 </td>
                 <td>{{ v.Datetime|date('d/m/Y - H:i') }}</td>
@@ -94,7 +82,6 @@
             {% endfor %}
           </tbody>
         </table>
-      {% endif %}
+      </div>
     </div>
-  </div>
-</div>
+{% endif %}

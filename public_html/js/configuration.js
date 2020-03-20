@@ -30,8 +30,9 @@ $(document).ready(function() {
 
   if (document.URL.indexOf("#ca") >= 0) {
     $($("ul.nav-tabs li")[1]).children("a")[0].click();
-  }
-  else if (document.URL.indexOf("#ap") >= 0) {
+  } else if (document.URL.indexOf("#ap") >= 0) {
+    $($("ul.nav-tabs li")[3]).children("a")[0].click();
+  } else if (document.URL.indexOf("#journaux") >= 0) {
     $($("ul.nav-tabs li")[2]).children("a")[0].click();
   }
 
@@ -118,8 +119,9 @@ $(document).ready(function() {
   $("button.modal-save").on("click", function(e) {
     var modal = '#' + $(this).attr("data-modal");
     var form = '#' + $(this).attr("data-form");
-    ajaxModalFormSave(form, modal);
-
+    ajaxModalSave(form, modal, function() {
+      location.reload();
+    });
   });
 
   //delete by primary key
@@ -168,14 +170,6 @@ $(document).ready(function() {
     var modal = $(this).attr("data-target");
     $(modal + ' form input[name="dicomTag"]').val($(this).attr('data-dicomtag'));
     $(modal + ' form input[name="dicomCodeMeaning"]').val($(this).attr('data-dicomcodemeaning'));
-  });
-
-
-  $("button.typeToggleVisibility").on("click", function(e) {
-
-    classToToggle = $(this).attr('id');
-    $('.' + classToToggle).toggle();
-
   });
 
   // Upload fichier par drag@drop
@@ -251,38 +245,121 @@ $(document).ready(function() {
     }
   });
 
-  //activation de codemirror pour édition templates
-  if ($("#templateEditor").length ) {
+  //delete user template
+  $(".delUserTemplate").on("click", function(e) {
+    e.preventDefault();
+    var file = $(this).attr("data-file");
+    if (confirm("Êtes-vous certain ?")) {
+      $.ajax({
+        url: urlBase + '/configuration/ajax/configUserTemplateDelete/',
+        type: 'post',
+        data: {
+          file: file
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
+  });
+
+  //  activation de codemirror pour édition templates
+  if ($("#templateEditor").length) {
     var editor = CodeMirror.fromTextArea(document.getElementById("templateEditor"), {
       lineNumbers: true,
       mode: "twig",
       lineWrapping: true
     });
-    editor.setSize(null, 400);
+    editor.setSize(null, 500);
   }
 
-  //auto_grow pour edition de formulaires
-  $("#formParamsEdit textarea").on("keyup, focus", function() {
-    $(this).css("overflow", "hidden");
-    auto_grow(this);
+  // codemirror pour les différents éditeurs de la conception de formulaire
+  $('#structure-tab').on('shown.bs.tab', function(e) {
+    if (yamlEditor instanceof CodeMirror) {
+      yamlEditor.refresh();
+    } else {
+      // Load main editor
+      yamlEditor = CodeMirror.fromTextArea(document.getElementById("yamlEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      yamlEditor.setSize('100%', 900);
+    }
+    yamlEditor.on("change", function(yamlEditor, change) {
+      $('#yamlEditor').val(yamlEditor.getValue());
+    });
   });
+
+  $('#cda-tab').on('shown.bs.tab', function(e) {
+    if (cdaEditor instanceof CodeMirror) {
+      cdaEditor.refresh();
+    } else {
+      // Load main editor
+      cdaEditor = CodeMirror.fromTextArea(document.getElementById("cdaEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      cdaEditor.setSize('100%', 500);
+    }
+    cdaEditor.on("change", function(cdaEditor, change) {
+      $('#cdaEditor').val(cdaEditor.getValue());
+    });
+  });
+
+  $('#javascript-tab').on('shown.bs.tab', function(e) {
+    if (javascriptEditor instanceof CodeMirror) {
+      javascriptEditor.refresh();
+    } else {
+      // Load main editor
+      javascriptEditor = CodeMirror.fromTextArea(document.getElementById("javascriptEditor"), {
+        lineNumbers: true,
+        mode: "javascript",
+      });
+      javascriptEditor.setSize('100%', 700);
+    }
+    javascriptEditor.on("change", function(javascriptEditor, change) {
+      $('#javascriptEditor').val(javascriptEditor.getValue());
+    });
+
+  });
+
+  $('#options-tab').on('shown.bs.tab', function(e) {
+    if (optionsEditor instanceof CodeMirror) {
+      optionsEditor.refresh();
+    } else {
+      // Load main editor
+      optionsEditor = CodeMirror.fromTextArea(document.getElementById("optionsEditor"), {
+        lineNumbers: true,
+        mode: "yaml",
+      });
+      optionsEditor.setSize('100%', 700);
+    }
+    optionsEditor.on("change", function(optionsEditor, change) {
+      $('#optionsEditor').val(optionsEditor.getValue());
+    });
+  });
+
 
   // voir les mots de passe dans les paramètres par défaut
   $(".viewPassword").removeClass('viewPassword').parent()
     .css('cursor', 'pointer')
     .addClass('viewPassword')
-    .on("mousedown", function(){
-      $(this).closest('.input-group').find('input').attr('type','text');
+    .on("mousedown", function() {
+      $(this).closest('.input-group').find('input').attr('type', 'text');
     })
-    .on("mouseup", function(){
-      $(this).closest('.input-group').find('input').attr('type','password');
+    .on("mouseup", function() {
+      $(this).closest('.input-group').find('input').attr('type', 'password');
     });
 
   //Suppression d'un paramètre dans la page paramètres spécifiques
-  $('body').on('click', '.removeParam', function(){
+  $('body').on('click', '.removeParam', function() {
     var $tr = $(this).closest('tr');
     $.ajax({
-      url: urlBase+"/configuration/ajax/configUserParamDelete/",
+      url: urlBase + "/configuration/ajax/configUserParamDelete/",
       type: 'post',
       data: {
         userID: $('input[name=userID]').val(),
@@ -300,11 +377,11 @@ $(document).ready(function() {
   });
 
   //droits admin dans la page liste des utilisateurs
-  $(".changeAdmin").on("click", function(e){
+  $(".changeAdmin").on("click", function(e) {
     e.preventDefault();
     var $ca = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configGiveAdmin/",
+      url: urlBase + "/configuration/ajax/configGiveAdmin/",
       type: 'post',
       data: {
         id: $ca.attr('data-userid')
@@ -323,68 +400,90 @@ $(document).ready(function() {
   });
 
   //choix du module utilisateur dans la page liste des utilisateurs
-  $(".changeModule").on("change", function(){
+  $(".changeModule").on("change", function() {
     var $cm = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configChangeModule/",
+      url: urlBase + "/configuration/ajax/configChangeModule/",
       type: 'post',
       data: {
         id: $cm.attr('data-userid'),
         module: $cm.val()
       },
       dataType: "json",
-      success: function(data) {
-      },
+      success: function(data) {},
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
 
+      }
+    });
+  });
+
+  // révoquer la clef 2FA d'un utilisateur
+  $(".revoke2faKey").on("click", function(e) {
+    e.preventDefault();
+    var $cm = $(this);
+    $.ajax({
+      url: urlBase + "/configuration/ajax/configRevoke2faKey/",
+      type: 'post',
+      data: {
+        uid: $cm.attr('data-userid'),
+      },
+      dataType: "json",
+      success: function(data) {
+        alert_popup("success", 'La clef a été supprimée');
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
       }
     });
   });
 
   //changement de mot de passe d'un utilisateur dans la page liste des utilisateurs
-  $(".changePassword").on("click", function(e){
+  $(".changePassword").on("click", function(e) {
     e.preventDefault();
     var $cp = $(this);
     $.ajax({
-      url: urlBase+"/configuration/ajax/configChangePassword/",
+      url: urlBase + "/configuration/ajax/configChangePassword/",
       type: 'post',
       data: {
         id: $cp.attr('data-userid'),
-        password: $("input[data-userid="+$cp.attr('data-userid')+"]").val()
+        password: $("input[data-userid=" + $cp.attr('data-userid') + "]").val()
       },
       dataType: "json",
       success: function(data) {
-        alert_popup("success", 'le mot de passe de l\'utilisateur "'+ $cp.attr('data-name') + '" a été changé avec succès');
-
+        if (data.status == "ok") {
+          alert_popup("success", 'le mot de passe de l\'utilisateur "' + $cp.attr('data-name') + '" a été changé avec succès');
+          $("input[data-userid=" + $cp.attr('data-userid') + "]").val('');
+        } else {
+          alert_popup("danger", data.msg);
+        }
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
-
       }
     });
   });
 
   //forcer le rechargement de la page sur modif du yaml agenda
-  $(".reload-on-mod").on("keyup", function(){
+  $(".reload-on-mod").on("keyup", function() {
     $(this).closest("form").addClass('reload');
   });
 
   //Révoquer un utilisateur dans la page liste des utilisateurs
-  $(".revokeUser").on("click", function(e){
+  $(".revokeUser").on("click", function(e) {
     e.preventDefault();
     var $ru = $(this);
-    if (!confirm('Etes vous sûr de vouloir supprimer l\'utilisateur "'+$ru.attr('data-name')+'" ?'))
+    if (!confirm('Etes vous sûr de vouloir supprimer l\'utilisateur "' + $ru.attr('data-name') + '" ?'))
       return;
     $.ajax({
-      url: urlBase+"/configuration/ajax/configRevokeUser/",
+      url: urlBase + "/configuration/ajax/configRevokeUser/",
       type: 'post',
       data: {
         id: $ru.attr('data-userid')
       },
       dataType: "json",
       success: function(data) {
-          $ru.closest("tr").remove();
+        $ru.closest("tr").remove();
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -394,7 +493,7 @@ $(document).ready(function() {
   });
 
   // selecteur de catégorie page SpecificUserParam
-  $('select[name=paramCat]').on('click', function(){
+  $('select[name=paramCat]').on('click', function() {
     $('.paramselect').hide();
     $('.paramselect[name=paramNameInCat' + $(this).val() + ']').show();
     $('#description').html('description : ' + $('.paramselect:visible').find('option:selected').attr('data-desc'));
@@ -402,28 +501,32 @@ $(document).ready(function() {
   });
 
   // selecteur de paramètre page SpecificUserParam
-  $('.paramselect').on('click', function(){
+  $('.paramselect').on('click', function() {
     $('#description').html('description : ' + $(this).find('option:selected').attr('data-desc'));
     $('#type').html('type : ' + $(this).find('option:selected').attr('data-type'));
   });
 
+  // upload module
   $("body.uploader").dmUploader({
     url: urlBase + '/configuration/ajax/configInstallModule/',
     extFilter: ["zip"],
     maxFiles: 1,
     allowedTypes: "application/(zip|x-zip-compressed)",
     dataType: 'html',
-    onUploadSuccess: function() {
-      console.log('fichier envoyé');
-    },
-    onDragEnter: function(){
+    onDragEnter: function() {
       $(".mask").css("display", "block");
-      $(".mask").animate({opacity: 0.4}, 500);
+      $(".mask").animate({
+        opacity: 0.4
+      }, 500);
     },
-    onDragLeave: function(){
-      $(".mask").animate({opacity: 0}, 500, "linear", function(){$(".mask").css("display", "none")});
+    onDragLeave: function() {
+      $(".mask").animate({
+        opacity: 0
+      }, 500, "linear", function() {
+        $(".mask").css("display", "none")
+      });
     },
-    onFileTypeError: function(){
+    onFileTypeError: function() {
       alert_popup("danger", "Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
 
     },
@@ -432,55 +535,159 @@ $(document).ready(function() {
         $(this).dmUploader("cancel", id);
     },
     onUploadSuccess: function(id, data) {
-        if (data.indexOf("Erreur:")==0) {
-            $("#errormessage").html(data);
-            $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
-        } else if (data.toLowerCase().indexOf("ok")==0) {
-          alert_popup("success", "La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
+      if (data.indexOf("Erreur:") == 0) {
+        $("#errormessage").html(data);
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
+      } else if (data.toLowerCase().indexOf("ok") == 0) {
+        alert_popup("success", "La première phase d'installation a été réalisée avec succès! Deloguez puis reloguez vous pour accomplir la suite");
 
-        } else {
-          alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0,data.length-2));
+      } else {
+        alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0, data.length - 2));
 
-        }
+      }
     },
     onUploadError: function(id, xhr, status, errorThrown) {
       $("#errormessage").html(errorThrown);
-      $(".submit-error").animate({top: "50px"},300,"easeInOutCubic", function(){setTimeout((function(){$(".submit-error").animate({top:"0"},300)}), 4000)});
+      $(".submit-error").animate({
+        top: "50px"
+      }, 300, "easeInOutCubic", function() {
+        setTimeout((function() {
+          $(".submit-error").animate({
+            top: "0"
+          }, 300)
+        }), 4000)
+      });
     }
   });
 
-  // importer les datas d'un acte CCAM
-  $(".importFromAmeliCCAM").on("click", function(e){
-    e.preventDefault();
-    codeActe=$('.modal input[name="code"]').val();
+  // upload plugin
+  $("body.uploaderPlugin").dmUploader({
+    url: urlBase + '/configuration/ajax/configInstallPlugin/',
+    extFilter: ["zip"],
+    maxFiles: 1,
+    allowedTypes: "application/(zip|x-zip-compressed)",
+    dataType: 'html',
+    onDragEnter: function() {
+      $(".mask").css("display", "block");
+      $(".mask").animate({
+        opacity: 0.4
+      }, 500);
+    },
+    onDragLeave: function() {
+      $(".mask").animate({
+        opacity: 0
+      }, 500, "linear", function() {
+        $(".mask").css("display", "none")
+      });
+    },
+    onFileTypeError: function() {
+      alert_popup("danger", "Le format de fichier déposé n'est pas correct. Il faut que ce soit un zip (.zip)");
 
-    if(codeActe.length != 7) {
-      alert('Le code inséré n\'est pas un code d\'acte CCAM valide !');
+    },
+    onBeforeUpload: function(id) {
+      if (!confirm("Confirmez l'installation du fichier"))
+        $(this).dmUploader("cancel", id);
+    },
+    onUploadSuccess: function(id, data) {
+      if (data.indexOf("Erreur:") == 0) {
+        $("#errormessage").html(data);
+        $(".submit-error").animate({
+          top: "50px"
+        }, 300, "easeInOutCubic", function() {
+          setTimeout((function() {
+            $(".submit-error").animate({
+              top: "0"
+            }, 300)
+          }), 4000)
+        });
+      } else if (data.toLowerCase().indexOf("ok") == 0) {
+        // ok on reload la page
+        window.location.reload(true);
+
+      } else {
+        alert_popup("danger", "La première phase d'installation a été réalisée, mais il y a eu les messages suivants : " + data.substr(0, data.length - 2));
+
+      }
+    },
+    onUploadError: function(id, xhr, status, errorThrown) {
+      $("#errormessage").html(errorThrown);
+      $(".submit-error").animate({
+        top: "50px"
+      }, 300, "easeInOutCubic", function() {
+        setTimeout((function() {
+          $(".submit-error").animate({
+            top: "0"
+          }, 300)
+        }), 4000)
+      });
+    }
+  });
+
+
+  $('.modalGestionActes').on('show.bs.modal', function(e) {
+    setModalGestionActes();
+  });
+
+  $('.modalGestionActes select[name="type"]').on('change', function(e) {
+    setModalGestionActes();
+  });
+
+  function setModalGestionActes() {
+    if ($('.modal select[name="type"]').val() == 'NGAP') {
+      $('.modal input[name="activite"]').parent('div').addClass('d-none');
+      $('.modal input[name="phase"]').parent('div').addClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').removeClass('d-none');
+    } else if ($('.modal select[name="type"]').val() == 'Libre') {
+      $('.modal input[name="activite"]').parent('div').addClass('d-none');
+      $('.modal input[name="phase"]').parent('div').addClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').addClass('d-none');
+    } else {
+      $('.modal input[name="activite"]').parent('div').removeClass('d-none');
+      $('.modal input[name="phase"]').parent('div').removeClass('d-none');
+      $('.modal select[name="codeProf"]').parent('div').addClass('d-none');
+    }
+  }
+
+  // importer les datas d'un acte CCAM
+  $(".importFromCCAM").on("click", function(e) {
+    e.preventDefault();
+    acteCode = $('.modal input[name="code"]').val();
+
+    if (acteCode.length < 1) {
+      alert('Le code inséré n\'est pas un code d\'acte valide !');
       return;
     }
 
     $.ajax({
-      url: urlBase+"/configuration/ajax/extractCcamActeData/",
+      url: urlBase + "/configuration/ajax/extractCcamActeData/",
       type: 'post',
       data: {
-        codeActe: codeActe
+        acteType: $('.modal select[name="type"]').val(),
+        acteCode: acteCode,
+        activiteCode: $('.modal input[name="activite"]').val(),
+        phaseCode: $('.modal input[name="phase"]').val(),
+        codeProf: $('.modal select[name="codeProf"]').val(),
       },
       dataType: "json",
       success: function(data) {
-        $('.modal input[name="label"]').val(data.label);
-        $('.modal input[name="tarifs1"]').val(data.tarifs1);
-        $('.modal input[name="tarifs2"]').val(data.tarifs2);
-        $('.modal select[name="type"]').find('option[value="CCAM"]').prop("selected", "selected");
-        console.log(data.modificateurs);
-        $.each(['F', 'P', 'S', 'M', 'R', 'D', 'E', 'C', 'U'], function( index, value ) {
-          if(data.modificateurs.indexOf(value) != -1) {
-            console.log(value + ' applicable');
-            $('.modal select[name="'+ value +'"]').find('option[value="true"]').prop("selected", "selected");
-          } else {
-            console.log(value + ' non applicable');
-            $('.modal select[name="'+ value +'"]').find('option[value="false"]').prop("selected", "selected");
-          }
-        });
+        if (!data.yaml) {
+          alert_popup("danger", data);
+          return;
+        }
+        $('.modal textarea[name="dataYaml"]').val(data.yaml);
+        $('.modal input[name="label"]').val(data.acteLabel);
+        $('.modal input[name="code"]').val(data.acteCode);
+        $('.modal input[name="activite"]').val(data.activiteCode);
+        $('.modal input[name="phase"]').val(data.phaseCode);
+        $('.modal select[name="tarifUnit"]').val(data.tarifUnite);
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -489,40 +696,25 @@ $(document).ready(function() {
     });
   });
 
-});
-
-function ajaxModalFormSave(form, modal) {
-  var data = {};
-  $(form + ' input, ' + form + ' select, ' + form + ' textarea').each(function(index) {
-    var input = $(this);
-    data[input.attr('name')] = input.val();
-  });
-
-  var url = $(form).attr('action');
-  data["groupe"] = $(form).attr('data-groupe');
-
-  $.ajax({
-    url: url,
-    type: 'post',
-    data: data,
-    dataType: "json",
-    success: function(data) {
-      if (data.status == 'ok') {
-        $(modal).modal('hide');
-        location.reload();
-      } else {
-        $(modal + ' div.alert').show();
-        $(modal + ' div.alert ul').html('');
-        $.each(data.msg, function(index, value) {
-          $(modal + ' div.alert ul').append('<li>' + index + ': ' + value + '</li>');
-          $('#' + index + 'ID').parent('div').addClass('has-error');
-
-        });
+  //Fixer le displayOrder des data type en fonction de l'ordre dans un form
+  $("button.fixDisplayOrder").on("click", function(e) {
+    e.preventDefault();
+    if (!confirm('Etes vous sûr de vouloir réaliser cette action ?'))
+      return;
+    $.ajax({
+      url: urlBase + "/configuration/ajax/fixDisplayOrder/",
+      type: 'post',
+      data: {
+        formid: $(this).attr('data-formid')
+      },
+      dataType: "json",
+      success: function(data) {
+        alert_popup("success", 'Action effectuée !');
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
       }
-    },
-    error: function() {
-      alert_popup("danger", 'Problème, rechargez la page !');
-
-    }
+    });
   });
-}
+
+});

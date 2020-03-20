@@ -43,11 +43,25 @@ $(document).ready(function() {
   //spécifier manuellement le patientID
   $("#view").on("click", "#specifierPatientIDManu", function(e) {
     e.preventDefault();
-    $("tr.patietSelect").removeClass('table-success gras');
+    $("tr.patietSelect").removeClass('table-success font-weight-bold');
     $("#idConfirmPatientIDLabel").show();
     $("#idConfirmPatientID").attr('type', 'text');
   });
 
+  //autocomplete pour la recherche patient
+  $('body').delegate('#searchPatientID', 'focusin', function() {
+    if ($(this).is(':data(autocomplete)')) return;
+    $(this).autocomplete({
+      source: urlBase + '/inbox/ajax/getPatients/',
+      select: function(event, ui) {
+        $('#tabPatients').append(constructPatientLine(ui.item));
+        selectPatient($("tr.patientSelect[data-patientid = " + ui.item.id + "]"));
+
+        $('#searchPatientID').val(ui.item.label);
+        $('#searchPatientID').attr('data-id', ui.item.id);
+      }
+    });
+  });
 
   $("#view").on("change keyup", "#idConfirmPatientID", function(e) {
     patientID = $(this).val();
@@ -75,7 +89,7 @@ $(document).ready(function() {
 
 function viewMail(el) {
   $.ajax({
-    url: urlBase+'/inbox/ajax/viewMail/',
+    url: urlBase + '/inbox/ajax/viewMail/',
     type: 'post',
     data: {
       mailID: el.attr('data-mailID'),
@@ -83,9 +97,9 @@ function viewMail(el) {
     dataType: "html",
     success: function(data) {
 
-      $("tr.mailClicView").each(function( index ) {
+      $("tr.mailClicView").each(function(index) {
         $(this).removeClass('table-success');
-        if($(this).attr('data-status') == 'c') $(this).addClass('table-warning');
+        if ($(this).attr('data-status') == 'c') $(this).addClass('table-warning');
       });
 
       $(el).removeClass('table-warning').addClass('table-success');
@@ -101,12 +115,46 @@ function viewMail(el) {
 
 
 function selectPatient(el) {
-  $("tr.patietSelect").removeClass('table-success gras');
-  $(el).addClass('table-success gras');
+  $("tr.patietSelect").removeClass('table-success font-weight-bold');
+  $(el).addClass('table-success font-weight-bold');
   patientID = $(el).attr('data-patientID');
   $("#idConfirmPatientID").val(patientID);
   if (patientID > 0) {
     $("#submitIndicID").html(patientID);
     $("#submitBoutonClasser").show();
   }
+}
+
+function constructPatientLine(data) {
+  if (data.birthname == null) {
+    data.birthname = '';
+  }
+  if (data.lastname == null) {
+    data.lastname = '';
+  }
+
+  if (data.birthname.length > 0 && data.lastname.length > 0) {
+    identiteNom = data.lastname + ' (' + data.birthname + ')';
+  } else if (data.lastname.length > 0) {
+    identiteNom = data.lastname;
+  } else if (data.birthname.length > 0) {
+    identiteNom = data.birthname;
+  } else {
+    identiteNom = '';
+  }
+
+  line = '<tr class="patientSelect cursor-pointer" data-patientid="' + data.id + '"> \
+    <td>#' + data.id + '</td> \
+    <td>' + identiteNom + '</td> \
+    <td>' + data.firstname + '</td> \
+    <td>' + data.birthdate + '</td> \
+    <td class="small">' + data.streetNumber + ' ' + data.street + ' ' + data.postalCodePerso + ' ' + data.city + '</td> \
+    <td  class="small">' + (data.nss != null ? data.nss : '') + '</td> \
+    <td> \
+    <a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + data.id + '/" target="_blank"> \
+      <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span> \
+    </a> \
+    </td> \
+  </tr>";'
+  return line;
 }

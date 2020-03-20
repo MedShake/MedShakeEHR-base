@@ -29,14 +29,14 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : édition du template{% endblock %}
+{% block title %}{{ config.designAppName }} : édition du template{% endblock %}
 
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
-<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.css">
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/lib/codemirror.js?{{ modules.base }}"></script>
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/codemirror/codemirror/mode/twig/twig.js?{{ modules.base }}"></script>
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css">
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.js?{{ modules.base }}"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/twig/twig.js?{{ modules.base }}"></script>
 
 {% endblock %}
 
@@ -49,7 +49,7 @@
     <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des modèles</a>
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/templates-pdf/">Liste des modèles d'impression</a>
   </li>
   {% if page.selectUser > 0 %}
     <li class="breadcrumb-item">
@@ -61,7 +61,7 @@
   </li>
 </ol>
 
-<h1>Edition du modèle de rapport <small>{{ page.fichier.name }}
+<h1>Edition du modèle d'impression <small>{{ page.fichier.name }}
 {% if page.selectUser > 0 %}
   de {{ page.fichier.proprio.firstname }}
   {% if page.fichier.proprio.lastname %}
@@ -131,7 +131,7 @@
 
 
 
-  <div class="form-group">
+  <div class="form-group border">
   {{ f.textarea ({
     'textarea' : {
       'name' : 'code',

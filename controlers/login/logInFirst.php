@@ -30,7 +30,10 @@
 $debug='';
 $template="firstLogin";
 
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
+  msTools::redirRoute('userLogIn');
+}
+
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='baseFirstLogin');
-
 $p['page']['form']=$form->getForm();

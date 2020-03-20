@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
                     </label>
-                    <select class="form-control custom-select selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
+                    <select class="custom-select selectPrescriptionStarter" id="selectPrescription{{ loop.index }}ID" name="selectPrescription{{ loop.index }}" autocomplete="off">
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}" {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}>{{ val.optionmenu }}</option>
@@ -59,15 +59,23 @@
         <input type="hidden" name="ordoForm" value="{{ page.ordo.ordoForm }}" />
         <input type="hidden" name="asUserID" value="{{ page.ordo.asUserID }}" />
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-auto">
                 <div class="form-group">
-                    <label class="control-label" for="p_189ID">Modèle impression
+                    <label class="control-label">Modèle impression
                     </label>
-                    <select class="form-control custom-select" name="ordoTypeImpression" data-typeid="189" autocomplete="off">
-
+                    <select class="custom-select" name="ordoTypeImpression" autocomplete="off">
                         <option value="standard">standard</option>
                         <option value="ald"{% if page.courrier.modeprint == 'ald' %} selected="selected"{% endif %}>ALD</option>
-
+                    </select>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group">
+                    <label class="control-label">Imprimer le nombre de lignes de prescription
+                    </label>
+                    <select class="custom-select" name="ordoImpressionNbLignes" autocomplete="off">
+                        <option value="o" {% if page.courrier.ordoImpressionNbLignes == 'o' %} selected="selected"{% endif %}>oui</option>
+                        <option value="n" {% if page.courrier.ordoImpressionNbLignes == 'n' %} selected="selected"{% endif %}>non</option>
                     </select>
 
                 </div>

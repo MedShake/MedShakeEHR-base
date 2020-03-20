@@ -27,18 +27,9 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-// patient -> praticien
-$patient = new msObjet();
-$patient->setToID($_POST['patientID']);
-$patient->setFromID($p['user']['id']);
-$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['praticienID']);
-$patient->createNewObjetByTypeName('relationPatientPraticien', $_POST['preRelationPatientPrat'], $supportID);
+$relation = new msPeopleRelations;
+$relation->setToID($_POST['patientID']);
+$relation->setFromID($p['user']['id']);
+$relation->setRelationWithPro($_POST['preRelationPatientPrat'], $_POST['praticienID']);
 
-// praticien -> patient
-$praticien = new msObjet();
-$praticien->setToID($_POST['praticienID']);
-$praticien->setFromID($p['user']['id']);
-$supportID=$praticien->createNewObjetByTypeName('relationID', $_POST['patientID']);
-$praticien->createNewObjetByTypeName('relationPatientPraticien', 'patient', $supportID);
-
-echo json_encode(array('ok'));
+exit (json_encode(array('ok')));

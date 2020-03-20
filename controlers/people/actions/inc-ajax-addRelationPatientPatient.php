@@ -27,27 +27,9 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //sortir les choix de relations patient<->patient pour faire un reverse tab
- $data = new msData();
- $typeID = $data->getTypeIDFromName('relationPatientPatient');
- $options = $data->getSelectOptionValue(array($typeID));
- foreach($options[$typeID] as $k=>$v) {
-   $reversTab[$k]=$v;
- }
+$relation = new msPeopleRelations;
+$relation->setToID($_POST['patientID']);
+$relation->setFromID($p['user']['id']);
+$relation->setRelationWithOtherPatient($_POST['preRelationPatientPatient'], $_POST['patient2ID']);
 
-
-// patientPrin -> patient
-$patient = new msObjet();
-$patient->setToID($_POST['patientID']);
-$patient->setFromID($p['user']['id']);
-$supportID=$patient->createNewObjetByTypeName('relationID', $_POST['patient2ID']);
-$patient->createNewObjetByTypeName('relationPatientPatient', $_POST['preRelationPatientPatient'], $supportID);
-
-// patient -> patientPrin
-$patient2 = new msObjet();
-$patient2->setToID($_POST['patient2ID']);
-$patient2->setFromID($p['user']['id']);
-$supportID=$patient2->createNewObjetByTypeName('relationID', $_POST['patientID']);
-$patient2->createNewObjetByTypeName('relationPatientPatient', $reversTab[$_POST['preRelationPatientPatient']], $supportID);
-
-echo json_encode(array('ok'));
+exit (json_encode(array('ok')));

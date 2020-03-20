@@ -31,12 +31,12 @@
   {# poids #}
   {% if page.patientBasicPhysio.poids.statut == 'missingValue' %}
     <tr class="table-danger">
-      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Poids : valeur manquante !</td>
+      <td><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Poids : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.poids.statut == 'ok' or page.patientBasicPhysio.poids.statut == 'oldValue' %}
-    <tr class="{% if page.patientBasicPhysio.poids.statut == "oldValue" %}table-danger{% else %}table-light{% endif %}">
+    <tr class="{% if page.patientBasicPhysio.poids.statut == "oldValue" %}table-danger{% else %}table-gray{% endif %}">
       <td data-toggle="collapse" data-target="#physioPoidsDet" style="cursor: pointer">
-        {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>{% endif %}
+        {% if page.patientBasicPhysio.poids.statut == "oldValue" %}<span class="fas fa-exclamation-triangle" aria-hidden="true"></span>{% endif %}
         Poids : {{ page.patientBasicPhysio.poids.value|replace({'.':','}) }} kg
         {% if page.patientBasicPhysio.poids.statut == "oldValue" %} - poids à actualiser !{% endif %}
         <div id="physioPoidsDet" class="collapse">
@@ -58,10 +58,10 @@
   {# taille #}
   {% if page.patientBasicPhysio.taillePatient.statut == 'missingValue' %}
     <tr class="table-danger">
-      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Taille : valeur manquante !</td>
+      <td><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Taille : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.taillePatient.statut == 'ok' %}
-    <tr class="table-light">
+    <tr class="table-gray">
       <td data-toggle="collapse" data-target="#physioTaillePatientDet" style="cursor: pointer">
         Taille : {{ page.patientBasicPhysio.taillePatient.value|replace({'.':','}) }} cm
         <div id="physioTaillePatientDet" class="collapse">
@@ -83,10 +83,10 @@
   {# clairance #}
   {% if page.patientBasicPhysio.clairanceCreatinine.statut == 'incorectValue' %}
     <tr class="table-danger">
-      <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
+      <td><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Clairance Cr. : valeur manquante !</td>
     </tr>
   {% elseif page.patientBasicPhysio.clairanceCreatinine.statut == 'ok' %}
-    <tr class="{% if page.patientBasicPhysio.clairanceCreatinine.value < 30 %}table-danger{% elseif page.patientBasicPhysio.clairanceCreatinine.value < 60 %}table-warning{% else %}table-light{% endif %}">
+    <tr class="{% if page.patientBasicPhysio.clairanceCreatinine.value < 30 %}table-danger{% elseif page.patientBasicPhysio.clairanceCreatinine.value < 60 %}table-warning{% else %}table-gray{% endif %}">
       <td data-toggle="collapse" data-target="#clairanceCreatinineDet" style="cursor: pointer">Clairance créatinine :
         {{ page.patientBasicPhysio.clairanceCreatinine.value|replace({'.':','}) }} ml/min
         <div id="clairanceCreatinineDet" class="collapse">
@@ -112,7 +112,7 @@
     </tr>
   {% else %}
     <tr class="{% if page.patientBasicPhysio.statutHepatique.statut == 'statutHepatiqueOk' %}
-          table-light"><td data-toggle="collapse" data-target="#statutHepatiqueDet" style="cursor: pointer">
+          table-gray"><td data-toggle="collapse" data-target="#statutHepatiqueDet" style="cursor: pointer">
             Pas d'insuffisance hépatique connue
         {% elseif page.patientBasicPhysio.statutHepatique.statut == 'statutHepatiqueIhl' %}
           table-warning"><td data-toggle="collapse" data-target="#statutHepatiqueDet" style="cursor: pointer">
@@ -149,12 +149,12 @@
 
     {% if page.patientBasicPhysio.grossesse.statut == 'missingValue' %}
       <tr class="table-danger">
-        <td><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Grossesse : information manquante !</td>
+        <td><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Grossesse : information manquante !</td>
       </tr>
     {% elseif page.patientBasicPhysio.grossesse.statut == 'termeDepasse46SA' %}
       <tr class="table-danger alerteMsg" data-typeAlert="lapAlertPatientTermeGrossesseSup46" data-alertemsg="Le terme de grossesse est supérieur à 46 semaines d'aménorrhée.">
         <td data-toggle="collapse" data-target="#grosssesseDet" style="cursor: pointer">
-          <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Terme > 46SA !
+          <span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Terme > 46SA !
           <div id="grosssesseDet" class="collapse">
           <table class="table table-sm" style="margin-top:8px;">
             <tr>
@@ -178,7 +178,7 @@
         </td>
       </tr>
     {% elseif page.patientBasicPhysio.grossesse.statut == 'absenceGrossesse' %}
-    <tr class="table-light">
+    <tr class="table-gray">
       <td>Pas de grossesse connue</td>
     </tr>
     {% elseif page.patientBasicPhysio.grossesse.statut == 'grossesseEnCours' %}
@@ -221,7 +221,7 @@
       {% elseif page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
         table-danger alerteMsg" data-alertemsg="L'état d'allaitement dure depuis plus de 3 ans." data-typeAlert="lapAlertPatientAllaitementSup3Ans">
       {% else %}
-        table-light">
+        table-gray">
       {% endif %}
       <td data-toggle="collapse" data-target="#allaitementDet" style="cursor: pointer">
         {% if page.patientBasicPhysio.allaitement.statut == 'absenceAllaitement' %}
@@ -229,21 +229,21 @@
         {% elseif page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' %}
           Allaitement en cours
         {% elseif page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
-          <span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Allaitement > 3 ans ?
+          <span class="fas fa-exclamation-triangle" aria-hidden="true"></span> Allaitement > 3 ans ?
         {% endif %}
-        <button class="btn btn-light btn-sm float-right p-0">Modifier</button>
+        <span class="float-right"><i class="fas fa-ellipsis-h"></i></span>
         <div id="allaitementDet" class="collapse">
           <table class="table table-sm" style="margin-top:8px;">
             <tr>
               <td>Modifier</td>
               <td>
                 {% if page.patientBasicPhysio.allaitement.basedOn =='missingValue' %}
-                  <button class="btn btn-light btn-sm allaitementStart">Allaite actuellement</button>
-                  <button class="btn btn-light btn-sm allaitementStop">N'allaite pas</button>
+                  <button class="btn btn-light btn-sm allaitementStart small">Allaite actuellement</button>
+                  <button class="btn btn-light btn-sm allaitementStop small">N'allaite pas</button>
                 {% elseif page.patientBasicPhysio.allaitement.statut == 'absenceAllaitement' %}
-                  <button class="btn btn-light btn-sm allaitementStart">Allaite actuellement</button>
+                  <button class="btn btn-light btn-sm allaitementStart small">Allaite actuellement</button>
                 {% elseif page.patientBasicPhysio.allaitement.statut == 'allaitementEnCours' or page.patientBasicPhysio.allaitement.statut == 'alerteAllaitementLong' %}
-                  <button class="btn btn-light btn-sm allaitementStop">N'allaite plus actuellement</button>
+                  <button class="btn btn-light btn-sm allaitementStop small">N'allaite plus actuellement</button>
                 {% endif %}
               </td>
             </tr>

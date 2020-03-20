@@ -32,8 +32,10 @@ if(is_numeric($_POST['patientID'])) {
   if($statutActu=msSQL::sqlUniqueChamp("select type from people where id='".$_POST['patientID']."'")) {
     if($statutActu=='patient') {
       $statutFutur='pro';
+      if($p['config']['droitDossierPeutCreerPraticien'] != 'true') die();
     } else {
       $statutFutur='patient';
+      if($p['config']['droitDossierPeutRetirerPraticien'] != 'true') die();
     }
 
     $data=array(

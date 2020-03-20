@@ -27,6 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($match['params']['mailID'])) die;
 
 //sortir data hprim
 if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id='".$match['params']['mailID']."' ")) {

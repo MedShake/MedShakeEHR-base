@@ -68,8 +68,15 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     //creation folder si besoin
     msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 
-    $destination_file= $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-    move_uploaded_file($fichier['tmp_name'], $destination_file);
+    $destination_file = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
+    if(msTools::commandExist('gs') and $ext=='pdf') {
+      $tempFile = $p['config']['workingDirectory'].$supportID.'.pdf';
+      move_uploaded_file($fichier['tmp_name'], $tempFile);
+      msPDF::optimizeWithGS($tempFile, $destination_file);
+      unlink($tempFile);
+    } else {
+      move_uploaded_file($fichier['tmp_name'], $destination_file);
+    }
 }
 
 die();

@@ -1,0 +1,179 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Transmissions, transmission
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : transmission #{{ page.transmissionID }}
+{% endblock %}
+
+{% block head %}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions.js?{{ modules.base }}"></script>
+  <script>
+    var sujetID = {{ page.transmissionID }};
+  </script>
+{% endblock %}
+
+{% block body %}
+  <h1>Transmission #{{ page.transmissionID }}</h1>
+
+  {% if page.transmission.statut == 'deleted' %}
+    <div class="alert alert-danger my-4" role="alert">
+      Cette transmission est considérée comme effacée !
+    </div>
+  {% endif %}
+
+  <div class="row my-4">
+    <div class="col">
+      <a class="btn btn-secondary" href="/transmissions/{{ page.transmission.fromBox }}/">
+        <i class="fas fa-angle-double-left"></i>
+        Retour à la liste</a>
+        {% if user.id in page.transmission.destinatairesID %}
+          {% if page['transmission']['statutDestinataires'][user.id] == 'checked' %}
+            <button class="btn btn-outline-secondary marquerTransmissionTraitee" data-transmissionid="{{ page.transmissionID }}"><i class="fas fa-clipboard"></i> Marquer comme non traitée</button>
+          {% else %}
+            <button class="btn btn-success marquerTransmissionTraitee" data-transmissionid="{{ page.transmissionID }}"><i class="fas fa-clipboard-check"></i> Marquer comme traitée</button>
+          {% endif %}
+        {% endif %}
+
+    </div>
+    <div class="col text-right">
+      {% if user.id == page.transmission.fromID %}
+        <div class="btn-group">
+          <button class="btn btn-secondary editerTransmission" data-transmissionid="{{ page.transmissionID }}"><i class="fas fa-pencil-alt"></i> Editer</button>
+          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item editerTransmission" href="#" data-transmissionid="{{ page.transmissionID }}">Éditer</a>
+            <a class="dropdown-item effacerTransmission" href="#" data-transmissionid="{{ page.transmissionID }}">Supprimer</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card border-secondary">
+    <div class="card-header">
+      <table class="table my-0 border-secondary">
+        <tbody>
+          <tr>
+            <td class="border-top-0">Auteur</td>
+            <td class="border-top-0">{{ page.transmission.identiteAuteur }}</td>
+            <td class="border-top-0 text-right">Créée
+              {% if page.transmission.registerDate|date('Ymd') != "now"|date('Ymd') %}
+                le {{ page.transmission.registerDate|date('d/m/Y H:i') }}
+              {% else %}
+                aujourd'hui {{ page.transmission.registerDate|date('H:i') }}
+              {% endif %}
+
+              {% if page.transmission.updateDate !=  page.transmission.registerDate %}
+                - Dernière action
+                {% if page.transmission.updateDate|date('Ymd') != "now"|date('Ymd') %}
+                  le {{ page.transmission.updateDate|date('d/m/Y H:i') }}
+                {% else %}
+                  aujourd'hui {{ page.transmission.updateDate|date('H:i') }}
+                {% endif %}
+              {% endif %}
+            </td>
+          </tr>
+          <tr class="{% if page.transmission.priorite == 10 %}table-danger{% elseif page.transmission.priorite == 5 %}table-warning{% endif %}">
+            <td>Sujet</td>
+            <td colspan="2" class="font-weight-bold">{{ page.transmission.sujet }}</td>
+          </tr>
+          <tr>
+            <td>Concerne</td>
+            <td colspan="2" class="font-weight-bold">
+              {% if page.transmission.aboutID > 0 %}
+                <a target="_blank" class="btn btn-sm btn-outline-secondary  mr-1" href="/patient/{{ page.transmission.aboutID }}/">
+                  <i class="fas fa-folder-open"></i>
+                </a>
+                {{ page.transmission.identiteAbout }}
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td>Destinataires</td>
+            <td colspan="2">
+              <ul class="list-unstyled my-0">
+                {% for desti in page.transmission.destinataires %}
+                  <li>
+                    {{ desti.identiteDestinataire }}
+
+                    {% if page.transmission.updateDate > desti.dateLecture %}
+                      <i class="fas fa-eye-slash font-weight-bold text-danger" title="non lu par le destinataire"></i>
+                    {% else %}
+                      <i class="far fa-eye font-weight-bold text-success toChangeOnUpdate" title="lu par le destinataire"></i>
+                    {% endif %}
+                    {% if desti.statut == 'checked' %}
+                        <i class="fas fa-clipboard-check font-weight-bold text-success toRemoveOnUpdate" title="Considérée comme traitée par le destinataire"></i>
+                    {% endif %}
+
+                  </li>
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    {% if page.transmission.texte is not empty %}
+    <div class="card-body">
+      {{ page.transmission.texte|nl2br }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div id="blocReponses">
+    {% include 'inc-transmissionsBlocReponses.html.twig' %}
+  </div>
+
+  <div class="collapse" id="transmissionRepondre">
+    <div class="card card-body my-4">
+      <form>
+        <div class="form-group">
+          <input id="formRepSujetID" value="{{ page.transmissionID }}" type="hidden" autocomplete="off">
+          <input id="formRepReponseID" value="" type="hidden" autocomplete="off">
+          <label for="texteReponse">Réponse</label>
+          <textarea class="form-control" id="texteReponse" rows="5" autocomplete="off"></textarea>
+        </div>
+        <button type="submit" id="reponseEnvoyer" class="btn btn-primary mb-2">Envoyer</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="my-4">
+    <button class="btn btn-secondary" data-toggle="collapse" href="#transmissionRepondre"><i class="fas fa-reply"></i> Répondre</button>
+
+  </div>
+{% endblock %}
+
+{% block modals %}
+{# modal nouvelle transmission #}
+{% include 'inc-transmissionsNouvelleModal.html.twig' %}
+{% endblock %}

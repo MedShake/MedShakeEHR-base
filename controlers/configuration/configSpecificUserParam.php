@@ -38,7 +38,7 @@ $template='configSpecificUserParam';
 $p['page']['userID']=$match['params']['userID'];
 $prat=new msPeople();
 $prat->setToID($p['page']['userID']);
-$p['page']['userData']=$prat->getSimpleAdminDatas();
+$p['page']['userData']=$prat->getSimpleAdminDatasByName();
 $module=$prat->getModule();
 
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
@@ -59,6 +59,7 @@ if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
         $p['page']['userParams'][$v['cat']][]=$v;
     }
 }
+ksort($p['page']['userParams']);
 
 $p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
 foreach($p['page']['availableParams'] as $k=>$v) {

@@ -1,0 +1,171 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : edition d'un user template
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : édition du modèle de configuration utilisateur{% endblock %}
+
+{% block head %}
+{{ parent() }}
+<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css">
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.js?{{ modules.base }}"></script>
+<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/yaml/yaml.js?{{ modules.base }}"></script>
+
+{% endblock %}
+
+{% block jsEmbed %}
+{{ parent() }}
+
+$(document).ready(function() {
+  if ($("#templateEditorUT").length) {
+    var editor = CodeMirror.fromTextArea(document.getElementById("templateEditorUT"), {
+      lineNumbers: true,
+      mode: "yaml",
+      lineWrapping: true
+    });
+    editor.setSize(null, 500);
+  }
+});
+{% endblock %}
+
+{% block body %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-templates/">Liste des modèles de configurations</a>
+  </li>
+  {% if page.selectUser > 0 %}
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-templates/{{ page.selectUser }}/">{{ page.fichier.proprio.firstname }} {% if page.fichier.proprio.lastname %}{{ page.fichier.proprio.lastname }}{% else %}{{ page.fichier.proprio.birthname }}{% endif %}</a>
+    </li>
+  {% endif %}
+  <li class="breadcrumb-item active">
+    Édition
+  </li>
+</ol>
+
+<h1>Edition du modèle <small>{{ page.fichier.name }}
+{% if page.selectUser > 0 %}
+  de {{ page.fichier.proprio.firstname }}
+  {% if page.fichier.proprio.lastname %}
+    {{ page.fichier.proprio.lastname }}
+  {% else %}
+    {{ page.fichier.proprio.birthname }}
+  {% endif %}
+{% endif %}</small></h1>
+
+
+{% if page.templatesDirAutorisationEcriture == false %}
+  <div class="alert alert-danger" role="alert">Le répertoire {{ page.fichier.chemin }} n'est pas accessible en écriture. Le template ne peut être édité par cette méthode.</div>
+{% endif %}
+
+<div class="row mt-4">
+
+<form class="col-md-12"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserTemplatesSave/">
+
+  <div class="form-row">
+
+    <div class="form-group col-4">
+
+      {{ f.input ({
+        'input' : {
+          'type' : 'text',
+          'name' : 'directory',
+          'placeholder' : 'nom du fichier',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'readonly' : 'readonly',
+          'value' : page.fichier.chemin
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Répertoire',
+        }
+      }) }}
+
+    </div>
+
+    <div class="form-group col-5">
+
+      {{ f.input ({
+        'input' : {
+          'type' : 'text',
+          'name' : 'fichier',
+          'placeholder' : 'nom du fichier',
+          'class' : 'form-control',
+          'autocomplete' : 'off',
+          'value' : page.fichier.name
+        },
+        'label' : {
+          'position' : 'before',
+          'label' : 'Nom du fichier (indiquer un nouveau nom pour conserver l\'original)',
+        }
+      }) }}
+      </div>
+    </div>
+
+
+
+  <div class="form-group">
+  {{ f.textarea ({
+    'textarea' : {
+      'name' : 'code',
+      'id' : 'templateEditorUT',
+      'placeholder' : 'valeurs par défaut',
+      'class' : 'form-control',
+      'autocomplete' : 'off',
+      'value' : page.fichier.code,
+      'add' : 'rows="45" style="font-family:monospace;"'
+    },
+    'label' : {
+      'position' : 'before',
+      'class' : 'font-weight-bold',
+      'label' : 'Paramètres à appliquer à l\'utilisateur (yaml)'
+    }
+  }) }}
+  </div>
+
+
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled{% endif %} type="submit" name="saveAndEnd" value="1" class="btn btn-primary">Sauver et terminer</button>
+  <button {% if page.templatesDirAutorisationEcriture == false %}disabled{% endif %} type="submit" name="saveOnly" value="1" class="btn btn-primary">Sauver</button>
+
+  <p>
+  {{ page.form.yaml }}
+  </p>
+
+</form>
+
+</div>
+
+{% endblock %}

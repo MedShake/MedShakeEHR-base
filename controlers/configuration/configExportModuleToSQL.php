@@ -38,5 +38,11 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Pragma: public');
 //header('Content-Length: ' . $size);
 
-$sqlGen = new msSqlGenerate;
+$class= 'msMod'.ucfirst($match['params']['moduleName']).'SqlGenerate';
+
+if(class_exists($class)) {
+  $sqlGen = new $class;
+} else {
+  $sqlGen = new msSqlGenerate;
+}
 echo $sqlGen->getSqlForModule($match['params']['moduleName']);

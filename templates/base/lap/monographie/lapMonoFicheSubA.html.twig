@@ -31,12 +31,12 @@
   <tbody>
 
     <tr>
-      <td colspan="2" class="gras table-info text-uppercase">Dénomination(s)</td>
+      <td colspan="2" class="font-weight-bold table-info text-uppercase">Dénomination(s)</td>
     </tr>
 
     {% if page.sub.subId.sac_cdf_orn_code_fk is not empty %}
     <tr>
-      <td class="gras">Origine de la dénomination</td>
+      <td class="font-weight-bold">Origine de la dénomination</td>
       <td>
         {% if page.sub.subId.sac_cdf_orn_code_fk == '3' %}Dénomination commune Française
         {% elseif page.sub.subId.sac_cdf_orn_code_fk == '6' %}Dénomination Commune Internationale
@@ -48,14 +48,14 @@
 
     {% if page.sub.subId.sac_noma is not empty %}
     <tr>
-      <td class="gras">Terme en langue anglaise</td>
+      <td class="font-weight-bold">Terme en langue anglaise</td>
       <td>{{ page.sub.subId.sac_noma }}</td>
     </tr>
     {% endif %}
 
     {% if page.sub.detSubact.1 is not empty %}
     <tr>
-      <td colspan="2" class="gras table-info text-uppercase">Numéro(s) de CAS</td>
+      <td colspan="2" class="font-weight-bold table-info text-uppercase">Numéro(s) de CAS</td>
     </tr>
     <tr>
       <td colspan="2">
@@ -70,11 +70,11 @@
 
     {% if page.sub.detSubact.2 is not empty  or page.sub.detSubact.3 is not empty %}
     <tr>
-      <td colspan="2" class="gras table-info text-uppercase">Classe(s) chimique(s) et classe(s) pharmacothérapeutique(s)</td>
+      <td colspan="2" class="font-weight-bold table-info text-uppercase">Classe(s) chimique(s) et classe(s) pharmacothérapeutique(s)</td>
     </tr>
       {% if page.sub.detSubact.3 is not empty %}
       <tr>
-        <td class="gras">Classe(s) chimique(s)</td>
+        <td class="font-weight-bold">Classe(s) chimique(s)</td>
         <td>
           <ul class="list-unstyled">
           {% for data in page.sub.detSubact.3 %}
@@ -87,7 +87,7 @@
 
       {% if page.sub.detSubact.2 is not empty %}
       <tr>
-        <td class="gras">Classe(s) pharmacothérapeutique(s)</td>
+        <td class="font-weight-bold">Classe(s) pharmacothérapeutique(s)</td>
         <td>
           <ul class="list-unstyled">
           {% for data in page.sub.detSubact.2 %}

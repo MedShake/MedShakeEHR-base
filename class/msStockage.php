@@ -30,18 +30,26 @@
 class msStockage
 {
 
-    /**
-     * @var int ID de l'objet
-     */
+/**
+ * @var int ID de l'objet
+ */
     private $_objetID;
-    /**
-     * @var string extension du fichier (pdf, txt)
-     */
+/**
+ * @var string extension du fichier (pdf, txt)
+ */
     private $_fileExt;
-    /**
-     * @var string chemin vers le fichier
-     */
+/**
+ * @var string chemin vers le fichier
+ */
     private $_pathToDoc;
+/**
+ * @var int fromID de l'objet porteur du doc
+ */
+    private $_fromID;
+/**
+ * @var int toID de l'objet porteur du doc
+ */
+    private $_toID;
 
 /**
  * Définir l'ID de l'objet
@@ -50,6 +58,10 @@ class msStockage
     public function setObjetID($v)
     {
         if (is_numeric($v)) {
+            $this->_fileExt=null;
+            $this->_pathToDoc=null;
+            $this->_fromID=null;
+            $this->_toID=null;
             return $this->_objetID = $v;
         } else {
             throw new Exception('ObjetID is not numeric');
@@ -57,7 +69,41 @@ class msStockage
     }
 
 /**
- * Définir un chemin de sous-dossier de stockage à partir de l'ID objet
+ * Obtenir le fromID de l'objet porteur du doc
+ * @return int fromID
+ */
+    public function getFromID() {
+      if(isset($this->_fromID)) return $this->_fromID;
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if($d=msSQL::sqlUnique("select toID, fromID from objets_data where id='".$this->_objetID."' limit 1")) {
+        $this->_fromID=$d['fromID'];
+        $this->_toID=$d['toID'];
+        return $this->_fromID;
+      }
+      return false;
+    }
+
+/**
+ * Obtenir le toID de l'objet porteur du doc
+ * @return int toID
+ */
+    public function getToID() {
+      if(isset($this->_toID)) return $this->_toID;
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if($d=msSQL::sqlUnique("select toID, fromID from objets_data where id='".$this->_objetID."' limit 1")) {
+        $this->_fromID=$d['fromID'];
+        $this->_toID=$d['toID'];
+        return $this->_toID;
+      }
+      return false;
+    }
+
+/**
+ * Obtenir un chemin de sous-dossier de stockage à partir de l'ID objet
  * @param  int $objetID ID de l'objet
  * @return string          chemin de sous dossiers (numérique)
  */
@@ -65,9 +111,9 @@ class msStockage
     {
         $chaine = strval($objetID);
         if($objetID<10) {
-          $first=$chaine{0}.'0';
+          $first=$chaine[0].'0';
         } else {
-          $first=$chaine{0}.$chaine{1};
+          $first=$chaine[0].$chaine[1];
         }
 
         return $first.'/'.floor($objetID/1000);
@@ -83,7 +129,7 @@ class msStockage
             throw new Exception('ObjetID is not numeric');
         }
 
-        if(isset($this->_pathToDoc)) return $this->_pathToDoc;
+        if(isset($this->_pathToDoc) and !is_null($this->_pathToDoc)) return $this->_pathToDoc;
 
         global $p;
         $ext=$this->getFileExtOfDoc($this->_objetID);
@@ -115,7 +161,7 @@ class msStockage
             throw new Exception('ObjetID is not numeric');
         }
 
-        if(isset($this->_fileExt)) return $this->_fileExt;
+        if(isset($this->_fileExt) and !is_null($this->_fileExt)) return $this->_fileExt;
 
         $docTypeID = msData::getTypeIDFromName('docType');
 
@@ -128,15 +174,28 @@ class msStockage
     }
 
 /**
+ * Obtenir le mimetype du fichier
+ * @return string mimetype
+ */
+    public function getFileMimeType() {
+      return msTools::getmimetype($this->getPathToDoc());
+    }
+
+/**
  * Obtenir la taille d'un fichier
  * @param  int $decimals nombre de décimales souhaitées
  * @return string           taille du fichier
  */
     public function getFileSize($decimals = 2) {
-      $bytes=filesize($this->getPathToDoc());
-      $sz = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po'];
-      $factor = floor((strlen($bytes) - 1) / 3);
-      return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+        return msTools::getFileSize($this->getPathToDoc(), $decimals);
+    }
+
+/**
+ * Obtenir l'orientation d'un PDF via pdftk en se basant sur ses dimensions
+ * @return string landscape ou portait ou false si pb
+ */
+    public function getPdfOrientation() {
+      return msTools::getPdfOrientation($this->getPathToDoc());
     }
 
 /**
@@ -153,6 +212,21 @@ class msStockage
         } else {
             return false;
         }
+    }
+
+/**
+ * Obtenir l'origine d'un document identifié par son objetID
+ * @return string interne/externe
+ */
+    public function getDocOrigin() {
+      if (!isset($this->_objetID)) {
+          throw new Exception('ObjetID is not numeric');
+      }
+      if(msSQL::sqlUniqueChamp("select value from objets_data where typeID='".msData::getTypeIDFromName('docOrigine')."' and instance='".$this->_objetID."' limit 1") == 'interne') {
+        return 'interne';
+      } else {
+        return 'externe';
+      }
     }
 
 /**

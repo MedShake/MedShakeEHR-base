@@ -1,0 +1,155 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs: historique acces http
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : historique accès http
+  {{ page.typeLabel }}
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/logs.js?{{ modules.base }}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+        Historique des accès http
+    </li>
+  </ol>
+
+  {% if page.MEDSHAKEEHRLOGFILE == FALSE %}
+  <div class="alert alert-danger my-4" role="alert">
+    Le fichier de log n'est pas défini comme variable d'environnement "MEDSHAKEEHRLOGFILE" du serveur ! Consultez la documentation.
+  </div>
+  {% endif %}
+
+  <h1>Historique des accès http</h1>
+  <div class="jumbotron my-4">
+    <form id="formSearchAccessLog">
+      <div class="form-row">
+        <div class="form-group col-1">
+          <label for="dateStartOperator">&nbsp;</label>
+          <select class="custom-select" name="dateStartOperator" autocomplete="off"><option value="<">&lt;</option>
+          <option value=" <=">&lt;=</option>
+          <option selected="selected" value="==">=</option>
+          <option value=">=">&gt;=</option>
+          <option value=">">&gt;</option>
+        </select>
+      </div>
+      <div class="form-group col-2">
+        <label for="dateStart">Date (ou début)</label>
+        <input type="date" class="form-control" name="dateStart" autocomplete="off">
+      </div>
+      <div class="form-group col-1">
+        <label for="heureStart">&nbsp;</label>
+        <input type="time" class="form-control" name="heureStart" step="1" autocomplete="off">
+      </div>
+      <div class="form-group col-1"></div>
+      <div class="form-group col-3">
+        <label for="urlPattern">Pattern url à rechecher</label>
+        <input type="text" class="form-control" name="urlPattern" autocomplete="off">
+      </div>
+      <div class="form-group col-1"></div>
+      <div class="form-group col-1">
+        <label for="userID">ID utilisateur</label>
+        <input type="number" class="form-control" name="userID" autocomplete="off">
+      </div>
+      <div class="form-group col-1">
+        <label for="userIP">IP</label>
+        <input type="text" class="form-control" name="userIP" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-1">
+        <label for="dateEndOperator">&nbsp;</label>
+        <select class="custom-select" name="dateEndOperator" autocomplete="off"><option value="<">&lt;</option>
+          <option value=" <=">&lt;=</option>
+        <option selected="selected" value="==">=</option>
+        <option value=">=">&gt;=</option>
+        <option value=">">&gt;</option>
+      </select>
+    </div>
+    <div class="form-group col-2">
+      <label for="dateEnd">Fin</label>
+      <input type="date" class="form-control" name="dateEnd" autocomplete="off">
+    </div>
+    <div class="form-group col-1">
+      <label for="heureEnd">&nbsp;</label>
+      <input type="time" class="form-control" name="heureEnd" step="1" autocomplete="off">
+    </div>
+    <div class="form-group col-1"></div>
+    <div class="form-group col-3">
+      <label for="preformatedPatterns">Pattern url préformées</label>
+      <select class="custom-select" name="preformatedPatterns" autocomplete="off">
+        <option value=""></option>
+        <option value="/^\/patient\/[0-9]+\/$/">Dossiers patient ouverts</option>
+        <option value="/^\/patient\/25\/$/">Dossier patient spécifique (remplacer 25 par ID désiré)</option>
+        <option value="/^\/login\/$/">Accès écran login</option>
+      </select>
+    </div>
+    <div class="form-group col-1"></div>
+    <div class="form-group col-1">
+      <label for="nbLignes">Nb de lignes</label>
+      <input type="number" class="form-control" name="nbLignes" value="100" step="1" autocomplete="off">
+    </div>
+  </div>
+  <div class="form-row">
+    <button id="searchAccessLog" class="btn btn-primary">Chercher</button>
+  </div>
+</form>
+</div>
+
+
+  <table id="accessLogShow" class="table table-sm table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th>Date</th>
+        <th>IP</th>
+        <th>Méthode</th>
+        <th>URL</th>
+        <th>Protocol</th>
+        <th>UserID</th>
+        <th>Patient</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+
+{% endblock %}

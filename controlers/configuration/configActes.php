@@ -69,10 +69,12 @@
 					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
          foreach ($tabTypes as $v) {
              $reglement = new msReglement();
-             $secteur=msConfiguration::getParameterValue('administratifSecteurHonoraires', array('id'=>'', 'module'=>$v['catModule']));
-             $reglement->set_secteurTarifaire($secteur);
-             $reglement->set_factureTypeID($v['id']);
-             $reglement->set_factureTypeData($v);
+             $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>'', 'module'=>$v['catModule']));
+             $reglement->setSecteurTarifaire((int)$secteur);
+             $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>'', 'module'=>$v['catModule']));
+             $reglement->setSecteurTarifaireNgap($secteurNgap);
+             $reglement->setFactureTypeID($v['id']);
+             $reglement->setFactureTypeData($v);
              $p['page']['secteurs'][$v['catName']]=$secteur;
              $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
          }
@@ -84,6 +86,6 @@
      //utilisation de chaque facture type
      $data=new msData();
      $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') group by parentTypeID", 'parentTypeID', 'nb');
+     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') and deleted='' group by parentTypeID", 'parentTypeID', 'nb');
 
  }

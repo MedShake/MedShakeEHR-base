@@ -29,6 +29,13 @@
 $template="peopleListDeleted";
 $debug='';
 
+//ajustement en fonction des droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' ) {
+  $where=' and p.fromID='.$p['user']['id'];
+} else {
+  $where='';
+}
+
 $name2typeID = new msData();
 $name2typeID = $name2typeID->getTypeIDsFromName(['administratifMarqueurSuppression', 'firstname', 'lastname', 'birthname']);
 
@@ -50,7 +57,7 @@ left join objets_data as m on m.toID=p.id and m.typeID='".$name2typeID['administ
 left join objets_data as o3 on o3.toID=m.fromID and o3.typeID='".$name2typeID['lastname']."' and o3.outdated=''
 left join objets_data as o4 on o4.toID=m.fromID and o4.typeID='".$name2typeID['firstname']."' and o4.outdated=''
 left join objets_data as bn2 on bn2.toID=m.fromID and bn2.typeID='".$name2typeID['birthname']."' and bn2.outdated=''
-where p.type='deleted'
+where p.type='deleted' ".$where."
 group by p.id, bn1.id, o.id, o2.id, m.id, bn2.id, o3.id, o4.id
 order by p.id")) {
 
@@ -59,5 +66,12 @@ order by p.id")) {
     if(isset($value['typeDossier'])) $p['page']['users'][$k]['typeDossier']=$value['typeDossier'];
     if(isset($value['motif'])) $p['page']['users'][$k]['motif']=$value['motif'];
   }
+
+
+  $formDel = new msForm();
+  $formDel->setFormIDbyName($p['page']['formIN']='baseAskUserPassword');
+  $p['page']['formDel']=$formDel->getForm();
+  $formDel->setFieldAttrAfterwards($p['page']['formDel'], 'password', ['label'=>'Saisissez votre mot de passe pour valider l\'action']);
+  $formDel->addHiddenInput($p['page']['formDel'], ['peopleID'=>'']);
 
 }

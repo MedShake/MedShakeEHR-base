@@ -38,7 +38,7 @@ $dc = new msDicom();
 $dc->setToID($_POST['patientID']);
 $dc->setDcStudyID($_POST['dcStudyID']);
 $data = $dc->getStudyDcData();
-$dcStudyDate=$data['MainDicomTags']['StudyDate'].'T'.$data['MainDicomTags']['StudyTime'];
+$dcStudyDate=$data['MainDicomTags']['StudyDate'].'T'.round($data['MainDicomTags']['StudyTime']);
 
 // images
 foreach ($_POST['images'] as $k=>$v) {
@@ -81,7 +81,6 @@ if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
 
     $pdf->makePDF();
     $pdf->savePDF();
-    //$pdf->showPDF();
 
     msTools::redirection('/patient/'.$_POST['patientID'].'/');
 }

@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : Creation admin{% endblock %}
+{% block title %}{{ config.designAppName }} : création admin{% endblock %}
 
 {% block head %}
 {{ parent() }}
@@ -37,7 +37,9 @@
 {% block body %}
 
 <h3>MedshakeEHR est désormais fonctionnel</h3>
-<p style="margin-top:50px;margin-bottom:50px">Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration qui autorisent à configurer le logiciel et créer des utilisateurs.</p>
+<div class="alert alert-primary my-4">
+  Nous allons créer le premier utilisateur. Celui-ci aura les droits d'administration qui autorisent à configurer le logiciel et créer des utilisateurs.
+</div>
 {# validation error display bloc #}
 {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
 

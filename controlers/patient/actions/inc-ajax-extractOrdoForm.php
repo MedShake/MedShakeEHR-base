@@ -38,7 +38,7 @@ if (!isset($delegate)) {
   } else {
       $res=msSQL::sql2tab("SELECT dt.module AS module, dt.formValues AS form, dt.name as porteur, dt.fromID AS userID FROM data_types as dt
         LEFT JOIN objets_data as od ON dt.id=od.typeID
-        WHERE od.id='".$_POST['objetID']."' limit 1");
+        WHERE od.id='".msSQL::cleanVar($_POST['objetID'])."' limit 1");
       $ordoForm=$res[0]['form'];
       $porteur=$res[0]['porteur'];
       $userID=$res[0]['userID'];
@@ -68,7 +68,7 @@ $p['page']['patient']['id']=$_POST['patientID'];
 if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as catLabel
   from prescriptions as p
   left join prescriptions_cat as c on c.id=p.cat
-  where p.toID in ('0','".$userID."') and c.type='nonlap'
+  where p.toID in ('0','".msSQL::cleanVar($userID)."') and c.type='nonlap'
   group by p.id
   order by c.displayOrder, p.id in (1,2) desc, c.label asc, p.label asc")) {
     foreach ($tabTypes as $v) {
@@ -76,24 +76,34 @@ if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as ca
     }
 }
 
+// impression par défaut nb lignes prescriptions
+if($p['config']['utiliserLap'] == 'true' or $p['config']['utiliserLapExterne'] == 'true' ) {
+  $p['page']['courrier']['ordoImpressionNbLignes'] = 'n';
+} else {
+  $p['page']['courrier']['ordoImpressionNbLignes'] = 'o';
+}
+
 //si edition, on sort les datas et on ajoute un hidden avec objetID
 if (is_numeric($_POST['objetID'])) {
     $p['page']['courrier']['objetID']=$_POST['objetID'];
 
     $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression','ordoLigneOrdo']);
+    $name2typeID = $name2typeID->getTypeIDsFromName(['ordoLigneOrdoALDouPas','ordoTypeImpression','ordoLigneOrdo','ordoImpressionNbLignes']);
 
     if ($ordoData=msSQL::sql2tab("select ald.value as ald, concat(p.parentTypeID,'_',UNIX_TIMESTAMP(),'_',p.id) as formname, 'Ligne importée' as label, p.value as description, p.typeID, concat(' (initialement : ',pres.label,')') as labelInitiale, p.id
     from objets_data as p
     left join objets_data as ald on p.id=ald.instance and ald.typeID='".$name2typeID['ordoLigneOrdoALDouPas']."' and ald.outdated='' and ald.deleted=''
     left join prescriptions as pres on pres.id=p.parentTypeID
-    where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."')
+    where p.instance='".$_POST['objetID']."' and p.outdated='' and p.deleted='' and p.typeID in ('".$name2typeID['ordoTypeImpression']."','".$name2typeID['ordoLigneOrdo']."','".$name2typeID['ordoImpressionNbLignes']."')
     group by p.id, ald.id
     order by p.id asc")) {
+
         $modePrint='standard';
 
         foreach ($ordoData as $v) {
-            if ($v['typeID']==$name2typeID['ordoTypeImpression']) {
+            if ($v['typeID']==$name2typeID['ordoImpressionNbLignes']) {
+                $p['page']['courrier']['ordoImpressionNbLignes']=$v['description'];
+            } elseif ($v['typeID']==$name2typeID['ordoTypeImpression']) {
                 $modePrint=$v['description'];
                 $p['page']['courrier']['modeprintObjetID']=$v['id'];
             } else {

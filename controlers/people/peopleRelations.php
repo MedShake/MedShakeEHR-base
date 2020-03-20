@@ -33,8 +33,14 @@ $template="peopleRelations";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
+$p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$match['params']['patient'];
+
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
 
 //sortir les choix de relations patient<->prat
 $data = new msData();
@@ -52,9 +58,9 @@ foreach($options[$typeID] as $k=>$v) {
 
 //formulaire de création praticien en modal
 $formPro = new msForm();
-$formPro->setFormIDbyName('baseNewPro');
-if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
-    $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
+$formPro->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+if (isset($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues'])) {
+    $formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
 }
 $p['page']['form']=$formPro->getForm();
 //ajout champs cachés au form

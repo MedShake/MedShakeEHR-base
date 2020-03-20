@@ -33,25 +33,47 @@ $template="patientCsForm";
 $formIN = $p['page']['formIN'] = $_POST['formIN'];
 
 if(!isset($_POST['csID'])) {
-  $_POST['csID']=msSQL::sqlUniqueChamp("select id from data_types where groupe='typecs' and formValues='".$_POST['formIN']."' limit 1");
+  $_POST['csID']=msSQL::sqlUniqueChamp("select id from data_types where groupe='typecs' and formValues='".msSQL::cleanVar($_POST['formIN'])."' limit 1");
 }
 
-//infos sur le form
+// formulaire
 $formInfos = new msData();
 $p['page']['formInfos'] = $formInfos->getDataType($_POST['csID'], array('label'));
 
-//formulaire
-$form = new msForm();
+// module du formulaire
+$formModule = new msForm;
+$p['page']['formInfos']['module']=$formModule->getFormUniqueRawField($formIN, 'module');
+
+// class du module étendant potentiellement msForm
+$class='msMod'.ucfirst($p['page']['formInfos']['module']).'Forms';
+$method_pre='doPreGetForm_'.$formIN;
+$method_post='doPostGetForm_'.$formIN;
+
+// instancier la bonne class pour travailler sur le form
+if(class_exists($class)) {
+  $form = new $class;
+} else {
+  $form = new msForm();
+}
+
 $form->setFormIDbyName($formIN);
 
 //chargement des values si demandé
 if (isset($_POST['prevalues'])) {
     if ($_POST['prevalues']=='yes') {
         $form->setInstance($_POST['objetID']);
+        $form->setTypesSupForPrevaluesExtraction(['codeTechniqueExamen']);
         $form->getPrevaluesForPatient($_POST['patientID']);
     }
 }
+
+// méthode sépcifique au module et form : pre
+if(method_exists($class,$method_pre)) {
+  $form->$method_pre();
+}
+
 $p['page']['form']=$form->getForm();
+
 if($_POST['mode'] == 'update' or $_POST['mode'] == 'create' ) $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 //ajout champs cachés au form
@@ -63,4 +85,12 @@ $p['page']['form']['addHidden']=array(
 );
 if (isset($_POST['objetID'])) {
     $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];
+}
+
+$p['page']['formJavascript']=$form->getFormJavascript();
+
+
+// méthode spécifique au module et form : post
+if(method_exists($class,$method_post)) {
+  $form->$method_post();
 }

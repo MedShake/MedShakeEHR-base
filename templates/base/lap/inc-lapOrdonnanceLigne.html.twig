@@ -31,7 +31,7 @@
   <div class="card bg-light mb-2 p-2 ui-sortable-handle lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row">
       <div class="col-md-7">
-        <div class="gras">
+        <div class="font-weight-bold">
           {{ page.ligne.medics.0.nomUtileFinal }}
           {% if page.ligne.medics.0. isNPS == 'true' %}
             [non substituable
@@ -65,23 +65,23 @@
 
         {# editer ligne #}
         <button class="btn btn-light btn-sm editLignePrescription">
-          <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+          <span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
 
         {# options de ligne  #}
         <div class="btn-group">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-wrench" aria-hidden="true"></span>
+            <span class="fas fa-wrench" aria-hidden="true"></span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
               <a href="#" class="dropdown-item addToLigne">
-                <span class="fa fa-plus" aria-hidden="true"></span>
+                <span class="fas fa-plus" aria-hidden="true"></span>
                 Ajouter un médicament à cette ligne de prescription
               </a>
 
             {% if page.ligne.medics.0. prescriptibleEnDC == '1' %}
               <div role="separator" class="dropdown-divider"></div>
               <a href="#" class="dropdown-item">
-                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                <span class="fas fa-sync-alt" aria-hidden="true"></span>
                 Convertir en DCI
               </a>
             {% endif %}
@@ -89,7 +89,7 @@
         </div>
         {# supprimer la ligne #}
         <button class="btn btn-light btn-sm removeLignePrescription">
-          <span class="fa fa-trash" aria-hidden="true"></span></button>
+          <span class="fas fa-trash" aria-hidden="true"></span></button>
 
       </div>
     </div>
@@ -100,7 +100,7 @@
 
   <div class="card bg-light mb-2 p-2 lignePrescription{% if page.ligne.ligneData.isALD == 'true' %} ald{% endif %}">
     <div class="row" style="margin-bottom: 12px">
-      <div class="col-md-7 gras">
+      <div class="col-md-7 font-weight-bold">
         {{ page.ligne.medics.0.voieUtilisee|capitalize }}
         -
         {{ page.ligne.medics.0.dureeTotaleHuman }}
@@ -112,18 +112,18 @@
         {# options de ligne  #}
         <div class="btn-group">
           <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-wrench" aria-hidden="true"></span>
+            <span class="fas fa-wrench" aria-hidden="true"></span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
             <a href="#" class="dropdown-item addToLigne">
-              <span class="fa fa-plus" aria-hidden="true"></span>
+              <span class="fas fa-plus" aria-hidden="true"></span>
               Ajouter un médicament à cette ligne de prescription
             </a>
 
             {% if page.ligne.medics.0. prescriptibleEnDC == '1' %}
               <div class="drowdown-divider"></div>
               <a href="#" class="dropdown-item">
-                <span class="fa fa-sync-alt" aria-hidden="true"></span>
+                <span class="fas fa-sync-alt" aria-hidden="true"></span>
                 Convertir en DCI
               </a>
             {% endif %}
@@ -131,7 +131,7 @@
         </div>
         {# supprimer la ligne #}
         <button class="btn btn-light btn-sm removeLignePrescription">
-          <span class="fa fa-trash" aria-hidden="true"></span></button>
+          <span class="fas fa-trash" aria-hidden="true"></span></button>
       </div>
     </div>
 
@@ -140,7 +140,7 @@
         {% for medic in page.ligne.medics %}
           <tr>
             <td class="col-md-6">
-              <div class="gras">
+              <div class="font-weight-bold">
                 {{ loop.index }}
                 -
                 {{ medic.nomUtileFinal }}
@@ -169,10 +169,10 @@
             <td class="col-md-2">
               {# editer medic #}
               <button class="btn btn-light btn-sm editMedicLignePrescription">
-                <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
+                <span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
               {# supprimer medic #}
               <button class="btn btn-light btn-sm removeMedicLignePrescription">
-                <span class="fa fa-trash" aria-hidden="true"></span></button>
+                <span class="fas fa-trash" aria-hidden="true"></span></button>
             </td>
 
           </tr>

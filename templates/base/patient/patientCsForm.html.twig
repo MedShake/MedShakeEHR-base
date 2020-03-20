@@ -28,7 +28,7 @@
 
 {% import "macroForm.html.twig" as f %}
 {# Formulaire de synthèse #}
-<div class="jumbotron col-md-12">
+<div class="jumbotron col-12">
 
   <div class="row">
     <div class="col">
@@ -38,4 +38,10 @@
   </div>
 
   {{ f.formbuilder(page.form , page.formIN ) }}
+
+  {% if page.formJavascript is not empty %}
+  <script>
+   {{ page.formJavascript }}
+  </script>
+  {% endif %}
 </div>

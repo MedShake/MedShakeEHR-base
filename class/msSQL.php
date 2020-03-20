@@ -42,8 +42,7 @@ class msSQL
       if (mysqli_connect_errno()) {
           die('Echec de connexion à la base de données');
       } else {
-          $mysqli->query('SELECT @password:="'.$p['config']['sqlVarPassword'].'"');
-          //$mysqli->query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+          $mysqli->query('SELECT @password:="'.$mysqli->real_escape_string($p['config']['sqlVarPassword']).'"');
           return $mysqli;
       }
   }
@@ -59,6 +58,20 @@ class msSQL
       global $mysqli;
       $var=$mysqli->real_escape_string(trim($var));
       return $var;
+  }
+
+/**
+ * Nettoyer un array avant utilisation sur string SQL
+ * @param  array $var array
+ * @return string      variable échappée
+ */
+  public static function cleanArray($array)
+  {
+      array_map(function($v){
+        global $mysqli;
+        $mysqli->real_escape_string(trim($v));
+      }, $array);
+      return $array;
   }
 
 /**
@@ -84,7 +97,7 @@ class msSQL
  */
   public static function sqlUniqueChamp($sql)
   {
-      $query=msSQL::sqlQuery($sql);
+      $query=self::sqlQuery($sql);
       if ($query and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           $row = $query->fetch_row();
@@ -101,7 +114,7 @@ class msSQL
  */
   public static function sqlUnique($sql)
   {
-      $query=msSQL::sqlQuery($sql);
+      $query=self::sqlQuery($sql);
       if ($query and mysqli_num_rows($query)==1) {
           $query->data_seek(0);
           return $query->fetch_array(MYSQLI_ASSOC);
@@ -117,7 +130,7 @@ class msSQL
  */
   public static function sql2tab($sql)
   {
-      $query=msSQL::sqlQuery($sql);
+      $query=self::sqlQuery($sql);
       if ($query and mysqli_num_rows($query)>0) {
           while ($row=$query->fetch_array(MYSQLI_ASSOC)) {
               if ($row) {
@@ -139,7 +152,7 @@ class msSQL
  */
   public static function sql2tabKey($sql, $key, $value='')
   {
-      if ($tab=msSQL::sql2tab($sql)) {
+      if ($tab=self::sql2tab($sql)) {
           foreach ($tab as $k=>$v) {
               if ($value) {
                   $returntab[$v[$key]]=$v[$value];
@@ -160,7 +173,7 @@ class msSQL
  */
   public static function sql2tabSimple($sql)
   {
-      $query=msSQL::sqlQuery($sql);
+      $query=self::sqlQuery($sql);
       if ($query and mysqli_num_rows($query)>0) {
           while ($row=$query->fetch_array(MYSQLI_NUM)) {
               if ($row) {
@@ -186,10 +199,10 @@ class msSQL
   {
       global $mysqli;
       foreach ($data as $key=>$val) {
-          $key=msSQL::cleanVar($key);
+          $key=self::cleanVar($key);
           $val=html_entity_decode($val, ENT_QUOTES | ENT_HTML5, "UTF-8");
           if ($trashHTML==true) {
-              $val=msSQL::cleanVar($val);
+              $val=self::cleanVar($val);
           } else {
               $val=$mysqli->real_escape_string(trim($val));
           }
@@ -197,10 +210,28 @@ class msSQL
           $valeurs[]='\''.$val.'\'';
           $dupli[]=$key.'=VALUES('.$key.')';
       }
-      if (msSQL::sqlQuery("insert into ".msSQL::cleanVar($table)." (".implode(',', $cols).") values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
+      if (self::sqlQuery("insert into ".self::cleanVar($table)." (".implode(',', $cols).") values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
           return $mysqli->insert_id;
       } else {
           return false;
       }
   }
+
+/**
+ * Obtenir un tableau des différentes valeurs d'un champ enum
+ * @param  string $table nom de la table
+ * @param  string $field nom du champ
+ * @return array        tableau des valeurs
+ */
+  public static function sqlEnumList($table, $field) {
+    if($row = self::sqlUnique("SHOW FIELDS FROM ".self::cleanVar($table)." where Field = '".self::cleanVar($field)."'")) {
+      preg_match('#^enum\((.*?)\)$#ism', $row['Type'], $matches);
+      $enum = str_getcsv($matches[1], ",", "'");
+      return $enum;
+    } else {
+      return [];
+    }
+  }
+
+
 }

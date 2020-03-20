@@ -31,10 +31,10 @@ file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($conf, fals
 
 $agendaFiles=glob($p['config']['webDirectory'].'/agendasConfigurations/configAgenda*.js');
 foreach($agendaFiles as $file) {
-    rename($file, str_replace($p['webDirectory'].'/agendasConfigurations/configAgenda', $p['homepath'].'config/agendas/agenda', $file));
+    rename($file, str_replace($p['config']['webDirectory'].'/agendasConfigurations/configAgenda', $p['homepath'].'config/agendas/agenda', $file));
 }
 $rdvFiles=glob($p['homepath'].'/config/configTypesRdv*.yml');
-foreach($agendaFiles as $file) {
+foreach($rdvFiles as $file) {
     rename($file, str_replace($p['homepath'].'/config/configTypesRdv', $p['homepath'].'config/agendas/typesRdv', $file));
 }
 

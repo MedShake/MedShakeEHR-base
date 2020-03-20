@@ -28,11 +28,20 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
-{% block head %}
+{% block jsFiles %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block jsEmbed %}
+{{ parent() }}
+$(document).ready(function() {
+  $("tr.btn-edit").on("click", function() {
+    window.location.href = $(this).find("a.btn-edit").attr('href');
+  });
+});
 {% endblock %}
 
 {% block body %}
@@ -45,16 +54,23 @@
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
   </li>
 	<li class="breadcrumb-item active">
-			Formulaires
+			  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
 	</li>
+  {% if page.groupe is not empty %}
+  <li class="breadcrumb-item active">
+		  {{ page.tabTypes[page.groupe]['0']['catLabel'] }}
+	</li>
+  {% endif %}
 </ol>
 
-<h1>Liste des formulaires</h1>
+<h1>Liste des formulaires
+  {% if page.groupe is not empty %}<small> - {{ page.tabTypes[page.groupe]['0']['catLabel'] }}</small>{% endif %}
+</h1>
 
 <div>
 
 	{# Nav tabs #}
-	<ul class="nav nav-tabs" role="tablist">
+	<ul class="nav nav-tabs mt-3" role="tablist">
 		<li role="presentation" class="nav-item"><a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/cat/" aria-controls="categories" role="tab">Catégories</a></li>
 		<li role="presentation" class="nav-item"><a class="nav-link active" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/" aria-controls="types" role="tab">Formulaires</a></li>
 	</ul>
@@ -65,16 +81,21 @@
 		{# type tab #}
 		<div role="tabpanel" class="tab-pane active" id="types">
 
-			<p></p>
-			<button type="button" class="btn btn-primary float-right m-1 mb-3 reset-modal" data-toggle="modal" data-target="#modalNewType">
-			Nouveau formulaire
-			</button>
+      <div class="row mt-3">
+        <div class="col text-right">
+          <button type="button" class="btn btn-primary reset-modal" data-toggle="modal" data-target="#modalNewType">
+            <i class="fas fa-plus"></i> Nouveau formulaire
+          </button>
+        </div>
+      </div>
 
 			{% for k,v in page.tabTypes %}
-        {% if page.groupe=='' or page.groupe==v.0.catName %}
-				  <h2 class="mb-2" id="cat{{ v.0.catName }}">{{ v.0.catLabel }}</h2>
-				  <table class="table table-sm mb-0 table-hover mb-3">
-				  <thead>
+        {% if page.groupe == '' or page.groupe == v.0.catName %}
+				  <h2 id="cat{{ v.0.catName }}">{{ v.0.catLabel }} <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ v.0.catName }}/">
+            <span class="fas fa-search-plus" aria-hidden="true"></span>
+          </a></h2>
+				  <table class="table table-sm table-hover mb-3">
+				  <thead class="thead-light">
 				  <tr>
 					  <th>#</th>
             <th>Module</th>
@@ -86,19 +107,16 @@
 				  </thead>
 				  <tbody>
 				  {% for w in v %}
-					  <tr>
+					  <tr class="btn-edit" style="cursor: pointer;">
 					  <td>{{ w.id }}</td>
             <td>{{ w.module }}</td>
             <td>{{ w.internalName }}</td>
             <td>{{ w.name }}</td>
             <td>{{ w.description }}</td>
-            <td class="d-flex justify-content-end">
+            <td class="text-right">
               <div class="btn-group">
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
-                  <span class="fa fa-eye" aria-hidden="true"></span>
-                </a>
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-                  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+                <a class="btn btn-light btn-sm btn-edit" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+                  <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                 </a>
               </div>
 					  </td>
@@ -113,22 +131,20 @@
 	</div>
 
 </div>
+{% endblock %}
 
+{% block modals %}
 {# modal new type #}
 <div class="modal fade" id="modalNewType" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Création formulaire</h4>
+        <h4 class="modal-title font-weight-bold" id="myModalLabel">Création formulaire</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
 
-	  		<div class="alert alert-danger" role="alert" style="display : none;">
-				Problèmes rencontrés :
-				<ul>
-				</ul>
-			</div>
+	  		{{ f.errorsBloc() }}
 
 			<form id="formModalNewType" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormCreate/">
 
@@ -217,13 +233,10 @@
 			</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
         <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
       </div>
     </div>
   </div>
 </div>
-
-
-
 {% endblock %}

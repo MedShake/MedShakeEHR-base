@@ -28,59 +28,98 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : inbox{% endblock %}
+{% block title %}{{ config.designAppName }} : inbox{% endblock %}
 
 {% block head %}
-    {{ parent() }}
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js?{{ modules.base }}"></script>
-    <style>
-        tr.mailClicView:hover, tr.patietSelect:hover {
-            cursor: pointer;
-        }
-
-    </style>
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/inbox.js?{{ modules.base }}"></script>
+  <style>
+    tr.mailClicView:hover,
+    tr.patietSelect:hover {
+      cursor: pointer;
+    }
+  </style>
 {% endblock %}
 
 {% block body %}
 
+  <h1>Boite de réception</h1>
 
+  {% if page.inbox.mails is empty %}
+    <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 200px); min-height: 250px">
+      <div class="mb-3"><i class="fas fa-inbox fa-10x text-light"></i></div>
+      <div class="text-muted">La boite de réception est vide.</div>
+    </div>
+  {% else %}
 
-        <h1>Boite de réception</h1>
+    {% set trans_mois = {
+          "01": "janvier",
+          "02": "février",
+          "03": "mars",
+          "04": "avril",
+          "05": "mai",
+          "06": "juin",
+          "07": "juillet",
+          "08": "août",
+          "09": "septembre",
+          "10": "octobre",
+          "11": "novembre",
+          "12": "décembre"
+      }
+    %}
 
-        <div class="row mt-4">
+    <div class="row mt-4">
 
-            <div class="col-3">
-                <table class="table table-sm mb-0 table-hover small">
+      <div class="col-3">
+        <table class="table table-sm mb-0 table-hover">
 
-                    {% for k, mails in page.inbox.mails %}
-                      {% set parentLoop = loop.index %}
-                        <tr>
-                            <td class="table-primary" colspan="3">
-                                <strong>{{ k }}</strong>
-                            </td>
-                        </tr>
-                        {% for mail in mails %}
-                            <tr class="mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailID="{{ mail.id }}" data-status="{{ mail.archived }}">
-                                <td class="gras">
-                                {{ mail.hprimIdentite|e }}
-                                </td>
-                                <td>
-                                    {{ mail.hprimExpediteur|e }}
-                                </td>
-                                <td>
-                                    {% if mail.pjNombre > 0 %}
-                                        <span class="badge badge-secondary">{{ mail.pjNombre }}</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
+          {% for k, mails in page.inbox.mails %}
+            {% set parentLoop = loop.index %}
+            <tr>
+              <td class="bg-primary text-white" colspan="3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span><i class="fas fa-calendar-day mr-2"></i>
+                    <strong>{{ k|date('j') }}{% if k|date('j') == 1 %}er{% endif %} {{ trans_mois[k|date('m')] }} {{ k|date('Y') }}</strong>
+                  </span>
+                  {% if loop.index == 1 %}
+                    {% if page.sort == 'asc' %}
+                      <a title="Inverser l'ordre chronologique d'affichage" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/sortMails/" class="btn btn-sm btn-primary"><i class="fas fa-arrow-down"></i></a>
+                    {% else %}
+                      <a title="Inverser l'ordre chronologique d'affichage" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/actions/sortMails/" class="btn btn-sm btn-primary"><i class="fas fa-arrow-up"></i></i></a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% for mail in mails %}
+              <tr class="small mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailid="{{ mail.id }}" data-status="{{ mail.archived }}">
+                {% if mail.hprimIdentite %}
+                  <td class="font-weight-bold">
+                    {{ mail.hprimIdentite|e }}
+                  </td>
+                  <td>
+                    {{ mail.hprimExpediteur|e }}
+                  </td>
+                {% else %}
+                  <td colspan="2">
+                    - message sans données HPRIM -
+                  </td>
+                {% endif %}
 
-                </table>
-            </div>
+                <td>
+                  {% if mail.pjNombre > 0 %}
+                    <span class="badge badge-primary">{{ mail.pjNombre }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endfor %}
 
-            <div id="view" class="col-9"></div>
+        </table>
+      </div>
 
-        </div>
+      <div id="view" class="col-9"></div>
 
+    </div>
+  {% endif %}
 {% endblock %}

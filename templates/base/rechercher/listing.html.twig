@@ -31,7 +31,7 @@
 {% if page.outputTableHead %}
   <table class="table table-sm mb-0 table-hover">
     <caption></caption>
-    <thead>
+    <thead class="thead-light">
       <tr>
         <th class="d-none d-sm-table-cell"></th>
         {% for th in page.outputTableHead %}
@@ -51,22 +51,25 @@
           <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
         {% else %}
           {% set patientIDmod = page['outputType'][patientID]['type']=='externe' and patientID in page.extToInt|keys ? page.extToInt[patientID] : patientID %}
-          <tr class="openPatient{% if page['outputType'][patientID]['type'] == 'pro' and page.porp == 'patient' %} table-info{% elseif page['outputType'][patientID]['type'] == 'dcd' %} table-active dcd{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/">
+          <tr class="openPatient {% if page['outputType'][patientID]['type'] == 'dcd' %} dcd{% endif %}{% if loop.index == 1 %} table-active{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/" data-patientid="{{ patientID }}">
         {% endif %}
           <td class="d-none d-sm-table-cell">
-            {% if page.porp != 'pro' %}
-              {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod==patientID) or page.porp == 'externe' %}
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à un dossier">
-                  <span class="fa fa-paperclip" aria-hidden="true"></span>
-                </a>
-              {% else %}
-                <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Ouvrir le dossier">
-                  <span class="fa fa-folder-open" aria-hidden="true"></span>
-                </a>
-              {% endif %}
+
+            {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod == patientID) or page.porp == 'externe' %}
+              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à ce dossier">
+                <i class="fas fa-paperclip fa-fw"></i>
+              </a>
+            {% elseif page['outputType'][patientID]['type']=='pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}
+              <a class="btn btn-danger btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Utilisateur du logiciel">
+                <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+              </a>
+            {% elseif page['outputType'][patientID]['type']=='pro' %}
+              <a class="btn {% if page.porp == 'pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}btn-danger{% else %}btn-info{% endif %} btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Profesionnel santé">
+                <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+              </a>
             {% else %}
-              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Afficher la synthèse">
-                <span class="fa fa-user" aria-hidden="true"></span>
+              <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="{% if page['outputType'][patientID]['type'] == 'dcd' %}Patient décédé{% else %}Patient{% endif %}">
+                <i class="fas {% if page['outputType'][patientID]['type'] == 'dcd' %}fa-cross{% else %}fa-user{% endif %} fa-fw" {% if loop.index <= 9 %}accesskey="{{ loop.index }}"{% endif %}></i>
               </a>
             {% endif %}
           </td>
@@ -79,41 +82,81 @@
             {% endif %}
           {% endfor %}
 
-          <td class="d-table-cell d-flex justify-content-end">
+          <td class="text-right">
             <div class="btn-group">
               {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
-                <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
-                  <span class="fa fa-pencil-alt" aria-hidden="true"></span>
-                </a>
+
+                {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
+                  <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a>
+                {% endif %}
                 {% if page.porp != 'pro' %}
                   <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
-                    <span class="fa fa-link" aria-hidden="true"></span>
+                    <i class="fas fa-link"></i>
                   </a>
+                  {% if page.modelesDocASigner|length == 1 %}
+                    <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ page.modelesDocASigner[0]['id'] }}" title="Faire signer {{ page.modelesDocASigner[0]['label']|e('html_attr') }}">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  {% elseif page.modelesDocASigner|length > 1 %}
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        {% for docSign in page.modelesDocASigner %}
+                        <a class="dropdown-item sendSign" href="#" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ docSign.id }}">{{ docSign.label }}</a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
 
-                  <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-patientID="{{ patientIDmod }}" title="Faire signer consentement">
-                    <span class="fa fa-edit" aria-hidden="true"></span>
-                  </button>
+                  {% if config.transmissionsPeutCreer == 'true' %}
+                    <button type="button" class="btn btn-light btn-sm newTransmission" data-patientID="{{ patientIDmod }}" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
+                  {% endif %}
                 {% endif %}
                 <div class="btn-group">
                   <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="fa fa-ellipsis-h" aria-hidden="true"></span>
+                    <i class="fas fa-ellipsis-h"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">Éditer</a>
-                    <a class=" dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">Relations</a>
-                    {% if page['outputType'][patientID]['type'] != 'pro' %}
-                      <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Ajouter à la liste Praticiens</a>
-                    {% else %}
-                      <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">Retirer de la liste Praticiens</a>
+                    {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
+                      <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
+                        <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Éditer
+                      </a>
                     {% endif %}
-                    <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item sendSign" data-patientID="{{ patientIDmod }}" href="#">Faire signer consentement</a>
-                    {% if config.smtpTracking %}
-                      <div role="separator" class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientIDmod }}/" >Historique des mails envoyés</a>
+                    {% if page['outputType'][patientID]['type'] == 'patient' %}
+                      <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">
+                        <i class="fas fa-link fa-fw text-muted mr-1"></i> Relations
+                      </a>
                     {% endif %}
-                    <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">Supprimer ce dossier</a>
+                    {% if config.PraticienPeutEtrePatient == 'true' and config.droitDossierPeutCreerPraticien == 'true' %}
+                      {% if page['outputType'][patientID]['type'] != 'pro' %}
+                        <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
+                          <i class="fas fa-user-md fa-fw text-muted mr-1"></i> Ajouter à la liste Praticiens
+                        </a>
+                      {% elseif config.droitDossierPeutRetirerPraticien == 'true' %}
+                        <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
+                          <i class="fas fa-user-slash fa-fw text-muted mr-1"></i> Retirer de la liste Praticiens
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                    {% if config.smtpTracking and page['outputType'][patientID]['type'] == 'patient' %}
+                      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientIDmod }}/" >
+                          <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des mails envoyés
+                      </a>
+                    {% endif %}
+                    {% if user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isNotUser' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
+                      <a class="dropdown-item rendreUtilisateur" href="#" data->
+                          <i class="fas fa-user fa-fw text-muted mr-1"></i> Rendre utilisateur
+                      </a>
+                    {% endif %}
+                    {% if (config.droitDossierPeutSupPatient =='true' and page['outputType'][patientID]['type'] == 'patient') or (config.droitDossierPeutSupPraticien =='true' and page['outputType'][patientID]['type'] == 'pro') %}
+                      <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">
+                        <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer ce dossier
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
               {% endif %}
@@ -124,5 +167,8 @@
     </tbody>
   </table>
 {% else %}
-<div style="margin-bottom:20px">Pas de résultat correspondant à la recherche</div>
+  <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 500px); min-height: 250px">
+    <div class="mb-3"><i class="fas fa-user-slash fa-10x text-light"></i></div>
+    <div class="text-muted">Pas de résultat correspondant à la recherche.</div>
+  </div>
 {% endif %}

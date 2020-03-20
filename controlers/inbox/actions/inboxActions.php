@@ -32,25 +32,12 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'classerDansDossier', // Classer comme document dans un dossier patient
     'suppSansClasser', //supprimer un message sans le classer
-    'suppInbox' //supprimer un message déjà classé
+    'suppInbox', //supprimer un message déjà classé
+    'sortMails' // inverser l'ordre de tri chronologique des mails
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
-}
-
-
-// Classer comme document dans un dossier patient
-if ($m=='classerDansDossier') {
-    include('inc-action-classerDansDossier.php');
-}
-
-//supprimer un message sans le classer
-elseif ($m=='suppSansClasser') {
-    include('inc-action-suppSansClasser.php');
-}
-
-//supprimer un message déjà classé
-elseif ($m=='suppInbox') {
-    include('inc-action-suppInbox.php');
+} else {
+    include('inc-action-'.$m.'.php');
 }

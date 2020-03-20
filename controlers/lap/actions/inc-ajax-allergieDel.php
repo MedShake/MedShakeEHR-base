@@ -30,7 +30,8 @@
  $patient = new msObjet();
  $patient->setFromID($p['user']['id']);
  $patient->setToID($_POST['patientID']);
- if ($patient->setDeletedObjetAndSons($_POST['objetID'])) {
+ $patient->setObjetID($_POST['objetID']);
+ if ($patient->setDeletedObjetAndSons()) {
      echo json_encode(array("statut"=>'ok'));
  } else {
      echo json_encode(array("statut"=>'error'));

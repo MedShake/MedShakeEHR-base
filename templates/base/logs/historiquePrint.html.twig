@@ -28,36 +28,135 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : historique impression{% endblock %}
+{% block title %}{{ config.designAppName }} : historique impression{% endblock %}
 
-{% block head %}
+{% block cssEmbed %}
     {{ parent() }}
+    .appercu .gras {
+      font-weight: bold;
+    }
+
+    .appercu .centrer {
+      text-align: center;
+    }
+
+    .appercu .t6 {
+      font-size: 10px;
+    }
+
+    .appercu .t8 {
+      font-size: 12px;
+    }
+
+    .appercu .t9 {
+      font-size: 13px;
+    }
+
+    .appercu .t10 {
+      font-size: 14px;
+    }
+
+    .appercu .t12 {
+      font-size: 16px;
+    }
+
+    .appercu h2 {
+      margin-top: 4px;
+      font-size: 22px;
+    }
+
+    .appercu h3 {
+      margin: 12pt 0 5px;
+      padding: 0;
+      font-size: 20px;
+    }
+
+    .appercu h4 {
+      margin: 10pt 0 3px;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .appercu ul {
+      margin: 0 0 0 10px;
+      padding: 0;
+    }
+
+    .appercu .vat {
+      vertical-align: top;
+    }
+
+    .appercu .cbox {
+      font-family: DejaVu Sans, sans-serif;
+      font-size: 16px;
+    }
+
+    .appercu th {
+      background: #555;
+      color: #FFF;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .appercu .tabPatiente td {
+      vertical-align: top;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .appercu .bordurelat {
+      border-left: 1pt solid #000;
+      border-right: 1pt solid #000;
+    }
 {% endblock %}
 
 {% block body %}
 <h1>Historique des versions PDF générées</h1>
 <p>
-<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/">Retour dossier patient</a>
+<a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.toID }}/"><i class="fas fa-folder-open"></i> Retour dossier patient</a>
 </p>
-<div>
-<ul class="nav nav-tabs" role="tablist">
-  {% for v in page.print %}
-  <li role="presentation" class="nav-item">
-    <a class="nav-link{% if loop.first %} active{% endif %}" href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a>
-  </li>
-  {% endfor %}
-</ul>
-</div>
 
 
-<div class="tab-content">
-{% for v in page.print %}
-<div role="tabpanel" class="tab-pane{% if loop.index0 == 0 %} active{% endif %}" id="print{{ v.id }}">
-  <div class="appercu">
-    {{ v.value }}
+<div class="row">
+  <div class="col-2">
+  <ul class="nav flex-column nav-pills" role="tablist">
+    {% for v in page.print %}
+    <li role="presentation" class="nav-item">
+      <a class="nav-link{% if loop.first %} active{% endif %}" href="#print{{ v.id }}" aria-controls="print{{ v.id }}" role="tab" data-toggle="tab">{{ v.creationDate }}</a>
+    </li>
+    {% endfor %}
+  </ul>
   </div>
-</div>
-{% endfor %}
+
+  <div class="col-10">
+    <div class="tab-content">
+    {% for v in page.print %}
+    <div role="tabpanel" class="tab-pane{% if loop.index0 == 0 %} active{% endif %}" id="print{{ v.id }}">
+      <div class="row mb-4">
+        <div class="col-6 col-xl-4 ">
+                Auteur : {{ v.identiteAuteur }}
+        </div>
+        <div class="col-6 col-xl-4  text-right">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/makepdf/{{ v.toID }}/fromHistory/{{ v.id }}/" class="btn btn-sm btn-outline-secondary" target="_blank"><i class="far fa-file-pdf"></i> Voir la version PDF</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-xl-8 ">
+          <div class="card" >
+            <div class="card-body">
+              <div class="appercu">
+                {{ v.value }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
 </div>
 
 {% endblock %}

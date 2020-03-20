@@ -31,12 +31,14 @@
  if (!msUser::checkUserIsAdmin()) {
      $template="forbidden";
  } else {
-     $template="configDataType";
-     $p['page']['groupe']=$match['params']['groupe'];
-     $debug='';
+    $template="configDataType";
+    $debug='';
+
+    $p['page']['groupe']=$match['params']['groupe'];
+    if(!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
 
     //restriction à une cat
-    if (isset($match['params']['cat'])) {
+    if (isset($match['params']['cat']) and is_numeric($match['params']['cat'])) {
         $catRestriction= ' and t.cat = '.$match['params']['cat'];
     } else {
         $catRestriction=null;
@@ -47,9 +49,9 @@
         (select count(id) from objets_data as d where d.typeID=t.id ) as enfants
         from data_types as t
         left join data_cat as c on c.id=t.cat
-        where t.id > 0 and t.groupe='".$p['page']['groupe']."' ".$catRestriction."
+        where t.id > 0 and t.groupe='".msSQL::cleanVar($p['page']['groupe'])."' ".$catRestriction."
         group by t.id
-        order by c.label asc, t.label asc")) {
+        order by t.module, t.displayOrder, c.label asc, t.label asc, t.name")) {
 
 
         foreach ($tabTypes as $v) {
@@ -58,8 +60,14 @@
     }
 
     // liste des catégories
-    if ($p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label'));
+    $p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label');
 
     // liste des modules
-    $p['page']['modules']=msSQL::sql2tabKey("SELECT id, name AS module FROM system WHERE groupe='module'", "module", "module");
+    $p['page']['modules']=msModules::getInstalledModulesNames();
+
+    // liste des types possibles
+    $p['page']['typesPossibles']=msSQL::sqlEnumList('data_types', 'formType');
+    sort($p['page']['typesPossibles']);
+    $p['page']['typesPossibles']=array_combine($p['page']['typesPossibles'],$p['page']['typesPossibles']);
+
  }

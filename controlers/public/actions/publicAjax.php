@@ -31,16 +31,15 @@
 $m=$match['params']['m'];
 
 $acceptedModes=array(
-    'publicMakeDocSigne', // Créer le ocument signé.
+    'publicMakeDocSigne', // Créer le document signé.
+    'publicLostPasswordEmailTreat', // Traiter l'email de recouvrement de password
+    'publicLostPasswordNewPassTreat' // Traiter le nouveau mot de passe souhaité
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
 }
 
-// Création d'une cat pour form
-if ($m=='publicMakeDocSigne') {
-    include('inc-ajax-publicMakeDocSigne.php');
-}
+include('inc-ajax-'.$m.'.php');
 
 die();

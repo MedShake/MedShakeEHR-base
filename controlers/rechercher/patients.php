@@ -34,13 +34,50 @@ if (isset($match['params']['porp'])) {
     $p['page']['porp']=$match['params']['porp'];
 }
 
-// liste des types par catégorie
-if ($tabTypes=msSQL::sql2tab("select t.label, t.id, c.label as catName, c.label as catLabel
+// liste des types par catégorie avec retriction aux types employés dans le form de création
+$form = new msForm;
+if($p['page']['porp'] == 'pro') {
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+} else {
+  $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+}
+
+if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
   from data_types as t
   left join data_cat as c on c.id=t.cat
-  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group'
+  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in ('".implode("', '", $form->formExtractDistinctTypes())."')
   order by c.label asc, t.label asc")) {
     foreach ($tabTypes as $v) {
         $p['page']['tabTypes'][$v['catName']][]=$v;
     }
+}
+
+// Transmissions
+if($p['config']['transmissionsPeutCreer'] == 'true') {
+  $trans = new msTransmissions();
+  $trans->setUserID($p['user']['id']);
+  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+}
+
+// Modules & templates
+if (msUser::checkUserIsAdmin()) {
+  $p['page']['modules']=msModules::getInstalledModulesNames();
+  $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
+
+  // Formulaire nouvel utilisateur
+  $formModal = new msForm;
+  $formModal->setFormIDbyName($p['page']['formModalIN']='baseNewUserFromPeople');
+  $formModal->setOptionsForSelect(array(
+    'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
+    'module'=>$p['page']['modules'],
+  ));
+
+  $p['page']['formModal']=$formModal->getForm();
+  if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
+  } else {
+    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
+  }
+  $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
 }

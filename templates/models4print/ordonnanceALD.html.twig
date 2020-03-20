@@ -134,7 +134,9 @@
                             <strong>Prescriptions relatives au traitement de l'affection de longue durée reconnue (liste ou hors liste)</strong><br>
                             (AFFECTION EXONERANTE)
                         </div>
+                        {% if tag.ordoImpressionNbLignes != 'n' %}
                         <p class="t8" style="text-align : right;">{{ ma|length }} ligne{% if ma|length > 1 %}s{% endif %} de prescriptions</p>
+                        {% endif %}
 
                         {% for v in ma %}
                             <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>
@@ -146,7 +148,9 @@
                         <strong>Prescriptions SANS RAPPORTS avec l'affection de longue durée</strong><br>
                         (MALADIES INTERCURRENTES)
                     </div>
+                    {% if tag.ordoImpressionNbLignes != 'n' %}
                     <p class="t8" style="text-align : right;">{{ ms|length }} ligne{% if ms|length > 1 %}s{% endif %} de prescriptions</p>
+                    {% endif %}
 
                     {% for v in ms %}
                         <p class="t8" style="margin-bottom: 8pt;">{{ v|nl2br }}</p>

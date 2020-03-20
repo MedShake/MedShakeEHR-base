@@ -1,0 +1,115 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : informations système et stats Orthanc
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% block title %}{{ config.designAppName }} : informations Orthanc{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Informations Orthanc
+    </li>
+  </ol>
+
+  <h1 class="mb-3">Informations Orthanc</h1>
+
+  {% if page.orthancSystemInfo.Name is not defined %}
+    <div class="alert alert-danger" role="alert">
+      L'API Orthanc n'est pas joignable. Vérifiez votre configuration !
+    </div>
+  {% else %}
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true"><i class="fas fa-cogs fa-fw mr-1"> </i>Informations Orthanc</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false"><i class="fas fa-chart-bar fa-fw mr-1"> </i>Statistiques Orthanc</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="wl-tab" data-toggle="tab" href="#wl" role="tab" aria-controls="wl" aria-selected="false"><i class="fas fa-file-prescription fa-fw mr-1"> </i>Fichiers worklist présents</a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active border-left" id="main" role="tabpanel" aria-labelledby="main-tab">
+        <ul class="list-group list-group-flush">
+          {% for key, val in page.orthancSystemInfo %}
+            <li class="list-group-item">
+              <span class="font-weight-bold">{{ key }}</span>
+              :
+              {{ val }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="tab-pane fade border-left" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+        <ul class="list-group list-group-flush">
+          {% for key, val in page.orthancStats %}
+            <li class="list-group-item">
+              <span class="font-weight-bold">{{ key }}</span>
+              :
+              {{ val }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="tab-pane fade border-left" id="wl" role="tabpanel" aria-labelledby="wl-tab">
+        <ul class="list-group list-group-flush">
+          {% for key, val in page.wlfiles %}
+            <li class="list-group-item">
+              {{ val }}
+            </li>
+          {% endfor %}
+        </ul>
+
+        {% if page.wlfiles|length > 0 %}
+          <div class="mt-3 text-right">
+            <a class="btn btn-sm btn-danger" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configDicomRmWl/" role="button"><i class="fas fa-trash-alt"></i> Tout supprimer</a>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+
+  {% endif %}
+
+{% endblock %}

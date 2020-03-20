@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 $acceptedTables=array(
     'data_cat',
@@ -43,7 +43,8 @@ $acceptedTables=array(
 $table=msSQL::cleanVar($_POST['table']);
 $id=msSQL::cleanVar($_POST['id']);
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
-    $do=false;
+    http_response_code(401);
+    die();
 }
 
 //conditions by table
@@ -95,5 +96,5 @@ if ($do) {
     $return['status']='ok';
     echo json_encode($return);
 } else {
-    header('HTTP/1.1 401 Unauthorized');
+    http_response_code(401);
 }

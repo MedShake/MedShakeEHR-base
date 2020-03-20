@@ -28,7 +28,7 @@
 
  {% extends "page.html.twig" %}
  {% import "macroForm.html.twig" as f %}
- {% block title %}MedShakeEHR : configuration tags Dicom{% endblock %}
+ {% block title %}{{ config.designAppName }} : configuration tags Dicom{% endblock %}
 
  {% block head %}
    {{ parent() }}
@@ -48,11 +48,12 @@
 	  </li>
   </ol>
 
-   <h1>Tags DICOM</h1>
+  <h1>Tags DICOM</h1>
 
-   <p></p>
 
-   <table class="table table-sm">
+
+   <table class="table table-sm mt-4">
+     <thead class="thead-light">
      <tr>
        <th>Tag</th>
        <th colspan="2">Type associé</th>
@@ -61,22 +62,24 @@
        <th>Décimales</th>
        <th></th>
      </tr>
+    </thead>
+    <tbody>
      {% for k,v in page.tags %}
-      <tr class="{% if v.0.typeID > 0 or v.1.typeID > 0 %}table-success{% else %}table-warning{% endif %}">
-       <td colspan="6" class="gras">
+      <tr class="{% if v.0.typeName|length > 0 or v.1.typeName|length > 0 %}table-success{% else %}table-warning{% endif %}">
+       <td colspan="6" class="font-weight-bold">
          {{ k }}&nbsp;&nbsp;&nbsp;&nbsp;{{ v.0.dicomCodeMeaning }}
        </td>
-       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-light btn-sm float-right m-1 reset-modal bottom-space addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
-        <span class="fa fa-plus" aria-hidden="true"></span>
+       <td> <button type="button" data-dicomtag="{{ k }}" data-dicomcodemeaning="{{ v.0.dicomCodeMeaning }}" class="btn btn-light btn-sm float-right m-1 reset-modal mb-4 addtomodaldicom" data-toggle="modal" data-target="#modalNewType">
+        <span class="fas fa-plus" aria-hidden="true"></span>
         </button></td>
       </tr>
      {% for t in v %}
-      {% if t.typeID > 0 %}
+      {% if t.typeName|length > 0 %}
       <tr id="typeID  {{ t.typeID }}">
         <td>&nbsp;
         </td>
-        <td class="gras">
-          {{ t.typeID }}
+        <td class="font-weight-bold">
+          {{ t.typeName }}
         </td>
         <td>
           {{ t.label }}{% if t.labelCat %} <small>({{ t.labelCat }})</small>{% endif %}
@@ -91,13 +94,13 @@
           {{ t.roundDecimal }}
         </td>
 
-        <td class="d-flex justify-content-end">
+        <td class="text-right">
           <div class="btn-group">
             <button type="button" class="btn btn-light btn-sm edit-by-prim-key" aria-label="Editer" data-id="{{ t.id }}" data-table="dicomTags" data-form="formModalNewType" data-modal="modalNewType">
-            <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+            <span class="fas fa-pencil-alt" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-light btn-sm delete-by-prim-key" aria-label="Supprimer" data-id="{{ t.id }}" data-table="dicomTags">
-            <span class="fa fa-times" aria-hidden="true"></span>
+            <span class="fas fa-times" aria-hidden="true"></span>
             </button>
           </div>
         </td>
@@ -108,25 +111,23 @@
      {% endfor %}
 
      {% endfor %}
+   </tbody>
    </table>
 
+ {% endblock %}
 
-
+ {% block modals %}
    {# modal new type #}
    <div class="modal fade" id="modalNewType" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <h4 class="modal-title" id="myModalLabel">Création / édition</h4>
+           <h4 class="modal-title font-weight-bold" id="myModalLabel">Création / édition</h4>
            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body">
 
-   	  		<div class="alert alert-danger" role="alert" style="display : none;">
-   				Merci de considérer les informations suivantes et de corriger les champs concernés :
-   				<ul>
-   				</ul>
-   			</div>
+   	  		{{ f.errorsBloc() }}
 
    			<form id="formModalNewType" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configTagDicomCreate/" data-groupe="{{ page.groupe }}">
    				<div class="form-group">
@@ -165,14 +166,14 @@
    				{{ f.input ({
    					'input' : {
    						'type' : 'text',
-   						'name' : 'typeID',
-   						'placeholder' : 'typeID',
+   						'name' : 'typeName',
+   						'placeholder' : 'typeName',
    						'class' : 'form-control',
    						'autocomplete' : 'off'
    					},
    					'label' : {
    						'position' : 'before',
-   						'label' : 'TypeID',
+   						'label' : 'TypeName',
    					}
    				}) }}
    				</div>
@@ -188,7 +189,7 @@
    					},
    					'label' : {
    						'position' : 'before',
-   						'label' : 'Valeur rerournée',
+   						'label' : 'Valeur retournée',
    					}
    				}) }}
    				</div>
@@ -216,7 +217,7 @@
    			</form>
          </div>
          <div class="modal-footer">
-           <button type="button" class="btn" data-dismiss="modal">Fermer</button>
+           <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
            <button type="button" class="btn btn-primary modal-save" data-form="formModalNewType" data-modal="modalNewType">Sauvegarder</button>
          </div>
        </div>

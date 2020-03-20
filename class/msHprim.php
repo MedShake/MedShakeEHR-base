@@ -75,7 +75,6 @@ class msHprim
 
 /**
  * Enregistrer chaque lignee HPRIM dans la bdd
- * La table n'est pas exploitée actuellement
  * @param  array $tabRes  Array résultat de parseSourceHprim()
  * @param  int $fromID  ID du user
  * @param  int $toID    ID du patient concerné
@@ -125,6 +124,11 @@ class msHprim
 
               case "4":
               $d['adresse1'] = fgets($file);
+              if(!empty($d['adresse1']) and is_numeric($d['adresse1'][0])) {
+                $explo = explode(' ', $d['adresse1'], 2);
+                $d['streetNumber'] = $explo[0];
+                $d['street'] = $explo[1];
+              }
               break;
 
               case "5":
@@ -143,10 +147,23 @@ class msHprim
 
               case "8":
               $d['nss'] = fgets($file);
+              if(!empty($d['nss'])) {
+                if($d['nss'][0] == 1) {
+                  $d['administrativeGenderCode'] = 'M';
+                } elseif($d['nss'][0] == 2) {
+                  $d['administrativeGenderCode'] = 'F';
+                } else {
+                  $d['administrativeGenderCode'] = 'U';
+                }
+              } else {
+                $d['administrativeGenderCode'] = 'U';
+              }
               break;
+
               case "9":
               $d['numDossier'] = fgets($file);
               break;
+
               case "10":
               $d['dateDossier'] = substr(fgets($file), 0, 15);
               break;
@@ -178,6 +195,7 @@ class msHprim
     public static function getPossiblePatients($hprimData, $patientID='')
     {
         $hprimData=array_map('trim', $hprimData);
+        $hprimData=msSQL::cleanArray($hprimData);
         $nom=$ddn=$nss=$cp=array(''=>'');
 
         if(is_numeric($patientID)) {
@@ -229,7 +247,7 @@ class msHprim
             if ($v > 1) {
                 $patient= new msPeople();
                 $patient->setToID($k);
-                $final[$k]=$patient->getSimpleAdminDatas();
+                $final[$k]=$patient->getSimpleAdminDatasByName();
                 $final[$k]['patientType']=$patient->getPeopleType();
                 $final[$k]['nbOccurence']=$v;
                 $final[$k]['id']=$k;

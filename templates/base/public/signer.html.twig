@@ -40,8 +40,7 @@
     <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
     {# css #}
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
 
     {# js #}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
@@ -52,6 +51,7 @@
 
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+      var signPeriphName = '{{ page.signPeriphName }}';
     </script>
 
     <style>
@@ -79,18 +79,18 @@
   <body>
     <div class="row">
       <div class="col">
-    {% include('consentementEcho.html.twig') %}
+    {% include( [page.docasigner.template ~ '_signer.html.twig' , page.docasigner.template ~ '.html.twig']) %}
     </div>
   </div>
 
     <div id="consignes" class="row mb-2 mt-5">
-      <div class="col-1">
+      <div class="col-2">
         <button class="btn btn-primary btn-lg resetSignature ">Recommencer</button>
       </div>
       <div class="col text-center">
         <h4>Merci de signer dans la zone grise ci-dessous puis de valider</h4>
       </div>
-      <div class="col-1 text-right">
+      <div class="col-2 text-right">
         <button class="btn btn-danger btn-lg saveSignature ">Valider</button>
       </div>
     </div>

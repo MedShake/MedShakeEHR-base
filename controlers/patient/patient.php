@@ -36,18 +36,33 @@ $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
 $p['page']['patient']['id']=$match['params']['patient'];
 
+// vérifier si correspond à un patient existant
+if(!in_array($patient->getType(), ['patient', 'pro', 'externe'])) {
+  $template = "404";
+  return;
+}
+
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 //si patient externe, on cherche une relation avec un patient, et si on trouve, on permute
-if ($externe=$patient->isExterne() and
-    ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
-        ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
-        WHERE od.toID='".$p['page']['patient']['id']."'"))) {
-     $patient->setToID($internePatient);
-     $p['page']['patient']['id']=$internePatient;
-    }
+if ($externe=$patient->isExterne() and ($internePatient=msSQL::sqlUniqueChamp("SELECT od.value FROM data_types AS dt LEFT JOIN objets_data AS od
+  ON dt.name='relationExternePatient' AND od.typeID=dt.id AND od.outdated='' AND od.deleted=''
+  WHERE od.toID='".$p['page']['patient']['id']."'"))) {
+    msTools::redirection('/patient/'.$internePatient.'/');
+}
 
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
 $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
+  if(msTools::validateDate($p['page']['patient']['administrativeDatas']['deathdate']['value'], "d/m/Y")) {
+    $p['page']['patient']['administrativeDatas']['deathAge']=$patient->getDeathAge();
+  }
+}
 
 //cas où le patient est externe et sans relation connue
 if ($externe and !$internePatient) {
@@ -56,7 +71,7 @@ if ($externe and !$internePatient) {
     $keys=['mobilePhone', 'homePhone', 'telPro', 'personalEmail', 'profesionnalEmail'];
     foreach($keys as $v) {
         if(!array_key_exists($v, $data)) {
-          $data[$v]='**********';
+          $data[$v]['value']='**********';
         }
     }
     $name2typeID = new msData();
@@ -65,12 +80,12 @@ if ($externe and !$internePatient) {
     $candidats=array();
     $candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']."')
-               OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']."')");
+               WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']['value']."')
+               OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']['value']."')");
 
     $candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
                ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']."'");
+               WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']['value']."'");
 
     // si on a pu identifier le patient de façon unique, on associe directement et on charge les données du patient interne
     if ((($candidats['phone'] and ($c1=count($candidats['phone']))==1) or ($candidats['email'] and ($c2=count($candidats['email']))==1)) and
@@ -80,9 +95,7 @@ if ($externe and !$internePatient) {
         $obj->setToID($p['page']['patient']['id']);
         $obj->setFromID($p['user']['id']);
         $obj->createNewObjetByTypeName('relationExternePatient', $internePatient);
-        $patient->setToID($internePatient);
-        $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-        $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+        msTools::redirection('/patient/'.$internePatient.'/');
     } else {
         //sinon, on affiche la page de recherche patient
         $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
@@ -95,9 +108,10 @@ if ($externe and !$internePatient) {
 
 // le formulaire d'édition de ses données admin
 $formpatient = new msForm();
-$formpatient->setFormIDbyName('baseNewPatient');
+$formpatient->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 $formpatient->setPrevalues($patient->getSimpleAdminDatas());
 $p['page']['formEditAdmin']=$formpatient->getForm();
+$p['page']['formJavascript'][$p['config']['formFormulaireNouveauPatient']]=$formpatient->getFormJavascript();
 
 //type du dossier
 $p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");
@@ -116,51 +130,31 @@ $certificats=new msData();
 $certificats->setModules(['base', $p['user']['module']]);
 
 if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
-  foreach($p['page']['modelesCertif'] as $k=>$v) {
-    if(isset($v['onlyfor'])) {
-      $p['page']['modelesCertif'][$k]['onlyfor']=explode(',', $v['onlyfor']);
-      if(is_array($p['page']['modelesCertif'][$k]['notfor'])) {
-        if(count(array_filter($p['page']['modelesCertif'][$k]['onlyfor']))>0) {
-          if(!in_array($p['user']['id'], $p['page']['modelesCertif'][$k]['onlyfor'])) {
-            unset($p['page']['modelesCertif'][$k]);
-          }
-        }
-      }
-    }
-    if(isset($v['notfor'])) {
-      $p['page']['modelesCertif'][$k]['notfor']=explode(',', $v['notfor']);
-      if(is_array($p['page']['modelesCertif'][$k]['notfor'])) {
-        if(in_array($p['user']['id'], $p['page']['modelesCertif'][$k]['notfor'])) {
-          unset($p['page']['modelesCertif'][$k]);
-        }
-      }
-    }
-  }
+  $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCertif'], $p['user']['id']);
 }
 //les courriers
 if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
-  foreach($p['page']['modelesCourrier'] as $k=>$v) {
-    if(isset($v['onlyfor'])) {
-      $p['page']['modelesCourrier'][$k]['onlyfor']=explode(',', $v['onlyfor']);
-      if(is_array($p['page']['modelesCourrier'][$k]['notfor'])) {
-        if(count(array_filter($p['page']['modelesCourrier'][$k]['onlyfor']))>0) {
-          if(!in_array($p['user']['id'], $p['page']['modelesCourrier'][$k]['onlyfor'])) {
-            unset($p['page']['modelesCourrier'][$k]);
-          }
-        }
-      }
-    }
-    if(isset($v['notfor'])) {
-      $p['page']['modelesCourrier'][$k]['notfor']=explode(',', $v['notfor']);
-      if(is_array($p['page']['modelesCourrier'][$k]['notfor'])) {
-        if(in_array($p['user']['id'], $p['page']['modelesCourrier'][$k]['notfor'])) {
-          unset($p['page']['modelesCourrier'][$k]);
-        }
-      }
-    }
-  }
+  $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCourrier'], $p['user']['id']);
 }
 
-//les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+// liste des documents pouvant être envoyés à la signature par l'utilisateur courant
+$docAsSigner = new msSignatureNumerique;
+$docAsSigner->setFromID($p['user']['id']);
+$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+
+//les correspondants
+$correspondants = new msPeopleRelations;
+$correspondants->setToID($match['params']['patient']);
+$p['page']['correspondants']=$correspondants->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+
+// Transmissions
+if($p['config']['transmissionsPeutCreer'] == 'true') {
+  $trans = new msTransmissions();
+  $trans->setUserID($p['user']['id']);
+  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+}
+
+// Formulaires de règlement
+$data=new msData;
+$p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));

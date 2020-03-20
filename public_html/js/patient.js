@@ -54,19 +54,7 @@ if (!scriptsList) {
 var goToDicom = false;
 
 $(document).ready(function() {
-  refreshHistorique();
-  $('.historiqueMedicalComplet .anneeHistorique').each(function(idx, el) {
-    if (!idx) {
-      $(el).find('.fa-minus-square').show();
-      $(el).find('.fa-plus-square').hide();
-      $($(el).attr('data-target')).collapse('show');
-    } else {
-      $(el).find('.fa-minus-square').hide();
-      $(el).find('.fa-plus-square').show();
-      $($(el).attr('data-target')).collapse('hide');
-    }
-  });
-  refreshHistoriqueToday();
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations pour saut entre tabs
 
@@ -114,6 +102,13 @@ $(document).ready(function() {
     }
   });
 
+  // 1er chargement tab Bio
+  $('#ongletBio').on("show.bs.tab", function() {
+    if ($('#tabBio').html() == '') {
+      var url = $('#tabBio').attr('data-rootUrl');
+      loadTabPatient(url, 'tabBio');
+    }
+  });
 
   function loadTabPatient(url, tab, param) {
     $.ajax({
@@ -149,101 +144,140 @@ $(document).ready(function() {
     setPeopleData(value, patientID, typeID, source, instance);
   });
 
-  $('input.jqautocomplete').on("autocompleteselect", function(event, ui) {
-    $(this).trigger("paste");
-  });
-
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations touch pour vue mobile
-  $('.swipable').swipe({
-    triggerOnTouchEnd: true,
-    swipeStatus: function(event, phase, direction, distance) {
-      if (!$('.swipable').hasClass('swipableon'))
-        return;
-      if (phase == 'move') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.swipable').css('overflow-y', 'hidden');
-          $('.atcd').css('left', -distance);
-          $('.dossier').show().css('left', $(window).width() - distance).css('top', -$('.atcd')[0].offsetHeight);
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.swipable').css('overflow-y', 'hidden');
-          $('.atcd').show().css('left', -$(window).width() + distance);
-          $('.dossier').css('left', distance).css('top', -$('.atcd')[0].offsetHeight);
+  if ($('.swipable').length) {
+    $('.swipable').swipe({
+      triggerOnTouchEnd: true,
+      swipeStatus: function(event, phase, direction, distance) {
+        if (!$('.swipable').hasClass('swipableon'))
+          return;
+        if (phase == 'move') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.swipable').css('overflow-y', 'hidden');
+            $('.atcd').css('left', -distance);
+            $('.dossier').show().css('left', $(window).width() - distance).css('top', -$('.atcd')[0].offsetHeight);
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.swipable').css('overflow-y', 'hidden');
+            $('.atcd').show().css('left', -$(window).width() + distance);
+            $('.dossier').css('left', distance).css('top', -$('.atcd')[0].offsetHeight);
+          }
+        } else if (phase == 'cancel') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.atcd').animate({
+              left: 0
+            }, 400);
+            $('.dossier').animate({
+              left: $(window).width()
+            }, 400, function() {
+              $('.dossier').hide().css('top', 0);
+            });
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.atcd').animate({
+              left: -$(window).width()
+            }, 400, function() {
+              $('.atcd').hide();
+              $('.swipable').css('overflow-y', 'auto')
+            });
+            $('.dossier').animate({
+              left: 0
+            }, 400, function() {
+              $('.dossier').css('top', 0)
+            });
+          }
+        } else if (phase == 'end') {
+          if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
+            $('.atcd').animate({
+              left: -$(window).width()
+            }, 400, function() {
+              $('.atcd').hide();
+              $('.swipable').removeClass('swipable-left').addClass('swipable-right');
+              $('.swipable').css('overflow-y', 'auto')
+            });
+            $('.dossier').animate({
+              left: 0
+            }, 400, function() {
+              $('.dossier').css('top', 0)
+            });
+          } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
+            $('.atcd').animate({
+              left: 0
+            }, 400);
+            $('.dossier').animate({
+              left: $(window).width()
+            }, 400, function() {
+              $('.dossier').hide().css('top', 0);
+              $('.swipable').removeClass('swipable-right').addClass('swipable-left');
+              $('.swipable').css('overflow-y', 'auto')
+            });
+          }
         }
-      } else if (phase == 'cancel') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.atcd').animate({
-            left: 0
-          }, 400);
-          $('.dossier').animate({
-            left: $(window).width()
-          }, 400, function() {
-            $('.dossier').hide().css('top', 0);
-          });
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.atcd').animate({
-            left: -$(window).width()
-          }, 400, function() {
-            $('.atcd').hide();
-            $('.swipable').css('overflow-y', 'auto')
-          });
-          $('.dossier').animate({
-            left: 0
-          }, 400, function() {
-            $('.dossier').css('top', 0)
-          });
-        }
-      } else if (phase == 'end') {
-        if (direction == 'left' && $('.swipable').hasClass('swipable-left')) {
-          $('.atcd').animate({
-            left: -$(window).width()
-          }, 400, function() {
-            $('.atcd').hide();
-            $('.swipable').removeClass('swipable-left').addClass('swipable-right');
-            $('.swipable').css('overflow-y', 'auto')
-          });
-          $('.dossier').animate({
-            left: 0
-          }, 400, function() {
-            $('.dossier').css('top', 0)
-          });
-        } else if (direction == 'right' && $('.swipable').hasClass('swipable-right')) {
-          $('.atcd').animate({
-            left: 0
-          }, 400);
-          $('.dossier').animate({
-            left: $(window).width()
-          }, 400, function() {
-            $('.dossier').hide().css('top', 0);
-            $('.swipable').removeClass('swipable-right').addClass('swipable-left');
-            $('.swipable').css('overflow-y', 'auto')
-          });
-        }
-      }
-    },
-    allowPageScroll: 'vertical',
-    preventDefaultEvents: false,
-    threshold: 100
-  });
-  if (window.innerWidth < 768) {
-    $('.swipable').addClass('swipableon swipable-right');
-    $('.atcd').hide();
-    $('.dossier').show();
-  } else {
-    $('.atcd').show();
-    $('.dossier').show();
-  };
-  $(window).on("resize", function() {
+      },
+      allowPageScroll: 'vertical',
+      preventDefaultEvents: false,
+      threshold: 100
+    });
     if (window.innerWidth < 768) {
-      if (!$('.swipable').hasClass('swipableon')) {
-        $('.swipable').addClass('swipableon swipable-right');
-        $('.atcd').hide();
-        $('.dossier').show();
-      }
+      $('.swipable').addClass('swipableon swipable-right');
+      $('.atcd').hide();
+      $('.dossier').show();
     } else {
-      $('.swipable').removeClass('swipableon').removeClass('swipable-right').removeClass('swipable-left');
-      $('.atcd').show().css('left', '');
-      $('.dossier').show().css('left', '').css('top', '');
+      $('.atcd').show();
+      $('.dossier').show();
+    };
+    $(window).on("resize", function() {
+      if (window.innerWidth < 768) {
+        if (!$('.swipable').hasClass('swipableon')) {
+          $('.swipable').addClass('swipableon swipable-right');
+          $('.atcd').hide();
+          $('.dossier').show();
+        }
+      } else {
+        $('.swipable').removeClass('swipableon').removeClass('swipable-right').removeClass('swipable-left');
+        $('.atcd').show().css('left', '');
+        $('.dossier').show().css('left', '').css('top', '');
+      }
+    });
+  }
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Observations Tab Biologie
+
+  $('#tabBio').on('click', 'a.bioDateSelect, button.bioDateSelect', function(e) {
+    e.preventDefault();
+    var url = $('#tabBio').attr('data-rootUrl');
+    var param = {
+      'dateBio': $(this).attr('data-dateBio')
+    };
+    loadTabPatient(url, 'tabBio', param);
+  });
+
+  $('#tabBio').on('change', 'select.bioDateSelect', function(e) {
+    var url = $('#tabBio').attr('data-rootUrl');
+    var param = {
+      'dateBio': $(this).val()
+    };
+    loadTabPatient(url, 'tabBio', param);
+  });
+
+  $('#tabBio').on('click', '#accordionDocs div.card-header', function(e) {
+    objetID = $(this).attr('data-objetid');
+    destination = $("#collapse" + objetID + " div.card-body");
+    if (destination.html() == '') {
+      $.ajax({
+        url: urlBase + '/patient/ajax/getFilePreviewDocument/',
+        type: 'get',
+        data: {
+          objetID: objetID,
+        },
+        dataType: "html",
+        success: function(data) {
+          destination.html(data)
+        },
+        error: function() {
+          destination.remove();
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
     }
   });
 
@@ -298,7 +332,8 @@ $(document).ready(function() {
     });
   });
 
-  $("#patientPhonecapture button").on("click", function() {
+  $("#patientPhonecapture #patientPhonecaptureEndButton").on("click", function() {
+    $('#patientPhonecapture').modal('toggle');
     if (goToDicom) {
       $('#ongletDicom')[0].click();
       if ($('#tabDicom').html() != '') {
@@ -353,7 +388,7 @@ $(document).ready(function() {
   });
 
   //bouton de nouveau document importé
-  $("#linkAddNewDoc, #cleanNewDocImport").on("click", function(e) {
+  $(".linkAddNewDoc, .cleanNewDocImport").on("click", function(e) {
     e.preventDefault();
     $('#newDoc').toggle();
     $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.docupload);
@@ -384,6 +419,56 @@ $(document).ready(function() {
     }
   });
 
+  // bouton de nouvelle transmission
+  $('body').on("click", ".newTransmission", function(e) {
+    e.preventDefault();
+
+    if ($(this).parents('tr').attr('data-creationDate')) {
+      $('#transSujet').val("Pièce du dossier patient");
+      datepiece = $(this).parents('tr').attr('data-creationDate');
+      datepiece = moment(datepiece).format('DD/MM/YYYY HH:mm');
+      texte = "Voir la ligne de l'historique \"" + $(this).parents('td').next('td').text() + '" du ' + datepiece;
+      texte = texte.replace(/\r?\n|\r/g, "");
+      texte = texte.replace(/  +/g, ' ');
+      $('#transTransmission').val(texte);
+    }
+    $('#transConcerne').addClass('d-none');
+    $('#transPatientConcID').val($('#identitePatient').attr('data-patientid'));
+    $('#transPatientConcSel').html($('#identitePatient').attr('data-patientIdentite'));
+    $('#transPatientConcSel').removeClass('d-none');
+
+    $('#modalTransmission').modal('show');
+  });
+  // poster une transmission
+  $('body').on("click", "#transmissionEnvoyer", function(e) {
+    e.preventDefault();
+    transmissionNewNextLocation = 'stayHere';
+    posterTransmission();
+  });
+
+  // bouton de nouvelle FSE
+  $('body').on("click", ".newFse", function(e) {
+    e.preventDefault();
+    getFseData($(this));
+    $('#modalFaireFse').modal('show');
+  });
+
+  // bouton de validation FSE
+  $('body').on("click", "#modalFaireFseValider", function(e) {
+    e.preventDefault();
+    doFse($(this));
+    //$('#modalFaireFse').modal('hide');
+  });
+
+  // bouton de fin FSE
+  $('body').on("click", "#modalFaireFseTerminer", function(e) {
+    e.preventDefault();
+    $('#modalFaireFse').modal('hide');
+    $('#modalFaireFseTerminer').addClass('d-none');
+    $('#modalFaireFseValider').removeClass('d-none');
+    $('#modalFaireFse div.modal-body').html(originalModalBody);
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations fermeture actions non terminées
 
@@ -397,7 +482,6 @@ $(document).ready(function() {
   ///////// Observations spécifiques aux lignes de l'historique  (dont modal)
 
   // contraction d'une année
-
   $("body").on("click", ".anneeHistorique", function() {
     setTimeout((function($el) {
       if ($el.hasClass('collapsed'))
@@ -408,7 +492,6 @@ $(document).ready(function() {
   });
 
   //sélectionner un groupe dans l'historique
-
   $("body").on("click change", "#historiqueTypeSelect button, #historiqueTypeSelect option", function(e) {
     e.preventDefault();
     groupe = $(this).attr('data-groupe');
@@ -485,6 +568,16 @@ $(document).ready(function() {
     showObjetDet($(this));
   });
 
+  // réduire la taille d'une image pour aperçu dans historique
+  $("body").on("click", "button.reduceImagePreviewSize", function(e) {
+    reduceImagePreviewSize($(this))
+  });
+
+  // rotation (définitive) d'une image via aperçu historiques
+  $("body").on("click", ".rotationImage90", function(e) {
+    rotateImage90($(this));
+  });
+
   // voir étude dicom correspondant à l'examen
   $('#tabDossierMedical').on("click", "a.viewStudy", function(e) {
     e.preventDefault();
@@ -495,6 +588,35 @@ $(document).ready(function() {
     };
     $('#ongletDicom').tab('show');
     loadTabPatient(url, 'tabDicom', param);
+  });
+
+  // envoyer à la signature
+  $('#tabDossierMedical').on("click", "a.sendSign", function(e) {
+    e.preventDefault();
+    source = $(this);
+    $.ajax({
+      url: urlBase + '/patients/ajax/patientsSendSign/',
+      type: 'post',
+      data: {
+        patientID: $('#identitePatient').attr("data-patientID"),
+        typeID: $(this).attr('data-csID'),
+        signPeriphName: signPeriphName,
+        objetID: $(this).parents('tr').attr('data-objetID'),
+        fromID: $(this).attr('data-fromID')
+      },
+      dataType: "html",
+      success: function(data) {
+        el = source.closest('tr');
+        el.css("background", "#efffe8");
+        setTimeout(function() {
+          el.css("background", "");
+        }, 1000);
+      },
+      error: function() {
+        alert_popup("danger", 'Problème, rechargez la page !');
+
+      }
+    });
 
   });
 
@@ -551,6 +673,17 @@ $(document).ready(function() {
     $('#ongletLAP').tab('show');
   });
 
+  // Observation ctrl + click pour historique
+  $('body').on("click", "textarea, input, select", function(e) {
+    if (e.shiftKey) {
+      e.preventDefault();
+      patientID = $('#identitePatient').attr('data-patientid');
+      instance = $(this).parents('form').attr('data-instance');
+      dataType = $(this).attr('data-internalName');
+      window.location.href = urlBase + '/logs/historique/' + patientID + '/' + dataType + '/' + instance + '/';
+    }
+  });
+
   ////////////////////////////////////////////////////////////////////////
   ///////// Changer la date de création d'une ligne d'historique
 
@@ -579,8 +712,8 @@ $(document).ready(function() {
   $('body').on('dblclick', '.trLigneExamen td:nth-child(2)', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    if ($(this).closest('tr').attr('data-creationdate'))
-      changeCreationDate($(this));
+    groupe = $(this).closest('tr').attr('data-groupe');
+    if (groupe == 'typecs' || groupe == 'reglement') changeCreationDate($(this));
   });
   $("body").on("click", ".changeCreationDate", function(e) {
     e.preventDefault();
@@ -618,6 +751,8 @@ $(document).ready(function() {
 
   //enregistrement de forms en ajax
   $('body').on('click', "#tabDossierMedical form input[type=submit], #tabDossierMedical button[type=submit]", function(e) {
+
+    $('#tabDossierMedical .is-invalid').removeClass('is-invalid');
     if ($(this).closest("form").attr("action").indexOf('/actions/') >= 0) {
       return;
     };
@@ -634,26 +769,45 @@ $(document).ready(function() {
       return;
     }
     $(window).unbind("beforeunload");
-    $(this).closest(".toclear").html("");
     var form = $(this).closest("form");
     var objetid = form.find("input[name=objetID]").val();
     $.ajax({
       url: form.attr("action"),
       type: 'post',
       data: form.serialize(),
-      dataType: "html",
+      dataType: "json",
       success: function(data) {
+
+        if (data.statut == "erreur") {
+          $('div.alert ul').html('');
+          $.each(data.msg, function(index, value) {
+            $(' div.alert ul').append('<li>' + value + '</li>');
+          });
+          $.each(data.code, function(index, value) {
+            $('#tabDossierMedical *[name="' + value + '"]').addClass('is-invalid');
+          });
+          $('div.alert').removeClass('d-none');
+          scrollTo('body', 2);
+          return;
+        }
+
+        // on remet au propre
+        form.closest(".toclear").html("");
+        $('div.alert').addClass('d-none');
+
         // on recharge la colonne lat
         getLatCol();
 
         // on agit sur historiques
-        if (!data.length || form.hasClass('ignoreReturn')) {
+        if (!data.html.length || form.hasClass('ignoreReturn')) {
           return;
-        } else if (data.substr(0, 7) == "Erreur:") {
-          alert_popup("danger", data);
-        } else if (data.substr(0, 14) == "Avertissement:") {
-          alert_popup("warning", data);
-        } else {
+        } else if (data.statut == "avertissement") {
+          alert_popup("warning", data.msg);
+        } else if (data.statut == "ok-fullrefresh") {
+          getHistoriqueToday();
+          getHistorique();
+          scrollTo('body', 2);
+        } else if (data.statut == "ok") {
           var $tr = $("#historique .anneeHistorique:nth-child(1)");
           if ($tr.length && $tr.children("td:nth-child(2)").html().substr(8, 4) == moment().format("YYYY")) {
             $tr.find('.fa-minus-square').show();
@@ -661,9 +815,9 @@ $(document).ready(function() {
             $($tr.attr('data-target')).collapse('show');
             var $l = $("#historique tr.tr" + objetid);
             if (objetid && $l.length)
-              $l.replaceWith(data);
+              $l.replaceWith(data.html);
             else
-              $tr.after(data);
+              $tr.after(data.html);
           } else {
             $('#historique tbody').prepend('<tr class="anneeHistorique table-primary" data-toggle="collapse" data-target=".historiqueMedicalComplet .trLigneExamen[data-annee=' + moment().format("YYYY") + ']" aria-expanded="true" aria-controls="annee' + moment().format("YYYY") + '">\
               <td class="pl-3">\
@@ -671,25 +825,23 @@ $(document).ready(function() {
                 <span class="far fa-plus-square" style="display:none"></span>\
               </td>\
               <td colspan="4"><strong>' + moment().format("YYYY") + '</strong></td>\
-            </tr>' + data);
-            var regdate = $('#historique tr:nth-of-type(2)').attr('data-registerdate');
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-none').html(regdate.substr(0, 10));
-            $('#historique tr:nth-of-type(2) > td:nth-of-type(2) > span.d-md-none').html(regdate.substr(0, 5));
+            </tr>' + data.html);
             refreshHistorique();
           }
 
           var $lt = $("#historiqueToday tr.tr" + objetid);
-          if (objetid && $lt.length)
-            $lt.replaceWith(data);
-          else {
-            $('#historiqueToday tbody').prepend(data);
-            if ($('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate').substr(0, 10) != moment().format("YYYY-MM-DD"))
-              $('#historiqueToday tbody tr:nth-of-type(1)').remove();
+          if (objetid && $lt.length) {
+            $lt.replaceWith(data.html);
+          } else if (data.today == 'oui') {
+            $('#historiqueToday tbody').prepend(data.html);
           }
-          var regdatet = $('#historiqueToday tbody tr:nth-of-type(1)').attr('data-registerdate');
-          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-none').html(regdatet.substr(11));
-          $('#historiqueToday tbody tr:nth-of-type(1) > td:nth-of-type(2) > span.d-md-none').html(regdatet.substr(11, 5));
           refreshHistoriqueToday();
+          scrollTo('body', 2);
+
+          // construire immédiatement le PDF si demandé dans les options du formulaire
+          if (data.buildPdfNow) {
+            buildPdfForObjet(data.objetID);
+          }
         }
       },
       error: function() {
@@ -976,7 +1128,7 @@ function sendFormToReglementDiv(el) {
     dataType: "html",
     success: function(data) {
       $('#newReglement').html(data);
-      if($.isArray(scriptsList.reglement)) {
+      if ($.isArray(scriptsList.reglement)) {
         $.each(scriptsList.reglement, function(index, value) {
           $.getScriptOnce(urlBase + "/js/patientScripts/" + value);
         });
@@ -1309,13 +1461,13 @@ function toogleImportant(el) {
     dataType: "html",
     success: function() {
       if (importanceActu == 'n') {
-        el.html('Démarquer important');
+        el.html('<i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i> Rendre non important');
         el.attr('data-importanceActu', 'y');
         el.closest('tr').addClass(el.closest('tr').hasClass('trReglement') ? 'table-danger' : 'table-info');
       }
       if (importanceActu == 'y') {
         el.closest('tr').removeClass('table-info').removeClass('table-danger');
-        el.html('Marquer important');
+        el.html('<i class="fas fa-exclamation-triangle fa-fw text-muted mr-1"></i> Marquer important');
         el.attr('data-importanceActu', 'n');
       }
     },
@@ -1343,7 +1495,7 @@ function modalAlternateTitreChange() {
     },
     dataType: "html",
     success: function() {
-      if(titreActu.length > 0) {
+      if (titreActu.length > 0) {
         $('.alternatTitre' + objetID).html(' : ' + titreActu);
       } else {
         $('.alternatTitre' + objetID).html('');
@@ -1400,7 +1552,7 @@ function showObjetDet(element, timed) {
 
   if (destination.length == 0) {
     if (element.closest('tr').attr('data-typeName') == 'lapOrdonnance') {
-      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="text-right"><button class="btn btn-secondary btn-sm renouvToutesLignes mb-1" type="button" title="Renouveler"><i class="fa fa-sync-alt" aria-hidden="true"></i> Tout renouveler</button></div><div class="alert alert-primary gras" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark gras" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
+      ligne.after('<tr class="detObjet' + objetID + ' detObjet" style="background : transparent"><td></td><td colspan="4" class="placeForOrdoLap py-4"><div class="text-right"><button class="btn btn-secondary btn-sm renouvToutesLignes mb-1" type="button" title="Renouveler"><i class="fas fa-sync-alt" aria-hidden="true"></i> Tout renouveler</button></div><div class="alert alert-primary font-weight-bold" role="alert">Prescriptions ALD</div><div class="ald conteneurPrescriptionsALD"></div><div class="alert alert-dark font-weight-bold" role="alert">Prescriptions standards</div><div style="min-height:15px;" class="conteneurPrescriptionsG"></div></td></tr>');
       voirOrdonnanceMode = 'voirOrdonnance';
       getOrdonnance(objetID, "." + zone + " .detObjet" + objetID + ' td.placeForOrdoLap');
     } else {
@@ -1409,7 +1561,7 @@ function showObjetDet(element, timed) {
 
       $.ajax({
         url: urlBase + '/patient/ajax/ObjetDet/',
-        type: 'post',
+        type: 'get',
         data: {
           objetID: objetID,
         },
@@ -1430,15 +1582,63 @@ function showObjetDet(element, timed) {
 }
 
 /**
+ * Réduction à w-50 d'une image dans apercu lignes d'historiques
+ * @param  {object} el objet cliqué
+ * @return {void}
+ */
+function reduceImagePreviewSize(el) {
+  cible = $('#' + el.attr('data-cible'));
+  if (cible.hasClass('w-50')) {
+    cible.removeClass('w-50');
+    el.find('i').addClass('fa-search-minus').removeClass('fa-search-plus');
+  } else {
+    cible.addClass('w-50');
+    el.find('i').addClass('fa-search-plus').removeClass('fa-search-minus');
+  }
+}
+
+/**
+ * Rotation d'une image de 90° à droite ou à gauche
+ * @param  {object} el objet cliqué
+ * @return {void}
+ */
+function rotateImage90(el) {
+  fichierID = el.attr('data-doc');
+  cible = $('#' + el.attr('data-cible'));
+  direction = el.attr('data-direction');
+  el.find('i').addClass('fa-spin');
+  $.ajax({
+    url: urlBase + '/patient/ajax/rotateDoc/',
+    type: 'post',
+    data: {
+      fichierID: fichierID,
+      direction: direction,
+    },
+    dataType: "html",
+    success: function(data) {
+      d = new Date();
+
+      cible.attr("src", cible.attr('src') + "?" + d.getTime());
+      el.find('i').removeClass('fa-spin');
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
+}
+
+/**
  * Rafraichir l'historique complet
  * @return {void}
  */
 function refreshHistorique() {
   if (!$('.historiqueMedicalComplet .trLigneExamen').length) {
     $('.historiqueMedicalComplet').hide();
+    $('.noticeDossierPatientVide').removeClass('d-none');
     return;
   }
   $('.historiqueMedicalComplet').show();
+  $('.noticeDossierPatientVide').addClass('d-none');
 }
 
 /**
@@ -1512,8 +1712,26 @@ function getLatCol() {
   });
 }
 
+/**
+ * Construire le PDF à partir de l'objetID
+ * @param  {int} objetID objetID
+ * @return {void}
+ */
+function buildPdfForObjet(objetID) {
+  $.ajax({
+    url: urlBase + '/print/ajax/buildPdfForObjet/',
+    type: 'post',
+    data: {
+      objetID: objetID
+    },
+    dataType: "html",
+    success: function() {},
+    error: function() {}
+  });
+}
+
 ////////////////////////////////////////////////////////////////////////
-///////// Fonctions relatives à la surveillance de changeemnt dans
+///////// Fonctions relatives à la surveillance de changement dans
 ///////// formulaires pour enregistrement automatique
 
 /**
@@ -1523,7 +1741,7 @@ function getLatCol() {
  * @return {void}
  */
 function activeWatchChange(parentTarget) {
-  // la frappe sur input ou textarea
+  // frappe sur input ou textarea
   $(parentTarget + " input:not(.datepic), " + parentTarget + " textarea").typeWatch({
     wait: 1000,
     highlight: false,
@@ -1542,11 +1760,21 @@ function activeWatchChange(parentTarget) {
       }
     }
   });
-  // les selects
+  // select
   $(parentTarget + " select").on("change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).attr("data-typeID");
     value = $(this).val();
+    source = $(this);
+    instance = $(this).closest("form").attr("data-instance");
+    setPeopleData(value, patientID, typeID, source, instance);
+  });
+  // custom checkbox (type checkbox ou switch)
+  $(parentTarget + " .custom-switch, " + parentTarget + " .custom-checkbox ").on("click", function(e) {
+    patientID = $('#identitePatient').attr("data-patientID");
+    inputSource = $(this).find('input');
+    typeID = inputSource.attr("data-typeID");
+    value = inputSource.prop('checked');
     source = $(this);
     instance = $(this).closest("form").attr("data-instance");
     setPeopleData(value, patientID, typeID, source, instance);

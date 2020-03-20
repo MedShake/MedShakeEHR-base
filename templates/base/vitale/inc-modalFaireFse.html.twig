@@ -1,0 +1,104 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > modale pour l'affichade des résultats de lecture Vitale et CPS
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #
+#}
+<div id="modalFaireFse" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold">Établir une FSE</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="modalFaireFseStartForm" class="card card-body bg-light mb-3">
+          <input type="hidden" class="form-control" name="numero_rpps">
+          <input type="hidden" class="form-control" name="msehrParams">
+          <div id="fseRetirerSiModeSimple">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="contexte_facturation">Contexte de facturation</label>
+                <select name='contexte_facturation' class="custom-select custom-select-sm">
+                  <option value="ML">Maladie</option>
+                  <option value="MT">Matérnité</option>
+                  <option value="AT">Accident du travail</option>
+                  <option value="SG">Soins médicaux gratuit</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="ips">Parcours de soins</label>
+                <select name='ips' class="custom-select custom-select-sm">
+                  <option value="N">Nouveau médécin traitant</option>
+                  <option value="T">Je suis le médecin traitant</option>
+                  <option value="O">Orienté par le médecin traitant</option>
+                  <option value="M">Orienté par autre que le médecin traitant</option>
+                  <option value="S">Hors Parcours de soins</option>
+                  <option value="D">Accès direct spécifique</option>
+                  <option value="R">Médecin traitant remplacé</option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label for="medecin_traitant_declare">Médecin traitant déclaré ?</label>
+                <select name='medecin_traitant_declare' class="custom-select custom-select-sm">
+                  <option value="true">Oui</option>
+                  <option value="false">Non</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="prenom_1180">Prénom du médecin traitant déclaré</label>
+                <input type="text" class="form-control form-control-sm" name="prenom_1180">
+              </div>
+              <div class="form-group col">
+                <label for="nom_1180">Nom du médecin traitant déclaré</label>
+                <input type="text" class="form-control form-control-sm" name="nom_1180">
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card small">
+          <div class="card-header">
+            Actes envoyés à la facturation
+          </div>
+          <div class="card-body">
+            <div id="modalFaireFseActes">
+            </div>
+            <p>NB : La facture finale établie par le service tiers peut différer. Consultez son interface pour vous assurer de la bonne cohérence.</p>
+          </div>
+        </div>
+        <div id="modalFaireFseFinishForm" class="d-none"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalFaireFseTerminer" type="button" class="btn btn-primary d-none">Terminer</button>
+        <button id="modalFaireFseValider" data-vitaleservice="{{ config.vitaleService }}" type="button" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>

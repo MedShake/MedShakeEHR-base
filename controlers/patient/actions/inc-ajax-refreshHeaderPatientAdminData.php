@@ -29,13 +29,24 @@
 $template="inc-ajax-patientAdminData";
 
 //le patient
-$patient = new msPeople();
+$patient = new msPeopleRelations();
 $patient->setToID($_POST['patientID']);
+
+//vérifier les droits
+if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+  $template="forbidden";
+  return;
+}
+
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
 $p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
 $p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
+if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
+  if(msTools::validateDate($p['page']['patient']['administrativeDatas']['deathdate']['value'], "d/m/Y")) {
+    $p['page']['patient']['administrativeDatas']['deathAge']=$patient->getDeathAge();
+  }
+}
 
 //les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros();
-$p['page']['liensFamiliaux']=$patient->getRelationsWithOtherPatients();
+$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);

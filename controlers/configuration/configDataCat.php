@@ -26,18 +26,20 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDataCat";
-     $p['page']['groupe']=$match['params']['groupe'];
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+   $template="forbidden";
+} else {
+   $template="configDataCat";
+   $debug='';
 
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(t.id) as enfants
-			from data_cat as c
-			left join data_types as t on c.id=t.cat
-			where c.groupe='".$p['page']['groupe']."'
-			group by c.id
-			order by c.label asc", 'id');
- }
+   $p['page']['groupe']=$match['params']['groupe'];
+   if(!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
+
+   $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(t.id) as enfants
+		from data_cat as c
+		left join data_types as t on c.id=t.cat
+		where c.groupe='".msSQL::cleanVar($p['page']['groupe'])."'
+		group by c.id
+		order by c.label asc", 'id');
+}

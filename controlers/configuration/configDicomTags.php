@@ -35,7 +35,7 @@
 
      if($tags = msSQL::sql2tab("select dt.*, d.label, dc.label as labelCat
      from dicomTags dt
-      left join data_types as d on d.id=dt.typeID
+      left join data_types as d on d.name=dt.typeName
       left join data_cat as dc on dc.id=d.cat
       where dt.dicomTag !='' order by dt.dicomCodeMeaning")) {
 

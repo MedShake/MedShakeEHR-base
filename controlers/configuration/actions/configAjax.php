@@ -38,6 +38,7 @@ $acceptedModes=array(
     'configExtractByPrimaryKey', // Effacer dans une table par l'intermédiaire de la primary key
     'configFormsCatCreate', // Création d'une cat pour les forms
     'configFormCreate', // Création d'un form
+    'configFormPreview', // Prévisu d'un form
     'configChangeModule', // Change le module d'un utilisateur
     'configChangePassword', // Change le mot de passe d'un utilisateur
     'configGiveAdmin', // Toggle droit d'admin
@@ -57,9 +58,15 @@ $acceptedModes=array(
     'configCronJobs', //Configurer les crons
     'configInstallModule', // Installer un module
     'configSpecificUserParam', // Attribuer une config spécifique à un utilisateur
+    'configUserCreate', // créer un utilisateur
     'configUserParamCreate', // Créer un paramètre dans la configuration spécifique à un utilisateur
     'configUserParamDelete', // Supprimer un paramètre dans la configuration spécifique à un utilisateur
-    'extractCcamActeData' // extraire les data sur un acte CCAM
+    'configUserTemplateDelete', // Supp d'un template user
+    'extractCcamActeData', // extraire les data sur un acte CCAM
+    'fixDisplayOrder', // fixer le displayOrder pour les data types en fonction de l'ordre dans un form
+    'configUncryptApicryptKey', //déchiffrer une clef Apicrypt
+    'configRevoke2faKey',  // révoquer la clef 2FA d'un utilisateur
+    'configInstallPlugin' // installation de plugin
 );
 if (!in_array($m, $acceptedModes)) {
     die;

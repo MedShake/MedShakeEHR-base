@@ -102,19 +102,23 @@ public function getDcInstanceID()
     public function __construct()
     {
         global $p;
-        $this->_baseCurlUrl='http://'.$p['config']['dicomHost'].':8042';
+        $this->_baseCurlUrl=$p['config']['dicomProtocol'].$p['config']['dicomHost'].':'.$p['config']['dicomPort'];
     }
 
 /**
- * Definri l'ID patient
+ * Definir l'ID patient
  * Definir l'ID Orthanc via l'ID patient MedShakeEHR
  * @param [type] $v [description]
  */
     public function setToID($v)
     {
-        $this->_toID = $v;
-        $this->_makeDcPatientID();
-        return $this->_toID;
+      if (msPeople::checkPeopleExist($v)) {
+          $this->_toID = $v;
+          $this->_makeDcPatientID();
+          return $this->_toID;
+      } else {
+          throw new Exception('ToID does not exist');
+      }
     }
 
 /**
@@ -142,6 +146,26 @@ public function getDcInstanceID()
     public function setDcInstanceID($v)
     {
         return $this->_dcInstanceID = $v;
+    }
+
+/**
+ * Obtenir les infos système Orthanc
+ * @return array data system Orthanc
+ */
+    public function getOrthancSystemInfo()
+    {
+      $url=$this->_baseCurlUrl.'/system';
+      return  $this->_dcGetContent($url);
+    }
+
+/**
+ * Obtenir les stats Orthanc
+ * @return array stats orthanc
+ */
+    public function getOrthancStats()
+    {
+      $url=$this->_baseCurlUrl.'/statistics';
+      return  $this->_dcGetContent($url);
     }
 
 /**
@@ -346,7 +370,6 @@ public function getDcInstanceID()
     private function _dcGetContent($url)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $result=curl_exec($ch);

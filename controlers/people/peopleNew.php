@@ -22,8 +22,8 @@
 
 /**
  * people :  créer un individus
- * soit en mode patient -> formulaire baseNewPatient
- * soit en mode pro -> formualire baseNewPro
+ * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
+ * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -35,16 +35,41 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']='baseNewPatient';
-} elseif ($p['page']['porp']=='pro') {
-    $p['page']['formIN']='baseNewPro';
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
+} elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
+} else {
+  $template="forbidden";
+  return;
 }
 
+if($template != "forbidden") {
+  $formpatient = new msForm();
+  $formpatient->setFormIDbyName($p['page']['formIN']);
+  if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
+      $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
+  }
+  if (isset($_POST)) {
+      $formpatient->setPrevalues($_POST);
+  }
 
-$formpatient = new msForm();
-$formpatient->setFormIDbyName($p['page']['formIN']);
-if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
-    $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
+  //si formulaire pro
+  if ($p['page']['porp']=='pro') {
+
+    //si jeux de valeurs normées présents
+    if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+      $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+      $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+    }
+
+    if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+      $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+      $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+    }
+    if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
+  }
+
+  $p['page']['form']=$formpatient->getForm();
+  $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
+  $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 }
-$p['page']['form']=$formpatient->getForm();
-$formpatient->addSubmitToForm($p['page']['form'], 'btn-primary');

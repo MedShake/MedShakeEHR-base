@@ -48,17 +48,22 @@ if (isset($match['params']['key'])) {
     if(count($error)>0) {
       $p['page']['error']=$error;
       $template='phonecaptureError';
+
+      // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
+      openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+      syslog(LOG_WARNING, "MedShakeEHR - echec de connexion phonecapture depuis {$_SERVER['REMOTE_ADDR']}");
+      closelog();
     } else {
       //mdp de l'utilisateur
-      $userPass=msSQL::sqlUniqueChamp("select CAST(AES_DECRYPT(pass,@password) AS CHAR(50)) as pass from people where id='".msSQL::cleanVar($params[0])."' and LENGTH(pass)>0");
+      $userPass=msUser::getUserPassByUserID($params[0]);
 
       //recherche de fingeprint specifique utilisateur
       $p['config']['phonecaptureFingerprint']=msConfiguration::getUserParameterValue('phonecaptureFingerprint', msSQL::cleanVar($params[0]));
 
-      $userPass=md5(md5(sha1(md5($userPass.$p['config']['phonecaptureFingerprint']))));
+      $userPass=password_hash($userPass.$p['config']['phonecaptureFingerprint'],PASSWORD_DEFAULT);
 
-      setcookie("userIdPc", $params[0], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
-      setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain']);
+      setcookie("userIdPc", $params[0], (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain'], false, true);
+      setcookie("userPassPc", $userPass, (time()+$p['config']['phonecaptureCookieDuration']), "/", $p['config']['cookieDomain'], false, true);
 
       msTools::redirection('/phonecapture/');
 

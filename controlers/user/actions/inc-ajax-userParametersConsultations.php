@@ -31,14 +31,14 @@
 $preparams=array();
 
 foreach ($_POST as $k=>$v) {
-    preg_match('/(desc|back|border|duree|key)_(.*)/', $k, $matches);
-    if ($matches[2]) {
+    preg_match('/(desc|back|border|duree|key|utilisable)_(.*)/', $k, $matches);
+    if (isset($matches[2])) {
         $preparams[$matches[2]][$matches[1]]=$v;
     }
 }
 foreach ($preparams as $k=>$v) {
     if ($v['key']) {
-        $params["'[".$v['key']."]'"]=array('descriptif'=>$v['desc'], 'backgroundColor'=>$v['back'], 'borderColor'=>$v['border'], 'duree'=>$v['duree']);
+        $params["'[".$v['key']."]'"]=array('descriptif'=>$v['desc'], 'backgroundColor'=>$v['back'], 'borderColor'=>$v['border'], 'duree'=>$v['duree'], 'utilisable'=>$v['utilisable']);
     }
 }
 

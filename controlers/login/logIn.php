@@ -30,7 +30,16 @@
 $debug='';
 $template="login";
 
+// vérifications et ajustement saut de version majeure  
+$versionBase = msSQL::sqlUniqueChamp("SELECT value AS version FROM system WHERE name='base'");
+if(version_compare($versionBase, 'v6.0.0', '<')) {
+  include($homepath.'/scripts/jumpv5tov6.php');
+}
 
-$formpatient = new msForm();
-$formpatient->setFormIDbyName($p['page']['formIN']='baseLogin');
-$p['page']['form']=$formpatient->getForm();
+$formLogin = new msForm();
+$formLogin->setFormIDbyName($p['page']['formIN']='baseLogin');
+$p['page']['form']=$formLogin->getForm();
+
+if($p['config']['optionGeLogin2FA'] == 'false') {
+  $formLogin->removeFieldFromForm($p['page']['form'], 'otpCode');
+}

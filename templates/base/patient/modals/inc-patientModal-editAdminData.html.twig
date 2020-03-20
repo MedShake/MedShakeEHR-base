@@ -28,14 +28,20 @@
 #}
 {% import "macroForm.html.twig" as f %}
 <div id="editAdmin" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title gras">Edition des informations administratives du patient</h4>
+        <h4 class="modal-title font-weight-bold">Edition des informations administratives du patient</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body changeObserv">
-        {{ f.formbuilder(page.formEditAdmin , 'baseNewPatient' , session) }}
+        {{ f.formbuilder(page.formEditAdmin , config.formFormulaireNouveauPatient , session) }}
+
+        {% if page.formJavascript[config.formFormulaireNouveauPatient] is not empty %}
+          <script>
+           {{ page.formJavascript[config.formFormulaireNouveauPatient] }}
+          </script>
+        {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary modalAdminClose" data-dismiss="modal">Fermer</button>

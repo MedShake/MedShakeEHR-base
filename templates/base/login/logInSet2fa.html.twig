@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > login set2fa
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : mise en place l'authentification à 2 facteurs{% endblock %}
+{% set noMenuInBar = true %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  var uri2fa = "{{ user.secret2fa }}";
+
+$(document).ready(function() {
+  //générer QR code sur page accés
+  if ($('#QRcode').length) {
+    var el = kjua({
+      text: uri2fa,
+
+      // render method: 'canvas' or 'image'
+      render: 'image',
+
+      // render pixel-perfect lines
+      crisp: true,
+
+      // minimum version: 1..40
+      minVersion: 1,
+
+      // error correction level: 'L', 'M', 'Q' or 'H'
+      ecLevel: 'H',
+
+      // size in pixel
+      size: 400,
+
+      // pixel-ratio, null for devicePixelRatio
+      ratio: null,
+
+      // code color
+      fill: '#333',
+
+      // background color
+      back: '#fff',
+
+      // roundend corners in pc: 0..100
+      rounded: 100,
+
+      // quiet zone in modules
+      quiet: 1,
+
+      // image element
+      image: null
+
+    });
+    $('#QRcode').html(el);
+  }
+
+})
+{% endblock %}
+
+{% block body %}
+<h1>Mise en place de l'authentification à double facteurs pour votre compte</h1>
+
+<div class="alert alert-danger my-3 font-weight-bold d-flex justify-content-between align-items-center" role="alert">
+  <i class="fas fa-exclamation-triangle fa-2x"></i>
+  <span>Ne quitter pas cette page sans avoir suivi scrupuleusement toutes les instructions, vous ne pourriez définitvement plus vous reconnecter à l'application !</span>
+  <i class="fas fa-exclamation-triangle fa-2x"></i>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card card-body">
+      <h3>But et principes généraux de la procédure</h3>
+      <p>
+        L'authentification à double facteur a pour but de renforcer la sécurité des comptes de l'application en demandant au moment de l'identification de l'utilisateur un mot de passe supplémentaire généré par un périphérique informatique tiers. Ce
+        périphérique est typiquement votre téléphone portable.
+      </p>
+      <p>
+        Ce mot de passe a la particularité d'être labile dans le temps. Sa validité est de 30 secondes. Sa génération repose sur une clef de chiffrement qui vous est présentée ici à l'écran sous forme de QR code. Cette clef est facilement copiable dans votre
+        téléphone dans un programme spécifique grâce à ce QR code.
+      </p>
+      <p>
+        Pour accéder par la suite à l'application, il vous faudra donc toujours être muni du téléphone qui possède le programme capable de vous donner le mot de passe à utiliser.
+      </p>
+
+      <h3>Actions à entreprendre</h3>
+      <p>
+        <ol class="pl-3">
+          <li>Téléchargez une application OTP (one-time password) pour votre smartphone. Vous pouvez par exemple choisir FreeOTP, application libre et open source mais vous trouverez des dizaines d'autres applications de ce type. Attention de n'utilisez qu'une application dont vous êtes certain de la provenance et de la sécurité !</li>
+          <li>Initialisez l'application et assurez-vous de lui permettre l'accès à l'appareil photo.</li>
+          <li>Flashez le QR code présent à l'écran</li>
+          <li>Optionnelement, vous pouvez aussi enregistrer l'image du QR code dans un espace informatique sécurisé (gestionnaire de mot de passe par exemple)</li>
+        </ol>
+      </p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div id="QRcode"></div>
+  </div>
+</div>
+<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/" type="button" class="btn btn-danger mt-4">J'ai bien compris et j'ai terminé le processus</a>
+
+
+{% endblock %}

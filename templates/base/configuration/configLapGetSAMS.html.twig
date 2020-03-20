@@ -1,0 +1,77 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : rafraichir les SAMs et afficher le résultat
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% block title %}{{ config.designAppName }} : rafraichissement des SAMS{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Rafraichissement des SAMS
+    </li>
+  </ol>
+
+  <h1>Résultat du rafraichissement</h1>
+
+  <h2 class="my-3">Fichier source</h2>
+
+  <p><a href="{{ page.xmlUrl }}" target="_blank">{{ page.xmlUrl }}</a></p>
+
+  <h2 class="my-3">Spécialités trouvées par SAM</h2>
+  <table class="table table-sm table-hover table-striped">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>intitulé</th>
+        <th>géré</th>
+        <th class="text-right">spécialités trouvées</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sam in page.samsList %}
+        <tr>
+          <td>{{ sam.id }}</td>
+          <td>{{ sam.titre }}</td>
+          <td>{{ sam.methode }}</td>
+          <td class="text-right">{{ page['codesParSams'][sam.id]|length }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

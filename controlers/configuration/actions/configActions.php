@@ -35,23 +35,17 @@ $m=$match['params']['m'];
 $acceptedModes=array(
     'configUserCreate', //Créer un user
     'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave' // sauvegarder un template PDF
+    'configTemplatePDFSave', // sauvegarder un template PDF
+    'configUserTemplatesSave', // sauver un template user
+    'configRemoveInstallFiles', // supprimer les fichies d'installation
+    'configDicomRmWl', // supprimer tous les fichiers worklist actifs
+    'configRestartApicrypt2' // relancer le service Apicrypt2
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+  die;
+} else {
+  include('inc-action-'.$m.'.php');
 }
 
-
-// Attribuer un password à un user
-if ($m=='configUserCreate') {
-    include('inc-action-configUserCreate.php');
-}
-// appliquer les updates
-elseif ($m=='configApplyUpdates') {
-    include('inc-action-configApplyUpdates.php');
-}
-// sauvegarder un template PDF
-elseif ($m=='configTemplatePDFSave') {
-    include('inc-action-configTemplatePDFSave.php');
-}
+die();

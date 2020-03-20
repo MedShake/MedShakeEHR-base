@@ -27,35 +27,28 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- $name2typeID = new msData();
- $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname', 'birthdate']);
+$term = msSQL::cleanVar($_GET['term']);
+$a_json = array();
 
- $term = msSQL::cleanVar($_GET['term']);
- $a_json = array();
-
- if ($data=msSQL::sql2tab("select p.id, d8.value as ddn,
- CASE
-  WHEN d2.value != '' and d1.value != '' THEN concat(d2.value, ' (', d1.value ,') ', d3.value)
-  WHEN d2.value != '' THEN concat(d2.value, ' ', d3.value)
-  ELSE concat(d1.value, ' ', d3.value) END as identite
- from people as p
- left join objets_data as d1 on d1.toID=p.id and d1.typeID='".$name2typeID['birthname']."' and d1.outdated='' and d1.deleted=''
- left join objets_data as d2 on d2.toID=p.id and d2.typeID='".$name2typeID['lastname']."' and d2.outdated='' and d2.deleted=''
- left join objets_data as d8 on d8.toID=p.id and d8.typeID='".$name2typeID['birthdate']."' and d8.outdated='' and d8.deleted=''
- left join objets_data as d3 on d3.toID=p.id and d3.typeID='".$name2typeID['firstname']."' and d3.outdated='' and d3.deleted=''
- where (concat(d2.value, ' ', d3.value) like '%".$term."%' or concat(d1.value, ' ', d3.value) like '%".$term."%') and p.type in ('pro', 'patient')
- group by p.id, d1.value, d2.value, d3.value, d8.value
- order by identite limit 20")) {
+$mss=new msPeopleSearch;
+$mss->setNameSearchMode('BnFnOrLnFn');
+$mss->setPeopleType(['pro','patient']);
+$criteres = array(
+    'birthname'=>$term,
+  );
+$mss->setCriteresRecherche($criteres);
+$mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
+$mss->setLimitNumber(20);
+if ($data=msSQL::sql2tab($mss->getSql())) {
 
  	foreach ($data as $k=>$v) {
  		$a_json[]=array(
- 			'label'=>trim($v['identite']).' '.$v['ddn'],
+ 			'label'=>trim($v['identite']).' '.$v['birthdate'],
  			'value'=>trim($v['identite']),
- 			'patientID'=>$v['id'],
+ 			'patientID'=>$v['peopleID'],
  		);
  	}
- }
-
+}
 
 header('Content-Type: application/json');
 echo json_encode($a_json);

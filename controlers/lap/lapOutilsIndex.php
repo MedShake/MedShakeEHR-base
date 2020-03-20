@@ -34,7 +34,7 @@
  $p['page']['infosTheriaque']=$lap->getTheriaqueInfos();
 
  //version de MedShake
- $p['page']['modules']=msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+ $p['page']['modules']=msModules::getInstalledModulesNamesAndVersions();
 
  // liste des SAMs gérés
  $lapSams = new msLapSAM;

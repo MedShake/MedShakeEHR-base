@@ -1,0 +1,37 @@
+// MedShakeEHR
+
+.list-style-position-inside {
+  list-style-position: inside;
+}
+.cursor-pointer {cursor: pointer;}
+
+.fakeFormBloc {
+  height: calc(1.5em + .5rem + 2px);
+}
+
+// Bootstrap
+
+$blue: darken(#428bca, 6.5%);
+$indigo: #5bc0de;
+$red: #d9534f;
+$orange: #f0ad4e;
+$yellow: #f0ad4e;
+$green: #5cb85c;
+
+$light: lighten(#000000, 96%);
+
+$theme-colors: (
+  "orange": $orange,
+  "gray": lighten(#000000, 79%),
+);
+
+$sizes: (
+  5: 5%,
+  10: 10%,
+  15: 15%,
+  20: 20%,
+);
+
+$yiq-contrasted-threshold: 183;
+
+@import "../thirdparty/twbs/bootstrap/scss/bootstrap";

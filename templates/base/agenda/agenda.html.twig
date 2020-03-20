@@ -27,189 +27,273 @@
  #}
 
 {% extends "page.html.twig" %}
-{% block title %}Agenda MedShakeEHR{% endblock %}
+{% block title %}Agenda - {{ config.designAppName }}{% endblock %}
+
+{% block jsFiles %}
+  {{ parent() }}
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
+  {% if config.vitaleActiver =='true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+  {% endif %}
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js?{{ modules.base }}'></script>
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  var selected_calendar = {{ page.userID }};
+  var boutonsHeaderCenter;
+  var hiddenDays;
+  var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};
+  var minTime;
+  var maxTime;
+  var businessHours;
+  var slotDuration;
+  var slotLabelInterval;
+  var eventTextColor;
+  var eventSources;
+  var viewRender;
+  var dateToGo = '{{ page.dateToGo }}';
+  var agendaRefreshDelayEvents = {{ config.agendaRefreshDelayEvents }};
+  {{ page.configAgenda }}
+{% endblock %}
+
+{% block cssFiles %}
+  {{ parent() }}
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
+{% endblock %}
+
+{% block cssEmbed %}
+  {{ parent() }}
+  a.eventAbsent .fc-title {
+    text-decoration: line-through;
+  }
+
+  a.eventEnAttente .fc-title::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f4b8";
+    margin-right: 3px;
+  }
+
+  .selected {
+    border: solid 3px #4399e4;
+    opacity: 0.8;
+  }
+
+  .fc-event {
+    font-size: 1em;
+    border-radius: 0;
+    border-width: 1px 0;
+    padding-left: 5px;
+  }
+
+  .fc-title, .fc-time {
+    font-size: 14px !important;
+  }
+
+  .fc-right h2 {
+    font-size: 1.8em !important;
+  }
+
+  .fc-nonbusiness {
+    background: #607d8b;
+  }
+
+  th.fc-day-header a {
+    color : black;
+  }
+  {% if (config.agendaService in ['clicRDV'])==false %}
+    .fc-synchronize-button {display:none !important}
+  {% endif %}
+
+  .ui-autocomplete{z-index:2000}
+
+  .cursor-move {cursor:move}
+  .cursor-copy {cursor:copy}
+  .cursor-cell {cursor:cell}
+
+  a.hideCalendarTime .fc-time{
+    display:none;
+  }
+
+  a.hideCalendarTime .fc-title{
+    font-weight: bold;
+  }
+
+  .faicon {
+    opacity: 0.15
+  }
+
+  #patientLinksProTab td:first-child { display: none; }
+{% endblock %}
 
 {% block head %}
     {{ parent() }}
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
-    <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css' rel='stylesheet' />
-
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js'></script>
-    <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/agenda.js'></script>
-
-    <style>
-      a.eventAbsent .fc-title {
-        text-decoration: line-through;
-      }
-      .selected {
-        border: solid 3px #4399e4;
-        opacity: 0.8;
-      }
-
-      .fc-event {
-        font-size: 1em;
-        border-radius: 0;
-        border-width: 1px 0;
-        padding-left: 5px;
-      }
-
-      .fc-nonbusiness {
-      	background: #607d8b;
-      }
-
-      th.fc-day-header a {
-        color : black;
-      }
-      {% if (config.agendaService in ['clicRDV'])==false %}
-        .fc-synchronize-button {display:none !important}
-      {% endif %}
-
-      .ui-autocomplete{z-index:2000}
-
-      #calendar .fc-prevMonth-button,
-      #calendar .fc-prev-button,
-      #calendar .fc-synchronize-button,
-      #calendar .fc-next-button,
-      #calendar .fc-nextMonth-button
-        {color:#484848;min-width:36px;height:31px;border-color:#bbb;background-color:#fff;padding-top:0}
-      #calendar .fc-today-button {background-color:#e6eaef;border:none;color:#484848;height:31px;padding-top:0}
-
-      #calendar .fc-prevMonth-button:hover,
-      #calendar .fc-prev-button:hover,
-      #calendar .fc-synchronize-button:hover,
-      #calendar .fc-next-button:hover,
-      #calendar .fc-nextMonth-button:hover
-        {color:#181818;background-color:#ddd}
-
-      .cursor-move {cursor:move}
-      .cursor-copy {cursor:copy}
-      .cursor-cell {cursor:cell}
-    </style>
-
-    <script>
-    var boutonsHeaderCenter;
-    var hiddenDays;
-    var firstDay {% if config.agendaPremierJour != '' %}={{ config.agendaPremierJour }}{% endif %};
-    var minTime;
-    var maxTime;
-    var businessHours;
-    var slotDuration;
-    var slotLabelInterval;
-    var eventTextColor;
-    var eventSources;
-    var viewRender;
-    {{ page.configAgenda }}
-    </script>
-
 {% endblock %}
 
 {% block body %}
+  {% if config.agendaModePanneauLateral == 'true' %}
+    <div class="row">
+      <div class="col-3">
 
-{% if config.agendaModePanneauLateral == 'true' %}
-  <div class="row">
-    <div class="col-3">
-      <form id="newPatientData">
-        {% include 'inc-agenda-patient.html.twig' %}
-      </form>
-      {% include 'inc-agenda-historiquePatient.html.twig' %}
-      <button id="nettoyer" class="btn" style="display:none">Annuler</button>
-    </div>
-    <div class="col-9">
-{% endif %}
-{% if page.agendaUsers|length > 1 %}
-  <ul class="nav nav-tabs bottom-space" >
+        {% include 'inc-agenda-patientSearch.html.twig' %}
 
-    {% for k,v in page.agendaUsers %}
-      <li role="presentation" class="nav-item">
-          <a class="nav-link{% if k == page.userID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+        <div class="nePasNettoyer">
+          {% include 'inc-agenda-patient.html.twig' %}
 
-<div id="calendar" data-userID="{{ page.userID }}" data-mode="{% if config.agendaModePanneauLateral == 'true' %}lateral{% else %}modal{% endif %}"></div>
+          {% include 'inc-agenda-patientLinksPro.html.twig' %}
+
+          {% include 'inc-agenda-historiquePatient.html.twig' %}
+        </div>
+
+        <div id="typesRdv">
+          <h5 class="mt-4">
+            Types de rendez-vous
+          </h5>
+          <table class="table table-sm mb-0 small">
+            {% for rac,dat in page.typeRdv %}
+              <tr><td><i class="fas fa-square-full mr-2" style="color : {{ dat.backgroundColor }}"></i> {{ dat.descriptif }}</td></tr>
+            {% endfor %}
+          </table>
+        </div>
+
+      </div>
+      <div class="col-9">
+  {% endif %}
+  {% if page.agendaUsers|length > 1 %}
+    <ul class="nav nav-tabs mb-3 font-weight-bold" >
+
+      {% for k,v in page.agendaUsers %}
+        <li role="presentation" class="nav-item">
+            <a class="nav-link{% if k == page.userID %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">{{ v }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div id="smallCalendar" class="position-absolute" style="z-index: 1000; margin-top: 50px; display: none;"></div>
+  <div id="calendar" data-userID="{{ page.userID }}" data-mode="{% if config.agendaModePanneauLateral == 'true' %}lateral{% else %}modal{% endif %}"></div>
 
 {% if config.agendaModePanneauLateral == 'true' %}
     </div>
   </div>
 {% endif %}
+{% endblock %}
+
+{% block modals %}
 {# modal rdv/nouveau patient #}
-<div id="creerNouveau" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-lg{% endif %}" role="document">
+<div id="creerNouveau" class="modal {% if config.vitaleActiver !='true' %}fade{% endif %}" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog{% if config.agendaModePanneauLateral != 'true' %} modal-xl{% else %}{% endif %}" role="document">
     <div class="modal-content">
-      <form id="formRdv">
+      <div class="modal-header">
+        <h5 id="titreRdv" class="modal-title font-weight-bold"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" role="alert" style="display : none;">
+            Merci de considérer les informations suivantes et de corriger les champs concernés :
+            <ul></ul>
+        </div>
+        <div class="row">
+          {% if config.agendaModePanneauLateral != 'true' %}
+            <div class="col-md-6 border-right">
+              {% include 'inc-agenda-patientSearch.html.twig' %}
+              {% include 'inc-agenda-patient.html.twig' %}
+              {% include 'inc-agenda-patientLinksPro.html.twig' %}
+            </div>
+            <div class="col-md-6">
+          {% else %}
+            <div class="col-12">
+          {% endif %}
+            <div class="{% if config.agendaModePanneauLateral != 'true' %}mb-3{% endif %}">
+              {% if config.agendaModePanneauLateral != 'true' %}
+                <ul class="nav nav-tabs">
+                  <li class="nav-item font-weight-bold">
+                    <span class="nav-link active bg-light" style="border-bottom-color : #f5f5f5"><i class="fas fa-calendar-day fa-fw mr-1"></i> Rendez-vous</span>
+                  </li>
+                </ul>
+              {% endif %}
+              <div class="bg-light {% if config.agendaModePanneauLateral != 'true' %}border-left border-right border-bottom{% else %}border{% endif %}" class="">
+                <form id="formRdv" class="card-body">
+                  <div class="form-group">
+                    <div id="datepicker" class="input-group input-group-sm mx-0 mb-3">
+                      <input class="form-control" />
+                      <div class="input-group-append">
+                        <span class="fas fa-calendar input-group-text" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-2">
+                    <div class="input-group input-group-sm mx-0">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text bg-white"><i id="eventColor" class="fas fa-circle"></i></div>
+                      </div>
+                      <select id="type" class="custom-select border-left-0" name="type" autocomplete="off">
+                        {% for k, v in page.typeRdv %}
+                          {%  if k != '[off]' %}
+                            <option value="{{ k }}" style="color: #FFF; background-color: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %} data-color="{{ v.backgroundColor }}">
+                              {{ v.descriptif }}
+                            </option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                      <div class="input-group-append">
+                        <div class="input-group-text" id="duree"><i class="far fa-clock mr-2"></i> {{ (page.typeRdv|first).duree }}mn</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea id="motif" class="form-control form-control-sm mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {% if config.agendaModePanneauLateral != 'true' %}
+              {% include 'inc-agenda-historiquePatient.html.twig' %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="buttonCreer" class="btn btn-primary" type="button" >Créer</button>
+        <button id="buttonModifier" class="btn btn-primary" type="button" >Modifier</button>
+        <button id="buttonCancel" class="btn btn-light" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{# modal éditer off #}
+<div id="editerOff" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <form id="formEditerOff">
         <div class="modal-header">
-          <h4 class="modal-title gras"></h4>
+          <h4 id="titreRdv" class="modal-title font-weight-bold"></h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <div class="alert alert-danger" role="alert" style="display : none;">
-              Merci de considérer les informations suivantes et de corriger les champs concernés :
-              <ul></ul>
-          </div>
-          <div class="row">
-            {% if config.agendaModePanneauLateral != 'true' %}
-              <div class="col-md-6 border-right">
-                {% include 'inc-agenda-patient.html.twig' %}
-              </div>
-              <div class="col-md-6">
-            {% else %}
-              <div class="col-12">
-            {% endif %}
-              <h3 id="titreRdv">Rendez-vous</h3>
-              <div class="card bg-light p-2">
-                <div class="form-group">
-                  <div id="datepicker" class="input-group mx-0 mb-3">
-                    <input class="form-control" />
-                    <div class="input-group-append">
-                      <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group mb-2">
-                  <div class="input-group mx-0">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text"><span id="duree" class="far fa-clock"> {{ (page.typeRdv|first).duree }}mn</span></div>
-                    </div>
-                    <select id="type" class="form-control form-control-sm custom-select" name="type" autocomplete="off">
-                      {% for k, v in page.typeRdv if k != '[off]' %}
-                        <option value="{{ k }}" style="color: #FFF; background: {{ v.backgroundColor }}; padding : 3px;" data-duree="{{ v.duree }}"{% if loop.first %} selected="selected"{% endif %}>
-                          {{ v.descriptif }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <textarea id="motif" class="form-control mt-2" name="motif" placeholder="Motif" rows="3" autocomplete="off"></textarea>
-                </div>
-              </div>
-              {% if config.agendaModePanneauLateral != 'true' %}
-                {% include 'inc-agenda-historiquePatient.html.twig' %}
-              {% endif %}
-            </div>
+          <div class="form-group">
+            <textarea id="motifOff" class="form-control" placeholder="Commentaire" rows="3" autocomplete="off"></textarea>
           </div>
         </div>
         <div class="modal-footer">
-          <button id="buttonCreer" class="btn btn-primary" disabled="disabled" type="button" data-dismiss="modal">Créer</button>
-          <button id="buttonModifier" class="btn btn-primary" type="button" data-dismiss="modal">Modifier</button>
-          <div class="dropdown">
-            <button id="buttonAutresActions" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Autres actions
-            </button>
-            <div class="dropdown-menu" aria-labelledby="buttonAutresActions">
-              <a class="dropdown-item" id="buttonMark" href="#">Non honoré</a>
-              <a class="dropdown-item" id="buttonClone" href="#">Cloner</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" id="buttonRemove" href="#">Supprimer</a>
-            </div>
-          </div>
-          <button id="buttonCancel" class="btn float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
+          <button id="buttonValiderOff" class="btn btn-primary" type="button" data-dismiss="modal">Valider</button>
+          <button id="buttonCancelOff" class="btn btn-light float-right m-1" type="button" data-dismiss="modal" aria-label="Close">Annuler</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+{# modal résultat lecture CPS Vitale  #}
+{% if config.vitaleActiver =='true' %}
+	{% include 'inc-modalLectureCpsVitale.html.twig' %}
+{% endif %}
 {% endblock %}

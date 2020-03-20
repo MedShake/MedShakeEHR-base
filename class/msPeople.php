@@ -33,15 +33,11 @@ class msPeople
 /**
  * @var int $_toID ID de l'individus concerné
  */
-    public $_toID;
+    protected $_toID;
 /**
  * @var int $_fromID ID de l'utilisteur enregistrant la donnée
  */
-    private $_fromID;
-/**
- * @var int $_dataset Le jeu de data concerné
- */
-    private $_dataset;
+    protected $_fromID;
 /**
  * @var int $_type Type : patient ou pro
  */
@@ -56,10 +52,34 @@ class msPeople
  */
     private $_birthdate;
 /**
+ * data administratives
+ * @var array
+ */
+    private $_administrativesDatas;
+/**
  * age du patient à différent format
  * @var array
  */
     private $_ageFormats;
+/**
+ * age du patient au décès
+ * @var array
+ */
+    private $_deathAgeFormats;
+
+/**
+ * Vérifier que le people existe
+ * @param  int $id ID du people
+ * @return boolean     true/false
+ */
+    public static function checkPeopleExist($id) {
+      if(!is_numeric($id)) return false;
+      if(msSQL::sqlUniqueChamp("SELECT id FROM people WHERE id='".$id."' limit 1")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
 /**
  * Définir l'individu concerné
@@ -68,10 +88,10 @@ class msPeople
  */
     public function setToID($v)
     {
-        if (is_numeric($v)) {
+        if ($this->checkPeopleExist($v)) {
             return $this->_toID = $v;
         } else {
-            throw new Exception('ToID is not numeric');
+            throw new Exception('ToID does not exist');
         }
     }
 
@@ -82,10 +102,10 @@ class msPeople
  */
     public function setFromID($v)
     {
-        if (is_numeric($v)) {
+        if ($this->checkPeopleExist($v)) {
             return $this->_fromID = $v;
         } else {
-            throw new Exception('FromID is not numeric');
+            throw new Exception('FromID does not exist');
         }
     }
 
@@ -112,19 +132,18 @@ class msPeople
             throw new Exception('Type n\'est pas d\'une valeur autorisée');
         }
     }
+
 /**
- * Définir le jeu de données
- * @param string $v jeu de données
- * @return string Dataset
+ * Obtenir le type de people à partir de l'id
+ * @return string type ou null
  */
-    public function setDataset($v)
-    {
-        if (is_string($v)) {
-            return $this->_dataset = $v;
-        } else {
-            throw new Exception('Dataset is not string');
+    public function getType() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
         }
+        return $this->_type = msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
     }
+
 /**
  * Est-ce un patient externe?
  * @return value true/false
@@ -138,13 +157,25 @@ class msPeople
 
 /**
  * Obtenir le module pour un user
- * @return value module
+ * @return string module
  */
     public function getModule() {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
         return msSQL::sqlUniqueChamp("SELECT module FROM people WHERE id='".$this->_toID."' limit 1");
+    }
+
+/**
+ * Obtenir le fromID pour un people
+ * @return int fromID
+ */
+    public function getFromID() {
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+        if(isset($this->_fromID)) return $this->_fromID;
+        return msSQL::sqlUniqueChamp("SELECT fromID FROM people WHERE id='".$this->_toID."' limit 1");
     }
 
 /**
@@ -172,15 +203,20 @@ class msPeople
   			from objets_data as d
   			left join data_types as t on d.typeID=t.id
   			left join data_types as tt on d.parentTypeID=tt.id
-  			where d.toID='".$this->_toID."' and d.outdated='' and t.groupe='admin'
+  			where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'
   			order by d.parentTypeID ")) {
+
+          $dataGet = new msData;
+          $selectConversions = $dataGet->getSelectOptionValueByTypeName(array_column($datas, 'name'));
+
 
           foreach ($datas as $v) {
               if($v['name']=='birthdate') $this->_birthdate=$v['value'];
               $tab[$v['typeID']]=$v;
               $tab[$v['name']]=$v;
+              if(isset($selectConversions[$v['name']][$v['value']])) $tab[$v['name']]['value_label']=$selectConversions[$v['name']][$v['value']];
           }
-          return $tab;
+          return $this->_administrativesDatas=$tab;
         }
 
 
@@ -199,7 +235,7 @@ class msPeople
         $tab=msSQL::sql2tabKey("select d.typeID, d.value
         from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "typeID", "value");
+			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'", "typeID", "value");
 
         return $tab;
     }
@@ -208,72 +244,44 @@ class msPeople
  * Obtenir les données administratives d'un individu avec key name
  * @return array Array name=>value
  */
-    public function getSimpleAdminDatasByName()
+    public function getSimpleAdminDatasByName($typesName=[])
     {
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
 
+        if(!empty($typesName)) {
+          $typesSelect=" and t.name in ('".implode("', '",$typesName)."')";
+        } else {
+          $typesSelect=null;
+        }
+
         $tab=msSQL::sql2tabKey("select t.name, d.value
         from objets_data as d
         left join data_types as t on d.typeID=t.id
-			  where d.toID='".$this->_toID."' and d.outdated=''  and t.groupe='admin'", "name", "value");
+			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'".$typesSelect. " order by t.displayOrder", "name", "value");
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
 
         return $tab;
     }
 
-    /**
-     * Obtenir les pros en relation avec ce patient
-     * @return array array des pros en relation
-     */
-    public function getRelationsWithPros()
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
+/**
+ * Obtenir les labels des champs select / radio sur les data admin simples
+ * @param  array $tab data admin simples
+ * @return array      data damin avec label (typeName_label)
+ */
+    public function getLabelForSimpleAdminDatas($tab) {
+        $dataGet = new msData;
+        if($selectConversions = $dataGet->getSelectOptionValueByTypeName(array_keys($tab))) {
+          foreach($tab as $k=>$v) {
+            if(isset($selectConversions[$k][$v])) $tab[$k.'_label']=$selectConversions[$k][$v];
+          }
         }
-
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthname']);
-
-        return msSQL::sql2tab("select o.value as pratID, c.value as typeRelation, p.value as prenom, t.value as titre, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
-        from objets_data as o
-        inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPraticien']."' and c.value != 'patient'
-        left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-        left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-        left join objets_data as t on t.toID=o.value and t.typeID='".$name2typeID['titre']."' and t.outdated='' and t.deleted=''
-        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-        group by o.value, c.id, bn.id, n.id, p.id, t.id
-        order by typeRelation = 'MT' desc, nom asc");
+        return $tab;
     }
 
-    /**
-     * Obtenir les autres patients liés généalogiquement avec ce patient
-     * @return array array des autres patients
-     *
-     */
-    public function getRelationsWithOtherPatients()
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
 
-        $name2typeID = new msData();
-        $name2typeID = $name2typeID->getTypeIDsFromName(['relationID', 'relationPatientPraticien', 'relationPatientPatient', 'titre', 'firstname', 'lastname', 'birthdate', 'birthname']);
-
-        return msSQL::sql2tab("select o.value as patientID, c.value as typeRelation, p.value as prenom, d.value as ddn, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
-      from objets_data as o
-      inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID['relationPatientPatient']."'
-      left join objets_data as n on n.toID=o.value and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-      left join objets_data as bn on bn.toID=o.value and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-      left join objets_data as p on p.toID=o.value and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-      left join objets_data as d on d.toID=o.value and d.typeID='".$name2typeID['birthdate']."' and p.outdated='' and p.deleted=''
-      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated=''
-      group by o.value, c.id, bn.id, n.id, p.id, d.id
-      order by nom asc");
-    }
 
 /**
  * Sortir tous les types et les valeurs liées à partir d'un groupe de cat
@@ -364,7 +372,8 @@ class msPeople
       where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAldDeclaration']."' and p.deleted='' and p.outdated=''", 'id')) {
         foreach($csAldID as $id=>$v) {
             $ald=new msObjet;
-            $rd[$id]=$ald->getObjetAndSons($id, 'name');
+            $ald->setObjetID($id);
+            $rd[$id]=$ald->getObjetAndSons('name');
             $rd[$id]['fromName']=$v['prenom'].' '.$v['nom'];
             $selectedAldLabel=new msData;
             $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$rd[$id]['aldNumber']['typeID']]);
@@ -405,8 +414,9 @@ class msPeople
       left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
       where p.toID='".$this->_toID."' and p.typeID='".$name2typeID['csAtcdStrucDeclaration']."' and p.deleted='' and p.outdated='' and p.instance='".$name2typeID[$parentTypeName]."' ", 'id')) {
         foreach($csAldID as $id=>$v) {
-            $ald=new msObjet;
-            $rd['atcd'][$id]=$ald->getObjetAndSons($id, 'name');
+            $atcd=new msObjet;
+            $atcd->setObjetID($id);
+            $rd['atcd'][$id]=$atcd->getObjetAndSons('name');
             $rd['atcd'][$id]['fromName']=$v['prenom'].' '.$v['nom'];
         }
 
@@ -498,87 +508,106 @@ class msPeople
     }
 
 /**
- * Historique complet des actes pour un individu
- * @return array Array multi avec année en clef de 1er niveau
+ * Obtenir les data pour l'historique des actes du jour pour un individu
+ * @return array Array multi.
  */
-    public function getHistorique($objetID='')
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-
-        $data = new msData();
-        $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
-        $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
-
-        if ($data = msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, DATE_FORMAT(p.creationDate,'%d/%m/%Y') as creationTime, DATE_FORMAT(p.creationDate,'%d/%m') as creationTimeShort, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
-        CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
-        from objets_data as p
-        left join data_types as t on p.typeID=t.id
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
-        left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
-        left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
-        left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
-        left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier')
-              or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
-              or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
-              or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."')
-              or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
-              or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0')
-              )
-        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".
-        ($objetID ? (" and p.id=".$objetID) : "").
-        " group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
-        order by p.creationDate desc")) {
-              foreach ($data as $v) {
-                  $return[$v['creationYear']][]=$v;
-            }
-
-            return $return;
-        }
+    public function getToday() {
+      return $this->_getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
     }
 
 /**
- * Historique des actes du jour pour un individu
- * @return array Array multi.
+ * Obtenir les data pour l'historique complet des actes pour un individu
+ * @return array Array multi avec année en clef de 1er niveau
  */
-    public function getToday($limit='')
-    {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
+    public function getHistorique() {
+      $tab=[];
+      if($data = $this->_getHistoriqueData()) {
+        foreach ($data as $v) {
+            $tab[$v['creationYear']][]=$v;
         }
+      }
+      return $tab;
+    }
 
-        $data = new msData();
-        $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
-        $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-        $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance']);
+/**
+ * Obtenir les data pour l'historique d'un objetID spécique
+ * @param  int $objetID objetID
+ * @return array          data historique de l'objetID
+ */
+    public function getHistoriqueObjet($objetID) {
+      if($data = $this->_getHistoriqueData(0, 1, '', (array)$objetID)) {
+        return $data[0];
+      } else {
+        return [];
+      }
+    }
 
-        return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate, DATE_FORMAT(p.creationDate,'%H:%i:%s') as creationTime, DATE_FORMAT(p.creationDate,'%H:%i') as creationTimeShort, p.updateDate, t.id as typeCS, t.name, t.groupe, t.label, t.module as module, t.formValues as formName, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
-        CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
-        from objets_data as p
-        left join data_types as t on p.typeID=t.id
-        left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
-        left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
-        left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-        left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
-        left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
-        left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
-        left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
-        left join forms as f on f.internalName=t.formValues
-        where (t.groupe in ('typeCS', 'courrier')
-          or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
-          or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
-          or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."')
-          or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
-          or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-        and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' and DATE(p.creationDate) = CURDATE() and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'
-        group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
-        order by p.creationDate desc ".$limit);
+/**
+ * Obtenir un historique suivant paramètres
+ * @param  integer $limitStart      premier argument pour limit sql
+ * @param  integer $limitNb         second argument pour limit sql
+ * @param  string  $datesPrecisions string sql pour restriction plage dates
+ * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
+ * @return array                   data d'historique
+ */
+    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[]) {
+      global $p;
+
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if($limitNb > 0) {
+        $limitSql = 'limit '.$limitStart.','.$limitNb;
+      } else {
+        $limitSql = '';
+      }
+
+      if(isset($objetIDs) and is_array($objetIDs) and !empty($objetIDs)) {
+        $objetIDsSql = " and p.id in ('".implode("', '",$objetIDs)."')";
+      } else {
+        $objetIDsSql = '';
+      }
+
+      $data = new msData();
+      $porteursOrdoIds=array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id');
+      $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+      $name2typeID=$data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname','csAtcdStrucDeclaration','lapOrdonnance', 'lapExtOrdonnance']);
+
+      $catIdHorsHistoriques = msDataCat::getCatIDFromName('declencheursHorsHistoriques');
+
+      $lapCompSql = '';
+      $lapExtCompSql = '';
+
+      if($p['config']['utiliserLap'] == 'true') {
+        $lapCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."') ";
+      }
+      if($p['config']['utiliserLapExterne'] == 'true') {
+        $lapExtCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapExtOrdonnance']."') ";
+      }
+
+      return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
+      CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
+      from objets_data as p
+      left join data_types as t on p.typeID=t.id
+      left join objets_data as n1 on n1.toID=p.fromID and n1.typeID='".$name2typeID['firstname']."' and n1.outdated='' and n1.deleted=''
+      left join objets_data as n2 on n2.toID=p.fromID and n2.typeID='".$name2typeID['lastname']."' and n2.outdated='' and n2.deleted=''
+      left join objets_data as bn on bn.toID=p.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      left join objets_data as mail on mail.instance=p.id and mail.typeID='".$name2typeID['mailPorteur']."'
+      left join objets_data as doc on doc.instance=p.id and doc.typeID='".$name2typeID['docType']."'
+      left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
+      left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
+      left join forms as f on f.internalName=t.formValues
+      where ((t.groupe in ('typeCS', 'courrier') and t.cat != '".$catIdHorsHistoriques."' )
+        or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
+        or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
+        ".$lapCompSql."
+        ".$lapExtCompSql."
+        or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
+        or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql."
+      group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
+      order by p.creationDate desc ".$limitSql);
     }
 
 /**
@@ -589,6 +618,68 @@ class msPeople
     {
       if(isset($this->_ageFormats['ageDisplay'])) return $this->_ageFormats['ageDisplay'];
       else return $this->getAgeFormats()['ageDisplay'];
+    }
+
+/**
+ * Calcul de l'age de décès du patient
+ * @return array array de l'age au différents formats
+ */
+    public function getDeathAge() {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+
+      if(isset($this->_birthdate)) {
+        $birthdate=$this->_birthdate;
+      } else {
+        $typeID=msData::getTypeIDFromName('birthdate');
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
+      }
+
+      if(isset($this->_administrativesDatas['deathdate'])) {
+        $deathdate=$this->_administrativesDatas['deathdate']['value'];
+      } else {
+        $typeID=msData::getTypeIDFromName('deathdate');
+        $deathdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
+      }
+
+      if (msTools::validateDate($birthdate, 'd/m/Y') and msTools::validateDate($deathdate, 'd/m/Y') ) {
+
+          // age à afficher
+          $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->y;
+          $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->m;
+          $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(DateTime::createFromFormat('d/m/Y', $deathdate))->d;
+          if ($annees>=3) {
+            $ageDisplay = $annees.' ans';
+          } elseif (($annees*12+$mois)>=3){
+            $ageDisplay = ($annees*12+$mois).' mois';
+          } elseif (((30*$mois+$jours)/7)>=2){
+            $ageDisplay = round((30*$mois+$jours)/7).' semaines';
+          } else {
+            $ageDisplay = $jours.' jours';
+          }
+
+          // différences
+          $dtNaissance = DateTime::createFromFormat('d/m/Y', $birthdate);
+          $dtDeath = DateTime::createFromFormat('d/m/Y', $deathdate);
+          $interval = $dtNaissance->diff($dtDeath);
+
+          return $this->_deathAgeFormats = array(
+            'birthdate'=>$birthdate,
+            'ageDisplay'=>$ageDisplay,
+            'ageTotalDays'=>$interval->format('%a'),
+            'ageTotalYears'=>$interval->format('%y'),
+            'ageTotalMonths'=>$interval->m + 12*$interval->y,
+            'ageComposantes'=>array(
+              'y'=>$interval->format('%y'),
+              'm'=>$interval->format('%m'),
+              'd'=>$interval->format('%d')
+            )
+          );
+        } else {
+          return false;
+        }
+
     }
 
 /**
@@ -609,12 +700,12 @@ class msPeople
         $birthdate=$this->_birthdate;
       } else {
         $typeID=msData::getTypeIDFromName('birthdate');
-        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' order by id desc limit 1");
+        $birthdate=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$this->_toID."' and typeID='".$typeID."' and deleted!='y' and outdated!='y' order by id desc limit 1");
       }
 
-      if (isset($birthdate)) {
+      if (msTools::validateDate($birthdate, 'd/m/Y')) {
 
-          // age à aficher
+          // age à afficher
           $annees = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->y;
           $mois = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->m;
           $jours = DateTime::createFromFormat('d/m/Y', $birthdate)->diff(new DateTime('now'))->d;
@@ -656,11 +747,12 @@ class msPeople
  * Créer un nouvel individu
  * @return int ID du nouvel individu
  */
-    public function createNew()
+    public function createNew($id='')
     {
         if (!is_numeric($this->_fromID)) {
             throw new Exception('FromID is not numeric');
         } else {
+            if(is_numeric($id)) $this->_toID=$id;
             $data=array(
                 'pass' => '',
                 'type' => $this->_type,

@@ -29,10 +29,6 @@
 
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-//accès par admin uniquement
-if (!msUser::checkUserIsAdmin()) {
-    die;
-}
 // si pas de fichier à supprimer
 if (!isset($_POST['file'])) {
     die;
@@ -46,8 +42,8 @@ if (is_file($directory.'Clefs/'.$_POST['file'])) {
     if (unlink($directory.'Clefs/'.$_POST['file'])) {
         echo json_encode(array('ok'));
     } else {
-        header("HTTP/1.0 404 Not Found");
+        http_response_code(404);
     }
 } else {
-    header("HTTP/1.0 404 Not Found");
+    http_response_code(404);
 }

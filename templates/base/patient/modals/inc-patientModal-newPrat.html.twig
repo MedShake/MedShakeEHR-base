@@ -27,22 +27,26 @@
 #}
 {% import "macroForm.html.twig" as f %}
 <div id="newPro" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title gras">Création d'un nouveau praticien</h4>
+        <h4 class="modal-title font-weight-bold">Création d'un nouveau praticien</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
-      <div class="modal-body">
-        <div class="alert alert-danger" role="alert" style="display : none;">
-            Merci de considérer les informations suivantes et de corriger les champs concernés :
-            <ul></ul>
-        </div>
-        {{ f.formbuilder(page.form , 'baseNewPro' , session) }}
+      <div class="modal-body checkboxFixValue">
+        {{ f.errorsBloc() }}
+
+        {{ f.formbuilder(page.form , config.formFormulaireNouveauPraticien , session) }}
+
+        {% if page.formJavascript[config.formFormulaireNouveauPraticien] is not empty %}
+          <script>
+           {{ page.formJavascript[config.formFormulaireNouveauPraticien] }}
+          </script>
+        {% endif %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-primary modal-save" data-modal="newPro" data-form="formName_baseNewPro">Créer</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Abandonner</button>
+        <button type="button" class="btn btn-primary modal-save" data-modal="newPro" data-form="formName_{{ config.formFormulaireNouveauPraticien }}">Créer</button>
       </div>
     </div>
   </div>

@@ -1,0 +1,48 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Transmissions, bloc des réponses pour inclusion
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ {% for reponse in page.transmissionReponses %}
+   <div class="card my-4">
+     <div class="card-header">
+       {{ reponse.identiteAuteur }} <small>
+       {% if reponse.registerDate|date('Ymd') != "now"|date('Ymd') %}
+        {{ reponse.registerDate|date('d/m/Y H:i') }}
+       {% else %}
+         Aujourd'hui à {{ reponse.registerDate|date('H:i') }}
+       {% endif %}</small>
+       {% if user.id == reponse.fromID %}
+       <div class="btn-group">
+         <button class="btn btn-sm btn-light editerReponse" data-transmissionid="{{ reponse.id }}"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn btn-sm btn-light effacerTransmission" data-transmissionid="{{ reponse.id }}"><i class="far fa-trash-alt"></i></button>
+      </div>
+       {% endif %}
+     </div>
+     <div class="card-body">
+       {{ reponse.texte|nl2br }}
+     </div>
+   </div>
+ {% endfor %}

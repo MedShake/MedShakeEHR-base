@@ -31,8 +31,6 @@ $template="inc-patientPeopleRelations";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatas();
-$p['page']['patient']['id']=$match['params']['patientID'];
 
 //sortir les choix de relations patient<->prat
 $data = new msData();
@@ -50,11 +48,24 @@ foreach($options[$typeID] as $k=>$v) {
 
 //formulaire de création praticien en modal
 $formPro = new msForm();
-$formPro->setFormIDbyName('baseNewPro');
-if (isset($_SESSION['form']['baseNewPro']['formValues'])) {
-    $formPro->setPrevalues($_SESSION['form']['baseNewPro']['formValues']);
+$formPro->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+if (isset($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues'])) {
+    $formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
 }
+
+//si jeux de valeurs normées présents
+if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+  $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+  $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+}
+if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+  $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+  $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+}
+if(!empty($optionsInject)) $formPro->setOptionsForSelect($optionsInject);
+
 $p['page']['form']=$formPro->getForm();
+$p['page']['formJavascript'][$p['config']['formFormulaireNouveauPraticien']]=$formPro->getFormJavascript();
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(
   'actAsAjax'=>'true',

@@ -34,6 +34,7 @@
      'tabDicomStudyView', // voir une étude dicom
      'tabLiensPatient', // relation patient / patient et praticien
      'tabLAP', // lap
+     'tabBio', // bio hprim
  );
 
  if (!in_array($tab, $acceptedModes)) {

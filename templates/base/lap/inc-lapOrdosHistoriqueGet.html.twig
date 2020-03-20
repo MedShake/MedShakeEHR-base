@@ -48,13 +48,13 @@
       <tbody>
         {% for mois, v in page.ordos %}
           <tr>
-            <td colspan="4" class="table-primary gras text-center">{{ mois|capitalize }}</td>
+            <td colspan="4" class="table-primary font-weight-bold text-center">{{ mois|capitalize }}</td>
           </tr>
           {% for ordo in v %}
             <tr data-ordonnanceID="{{ ordo.id }}" class="voirOrdonnance" style="cursor: pointer;">
               <td>
                 <button class="btn btn-light btn-sm" title="Voir">
-                  <span class="fa fa-eye" aria-hidden="true"></span></button>
+                  <span class="fas fa-eye" aria-hidden="true"></span></button>
               </td>
               <td>{{ ordo.registerDate|date("d/m/Y H:i") }}</td>
               <td>{{ ordo.prenom }}

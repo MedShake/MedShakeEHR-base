@@ -21,25 +21,39 @@
  */
 
 /**
- * Public : signer un consentement écho sur périphérique tactil
+ * Public : signer un doc sur périphérique tactile
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $template="signer";
 
-if (is_file($p['config']['workingDirectory'].'consentementPatientID.txt')) {
-    $patientID=trim(file_get_contents($p['config']['workingDirectory'].'consentementPatientID.txt'));
+if(isset($match['params']['signPeriphName'])) {
+  $signPeriphName=$match['params']['signPeriphName'];
+} else {
+  $signPeriphName=$p['config']['signPeriphName'];
 }
 
-if (!isset($patientID)) {
-    die('Le patient n\'est pas défini');
+$p['page']['signPeriphName']=$signPeriphName;
+
+if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')) {
+  $p['page']['docasigner']=Spyc::YAMLLoad($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');
 } else {
-    if (is_numeric($patientID)) {
-        $courrier = new msCourrier();
-        $courrier->setPatientID($patientID);
-        $p['page']['courrier']=$courrier->getCourrierData();
-    } else {
-        die('Le patient n\'est pas défini');
-    }
+  die('Les données sur la signature à réaliser ne sont pas disponibles.');
+}
+
+if (!isset($p['page']['docasigner']['patientID'])) {
+  die('Le patient n\'est pas défini.');
+} else {
+  $courrier = new msCourrier();
+  $courrier->setPatientID($p['page']['docasigner']['patientID']);
+  if(isset($p['page']['docasigner']['objetID'])) {
+    $courrier->setObjetID($p['page']['docasigner']['objetID']);
+    $p['page']['courrier']=$courrier->getDataByObjetID();
+  } elseif (is_numeric($p['page']['docasigner']['patientID'])) {
+    $courrier->setFromID($p['page']['docasigner']['fromID']);
+    $p['page']['courrier']=$courrier->getCourrierData();
+  } else {
+    die('Le patient n\'est pas défini');
+  }
 }

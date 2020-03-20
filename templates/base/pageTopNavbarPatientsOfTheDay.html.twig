@@ -1,0 +1,48 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > POTD dropdown menu
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+{% for v in page.patientsOfTheDay %}
+  <a {% if page.targetMenuPOTD == '_blank' %}target="_blank" {% endif %}class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/">
+    {% if page.typesRdv[v.type]['backgroundColor'] %}
+      <i class="fas {% if v.attente == 'oui' %}fa-couch{% else %}fa-circle{% endif %} fa-fw" style="color: {{ page.typesRdv[v.type]['backgroundColor'] }}" title="{{ page.typesRdv[v.type]['descriptif'] }}"></i>
+      {% if v.absent == 'oui' %}<s>{% endif %}
+      <span class="mx-2">{{ v.heure }}</span>
+    {% else %}
+      {% if v.absent == 'oui' %}<s>{% endif %}
+      {{ v.heure }}
+      <small>{{ v.type }}</small>
+    {% endif %}
+    {{ v.identite }}
+    {% if v.absent == 'oui' %}</s>{% endif %}
+  </a>
+{% endfor %}
+<div class="dropdown-divider"></div>
+<a {% if page.targetMenuPOTD == '_blank' %}target="_blank"{% endif %} class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/todays/">
+  <i class="fas fa-list-ul fa-fw text-muted mr-1"></i>
+  Afficher la liste
+</a>

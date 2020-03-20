@@ -1,0 +1,107 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Transmissions, index
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : transmissions{% endblock %}
+
+{% block head %}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block body %}
+  <h1>Transmissions</h1>
+
+  <div id="toolbarTransmissions">
+    <div class="row mt-4">
+      <div class="col">
+        <div class="btn-toolbar">
+          <div class="btn-group mr-4">
+            <button title="Transmissions dont vous êtes le destinataire" type="button" id="inbox" class="btn {% if page.transBox == 'recues' %}btn-secondary{% else %}btn-light{% endif %} ctrlTransListing"><i class="fas fa-arrow-down"></i> <strong>Reçues</strong>
+              {%if page.nbTransmissionsRecuesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsRecuesNonLues}}</span>{% endif %}
+            </button>
+            <button title="Transmissions que vous avez adressées à d'autres utilisateurs" type="button" id="outbox" class="btn {% if page.transBox == 'envoyees' %}btn-secondary{% else %}btn-light{% endif %} ctrlTransListing"><i class="fas fa-arrow-up"></i> <strong>Envoyées</strong>
+              {%if page.nbTransmissionsEnvoyeesNonLues > 0 %}<span class="badge badge-dark ml-2">{{ page.nbTransmissionsEnvoyeesNonLues}}</span>{% endif %}
+            </button>
+          </div>
+        </div>
+      </div>
+        {% if config.transmissionsPeutCreer == 'true' %}
+          <div class="col text-right">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTransmission"><i class="far fa-comments"></i> Nouvelle transmission</button>
+          </div>
+        {% endif %}
+    </div>
+
+    <div class="row mt-3 mb-4">
+      <div class="col">
+        <div class="btn-group">
+          <button title="Filtrer les transmissions sur le caractère traitée ou non" type="button" disabled class="btn btn-sm btn-secondary"><i class="far fa-comments"></i></button>
+          <button type="button" id="nontraitees" class="btn btn-sm btn-light ctrlTransListing">Non traitées</button>
+          <button type="button" id="traitees" class="btn btn-sm btn-light ctrlTransListing">Traitées</button>
+          <button type="button" class="btn btn-sm btn-secondary ctrlTransListing">Toutes</button>
+        </div>
+        <div class="btn-group ml-4">
+          <button id="ctrlTransLecture" title="Voir les transmissions où il existe une réponse que vous n'avez pas lue" type="button"  class="btn btn-sm btn-light"><span class="fas fa-glasses"></span> </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table id="listeTransmissions" class="table table-hover text-left my-4">
+    <thead class="thead-light">
+      <tr>
+        <th>Création</th>
+        <th></th>
+        <th>Sujet</th>
+        <th>Concerne</th>
+        <th>Auteur</th>
+        <th>Destinataires</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <div class="row">
+    <div class="col"></div>
+    <div class="col text-center"><span id="pageCourante"></span></div>
+    <div class="col text-right">
+      <button id="pageSuivante" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-left"></i></button>
+      <button id="pagePrecedente" class="btn btn-secondary d-none pageChange"><i class="fas fa-angle-double-right"></i></button>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block modals %}
+{# modal nouvelle transmission #}
+{% include 'inc-transmissionsNouvelleModal.html.twig' %}
+{% endblock %}

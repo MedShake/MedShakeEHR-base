@@ -34,17 +34,18 @@ userLogInDo: ['POST', '/login/logInDo/', 'login/logInDo']
 userLogOutDo: ['GET', '/login/logOutDo/', 'login/logOutDo']
 userLogInFirst: ['GET', '/login/logInFirst/', 'login/logInFirst']
 userLogInFirstDo: ['POST', '/login/logInFirstDo/', 'login/logInFirstDo']
+userLogInSet2fa: ['GET', '/login/set2fa/', 'login/logInSet2fa']
 
 #RESTful interface
 restGeneral: ['GET|POST|PUT|DELETE', '/rest/[a:m]/', 'rest/rest']
 
 #Ajax general
-ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:dataset]/[i:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
+ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
 ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
 
 #agenda
 agendaAjax: ['GET|POST', '/agenda/[i:userID]/ajax/[a:m]/', 'agenda/actions/agendaAjax']
-agenda: ['GET', '/agenda/[i:userID]/', 'agenda/agenda']
+agenda: ['GET', '/agenda/[i:userID]/[i:dateToGo]?/', 'agenda/agenda']
 agendaPatientsOfTheDay: ['GET', '/agenda/[i:userID]/patientsOfTheDay/', 'agenda/agendaPatientsOfTheDay']
 
 #chercher patients / pros
@@ -55,7 +56,7 @@ patients: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/patients']
 peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
 peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
 peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/actions/peopleActions']
-peopleNew: ['GET', '/[patient|pro:porp]/create/', 'people/peopleNew']
+peopleNew: ['GET|POST', '/[patient|pro:porp]/create/', 'people/peopleNew']
 peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
 peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
 
@@ -85,20 +86,29 @@ dcViewStudy: ['GET', '/dicom/[i:patientID]/study/[:dcStudyID]/', 'dicom/viewStud
 
 #logs
 logsActions: ['GET|POST', '/logs/actions/[a:m]/', 'logs/actions/logsActions']
+logsAjax: ['GET|POST', '/logs/ajax/[a:m]/', 'logs/actions/logsAjax']
 logs: ['GET', '/logs/[i:patient]?/[i:typeID]?/[i:instance]?/', 'logs/logs']
 historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiquePrint']
 historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
 historiqueMailSendGeneral: ['GET', '/logs/historiqueGeneralMailSend/[i:user]?/[i:start]?/', 'logs/historiqueMailSendGeneral']
 historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patientID]/', 'logs/historiqueMailSendToPatient']
-historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/', 'logs/historiqueRappelsSMS']
-historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/', 'logs/historiqueRappelsMail']
+historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsSMS']
+historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsMail']
 logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
+historiqueDataType: ['GET', '/logs/historique/[a:dataType]/[i:page]?/', 'logs/historiqueDataType']
+historiqueContextDataType: ['GET', '/logs/historique/[i:patientID]/[a:dataType]/[i:instance]?/', 'logs/historiqueContextDataType']
+historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
 
 #pdf
-makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
+printAjax: ['GET|POST', '/print/ajax/[a:m]/', 'print/actions/printAjax']
+makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP|ordoLapExt|reglement:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
 makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
 showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
 duplicataPDF: ['GET|POST', '/duplicata/[i:objetID]/', 'print/pdfDuplicata']
+pdfMakeFromHistory: ['GET|POST', '/makepdf/[i:patient]/fromHistory/[i:versionID]/', 'print/pdfMakeFromHistory']
+
+#CDA
+cdaShow: ['GET|POST', '/showcda/[i:objetID]/', 'cda/cdaShow']
 
 #fichier (extraire vers navigateur)
 fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
@@ -111,12 +121,28 @@ compta: ['GET|POST', '/compta/', 'compta/compta']
 comptaMemoTarif: ['GET', '/compta/memo-tarifs/[i:user]?/', 'compta/comptaMemoTarifs']
 
 #inbox
-inboxAjax: ['POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
+inboxAjax: ['GET|POST', '/inbox/ajax/[a:m]/', 'inbox/actions/inboxAjax']
 inboxActions: ['POST|GET', '/inbox/actions/[a:m]/[i:mailID]?/', 'inbox/actions/inboxActions']
 inbox: ['GET|POST', '/inbox/', 'inbox/inbox']
 
+#dropbox
+dropboxAjax: ['GET|POST', '/dropbox/ajax/[a:m]/', 'dropbox/actions/dropboxAjax']
+dropboxActions: ['POST|GET', '/dropbox/actions/[a:m]/', 'dropbox/actions/dropboxActions']
+dropbox: ['GET|POST', '/dropbox/', 'dropbox/dropbox']
+dropboxSendFileToNav: ['GET', '/dropbox/[a:box]/[*:filename]/', 'dropbox/dropboxSendFileToNav']
+
+#transmissions
+transmissionsAjax: ['GET|POST', '/transmissions/ajax/[a:m]/', 'transmissions/actions/transmissionsAjax']
+transmissionsIndex: ['GET', '/transmissions/[recues|envoyees:transBox]?/', 'transmissions/transmissionsIndex']
+transmissionsTransmission: ['GET', '/transmission/[i:transmission]/', 'transmissions/transmissionsTransmission']
+
 #outils
+outilsAjax: ['POST', '/outils/ajax/[a:m]/', 'outils/actions/outilsAjax']
+outilsActions: ['POST|GET', '/outils/actions/[a:m]/', 'outils/actions/outilsActions']
 outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
+outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
+outilsStatsGenerales: ['POST|GET', '/outils/statistiques/', 'outils/statsGenerales']
+outilsFaxAutonome: ['POST|GET', '/outils/envoyer-fax/', 'outils/outilsFaxAutonome']
 
 #configuration
 configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']
@@ -130,16 +156,20 @@ configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configurat
 configActes: ['GET', '/configuration/actes/[i:user]?/[i:cat]?/', 'configuration/configActes']
 configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesCat']
 configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActesBase']
+configActesBaseMaj: ['GET', '/configuration/actes-base/rapport-maj/', 'configuration/configActesBaseMaj']
 configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
 configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
 configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
 configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
+configBackups: ['GET', '/configuration/configBackups/', 'configuration/configBackups']
+configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
 
-# Configuration Apicrypt clefs
+# Configuration Apicrypt
 configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
+configApicrypt2Infos: ['GET', '/configuration/apicrypt2-infos/', 'configuration/configApicrypt2Infos']
 
 # Configuration Templates PDF edit
 configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'configuration/configTemplatesPDF']
@@ -148,6 +178,7 @@ configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[
 # Configuration forms
 configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
 configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configFormCdaTools: ['GET', '/configuration/forms/cdaTools/[i:form]/', 'configuration/configFormCdaTools']
 configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
 configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configForms']
 configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
@@ -157,10 +188,13 @@ configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configura
 configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
 configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
 configExecUpgradeScript: ['GET', '/configuration/exec/[a:module]/[*:script]/', 'configuration/configExecUpgradeScript']
+configDicomOrthanc: ['GET', '/configuration/orthancInfos/', 'configuration/configDicomOrthanc']
 
 # configuration Users
 configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
 configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
+configUserTemplate: ['GET', '/configuration/user-templates/', 'configuration/configUserTemplate']
+configUserTemplatesEdit: ['GET', '/configuration/user-templates/edit/[*:fichier]/', 'configuration/configUserTemplatesEdit']
 
 # configuration crons
 configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
@@ -172,8 +206,15 @@ configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configAppl
 configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
 configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/', 'configuration/configExportModuleToSQL']
 
+# configuration plugins
+configPlugins: ['GET', '/configuration/plugins/', 'configuration/configPlugins']
+
+
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
+
+# configuration voir jeux de valeurs
+configJdvShow: ['GET', '/configuration/configJdvShow/', 'configuration/configJdvShow']
 
 # User
 userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
@@ -183,8 +224,10 @@ userPhoneCaptureAccess: ['GET', '/user/userPhoneCaptureAccess/', 'user/userPhone
 
 #public
 publicAjax: ['POST', '/public/ajax/[a:m]/', 'public/actions/publicAjax']
-publicSigner: ['GET', '/public/signer/', 'public/signer']
-publicSignerMerci: ['GET', '/public/signer/merci/', 'public/signerMerci']
+publicSigner: ['GET', '/public/signer/[a:signPeriphName]?/', 'public/signer']
+publicSignerMerci: ['GET', '/public/signer-merci/', 'public/signerMerci']
+publicLostPasswordEmailAsk: ['GET', '/public/lostPassword/emailAsk/', 'public/lostPassword/emailAsk']
+publicLostPasswordNewSet: ['GET', '/public/lostPassword/setNew/[a:str]/', 'public/lostPassword/newSet']
 
 #routes pour le module (! on part de controlers/module/ cette fois !)
 moduleAjax: ['POST', '/module/ajax/[a:m]/', 'actions/moduleAjax']

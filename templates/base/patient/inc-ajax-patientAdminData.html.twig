@@ -45,70 +45,155 @@
     {% endif %}
     <small>
       {# birthdate #}
-      {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
-      -
+      {%  if page['patient']['administrativeDatas']['birthdate']['value'] is not empty %}
+        {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
+          <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
+        {% endif %}
+        {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        -
+      {% endif %}
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
         {# date décès #}
         {{ page['patient']['administrativeDatas']['deathdate']['value']|e }}
+        - <i class="fas fa-cross fa-xs"></i>
+        <span title="{{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['deathAge']['ageDisplay']|e }}</span>
       {% else %}
         {# age #}
-        {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
+
       {% endif %}
-       - {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}&#9792;{% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}&#9794;{% endif %}
+       -
+      {% if page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'F' %}
+        <i class="fas fa-venus text-muted" title="&#9792;"></i>
+      {% elseif page['patient']['administrativeDatas']['administrativeGenderCode']['value'] == 'M' %}
+        <i class="fas fa-mars text-muted" title="&#9794;"></i>
+      {% endif %}
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
             <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
-                <i class="fas fa-comment-alt"></i>
+                <i class="far fa-comment-alt text-danger"></i>
             </button>
           {% endif %}
 
-          <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fa fa-pencil-alt" aria-hidden="true"></span></button>
-
+          <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
+          {% if config.transmissionsPeutCreer == 'true' %}
+            <button type="button" class="btn btn-light btn-sm newTransmission" data-toggle="modal" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
+          {% endif %}
         </div>
+
+        {% if page.patient.id in config.statsExclusionPatientsArray %}
+          <span class="badge badge-danger float-right">Patient test</span>
+        {% endif %}
+
    </small>
+
 </h1>
 <div style="margin-bottom : 8px;">
     {# email #}
     {% if page['patient']['administrativeDatas']['personalEmail']['value'] %}
-      <div class="btn-group">
-        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-at text-muted"></i>
+      <div class="btn-group mr-3">
+        <button type="button" class="btn  btn-sm dropdown-toggle pl-0 pr-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ page['patient']['administrativeDatas']['personalEmail']['value']|e }}
         </button>
 
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns">Envoyer un mail</a></li>
-          <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/" >Historique des mails envoyés</a></li>
-
+          <li><a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-mailtype="ns"><i class="fas fa-at fa-fw text-muted mr-1"></i> Envoyer un mail</a></li>
+          <li><a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ page.patient.id }}/"><i class="fas fa-history fa-fw text-muted mr-1"></i>  Historique des mails envoyés</a></li>
         </ul>
       </div>
-
-      -
 
     {% endif %}
 
     {# tel #}
-    {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
-    {% if page['patient']['administrativeDatas']['homePhone']['value'] and page['patient']['administrativeDatas']['mobilePhone']['value'] %}
-      /
+    {% if page['patient']['administrativeDatas']['homePhone']['value']  %}
+      <span class="mr-3"><i class="fas fa-phone text-muted"></i>
+      {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+      {{ page['patient']['administrativeDatas']['homePhone']['value']|e }}
+      {% if config.click2callService is not empty %}</span>{% endif %}
+      </span>
     {% endif %}
-    {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
-    -
+
+    {% if page['patient']['administrativeDatas']['mobilePhone']['value']  %}
+      <span class="mr-3"><i class="fas fa-mobile-alt text-muted"></i>
+      {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+      {{ page['patient']['administrativeDatas']['mobilePhone']['value']|e }}
+      {% if config.click2callService is not empty %}</span>{% endif %}
+      </span>
+    {% endif %}
+
     {# adresse #}
+    {% if page['patient']['administrativeDatas']['city']['value'] %}<i class="fas fa-home text-muted"></i>{% endif %}
     {{ page['patient']['administrativeDatas']['streetNumber']['value']|e }}
     {{ page['patient']['administrativeDatas']['street']['value']|e }}
     {{ page['patient']['administrativeDatas']['postalCodePerso']['value']|e }}
     {{ page['patient']['administrativeDatas']['city']['value']|e }}
+    {% if  page['patient']['administrativeDatas']['country']['value_label'] is defined %} - {{ page['patient']['administrativeDatas']['country']['value_label']|e }}{% endif %}
 
     {% if page.correspondants %}
-      <div class="btn-group ml-4">
+      <div class="d-inline ml-4">
         <button type="button" class="btn btn-light btn-sm editerRelationsPatient" title="Édition des relations">
-          <span class="fa fa-link" aria-hidden="true"></span>
+          <span class="fas fa-link" aria-hidden="true"></span>
         </button>
         {% for v in page.correspondants %}
-          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="">
+        <div class="btn-group">
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
+
             {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
+            {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
           </a>
+          <button type="button" class="btn btn-sm btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+              <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-header">Téléphones / fax pros</div>
+            {% if v.telPro %}
+              <div class="dropdown-item">
+                <i class="fas fa-phone fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.telPro }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.telPro2 %}
+              <div class="dropdown-item">
+                <i class="fas fa-phone fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.telPro2 }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.mobilePhonePro %}
+              <div class="dropdown-item">
+                <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ v.mobilePhonePro }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </div>
+            {% endif %}
+            {% if v.faxPro %}
+              <div class="dropdown-item">
+                <i class="fas fa-fax fa-fw text-muted mr-1"></i>
+                {{ v.faxPro }}
+              </div>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-header">Emails pros</div>
+            {% if v.profesionnalEmail %}
+              <div class="dropdown-item">
+                <i class="fas fa-at fa-fw text-muted mr-1"></i>
+                {{ v.profesionnalEmail }}
+              </div>
+            {% endif %}
+            {% if v.emailApicrypt %}
+              <div class="dropdown-item">
+                <i class="fas fa-lock fa-fw text-muted mr-1"></i>
+                {{ v.emailApicrypt }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
         {% endfor %}
       </div>
     {% endif %}

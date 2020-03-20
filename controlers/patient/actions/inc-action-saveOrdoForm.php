@@ -78,8 +78,10 @@ if (count($_POST)>2) {
     //type d'impression modeprintObjetID
     if (isset($_POST['modeprintObjetID'])) {
         $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
+        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID, '0', $_POST['modeprintObjetID']);
     } else {
         $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
+        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID);
     }
 
     foreach ($_POST as $k=>$v) {
@@ -94,7 +96,10 @@ if (count($_POST)>2) {
             }
             if ($postObjetId>0) {
                 if($v=='' and $modeAction == 'edition') {
-                  $patient->setDeletedObjetAndSons($postObjetId);
+                  $objDel = new msObjet;
+                  $objDel->setFromID($_POST['asUserID']?:$p['user']['id']);
+                  $objDel->setObjetID($postObjetId);
+                  $objDel->setDeletedObjetAndSons();
                 } else {
                   msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
                 }

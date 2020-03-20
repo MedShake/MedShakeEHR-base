@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -42,7 +42,7 @@
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
     </li>
     <li class="breadcrumb-item active">
       Agendas
@@ -52,7 +52,7 @@
   <h1>Gestion des agendas</h1>
 
   {# Nav tabs #}
-  <ul class="nav nav-tabs bottom-space" role="tablist">
+  <ul class="nav nav-tabs mb-4" role="tablist">
     <li role="presentation" class="nav-item">
       <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/agenda/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
@@ -142,7 +142,7 @@
 
           {{ f.textarea ({
 			    'textarea' : {
-				    'name' : 'typesRdv',
+				    'name' : 'configTypesRdv',
 				    'placeholder' : 'entrer ici du yaml',
 				    'class' : 'form-control',
 				    'autocomplete' : 'off',
@@ -164,7 +164,7 @@
     </form>
   {% else %}
     <table class="table table-sm mb-0 table-hover ">
-      <thead>
+      <thead class="thead-light">
         <th>Paramètre</th>
         <th>Valeur</th>
       </thead>

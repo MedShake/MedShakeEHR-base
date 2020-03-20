@@ -27,9 +27,9 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['mailID'])) die;
 
-
-if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id='".$_POST['mailID']."' and archived='c' ")) {
+if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id='".msSQL::cleanVar($_POST['mailID'])."' and archived='c' ")) {
     $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
     $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
@@ -47,7 +47,7 @@ if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeNa
     }
 
     unlink($p['config']['apicryptCheminInbox'].$data['txtFileName']);
-    msSQL::sqlQuery("update inbox set archived='y' where id='".$_POST['mailID']."' limit 1");
+    msSQL::sqlQuery("update inbox set archived='y' where id='".msSQL::cleanVar($_POST['mailID'])."' limit 1");
 }
 
 msTools::redirection('/inbox/');

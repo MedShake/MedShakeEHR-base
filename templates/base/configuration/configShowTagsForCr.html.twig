@@ -29,7 +29,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -40,7 +40,7 @@
   <h1>Tags disponibles pour l'objet</h1>
 
   <table class="table table-sm table-hover table-striped">
-    <thead>
+    <thead class="thead-light">
       <tr>
         <th>#</th>
         <th>Tag</th>
@@ -51,7 +51,7 @@
     <tbody>
       {% for k,v in page.tabTags %}
         <tr>
-          <td class="gras table-primary" colspan="4">
+          <td class="font-weight-bold table-primary" colspan="4">
             {% if k =='calc' %}Tags calculés{% else %}{{ v.catName }}{% endif %}
           </td>
         </tr>
@@ -71,11 +71,11 @@
             </td>
             <td>
               {% if w.value is not iterable %}
-              {{ w.value|nl2br }}
-              {% if page['tagsValues']['val_'~l] %}<br>{{ page['tagsValues']['val_'~l] }}{% endif %}
-              {% if page['tagsValues']['pct_'~l] %}<br>{{ page['tagsValues']['pct_'~l] }}{% endif %}
+                {{ w.value|nl2br }}
+                {% if page['tagsValues']['val_'~l] %}<br>{{ page['tagsValues']['val_'~l] }}{% endif %}
+                {% if page['tagsValues']['pct_'~l] %}<br>{{ page['tagsValues']['pct_'~l] }}{% endif %}
               {% else %}
-                - tableau de valeurs -
+                - tableau de valeurs ({{ w.value|length }}) -
               {% endif %}
             </td>
           </tr>

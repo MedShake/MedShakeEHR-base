@@ -26,114 +26,118 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<div class="row" style="margin-bottom : 20px;margin-top : 5px;">
-  <div class="col-md-12">
-    <button class="btn btn-secondary btn-sm tabDicomRefresh"><span class="fa fa-step-backward" aria-hidden="true"></span> Retour à la liste</button>
+<div class="row mb-3">
+  <div class="col-md-12 px-0">
+    <button class="btn btn-secondary tabDicomRefresh"><i class="fas fa-arrow-left" aria-hidden="true"></i> Retour à la liste</button>
   </div>
 </div>
 
-<div class="card mb-3">
-    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
-      <div class="float-right m-1">
-        <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-sm btn-primary mb-0">Générer un ZIP</button>
-        <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-sm btn-primary mb-0">Générer un PDF</button>
+<div class="row mb-3">
+  <div class="col-md-12 px-0">
+
+    <div class="card mb-3">
+      <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dicom/actions/makePdfWithDcImages/" method="post">
+
+      <div class="card-header d-flex justify-content-between">
+        <div class="font-weight-bold">Images de l'étude</div>
+        <div>
+          <button type="button" data-status="unchecked" class="btn btn-primary btn-sm selectAll"><i class="fas fa-check-square mr-1"></i> Tout sélectionner</button>
+          <button id="makeZipWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makeZipWithDcImages" class="btn btn-sm btn-secondary"><i class="fas fa-file-archive mr-1"></i> Générer un ZIP</button>
+          <button id="makePdfWithDcImages" disabled="disabled" type="submit" name="submitValue" value="makePdfWithDcImages" class="btn btn-sm btn-secondary"><i class="fas fa-file-pdf mr-1"></i> Générer un PDF</button>
+        </div>
       </div>
-  <div class="card-header"><h3>Images de l'étude</h3>
-  </div>
-  <div class="card-body pt-1 imagesList">
-      <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
-      <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
-      <span class="imageDc" style="display:block; vertical-align:bottom; width:100%">
-        <button type="button" data-status="unchecked" class="btn btn-light btn-sm selectAll">Tout sélectionner / déselectionner</button>
-      </span>
-      {% for instance, frames in page.imagesPath %}
-        {% for frame, imagepath in frames %}
-          <table class="{% if frame > 0 %}d-none{% else %}d-inline-block{% endif %} m-1 mb-2 {% if frame > 0 %}frames{{ instance }}{% endif %}" style="border:5px solid #eee;background-color:#eee;">
-            <thead>
-              <tr>
-                <th style="text-align:center;line-height:0">
-                  <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off"/>
-                </th>
-              </tr>
-            </thead>
-          <tbody>
-            <tr>
-              <td style="border:5px solid #eee">
-                <span id="{{ instance }}-{{ frame }}" class="imageDc">
-                  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
-                  {% if frame == 0 and frames | length > 1 %}
+      <div class="card-body imagesList">
+          <input type="hidden" name="patientID" value="{{ page.patient.id }}"/>
+          <input type="hidden" name="dcStudyID" value="{{ page.studyDcData.ID }}"/>
+          {% for instance, frames in page.imagesPath %}
+            {% for frame, imagepath in frames %}
+              <table class="{% if frame > 0 %}d-none{% else %}d-inline-block{% endif %} m-1 mb-2 {% if frame > 0 %}frames{{ instance }}{% endif %}" style="border:5px solid #eee;background-color:#eee;">
+                <thead>
+                  <tr>
+                    <th style="text-align:center;line-height:0">
+                      <input name="images[]" value="{{ instance }}-{{ frame }}" type="checkbox" data-imgfor="IMG{{ instance }}-{{ frame }}" autocomplete="off"/>
+                    </th>
+                  </tr>
+                </thead>
+              <tbody>
+                <tr>
+                  <td style="border:5px solid #eee">
+                    <span id="{{ instance }}-{{ frame }}" class="imageDc">
+                      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}"><img id="IMG{{ instance }}-{{ frame }}" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ imagepath }}" alt=""/></a>
+                      {% if frame == 0 and frames | length > 1 %}
 
-                    <span class="voirframes d-block text-center" data-frames="frames{{ instance }}">
-                      {{ frames|length }}
-                      images - voir / masquer
+                        <span class="voirframes d-block text-center" data-frames="frames{{ instance }}">
+                          {{ frames|length }}
+                          images - voir / masquer
+                        </span>
+                      {% endif %}
                     </span>
+                  </td>
+                {% endfor %}
+              {% endfor %}
+              </tr>
+            <tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+
+    {# Data SR via XML #}
+    {% if page.studyDcDataSRFull %}
+      <div class="card">
+        <div class="card-header">Tags DICOM SR (XML)</div>
+        <div class="card-body">
+          <p>Mesures remontées dans cette études</p>
+        </div>
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+            <th>Tag</th>
+            <th>Foetus</th>
+            <th>Nom</th>
+            <th>Valeur</th>
+            <th>Précision</th>
+            <th>Unité</th>
+          </thead>
+          <tbody>
+            {% for k, v in page.studyDcDataSRFull %}
+              {% for l, w in v.NumericValue %}
+                <tr>
+                  {% if loop.index0 == 0 %}
+                    <td>{{ k }}</td>
+                    <td>{{ v.FoetusID }}</td>
+                    <td>{{ v.CodeMeaning }}
+                      {% if v.structure %}
+                        <small>({{ v.structure|join(' > ') }})</small>
+                      {% endif %}
+                    </td>
+                    <td>{{ w }}</td>
+                    <td>
+                      {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                        <small>
+                          ({{ l }})</small>
+                      {% endif %}
+                    </td>
+                    <td>{{ v.MeasurementUnits }}</td>
+                  {% else %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ w }}</td>
+                    <td>
+                      {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
+                        <small>
+                          ({{ l }})</small>
+                      {% endif %}
+                    </td>
+                    <td>{{ v.MeasurementUnits }}</td>
                   {% endif %}
-                </span>
-              </td>
+
+                </tr>
+              {% endfor %}
             {% endfor %}
-          {% endfor %}
-          </tr>
-        <tbody>
-      </table>
-    </form>
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
   </div>
 </div>
-
-{# Data SR via XML #}
-{% if page.studyDcDataSRFull %}
-  <div class="card">
-
-    <div class="card-header"><h3>Tags DICOM SR (XML)</h3></div>
-    <div class="card-body">
-      <p>Mesures remontées dans cette études</p>
-    </div>
-    <table class="table table-sm table-striped table-hover">
-      <thead>
-        <th>Tag</th>
-        <th>Foetus</th>
-        <th>Nom</th>
-        <th>Valeur</th>
-        <th>Précision</th>
-        <th>Unité</th>
-      </thead>
-      <tbody>
-        {% for k, v in page.studyDcDataSRFull %}
-          {% for l, w in v.NumericValue %}
-            <tr>
-              {% if loop.index0 == 0 %}
-                <td>{{ k }}</td>
-                <td>{{ v.FoetusID }}</td>
-                <td>{{ v.CodeMeaning }}
-                  {% if v.structure %}
-                    <small>({{ v.structure|join(' > ') }})</small>
-                  {% endif %}
-                </td>
-                <td>{{ w }}</td>
-                <td>
-                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
-                    <small>
-                      ({{ l }})</small>
-                  {% endif %}
-                </td>
-                <td>{{ v.MeasurementUnits }}</td>
-              {% else %}
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ w }}</td>
-                <td>
-                  {% if v['PrecisionValue'][l] != 'std' %}{{ v['PrecisionValue'][l] }}
-                    <small>
-                      ({{ l }})</small>
-                  {% endif %}
-                </td>
-                <td>{{ v.MeasurementUnits }}</td>
-              {% endif %}
-
-            </tr>
-          {% endfor %}
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-{% endif %}

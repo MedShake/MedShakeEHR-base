@@ -313,7 +313,11 @@ function analyserPrescription() {
       patientID: $('#identitePatient').attr("data-patientID"),
     },
     dataType: "json",
+    beforeSend: function() {
+      $('#waitingModal').modal('toggle');
+    },
     success: function(data) {
+      $('#waitingModal').modal('toggle');
       console.log("Analyse ordonnance : OK");
       $('#modalLapAlerte div.modal-body').html(data['html']);
       $('#modAlerteImprimer, #modAlerteModifier').show();
@@ -737,17 +741,17 @@ function makeLigneOrdo(data, mode) {
       retour += '        <span class="badge badge-secondary">chronique</span>';
     }
     if (testIfAldOk(data.medics[0].ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-      retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+      retour += ' <span class="fas fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
     } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-      retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+      retour += ' <span class="fas fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
     }
 
     if (data.medics[0].prescripteurInitialTT) {
-      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></button>';
+      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + data.medics[0].prescripteurInitialTT + '"><span class="fas fa-user" aria-hidden="true"></span></button>';
     }
 
     if (data.medics[0].prescriptionMotif) {
-      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></button>';
+      retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(data.medics[0].prescriptionMotif) + '"><span class="fas fa-comment" aria-hidden="true"></span></button>';
     }
 
     retour += '      </div>';
@@ -777,10 +781,10 @@ function makeLigneOrdo(data, mode) {
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
-      retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
+      retour += '<span class="fas fa-sync-alt" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-times" aria-hidden="true"></span>';
+      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-times" aria-hidden="true"></span>';
       retour += '  </button>';
       retour += '  <div class="dropdown-menu dropdown-menu-right">';
       retour += '    <a href="#" class="dropdown-item marquerArretEffectifCeJour">Arrêt effectif ce jour</a>';
@@ -789,7 +793,7 @@ function makeLigneOrdo(data, mode) {
       retour += '</div>';
 
       retour += ' <div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-book" aria-hidden="true"></span></span>';
+      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-book" aria-hidden="true"></span></span>';
       retour += '  </button>';
       retour += '  <div class="dropdown-menu dropdown-menu-right">';
       retour += '    <a href="#" data-speThe="' + data.medics[0].speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
@@ -801,17 +805,17 @@ function makeLigneOrdo(data, mode) {
     // voir ordo
     else if (mode == 'voirOrdonnance' || mode == 'voirPrescriptionType') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
-      retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
+      retour += '<span class="fas fa-sync-alt" aria-hidden="true"></span></button> ';
     }
     //Actions pour mode ordonnance
     else if (mode == 'editionOrdonnance') {
       retour += '    <button class="btn btn-light btn-sm editLignePrescription">';
-      retour += '      <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>';
+      retour += '      <span class="fas fa-pencil-alt" aria-hidden="true"></span></button>';
 
 
       retour += '    <div class="btn-group">';
       retour += '      <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '        <span class="fa fa-euro-sign" aria-hidden="true"></span>';
+      retour += '        <span class="fas fa-euro-sign" aria-hidden="true"></span>';
       retour += '      </button>';
       retour += '      <div class="dropdown-menu dropdown-menu-right">';
       retour += '          <a href="#" class="dropdown-item coutMedic" disabled data-cout="' + coutMedic.math + '">Coût estimé : ';
@@ -826,30 +830,30 @@ function makeLigneOrdo(data, mode) {
 
       retour += '    <div class="btn-group">';
       retour += '      <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '        <span class="fa fa-wrench" aria-hidden="true"></span>';
+      retour += '        <span class="fas fa-wrench" aria-hidden="true"></span>';
       retour += '      </button>';
       retour += '      <div class="dropdown-menu dropdown-menu-right">';
       retour += '          <a href="#" class="dropdown-item addToLigne">';
-      retour += '            <span class="fa fa-plus" aria-hidden="true"></span>';
+      retour += '            <span class="fas fa-plus" aria-hidden="true"></span>';
       retour += '            Ajouter un médicament à cette ligne de prescription</a>';
 
 
       retour += '          <a href="' + urlBase + '/lap/monographie/' + data.medics[0].speThe + '/" target="_blank"  class="dropdown-item">';
-      retour += '            <span class="fa fa-book" aria-hidden="true"></span>';
+      retour += '            <span class="fas fa-book" aria-hidden="true"></span>';
       retour += '            Monographie</a>';
 
 
       if (data.medics[0].prescriptibleEnDC == '1' && data.medics[0].nomDC != data.medics[0].nomUtileFinal) {
         retour += '          <div class="dropdown-divider"></div>';
         retour += '            <a href="#" class="dropdown-item convertDci">';
-        retour += '              <span class="fa fa-sync-alt" aria-hidden="true"></span>';
+        retour += '              <span class="fas fa-sync-alt" aria-hidden="true"></span>';
         retour += '              Convertir en DCI</a>';
       }
       retour += '      </div>';
       retour += '    </div>';
 
       retour += '    <button class="btn btn-light btn-sm removeLignePrescription">';
-      retour += '      <span class="fa fa-trash" aria-hidden="true"></span></button>';
+      retour += '      <span class="fas fa-trash" aria-hidden="true"></span></button>';
     }
 
     retour += '  </div>';
@@ -866,16 +870,16 @@ function makeLigneOrdo(data, mode) {
     }
     retour += '>';
     retour += '  <div class="row" style="margin-bottom: 12px">';
-    retour += '    <div class="col-md-11 gras">';
+    retour += '    <div class="col-md-11 font-weight-bold">';
     retour += '      ' + data.ligneData.voieUtilisee + ' - ' + data.ligneData.dureeTotaleHuman
     if (data.ligneData.nbRenouvellements > 0) {
       retour += ' - à renouveler ' + data.ligneData.nbRenouvellements + ' fois';
     }
     if (mode != 'voirPrescriptionType') {
       if (data.ligneData.dateDebutPrise != data.ligneData.dateFinPriseAvecRenouv) {
-        retour += ' <small class="nongras"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
+        retour += ' <small class="font-weight-normal"> - ' + data.ligneData.dateDebutPrise + ' au ' + data.ligneData.dateFinPriseAvecRenouv + '</small>';
       } else {
-        retour += ' <small class="nongras"> - le ' + data.ligneData.dateDebutPrise + '</small>';
+        retour += ' <small class="font-weight-normal"> - le ' + data.ligneData.dateDebutPrise + '</small>';
       }
     }
     retour += '    </div>';
@@ -884,10 +888,10 @@ function makeLigneOrdo(data, mode) {
     //Actions pour mode TT en cours
     if (mode == 'TTenCours') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
-      retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
+      retour += '<span class="fas fa-sync-alt" aria-hidden="true"></span></button> ';
 
       retour += '<div class="btn-group">';
-      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-times" aria-hidden="true"></span>';
+      retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-times" aria-hidden="true"></span>';
       retour += '  </button>';
       retour += '  <div class="dropdown-menu dropdown-menu-right">';
       retour += '    <a href="#" class="dropdown-item marquerArretEffectifCeJour">Arrêt effectif ce jour</a>';
@@ -900,31 +904,31 @@ function makeLigneOrdo(data, mode) {
     // voir ordo
     else if (mode == 'voirOrdonnance' || mode == 'voirPrescriptionType') {
       retour += '<button class="btn btn-light btn-sm renouvLignePrescription" title="Renouveler">';
-      retour += '<span class="fa fa-sync-alt" aria-hidden="true"></span></button> ';
+      retour += '<span class="fas fa-sync-alt" aria-hidden="true"></span></button> ';
     }
 
     //Actions pour mode ordonnance
     else if (mode == 'editionOrdonnance') {
       retour += '      <div class="btn-group">';
       retour += '        <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-      retour += '          <span class="fa fa-wrench" aria-hidden="true"></span>';
+      retour += '          <span class="fas fa-wrench" aria-hidden="true"></span>';
       retour += '        </button>';
       retour += '        <div class="dropdown-menu dropdown-menu-right">';
       retour += '            <a href="#" class="dropdown-item addToLigne">';
-      retour += '              <span class="fa fa-plus" aria-hidden="true"></span>';
+      retour += '              <span class="fas fa-plus" aria-hidden="true"></span>';
       retour += '              Ajouter un médicament à cette ligne de prescription</a>';
 
       if (data.medics[0].prescriptibleEnDC == '1') {
         retour += '            <div class="dropdown-divider"></div>';
         retour += '              <a href="#" class="dropdown-item convertDci">';
-        retour += '                <span class="fa fa-sync-alt" aria-hidden="true"></span>';
+        retour += '                <span class="fas fa-sync-alt" aria-hidden="true"></span>';
         retour += '                Convertir en DCI</a>';
       }
       retour += '        </div>';
       retour += '      </div>';
       retour += '      ';
       retour += '      <button class="btn btn-light btn-sm removeLignePrescription">';
-      retour += '        <span class="fa fa-trash" aria-hidden="true"></span></button>';
+      retour += '        <span class="fas fa-trash" aria-hidden="true"></span></button>';
     }
     retour += '    </div>';
     retour += '  </div>';
@@ -951,17 +955,17 @@ function makeLigneOrdo(data, mode) {
       }
 
       if (testIfAldOk(medic.ald) && mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-        retour += ' <span class="fa fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
+        retour += ' <span class="fas fa-check-sign text-success" aria-hidden="true" title="la base médicamenteuse confirme la prise en charge possible en ALD pour ce médicament"></span>';
       } else if (mode == 'editionOrdonnance' && aldActivesListe.length > 0) {
-        retour += ' <span class="fa fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
+        retour += ' <span class="fas fa-exclamation-circle text-warning" aria-hidden="true" title="la base médicamenteuse ne peut confirmer la possible prise en charge en ALD pour ce médicament"></span>';
       }
 
       if (medic.prescripteurInitialTT) {
-        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="fa fa-user" aria-hidden="true"></span></button>';
+        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Prescripteur" data-content="' + medic.prescripteurInitialTT + '"><span class="fas fa-user" aria-hidden="true"></span></button>';
       }
 
       if (medic.prescriptionMotif.length > 0) {
-        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="fa fa-comment" aria-hidden="true"></span></button>';
+        retour += ' <button class="btn btn-light btn-sm" type="button" data-toggle="popover" data-container="body" data-placement="top"  title="Commentaire personnel" data-content="' + nl2br(medic.prescriptionMotif) + '"><span class="fas fa-comment" aria-hidden="true"></span></button>';
       }
 
       retour += '    </div>';
@@ -975,7 +979,7 @@ function makeLigneOrdo(data, mode) {
       //Actions pour mode TT en cours
       if (mode == 'TTenCours') {
         retour += ' <div class="btn-group">';
-        retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-book" aria-hidden="true"></span>';
+        retour += '  <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-book" aria-hidden="true"></span>';
         retour += '  </button>';
         retour += '  <div class="dropdown-menu dropdown-menu-right">';
         retour += '    <a href="#" data-speThe="' + medic.speThe + '" class="dropdown-item effetsIndesirables">Effets indésirables</a>';
@@ -988,10 +992,10 @@ function makeLigneOrdo(data, mode) {
       //Actions pour mode ordonnance
       else if (mode == 'editionOrdonnance') {
         retour += '  <button class="btn btn-light btn-sm editMedicLignePrescription">';
-        retour += '    <span class="fa fa-pencil-alt" aria-hidden="true"></span></button>';
+        retour += '    <span class="fas fa-pencil-alt" aria-hidden="true"></span></button>';
 
         retour += '  <button class="btn btn-light btn-sm removeMedicLignePrescription">';
-        retour += '    <span class="fa fa-trash" aria-hidden="true"></span></button>';
+        retour += '    <span class="fas fa-trash" aria-hidden="true"></span></button>';
       }
 
       retour += '</td>';

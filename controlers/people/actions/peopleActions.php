@@ -28,7 +28,7 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+if(isset($match['params']['m'])) $m=$match['params']['m'];
 
 //compatibilité avec l'url /people/register/
 if(isset($match['params']['porp'])) $m='peopleRegister';

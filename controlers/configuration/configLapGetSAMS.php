@@ -28,12 +28,17 @@
 
  //admin uniquement
  if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
+   $template="forbidden";
  } else {
+   $debug='';
+   $template="configLapGetSAMS";
    $sam = new msLapSAM;
    $sam->getTheXmlFile();
    $sam->getSamXmlFileContent();
-   $sam->getCodesSpeBySAM();
+   $p['page']['xmlUrl']=$sam->getTheXmlUrl();
+   $p['page']['samsList']=$sam->getSamListInXml();
+   $p['page']['codesParSams']=$sam->getCodesSpeBySAM();
    $sam->setFileCodesSpeBySAM();
-   echo 'Opération effectuée';
+
+
  }

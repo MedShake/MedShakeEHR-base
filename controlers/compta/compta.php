@@ -109,7 +109,7 @@ if (isset($_POST['prat'])) {
 $prat=new msPeople();
 $prat->setToID($p['page']['pratsSelect'][0]);
 $user=array('id'=>$p['page']['pratsSelect'][0], 'module'=>$prat->getModule());
-$p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonoraires', $user);
+$p['page']['secteur']=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', $user);
 
 //sortir les reglements du jour
 if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name,
@@ -161,14 +161,21 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
     }
     //tableau des totaux
     $tabTot=array(
-      'regleCheque' => '',
-      'regleCB' => '',
-      'regleEspeces' => '',
-      'regleFacture' => '',
-      'regleTiersPayeur' => '');
+      'regleCheque' => 0,
+      'regleCB' => 0,
+      'regleEspeces' => 0,
+      'regleFacture' => 0,
+      'regleTiersPayeur' => 0);
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
+
+        $v['regleCheque']=(float)$v['regleCheque'];
+        $v['regleCB']=(float)$v['regleCB'];
+        $v['regleEspeces']=(float)$v['regleEspeces'];
+        $v['regleTiersPayeur']=(float)$v['regleTiersPayeur'];
+        $v['regleFacture']=(float)$v['regleFacture'];
+
         $tabReg[$k]['dejaPaye']=$v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'];
         $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
 

@@ -67,6 +67,12 @@ var modeActionModal = 'new';
  */
 listeCodesIndics = '';
 
+/**
+ * Index de la sélection dans le tableau de recherche de médicaments
+ * @type {Number}
+ */
+var listingTabMedicRow = -1;
+
 $(document).ready(function() {
 
   //Nouvelle prescription
@@ -134,6 +140,56 @@ $(document).ready(function() {
     keycode = event.keyCode || event.which;
     if (keycode == '13') {
       sendMedicRecherche($('#txtRechercheMedic').val());
+    }
+  });
+
+  //navigation au clavier dans les résultats de recherche de médicaments
+  $('#rechercheResultats, #txtRechercheMedic').on("keydown", function(e) {
+    if ($('#recherchermedic').is(':visible') && $('#tabMedicaments tbody tr').length > 0) {
+      if (e.keyCode == 40) { //down
+        $('#rechercheResultats').focus();
+
+        listingTabMedicRow++;
+        if (listingTabMedicRow + 1 > $('#tabMedicaments tbody tr').length) {
+          listingTabMedicRow = $('#tabMedicaments tbody tr').length - 1;
+        }
+        $('#tabMedicaments tbody tr').removeClass('table-active');
+        if (listingTabMedicRow >= 0) {
+          $('#tabMedicaments tbody tr').eq(listingTabMedicRow).addClass('table-active');
+        }
+      } else if (e.keyCode == 38) { //up
+        listingTabMedicRow--;
+        if (listingTabMedicRow < 0) {
+          listingTabMedicRow = -1;
+          $('#txtRechercheMedic').focus();
+        }
+        $('#tabMedicaments tbody tr').removeClass('table-active');
+        if (listingTabMedicRow >= 0) {
+          $('#tabMedicaments tbody tr').eq(listingTabMedicRow).addClass('table-active');
+        }
+      } else if (e.keyCode == 13 && listingTabMedicRow >= 0) { //enter
+        $('#tabMedicaments tbody tr').eq(listingTabMedicRow).find("td.sendToPrescription:first").click();
+      }
+    }
+  });
+
+  // Focus sur le champ de recherche : on réinit la position
+  $('#txtRechercheMedic').on('focus', function(e) {
+    listingTabMedicRow = -1;
+    $('#tabMedicaments tbody tr').removeClass('table-active');
+  });
+
+  // Activation onglet de recherche : on replace le focus sur le champ de recherche
+  $('#recherchermedicTab').on('shown.bs.tab', function(event) {
+    $('#txtRechercheMedic').focus();
+  });
+
+  // Quand on a trié les médicaments dans le résultat de recherche : on réinit la position
+  $('body').on("aftertablesort", "#tabMedicaments", function(event, data) {
+    if (listingTabMedicRow >= 0) {
+      listingTabMedicRow = 0;
+      $('#tabMedicaments tbody tr').removeClass('table-active');
+      $('#tabMedicaments tbody tr').eq(listingTabMedicRow).addClass('table-active');
     }
   });
 
@@ -205,15 +261,13 @@ $(document).ready(function() {
     });
   });
 
-  // Trier le tableau de recherche détailléedes médics en cliquant sur les headers de colonne
+  // Trier le tableau de recherche détaillée des médics en cliquant sur les headers de colonne
   $('body').on("aftertablesort", "#tabDetMedicaments", function(event, data) {
     th = $(this).find("th");
     th.find(".arrow").remove();
     dir = $.fn.stupidtable.dir;
     arrow = data.direction === dir.ASC ? "fa-chevron-up" : "fa-chevron-down";
     th.eq(data.column).append(' <span class="arrow fa ' + arrow + '"></span>');
-    //console.log("The sorting direction: " + data.direction);
-    //console.log("The column index: " + data.column);
   });
 
   // envoyer médicament à la zone de prescription
@@ -228,7 +282,7 @@ $(document).ready(function() {
   });
 
   // focus sur le champ de recherche
-  $('#modalRecherche').on('show.bs.modal', function(event) {
+  $('#modalRecherche').on('shown.bs.modal', function(event) {
     $('#txtRechercheMedic').focus();
   });
 
@@ -536,10 +590,12 @@ function sendMedicRecherche(term) {
     dataType: "html",
     beforeSend: function() {
       $('#txtRechercheMedicHB').html("Recherche en cours ...");
+      $('#rechercheResultats').html('<div class="text-center p-4"><i class="fas fa-spinner fa-4x fa-spin text-warning"></i></div>');
     },
     success: function(data) {
       listeCodesIndics = '';
       $('#rechercheResultats').html(data);
+      $('#txtRechercheMedic').focus();
       $('#txtRechercheMedicHB').html("Taper le texte de votre recherche ici");
       var tableMedics = $("#tabMedicaments").stupidtable({
         "alphanum": function(a, b) {
@@ -702,15 +758,15 @@ function lapInstallPrescription(tab) {
       });
 
       // si lastPrescription
-      if(data.lastPrescription) {
-        if(data.lastPrescription.consignesPrescription) {
+      if (data.lastPrescription) {
+        if (data.lastPrescription.consignesPrescription) {
           $('#lapConsignesPrescription').val(data.lastPrescription.consignesPrescription);
           $("#prescriptionHumanConsignes").html(nl2br($('#lapConsignesPrescription').val()));
         }
-        if(data.lastPrescription.uniteUtiliseeOrigine) {
+        if (data.lastPrescription.uniteUtiliseeOrigine) {
           $('#uniteUtilisee').val(data.lastPrescription.uniteUtiliseeOrigine);
         }
-        if(data.lastPrescription.voieUtiliseeCode) {
+        if (data.lastPrescription.voieUtiliseeCode) {
           $('#voieUtilisee').val(data.lastPrescription.voieUtiliseeCode);
         }
       }

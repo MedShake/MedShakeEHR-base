@@ -38,6 +38,7 @@ $template="configTemplatesPDFEdit";
 $debug='';
 
 $fichier=urldecode($match['params']['fichier']);
+$fichier=basename($fichier);
 
 //utilisateurs ayant un repertoire de templates spécifique
 $p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');

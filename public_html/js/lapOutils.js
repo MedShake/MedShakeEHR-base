@@ -107,7 +107,7 @@ function lapOutilsSearchPres(el) {
       html = '<div class="row mb-2"><div class="col text-right"><button class="btn btn-secondary btn-sm" onclick="exportTableToCSV(\'#tableResultatsReMulti\',\'recherche.csv\')">Exporter en CSV</button></div></div>';
       html += '<div class="row"><div class="col">';
       html += '<table id="tableResultatsReMulti" class="table table-hover table-sm small">';
-      html += '<thead class="thead-dark"><tr>';
+      html += '<thead class="thead-light"><tr>';
       html += '<th class="col-auto">ID patient</th>';
       html += '<th class="col-auto">Identité patient</th>';
       html += '<th class="col-auto">Ddn</th>';
@@ -163,7 +163,7 @@ function displayListSamPatients(el) {
         html += '<thead><tr><th class="col-auto"></th><th class="col-auto">Identité</th><th class="col-auto">Date de la prescription</th></tr></thead><tbody>';
         $.each(data.patientsList, function(index, ligne) {
           html += '<tr>';
-          html += '<td><a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier"><span class="fa fa-folder-open" aria-hidden="true"></span></a></td>';
+          html += '<td><a class="btn btn-light btn-sm" role="button" href="' + urlBase + '/patient/' + ligne.toID + '/" title="Ouvrir le dossier"><span class="fas fa-folder-open" aria-hidden="true"></span></a></td>';
           html += '<td>' + ligne.identiteDossier + '</td>';
           html += '<td>' + ligne.registerDate + '</td>';
           html += '</tr>';
@@ -203,6 +203,7 @@ function sendMedicRecherche(term) {
     dataType: "html",
     beforeSend: function() {
       $('#txtRechercheMedicHB').html("Recherche en cours ...");
+      $('#rechercheResultats').html('<div class="text-center p-4"><i class="fas fa-spinner fa-4x fa-spin text-warning"></i></div>');
     },
     success: function(data) {
       $('#rechercheResultats').html(data);

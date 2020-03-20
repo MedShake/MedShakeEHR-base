@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : historique rappels SMS pour les consultations du
+{% block title %}{{ config.designAppName }} : historique rappels SMS pour les consultations du
   {{ page.dates.rdv|date("d/m/Y") }}{% endblock %}
 
 {% block head %}
@@ -36,118 +36,133 @@
 {% endblock %}
 
 {% block body %}
-  <h1 class="bottom-space">Historique rappels SMS pour les consultations du
+  <h1 class="mb-4">Historique rappels SMS pour les consultations du
     {{ page.dates.rdv|date("d/m/Y") }}</h1>
 
-  <div class="container-fluid">
+    {# Nav tabs #}
+    {% if page.pratsInConfig is not empty %}
+      <ul class="nav nav-tabs my-3" role="tablist">
+        {% for id, user in page.pratsInConfig %}
+          <li role="presentation" class="nav-item">
+            <a class="nav-link{% if page.selectPrat == id %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.emission|date("Y-m-d") }}/{{ id }}/" >
+              {{ user }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-    <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline bottom-space">
+  <form id="dateForm" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/" method="post" class="form-inline mb-4">
 
-      <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/">
-        <span class="fa fa-step-backward" aria-hidden="true"></span>
-        Jour précédent
-      </a>
-      <a class="btn btn-outline-secondary {% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/">
-        Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
-      </a>
-      <a class="btn btn-outline-secondary {% if page.dates.suivant > "now"|date("U") %} disabled{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/">
-        Jour suivant
-        <span class="fa fa-step-forward" aria-hidden="true"></span>
-      </a>
+    <a class="btn btn-outline-secondary m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.precedent|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
+      <span class="fas fa-step-backward" aria-hidden="true"></span>
+      Jour précédent
+    </a>
+    <a class="btn btn-outline-secondary {% if "now"|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ "now"|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
+      Envoyés ce jour (consultations du {{ page.dates.smsEnvoyeAujour|date("d/m") }})
+    </a>
+    <a class="btn btn-outline-secondary {% if page.dates.suivant > "now"|date("U") %} disabled{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.suivant|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}">
+      Jour suivant
+      <span class="fas fa-step-forward" aria-hidden="true"></span>
+    </a>
 
-      <a class="btn btn-outline-secondary {% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/" style="margin-right: 20px">
-        Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
-      </a>
+    <a class="btn btn-outline-secondary {% if page.dates.smsPourAujour|date("Y-m-d") == page.dates.emission|date("Y-m-d") %} active{% endif %} m-1" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/{{ page.dates.smsPourAujour|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}" style="margin-right: 20px">
+      Envoyés le {{ page.dates.smsPourAujour|date("d/m") }} (consultations du jour)
+    </a>
 
-      <div id="dateSel" class="input-group date datepick" >
-        <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
-        <span class="input-group-append">
-          <span class="fa fa-calendar input-group-text"></span>
-        </span>
-      </div>
-      <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
-    </form>
+    <div id="dateSel" class="input-group date datepick" >
+      <input type="text" name="dateSel" class="form-control" placeholder="date d'envoi" autocomplete="off" value="{{ page.periode.end }}"/>
+      <span class="input-group-append">
+        <span class="fas fa-calendar input-group-text"></span>
+      </span>
+    </div>
+    {% if page.selectPrat > 0 %}
+      <input type="hidden" name="pratID" value="{{ page.selectPrat }}" >
+    {% endif %}
+    <button type="submit" class="btn btn-outline-secondary m-1">Chercher</button>
+  </form>
 
-    {% if page.data %}
+  {% if page.data %}
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
 
-          <div class="card-header gras">
-            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/" class="btn btn-secondary btn-sm float-right m-1">Voir rappels mail</a>
-            <h3>Campagne du {{ page.dates.emission|date("d/m/Y") }}</h3>
-          </div>
-
-          <ul class="list-group">
-            <li class="list-group-item">Statut :
-              {{ page.data.campaign.status }}
-              /
-              {{ page.data.campaign.statusText }}</li>
-            <li class="list-group-item">Numéros invalides :
-              {{ page.data.campaign.invalidNumbers }}</li>
-            <li class="list-group-item">Nombre de SMS :
-              {{ page.data.campaign.nbSms }}</li>
-            <li class="list-group-item">Nombre de crédits utilisés :
-              {{ page.data.campaign.creditsUsed }}</li>
-            <li class="list-group-item">Nombre de crédits restants :
-              {{ page.data.campaign.credits }}</li>
-            <li class="list-group-item">N° de campagne :
-              {{ page.data.campaign.campaignId }}</li>
-          </ul>
+        <div class="card-header font-weight-bold">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/{{ page.dates.emission|date("Y-m-d") }}/{% if page.selectPrat > 0 %}{{ page.selectPrat }}/{% endif %}" class="btn btn-secondary btn-sm float-right m-1">Voir rappels mail</a>
+          <h3>Campagne du {{ page.dates.emission|date("d/m/Y") }}</h3>
         </div>
-      </div>
 
-      <div class="col-md-6">
-
-        <div class="card">
-
-          <div class="card-header gras"><h3>SMS envoyés</h3>
-          </div>
-
-          <table class="table table-sm mb-0 table-hover  table-striped">
-            <thead>
-              <tr>
-                <th>RDV</th>
-                <th>Identité</th>
-                <th>N°</th>
-                <th>
-                  <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
-                    Statut
-                    <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
-                    <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
-                    <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fa fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
-                  </form>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {% for k, v in page.data.sms %}
-                <tr>
-                  <td>{{ v.heureRdv }}</td>
-                  <td>{{ v.identite }}</td>
-                  <td>{{ v.telFrDisplay }}</td>
-                  <td>
-                    {% if v.accRecepComment %}{{ v.accRecepComment }}
-                      /
-                      {{ v.accRecepRecepDate }}{% endif %}
-                  </td>
-                </tr>
-
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+        <ul class="list-group">
+          <li class="list-group-item">Statut :
+            {{ page.data.campaign.status }}
+            /
+            {{ page.data.campaign.statusText }}</li>
+          <li class="list-group-item">Numéros invalides :
+            {{ page.data.campaign.invalidNumbers }}</li>
+          <li class="list-group-item">Nombre de SMS :
+            {{ page.data.campaign.nbSms }}</li>
+          <li class="list-group-item">Nombre de crédits utilisés :
+            {{ page.data.campaign.creditsUsed }}</li>
+          <li class="list-group-item">Nombre de crédits restants :
+            {{ page.data.campaign.credits }}</li>
+          <li class="list-group-item">N° de campagne :
+            {{ page.data.campaign.campaignId }}</li>
+        </ul>
       </div>
     </div>
 
-    {% else %}
+    <div class="col-md-6">
 
-    <div class="alert alert-warning" role="alert">Pas de campagne enregistrée pour cette date.</div>
+      <div class="card">
 
-    {% endif %}
+        <div class="card-header font-weight-bold"><h3>SMS envoyés</h3>
+        </div>
 
+        <table class="table table-sm mb-0 table-hover  table-striped">
+          <thead class="thead-light">
+            <tr>
+              <th>RDV</th>
+              <th>Identité</th>
+              <th>N°</th>
+              <th>
+                <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
+                  Statut
+                  <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
+                  <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
+                  <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fas fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
+                </form>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for k, v in page.data.sms %}
+              <tr>
+                <td>{{ v.heureRdv }}</td>
+                <td>{{ v.identite }}</td>
+                <td>{{ v.telFrDisplay }}</td>
+                <td>
+                  {% if v.accRecepComment %}{{ v.accRecepComment }}
+                    /
+                    {{ v.accRecepRecepDate }}{% endif %}
+                </td>
+              </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
+  {% else %}
+
+    <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 400px); min-height: 250px">
+      <div class="mb-3"><i class="fas fa-comment-alt fa-10x text-light"></i></div>
+      <div class="text-muted">Pas de campagne enregistrée pour cette date.</div>
+    </div>
+
+  {% endif %}
 
 {% endblock %}

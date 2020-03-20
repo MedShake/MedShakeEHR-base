@@ -30,11 +30,27 @@
 $debug='';
 $template="historiquePrint";
 
+if(!is_numeric($match['params']['objetID'])) die;
+
 $objet = new msObjet();
-$p['page']['patient'] = $objet->getObjetDataByID($match['params']['objetID'], ['toID']);
+$objet->setObjetID($match['params']['objetID']);
+$p['page']['patient'] = $objet->getObjetDataByID(['toID']);
 
+$name2typeID = new msData();
+$name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
 
-if ($p['page']['print']=msSQL::sql2tab("select id, creationDate, value, toID, anonyme from printed where objetID='".$match['params']['objetID']."' order by creationDate desc")) {
+if ($p['page']['print']=msSQL::sql2tab("select p.id, p.creationDate, p.value, p.toID, p.anonyme,
+    CASE
+      WHEN ln1.value != '' THEN concat(ln1.value , ' ' , fn1.value)
+      ELSE concat(fn1.value , ' ' , bn1.value)
+    END as identiteAuteur
+    from printed as p
+    left join objets_data as ln1 on ln1.toID=p.fromID and ln1.typeID='".$name2typeID['lastname']."' and ln1.outdated='' and ln1.deleted=''
+    left join objets_data as bn1 on bn1.toID=p.fromID and bn1.typeID='".$name2typeID['birthname']."' and bn1.outdated='' and bn1.deleted=''
+    left join objets_data as fn1 on fn1.toID=p.fromID and fn1.typeID='".$name2typeID['firstname']."' and fn1.outdated='' and fn1.deleted=''
+    where p.objetID='".$match['params']['objetID']."'
+    order by p.creationDate desc")) {
+
     foreach ($p['page']['print'] as $k=>$v) {
         $p['page']['print'][$k]['value'] = msTools::cutHtmlHeaderAndFooter($v['value']);
     }

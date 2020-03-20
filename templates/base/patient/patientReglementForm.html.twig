@@ -44,16 +44,16 @@
                 <div class="form-group">
                     <label class="control-label" for="selectActe{{ loop.index }}">{{ k }}
                     </label>
-                    <select class="form-control custom-select selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
+                    <select class="custom-select selectActeStarter" id="selectActe{{ loop.index }}ID" name="selectActe{{ loop.index }}" autocomplete="off">
                         <option value=''></option>
                         {% for val in v %}
                             <option value="{{ val.id }}"
-                            {% if val.id == page.formActes.prevalue %} selected="selected" {% endif %}
+                            {% if val.id == page.selectedFactureTypeID %} selected="selected" {% endif %}
                              style="padding-top : 6px; padding-bottom : 6px; border-top : 1px solid #DDD;
                             {% if val.flagCmu %}background : #EEE; {% endif %}
                             {% if val.flagImportant %}font-weight : bold; {% endif %}
                             "
-                          >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ (val.details|keys)|join(' + ') }}</option>
+                          >{{ val.numIndexFSE }}. {{ val.label }} &harr; {{ val.syntheseActes }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -62,27 +62,30 @@
     </div>
 
     <div id="detFacturation" class="card col-md-12 px-0 mb-3" style="display: none;">
-      <div class="card-header text-center gras">Facturation à appliquer</div>
+      <div class="card-header text-center font-weight-bold">Facturation à appliquer</div>
 
       <table class="table table-sm mb-0">
         <thead>
-          <th class="col-1">acte</th>
-          <th class="text-left col-3"></th>
-          <th class="col-1 text-left" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}>code asso.</th>
-          <th class="col-1 text-center">base</th>
-          {% if page.secteur != '' %}
-            <th class="pourcents col-1 text-center">%</th>
-          {% endif %}
-          <th class="col-1 text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}>modif CCAM</th>
-          <th class="col-1 text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}></th>
-          <th class="col-1 text-center"></th>
-          {% if page.secteur == '' %}
-            <th class="col-1 text-center">modulation</th>
-          {% else %}
-            <th class="col-1 text-center">depassement</th>
-          {% endif %}
-          <th class="col-1 text-right">total</th>
-          <th class="col-auto"></th>
+          <tr>
+            <th class="">acte</th>
+            <th class="text-left"></th>
+            <th class="text-left" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 100px;"{% endif %}>code asso.</th>
+            <th class="text-center">base</th>
+            {% if page.formIN != 'baseReglementLibre' %}
+              <th class="pourcents text-center" style="width : 100px;">quantité</th>
+            {% endif %}
+            <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% else %} style="width : 120px;"{% endif %}>modif CCAM</th>
+            <th class="text-center" {% if page.form.addHidden.reglementForm == 'baseReglementLibre' %} style="display : none"{% endif %}></th>
+            <th class="text-center"></th>
+            {% if page.secteur == 'baseReglementLibre' %}
+              <th class="text-center" style="width : 120px;">modulation</th>
+            {% else %}
+              <th class="text-center" style="width : 120px;">dépassement</th>
+              <th class="text-right" style="width : 80px;"></th>
+            {% endif %}
+            <th class="text-right">total</th>
+            <th class=""></th>
+          </tr>
         </thead>
 
         <tbody></tbody>
@@ -99,4 +102,17 @@
       </script>
     {% endif %}
 
+    <script>
+      modificateursCcamValue = {
+        {% for code, val in page.modifcateursCcam %}
+        '{{ code }}' : '{{ val.tarif }}',
+        {% endfor %}
+      };
+
+      modificateursCcamUnit = {
+        {% for code, val in page.modifcateursCcam %}
+        '{{ code }}' : '{{ val.tarifUnit }}',
+        {% endfor %}
+      };
+    </script>
 </div>

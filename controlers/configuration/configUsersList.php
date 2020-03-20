@@ -34,14 +34,23 @@
      $template="configUsersList";
      $debug='';
 
-     $name2typeID = new msData();
-     $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
-     $p['page']['modules']=msSQL::sql2tabKey("SELECT id, name AS module FROM system WHERE groupe='module'", "id", "module");
+     $p['page']['modules']=msModules::getInstalledModulesNames();
+     $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
      $p['page']['userid']=$p['user']['id'];
-     $p['page']['users']=msSQL::sql2tab("select pp.id, pp.name, pp.rank, pp.module, p.value as prenom, CASE WHEN n.value != '' THEN n.value ELSE bn.value END as nom
-      from people as pp
-      left join objets_data as n on n.toID=pp.id and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-      left join objets_data as bn on bn.toID=pp.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-      left join objets_data as p on p.toID=pp.id and p.typeID='".$name2typeID['firstname']."' and p.outdated=''  and p.deleted=''
-      where pp.name!='' and pp.pass!='' order by pp.id");
+     $p['page']['users']=msPeopleSearch::getUsersList();
+
+     $formModal = new msForm;
+     $formModal->setFormIDbyName($p['page']['formIN']='baseNewUser');
+     $formModal->setOptionsForSelect(array(
+       'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
+       'module'=>$p['page']['modules'],
+     ));
+     $p['page']['formModal']=$formModal->getForm();
+
+     if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
+       $formModal->removeFieldAttrAfterwards($p['page']['formModal'], 'password', ['tabindex']);
+     } else {
+       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
+     }
  }

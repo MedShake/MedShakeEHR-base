@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 //utilisateurs pouvant avoir un agenda
 $agendaUsers= new msPeople();
@@ -88,6 +88,7 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
         $js[]="    events:[\n";
         $d=1;
         foreach(['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] as $day) {
+          if(isset($params[$day]['pauseStart'], $params[$day]['pauseEnd'])) {
             if ($params[$day]['pauseStart'] != $params[$day]['pauseEnd'] and !in_array($d, $hiddenDays)) {
                 $js[]="      {\n";
                 $js[]="        start: '".$params[$day]['pauseStart'].":00',\n";
@@ -97,8 +98,9 @@ if($_POST['userID']>0 and in_array($_POST['userID'], array_keys($autorisedUsers)
                 $js[]="        className: 'fc-nonbusiness'\n";
                 $js[]="      },\n";
             }
-            $d++;
-            $d%=7;
+          }
+          $d++;
+          $d%=7;
         }
         $js[]="    ]\n";
         $js[]="  }\n";

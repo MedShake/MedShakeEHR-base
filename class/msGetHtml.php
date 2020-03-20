@@ -36,10 +36,16 @@ class msGetHtml
  */
   private $_template;
 /**
+ * extension du nom de fichier de template à utiliser
+ * @var string
+ */
+  private $_templateFileExt='.html.twig';
+/**
  * répertoire(s) ou le template doit être trouvé
  * @var array
  */
   private $_templatesDirectories;
+
 
 /**
  * Définir le template
@@ -49,8 +55,18 @@ class msGetHtml
  */
   public function set_template($_template)
   {
-      $_template=str_ireplace('.html.twig', '', $_template);
+      $_template=str_ireplace($this->_templateFileExt, '', $_template);
       $this->_template = $_template;
+      return $this;
+  }
+
+/**
+ * Définir l'extension des fichiers de templates
+ * @param string $templateFileExt .html.twig ou .xml.twig sauf cas particulier
+ */
+  public function set_templateFileExt($templateFileExt)
+  {
+      $this->_templateFileExt = $templateFileExt;
       return $this;
   }
 
@@ -113,19 +129,19 @@ class msGetHtml
       }
 
       // Lancer Twig
-      $loader = new Twig_Loader_Filesystem($this->_templatesDirectories);
-      $twig = new Twig_Environment($loader, $twigEnvironment);
-      $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-      $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+      $loader = new \Twig\Loader\FilesystemLoader($this->_templatesDirectories);
+      $twig = new \Twig\Environment($loader, $twigEnvironment);
+      $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+      $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
-      return $twig->render($this->_template.'.html.twig', $p);
+      return $twig->render($this->_template.$this->_templateFileExt, $p);
   }
 
-  /**
-   * Générer le HTML et le retourner mais avec variable injectée
-   * @return string HTML générer par le moteur de template
-   */
-    public function genererHtmlString($var)
+/**
+ * Générer le HTML et le retourner mais avec variable injectée
+ * @return string HTML généré par le moteur de template
+ */
+    public function genererHtmlVar($var)
     {
         global $p;
 
@@ -150,12 +166,43 @@ class msGetHtml
         }
 
         // Lancer Twig
-        $loader = new Twig_Loader_Filesystem($this->_templatesDirectories);
-        $twig = new Twig_Environment($loader, $twigEnvironment);
-        $twig->getExtension('Twig_Extension_Core')->setDateFormat('d/m/Y', '%d days');
-        $twig->getExtension('Twig_Extension_Core')->setTimezone('Europe/Paris');
+        $loader = new \Twig\Loader\FilesystemLoader($this->_templatesDirectories);
+        $twig = new \Twig\Environment($loader, $twigEnvironment);
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
-        return $twig->render($this->_template.'.html.twig', $var);
+        return $twig->render($this->_template.$this->_templateFileExt, $var);
+    }
+
+
+/**
+ * Obtenir l'interprétation d'une chaine comportant des balises twig
+ * @param  string $string chaine à interpréter
+ * @param  array $var    array pour les tags
+ * @return string         chaine interprétée
+ */
+    public static function genererHtmlFromString($string, $var) {
+        global $p;
+        // les variables d'environnement twig
+        if (isset($p['config']['twigEnvironnementCache'])) {
+            $twigEnvironment['cache']=$p['config']['twigEnvironnementCache'];
+        } else {
+            $twigEnvironment['cache']=false;
+        }
+        if (isset($p['config']['twigEnvironnementAutoescape'])) {
+            $twigEnvironment['autoescape']=$p['config']['twigEnvironnementAutoescape'];
+        } else {
+            $twigEnvironment['autoescape']=false;
+        }
+
+        if(empty($string)) return;
+
+        $tplName = uniqid( 'string_template_', true );
+        $loader = new \Twig\Loader\ArrayLoader([ $tplName => $string ]);
+        $twig = new \Twig\Environment($loader, $twigEnvironment);
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
+        $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
+        return $twig->render($tplName, $var);
     }
 
 /**

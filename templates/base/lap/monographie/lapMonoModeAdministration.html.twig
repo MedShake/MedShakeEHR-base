@@ -30,7 +30,7 @@
 <table class="table table-sm table-hover">
   <tbody>
     <tr>
-      <td class="gras">Voie(s) d'administration
+      <td class="font-weight-bold">Voie(s) d'administration
       </td>
       <td>
         <ul class="list-unstyled">
@@ -42,12 +42,14 @@
     </tr>
 
     <tr>
-      <td class="gras">Modalité(s)
+      <td class="font-weight-bold">Modalité(s)
       </td>
       <td>
         <ul class="list-unstyled">
-          {% for modalite in page.modeAdministration.posoComUti.1 if modalite.grp starts with '2.' %}
-            <li>{{ modalite.info_01 }}</li>
+          {% for modalite in page.modeAdministration.posoComUti.1 %}
+            {% if modalite.grp starts with '2.' %}
+              <li>{{ modalite.info_01 }}</li>
+            {% endif %}
           {% endfor %}
         </ul>
       </td>
@@ -60,15 +62,17 @@
     </tr>
 
 
-    {% for ref in page.modeAdministration.posoComUti.1 if ref.grp == '3' %}
-      {% if loop.first %}
-        <tr>
-          <td class="gras">Référence(s) officielle(s)</td>
-          <td>
-            <ul class="list-unstyled">
+    {% for ref in page.modeAdministration.posoComUti.1 %}
+      {% if ref.grp == '3' %}
+        {% if loop.first %}
+          <tr>
+            <td class="font-weight-bold">Référence(s) officielle(s)</td>
+            <td>
+              <ul class="list-unstyled">
+        {% endif %}
+              <li>{{ ref.info_01 }}
+                {{ ref.date_01|date("d/m/Y") }}</li>
       {% endif %}
-            <li>{{ ref.info_01 }}
-              {{ ref.date_01|date("d/m/Y") }}</li>
     {% endfor %}
     {% if loop.index > 0 %}
         </ul>

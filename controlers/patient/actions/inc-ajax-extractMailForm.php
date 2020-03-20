@@ -32,7 +32,7 @@ $debug='';
 $template="mailForm";
 
 //recupére les administrative data
-$to=new msPeople();
+$to=new msPeopleRelations();
   $to->setToID($_POST['patientID']);
   $toAdminData=$to->getSimpleAdminDatasByName();
 
@@ -42,31 +42,46 @@ if ($_POST['mailType']=='ns') {
     $preValues['mailTo']= array_key_exists('personalEmail', $toAdminData) ? $toAdminData['personalEmail'] : '';
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['smtpDefautSujet'];
-    $catModelesMails=msData::getCatIDFromName('catModelesMailsToPatient');
+    $catModelesMails='catModelesMailsToPatient';
+    //les correspondants
+    $p['page']['correspondants']=$to->getRelationsWithPros();
 } elseif ($_POST['mailType']=='apicrypt') {
     $preValues['mailFrom']=$p['config']['apicryptAdresse'];
     $preValues['mailBody']="";
     $preValues['mailSujet']=$p['config']['apicryptDefautSujet'];
-    $catModelesMails=msData::getCatIDFromName('catModelesMailsToApicrypt');
+    $catModelesMails='catModelesMailsToApicrypt';
+    //les correspondants et liens familiaux
+    $p['page']['correspondants']=$to->getRelationsWithPros(['emailApicrypt'], ['emailApicrypt']);
+} elseif ($_POST['mailType']=='ecofax') {
+    $catModelesMails=false;
+    $p['page']['correspondants']=$to->getRelationsWithPros(['faxPro'], ['faxPro']);
 } else {
-    $catModelesMails=0;
+    $catModelesMails=false;
+}
+
+$submitLabel='Envoyer';
+if ($_POST['mailType']=='ecofax') {
+  $submitLabel='Faxer';
 }
 
 //modèles
-//les certificats
-$lm=new msData();
-if($lm=$lm->getDataTypesFromCatID($catModelesMails, ['id','label'])) {
-  $preValues['446'][0]='';
-  foreach($lm as $v) {
-    $preValues['446'][$v['id']]=$v['label'];
+$lmc=new msData();
+if($catModelesMails and $lm=$lmc->getDataTypesFromCatName($catModelesMails, ['id','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+  $lmc->applyRulesOnlyforNotforOnArray($lm, $p['user']['id']);
+  $typeID = msData::getTypeIDFromName('mailModeles');
+  $preValues[$typeID][0]='';
+  if(!empty($lm)) {
+    foreach($lm as $v) {
+      $preValues[$typeID][$v['id']]=$v['label'];
+    }
   }
 }
-
 
 //sur le doc à joindre
 if (isset($_POST['objetID'])) {
     $doc = new msObjet();
-    $p['page']['doc']=$doc->getCompleteObjetDataByID($_POST['objetID']);
+    $doc->setObjetID($_POST['objetID']);
+    $p['page']['doc']=$doc->getCompleteObjetDataByID();
 
     //make URL
     $doc = new msStockage;
@@ -75,6 +90,7 @@ if (isset($_POST['objetID'])) {
     if ($doc->testDocExist()) {
         $p['page']['doc']['url']=$doc->getWebPathToDoc();
         $p['page']['doc']['filesize']=$doc->getFileSize(0);
+        $p['page']['doc']['mimetype']=msTools::getmimetype($doc->getPathToDoc());
     } else {
         $pdf= new msPDF();
         $pdf->setObjetID($_POST['objetID']);
@@ -84,17 +100,22 @@ if (isset($_POST['objetID'])) {
         if ($doc->testDocExist()) {
             $p['page']['doc']['url']=$doc->getWebPathToDoc();
             $p['page']['doc']['filesize']=$doc->getFileSize(0);
+            $p['page']['doc']['mimetype']=msTools::getmimetype($doc->getPathToDoc());
         }
+    }
+
+    if(isset($p['page']['doc']['mimetype'])) {
+      $p['page']['doc']['mimetypeParts'] = explode('/', $p['page']['doc']['mimetype']);
     }
 }
 
 //formulaire
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
-$form->setPrevalues($preValues);
+if(isset($preValues)) $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
-$form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
+$form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block', $submitLabel);
 
 $p['page']['form']['addHidden']=array(
   'patientID'=>$_POST['patientID'],

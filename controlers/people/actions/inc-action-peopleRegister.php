@@ -38,10 +38,33 @@ if (!isset($_POST['actAsAjax'])) {
     $match['params']['porp']=$_POST['porp'];
 }
 
+// vérification des droits
+if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien']!='true') {
+  die("Action interdite");
+}
+
 //definition formulaire de travail
-$form = new msForm();
+$form = new msFormValidation();
 $form->setFormIDbyName($formIN);
 $form->setPostdatas($_POST);
+$form->setContextualValidationErrorsMsg(false);
+$form->setContextualValidationRule('birthname',['checkNoName']);
+
+
+if ($match['params']['porp']=='pro' and !$actAsAjax) {
+
+  //si jeux de valeurs normées présents
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+    $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+  }
+
+  if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+    $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+    $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
+  }
+  if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
+}
 $validation=$form->getValidation();
 
 
@@ -67,8 +90,6 @@ if ($validation === false) {
     } else {
         $patient->setToID($_POST['patientID']);
     }
-    $patient->setDataset('admin');
-
 
     foreach ($_POST as $k=>$v) {
         if (($pos = strpos($k, "_")) !== false) {
@@ -88,8 +109,10 @@ if ($validation === false) {
     } else {
         if ($match['params']['porp']=='pro') {
             msTools::redirection('/pro/'.$patient->getToID().'/');
-        } else {
+        } elseif($p['config']['optionGePatientOuvrirApresCreation'] == 'liens') {
             msTools::redirection('/patient/relations/'.$patient->getToID().'/');
+        } else {
+            msTools::redirection('/patient/'.$patient->getToID().'/');
         }
     }
 }

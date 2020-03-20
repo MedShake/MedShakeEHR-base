@@ -40,7 +40,7 @@
       {% endif %}
       {% if config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
       <li class="nav-item">
-        <a class="nav-link" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
+        <a id="prescriptionsTypesButton" class="nav-link{% if config.utiliserLap != 'true' %} active{% endif %}" href="#prescriptionsTypes" data-toggle="tab">Prescriptions types</a>
       </li>
       {% endif %}
     </ul>
@@ -149,7 +149,7 @@
       {% endif %}
 
       {# prescriptions types #}
-      <div role="tabpanel" class="tab-pane" id="prescriptionsTypes">
+      <div role="tabpanel" class="tab-pane{% if config.utiliserLap != 'true' %} active{% endif %}" id="prescriptionsTypes">
         <h3>Gestion des catégories et des prescriptions types personnelles</h3>
 
         <div class="alert alert-info" role="alert">

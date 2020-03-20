@@ -46,7 +46,8 @@ $acceptedModes=array(
     'userParametersDelByPrimaryKey', // effacer d'une table par la primary key
     'userParametersPrescriptionsCatCreate', // céer une nouvelle catégorie
     'userParametersPrescriptionsCreate', // créer une nouvelle prescription type
-
+    'userParametersAdministratif', // changer les paramètres Administratif
+    'cleanSessionFormWarning', // supprimer les alertes formulaire en session
 );
 
 //inclusion

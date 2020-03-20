@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -67,7 +67,7 @@
           </div>
         {% endfor %}
         <table class="table table-sm mb-0 table-hover table-striped checkboxFixValue">
-          <thead class="thead-dark">
+          <thead class="thead-light">
             <tr>
               <th>Paramètre</th>
               <th>Valeur</th>
@@ -100,7 +100,7 @@
                         'id' : param.name ~ 'ID',
                         'class' : 'form-control form-control-sm',
                         'value' : param.value,
-                        'plus' : 'password' in (param.name|lower) ? '<i class="fa fa-eye viewPassword"></i>' : '',
+                        'plus' : 'password' in (param.name|lower) ? '<i class="fas fa-eye viewPassword"></i>' : '',
                         'autocomplete' : 'off',
                         'readonly' : param.readonly|default('')
                       }

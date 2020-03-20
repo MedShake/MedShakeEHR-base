@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}Historique général des envois par mail - MedShakeEHR{% endblock %}
+{% block title %}{{ config.designAppName }} : historique général des envois par mail{% endblock %}
 
 {% block head %}
     {{ parent() }}
@@ -53,16 +53,16 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col">
-      <div class="btn-group float-right m-1" role="group" aria-label="...">
-        <a class="btn btn-secondary btn-sm" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
-          <span class="fa fa-chevron-left" aria-hidden="true"></span>
+<div class="row mb-2">
+  <div class="col text-right">
+      <div class="btn-group" role="group" aria-label="...">
+        <a class="btn btn-secondary" {% if page.nextStart < 0 %}disabled{% endif %} role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.nextStart }}/">
+          <span class="fas fa-chevron-left" aria-hidden="true"></span>
           Plus récents
         </a>
-        <a class="btn btn-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
+        <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/{{ page.expediteurID }}/{{ page.previousStart }}/">
           Plus anciens
-          <span class="fa fa-chevron-right" aria-hidden="true"></span>
+          <span class="fas fa-chevron-right" aria-hidden="true"></span>
         </a>
       </div>
   </div>
@@ -71,7 +71,7 @@
 <div class="row">
   <div class="col">
     <table class="table table-sm mb-0 table-hover ">
-        <thead>
+        <thead class="thead-light">
             <tr>
                 <th>Date</th>
                 <th>De</th>
@@ -92,16 +92,16 @@
                     <td>
                       <div class="btn-group">
                         <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/">
-                          <span class="fa fa-folder-open" aria-hidden="true"></span>
+                          <span class="fas fa-folder-open" aria-hidden="true"></span>
                         </a>
                       </div>
-                      {{ v.patient.3 }}
-                      {% if v.patient.1 and v.patient.2 %}
-                        {{ v.patient.2|e }} ({{ v.patient.1|e }})
-                      {% elseif v.patient.2 %}
-                        {{ v.patient.2 }}
+                      {{ v.patient.firstname }}
+                      {% if v.patient.birthname and v.patient.lastname %}
+                        {{ v.patient.lastname|e }} ({{ v.patient.birthname|e }})
+                      {% elseif v.patient.lastname %}
+                        {{ v.patient.lastname }}
                       {% else %}
-                        {{ v.patient.1 }}
+                        {{ v.patient.birthname }}
                       {% endif %}
                     </td>
 

@@ -37,13 +37,14 @@
    if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$_POST['patientID']."' ", 'instance', 'value')) {
        foreach ($d as $k=>$v) {
            $ob = new msObjet();
-           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID($k);
+           $ob->setObjetID($k);
+           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
        }
    }
 
    //on complète les data dicom avec un datetime facilement exploitable et on rapproche de la liste de l'EHR
    foreach ($p['page']['studiesDcData'] as $k=>$v) {
-       $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+       $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
        if(isset($p['page']['studiesDcDataRapro'][$v['ID']])) $p['page']['studiesDcData'][$k]['ehr'] = $p['page']['studiesDcDataRapro'][$v['ID']];
    }
 

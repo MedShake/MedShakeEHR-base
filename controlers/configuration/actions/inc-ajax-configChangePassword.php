@@ -24,12 +24,67 @@
  * Config : change le mot de passe d'un utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
-if(!is_numeric($_POST['id']) or !isset($_POST['password'])) die;
+if($p['config']['optionGeLoginPassAttribution'] == 'random') {
+  //check & validate datas
+  $gump=new GUMP('fr');
+  $_POST = $gump->sanitize($_POST);
+  $gump->validation_rules(array(
+    'id'=> 'required|numeric',
+  ));
+  $gump->filter_rules(array(
+    'id'=> 'trim',
+  ));
 
-msSQL::sqlQuery("UPDATE people SET pass=AES_ENCRYPT('".$_POST['password']."',@password) WHERE id='".$_POST['id']."'");
+  $validated_data = $gump->run($_POST);
 
-echo json_encode(array('ok'));
+  if ($validated_data === false) {
+    exit(json_encode([
+      'status'=>'erreur',
+      'msg'=>implode('; ',$gump->get_errors_array())
+    ]));
+  } else {
+    $randomPassword = msTools::getRandomStr($p['config']['optionGeLoginPassMinLongueur']);
+    msUser::setUserNewPassword($_POST['id'], $randomPassword);
+    msUser::mailUserNewPassword($_POST['id'], $randomPassword);
+
+    exit(json_encode([
+      'status'=>'ok',
+      'msg'=>''
+    ]));
+  }
+
+
+} else {
+  //check & validate datas
+  $gump=new GUMP('fr');
+  $_POST = $gump->sanitize($_POST);
+  $gump->validation_rules(array(
+    'id'=> 'required|numeric',
+    'password'=> 'required|checkPasswordLength',
+  ));
+
+  $gump->filter_rules(array(
+    'id'=> 'trim',
+    'password'=> 'trim',
+  ));
+
+  $validated_data = $gump->run($_POST);
+
+  if ($validated_data === false) {
+    exit(json_encode([
+      'status'=>'erreur',
+      'msg'=>implode('; ',$gump->get_errors_array())
+    ]));
+  } else {
+    msUser::setUserNewPassword($_POST['id'], $_POST['password']);
+    exit(json_encode([
+      'status'=>'ok',
+      'msg'=>''
+    ]));
+  }
+}

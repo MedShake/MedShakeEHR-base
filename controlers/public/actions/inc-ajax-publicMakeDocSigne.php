@@ -27,17 +27,19 @@
  */
 
 $signature=$_POST['signatureSvg'];
+$signPeriphName=$_POST['signPeriphName'];
 
-$svg=$p['config']['workingDirectory'].'signature.svg';
-$png=$p['config']['workingDirectory'].'signature.png';
+$svg=$p['config']['workingDirectory'].$signPeriphName.'signature.svg';
+$png=$p['config']['workingDirectory'].$signPeriphName.'signature.png';
 
-if (is_file($p['config']['workingDirectory'].'consentementPatientID.txt')) {
-    $patientID=trim(file_get_contents($p['config']['workingDirectory'].'consentementPatientID.txt'));
+
+if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')) {
+    $data=Spyc::YAMLLoad($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');
 } else {
-    $patientID=null;
+    $data['patientID']=null;
 }
 
-if ($signature and is_numeric($patientID)) {
+if ($signature and is_numeric($data['patientID'])) {
     file_put_contents($svg, $signature[1]);
     exec('convert '.$svg.' '.$png);
 
@@ -51,33 +53,38 @@ if ($signature and is_numeric($patientID)) {
 
     //Data patient
     $courrier = new msCourrier();
-    $courrier->setPatientID($patientID);
-    $p['page']['courrier']=$courrier->getCourrierData();
+    $courrier->setPatientID($data['patientID']);
+    if(isset($data['objetID'])) {
+      $courrier->setObjetID($data['objetID']);
+      $p['page']['courrier']=$courrier->getDataByObjetID();
+    } elseif (is_numeric($data['patientID'])) {
+      $courrier->setFromID($data['fromID']);
+      $p['page']['courrier']=$courrier->getCourrierData();
+    }
 
     $pdf= new msPDF();
-    $pdfCorps = $pdf->makeWithTwig('consentementEcho.html.twig');
+    $pdfCorps = $pdf->makeWithTwig($data['template'].'.html.twig');
     $signIMG = '<img src="'.$png.'" style="height : 50pt" />';
-    $pdfCorps = str_replace('<!-- signatureIMG -->', '<br><br>'.$signIMG, $pdfCorps);
+    $pdfCorps = str_replace('<!-- signatureIMG -->', $signIMG, $pdfCorps);
     $pdfCorps = str_replace('class="tailleFont"', 'style="font-size : 9pt;"', $pdfCorps);
 
+    if(!isset($data['objetID'])) {
 
-    // nouvel objet support
-    $doc = new msObjet();
-    $doc->setFromID('3');
-    $doc->setToID($patientID);
+      // nouvel objet support
+      $doc = new msObjet();
+      $doc->setFromID($data['fromID']);
+      $doc->setToID($data['patientID']);
 
-
-    if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
-
+      if ($supportID=$doc->createNewObjetByTypeName('docPorteur', '')) {
         //titre
-        $doc->setTitleObjet($supportID, 'Consentement échographie foetale');
+        $doc->setTitleObjet($supportID, $data['label']);
 
         //type
         $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
         $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
-        $pdf->setFromID('0');
-        $pdf->setToID($patientID);
+        $pdf->setFromID($data['fromID']);
+        $pdf->setToID($data['patientID']);
         $pdf->setType('doc');
         $pdf->setObjetID($supportID);
 
@@ -87,9 +94,18 @@ if ($signature and is_numeric($patientID)) {
 
         $pdf->makePDF();
         $pdf->savePDF();
+      }
+    } elseif(is_numeric($data['objetID'])) {
+      $pdf->setObjetID($data['objetID']);
+      $pdf->setPageHeader('');
+      $pdf->setPageFooter('');
+      $pdf->setBodyFromPost($pdfCorps);
+      $pdf->makePDFfromObjetID();
+      $pdf->savePDF();
     }
+
 }
 
 unlink($svg);
 unlink($png);
-unlink($p['config']['workingDirectory'].'consentementPatientID.txt');
+unlink($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');

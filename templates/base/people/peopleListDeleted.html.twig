@@ -28,18 +28,50 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}Liste des dossiers supprimés - MedShakeEHR{% endblock %}
+{% block title %}{{ config.designAppName }} : liste des dossiers supprimés{% endblock %}
 
-{% block head %}
+{% block jsFiles %}
   {{ parent() }}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
 {% endblock %}
 
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+
+    $('body').on('click', 'button.destroyPeople', function (e) {
+      var peopleID = $(this).attr('data-patientID');
+      var peopleIdentity = $(this).attr('data-patientIdentite');
+
+      $('#peopleIdentity').html(peopleIdentity);
+      $('#peopleNumber').html(peopleID);
+      $('#modalpeopleDestroy input[name="peopleID"]').val(peopleID);
+    });
+
+    $('body').on('click', '#formDestroyePeople button[type="submit"]', function (e) {
+      e.preventDefault();
+      ajaxModalSave('#formDestroyePeople', '#modalpeopleDestroy' , function(){ $('#modalpeopleDestroy').modal('hide');
+      window.location.reload();});
+    });
+
+
+  });
+
+{% endblock %}
+
+
 {% block body %}
   <h1>Liste des dossiers supprimés</h1>
 
-  <table class="table table-sm mb-0 table-hover  table-striped">
-    <thead>
+  {% if page.users|length < 1 %}
+  <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 300px); min-height: 250px">
+    <div class="mb-3"><i class="fas fa-user-slash fa-10x text-light"></i></div>
+    <div class="text-muted">Il n'existe aucun dossier supprimé.</div>
+  </div>
+  {% else %}
+
+  <table class="table table-sm mt-4 table-hover  table-striped">
+    <thead class="thead-light">
       <tr>
         <th>#</th>
         <th>Dossier</th>
@@ -56,7 +88,7 @@
           <td>{{ v.id }}</td>
           <td>
             <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ v.typeDossier }}/{{ v.id }}/" title="Afficher le dossier">
-              <span class="fa fa-folder-open" aria-hidden="true"></span>
+              <span class="fas fa-folder-open" aria-hidden="true"></span>
             </a>
             {{ v.identiteDossier|e }}
           </td>
@@ -64,11 +96,16 @@
           <td>{{ v.identiteUser|e }}</td>
           <td>{{ v.dateDeleted|e }}</td>
           <td>{{ v.motif|e }}</td>
-          <td class="d-flex justify-content-end">
+          <td class="text-right">
             <div class="btn-group">
-              <button type="button" class="btn btn-light btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
-                <span class="fa fa-undo-alt" aria-hidden="true"></span>
+              <button type="button" class="btn btn-primary btn-sm unmarkDeleted" data-patientID="{{ v.id }}" title="Réactiver ce dossier">
+                <i class="fas fa-trash-restore"></i>
               </button>
+              {% if config.optionGeDestructionDataDossierPatient == 'true' %}
+                <button type="button" class="btn btn-danger btn-sm destroyPeople" data-patientID="{{ v.id }}" data-patientIdentite="{{ v.identiteDossier|e }}" title="Suppression totale et irréversible de ce dossier" data-toggle="modal" data-target="#modalpeopleDestroy">
+                  <i class="fas fa-trash"></i>
+                </button>
+              {% endif %}
             </div>
 
           </td>
@@ -77,5 +114,45 @@
       {% endfor %}
     </tbody>
   </table>
+  {% endif %}
 
+{% endblock %}
+
+{% block modals %}
+  <div id="modalpeopleDestroy" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form id="formDestroyePeople" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/peopleDestroy/" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title font-weight-bold">Détruire un dossier</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {{ f.errorsBloc }}
+            <div class="alert alert-danger" role="alert">
+              <p class="font-weight-bold">Vous demandez la destruction du dossier #<span id="peopleNumber"></span>  - <span id="peopleIdentity"></span></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span>
+                  <p class="mb-0">Cette destruction est :</p>
+                  <ul class="list-style-position-inside pl-0 pt-0" >
+                    <li>totale</li>
+                    <li>irréversible</li>
+                    <li>sans sauvegarde automatique préalable</li>
+                  </ul>
+                </span>
+                <i class="fas fa-exclamation-triangle fa-5x"></i>
+              </div>
+            {{ f.formbuilder(page.formDel , page.formIN , session) }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Détruire définitivement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}

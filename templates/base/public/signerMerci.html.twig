@@ -34,14 +34,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>
-      Votre consentement est bien enregistré, merci !
+      Le document est bien enregistré, merci !
     </title>
     <meta name="Description" content="{% block metaDescription %}{% endblock %}"/>
     <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
     {# css #}
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
 
     {# js #}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
@@ -55,7 +54,6 @@
       body {
         padding: 10px;
       }
-
     </style>
 
     {% block head %}{% endblock %}
@@ -64,8 +62,8 @@
   <body>
     <div class="container">
     <div class="jumbotron col-md-12">
-      <p>Votre consentement est bien enregistré, merci !<br><br>
-        Vous pouvez maintenant rendre cette tablette à la secrétaire.
+      <p>Le document est bien enregistré, merci !<br><br>
+        Vous pouvez maintenant rendre cette tablette.
       </p>
     </div>
     </div>

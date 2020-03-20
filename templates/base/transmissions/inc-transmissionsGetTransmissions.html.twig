@@ -1,0 +1,74 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Transmissions, bloc des sujets pour inclusion
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% if page.listeSujets is empty %}
+  <tr>
+    <td colspan="6">Pas de transmission répondant aux critères</td>
+  </tr>
+{% else %}
+ {% for suj in page.listeSujets %}
+   <tr class="{% if suj.updateDate > suj.dateLectureUser %} font-weight-bold{% endif %} voirTransmission" data-transmissionid="{{ suj.id }}" style="cursor: pointer;">
+     <td>
+       {% if suj.registerDate|date('Ymd') != "now"|date('Ymd') %}
+        {{ suj.registerDate|date('d/m/Y H:i') }}
+       {% else %}
+         {{ suj.registerDate|date('H:i') }}
+       {% endif %}
+     </td>
+     <td>
+       {% if suj.priorite == 10 %}<i class="fas fa-exclamation-triangle fa-lg text-danger"></i>{% elseif suj.priorite == 5 %}<i class="fas fa-exclamation-triangle fa-lg text-warning">{% endif %}
+     </td>
+     <td>
+       <a href="/transmission/{{ suj.id }}/" class="text-dark">{{ suj.sujet }}</a>
+     </td>
+     <td>
+       {% if suj.aboutID > 0 %}
+       <a class="btn btn-sm btn-light" target="_blank" href="/patient/{{ suj.aboutID }}/"><i class="fas fa-folder-open"></i></a> {{ suj.identiteAbout }}
+       {% endif %}
+     </td>
+     <td>{{ suj.identiteAuteur }}</td>
+     <td>
+       {% if suj.destinataires|length > 0 %}
+         <ul class="list-unstyled my-0">
+           {% for desti in suj.destinataires %}
+             <li>
+               {{ desti.identiteDestinataire }}
+               {% if suj.updateDate > desti.dateLecture %} <i class="fas fa-eye-slash font-weight-bold text-danger" title="non lu par le destinataire"></i>{% else %} <i class="far fa-eye font-weight-bold text-success" title="lu par le destinataire"></i>{% endif %}
+               {% if desti.statut == 'checked' %}
+                   <i class="fas fa-clipboard-check font-weight-bold text-success" title="Considérée comme traitée par le destinataire"></i>
+               {% endif %}
+
+             </li>
+           {% endfor %}
+         </ul>
+       {% else %}
+         Tous
+       {% endif %}
+     </td>
+   </tr>
+ {% endfor %}
+{% endif %}

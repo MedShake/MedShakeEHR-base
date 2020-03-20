@@ -109,7 +109,7 @@
           $p['page']['check']['templatesPdfFolder']['is_dir']=false;
           $p['page']['check']['templatesPdfFolder']['is_writable']=false;
       }
- 
+
       //repertoire de backup
       if (is_dir($p['config']['backupLocation'])) {
           $p['page']['check']['backupLocation']['is_dir']=true;
@@ -120,5 +120,63 @@
           $p['page']['check']['backupLocation']['is_dir']=false;
           $p['page']['check']['backupLocation']['is_writable']=false;
       }
+
+      // Détection des bin nécessaires
+      $com=[
+        'gs',
+        'awk',
+        'mysql',
+        'mysqldump',
+        'dump2dcm',
+        'img2dcm',
+        'storescu',
+        'convert',
+        'git',
+        'pdftk',
+      ];
+      sort($com);
+      foreach($com as $co) {
+        $p['page']['commands'][$co]=msTools::commandExist($co);
+      }
+
+      // modules php
+      $modulesPHP = get_loaded_extensions();
+      $modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'soap', 'dom', 'gnupg'];
+      sort($modulesPHPrequis);
+      foreach($modulesPHPrequis as $mod) {
+        if(in_array($mod, $modulesPHP)) {
+          $p['page']['modulesPHP'][$mod]=true;
+        } else {
+          $p['page']['modulesPHP'][$mod]=false;
+        }
+      }
+
+      // var PHP
+      $varPHP = ['memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size', 'max_input_vars'];
+      $p['page']['recoVarPHP'] = ['memory_limit'=>128, 'max_execution_time'=>30, 'upload_max_filesize'=>20, 'post_max_size'=>20, 'max_input_vars'=>20000];
+      sort($varPHP);
+      foreach($varPHP as $var) {
+        $p['page']['varPHP'][$var]['val']=ini_get($var);
+        if(strpos($p['page']['varPHP'][$var]['val'],'G') > 1) {
+          $p['page']['varPHP'][$var]['valBrute'] = (int)$p['page']['varPHP'][$var]['val'] * 1000;
+        } else {
+          $p['page']['varPHP'][$var]['valBrute'] = (int)$p['page']['varPHP'][$var]['val'];
+        }
+      }
+
+      // composer
+      $p['page']['composerBack'] = msExternalData::jsonFileToPhpArray($homepath.'composer.lock');
+      $p['page']['composerFront'] = msExternalData::jsonFileToPhpArray($p['config']['webDirectory'].'composer.lock');
+
+
+      // apicrypt 2
+      if(class_exists('msApicrypt2')) {
+        $p['page']['apicrypt2present'] = true;
+        $apicrypt2 = new msApicrypt2;
+        $ping = $apicrypt2->global_tic();
+        if(isset($ping->reply) and $ping->reply == 'toc' and $apicrypt2->isHealthy()) $p['page']['apicrypt2ping'] = true;
+
+      }
+
 
 }

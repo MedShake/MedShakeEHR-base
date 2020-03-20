@@ -24,6 +24,7 @@
  * Installateur sur base préinstallée
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 $webpath=str_replace('/install.php','',$_SERVER['REQUEST_URI']);
@@ -68,6 +69,10 @@ if (!is_file($homepath.'config/config.yml')) {
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['bienvenue'])) {
         $template="configForm";
     } elseif ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['configForm'])) {
+
+        $_POST['stockageLocation'] = msTools::setDirectoryLastSlash($_POST['stockageLocation']);
+        $_POST['backupLocation'] = msTools::setDirectoryLastSlash($_POST['backupLocation']);
+
         $mysqli = new mysqli($_POST['sqlServeur'], $_POST['sqlRootId'], $_POST['sqlRootPwd']);
         $mysqli->set_charset("utf8");
         if (mysqli_connect_errno()) {
@@ -132,6 +137,7 @@ if (!is_file($homepath.'config/config.yml')) {
         $mysqli=msSQL::sqlConnect();
 
         /////////// Validators loader
+        define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
         require $homepath.'fonctions/validators.php';
 
         /////////// Router
@@ -141,26 +147,27 @@ if (!is_file($homepath.'config/config.yml')) {
         $router->setBasePath($p['config']['urlHostSuffixe']);
         $match = $router->match();
 
-        if (!count(msSQL::sql2tabSimple("SHOW TABLES"))) {
-            exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/base/sqlInstall.sql');
+        if (empty(msSQL::sql2tabSimple("SHOW TABLES"))) {
+            exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' -h'.escapeshellarg($p['config']['sqlServeur']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' < '.$homepath.'upgrade/base/sqlInstall.sql');
             msSQL::sqlQuery("INSERT INTO configuration (name, level, value) VALUES
-            ('mailRappelLogCampaignDirectory', 'default', '".$webdir."'/mailsRappelRdvArchives/'),
+            ('mailRappelLogCampaignDirectory', 'default', '".$webdir."/mailsRappelRdvArchives/'),
             ('smsLogCampaignDirectory', 'default', '".$webdir."/smsArchives/'),
             ('apicryptCheminInbox', 'default', '".$webdir."/inbox/'),
-            ('apicryptCheminArchivesInbox', 'default', '".$webdir."/inboxArchives/'),
+            ('apicryptCheminArchivesInbox', 'default', '".$homepath."inboxArchives/'),
             ('apicryptCheminFichierNC', 'default', '".$webdir."/workingDirectory/NC/'),
             ('apicryptCheminFichierC', 'default', '".$webdir."/workingDirectory/C/'),
             ('apicryptCheminVersClefs', 'default', '".$homepath."apicrypt/'),
             ('apicryptCheminVersBinaires', 'default', '".$homepath."apicrypt/bin/'),
             ('dicomWorkListDirectory', 'default', '".$webdir."/workingDirectory/'),
             ('dicomWorkingDirectory', 'default', '".$webdir."/workingDirectory/'),
-            ('templatesPdfFolder', 'default', '".$homepath."templates/models4print/')
+            ('templatesPdfFolder', 'default', '".$homepath."templates/models4print/'),
+            ('templatesCdaFolder', 'default', '".$homepath."templates/CDA/')
             ON DUPLICATE KEY UPDATE value=VALUES(value)");
 
             $modules=scandir($homepath.'upgrade/');
             foreach ($modules as $module) {
                 if ($module!='.' and $module!='..') {
-                    exec('mysql -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' --default-character-set=utf8 '.$p['config']['sqlBase'].' < '.$homepath.'upgrade/'.$module.'/sqlInstall.sql');
+                    exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' -h'.escapeshellarg($p['config']['sqlServeur']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' < '.$homepath.'upgrade/'.$module.'/sqlInstall.sql');
                 }
             }
 
@@ -181,10 +188,9 @@ if ($template!=''): ?>
       MedShakeEHR : Installation</title>
     <meta name="Description" content=""/>
 
-    <link type="text/css" href="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="<?=$webpath?>/scss/bs_custom.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
     <link type="text/css" href="<?=$webpath?>/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
-    <link type="text/css" href="<?=$webpath?>/css/general.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$webpath?>/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -199,26 +205,11 @@ if ($template!=''): ?>
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <i class="fa fa-bars" aria-hidden="true"></i>
-            </button>
-            <a href="" class="navbar-brand">MedShakeEHR</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="top-navbar">
-          <ul class="nav navbar-nav">
-          </ul>
-        </div>
-      </div>
+    <nav class="navbar navbar-dark bg-dark mb-3">
+      <a class="navbar-brand" href="#">MedShakeEHR</a>
     </nav>
 
-    <div class="container-fluid" role="main" style="padding-top:60px; padding-bottom : 50px;">
+    <div class="container-fluid" role="main">
 <?php
 if ($template=='bienvenue') :
 ?>
@@ -236,8 +227,8 @@ if ($template=='bienvenue') :
 elseif ($template=='configForm') :
 ?>
       <h2>Configuration rapide</h2>
-      <p>Nous allons créer le fichier de configuration nécéssaire au démarrage.</p>
-      <form	action="<?=$_SERVER['REQUEST_URI']?>" 		method="post">
+      <p>Nous allons créer le fichier de configuration nécessaire au démarrage.</p>
+      <form	action="<?=$_SERVER['REQUEST_URI']?>" class="mb-4" method="post">
         <input name="configForm" type="hidden"/>
         <div class="row">
           <div class="col-md-4">
@@ -275,8 +266,8 @@ elseif ($template=='configForm') :
             </div>
             <div class="form-group">
               <label class="control-label">Nom de la base à créer</label>
-              <input name="sqlBase" type="text" class="form-control" autocomplete="off" required="required"
-              value="medshakeehr"/>
+              <input name="sqlBase" type="text" pattern="[a-zA-Z0-9_]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr"/>
+              <small class="form-text text-muted">Caractères alphanumériques et underscore uniquement</small>
             </div>
             <div class="form-group">
               <label class="control-label">Nom d'utilisateur de la base à créer</label>
@@ -301,7 +292,7 @@ elseif ($template=='configForm') :
 else :
 ?>
       <h2>Installation de la base de données</h2>
-      <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons Maintenant installer la base de données.</p>
+      <p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons maintenant installer la base de données.</p>
       <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
         <input name="baseInstall" type="hidden"/>
         <div class="row">

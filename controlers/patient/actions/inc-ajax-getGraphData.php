@@ -24,6 +24,7 @@
  * Patient > ajax : obtenir les datas pour les graphs biométrie poids / taille / IMC
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 header('Content-Type: application/json');
@@ -37,10 +38,13 @@ if ($patientData['birthdate']=='') {
 }
 $naissance=DateTime::createFromFormat('d/m/Y', $patientData['birthdate']);
 
+$data = new msData;
+$name2typeID=$data->getTypeIDsFromName(['poids', 'taillePatient']);
+
 $dataBrutes=msSQL::sql2tab("SELECT dt.name, od.value, od.registerDate AS date
-  FROM objets_data AS od LEFT JOIN data_types AS dt
-  ON od.typeID=dt.id AND od.toID='".$_POST['patientID']."' and deleted=''
-  WHERE dt.groupe='medical' AND od.instance='0'
+  FROM objets_data AS od
+  LEFT JOIN data_types AS dt ON od.typeID=dt.id AND od.toID='".msSQL::cleanVar($_POST['patientID'])."' and deleted=''
+  WHERE dt.groupe='medical' AND od.typeID in ('".implode("', '", $name2typeID)."') AND od.value != ''
   ORDER BY od.registerDate ASC");
 
 

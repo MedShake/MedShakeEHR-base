@@ -28,28 +28,43 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : Paramètres{% endblock %}
+{% block title %}{{ config.designAppName }} : paramètres{% endblock %}
 
-{% block head %}
-{{ parent() }}
+{% block cssFiles %}
+  {{ parent() }}
   <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block jsFiles %}
+  {{ parent() }}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/userParametersAgenda.js?{{ modules.base }}"></script>
-    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/userParametersPrescriptions.js?{{ modules.base }}"></script>
-  <script>
-    var clicRdvConsults={{ page.clicRdvConsults|default('{}') }};
-    var clicRdvConsultsRel={{ page.clicRdvConsultsRel|default('[]') }};
-  </script>
-  <style>
-    td {vertical-align:middle !important}
-    td.time {width:150px}
-    .consult td:nth-of-type(1) {width:40px}
-    .consult td:nth-of-type(2) {width:80px}
-    .consult td:nth-of-type(3) {width:300px}
-    .consult td:nth-of-type(4) {width:120px}
-    .consult td:nth-of-type(5) {width:120px}
-    .consult td:nth-of-type(6) {width:80px}
-  </style>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/userParametersPrescriptions.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  var clicRdvConsults={{ page.clicRdvConsults|default('{}') }};
+  var clicRdvConsultsRel={{ page.clicRdvConsultsRel|default('[]') }};
+
+  $(document).ready(function() {
+    if(window.location.hash) {
+      var hashTab = window.location.hash;
+      $("ul.nav-tabs a[href='" + hashTab + "']").trigger('click');
+    }
+  });
+{% endblock %}
+
+{% block cssEmbed %}
+  {{ parent() }}
+  td {vertical-align:middle !important}
+  td.time {width:150px}
+  .consult td:nth-of-type(1) {width:40px}
+  .consult td:nth-of-type(2) {width:80px}
+  .consult td:nth-of-type(3) {width:300px}
+  .consult td:nth-of-type(4) {width:120px}
+  .consult td:nth-of-type(5) {width:120px}
+  .consult td:nth-of-type(6) {width:80px}
 {% endblock %}
 
 {% block body %}
@@ -61,7 +76,10 @@
   {# form display #}
   <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-      <a class="nav-link active" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
+      <a class="nav-link active" href="#pergonomie" aria-controls="pergonomie" role="tab" data-toggle="tab">Ergonomie</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#padministratif" aria-controls="padministratif" role="tab" data-toggle="tab">Réglages administratifs</a>
     </li>
     {% if page.hasAgenda %}
       <li class="nav-item">
@@ -73,17 +91,29 @@
       <a class="nav-link" href="#plap" aria-controls="plap" role="tab" data-toggle="tab">Prescriptions</a>
     </li>
     {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="#pmdp" aria-controls="pmdp" role="tab" data-toggle="tab">Mot de passe</a>
+    </li>
   </ul>
 
   <div class="tab-content">
+    {# formulaire ergonomie #}
+    <div role="tabpanel" class="tab-pane active" id="pergonomie" >
+      {% include('inc-tabUserParametersErgonomie.html.twig') %}
+    </div>
+
+    {# réglages administratifs #}
+    <div role="tabpanel" class="tab-pane" id="padministratif" >
+      {% include('inc-tabUserParametersAdministratif.html.twig') %}
+    </div>
 
     {# formulaire mot de passe MedShake #}
-    <div role="tabpanel" class="tab-pane active" id="pmdp" >
+    <div role="tabpanel" class="tab-pane" id="pmdp" >
       {% include('inc-tabUserParametersPassword.html.twig') %}
     </div>
 
     {# LAP #}
-    {% if config.utiliserLap == 'true' %}
+    {% if config.utiliserLap == 'true' or config.administratifPeutAvoirPrescriptionsTypes == 'true' %}
       <div role="tabpanel" class="tab-pane" id="plap">
         {% include('inc-tabUserParametersLap.html.twig') %}
       </div>

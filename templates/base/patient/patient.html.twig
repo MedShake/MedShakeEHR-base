@@ -26,115 +26,40 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-{% extends "page.html.twig" %}
-{% import "macroForm.html.twig" as f %}
+{% extends "patientBase.html.twig" %}
 
-{% block title %}{{ page.patient.administrativeDatas.firstname.value|e }}
-    {{ (page.patient.administrativeDatas.lastname.value|default(page.patient.administrativeDatas.birthname.value))|e }}
-    : dossier patient - MedShakeEHR
-{% endblock %}
-
-{% block head %}
-  {# variables JS embarquées #}
-  {# provoquer envoie asynchrone du patient dans le DICOM si config ok #}
-  <script>
-    var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
-
-    {% if config.utiliserLap == 'true' %}
-      lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};
-      lapAlertPatientAllaitementSup3Ans = {{ config.lapAlertPatientAllaitementSup3Ans }};
-    {% endif %}
-  </script>
-
+{% block jsFiles %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/tinymce.min.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/tinymce/tinymce/jquery.tinymce.min.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?{{ modules.base }}"></script>
-
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/mattbryson/TouchSwipe-Jquery-Plugin/jquery.touchSwipe.min.js?{{ modules.base }}"></script>
-
-  {# JS général du dossier patient #}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
-
-  {# JS LAP #}
-  {% if config.utiliserLap == 'true' %}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapTTenCours.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueOrdos.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapHistoriqueTT.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescription.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapSam.js?{{ modules.base }}"></script>
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapPrescriptionsTypes.js?{{ modules.base }}"></script>
-  {% endif %}
-
   {# JS commun au formulaire de consultation du module #}
-  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonGynobs.js?{{ modules.base }}"></script>
-
-  {# JS spécifiques des formulaires présents à l'affichage initial de la page #}
-  {% for i in page.listeForms %}
-    <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/formsScripts/{{ i }}.js?{{ modules.base }}"></script>
-  {% endfor %}
-
-  {# CSS spécifique #}
-  <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dimsemenov/magnific-popup/dist/magnific-popup.css" rel="stylesheet"/>
-  <style>
-
-    tr.collapsing {
-        transition:none;
-        -webkit-transition: none;
-        display:table-row;
-    }
-
-    #newDoc {
-      display: none;
-    }
-
-    .imageDc img {
-        max-width: 330px;
-        max-height: 330px;
-    }
-
-    .voirframes {
-      cursor: pointer;
-    }
-
-  </style>
-
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/module/commonBase.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
-
-    {# alerte dossier supprimé #}
-    {% if page.patient.dossierType == "deleted" %}
-      <div class="row alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
-    {% endif %}
-
-    {# identité patient #}
-    <div class="row" id="identitePatient" data-genre="{{ page.patient.administrativeDatas.administrativeGenderCode.value }}" data-patientid="{{ page.patient.id }}">
-      {% include('inc-ajax-patientAdminData.html.twig') %}
-    </div>
+    {{ parent() }}
 
     {# Onglets #}
-    <ul class="nav nav-tabs gras my-3">
+    <ul class="nav nav-tabs font-weight-bold my-3 text-uppercase">
       <li class="nav-item">
-        <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-notes-medical mr-2"></i>Dossier médical</a>
+        <a id="ongletDossierMedical" class="nav-link active" href="#tabDossierMedical" aria-controls="tabDossierMedical" aria-selected="true" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-notes-medical fa-lg mr-2"></i>Dossier médical</a>
       </li>
       <li class="nav-item">
-        <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab"><i class="fas fa-chart-line mr-2"></i>Biométrie</a>
+        <a id="ongletBio" class="nav-link" href="#tabBio" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-vial fa-lg mr-2"></i>Biologie</a>
+      </li>
+      <li class="nav-item">
+        <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-chart-line fa-lg mr-2"></i>Biométrie</a>
       </li>
       {% if config.utiliserLap == 'true' %}
       <li class="nav-item">
-        <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab"><i class="fas fa-pills mr-2"></i>LAP</a>
+        <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-pills fa-lg mr-2"></i>LAP</a>
       </li>
       {% endif %}
       {% if config.dicomHost != '' %}
         <li class="nav-item">
-          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab"><i class="far fa-images mr-2"></i>Imagerie</a>
+          <a id="ongletDicom" class="nav-link" href="#tabDicom" aria-controls="tabDicom" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="far fa-images fa-lg mr-2"></i>Imagerie</a>
         </li>
       {% endif %}
       <li class="nav-item">
-        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab"><i class="fas fa-link mr-2"></i>Liens du patient</a>
+        <a id="ongletLiensPatient" class="nav-link" href="#tabLiensPatient" aria-controls="tabLiensPatient" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-link fa-lg mr-2"></i>Liens du patient</a>
       </li>
     </ul>
 
@@ -145,6 +70,9 @@
       <div id="tabDossierMedical" class="tab-pane active" role="tabpanel">
         {% include('inc-patientTabDossierMedical.html.twig') %}
       </div>
+
+      {# tab Bio #}
+      <div id="tabBio" class="tab-pane" role="tabpanel" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabBio/"></div>
 
       {# tab Graphiques #}
       <div id="tabGraph" class="tab-pane" role="tabpanel">
@@ -164,59 +92,5 @@
       {# tab liens patient #}
       <div id="tabLiensPatient" class="tab-pane" role="tabpanel" data-rootUrl="/patient/{{ page.patient.id }}/tab/tabLiensPatient/"></div>
     </div>
-
-{% endblock %}
-
-{% block modals %}
-
-{# modal changer nom consultation ou doc #}
-{% include 'inc-patientModal-changerTitre.html.twig' %}
-
-{# modal rapatrier mesures examen particulier #}
-{% include 'inc-patientModal-getSpecificDicomData.html.twig' %}
-
-{# modal éditer infos adminsitratives du patient #}
-{% include 'inc-patientModal-editAdminData.html.twig' %}
-
-{# modal changer la date d'une ligne d'historique #}
-{% include 'inc-patientModal-changerDateEffet.html.twig' %}
-
-{# modal phonecapture #}
-{% include 'inc-patientModal-phonecapture.html.twig' %}
-
-{# modals spécifiques LAP ON #}
-{% if config.utiliserLap == 'true' %}
-  {# recherche CIM10 #}
-  {% include 'inc-patientModal-searchCIM10.html.twig' %}
-
-  {# recherche Allergie #}
-  {% include 'inc-patientModal-searchAllergie.html.twig' %}
-
-  {# modal recherche de médicament #}
-  {% include 'inc-lapModalRechercher.html.twig' %}
-
-  {# modal voir ordonnance #}
-  {% include 'inc-lapModalVoirOrdonnance.html.twig' %}
-
-  {# modal spécifier date d'arrêt effective #}
-  {% include 'inc-lapModalMedicDateArretEffective.html.twig' %}
-
-  {# modal générique pour les alertes LAP #}
-  {% include 'inc-lapModalAlertes.html.twig' %}
-
-  {# modal générique pour les alertes SAM #}
-  {% include 'inc-lapModalAlerteSam.html.twig' %}
-
-  {# modal générique pour les infos médicament #}
-  {% include 'inc-lapInfosMedic.html.twig' %}
-
-  {# modal enregistrer comme prescription type #}
-  {% include 'inc-lapModalPresPre.html.twig' %}
-
-  {# modal créer nouvelle catégorie de prescription type #}
-  {% include 'inc-lapModalPresTypesCatNew.html.twig' %}
-
-
-{% endif %}
 
 {% endblock %}

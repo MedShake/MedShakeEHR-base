@@ -27,10 +27,10 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (is_numeric($_POST['objetID'])) {
+if (is_numeric($_GET['objetID'])) {
 
     $preview = new msModBaseObjetPreview;
-    $preview->setObjetID($_POST['objetID']);
+    $preview->setObjetID($_GET['objetID']);
     $objetGroupe=$preview->getObjetGroupe();
     $objetName=$preview->getObjetName();
     $objetModule=$preview->getObjetModule();
@@ -41,23 +41,31 @@ if (is_numeric($_POST['objetID'])) {
         echo $preview->getGenericPreviewReglement();
     } elseif ($objetGroupe=="mail") {
         echo $preview->getGenericPreviewMail();
+    } elseif ($objetGroupe=="ordo" and $objetName=="lapExtOrdonnance") {
+        echo $preview->getGenericPreviewOrdoLapExt();
     } elseif ($objetGroupe=="ordo") {
         echo $preview->getGenericPreviewOrdo();
     } elseif ($objetGroupe=="courrier") {
-          echo $preview->getGenericPreviewCourrier();
+        echo $preview->getGenericPreviewCourrier();
     } elseif($objetGroupe=="typecs") {
 
-        //si méthode existe dans base
+
         $classModuleObjet = 'msMod'.ucfirst($objetModule).'ObjetPreview';
         $methode = 'getPreview'.ucfirst($objetName);
+
+        //si méthode existe dans base
         if(method_exists('msModBaseObjetPreview',$methode)) {
           echo $preview->$methode();
         }
         // si méthode existe dans extension proposé par le module dont le type dépend
         elseif(method_exists($classModuleObjet,$methode)) {
           $previewExtend = new $classModuleObjet;
-          $previewExtend->setObjetID($_POST['objetID']);
+          $previewExtend->setObjetID($_GET['objetID']);
           echo $previewExtend->$methode();
+        }
+        // si document qui peut être signé -> affichage du PDF
+        elseif($preview->getCanBeSigned()) {
+          echo $preview->getGenericPreviewPDF();
         }
         // sinon on tente au final avec le template impression
         else {

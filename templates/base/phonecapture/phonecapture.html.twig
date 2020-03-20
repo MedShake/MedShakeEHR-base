@@ -38,9 +38,8 @@
     </title>
 
     {# css #}
-    <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FortAwesome/Font-Awesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/general.css" rel="stylesheet"/>
+    <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
 
     <style>
       @media screen and (orientation:portrait) {
@@ -80,7 +79,7 @@
     <script>
       var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
 
-      var patientIdentite = '{{ page.data.patient.2 }} {{ page.data.patient.3 }} ({{ page.data.patient.dicomPatientID }})';
+      var patientIdentite = '{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }} ({{ page.data.patient.dicomPatientID }})';
 
       var dicomPatientID = '{{ page.data.patient.dicomPatientID }}';
 
@@ -95,11 +94,11 @@
       <div id="portrait" class="p-1 mb-2">
         <div class="row mb-2 p-0" style="line-height:17px">
           <div class="col-1 p-0">
-            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm" style="height:100%"><i class="fa fa-sync"></i></button>
+            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm" style="height:100%"><i class="fas fa-sync"></i></button>
           </div>
           <div class="col-11 pl-2 pr-0">
-            Prat.: {{ page.data.prat.2|default(page.data.prat.1) }} {{ page.data.prat.3 }}<br>
-            Patient: <strong>{{ page.data.patient.2|default(page.data.patient.1) }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+            Prat.: {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }}<br>
+            Patient: <strong>{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }}</strong> ({{ page.data.patient.dicomPatientID }})
           </div>
         </div>
         <div class="row">
@@ -112,12 +111,12 @@
         </div>
         <div class="row">
           <div class="col-6">
-            <button class="btn btn-success btn-lg btn-block nmt declencher"><i class="fa fa-camera"></i></button>
-            <button class="btn btn-success btn-lg btn-block nmt rafraichir"><i class="fa fa-sync-alt"></i></button>
-            <button class="btn btn-success btn-lg btn-block nmt refaire"><i class="fa fa-redo-alt"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt declencher"><i class="fas fa-camera"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt rafraichir"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt refaire"><i class="fas fa-redo-alt"></i></button>
           </div>
           <div class="col-6">
-            <button class="btn btn-danger btn-lg btn-block nmt envoyer"><i class="fa fa-paper-plane"></i></button>
+            <button class="btn btn-danger btn-lg btn-block nmt envoyer"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
       </div>
@@ -125,9 +124,9 @@
       <div id="landscape" class="p-1">
         <div class="row mb-2">
           <div class="col-12 p-0">
-            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm"><i class="fa fa-sync"></i></button>
-            Praticien : {{ page.data.prat.2|default(page.data.prat.1) }} {{ page.data.prat.3 }} /
-            Patient : <strong>{{ page.data.patient.2|default(page.data.patient.1) }} {{ page.data.patient.3 }}</strong> ({{ page.data.patient.dicomPatientID }})
+            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm"><i class="fas fa-sync"></i></button>
+            Praticien : {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }} /
+            Patient : <strong>{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }}</strong> ({{ page.data.patient.dicomPatientID }})
           </div>
         </div>
         <div class="row mb-2">
@@ -136,11 +135,11 @@
             <canvas class="prevue" style="display:none"><canvas>
           </div>
           <div class="col-3">
-            <button class="btn btn-success btn-lg btn-block nmt declencher"><i class="fa fa-camera"></i></button>
-            <button class="btn btn-success btn-lg btn-block nmt rafraichir"><i class="fa fa-sync-alt"></i></button>
-            <button class="btn btn-success btn-lg btn-block nmt refaire"><i class="fa fa-redo-alt"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt declencher"><i class="fas fa-camera"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt rafraichir"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn btn-success btn-lg btn-block nmt refaire"><i class="fas fa-redo-alt"></i></button>
             <br>
-            <button class="btn btn-danger btn-lg btn-block nmt envoyer"><i class="fa fa-paper-plane"></i></button>
+            <button class="btn btn-danger btn-lg btn-block nmt envoyer"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
       </div>
@@ -152,7 +151,7 @@
       </div>
       <div class="row" style="text-align: center;padding-bottom : 4px;">
         <div class="col-12">
-          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/logout/" id="logout" class="btn btn-light btn-sm"><i class="fa fa-power-off"></i> Déconnexion</a>
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/logout/" id="logout" class="btn btn-light btn-sm"><i class="fas fa-power-off"></i> Déconnexion</a>
         </div>
       </div>
     <div>

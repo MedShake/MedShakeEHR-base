@@ -1,0 +1,351 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Outils > export data
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : export Data{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    $(".switchCheckAll").on("click", function() {
+      $(this).parents('div.card').find('input').prop('checked', true);
+      $(this).parents('div.card').find('input').val(true);
+    });
+    $(".switchUncheckAll").on("click", function() {
+      $(this).parents('div.card').find('input').prop('checked', false);
+      $(this).parents('div.card').find('input').val(false);
+
+      if($(this).parents('div.card').hasClass('selectMinOne')) {
+        $(this).parents('div.card').find('input').first().prop('checked', true);
+        $(this).parents('div.card').find('input').first().val(true);
+      }
+    });
+
+    $("#exportDataChoisirFormButton").on("click", function(e) {
+      e.preventDefault();
+      window.location.href = urlBase + '/outils/export-data/' + $("#formID").val() + '/';
+    });
+
+  });
+{% endblock %}
+
+{% block body %}
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/outils/export-data/">Choix du formulaire</a></li>
+      {% if page.formInfos.id %}<li class="breadcrumb-item active"><a href="#">Choix des données</a></li>{% endif %}
+
+    </ol>
+  </nav>
+
+  <h1>Export de données</h1>
+
+  {% if page.listeForms %}
+    <div class="card card-body my-4 bg-light">
+      <h3>Choisir le formulaire concerné par l'export</h3>
+      <form>
+        <div class="row">
+          <div class="form-group col-10">
+            <select autocomplete="off" id="formID" name="formID" class="custom-select">
+              {% for catID, forms in page.listeForms %}
+                <optgroup label="{{ page['listeCats'][catID]['label']|e('html_attr') }}">
+                  {% for form in forms %}
+                    <option value="{{ form.id }}">{{ form.label|e('html_attr') }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-2">
+            <button id="exportDataChoisirFormButton" type="submit" class="btn btn-primary">Choisir</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  {% elseif page.formInfos.id > 0 %}
+
+    <form class="checkboxFixValue" action="/outils/actions/exportDataDownload/" method="post">
+      <input type="hidden" name="dataTypeID" value="{{ page.dataTypeinfos.id }}">
+      <input type="hidden" name="formID" value="{{ page.formInfos.id }}">
+      <div class="row">
+
+        <div class="col-12 col-lg-4">
+
+          <div class="card my-4 bg-secondary text-white">
+            <div class="card-header font-weight-bold">{{ page.dataTypeinfos.label }}</div>
+            <div class="card-body">
+              Formulaire source : {{ page.formInfos.name }} (#{{ page.formInfos.id }})<br>
+              Exploité sous : {{ page.dataTypeinfos.catLabel }} > {{ page.dataTypeinfos.label }}
+              <button type="submit" class="btn btn-warning btn-block mt-4">Exporter</button>
+            </div>
+          </div>
+
+          <div class="card my-4 bg-light">
+            <div class="card-header font-weight-bold">Options</div>
+            <div class="card-body">
+              <div class="form-group">
+                {{ f.select ({
+                'select' : {
+                  'name' : 'option_file_format',
+                  'class' : 'custom-select-sm',
+                  'autocomplete' : 'off',
+                  'values' : {'ods':'LibreOffice (.ods)', 'xlsx':'Excel (.xlsx)'},
+                },
+                'label' : {
+                  'position' : 'before',
+                  'label' : 'Format du fichier',
+                }
+              }) }}
+              </div>
+              <div class="form-group">
+                {{ f.select ({
+          			'select' : {
+          				'name' : 'option_select_type',
+          				'class' : 'custom-select-sm',
+          				'autocomplete' : 'off',
+          				'values' : {'selectCode':'Exporter le code', 'selectValue':'Exporter le texte'},
+          			},
+          			'label' : {
+          				'position' : 'before',
+          				'label' : 'Champs avec sélecteur et réponses prédéterminées',
+          			}
+          		}) }}
+              </div>
+
+            </div>
+          </div>
+
+          <div class="card my-4 bg-light">
+            <div class="card-header font-weight-bold">Plage calendaire</div>
+            <div class="card-body">
+
+              <div class="form-group">
+                {{ f.select ({
+          			'select' : {
+          				'name' : 'date_type',
+          				'class' : 'custom-select-sm',
+          				'autocomplete' : 'off',
+          				'values' : {'registerDate':'Date de saisie', 'creationDate':'Date effective'},
+          				'valueDefaut': page.form.cat
+          			},
+          			'label' : {
+          				'position' : 'before',
+          				'label' : 'Date concernée',
+          			}
+          		}) }}
+              </div>
+              <div class="row">
+                <div class="form-group col">
+                  {{ f.input ({
+                    'input' : {
+                      'type' : 'text',
+                      'name' : 'date_start',
+                      'id' : 'id_date_start_id',
+                      'autocomplete' : 'off',
+                      'class' : 'form-control-sm datepic ',
+                      'before' : '<div id="before_date_start" class="input-group input-group-sm mx-0 date datepick" data-typeid="id_date_start_id">',
+                      'after' : '<div class="input-group-append"><span class="fas fa-calendar input-group-text"></span></div></div>',
+                    },
+                    'label' : {
+                      'label' : 'Début de période',
+                    }
+                  }) }}
+                </div>
+
+                <div class="form-group col">
+                  {{ f.input ({
+                    'input' : {
+                      'type' : 'text',
+                      'name' : 'date_end',
+                      'id' : 'id_date_end_id',
+                      'autocomplete' : 'off',
+                      'class' : 'form-control-sm datepic ',
+                      'before' : '<div id="before_date_end" class="input-group input-group-sm mx-0 date datepick" data-typeid="id_date_end_id">',
+                      'after' : '<div class="input-group-append"><span class="fas fa-calendar input-group-text"></span></div></div>',
+                    },
+                    'label' : {
+                      'label' : 'Fin de période',
+                    }
+                  }) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card my-4 bg-light selectMinOne">
+            <div class="card-header font-weight-bold">
+              <div class="float-right text-secondary">
+                <i class="far fa-check-square switchCheckAll" title="tous"></i>
+                <i class="far fa-square switchUncheckAll" title="aucun"></i>
+              </div>
+              Dossiers des praticiens à inclure
+            </div>
+            <div class="card-body">
+              {% if config.droitExportPeutExporterAutresData == 'true' and page.prat|length > 1 %}
+                <p class="mb-3">Sélectionner au moins 1 praticien.</p>
+              {% endif %}
+              {% for prat in page.prat %}
+                <div class="form-group">
+                  {% if config.droitExportPeutExporterAutresData == 'false' and prat.id != user.id %}
+                    {% set disabled='disabled' %}
+                  {% else %}
+                    {% set disabled = false %}
+                  {% endif %}
+                  {{ f.input ({
+                'input' : {
+                  'type' : 'switch',
+                  'name' : 'pratliste_' ~ prat.id ,
+                  'id' : 'pratliste_' ~ prat.id ~ '_id',
+                  'autocomplete' : 'off',
+                  'value' : 'true',
+                  'disabled' : disabled
+                },
+                'label' : {
+                  'position' : 'before',
+                  'label' : prat.prenom ~ ' ' ~ prat.nom ,
+                }
+              }) }}
+                </div>
+              {% endfor %}
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="card my-4 bg-light">
+            <div class="card-header font-weight-bold">
+              <div class="float-right text-secondary">
+                <i class="far fa-check-square switchCheckAll" title="tous"></i>
+                <i class="far fa-square switchUncheckAll" title="aucun"></i>
+              </div>
+              Données administratives patient à inclure
+            </div>
+            <div class="card-body">
+              {% for type, label in page.dataFieldsAdmin %}
+                <div class="form-group">
+                  {{ f.input ({
+            			'input' : {
+            				'type' : 'switch',
+            				'name' : 'patient_' ~ type,
+                    'id' : type ~ '_id',
+            				'autocomplete' : 'off',
+            				'value' : 'false'
+            			},
+            			'label' : {
+            				'position' : 'before',
+            				'label' : label,
+            			}
+            		}) }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card my-4 bg-light">
+            <div class="card-header font-weight-bold">
+              <div class="float-right text-secondary">
+                <i class="far fa-check-square switchCheckAll" title="tous"></i>
+                <i class="far fa-square switchUncheckAll" title="aucun"></i>
+              </div>
+              Données administratives praticien à inclure
+            </div>
+            <div class="card-body">
+              {% for type, label in page.dataFieldsAdminPro %}
+                <div class="form-group">
+                  {{ f.input ({
+            			'input' : {
+            				'type' : 'switch',
+            				'name' : 'praticien_' ~ type,
+                    'id' : 'prat_' ~ type ~ '_id',
+            				'autocomplete' : 'off',
+            				'value' : 'false'
+            			},
+            			'label' : {
+            				'position' : 'before',
+            				'label' : label,
+            			}
+            		}) }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="card my-4 bg-light">
+            <div class="card-header font-weight-bold">
+              <div class="float-right text-secondary">
+                <i class="far fa-check-square switchCheckAll" title="tous"></i>
+                <i class="far fa-square switchUncheckAll" title="aucun"></i>
+              </div>
+              Champs du formulaire à inclure
+            </div>
+            <div class="card-body">
+              {% for type, label in page.dataFields %}
+                <div class="form-group">
+                  {{ f.input ({
+                  'input' : {
+                    'type' : 'switch',
+                    'id' : type ~ '_id',
+                    'name' : 'dataField_' ~ type,
+                    'autocomplete' : 'off',
+                    'value' : 'true'
+                  },
+                  'label' : {
+                    'position' : 'before',
+                    'label' : label,
+                  }
+                }) }}
+                </div>
+              {% endfor %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+  {% else %}
+
+    </div>
+    <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 500px); min-height: 250px">
+      <div class="mb-3"><i class="fas fa-database fa-10x text-light"></i></div>
+      <div class="text-muted">Aucun formulaire n'est configuré pour autoriser l'export de données.</div>
+    </div>
+
+  {% endif %}
+
+{% endblock %}

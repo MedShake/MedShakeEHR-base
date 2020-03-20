@@ -1,4 +1,8 @@
-php_value max_input_vars 20000
+#Header always set X-Frame-Options "SAMEORIGIN"
+
+# url rewriting
+# s'assurer que la valeur de AllowOverride du virtualhost permet bien la prise
+# en compte des règles ci-dessous
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^public/.* public.php [L]
@@ -6,3 +10,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^phonecapture/.* phonecapture.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
+
+# fixer si PHP tourne comme un module Apache
+#php_value post_max_size 300M
+#php_value upload_max_filesize 300M
+#php_value max_input_vars 20000

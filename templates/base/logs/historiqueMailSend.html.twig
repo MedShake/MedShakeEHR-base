@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : historique des envois par mail{% endblock %}
+{% block title %}{{ config.designAppName }} : historique des envois par mail{% endblock %}
 
 {% block head %}
     {{ parent() }}
@@ -39,13 +39,13 @@
 <h1>Historique d'envoi par mail</h1>
 <p>
 <a class="btn btn-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patientID }}/">
-  Retour dossier patient
+  <i class="fas fa-folder-open"></i> Retour dossier patient
 </a>
 </p>
 <div class="row">
   <div class="col">
     <table class="table table-sm mb-0 table-hover  ">
-        <thead>
+        <thead class="thead-light">
             <tr>
                 <th>Date</th>
                 <th>De</th>

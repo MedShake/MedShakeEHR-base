@@ -27,12 +27,12 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 $form=new msForm();
 $form->setFormID($_POST['id']);
 $formdata=$form->getFormFromDb();
-$cleanForm=$form->cleanForm($_POST['yamlStructure'],$formdata['global']['dataset']);
+$cleanForm=$form->cleanForm($_POST['yamlStructure']);
 
 $data=array(
     'id'=>$_POST['id'],
@@ -43,7 +43,10 @@ $data=array(
     'cat'=>$_POST['cat'],
     'yamlStructure'=>$cleanForm,
     'formAction'=>$_POST['formAction'],
-    'printModel'=>$_POST['printModel']
+    'printModel'=>$_POST['printModel'],
+    'cda'=>$_POST['cda'],
+    'javascript'=>$_POST['javascript'],
+    'options'=>$_POST['options'],
 );
 
 msSQL::sqlInsert('forms', $data);

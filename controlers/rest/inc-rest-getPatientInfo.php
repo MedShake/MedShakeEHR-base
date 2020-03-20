@@ -24,17 +24,25 @@
  * Rest : envoyer les informations sur le patient courant
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
+
+$user=new msUser();
+if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$user->checkLogin($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+   http_response_code(401);
+   die;
+}
+$userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
 
 
 // récupérer data prat & patient
 $data=json_decode(file_get_contents($p['config']['workingDirectory'].$userID.'/workList.json'), true);
 
 if(!is_array($data)) {
-    header('HTTP/1.1 204 No Content');
+    http_response_code(204);
     die;
 }
 
 header('Content-Type: application/json');
 die (json_encode($data));
-

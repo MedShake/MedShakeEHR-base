@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -58,7 +58,7 @@
     {% for k,v in page.tabTypes %}
       <h2 class="mb-2" id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h2>
       <table class="table table-sm mb-0 table-hover mb-3">
-      <thead>
+      <thead class="thead-light">
       <tr>
         <th>#</th>
         <th>Module</th>
@@ -73,13 +73,13 @@
         <td>{{ w.module }}</td>
         <td>{{ w.name }}</td>
 
-        <td class="d-flex justify-content-end">
+        <td class="text-right">
           <div class="btn-group">
-            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
-              <span class="fa fa-eye" aria-hidden="true"></span>
+            <a class="btn btn-light btn-sm{% if k=='displayforms' %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+              <span class="fas fa-eye" aria-hidden="true"></span>
             </a>
             <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
-              <span class="fa fa-pencil-alt" aria-hidden="true"></span>
+              <span class="fas fa-pencil-alt" aria-hidden="true"></span>
             </a>
           </div>
         </td>
@@ -91,7 +91,7 @@
 
     <div class=" col-md-8">
 
-      <h1 class="bottom-space">Aperçu du formulaire #{{ page.formData.id }}
+      <h1 class="mb-4">Aperçu du formulaire #{{ page.formData.id }}
         <small>{{ page.formData.name }}</small>
       </h1>
 
@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card my-3">
         <div class="card-header" data-toggle="collapse" data-target="#collapseSql" style="cursor: pointer">
           <button class="btn btn-light btn-sm">
             <i class="far fa-plus-square"></i>
@@ -124,6 +124,22 @@
           <textarea class="form-control" rows="20">{{ page.sqlCode }}</textarea>
         </div>
       </div>
+
+      <div class="card my-3">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseTools" style="cursor: pointer">
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
+          Outils
+        </div>
+        <div id="collapseTools" class="collapse card-body">
+          <p>
+            Fixer l'ordre d'affichage des types utilisés dans ce formulaire en fonction de l'ordre d'apparition dans la structure de celui-ci :
+            <button class="btn btn-danger fixDisplayOrder" data-formid="{{ page.formData.id }}"><i class="fas fa-sort-amount-down"></i> Fixer l'ordre</button>
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 

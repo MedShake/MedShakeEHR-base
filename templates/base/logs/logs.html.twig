@@ -28,20 +28,33 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : logs{% endblock %}
+{% block title %}{{ config.designAppName }} : logs{% endblock %}
 
 {% block head %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+  </li>
+  <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+  </li>
+  <li class="breadcrumb-item active">
+      Logs
+  </li>
+</ol>
+
 <h1>Logs</h1>
 
 
 <div class="row">
   <div class="col">
     <table class="table table-sm table-hover small w-100" style="table-layout: fixed; word-wrap: break-word;" >
-        <thead>
+        <thead class="thead-light">
             <tr>
                 <th class="">#</th>
                 <th>date</th>
@@ -65,7 +78,7 @@
                     <td>{% if v.registerDate != v.updateDate %}{{ v.updateDate|replace({' ':'&nbsp;'}) }}{% endif %}
                     </td>
                     <td>{% if v.creationDate != v.registerDate %}{{ v.creationDate|replace({' ':'&nbsp;'}) }}{% endif %}</td>
-                    <td>{{ v.prescripteur }}</td>
+                    <td>#{{ v.prescripteurID }} {{ v.prescripteur }}</td>
                     {% if page.patientID =='' %}<td>  <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/{{ v.toID }}/">#{{ v.toID }}</a></td>{% endif %}
                     <td>#{{ v.instance }}</td>
                     <td>

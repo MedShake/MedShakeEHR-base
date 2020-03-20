@@ -32,12 +32,24 @@ header('Content-Type: application/json');
 if(!is_numeric($_POST['acteID'])) die();
 
 $reglement = new msReglement();
-if (isset($_POST['reglementForm'])) {
-    $reglement->set_secteurTarifaire($_POST['reglementForm']=='baseReglementS1'?'1':($_POST['reglementForm']=='baseReglementS2'?'2':''));
+
+if($_POST['regleSecteurHonoraires']) {
+  $reglement->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
 } else {
-    $reglement->set_secteurTarifaire($p['config']['administratifSecteurHonoraires']);
+  $reglement->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
 }
-$reglement->set_factureTypeID($_POST['acteID']);
+if($_POST['regleSecteurHonorairesNgap']) {
+  $reglement->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
+} else {
+  $reglement->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
+}
+if($_POST['regleSecteurGeoTarifaire']) {
+  $reglement->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
+} else {
+  $reglement->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+}
+
+$reglement->setFactureTypeID($_POST['acteID']);
 $data = $reglement->getCalculateFactureTypeData();
 
 

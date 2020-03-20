@@ -1,0 +1,89 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs: historique data type
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : historique
+  {{ page.typeLabel }}
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <h1>Historique {{ page.typeLabel }}</h1>
+
+  <div class="d-flex justify-content-between mt-4 mb-1">
+  {% if page.nbpages > 1 %}
+    <ul class="pagination pagination-sm">
+      <li class="page-item{% if page.page == '0' %} active{% endif %}"><a class="page-link" href="/logs/historique/{{ page.typeName }}/">1</a></li>
+
+      {% if page.nbpages > 2 %}
+        {% for i in page.pageLoopFirst..page.pageLoopLast %}
+            <li class="page-item{% if page.page == (i - 1) %} active{% endif %}"><a class="page-link" href="/logs/historique/{{ page.typeName }}/{{ (i - 1) }}/">{{ i }}</a></li>
+        {% endfor %}
+      {% endif %}
+
+      <li class="page-item{% if page.page == page.nbpages %} active{% endif %}"><a class="page-link" href="/logs/historique/{{ page.typeName }}/{{ (page.nbpages - 1) }}/">{{ page.nbpages }}</a></li>
+    </ul>
+    <div>
+      {{ page.totalObj }} enregistrements
+    </div>
+  {% else %}
+      <div>1 page - {{ page.totalObj }} enregistrement{% if page.totalObj > 1 %}s{% endif %}</div>
+  {% endif %}
+</div>
+
+  <table class="table table-sm table-hover table-striped">
+    <thead class="thead-light">
+      <tr>
+        <th>Date</th>
+        <th>Patient</th>
+        <th>Praticien</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for v in page.listeObj %}
+      <tr>
+        <td>{{ v.registerDate }}</td>
+        <td>
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.toID }}/" title="Ouvrir le dossier">
+            <span class="fas fa-folder-open" aria-hidden="true"></span>
+          </a>
+          {{ v.patientPrenom }} {{ v.patientNom }}
+          {% if v.toID in config.statsExclusionPatientsArray %}
+            <span class="badge badge-danger">Patient test</span>
+          {% endif %}
+        </td>
+        <td>{{ v.pratPrenom }} {{ v.pratNom }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

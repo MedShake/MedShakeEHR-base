@@ -31,7 +31,7 @@ document.addEventListener("touchstart", function(e) {
   if (e.targetTouches.length != 2)
     return;
   if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-    if(page.requestFullscreen)
+    if (page.requestFullscreen)
       page.requestFullscreen();
     else if (page.mozRequestFullScreen)
       page.mozRequestFullScreen();
@@ -39,8 +39,7 @@ document.addEventListener("touchstart", function(e) {
       page.webkitRequestFullscreen();
     else if (page.msRequestFullscreen)
       page.msRequestFullscreen();
-  }
-  else {
+  } else {
     if (document.exitFullscreen)
       document.exitFullscreen();
     else if (document.webkitExitFullscreen)
@@ -140,7 +139,7 @@ $(document).ready(function() {
       }
     });
 
-    $(window).on("resize", function () {
+    $(window).on("resize", function() {
       if ((orientation == 'portrait' && $(window).width() < $(window).height()) || (orientation == 'landscape' && $(window).width() > $(window).height()))
         return;
       clearTimeout(videoTO);
@@ -211,7 +210,10 @@ $(document).ready(function() {
         video: {
           width: phonecaptureResolutionWidth,
           height: phonecaptureResolutionWidth,
-          frameRate: 10
+          frameRate: 10,
+          facingMode: {
+            exact: 'environment'
+          }
         }
       };
 

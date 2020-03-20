@@ -45,8 +45,8 @@ if ($do) {
     if ($data=msSQL::sqlUnique("select * from $table where id = '$id' limit 1")) {
         echo json_encode($data);
     } else {
-        header('HTTP/1.1 401 Unauthorized');
+        http_response_code(401);
     }
 } else {
-    header('HTTP/1.1 401 Unauthorized');
+    http_response_code(401);
 }

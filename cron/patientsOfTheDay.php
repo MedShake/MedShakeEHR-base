@@ -38,7 +38,7 @@ if (isset($p)) {
     $p['page']['availableCrons']['patientsOfTheDay']=array(
         'task' => 'Patients du jour',
         'defaults' => array('m'=>'0','h'=>'8','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Enregistre la liste des patients du jour.');
+        'description' => 'Enregistre la liste des patients du jour depuis une source externe.');
     return;
 }
 
@@ -69,9 +69,9 @@ $users=msPeople::getUsersWithSpecificParam('agendaDistantPatientsOfTheDay');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
 
-    /// enregistre le fichier sous le nom déterminé en config 
+    /// enregistre le fichier sous le nom déterminé en config
     if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
       msExternalData::fileSaveLocal($p['config']['agendaDistantPatientsOfTheDay'], $p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
     }

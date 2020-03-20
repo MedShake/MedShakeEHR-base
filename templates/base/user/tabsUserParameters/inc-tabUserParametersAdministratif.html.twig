@@ -1,0 +1,107 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > userParameters : tab administratif
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+{% import "macroForm.html.twig" as f %}
+<h3>Règlages administratifs</h3>
+
+<form class="ajaxForm checkboxFixValue" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/ajax/userParametersAdministratif/">
+  <div class="form-row">
+    <div class="col-12 col-md-4">
+
+      <div class="card my-4">
+        <div class="card-header font-weight-bold">
+          Facturation des actes
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="administratifSecteurHonorairesCcamID">Grille tarifaire CCAM : <span class="text-danger">choisir une option sup. ou égale à 3</span></label>
+            <select id="administratifSecteurHonorairesCcamID" name="administratifSecteurHonorairesCcam" class="custom-select custom-select-sm">
+              <option value="0" {% if page.reglement.params.administratifSecteurHonorairesCcam == '0' %} selected="selected"{% endif %}>0 : Tous secteurs</option>
+              <option value="1" {% if page.reglement.params.administratifSecteurHonorairesCcam == '1' %} selected="selected"{% endif %}>1 : Secteur 1 / adhérent / SF</option>
+              <option value="2" {% if page.reglement.params.administratifSecteurHonorairesCcam == '2' %} selected="selected"{% endif %}>2 : Hors secteur 1 / hors adhérent</option>
+              <option value="3" {% if page.reglement.params.administratifSecteurHonorairesCcam == '3' %} selected="selected"{% endif %}>3 : Spé chir et gynéco-obst, s1 /  s1 OPTAM / s1 OPTAMCO / s2-1DP OPTAMCO</option>
+              <option value="4" {% if page.reglement.params.administratifSecteurHonorairesCcam == '4' %} selected="selected"{% endif %}>4 : Spé chir et gynéco-obst, s2-1DP</option>
+              <option value="5" {% if page.reglement.params.administratifSecteurHonorairesCcam == '5' %} selected="selected"{% endif %}>5 : Spé chir et gynéco-obst, s2-1DP OPTAM</option>
+              <option value="6" {% if page.reglement.params.administratifSecteurHonorairesCcam == '6' %} selected="selected"{% endif %}>6 : Spé chir et gynéco-obst, non conventionné</option>
+              <option value="7" {% if page.reglement.params.administratifSecteurHonorairesCcam == '7' %} selected="selected"{% endif %}>7 : Anesthésistes, s1 / s1-1DP-2 OPTAM</option>
+              <option value="8" {% if page.reglement.params.administratifSecteurHonorairesCcam == '8' %} selected="selected"{% endif %}>8 : Anesthésistes, s2-1DP / non conventionné</option>
+              <option value="9" {% if page.reglement.params.administratifSecteurHonorairesCcam == '9' %} selected="selected"{% endif %}>9 : Généralistes, s1 / s1-1DP-2 OPTAM</option>
+              <option value="10" {% if page.reglement.params.administratifSecteurHonorairesCcam == '10' %} selected="selected"{% endif %}>10 : Généralistes, s2-1DP / non conventionné</option>
+              <option value="11" {% if page.reglement.params.administratifSecteurHonorairesCcam == '11' %} selected="selected"{% endif %}>11 : Pédiatres, s1 / s1-1DP-2 OPTAM</option>
+              <option value="12" {% if page.reglement.params.administratifSecteurHonorairesCcam == '12' %} selected="selected"{% endif %}>12 : Pédiatres, s2-1DP / non conventionné</option>
+              <option value="13" {% if page.reglement.params.administratifSecteurHonorairesCcam == '13' %} selected="selected"{% endif %}>13 : Chirurgiens-dentistes</option>
+              <option value="14" {% if page.reglement.params.administratifSecteurHonorairesCcam == '14' %} selected="selected"{% endif %}>14 : Autres spécialités médicales,  s2-1DP / non conventionné</option>
+              <option value="15" {% if page.reglement.params.administratifSecteurHonorairesCcam == '15' %} selected="selected"{% endif %}>15 : Sages-femmes</option>
+              <option value="16" {% if page.reglement.params.administratifSecteurHonorairesCcam == '16' %} selected="selected"{% endif %}>16 : Autres spécialités médicales,  s1 / s1-1DP-2 OPTAM</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="administratifSecteurHonorairesNgapID">Grille tarifaire NGAP</label>
+            <select id="administratifSecteurHonorairesNgapID" name="administratifSecteurHonorairesNgap" class="custom-select custom-select-sm">
+              {% for code,label in page.codeProf %}
+                <option value="{{ code }}" {% if page.reglement.params.administratifSecteurHonorairesNgap == code %} selected="selected"{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="administratifSecteurGeoTarifaireID">Zone géographique de tarification</label>
+            <select id="administratifSecteurGeoTarifaireID" name="administratifSecteurGeoTarifaire" class="custom-select custom-select-sm">
+              <option value="metro" {% if page.reglement.params.administratifSecteurGeoTarifaire == 'metro' %} selected="selected"{% endif %}>Métropole</option>
+              <option value="971" {% if page.reglement.params.administratifSecteurGeoTarifaire == '971' %} selected="selected"{% endif %}>GUADELOUPE</option>
+              <option value="972" {% if page.reglement.params.administratifSecteurGeoTarifaire == '972' %} selected="selected"{% endif %}>MARTINIQUE</option>
+              <option value="973" {% if page.reglement.params.administratifSecteurGeoTarifaire == '973' %} selected="selected"{% endif %}>GUYANE</option>
+              <option value="974" {% if page.reglement.params.administratifSecteurGeoTarifaire == '974' %} selected="selected"{% endif %}>REUNION</option>
+              <option value="976" {% if page.reglement.params.administratifSecteurGeoTarifaire == '976' %} selected="selected"{% endif %}>MAYOTTE</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="administratifSecteurIKID">Tarification des IK</label>
+            <select id="administratifSecteurIKID" name="administratifSecteurIK" class="custom-select custom-select-sm">
+              <option value="plaine" {% if page.reglement.params.administratifSecteurIK == 'plaine' %} selected="selected"{% endif %}>Plaine</option>
+              <option value="montagne" {% if page.reglement.params.administratifSecteurIK == 'montagne' %} selected="selected"{% endif %}>Montagne</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="administratifReglementFormulairesID">Formulaire(s) de règlement à utiliser</label>
+
+            <select class="custom-select" multiple id="administratifReglementFormulairesID" name="administratifReglementFormulaires[]" autocomplete="off">
+              {% for rform in page.reglement.possibleForms %}
+                <option value="{{ rform.name }}" {% if rform.name in page.reglement.params.administratifReglementFormulaires %}selected{% endif %}>{{ rform.module}} - {{ rform.description}}</option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">
+              Sélection multiple possible avec la touche contrôle enfoncée.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input class="btn btn-primary mt-2" type="submit" value="Valider" />
+</form>

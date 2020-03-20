@@ -21,15 +21,15 @@
  */
 
 /**
- * Config > ajax : associer un tag Dicom à un typeID
+ * Config > ajax : associer un tag Dicom à un typeName
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 //check & validate datas
-$gump=new GUMP();
+$gump=new GUMP('fr');
 unset($_POST['groupe']);
 $_POST = $gump->sanitize($_POST);
 
@@ -37,14 +37,14 @@ if (isset($_POST['id'])) {
     $gump->validation_rules(array(
             'id'=> 'required|numeric',
             'dicomTag'=> 'required',
-            'typeID'=> 'required',
+            'typeName'=> 'required',
             'returnValue' => 'required',
             'roundDecimal' => 'required|numeric'
         ));
 } else {
     $gump->validation_rules(array(
             'dicomTag'=> 'required',
-            'typeID'=> 'required',
+            'typeName'=> 'required',
             'returnValue' => 'required',
             'roundDecimal' => 'required|numeric'
         ));
@@ -54,7 +54,9 @@ $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
     $return['status']='failed';
-    $return['msg']=$gump->get_errors_array();
+    $errors = $gump->get_errors_array();
+    $return['msg']=$errors;
+    $return['code']=array_keys($errors);
 } else {
     if (msSQL::sqlInsert('dicomTags', $validated_data) > 0) {
         $return['status']='ok';

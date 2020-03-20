@@ -37,7 +37,7 @@ if (!in_array($_POST['reglementForm'], ['baseReglementLibre', 'baseReglementS1',
       }
 }
 
-if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
+if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0 ) {
     if(!is_numeric($_POST['acteID'])) $_POST['acteID']=0;
     $patient = new msObjet();
     $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
@@ -51,21 +51,25 @@ if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
     }
     foreach (['regleTarifSSCejour', 'regleTarifLibreCejour', 'regleDepaCejour', 'regleModulCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
         if (!isset($_POST[$param])) {
-          $_POST[$param]='';
+          $_POST[$param]=0;
         }
     }
     //support
     if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID'], $_POST['objetID']);
+
+        //par précaution on supprime le pdf antérieur
+        $doc= new msStockage();
+        $doc->setObjetID($supportID);
+        $doc->deleteDoc();
     } elseif($_POST['acteID']>0) {
         $supportID=$patient->createNewObjet($_POST['porteur'], '', '0', $_POST['acteID']);
     } else {
         $supportID=$patient->createNewObjet($_POST['porteur'], '');
     }
-    echo 'support : '.$supportID;
 
-    $paye= $_POST['regleCheque'] + $_POST['regleCB'] + $_POST['regleEspeces'] + $_POST['regleTiersPayeur'] + '0';
-    $apayer= $_POST['regleTarifSSCejour'] + $_POST['regleDepaCejour'] + $_POST['regleTarifLibreCejour'] + $_POST['regleModulCejour'] + '0';
+    $paye = (float)$_POST['regleCheque'] + (float)$_POST['regleCB'] + (float)$_POST['regleEspeces'] + (float)$_POST['regleTiersPayeur'] + '0';
+    $apayer= (float)$_POST['regleTarifSSCejour'] + (float)$_POST['regleDepaCejour'] + (float)$_POST['regleTarifLibreCejour'] + (float)$_POST['regleModulCejour'] + '0';
     $important=array('id'=>$supportID, 'important'=>$paye < $apayer?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
 
@@ -85,29 +89,55 @@ if (count($_POST['acteID'])>0 or strlen($_POST['regleDetailsActes']) > 0 ) {
 
     //titre
     if($_POST['acteID'] > 0) {
-        $codes = msSQL::sqlUniqueChamp("select details from actes where id='".$_POST['acteID']."' limit 1");
-        $codes = Spyc::YAMLLoad($codes);
-        $codes = implode(' + ', array_keys($codes));
+        $ft = new msReglement;
+        $ft->setFactureTypeID($_POST['acteID']);
+        $codes = $ft->getFactureTypeData()['syntheseActes'];
     } else {
         $codes = json_decode($_POST['regleDetailsActes'], TRUE);
-        $codes = implode(' + ', array_column($codes, 'acte') );
+        if(!empty($codes)) {
+          foreach($codes as $code) {
+            if(isset($code['quantite']) and $code['quantite'] > 1 ) {
+              $titre[] = $code['quantite'].$code['acte'];
+            } else {
+              $titre[] = $code['acte'];
+            }
+          }
+          $codes = implode(' + ', $titre);
+        } else {
+          $codes = '';
+        }
     }
 
     $patient->setTitleObjet($supportID, $codes.' / '.$_POST['regleFacture'].'€');
 
-    // générer le retour
-    $debug='';
-    //template
-    $template="pht-ligne-reglement";
+    // faire le ménage dans la salle d'attente (si si ... !)
+    $agenda=new msAgenda;
+    $agenda->set_userID($p['user']['id']);
+    $agenda->set_patientID($_POST['patientID']);
+    $agenda->cleanEnAttente();
+
+    // générer le retour, dont html
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
-    if (isset($_POST['objetID']) and $_POST['objetID']!=='') {
-        $ligneHisto=$patient->getHistorique($_POST['objetID']);
-        $p['cs']=array_pop($ligneHisto)[0];
-    } else {
-        $p['cs']=$patient->getToday("limit 1")[0];
-    }
+    $p['cs']=$patient->getHistoriqueObjet($supportID);
+    $datCrea = new DateTime($p['cs']['creationDate']);
+
+    $html = new msGetHtml;
+    $html->set_template('pht-ligne-reglement');
+    $html=$html->genererHtml();
+
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'ok',
+      'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
+      'html'=>$html,
+    ]));
 
 } else {
-    die('Avertissement: Formulaire vide !');
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'avertissement',
+      'msg'=>'Attention : formulaire vide !',
+      'html'=>'',
+    ]));
 }

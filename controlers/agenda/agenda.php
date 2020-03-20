@@ -33,16 +33,28 @@ $template="agenda";
 // userID
 if(isset($match['params']['userID'])) $p['page']['userID']=$match['params']['userID'];
 
+// date d'ouverture
+$p['page']['dateToGo']=date('Y-m-d');
+if(isset($match['params']['dateToGo'])) {
+  if(msTools::validateDate($match['params']['dateToGo'], $format = 'Ymd')) {
+    $p['page']['dateToGo'] = DateTime::createFromFormat('Ymd', $match['params']['dateToGo'])->format('Y-m-d');
+  }
+}
+
 //paramètres de l'agenda
 if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js')) {
   $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'.js');
   if(is_file($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js')) {
     $p['page']['configAgenda'].=file_get_contents($p['homepath'].'config/agendas/agenda'.$match['params']['userID'].'_ad.js');
   }
+} else {
+  $p['page']['configAgenda']=file_get_contents($p['homepath'].'config/agendas/agendaDefault.js');
 }
 
 // types de rendez-vous
-$p['page']['typeRdv']=msAgenda::getRdvTypes($match['params']['userID']);
+$typesRdv = new msAgenda;
+$typesRdv->set_userID($match['params']['userID']);
+$p['page']['typeRdv']=$typesRdv->getRdvTypes();
 
 //formulaire prise rdv
 $formPriseRdv = new msForm();
@@ -59,3 +71,9 @@ if (isset($_SESSION['form']['baseModalNewPatient']['formValues'])) {
 $p['page']['formNewPatient']=$formpatient->getForm();
 //modifier action pour url ajax
 $p['page']['formNewPatient']['global']['formAction']='/people/actions/peopleRegister/';
+
+//sortir les choix de relations patient<->prat
+$data = new msData();
+$typeID = $data->getTypeIDFromName('relationPatientPraticien');
+$options = $data->getSelectOptionValue(array($typeID));
+$p['page']['preRelationPatientPrat']['formValues']=$options[$typeID];

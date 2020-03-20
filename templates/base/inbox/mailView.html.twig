@@ -28,7 +28,7 @@
 
 {% if page.mail.mailHeaderInfos.from %}
  <div class="card mb-3">
-     <div class="card-header gras">Message</div>
+     <div class="card-header font-weight-bold"><i class="fas fa-at fa-fw fa-lg text-muted mr-1"></i> Message</div>
      <div class="card-body">
        <table class="table table-sm mb-0 table-hover ">
            <thead>
@@ -51,10 +51,10 @@
 {% endif %}
 
 <div class="card mb-3">
-    <div class="card-header gras">Patient</div>
+    <div class="card-header font-weight-bold"><i class="fas fa-user fa-fw fa-lg text-muted mr-1"></i> Patient</div>
     <div class="card-body">
 
-        <table class="table table-sm mb-0 table-hover ">
+        <table id="tabPatients" class="table table-sm mb-0 table-hover ">
             <thead>
                 <tr>
                     <th></th>
@@ -62,7 +62,7 @@
                     <th>Prénom</th>
                     <th>Date de naissance</th>
                     <th>Adresse</th>
-                    <th>SS</th>
+                    <th>INS</th>
                     <th></th>
                 </tr>
             </thead>
@@ -73,7 +73,7 @@
                     <td>{{ page.mail.hprimAllSerialize.prenom|e }}</td>
                     <td>{{ page.mail.hprimAllSerialize.ddn|e }}</td>
                     <td>
-                        <small>{{ page.mail.hprimAllSerialize.adresse1v }}
+                        <small>{{ page.mail.hprimAllSerialize.adresse1 }}
                             {% if page.mail.hprimAllSerialize.adresse2 != page.mail.hprimAllSerialize.adresse1 and page.mail.hprimAllSerialize.adresse2 %}
                                 {{ page.mail.hprimAllSerialize.adresse2 }}
                             {% endif %}
@@ -83,35 +83,48 @@
                     <td>
                         <small>{{ page.mail.hprimAllSerialize.nss|e }}</small>
                     </td>
-                    <td></td>
+                    <td>
+                      <form class="d-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post" target="_blank">
+                        <input type="hidden" name="birthname" value="{{ page.mail.hprimAllSerialize.nom|e }}">
+                        <input type="hidden" name="firstname" value="{{ page.mail.hprimAllSerialize.prenom|e }}">
+                        <input type="hidden" name="birthdate" value="{{ page.mail.hprimAllSerialize.ddn|e }}">
+                        <input type="hidden" name="postalCodePerso" value="{{ page.mail.hprimAllSerialize.cp|e }}">
+                        <input type="hidden" name="street" value="{{ page.mail.hprimAllSerialize.street|e }}">
+                        <input type="hidden" name="streetNumber" value="{{ page.mail.hprimAllSerialize.streetNumber|e }}">
+                        <input type="hidden" name="city" value="{{ page.mail.hprimAllSerialize.ville|e }}">
+                        <input type="hidden" name="nss" value="{{ page.mail.hprimAllSerialize.nss|e }}">
+                        <input type="hidden" name="administrativeGenderCode" value="{{ page.mail.hprimAllSerialize.administrativeGenderCode|e }}">
+                        <button type="submit" class="btn btn-sm btn-light" title="Créer le dossier"><i class="fas fa-user-plus"></i></button>
+                      </form>
+                    </td>
                 </tr>
                 {% for k, v in page.mail.patientsPossibles %}
 
                     <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}" {% if v.patientType == 'deleted' %}style="text-decoration: line-through"{% endif %}>
                         <td>#{{ v.id }}</td>
                         <td>
-                          {% if v.1 and v.2 %}
-                            {{ v.2|e }} ({{ v.1|e }})
-                          {% elseif v.2 %}
-                            {{ v.2 }}
+                          {% if v.birthname and v.lastname %}
+                            {{ v.lastname|e }} ({{ v.birthname|e }})
+                          {% elseif v.lastname %}
+                            {{ v.lastname }}
                           {% else %}
-                            {{ v.1 }}
+                            {{ v.birthname }}
                           {% endif %}
                         </td>
-                        <td>{{ v.3|e }}</td>
-                        <td>{{ v.8|e }}</td>
+                        <td>{{ v.firstname|e }}</td>
+                        <td>{{ v.birthdate|e }}</td>
                         <td>
-                            <small>{{ v.9|e }}
-                                {{ v.11|e }}
-                                {{ v.13|e }}
-                                {{ v.12|e }}</small>
+                            <small>{{ v.streetNumber|e }}
+                                {{ v.street|e }}
+                                {{ v.postalCodePerso|e }}
+                                {{ v.city|e }}</small>
                         </td>
                         <td>
-                            <small>{{ v.180|e }}</small>
+                            <small>{{ v.nss|e }}</small>
                         </td>
                         <td>
                             <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.id }}/" target="_blank">
-                              <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                              <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                             </a>
                         </td>
 
@@ -120,6 +133,17 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if page.mail.archived == 'n' %}
+        <form class="form-inline">
+          <div class="input-group my-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+            <input class="form-control" type="text" placeholder="Rechercher un autre patient" id="searchPatientID" autocomplete="off"/>
+          </div>
+        </form>
+        {% endif %}
 
     </div>
 </div>
@@ -142,8 +166,8 @@
       <div class="col text-right">
 
         <div class="btn-group dropleft m-1">
-            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="fa fa-wrench" aria-hidden="true"></span>
+            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fas fa-wrench" aria-hidden="true"></span>
             </button>
             <div class="dropdown-menu">
                 <a class="dropdown-item" id="specifierPatientIDManu" href="#">Spécifier numéro de dossier manuellement</a>
@@ -172,14 +196,61 @@
 
 {% if page.mail.pjSerializeName %}
   <div class="card mb-3">
-      <div class="card-header gras">Pièces jointes</div>
+      <div class="card-header font-weight-bold"><i class="fas fa-paperclip fa-fw fa-lg text-muted mr-1"></i> Pièces jointes</div>
       <div class="card-body">
+
+        <div class="nav nav-pills" id="attachedPjLink" role="tablist">
+          <a class="nav-link btn btn-outline-primary mr-2" id="attachedPjLink0" data-toggle="pill" href="#attachedPj0" title="Masquer les pièces jointes">
+            <span class="fas fa-angle-double-up" aria-hidden="true"></span>
+          </a>
           {% for pj in page.mail.pjSerializeName %}
-              <a class="btn btn-info" role="button" href="{{ page.mail.relativePathForPJ }}{{ page.mail.txtFileName|replace({'.txt':'.f'}) }}/{{ pj }}" target="_blank">
-                <span class="fa fa-file" aria-hidden="true"></span>
+              <a class="nav-link{% if loop.index == 1 %} active{% endif %}" id="attachedPjLink{{ loop.index }}" data-toggle="pill" href="#attachedPj{{ loop.index }}" >
+                <span class="fas fa-file" aria-hidden="true"></span>
                 {{ pj }}
               </a>
           {% endfor %}
+        </div>
+
+
+
+        <div class="tab-content" id="attachedPj">
+          <div class="tab-pane fade" id="attachedPj0" role="tabpanel" aria-labelledby="attachedPjLink0"></div>
+          {% for kpj, pj in page.mail.pjSerializeName %}
+            <div class="tab-pane fade{% if loop.index == 1 %} show active{% endif %}" id="attachedPj{{ loop.index }}" role="tabpanel" aria-labelledby="attachedPjLink{{ loop.index }}">
+              <div class="row">
+                <div class="col-auto">
+                  {% if page['mail']['pjData'][kpj]['object']['display'] %}
+                    <div class="d-block text-right my-2">
+                      <a class="btn btn-outline-secondary btn-sm" role="button" href="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" target="_blank">
+                      <i class="fas fa-external-link-alt"></i>
+                        Ouvrir dans un onglet
+                      </a>
+                    </div>
+                    {% if page['mail']['pjData'][kpj]['object']['displayType'] == 'object' %}
+                      <object
+                        data="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}"
+                        width="{{ page['mail']['pjData'][kpj]['object']['width'] }}"
+                        height="{{ page['mail']['pjData'][kpj]['object']['height'] }}"
+                        style="border: 15px solid #DDD"
+                        type="{{ page['mail']['pjData'][kpj]['mime'] }}">
+                      </object>
+                    {% elseif page['mail']['pjData'][kpj]['object']['displayType'] == 'img' %}
+                      <img src="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" alt="" class="img-fluid" style="border: 15px solid #DDD">
+                    {% endif %}
+                  {% else %}
+                    <div class="d-block text-left my-2">
+                      <p>Ce type de fichier n'est pas prévisualisable dans un navigateur</p>
+                      <a class="btn btn-secondary" role="button" href="{{ page['mail']['pjData'][kpj]['fileRelativePath'] }}" target="_blank">
+                      <i class="fas fa-external-link-alt"></i>
+                        Télécharger / ouvrir
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
   </div>
 {% endif %}
@@ -187,7 +258,7 @@
 {% if page.mail.bioHprim %}
 
     <div class="card mb-3">
-        <div class="card-header gras">Résultats biologiques extraits du corps du message</div>
+        <div class="card-header font-weight-bold"><i class="fas fa-vial fa-fw fa-lg text-muted mr-1"></i> Résultats biologiques extraits du corps du message</div>
         <table class="table table-sm mb-0 table-striped table-hover">
             <thead>
                 <tr>
@@ -223,7 +294,7 @@
 
 
 <div class="card mb-3">
-    <div class="card-header gras">Corps du message</div>
+    <div class="card-header font-weight-bold"><i class="fas fa-envelope-open fa-fw fa-lg text-muted mr-1"></i> Corps du message</div>
     <div class="card-body">
         {{ page.mail.corps|e|nl2br }}
     </div>

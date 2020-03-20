@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : comptabilité{% endblock %}
+{% block title %}{{ config.designAppName }} : règlements du jour{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -39,13 +39,20 @@
 
   <h1>Règlements du jour</h1>
 
-  <div class="row">
+  {% if page.tabRegC is empty and page.tabRegNC is empty %}
+    <div class="mt-4 d-flex flex-column align-items-center justify-content-center" style="height: calc(100vh - 200px); min-height: 250px">
+      <div class="mb-3"><i class="fas fa-cash-register fa-10x text-light"></i></div>
+      <div class="text-muted">Il n'existe pas de règlement en date du jour.</div>
+    </div>
+  {% endif %}
+
+  <div class="row mt-3">
     <div class="col-lg-10 col-md-12">
 
       {% if page.tabRegNC %}
-      <div class="card mt-4">
-        <div class="card-header h5">
-          Paiements à recevoir
+      <div class="card mb-4">
+        <div class="card-header h5 font-weight-bold">
+          <i class="fas fa-exclamation-circle text-warning"></i> Paiements à recevoir
         </div>
         <div class="card-body">
 
@@ -66,7 +73,7 @@
                 <tr id="ligne{{ obj }}" data-montant="{{ reg.resteAPaye }}">
                   <td>
                     <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                      <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                     </a>
                     {{ reg.prenom|e }}
                     {{ reg.nom|e }}
@@ -85,21 +92,21 @@
                   {% endif %}
                   <td>
                     <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                      <span class="fas fa-question-circle" aria-hidden="true"></span>
                     </button>
                     {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}
                       <strong>{{ reg.regleFacture|e }}€</strong>
                     {% else %}
                       <strong>{{ reg.regleFacture }}€</strong>
-                      ({{ reg.regleTarifCejour|e }}€ +
+                      ({{ reg.regleTarifSSCejour|e }}€ +
                       {{ reg.regleDepaCejour|e }}€)
                     {% endif %}
                   </td>
 
                   <td>{{ reg.dejaPaye|e }}€</td>
                   <td>{{ reg.resteAPaye }}€</td>
-                  <td>
-                    <button class="btn btn-danger btn-sm editReglement float-right m-1 py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
+                  <td class="text-right">
+                    <button class="btn btn-danger btn-sm editReglement py-0" type="button" data-objetID="{{ obj }}" data-patientID="{{ reg.toID }}" data-patientname="{{ reg.prenom|e }} {{ reg.nom|e }}" data-porteur="{{ reg.typeID }}" data-aregler="{{ reg.resteAPaye|number_format(2, '.', '') }}" data-dejaCheque="{{ reg.dejaPayeTab.dejaCheque }}" data-dejaCB="{{ reg.dejaPayeTab.dejaCB }}"  data-dejaEspeces="{{ reg.dejaPayeTab.dejaEspeces }}" data-toggle="modal" data-target="#modalReglement">
                       Saisir règlement
                     </button>
 
@@ -114,9 +121,9 @@
       {% endif %}
 
       {% if page.tabRegC %}
-      <div class="card mt-5">
-        <div class="card-header h5">
-          Paiements effectués
+      <div class="card">
+        <div class="card-header h5 font-weight-bold">
+          <i class="fas fa-check-circle text-success"></i> Paiements effectués
         </div>
         <div class="card-body">
           <table class="table table-sm mb-0 table-hover table-striped table-responsive-xl">
@@ -135,7 +142,7 @@
                 <tr>
                   <td>
                     <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" target="_blank">
-                      <span class="fa fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
+                      <span class="fas fa-folder-open" aria-hidden="true" title="Voir dossier"></span>
                     </a>
                     {{ reg.prenom|e }}
                     {{ reg.nom|e }}
@@ -150,11 +157,11 @@
                   </td>
                   <td>
                     <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
-                      <span class="fa fa-question-circle" aria-hidden="true"></span>
+                      <span class="fas fa-question-circle" aria-hidden="true"></span>
                     </button>
                     {% if reg.regleSituationPatient == 'CMU' or reg.regleSituationPatient == 'TP' %}{{ reg.regleFacture|e }}€
                     {% else %}
-                      {{ reg.regleFacture|e }}€ ({{ reg.regleTarifCejour|e }}€ +
+                      {{ reg.regleFacture|e }}€ ({{ reg.regleTarifSSCejour|e }}€ +
                       {{ reg.regleDepaCejour|e }}€)
                     {% endif %}
                   </td>
@@ -176,82 +183,82 @@
     </div>
 
   </div>
+{% endblock %}
 
-  <div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 id="nomPatient" class="modal-title gras"></h4>
-        </div>
-        <div class="modal-body">
-
-          <h4 id="montant"></h4>
-			    <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-dataset="data_types" data-instance="0">
-		        <input title=" / " name="page" value="comptaToday" type="hidden">
-		        <input title=" / " name="formIN" value="" type="hidden">
-		        <input title=" / " name="patientID" value="" type="hidden">
-		        <input title=" / " name="porteur" value="" type="hidden">
-		        <input title=" / " name="objetID" value="" type="hidden">
-		        <input title=" / " name="apayer" value="" type="hidden">
-		        <input title=" / " name="dejaCheque" value="" type="hidden">
-		        <input title=" / " name="dejaCB" value="" type="hidden">
-		        <input title=" / " name="dejaEspeces" value="" type="hidden">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleCheque_id">Chèque
-                  </label>
-                  <div class="input-group">
-                    <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-typeid="193" data-internalname="regleCheque" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleCB_id">CB
-                  </label>
-                  <div class="input-group">
-                    <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-typeid="194" data-internalname="regleCB" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleEspeces_id">Espèces
-                  </label>
-                  <div class="input-group">
-                    <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-typeid="195" data-internalname="regleEspeces" type="text">
-                    <div class="input-group-append">
-                      <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
-                  </label>
-                  <input title="regleIdentiteCheque / 205" id="id_regleIdentiteCheque_id" name="regleIdentiteCheque" placeholder="si différent patient" class="form-control" autocomplete="off" data-typeid="205" data-internalname="regleIdentiteCheque" type="text">
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn" data-dismiss="modal">Annuler</button>
-              <input type="submit" class="btn btn-primary" />
-            </div>
-      	  </form>
-        </div>
+{% block modals %}
+<div id="modalReglement" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="nomPatient" class="modal-title font-weight-bold"></h4>
       </div>
+      <div class="modal-body">
+
+        <h5 id="montant"></h5>
+        <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/actions/saveReglementForm/" method="post" id="formName_" class="" data-instance="0">
+          <input title=" / " name="page" value="comptaToday" type="hidden">
+          <input title=" / " name="formIN" value="" type="hidden">
+          <input title=" / " name="patientID" value="" type="hidden">
+          <input title=" / " name="porteur" value="" type="hidden">
+          <input title=" / " name="objetID" value="" type="hidden">
+          <input title=" / " name="apayer" value="" type="hidden">
+          <input title=" / " name="dejaCheque" value="" type="hidden">
+          <input title=" / " name="dejaCB" value="" type="hidden">
+          <input title=" / " name="dejaEspeces" value="" type="hidden">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleCheque_id">Chèque
+                </label>
+                <div class="input-group">
+                  <input title="regleCheque / 193" id="id_regleCheque_id" name="regleCheque" class="form-control checkAmount" autocomplete="off" data-internalname="regleCheque" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleCheque_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleCB_id">CB
+                </label>
+                <div class="input-group">
+                  <input title="regleCB / 194" id="id_regleCB_id" name="regleCB" class="form-control checkAmount" autocomplete="off" data-internalname="regleCB" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleCB_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label" for="id_regleEspeces_id">Espèces
+                </label>
+                <div class="input-group">
+                  <input title="regleEspeces / 195" id="id_regleEspeces_id" name="regleEspeces" class="form-control checkAmount" autocomplete="off" data-internalname="regleEspeces" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="id_regleEspeces_idAddOn">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label" for="id_regleIdentiteCheque_id">Identité payeur
+                </label>
+                <input title="regleIdentiteCheque / 205" id="id_regleIdentiteCheque_id" name="regleIdentiteCheque" placeholder="si différent patient" class="form-control" autocomplete="off" data-internalname="regleIdentiteCheque" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
     </div>
   </div>
-
-
+</div>
 {% endblock %}

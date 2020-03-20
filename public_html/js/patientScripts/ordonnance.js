@@ -37,7 +37,7 @@ $(document).ready(function() {
   //supprimer ligne ordo
   $('#newOrdo').on("click", "button.cleanLigneOrdo", function(e) {
     name = $(this).parent().find("textarea").attr('name');
-    newinput = '<input name="'+ name + '" type="hidden" value="" >';
+    newinput = '<input name="' + name + '" type="hidden" value="" >';
     $(this).parents('form').prepend(newinput);
     $(this).closest('div.ligneOrdo').remove();
   });
@@ -50,13 +50,10 @@ $(document).ready(function() {
   //retour à la racine du dossier patient quand submit d'ordo.
   $('#newOrdo').on("submit", '#ordoComposer', function() {
     setTimeout(function() {
-      window.location.reload();
-    }, 1000);
-  });
-
-  //autogrow sur la ligne d'ordo
-  $('#newOrdo').on("keyup", "textarea", function(e) {
-    autoGrowOrdo(this);
+      getHistorique();
+      getHistoriqueToday();
+      $('#newOrdo').html('');
+    }, 500);
   });
 
 
@@ -70,7 +67,7 @@ function ajouterLigneOrdo(selecteur) {
   item = $('#' + id + ' option:selected').val();
 
   $.ajax({
-    url: urlBase+'/patient/ajax/getLigneOrdo/',
+    url: urlBase + '/patient/ajax/getLigneOrdo/',
     type: 'post',
     data: {
       ligneID: item,
@@ -90,11 +87,8 @@ function ajouterLigneOrdo(selecteur) {
 }
 
 //auto_grow
-
 function autoGrowOrdo() {
-  $("#ordoComposer textarea").each(function(index) {
-    $(this).css("height", "10px");
-    $(this).css("overflow", "hidden");
-    auto_grow(this);
+  $("#ordoComposer textarea").each(function() {
+    autosize(this);
   });
 }

@@ -1,0 +1,86 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs: historique valeur data type dans contexte patient & instance
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : historique
+  {{ page.dataType.label }}
+{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <h1>Historique {{ page.dataType.label }}</h1>
+
+  <h2>Type de la donnée</h2>
+
+  <div class="card card-body bg-light my-4">
+    <ul class="list-unstyled mb-0">
+      <li>libellé : {{ page.dataType.label }}</li>
+      <li>description : {{ page.dataType.description }}</li>
+      <li>identifiant : {{ page.dataType.name }}</li>
+      <li>type de champ : {{ page.dataType.formType }}</li>
+      <li>module : {{ page.dataType.module }}</li>
+      <li>durée de vie : {{ page.dataType.durationLife }}s</li>
+    </ul>
+  </div>
+
+  <h2>Historique des valeurs</h2>
+  <table class="table table-sm small">
+    <thead class="thead-light">
+      <th>#</th>
+      <th></th>
+      <th>Du</th>
+      <th>Au</th>
+      <th>Par</th>
+      <th>Valeur</th>
+    </thead>
+    {% for k, v in page.histo %}
+      <tr>
+        <td>
+          #{{ v.id }}
+        </td>
+        <td>
+          {% if v.deleted == 'y' %}
+            <span class="badge badge-danger">deleted</span>
+          {% endif %}
+          {% if v.outdated == 'y' %}
+            <span class="badge badge-secondary">outdated</span>
+          {% endif %}
+        </td>
+        <td>{{ v.registerDate }}</td>
+        <td>{{ page.histo[k-1]['registerDate'] }}</td>
+        <td>{{ v.pratPrenom }}
+          {{ v.pratNom }}</td>
+        <td>{{ v.value|nl2br }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

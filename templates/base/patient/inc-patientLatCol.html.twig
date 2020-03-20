@@ -33,4 +33,10 @@
 {% endif %}
 <div id="latForm" class="changeObserv">
     {{ f.formbuilder(page.formData_baseATCD , page.formName_baseATCD , valFormLat ) }}
+
+    {% if page.formJavascript.baseATCD is not empty %}
+      <script>
+        {{ page.formJavascript.baseATCD }}
+      </script>
+    {% endif %}
 </div>

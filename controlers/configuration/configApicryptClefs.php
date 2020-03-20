@@ -65,7 +65,13 @@ if (is_writable($p['page']['repertoireClefs'])) {
 if ($p['page']['listeClefsAutorisationLecture']) {
     if ($listeClefs=array_diff(scandir($p['page']['repertoireClefs']), array('..', '.'))) {
         foreach ($listeClefs as $k=>$clef) {
+            if(is_dir($p['page']['repertoireClefs'].$clef)) {
+              continue;
+            }
             $p['page']['listeClefs'][$k]['file']=$clef;
+            $p['page']['listeClefs'][$k]['filesize']=msTools::getFileSize($p['page']['repertoireClefs'].$clef, 2);
+            $p['page']['listeClefs'][$k]['fileInfo']=pathinfo($p['page']['repertoireClefs'].$clef);
+
             if (is_readable($p['page']['repertoireClefs'].$clef)) {
                $p['page']['listeClefs'][$k]['autorisationLecture'] = true;
             } else {

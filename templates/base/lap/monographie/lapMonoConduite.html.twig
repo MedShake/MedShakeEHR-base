@@ -33,14 +33,18 @@
   <table class="table table-sm table-hover">
     <tbody>
       <tr>
-        <td class="gras">Recommandations</td>
+        <td class="font-weight-bold">Recommandations</td>
         <td>
           <ul class="list-unstyled">
-          {% for data in fiche if data.grp starts with '0.' %}
-          <li>{{ data.info_01 }}</li>
+          {% for data in fiche %}
+            {% if data.grp starts with '0.' %}
+              <li>{{ data.info_01 }}</li>
+            {% endif %}
           {% endfor %}
-          {% for data in fiche if data.grp starts with '1.' %}
-          <li style="margin-left : 1em">{{ data.info_01 }}</li>
+          {% for data in fiche %}
+            {% if data.grp starts with '1.' %}
+              <li style="margin-left : 1em">{{ data.info_01 }}</li>
+            {% endif %}
           {% endfor %}
           </ul>
         </td>
@@ -53,7 +57,7 @@
       </tr>
 
       <tr>
-        <td class="gras">Référence(s) officielle(s)</td>
+        <td class="font-weight-bold">Référence(s) officielle(s)</td>
         <td>
           {{ fi.info_01 }} {{ fi.dat_cre }}
         </td>

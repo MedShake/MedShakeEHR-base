@@ -49,7 +49,7 @@ $p['page']['pratsAuto']=msSQL::sql2tabKey("select p.id, p.rank, o2.value as pren
  left join objets_data as bn on bn.toID=p.id and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
  where p.id in ('".implode("','", $pratIdAutorises)."') order by p.id", "id");
 
-$p['page']['secteur']=msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='administratifSecteurHonoraires' AND level='default'");
+$p['page']['secteur']=msSQL::sqlUniqueChamp("SELECT value FROM configuration WHERE name='administratifSecteurHonorairesCcam' AND level='default'");
 
 //sortir les reglements du jour
 if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, pd.creationDate, pd.registerDate, pd.instance, p.value as prenom , a.label, dc.name, dc.module,
@@ -99,6 +99,13 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
 
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
+
+      $v['regleCheque']=(float)$v['regleCheque'];
+      $v['regleCB']=(float)$v['regleCB'];
+      $v['regleEspeces']=(float)$v['regleEspeces'];
+      $v['regleTiersPayeur']=(float)$v['regleTiersPayeur'];
+      $v['regleFacture']=(float)$v['regleFacture'];
+
       $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
       $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
       $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');

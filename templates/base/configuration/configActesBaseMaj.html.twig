@@ -1,0 +1,80 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : actes de base, rapport de mise à jour
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actes-base/">
+        Actes et tarifs
+      </a>
+    </li>
+    <li class="breadcrumb-item active">
+      Rapport de mise à jour intégrale
+    </li>
+  </ol>
+
+  <h1>Rapport de mise à jour automatique</h1>
+
+  <table class="table table-sm table-hover my-4">
+    <thead class="thead-light">
+      <tr>
+        <th>Type</th>
+        <th colspan="2">Acte</th>
+        <th>Activité</th>
+        <th>Phase</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for k,acte in page.rapport %}
+        <tr{% if acte.statut == 'ko' %} class="table-danger"{% endif %}>
+          <td>{{ acte.type }}</td>
+          <td>{{ acte.code }}</td>
+          <td>{{ acte.label }}</td>
+          <td>{{ acte.activite }}</td>
+          <td>{{ acte.phase }}</td>
+          <td>
+            {% if acte.statut == 'ko' %}Problème : vérifiez l'acte manuellement{% else %}ok{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+<tbody>
+</table>
+{% endblock %}

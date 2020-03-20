@@ -28,11 +28,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+if(!is_numeric($_POST['patientID'])) die;
+if(!is_numeric($_POST['mailID'])) die;
+
 //sortir data hprim
-if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id='".$_POST['mailID']."' ")) {
+if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id='".msSQL::cleanVar($_POST['mailID'])."' ")) {
     $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
 
     $corps=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$data['txtFileName']);
+    if (!mb_detect_encoding($corps, 'utf-8', true)) {
+        $corps = utf8_encode($corps);
+    }
     $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
     if (count($pj['pjSerializeName'])>0) {
@@ -82,7 +88,11 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
                 msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 
                 $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-                copy($source, $destination);
+                if($ext=='txt') {
+                  msTools::convertPlainTextFileToUtf8($source, $destination);
+                } else {
+                  copy($source, $destination);
+                }
 
                 ////////////////////////////
                 // stockage archives
@@ -139,7 +149,11 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
             msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
 
             $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-            copy($source, $destination);
+            if($ext=='txt') {
+              msTools::convertPlainTextFileToUtf8($source, $destination);
+            } else {
+              copy($source, $destination);
+            }
         }
     }
 
@@ -149,8 +163,11 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
         $hprimHeader=msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$data['txtFileName']);
         $hprimHeader['dateDossier']= trim($hprimHeader['dateDossier']);
         if (strlen($hprimHeader['dateDossier']) == 10) {
-            $date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier']);
-            $date = $date->format('Y-m-d');
+            if($date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier'])) {
+              $date = $date->format('Y-m-d');
+            } else {
+              $date=date("Y-m-d");
+            }
         } else {
             $date=date("Y-m-d");
         }

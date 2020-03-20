@@ -48,6 +48,8 @@ spl_autoload_register(function ($class) {
     }
 });
 
+/////////// Compatibilité versions antérieures PHP
+require $homepath.'fonctions/compatibilite.php';
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
@@ -62,10 +64,16 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
+/////////// Vérification de l'état de la base et sortie des versions des modules
+if (!count($p['modules']=msSQL::sql2tabKey("select name, value from system", 'name', 'value'))) {
+    msTools::redirection('/install.php');
+}
+
 /////////// Compléter le tableau des paramètres de configuration par défaut
 $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// Validators loader
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router

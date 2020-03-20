@@ -78,8 +78,10 @@ if (count($_POST)>2) {
     //type d'impression modeprintObjetID
     if (isset($_POST['modeprintObjetID'])) {
         $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
+        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID, '0', $_POST['modeprintObjetID']);
     } else {
         $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
+        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID);
     }
 
     foreach ($_POST as $k=>$v) {
@@ -96,7 +98,10 @@ if (count($_POST)>2) {
 
             if ($postObjetId>0) {
                 if($v=='' and $modeAction == 'edition') {
-                  $patient->setDeletedObjetAndSons($postObjetId);
+                  $objDel = new msObjet;
+                  $objDel->setFromID($_POST['asUserID']?:$p['user']['id']);
+                  $objDel->setObjetID($postObjetId);
+                  $objDel->setDeletedObjetAndSons();
                 } else {
                   msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
                 }
@@ -116,13 +121,27 @@ if (count($_POST)>2) {
     $pdf->makePDF();
     $pdf->savePDF();
 
-    $debug='';
-    //template
-    $template="pht-ligne-ordo";
     $patient=new msPeople();
     $patient->setToID($_POST['patientID']);
-    $p['cs']=$patient->getToday("limit 1")[0];
+    $p['cs']=$patient->getHistoriqueObjet($supportID);
+    $datCrea = new DateTime($p['cs']['creationDate']);
+
+    $html = new msGetHtml;
+    $html->set_template('pht-ligne-ordo');
+    $html=$html->genererHtml();
+
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'ok',
+      'today'=>($datCrea->format('Y-m-d') == date('Y-m-d'))?'oui':'non',
+      'html'=>$html,
+    ]));
 
 } else {
-    die('Avertissement: Ordonnance vide !');
+    header('Content-Type: application/json');
+    exit(json_encode([
+      'statut'=>'avertissement',
+      'msg'=>'Attention : ordonnance vide !',
+      'html'=>'',
+    ]));
 }

@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
             $template='erreur-droits';
         } else {
             file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
-            $dossier.=(strlen($dossier)-1)!='/' ? '/' : '';
+            $dossier.=($dossier[strlen($dossier)-1])!='/' ? '/' : '';
             //récupération de la dernière version release
             $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
             curl_setopt($ch, CURLOPT_USERAGENT, "linux");
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 json_encode($ret);
                 //exécution de composer pour la partie JS
                 chdir($dossierweb);
-                exec('COMPOSER_HOME="/tmp/" php '.$dossier.'/composer.phar install 2>&1', $ret);
+                exec('COMPOSER_HOME="/tmp/" php '.$dossier.'composer.phar install 2>&1', $ret);
                 //Vérifie l'absence d'erreur dans le log Composer
                 $errormatches = array_filter($ret, function ($haystack){
 					if( strpos(strtolower($haystack), 'error') === false) {return false;} else {return true;}
@@ -186,15 +186,15 @@ if ($template=='bienvenue') :
 ?>
       <h1>Installateur de MedShakeEHR</h1>
       <div id="inst">
-        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Celà peut prendre plusieurs minutes.<br>
+        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
           <strong>Ne fermez pas cette page, et ne la rechargez pas non plus!</strong></p>
-        <p>Définissez ci dessous le dossier où MedShakeEHR doit être installé.<br>
+        <p>Définissez ci-dessous le dossier où MedShakeEHR doit être installé.<br>
           <strong> - Cet emplacement ne doit pas être accessible au réseau</strong><br>
           <strong> - L'utilisateur www-data doit avoir les droits d'écriture sur cet emplacement, ainsi que sur le dossier <code><?=getcwd()?></code>.</p>
         <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
           <input name="bienvenue" type="hidden"/>
           <input id="dest" name="destination" type="text" value="/opt/MedShakeEHR" style="border:solid 1px #ccc"/>
-          <button type="submit" class="btn" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
+          <button type="submit" class="btn btn-light" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
         </form>
       </div>
       <div class="svgcontainer">
@@ -219,7 +219,7 @@ else :
 ?>
       <h1>Erreur!</h1>
       <p style="margin-top:50px;">Le dossier <?=$dossier?> n'est pas accéssible en écriture. Veuillez corriger le problème puis cliquer sur suivant.</p>
-      <a href=<?=$_SERVER['REQUEST_URI']?>><button class="btn">Suivant</button></a>
+      <a href=<?=$_SERVER['REQUEST_URI']?>><button class="btn btn-light">Suivant</button></a>
 <?php
 endif;
 ?>

@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -51,40 +51,51 @@
 
   <h1>Liste des utilisateurs</h1>
 
-  <button class="btn btn-primary float-right m-1 newUser" type="button" data-toggle="modal" data-target="#modalUserCreation" style="margin-bottom:10px">Nouvel utilisateur</button>
+  <div class="row mb-2">
+    <div class="col text-right">
+      <button class="btn btn-primary newUser" type="button" data-toggle="modal" data-target="#modalUserCreation">
+        <i class="fas fa-plus"></i>
+        Nouvel utilisateur</button>
+    </div>
+  </div>
 
   <table class="table table-sm mb-0 table-hover text-center table-striped">
-    <thead>
+    <thead class="thead-light">
       <tr>
-        <th>#</th>
+        <th class="text-left">#</th>
         <th>Identifiant</th>
         <th>Identité</th>
         <th>Module</th>
         <th>Administrateur</th>
-        <th>Mot de passe</th>
+        {% if config.optionGeLoginPassAttribution == 'admin' %}<th>Mot de passe</th>{% endif %}
         <th></th>
       </tr>
     </thead>
     <tbody>
       {% for v in page.users %}
         <tr>
-          <td>{{ v.id }}</td>
+          <td class="text-left">
+            <a class="btn btn-light btn-sm mr-2" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.id }}/" title="Voir fiche pro" target="_blank">
+              <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+            </a>
+          #{{ v.id }}</td>
           <td>{{ v.name }}</td>
           <td>{{ v.prenom }} {{ v.nom }}</td>
           <td>
-             <select class="changeModule" data-userid="{{ v.id }}">
-              {% for mi,mv in page.modules %}
+             <select class="custom-select custom-select-sm changeModule" data-userid="{{ v.id }}">
+              {% for mv in page.modules %}
                 <option value="{{ mv }}" {% if mv==v.module %}selected{% endif %}>{{ mv }}</option>
               {% endfor %}
             </select>
          </td>
           <td>
-            <a {% if v.id!=page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
+            <a {% if v.id != page.userid %} class="changeAdmin" data-userid="{{ v.id }}" href="javascript:void(0)" {% endif %}>
               <span class="far fa-{% if v.rank =='' %}square{% else %}check-square{% endif %}" aria-hidden="true" titre="Cliquez pour changer"></span>
             </a>
           </td>
+          {% if config.optionGeLoginPassAttribution == 'admin' %}
           <td>
-            {% if v.id!=page.userid %}
+            {% if v.id != page.userid %}
               <div class="input-group my-0 input-group-sm">
                 <input title="Nouveau mot de passe" autocomplete="off" data-userid="{{ v.id }}" value="" class="form-control" type="password"/>
                 <div class="input-group-append changePassword" data-userid="{{ v.id }}" data-name="{{ v.name }}">
@@ -93,84 +104,65 @@
               </div>
             {% endif %}
           </td>
-          <td class="d-flex justify-content-end">
+          {% endif %}
+          <td class="text-right">
             <div class="btn-group">
-              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/" title="Paramètres spécifiques">
-                  <span class="fa fa-wrench" aria-hidden="true"></span>
-              </a>
-              {% if v.id!=page.userid %}
-                <button class="btn btn-light btn-sm" type="button" title="Révoquer cet identifiant (ne supprime pas les fiches pro/patient)">
-                  <span class="fa fa-times revokeUser" data-userid="{{ v.id }}" data-name="{{ v.name }}" aria-hidden="true"></span>
+              <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
+                  <i class="fas fa-wrench"></i>
                 </button>
-              {% endif %}
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ v.id }}/">
+                    <i class="fas fa-cogs fa-fw text-muted mr-1"></i>
+                    Paramètres spécifiques de configuration
+                  </a>
+                  {% if v.id != page.userid or config.optionGeLogin2FA == 'true' or config.optionGeLoginPassAttribution == 'random' %}
+                    <div class="dropdown-divider"></div>
+                  {% endif %}
+                  {% if config.optionGeLoginPassAttribution == 'random' %}
+                    <a class="dropdown-item changePassword" href="#" title="Envoyer un nouveau mot de passe aléatoire par mail" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                      <i class="fas fa-paper-plane fa-fw text-muted mr-1"></i>
+                      Envoyer un nouveau mot de passe par mail
+                    </a>
+                  {% endif %}
+                  {% if v.id != page.userid %}
+                    <a class="dropdown-item  revokeUser" href="#" title="Révoquer cet identifiant utilisateur (ne supprime pas les fiches pro/patient)" data-userid="{{ v.id }}" data-name="{{ v.name }}">
+                      <i class="fas fa-user-minus fa-fw text-muted mr-1"></i>
+                      Révoquer cet utilisateur
+                    </a>
+                  {% endif %}
+                  {% if config.optionGeLogin2FA == 'true' %}
+                    <a class="dropdown-item revoke2faKey" data-userid="{{ v.id }}" href="#">
+                      <i class="fas fa-qrcode fa-fw text-muted mr-1"></i>
+                      Révoquer la clef 2FA de cet utilisateur
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
             </div>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
+{% endblock %}
 
-  <div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title gras">Nouvel utilisateur</h4>
-        </div>
-        <div class="modal-body">
-          <form id="formNewUser" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserCreate/" method="post">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_username">Identifiant (*)</label>
-                    <input class="form-control" name="p_username" required type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_password">Mot de passe (*)</label>
-                    <input class="form-control" name="p_password" required type="password" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_module">Module</label>
-                    <select class="form-control custom-select" name="p_module">
-                      {% for mi,mv in page.modules %}
-                        <option value="{{ mv }}" {% if mv=='base' %}selected{% endif %}>{{ mv }}</option>
-                      {% endfor %}
-                    </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_birthname">Nom de naissance</label>
-                    <input class="form-control" name="p_birthname" type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_lastname">Nom d'usage</label>
-                    <input class="form-control" name="p_lastname" type="text" value="" />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label for="p_firstname">Prénom (*)</label>
-                    <input class="form-control" name="p_firstname" required type="text" value="" />
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn" data-dismiss="modal">Annuler</button>
-              <button type="submit" class="btn btn-primary">Valider</button>
-            </div>
-          </form>
-        </div>
+{% block modals %}
+<div id="modalUserCreation" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold">Nouvel utilisateur</h4>
+      </div>
+      <div class="modal-body">
+        {{ f.errorsBloc(false) }}
+        {{ f.formbuilder(page.formModal , page.formIN , session) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary modal-save" data-form="formName_{{ page.formIN }}" data-modal="modalUserCreation">Valider</button>
       </div>
     </div>
   </div>
-
-
+</div>
 {% endblock %}

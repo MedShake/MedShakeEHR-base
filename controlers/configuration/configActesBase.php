@@ -27,36 +27,49 @@
  */
 
  //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configActesBase";
-     $debug='';
+if (!msUser::checkUserIsAdmin()) {
+  $template="forbidden";
+} else {
+  $template="configActesBase";
+  $debug='';
 
-     //actes NGAP CCAM
-     $p['page']['actesBase']=msSQL::sql2tabKey("select * from actes_base order by type='NGAP' desc, code", "code");
+  //types actes
+  $p['page']['typesActes']=msSQL::sql2tabSimple("select distinct type from actes_base order by type='NGAP' desc, type='CCAM' desc, type='Libre' asc");
 
-     // nombre d'utilisation de Chaque
-     $tab=[];
-     if ($details=msSQL::sql2tabSimple("select details from actes")) {
+  //actes NGAP CCAM
+  if ($actesBase=msSQL::sql2tab("select id, code, phase, activite, codeProf, label, type from actes_base order by type='NGAP' desc, code")) {
+    foreach ($actesBase as $k=>$v) {
+      if($v['type'] == 'NGAP') {
+        $p['page']['actesBase'][$v['type']][$v['codeProf']][$v['code']]=$v;
+      } else {
+        $p['page']['actesBase'][$v['type']][$v['activite'].'-'.$v['phase']][$v['code']]=$v;
+      }
+    }
+  }
 
+  //Correspondances code NGAP
+  $p['page']['codeProf']=msReglementActe::getCodeProfLabel();
 
-         foreach ($details as $det) {
-             $det=Spyc::YAMLLoad($det);
-             $det=array_keys($det);
+  //nombre d'utilisation de chaque
+  $tab=[];
+  if ($details=msSQL::sql2tabSimple("select details from actes")) {
+    foreach ($details as $det) {
+      $det=Spyc::YAMLLoad($det);
+      $det=array_keys($det);
 
-             foreach ($det as $code) {
-                 if (isset($tab[$code])) {
-                     $tab[$code]=$tab[$code]+1;
-                 } else {
-                     $tab[$code]=1;
-                 }
-             }
-         }
+      foreach ($det as $code) {
+        if (isset($tab[$code])) {
+          $tab[$code]=$tab[$code]+1;
+        } else {
+          $tab[$code]=1;
+        }
+      }
+    }
 
-
-         foreach($tab as $code=>$nb) {
-           $p['page']['actesBase'][$code]['nbUtilisation']=$nb;
-         }
-     }
- }
+    foreach ($tab as $code=>$nb) {
+      foreach($p['page']['typesActes'] as $typeActe) {
+        if(isset($p['page']['actesBase'][$typeActe][$code])) $p['page']['actesBase'][$typeActe][$code]['nbUtilisation']=$nb;
+      }
+    }
+  }
+}

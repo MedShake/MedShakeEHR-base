@@ -31,27 +31,28 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title gras">Modifier la date affichée d'un élément de l'historique</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title font-weight-bold">Modifier la date affichée</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <p>Cet élément a été enregistré en base le <span id="modalRegisterDateDisplay"></span></p>
-        <p>Il est actuellement affiché en date du <span id="modalCreationDateDisplay"></span></p>
-        <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/ajax/changeObjetCreationDate/" method="post">
-          <input name="objetID" type="hidden" value="" />
-          <div class="form-group">
-              <label for="datepickHisto">Modifier la date d'effet pour le</label>
-              <div class="input-group date  col-md-8" id="datepickHisto">
-                  <input name="newCreationDate" type="text" class="form-control" />
-                  <span class="input-group-append">
-                      <span class="fa fa-calendar input-group-text"></span>
-                  </span>
+            <p>Cet élément a été enregistré en base le
+              <span id="modalRegisterDateDisplay"></span></p>
+            <p>Il est actuellement affiché en date du
+              <span id="modalCreationDateDisplay"></span></p>
+            <form id="formNewCreationDate" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/ajax/changeObjetCreationDate/" method="post">
+              <input name="objetID" type="hidden" value=""/>
+              <label for="datepickHisto">Modifier la date d'effet pour le :</label>
+              <div class="input-group date w-50" id="datepickHisto">
+                <input name="newCreationDate" type="text" class="form-control"/>
+                <span class="input-group-append">
+                  <span class="fas fa-calendar input-group-text"></span>
+                </span>
               </div>
-          </div>
-        </form>
+            </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
         <button type="button" class="btn btn-primary modalCreationDateClose" data-dismiss="modal">Modifier</button>
       </div>
     </div>

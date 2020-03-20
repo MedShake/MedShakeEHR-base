@@ -23,18 +23,26 @@
  # Template > Agenda, cadre patient
  #
  # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
 {% import "macroForm.html.twig" as f %}
 
-<h3>Patient</h3>
-<div id="patientSearch" class="input-group mx-0 mb-3">
-  <input id="search" type="text" class="form-control" placeholder="Rechercher un patient" autocomplete="off"/>
-  <div class="input-group-append">
-    <button id="newPatient" type="button" class="btn btn-outline-secondary">Créer patient</button>
+<div id="patientInfo" class="mb-3" style="display: none;">
+  <ul class="nav nav-tabs">
+    <li class="nav-item font-weight-bold">
+      <span class="nav-link active bg-light" style="border-bottom-color : #f5f5f5"><i class="fas fa-user fa-fw mr-1"></i> Patient</span>
+    </li>
+    <li class="nav-item ml-auto pt-1">
+      {% if config.vitaleActiver =='true' %}
+        <button id="lectureCpsVital" type="button" class="btn btn-success btn-sm lireCpsVitale" title="Créer à partir des données carte vitale" style="display: none;"><i class="fas fa-user"></i> Vitale</button>
+      {% endif %}
+      <button id="nettoyer" class="btn btn-danger btn-sm" title="Revenir à l'état initial" style="display:none"><i class="fas fa-times fa-fw"></i></button>
+    </li>
+  </ul>
+  <div id="patientFormTab" class="border-right border-left border-bottom bg-light">
+    <form id="newPatientData" class="card-body">
+        {{ f.formbuilder(page.formNewPatient , config.formFormulaireNouveauPatient, session) }}
+    </form>
   </div>
 </div>
-<div id="patientInfo" style="display: none">
-  {{ f.formbuilder(page.formNewPatient , 'baseNewPatient', session) }}
-</div>
-

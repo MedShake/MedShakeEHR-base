@@ -1,0 +1,117 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2018
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : liste des backups
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : backups SQL{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Backups
+    </li>
+  </ol>
+
+  <h1>Backups SQL</h1>
+
+  <h2 class="my-4">Répertoire</h2>
+
+  <table class="table table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>
+          Paramètre
+        </th>
+        <th>
+          Répertoire local
+        </th>
+        <th>
+          Est accessible en lecture
+        </th>
+        <th>
+          Est accessible en écriture
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>backupLocation</td>
+        <td>{{ config.backupLocation }}</td>
+        <td class="{% if page.backupsDirAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+        <td class="{% if page.backupsDirAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="my-4">Backups présents</h2>
+
+  <div class="alert alert-info" role="alert">Pour des raisons de sécurité, les backups ne sont pas accessibles par le navigateur.</div>
+
+  {% if page.backupsDirAutorisationLecture == 1 %}
+
+    {% if page.backups.files | length < 1 %}
+      <div class="alert alert-info" role="alert">Aucun backups SQL n'est disponible.</div>
+    {% else %}
+      <table class="table table-sm mb-0 table-hover ">
+        <thead class="thead-light">
+          <tr>
+            <th>
+              Fichier
+            </th>
+            <th>
+              Taille
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for k, v in page.backups.files %}
+            <tr>
+              <td>{{ v.name }}</td>
+              <td>{{ v.size }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+  {% else %}
+    <div class="alert alert-danger" role="alert">Le répertoire de backup n'est pas accessible en lecture. Les backups ne peuvent être listés par cette interface.</div>
+  {% endif %}
+
+{% endblock %}

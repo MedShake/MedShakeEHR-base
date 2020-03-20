@@ -59,7 +59,13 @@ $acceptedModes=array(
     'getHistorique', // Obtenir l'historique complet
     'getHistoriqueToday', // Obtenir l'historique du jour
     'getGraphData', // Obtenir les data pour les graphs biométrie
-    'getGraphDataCardio' // Obtenir les data pour les graphs biométrie cardio
+    'getGraphDataCardio', // Obtenir les data pour les graphs biométrie cardio
+    'getFseData', // obtenir les data nécessaires à l'établissement d'une FSE
+    'getFseReturnData', // obtenir les data nécessaires à l'établissement d'une FSE
+    'getFilePreviewDocument', // obtenir le html de prévisualisation d'un fichier
+    'lapExternePrepare', // préparer le LAP externe
+    'lapExterneCheckOrdo', // vérifier la dispo d'une ordo produite par le LAP externe
+    'rotateDoc', // rotation image dans aperçu ligne historique
 );
 
 

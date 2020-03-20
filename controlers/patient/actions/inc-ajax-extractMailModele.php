@@ -28,5 +28,17 @@
 
 $mm=new msData();
 if($mm=$mm->getDataType($_POST['modeleID'], ['id','formValues'])) {
-  echo $mm['formValues'];
+
+  $courrier=new msCourrier();
+  if(is_numeric($_POST['objetID'])) {
+    $courrier->setObjetID($_POST['objetID']);
+    $dataCourrier['tag']=$courrier->getDataByObjetID();
+  } elseif(is_numeric($_POST['patientID'])) {
+    $courrier->setPatientID($_POST['patientID']);
+    $dataCourrier['tag']=$courrier->getCourrierData();
+  }
+
+  $texte = msGetHtml::genererHtmlFromString($mm['formValues'], $dataCourrier);
+
+  exit($texte);
 }

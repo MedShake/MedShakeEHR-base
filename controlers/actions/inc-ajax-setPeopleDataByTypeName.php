@@ -21,7 +21,7 @@
  */
 
 /**
- * Requêtes AJAX > enregistrement des données patient par nom du type de donnée 
+ * Requêtes AJAX > enregistrement des données patient par nom du type de donnée
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -33,5 +33,5 @@
      $return['status']='ok';
      echo json_encode($return);
  } else {
-     header('HTTP/1.1 401 Unauthorized');
+     http_response_code(401);
  }

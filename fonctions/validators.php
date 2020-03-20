@@ -33,28 +33,60 @@ GUMP::add_validator("identite", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\-\'\ ])+$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce champ a une mauvaise syntaxe !');
+	}, 'Le champ {field} a une mauvaise syntaxe');
 
 GUMP::add_validator("mobilphone", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^0[6-7]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce numéro de téléphone mobile n\'est pas valide !');
+	}, 'Le champ {field} n\'est pas un numéro de téléphone mobile valide');
 
 GUMP::add_validator("phone", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		$find=preg_match('/^0[1-6]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Ce numéro de téléphone n\'est pas valide !');
+	}, 'Le champ {field} n\'est pas un numéro de téléphone valide');
 
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		if (msSQL::sqlUniqueChamp("select $field from $param where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
-	}, 'Ce nom est déjà utilisé !');
+	}, 'Le champ {field} contient une valeur déjà utilisée');
 
 GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
 		msTools::validateDate($input[$field], $param);
-	}, 'Cette date n\'est pas valide !');
+	}, 'Le champ {field} ne contient pas une date valide');
 
+GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return FALSE;
+		$checkLogin = new msUser;
+		return $checkLogin->checkLoginByUserID($param, $input[$field]);
+	}, 'Le champ {field} n\'est pas correct');
+
+GUMP::add_validator("checkPasswordLength", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return FALSE;
+		if (mb_strlen($input[$field]) < PASSWORDLENGTH) return FALSE;
+		return TRUE;
+	}, 'Le champ {field} doit avoir un nombre de caract&#232;res de '. PASSWORDLENGTH.' ou plus');
+
+GUMP::add_validator("checkNoName", function($field, $input, $param = NULL) {
+		if (empty($input['p_birthname']) and empty($input['p_lastname'])) return FALSE;
+		return TRUE;
+	}, 'Le champ Nom de naissance et Nom d\'usage ne peuvent être vides en même temps');
+
+GUMP::add_validator("checkUniqueUsername", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return TRUE;
+		if (msSQL::sqlUniqueChamp("select name from people where name='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
+	}, 'Ce nom d\'utilisateur est déjà existant');
+
+GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) {
+		if(!empty($input[$field])) return TRUE;
+		$params = explode(';', $param);
+		if(!empty($params)) {
+			foreach($params as $pa) {
+				if(!empty($input['p_'.$pa])) return TRUE;
+			}
+		}
+		return FALSE;
+	}, 'Le champ {field} ne peut être vide en même temps que certains autres');
 
 ?>

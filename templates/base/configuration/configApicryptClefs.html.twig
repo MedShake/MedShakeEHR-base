@@ -28,9 +28,44 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block jsEmbed %}
+{{ parent() }}
+$(document).ready(function() {
+  $("button.dechiffrer").on("click", function(e) {
+
+    code = window.prompt('Entrez le code LONG figurant sur le courrier Apycript');
+    if (code) {
+      source = $(this).attr('data-source');
+      destination = $(this).attr('data-destination');
+
+      $.ajax({
+        url: urlBase + '/configuration/ajax/configUncryptApicryptKey/',
+        type: 'post',
+        data: {
+          source: source,
+          destination: destination,
+          code: code
+        },
+        dataType: "json",
+        success: function(data) {
+          location.reload();
+        },
+        error: function() {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
+      });
+    }
+    });
+});
+{% endblock %}
+
+{% block jsFiles %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
@@ -53,7 +88,7 @@
 
 
 {# Nav tabs #}
-<ul class="nav nav-tabs bottom-space" role="tablist">
+<ul class="nav nav-tabs mt-3 mb-4" role="tablist">
     <li role="presentation" class="nav-item">
         <a class="nav-link{% if page.selectUser < 1 %} active{% endif %}" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/apicrypt-clefs/" aria-controls="categories" role="tab">Configuration générale</a>
     </li>
@@ -68,36 +103,38 @@
 </ul>
 
 
-  <h2>Répertoire</h2>
+<h2>Répertoire</h2>
 
 
-  <table class="table table-sm">
-      <tr>
-          <th>
-              Paramètre
-          </th>
-          <th>
-              Chemin + répertoire "Clefs" final
-          </th>
-          <th>
-              Est accessible en lecture
-          </th>
-          <th>
-              Est accessible en écriture
-          </th>
-      </tr>
+<table class="table table-sm">
+  <thead class="thead-light">
+    <tr>
+      <th>
+        Paramètre
+      </th>
+      <th>
+        Chemin + répertoire "Clefs" final
+      </th>
+      <th>
+        Est accessible en lecture
+      </th>
+      <th>
+        Est accessible en écriture
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>apicryptCheminVersClefs</td>
+      <td>{{ page.repertoireClefs }}</td>
+      <td class="{% if page.listeClefsAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      <td class="{% if page.listeClefsAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
 
-          <tr>
-              <td>apicryptCheminVersClefs</td>
-              <td>{{ page.repertoireClefs }}</td>
-              <td class="{% if page.listeClefsAutorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-              <td class="{% if page.listeClefsAutorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
-          </tr>
 
-  </table>
-
-
-  <h2>Clefs présentes</h2>
+  <h2 class="mt-4">Clefs présentes</h2>
 
   {% if page.listeClefsAutorisationLecture == 1 %}
 
@@ -105,28 +142,48 @@
       <div class="alert alert-danger" role="alert">Aucune clef Apicrypt n'est chargée pour cet utilisateur.</div>
     {% else %}
       <table class="table table-sm mb-0 table-hover ">
+        <thead class="thead-light">
           <tr>
-              <th>
+              <th colspan="2">
                   Fichier
               </th>
               <th>
                   Chemin complet
               </th>
               <th>
+                Est accessible en lecture
+              </th>
+              <th>
+                Est accessible en écriture
+              </th>
+              <th class="text-right">
                   Gérer
               </th>
           </tr>
+          </thead>
+          <tbody>
           {% for k,v in page.listeClefs %}
               <tr>
-                  <td>{{ v.file }}</td>
-                  <td>{{ page.repertoireClefs }}{{ v.file }}</td>
                   <td>
+                    {{ v.file }}
+                    {% if v.fileInfo.extension == 'aes' %}
+                      <button class="btn btn-sm btn-danger ml-3 dechiffrer" data-source="{{ page.repertoireClefs }}{{ v.file }}" data-destination="{{ page.repertoireClefs }}{{ v.fileInfo.filename }}">
+                        <i class="fas fa-lock"></i> Cliquez pour déchiffrer et utiliser
+                      </button>
+                    {% endif %}
+                  </td>
+                  <td class="text-right">{{ v.filesize }}</td>
+                  <td>{{ page.repertoireClefs }}{{ v.file }}</td>
+                  <td class="{% if v.autorisationLecture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+                  <td class="{% if v.autorisationEcriture == 1 %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+                  <td class="text-right">
                     <div class="btn-group">
-                      <button class="delApicryptClef btn btn-sm" type="button" data-file="{{ v.file }}" data-user="{{ page.selectUser }}">supprimer</a>
+                      <button class="delApicryptClef btn btn-sm btn-light" type="button" data-file="{{ v.file }}" data-user="{{ page.selectUser }}" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
                     </div>
                   </td>
               </tr>
           {% endfor %}
+        </tbody>
       </table>
     {% endif %}
 
@@ -134,7 +191,7 @@
     <div class="alert alert-danger" role="alert">Le répertoire de clefs n'est pas accessible en lecture. Les clefs ne peuvent être listées et gérées par cette interface.</div>
   {% endif %}
 
-  <h2>Ajouter des clefs</h2>
+  <h2 class="mt-4">Ajouter des clefs</h2>
 
   {% if page.listeClefsAutorisationEcriture == 1 %}
 

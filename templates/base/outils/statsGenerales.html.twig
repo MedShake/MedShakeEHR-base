@@ -1,0 +1,114 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Outils > statistiques générales
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : statistiques générales{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+  <h1>Statistiques générales</h1>
+
+  <nav class="mt-4 font-weight-bold">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-patients-tab" data-toggle="tab" href="#nav-patients" role="tab" aria-controls="nav-home" aria-selected="true">
+        <i class="fas fa-users fa-fw"></i>
+        Patients / Praticiens</a>
+      <a class="nav-item nav-link" id="nav-forms-tab" data-toggle="tab" href="#nav-forms" role="tab" aria-controls="nav-profile" aria-selected="false">
+        <i class="fas fa-list fa-fw"></i>
+        Formulaires</a>
+    </div>
+  </nav>
+
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade p-4 border-left" id="nav-forms" role="tabpanel" aria-labelledby="nav-patients-tab">
+      <div class="row">
+        <div class="col-12 col-xl-8">
+          <div class="alert alert-info mb-4">
+            Les statistiques n'incluent pas les dossiers tests.
+          </div>
+          <table class="table table-sm table-hover">
+            <thead class="thead-light">
+              <tr>
+                <th>Formulaires</th>
+                <th colspan="2" class="text-center">En base - actifs</th>
+                <th class="text-right">En base - supprimés</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for catName, forms in page.forms %}
+                <tr class="table-primary">
+                  <td colspan="4">{{ forms[0]['catLabel'] }}</td>
+                </tr>
+                {% for form in forms %}
+                  <tr>
+                    <td>{{ form.label }}</td>
+                    <td class="text-right">
+                      {{ form.actifs }}
+                    </td class="text-right">
+                    <td>
+                      {% if form.actifs > 0 %}
+                      <a href="/logs/historique/{{ form.name }}/" type="button" class="btn btn-light btn-sm" title="Afficher l'historique"><i class="fas fa-history"></i></a>
+                      {% endif %}
+                    </td>
+                    <td class="text-right">{{ form.deleted }}</td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade show active p-4 border-left" id="nav-patients" role="tabpanel" aria-labelledby="nav-forms-tab">
+      <div class="row">
+        <div class="col-12 col-xl-8">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <i class="fas fa-user fa-fw"></i>
+              Patients :
+              {{ page.dossiers.patient }}</li>
+            <li class="list-group-item">
+              <i class="fas fa-user-md fa-fw"></i>
+              Praticiens :
+              {{ page.dossiers.pro }}</li>
+            <li class="list-group-item">
+              <i class="fas fa-user-slash fa-fw"></i>
+              Dossiers supprimés :
+              {{ page.dossiers.deleted }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

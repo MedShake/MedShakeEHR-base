@@ -48,6 +48,8 @@ spl_autoload_register(function ($class) {
     }
 });
 
+/////////// Compatibilité versions antérieures PHP
+require $homepath.'fonctions/compatibilite.php';
 
 /////////// Config loader
 $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
@@ -63,6 +65,7 @@ $p['homepath']=$homepath;
 $mysqli=msSQL::sqlConnect();
 
 /////////// Validators loader
+define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
 /////////// Router

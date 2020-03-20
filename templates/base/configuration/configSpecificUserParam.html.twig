@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : configuration{% endblock %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -47,19 +47,25 @@
     <li class="breadcrumb-item">
         <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/users/">Utilisateurs et options</a>
     </li>
-    <li class="breadcrumb-item active">Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
-      {{ page.userData.2 }}
+    <li class="breadcrumb-item active">Paramètres spécifiques à {{ page.userData.firstname }} {% if page.userData.lastname %}
+      {{ page.userData.lastname }}
     {% else %}
-      {{ page.userData.1 }}
+      {{ page.userData.birthname }}
     {% endif %}
     </li>
   </ol>
 
-  <h1>Paramètres spécifiques à {{ page.userData.3 }} {% if page.userData.2 %}
-    {{ page.userData.2 }}
+  <h1>Paramètres spécifiques à {{ page.userData.firstname }} {% if page.userData.lastname %}
+    {{ page.userData.lastname }}
   {% else %}
-    {{ page.userData.1 }}
+    {{ page.userData.birthname }}
   {% endif %}</h1>
+
+  {% if page.userParams|length < 1 %}
+    <div class="alert alert-info mt-4 mb-3" role="alert">
+      Aucun paramètre spécifique n'est défini pour le moment pour cet utilisateur.
+    </div>
+  {% endif %}
 
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
     <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
@@ -74,14 +80,18 @@
         </ul>
       </div>
       <div class="col-md-10 tab-content">
-        <div class="col-12">
-          <button class="btn btn-primary float-right mb-3 addParam" type="button" data-toggle="modal" data-target="#modalAddParam">Nouveau paramètre</button>
+        <div class="row">
+          <div class="col text-right">
+            <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
+          </div>
         </div>
+
+
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
           <div class="col-12 mt-4">
             <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
-              <thead>
+              <thead class="thead-light">
                 <tr>
                   <th>Paramètre</th>
                   <th class="col-3">Valeur défaut</th>
@@ -148,7 +158,7 @@
                     <td class="text-right">
                       <div class="btn-group">
                         <button class="btn btn-light btn-sm removeParam" type="button">
-                          <span class="fa fa-times"></span>
+                          <span class="fas fa-times"></span>
                         </button>
                       </div>
                     </td>
@@ -157,13 +167,7 @@
               </tbody>
             </table>
 
-            {{ f.input ({
-              'input' : {
-                'type' : 'submit',
-                'value' : 'Enregistrer',
-                'class' : 'btn btn-primary mt-3'
-              }
-            }) }}
+            <button class="btn btn-primary mt-3" type="submit"><i class="fas fa-save"></i> Enregistrer</button>
           </div>
         </div>
       {% endfor %}
@@ -171,16 +175,18 @@
     </div>
 
   </form>
+{% endblock %}
 
+{% block modals %}
   {# modal d'ajout de paramètres #}
   <div id="modalAddParam" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title gras">Nouveau paramètre</h4>
+          <h4 class="modal-title font-weight-bold">Nouveau paramètre</h4>
         </div>
-        <div class="modal-body">
           <form id="formNewParam" class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserParamCreate/" method="post">
+           <div class="modal-body">
             <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
             <div class="row">
               <div class="col-md-6">
@@ -198,28 +204,30 @@
                 {% for saniCat,cat in page.availableCats %}
                   <select class="custom-select paramselect" name="paramNameInCat{{ saniCat }}"{% if not loop.first %} style="display:none"{% endif %} autocomplete="off">
                     {% set first = true %}
-                    {% for p in page.availableParams if p.saniCat == saniCat %}
-                      <option value="{{ p.name }}" {% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
-                      {% set first = false %}
+                    {% for p in page.availableParams %}
+                      {% if p.saniCat == saniCat %}
+                        <option value="{{ p.name }}" {% if first %}selected{% endif %} data-desc="{{ p.description }}" data-type="{{ p.type }}">{{ p.name }}</option>
+                        {% set first = false %}
+                      {% endif %}
                     {% endfor %}
                   </select>
                 {% endfor %}
               </div>
             </div>
-            <p id="description" class="py-1" style="background-color:#eee">description : {{ (page.availableParams|first).description }}</p>
-            <p id="type" class="py-1" style="background-color:#eee">type : {{ (page.availableParams|first).type }}</p>
+            <p id="description" class="p-2 bg-light" >Description : {{ (page.availableParams|first).description }}</p>
+            <p id="type" class="p-2 bg-light">type : {{ (page.availableParams|first).type }}</p>
             <div class="form-group row">
               <div class="col-12">
                 <label>Valeur</label>
                 <input class="form-control" type="text" name="paramValue" autocomplete="off"/>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn" data-dismiss="modal">Annuler</button>
-              <button type="submit" class="btn btn-primary">Valider</button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Valider</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

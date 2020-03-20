@@ -28,7 +28,7 @@
 
 {% extends "page.html.twig" %}
 {% import "macroForm.html.twig" as f %}
-{% block title %}MedShakeEHR : modules{% endblock %}
+{% block title %}{{ config.designAppName }} : modules{% endblock %}
 
 {% block head %}
   {{ parent() }}
@@ -45,6 +45,8 @@
       z-index: 10;
       width: 100vw;
       height: 100vh;
+      top:0;
+      left: 0;
     }
   </style>
 {% endblock %}
@@ -64,63 +66,127 @@
     </li>
   </ol>
 
-  <h1>Modules installés</h1>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-12 col-xl-8 mb-4">
+      <h1>Modules installés</h1>
       <table class="table table-sm mb-0 table-striped table-hover">
-        <thead>
+        <thead class="thead-light">
           <tr>
             <th>Nom</th>
+            <th>Nom court</th>
             <th>Version</th>
-            <th  class="col-auto"></th>
+            <th class="col-auto"></th>
           </tr>
         </thead>
         <tbody>
           {% for m in page.modules %}
-            <tr>
-              <td>{{ m.name }}</td>
-              <td>{{ m.version }}</td>
-              <td class="text-right">
-                {% if m.name != 'base' %}
-                  <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}"><i class="fas fa-search-plus"></i></button>
+            <tr data-toggle="collapse" data-target="#{{ m.name }}">
+              <td>
+                {% if page.modulesInfosGen[m.name]['nom'] %}
+                  {{ page.modulesInfosGen[m.name]['nom'] }}
                 {% endif %}
               </td>
+              <td>
+                {{ m.name }}
+              </td>
+              <td>{{ m.version }}</td>
+              <td class="text-right">
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}">
+                  <i class="fas fa-info fa-fw"></i>
+                </button>
+              </td>
             </tr>
-            {% if m.name != 'base' %}
-              <tr class="collapse" id="{{ m.name }}">
-                <td colspan="3" class="p-3 bg-white">
-                  <h5>Paramètres de configuration spécifiques au module {{ m.name }}</h5>
-                  {% if page.modulesConfig[m.name]|length > 0 %}
+            <tr class="collapse" id="{{ m.name }}">
+              <td colspan="4" class="p-3 bg-white">
+                {% if page.modulesInfosGen[m.name]['nom'] %}
+                  <h5>Informations sur ce module</h5>
+
+                  <div class="card card-body my-3 bg-light">
+
+                    <ul class="list-unstyled mb-0">
+                    {% if page.modulesInfosGen[m.name]['nom'] %}
+                      <li>
+                        <strong>{{ page.modulesInfosGen[m.name]['nom'] }}</strong>
+                        {% if page.modulesInfosGen[m.name]['description'] is not empty %}
+                          <p class="mb-0">{{ page.modulesInfosGen[m.name]['description'] }}</p>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                    {% if page.modulesInfosGen[m.name]['auteurs'] is not empty %}
+                      <li>
+                        Auteur{% if page.modulesInfosGen[m.name]['auteurs']|length > 1 %}s{% endif %} :
+                        {% for auteur, lien in page.modulesInfosGen[m.name]['auteurs'] %}
+                          {% if lien is not empty %}
+                            <a href="{{ lien }}" target="_blank">{{ auteur }}</a>
+                          {% else %}
+                            {{ auteur }}
+                          {% endif %}
+                          {% if loop.index0 >= 0 and loop.revindex0 > 0 %} - {% endif %}
+                        {% endfor %}
+                      </li>
+                    {% endif %}
+                    {% if page.modulesInfosGen[m.name]['licence'] %}
+                      <li>
+                        Licence : {{ page.modulesInfosGen[m.name]['licence'] }}
+                      </li>
+                    {% endif %}
+                    {% if page.modulesInfosGen[m.name]['documentation'] or page.modulesInfosGen[m.name]['sources'] %}
+                      <li>
+                        {% if page.modulesInfosGen[m.name]['documentation'] %}
+                          <a href="{{ page.modulesInfosGen[m.name]['documentation'] }}" target="_blank">Documentation</a>
+                        {% endif %}
+                        {% if page.modulesInfosGen[m.name]['documentation'] and page.modulesInfosGen[m.name]['sources'] %} - {% endif %}
+                        {% if page.modulesInfosGen[m.name]['sources'] %}
+                          <a href="{{ page.modulesInfosGen[m.name]['sources'] }}" target="_blank">Code source</a>
+                        {% endif %}
+                      </li>
+                    {% endif %}
+                    </ul>
+                  </div>
+
+                {% endif %}
+                <h5>Paramètres de configuration spécifiques au module {{ m.name }}</h5>
+                {% if page.modulesConfig[m.name] | length > 0 %}
                   <table class="table table-sm small">
-                    <thead>
+                    <thead class="thead-light">
                       <th>nom</th>
                       <th>catégorie</th>
                       <th>valeur</th>
                     </thead>
                     <tbody>
                       {% for c in page.modulesConfig[m.name] %}
-                      <tr>
-                        <td>{{ c.name }}</td>
-                        <td>{{ c.cat }}</td>
-                        <td>{{ c.value }}</td>
-                      </tr>
+                        <tr>
+                          <td>{{ c.name }}</td>
+                          <td>{{ c.cat }}</td>
+                          <td>{{ c.value }}</td>
+                        </tr>
                       {% endfor %}
                     </tbody>
                   </table>
-                  {% else %}
-                    <p>Pas de paramètres spécifiques.</p>
-                  {% endif %}
-                  <a class="btn btn-sm btn-success" data-module="m.name" href="/configuration/modules/export/{{ m.name }}/" role="button">Exporter le module en SQL</a>
-                </td>
-              </tr>
-            {% endif %}
+                {% else %}
+                  <p>Pas de paramètres spécifiques.</p>
+                {% endif %}
+                <a class="btn btn-sm btn-success" data-module="m.name" href="/configuration/modules/export/{{ m.name }}/" role="button"><i class="fas fa-database mr-1"></i> Exporter le module en SQL</a>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-  <h1 class="mt-3">Installer un nouveau module ou une mise à jour</h1>
-  <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.<p>
-  <p><strong>Ceci aura pour effet de mettre la base de données en état de maintenance</strong>, ce qui empêchera tout utilisateur non administrateur d'accèder à MedShakeEHR, jusqu'à ce que vous vous reloguiez pour terminer les mises à jour</p>
-      <input type="hidden" />
-    {% endblock %}
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <h1>Installer un nouveau module ou une mise à jour</h1>
+      <div class="card card-body">
+        <div class="text-center my-4">
+          <i class="fas fa-file-archive text-light fa-8x"></i>
+        </div>
+
+        <p>Glissez-déposez le fichier zip d'un nouveau module MedShakeEHR ou d'une mise à jour sur cette page pour l'installer.</p>
+        <p>
+          <strong>Ceci aura pour effet de mettre la base de données en état de maintenance</strong>, ce qui empêchera tout utilisateur non administrateur d'accéder à MedShakeEHR, jusqu'à ce que vous vous reloguiez pour terminer les mises à jour
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

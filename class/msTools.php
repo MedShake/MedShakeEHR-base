@@ -59,16 +59,16 @@ class msTools
       }
 
       if ($type=='301') {
-          header('HTTP/1.1 301 Moved Permanently');
+          http_response_code(301);
       }
       if ($type=='401') {
-          header('HTTP/1.1 401 Unauthorized');
+          http_response_code(401);
       }
       if ($type=='403') {
-          header('HTTP/1.1 403 Forbidden');
+          http_response_code(403);
       }
       if ($type=='404') {
-          header('HTTP/1.1 404 Not Found');
+          http_response_code(404);
       }
       header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$routes[$routeAbrev][1]);
       die;
@@ -85,16 +85,16 @@ class msTools
       global $p;
 
       if ($type=='301') {
-          header('HTTP/1.1 301 Moved Permanently');
+          http_response_code(301);
       }
       if ($type=='401') {
-          header('HTTP/1.1 401 Unauthorized');
+          http_response_code(401);
       }
       if ($type=='403') {
-          header('HTTP/1.1 403 Forbidden');
+          http_response_code(403);
       }
       if ($type=='404') {
-          header('HTTP/1.1 404 Not Found');
+          http_response_code(404);
       }
       header('Location: '.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].$url);
       die;
@@ -122,6 +122,29 @@ class msTools
   }
 
 /**
+ * Obtenir toutes les values d'un tableau multidimensionnel
+ * @param  array  $array le tableau
+ * @return array        les values
+ */
+  public static function array_values_multi(array $array)
+  {
+      $values = array();
+
+      foreach ($array as $key => $value) {
+
+
+          if (is_array($value)) {
+              $values = array_merge($values, msTools::array_values_multi($value));
+          } else {
+            $values[] = $value;
+          }
+      }
+
+      return $values;
+  }
+
+
+/**
  * Valider une date du calendrier
  * @param  string $date   la date
  * @param  string $format son format
@@ -129,9 +152,46 @@ class msTools
  */
   public static function validateDate($date, $format = 'd/m/Y H:i:s')
   {
+      if(!is_string($date)) return false;
       $d = DateTime::createFromFormat($format, $date);
       return $d && $d->format($format) == $date;
   }
+
+/**
+ * Formater une date sortie dun champ datetime SQL
+ * @param  string $dateSQL      date Y-m-d H:i:s
+ * @param  string $outputFormat format de date souhaité
+ * @return string               date formatée
+ */
+  public static function sqlDateToDisplayDate($dateSQL, $outputFormat = 'd/m/Y')
+  {
+    if(!is_string($dateSQL)) return false;
+    $d = DateTime::createFromFormat('Y-m-d H:i:s', $dateSQL);
+    return $d->format($outputFormat);
+  }
+
+/**
+ * Convertisseur générique de date
+ * @param  string $dateIn        date
+ * @param  string $dateInFormat  format date en entrée
+ * @param  string $dateOutFormat format date en sortie
+ * @return string                date convertie
+ */
+  public static function dateConverter($dateIn, $dateInFormat, $dateOutFormat) {
+    if(!msTools::validateDate($dateIn, $dateInFormat)) return false;
+    $d = DateTime::createFromFormat($dateInFormat, $dateIn);
+    return $d->format($dateOutFormat);
+  }
+
+/**
+ * Valider une chaîne comme étant une expression régulière
+ * @param  string  $string expression
+ * @return boolean         TRUE / FALSE
+ */
+  public static function isRegularExpression($string) {
+    return @preg_match($string, '') !== FALSE;
+  }
+
 
 /**
  * "bbcodifier" du html
@@ -200,13 +260,32 @@ class msTools
   }
 
 /**
+ * Convertir un ficher texte iso en UTF8 sur lui même ou vers un autre fichier
+ * @param  string $source      fichier source
+ * @param  string $destination fichier destination
+ * @return bool              true/false
+ */
+  public static function convertPlainTextFileToUtf8($source, $destination='') {
+    if(!$destination) $destination=$source;
+    $contenu=file_get_contents($source);
+    if (!mb_detect_encoding($contenu, 'utf-8', true)) {
+      $contenu = utf8_encode($contenu);
+      return (bool)file_put_contents($destination, $contenu);
+    } elseif ($destination!=$source) {
+      return (bool)file_put_contents($destination, $contenu);
+    } else {
+      return true;
+    }
+  }
+
+/**
  * Tranformer une date d/m/Y en Ymd
  * @param  string $d la date d/m/Y
  * @return string    la date Ymd
  */
   public static function readableDate2Reverse($d)
   {
-      return $d{6}.$d{7}.$d{8}.$d{9}.$d{3}.$d{4}.$d{0}.$d{1};
+      return $d[6].$d[7].$d[8].$d[9].$d[3].$d[4].$d[0].$d[1];
   }
 
 /**
@@ -299,7 +378,7 @@ class msTools
 
 
 /**
- * Obtenir tous les sous repertoires d'un répertoire, avec récusrsivité
+ * Obtenir tous les sous repertoires d'un répertoire, avec récursivité
  * @param  string $directory           répertoire racine
  * @param  string $directory_seperator séparateur de répertoire dans le chemin (/)
  * @return array                      array des répertoires et sous répertoires
@@ -342,6 +421,20 @@ class msTools
    }
 
 /**
+ * Trier un tableau en natural sorting via un nom de clef de colonne, en préservant les clefs
+ * @param  string $key   colonne sur laquelle trier
+ * @param  array  $array tableau à trier
+ * @return array        tableau trié
+ */
+   public static function array_unatsort_by($key, array &$array)
+   {
+       return uasort($array, function($x, $y) use ($key)
+       {
+           return strnatcasecmp($x[$key] ?? null, $y[$key] ?? null);
+       });
+   }
+
+/**
  * Vérifier si une commande système existe
  * @param  string $cmd nom de la commande
  * @return boolean      true / false
@@ -349,6 +442,88 @@ class msTools
    public static function commandExist($cmd) {
       $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
       return !empty($return);
+   }
+
+/**
+ * Obtenir la taille d'un fichier en version lisible simple
+ * @param  string  $file     fichier (dont chemin)
+ * @param  integer $decimals nombre de décimales
+ * @return string            taille lisible
+ */
+   public static function getFileSize($file, $decimals = 2) {
+     $bytes=filesize($file);
+     return self::readabledSize($bytes, $decimals);
+   }
+
+/**
+ * Obtenir une taille en bytes en unitées plus lisibles
+ * @param  int  $bytes    taille en bytes
+ * @param  integer $decimals décimales pour arrondi
+ * @return string            taille lisible
+ */
+   public static function readabledSize($bytes, $decimals = 2) {
+     $sz = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po'];
+     $factor = floor((strlen($bytes) - 1) / 3);
+     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+   }
+
+/**
+ * Ajouter un slash final au chemin si absent
+ * @param string $dir chemin
+ */
+   public static function setDirectoryLastSlash($dir) {
+     if(substr($dir, -1) == '/') return $dir;
+     return $dir.'/';
+   }
+
+/**
+ * Obtenir un tableau ou les clefs sont préfixées
+ * @param  array $tab    tableau 2 dimensions
+ * @param  string $prefix préfixe
+ * @return array         tableau avec clefs préfixées
+ */
+   public static function getPrefixKeyArray($tab, $prefix) {
+     if(empty($tab)) return [];
+     foreach($tab as $k=>$v) {
+       $prefixTab[$prefix.$k]=$v;
+     }
+     return $prefixTab;
+   }
+
+/**
+ * Générer une chaine aléatoire de caractères
+ * @param  integer $length longueur de la chaine
+ * @param  string  $chars  caractères éligibles
+ * @return string          chaine aléatoire
+ */
+   public static function getRandomStr($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789') {
+     $count = mb_strlen($chars);
+     for ($i = 0, $result = ''; $i < $length; $i++) {
+         $index = rand(0, $count - 1);
+         $result .= mb_substr($chars, $index, 1);
+     }
+     return $result;
+   }
+
+/**
+* Obtenir l'orientation d'un PDF via pdftk en se basant sur ses dimensions
+* @return string landscape ou portait ou false si pb
+*/
+   public static function getPdfOrientation($fileFullPath) {
+     if(!is_file($fileFullPath)) return false;
+     if(strtolower(pathinfo($fileFullPath,  PATHINFO_EXTENSION)) != 'pdf') return false;
+
+     exec('pdftk '.escapeshellarg($fileFullPath).' dump_data | grep "PageMediaDimensions"' ,$output);
+     if(!isset($output[0])) return false;
+     $dim = explode(" ", $output[0]);
+     if(!isset($dim[2])) return false;
+     if($dim[1] > $dim[2]) {
+       return 'landscape';
+     } elseif($dim[1] <= $dim[2]) {
+       return 'portrait';
+     } else {
+       return false;
+     }
    }
 
 }

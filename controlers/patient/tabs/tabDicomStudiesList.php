@@ -27,6 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+ if(!is_numeric($match['params']['patientID'])) die;
  $template='inc-patientDicomStudiesList';
 
  $dc = new msDicom();
@@ -37,7 +38,7 @@
    //on complète les data dicom avec un datetime facilement exploitable
    if(isset($p['page']['studiesDcData'])) {
      foreach ($p['page']['studiesDcData'] as $k=>$v) {
-         $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+         $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
      }
    }
 
@@ -45,7 +46,8 @@
    if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' ", 'instance', 'value')) {
        foreach ($d as $k=>$v) {
            $ob = new msObjet();
-           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID($k);
+           $ob->setObjetID($k);
+           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
        }
    }
  } else {

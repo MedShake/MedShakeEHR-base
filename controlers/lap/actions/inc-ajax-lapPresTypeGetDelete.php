@@ -27,6 +27,7 @@
  */
 
 $debug='';
+if(!is_numeric($_POST['id'])) die;
 if(msSQL::sqlQuery("delete from prescriptions where toID='".$p['user']['id']."' and id='".msSQL::cleanVar($_POST['id'])."' limit 1 ")) {
   echo json_encode(['statut'=>'ok']);
 }

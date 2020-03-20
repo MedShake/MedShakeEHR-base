@@ -46,14 +46,15 @@ if (!isset($p['page']['studiesDcData']['HttpError'])) {
 
   //on complète les data dicom avec un datetime facilement exploitable
   foreach ($p['page']['studiesDcData'] as $k=>$v) {
-      $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+      $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
   }
 
   //on cherche les examens EHR qui peuvent être attachés.
-  if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' ", 'instance', 'value')) {
+  if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$p['page']['patient']['id']."' ", 'instance', 'value')) {
       foreach ($d as $k=>$v) {
           $ob = new msObjet();
-          $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID($k);
+          $ob->setObjetID($k);
+          $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
       }
   }
 } else {

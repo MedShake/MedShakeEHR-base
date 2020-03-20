@@ -33,16 +33,18 @@ class msModBaseObjetPreview
 {
   protected $_objetID;
   protected $_dataObjet;
+  protected $_pdfOrientation;
 
 /**
  * Définir l'ID de l'objet
  * @param int $id objetID
  */
   public function setObjetID($id) {
+    if(!is_numeric($id)) throw new Exception('ID is not numeric');
     $this->_objetID = $id;
     $data = new msObjet();
-    $data->setToID($id); //fake
-    $this->_dataObjet = $data->getCompleteObjetDataByID($id);
+    $data->setObjetID($id);
+    $this->_dataObjet = $data->getCompleteObjetDataByID();
   }
 
 /**
@@ -70,6 +72,18 @@ class msModBaseObjetPreview
   }
 
 /**
+ * Obtenir l'info sur le fait que le document puisse êter signé par le patient
+ * @return bool TRUE/FALSE
+ */
+  public function getCanBeSigned() {
+    if($this->_dataObjet['placeholder'] == 'o' and $this->_dataObjet['groupe'] == 'typecs') {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+/**
  * Obtenir le HTML de prévisualisation d'un Document
  * @return string code html
  */
@@ -79,18 +93,17 @@ class msModBaseObjetPreview
     $doc->setObjetID($this->_objetID);
 
     if ($doc->testDocExist()) {
-        $p['page']['pj']['href']=$doc->getWebPathToDoc();
-        $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
-        $p['page']['pj']['filesize']= $doc->getFileSize(0);
-
-        if (array_key_exists($p['page']['pj']['html'], array('JPG'=>true, 'PNG'=>true))) {
-            $p['page']['pj']['view']='<img style="max-width:100%;max-height:200px" src="'.$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/'.$doc->getWebPathToDoc().'"/>';
-        } elseif ($p['page']['pj']['html']=='TXT') {
-            $fn=$doc->getPathToDoc();
-            $fsz=filesize($fn);
-            $f=fopen($fn, 'r');
-            $p['page']['pj']['detail']= fread($f, min(256, $fsz)).($fsz>256?"\n...":'');
+        $p['page']['doc']['id']=$this->_objetID;
+        $p['page']['doc']['uniqid']=uniqid();
+        $p['page']['doc']['href']=$doc->getWebPathToDoc();
+        $p['page']['doc']['ext']=strtoupper($doc->getFileExtOfDoc());
+        $p['page']['doc']['mime']=$doc->getFileMimeType();
+        if($p['page']['doc']['mime'] == 'application/pdf') {
+          $this->_pdfOrientation = $doc->getPdfOrientation();
         }
+        $p['page']['doc']['filesize']= $doc->getFileSize(0);
+        $p['page']['doc']['displayParams']=$this->getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+        $p['page']['doc']['origine']=$doc->getDocOrigin();
     }
     if (!empty($this->_dataObjet['value'])) {
         //hprim
@@ -101,7 +114,120 @@ class msModBaseObjetPreview
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detDoc.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
+    return $html;
+  }
+
+/**
+ * Obtenir les paramètres d'affichage du document de la ligne d'historique
+ * @param  string $mime mimetype du doc
+ * @param  string $file fichier
+ * @return array       tableau de paramètres
+ */
+  public function getFilePreviewParams($mime, $file) {
+    $tab=array(
+      'display'=>false,
+      'displayType'=>'object',
+      'width'=>0,
+      'height'=>0,
+    );
+
+    // texte
+    if($mime == 'text/plain') {
+      $tab=array(
+        'display'=>true,
+        'displayType'=>'object',
+        'width'=>'900px',
+        'height'=>'900px',
+      );
+    }
+
+    // pdf
+    elseif($mime == 'application/pdf') {
+      if(!isset($this->_pdfOrientation)) {
+        $this->_pdfOrientation = msTools::getPdfOrientation($file);
+      }
+      if($this->_pdfOrientation == "landscape") {
+        $tab=array(
+          'display'=>true,
+          'displayType'=>'object',
+          'width'=>'1250px',
+          'height'=>'1000px',
+          'orientation'=> $this->_pdfOrientation
+        );
+      } else {
+        $tab=array(
+          'display'=>true,
+          'displayType'=>'object',
+          'width'=>'900px',
+          'height'=>'1260px',
+          'orientation'=> $this->_pdfOrientation
+        );
+      }
+    }
+
+    // zip
+    elseif($mime == 'application/zip') {
+      $tab=array(
+        'display'=>false,
+        'displayType'=>'object',
+        'width'=>0,
+        'height'=>0,
+      );
+    }
+
+    // image
+    elseif(explode('/', $mime)[0] == 'image') {
+      $imageInfos = getimagesize($file);
+      if($imageInfos[0]>1000) {
+        $imageInfos[1]=round($imageInfos[1]*1000/$imageInfos[0]);
+        $imageInfos[0]=1000;
+      }
+      if($imageInfos[1]>1000) {
+        $imageInfos[0]=round($imageInfos[0]*1000/$imageInfos[1]);
+        $imageInfos[1]=1000;
+      }
+      $tab=array(
+        'display'=>true,
+        'displayType'=>'img',
+        'width'=>$imageInfos[0].'px',
+        'height'=>$imageInfos[1].'px',
+      );
+    }
+    return $tab;
+  }
+
+/**
+ * Obtenir le html pour l'inclusion du fichier propre à un document
+ * @return string html
+ */
+  public function getFilePreviewDocument() {
+    global $p;
+    $doc = new msStockage();
+    $doc->setObjetID($this->_objetID);
+
+    if ($doc->testDocExist()) {
+        $p['page']['pj']['href']=$doc->getWebPathToDoc();
+        $p['page']['pj']['html']=strtoupper($doc->getFileExtOfDoc());
+    }
+
+    if($p['page']['pj']['html'] == 'PDF') {
+      $p['page']['doc']['mime']=$doc->getFileMimeType();
+      if(!isset($this->_pdfOrientation)) {
+        $this->_pdfOrientation = $doc->getPdfOrientation();
+      }
+      $p['page']['doc']['displayParams']=$this->getFilePreviewParams($p['page']['doc']['mime'], $doc->getPathToDoc());
+
+      $html = '<object
+        data="'.$p['page']['pj']['href'].'"
+        width="'.$p['page']['doc']['displayParams']['width'].'"
+        height="'.$p['page']['doc']['displayParams']['height'].'"
+        style="border: 15px solid #DDD"
+        type="'.$p['page']['doc']['mime'].'">
+      </object>';
+    } elseif($p['page']['pj']['html'] == 'TXT') {
+      $html = nl2br(file_get_contents($doc->getPathToDoc()));
+    }
     return $html;
   }
 
@@ -112,7 +238,8 @@ class msModBaseObjetPreview
   public function getGenericPreviewReglement() {
     global $p;
     $data = new msObjet();
-    $p['page']['datareg'] = $data->getObjetAndSons($this->_objetID, 'name');
+    $data->setObjetID($this->_objetID);
+    $p['page']['datareg'] = $data->getObjetAndSons('name');
     $p['page']['typeFormHonoraires']=msSQL::sqlUniqueChamp("SELECT dt.formValues AS form FROM data_types as dt
     LEFT JOIN objets_data as od ON dt.id=od.typeID WHERE od.id='".$this->_objetID."' limit 1");
     $p['page']['acteFacture']=msSQL::sqlUnique("SELECT * FROM actes WHERE id=(SELECT parentTypeID FROM objets_data WHERE id='".$this->_objetID."')");
@@ -125,9 +252,21 @@ class msModBaseObjetPreview
       }
     }
 
+    // si retour post FSE
+    if(isset($p['page']['datareg']['regleFseData'])) {
+      $p['page']['dataregFse']=json_decode($p['page']['datareg']['regleFseData']['value'], true)[0];
+      foreach($p['page']['dataregFse']['dataDetail'] as $acte) {
+        if($acte['is_ligne_ok'] == 1) {
+          $p['page']['dataregFse']['actesOK'][]=$acte['code_prestation'];
+        } else {
+          $p['page']['dataregFse']['actesKO'][]=$acte['code_prestation'];
+        }
+      }
+    }
+
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detReglement.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 
@@ -139,11 +278,12 @@ class msModBaseObjetPreview
     global $p;
 
     $data = new msObjet();
-    $p['page']['dataMail'] = $data->getObjetAndSons($this->_objetID, 'name');
+    $data->setObjetID($this->_objetID);
+    $p['page']['dataMail'] = $data->getObjetAndSons('name');
 
     $html = new msGetHtml;
     $html->set_template('inc-ajax-detMail.html.twig');
-    $html = $html->genererHtmlString($p);
+    $html = $html->genererHtmlVar($p);
     return $html;
   }
 
@@ -178,9 +318,26 @@ class msModBaseObjetPreview
           $p['page']['courrier']['modeprint']=$modePrint;
       }
 
+      //version pdf
+      $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
       $html = new msGetHtml;
       $html->set_template('inc-ajax-detOrdo.html.twig');
-      $html = $html->genererHtmlString($p);
+      $html = $html->genererHtmlVar($p);
+      return $html;
+    }
+
+/**
+ * Obtenir le HTML de prévisualisation d'une Ordo LAP Externe
+ * @return string code html
+ */
+    public function getGenericPreviewOrdoLapExt() {
+      //version pdf
+      $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detOrdoLapExt.html.twig');
+      $html = $html->genererHtmlVar($p);
       return $html;
     }
 
@@ -196,11 +353,16 @@ class msModBaseObjetPreview
         $fakePDF->setObjetID($this->_objetID);
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
+        $p['page']['txtVersion']=  msTools::cutHtmlHeaderAndFooter($version);
 
-        $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
-        $string .=  msTools::cutHtmlHeaderAndFooter($version);
-        $string .=  '</div></td>';
-        return $string;
+        //version pdf
+        $p['page']['pdfHtml'] = $this->getFilePreviewDocument();
+
+        $html = new msGetHtml;
+        $html->set_template('inc-ajax-detCourrier.html.twig');
+        $html = $html->genererHtmlVar($p);
+        return $html;
+
       }
 
 /**
@@ -212,21 +374,61 @@ class msModBaseObjetPreview
       $string='';
       $courrier=new msCourrier;
       $modelImpression = $courrier->getPrintModel($this->_dataObjet['formValues']);
-      if(is_file($p['config']['templatesPdfFolder'].$modelImpression.'.html.twig')) {
+      $templatesPdfFolder = msConfiguration::getParameterValue('templatesPdfFolder', ['id'=>$this->_dataObjet['fromID'], 'module'=>'']);
+      if(is_file($templatesPdfFolder.$modelImpression.'.html.twig')) {
         $fakePDF = new msPDF();
         $fakePDF->setPageHeader('');
         $fakePDF->setPageFooter('');
         $fakePDF->setObjetID($this->_objetID);
         $fakePDF->makePDFfromObjetID();
         $version = $fakePDF->getContenuFinal();
-
-      } else {
-        $version = "Pas d'aperçu disponible pour cet élément";
+        $p['page']['txtVersion'] = msTools::cutHtmlHeaderAndFooter($version);
       }
-      $string = '<td></td><td colspan="4" class="py-4"><div class="card bg-light p-2 appercu">';
-      $string .=  msTools::cutHtmlHeaderAndFooter($version);
-      $string .=  '</div></td>';
-      return $string;
+      // si pdf existant
+      $stockage = new msStockage;
+      $stockage->setObjetID($this->_objetID);
+      if($stockage->testDocExist()) {
+        $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
+      }
+      // si rien on va utiliser le template automatique.
+      if (!isset($p['page']['txtVersion']) and !isset($p['page']['pdfVersion'])) {
+        $form = new msForm;
+        $form->setFormIDbyName($this->_dataObjet['formValues']);
+        $form->getForm();
+        $courrier->setObjetID($this->_objetID);
+        $tag['tag']=$courrier->getDataByObjetID();
+        $p['page']['txtVersion'] = msGetHtml::genererHtmlFromString($form->getFlatBasicTemplateCode(), $tag );
+
+        // et si vraiment rien, message impossibilité
+        if(empty($p['page']['txtVersion'])) $p['page']['txtVersion'] = "Pas d'aperçu disponible pour cet élément";
+      }
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detGenericPreview.html.twig');
+      $html = $html->genererHtmlVar($p);
+      return $html;
+    }
+
+/**
+ * Obtenir le PDF embarqué
+ * @return string code html pour PDF embarqué
+ */
+    public function getGenericPreviewPDF() {
+      $doc = new msStockage();
+      $doc->setObjetID($this->_objetID);
+      if (!$doc->testDocExist()) {
+        $pdf= new msPDF();
+        $pdf->setObjetID($this->_objetID);
+        $pdf->makePDFfromObjetID();
+        $pdf->savePDF();
+      }
+      $this->_pdfOrientation = $doc->getPdfOrientation();
+      $p['page']['pdfVersion'] = $this->getFilePreviewDocument();
+
+      $html = new msGetHtml;
+      $html->set_template('inc-ajax-detGenericPreview.html.twig');
+      $html = $html->genererHtmlVar($p);
+      return $html;
     }
 
 /**
@@ -237,7 +439,8 @@ class msModBaseObjetPreview
         global $p;
 
         $data = new msObjet();
-        $p['page']['dataAld'] = $data->getObjetAndSons($this->_objetID, 'name');
+        $data->setObjetID($this->_objetID);
+        $p['page']['dataAld'] = $data->getObjetAndSons('name');
         $selectedAldLabel=new msData;
         $selectedAldLabel = $selectedAldLabel->getSelectOptionValue([$p['page']['dataAld']['aldNumber']['typeID']]);
 
@@ -245,7 +448,7 @@ class msModBaseObjetPreview
 
         $html = new msGetHtml;
         $html->set_template('inc-ajax-detCsAldDeclaration.html.twig');
-        $html = $html->genererHtmlString($p);
+        $html = $html->genererHtmlVar($p);
         return $html;
       }
 

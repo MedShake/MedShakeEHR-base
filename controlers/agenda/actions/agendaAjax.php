@@ -41,46 +41,11 @@ $acceptedModes=array(
     'synchronizeEvents', // synchroniser les événements (internes et externes)
     'setEventPasVenu', // marquer rendez-vous non honoré / honoré
     'getHistoriquePatient', // obtenir l'historique de rendez-vous d'un patient
+    'setEventEnAttente', // marquer patient en salle d'attente
 );
 
 if (!in_array($m, $acceptedModes)) {
     die;
-}
-
-
-// Extraire un form et lancer nouvelle Cs
-if ($m=='getEvents') {
-    include('inc-ajax-getEvents.php');
-}
-// Effacer un RDV
-elseif ($m=='delEvent') {
-    include('inc-ajax-delEvent.php');
-}
-// Déplacer un RDV
-elseif ($m=='moveEvent') {
-    include('inc-ajax-moveEvent.php');
-}
-// Déplacer un RDV
-elseif ($m=='searchPatient') {
-    include('inc-ajax-searchPatient.php');
-}
-// Obtenir les data patient
-elseif ($m=='getPatientAdminData') {
-    include('inc-ajax-getPatientAdminData.php');
-}
-// Ajouter ou updater un rdv
-elseif ($m=='synchronizeEvents') {
-    include('inc-ajax-synchronizeEvents.php');
-}
-// Ajouter ou updater un rdv
-elseif ($m=='setNewRdv') {
-    include('inc-ajax-setNewRdv.php');
-}
-// Marquer rendez-vous non honoré / honoré
-elseif ($m=='setEventPasVenu') {
-    include('inc-ajax-setEventPasVenu.php');
-}
-// Obtenir l'historique de rendez-vous d'un patient
-elseif ($m=='getHistoriquePatient') {
-    include('inc-ajax-getHistoriquePatient.php');
+} else {
+  include('inc-ajax-'.$m.'.php');
 }

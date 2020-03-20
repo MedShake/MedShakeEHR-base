@@ -56,7 +56,7 @@ $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 $today=date('Y-m-d');
-exec('mysqldump -u '.$p['config']['sqlUser'].' -p'.$p['config']['sqlPass'].' '.$p['config']['sqlBase'].' > '.$p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql');
+exec('mysqldump -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' '.escapeshellarg($p['config']['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql'));
 
 $dumpsList=scandir($p['config']['backupLocation']);
 

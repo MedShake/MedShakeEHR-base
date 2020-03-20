@@ -1,0 +1,58 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : details sur une ligne générique pour l'historique
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+<td></td>
+<td colspan="4" class="py-4">
+
+  {% set randID = random(100000, 999999) %}
+
+  <nav class="nav nav-tabs font-weight-bold">
+    {% if page.txtVersion %}
+      <a class="nav-item nav-link active" id="tab-tab{{ randID }}" data-toggle="tab" href="#tab-pan{{ randID }}">
+        <i class="far fa-file-alt fa-fw"></i> Texte
+      </a>
+    {% endif %}
+    {% if page.pdfVersion %}
+      <a class="nav-item nav-link {% if page.txtVersion is not defined  %}active{% endif %}" id="pdf-tab{{ randID }}" data-toggle="tab" href="#pdf-pan{{ randID }}">
+        <i class="far fa-file-pdf fa-fw"></i> PDF
+      </a>
+    {% endif %}
+  </nav>
+
+  <div class="tab-content border-left p-4">
+    {% if page.txtVersion %}
+      <div class="tab-pane active" id="tab-pan{{ randID }}">
+        <div style="min-height: 200px;">
+          {{ page.txtVersion }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if page.pdfVersion %}
+      <div class="tab-pane  {% if page.txtVersion is not defined  %}active{% endif %}" id="pdf-pan{{ randID }}">{{ page.pdfVersion }}</div>
+    {% endif %}
+  </div>
+</td>

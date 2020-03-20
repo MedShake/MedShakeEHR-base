@@ -30,23 +30,23 @@
 
 <table class="table table-sm table-hover">
   <thead>
-    <th class="col-md-6 text-center">DÉBUT</th>
-    <th class="text-center gras">
-      <select id="selectHistoTTAnnee" class="custom-select">
-      {% for annee in page.histoTTannees %}
-        <option {% if annee == page.histoTTannee %}selected="selected"{% endif %}>{{ annee }}</option>
-      {% endfor %}
-      </select>
-    </th>
-    <th class="col-md-6 text-center">FIN</th>
+    <tr>
+      <th class="text-center  border-top-0">DÉBUT</th>
+      <th class="text-center font-weight-bold  border-top-0" style="width : 95px">
+        <select id="selectHistoTTAnnee" class="custom-select">
+        {% for annee in page.histoTTannees %}
+          <option {% if annee == page.histoTTannee %}selected="selected"{% endif %}>{{ annee }}</option>
+        {% endfor %}
+        </select>
+      </th>
+      <th class="text-center  border-top-0">FIN</th>
+    </tr>
   </thead>
 
   {% for mois, jours in page.histoTT %}
     <thead>
       <tr class="table-primary">
-        <td></td>
-        <td class="gras text-capitalize text-center">{{ mois }}</td>
-        <td></td>
+        <td colspan="3" class="font-weight-bold text-capitalize text-center">{{ mois }}</td>
       </tr>
     </thead>
     <tbody>
@@ -76,7 +76,7 @@
                 </ul>
               {% endif %}
             </td>
-            <td class="gras text-center col-md-1 table-info">{{ jour }}</td>
+            <td class="font-weight-bold text-center table-info">{{ jour }}</td>
             <td>
               {% if medics.stop %}
                 <ul style="line-height : 1.7">

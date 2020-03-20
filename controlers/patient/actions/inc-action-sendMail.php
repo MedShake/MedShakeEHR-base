@@ -27,9 +27,13 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- // Apicrypt
+ // Apicrypt 1 & 2
  if ($_POST['mailType']=='apicrypt') {
+   if(isset($p['config']['apicryptVersion']) and $p['config']['apicryptVersion']==2) {
+     $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'2.php';
+   } else {
      $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'.php';
+   }
  }
 
  // Mail non sécurisé
@@ -57,14 +61,6 @@
 // Inclusion après vérification
 if (is_file($fileToInclude)) {
     include($fileToInclude);
-
-    // Pour évolution ajax future
-    // $debug='';
-    // //template
-    // $template="pht-ligne-mail";
-    // $patient=new msPeople();
-    // $patient->setToID($_POST['patientID']);
-    // $p['cs']=$patient->getToday("limit 1")[0];
 } else {
     die('Erreur: Pas d\'action correspondante');
 }

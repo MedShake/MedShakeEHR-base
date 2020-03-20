@@ -40,15 +40,15 @@
 
 
     //sortie du formulaire et préparation à son exploitation par le templates
-    if ($p['page']['form']=msSQL::sqlUnique("select * from forms where id='".$p['page']['formID']."' limit 1")) {
-        if ($p['page']['tabCat']=msSQL::sql2tabKey("select c.id, c.label
-    		from forms_cat as c
-    		order by c.label asc", 'id', 'label')) {
-        }
+    $form = new msForm;
+    $form->setFormID($p['page']['formID']);
+    if ($p['page']['form']=$form->getFormRawData()) {
+        $p['page']['tabCat']=msForms::getCatListByID();
+        $p['page']['form']['catName']=$form->getCatNameFromCatID($p['page']['form']['cat']);
 
         // liste des types par catégorie
         if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel
-    		from ".$p['page']['form']['dataset']." as t
+    		from data_types as t
     		left join data_cat as c on c.id=t.cat
     		where t.id > 0 and t.groupe = '".$p['page']['form']['groupe']."'
     		order by c.label asc, t.label asc")) {
@@ -57,6 +57,6 @@
             }
         }
         //liste des modules
-        $p['page']['modules']=msSQL::sql2tabKey("SELECT name AS module FROM system WHERE groupe='module' order by name", "module", "module");
+        $p['page']['modules']=msModules::getInstalledModulesNames();
     }
  }
