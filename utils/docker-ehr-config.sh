@@ -117,6 +117,11 @@ init(){
  copyGeneratedEnv
 }
 
+update(){
+ replaceEnvSubst
+ copyGeneratedEnv
+}
+
 calledProcedure=${1:-init}
 #echo "Calling procedure >$calledProcedure< >>$1<< $@"
 

@@ -7,6 +7,8 @@ services:
             - "80:80"
         volumes:
             - ~/ehr/log:/var/log
+            - ~/ehr/work:/app/MedShakeEHR-base/work
+            - ~/ehr/backup:/app/MedShakeEHR-base/backup
         links:
             - db:db
         environment:
