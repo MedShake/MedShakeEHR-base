@@ -38,7 +38,7 @@ $(document).ready(function() {
   $('body').delegate('input.searchPeopleID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
-      source: urlBase + '/people/ajax/' + $(this).attr('data-ajax') +'/',
+      source: urlBase + '/people/ajax/' + $(this).attr('data-ajax') + '/',
       select: function(event, ui) {
         $(this).val(ui.item.label);
         $(this).attr('data-id', ui.item.id);
@@ -60,7 +60,7 @@ $(document).ready(function() {
   $('body').on("click", ".removeRelation", function(e) {
     e.preventDefault();
     e.stopPropagation();
-    if(confirm('Confirmez-vous ?')) {
+    if (confirm('Confirmez-vous ?')) {
       removeRelation($(this).attr("data-peopleID"), $(this).attr('data-withID'));
     }
   });
@@ -255,6 +255,7 @@ function getRelationsGroupePraticiensTab(groupeID) {
     success: function(data) {
       $('#bodyTabRelationGroupePraticiens').html('');
       if (data.length > 0) {
+        lienSup = $('#bodyTabRelationGroupePraticiens').attr("data-lienSup");
         $.each(data, function(index, value) {
           $('#bodyTabRelationGroupePraticiens').append('\
             <tr class="voirDossier" style="cursor:pointer">\
@@ -265,9 +266,11 @@ function getRelationsGroupePraticiensTab(groupeID) {
               </td>\
               <td>' + ((value.titre) ? (value.titre + ' ') : '') + value.identiteUsuelle + '</td><td class="small">' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
+              ' + ((lienSup == 'true') ? ('\
                 <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + groupeID + '" data-withID="' + value.peopleID + '">\
                     <i class="fas fa-times fa-fw"></i>\
                 </button>\
+                ') : '') + ' \
               </td>\
             </tr>');
         });
@@ -348,6 +351,7 @@ function getRelationsRegistreGroupesTab(registreID) {
     success: function(data) {
       $('#bodyTabRelationRegistreGroupes').html('');
       if (data.length > 0) {
+        lienSup = $('#bodyTabRelationRegistreGroupes').attr("data-lienSup");
         $.each(data, function(index, value) {
           $('#bodyTabRelationRegistreGroupes').append('\
             <tr class="voirDossier cursor-pointer">\
@@ -357,9 +361,11 @@ function getRelationsRegistreGroupesTab(registreID) {
                 </a>\
               ' + value.groupname + '</td><td class="small">' + value.city + ' (' + value.country + ')</td><td class="small">' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
+              ' + ((lienSup == 'true') ? ('\
                 <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + registreID + '" data-withID="' + value.peopleID + '">\
                     <i class="fas fa-times fa-fw"></i>\
                 </button>\
+                ') : '') + ' \
               </td>\
             </tr>');
         });
@@ -380,7 +386,7 @@ function getRelationsRegistreGroupesTab(registreID) {
 
 
 /**
- * Obtenir le tableau de relation praticien / groupes
+ * Obtenir le tableau de relation registre / praticiens admin
  * @param  {int} pratID ID praticien
  */
 function getRelationsRegistrePraticiensTab(registreID) {
@@ -395,6 +401,7 @@ function getRelationsRegistrePraticiensTab(registreID) {
     success: function(data) {
       $('#bodyTabRelationRegistrePraticiens').html('');
       if (data.length > 0) {
+        lienSup = $('#bodyTabRelationRegistrePraticiens').attr("data-lienSup");
         $.each(data, function(index, value) {
           $('#bodyTabRelationRegistrePraticiens').append('\
             <tr class="voirDossier" style="cursor:pointer">\
@@ -405,9 +412,11 @@ function getRelationsRegistrePraticiensTab(registreID) {
               </td>\
               <td>' + ((value.titre) ? (value.titre + ' ') : '') + value.identiteUsuelle + '</td><td class="small">' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
+                ' + ((lienSup == 'true') ? ('\
                 <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + registreID + '" data-withID="' + value.peopleID + '">\
                     <i class="fas fa-times fa-fw"></i>\
                 </button>\
+                ') : '') + ' \
               </td>\
             </tr>');
         });
@@ -442,6 +451,7 @@ function getRelationsGroupeRegistresTab(groupeID) {
     success: function(data) {
       $('#bodyTabRelationGroupeRegistres').html('');
       if (data.length > 0) {
+        lienSup = $('#bodyTabRelationGroupeRegistres').attr("data-lienSup");
         $.each(data, function(index, value) {
           $('#bodyTabRelationGroupeRegistres').append('\
             <tr class="voirDossier cursor-pointer">\
@@ -451,9 +461,11 @@ function getRelationsGroupeRegistresTab(groupeID) {
                 </a>\
               ' + value.registryname + '</td><td class="small">' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
+              ' + ((lienSup == 'true') ? ('\
                 <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + groupeID + '" data-withID="' + value.peopleID + '">\
                     <i class="fas fa-times fa-fw"></i>\
                 </button>\
+                ') : '') + ' \
               </td>\
             </tr>');
         });
@@ -487,17 +499,21 @@ function removeRelation(peopleID, withID) {
         ID1: peopleID,
         ID2: withID,
       },
-      dataType: "html",
+      dataType: "json",
       success: function(data) {
-        if ($('#bodyTabRelationPatientPrat').length) getRelationsPatientPraticiensTab(peopleID);
-        if ($('#bodyTabRelationPatientPatients').length) getRelationsPatientPatientsTab(peopleID);
-        if ($('#bodyTabRelationPraticienGroupes').length) getRelationsPraticienGroupesTab(peopleID);
-        if ($('#bodyTabRelationGroupeRegistres').length) getRelationsGroupeRegistresTab(peopleID);
-        if ($('#bodyTabRelationRegistrePraticiens').length) getRelationsRegistrePraticiensTab(peopleID);
-        if ($('#bodyTabRelationGroupePraticiens').length) getRelationsGroupePraticiensTab(peopleID);
-        if ($('#bodyTabRelationRegistreGroupes').length) getRelationsRegistreGroupesTab(peopleID);
+        if (data.status == 'ok') {
+          if ($('#bodyTabRelationPatientPrat').length) getRelationsPatientPraticiensTab(peopleID);
+          if ($('#bodyTabRelationPatientPatients').length) getRelationsPatientPatientsTab(peopleID);
+          if ($('#bodyTabRelationPraticienGroupes').length) getRelationsPraticienGroupesTab(peopleID);
+          if ($('#bodyTabRelationGroupeRegistres').length) getRelationsGroupeRegistresTab(peopleID);
+          if ($('#bodyTabRelationRegistrePraticiens').length) getRelationsRegistrePraticiensTab(peopleID);
+          if ($('#bodyTabRelationGroupePraticiens').length) getRelationsGroupePraticiensTab(peopleID);
+          if ($('#bodyTabRelationRegistreGroupes').length) getRelationsRegistreGroupesTab(peopleID);
 
-        if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
+          if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
+        } else {
+          alert_popup("danger", 'Problème, rechargez la page !');
+        }
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');

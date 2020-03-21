@@ -32,9 +32,13 @@ $template='groupeView';
 if(!is_numeric($match['params']['groupeID'])) die;
 $p['page']['groupeDataID']=$match['params']['groupeID'];
 
-$groupe = new msPeopleRelations;
+$groupe = new msPeopleRelationsDroits;
 $groupe->setToID($p['page']['groupeDataID']);
 $p['page']['groupeData']['dossierType']=$groupe->getType();
+
+// position de l'utilisateur courant // groupe et ajust si admin général
+$p['page']['userPositionInGroup'] = $groupe->getCurrentUserStatusInGroup();
+if($p['user']['rank'] == 'admin') $p['page']['userPositionInGroup'] = 'admin';
 
 if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGeActiverGroupes'] != 'true') {
   $template = "404";
@@ -54,7 +58,7 @@ foreach($options[$typeID] as $k=>$v) {
   $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
 }
 
-// gestion groupe
+// gestion registre
 if($p['config']['optionGeActiverRegistres'] == 'true') {
 
   //sortir les choix de relations groupe <-> registre

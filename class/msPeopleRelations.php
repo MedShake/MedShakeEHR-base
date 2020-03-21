@@ -139,11 +139,54 @@ class msPeopleRelations extends msPeople
 
     }
 
+    private function _checkActionValidity() {
+      global $p;
+
+      $toIdType = $this->getType();
+
+      if($this->_relationType == 'relationPatientPraticien' and (($toIdType!='patient' and $toIdType!='pro') or $this->_withIdType != 'pro')) {
+        return false;
+      }
+
+      elseif($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
+        return false;
+      }
+
+      elseif($this->_relationType == 'relationPraticienGroupe') {
+        if ($toIdType == 'pro' and $this->_withIdType != 'groupe') {
+          return false;
+        } elseif ($toIdType == 'groupe' and $this->_withIdType != 'pro') {
+          return false;
+        }
+        else {
+          $checkAdminGroup = new msPeopleRelationsDroits;
+          if($toIdType == 'groupe') {
+            $checkAdminGroup->setToID($this->_toID);
+          } elseif($this->_withIdType == 'groupe') {
+            $checkAdminGroup->setToID($this->_withID);
+          }
+          $checkAdminGroup = $checkAdminGroup->getCurrentUserStatusInGroup();
+          if($checkAdminGroup != 'admin' and $p['user']['rank'] != 'admin') {
+            return false;
+          }
+        }
+      }
+
+      elseif($this->_relationType == 'relationPraticienRegistre' and ($toIdType!='pro' or $this->_withIdType != 'registre') or $p['config']['droitRegistrePeutGererAdministrateurs'] != 'true') {
+        return false;
+      }
+
+      elseif($this->_relationType == 'relationGroupeRegistre') {
+        if ($p['config']['droitRegistrePeutGererGroupes'] != 'true') {
+          return false;
+        }
+      }
+
+      return true;
+    }
 
 /**
  * Définir une relation entre 2 peopleID
- * @param string $toStatus     statut s'appliquant à toID
- * @param int $withID       peopleID du sujet en relation avec toID
  */
     public function setRelation() {
 
@@ -164,22 +207,7 @@ class msPeopleRelations extends msPeople
       }
 
       // valider l'opération
-      $toIdType = $this->getType();
-
-      if($this->_relationType == 'relationPatientPraticien' and (($toIdType!='patient' and $toIdType!='pro') or $this->_withIdType != 'pro')) {
-        throw new Exception('Action non valide');
-      }
-      if($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
-        throw new Exception('Action non valide');
-      }
-      if($this->_relationType == 'relationPraticienGroupe') {
-        if ($toIdType == 'pro' and $this->_withIdType != 'groupe') {
-          throw new Exception('Action non valide');
-        } elseif ($toIdType == 'groupe' and $this->_withIdType != 'pro') {
-          throw new Exception('Action non valide');
-        }
-      }
-      if($this->_relationType == 'relationPraticienRegistre' and ($toIdType!='pro' or $this->_withIdType != 'registre')) {
+      if(!$this->_checkActionValidity()) {
         throw new Exception('Action non valide');
       }
 
@@ -226,9 +254,8 @@ class msPeopleRelations extends msPeople
 
 /**
  * Retirer une relation entre 2 peopleID
- * @param int $withID 2e peopleID concerné
  */
-    public function setRelationDeleted($withID)
+    public function setRelationDeleted()
     {
       if (!is_numeric($this->_toID)) {
           throw new Exception('ToID is not numeric');
@@ -238,27 +265,36 @@ class msPeopleRelations extends msPeople
           throw new Exception('FromID is not numeric');
       }
 
-      if (!is_numeric($withID)) {
+      if (!is_numeric($this->_withID)) {
           throw new Exception('WithID is not numeric');
+      }
+
+      $this->_relationType = $this->getPeopleRelationType();
+
+      // valider l'opération
+      if(!$this->_checkActionValidity()) {
+        return false;
       }
 
       $typeID = msData::getTypeIDFromName('relationID');
 
-      // patient -> praticien/patient
-      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$this->_toID."' and value='".$withID."' and deleted='' limit 1")) {
+      // sup relation
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$this->_toID."' and value='".$this->_withID."' and deleted='' limit 1")) {
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setObjetID($id);
         $obj->setDeletedObjetAndSons();
       }
 
-      // praticien/patient -> patient
-      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$withID."' and value='".$this->_toID."' and deleted='' limit 1")) {
+      // sup relation réciproque
+      if ($id=msSQL::sqlUniqueChamp("select id from objets_data where typeID='".$typeID."' and toID='".$this->_withID."' and value='".$this->_toID."' and deleted='' limit 1")) {
         $obj = new msObjet;
         $obj->setFromID($this->_fromID);
         $obj->setObjetID($id);
         $obj->setDeletedObjetAndSons();
       }
+
+      return true;
     }
 
 /**
@@ -401,4 +437,37 @@ class msPeopleRelations extends msPeople
       return array_unique($r);
 
     }
+
+/**
+ * Obtenir le type de relation (data type name) entre 2 people
+ * @return string name du data type
+ */
+    public function getPeopleRelationType() {
+
+      if (!isset($this->_toID)) {
+          throw new Exception('ToID is not defined');
+      }
+
+      if (!isset($this->_withID)) {
+          throw new Exception('WithID is not defined');
+      }
+
+      $data = new msData();
+      $name2typeID = $data->getTypeIDsFromName(['relationID']);
+
+      $typeRelation = msSql::sqlUniqueChamp("select d.name as typeRelation
+      from objets_data as o
+      inner join objets_data as c on c.instance=o.id
+      left join data_types as d on d.id=c.typeID
+      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' and o.value='".$this->_withID."'
+      limit 1");
+      if(!$typeRelation) {
+        return null;
+      } else {
+        return $typeRelation;
+      }
+
+    }
+
+
 }

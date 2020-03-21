@@ -81,6 +81,12 @@ if ($p['page']['porp']=='patient') {
 } elseif ($p['page']['porp']=='registre') {
     $template="registreEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
+
+    //vérifier droits
+    if($p['config']['droitRegistrePeutCreerRegistre'] != 'true') {
+      $template="forbidden";
+      return;
+    }
 }
 
 $p['page']['patient']=$patient->getSimpleAdminDatasByName();
