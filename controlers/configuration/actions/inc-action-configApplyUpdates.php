@@ -47,7 +47,7 @@ function includePhp($file, $suffixe) {
 $formIN=$_POST['formIN'];
 unset($_SESSION['form'][$formIN]);
 
-$modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
+$modules=msSQL::sql2tabKey("SELECT name, value as version FROM `system` WHERE groupe='module'", "name");
 
 $availableInstalls=scandir($p['homepath'].'upgrade/');
 $installFiles=[];
@@ -73,7 +73,7 @@ foreach ($modules as $module) {
 }
 //s'il y a des patches à appliquer
 if (count($installFiles) or count($moduleUpdateFiles)) {
-    msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
+    msSQL::sqlQuery("UPDATE `system` SET value='maintenance' WHERE name='state' and groupe='system'");
     //on fait une sauvegarde de la base
     exec('mysqldump -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' '.escapeshellarg($p['config']['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql'));
     //puis on applique les patches en commençant par ceux de base s'il y en a
@@ -101,7 +101,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
         }
     }
 }
-msSQL::sqlQuery("UPDATE system SET value='normal' WHERE name='state' and groupe='system'");
+msSQL::sqlQuery("UPDATE `system` SET value='normal' WHERE name='state' and groupe='system'");
 
 if (isset($output) and is_array($output)) {
     foreach($output as $k=>$message) {

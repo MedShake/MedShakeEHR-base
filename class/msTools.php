@@ -55,7 +55,7 @@ class msTools
       global $p, $routes;
 
       if (!$routeAbrev or !array_key_exists($routeAbrev, $routes)) {
-          $routeAbrev='siteIndex';
+          $routeAbrev='root';
       }
 
       if ($type=='301') {

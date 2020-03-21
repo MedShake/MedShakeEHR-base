@@ -21,7 +21,7 @@
  */
 
 /**
- * Config : donner les droits administrateur à un utilisateur 
+ * Config : donner les droits administrateur à un utilisateur
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -30,7 +30,7 @@
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 if(!is_numeric($_POST['id'])) die;
-$actualRank=msSQL::sqlUniqueChamp("select rank from people where id = '".$_POST['id']."' limit 1");
+$actualRank=msSQL::sqlUniqueChamp("select `rank` from people where id = '".$_POST['id']."' limit 1");
 
 if( $actualRank == 'admin') {
   msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>''));
