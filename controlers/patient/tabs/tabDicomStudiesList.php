@@ -38,7 +38,7 @@
    //on complète les data dicom avec un datetime facilement exploitable
    if(isset($p['page']['studiesDcData'])) {
      foreach ($p['page']['studiesDcData'] as $k=>$v) {
-         $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+         $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
      }
    }
 

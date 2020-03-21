@@ -44,7 +44,7 @@
 
    //on complète les data dicom avec un datetime facilement exploitable et on rapproche de la liste de l'EHR
    foreach ($p['page']['studiesDcData'] as $k=>$v) {
-       $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.$v['MainDicomTags']['StudyTime'];
+       $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
        if(isset($p['page']['studiesDcDataRapro'][$v['ID']])) $p['page']['studiesDcData'][$k]['ehr'] = $p['page']['studiesDcDataRapro'][$v['ID']];
    }
 

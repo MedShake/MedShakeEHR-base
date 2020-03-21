@@ -39,7 +39,8 @@ $acceptedModes=array(
     'configUserTemplatesSave', // sauver un template user
     'configRemoveInstallFiles', // supprimer les fichies d'installation
     'configDicomRmWl', // supprimer tous les fichiers worklist actifs
-    'configToggleSystemState' // activer / désactiver le mode maintenance
+    'configToggleSystemState', // activer / désactiver le mode maintenance
+    'configRestartApicrypt2' // relancer le service Apicrypt2
 );
 
 if (!in_array($m, $acceptedModes)) {

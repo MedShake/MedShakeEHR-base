@@ -34,7 +34,7 @@ class msModules
  * @return array array moduleName=>moduleName
  */
   public static function getInstalledModulesNames() {
-    return msSQL::sql2tabKey("SELECT name FROM system WHERE groupe='module' order by name", "name", "name");
+    return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='module' order by name", "name", "name");
   }
 
 /**
@@ -42,7 +42,7 @@ class msModules
  * @return array k=>['module','version']
  */
   public static function getInstalledModulesNamesAndVersions() {
-    return msSQL::sql2tab("SELECT name, value AS version FROM system WHERE groupe='module'");
+    return msSQL::sql2tab("SELECT name, value AS version FROM `system` WHERE groupe='module'");
   }
 
 /**
@@ -50,7 +50,7 @@ class msModules
  * @return array module => 'version'
  */
   public static function getInstalledModulesVersions() {
-    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM system WHERE groupe='module' ", "name", "version")) {
+    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM `system` WHERE groupe='module' ", "name", "version")) {
       return $r;
     } else {
       return [];

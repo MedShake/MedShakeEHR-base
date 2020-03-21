@@ -119,7 +119,7 @@ $users=msPeople::getUsersListForService('optionGeActiverRappelsRdvMail');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
 
     $tsJourRDV=time()+($p['config']['mailRappelDaysBeforeRDV']*24*60*60);
 

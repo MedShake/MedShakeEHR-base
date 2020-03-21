@@ -215,7 +215,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     }
 
     // complément system
-    $system=msSQL::sqlUnique("select * from $this->_bdd.system where name='state' and groupe='system' limit 1");
+    $system=msSQL::sqlUnique("select * from $this->_bdd.`system` where name='state' and groupe='system' limit 1");
     unset($system['id']);
     if(isset($this->_system_fields)) $this->_system_fields=$this->_getSqlFieldsPart($system);
     $this->_system_values[]=$this->_getSqlValuesPart($system);

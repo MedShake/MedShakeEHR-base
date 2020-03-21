@@ -71,7 +71,7 @@ $users=msPeople::getUsersWithSpecificParam('apicryptAdresse');
 foreach ($users as $userID=>$val) {
 
     /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser($userID));
+    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
 
     /////////// Relever le compte pop3
     $pop = new msPop3();

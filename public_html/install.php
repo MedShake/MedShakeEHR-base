@@ -164,7 +164,7 @@ if (!is_file($homepath.'config/config.yml')) {
                 }
             }
 
-            msTools::redirRoute('firstLogin');
+            msTools::redirRoute('userLogInFirst');
         }
     }
 }
