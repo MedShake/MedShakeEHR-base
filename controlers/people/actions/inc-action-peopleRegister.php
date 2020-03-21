@@ -41,6 +41,8 @@ if (!isset($_POST['actAsAjax'])) {
 // vérification des droits
 if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien']!='true') {
   die("Action interdite");
+} elseif ($match['params']['porp']=='registre' and $p['config']['droitRegistrePeutCreerRegistre'] != 'true') {
+  die("Action interdite");
 }
 
 //definition formulaire de travail
