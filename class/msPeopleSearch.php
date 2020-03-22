@@ -163,7 +163,7 @@ class msPeopleSearch
       $frat->setRelationType('relationPraticienGroupe');
       $ids = $frat->getSiblingIDs();
       $ids[] = $p['user']['id'];
-      $restrictionUser .= " and p.id in ('".implode("', '", $ids)."')";
+      $restrictionUser .= " and (p.id in ('".implode("', '", $ids)."') or p.fromID = '".$p['user']['id']."')";
     }
 
     if(in_array('groupe', $this->_peopleType ) and $this->_restricGroupesEstMembre == true) {
