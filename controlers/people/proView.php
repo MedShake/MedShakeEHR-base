@@ -47,12 +47,14 @@ $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['proData']));
 
 //les patients connus
-$patients = new msPeopleRelations;
-$patients->setToID($p['page']['proDataID']);
-$patients->setRelationType('relationPatientPraticien');
-$patients->setReturnedPeopleTypes(['patient']);
-$p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
-msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
+if($p['config']['optionGePraticienMontrerPatientsLies'] == 'true') {
+  $patients = new msPeopleRelations;
+  $patients->setToID($p['page']['proDataID']);
+  $patients->setRelationType('relationPatientPraticien');
+  $patients->setReturnedPeopleTypes(['patient']);
+  $p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
+  msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
+}
 
 // gestion groupe
 if($p['config']['optionGeActiverGroupes'] == 'true') {

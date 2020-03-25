@@ -77,6 +77,11 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginCreationDefaultModule', 'default', '0', '', 'Login', 'texte', 'module par défaut pour création nouvel utilisateur', 'base');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginCreationDefaultTemplate', 'default', '0', '', 'Login', 'texte', 'template par défaut pour création nouvel utilisateur', '');
+
+-- configuration : montrer patients connus sur fiche praticien
+
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGePraticienMontrerPatientsLies', 'default', '0', '', 'Options', 'true/false', 'si true, montrer les patients liés au praticien sur la fiche pro', 'true');
+
 -- data_cat
 
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
