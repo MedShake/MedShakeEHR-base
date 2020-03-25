@@ -61,9 +61,9 @@ if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
       }
 
       // application du template si précisé
-      if(isset($_POST['p_userTemplate']) and !empty($_POST['p_userTemplate'])) {
+      if(isset($_POST['p_template']) and !empty($_POST['p_template'])) {
         $directory=$homepath.'config/userTemplates/';
-        $fichier=basename($_POST['p_userTemplate']).'.yml';
+        $fichier=basename($_POST['p_template']).'.yml';
         if(is_file($directory.$fichier)) {
           $dataTp = Spyc::YAMLLoad($directory.$fichier);
           if(is_array($dataTp) and !empty($dataTp)) {
