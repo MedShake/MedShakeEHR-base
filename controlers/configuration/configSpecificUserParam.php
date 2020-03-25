@@ -41,6 +41,7 @@ $prat->setToID($p['page']['userID']);
 $p['page']['userData']=$prat->getSimpleAdminDatasByName();
 $module=$prat->getModule();
 
+$p['page']['userParams']=[];
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
     foreach($data as $k=>$v) {
         if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
