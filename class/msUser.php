@@ -543,4 +543,23 @@ class msUser
        return $mail->send();
      }
 
+/**
+ * Créer un username unique pour le login en fonction de l'identité (bêta)
+ * @param  string $identite identité de l'indivité de la forme firstname lastname birthname
+ * @return string           username
+ */
+     public static function makeRandomUniqLoginUsername($identite) {
+       if(empty($identite)) throw new Exception('Identite is empty');
+       $identite=msTools::stripAccents($identite);
+       $identite=str_replace(['\'', '-'], ' ', $identite);
+       $l=[];
+       if($words = explode(' ', $identite)) {
+         foreach($words as $word) {
+           if(!empty($word[0]) and ctype_alpha($word[0])) $l[]=$word[0];
+         }
+       }
+       return strtolower(implode('', $l));
+
+     }
+
 }
