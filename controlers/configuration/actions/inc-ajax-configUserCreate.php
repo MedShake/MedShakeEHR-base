@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] != 'true') {die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");}
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
@@ -35,7 +35,7 @@ $form = new msFormValidation();
 $form->setformIDbyName($_POST['formIN']);
 $form->setPostdatas($_POST);
 $form->setContextualValidationErrorsMsg(false);
-$form->setContextualValidationRule('username',['checkUniqueUsername','alpha_dash','max_len,25']);
+$form->setContextualValidationRule('username',['checkUniqueUsername','alpha_numeric_dash','max_len,25']);
 if($p['config']['optionGeLoginPassAttribution'] == 'admin') {
   $form->setContextualValidationRule('password',['checkPasswordLength']);
 } elseif($p['config']['optionGeLoginPassAttribution'] == 'random' and $_POST['formIN'] =="baseNewUser") {

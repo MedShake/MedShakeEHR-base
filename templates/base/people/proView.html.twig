@@ -84,7 +84,7 @@
     <div class="card mb-4">
       <div class="card-header d-flex justify-content-between">
         <div class="font-weight-bold">
-          <i class="fas fa-user-md fa-fw fa-lg text-danger"></i>
+          <i class="fas fa-user-md fa-fw fa-lg {% if page.proData.isUser %}text-danger{% else %}text-info{% endif %}"></i>
           Informations professionnelles
         </div>
         <div>
@@ -92,8 +92,23 @@
           </a>
         </div>
       </div>
-      <div class="card-body">
-          Informations professionnelles sur ce praticien
+      <div class="card-body d-flex justify-content-between">
+        <div>
+          Informations professionnelles sur ce praticien {% if page.proData.isUser %} et utilisateur{% endif %}
+        </div>
+        <div>
+          {% if page.proData.isUser == false and config.droitDossierPeutTransformerPraticienEnUtilisateur == 'true' %}
+          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserCreate/" method="post" id="formName_baseNewUserFromPeople">
+  			    <input type="hidden" name="formIN" value="baseNewUserFromPeople">
+            <input type="hidden" name="preUserID" value="{{ page.proDataID }}" >
+            <input type="hidden" name="p_username" value="{{ page.loginUsername }}" >
+            <input type="hidden" name="p_template" value="{{ config.optionGeLoginCreationDefaultTemplate }}" >
+            <input type="hidden" name="p_password" value="" >
+            <input type="hidden" name="p_module" value="{{ config.optionGeLoginCreationDefaultModule }}" >
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-user-md"></i> Créer accès utilisateur</button>
+			    </form>
+          {% endif %}
+        </div>
       </div>
 
       <table class="table table-sm mb-0 table-hover ">
