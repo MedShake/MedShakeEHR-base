@@ -32,16 +32,16 @@ $template='proView';
 if(!is_numeric($match['params']['proID'])) die;
 $p['page']['proDataID']=$match['params']['proID'];
 
-$patient = new msPeople();
-$patient->setToID($p['page']['proDataID']);
-$p['page']['proData']['dossierType']=$patient->getType();
+$patient = new msPeopleDroits($p['page']['proDataID']);
 
-if($p['page']['proData']['dossierType'] != 'pro') {
+if($patient->getType() != 'pro') {
   $template = "404";
   return;
 }
 
 $p['page']['proData']=$patient->getLabelForSimpleAdminDatas($patient->getSimpleAdminDatasByName());
+$p['page']['proData']['isUser']=$patient->checkIsUser();
+$p['page']['proData']['dossierType']=$patient->getType();
 
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['proData']));
@@ -75,4 +75,8 @@ if($p['config']['optionGeActiverRegistres'] == 'true') {
   $registres->setToID($p['page']['proDataID']);
   $registres->setRelationType('relationRegistrePraticien');
   $p['page']['posteAdminRegistre'] = $registres->getRelations(['registryname']);
+}
+
+if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
+  $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'].' '.@$p['page']['proData']['lastname'].' '.@$p['page']['proData']['birthname']);
 }

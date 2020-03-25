@@ -151,6 +151,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeLoginCreationDefaultModule'=>'base',
     'optionGeLoginCreationDefaultTemplate'=>'',
     'optionGePraticienMontrerPatientsLies'=>'true',
+    'droitDossierPeutTransformerPraticienEnUtilisateur'=>'false',
   ];
 
   protected function _getSpecifSql() {
