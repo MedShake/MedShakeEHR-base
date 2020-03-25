@@ -75,6 +75,14 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGePraticienOuvrirApresCreation', 'default', '0', '', 'Options', 'text', 'où rediriger après création d\'un nouveau praticien (fichepro/crealogin/creagrouplink)', 'fichepro');
 
+-- configuration : catégorie pour les formulaires systèmes
+
+UPDATE `configuration` set cat = 'Formulaires système' WHERE `name` like 'formFormulaire%';
+
+-- configuration : catégorie pour les variables autour du login et nouvelles variables
+
+UPDATE `configuration` set cat = 'Login' WHERE `name` like 'optionGeLogin%';
+
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginCreationDefaultModule', 'default', '0', '', 'Login', 'texte', 'module par défaut pour création nouvel utilisateur', 'base');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeLoginCreationDefaultTemplate', 'default', '0', '', 'Login', 'texte', 'template par défaut pour création nouvel utilisateur', '');
 
