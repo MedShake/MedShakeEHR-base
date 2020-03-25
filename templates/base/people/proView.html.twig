@@ -34,13 +34,13 @@
 {% endif %}
 {{ page.proData.firstname }}
 {% if page.proData.lastname and page.proData.birthname %}
-  {{ page.proData.lastname }} <small>(né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})</small>
+  {{ page.proData.lastname }} (né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})
 {% elseif page.proData.lastname %}
   {{ page.proData.lastname }}
 {% else %}
   {{ page.proData.birthname }}
 {% endif %}
- {{ page.proData.job }}
+ - {{ page.proData.job }}
  - {{ config.designAppName }}
 {% endblock %}
 
