@@ -92,6 +92,8 @@ if (msUser::checkUserIsAdmin() and in_array($p['page']['porp'], ['patient', 'pro
     'module'=>$p['page']['modules'],
   ));
 
+  $formModal->setPrevalues(['template'=> $p['config']['optionGeLoginCreationDefaultTemplate'], 'module'=> $p['config']['optionGeLoginCreationDefaultModule']]);
+
   $p['page']['formModal']=$formModal->getForm();
   if($p['config']['optionGeLoginPassAttribution'] == 'random') {
     $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);

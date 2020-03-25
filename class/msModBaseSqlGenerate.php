@@ -148,6 +148,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeActiverDicom'=>'true',
     'droitRegistrePeutCreerRegistre'=>'false',
     'droitGroupePeutVoirTousGroupes'=>'false',
+    'optionGeLoginCreationDefaultModule'=>'base',
+    'optionGeLoginCreationDefaultTemplate'=>'',
   ];
 
   protected function _getSpecifSql() {
