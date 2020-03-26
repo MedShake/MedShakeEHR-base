@@ -305,6 +305,7 @@ function getRelationsPraticienGroupesTab(pratID) {
     success: function(data) {
       $('#bodyTabRelationPraticienGroupes').html('');
       if (data.length > 0) {
+        $('form.assignMyOwnGroups').addClass('d-none');
         $.each(data, function(index, value) {
           $('#bodyTabRelationPraticienGroupes').append('\
             <tr class="voirDossier cursor-pointer">\
@@ -321,6 +322,7 @@ function getRelationsPraticienGroupesTab(pratID) {
             </tr>');
         });
       } else {
+        $('form.assignMyOwnGroups').removeClass('d-none');
         $('#bodyTabRelationPraticienGroupes').append('\
           <tr class="bg-transparent text-muted">\
             <td class="pl-3">\

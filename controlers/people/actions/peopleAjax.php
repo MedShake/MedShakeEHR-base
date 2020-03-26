@@ -48,6 +48,7 @@ $acceptedModes=array(
     'getRelationsRegistrePraticiensTab', // obtenir le tableau de relation registre <-> praticiens
     'getRelationsGroupePraticiensTab', // obtenir le tableau de relation groupe <-> praticiens
     'getRelationsRegistreGroupesTab', // obtenir le tableau de relation registre <-> groupes
+    'autoAssignOwnGroupsToUser', // autoassigner ses propres groupes à un user fils
 );
 
 if (!in_array($m, $acceptedModes)) {

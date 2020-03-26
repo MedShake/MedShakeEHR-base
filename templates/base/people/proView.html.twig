@@ -97,15 +97,20 @@
           Informations professionnelles sur ce praticien {% if page.proData.isUser %} et utilisateur{% endif %}
         </div>
         <div>
-          {% if page.proData.isUser == false and config.droitDossierPeutTransformerPraticienEnUtilisateur == 'true' %}
-          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserCreate/" method="post" id="formName_baseNewUserFromPeople">
+          {% if page.proData.isUser == false and config.droitDossierPeutTransformerPraticienEnUtilisateur == 'true' and config.optionGeLoginPassAttribution == 'random' %}
+          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserCreate/" method="post">
   			    <input type="hidden" name="formIN" value="baseNewUserFromPeople">
             <input type="hidden" name="preUserID" value="{{ page.proDataID }}" >
             <input type="hidden" name="p_username" value="{{ page.loginUsername }}" >
             <input type="hidden" name="p_template" value="{{ config.optionGeLoginCreationDefaultTemplate }}" >
             <input type="hidden" name="p_password" value="" >
             <input type="hidden" name="p_module" value="{{ config.optionGeLoginCreationDefaultModule }}" >
-            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-user-md"></i> Créer accès utilisateur</button>
+            <button type="submit" class="btn btn-sm btn-danger"
+            {% if page.proData.profesionnalEmail is empty and page.proData.personalEmail is empty %} disabled title="Indiquez une adresse email pro ou perso pour ce praticien où il recevra login et mot de passe" ><i class="fas fa-exclamation-triangle"></i>
+            {% else %}
+            ><i class="fas fa-user-md"></i>
+            {% endif %}
+             Créer accès utilisateur</button>
 			    </form>
           {% endif %}
         </div>
@@ -306,7 +311,20 @@
             </div>
           </div>
           <div class="card-body">
-            Groupes intégrés par ce praticien
+            <div class="d-flex justify-content-between">
+              <div>Groupes intégrés par ce praticien</div>
+              <div>
+                {% if config.droitDossierPeutAssignerPropresGroupesPraticienFils == 'true' %}
+                <form class="ajaxForm reload assignMyOwnGroups d-none" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/autoAssignOwnGroupsToUser/" method="post" >
+                  <input type="hidden" name="proID" value="{{ page.proDataID }}">
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="fas fa-clone"></i>
+                    Assigner mes propres groupes
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
             <div class="collapseGroupeGestion collapse">
               {% if config.groupesNbMaxGroupesParPro > 0 %}
                 <div class="alert alert-info mt-2" role="alert">

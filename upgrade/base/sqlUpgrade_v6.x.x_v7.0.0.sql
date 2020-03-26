@@ -94,6 +94,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutTransformerPraticienEnUtilisateur', 'default', '0', '', 'Droits', 'true/false', 'si true, peut rendre utilisateur un praticien', 'false');
 
+-- configuration : peut assigner en 1 clic ses propres groupes à un praticien fils
+
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitDossierPeutAssignerPropresGroupesPraticienFils', 'default', '0', '', 'Droits', 'true/false', 'si true, peut assigner ses propres appartenances aux groupes à un praticien créé par lui-même', 'false');
+
 -- data_cat
 
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
