@@ -78,5 +78,5 @@ if($p['config']['optionGeActiverRegistres'] == 'true') {
 }
 
 if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
-  $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'].' '.@$p['page']['proData']['lastname'].' '.@$p['page']['proData']['birthname']);
+  $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'], @$p['page']['proData']['lastname'], @$p['page']['proData']['birthname']);
 }
