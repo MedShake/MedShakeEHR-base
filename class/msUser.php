@@ -544,22 +544,46 @@ class msUser
      }
 
 /**
- * Créer un username unique pour le login en fonction de l'identité (bêta)
- * @param  string $identite identité de l'indivité de la forme firstname lastname birthname
- * @return string           username
+ * Créer un username unique pour le login en fonction de l'identité
+ * @param  string $fn firstname
+ * @param  string $ln lastname
+ * @param  string $bn birthname
+ * @return string     username
  */
-     public static function makeRandomUniqLoginUsername($identite) {
-       if(empty($identite)) throw new Exception('Identite is empty');
-       $identite=msTools::stripAccents($identite);
-       $identite=str_replace(['\'', '-'], ' ', $identite);
-       $l=[];
-       if($words = explode(' ', $identite)) {
-         foreach($words as $word) {
-           if(!empty($word[0]) and ctype_alpha($word[0])) $l[]=$word[0];
-         }
-       }
-       return strtolower(implode('', $l));
+    public static function makeRandomUniqLoginUsername($fn='', $ln='', $bn='') {
+      if(empty($fn) and empty($ln) and empty($bn)) throw new Exception('Identite is empty');
 
-     }
+      $l=[];
+      if(!empty($fn)) {
+       $fn=msTools::stripAccents($fn);
+       $fn=str_replace(['\'', '-'], ' ', $fn);
+       if(!empty($fn[0]) and ctype_alpha($fn[0])) $l[]=$fn[0];
+      }
+
+      if(!empty($ln)) {
+       $ln=msTools::stripAccents($ln);
+       $ln=str_replace(['\'', '-'], ' ', $ln);
+       if(!empty($ln)) $l[]=$ln;
+      } elseif(!empty($bn)) {
+       $bn=msTools::stripAccents($bn);
+       $bn=str_replace(['\'', '-'], ' ', $bn);
+       if(!empty($bn)) $l[]=$bn;
+      }
+
+      $firstpart = strtolower(implode('', $l));
+      if(empty($firstpart)) $firstpart=msTools::getRandomStr(10,'abcdefghijklmnopqrstuvwxyz');
+      if(strlen($firstpart) > 20) {
+        $firstpart=substr($firstpart,0, 20);
+      }
+
+      $secondpart = msTools::getRandomStr(4,'123456789');
+      $username = $firstpart.$secondpart;
+
+      if(msSQL::sqlUniqueChamp("select name from people where name='".msSQL::cleanVar($username)."' limit 1")) {
+        $username = makeRandomUniqLoginUsername($fn, $ln, $bn);
+      }
+
+      return $username;
+    }
 
 }
