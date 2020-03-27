@@ -182,6 +182,7 @@ if (isset($template)) {
 
       // patients of the day
       $events = new msAgenda();
+      if(!isset($p['page'])) $p['page']=[];
       $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
 
       // crédits SMS
