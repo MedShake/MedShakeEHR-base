@@ -49,6 +49,7 @@ $acceptedModes=array(
     'getRelationsGroupePraticiensTab', // obtenir le tableau de relation groupe <-> praticiens
     'getRelationsRegistreGroupesTab', // obtenir le tableau de relation registre <-> groupes
     'autoAssignOwnGroupsToUser', // autoassigner ses propres groupes à un user fils
+    'userCreate', // créer un utilisateur en 1 clic depuis fiche pro.
 );
 
 if (!in_array($m, $acceptedModes)) {

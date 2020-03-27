@@ -98,7 +98,7 @@
         </div>
         <div>
           {% if page.proData.isUser == false and config.droitDossierPeutTransformerPraticienEnUtilisateur == 'true' and config.optionGeLoginPassAttribution == 'random' %}
-          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configUserCreate/" method="post">
+          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/userCreate/" method="post">
   			    <input type="hidden" name="formIN" value="baseNewUserFromPeople">
             <input type="hidden" name="preUserID" value="{{ page.proDataID }}" >
             <input type="hidden" name="p_username" value="{{ page.loginUsername }}" >
@@ -314,7 +314,7 @@
             <div class="d-flex justify-content-between">
               <div>Groupes intégrés par ce praticien</div>
               <div>
-                {% if config.droitDossierPeutAssignerPropresGroupesPraticienFils == 'true' %}
+                {% if config.droitDossierPeutAssignerPropresGroupesPraticienFils == 'true' and  page.proDataID != user.id %}
                 <form class="ajaxForm reload assignMyOwnGroups d-none" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/autoAssignOwnGroupsToUser/" method="post" >
                   <input type="hidden" name="proID" value="{{ page.proDataID }}">
                   <button type="submit" class="btn btn-sm btn-danger">
