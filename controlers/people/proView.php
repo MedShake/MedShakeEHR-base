@@ -32,6 +32,22 @@ $template='proView';
 if(!is_numeric($match['params']['proID'])) die;
 $p['page']['proDataID']=$match['params']['proID'];
 
+//contrôle sur droit à voir le prat (même groupe ou enfant du user) si restriction active
+if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
+  // même groupe
+  $frat = new msPeopleRelations;
+  $frat->setToID($p['page']['proDataID']);
+  $frat->setRelationType('relationPraticienGroupe');
+  $ids = $frat->getSiblingIDs($p['user']['id']);
+  // parent
+  $parentID = $frat->getFromID();
+
+  if(!in_array($p['page']['proDataID'], $ids) and $parentID != $p['user']['id']) {
+    $template = "forbidden";
+    return;
+  }
+}
+
 $patient = new msPeopleDroits($p['page']['proDataID']);
 
 if($patient->getType() != 'pro') {
