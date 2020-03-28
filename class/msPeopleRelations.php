@@ -305,6 +305,8 @@ class msPeopleRelations extends msPeople
  */
     public function getRelations($dataComp=[], $dataCompNotEmpty=[])
     {
+        global $p;
+
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
@@ -383,14 +385,18 @@ class msPeopleRelations extends msPeople
 
         $relations = [];
 
-
-        if($relations =  msSQL::sql2tab("select o.value as peopleID, c.value as typeRelation ".implode(" ", $champsSql)."
+        if($relations =  msSQL::sql2tab("select o.value as peopleID, o.fromID as createBy, u2.value as currentUserStatus, c.value as typeRelation, '".$p['user']['rank']."' as currentUserRank
+        ".implode(" ", $champsSql)."
         from objets_data as o
         ".$strictTable."
         inner join objets_data as c on c.instance=o.id and c.typeID='".$name2typeID[$this->_relationType]."'
+
+        left join objets_data as u on u.value=o.value and u.toID = '".$p['user']['id']."' and u.typeID='".$name2typeID['relationID']."' and u.deleted='' and u.outdated=''
+        left join objets_data as u2 on u2.instance=u.id and u2.typeID='".$name2typeID[$this->_relationType]."' and u2.deleted='' and u2.outdated=''
+
         ".implode(" ", $tablesSql)."
         where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
-        group by o.value, c.id ".implode("", $groupBy).' '.$orderBy )) {
+        group by o.value, c.id, u.id, u2.id ".implode("", $groupBy).' '.$orderBy )) {
 
           $typeID = $data->getTypeIDFromName($this->_relationType);
           $options = $data->getSelectOptionValue(array($typeID))[$typeID];
