@@ -315,9 +315,11 @@ function getRelationsPraticienGroupesTab(pratID) {
                 </a>\
               ' + value.groupname + '</td><td class="small">' + value.city + ' (' + value.country + ')</td><td class="small">' + value.typeRelationTxt + '</td>\
               <td class="text-right">\
+              ' + ((value.currentUserStatus == 'admin' || value.currentUserRank == 'admin') ? ('\
                 <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + pratID + '" data-withID="' + value.peopleID + '">\
                     <i class="fas fa-times fa-fw"></i>\
                 </button>\
+                ') : '') + ' \
               </td>\
             </tr>');
         });
