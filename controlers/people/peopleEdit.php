@@ -38,6 +38,7 @@ $p['page']['porp']=$match['params']['porp'];
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
+$parentID = $patient->getFromID();
 $peolpleIdType = $patient->getType();
 if(!in_array($peolpleIdType, ['patient', 'pro', 'groupe', 'registre'])) {
   $template = "404";
@@ -70,6 +71,10 @@ if ($p['page']['porp']=='patient') {
 
     //vérifier les droits
     if($p['config']['droitDossierPeutCreerPraticien'] != 'true' and $match['params']['patient']!=$p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
+    if(!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutCreerPraticien'] == 'true' and $match['params']['patient'] != $p['user']['id'] and $parentID != $p['user']['id']) {
       $template="forbidden";
       return;
     }

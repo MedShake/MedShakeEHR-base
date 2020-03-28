@@ -88,8 +88,10 @@
           Informations professionnelles
         </div>
         <div>
+          {% if user.rank == 'admin' or page.proDataID == user.id or page.proData.parentID ==  user.id %}
           <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"  title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i>
           </a>
+          {% endif %}
         </div>
       </div>
       <div class="card-body d-flex justify-content-between">

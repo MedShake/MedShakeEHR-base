@@ -58,6 +58,7 @@ if($patient->getType() != 'pro') {
 $p['page']['proData']=$patient->getLabelForSimpleAdminDatas($patient->getSimpleAdminDatasByName());
 $p['page']['proData']['isUser']=$patient->checkIsUser();
 $p['page']['proData']['dossierType']=$patient->getType();
+$p['page']['proData']['parentID']=$patient->getFromID();
 
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['proData']));
