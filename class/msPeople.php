@@ -179,6 +179,34 @@ class msPeople
     }
 
 /**
+ * Définir et sauvegarder en base le peopleExportID pour l'export anonymisé
+ */
+    public function setPeopleExportID() {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+      $peopleExportID = msTools::getRandomStr(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName([$service, 'PeopleExportID']);
+      if(msSQL::sqlQuery($data=msSQL::sqlUniqueChamp("select pd.id
+      from objets_data as pd
+      where pd.typeID = '".$name2typeID['PeopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
+      order by pd.id desc
+      limit 1"))) {
+        $this->setPeopleExportID();
+      } else {
+        $obj = new msObjet;
+        $obj->setToID($this->_toID);
+        $obj->setFromID($this->_fromID);
+        $obj->createNewObjetByTypeName('PeopleExportID', $peopleExportID);
+        return $peopleExportID;
+      }
+
+    }
+
+
+/**
  * Obtenir les données administratives d'un individu (version complète)
  * @return array Array avec en clef le typeID
  */
