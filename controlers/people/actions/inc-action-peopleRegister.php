@@ -93,6 +93,12 @@ if ($validation === false) {
         $newpatient->setFromID($p['user']['id']);
         $newpatient->setType($match['params']['porp']);
         $objet->setToID($newpatient->createNew());
+
+        //création de l'exportID
+        if($p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
+          $newpatient->setPeopleExportID();
+        }
+
     } else {
         $objet->setToID($_POST['patientID']);
         $patient = new msPeople();
