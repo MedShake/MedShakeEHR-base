@@ -51,20 +51,22 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
       $form=new msForm;
       $form->setFormIDbyName($p['page']['dataTypeinfos']['formValues']);
       $p['page']['formInfos']=$form->getFormRawData(['id','name', 'description']);
-
       $p['page']['dataFields']=$form->formExtractDistinctTypes();
+      msTools::arrayRemoveByKey($p['page']['dataFields'], $form->getFormDataToNeverExport());
       $p['page']['dataFields']=$data->getLabelFromTypeName(array_keys($p['page']['dataFields']));
 
       //champs dans les data administratives patient
       $form=new msForm;
       $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
       $p['page']['dataFieldsAdmin']=$form->formExtractDistinctTypes();
+      msTools::arrayRemoveByKey($p['page']['dataFieldsAdmin'], $form->getFormDataToNeverExport());
       $p['page']['dataFieldsAdmin']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdmin']));
 
       //champs dans les data administratives praticien
       $form=new msForm;
       $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
       $p['page']['dataFieldsAdminPro']=$form->formExtractDistinctTypes();
+      msTools::arrayRemoveByKey($p['page']['dataFieldsAdminPro'], $form->getFormDataToNeverExport());
       $p['page']['dataFieldsAdminPro']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdminPro']));
 
       //liste praticiens

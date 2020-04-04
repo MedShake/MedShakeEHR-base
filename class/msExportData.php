@@ -97,6 +97,9 @@ class msExportData
 
   private $_tabCorrespondances;
 
+  private $_forbiddenDataAdminPatientList=[];
+  private $_forbiddenDataAdminPratList=[];
+  private $_forbiddenFormFieldList=[];
 
 /**
  * Définir les instance du formulaire à exporter
@@ -114,8 +117,27 @@ class msExportData
  */
     public function setFormID($formID)
     {
+      global $p;
       if (is_numeric($formID)) {
-        return $this->_formID = $formID;
+        $this->_formID = $formID;
+
+        // champs interdits d'export dans le form
+        $form=new msForm;
+        $form->setFormID($this->_formID);
+        $this->_forbiddenFormFieldList=$form->getFormDataToNeverExport();
+
+        //champs interdits dans les data administratives patient
+        $form=new msForm;
+        $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+        $this->_forbiddenDataAdminPatientList=$form->getFormDataToNeverExport();
+
+        //champs interdits dans les data administratives praticien
+        $form=new msForm;
+        $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+        $this->_forbiddenDataAdminPratList=$form->getFormDataToNeverExport();
+
+        return $this->_formID;
+
       } else {
         throw new Exception('formID is not numeric');
       }
@@ -180,7 +202,7 @@ class msExportData
  * @param string $val data type name
  */
     public function addToDataAdminPatientList($val) {
-      if(!in_array($val, $this->_dataAdminPatientList)) $this->_dataAdminPatientList[]=$val;
+      if(!in_array($val, $this->_dataAdminPatientList) and !in_array($val, $this->_forbiddenDataAdminPatientList)) $this->_dataAdminPatientList[]=$val;
     }
 
 /**
@@ -188,7 +210,7 @@ class msExportData
  * @param string $val data type name
  */
     public function addToDataAdminPratList($val) {
-      if(!in_array($val, $this->_dataAdminPratList)) $this->_dataAdminPratList[]=$val;
+      if(!in_array($val, $this->_dataAdminPratList) and !in_array($val, $this->_forbiddenDataAdminPratList)) $this->_dataAdminPratList[]=$val;
     }
 
 /**
@@ -196,7 +218,7 @@ class msExportData
  * @param string $val data type name
  */
     public function addToFormFieldList($val) {
-      if(!in_array($val, $this->_formFieldList)) $this->_formFieldList[]=$val;
+      if(!in_array($val, $this->_formFieldList)  and !in_array($val, $this->_forbiddenFormFieldList)) $this->_formFieldList[]=$val;
     }
 
 /**

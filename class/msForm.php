@@ -395,6 +395,20 @@ class msForm
     }
 
 /**
+ * Obtenir les types déclarés comme NON exportables dans le formulaire
+ * @return array tableau des data_types
+ */
+    public function getFormDataToNeverExport() {
+      if($notExport = $this->getFormOptions()) {
+        if(isset($notExport['optionsExport']['neverExportData']) and !empty($notExport['optionsExport']['neverExportData'])) {
+          return $notExport['optionsExport']['neverExportData'];
+        }
+      }
+      return [];
+
+    }
+
+/**
  * Ajouter des champs input hidden à un form généré
  * @param array $f    formulaire u format array php
  * @param array $data array input name=> input value
