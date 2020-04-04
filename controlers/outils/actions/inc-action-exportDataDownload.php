@@ -37,6 +37,8 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
   $formExport = new msExportData;
   if(!empty($_POST)) {
 
+    $formExport->setFormID($_POST['formID']);
+
     $data=new msData;
     $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType']);
 
@@ -52,9 +54,6 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 
       if($k=='dataTypeID' and is_numeric($v)) {
         $formExport->setDataTypeIDs($v);
-      }
-      elseif($k=='formID' and is_numeric($v)) {
-        $formExport->setFormID($v);
       }
       elseif($kType=='patient') {
         $formExport->addToDataAdminPatientList($kKey);
