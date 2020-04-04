@@ -70,7 +70,9 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
       $p['page']['dataFieldsAdminPro']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdminPro']));
 
       //liste praticiens
-      $p['page']['prat']=msPeopleSearch::getUsersList();
+      if($p['config']['optionGeExportPratListSelection'] == 'true') {
+        $p['page']['prat']=msPeopleSearch::getUsersList();
+      }
 
     } else {
       msTools::redirection('/outils/export-data/', '401');
