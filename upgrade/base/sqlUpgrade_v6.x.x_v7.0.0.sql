@@ -102,6 +102,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeCreationAutoPeopleExportID', 'default', '0', '', 'Options', 'true/false', 'si true, création automatique d\'un peopleExportID', 'false');
 
+-- configuration droitExportPeutExporterAutresData -> droitExportPeutExporterToutesData
+
+update `configuration` set name = 'droitExportPeutExporterToutesData' WHERE `name` LIKE 'droitExportPeutExporterAutresData';
+
 -- data_cat
 
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
