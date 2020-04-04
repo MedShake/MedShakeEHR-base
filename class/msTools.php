@@ -143,6 +143,16 @@ class msTools
       return $values;
   }
 
+/**
+ * Retirer les éléments d'un array avec une liste de clefs
+ * @param  array $tab  array à traiter
+ * @param  array  $keys liste des clefs
+ */
+  public static function arrayRemoveByKey(&$tab, $keys=[] ) {
+    foreach($keys as $key){
+      unset($tab[$key]);
+    }
+  }
 
 /**
  * Valider une date du calendrier
