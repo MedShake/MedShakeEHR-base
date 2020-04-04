@@ -211,12 +211,12 @@
               Dossiers des praticiens à inclure
             </div>
             <div class="card-body">
-              {% if config.droitExportPeutExporterAutresData == 'true' and page.prat|length > 1 %}
+              {% if config.droitExportPeutExporterToutesData == 'true' and page.prat|length > 1 %}
                 <p class="mb-3">Sélectionner au moins 1 praticien.</p>
               {% endif %}
               {% for prat in page.prat %}
                 <div class="form-group">
-                  {% if config.droitExportPeutExporterAutresData == 'false' and prat.id != user.id %}
+                  {% if config.droitExportPeutExporterToutesData == 'false' and prat.id != user.id %}
                     {% set disabled='disabled' %}
                   {% else %}
                     {% set disabled = false %}
