@@ -153,6 +153,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGePraticienMontrerPatientsLies'=>'true',
     'droitDossierPeutTransformerPraticienEnUtilisateur'=>'false',
     'droitDossierPeutAssignerPropresGroupesPraticienFils'=>'false',
+    'optionGeCreationAutoPeopleExportID'=>'true',
+    'optionGeExportPratListSelection'=>'true'
   ];
 
   protected function _getSpecifSql() {
