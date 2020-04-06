@@ -47,6 +47,12 @@ if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGe
 
 $p['page']['groupeData']=$groupe->getLabelForSimpleAdminDatas($groupe->getSimpleAdminDatasByName());
 
+// création exportID si manquant
+if(!isset($p['page']['groupeData']['peopleExportID']) and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
+  $groupe->setFromID($p['user']['id']);
+  $p['page']['groupeData']['peopleExportID']=$groupe->setPeopleExportID();
+}
+
 $labels = new msData();
 $p['page']['groupeDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['groupeData']));
 
