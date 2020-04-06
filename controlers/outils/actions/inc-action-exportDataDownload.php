@@ -44,7 +44,10 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 
     if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
-    $sortTab=array('id','patient_id', 'praticien_id', 'date_saisie', 'date_effective', 'date_modification');
+    $sortTab=array('id','patient_peopleExportID', 'praticien_peopleExportID', 'groupe_peopleExportID', 'date_saisie', 'date_effective', 'date_modification');
+
+    $formExport->addToDataAdminPratList('peopleExportID');
+    $formExport->addToDataAdminPatientList('peopleExportID');
 
     foreach($_POST as $k=>$v) {
       $kParts=explode('_', $k);
