@@ -61,10 +61,17 @@ if($p['page']['porp'] == 'pro') {
   $form->setFormIDbyName($p['config']['formFormulaireNouveauRegistre']);
 }
 
+// si administrateur on injecte la possibilité de chercher par identifiant d'export
+if (msUser::checkUserIsAdmin() and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
+  $addExportIdSearch = ", '".msData::getTypeIDFromName('peopleExportID')."'";
+} else {
+  $addExportIdSearch = '';
+}
+
 if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
   from data_types as t
   left join data_cat as c on c.id=t.cat
-  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in ('".implode("', '", $form->formExtractDistinctTypes())."')
+  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in ('".implode("', '", $form->formExtractDistinctTypes())."' ".$addExportIdSearch.")
   order by c.label asc, t.label asc")) {
     foreach ($tabTypes as $v) {
         $p['page']['tabTypes'][$v['catName']][]=$v;
