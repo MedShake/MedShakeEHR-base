@@ -188,10 +188,10 @@ class msPeople
       $peopleExportID = msTools::getRandomStr(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
       $name2typeID = new msData();
-      $name2typeID = $name2typeID->getTypeIDsFromName([$service, 'PeopleExportID']);
+      $name2typeID = $name2typeID->getTypeIDsFromName(['peopleExportID']);
       if(msSQL::sqlQuery($data=msSQL::sqlUniqueChamp("select pd.id
       from objets_data as pd
-      where pd.typeID = '".$name2typeID['PeopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
+      where pd.typeID = '".$name2typeID['peopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
       order by pd.id desc
       limit 1"))) {
         $this->setPeopleExportID();
@@ -199,7 +199,7 @@ class msPeople
         $obj = new msObjet;
         $obj->setToID($this->_toID);
         $obj->setFromID($this->_fromID);
-        $obj->createNewObjetByTypeName('PeopleExportID', $peopleExportID);
+        $obj->createNewObjetByTypeName('peopleExportID', $peopleExportID);
         return $peopleExportID;
       }
 
