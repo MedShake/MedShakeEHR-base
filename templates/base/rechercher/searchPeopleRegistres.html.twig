@@ -106,8 +106,9 @@
 	  <div class="col-12 col-lg-3 text-right my-lg-2">
 
 			<div class="btn-group my-lg-1">
+				{% if config.droitRegistrePeutCreerRegistre == 'true' %}
 	    	<a class="btn btn-primary float-right" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registre/create/"><i class="fas fa-plus"></i> Nouveau registre</a>
-
+				{% endif %}
 			</div>
 	  </div>
 	</div>
