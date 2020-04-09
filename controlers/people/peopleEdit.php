@@ -106,6 +106,12 @@ if(isset($_SESSION['form'][$p['page']['formIN']]['formValues']) and !empty($_SES
   $formpatient->setPrevalues($p['page']['patient']);
 }
 
+//si formulaire registre
+if ($p['page']['porp']=='registre') {
+  $registreCatPorteursForms['registryFormsCat'] = ['Z'=>''] +  array_column(msDataCat::getCatListFromGroupe(['typecs'], ['name', 'label'], 'label'), 'label', 'name');
+  $formpatient->setOptionsForSelect($registreCatPorteursForms);
+}
+
 //si formulaire pro
 if ($p['page']['porp']=='pro') {
 

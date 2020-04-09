@@ -73,6 +73,12 @@ if($template != "forbidden") {
     if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
   }
 
+  //si formulaire registre
+  if ($p['page']['porp']=='registre') {
+    $registreCatPorteursForms['registryFormsCat'] = ['Z'=>''] + array_column(msDataCat::getCatListFromGroupe(['typecs'], ['name', 'label'], 'label'), 'label', 'name');
+    $formpatient->setOptionsForSelect($registreCatPorteursForms);
+  }
+
   $p['page']['form']=$formpatient->getForm();
   $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
   $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
