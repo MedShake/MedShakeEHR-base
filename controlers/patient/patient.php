@@ -120,7 +120,7 @@ $p['page']['formEditAdmin']['addHidden']=array(
 );
 
 //type du dossier
-$p['page']['patient']['dossierType']=msSQL::sqlUniqueChamp("select type from people where id='".$p['page']['patient']['id']."' limit 1");
+$p['page']['patient']['dossierType']=$patient->getType();
 
 //historique du jour des consultation du patient
 $p['page']['patient']['today']=$patient->getToday();
@@ -129,24 +129,30 @@ $p['page']['patient']['today']=$patient->getToday();
 $p['page']['patient']['historique']=$patient->getHistorique();
 
 //les ALD du patient
-$p['page']['patient']['ALD']=$patient->getALD();
-
-//les certificats
-$certificats=new msData();
-$certificats->setModules(['base', $p['user']['module']]);
-
-if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
-  $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCertif'], $p['user']['id']);
+if($p['config']['optionGeActiverSignatureNumerique'] == 'true') {
+  $p['page']['patient']['ALD']=$patient->getALD();
 }
-//les courriers
-if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
-  $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCourrier'], $p['user']['id']);
+
+if($p['config']['optionDossierPatientActiverCourriersCertificats'] == 'true') {
+  //les certificats
+  $certificats=new msData();
+  $certificats->setModules(['base', $p['user']['module']]);
+
+  if($p['page']['modelesCertif']=$certificats->getDataTypesFromCatName('catModelesCertificats', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor' ])) {
+    $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCertif'], $p['user']['id']);
+  }
+  //les courriers
+  if($p['page']['modelesCourrier']=$certificats->getDataTypesFromCatName('catModelesCourriers', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
+    $certificats->applyRulesOnlyforNotforOnArray($p['page']['modelesCourrier'], $p['user']['id']);
+  }
 }
 
 // liste des documents pouvant être envoyés à la signature par l'utilisateur courant
-$docAsSigner = new msSignatureNumerique;
-$docAsSigner->setFromID($p['user']['id']);
-$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+if($p['config']['optionGeActiverSignatureNumerique'] == 'true') {
+  $docAsSigner = new msSignatureNumerique;
+  $docAsSigner->setFromID($p['user']['id']);
+  $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+}
 
 //les correspondants
 $correspondants = new msPeopleRelations;
@@ -155,14 +161,19 @@ $correspondants->setReturnedPeopleTypes(['pro']);
 $correspondants->setRelationType('relationPatientPraticien');
 $p['page']['correspondants']=$correspondants->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
 
+
 // Transmissions
-if($p['config']['transmissionsPeutCreer'] == 'true') {
-  $trans = new msTransmissions();
-  $trans->setUserID($p['user']['id']);
-  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
-  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+if($p['config']['optionGeActiverTransmissions'] == 'true') {
+  if($p['config']['transmissionsPeutCreer'] == 'true') {
+    $trans = new msTransmissions();
+    $trans->setUserID($p['user']['id']);
+    $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
+    $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+  }
 }
 
 // Formulaires de règlement
-$data=new msData;
-$p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));
+if($p['config']['optionGeActiverCompta'] == 'true') {
+  $data=new msData;
+  $p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));
+}
