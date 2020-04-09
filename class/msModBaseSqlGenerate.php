@@ -162,7 +162,9 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'droitRegistrePeutGererAdministrateurs'=>'false',
     'optionGeActiverGroupes'=>'false',
     'groupesNbMaxGroupesParPro'=>'1',
-
+    'optionGeActiverSignatureNumerique'=>'true',
+    'optionDossierPatientActiverGestionALD'=>'true',
+    'optionDossierPatientActiverCourriersCertificats'=>'true',
   ];
 
   protected function _getSpecifSql() {
