@@ -39,6 +39,33 @@ class msPeopleRelationsDroits extends msPeopleRelations
       }
 
 /**
+ * Obtenir les registres autorisés dans un dossier patient
+ * on remonte aux registres via patientId -> pratId créateur du dossier -> groupes -> registres
+ * @return array array peopleId=>data
+ */
+      public function getRegistresPatient($onlyActiv = false) {
+        $pratID = $this->getFromID();
+        $this->setToID($pratID);
+        $this->setRelationType('relationPraticienGroupe');
+        $lRegistres=[];
+        if($groupes = $this->getRelations()) {
+          foreach($groupes as $groupe=>$gdata) {
+            $registres = new msPeopleRelations();
+            $registres->setToID($gdata['peopleID']);
+            $registres->setRelationType('relationGroupeRegistre');
+            if($listeRegistres = $registres->getRelations(['registryState', 'registryname'])) {
+              foreach($listeRegistres as $registreData) {
+                if(($onlyActiv and $registreData['registryState'] == 'actif') or $onlyActiv == false) {
+                  $lRegistres[$registreData['peopleID']]=$registreData;
+                }
+              }
+            }
+          }
+        }
+        return $lRegistres;
+      }
+
+/**
  * Obtenir le statut d'un people vis à vis d'un autre
  * @param  int $people1 people dont il faut obtenir le statut
  * @param  int $people2 people en vis à vis
@@ -69,4 +96,5 @@ class msPeopleRelationsDroits extends msPeopleRelations
         }
 
       }
+
 }
