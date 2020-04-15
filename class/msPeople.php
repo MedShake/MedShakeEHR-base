@@ -573,6 +573,22 @@ class msPeople
     }
 
 /**
+ * Obtenir les éléments d'historique pour une instance
+ * @param  int $instance instance ( = parentID)
+ * @return array            data historique
+ */
+    public function getHistoriqueInstance($instance) {
+      if($data = $this->_getHistoriqueData(0, 0, '', [], $instance)) {
+        foreach ($data as $v) {
+            $tab[$v['creationYear']][]=$v;
+        }
+        return $tab;
+      } else {
+        return [];
+      }
+    }
+
+/**
  * Obtenir un historique suivant paramètres
  * @param  integer $limitStart      premier argument pour limit sql
  * @param  integer $limitNb         second argument pour limit sql
@@ -580,7 +596,7 @@ class msPeople
  * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
  * @return array                   data d'historique
  */
-    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[]) {
+    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0) {
       global $p;
 
       if (!is_numeric($this->_toID)) {
@@ -591,6 +607,12 @@ class msPeople
         $limitSql = 'limit '.$limitStart.','.$limitNb;
       } else {
         $limitSql = '';
+      }
+
+      if(is_numeric($instance) and $instance > 0) {
+        $whereInstance = " and p.instance = '".$instance."'";
+      } else {
+        $whereInstance = '';
       }
 
       if(isset($objetIDs) and is_array($objetIDs) and !empty($objetIDs)) {
@@ -635,7 +657,7 @@ class msPeople
         ".$lapExtCompSql."
         or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
         or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql."
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql." ".$whereInstance."
       group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
       order by p.creationDate desc ".$limitSql);
     }
