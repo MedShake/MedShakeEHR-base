@@ -70,7 +70,7 @@ class msPeopleRelations extends msPeople
  */
     public function setRelationType($v)
     {
-      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre', 'relationRegistrePraticien'];
+      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre', 'relationRegistrePraticien', 'relationRegistrePatient', 'relationGroupePatient'];
       if(!in_array($v, $relationPossibleTypes)) {
         throw new Exception('RelationType is not valid');
       } else {
@@ -173,6 +173,14 @@ class msPeopleRelations extends msPeople
       }
 
       elseif($this->_relationType == 'relationPraticienRegistre' and ($toIdType!='pro' or $this->_withIdType != 'registre') or $p['config']['droitRegistrePeutGererAdministrateurs'] != 'true') {
+        return false;
+      }
+
+      elseif($this->_relationType == 'relationRegistrePatient' and ($toIdType!='registre' or $this->_withIdType != 'patient') ) {
+        return false;
+      }
+
+      elseif($this->_relationType == 'relationGroupePatient' and ($toIdType!='groupe' or $this->_withIdType != 'patient') ) {
         return false;
       }
 
