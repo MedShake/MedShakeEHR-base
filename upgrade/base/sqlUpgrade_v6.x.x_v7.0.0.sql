@@ -76,6 +76,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionDossierPatientActiverGestionALD', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, gérer les ALD', 'true');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionDossierPatientActiverCourriersCertificats', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, activer courriers et certificats', 'true');
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionDossierPatientInhiberHistoriquesParDefaut', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, déactive la production des informations pour les historiques par défaut', 'false');
 
 -- configuration : catégorie pour les formulaires systèmes
 

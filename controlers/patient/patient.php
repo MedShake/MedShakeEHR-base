@@ -122,11 +122,13 @@ $p['page']['formEditAdmin']['addHidden']=array(
 //type du dossier
 $p['page']['patient']['dossierType']=$patient->getType();
 
-//historique du jour des consultation du patient
-$p['page']['patient']['today']=$patient->getToday();
+if($p['config']['optionDossierPatientInhiberHistoriquesParDefaut'] != 'true') {
+  //historique du jour des consultation du patient
+  $p['page']['patient']['today']=$patient->getToday();
 
-//historique complet des consultation du patient
-$p['page']['patient']['historique']=$patient->getHistorique();
+  //historique complet des consultation du patient
+  $p['page']['patient']['historique']=$patient->getHistorique();
+}
 
 //les ALD du patient
 if($p['config']['optionGeActiverSignatureNumerique'] == 'true') {
