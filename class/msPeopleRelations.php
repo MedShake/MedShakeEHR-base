@@ -475,5 +475,69 @@ class msPeopleRelations extends msPeople
 
     }
 
+/**
+ * Obtenir la (value) valeur d'une relation
+ * @return string value de la relation
+ */
+    public function getPeopleRelationValue() {
+
+      if (!isset($this->_toID)) {
+          throw new Exception('ToID is not defined');
+      }
+
+      if (!isset($this->_withID)) {
+          throw new Exception('WithID is not defined');
+      }
+
+      $data = new msData();
+      $name2typeID = $data->getTypeIDsFromName(['relationID']);
+
+      $typeRelation = msSql::sqlUniqueChamp("select c.value
+      from objets_data as o
+      inner join objets_data as c on c.instance=o.id
+      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' and o.value='".$this->_withID."'
+      limit 1");
+      if(!$typeRelation) {
+        return null;
+      } else {
+        return $typeRelation;
+      }
+
+    }
+
+/**
+ * Obtenir les datas sur une relation
+ * @return array data relation
+ */
+    public function getPeopleRelationData() {
+
+      if (!isset($this->_toID)) {
+          throw new Exception('ToID is not defined');
+      }
+
+      if (!isset($this->_withID)) {
+          throw new Exception('WithID is not defined');
+      }
+
+      $data = new msData();
+      $name2typeID = $data->getTypeIDsFromName(['relationID','lastname', 'birthname','firstname']);
+
+      $typeRelation = msSql::sqlUnique("select c.*, CASE WHEN ln.value != '' THEN concat(fn.value , ' ' , ln.value) ELSE concat(fn.value , ' ' , bn.value) END as fromIdentite
+      from objets_data as o
+      inner join objets_data as c on c.instance=o.id
+
+      left join objets_data as ln on ln.toID=c.fromID and ln.typeID='".$name2typeID['lastname']."' and ln.outdated='' and ln.deleted=''
+      left join objets_data as bn on bn.toID=c.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
+      left join objets_data as fn on fn.toID=c.fromID and fn.typeID='".$name2typeID['firstname']."' and fn.outdated='' and fn.deleted=''
+
+      where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' and o.value='".$this->_withID."'
+      limit 1");
+      if(!$typeRelation) {
+        return null;
+      } else {
+        return $typeRelation;
+      }
+
+    }
 
 }
