@@ -728,4 +728,23 @@ public function getToID()
         WHERE o.toID = '".$this->_toID."' AND o.typeID = '".$typeID."' and o.instance='".$instance."'
         order by o.registerDate desc");
     }
+
+/**
+ * Obtenir les valeurs d'un data type
+ * @param  string $name data_type
+ * @return array       array des différentes valeurs non outdated non deleted
+ */
+    public function getDataTypePatientActiveValues($name) {
+      if (!isset($this->_toID)) throw new Exception('toID is not defined');
+
+      $typeID=msData::getTypeIDFromName($name);
+
+      $tab = (array) msSQL::sql2tabSimple("SELECT o.value
+        FROM objets_data as o
+        WHERE o.toID = '".$this->_toID."' AND o.typeID = '".$typeID."' and o.outdated = '' and o.deleted = ''");
+      $tab = array_unique($tab);
+      return $tab;
+    }
+
+
 }
