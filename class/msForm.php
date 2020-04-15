@@ -137,7 +137,7 @@ class msForm
             $this->_formIN=$formName;
             return $this->_formID = $formID;
         } else {
-            throw new Exception('Formulaire non trouvé à partir de son nom');
+            throw new Exception('Formulaire '.$formName.' non trouvé à partir de son nom');
         }
     }
 
@@ -217,6 +217,30 @@ class msForm
         return false;
       }
     }
+
+/**
+ * Retirer des options après génération du form dans un chmap select
+ * @param  array $form     formulaire array php (post getForm())
+ * @param  string $name     nom du data_type
+ * @param  array  $toRemove array des option à retirer (name)
+ * @return void
+ */
+    public function removeOptionInSelectForm(&$form, $name, $toRemove=[]) {
+      foreach($toRemove as $optionToRemove) {
+        unset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value']['formValues'][$optionToRemove]);
+      }
+    }
+
+/**
+ * Obtenir les options d'un select à partir du form généré en array php
+ * @param  array $form formulaire post getForm()
+ * @param  string $name nom du data_type
+ * @return array       array value => label
+ */
+    public function getOptionInSelectForm($form, $name) {
+      return $form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value']['formValues'];
+    }
+
 
 /**
  * Retirer un champ du formulaire après sa création
