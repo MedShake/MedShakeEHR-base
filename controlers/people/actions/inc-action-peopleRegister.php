@@ -129,11 +129,11 @@ if ($validation === false) {
       $relationGroupPatient = new msPeopleRelations;
       foreach($relationPratGroups->getRelations() as $rela) {
         $relation = new msPeopleRelations;
-        $relation->setToID($rela['peopleID']);
+        $relation->setToID($objet->getToID());
         $relation->setToStatus('membre');
         $relation->setFromID($p['user']['id']);
-        $relation->setWithID($objet->getToID());
-        $relation->setRelationType('relationGroupePatient');
+        $relation->setWithID($rela['peopleID']);
+        $relation->setRelationType('relationPatientGroupe');
         if(!$relation->checkRelationExist()) {
           $relation->setRelation();
         }
