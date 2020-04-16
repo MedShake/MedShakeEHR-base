@@ -145,7 +145,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('admin', 'registryAuthorisationEndDate', '', 'Date de fin d\'autorisation du registre', 'date de fin d\'autorisation du registre', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'registryname', 'nom du registre', 'Nom du registre', 'nom du registre', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'registryState', '', 'État du registre', 'état du registre', '', '', 'select', '\'actif\' : \'registre actif\'\n\'suspendu\' : \'registre suspendu\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '4'),
-('admin', 'registryFormsCat', '', 'Catégorie porteuse des formulaires du registre', 'catégorie porteuse des formulaires du registre', '', '', 'select', '\'\' : \'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '12');
+('admin', 'registryPrefixTech', '', 'Préfixe technique', 'préfixe technique pour qualifier les éléments de structuration du registre', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '12');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catMarqueursAdminDossiers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
