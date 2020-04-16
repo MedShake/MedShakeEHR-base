@@ -27,6 +27,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
+$debug='';
 
 //template
 $template="patientCsForm";
@@ -75,6 +76,17 @@ if(method_exists($class,$method_pre)) {
 $p['page']['form']=$form->getForm();
 
 if($_POST['mode'] == 'update' or $_POST['mode'] == 'create' ) $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
+
+// retrait des options d'un champ select qui doit prévenir le duplication
+if($_POST['mode'] == 'create' ) {
+  $typePreventDupl = $form->getFormOptions();
+  if(isset($typePreventDupl['typeToPreventDuplicate'])) {
+    $objDup = new msObjet;
+    $objDup->setToID($_POST['patientID']);
+    $optionsDejaUtilisees = $objDup->getDataTypePatientActiveValues($typePreventDupl['typeToPreventDuplicate']);
+    $form->removeOptionInSelectForm($p['page']['form'], $typePreventDupl['typeToPreventDuplicate'], $optionsDejaUtilisees);
+  }
+}
 
 //ajout champs cachés au form
 $p['page']['form']['addHidden']=array(

@@ -340,6 +340,58 @@ function getRelationsPraticienGroupesTab(pratID) {
 }
 
 /**
+ * Obtenir le tableau de relation patient / groupes
+ * @param  {int} pratID ID praticien
+ */
+function getRelationsPatientGroupesTab(patientID) {
+  if (!patientID) return;
+  $.ajax({
+    url: urlBase + '/people/ajax/getRelationsPatientGroupesTab/',
+    type: 'post',
+    data: {
+      patientID: patientID,
+    },
+    dataType: "json",
+    success: function(data) {
+      $('#bodyTabRelationPatientGroupes').html('');
+      if (data.length > 0) {
+        $('form.assignMyOwnGroups').addClass('d-none');
+        $.each(data, function(index, value) {
+          console.log(value);
+          $('#bodyTabRelationPatientGroupes').append('\
+            <tr class="voirDossier cursor-pointer">\
+              <td>\
+                <a class="btn btn-light btn-sm mr-3" role="button" href="' + urlBase + '/groupe/' + value.peopleID + '/">\
+                  <i class="fas fa-hospital-alt fa-fw"></i>\
+                </a>\
+              ' + value.groupname + '</td><td class="small">' + value.city + ' (' + value.country + ')</td>\
+              <td class="text-right">\
+              ' + ((value.currentUserStatus == 'admin' || value.currentUserRank == 'admin') ? ('\
+                <button class="btn btn-light btn-sm removeRelation" type="button" data-peopleID="' + patientID + '" data-withID="' + value.peopleID + '">\
+                    <i class="fas fa-times fa-fw"></i>\
+                </button>\
+                ') : '') + ' \
+              </td>\
+            </tr>');
+        });
+      } else {
+        $('form.assignMyOwnGroups').removeClass('d-none');
+        $('#bodyTabRelationPatientGroupes').append('\
+          <tr class="bg-transparent text-muted">\
+            <td class="pl-3">\
+              Ce patient n\'intègre aucun groupe\
+            </td>\
+          </tr>');
+      }
+    },
+    error: function() {
+      alert_popup("danger", 'Problème, rechargez la page !');
+    }
+  });
+}
+
+
+/**
  * Obtenir le tableau de relation registre / groupes
  * @param  {int} registreID ID registre
  */
@@ -438,6 +490,8 @@ function getRelationsRegistrePraticiensTab(registreID) {
     }
   });
 }
+
+
 
 /**
  * Obtenir le tableau de relation groupe / registres
