@@ -114,6 +114,9 @@ function setRelation(relationType, peopleID, withID, toStatus) {
           }
           if ($('#bodyTabRelationRegistrePraticiens').length) getRelationsRegistrePraticiensTab(peopleID);
 
+          if ($('#bodyTabRelationPatientGroupes').length) getRelationsPatientGroupesTab(peopleID);
+
+
           if (typeof ajaxModalPatientAdminCloseAndRefreshHeader === "function") ajaxModalPatientAdminCloseAndRefreshHeader();
         } else if (data.status == 'exist') {
           alert_popup("info", 'Cette association existe déjà !');
@@ -357,7 +360,6 @@ function getRelationsPatientGroupesTab(patientID) {
       if (data.length > 0) {
         $('form.assignMyOwnGroups').addClass('d-none');
         $.each(data, function(index, value) {
-          console.log(value);
           $('#bodyTabRelationPatientGroupes').append('\
             <tr class="voirDossier cursor-pointer">\
               <td>\
