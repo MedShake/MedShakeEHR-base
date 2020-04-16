@@ -120,6 +120,26 @@ if ($validation === false) {
         }
     }
 
+    // ajout des groupes du prat créateur au patient nouvellement créé
+    if(!isset($_POST['patientID']) and $p['config']['optionGeActiverGroupes'] == 'true' and $p['config']['groupesAutoAttachProGroupsToPatient'] == 'true') {
+      $relationPratGroups = new msPeopleRelations;
+      $relationPratGroups->setToID($p['user']['id']);
+      $relationPratGroups->setRelationType('relationPraticienGroupe');
+
+      $relationGroupPatient = new msPeopleRelations;
+      foreach($relationPratGroups->getRelations() as $rela) {
+        $relation = new msPeopleRelations;
+        $relation->setToID($rela['peopleID']);
+        $relation->setToStatus('membre');
+        $relation->setFromID($p['user']['id']);
+        $relation->setWithID($objet->getToID());
+        $relation->setRelationType('relationGroupePatient');
+        if(!$relation->checkRelationExist()) {
+          $relation->setRelation();
+        }
+      }
+    }
+
     unset($_SESSION['form'][$formIN]);
 
     if ($actAsAjax) {
