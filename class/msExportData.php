@@ -102,6 +102,7 @@ class msExportData
   private $_forbiddenFormFieldList=[];
 
   private $_relationsPratGroupe=[];
+  private $_relationsPatientGroupe=[];
 
 /**
  * Définir les instance du formulaire à exporter
@@ -360,10 +361,10 @@ class msExportData
               $people->setRelationType('relationPraticienGroupe');
               $this->_relationsPratGroupe[$PratID] = $people->getRelations(['peopleExportID']);
 
-              $this->_pratAdminData[$PratID]['groupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
+              $this->_pratAdminData[$PratID]['praticienGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
             } else {
 
-              $this->_pratAdminData[$PratID]['groupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
+              $this->_pratAdminData[$PratID]['praticienGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
             }
           }
 
@@ -378,8 +379,9 @@ class msExportData
  * @return array            données admin patient
  */
     private function _getPatientAdminData($patientID) {
+      global $p;
       if(empty($this->getDataAdminPatientList())) return [];
-      $people = new msPeople;
+      $people = new msPeopleRelations;
       $people->setToID($patientID);
       $dataPatient=$people->getSimpleAdminDatasByName($this->getDataAdminPatientList());
 
@@ -399,6 +401,20 @@ class msExportData
           $patient['patient_'.$v]='';
         }
       }
+
+      //groupes du patient
+      if($p['config']['optionGeActiverGroupes'] == 'true') {
+        if(!isset($this->_relationsPatientGroupe[$patientID])) {
+          $people->setRelationType('relationPatientGroupe');
+          $this->_relationsPatientGroupe[$patientID] = $people->getRelations(['peopleExportID']);
+
+          $patient['patientGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPatientGroupe[$patientID],'peopleExportID')));
+        } else {
+
+          $patient['patientGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPatientGroupe[$patientID],'peopleExportID')));
+        }
+      }
+
       return $patient;
     }
 
@@ -417,6 +433,7 @@ class msExportData
         foreach($data as $k=>$v) {
           if(in_array($v['typeID'], $this->_dataTypeIDs)) {
             $tab[$k]['id']=$k;
+            $tab[$k]['parent_id']=$v['instance'];
             $tab[$k]['date_effective']=$v['creationDate'];
             $tab[$k]['date_saisie']=$v['registerDate'];
             $tab[$k]['date_modification']=$v['updateDate'];

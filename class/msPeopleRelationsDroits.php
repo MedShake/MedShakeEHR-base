@@ -40,13 +40,11 @@ class msPeopleRelationsDroits extends msPeopleRelations
 
 /**
  * Obtenir les registres autorisés dans un dossier patient
- * on remonte aux registres via patientId -> pratId créateur du dossier -> groupes -> registres
+ * on remonte aux registres via patientId -> groupes patient -> registres
  * @return array array peopleId=>data
  */
       public function getRegistresPatient($onlyActiv = false) {
-        $pratID = $this->getFromID();
-        $this->setToID($pratID);
-        $this->setRelationType('relationPraticienGroupe');
+        $this->setRelationType('relationPatientGroupe');
         $lRegistres=[];
         if($groupes = $this->getRelations()) {
           foreach($groupes as $groupe=>$gdata) {
