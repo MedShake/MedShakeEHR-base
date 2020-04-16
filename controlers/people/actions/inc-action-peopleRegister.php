@@ -68,12 +68,6 @@ if ($match['params']['porp']=='pro' and !$actAsAjax) {
   if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
 }
 
-//si formulaire registre
-if ($match['params']['porp']=='registre') {
-  $registreCatPorteursForms['p_registryFormsCat'] = ['Z'=>''] +  array_column(msDataCat::getCatListFromGroupe(['typecs'], ['name', 'label'], 'label'), 'label', 'name');
-  $form->setOptionsForSelect($registreCatPorteursForms);
-}
-
 $validation=$form->getValidation();
 
 if ($validation === false) {

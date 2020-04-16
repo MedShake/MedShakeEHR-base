@@ -53,7 +53,7 @@ class msPeopleRelationsDroits extends msPeopleRelations
             $registres = new msPeopleRelations();
             $registres->setToID($gdata['peopleID']);
             $registres->setRelationType('relationGroupeRegistre');
-            if($listeRegistres = $registres->getRelations(['registryState', 'registryname'])) {
+            if($listeRegistres = $registres->getRelations(['registryState', 'registryname', 'registryPrefixTech'])) {
               foreach($listeRegistres as $registreData) {
                 if(($onlyActiv and $registreData['registryState'] == 'actif') or $onlyActiv == false) {
                   $lRegistres[$registreData['peopleID']]=$registreData;
