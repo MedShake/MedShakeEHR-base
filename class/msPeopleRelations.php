@@ -70,7 +70,7 @@ class msPeopleRelations extends msPeople
  */
     public function setRelationType($v)
     {
-      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre', 'relationRegistrePraticien', 'relationRegistrePatient', 'relationGroupePatient'];
+      $relationPossibleTypes = ['relationPraticienGroupe', 'relationPatientPraticien', 'relationPatientPatient', 'relationGroupeRegistre', 'relationRegistrePraticien', 'relationRegistrePatient', 'relationPatientGroupe'];
       if(!in_array($v, $relationPossibleTypes)) {
         throw new Exception('RelationType is not valid');
       } else {
@@ -180,7 +180,7 @@ class msPeopleRelations extends msPeople
         return false;
       }
 
-      elseif($this->_relationType == 'relationGroupePatient' and ($toIdType!='groupe' or $this->_withIdType != 'patient') ) {
+      elseif($this->_relationType == 'relationPatientGroupe' and ($toIdType!='patient' or $this->_withIdType != 'groupe') ) {
         return false;
       }
 
