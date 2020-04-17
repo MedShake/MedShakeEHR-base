@@ -40,7 +40,8 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
     $formExport->setFormID($_POST['formID']);
 
     $data=new msData;
-    $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType']);
+    $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType', 'validationRules']);
+    $p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
 
     if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
@@ -88,6 +89,37 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
         $formExport->setOptionSelect($v);
       }
     }
+
+    if($p['config']['optionGeExportPratListSelection'] == 'false') {
+      // on va chercher si le user est admin registre : si oui = tous les prats
+      $adminReg = new msPeopleRelationsDroits;
+      $adminReg->setToID($p['user']['id']);
+      $p['page']['isRegistryAdmin'] = false;
+      if($userRegistriesAdmin = $adminReg->getRegistriesWherePeopleIsAdmin()) {
+        if(in_array($p['page']['dataTypeinfos']['registreID'],$userRegistriesAdmin)) {
+          $formExport->setCanExportAll(true);
+        }
+      }
+
+      // sinon on va regarder si autorisé à exporter les datas groupe
+      if($p['page']['isRegistryAdmin'] == false and $p['config']['droitExportPeutExporterToutesDataGroupes'] == 'true') {
+        $sibling = new msPeopleRelations;
+        $sibling->setToID($p['user']['id']);
+        $sibling->setRelationType('relationPraticienGroupe');
+        $formExport->addToPratList($p['user']['id']);
+        if($pratsID=$sibling->getSiblingIDs()) {
+          foreach($pratsID as $pratID) {
+            $formExport->addToPratList($pratID);
+          }
+        }
+      }
+
+      // sinon on va regarder si autorisé à exporter ses datas de groupe
+      elseif($p['page']['isRegistryAdmin'] == false and $p['config']['droitExportPeutExporterPropresData'] == 'true') {
+        $formExport->addToPratList($p['user']['id']);
+      }
+    }
+
     $formExport->setSortTab($sortTab);
   }
 

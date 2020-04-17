@@ -33,16 +33,21 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
   $template="exportData";
   $debug='';
 
+  // si formulaire non sélectionnés
   if(!isset($match['params']['dataTypeID'])) {
     $listForms=new msExportData;
-    $p['page']['listeForms']=$listForms->getExportabledList();
+
     $p['page']['listeCats']=msData::getCatListFromGroupe(['typecs'],['id','label']);
+    $p['page']['listeForms']=$listForms->getExportabledList();
   }
 
+  // si formulaire sélectionné
   elseif(isset($match['params']['dataTypeID']) and is_numeric($match['params']['dataTypeID'])) {
 
     $data=new msData;
     $p['page']['dataTypeinfos']=$data->getDataType($match['params']['dataTypeID']);
+    $p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
+
     $p['page']['dataTypeinfos']['catLabel']=$data->getCatLabelFromCatID($p['page']['dataTypeinfos']['cat']);
 
     if($p['page']['dataTypeinfos']['groupe']=='typecs' and $p['page']['dataTypeinfos']['formType']=='select') {
@@ -72,6 +77,18 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
       //liste praticiens
       if($p['config']['optionGeExportPratListSelection'] == 'true') {
         $p['page']['prat']=msPeopleSearch::getUsersList();
+      } else {
+
+        // on va chercher si le user est admin registre : si oui = tous les prats
+        $adminReg = new msPeopleRelationsDroits;
+        $adminReg->setToID($p['user']['id']);
+        $p['page']['isRegistryAdmin'] = false;
+        if($userRegistriesAdmin = $adminReg->getRegistriesWherePeopleIsAdmin()) {
+          if(in_array($p['page']['dataTypeinfos']['registreID'],$userRegistriesAdmin)) {
+            $p['page']['isRegistryAdmin'] = true;
+          }
+        }
+
       }
 
     } else {

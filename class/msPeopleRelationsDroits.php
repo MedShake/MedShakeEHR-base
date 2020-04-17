@@ -64,6 +64,32 @@ class msPeopleRelationsDroits extends msPeopleRelations
       }
 
 /**
+ * Obtenir les regitresID des registres où le people a un rôle d'admin
+ * @return array array simple ou les values sont les ID registre
+ */
+      public function getRegistriesWherePeopleIsAdmin() {
+
+        if (!is_numeric($this->_toID)) {
+            throw new Exception('ToID is not numeric');
+        }
+
+        $data = new msData();
+        $name2typeID = $data->getTypeIDsFromName(['relationID', 'relationRegistrePraticien']);
+
+        $listeRegistres = msSql::sql2tabSimple("select o.value
+        from objets_data as o
+        inner join objets_data as c on c.instance=o.id
+        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' and c.value='admin' and c.typeID='".$name2typeID['relationRegistrePraticien']."'
+        limit 1");
+        if(!$listeRegistres) {
+          return [];
+        } else {
+          return $listeRegistres;
+        }
+
+      }
+
+/**
  * Obtenir le statut d'un people vis à vis d'un autre
  * @param  int $people1 people dont il faut obtenir le statut
  * @param  int $people2 people en vis à vis

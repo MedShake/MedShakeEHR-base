@@ -106,6 +106,17 @@
             <div class="card-body">
               Formulaire source : {{ page.formInfos.name }} (#{{ page.formInfos.id }})<br>
               Exploité sous : {{ page.dataTypeinfos.catLabel }} > {{ page.dataTypeinfos.label }}
+
+              {% if config.optionGeExportPratListSelection != 'true' %}
+                {% if page.isRegistryAdmin %}
+                  <br>Données exportées : toutes (administrateur registre)
+                {% elseif config.droitExportPeutExporterToutesDataGroupes == 'true' %}
+                  <br>Données exportées : données de votre groupe
+                {% elseif config.droitExportPeutExporterPropresData == 'true' %}
+                <br>Données exportées : données propres uniquement
+                {% endif %}
+              {% endif %}
+
               <button type="submit" class="btn btn-warning btn-block mt-4">Exporter</button>
             </div>
           </div>
@@ -203,44 +214,44 @@
           </div>
 
           {% if config.optionGeExportPratListSelection == 'true' %}
-          <div class="card my-4 bg-light selectMinOne">
-            <div class="card-header font-weight-bold">
-              <div class="float-right text-secondary">
-                <i class="far fa-check-square switchCheckAll" title="tous"></i>
-                <i class="far fa-square switchUncheckAll" title="aucun"></i>
-              </div>
-              Dossiers des praticiens à inclure
-            </div>
-            <div class="card-body">
-              {% if config.droitExportPeutExporterToutesData == 'true' and page.prat|length > 1 %}
-                <p class="mb-3">Sélectionner au moins 1 praticien.</p>
-              {% endif %}
-              {% for prat in page.prat %}
-                <div class="form-group">
-                  {% if config.droitExportPeutExporterToutesData == 'false' and prat.id != user.id %}
-                    {% set disabled='disabled' %}
-                  {% else %}
-                    {% set disabled = false %}
-                  {% endif %}
-                  {{ f.input ({
-                'input' : {
-                  'type' : 'switch',
-                  'name' : 'pratliste_' ~ prat.id ,
-                  'id' : 'pratliste_' ~ prat.id ~ '_id',
-                  'autocomplete' : 'off',
-                  'value' : 'true',
-                  'disabled' : disabled
-                },
-                'label' : {
-                  'position' : 'before',
-                  'label' : prat.prenom ~ ' ' ~ prat.nom ,
-                }
-              }) }}
+            <div class="card my-4 bg-light selectMinOne">
+              <div class="card-header font-weight-bold">
+                <div class="float-right text-secondary">
+                  <i class="far fa-check-square switchCheckAll" title="tous"></i>
+                  <i class="far fa-square switchUncheckAll" title="aucun"></i>
                 </div>
-              {% endfor %}
+                Dossiers des praticiens à inclure
+              </div>
+              <div class="card-body">
+                {% if config.droitExportPeutExporterToutesDataGroupes == 'true' and page.prat|length > 1 %}
+                  <p class="mb-3">Sélectionner au moins 1 praticien.</p>
+                {% endif %}
+                {% for prat in page.prat %}
+                  <div class="form-group">
+                    {% if config.droitExportPeutExporterToutesDataGroupes == 'false' and prat.id != user.id %}
+                      {% set disabled='disabled' %}
+                    {% else %}
+                      {% set disabled = false %}
+                    {% endif %}
+                    {{ f.input ({
+                  'input' : {
+                    'type' : 'switch',
+                    'name' : 'pratliste_' ~ prat.id ,
+                    'id' : 'pratliste_' ~ prat.id ~ '_id',
+                    'autocomplete' : 'off',
+                    'value' : 'true',
+                    'disabled' : disabled
+                  },
+                  'label' : {
+                    'position' : 'before',
+                    'label' : prat.prenom ~ ' ' ~ prat.nom ,
+                  }
+                }) }}
+                  </div>
+                {% endfor %}
 
+              </div>
             </div>
-          </div>
           {% endif %}
 
         </div>

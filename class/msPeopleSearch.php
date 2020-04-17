@@ -354,7 +354,7 @@ class msPeopleSearch
         $final=array_slice($final, $this->_limitStart, $this->_limitNumber, true);
 
         foreach ($final as $k=>$v) {
-            if ($v > 1) {
+            if ($v >= 1) {
                 $patient= new msPeople();
                 $patient->setToID($k);
                 $peopleType = $patient->getType();
