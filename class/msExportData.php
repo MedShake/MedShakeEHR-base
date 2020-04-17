@@ -104,6 +104,8 @@ class msExportData
   private $_relationsPratGroupe=[];
   private $_relationsPatientGroupe=[];
 
+  private $_canExportAll=false;
+
 /**
  * Définir les instance du formulaire à exporter
  * @param int $dataTypeID ID objet
@@ -201,6 +203,17 @@ class msExportData
     }
 
 /**
+ * Définir le fait que l'export concerne tous les fromID
+ * @param boolean $canExportAll true/false
+ */
+    public function setCanExportAll($canExportAll) {
+      if(!is_bool($canExportAll)) {
+        throw new Exception('CanExportAll n\'est pas valide');
+      }
+      $this->_canExportAll=$canExportAll;
+    }
+
+/**
  * Ajouter un champ administratif patient à exporter
  * @param string $val data type name
  */
@@ -236,8 +249,17 @@ class msExportData
  * Obtenir la liste des instances de formulaires exportables
  * @return array tableau par catID
  */
-    public function getExportabledList() {
-      if($data =  msSQL::sql2tab("select id, label, cat, formValues from data_types where groupe='typecs' and formType='select' order by displayOrder")) {
+    public function getExportabledList($namePrefix=[]) {
+      if(!empty($namePrefix)) {
+        foreach($namePrefix as $prefix) {
+          $wherePrefix[] = ' name like "'.$prefix.'%" ';
+        }
+        $wherePrefix = ' and ('.implode(' or ', $wherePrefix).')';
+      } else {
+        $wherePrefix ='';
+      }
+
+      if($data =  msSQL::sql2tab("select id, label, cat, formValues from data_types where groupe='typecs' and formType='select' ".$wherePrefix." order by displayOrder")) {
         foreach($data as $k=>$v) {
           $tab[$v['cat']][]=$v;
         }
@@ -322,7 +344,13 @@ class msExportData
       } else {
         $toIdToExclude = '';
       }
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') and fromID in ('".implode("', '", $this->_pratList)."') ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
+      if($this->_canExportAll == true) {
+        $fromIdwhere = "";
+      } else {
+        $fromIdwhere = "and fromID in ('".implode("', '", $this->_pratList)."')";
+      }
+
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') ".$fromIdwhere." ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
     }
 
 /**
