@@ -71,7 +71,7 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
         $sortTab[]='data_'.$kKey;
       }
       elseif($kType=='pratliste' and is_numeric($kKey)) {
-        if ($p['config']['droitExportPeutExporterToutesData'] == 'true' or $p['user']['id'] == $kKey) {
+        if ($p['config']['droitExportPeutExporterToutesDataGroupes'] == 'true' or $p['user']['id'] == $kKey) {
           $formExport->addToPratList($kKey);
         }
       }

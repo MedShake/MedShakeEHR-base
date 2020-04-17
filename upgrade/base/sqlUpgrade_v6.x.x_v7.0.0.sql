@@ -113,7 +113,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 -- configuration droitExportPeutExporterAutresData -> droitExportPeutExporterToutesData
 
-update `configuration` set name = 'droitExportPeutExporterToutesData' WHERE `name` LIKE 'droitExportPeutExporterAutresData';
+update `configuration` set name = 'droitExportPeutExporterToutesDataGroupes', description ='si true, peut exporter les datas générées par les autres praticiens de ses groupes'  WHERE `name` LIKE 'droitExportPeutExporterAutresData';
 
 -- data_cat
 

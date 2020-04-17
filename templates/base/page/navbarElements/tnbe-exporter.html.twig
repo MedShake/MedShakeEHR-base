@@ -25,7 +25,7 @@
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-{% if config.droitExportPeutExporterToutesData == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
+{% if config.droitExportPeutExporterToutesDataGroupes == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
  <li class="nav-item" title="Export de données">
    <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/export-data/">
      {% if config.designTopMenuStyle == 'icones' %}

@@ -99,7 +99,7 @@
      <i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>
      Dossiers supprimés
    </a>
-   {% if config.droitExportPeutExporterToutesData == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
+   {% if config.droitExportPeutExporterToutesDataGroupes == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
      <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/export-data/">
        <i class="fas fa-database fa-fw text-muted mr-1"></i>
        Export de données
