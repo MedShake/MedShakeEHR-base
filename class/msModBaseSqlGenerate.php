@@ -98,7 +98,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'signPeriphName'=>'default',
     'administratifSecteurHonorairesNgap'=>'mspe',
     'droitExportPeutExporterPropresData'=>'true',
-    'droitExportPeutExporterToutesData'=>'false',
+    'droitExportPeutExporterToutesDataGroupes'=>'false',
     'droitStatsPeutVoirStatsGenerales'=>'true',
     'statsExclusionCats'=>'catTypeCsATCD,csAutres,declencheur',
     'droitDossierPeutCreerPraticien'=>'true',
