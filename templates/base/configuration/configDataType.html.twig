@@ -146,7 +146,7 @@
 				<th>Nom</th>
         <th>Label</th>
         <th>Utilisé</th>
-				{% if page.groupe not in ["courrier"] %}<th>Validation</th>{% endif %}
+				{% if page.groupe == "typecs" and config.optionGeActiverRegistres == 'true' %}<th>Registre</th>{% elseif page.groupe not in ["courrier"] %}<th>Validation</th>{% endif %}
 				<th>{{ labelFormType }}</th>
 				<th>Vie</th>
 				<th>Description</th>
@@ -161,7 +161,9 @@
 				<td>{{ w.name }}</td>
         <td>{{ w.label }}</td>
 				<td>{{ w.enfants }}</td>
-				{% if page.groupe not in ["courrier"] %}<td>{{ w.validationRules }}</td>{% endif %}
+        {% if page.groupe == "typecs" and config.optionGeActiverRegistres == 'true' %}
+        <td>{{ page.registresPossibles[w.validationRules] }}</td>
+				{% elseif page.groupe not in ["courrier"] %}<td>{{ w.validationRules }}</td>{% endif %}
 				<td>
           {% if page.groupe == "typecs" and w.formType == 'select' %}
             oui
@@ -366,6 +368,24 @@
 					</div>
 				{% endif %}
 
+        {% if page.groupe == "typecs" and config.optionGeActiverRegistres == 'true' %}
+					<div class="form-group">
+					{{ f.select ({
+            'select' : {
+              'name' : 'validationRules',
+              'id' : 'validationRulesID',
+              'class' : 'custom-select',
+              'values' : page.registresPossibles ,
+              'autocomplete' : 'off',
+              'valueDefaut': ''
+            },
+						'label' : {
+							'position' : 'before',
+							'label' : 'Registre concerné',
+						}
+					}) }}
+					</div>
+        {% endif %}
 
         {% if page.groupe == "courrier" %}
 					<div class="form-group">

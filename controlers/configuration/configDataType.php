@@ -70,4 +70,16 @@
     sort($p['page']['typesPossibles']);
     $p['page']['typesPossibles']=array_combine($p['page']['typesPossibles'],$p['page']['typesPossibles']);
 
+    // Liste des registres
+    if($p['config']['optionGeActiverRegistres'] == 'true') {
+      $registres = new msPeopleSearch;
+      $registres->setPeopleType(['registre']);
+      $registres->setCriteresRecherche(['registryname'=>'%']);
+      $registres->setColonnesRetour(['registryname']);
+      if(!empty($regs = $registres->getSimpleSearchPeople())) {
+        $p['page']['registresPossibles']=array_column($regs, 'registryname', 'id');
+      }
+
+    }
+
  }
