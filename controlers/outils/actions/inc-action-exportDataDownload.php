@@ -43,6 +43,8 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
     $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType', 'validationRules']);
     $p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
 
+    $formExport->setRegistreID($p['page']['dataTypeinfos']['registreID']);
+
     if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
     $sortTab=array('id','parent_id','patient_peopleExportID', 'patientGroupe_peopleExportID', 'praticien_peopleExportID', 'praticienGroupe_peopleExportID', 'date_saisie', 'date_effective', 'date_modification');
