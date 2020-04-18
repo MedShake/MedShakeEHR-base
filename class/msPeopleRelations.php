@@ -309,9 +309,10 @@ class msPeopleRelations extends msPeople
  * Obtenir pour le peopleID concerné les relations du type demandé
  * @param  array  $dataComp         typeName à retourner
  * @param  array  $dataCompNotEmpty typeName qui ne doivent pas être vide
+ * @param  array  $relationValues   value caractérisant la relation (membre, admin, inclus ...)
  * @return array                   tableau des infos sur peopleID
  */
-    public function getRelations($dataComp=[], $dataCompNotEmpty=[])
+    public function getRelations($dataComp=[], $dataCompNotEmpty=[], $relationValues=[])
     {
         global $p;
 
@@ -391,6 +392,14 @@ class msPeopleRelations extends msPeople
           $strictTable = '';
         }
 
+        // gestion de la value caractérisant la relation
+        if(!empty($relationValues)) {
+          $relationValues = msSQL::cleanArray($relationValues);
+          $whereRelationValues = " and c.value in ('".implode("', '", $relationValues)."') ";
+        } else {
+          $whereRelationValues = " ";
+        }
+
         $relations = [];
 
         if($relations =  msSQL::sql2tab("select o.value as peopleID, o.fromID as createBy, u2.value as currentUserStatus, c.value as typeRelation, '".$p['user']['rank']."' as currentUserRank
@@ -403,7 +412,7 @@ class msPeopleRelations extends msPeople
         left join objets_data as u2 on u2.instance=u.id and u2.typeID='".$name2typeID[$this->_relationType]."' and u2.deleted='' and u2.outdated=''
 
         ".implode(" ", $tablesSql)."
-        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty)."
+        where o.toID='".$this->_toID."' and o.typeID='".$name2typeID['relationID']."' and o.deleted='' and o.outdated='' ".implode("", $notEmpty).$whereRelationValues."
         group by o.value, c.id, u.id, u2.id ".implode("", $groupBy).' '.$orderBy )) {
 
           $typeID = $data->getTypeIDFromName($this->_relationType);
