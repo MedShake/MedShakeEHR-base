@@ -32,6 +32,13 @@ class msExportData
  * @var int
  */
   private $_formID;
+
+/**
+ * ID du registre concerné par l'export
+ * @var int
+ */
+  private $_registreID;
+
 /**
  * Id du/des data types qui implémentent le formulaire
  * @var array
@@ -115,6 +122,14 @@ class msExportData
       $this->_dataTypeIDs[]=$dataTypeID;
     }
 
+/**
+ * Définir le registreID concerné par l'export
+ * @param int $registreID registreID
+ */
+    public function setRegistreID($registreID) {
+      if(!is_numeric($registreID)) throw new Exception('RegistreID is not numeric');
+      $this->_registreID = $registreID;
+    }
 
 /**
  * Définir le numéro du formulaire
@@ -350,7 +365,18 @@ class msExportData
         $fromIdwhere = "and fromID in ('".implode("', '", $this->_pratList)."')";
       }
 
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') ".$fromIdwhere." ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
+      $toIdwhere = '';
+      if(!empty($p['config']['optionGeActiverRegistres'] == 'true') and isset($this->_registreID)) {
+        $relation = new msPeopleRelations;
+        $relation->setToID($this->_registreID);
+        $relation->setRelationType('relationRegistrePatient');
+        if($inclusRegistre = $relation->getRelations([], [], ['inclus'])) {
+          $inclusRegistre = array_column($inclusRegistre, 'peopleID');
+          $toIdwhere = " and toID in ('".implode("', '", $inclusRegistre)."') ";
+        }
+      }
+
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') ".$fromIdwhere.$toIdwhere." ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
     }
 
 /**
