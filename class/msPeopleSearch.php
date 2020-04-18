@@ -144,6 +144,8 @@ class msPeopleSearch
     global $p;
 
     $restrictionUser = '';
+    $restricPatientGroupeJoin = '';
+    $restricPatientGroupeWhere = '';
     if(in_array('patient',$this->_peopleType )) {
       if($this->_restricDossiersPropres==true) {
         $restrictionUser .= ' and p.fromID = "'.$p['user']['id'].'"';
@@ -151,9 +153,17 @@ class msPeopleSearch
         $frat = new msPeopleRelations;
         $frat->setToID($p['user']['id']);
         $frat->setRelationType('relationPraticienGroupe');
-        $ids = $frat->getSiblingIDs();
-        $ids[] = $p['user']['id'];
-        $restrictionUser .= " and p.fromID in ('".implode("', '", $ids)."')";
+        if($groupesUser = $frat->getRelations()) {
+
+          $groupesUser = array_column($groupesUser, 'peopleID');
+          $restricPatientGroupeWhere = " and resg.value in ('".implode("', '", $groupesUser)."') ";
+
+          if($this->_restricDossiersPropres==false and $this->_restricDossiersGroupes==true) {
+            $restricPatientGroupeJoin = " left join objets_data as resg on resg.toID = p.id and resg.typeID='".msData::getTypeIDFromName('relationID')."' and resg.value in ('".implode("', '", $groupesUser)."') ";
+          }
+        } else {
+          return $sql = 'SELECT NULL LIMIT 0';
+        }
       }
     }
 
@@ -188,8 +198,8 @@ class msPeopleSearch
     return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
     '.implode(', ', $this->_makeSqlSelect()).'
     from people as p
-    '.implode(' ', $this->_makeSqlJoin()). '
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
+    '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
+    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
     limit '.$this->_limitStart.','.$this->_limitNumber;
   }
 
@@ -240,7 +250,7 @@ class msPeopleSearch
   }
 
 /**
- * Fabriquer les paramètres SQL leftjoin pour la requète finale
+ * Fabriquer les paramètres SQL left join pour la requète finale
  * @return array
  */
   private function _makeSqlJoin () {
