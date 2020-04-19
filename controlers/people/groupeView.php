@@ -50,8 +50,9 @@ $p['page']['groupeData']=$groupe->getLabelForSimpleAdminDatas($groupe->getSimple
 // création exportID si manquant
 if(!isset($p['page']['groupeData']['peopleExportID']) and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
   $groupe->setFromID($p['user']['id']);
-  $p['page']['groupeData']['peopleExportID']=$groupe->setPeopleExportID();
+  $groupe->setPeopleExportID();
 }
+unset($p['page']['groupeData']['peopleExportID']);
 
 $labels = new msData();
 $p['page']['groupeDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['groupeData']));
