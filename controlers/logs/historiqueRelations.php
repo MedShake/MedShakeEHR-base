@@ -72,6 +72,12 @@ if($relationType == 'relationPraticienGroupe') {
     $dataCompReverse=['birthname', 'lastname', 'firstname'];
     $p['page']['titreRelation'] = "Historique des postes d'administrateur registre de ".$people->getSimpleAdminDatasByName(['identite'])['identiteUsuelle'].' <small class="text-muted">#'.$match['params']['peopleID'].'</small>';
   }
+} elseif($relationType == 'relationRegistrePatient') {
+  if($peopleType == 'patient') {
+    $dataComp=['registryname'];
+    $dataCompReverse=['birthname', 'lastname', 'firstname'];
+    $p['page']['titreRelation'] = "Historique des consentement ou refus de participation aux registres de ".$people->getSimpleAdminDatasByName(['identite'])['identiteUsuelle'].' <small class="text-muted">#'.$match['params']['peopleID'].'</small>';
+  }
 }
 
 $data = new msData();
