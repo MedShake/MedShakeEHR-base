@@ -42,7 +42,7 @@ if($p['page']['registreData']['dossierType'] != 'registre' or $p['config']['opti
 }
 
 $p['page']['registreData']=$registre->getLabelForSimpleAdminDatas($registre->getSimpleAdminDatasByName());
-
+unset($p['page']['registreData']['registryPrefixTech']);
 $labels = new msData();
 $p['page']['registreDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['registreData']));
 
