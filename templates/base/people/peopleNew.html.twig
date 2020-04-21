@@ -40,12 +40,62 @@ registre
 {% endif %}
 {% endblock %}
 
-{% block head %}
+{% block jsFiles %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
 {% if config.optionGeActiverVitaleLecture =='true' %}
 	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
 {% endif %}
+{% endblock %}
+
+{% block jsEmbed %}
+	{{ parent() }}
+
+	$(document).ready(function() {
+
+		$("#id_lastname_id, #id_birthname_id, #id_firstname_id, #id_groupname_id").typeWatch({
+			wait: 1000,
+			highlight: false,
+			allowSubmit: false,
+			captureLength: 1,
+			callback: function(value) {
+				searchSimilarPeople();
+			}
+		});
+	});
+
+	function searchSimilarPeople() {
+	  $.ajax({
+	    url: urlBase + '/patients/ajax/peopleSimilarSearch/',
+	    type: 'post',
+	    data: $(".searchSimilar form").serialize(),
+	    dataType: "json",
+	    success: function(data) {
+				showSimilar(data);
+	    },
+	    error: function() {}
+	  });
+	}
+
+	function showSimilar(data) {
+		str = '';
+		if (data.length > 0) {
+			str = '<div class="card"> \
+		  	<div class="card-header font-weight-bold"> \
+		    	{{ page.porp|capitalize }}s similaires existants \
+		  	</div> \
+		  	<div class="list-group list-group-flush"> ';
+
+			$.each(data, function(index, value) {
+    		str += '<a href="'+ urlBase + '/' + value.type + '/' + value.id + '/' + '" target="_blank" class="list-group-item list-group-item-action"><i class="fas fa-external-link-alt mr-3"></i>' + value.label + '</a>';
+			});
+
+	  	str += '</div> \
+				</div>';
+		}
+		$('#peopleSim').html(str);
+	}
+
 {% endblock %}
 
 {% block body %}
@@ -72,7 +122,7 @@ Nouveau registre
 
 {% if session['form'][page.formIN]['validationErrorsMsg'] %}
 <div class="row">
-	<div class="col-xl-10 col-12">
+	<div class="col-xl-8 col-12">
 		{{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg']) }}
 	</div>
 </div>
@@ -80,8 +130,8 @@ Nouveau registre
 
 
 <div class="row">
-	<div class="col-xl-10 col-12">
-		<div class="card bg-light card-body checkboxFixValue">
+	<div class="col-xl-8 col-12">
+		<div class="card bg-light card-body checkboxFixValue searchSimilar">
 			{{ f.formbuilder(page.form , page.formIN , session) }}
 		</div>
 		{% if page['formJavascript'][page.formIN] is not empty %}
@@ -89,6 +139,9 @@ Nouveau registre
 			 {{ page['formJavascript'][page.formIN] }}
 			</script>
 		{% endif %}
+	</div>
+
+	<div id="peopleSim" class="col-xl-4 col-12">
 	</div>
 </div>
 

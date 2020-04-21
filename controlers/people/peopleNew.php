@@ -74,6 +74,7 @@ if($template != "forbidden") {
   }
 
   $p['page']['form']=$formpatient->getForm();
+  $formpatient->addHiddenInput($p['page']['form'],['peopleType'=>$p['page']['porp']]);
   $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
   $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 }

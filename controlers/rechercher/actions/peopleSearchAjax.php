@@ -35,6 +35,7 @@ $acceptedModes=array(
     'switchPraticienListe', // ajouter/ retirer de la liste des praticiens
     'markDeleted', // marquer un dossier comme effacé
     'unmarkDeleted', // marquer un dossier comme à nouveau utilisable
+    'peopleSimilarSearch', // rechercher
 );
 
 if (!in_array($m, $acceptedModes)) {
