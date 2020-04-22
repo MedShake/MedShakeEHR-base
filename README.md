@@ -69,8 +69,8 @@ Tant que la demande d'intégration #32 n'est pas actée, vous devez effectuer à
 
 > . docker-ehr-config.sh
 
-NOTE : The dot and space before the command are mandatory to enable the spreading of the environement variables. Please save all the generated data at a proper location to enable a potenti$
-NB: Le point et l'espace avant la commande sont obligatoires pour permettre la bonne propagation des variables d'environements. Veuillez sauvegarder toutes les données générées à un endroi$
+NOTE : The dot and space before the command are mandatory to enable the spreading of the environement variables. Please save all the generated data at a proper location
+NB: Le point et l'espace avant la commande sont obligatoires pour permettre la bonne propagation des variables d'environements. Veuillez sauvegarder toutes les données générées
 
 7- Build the required EHR images :
 7- Construire les images de EHR :
