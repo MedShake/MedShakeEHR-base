@@ -139,6 +139,11 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
       $mss->setRestricGroupesEstMembre(true);
     }
 
+    // retrictions forcées sur retours sur l'UI
+    if($_POST['patientsPropres']=='true') {
+      $mss->setRestricDossiersPropres(true);
+    }
+
     // critères
     if($_POST['porp']=='registre') {
       $criteres = array(
