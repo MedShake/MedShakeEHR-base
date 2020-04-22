@@ -42,6 +42,12 @@ if(!in_array($patient->getType(), ['patient', 'pro', 'externe'])) {
   return;
 }
 
+// vérifier type exacte people
+if($p['config']['PraticienPeutEtrePatient'] != 'true' and !in_array($patient->getType(), ['patient', 'externe'])) {
+  $template = "404";
+  return;
+}
+
 //vérifier les droits
 $droits = new msPeopleDroits($p['user']['id']);
 if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
