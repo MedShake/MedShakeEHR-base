@@ -43,6 +43,11 @@ $(document).ready(function() {
     }
   });
 
+  $("input[type='checkbox'].searchupdate").on("click", function(e) {
+      updateListingPatients();
+      listingRow = 0;
+  });
+
   $(document).on("keydown", function(e) {
     if (e.keyCode == 40) { //down
       listingRow++;
@@ -326,6 +331,7 @@ function updateListingPatients() {
       d3: $('#d3').val(),
       autreCrit: $('#autreCrit option:selected').val(),
       autreCritVal: $('#autreCritVal').val(),
+      patientsPropres: $('#patientsPropres').is(':checked'),
     },
     dataType: "html",
     success: function(data) {
