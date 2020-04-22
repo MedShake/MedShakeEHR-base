@@ -77,7 +77,7 @@
           {% endif %}
 
           <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
-          {% if config.transmissionsPeutCreer == 'true' %}
+          {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
             <button type="button" class="btn btn-light btn-sm newTransmission" data-toggle="modal" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
           {% endif %}
         </div>
