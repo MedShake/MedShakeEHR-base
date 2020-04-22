@@ -7,6 +7,7 @@ backupLocation: /app/MedShakeEHR-base/backup/
 workingDirectory: /app/MedShakeEHR-base/public_html/workingDirectory/
 cookieDomain: ${EHR_SERVER_NAME}
 cookieDuration: 31104000
+cookieDuree: 31104000
 fingerprint: ${EHR_FINGERPRINT}
 sqlServeur: db
 sqlBase: ${EHR_DBMS_NAME}
@@ -22,3 +23,4 @@ dicomDiscoverNewTags: true
 dicomWorkListDirectory: /app/MedShakeEHR-base/work/worklist/
 dicomWorkingDirectory: /app/MedShakeEHR-base/public_html/workingDirectory/
 utiliserLap: false
+optionGeLogin2FA: false

@@ -1,5 +1,5 @@
-# We will go for a Bionic
-FROM ubuntu:bionic
+# We will go for a Eoan waiting from Focal
+FROM ubuntu:eoan
 LABEL description="MedShake EHR dockerized"
 LABEL maintainer="bugeaud@gmail.com"
 
@@ -48,10 +48,13 @@ RUN apt --assume-yes install git openjdk-8-jdk ant libcommons-lang3-java libbcpr
 #	&& ant -lib /usr/share/java jar \
 #	&& java -jar build/jar/pdftk.jar --help
 # Solution 2 : use Gradle (the new default)
-RUN git clone https://gitlab.com/marcvinyals/pdftk.git \
-       && cd pdftk \
-       && gradle shadowJar \
-       && java -jar build/libs/pdftk-all.jar --help
+#RUN git clone https://gitlab.com/pdftk-java/pdftk.git \
+#       && cd pdftk \
+#       && gradle wrapper --gradle-version 6.0.1 \
+#       && gradle shadowJar \
+#       && java -jar build/libs/pdftk-all.jar --help
+# Solution 3 : Starting from 18.10 there is a package for that :)
+RUN apt --assume-yes install pdftk
 
 WORKDIR $APP_PATH
 
@@ -64,7 +67,7 @@ RUN apt --assume-yes install curl
 #	&& php /tmp/composer.phar install
 # Solution 2 : Setup script (Composer recommanded way)
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php -r "if (hash_file('sha384', 'composer-setup.php') === 'e0012edf3e80b6978849f5eff0d4b4e4c79ff1609dd1e613307e16318854d24ae64f26d17af3ef0bf7cfb710ca74755a') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 
@@ -91,20 +94,20 @@ WORKDIR $APP_PATH
 RUN php --ini
 
 # Install npm
-RUN apt-get install -y -qq npm
+#V2 RUN apt-get install -y -qq npm
 
 # Install bower
-RUN npm install --global bower
+#V2 RUN npm install --global bower
 
 # Allow bower to run under docker's root
-RUN echo '{ "allow_root": true }' > /root/.bowerrc
+#V2 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 # Make sure any bower module will be fixed toward wrong line end
 RUN git config --global core.autocrlf input
 
 WORKDIR $MEDSHAKEEHRPUBLICPATH
-#RUN bower install -V --config.cwd ./MedShakeEHR-base/public_html/
-RUN bower install -V
+#V2 RUN bower install -V --config.cwd ./MedShakeEHR-base/public_html/
+#RUN bower install -V
 
 # Create the Apache 2 configuration for the MedShake EHR application
 COPY medshakeehr.conf /etc/apache2/sites-available/

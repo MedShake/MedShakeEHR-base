@@ -37,9 +37,9 @@ services:
             - MYSQL_USER=${EHR_DBMS_USER_NAME}
             - MYSQL_PASSWORD=${EHR_DBMS_USER_PASSWORD}
 
-    myadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - "8080:80"
-        links:
-            - db:db
+#    myadmin:
+#        image: phpmyadmin/phpmyadmin
+#        ports:
+#            - "8080:80"
+#        links:
+#            - db:db
