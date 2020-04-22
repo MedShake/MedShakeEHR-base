@@ -36,7 +36,7 @@
 
 {% if page.outputTableHead %}
   <table class="table table-sm mb-0 table-hover">
-    <caption></caption>
+    <caption class="text-center text-danger">{% if page.outputTableRow|length == 50 %}Il peut y avoir d'autres réponses, précisez votre recherche !{% endif %}</caption>
     <thead class="thead-light">
       <tr>
         <th class="d-none d-sm-table-cell"></th>
