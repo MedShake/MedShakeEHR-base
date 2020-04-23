@@ -149,7 +149,7 @@ login(){
  local userName=$1
  local userPassword=$2
  echo "$(tput setaf 10)FINE$(tput sgr0) Login with user" $userName
- curl -Liv -c /tmp/ehr-cookie.txt -H "Accept-Language: en,fr" -d "formIN=baseLogin" -d "p_username=$userName" -d "p_password=$userPassword" http://med1.medgence.com/login/logInDo/
+ curl -Liv -c /tmp/ehr-cookie.txt -H "Accept-Language: en,fr" -d "formIN=baseLogin" -d "p_username=$userName" -d "p_password=$userPassword" http://$EHR_SERVER_NAME/login/logInDo/
  echo "$(tput setaf 10)FINE$(tput sgr0) User logged in and session cookies stored for later auto-login"
 }
 
