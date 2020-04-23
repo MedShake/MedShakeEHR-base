@@ -239,6 +239,6 @@ echo "$(tput setaf 10)FINE$(tput sgr0) Calling procedure $calledProcedure with p
 
 # Those two lines are required to be  written in any script using this library
 #
-eval $calledProcedure $@
+$calledProcedure "$@"
 echo "$(tput setaf 10)DONE$(tput sgr0) Called $calledProcedure"
 
