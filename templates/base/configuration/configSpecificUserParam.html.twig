@@ -67,6 +67,23 @@
     </div>
   {% endif %}
 
+  <div class="row">
+    <div class="col {% if page.userParams|length > 0 %}offset-2{% endif %}"">
+      <form class="form-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserApplyTemplate/" method="post">
+        <input type="hidden" name="userID" value="{{ page.userID }}">
+        <select class="custom-select my-1 mr-sm-2" name="p_template">
+          {% for val in page.userTemplates %}
+            <option value="{{ val }}" {% if val == config.optionGeLoginCreationDefaultTemplate %}selected="selected"{% endif %}>{{ val }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline-primary ">Appliquer ce template de droits à l'utilisateur</button>
+      </form>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
+    </div>
+  </div>
+
   <form class="ajaxForm" method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configSpecificUserParam/">
     <input type="hidden" name="userID" value="{{ page.userID }}" autocomplete="off"/>
     <div class="row mt-3">
@@ -80,16 +97,10 @@
         </ul>
       </div>
       <div class="col-md-10 tab-content">
-        <div class="row">
-          <div class="col text-right">
-            <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
-          </div>
-        </div>
-
 
       {% for k,v in page.userParams %}
         <div id="cat{{ k|replace({' ':'_', '\'':'_'}) }}" role="tabpanel" class="tab-pane row{% if loop.first %} active{% endif %}">
-          <div class="col-12 mt-4">
+          <div class="col-12">
             <table class="table table-sm mb-0 table-hover  table-striped checkboxFixValue">
               <thead class="thead-light">
                 <tr>
