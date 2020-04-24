@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > patients : options pour ligne de patient ou de pro 
+ # Template > patients : options pour ligne de patient ou de pro
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
@@ -91,13 +91,17 @@
          </a>
        {% endif %}
        {% if user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isNotUser' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
-         <a class="dropdown-item rendreUtilisateur" href="#" data->
+         <a class="dropdown-item rendreUtilisateur" href="#" >
              <i class="fas fa-user fa-fw text-muted mr-1"></i> Rendre utilisateur
          </a>
+       {% elseif user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isUser' %}
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ patientID }}/" >
+                <i class="fas fa-user-cog fa-fw text-muted mr-1"></i> Configuration utilisateur
+            </a>
        {% endif %}
        {% if (config.droitDossierPeutSupPatient =='true' and page['outputType'][patientID]['type'] == 'patient') or (config.droitDossierPeutSupPraticien =='true' and page['outputType'][patientID]['type'] == 'pro') %}
          <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">
-           <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer ce dossier
+           <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer
          </a>
        {% endif %}
      </div>
