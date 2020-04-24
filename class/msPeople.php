@@ -668,8 +668,16 @@ class msPeople
  */
     public function getAge()
     {
-      if(isset($this->_ageFormats['ageDisplay'])) return $this->_ageFormats['ageDisplay'];
-      else return $this->getAgeFormats()['ageDisplay'];
+      if(isset($this->_ageFormats['ageDisplay'])) {
+        return $this->_ageFormats['ageDisplay'];
+      } else {
+        $ageFormats = $this->getAgeFormats();
+        if(isset($ageFormats['ageDisplay'])) {
+          return $ageFormats['ageDisplay'];
+        } else {
+          return '';
+        }
+      }
     }
 
 /**
