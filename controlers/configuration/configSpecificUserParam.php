@@ -67,3 +67,6 @@ foreach($p['page']['availableParams'] as $k=>$v) {
   $p['page']['availableParams'][$k]['saniCat']=msTools::sanitizeFilename($v['cat']);
 }
 $p['page']['availableCats']=msConfiguration::getListOfParametersCat();
+
+// templates user
+$p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
