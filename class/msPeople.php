@@ -189,11 +189,11 @@ class msPeople
 
       $name2typeID = new msData();
       $name2typeID = $name2typeID->getTypeIDsFromName(['peopleExportID']);
-      if(msSQL::sqlQuery($data=msSQL::sqlUniqueChamp("select pd.id
+      if($data=msSQL::sqlUniqueChamp("select pd.id
       from objets_data as pd
       where pd.typeID = '".$name2typeID['peopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
       order by pd.id desc
-      limit 1"))) {
+      limit 1")) {
         $this->setPeopleExportID();
       } else {
         $obj = new msObjet;
