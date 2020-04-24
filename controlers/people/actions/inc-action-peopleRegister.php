@@ -121,7 +121,7 @@ if ($validation === false) {
     }
 
     // ajout des groupes du prat créateur au patient nouvellement créé
-    if(!isset($_POST['patientID']) and $p['config']['optionGeActiverGroupes'] == 'true' and $p['config']['groupesAutoAttachProGroupsToPatient'] == 'true') {
+    if(!isset($_POST['patientID']) and $p['config']['optionGeActiverGroupes'] == 'true' and $p['config']['groupesAutoAttachProGroupsToPatient'] == 'true' and $match['params']['porp']=='patient') {
       $relationPratGroups = new msPeopleRelations;
       $relationPratGroups->setToID($p['user']['id']);
       $relationPratGroups->setRelationType('relationPraticienGroupe');
