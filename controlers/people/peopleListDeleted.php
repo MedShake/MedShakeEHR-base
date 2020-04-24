@@ -33,7 +33,7 @@ $debug='';
 if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true' ) {
   $where=' and p.fromID='.$p['user']['id'];
 
-} elseif($this->_restricDossiersGroupes=='true') {
+} elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
   // fratrie praticiens
   $frat = new msPeopleRelations;
   $frat->setToID($p['user']['id']);
