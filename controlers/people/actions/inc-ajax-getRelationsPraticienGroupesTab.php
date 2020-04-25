@@ -43,4 +43,18 @@ $liensPrat->setRelationType('relationPraticienGroupe');
 $groupes = $liensPrat->getRelations(['groupname', 'city','country']);
 msTools::array_unatsort_by('groupname', $groupes);
 
+if($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+  $userGroups = new msPeopleRelations();
+  $userGroups->setToID($p['user']['id']);
+  $userGroups->setRelationType('relationPraticienGroupe');
+  if($userGroups = $userGroups->getRelations()) {
+    $intersection=array_intersect(array_column($groupes, 'peopleID'), array_column($userGroups, 'peopleID'));
+    foreach($groupes as $k=>$v) {
+      if(!in_array($v['peopleID'], $intersection)) {
+        unset($groupes[$k]);
+      }
+    }
+  }
+}
+
 exit(json_encode(array_merge($groupes)));

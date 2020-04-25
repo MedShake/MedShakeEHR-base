@@ -314,7 +314,7 @@
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-between">
-              <div>Groupes intégrés par ce praticien</div>
+              <div>Groupes intégrés par ce praticien {% if config.droitGroupePeutVoirTousGroupes != 'true' %}(Vous n'êtes autorisé à voir que les groupes auxquels vous êtes intégré){% endif %}</div>
               <div>
                 {% if config.droitDossierPeutAssignerPropresGroupesPraticienFils == 'true' and  page.proDataID != user.id %}
                 <form class="ajaxForm reload assignMyOwnGroups d-none" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/autoAssignOwnGroupsToUser/" method="post" >

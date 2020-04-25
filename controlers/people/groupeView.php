@@ -45,6 +45,18 @@ if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGe
   return;
 }
 
+if($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+  $userGroups = new msPeopleRelations();
+  $userGroups->setToID($p['user']['id']);
+  $userGroups->setRelationType('relationPraticienGroupe');
+  if($userGroups = $userGroups->getRelations()) {
+    if(!in_array($p['page']['groupeDataID'], array_column($userGroups,'peopleID'))) {
+      $template = "forbidden";
+      return;
+    }
+  }
+}
+
 $p['page']['groupeData']=$groupe->getLabelForSimpleAdminDatas($groupe->getSimpleAdminDatasByName());
 
 // création exportID si manquant
