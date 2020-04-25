@@ -303,8 +303,9 @@
               Groupes
             </div>
             <div>
-              <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapseGroupeGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
-
+              {% if page.proData.canModifyGroups %}
+                <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapseGroupeGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+              {% endif %}
               {% if user.rank == 'admin' %}
               <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.proDataID }}/" title="Historique">
                 <i class="fas fa-history fa-fw"></i>
@@ -316,7 +317,7 @@
             <div class="d-flex justify-content-between">
               <div>Groupes intégrés par ce praticien {% if config.droitGroupePeutVoirTousGroupes != 'true' %}(Vous n'êtes autorisé à voir que les groupes auxquels vous êtes intégré){% endif %}</div>
               <div>
-                {% if config.droitDossierPeutAssignerPropresGroupesPraticienFils == 'true' and  page.proDataID != user.id %}
+                {% if page.proData.canModifyGroups and page.proDataID != user.id %}
                 <form class="ajaxForm reload assignMyOwnGroups d-none" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/autoAssignOwnGroupsToUser/" method="post" >
                   <input type="hidden" name="proID" value="{{ page.proDataID }}">
                   <button type="submit" class="btn btn-sm btn-danger">
