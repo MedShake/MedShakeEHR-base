@@ -84,6 +84,13 @@ if($p['config']['optionGeActiverGroupes'] == 'true') {
     $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
   }
 
+  // vérifier le droit de gérer les groupes du prat
+  if($p['user']['rank'] == 'admin' or ($patient->getFromID() == $p['user']['id'] and $p['config']['droitDossierPeutAssignerPropresGroupesPraticienFils'] == 'true')) {
+    $p['page']['proData']['canModifyGroups'] = true;
+  } else {
+    $p['page']['proData']['canModifyGroups'] = false;
+  }
+
 }
 
 //Poste admin registre connus
