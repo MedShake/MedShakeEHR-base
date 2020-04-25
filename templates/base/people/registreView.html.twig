@@ -160,7 +160,7 @@
         </div>
       </div>
       <div class="card-body">
-        Groupes participant au registre
+        Groupes participant au registre {% if config.droitGroupePeutVoirTousGroupes != 'true' %} (Vous n'êtes autorisé à voir que les groupes auxquels vous êtes intégré){% endif %}
 
         {% if config.droitRegistrePeutGererGroupes == 'true' %}
         <div class="collapseGroupesGestion collapse">
