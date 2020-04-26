@@ -62,7 +62,7 @@ if($p['page']['porp'] == 'pro') {
 }
 
 // si administrateur on injecte la possibilité de chercher par identifiant d'export
-if (msUser::checkUserIsAdmin() and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
+if ((msUser::checkUserIsAdmin() or $p['config']['droitDossierPeutRechercherParPeopleExportID'] == 'true') and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
   $addExportIdSearch = ", '".msData::getTypeIDFromName('peopleExportID')."'";
 } else {
   $addExportIdSearch = '';
