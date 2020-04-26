@@ -29,5 +29,6 @@ else
 fi
 cp utils/ehr-up.sh ~/ehr/
 cp utils/ehr-down.sh ~/ehr/
+cp -n docker-compose.yml ~/ehr/
 echo "$(tput setaf 10)DONE$(tput sgr0) File utils copied"
 
