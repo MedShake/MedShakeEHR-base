@@ -542,7 +542,7 @@ class msPeople
  * @return array Array multi.
  */
     public function getToday() {
-      return $this->_getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
+      return $this->getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
     }
 
 /**
@@ -551,7 +551,7 @@ class msPeople
  */
     public function getHistorique() {
       $tab=[];
-      if($data = $this->_getHistoriqueData()) {
+      if($data = $this->getHistoriqueData()) {
         foreach ($data as $v) {
             $tab[$v['creationYear']][]=$v;
         }
@@ -565,7 +565,7 @@ class msPeople
  * @return array          data historique de l'objetID
  */
     public function getHistoriqueObjet($objetID) {
-      if($data = $this->_getHistoriqueData(0, 1, '', (array)$objetID)) {
+      if($data = $this->getHistoriqueData(0, 1, '', (array)$objetID)) {
         return $data[0];
       } else {
         return [];
@@ -578,7 +578,7 @@ class msPeople
  * @return array            data historique
  */
     public function getHistoriqueInstance($instance) {
-      if($data = $this->_getHistoriqueData(0, 0, '', [], $instance)) {
+      if($data = $this->getHistoriqueData(0, 0, '', [], $instance)) {
         foreach ($data as $v) {
             $tab[$v['creationYear']][]=$v;
         }
@@ -588,15 +588,18 @@ class msPeople
       }
     }
 
+
 /**
  * Obtenir un historique suivant paramètres
  * @param  integer $limitStart      premier argument pour limit sql
  * @param  integer $limitNb         second argument pour limit sql
  * @param  string  $datesPrecisions string sql pour restriction plage dates
  * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
+ * @param  int     $instance        instance spécifique
+ * @param  int     $dataGroups      restriction à certains groupes
  * @return array                   data d'historique
  */
-    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0) {
+    public function getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0, $dataGroups=[]) {
       global $p;
 
       if (!is_numeric($this->_toID)) {
@@ -613,6 +616,13 @@ class msPeople
         $whereInstance = " and p.instance = '".$instance."'";
       } else {
         $whereInstance = '';
+      }
+
+      if(!empty($dataGroups)) {
+        $dataGroups = msSQL::cleanArray($dataGroups);
+        $whereDataGroups = " and t.groupe in ('".implode("', '", $dataGroups)."') ";
+      } else {
+        $whereDataGroups = '';
       }
 
       if(isset($objetIDs) and is_array($objetIDs) and !empty($objetIDs)) {
@@ -657,7 +667,7 @@ class msPeople
         ".$lapExtCompSql."
         or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
         or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql." ".$whereInstance."
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."' ".$objetIDsSql." ".$whereInstance." ".$whereDataGroups."
       group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
       order by p.creationDate desc ".$limitSql);
     }
