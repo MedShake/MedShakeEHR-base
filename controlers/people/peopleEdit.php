@@ -59,11 +59,10 @@ if ($p['page']['porp']=='patient') {
 
     //vérifier les droits
     $droits = new msPeopleDroits($p['user']['id']);
-    if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
+    if(!$droits->checkUserCanSeePatientData($match['params']['patient'])) {
       $template="forbidden";
       return;
     }
-
 
 } elseif ($p['page']['porp']=='pro') {
     $template="proEdit";
