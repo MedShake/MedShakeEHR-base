@@ -43,7 +43,7 @@ class msPeopleRelationsDroits extends msPeopleRelations
  * on remonte aux registres via patientId -> groupes patient -> registres
  * @return array array peopleId=>data
  */
-      public function getRegistresPatient($onlyActiv = false) {
+      public function getRegistresPatient($onlyActiv = false, $sortBy='peopleID') {
         $this->setRelationType('relationPatientGroupe');
         $lRegistres=[];
         if($groupes = $this->getRelations()) {
@@ -57,6 +57,7 @@ class msPeopleRelationsDroits extends msPeopleRelations
                   $lRegistres[$registreData['peopleID']]=$registreData;
                 }
               }
+              msTools::array_unatsort_by($sortBy, $lRegistres);
             }
           }
         }
