@@ -34,7 +34,7 @@ $patient->setToID($_POST['patientID']);
 
 //vérifier les droits
 $droits = new msPeopleDroits($p['user']['id']);
-if(!$droits->checkUserCanSeePatientsUser($patient->getFromID())) {
+if(!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
   $template="forbidden";
   return;
 }

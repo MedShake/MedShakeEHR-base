@@ -110,4 +110,50 @@ class msPeopleDroits extends msPeople
 
   }
 
+/**
+ * Vérifier si l'utilisateur (passé via construct toId) peut voir les datas du patient
+ * @param  int $patientID patientID
+ * @return bool            true/false
+ */
+  public function checkUserCanSeePatientData($patientID) {
+    if (!isset($patientID) or !is_numeric($patientID)) {
+        throw new Exception('PatientID is not numeric');
+    }
+
+    if($this->checkIsAdmin()) return true;
+
+    global $p;
+
+    $patientg = new msPeopleRelations;
+    $patientg->setToID($patientID);
+
+    if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true' and $patientg->getFromID() == $this->_toID) {
+      return true;
+    } elseif($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true' and $patientg->getFromID() != $this->_toID) {
+      return false;
+    } elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+      // groupes patient
+      $patientg->setRelationType('relationPatientGroupe');
+      if($patientg = $patientg->getRelations()) {
+        $patientg  = array_column($patientg, 'peopleID');
+      }
+
+      // groupes user
+      $pratg = new msPeopleRelations;
+      $pratg->setToID($this->_toID);
+      $pratg->setRelationType('relationPraticienGroupe');
+      if($pratg = $pratg->getRelations()) {
+        $pratg  = array_column($pratg, 'peopleID');
+      }
+
+      if(!empty(array_intersect($patientg, $pratg))) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
+
+  }
+
 }
