@@ -50,18 +50,16 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     //support
     $supportID=$patient->createNewObjetByTypeName('docPorteur',  $corps);
 
-    //non fonctionnel car non supporté par l'uploader ...
-    // if(isset($_POST['titre'])) {
-    //   echo $_POST['titre'];
-    //   msObjet::setTitleObjet($supportID, $_POST['titre']);
-    // }
-
     //nom original
     $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
     //type
     $patient->createNewObjetByTypeName('docType', $ext, $supportID);
     //titre
-    $patient->setTitleObjet($supportID, $fichier['name']);
+    if(isset($_POST['titre']) and !empty(trim($_POST['titre']))) {
+      $patient->setTitleObjet($supportID, $_POST['titre']);
+    } else {
+      $patient->setTitleObjet($supportID, $fichier['name']);
+    }
     //folder
     $folder=msStockage::getFolder($supportID);
 
