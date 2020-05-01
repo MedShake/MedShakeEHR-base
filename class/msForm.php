@@ -736,6 +736,9 @@ class msForm
                         if (preg_match('#tabindex=([0-9]+)#i', $h, $match)) {
                             $type['tabindex']=$match[1];
                         }
+                        if (preg_match('#maxlength=([0-9]+)#i', $h, $match)) {
+                            $type['maxlength']=$match[1];
+                        }
                     }
 
                     if(isset($_SESSION['form'][$this->_formIN]['validationErrors'])) {

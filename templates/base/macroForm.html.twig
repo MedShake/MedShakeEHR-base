@@ -127,6 +127,7 @@
 		{% if v.input.readonly %} readonly {% endif %}
     {% if v.input.required == 'required' %} required {% endif %}
 		{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
+		{% if v.input.maxlength is not empty %} maxlength="{{ v.input.maxlength }}" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
 		{{ v.input.add }} />
@@ -485,6 +486,7 @@
 										'defaut' : el.value.formValues,
 										'required' : el.value.required,
 										'tabindex' : el.value.tabindex,
+										'maxlength' : el.value.maxlength,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'datatypeid' : el.value.id,
