@@ -596,10 +596,11 @@ class msPeople
  * @param  string  $datesPrecisions string sql pour restriction plage dates
  * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
  * @param  int     $instance        instance spécifique
- * @param  int     $dataGroups      restriction à certains groupes
+ * @param  array   $dataGroups      restriction à certains groupes
+ * @param  array   $critDataTypeAnnexes      critères sur data type [name=>valeur]
  * @return array                   data d'historique
  */
-    public function getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0, $dataGroups=[]) {
+    public function getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0, $dataGroups=[], $critDataTypeAnnexes=[]) {
       global $p;
 
       if (!is_numeric($this->_toID)) {
@@ -648,6 +649,20 @@ class msPeople
         $lapExtCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapExtOrdonnance']."') ";
       }
 
+      // crit Annexes sur valeur data type
+      $critAnLeftJoin=[];
+      $critAnWhere=[];
+      if(!empty($critDataTypeAnnexes)) {
+        $i=1;
+        foreach($critDataTypeAnnexes as $k=>$v) {
+          $critAnLeftJoin[]="left join objets_data as critA".$i." on critA".$i.".instance = p.id";
+          $critAnWhere[]="critA".$i.".value = '".msSQL::cleanVar($v)."'";
+        }
+      }
+      $critAnLeftJoin=implode("\n", $critAnLeftJoin);
+      $critAnWhere=implode(" and ", $critAnWhere);
+      if(!empty($critAnWhere)) $critAnWhere = ' and '.$critAnWhere;
+
       return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
       CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
       from objets_data as p
@@ -660,6 +675,7 @@ class msPeople
       left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
       left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
       left join forms as f on f.internalName=t.formValues
+      ".$critAnLeftJoin."
       where ((t.groupe in ('typeCS', 'courrier') and t.cat != '".$catIdHorsHistoriques."' )
         or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
         or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
@@ -667,7 +683,7 @@ class msPeople
         ".$lapExtCompSql."
         or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
         or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."' ".$objetIDsSql." ".$whereInstance." ".$whereDataGroups."
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."' ".$objetIDsSql." ".$whereInstance." ".$whereDataGroups.$critAnWhere."
       group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
       order by p.creationDate desc ".$limitSql);
     }
