@@ -873,7 +873,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('dicomWorkingDirectory', 'default', '0', '', 'DICOM', 'dossier', 'répertoire de travail local où on peut rapatrier des images à partir d\'Orthanc pour les parcourir ou les traiter (pdf, zip ...). Utiliser en général le même répertoire que celui indiqué dans workingDirectory des paramètres généraux. Doit être en zone web accessible', ''),
 ('droitDossierPeutAssignerPropresGroupesPraticienFils', 'default', '0', '', 'Droits', 'true/false', 'si true, peut assigner ses propres appartenances aux groupes à un praticien créé par lui-même', 'false'),
 ('droitDossierPeutCreerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des dossiers praticiens', 'true'),
-('droitDossierPeutRechercherParPeopleExportID', 'default', '0', '', 'Droits', 'true/false', 'si true, autorisation à rechercher par peopleExportID', ''),
+('droitDossierPeutRechercherParPeopleExportID', 'default', '0', '', 'Droits', 'true/false', 'si true, autorisation à rechercher par peopleExportID', 'false'),
 ('droitDossierPeutRetirerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut retirer le statut praticien à un dossier (retour à patient, réciproque de droitDossierPeutCreerPraticien)', 'true'),
 ('droitDossierPeutSupPatient', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers patients (non définitivement)', 'true'),
 ('droitDossierPeutSupPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers praticiens (non définitivement)', 'true'),
