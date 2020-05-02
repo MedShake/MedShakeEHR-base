@@ -68,17 +68,19 @@
   {% endif %}
 
   <div class="row">
-    <div class="col {% if page.userParams|length > 0 %}offset-2{% endif %}"">
-      <form class="form-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserApplyTemplate/" method="post">
-        <input type="hidden" name="userID" value="{{ page.userID }}">
-        <select class="custom-select my-1 mr-sm-2" name="p_template">
-          {% for val in page.userTemplates %}
-            <option value="{{ val }}" {% if val == config.optionGeLoginCreationDefaultTemplate %}selected="selected"{% endif %}>{{ val }}</option>
-          {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-outline-primary ">Appliquer ce template de droits à l'utilisateur</button>
-      </form>
-    </div>
+    {% if page.userTemplates|length > 0 %}
+      <div class="col {% if page.userParams|length > 0 %}offset-2{% endif %}">
+        <form class="form-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configUserApplyTemplate/" method="post">
+          <input type="hidden" name="userID" value="{{ page.userID }}">
+          <select class="custom-select my-1 mr-sm-2" name="p_template">
+            {% for val in page.userTemplates %}
+              <option value="{{ val }}" {% if val == config.optionGeLoginCreationDefaultTemplate %}selected="selected"{% endif %}>{{ val }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-outline-primary ">Appliquer ce template de droits à l'utilisateur</button>
+        </form>
+      </div>
+    {% endif %}
     <div class="col text-right">
       <button class="btn btn-primary addParam" type="button" data-toggle="modal" data-target="#modalAddParam"><i class="fas fa-plus"></i> Nouveau paramètre</button>
     </div>
