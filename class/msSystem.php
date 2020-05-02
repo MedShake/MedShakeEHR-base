@@ -34,7 +34,7 @@ class msSystem
  * @return string normal / maintenance
  */
   public static function getSystemState() {
-    return msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe = 'system' limit 1");
+    return msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE name='state' and groupe = 'system' limit 1");
   }
 
 /**
@@ -85,7 +85,7 @@ class msSystem
       $routes[] = 'login';
       if(isset($p['user']['rank']) and $p['user']['rank'] == 'admin') $routes[] = 'configuration';
 
-      $inclusionsRules=Spyc::YAMLLoad($p['homepath'].'config/routes/routesInclusionRules.yml');
+      $inclusionsRules=yaml_parse_file($p['homepath'].'config/routes/routesInclusionRules.yml');
       if(!empty($inclusionsRules)) {
         foreach($inclusionsRules as $rule => $f) {
           if(isset($p['config'][$rule]) and $p['config'][$rule] == 'true') $routes[] = $f;
@@ -97,7 +97,7 @@ class msSystem
     foreach($routes as $route) {
       $file = $p['homepath'].'config/routes/routes-'.$route.'.yml';
       if(is_file($file)) {
-        $routes=Spyc::YAMLLoad($file);
+        $routes=yaml_parse_file($file);
         $router->addRoutes($routes);
       }
     }

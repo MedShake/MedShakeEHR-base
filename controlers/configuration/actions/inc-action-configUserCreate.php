@@ -65,7 +65,7 @@ if (isset($_POST['p_username']) and isset($_POST['p_password'])) {
         $directory=$homepath.'config/userTemplates/';
         $fichier=basename($_POST['p_template']).'.yml';
         if(is_file($directory.$fichier)) {
-          $dataTp = Spyc::YAMLLoad($directory.$fichier);
+          $dataTp = yaml_parse_file($directory.$fichier);
           if(is_array($dataTp) and !empty($dataTp)) {
             foreach($dataTp as $k=>$v) {
               if(array_key_exists($k, $p['config'])) {

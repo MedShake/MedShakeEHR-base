@@ -411,7 +411,7 @@ class msForm
           throw new Exception('formID is not defined');
       }
       if($options = $this->getFormRawData(['options'])['options']) {
-        return Spyc::YAMLLoad($options);
+        return yaml_parse($options);
       } else {
         return [];
       }

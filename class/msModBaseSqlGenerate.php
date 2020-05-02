@@ -140,7 +140,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
     'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
     'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
-    'designTopMenuSections'=>"agenda\npatients\npraticiens\ngroupes\nregistres\ncompta\ninbox\ndropbox\ntransmissions\noutils",
+    'designTopMenuSections'=>"- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils",
     'optionGeActiverAgenda'=>'true',
     'optionGeActiverCompta'=>'true',
     'optionGeActiverInboxApicrypt'=>'true',
