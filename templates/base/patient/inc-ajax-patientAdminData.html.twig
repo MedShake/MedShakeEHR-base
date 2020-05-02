@@ -49,7 +49,9 @@
         {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
           <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
         {% endif %}
-        {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        <span id="patientBirthdate" data-birthYear="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['birthYear']|e }}">
+          {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        </span>
         -
       {% endif %}
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
@@ -59,7 +61,9 @@
         <span title="{{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['deathAge']['ageDisplay']|e }}</span>
       {% else %}
         {# age #}
-        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
+        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">
+          {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+        </span>
 
       {% endif %}
        -
