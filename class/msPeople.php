@@ -812,6 +812,7 @@ class msPeople
 
           return $this->_ageFormats = array(
             'birthdate'=>$birthdate,
+            'birthYear'=>$dtNaissance->format('Y'),
             'ageDisplay'=>$ageDisplay,
             'ageTotalDays'=>$interval->format('%a'),
             'ageTotalYears'=>$interval->format('%y'),
