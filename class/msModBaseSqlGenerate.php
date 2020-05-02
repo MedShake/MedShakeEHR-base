@@ -166,6 +166,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionDossierPatientActiverGestionALD'=>'true',
     'optionDossierPatientActiverCourriersCertificats'=>'true',
     'optionDossierPatientInhiberHistoriquesParDefaut'=>'false',
+    'droitDossierPeutRechercherParPeopleExportID'=>'false',
   ];
 
   protected function _getSpecifSql() {
