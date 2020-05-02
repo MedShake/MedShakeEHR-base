@@ -60,6 +60,16 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     } else {
       $patient->setTitleObjet($supportID, $fichier['name']);
     }
+
+    // docRegistre
+    if($p['config']['optionGeActiverRegistres'] == 'true' and isset($_POST['docRegistre']) and is_numeric($_POST['docRegistre'])) {
+      $registre = new msPeople;
+      $registre->setToID($_POST['docRegistre']);
+      if($registre->getType() == 'registre') {
+        $patient->createNewObjetByTypeName('docRegistre', $_POST['docRegistre'], $supportID);
+      }
+    }
+
     //folder
     $folder=msStockage::getFolder($supportID);
 
