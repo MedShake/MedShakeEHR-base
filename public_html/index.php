@@ -181,9 +181,11 @@ if (isset($template)) {
       }
 
       // patients of the day
-      $events = new msAgenda();
-      if(!isset($p['page'])) $p['page']=[];
-      $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
+      if($p['config']['optionGeActiverAgenda'] == 'true') {
+        $events = new msAgenda();
+        if(!isset($p['page'])) $p['page']=[];
+        $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
+      }
 
       // crédits SMS
       if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
