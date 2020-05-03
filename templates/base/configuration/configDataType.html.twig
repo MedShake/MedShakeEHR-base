@@ -147,6 +147,7 @@
         <th>Label</th>
         <th>Utilisé</th>
 				{% if page.groupe == "typecs" and config.optionGeActiverRegistres == 'true' %}<th>Registre</th>{% elseif page.groupe not in ["courrier"] %}<th>Validation</th>{% endif %}
+        {% if page.groupe == "typecs" %}<th>Itération possible</th>{% endif %}
 				<th>{{ labelFormType }}</th>
 				<th>Vie</th>
 				<th>Description</th>
@@ -164,6 +165,7 @@
         {% if page.groupe == "typecs" and config.optionGeActiverRegistres == 'true' %}
         <td>{{ page.registresPossibles[w.validationRules] }}</td>
 				{% elseif page.groupe not in ["courrier"] %}<td>{{ w.validationRules }}</td>{% endif %}
+        {% if page.groupe == "typecs" %}<td>{{ w.validationErrorMsg }}</td>{% endif %}
 				<td>
           {% if page.groupe == "typecs" and w.formType == 'select' %}
             oui
@@ -363,6 +365,25 @@
 						'label' : {
 							'position' : 'before',
 							'label' : 'Message erreur de validation',
+						}
+					}) }}
+					</div>
+				{% endif %}
+
+        {% if page.groupe == "typecs" %}
+					<div class="form-group">
+					{{ f.input ({
+						'input' : {
+							'type' : 'text',
+							'name' : 'validationErrorMsg',
+							'id' : 'validationErrorMsgID',
+							'placeholder' : '',
+							'class' : 'form-control',
+							'autocomplete' : 'off'
+						},
+						'label' : {
+							'position' : 'before',
+							'label' : 'Nombre maximal d\'itérations',
 						}
 					}) }}
 					</div>
