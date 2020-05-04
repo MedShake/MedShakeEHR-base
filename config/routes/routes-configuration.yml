@@ -44,6 +44,7 @@ configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
 configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
 configBackups: ['GET', '/configuration/configBackups/', 'configuration/configBackups']
 configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
+configSmtpTest: ['GET', '/configuration/smtptest/', 'configuration/configSmtpTest']
 
 # Configuration Agenda
 configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
