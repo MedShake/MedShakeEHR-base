@@ -44,6 +44,7 @@ $liensPrat->setToID($registreID);
 
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationGroupeRegistre');
+$liensPrat->setReturnedPeopleTypes(['groupe']);
 $groupes = $liensPrat->getRelations(['groupname', 'city','country']);
 msTools::array_unatsort_by('groupname', $groupes);
 

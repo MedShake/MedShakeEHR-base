@@ -40,6 +40,7 @@ $liensPrat->setToID($patientID);
 
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationPatientGroupe');
+$liensPrat->setReturnedPeopleTypes(['groupe']);
 $groupes = $liensPrat->getRelations(['groupname', 'city','country']);
 msTools::array_unatsort_by('groupname', $groupes);
 
