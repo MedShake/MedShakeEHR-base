@@ -668,7 +668,7 @@ class msForm
                             'value'=>$match[1]
                         );
                 //label
-              } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
+                } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
                     if(!isset($match[3])) $match[3]='';
                     if(empty(trim($match[1]))) $match[1]='&nbsp;';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
@@ -784,6 +784,18 @@ class msForm
                             if (preg_match('#max=([0-9]+)#i', $h, $match)) {
                                 $type['max']=$match[1];
                             } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
+                                $type['min']=$match[1];
+                            } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
+                                $type['step']=$match[1];
+                            }
+                        }
+
+                    //traitement spécifique aux dates
+                    } elseif ($type['formType']=="number" or $type['formType']=="date") {
+                        foreach ($bloc as $h) {
+                            if (preg_match('#max=([0-9\-]+)#i', $h, $match)) {
+                                $type['max']=$match[1];
+                            } elseif (preg_match('#min=([0-9\-]+)#i', $h, $match)) {
                                 $type['min']=$match[1];
                             } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
                                 $type['step']=$match[1];
