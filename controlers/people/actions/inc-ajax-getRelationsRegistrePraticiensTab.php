@@ -40,6 +40,7 @@ $liensPrat->setToID($registreID);
 
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationRegistrePraticien');
+$liensPrat->setReturnedPeopleTypes(['pro']);
 $praticiens = $liensPrat->getRelations(['identite','titre']);
 
 exit(json_encode(array_merge($praticiens)));
