@@ -146,6 +146,12 @@
 			</div>
 		{% endif %}
 
+		{% if v.label.helpTxt is not empty %}
+			<small {% if v.input.id %} id="{{ v.input.id }}HelpTxt"{% endif %} class="form-text text-muted">
+				{{ v.label.helpTxt }}
+			</small>
+		{% endif %}
+
 	{% endif %}
 {% endmacro %}
 
@@ -219,6 +225,12 @@
 
 	{% if v.select.after %}
 		{{ v.select.after }}
+	{% endif %}
+
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
 	{% endif %}
 
 {% endmacro %}
@@ -310,6 +322,12 @@
 		{{ v.select.after }}
 	{% endif %}
 
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
+	{% endif %}
+
 {% endmacro %}
 
 
@@ -355,6 +373,12 @@
 		{{ v.select.after }}
 	{% endif %}
 
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
+	{% endif %}
+
 {% endmacro %}
 
 
@@ -391,6 +415,12 @@
 
 	{% if v.textarea.after %}
 		{{ v.textarea.after }}
+	{% endif %}
+
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.textarea.id %} id="{{ v.textarea.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
 	{% endif %}
 
 {% endmacro %}
@@ -503,6 +533,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
@@ -554,6 +585,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
@@ -580,6 +612,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
@@ -636,6 +669,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								<span id="id_{{ el.value.internalName }}_idHelp" class="help-block"></span>

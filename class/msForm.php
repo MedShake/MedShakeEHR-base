@@ -733,6 +733,9 @@ class msForm
                         if (preg_match('#plusg={(.*)}#i', $h, $match)) {
                             $type['plusg']=$match[1];
                         }
+                        if (preg_match('#helpTxt={(.+)}#i', $h, $match)) {
+                            $type['helpTxt']=$match[1];
+                        }
                         if (preg_match('#tabindex=([0-9]+)#i', $h, $match)) {
                             $type['tabindex']=$match[1];
                         }
