@@ -727,22 +727,22 @@ class msForm
                         if (preg_match('#^classLabel={(.*)}$#i', $h, $match)) {
                             $type['classLabel'].=' '.$match[1];
                         }
-                        if (preg_match('#plus={(.*)}#i', $h, $match)) {
+                        if (preg_match('#^plus={(.*)}#i', $h, $match)) {
                             $type['plus']=$match[1];
                         }
-                        if (preg_match('#plusg={(.*)}#i', $h, $match)) {
+                        if (preg_match('#^plusg={(.*)}#i', $h, $match)) {
                             $type['plusg']=$match[1];
                         }
-                        if (preg_match('#label={(.+)}#i', $h, $match)) {
+                        if (preg_match('#^label={(.+)}#i', $h, $match)) {
                             $type['label']=$match[1];
                         }
-                        if (preg_match('#helpTxt={(.+)}#i', $h, $match)) {
+                        if (preg_match('#^helpTxt={(.+)}#i', $h, $match)) {
                             $type['helpTxt']=$match[1];
                         }
-                        if (preg_match('#tabindex=([0-9]+)#i', $h, $match)) {
+                        if (preg_match('#^tabindex=([0-9]+)#i', $h, $match)) {
                             $type['tabindex']=$match[1];
                         }
-                        if (preg_match('#maxlength=([0-9]+)#i', $h, $match)) {
+                        if (preg_match('#^maxlength=([0-9]+)#i', $h, $match)) {
                             $type['maxlength']=$match[1];
                         }
                     }
