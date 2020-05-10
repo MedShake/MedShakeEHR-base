@@ -420,6 +420,9 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       dataType: "json",
       success: function(data) {
         glow('success', $(source));
+        if($(source).hasClass('reloadAfterGlow')) {
+          window.location.reload();
+        }
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');
@@ -450,6 +453,9 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
       dataType: "json",
       success: function(data) {
         glow('success', $(source));
+        if($(source).hasClass('reloadAfterGlow')) {
+          window.location.reload();
+        }
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');
