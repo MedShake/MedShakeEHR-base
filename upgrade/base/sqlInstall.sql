@@ -566,7 +566,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='contact');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('admin', 'emailApicrypt', 'adresse mail apicrypt', 'Email apicrypt', 'Email apicrypt', 'valid_email', '', 'email', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'emailApicrypt', 'adresse mail apicript', 'Email apicrypt', 'Email apicrypt', 'valid_email', '', 'email', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'faxPro', 'fax professionel', 'Fax professionnel', 'FAx pro', 'phone', '', 'tel', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'homePhone', '0x xx xx xx xx', 'Téléphone domicile', 'Téléphone du domicile de la forme 0x xx xx xx xx', 'phone', 'Le numéro de téléphone du domicile n\'est pas correct', 'tel', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'mobilePhone', 'mobile: 0x xx xx xx xx', 'Téléphone mobile', 'Numéro de téléphone commençant par 06 ou 07', 'mobilphone', 'Le numéro de téléphone mobile est incorrect', 'tel', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
@@ -937,6 +937,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('optionGeAdminActiverLiensRendreUtilisateur', 'default', '0', '', 'Options', 'true/false', 'si true, l\'administrateur peut transformer des patients ou praticiens en utilisateur via les listings publiques', 'false'),
 ('optionGeCreationAutoPeopleExportID', 'default', '0', '', 'Options', 'true/false', 'si true, création automatique d\'un peopleExportID', 'true'),
 ('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false'),
+('optionGeExportDataConsentementOff', 'default', '0', '', 'Options', 'true/false', 'si true, exporter les données avec consentement non accepté ou retiré', 'true'),
 ('optionGeExportPratListSelection', 'default', '0', '', 'Options', 'true/false', 'si true, sélection possible des datas à exporter par liste praticiens, sinon auto déterminée par droits utilisateur courant', 'true'),
 ('optionGeLogin2FA', 'default', '0', '', 'Login', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false'),
 ('optionGeLoginCreationDefaultModule', 'default', '0', '', 'Login', 'texte', 'module par défaut pour création nouvel utilisateur', 'base'),
