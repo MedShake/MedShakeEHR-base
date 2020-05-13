@@ -38,6 +38,11 @@ $p['page']['form']=$form->getForm();
 if(!empty($p['page']['form'])) {
   $sqlGen = new msSqlGenerate;
   $sqlGen=$sqlGen->getSqlForForm($form->getFormIN());
+
+  $sqlGenUpdate = new msSqlGenerate;
+  $sqlGenUpdate->setAddUpdateOnDuplicate(true);
+  $sqlGenUpdate=$sqlGenUpdate->getSqlForForm($form->getFormIN());
+
   $basicTemplateCode=$form->getFlatBasicTemplateCode();
 
   $html = new msGetHtml;
@@ -54,5 +59,6 @@ if(!empty($p['page']['form'])) {
 exit(json_encode(array(
   'htmlFormPreview'=>$html,
   'basicTemplateCode'=>$basicTemplateCode,
-  'sqlGen'=>$sqlGen
+  'sqlGen'=>$sqlGen,
+  'sqlGenUpdate'=>$sqlGenUpdate
 )));
