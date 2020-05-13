@@ -114,6 +114,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeExportPratListSelection', 'default', '0', '', 'Options', 'true/false', 'si true, sélection possible des datas à exporter par liste praticiens, sinon auto déterminée par droits utilisateur courant', 'true');
 
+-- configuration : exporter aussi les datas des patients avec consentement off
+
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionGeExportDataConsentementOff', 'default', '0', '', 'Options', 'true/false', 'si true, exporter les données avec consentement non accepté ou retiré', 'true');
+
 -- configuration droitExportPeutExporterAutresData -> droitExportPeutExporterToutesData
 
 update `configuration` set name = 'droitExportPeutExporterToutesDataGroupes', description ='si true, peut exporter les datas générées par les autres praticiens de ses groupes'  WHERE `name` LIKE 'droitExportPeutExporterAutresData';
