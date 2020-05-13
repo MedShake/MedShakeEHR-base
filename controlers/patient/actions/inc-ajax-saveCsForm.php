@@ -47,6 +47,10 @@ if ($validation === false) {
 
 } else {
 
+    // class et méthodes du module qui viennent agie en complément.
+    $class='msMod'.ucfirst($form->getFormUniqueRawField($formIN, 'module')).'Forms';
+    $method_post_generic='doPostPostFormGeneric';
+
     // construction du PDF immédiatement après le retour du JS
     $optionsFormulaire=$form->getFormOptions();
     if(isset($optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit']) and $optionsFormulaire['optionsPdf']['buildPdfOnFormSubmit'] == true) {
@@ -147,6 +151,11 @@ if ($validation === false) {
         }
     }
 
+    // méthode spécifique au module
+    if(method_exists($class,$method_post_generic)) {
+      $formModule = new $class;
+      $formModule->$method_post_generic();
+    }
 
     unset($_SESSION['form'][$formIN]);
 
