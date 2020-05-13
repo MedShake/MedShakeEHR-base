@@ -113,6 +113,8 @@ class msExportData
 
   private $_canExportAll=false;
 
+  private $_patientsIncludedInRegistry;
+
 /**
  * Définir les instance du formulaire à exporter
  * @param int $dataTypeID ID objet
@@ -366,13 +368,9 @@ class msExportData
       }
 
       $toIdwhere = '';
-      if(!empty($p['config']['optionGeActiverRegistres'] == 'true') and isset($this->_registreID)) {
-        $relation = new msPeopleRelations;
-        $relation->setToID($this->_registreID);
-        $relation->setRelationType('relationRegistrePatient');
-        if($inclusRegistre = $relation->getRelations([], [], ['inclus'])) {
-          $inclusRegistre = array_column($inclusRegistre, 'peopleID');
-          $toIdwhere = " and toID in ('".implode("', '", $inclusRegistre)."') ";
+      if($p['config']['optionGeActiverRegistres'] == 'true' and $p['config']['optionGeExportDataConsentementOff'] != 'true' and isset($this->_registreID)) {
+        if(!empty($this->_getAllPatientsIncludedInRegistry())) {
+          $toIdwhere = " and toID in ('".implode("', '", $this->_patientsIncludedInRegistry)."') ";
         }
       }
 
@@ -473,11 +471,39 @@ class msExportData
     }
 
 /**
+ * Obtenir les peopleID des patients avec consentement positif au registre
+ * @return array tableau des peopleID
+ */
+    private function _getAllPatientsIncludedInRegistry() {
+      global $p;
+      if(isset($this->_patientsIncludedInRegistry)) return $this->_patientsIncludedInRegistry;
+      if($p['config']['optionGeActiverRegistres'] == 'true' and isset($this->_registreID)) {
+        $relation = new msPeopleRelations;
+        $relation->setToID($this->_registreID);
+        $relation->setRelationType('relationRegistrePatient');
+        if($inclusRegistre = $relation->getRelations([], [], ['inclus'])) {
+          return $this->_patientsIncludedInRegistry = array_column($inclusRegistre, 'peopleID');
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
+
+    }
+
+/**
  * Obtenir toutes les données formulaire consolidées avec data prat et patient
  * @return array données des formulaires consolidées
  */
     private function _getAllObjetsAndChildsData()
     {
+      global $p;
+
+      if($p['config']['optionGeActiverRegistres'] == 'true' and isset($this->_registreID)) {
+        $this->_getAllPatientsIncludedInRegistry();
+      }
+
       $tab=[];
       $data = msSQL::sql2tabKey("select o.id, o.value, o.instance, o.typeID, o.fromID, o.toID, o.creationDate, o.registerDate, o.updateDate, t.name
       from objets_data as o
@@ -492,6 +518,11 @@ class msExportData
             $tab[$k]['date_saisie']=$v['registerDate'];
             $tab[$k]['date_modification']=$v['updateDate'];
             if(isset($this->_pratAdminData[$v['fromID']])) $tab[$k]=$tab[$k]+$this->_pratAdminData[$v['fromID']];
+            if(isset($this->_patientsIncludedInRegistry) and in_array($v['toID'], $this->_patientsIncludedInRegistry)) {
+              $tab[$k]['patient_consentementRegistre']='oui';
+            } else {
+              $tab[$k]['patient_consentementRegistre']='non';
+            }
             $tab[$k]=$tab[$k]+$this->_getPatientAdminData($v['toID']);
           } else {
             if($this->_optionSelect=="selectValue" and isset($this->_tabCorrespondances['data_'.$v['name']][$v['value']])) {

@@ -47,7 +47,7 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 
     if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
-    $sortTab=array('id','parent_id','patient_peopleExportID', 'patientGroupe_peopleExportID', 'praticien_peopleExportID', 'praticienGroupe_peopleExportID', 'date_saisie', 'date_effective', 'date_modification');
+    $sortTab=array('id','parent_id','patient_peopleExportID', 'patient_consentementRegistre', 'patientGroupe_peopleExportID', 'praticien_peopleExportID', 'praticienGroupe_peopleExportID', 'date_saisie', 'date_effective', 'date_modification');
 
     $formExport->addToDataAdminPratList('peopleExportID');
     $formExport->addToDataAdminPatientList('peopleExportID');
