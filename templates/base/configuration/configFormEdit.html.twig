@@ -59,6 +59,7 @@
         $('#formPreview').find('input, select, textarea').removeAttr('value');
         $('#basicTemplateCode').val(data.basicTemplateCode);
         $('#sqlGen').val(data.sqlGen);
+        $('#sqlGenUpdate').val(data.sqlGenUpdate);
       },
       error: function() {
         alert_popup("danger", 'Problème, rechargez la page !');
@@ -416,6 +417,16 @@
         </div>
         <div id="collapseSql" class="collapse card-body">
           <textarea id="sqlGen" class="form-control" rows="20"></textarea>
+        </div>
+      </div>
+
+      <div class="card my-3">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseSqlUpdate" style="cursor: pointer">
+          <i class="far fa-plus-square mr-1"></i>
+          Code SQL de mise à jour
+        </div>
+        <div id="collapseSqlUpdate" class="collapse card-body">
+          <textarea id="sqlGenUpdate" class="form-control" rows="20"></textarea>
         </div>
       </div>
 

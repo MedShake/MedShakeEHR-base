@@ -20,7 +20,7 @@
  #/
 
 /##
- # Template > Config : édition d'un formulaire
+ # Template > Config : aperçu des formulaires
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
@@ -31,426 +31,116 @@
 {% block title %}{{ config.designAppName }} : configuration{% endblock %}
 
 {% block head %}
-{{ parent() }}
-<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
-<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css">
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.js?{{ modules.base }}"></script>
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/yaml/yaml.js?{{ modules.base }}"></script>
-<script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/javascript/javascript.js?{{ modules.base }}"></script>
-{% endblock %}
-
-{% block jsEmbed %}
   {{ parent() }}
-
-  function refreshFormPreview() {
-    $.ajax({
-      url: urlBase + "/configuration/ajax/configFormPreview/",
-      type: 'post',
-      data: {
-        formID: $('#formID').text(),
-      },
-      dataType: "json",
-      success: function(data) {
-        $('#formPreview').html(data.htmlFormPreview);
-        {# prévenir les problèmes car le form est inclus entre les balises form pour l'édition #}
-        $('#formPreview').find('input, select, textarea').removeAttr('required');
-        $('#formPreview').find('input, select, textarea').removeAttr('name');
-        $('#formPreview').find('input, select, textarea').removeAttr('id');
-        $('#formPreview').find('input, select, textarea').removeAttr('value');
-        $('#basicTemplateCode').val(data.basicTemplateCode);
-        $('#sqlGen').val(data.sqlGen);
-        $('#sqlGenUpdate').val(data.sqlGenUpdate);
-      },
-      error: function() {
-        alert_popup("danger", 'Problème, rechargez la page !');
-      }
-    });
-  }
-
-  $(document).ready(function() {
-    refreshFormPreview();
-
-    $("button.formDataSave").on("click", function(e) {
-      setTimeout(refreshFormPreview, 500);
-    });
-  });
-
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
 {% endblock %}
 
 {% block body %}
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
-  </li>
-  <li class="breadcrumb-item">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
       <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#ca">Paramètres avancés</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/{{ page.form.catName }}/">{{ page.tabCat[page.form.cat] }}</a>
-  </li>
-  <li class="breadcrumb-item active">{{ page.form.name }}
-  </li>
-</ol>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/">Formulaires</a>
+    </li>
+    <li class="breadcrumb-item active">Aperçu du formulaire #{{ page.formData.id }}
+    </li>
+  </ol>
 
-<h1>Edition du formulaire #<span id="formID">{{ page.form.id }}</span> <small class="text-muted"> - {{ page.form.name }}</small></h1>
 
-<div class="row">
-<div class="col">
+  <div class="row">
 
-	<form id="formParamsEdit" class="ajaxForm"  method="post" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/ajax/configFormEdit/">
-    <div class="text-right" style="margin-bottom : -20px;">
-      <button type="submit" class="btn btn-primary formDataSave"><i class="fas fa-save"></i> Enregistrer</button>
+    <div class=" col-md-4">
+    {% for k,v in page.tabTypes %}
+      <h2 class="mb-2" id="cat{{ v.0.cat }}">{{ v.0.catLabel }}</h2>
+      <table class="table table-sm mb-0 table-hover mb-3">
+      <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Module</th>
+        <th>Nom</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for w in v %}
+        <tr {% if w.id == page.formData.id %}class="table-success"{% endif %}>
+        <td>{{ w.id }}</td>
+        <td>{{ w.module }}</td>
+        <td>{{ w.name }}</td>
+
+        <td class="text-right">
+          <div class="btn-group">
+            <a class="btn btn-light btn-sm{% if k=='displayforms' %} disabled{% endif %}" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/preview/{{ w.id }}/">
+              <span class="fas fa-eye" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/forms/edit/{{ w.id }}/">
+              <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+            </a>
+          </div>
+        </td>
+        </tr>
+      {% endfor %}
+      </tbody></table>
+    {% endfor %}
     </div>
 
-  <ul class="nav nav-tabs mb-4 font-weight-bold" id="navTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="preview-tab" data-toggle="tab" href="#preview-pan"><i class="far fa-eye"></i> Aperçu</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="generalites-tab" data-toggle="tab" href="#generalites-pan"><i class="fas fa-cogs"></i> Paramètres généraux</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="structure-tab" data-toggle="tab" href="#structure-pan"><i class="fas fa-code"></i> Structure</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="cda-tab" data-toggle="tab" href="#cda-pan"><i class="fas fa-code"></i> CDA</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="javascript-tab" data-toggle="tab" href="#javascript-pan"><i class="fas fa-code"></i> JavaScript</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="options-tab" data-toggle="tab" href="#options-pan"><i class="fas fa-code"></i> Options</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tools-tab" data-toggle="tab" href="#tools-pan"><i class="fas fa-tools"></i> Outils</a>
-    </li>
-  </ul>
+    <div class=" col-md-8">
 
-  <div class="tab-content" id="navTabContent">
-    <div class="tab-pane fade show active" id="preview-pan" >
-      <div class="col-12 col-lg-8">
-        <div id="formPreview"></div>
+      <h1 class="mb-4">Aperçu du formulaire #{{ page.formData.id }}
+        <small>{{ page.formData.name }}</small>
+      </h1>
+
+      <div class="alert alert-warning" role="alert">Les fichiers javascript n'étant pas chargés, ce formulaire n'est pas dynamique !</div>
+
+      <div class="jumbotron col-md-12">
+        {{ f.formbuilder(page.form , page.formIN ) }}
       </div>
-    </div>
-    <div class="tab-pane fade" id="generalites-pan" >
-      <div class="row">
-        <div class="col col-lg-5">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'hidden',
-      				'name' : 'id',
-      				'value' : page.form.id
-      			},
-      		}) }}
 
-          <div class="form-group">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'text',
-      				'name' : 'internalName',
-      				'placeholder' : 'nom à usage interne, pas d\'espace, pas d\'accent',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.internalName,
-              'readonly' : 'readonly'
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Nom à usage interne',
-      			}
-      		}) }}
-      		</div>
-
-          <div class="form-group">
-      		{{ f.select ({
-      			'select' : {
-      				'name' : 'module',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'values' : page.modules,
-      				'valueDefaut': page.form.module
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Module concerné',
-      			}
-      		}) }}
-      		</div>
-
-      		<div class="form-group">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'text',
-      				'name' : 'name',
-      				'placeholder' : 'nom du formulaire',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.name
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Nom du formulaire',
-      			}
-      		}) }}
-      		</div>
-
-      		<div class="form-group">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'text',
-      				'name' : 'description',
-      				'placeholder' : 'description du formulaire',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.description
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Description du formulaire',
-      			}
-      		}) }}
-      		</div>
-
-      		<div class="form-group">
-      		{{ f.select ({
-      			'select' : {
-      				'name' : 'cat',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'values' : page.tabCat,
-      				'valueDefaut': page.form.cat
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Catégorie',
-      			}
-      		}) }}
-      		</div>
-
-      		<div class="form-group">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'text',
-      				'name' : 'printModel',
-      				'placeholder' : 'modèle pour l\'impression',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.printModel
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Modèle pour l\'impression',
-      			}
-      		}) }}
-      		</div>
-
-      		<div class="form-group">
-      		{{ f.input ({
-      			'input' : {
-      				'type' : 'text',
-      				'name' : 'formAction',
-      				'placeholder' : 'url de destination à la validation',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.formAction
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'URL de destination à la validation (action)',
-      			}
-      		}) }}
-      		</div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-pane fade" id="structure-pan">
-      <div class="row">
-    		<div class="form-group col-md-7">
-      		{{ f.textarea ({
-      			'textarea' : {
-              'id' : 'yamlEditor',
-      				'name' : 'yamlStructure',
-      				'placeholder' : 'valeurs par défaut',
-      				'class' : 'form-control',
-      				'autocomplete' : 'off',
-      				'value' : page.form.yamlStructure,
-      				'add' : 'rows="25" style="font-family:monospace;"'
-      			},
-      			'label' : {
-      				'position' : 'before',
-      				'label' : 'Structure du formulaire (format yaml)',
-              'class' : 'font-weight-bold'
-      			}
-      		}) }}
-    		</div>
-
-        <div class="col-md-5 border-left">
-
-        <div class="mb-2 font-weight-bold">Types utilisables <a class="btn btn-sm btn-outline-secondary float-right mb-2" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/data-cat/medical/"><i class="fas fa-pen"></i> Modifier</a></div>
-
-          <table class="table table-sm mb-0 table-hover small">
-            <thead class="thead-light">
-              <tr>
-                <th>#</th>
-                <th>Tag</th>
-                <th>Label</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-          {% for k,v in page.tabTypes %}
-          <tr>
-            <th colspan="4">
-              <button id="cat{{ v.0.cat }}" type="button" class="btn btn-light btn-sm" data-toggle="collapse" data-target=".cat{{ v.0.cat }}">
-                <span class="fas fa-search" aria-hidden="true"></span>
-              </button> {{ v.0.catLabel }}
-            </th>
-          </tr>
-          {% for w in v %}
-            <tr class="collapse cat{{ v.0.cat }}">
-            <td>{{ w.id }}</td>
-            <td>{{ w.name }}</td>
-            <td>{{ w.label }}</td>
-            <td>{{ w.description }}</td>
-            </tr>
-          {% endfor %}
-          {% endfor %}
-          </tbody>
-          </table>
-
-        </div>
-      </div>
-    </div>
-
-
-    <div class="tab-pane fade" id="cda-pan">
-      <div class="alert alert-secondary">
-        <p><a href="/configuration/forms/cdaTools/{{ page.formID }}/" class="btn btn-sm btn-secondary float-right" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-          <strong>Outil de génération des blocs <code>actesPossibles</code> et <code>clinicalDocument/documentationOf/serviceEvent/code</code>.</strong>
-          <br>NB : <code>paramConditionServiceEvent</code> doit être déjà complètement défini avec les champs concernés puis enregistré.</p>
-      </div>
-      <div class="form-group">
-  		{{ f.textarea ({
-  			'textarea' : {
-          'id' : 'cdaEditor',
-  				'name' : 'cda',
-  				'placeholder' : 'Code au format YAML pour la génération du document au format XML CDA R2',
-  				'class' : 'form-control',
-  				'autocomplete' : 'off',
-  				'value' : page.form.cda,
-  				'add' : 'rows="20" style="font-family:monospace;"'
-  			},
-  			'label' : {
-  				'position' : 'before',
-  				'label' : 'Variables pour construction du CDA',
-          'class' : 'font-weight-bold'
-  			}
-  		}) }}
-  		</div>
-    </div>
-
-    <div class="tab-pane fade" id="javascript-pan">
-      <div class="form-group">
-      {{ f.textarea ({
-        'textarea' : {
-          'id' : 'javascriptEditor',
-          'name' : 'javascript',
-          'placeholder' : 'Le code entré ici n\'est interprété que pour les formulaires de consultation',
-          'class' : 'form-control',
-          'autocomplete' : 'off',
-          'value' : page.form.javascript,
-          'add' : 'rows="25" style="font-family:monospace;"'
-        },
-        'label' : {
-          'position' : 'before',
-          'label' : 'Javascript',
-          'class' : 'font-weight-bold'
-        }
-      }) }}
-      </div>
-    </div>
-
-    <div class="tab-pane fade" id="options-pan">
-
-      <div class="form-group">
-      {{ f.textarea ({
-        'textarea' : {
-          'id' : 'optionsEditor',
-          'name' : 'options',
-          'placeholder' : 'valeurs par défaut',
-          'class' : 'form-control',
-          'autocomplete' : 'off',
-          'value' : page.form.options,
-          'add' : 'rows="25" style="font-family:monospace;"'
-        },
-        'label' : {
-          'position' : 'before',
-          'label' : 'Options (format yaml)',
-          'class' : 'font-weight-bold'
-        }
-      }) }}
-      </div>
-    </div>
-
-    <div class="tab-pane fade" id="tools-pan">
       <div class="card my-3">
         <div class="card-header" data-toggle="collapse" data-target="#collapseTemplate" style="cursor: pointer">
-          <i class="far fa-plus-square mr-1"></i>
-          Template d'impression
+          <button class="btn btn-light btn-sm"><i class="far fa-plus-square"></i></button> Template d'impression
         </div>
         <div id="collapseTemplate" class="collapse card-body">
           <div class="alert alert-warning" role="alert">
             Ce code est généré automatiquement pour servir de base à la création d'un template d'impression. Il doit être retravaillé pour obtenir un résultat correct.
           </div>
-          <textarea id="basicTemplateCode" class="form-control" rows="20"></textarea>
+          <textarea class="form-control" rows="20">{{ page.basicTemplateCode }}</textarea>
         </div>
       </div>
 
       <div class="card my-3">
         <div class="card-header" data-toggle="collapse" data-target="#collapseSql" style="cursor: pointer">
-          <i class="far fa-plus-square mr-1"></i>
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
           Code SQL de création
         </div>
         <div id="collapseSql" class="collapse card-body">
-          <textarea id="sqlGen" class="form-control" rows="20"></textarea>
-        </div>
-      </div>
-
-      <div class="card my-3">
-        <div class="card-header" data-toggle="collapse" data-target="#collapseSqlUpdate" style="cursor: pointer">
-          <i class="far fa-plus-square mr-1"></i>
-          Code SQL de mise à jour
-        </div>
-        <div id="collapseSqlUpdate" class="collapse card-body">
-          <textarea id="sqlGenUpdate" class="form-control" rows="20"></textarea>
+          <textarea class="form-control" rows="20">{{ page.sqlCode }}</textarea>
         </div>
       </div>
 
       <div class="card my-3">
         <div class="card-header" data-toggle="collapse" data-target="#collapseTools" style="cursor: pointer">
-          <i class="far fa-plus-square mr-1"></i>
-          Autres outils
+          <button class="btn btn-light btn-sm">
+            <i class="far fa-plus-square"></i>
+          </button>
+          Outils
         </div>
         <div id="collapseTools" class="collapse card-body">
           <p>
             Fixer l'ordre d'affichage des types utilisés dans ce formulaire en fonction de l'ordre d'apparition dans la structure de celui-ci :
-            <button class="btn btn-danger fixDisplayOrder" data-formid="{{ page.form.id }}"><i class="fas fa-sort-amount-down"></i> Fixer l'ordre</button>
+            <button class="btn btn-danger fixDisplayOrder" data-formid="{{ page.formData.id }}"><i class="fas fa-sort-amount-down"></i> Fixer l'ordre</button>
           </p>
         </div>
       </div>
-    </div>
-
-    <div class="border-top text-right mt-4">
-		    <button type="submit" class="btn btn-primary mt-3 formDataSave"><i class="fas fa-save"></i> Enregistrer</button>
-    </div>
 
     </div>
-	</form>
-</div>
-</div>
+  </div>
 
 {% endblock %}
