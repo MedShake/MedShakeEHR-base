@@ -16,12 +16,12 @@
     "ext-curl": "*",
     "ext-dom": "*",
     "ext-gd": "*",
-    "lib-imagick": "*",
-    "lib-imap": "*",
-    "lib-intl": "*",
-    "lib-soap": "*",
-    "lib-xml": "*",
-    "lib-zip": "*",
+    "ext-imagick": "*",
+    "ext-imap": "*",
+    "ext-intl": "*",
+    "ext-soap": "*",
+    "ext-xml": "*",
+    "ext-zip": "*",
     "ext-mbstring": "*"
   }
 }
