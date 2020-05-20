@@ -13,5 +13,17 @@
     "setasign/fpdi-fpdf": "v2.3.0",
     "spomky-labs/otphp": "^10.0",
     "picqer/php-barcode-generator":  "v2.0.1"
+    "spomky-labs/otphp": "^10.0",
+    "ext-yaml": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "lib-imagick": "*",
+    "lib-imap": "*",
+    "lib-intl": "*",
+    "lib-soap": "*",
+    "lib-xml": "*",
+    "lib-zip": "*",
+    "ext-mbstring": "*"
   }
 }
