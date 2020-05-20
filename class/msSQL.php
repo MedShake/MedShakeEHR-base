@@ -39,7 +39,7 @@ class msSQL
       global $p;
       if(!empty($p['config']['sqlServeur'])) {
         $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
-      } elseif(!empty($p['config']['sqlServeur'])) {
+      } elseif(!empty($_SERVER['RDS_HOSTNAME'])) {
         $mysqli = new mysqli($_SERVER['RDS_HOSTNAME'], $_SERVER['RDS_USERNAME'], $_SERVER['RDS_PASSWORD'], $_SERVER['RDS_DB_NAME'], $_SERVER['RDS_PORT']);
       }
       $mysqli->set_charset("utf8");
