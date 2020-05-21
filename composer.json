@@ -11,17 +11,6 @@
     "ovh/ovh": "v2.0.1",
     "box/spout": "2.7.3",
     "setasign/fpdi-fpdf": "v2.3.0",
-    "spomky-labs/otphp": "^10.0",
-    "ext-yaml": "*",
-    "ext-curl": "*",
-    "ext-dom": "*",
-    "ext-gd": "*",
-    "ext-imagick": "*",
-    "ext-imap": "*",
-    "ext-intl": "*",
-    "ext-soap": "*",
-    "ext-xml": "*",
-    "ext-zip": "*",
-    "ext-mbstring": "*"
+    "spomky-labs/otphp": "^10.0"
   }
 }
