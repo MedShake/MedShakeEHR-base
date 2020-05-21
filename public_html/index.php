@@ -27,7 +27,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 
 if (($homepath=getenv("MEDSHAKEEHRPATH"))===false) {
