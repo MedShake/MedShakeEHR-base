@@ -35,4 +35,11 @@ if (!function_exists('array_key_first')) {
         return NULL;
     }
 }
+
+if (!function_exists('yaml_parse_file')) {
+    function yaml_parse_file(string $str) {
+      return  Spyc::YAMLLoad($str);
+    }
+}
+
 ?>
