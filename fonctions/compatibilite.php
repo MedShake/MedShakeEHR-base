@@ -42,4 +42,10 @@ if (!function_exists('yaml_parse_file')) {
     }
 }
 
+if (!function_exists('yaml_parse')) {
+    function yaml_parse(string $str) {
+      return  Spyc::YAMLLoad($str);
+    }
+}
+
 ?>
