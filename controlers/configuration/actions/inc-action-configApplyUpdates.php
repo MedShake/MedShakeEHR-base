@@ -93,12 +93,12 @@ foreach ($modules as $module) {
 if (count($installFiles) or count($moduleUpdateFiles)) {
     msSQL::sqlQuery("UPDATE `system` SET value='maintenance' WHERE name='state' and groupe='system'");
     //on fait une sauvegarde de la base
-    exec('mysqldump -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' '.escapeshellarg($sqlParams['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$sqlParams['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql'));
+    exec('mysqldump -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' '.escapeshellarg($sqlParams['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$sqlParams['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql'));
     //puis on applique les patches en commençant par ceux de base s'il y en a
     if (array_key_exists('base', $moduleUpdateFiles)) {
         foreach ($moduleUpdateFiles['base'] as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
         unset($moduleUpdateFiles['base']);
@@ -106,7 +106,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     foreach ($moduleUpdateFiles as $k=>$module) {
         foreach ($module as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
     }
@@ -114,7 +114,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
     }

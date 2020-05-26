@@ -138,7 +138,7 @@ if(key_exists($pluginName, $installedPlugins)) {
     uksort($sqlUpdateFiles, 'version_compare');
     foreach ($sqlUpdateFiles as $file) {
         includePhp($file, '_pre');
-        exec('mysql -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
+        exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).' -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
         includePhp($file, '_post');
     }
   }
@@ -147,7 +147,7 @@ if(key_exists($pluginName, $installedPlugins)) {
 // installation
 else {
   $fileSqlInstall = $p['homepath'].'config/plugins/'.$pluginName.'/sqlInstall.sql';
-  exec('mysql -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$fileSqlInstall, $output);
+  exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).' -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$fileSqlInstall, $output);
 }
 
 exit("ok");
