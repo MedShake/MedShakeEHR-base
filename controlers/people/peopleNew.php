@@ -52,8 +52,7 @@ if($template != "forbidden") {
   $formpatient->setFormIDbyName($p['page']['formIN']);
   if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
       $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
-  }
-  if (isset($_POST)) {
+  } elseif (isset($_POST)) {
       $formpatient->setPrevalues($_POST);
   }
 
