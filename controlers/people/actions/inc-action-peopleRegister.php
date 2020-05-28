@@ -126,7 +126,6 @@ if ($validation === false) {
       $relationPratGroups->setToID($p['user']['id']);
       $relationPratGroups->setRelationType('relationPraticienGroupe');
 
-      $relationGroupPatient = new msPeopleRelations;
       foreach($relationPratGroups->getRelations() as $rela) {
         $relation = new msPeopleRelations;
         $relation->setToID($objet->getToID());
