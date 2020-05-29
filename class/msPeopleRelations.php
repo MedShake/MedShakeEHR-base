@@ -172,7 +172,7 @@ class msPeopleRelations extends msPeople
         }
       }
 
-      elseif($this->_relationType == 'relationPraticienRegistre' and ($toIdType!='pro' or $this->_withIdType != 'registre') or $p['config']['droitRegistrePeutGererAdministrateurs'] != 'true') {
+      elseif($this->_relationType == 'relationPraticienRegistre' and (($toIdType!='pro' or $this->_withIdType != 'registre') or $p['config']['droitRegistrePeutGererAdministrateurs'] != 'true')) {
         return false;
       }
 
