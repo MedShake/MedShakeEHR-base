@@ -302,61 +302,63 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
-  if ($('.QRcodeAccesPhoneCapture').length) {
-    var el = kjua({
-      text: phoneCaptureUrlAcces,
+  if (typeof phoneCaptureUrlAcces !== 'undefined') {
+    if ($('.QRcodeAccesPhoneCapture').length) {
+      var el = kjua({
+        text: phoneCaptureUrlAcces,
 
-      // render method: 'canvas' or 'image'
-      render: 'image',
+        // render method: 'canvas' or 'image'
+        render: 'image',
 
-      // render pixel-perfect lines
-      crisp: true,
+        // render pixel-perfect lines
+        crisp: true,
 
-      // minimum version: 1..40
-      minVersion: 1,
+        // minimum version: 1..40
+        minVersion: 1,
 
-      // error correction level: 'L', 'M', 'Q' or 'H'
-      ecLevel: 'H',
+        // error correction level: 'L', 'M', 'Q' or 'H'
+        ecLevel: 'H',
 
-      // size in pixel
-      size: 400,
+        // size in pixel
+        size: 400,
 
-      // pixel-ratio, null for devicePixelRatio
-      ratio: null,
+        // pixel-ratio, null for devicePixelRatio
+        ratio: null,
 
-      // code color
-      fill: '#333',
+        // code color
+        fill: '#333',
 
-      // background color
-      back: '#fff',
+        // background color
+        back: '#fff',
 
-      // roundend corners in pc: 0..100
-      rounded: 100,
+        // roundend corners in pc: 0..100
+        rounded: 100,
 
-      // quiet zone in modules
-      quiet: 1,
+        // quiet zone in modules
+        quiet: 1,
 
-      // modes: 'plain', 'label' or 'image'
-      mode: 'label',
+        // modes: 'plain', 'label' or 'image'
+        mode: 'label',
 
-      // label/image size and pos in pc: 0..100
-      mSize: 10,
-      mPosX: 50,
-      mPosY: 50,
+        // label/image size and pos in pc: 0..100
+        mSize: 10,
+        mPosX: 50,
+        mPosY: 50,
 
-      // label
-      label: 'PhoneCapture',
-      fontname: 'sans',
-      fontcolor: '#d9534f',
+        // label
+        label: 'PhoneCapture',
+        fontname: 'sans',
+        fontcolor: '#d9534f',
 
-      // image element
-      image: null
+        // image element
+        image: null
 
-    });
-    $('.QRcodeAccesPhoneCapture').html(el);
+      });
+      $('.QRcodeAccesPhoneCapture').html(el);
+    }
   }
-
 });
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -420,7 +422,7 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       dataType: "json",
       success: function(data) {
         glow('success', $(source));
-        if($(source).hasClass('reloadAfterGlow')) {
+        if ($(source).hasClass('reloadAfterGlow')) {
           window.location.reload();
         }
       },
@@ -453,7 +455,7 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
       dataType: "json",
       success: function(data) {
         glow('success', $(source));
-        if($(source).hasClass('reloadAfterGlow')) {
+        if ($(source).hasClass('reloadAfterGlow')) {
           window.location.reload();
         }
       },
