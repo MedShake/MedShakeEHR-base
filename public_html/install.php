@@ -291,7 +291,7 @@ if (posix_getuid() < 1)
   die("Ce script d'installation ne doit pas être executé avec l'utilisateur root.\n");
 
 if ($iscli) {
-  $webdir=str_replace('/install.php', '', getcwd().'/'.array_shift($argv).'/');
+  $webdir=str_replace('/install.php', '', array_shift($argv).'/');
 } else {
   $webdir=getcwd().'/';
   $webpath=str_replace('/install.php','',$_SERVER['REQUEST_URI']);
