@@ -350,6 +350,12 @@ $(document).ready(function() {
     $('.QRcodeAccesPhoneCapture').html(el);
   }
 
+	// Évite que la liste ne dépasse l'écran quant la page est redimentionner
+	$(window).on('resize', function(){
+    $('#patientsOfTheDayMenu div.dropdown-menu').height(window.innerHeight*0.75);
+	});
+	$('#patientsOfTheDayMenu div.dropdown-menu').height(window.innerHeight*0.75);
+
 });
 
 
