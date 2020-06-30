@@ -390,6 +390,8 @@ class msPDF
               // permet de charger les tags page.courrier dans les template twig
               $courrier = new msCourrier();
               $courrier->setPatientID($this->_toID);
+			  $courrier->setFromID($this->_fromID);
+			  if (!empty($this->_objetID)) $courrier->setObjetID($this->_objetID);
               $this->_courrierData=$courrier->getCourrierData();
 
               //on déclare le modèle de page
