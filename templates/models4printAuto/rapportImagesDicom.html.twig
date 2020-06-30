@@ -1,0 +1,48 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : modèle pour création PDF images dicom
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+
+
+<p style="text-align : right;">{{ tag.UtilisateurActif_villeAdressePro }}, le
+    {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+
+{{ tag.images|length }} image{% if tag.images|length > 1 %}s{% endif %} - {{ (tag.images|length / 6)|round(0, 'ceil') }} page{% if tag.images|length > 6 %}s{% endif %}
+
+<table>
+    <tr>
+        {% for img in tag.images %}
+            <td style="width : 50%"><img src="{{ img }}" style="width : 8.5cm" /></td>
+            {% if loop.index is even %}
+            </tr>
+            <tr>
+            {% endif %}
+        {% endfor %}
+    </tr>
+</table>

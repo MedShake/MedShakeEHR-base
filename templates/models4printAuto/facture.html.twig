@@ -1,0 +1,42 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : facture
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+ {% set tag = page.courrier %}
+
+<p style="text-align : right;">{{ tag.UtilisateurActif_villeAdressePro }}, le {{ tag.date|date("d/m/Y") }}</p>
+
+ <h2 style="text-align : center">{{ tag.identiteCompleteTitreLongDdn }}</h2>
+ <br><br><br>
+ <p>Je soussigné {{ tag.UtilisateurActif_identiteUsuelleTitre	}} certifie avoir reçu ce jour de {{ tag.identiteCompleteTitreLongDdn }} la somme de {{ tag.regleFacture }}€ en règlement des honoraires de consultation.<br><br>
+
+ </p>
+
+ <p>Certificat remis en mains propre pour faire valoir ce que de droit.</p>
+
+ <br><br><br><br><br><br>
+
+ <p style="text-align:right">{{ tag.UtilisateurActif_identiteUsuelleTitre	}}</p>
