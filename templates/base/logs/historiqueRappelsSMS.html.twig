@@ -22,8 +22,9 @@
 /##
  # Template > logs : historique des rappels SMS
  #
- # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @contrib fr33z00 <https://github.com/fr33z00>
+ # @author           Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib          fr33z00             <https://github.com/fr33z00>
+ # @contrib 2020     Maxime   DEMAREST   <maxime@indelog.fr>
  #}
 
 {% extends "page.html.twig" %}
@@ -97,7 +98,7 @@
           <li class="list-group-item">Statut :
             {{ page.data.campaign.status }}
             /
-            {{ page.data.campaign.statusText }}</li>
+            {{ page.data.campaign.statusText }} {% if page.data.campaign.statusSimulate == 1 %}&nbsp<span class="font-italic">(Simulation)</span>{% endif %}</li>
           <li class="list-group-item">Numéros invalides :
             {{ page.data.campaign.invalidNumbers }}</li>
           <li class="list-group-item">Nombre de SMS :
@@ -129,7 +130,7 @@
                 <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
                   Statut
                   <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
-                  <input type="hidden" name="logFile" value="{{ config.smsLogCampaignDirectory }}{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
+                  <input type="hidden" name="logFile" value="{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
                   <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fas fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
                 </form>
               </th>
@@ -143,9 +144,14 @@
                 <td>{{ v.identite }}</td>
                 <td>{{ v.telFrDisplay }}</td>
                 <td>
-                  {% if v.accRecepComment %}{{ v.accRecepComment }}
-                    /
-                    {{ v.accRecepRecepDate }}{% endif %}
+                  {% if page.data.campaign.statusSimulate == 1 %}
+                    <span class="font-italic">Simulé</span>
+                  {% else %}
+                    {% if v.accRecepComment %}{{ v.accRecepComment }}
+                      /
+                      {{ v.accRecepRecepDate }}
+                    {% endif %}
+                  {% endif %}
                 </td>
               </tr>
 

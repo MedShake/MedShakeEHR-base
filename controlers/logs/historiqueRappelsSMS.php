@@ -23,7 +23,8 @@
 /**
  * Logs : présente l'historique des rappels SMS
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author           Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib 2020     Maxime   DEMAREST   <maxime@indelog.fr>
  */
 
 $debug='';
