@@ -41,4 +41,4 @@ if(is_file($smsLogCampaignFile)) {
   }
 }
 
-msTools::redirection('/logs/historiqueRappelsSMS/'.$_POST['date'].'/');
+msTools::redirection('/logs/historiqueRappelsSMS/'.date('Y-m-d', $_POST['date']).'/');
