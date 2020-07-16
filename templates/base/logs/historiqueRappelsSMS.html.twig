@@ -129,8 +129,8 @@
               <th>
                 <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/actions/majAcks/" method="post" class="form-inline">
                   Statut
-                  <input type="hidden" name="date" value="{{ page.dates.emission|date('Y-m-d') }}" />
-                  <input type="hidden" name="logFile" value="{{ page.dates.emission|date('Y/m/d/') }}RappelsRDV.json" />
+                  <input type="hidden" name="date" value="{{ page.dates.emission }}" />
+                  <input type="hidden" name="pratID" value="{{ page.pratID }}" />
                   <button type="submit" class="btn btn-light btn-sm ml-2"><span class="fas fa-sync-alt" aria-hidden="true"></span> Mettre à jour</button>
                 </form>
               </th>

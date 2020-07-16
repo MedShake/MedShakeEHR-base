@@ -31,57 +31,57 @@ class msSMSallMySMS
 {
 
   /**
-   * Nom de la campagne sms
-   * @var string
-   */
+  * Nom de la campagne sms
+  * @var string
+  */
   private $_campaign_name;
 
   /**
-   * Data de la camapgne
-   * @var string
-   */
+  * Data de la camapgne
+  * @var string
+  */
   private $_campaign_data;
 
   /**
-   * Réponse de l'api
-   * @var string
-   */
+  * Réponse de l'api
+  * @var string
+  */
   private $_campaign_answer;
 
   /**
-   * Message à envoyer
-   * @var string
-   */
+  * Message à envoyer
+  * @var string
+  */
   private $_message;
 
   /**
-   * Nom expéditeur du SMS
-   * @var string
-   */
+  * Nom expéditeur du SMS
+  * @var string
+  */
   private $_tpoa;
 
   /**
-   * Date d'envoi différé du SMS (YYYY-MM-JJ HH:MM:SS)
-   * @var string
-   */
+  * Date d'envoi différé du SMS (YYYY-MM-JJ HH:MM:SS)
+  * @var string
+  */
   private $_date;
 
   /**
-   * Destinataire(s)
-   * @var array
-   */
+  * Destinataire(s)
+  * @var array
+  */
   private $_destinataires;
 
   /**
-   * Notification par mail
-   * @var int
-   */
+  * Notification par mail
+  * @var int
+  */
   private $_mail_notification=1;
 
   /**
-   * Dynamic : nombre de paramètres dans le messages
-   * @var int
-   */
+  * Dynamic : nombre de paramètres dans le messages
+  * @var int
+  */
   private $_dynamic;
 
   /**
@@ -91,21 +91,21 @@ class msSMSallMySMS
   private $_timestamp4log;
 
   /**
-   * Filename pour déterminer le log de la campagne
-   * @var int
-   */
+  * Filename pour déterminer le log de la campagne
+  * @var int
+  */
   private $_filename4log;
 
   /**
-   * Data à ajouter dans le log
-   * @var array
-   */
+  * Data à ajouter dans le log
+  * @var array
+  */
   private $_addData4log;
 
   /**
-   * Ajouter des datas au log
-   * @param array $_addData4log [description]
-   */
+  * Ajouter des datas au log
+  * @param array $_addData4log [description]
+  */
   public function set_addData4log(array $_addData4log)
   {
 	$this->_addData4log = $_addData4log;
@@ -113,9 +113,9 @@ class msSMSallMySMS
   }
 
   /**
-   * Set filename4log
-   * @param string $_filename4log nom du fichier
-   */
+  * Set filename4log
+  * @param string $_filename4log nom du fichier
+  */
   public function set_filename4log($_filename4log)
   {
 	$this->_filename4log = $_filename4log;
@@ -123,9 +123,9 @@ class msSMSallMySMS
   }
 
   /**
-   * Set timestamp4log
-   * @param int $_timestamp4log timestamp
-   */
+  * Set timestamp4log
+  * @param int $_timestamp4log timestamp
+  */
   public function set_timestamp4log($_timestamp4log)
   {
 	$this->_timestamp4log = $_timestamp4log;
@@ -133,11 +133,10 @@ class msSMSallMySMS
   }
 
   /**
-   * Set campaign_name
-   * @param int $_campaign_name
-   *
-   * @return static
-   */
+  * Set campaign_name
+  * @param string $_campaign_name
+  * @return string campaing name
+  */
   public function set_campaign_name($_campaign_name)
   {
 	$this->_campaign_name = $_campaign_name;
@@ -145,9 +144,18 @@ class msSMSallMySMS
   }
 
   /**
-   * Set mail notification
-   * @param int  $_mail_notification 0/1
-   */
+  * Get campaign_name
+  * @return string nom de la campagne
+  */
+  public function get_campaign_name()
+  {
+      return $this->_campaign_name;
+  }
+
+  /**
+  * Set mail notification
+  * @param int  $_mail_notification 0/1
+  */
   public function set_mail_notification($_mail_notification)
   {
 	$this->_mail_notification = $_mail_notification;
@@ -155,9 +163,9 @@ class msSMSallMySMS
   }
 
   /**
-   * Set message
-   * @param string $_message message à envoyer
-   */
+  * Set message
+  * @param string $_message message à envoyer
+  */
   public function set_message($_message)
   {
 	$this->_message = $_message;
@@ -165,9 +173,10 @@ class msSMSallMySMS
   }
 
   /**
-   * Set tpoa
-   * @param string $_tpoa tpoa
-   */
+  * Set tpoa
+  * @param string $_tpoa Emmeteur du message
+  * @return string tpoa
+  */
   public function set_tpoa($_tpoa)
   {
 	$this->_tpoa = $_tpoa;
@@ -175,9 +184,18 @@ class msSMSallMySMS
   }
 
   /**
-   * Set date
-   * @param string $_date date d'envoi différé
-   */
+  *Get tpoa
+  * @param string $_tpoa Retourne le l'emmeteur du message
+  */
+  public function get_tpoa()
+  {
+    return $this->$_tpoa;
+  }
+
+  /**
+  * Set date
+  * @param string $_date date d'envoi différé
+  */
   public function set_date($_date)
   {
 	$this->_date = $_date;
@@ -185,11 +203,22 @@ class msSMSallMySMS
   }
 
   /**
-   * Ajouter un destinataire à la campagne
-   * @param  string $tel    n° de téléphone sans espace
-   * @param  array  $params paramètres à inclure dans message
-   * @return void
-   */
+  * Get full path of campain log
+  * @return string chemain du log de la campagne sms
+  */
+  public function get_fullpath4log() {
+    global $p;
+    if (empty($p['config']['smsLogCampaignDirectory'])) throw new Exception('smsLogCampaignDirectory n\'est pas définie');
+    if (empty($p['config']['smsLogCampaignDirectory'])) throw new Exception('$this->_timestamp4log n\'est pas définie');
+    return $p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).'RappelsRDV.json';
+  }
+
+  /**
+  * Ajouter un destinataire à la campagne
+  * @param  string $tel    n° de téléphone sans espace
+  * @param  array  $params paramètres à inclure dans message
+  * @return void
+  */
   public function ajoutDestinataire($tel, $params=[]) {
 	$tel=trim(str_ireplace(array(' ', '/', '.'), '', $tel));
 	if(strlen($tel) == 10) {
@@ -234,76 +263,82 @@ class msSMSallMySMS
   }
 
   /**
-   * Envoyer la campagne
-   * @param  boolean  $simulate  Simuler la campagne (default non)
-   * @return string              Retour JSON de l'api
-   */
-  public function sendCampaign($simulate = 0) {
-      global $p;
+  * Envoyer la campagne
+  * @param  boolean  $simulate  Simuler la campagne (default false)
+  * @param  boolean  $force     Force la re-émission de la campage même si celle-ci existe déjà (default false)
+  * @return string              Retour JSON de l'api
+  */
+  public function sendCampaign($simulate = 0, $force = 0) {
+    global $p;
 
-      if(count($this->_destinataires)>0) {
-        $this->_generateCampaign();
-        $url = 'https://api.allmysms.com/sms/send/bulk/';
+	// check si la campagne pour le jour est déjà envoyé
+    $logFile = $p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).$this->_filename4log;
+    if (file_exists($p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).$this->_filename4log) && $force !== true) {
+      return false;
+    }
 
-        $auth_token=base64_encode($p['config']['allMySmsLogin'].':'.$p['config']['allMySmsApiKey']);
+    if(is_array($this->_destinataires) && count($this->_destinataires)>0) {
+      $this->_generateCampaign();
+      $url = 'https://api.allmysms.com/sms/send/bulk/';
 
-        $array_data = array(
-            'text'=>$this->_campaign_data['DATA']['MESSAGE']." \r\nStop au 36180",
-            'to'=>$this->_campaign_data['DATA']['SMS'],
-            'from'=>$this->_campaign_data['DATA']['TPOA'],
-            'campaignName'=>$this->_campaign_data['DATA']['CAMPAIGN_NAME'],
-            'alerting'=>1,
-            'simulate'=>intval(!empty($simulate)),
-        );
-        $post_data = json_encode($array_data);
+      $auth_token=base64_encode($p['config']['allMySmsLogin'].':'.$p['config']['allMySmsApiKey']);
 
-        //open connection
-        $ch = curl_init();
+      $array_data = array(
+        'text'=>$this->_campaign_data['DATA']['MESSAGE']." \r\nStop au 36180",
+        'to'=>$this->_campaign_data['DATA']['SMS'],
+        'from'=>$this->_campaign_data['DATA']['TPOA'],
+        'campaignName'=>$this->_campaign_data['DATA']['CAMPAIGN_NAME'],
+        'alerting'=>1,
+        'simulate'=>intval(!empty($simulate)),
+      );
+      $post_data = json_encode($array_data);
 
-        curl_setopt_array($ch, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $post_data,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: Basic ".$auth_token,
-                "Content-Type: application/json",
-                "cache-control: no-cache"
-            ),
-        ));
+      //open connection
+      $ch = curl_init();
 
-        $result = curl_exec($ch);
+      curl_setopt_array($ch, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => $post_data,
+        CURLOPT_HTTPHEADER => array(
+          "Authorization: Basic ".$auth_token,
+          "Content-Type: application/json",
+          "cache-control: no-cache"
+        ),
+      ));
 
-        //close connection
-        curl_close($ch);
+      $result = curl_exec($ch);
 
-      } else {
-        $result['status']='0';
-        $result['statusText']="Pas de destinataires pour cette campagne - API AllMySMS non sollicitée";
-        $result=json_encode($result);
-      }
+      //close connection
+      curl_close($ch);
 
-      $this->_campaign_answer=$result;
+    } else {
+      $result['status']='0';
+      $result['statusText']="Pas de destinataires pour cette campagne - API AllMySMS non sollicitée";
+      $result=json_encode($result);
+    }
 
-	  return $result;
+    $this->_campaign_answer=$result;
 
+    return $result;
   }
 
   /**
-   * Loguer la campagne sous forme de fichier json
-   * @return void
-   */
+  * Loguer la campagne sous forme de fichier json
+  * @return void
+  */
   public function logCampaign() {
 
     global $p;
 
     if(!isset($this->_campaign_answer)) throw new Exception('Campaign_answer n\'est pas définie');
     if(!isset($this->_timestamp4log)) $this->_timestamp4log=time();
-    if(!isset($this->_filename4log)) $this->_filename4log=$this->_campaign_name;
+    if(!isset($this->_filename4log)) $this->_filename4log='RappelsRDV.json';
 
     $tab=json_decode($this->_campaign_answer, true);
     $tab['timestamp_send']=time();
@@ -325,9 +360,9 @@ class msSMSallMySMS
   }
 
   /**
-   * Loguer le crédit SMS restant
-   * @return [type] [description]
-   */
+  * Loguer le crédit SMS restant
+  * @return [type] [description]
+  */
   public function logCreditsRestants() {
 	global $p;
 	if(!isset($this->_campaign_answer)) throw new Exception('Campaign_answer n\'est pas définie');
@@ -339,9 +374,9 @@ class msSMSallMySMS
   }
 
   /**
-   * Ajouter les infos accusé de réception au log
-   * @param string $logFile fichier de log à amender
-   */
+  * Ajouter les infos accusé de réception au log
+  * @param string $logFile fichier de log à amender
+  */
   public function addAcksToLogs($logFile) {
     if (is_file($logFile)) {
       $data=json_decode(file_get_contents($logFile), true);
@@ -363,10 +398,10 @@ class msSMSallMySMS
   }
 
   /*
-   * Obtenir les infos accusés de réception
-   * @param  string $campId ID dans le campagne
-   * @return array          Tableau des infos accusé de réception
-   */
+  * Obtenir les infos accusés de réception
+  * @param  string $campId ID dans le campagne
+  * @return array          Tableau des infos accusé de réception
+  */
   public function getAcksRecep($campId) {
 
     global $p;
@@ -417,11 +452,11 @@ class msSMSallMySMS
   }
 
   /*
-   * Obtenir les donnée d'une campagne envoyé par sms
-   * @param string $date    Date d'evoie de la campagne au format 'Y-m-d'
-   * @param string $logDir  Dossier de stockage des retours de campagne sms (paramettre "smsLogCampaignDirectory"), si aucune varleur n'est fournis utilisara la valeur de la configuration
-   * @return array          Tableau des information sur la campagne envoyée
-   */
+  * Obtenir les donnée d'une campagne envoyé par sms
+  * @param string $date    Date d'evoie de la campagne au format 'Y-m-d'
+  * @param string $logDir  Dossier de stockage des retours de campagne sms (paramettre "smsLogCampaignDirectory"), si aucune varleur n'est fournis utilisara la valeur de la configuration
+  * @return array          Tableau des information sur la campagne envoyée
+  */
   public function getSendedCampaignData($date, $logDir='') {
 
     global $p;
@@ -513,5 +548,4 @@ class msSMSallMySMS
       }
     }
   }
-
 }

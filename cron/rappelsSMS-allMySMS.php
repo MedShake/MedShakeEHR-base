@@ -103,9 +103,17 @@ foreach ($users as $userID=>$value) {
             }
         }
 
-        $campaignSMS->sendCampaign(0);
         $campaignSMS->set_filename4log('RappelsRDV.json');
-        $campaignSMS->logCampaign();
-        $campaignSMS->logCreditsRestants();
+        $campaignSMS->set_timestamp4log(time());
+        openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        syslog(LOG_INFO, 'Evoie du rappel de rendez vous sms pour la campagne : '.$campaignSMS->get_fullpath4log());
+        $resu = $campaignSMS->sendCampaign();
+        if (!empty($resu)) {
+            $campaignSMS->logCampaign();
+            $campaignSMS->logCreditsRestants();
+        } else {
+            syslog(LOG_WARNING, $campaignSMS->get_fullpath4log().' exite, la campagne sms ne sera pas re-expedier une seconde fois');
+        }
+        closelog();
     }
 }
