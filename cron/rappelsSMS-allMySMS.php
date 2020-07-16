@@ -41,7 +41,7 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
 if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron/?$#", '', getcwd());
+else $homepath=preg_replace("#cron$#", '', dirname(__FILE__));
 
 /////////// Composer class auto-upload
 require $homepath.'vendor/autoload.php';
