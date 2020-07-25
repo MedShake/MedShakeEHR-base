@@ -238,7 +238,7 @@
 
 {# radio #}
 {% macro radio(v) %}
-
+	<div id="{{ v.radio.id }}">
 	{% if 'notInline' in v.radio.class %}
 
 		{# si un label existe #}
@@ -278,7 +278,7 @@
 		{% endfor %}
 		</div>
 	{% endif %}
-
+	</div>
 {% endmacro %}
 
 
