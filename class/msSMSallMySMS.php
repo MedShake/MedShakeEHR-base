@@ -273,7 +273,7 @@ class msSMSallMySMS
 
 	// check si la campagne pour le jour est déjà envoyé
     $logFile = $p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).$this->_filename4log;
-    if (file_exists($p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).$this->_filename4log) && $force !== true) {
+    if (file_exists($p['config']['smsLogCampaignDirectory'].date('Y/m/d/', $this->_timestamp4log).$this->_filename4log) && $force != true) {
       return false;
     }
 
@@ -367,7 +367,7 @@ class msSMSallMySMS
 	global $p;
 	if(!isset($this->_campaign_answer)) throw new Exception('Campaign_answer n\'est pas définie');
 	$campain_answer=json_decode($this->_campaign_answer, true);
-	if(isset($campain_answer['balance']) && isset($campain_answaer['cost'])) {
+	if(isset($campain_answer['balance']) && isset($campain_answer['cost'])) {
 	  $credits=round($campain_answer['balance']/($campain_answer['cost']/$campain_answer['nbSms']));
 	  file_put_contents($p['config']['workingDirectory'].$p['config']['smsCreditsFile'], $credits);
 	}
