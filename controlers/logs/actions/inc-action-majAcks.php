@@ -27,14 +27,18 @@
  */
 
 
+if (filter_var($_POST['pratID'], FILTER_VALIDATE_INT, array('min_range'=>1))) {
+    if ($date_path = date('Y/m/d', $_POST['date'])) {
+        $smsLogCampaignFile = msConfiguration::getParameterValue('smsLogCampaignDirectory', ['id'=>$_POST['pratID'], 'module'=>'']).'/'.$date_path.'/RappelsRDV.json';
+    }
+}
 
-if(is_file($_POST['logFile'])) {
-
+if(is_file($smsLogCampaignFile)) {
   $msSMS='msSMS'.$p['config']['smsProvider'];
   if (class_exists($msSMS)) {
       $campaign = new $msSMS();
-      $campaign->addAcksToLogs($_POST['logFile']);
+      $campaign->addAcksToLogs($smsLogCampaignFile);
   }
 }
 
-msTools::redirection('/logs/historiqueRappelsSMS/'.$_POST['date'].'/');
+msTools::redirection('/logs/historiqueRappelsSMS/'.date('Y-m-d', $_POST['date']).'/');
