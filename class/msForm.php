@@ -433,6 +433,19 @@ class msForm
     }
 
 /**
+ * Obtenir les types déclarés comme à substituer par le peopleExportID anonyme
+ * @return array tableau des data_types
+ */
+    public function getFormDataToSubstituteByPeopleExportId() {
+      if($toSubstituteByPeopleExportId = $this->getFormOptions()) {
+        if(isset($toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID']) and !empty($toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID'])) {
+          return $toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID'];
+        }
+      }
+      return [];
+    }
+
+/**
  * Ajouter des champs input hidden à un form généré
  * @param array $f    formulaire u format array php
  * @param array $data array input name=> input value
