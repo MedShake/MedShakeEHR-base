@@ -903,6 +903,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('smsRappelMessage', 'default', '0', '', 'Rappels SMS', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien'),
 ('smsSeuilCreditsAlerte', 'default', '0', '', 'Rappels SMS', 'nombre', 'prévenir dans l\'interface du logiciel si crédit inférieur ou égale à', '150'),
 ('smsTpoa', 'default', '0', '', 'Rappels SMS', 'texte', 'La balise #praticien sera automatiquement remplacée dans le message envoyé', 'Dr #praticien'),
+('smsTypeRdvPourRappel', 'default', '0', '', 'Rappels SMS', 'vide/text', 'N\'envoyer les rappels SMS qui pour les types de rendez-vous listé (placer les types de RDV entre "[]" et séparé par des virgules, ex : "[C1],[C2]"), laisser vide pour envoyer des rappel pour tout type de rendez-vous.', ''),
 ('smtpDefautSujet', 'default', '0', '', 'Mail', 'texte', 'titre par défaut du mail expédié', 'Document vous concernant'),
 ('smtpFrom', 'default', '0', '', 'Mail', 'email', 'adresse de l’expéditeur des messages, ex: user@domain.net', ''),
 ('smtpFromName', 'default', '0', '', 'Mail', 'texte', 'nom en clair de l\'expéditeur des messages', ''),

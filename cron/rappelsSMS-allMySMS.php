@@ -66,6 +66,9 @@ foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
     $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
 
+	if (! empty($p['config']['smsTypeRdvPourRappel']))
+		$smsTypeRdvPourRappel = explode(',', $p['config']['smsTypeRdvPourRappel']);
+
     $tsJourRDV=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
 
     $campaignSMS = new msSMSallMySMS();
@@ -82,6 +85,13 @@ foreach ($users as $userID=>$value) {
     $events = new msAgenda();
     $events->set_userID($userID);
     $patientsList=$events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
+
+	// Si smsTypeRdvPourRappel est défini et que le rdv n'est pas dans la liste des rdv pour appel retirer le patient de la liste
+	if (! empty($smsTypeRdvPourRappel) && is_array($patientsList)) {
+		for ($i=0 ; $i<count($patientsList) ; $i++) {
+			if (! in_array($patientsList[$i]['type'], $smsTypeRdvPourRappel)) unset($patientsList[$i]);
+		}
+	}
 
     $campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=>$tsJourRDV));
 
@@ -107,7 +117,8 @@ foreach ($users as $userID=>$value) {
         $campaignSMS->set_timestamp4log(time());
         openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
         syslog(LOG_INFO, 'Evoie du rappel de rendez vous sms pour la campagne : '.$campaignSMS->get_fullpath4log());
-        $resu = $campaignSMS->sendCampaign();
+        $resu = $campaignSMS->sendCampaign(1, 1);
+		var_dump($resu);
         if (!empty($resu)) {
             $campaignSMS->logCampaign();
             $campaignSMS->logCreditsRestants();
