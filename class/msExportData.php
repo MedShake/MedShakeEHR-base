@@ -108,6 +108,8 @@ class msExportData
   private $_forbiddenDataAdminPratList=[];
   private $_forbiddenFormFieldList=[];
 
+  private $_substituteByPeopleExportIdFormFieldList=[];
+
   private $_relationsPratGroupe=[];
   private $_relationsPatientGroupe=[];
 
@@ -147,6 +149,9 @@ class msExportData
         $form=new msForm;
         $form->setFormID($this->_formID);
         $this->_forbiddenFormFieldList=$form->getFormDataToNeverExport();
+
+    		//champs à substituer par le peopleExportID dans le form
+    		$this->_substituteByPeopleExportIdFormFieldList=$form->getFormDataToSubstituteByPeopleExportId();
 
         //champs interdits dans les data administratives patient
         $form=new msForm;
@@ -541,6 +546,30 @@ class msExportData
         foreach($tab as $k=>$v) {
           $tab[$k] = array_merge(array_flip($this->_sortTab), $tab[$k]);
         }
+
+    		// substitution des peopleID par peopleExportID
+    		if(!empty($this->_substituteByPeopleExportIdFormFieldList)) {
+    			$idToChange=[];
+    			foreach($this->_substituteByPeopleExportIdFormFieldList as $champ) {
+    				$idToChange=array_merge($idToChange, array_column($tab,'data_'.$champ));
+    			}
+    			$idToChange=array_unique($idToChange);
+    			foreach($idToChange as $idToSwitch) {
+    				if(is_numeric($idToSwitch) and !isset($this->_pratAdminData[$idToSwitch]['peopleExportID'])) {
+    					$pratToSwitch = new msPeople;
+    					$pratToSwitch->setToID($idToSwitch);
+    		            if(!$this->_pratAdminData[$idToSwitch]['peopleExportID']=@$pratToSwitch->getSimpleAdminDatasByName(['peopleExportID'])['peopleExportID']) {
+    						$pratToSwitch->setFromID($p['user']['id']);
+    						$this->_pratAdminData[$idToSwitch]['peopleExportID']=$pratToSwitch->setPeopleExportID();
+    					}
+    				}
+    			}
+    			foreach($tab as $k=>$v) {
+    				foreach($this->_substituteByPeopleExportIdFormFieldList as $champ) {
+    					$tab[$k]['data_'.$champ]=$this->_pratAdminData[$tab[$k]['data_'.$champ]]['peopleExportID'];
+    				}
+    			}
+    		}
       }
       return $tab;
     }
