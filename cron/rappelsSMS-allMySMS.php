@@ -88,7 +88,8 @@ foreach ($users as $userID=>$value) {
 
 	// Si smsTypeRdvPourRappel est défini et que le rdv n'est pas dans la liste des rdv pour appel retirer le patient de la liste
 	if (! empty($smsTypeRdvPourRappel) && is_array($patientsList)) {
-		for ($i=0 ; $i<count($patientsList) ; $i++) {
+		$nbPatients = count($patientsList);
+		for ($i=0 ; $i<$nbPatients ; $i++) {
 			if (! in_array($patientsList[$i]['type'], $smsTypeRdvPourRappel)) unset($patientsList[$i]);
 		}
 	}
