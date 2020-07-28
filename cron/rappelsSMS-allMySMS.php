@@ -118,7 +118,7 @@ foreach ($users as $userID=>$value) {
         $campaignSMS->set_timestamp4log(time());
         openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
         syslog(LOG_INFO, 'Evoie du rappel de rendez vous sms pour la campagne : '.$campaignSMS->get_fullpath4log());
-        $resu = $campaignSMS->sendCampaign(1, 1);
+        $resu = $campaignSMS->sendCampaign();
 		var_dump($resu);
         if (!empty($resu)) {
             $campaignSMS->logCampaign();
