@@ -119,7 +119,6 @@ foreach ($users as $userID=>$value) {
         openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
         syslog(LOG_INFO, 'Evoie du rappel de rendez vous sms pour la campagne : '.$campaignSMS->get_fullpath4log());
         $resu = $campaignSMS->sendCampaign();
-		var_dump($resu);
         if (!empty($resu)) {
             $campaignSMS->logCampaign();
             $campaignSMS->logCreditsRestants();
