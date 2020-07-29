@@ -217,7 +217,7 @@ class msData extends msDataCat
  * @param  array $ar array de name
  * @return array     array name=>typeID
  */
-    public function getTypeIDsFromName($ar=['1'])
+    public static function getTypeIDsFromName($ar=['1'])
     {
         return msSQL::sql2tabKey("select name, id from data_types where name in ('".implode("','", msSQL::cleanArray($ar))."')", 'name', 'id');
     }
@@ -258,7 +258,7 @@ class msData extends msDataCat
  * @param  array $typeIDsArray les typeID concernés
  * @return array               Array ('720'=> 'A' : 'plus', 'B' => 'moins')
  */
-    public function getSelectOptionValue($typeIDsArray)
+    public static function getSelectOptionValue($typeIDsArray)
     {
         $tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in ('".implode("', '", msSQL::cleanArray($typeIDsArray))."')", "id", "formValues");
         if (is_array($tab)) {
@@ -275,7 +275,7 @@ class msData extends msDataCat
  * @param  array $typeIDsArray les typeID concernés
  * @return array               Array ('name'=> 'A' : 'plus', 'B' => 'moins')
  */
-    public function getSelectOptionValueByTypeName($typeArray)
+    public static function getSelectOptionValueByTypeName($typeArray)
     {
         $tab = msSQL::sql2tabKey("select name, formValues from data_types where formType in ('select', 'radio') and name in ('".implode("', '", msSQL::cleanArray($typeArray))."')", "name", "formValues");
         if (is_array($tab)) {
