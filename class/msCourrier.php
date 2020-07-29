@@ -365,10 +365,10 @@ class msCourrier
         $tabRetour['patientID']=$this->_patientID;
 
 		// data de l'auteur initial si l'objet existe
-        if (is_numeric($this->_objetID)) {
+        	if (is_numeric($this->_objetID)) {
 			$this->_getObjetData();
 			$tabRetour=$tabRetour+$this->_getPsData($this->_objetData['fromID'],'AuteurInitial_');
-        }
+        	}
 		// ou sinon l'auteur initial est l'utilisateur actif
 		else if (is_numeric($this->_fromID)) {
 			$tabRetour=$tabRetour+$this->_getPsData($this->_fromID, 'AuteurInitial_');
