@@ -26,6 +26,12 @@
  * @author Maxime DEMAREST <maxime@indelog.fr>
  */
 
+// Ne retrouner déscativé si déscativé
+if ($p['config']['activGenBarreCode'] == 'false') {
+	echo json_encode(array('is_disabled' => 'true'));
+	exit();
+}
+
 $barcodedir = $p['config']['stockageLocation'].'barecode/';
 
 // TODO Check adeli and rpps format

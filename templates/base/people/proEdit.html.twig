@@ -34,7 +34,9 @@
   {{ parent() }}
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
+  {% if config.activGenBarreCode == 'true' %}
   <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/barecodegen.js?{{ modules.base }}"></script>
+  {% endif %}
 {% endblock %}
 
 {% block body %}

@@ -36,16 +36,20 @@ function retrunBareCodeBox(genCode = false) {
         },
         dataType: "json",
     }).done(function(data) {
-        $('#barecodeGenContainer').remove();
-        $('#myTabContent').after(data.html);
-        if (data.is_generated) {
+				if (data.is_disabled) {
+					alert_popup("warning", 'Le générateur de code barres est déscativé.');
+				} else {
+					$('#barecodeGenContainer').remove();
+					$('#myTabContent').after(data.html);
+					if (data.is_generated) {
             alert_popup("success", 'Code bare généré.');
-        }
-        $('#getCodeBarreButton').click(function() {
+					}
+					$('#getCodeBarreButton').click(function() {
             if ($.trim($('input[name=p_rpps]').val()).length > 0 || $.trim($('input[name=p_adeli]').val()) > 0) {
-                retrunBareCodeBox(true);
+              retrunBareCodeBox(true);
             }
-        });
+					});
+				}
     }).fail(function(data) {
         alert_popup("danger", 'Echec de l\'obtention des codes bares !');
     });
