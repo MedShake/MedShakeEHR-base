@@ -29,8 +29,13 @@
 $barcodedir = $p['config']['stockageLocation'].'barecode/';
 
 // TODO Check adeli and rpps format
-$rpps = $_POST['rpps'];
-$adeli = $_POST['adeli'];
+
+$praticien = new msPeople();
+$praticien->setToID($_POST['pratID']);
+$pratData = $praticien->getLabelForSimpleAdminDatas($praticien->getSimpleAdminDatasByName());
+
+$adeli = $pratData['adeli'];
+$rpps = $pratData['rpps'];
 
 $rpps_generated = 0;
 $adeli_generated = 0;
