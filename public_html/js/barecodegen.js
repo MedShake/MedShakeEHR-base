@@ -25,60 +25,35 @@
  * @author Maxime DEMAREST <maxime@indelog.fr>
  */
 
-$(document).ready(function() {
-
-    /**
-     * Obtenir la valeur du champ rpps
-     * @return string valeur du champ rpps
-     */
-    function getRppsField() {
-        return $('input[name=p_rpps]').val();
-    }
-
-    /**
-     * Obtenir la valeur du champ adeli
-     * @return string valeur du champ adeli
-     */
-    function getAdeliField() {
-        return $('input[name=p_adeli]').val();
-    }
-
-    function retrunBareCodeBox(genCode = false) {
-        patientID = $('#identitePatient').attr("data-patientID");
-        $.ajax({
-            url: urlBase + '/ajax/getBareCodeGenerator/',
-            type: 'post',
-            data: {
-                rpps: getRppsField(),
-                adeli: getAdeliField(),
-                genCode: genCode
-            },
-            dataType: "json",
-        }).done(function(data) {
-            $('#barecodeGenContainer').remove();
-            $('#myTabContent').after(data.html);
-            if (data.is_generated) {
-                alert_popup("success", 'Code bare généré.');
+function retrunBareCodeBox(genCode = false) {
+    patientID = $('#identitePatient').attr("data-patientID");
+    $.ajax({
+        url: urlBase + '/ajax/getBareCodeGenerator/',
+        type: 'post',
+        data: {
+            pratID: $('input[name=patientID]').val(),
+            genCode: genCode
+        },
+        dataType: "json",
+    }).done(function(data) {
+        $('#barecodeGenContainer').remove();
+        $('#myTabContent').after(data.html);
+        if (data.is_generated) {
+            alert_popup("success", 'Code bare généré.');
+        }
+        $('#getCodeBarreButton').click(function() {
+            if ($.trim($('input[name=p_rpps]').val()).length > 0 || $.trim($('input[name=p_adeli]').val()) > 0) {
+                retrunBareCodeBox(true);
             }
-            $('#getCodeBarreButton').click(function() {
-                if ($.trim(getAdeliField()).length > 0 || $.trim(getRppsField()) > 0) {
-                    retrunBareCodeBox(true);
-                }
-            });
-        }).fail(function(data) {
-            alert_popup("danger", 'Echec de l\'obtention des codes bares !');
         });
-    }
-
-    $('#id_rpps_id').change(function() {
-        retrunBareCodeBox();
+    }).fail(function(data) {
+        alert_popup("danger", 'Echec de l\'obtention des codes bares !');
     });
+}
 
-    $('#id_adeli_id').change(function() {
-        retrunBareCodeBox();
-    });
-
-    if ($.trim(getAdeliField()).length > 0 || $.trim(getRppsField()) > 0) {
+$(document).ready(function() {
+    // Appel la boite de dialog pour la génération du code rpps et adeli si ils ont une valeur
+    if ($.trim($('input[name=p_rpps]').val()).length > 0 || $.trim($('input[name=p_adeli]').val()) > 0) {
         retrunBareCodeBox();
     }
 });
