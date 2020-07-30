@@ -25,6 +25,11 @@
  * @author Maxime DEMAREST <maxime@indelog.fr>
  */
 
+
+/**
+ * Obtien via ajax la boite que affiche et génère les codes barres adeli et rpps
+ * @param boolean genCode    si true déclanche l'action de génération des codes barres
+ */
 function retrunBareCodeBox(genCode = false) {
     patientID = $('#identitePatient').attr("data-patientID");
     $.ajax({
