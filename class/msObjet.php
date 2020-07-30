@@ -219,7 +219,7 @@ public function getToID()
           return msSQL::sql2tabKey("select o.*, t.name
           from objets_data as o
           left join data_types as t on o.typeID=t.id
-          where o.typeID in (".implode(', ', $name2typeID).") and o.instance='".$this->_ID."' and o.outdated='' and o.deleted='' ", $by);
+          where o.typeID in ('".implode("', '", $name2typeID)."') and o.instance='".$this->_ID."' and o.outdated='' and o.deleted='' ", $by);
         }
     }
 
