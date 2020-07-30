@@ -606,7 +606,7 @@ class msCourrier
  * @param  int $instance    l'ID d'instance du formulaire (= objetID)
  * @return array            array avec les données de l'examen
  */
-    public function getExamenData($patientID, $formIN, $instance)
+    public static function getExamenData($patientID, $formIN, $instance)
     {
         if (!is_numeric($patientID)) throw new Exception('PatientID is not numeric');
         if (!is_string($formIN)) throw new Exception('formIN is not string');
