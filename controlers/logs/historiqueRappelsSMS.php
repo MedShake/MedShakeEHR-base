@@ -23,7 +23,8 @@
 /**
  * Logs : présente l'historique des rappels SMS
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author           Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib 2020     Maxime   DEMAREST   <maxime@indelog.fr>
  */
 
 $debug='';
@@ -64,13 +65,12 @@ if (isset($_POST['dateSel'])) {
 
 //dates
 $p['page']['dates']['emission']=$date;
+$p['page']['pratID']=$match['params']['pratID'];
 $p['page']['dates']['rdv']=$date+($smsDaysBeforeRDV*24*60*60);
 $p['page']['dates']['precedent']=$date-(60*60*24);
 $p['page']['dates']['suivant']=$date+(60*60*24);
 $p['page']['dates']['smsPourAujour']=time()-($smsDaysBeforeRDV*24*60*60);
 $p['page']['dates']['smsEnvoyeAujour']=time()+($smsDaysBeforeRDV*24*60*60);
-
-$p['page']['logFile']=$smsLogCampaignDirectory;
 
 $msSMS='msSMS'.$smsProvider;
 if (class_exists($msSMS)) {

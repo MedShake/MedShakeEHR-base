@@ -1,0 +1,49 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > models4print : corps d'une ordonnance non ALD
+ # (header et footer sont indiqués en fichier de config)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% set tag = page.courrier %}
+{% set ms = page.courrier.medoc.standard %}
+{% set ma = page.courrier.medoc.ald %}
+
+
+<p style="text-align : right;">{{ tag. AuteurInitial_villeAdressePro}}, le {{ tag.date|date("d/m/Y") }}</p>
+
+<h2 style="text-align : center; margin-bottom : 30pt;">{{ tag.identiteCompleteTitreLongDdn }} - {{ tag.age }}</h2>
+
+{% if tag.ordoImpressionNbLignes != 'n' %}
+<p style="text-align : right;">{{ ms|length }} ligne{% if ms|length > 1 %}s{% endif %} de prescriptions</p>
+{% endif %}
+
+{% for v in ms %}
+<p style="margin-bottom: 12pt;">{{ v|nl2br }}</p>
+{% endfor %}
+
+
+<br><br><br><br>
+
+<p style="text-align:right">{{ tag.AuteurInitial_identiteUsuelleTitre	}}</p>
