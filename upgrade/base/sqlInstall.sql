@@ -777,6 +777,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'default', '0', '', 'Options', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'default', '0', '', 'Options', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
+('activGenBarreCode', 'default', '0', '', 'Options', 'true/false', 'Activer ou non la fonctionalité permettant de générer les codes barres RPPS et ADELI.', 'true'),
 ('administratifComptaPeutVoirRecettesDe', 'default', '0', '', 'Règlements', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('administratifPeutAvoirAgenda', 'default', '0', '', 'Options', 'true/false', 'peut avoir un agenda à son nom', 'true'),
 ('administratifPeutAvoirFacturesTypes', 'default', '0', '', 'Règlements', 'true/false', 'peut avoir des factures types à son nom', 'false'),
