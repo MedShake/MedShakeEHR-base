@@ -214,7 +214,7 @@ class msSQL
           $valeurs[]='\''.$val.'\'';
           $dupli[]=$key.'=VALUES('.$key.')';
       }
-      if (self::sqlQuery("insert into ".self::cleanVar($table)." (`".implode('`, `', $cols)."`) values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
+      if (self::sqlQuery("insert into `".self::cleanVar($table)."` (`".implode('`, `', $cols)."`) values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
           return $mysqli->insert_id;
       } else {
           return false;
@@ -228,7 +228,7 @@ class msSQL
  * @return array        tableau des valeurs
  */
   public static function sqlEnumList($table, $field) {
-    if($row = self::sqlUnique("SHOW FIELDS FROM ".self::cleanVar($table)." where Field = '".self::cleanVar($field)."'")) {
+    if($row = self::sqlUnique("SHOW FIELDS FROM `".self::cleanVar($table)."` where Field = '".self::cleanVar($field)."'")) {
       preg_match('#^enum\((.*?)\)$#ism', $row['Type'], $matches);
       $enum = str_getcsv($matches[1], ",", "'");
       return $enum;
