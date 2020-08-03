@@ -111,4 +111,11 @@
     {% else %}
       {{ f.formbuilder(page.form , page.formIN ) }}
     {% endif %}
+
+    {% if page.formJavascript is not empty %}
+      <script>
+       {{ page.formJavascript }}
+      </script>
+    {% endif %}
+
 </div>

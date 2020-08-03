@@ -115,6 +115,7 @@ $form->setFormIDbyName($p['page']['formIN']=$_POST['formIN']);
 if(isset($preValues)) $form->setPrevalues($preValues);
 $form->setTypeForNameInForm('byName');
 $p['page']['form']=$form->getForm();
+$p['page']['formJavascript']=$form->getFormJavascript();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block', $submitLabel);
 
 $p['page']['form']['addHidden']=array(
