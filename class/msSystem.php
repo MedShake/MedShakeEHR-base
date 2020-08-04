@@ -76,7 +76,7 @@ class msSystem
  * @return array                   match routeur
  */
   public static function getRoutes($preDefinedRoutes=[]) {
-    global $p;
+    global $p, $routes;
 
     if((!empty($preDefinedRoutes))) {
       $routes = $preDefinedRoutes;
