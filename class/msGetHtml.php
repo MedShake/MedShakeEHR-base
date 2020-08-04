@@ -134,6 +134,13 @@ class msGetHtml
       $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
       $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
+      // filtre pour la verification de l'existence d'un fichier (utile dans la surcharge du menu principal)
+      $fileExist = new \Twig\TwigFilter('file_exist', function ($string) {
+          return file_exists($string);
+      });
+
+      $twig->addFilter($fileExist);
+
       return $twig->render($this->_template.$this->_templateFileExt, $p);
   }
 
@@ -170,6 +177,13 @@ class msGetHtml
         $twig = new \Twig\Environment($loader, $twigEnvironment);
         $twig->getExtension(\Twig\Extension\CoreExtension::class)->setDateFormat('d/m/Y', '%d days');
         $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
+
+        // filtre pour la verification de l'existence d'un fichier (utile dans la surcharge du menu principal)
+        $fileExist = new \Twig\TwigFilter('file_exist', function ($string) {
+            return file_exists($string);
+        });
+
+        $twig->addFilter($fileExist);
 
         return $twig->render($this->_template.$this->_templateFileExt, $var);
     }
