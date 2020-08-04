@@ -119,7 +119,7 @@ if (msSystem::getProUserCount() == 0) {
       $match = msSystem::getRoutes(['login']);
     }
 
-    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
+    if (is_array($match) && isset($match['target']) && $match['target']!='login/logIn' && $match['target']!='login/logInDo' && $match['target']!='rest/rest') {
         msTools::redirection('/login/');
     }
     // compléter la config par défaut
@@ -135,7 +135,7 @@ if(!empty($p['config']['statsExclusionPatients'])) {
 }
 
 ///////// Controler
-if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+if ($match && is_file($homepath.'controlers/'.$match['target'].'.php')) {
 
     include $homepath.'controlers/'.$match['target'].'.php';
 
@@ -148,8 +148,16 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
         http_response_code(404);
         die;
     }
-} elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-    include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif ($match && (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php') ||
+        is_file($homepath.'controlers/module/'.$match['target'].'.php'))) {
+
+    // Gestion des controlers additionnels des modules (controlers non existant dans MedShakeEHR-base)
+    if (isset($p['user']['id'])) {
+        include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    } else {
+        include $homepath.'controlers/module/'.$match['target'].'.php';
+    }
+
 } elseif(isset($p['user']['id'])) {
     $template ='404';
 }

@@ -64,8 +64,9 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base et sortie des versions des modules
-if (!count($p['modules']=msSQL::sql2tabKey("select name, value FROM `system`", 'name', 'value'))) {
+
+/////////// Sortie des versions des modules
+if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
     msTools::redirection('/install.php');
 }
 
@@ -92,8 +93,11 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     if (is_file($homepath.'controlers/module/'.$match['target'].'.php')) {
         include $homepath.'controlers/module/'.$match['target'].'.php';
     }
+} else if ($match && is_file($homepath.'controlers/module/'.$match['target'].'.php')) {
+    // Permet d'ajouter un controler via un module même si celui-ci n'existe pas dans MedShakeEHR-base
+    include $homepath.'controlers/module/'.$match['target'].'.php';
 } else {
-    //$template='problem';
+    $template='404';
 }
 
 //////// View if defined
