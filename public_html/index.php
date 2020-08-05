@@ -74,8 +74,8 @@ $mysqli=msSQL::sqlConnect();
 $p['config']['systemState']=msSystem::getSystemState();
 
 /////////// Sortie des versions des modules
-if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
-    msTools::redirection('/install.php');
+if (empty($p['modules']=msModules::getInstalledModulesVersions(true))) {
+	msTools::redirection('/install.php');
 }
 /////////// Validators loader
 define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
