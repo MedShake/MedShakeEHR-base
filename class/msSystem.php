@@ -94,7 +94,7 @@ class msSystem
             /* fichier additionnel pour les modules */
             foreach ($installedModules as $module) {
                 $file = $p['homepath'] . 'config/routes/'.$module.'/routesInclusionRules.yml';
-                if ($module != 'base' && is_file($file)) {
+                if ($module != 'base' and is_file($file)) {
                     $inclusionsRules = array_merge($inclusionsRules, yaml_parse_file($file));
                 }
             }
@@ -117,7 +117,7 @@ class msSystem
             // ajout de routes complémentaires (via module)
             foreach ($installedModules as $module) {
                 $file = $p['homepath'] . 'config/routes/' . $module . '/routes-' . $route . '.yml';
-                if ($module != "base" && is_file($file)) {
+                if ($module != "base" and is_file($file)) {
                     $routes = yaml_parse_file($file);
                     $router->addRoutes($routes);
                 }
