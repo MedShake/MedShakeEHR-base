@@ -356,6 +356,7 @@ $conf = array (
   'templatesFolder'=>$homepath.'templates/',
   'twigEnvironnementCache'=>false,
   'twigEnvironnementAutoescape'=>false,
+  'twigDebug'=>false
 );
 
 if ($iscli || ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['configForm']))) {
