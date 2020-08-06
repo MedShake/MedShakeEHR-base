@@ -28,6 +28,8 @@
 
 
 header('Content-Type: application/json');
+// Utiliser pour faciliter le debugage avec xdebug
+//header('Content-Type: text/html');
 
 $m=$match['params']['m'];
 
@@ -41,7 +43,8 @@ $acceptedModes=array(
     'getCpsVitaleData', // Obtenir les infos de la carte Vitale
     'getCpsVitaleDataRappro', // Obtenir les infos de la carte Vitale rapprochées aux ID patients
     'makeClick2Call', // lancer un appel click2call
-    'getPatientsOfTheDay' // obtenir le html pour le menu patients of the day
+    'getPatientsOfTheDay', // obtenir le html pour le menu patients of the day
+    'getBareCodeGenerator', // obtenir les codes bare généré
 );
 
 if (!in_array($m, $acceptedModes)) {

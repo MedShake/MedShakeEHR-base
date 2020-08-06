@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <http://www.github.com/fr33z00>
+ * @contrib Maxime DEMAREST <maxime@indelog>
  */
 class msTools
 {
@@ -535,5 +536,33 @@ class msTools
        return false;
      }
    }
+/**
+ * Générer un code bare au format svg
+ * @param  string  $type       type de code rpps ou adeli
+ * @param  string  $code       code à générer
+ * @return boolean             true if created, false if exisit
+ */
+    public static function genBareCodeFile($type, $code) {
+        global $p;
+        $created = false;
+
+        # checks
+        if (! in_array($type, array('rpps', 'adeli'))) {
+            throw new Exception('Le type de code doit être \'rpps\' ou \'adeli\'');
+        }
+        $barcodedir = $p['config']['stockageLocation'].'barecode/';
+        self::checkAndBuildTargetDir($barcodedir, $rights=0755);
+
+        if (file_exists($barcodedir.'barecode-'.$type.'-'.$code.'.svg')) {
+            return 0;
+        } else {
+            $generator = new Picqer\Barcode\BarcodeGeneratorSVG();
+            if (file_put_contents($barcodedir.'barecode-'.$type.'-'.$code.'.svg', $generator->getBarcode($code, $generator::TYPE_CODE_128))) {
+                return true;
+            } else {
+                throw new Exception('Echec de la création du fichier '.$barcodedir.'barecode-'.$type.'-'.$code.'.svg');
+            }
+        }
+    }
 
 }

@@ -332,7 +332,7 @@ class msPeople
  * @param  string $service service spécifique
  * @return array          tableau userID=>identité
  */
-  public function getUsersListForService($service)
+  public static function getUsersListForService($service)
   {
       $name2typeID = new msData();
       $name2typeID = $name2typeID->getTypeIDsFromName([$service, 'firstname', 'lastname', 'birthname']);

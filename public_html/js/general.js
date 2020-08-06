@@ -357,6 +357,13 @@ $(document).ready(function() {
       $('.QRcodeAccesPhoneCapture').html(el);
     }
   }
+
+	// Évite que la liste ne dépasse l'écran quant la page est redimentionner
+	$(window).on('resize', function(){
+    $('#patientsOfTheDayMenu div.dropdown-menu').height(window.innerHeight*0.75);
+	});
+	$('#patientsOfTheDayMenu div.dropdown-menu').height(window.innerHeight*0.75);
+
 });
 
 
@@ -421,6 +428,13 @@ function setPeopleData(value, patientID, typeID, source, instance) {
       },
       dataType: "json",
       success: function(data) {
+        dataTypeName = $('input[data-typeid='+typeID+']').attr('data-internalname');
+        /* Code de régénéation du code bare pour le rpps et l'adeli (dans barecodegen.js)
+           N'est activé que si la fonction est chargé (uniquement dans le template proEdit.html.twig)
+           et que l'élément modifié est le code rpps ou adeli */
+        if ((typeof retrunBareCodeBox !== 'undefined' && typeof retrunBareCodeBox === 'function') && (dataTypeName === 'rpps' || dataTypeName === 'adeli')) {
+            retrunBareCodeBox();
+        }
         glow('success', $(source));
         if ($(source).hasClass('reloadAfterGlow')) {
           window.location.reload();
