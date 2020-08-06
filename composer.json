@@ -12,7 +12,6 @@
     "box/spout": "2.7.3",
     "setasign/fpdi-fpdf": "v2.3.0",
     "spomky-labs/otphp": "^10.0",
-    "spomky-labs/otphp": "^10.0",
     "picqer/php-barcode-generator":  "v2.0.1"
   }
 }
