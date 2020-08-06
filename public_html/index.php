@@ -119,7 +119,7 @@ if (msSystem::getProUserCount() == 0) {
       $match = msSystem::getRoutes(['login']);
     }
 
-    if (is_array($match) and isset($match['target']) and $match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
+    if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
         msTools::redirection('/login/');
     }
     // compléter la config par défaut
