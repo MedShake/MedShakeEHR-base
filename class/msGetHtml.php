@@ -272,6 +272,21 @@ class msGetHtml
 			$this->_templatesDirectories[] = $moduleFolder;
 			$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
 		}
+
+		//templates module non connecté (public)
+		if (!isset($p['user']['module'])) {
+			$modules = msModules::getInstalledModulesNames();
+			foreach ($modules as $module) {
+				if ($module != "base") {
+					$moduleFolder = $p['config']['templatesFolder'] . $module . '/public';
+					if (is_dir($moduleFolder)) {
+						$this->_templatesDirectories[] = $moduleFolder;
+						$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
+					}
+				}
+			}
+		}
+
 		//templates base
 		$baseFolder = $p['config']['templatesFolder'] . "base";
 		if (is_dir($baseFolder)) {
