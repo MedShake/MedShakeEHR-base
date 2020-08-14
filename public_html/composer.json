@@ -163,8 +163,8 @@
     ],
 
     "require": {
-        "mattbryson/TouchSwipe-Jquery-Plugin": "1.6.18",
-        "FezVrasta/popper.js": "v1.14.4",
+        "mattbryson/touchswipe-jquery-plugin": "1.6.18",
+        "fezvrasta/popper.js": "v1.14.4",
         "twbs/bootstrap": "4.4.1",
         "eonasdan/bootstrap-datetimepicker": "4.17.47",
         "moment/moment": "2.24.0",
@@ -175,13 +175,13 @@
         "danielm/uploader": "v1.0.2",
         "brinley/jsignature": "2.1.3",
         "fullcalendar/fullcalendar": "3.10.1",
-        "swisnl/jquery-contextMenu": "2.5.0",
+        "swisnl/jquery-contextmenu": "2.5.0",
         "lrsjng/kjua": "v0.1.2",
         "chaijs/chai": "1.9.0",
         "jquery/jquery-mousewheel": "3.1.9",
         "mochajs/mocha": "1.17.1",
         "farbelous/bootstrap-colorpicker": "2.5.0",
-        "joequery/Stupid-Table-Plugin": "1.1.3",
+        "joequery/stupid-table-plugin": "1.1.3",
         "thebingservices/codemirror": "v5.10.0",
         "fortawesome/font-awesome": "^5.12",
         "fr33z00/panzoom": "v3.2.2.1+1Touch"
