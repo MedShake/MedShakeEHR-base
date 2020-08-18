@@ -527,7 +527,7 @@ class msTools
      }
    }
 /**
- * Générer un code bare au format svg
+ * Générer un code-barres au format svg
  * @param  string  $type       type de code rpps ou adeli
  * @param  string  $code       code à générer
  * @return boolean             true if created, false if exisit

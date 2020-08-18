@@ -62,10 +62,10 @@ if (empty($rpps)) {
     $has_rpps_barecode_file = true;
     $html .= '<div class="text-center">';
     $html .= file_get_contents($barcodedir.'barecode-rpps-'.$rpps.'.svg');
-    $html .= '<p>Code bare RPPS généré.</br><i>(n° '.$rpps.')</i></p>';
+    $html .= '<p>Code-barres RPPS généré.</br><i>(n° '.$rpps.')</i></p>';
     $html .= '</div>';
 } else {
-    $html .= '<div class="text-center">Code bare RPPS non généré</div>';
+    $html .= '<div class="text-center">Code-barres RPPS non généré</div>';
 }
 $html .= '</div>';
 
@@ -78,10 +78,10 @@ if (empty($adeli)) {
     $has_adeli_barecode_file = true;
     $html .= '<div class="text-center">';
     $html .= file_get_contents($barcodedir.'barecode-adeli-'.$adeli.'.svg');
-    $html .= '<p>Code bare ADELI généré.</br><i>(n° '.$adeli.')</i></p>';
+    $html .= '<p>Code-barres ADELI généré.</br><i>(n° '.$adeli.')</i></p>';
     $html .= '</div>';
 } else {
-    $html .= '<div class="text-center">Code bare ADELI non généré</div>';
+    $html .= '<div class="text-center">Code-barres ADELI non généré</div>';
 
 }
 $html .= '</div>';
@@ -91,7 +91,7 @@ $html .= '</div>';
 // block button to gen
 if ((!empty($rpps) || !empty($adeli)) && (!$has_rpps_barecode_file || !$has_adeli_barecode_file)) {
     $html .= '<div class="row  mt-3 justify-content-center" data-num-row="2">';
-    $html .= '<button id="getCodeBarreButton" type="button" class="btn btn-primary">Générer les codes barres</button>';
+    $html .= '<button id="getCodeBarreButton" type="button" class="btn btn-primary">Générer les codes-barres</button>';
     $html .= '</div>';
 }
 
