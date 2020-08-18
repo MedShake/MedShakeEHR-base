@@ -29,6 +29,6 @@
 
 if($_POST['externID']<1 or !is_numeric($_POST['externID'])) die;
 
-msSQL::sqlQuery("UPDATE people SET type='patient' WHERE id='".$_POST['externID']."'");
+msSQL::sqlQuery("UPDATE `people` SET `type`='patient' WHERE `id`='".$_POST['externID']."'");
 
 echo json_encode(array('ok'));

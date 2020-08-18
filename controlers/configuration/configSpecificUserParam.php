@@ -45,7 +45,7 @@ $p['page']['userParams']=[];
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
     foreach($data as $k=>$v) {
         if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
-            $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
+            $v['formValues']=msSQL::sql2tabKey("SELECT `id`, `name` FROM `people` WHERE `name`!='' and `type`='pro'", "id", "name");
             unset($v['formValues'][$p['page']['userID']]);
             if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
                 $v['formValues']['0']='';

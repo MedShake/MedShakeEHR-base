@@ -211,7 +211,7 @@ class msCcamNgapApi
  */
   public function getAllAndUpdate() {
     $tabr=[];
-    if($codes=msSQL::sql2tab("select id, code, type, phase, activite, codeProf from actes_base where type in ('NGAP', 'CCAM', 'mCCAM') order by type")); {
+    if($codes=msSQL::sql2tab("select `id`, `code`, `type`, `phase`, `activite`, `codeProf` from `actes_base` where `type` in ('NGAP', 'CCAM', 'mCCAM') order by `type`")); {
       foreach($codes as $k=>$code) {
         $this->setActeCode($code['code']);
         $this->setActiviteCode($code['activite']);

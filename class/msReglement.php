@@ -500,7 +500,7 @@ class msReglement
  */
       public function getModificateursCcam() {
         $modifs=[];
-          if($modifs=msSQL::sql2tabKey("select * from actes_base where type = 'mCCAM' ", 'code')) {
+          if($modifs=msSQL::sql2tabKey("select * from `actes_base` where `type` = 'mCCAM' ", 'code')) {
            foreach($modifs as $k=>$v) {
              $modifs[$k]['dataYaml']=Spyc::YAMLLoad($v['dataYaml']);
              if(isset($modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire])) {

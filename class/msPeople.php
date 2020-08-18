@@ -141,7 +141,7 @@ class msPeople
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
-        return $this->_type = msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
+        return $this->_type = msSQL::sqlUniqueChamp("SELECT `type` FROM `people` WHERE `id`='".$this->_toID."' limit 1");
     }
 
 /**
@@ -152,7 +152,7 @@ class msPeople
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
-        return msSQL::sqlUniqueChamp("SELECT type='externe' FROM people WHERE id='".$this->_toID."' limit 1")==1;
+        return msSQL::sqlUniqueChamp("SELECT `type`='externe' FROM `people` WHERE `id`='".$this->_toID."' limit 1")==1;
     }
 
 /**

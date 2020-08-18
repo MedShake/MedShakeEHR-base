@@ -30,7 +30,7 @@
 $debug='';
 $template="firstLogin";
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") != "0") {
   msTools::redirRoute('userLogIn');
 }
 

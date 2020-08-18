@@ -29,7 +29,7 @@
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") != "0") {
   msTools::redirRoute('userLogIn');
 }
 

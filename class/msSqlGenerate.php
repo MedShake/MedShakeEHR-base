@@ -226,7 +226,7 @@ class msSqlGenerate
 
     // extraction finale des actes NGAP / CCAM nécessaires
     $collecteCcamNgap=array_unique(array_merge($collecteCcamNgap, $listFromModule));
-    if($actesbase=msSQL::sql2tab("select * from $this->_bdd.actes_base where code in ('".implode("', '", $collecteCcamNgap)."') order by type, code")) {
+    if($actesbase=msSQL::sql2tab("select * from $this->_bdd.actes_base where `code` in ('".implode("', '", $collecteCcamNgap)."') order by `type`, `code`")) {
       foreach($actesbase as $actebase) {
         unset($actebase['id']);
         $actebase['fromID']=1;
