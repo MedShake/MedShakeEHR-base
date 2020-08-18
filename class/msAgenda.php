@@ -572,7 +572,7 @@ class msAgenda
       $data['stats']['ok']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut!='deleted' and  absente!='oui'");
       $data['stats']['annule']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and statut='deleted'");
       $data['stats']['absent']=msSQL::sqlUniqueChamp("select count(id) from agenda where patientid='".$this->_patientID."' and absente='oui'");
-      $data['historique']=(array)msSQL::sql2tab("select DATE_FORMAT(start, '%Y %m %d - %H:%i') as start, DATE_FORMAT(start, '%Y%m%d') as dateJump, DATE_FORMAT(start, '%Y-%m-%dT%TZ') as dateiso, type, statut, absente, motif, userid as agendaID from agenda where patientid='".$this->_patientID."' order by start desc limit $limit");
+      $data['historique']=(array)msSQL::sql2tab("select DATE_FORMAT(`start`, '%Y %m %d - %H:%i') as `start`, DATE_FORMAT(`start`, '%Y%m%d') as `dateJump`, DATE_FORMAT(`start`, '%Y-%m-%dT%TZ') as `dateiso`, `type`, `statut`, `absente`, `motif`, `userid` as agendaID from `agenda` where `patientid`='".$this->_patientID."' order by `start` desc limit $limit");
 
       return $data;
   }

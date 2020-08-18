@@ -89,7 +89,7 @@ $match = $router->match();
 $p['user']=null;
 $p['user']['id']=null;
 $p['user']['module']='base';
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name!=''") == "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro' AND `name`!=''") == "0") {
     if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
         msTools::redirRoute('userLogInFirst');
     }

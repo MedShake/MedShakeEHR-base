@@ -189,7 +189,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     }
 
     // complément data_cat
-    if($catData=msSQL::sql2tab("select * from $this->_bdd.data_cat where type='base'")) {
+    if($catData=msSQL::sql2tab("select * from $this->_bdd.data_cat where `type`='base'")) {
     foreach($catData as $v) {
         unset($v['id']);
         $v['fromID']='1';
@@ -206,7 +206,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     $this->_system_values[]=$this->_getSqlValuesPart($system);
 
     // people services
-    if($services=msSQL::sql2tab("select * from $this->_bdd.people where type='service' and module='base'")) {
+    if($services=msSQL::sql2tab("select * from $this->_bdd.people where `type`='service' and `module`='base'")) {
       foreach($services as $service) {
         unset($service['id']);
         $service['pass']='';

@@ -247,7 +247,7 @@ class msPeopleSearch
  * @return int       ID du service
  */
     public static function getServiceID($name) {
-      return msSQL::sqlUniqueChamp("SELECT id from people where name = '".cleanVar($name)."' and type = 'service' limit 1");
+      return msSQL::sqlUniqueChamp("SELECT `id` from `people` where `name` = '".cleanVar($name)."' and `type` = 'service' limit 1");
     }
 
 /**
