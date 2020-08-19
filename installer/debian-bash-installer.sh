@@ -128,7 +128,7 @@ apacheInstall() {
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)
 	sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/' /etc/php/$vphp/apache2/php.ini
 	sed -i 's/post_max_size = 8M/post_max_size = 20M/' /etc/php/$vphp/apache2/php.ini
-	sed -i 's/max_input_vars = 1000/max_input_vars = 10000/' /etc/php/$vphp/apache2/php.ini
+	sed -i 's/;max_input_vars = 1000/max_input_vars = 10000/' /etc/php/$vphp/apache2/php.ini
 
     ## Relancer Apache
     service apache2 restart
@@ -136,9 +136,11 @@ apacheInstall() {
 
 # Configuration MariaDB
 mariadbInstall() {
-    read -s -r -p "Choix du mot de passe root de mysql : " mysqlrootpass \
+    read -s -r -p "Choix du mot de passe root de mysql : " mysqlrootpass
+    echo
     read -p "Choix du nom de l'admin de mysql : " mysqladmin
-    read -s -r -p "Choix du mot de passe admin de mysql : " mysqlpass \
+    read -s -r -p "Choix du mot de passe admin de mysql : " mysqlpass 
+    echo
     mysql <<EOF
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
     DELETE FROM mysql.user WHERE User='';
