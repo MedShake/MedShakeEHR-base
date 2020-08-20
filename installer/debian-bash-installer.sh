@@ -192,9 +192,9 @@ msehrInstall() {
 
     ## Installation des dépendances avec composer
     cd $msehrPath
-    su www-data -s/bin/bash -c 'composer install'
+    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
     cd $msehrPath/public_html
-    su www-data -s/bin/bash -c 'composer install'
+    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
 }  
 
 # Choix du nettoyage
