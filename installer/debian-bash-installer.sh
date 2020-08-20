@@ -23,8 +23,7 @@
 
 # Choix dossier d'installation.
 selectPath() {
-    echo -e "Choix du dossier d'installation (ex: /home/ehr) : \c"
-    read msehrPath
+    read -p "Choix du dossier d'installation (ex: /home/ehr) : " msehrPath
 }
 
 # Choix des paquets à installer
@@ -32,8 +31,7 @@ selectPackages() {
     echo "Installation des dépendances de MedShakeEHR minimales, tapez 1 [défaut]"
     echo "Installation de MedShakeEHR avec Orthanc (Phonecapture, Echographe ...), tapez 2"
     echo "Ne rien installer, tapez 3"
-	echo -e "Choix : \c"
-    read selectInstall
+    read -p "Choix : " selectInstall
     case $selectInstall in
         "1" )
             msehrDep=$msehrMin 
@@ -53,8 +51,7 @@ packagesInstall(){
 
 # Choix de configurer le serveur LAMP
 selectLamp() {
-echo -e "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1, vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : \c"
-read selectLamp
+read -p "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1, vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : " selectLamp
 case $selectLamp in
     "1" )
         certGen
@@ -72,8 +69,7 @@ esac
 
 # Choix du certificat
 selectdomain() {
-    echo -e "Choix du domaine (ex: msehr.local) : \c"
-    read msehrDom
+    read -p "Choix du domaine (ex: msehr.local) : " msehrDom
 }
 
 # Génération d'un certificat ssl
@@ -132,7 +128,7 @@ apacheInstall() {
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)
 	sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/' /etc/php/$vphp/apache2/php.ini
 	sed -i 's/post_max_size = 8M/post_max_size = 20M/' /etc/php/$vphp/apache2/php.ini
-	sed -i 's/max_input_vars = 1000/max_input_vars = 10000/' /etc/php/$vphp/apache2/php.ini
+	sed -i 's/;max_input_vars = 1000/max_input_vars = 10000/' /etc/php/$vphp/apache2/php.ini
 
     ## Relancer Apache
     service apache2 restart
@@ -140,12 +136,11 @@ apacheInstall() {
 
 # Configuration MariaDB
 mariadbInstall() {
-    echo -e "Choix du mot de passe root de mysql : \c"
-    read mysqlrootpass
-    echo -e "Choix du nom de l'admin de mysql : \c"
-    read mysqladmin
-    echo -e "Choix du mot de passe admin de mysql : \c"
-    read mysqlpass
+    read -s -r -p "Choix du mot de passe root de mysql : " mysqlrootpass
+    echo
+    read -p "Choix du nom de l'admin de mysql : " mysqladmin
+    read -s -r -p "Choix du mot de passe admin de mysql : " mysqlpass 
+    echo
     mysql <<EOF
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
     DELETE FROM mysql.user WHERE User='';
@@ -157,8 +152,7 @@ EOF
 
 # Choix de la version de MedShakeEHR
 selectVersion() {
-    echo -e "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2 : \c"
-    read selectv
+    read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2 : " selectv
     case $selectv in
     "1" )
         msehrLatest ;;  
@@ -176,8 +170,7 @@ msehrLatest() {
 
 # Récupération d'une version de MedShakeEHR
 selectMsehrV() {
-    echo -e "Tapez la version sous la forme vX.X.X : \c"
-    read vversion
+    read -p "Tapez la version sous la forme vX.X.X : " vversion
 }	
 
 # Installation de MedShakeEHR     
@@ -206,8 +199,7 @@ msehrInstall() {
 
 # Choix du nettoyage
 selectRemoveInstallFiles() {
-    echo -e "Si vous souhaitez détruire les fichiers d'installation tapez 1, si vous souhaitez les conserver tapez 2"
-read selectRemove
+read -p "Si vous souhaitez détruire les fichiers d'installation tapez 1, si vous souhaitez les conserver tapez 2" selectRemove
 case $selectRemove in
     "1" )
         removeInstallFiles ;;
@@ -230,8 +222,7 @@ msehrDep=$msehrMin
 
 # Sélection de l'installation.
 echo " Bienvenue, ce script va vous guider lors de l'installation de MedShakeEHR. Si vous avez besoin d'aide au cours de l'installation : https://c-medshakeehr.fr/doc"
-echo -e "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : \c"
-read persoInstall
+read -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : " persoInstall
 case $persoInstall in
     "1" )
         packagesInstall
