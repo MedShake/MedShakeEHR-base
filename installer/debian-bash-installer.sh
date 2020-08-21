@@ -41,6 +41,9 @@ selectPackages() {
             packagesInstall ;;
         "3" ) 
 		 ;;
+        * ) 
+            echo "Mauvaise valeur saisie"
+            selectPackages ;;
     esac 
 }
 
@@ -64,6 +67,9 @@ case $selectLamp in
         mariadbInstall ;;
     "3" ) 
 	 ;;
+    * ) 
+        echo "Mauvaise valeur saisie"
+        selectLamp ;;
 esac 
 }
 
@@ -152,12 +158,17 @@ EOF
 
 # Choix de la version de MedShakeEHR
 selectVersion() {
-    read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2 : " selectv
+    read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2, ne rien installer tapez 3 : " selectv
     case $selectv in
     "1" )
         msehrLatest ;;  
     "2" )
         selectMsehrV ;;
+    "3" )
+         ;;
+    * ) 
+        echo "Mauvaise valeur saisie"
+        selectVersion ;;
 esac 
 }
 
@@ -192,9 +203,9 @@ msehrInstall() {
 
     ## Installation des dépendances avec composer
     cd $msehrPath
-    su www-data -s/bin/bash -c 'composer install'
+    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
     cd $msehrPath/public_html
-    su www-data -s/bin/bash -c 'composer install'
+    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
 }  
 
 # Choix du nettoyage
@@ -205,12 +216,41 @@ case $selectRemove in
         removeInstallFiles ;;
     "2" ) 
 	 ;;
+    * ) 
+        echo "Mauvaise valeur saisie"
+        selectRemoveInstallFiles ;;
 esac
 }
     
 # Nettoyage
 removeInstallFiles() {
     rm -r /tmp/$vversion.zip /tmp/MedShakeEHR-base-$version /tmp/debian-bash-installer.sh
+}
+
+# Sélection de l'installation.
+selectInstall(){
+    echo "Bienvenue, ce script va vous guider lors de l'installation de MedShakeEHR. Si vous avez besoin d'aide au cours de l'installation : https://c-medshakeehr.fr/doc"
+    read -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : " persoInstall
+    case $persoInstall in
+        "1" )
+            packagesInstall
+            certGen
+            apacheInstall
+            mariadbInstall
+            msehrLatest
+            msehrInstall
+            removeInstallFiles ;;
+        "2" )
+            selectPath
+            selectPackages
+            selectLamp
+            selectVersion
+            msehrInstall
+            selectRemoveInstallFiles ;;
+        * ) 
+            echo "Mauvaise valeur saisie"
+            selectInstall ;;    
+    esac  
 }
 
 # Variables globales par défauts.
@@ -220,23 +260,5 @@ msehrMin="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl 
 extraDicom="orthanc"
 msehrDep=$msehrMin
 
-# Sélection de l'installation.
-echo " Bienvenue, ce script va vous guider lors de l'installation de MedShakeEHR. Si vous avez besoin d'aide au cours de l'installation : https://c-medshakeehr.fr/doc"
-read -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : " persoInstall
-case $persoInstall in
-    "1" )
-        packagesInstall
-        certGen
-        apacheInstall
-        mariadbInstall
-        msehrLatest
-        msehrInstall
-        removeInstallFiles ;;
-    "2" )
-        selectPath
-        selectPackages
-        selectLamp
-        selectVersion
-        msehrInstall
-        selectRemoveInstallFiles ;;
-esac  
+clear
+selectInstall
