@@ -1,5 +1,5 @@
 -- Mise à jour n° de version
-UPDATE `system` SET `value`='v6.6.1' WHERE `name`='base' and `groupe`='module';
+UPDATE `system` SET `value`='v6.7.0' WHERE `name`='base' and `groupe`='module';
 
 -- Ajout mutuelle 
 
