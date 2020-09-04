@@ -71,6 +71,7 @@ $p['page']['formJavascript']['baseSynthese']=$form_baseSynthese->getFormJavascri
 $typeCs_csBase = new msData;
 $p['page']['typeCs_csBase']=$typeCs_csBase->getDataTypesFromCatName('csBase', array('id','label', 'formValues'));
 
+$data = new msData;
 $ordos=$data->getDataTypesFromCatName('porteursOrdo', array('id', 'module', 'label', 'description', 'formValues'));
 foreach ($ordos as $v) {
     if ($v['module']=='base') {
