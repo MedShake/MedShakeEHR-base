@@ -57,6 +57,7 @@ $p['page']['params']=array(
   array('cat'=>'Service d\'affichage','name'=>'templatesFolder','value'=>$p['config']['templatesFolder'],'type'=>'texte'),
   array('cat'=>'Service d\'affichage','name'=>'twigEnvironnementCache','value'=>$p['config']['twigEnvironnementCache']?:'false','type'=>'false/dossier','description'=>'ex: /tmp/templates_cache/'),
   array('cat'=>'Service d\'affichage','name'=>'twigEnvironnementAutoescape','value'=>$p['config']['twigEnvironnementAutoescape']?:'false','type'=>'false/texte'),
+  array('cat'=>'Service d\'affichage','name'=>'twigDebug','value'=>$p['config']['twigDebug']?:'false','type'=>'false/true')
 );
 
 $p['page']['params']=array_merge($p['page']['params'], msConfiguration::getDefaultParameters());
