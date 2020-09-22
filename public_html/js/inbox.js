@@ -49,7 +49,7 @@ $(document).ready(function() {
   });
 
   //autocomplete pour la recherche patient
-  $('body').delegate('#searchPatientID', 'focusin', function() {
+  $('body').delegate('#searchPeopleID', 'focusin', function() {
     if ($(this).is(':data(autocomplete)')) return;
     $(this).autocomplete({
       source: urlBase + '/inbox/ajax/getPatients/',
@@ -57,8 +57,8 @@ $(document).ready(function() {
         $('#tabPatients').append(constructPatientLine(ui.item));
         selectPatient($("tr.patientSelect[data-patientid = " + ui.item.id + "]"));
 
-        $('#searchPatientID').val(ui.item.label);
-        $('#searchPatientID').attr('data-id', ui.item.id);
+        $('#searchPeopleID').val(ui.item.label);
+        $('#searchPeopleID').attr('data-id', ui.item.id);
       }
     });
   });

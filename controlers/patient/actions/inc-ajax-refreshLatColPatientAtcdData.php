@@ -33,5 +33,12 @@ $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
 $p['page']['patient']['id']=$_POST['patientID'];
 
+//vérifier les droits
+$droits = new msPeopleDroits($p['user']['id']);
+if(!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
+  $template="forbidden";
+  return;
+}
+
 //les ALD du patient
-if($p['config']['utiliserLap'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}
+if($p['config']['optionGeActiverLapInterne'] == 'true') {$p['page']['patient']['ALD']=$patient->getALD();}

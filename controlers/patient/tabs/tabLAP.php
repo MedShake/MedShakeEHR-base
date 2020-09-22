@@ -29,7 +29,7 @@
  $debug='';
  $template="inc-tabLAP";
 
- if($p['config']['utiliserLap'] != 'true') die("Le LAP n'est pas activé");
+ if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
  $p['page']['patient']['id']=$match['params']['patientID'];
  $patient=new msPeople();

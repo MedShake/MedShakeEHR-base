@@ -24,6 +24,9 @@
  * people : editer les données d'un individus
  * soit en mode patient -> formulaire $p['config']['formFormulaireNouveauPatient']
  * soit en mode pro -> formulaire $p['config']['formFormulaireNouveauPraticien']
+ * soit en mode groupe -> formulaire $p['config']['formFormulaireNouveauGroupe']
+ * soit en mode registre -> formulaire $p['config']['formFormulaireNouveauRegistre']
+ *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -31,13 +34,21 @@
 
 $debug='';
 
-
 $p['page']['porp']=$match['params']['porp'];
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-
-if(!in_array($patient->getType(), ['patient', 'pro'])) {
+$parentID = $patient->getFromID();
+$peolpleIdType = $patient->getType();
+if(!in_array($peolpleIdType, ['patient', 'pro', 'groupe', 'registre'])) {
+  $template = "404";
+  return;
+}
+if($peolpleIdType == 'groupe' and $p['page']['porp']!= 'groupe') {
+  $template = "404";
+  return;
+}
+if($peolpleIdType == 'registre' and $p['page']['porp']!= 'registre') {
   $template = "404";
   return;
 }
@@ -47,16 +58,36 @@ if ($p['page']['porp']=='patient') {
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 
     //vérifier les droits
-    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+    $droits = new msPeopleDroits($p['user']['id']);
+    if(!$droits->checkUserCanSeePatientData($match['params']['patient'])) {
       $template="forbidden";
       return;
     }
+
 } elseif ($p['page']['porp']=='pro') {
     $template="proEdit";
     $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
 
     //vérifier les droits
     if($p['config']['droitDossierPeutCreerPraticien'] != 'true' and $match['params']['patient']!=$p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
+    if(!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutCreerPraticien'] == 'true' and $match['params']['patient'] != $p['user']['id'] and $parentID != $p['user']['id']) {
+      $template="forbidden";
+      return;
+    }
+
+} elseif ($p['page']['porp']=='groupe') {
+    $template="groupeEdit";
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
+
+} elseif ($p['page']['porp']=='registre') {
+    $template="registreEdit";
+    $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
+
+    //vérifier droits
+    if($p['config']['droitRegistrePeutCreerRegistre'] != 'true') {
       $template="forbidden";
       return;
     }
@@ -67,7 +98,12 @@ $p['page']['patient']['id']=$match['params']['patient'];
 
 $formpatient = new msForm();
 $formpatient->setFormIDbyName($p['page']['formIN']);
-$formpatient->setPrevalues($p['page']['patient']);
+
+if(isset($_SESSION['form'][$p['page']['formIN']]['formValues']) and !empty($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
+  $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
+} else {
+  $formpatient->setPrevalues($p['page']['patient']);
+}
 
 //si formulaire pro
 if ($p['page']['porp']=='pro') {
@@ -93,6 +129,7 @@ $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascri
 $p['page']['form']['addHidden']=array(
   'patientID'=>$match['params']['patient']
 );
+$formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 
 // Formulaire complémentaire
 $p['page']['formIN2']='basePeopleComplement';

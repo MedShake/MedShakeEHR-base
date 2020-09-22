@@ -37,7 +37,11 @@ class msSQL
   public static function sqlConnect()
   {
       global $p;
-      $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
+      if(!empty($p['config']['sqlServeur'])) {
+        $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
+      } elseif(!empty($_SERVER['RDS_HOSTNAME'])) {
+        $mysqli = new mysqli($_SERVER['RDS_HOSTNAME'], $_SERVER['RDS_USERNAME'], $_SERVER['RDS_PASSWORD'], $_SERVER['RDS_DB_NAME'], $_SERVER['RDS_PORT']);
+      }
       $mysqli->set_charset("utf8");
       if (mysqli_connect_errno()) {
           die('Echec de connexion à la base de données');

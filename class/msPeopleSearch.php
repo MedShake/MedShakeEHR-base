@@ -35,6 +35,9 @@ class msPeopleSearch
   private $_limitStart = 0;
   private $_limitNumber = 50;
   private $_restricDossiersPropres = false;
+  private $_restricDossiersGroupes = false;
+  private $_restricDossiersPratGroupes = false;
+  private $_restricGroupesEstMembre = false;
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -43,6 +46,34 @@ class msPeopleSearch
   public function setRestricDossiersPropres($restricDossiersPropres) {
     if(!is_bool($restricDossiersPropres)) throw new Exception('RestricDossiersPropres is not bool');
     return $this->_restricDossiersPropres=$restricDossiersPropres;
+  }
+
+/**
+ * Définir une restriction pour ne retourner que les dossiers créer par praticiens des groupes
+ * auxquels l'utilisateur est affilié
+ * @param bool $restricDossiersGroupes true/false
+ */
+  public function setRestricDossiersGroupes($restricDossiersGroupes) {
+    if(!is_bool($restricDossiersGroupes)) throw new Exception('RestricDossiersPropres is not bool');
+    return $this->_restricDossiersGroupes=$restricDossiersGroupes;
+  }
+
+/**
+ * Définir une restriction pour ne retourner que les dossiers praticiens affiliés aux mêmes groupes que l'utilisateur
+ * @param bool $restricDossiersPratGroupes true/false
+ */
+  public function setRestricDossiersPratGroupes($restricDossiersPratGroupes) {
+    if(!is_bool($restricDossiersPratGroupes)) throw new Exception('RestricDossiersPratGroupes is not bool');
+    return $this->_restricDossiersPratGroupes=$restricDossiersPratGroupes;
+  }
+
+/**
+ * Définir une restriction de recherche aux groupes auxquels l'utilisateur est membre
+ * @param bool $restricGroupesEstMembre true/false
+ */
+  public function setRestricGroupesEstMembre($restricGroupesEstMembre) {
+    if(!is_bool($restricGroupesEstMembre)) throw new Exception('RestricGroupesEstMembre is not bool');
+    return $this->_restricGroupesEstMembre=$restricGroupesEstMembre;
   }
 
 /**
@@ -112,18 +143,63 @@ class msPeopleSearch
   public function getSql() {
     global $p;
 
-    if($this->_restricDossiersPropres=='true') {
-      $restrictionUser = ' and p.fromID = "'.$p['user']['id'].'"';
-    } else {
-      $restrictionUser = '';
+    $restrictionUser = '';
+    $restricPatientGroupeJoin = '';
+    $restricPatientGroupeWhere = '';
+    if(in_array('patient',$this->_peopleType )) {
+      if($this->_restricDossiersPropres==true) {
+        $restrictionUser .= ' and p.fromID = "'.$p['user']['id'].'"';
+      } elseif($this->_restricDossiersGroupes==true) {
+        $frat = new msPeopleRelations;
+        $frat->setToID($p['user']['id']);
+        $frat->setRelationType('relationPraticienGroupe');
+        if($groupesUser = $frat->getRelations()) {
+
+          $groupesUser = array_column($groupesUser, 'peopleID');
+          $restricPatientGroupeWhere = " and resg.value in ('".implode("', '", $groupesUser)."') ";
+
+          if($this->_restricDossiersPropres==false and $this->_restricDossiersGroupes==true) {
+            $restricPatientGroupeJoin = " left join objets_data as resg on resg.toID = p.id and resg.typeID='".msData::getTypeIDFromName('relationID')."' and resg.value in ('".implode("', '", $groupesUser)."') ";
+          }
+        } else {
+          return $sql = 'SELECT NULL LIMIT 0';
+        }
+      }
+    }
+
+    if(in_array('pro', $this->_peopleType ) and $this->_restricDossiersPratGroupes == true) {
+      $frat = new msPeopleRelations;
+      $frat->setToID($p['user']['id']);
+      $frat->setRelationType('relationPraticienGroupe');
+      $ids = $frat->getSiblingIDs();
+      $ids[] = $p['user']['id'];
+      $restrictionUser .= " and (p.id in ('".implode("', '", $ids)."') or p.fromID = '".$p['user']['id']."')";
+    }
+
+    if(in_array('groupe', $this->_peopleType ) and $this->_restricGroupesEstMembre == true) {
+      $frat = new msPeopleRelations;
+      $frat->setToID($p['user']['id']);
+      $frat->setRelationType('relationPraticienGroupe');
+      $relations = $frat->getRelations();
+      if(!empty($relations)) {
+        $ids = array_column($relations, 'peopleID');
+        $restrictionUser .= " and p.id in ('".implode("', '", $ids)."')";
+      } else {
+        return $sql = 'SELECT NULL LIMIT 0';
+      }
+
+    }
+
+    $orderBy='';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $orderBy = 'order by trim(identite)';
     }
 
     return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
     '.implode(', ', $this->_makeSqlSelect()).'
     from people as p
-    '.implode(' ', $this->_makeSqlJoin()). '
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.implode(' ', $this->_whereClauses).' '.$restrictionUser.'
-    order by trim(identite)
+    '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
+    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
     limit '.$this->_limitStart.','.$this->_limitNumber;
   }
 
@@ -133,20 +209,22 @@ class msPeopleSearch
  */
   private function _makeSqlSelect () {
 
-    if(!in_array('lastname', $this->_colonnesRetour)) $this->_colonnesRetour[]='lastname';
-    if(!in_array('birthname', $this->_colonnesRetour)) $this->_colonnesRetour[]='birthname';
-    if(!in_array('firstname', $this->_colonnesRetour)) $this->_colonnesRetour[]='firstname';
     if(in_array('ageCalcule', $this->_colonnesRetour) and !in_array('birthdate', $this->_colonnesRetour)) {
       $this->_colonnesRetour[]='birthdate';
     }
 
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName($this->_colonnesRetour);
+    $name2type = new msData();
+    $name2typeID = $name2type->getTypeIDsFromName($this->_colonnesRetour);
 
-    $sp[0]='';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $name2typeID = array_merge($name2typeID, $name2type->getTypeIDsFromName(['lastname','birthname','firstname']));
+    }
+
+    $sp=[];
     foreach($this->_colonnesRetour as $v) {
+
       if($v=='identite') {
-        $sp[0]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""), " (", COALESCE(d'.$name2typeID['birthname'].'.value,"") ,")")
+        $sp[]= 'CASE WHEN d'.$name2typeID['lastname'].'.value !="" and d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""), " (", COALESCE(d'.$name2typeID['birthname'].'.value,"") ,")")
         WHEN d'.$name2typeID['birthname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['birthname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         WHEN d'.$name2typeID['lastname'].'.value !="" THEN concat(COALESCE(d'.$name2typeID['lastname'].'.value,""), " ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
         ELSE concat("(inconnu) ", COALESCE(d'.$name2typeID['firstname'].'.value,""))
@@ -163,23 +241,27 @@ class msPeopleSearch
           CONCAT(TIMESTAMPDIFF(MONTH, STR_TO_DATE(d'.$name2typeID['birthdate'].'.value, "%d/%m/%Y"), CURDATE()), " mois")
         END as '.$v;
       } else {
-        if(isset($name2typeID[$v])) $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
+        if(isset($name2typeID[$v])) {
+          $sp[]= 'd'.$name2typeID[$v].'.value as '.$v;
+        }
       }
     }
-    return $sp;
+    return array_filter($sp);
   }
 
 /**
- * Fabriquer les paramètres SQL leftjoin pour la requète finale
+ * Fabriquer les paramètres SQL left join pour la requète finale
  * @return array
  */
   private function _makeSqlJoin () {
 
     $tab=array_unique(array_merge(array_keys($this->_criteresRecherche) , $this->_colonnesRetour));
 
-    if(!in_array('lastname', $tab)) $tab[]='lastname';
-    if(!in_array('birthname', $tab)) $tab[]='birthname';
-    if(!in_array('firstname', $tab)) $tab[]='firstname';
+    if(in_array('identite', $this->_colonnesRetour)) {
+      if(!in_array('lastname', $tab)) $tab[]='lastname';
+      if(!in_array('birthname', $tab)) $tab[]='birthname';
+      if(!in_array('firstname', $tab)) $tab[]='firstname';
+    }
 
     $name2typeID = new msData();
     $name2typeID = $name2typeID->getTypeIDsFromName($tab);
@@ -196,12 +278,17 @@ class msPeopleSearch
  * @return array conditions where
  */
   private function _makeSqlWhere() {
-    if(!array_key_exists('lastname', $this->_criteresRecherche)) $this->_criteresRecherche['lastname']='';
-    if(!array_key_exists('birthname', $this->_criteresRecherche)) $this->_criteresRecherche['birthname']='';
-    if(!array_key_exists('firstname', $this->_criteresRecherche)) $this->_criteresRecherche['firstname']='';
 
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName(array_keys($this->_criteresRecherche));
+
+    $name2type = new msData();
+    $name2typeID = $name2type->getTypeIDsFromName(array_keys($this->_criteresRecherche));
+
+    if(in_array('identite', $this->_colonnesRetour)) {
+      $name2typeID = array_merge($name2typeID, $name2type->getTypeIDsFromName(['lastname','birthname','firstname']));
+      if(!array_key_exists('lastname', $this->_criteresRecherche)) $this->_criteresRecherche['lastname']='';
+      if(!array_key_exists('birthname', $this->_criteresRecherche)) $this->_criteresRecherche['birthname']='';
+      if(!array_key_exists('firstname', $this->_criteresRecherche)) $this->_criteresRecherche['firstname']='';
+    }
 
     foreach($this->_criteresRecherche as $k=>$v) {
         if(in_array($k, ['birthname', 'lastname']) and $this->_nameSearchMode == 'BnFnOrLnFn') {
@@ -277,10 +364,10 @@ class msPeopleSearch
         $final=array_slice($final, $this->_limitStart, $this->_limitNumber, true);
 
         foreach ($final as $k=>$v) {
-            if ($v > 1) {
+            if ($v >= 1) {
                 $patient= new msPeople();
                 $patient->setToID($k);
-                $peopleType = $patient->getPeopleType();
+                $peopleType = $patient->getType();
                 if(in_array($peopleType, $this->_peopleType)) {
                   $final[$k]=$patient->getSimpleAdminDatasByName($this->_colonnesRetour);
                   $final[$k]['patientType']=$peopleType;

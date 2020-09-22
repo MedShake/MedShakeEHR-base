@@ -69,7 +69,7 @@
   {{ parent() }}
   var dicomAutoSendPatient = {{ config.dicomAutoSendPatient }};
   var signPeriphName = '{{ config.signPeriphName }}';
-  {% if config.utiliserLap == 'true' %}
+  {% if config.optionGeActiverLapInterne == 'true' %}
     lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};
     lapAlertPatientAllaitementSup3Ans = {{ config.lapAlertPatientAllaitementSup3Ans }};
   {% endif %}
@@ -83,7 +83,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/mattbryson/TouchSwipe-Jquery-Plugin/jquery.touchSwipe.min.js?{{ modules.base }}"></script>
 
   {# JS fonctions pour Vitale #}
-  {% if config.vitaleActiver =='true' %}
+  {% if config.optionGeActiverVitaleLecture =='true' %}
   	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
   {% endif %}
 
@@ -96,7 +96,7 @@
   {% endif %}
 
   {# JS LAP #}
-  {% if config.utiliserLap == 'true' %}
+  {% if config.optionGeActiverLapInterne == 'true' %}
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lap.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapAllergies.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/lapOrdonnance.js?{{ modules.base }}"></script>
@@ -109,7 +109,7 @@
   {% endif %}
 
   {# JS LAP Externe #}
-  {% if config.utiliserLapExterne == 'true' and config.utiliserLapExterneName is not empty %}
+  {% if config.optionGeActiverLapExterne == 'true' and config.utiliserLapExterneName is not empty %}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patientScripts/patientLapExt{{ config.utiliserLapExterneName[:1]|upper ~ config.utiliserLapExterneName[1:] }}.js?{{ modules.base }}"></script>
   {% endif %}
 
@@ -167,10 +167,12 @@
 {% include 'inc-patientModal-changerDateEffet.html.twig' %}
 
 {# modal phonecapture #}
-{% include 'inc-patientModal-phonecapture.html.twig' %}
+{% if config.optionGeActiverPhonecapture == 'true' %}
+  {% include 'inc-patientModal-phonecapture.html.twig' %}
+{% endif %}
 
 {# modals spécifiques LAP ON #}
-{% if config.utiliserLap == 'true' %}
+{% if config.optionGeActiverLapInterne == 'true' %}
   {# recherche CIM10 #}
   {% include 'inc-patientModal-searchCIM10.html.twig' %}
 
@@ -209,7 +211,7 @@
 {% endif %}
 
 {# modal CPS Vitale  #}
-{% if config.vitaleActiver =='true' %}
+{% if config.optionGeActiverVitaleLecture =='true' %}
   {% include 'inc-modalFaireFse.html.twig' %}
 {% endif %}
 

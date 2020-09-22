@@ -21,15 +21,18 @@
  */
 
 /**
- * People : ajax > ajouter une relation patient <-> praticien
+ * People : ajax > retirer une relation entre 2 peopleID
+ *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
 $relation = new msPeopleRelations;
-$relation->setToID($_POST['patientID']);
+$relation->setToID($_POST['ID1']);
 $relation->setFromID($p['user']['id']);
-$relation->setRelationWithPro($_POST['preRelationPatientPrat'], $_POST['praticienID']);
-
-exit (json_encode(array('ok')));
+$relation->setWithID($_POST['ID2']);
+if($relation->setRelationDeleted()) {
+  exit (json_encode(['status'=>'ok']));
+} else {
+  exit (json_encode(['status'=>'ko']));
+}

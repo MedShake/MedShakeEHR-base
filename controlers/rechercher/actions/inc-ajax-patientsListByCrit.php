@@ -31,15 +31,30 @@ $debug='';
 
 $template="listing";
 
-// liste des documents pouvant être envoyés à la signature par l'utilisateur courant
-$docAsSigner = new msSignatureNumerique;
-$docAsSigner->setFromID($p['user']['id']);
-$p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+// si groupe, on vérifie que l'option générale est ON et on termine sinon
+if($_POST['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
+    die();
+}
+
+// si registre, on vérifie que l'option générale est ON et on termine sinon
+if($_POST['porp'] == 'registre' and $p['config']['optionGeActiverRegistres'] != 'true') {
+    die();
+}
 
 if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='today') {
     $formIN=$p['config']['formFormulaireListingPatients'];
+
+    // liste des documents pouvant être envoyés à la signature par l'utilisateur courant
+    $docAsSigner = new msSignatureNumerique;
+    $docAsSigner->setFromID($p['user']['id']);
+    $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
+
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
+} elseif ($_POST['porp']=='groupe') {
+    $formIN=$p['config']['formFormulaireListingGroupes'];
+} elseif ($_POST['porp']=='registre') {
+    $formIN=$p['config']['formFormulaireListingRegistres'];
 } else {
     die();
 }
@@ -49,12 +64,6 @@ $p['page']['porp']=$_POST['porp'];
 
 if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $form=Spyc::YAMLLoad($form);
-
-    $form['col0'] = array(
-      'head' => 'Identité',
-      'bloc' => array( 'identite')
-    );
-    ksort($form);
 
     //all type
     $col=count($form);
@@ -76,7 +85,6 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
             }
         }
     }
-    $listeTypes['identite']=0;
     $listeTypes=array_unique($listeTypes);
 
     $mss=new msPeopleSearch;
@@ -98,7 +106,11 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
 
 
     //patient ou pro en fonction
-    if($_POST['porp']=='pro') {
+    if($_POST['porp']=='registre') {
+        $mss->setPeopleType(['registre']);
+    } elseif($_POST['porp']=='groupe') {
+        $mss->setPeopleType(['groupe']);
+    } elseif($_POST['porp']=='pro') {
         $mss->setPeopleType(['pro']);
     } elseif($_POST['porp']=='today') {
         $mss->setPeopleType(['pro', 'patient', 'externe']);
@@ -113,15 +125,41 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     }
 
     //restrictions sur retours
-    if($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirTousPatients'] != 'true') {
+    if($_POST['porp']=='patient' and $p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
+      $mss->setRestricDossiersPropres(true);
+    } elseif(in_array($_POST['porp'], ['patient', 'pro']) and $p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+      $mss->setRestricDossiersGroupes(true);
+    }
+
+    if(in_array($_POST['porp'], ['pro']) and $p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
+      $mss->setRestricDossiersPratGroupes(true);
+    }
+
+    if($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+      $mss->setRestricGroupesEstMembre(true);
+    }
+
+    // retrictions forcées sur retours sur l'UI
+    if($_POST['patientsPropres']=='true') {
       $mss->setRestricDossiersPropres(true);
     }
 
-    $criteres = array(
-        'firstname'=>$_POST['d3'],
-        'lastname'=>$_POST['d2'],
-        'birthname'=>$_POST['d2']
+    // critères
+    if($_POST['porp']=='registre') {
+      $criteres = array(
+          'registryname'=>$_POST['d2'].'%',
+        );
+    } elseif($_POST['porp']=='groupe') {
+      $criteres = array(
+          'groupname'=>$_POST['d2'].'%',
+        );
+    } else {
+      $criteres = array(
+          'firstname'=>$_POST['d3'],
+          'lastname'=>$_POST['d2'],
+          'birthname'=>$_POST['d2']
       );
+    }
     if(!empty($_POST['autreCritVal'])) {
       $criteres[$_POST['autreCrit']]=$_POST['autreCritVal'];
     }
@@ -135,9 +173,8 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
 
     $p['page']['sqlString']=$sql=$mss->getSql();
-
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
-        for ($i=0;$i<=$col-1;$i++) {
+        for ($i=1;$i<=$col;$i++) {
             if (isset($form['col'.$i]['bloc'])) {
                 foreach ($form['col'.$i]['bloc'] as $v) {
                     if(!isset($p['config']['click2callService']) or empty($p['config']['click2callService'])) {

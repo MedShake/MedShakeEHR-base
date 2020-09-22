@@ -1,0 +1,92 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > logs : historique des relations
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }}
+  : historique relations{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+    </li>
+    <li class="breadcrumb-item active">
+      Historique des relations
+    </li>
+  </ol>
+
+  <h1>{{ page.titreRelation }}</h1>
+
+  <div class="row mt-4">
+    <div class="col">
+      <table class="table table-sm table-hover w-100" style="word-wrap: break-word;">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Auteur</th>
+            <th>Action</th>
+            <th>Qui</th>
+            <th>Type relation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in page.historique %}
+            <tr{% if v.action == 'delete' %} class="table-danger"{% endif %}>
+              <td>#{{ v.objetID }}</td>
+              <td>{{ v.date }}</td>
+              <td>#{{ v.byID }} {{ page.auteurs[v.byID]['identiteUsuelle'] }}</td>
+              <td>
+                {% if v.action == 'add' %}
+                  ajoute
+                {% elseif v.action == 'delete' %}
+                  supprime
+                {% endif %}
+              </td>
+              <td>
+                #{{ v.withID }}
+                {% if v.groupname is defined %}
+                  {{ v.groupname }}
+                {% elseif v.registryname is defined %}
+                  {{ v.registryname }}
+                {% elseif v.firstname is defined %}
+                  {{ v.firstname }} {{ v.birthname }} {{ v.lastname }}
+                {% endif %}
+              </td>
+              <td>{{ v.typeRelation }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

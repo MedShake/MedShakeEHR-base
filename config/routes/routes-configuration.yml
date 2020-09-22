@@ -1,0 +1,98 @@
+#
+# This file is part of MedShakeEHR.
+#
+# Copyright (c) 2020
+# Bertrand Boutillier <b.boutillier@gmail.com>
+# http://www.medshake.net
+#
+# MedShakeEHR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# MedShakeEHR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#######################################
+#
+# Routes : configuration
+#
+#######################################
+
+#configuration
+configAjax: ['POST', '/configuration/ajax/[a:m]/', 'configuration/actions/configAjax']
+configActions: ['POST|GET', '/configuration/actions/[a:m]/', 'configuration/actions/configActions']
+configIndex: ['GET', '/configuration/', 'configuration/configIndex']
+configDataType: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]?/', 'configuration/configDataType']
+configDataTypeValues: ['GET', '/configuration/data-type/[a:groupe]/[i:cat]/[i:typeID]/', 'configuration/configDataTypeValues']
+configDataCat: ['GET', '/configuration/data-cat/[a:groupe]/', 'configuration/configDataCat']
+configPrescriptions: ['GET', '/configuration/prescriptions/[i:user]?/[i:cat]?/', 'configuration/configPrescriptions']
+configPrescriptionsCat: ['GET', '/configuration/prescriptions-cat/', 'configuration/configPrescriptionsCat']
+configActes: ['GET', '/configuration/actes/[i:user]?/[i:cat]?/', 'configuration/configActes']
+configActesCat: ['GET', '/configuration/actes-cat/', 'configuration/configActesCat']
+configActesBase: ['GET', '/configuration/actes-base/', 'configuration/configActesBase']
+configActesBaseMaj: ['GET', '/configuration/actes-base/rapport-maj/', 'configuration/configActesBaseMaj']
+configActesFsePyx: ['GET', '/configuration/actes-fsepyx/[i:id]/', 'configuration/configActesFsePyx']
+configDicomTags: ['GET', '/configuration/tags-dicom/', 'configuration/configDicomTags']
+configLicence: ['GET', '/configuration/licence/', 'configuration/configLicence']
+configCredits: ['GET', '/configuration/credits/', 'configuration/configCredits']
+configBackups: ['GET', '/configuration/configBackups/', 'configuration/configBackups']
+configPhpinfo: ['GET', '/configuration/phpinfo/', 'configuration/configPhpinfo']
+configSmtpTest: ['GET', '/configuration/smtptest/', 'configuration/configSmtpTest']
+
+# Configuration Agenda
+configAgenda: ['GET', '/configuration/agenda/[i:userID]?/', 'configuration/configAgenda']
+
+# Configuration Apicrypt
+configApicrypt: ['GET', '/configuration/apicrypt-clefs/[i:userID]?/', 'configuration/configApicryptClefs']
+configApicrypt2Infos: ['GET', '/configuration/apicrypt2-infos/', 'configuration/configApicrypt2Infos']
+
+# Configuration Templates PDF edit
+configTemplatesPDF: ['GET', '/configuration/templates-pdf/[i:userID]?/', 'configuration/configTemplatesPDF']
+configTemplatesPDFEdit: ['GET', '/configuration/templates-pdf/edit/[*:fichier]/[i:userID]?/', 'configuration/configTemplatesPDFEdit']
+
+# Configuration forms
+configFormsCat: ['GET', '/configuration/forms/cat/', 'configuration/configFormsCat']
+configFormEdit: ['GET', '/configuration/forms/edit/[i:form]/', 'configuration/configFormEdit']
+configFormCdaTools: ['GET', '/configuration/forms/cdaTools/[i:form]/', 'configuration/configFormCdaTools']
+configFormPreview: ['GET', '/configuration/forms/preview/[i:form]/', 'configuration/configFormPreview']
+configForms: ['GET', '/configuration/forms/[a:groupe]?/', 'configuration/configForms']
+configShowTagsForCr: ['GET', '/configuration/configShowTagsForCr/[i:objetID]/', 'configuration/configShowTagsForCr']
+
+# configuration technique
+configDefaultParams: ['GET', '/configuration/configuration-globale/', 'configuration/configDefaultParams']
+configCheckTech: ['GET', '/configuration/check-directory/', 'configuration/configCheckDirectory']
+configCleanSession: ['GET', '/configuration/cleanSession/', 'configuration/configCleanSession']
+configExecUpgradeScript: ['GET', '/configuration/exec/[a:module]/[*:script]/', 'configuration/configExecUpgradeScript']
+configDicomOrthanc: ['GET', '/configuration/orthancInfos/', 'configuration/configDicomOrthanc']
+
+# configuration Users
+configUsersList: ['GET', '/configuration/users/', 'configuration/configUsersList']
+configSpecificUserParam: ['GET', '/configuration/user-param/[i:userID]/', 'configuration/configSpecificUserParam']
+configUserTemplate: ['GET', '/configuration/user-templates/', 'configuration/configUserTemplate']
+configUserTemplatesEdit: ['GET', '/configuration/user-templates/edit/[*:fichier]/', 'configuration/configUserTemplatesEdit']
+
+# configuration crons
+configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
+
+# configuration apply updates
+configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configApplyUpdates']
+
+# configuration modules
+configModules: ['GET', '/configuration/modules/', 'configuration/configModules']
+configExportModuleToSQL: ['GET', '/configuration/modules/export/[a:moduleName]/', 'configuration/configExportModuleToSQL']
+
+# configuration plugins
+configPlugins: ['GET', '/configuration/plugins/', 'configuration/configPlugins']
+
+# configuration LAP
+configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
+
+# configuration voir jeux de valeurs
+configJdvShow: ['GET', '/configuration/configJdvShow/', 'configuration/configJdvShow']

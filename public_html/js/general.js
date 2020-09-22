@@ -84,11 +84,17 @@ $(document).ready(function() {
     var $div = $(this).closest("div.datepick");
     var viewMode = $div.hasClass("pick-year") ? 'years' : ($div.hasClass("pick-month") ? 'months' : 'days');
     viewMode = $div.find("input").hasClass("pick-year") ? 'years' : ($div.find("input").hasClass("pick-month") ? 'months' : viewMode);
+
+    var min = $(this).find("input").is("[min]") ? $(this).find("input").attr('min') : false;
+    var max = $(this).find("input").is("[max]") ? $(this).find("input").attr('max') : false;
+
     $(this).datetimepicker({
       locale: 'fr',
       viewMode: viewMode,
       format: 'L',
       useCurrent: false,
+      minDate: min,
+      maxDate: max,
       icons: {
         time: 'far fa-clock',
         date: 'fa fa-calendar',
@@ -173,7 +179,7 @@ $(document).ready(function() {
   });
 
   // enlever les erreurs en session en fermant l'alerte
-  $('body').on('click', '.cleanSessionFormWarning', function () {
+  $('body').on('click', '.cleanSessionFormWarning', function() {
     $(this).closest('div.alert').addClass('d-none');
     $('.is-invalid').removeClass('is-invalid');
     $.ajax({
@@ -185,13 +191,13 @@ $(document).ready(function() {
 
   ////////////////////////////////////////////////////////////////////////
   /////////Rafraichir le menu POTD
-  if(refreshDelayPOTD > 0) {
+  if (refreshDelayPOTD > 0) {
     var lastHtmlDataMenuPOTD = '';
     setInterval(getPOTDmenuContent, refreshDelayPOTD * 1000);
   }
 
   function getPOTDmenuContent() {
-    if(document.visibilityState == "visible") {
+    if (document.visibilityState == "visible") {
       $.ajax({
         url: urlBase + '/ajax/getPatientsOfTheDay/',
         type: 'post',
@@ -200,8 +206,8 @@ $(document).ready(function() {
         },
         dataType: "json",
         success: function(data) {
-          if(data.displayMenu) {
-            if( data.html != lastHtmlDataMenuPOTD) {
+          if (data.displayMenu) {
+            if (data.html != lastHtmlDataMenuPOTD) {
               console.log('refresh POTD menu');
               $('#patientsOfTheDayMenu div.dropdown-menu').html(data.html);
             }
@@ -296,58 +302,60 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Générer le QR code  /phonecapture/ pour accès facile
 
-  if ($('.QRcodeAccesPhoneCapture').length) {
-    var el = kjua({
-      text: phoneCaptureUrlAcces,
+  if (typeof phoneCaptureUrlAcces !== 'undefined') {
+    if ($('.QRcodeAccesPhoneCapture').length) {
+      var el = kjua({
+        text: phoneCaptureUrlAcces,
 
-      // render method: 'canvas' or 'image'
-      render: 'image',
+        // render method: 'canvas' or 'image'
+        render: 'image',
 
-      // render pixel-perfect lines
-      crisp: true,
+        // render pixel-perfect lines
+        crisp: true,
 
-      // minimum version: 1..40
-      minVersion: 1,
+        // minimum version: 1..40
+        minVersion: 1,
 
-      // error correction level: 'L', 'M', 'Q' or 'H'
-      ecLevel: 'H',
+        // error correction level: 'L', 'M', 'Q' or 'H'
+        ecLevel: 'H',
 
-      // size in pixel
-      size: 400,
+        // size in pixel
+        size: 400,
 
-      // pixel-ratio, null for devicePixelRatio
-      ratio: null,
+        // pixel-ratio, null for devicePixelRatio
+        ratio: null,
 
-      // code color
-      fill: '#333',
+        // code color
+        fill: '#333',
 
-      // background color
-      back: '#fff',
+        // background color
+        back: '#fff',
 
-      // roundend corners in pc: 0..100
-      rounded: 100,
+        // roundend corners in pc: 0..100
+        rounded: 100,
 
-      // quiet zone in modules
-      quiet: 1,
+        // quiet zone in modules
+        quiet: 1,
 
-      // modes: 'plain', 'label' or 'image'
-      mode: 'label',
+        // modes: 'plain', 'label' or 'image'
+        mode: 'label',
 
-      // label/image size and pos in pc: 0..100
-      mSize: 10,
-      mPosX: 50,
-      mPosY: 50,
+        // label/image size and pos in pc: 0..100
+        mSize: 10,
+        mPosX: 50,
+        mPosY: 50,
 
-      // label
-      label: 'PhoneCapture',
-      fontname: 'sans',
-      fontcolor: '#d9534f',
+        // label
+        label: 'PhoneCapture',
+        fontname: 'sans',
+        fontcolor: '#d9534f',
 
-      // image element
-      image: null
+        // image element
+        image: null
 
-    });
-    $('.QRcodeAccesPhoneCapture').html(el);
+      });
+      $('.QRcodeAccesPhoneCapture').html(el);
+    }
   }
 
 	// Évite que la liste ne dépasse l'écran quant la page est redimentionner
@@ -357,6 +365,7 @@ $(document).ready(function() {
 	$('#patientsOfTheDayMenu div.dropdown-menu').height(window.innerHeight*0.75);
 
 });
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -427,6 +436,9 @@ function setPeopleData(value, patientID, typeID, source, instance) {
             retrunBareCodeBox();
         }
         glow('success', $(source));
+        if ($(source).hasClass('reloadAfterGlow')) {
+          window.location.reload();
+        }
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');
@@ -457,6 +469,9 @@ function setPeopleDataByTypeName(value, patientID, typeName, source, instance) {
       dataType: "json",
       success: function(data) {
         glow('success', $(source));
+        if ($(source).hasClass('reloadAfterGlow')) {
+          window.location.reload();
+        }
       },
       error: function() {
         //alert_popup("danger", 'Problème, rechargez la page !');

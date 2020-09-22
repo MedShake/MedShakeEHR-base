@@ -1,0 +1,127 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : listing recherche patients / pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : groupes{% endblock %}
+
+{% block jsFiles %}
+	{{ parent() }}
+	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block cssEmbed %}
+	{{ parent() }}
+	.openPatient td:nth-child(-n+7) {
+		cursor: pointer;
+	}
+{% endblock %}
+
+{% block body %}
+<h1>Groupes</h1>
+
+<div class="card card-body bg-light my-4">
+	<div class="row ">
+
+	  <form id="formRecherchePatients" class="form-inline col-12 col-lg-9 mx-0 row my-lg-2">
+	    <div class="form-group col-12 m-0 p-0 col-lg-5">
+	      {{ f.input ({
+		      'input' : {
+			      'type' : 'text',
+			      'id' : 'd2',
+			      'name' : 'groupname',
+	          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
+			      'placeholder' : 'Nom',
+			      'class' : 'form-control col-12 searchupdate',
+			      'autocomplete' : 'off',
+			      'datatypeid' : '2'
+		      },
+		      'label' : {
+			      'position' : 'before',
+		      }
+	      }) }}
+	    </div>
+
+
+	    <div class="col-12 my-2 my-lg-0 mx-0 p-0 pl-lg-4 col-lg-6">
+	      <div class="input-group mx-0">
+	        {{ f.input ({
+	          'input' : {
+		          'id' : 'autreCritVal',
+		          'type' : 'text',
+		          'name' : 'autre',
+	            'placeholder': 'Autre critère',
+		          'class' : 'form-control searchupdate',
+							'autocomplete' : 'off',
+	          },
+	          'label' : {
+		          'position' : 'before',
+		          'label' : '',
+	          }
+	        }) }}
+	        <div class="input-group-append" style="max-width:50%">
+	          {{ f.selectOptgroup ({
+	            'select' : {
+		            'id' : 'autreCrit',
+		            'name' : 'autre',
+		            'class' : 'custom-select input-group-text form-control',
+		            'values' : page.tabTypes,
+	        	    'valueDefaut' : 'birthdate',
+								'autocomplete' : 'off',
+	            },
+	            'label' : {
+		            'position' : 'before',
+		            'label' : '',
+	            }
+	          }) }}
+	        </div>
+	      </div>
+	    </div>
+	  </form>
+
+	  <div class="col-12 col-lg-3 text-right my-lg-2">
+
+			<div class="btn-group my-lg-1">
+				{% if config.droitGroupePeutCreerGroupe == 'true' %}
+	    	<a class="btn btn-primary float-right" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/create/"><i class="fas fa-plus"></i> Nouveau groupe</a>
+				{% endif %}
+			</div>
+	  </div>
+	</div>
+</div>
+
+<div class="row mt-3">
+	<div id="listing" data-porp="{{ page.porp }}" class="col">
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block modals %}
+{% endblock %}

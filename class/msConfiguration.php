@@ -269,7 +269,7 @@ class msConfiguration
         if ($listeTemplates=array_diff(scandir($homepath.'config/userTemplates/'), array('..', '.'))) {
           foreach($listeTemplates as $k=>$tp) {
             if(pathinfo($tp, PATHINFO_EXTENSION) == 'yml') {
-              $tab[]=basename($tp, '.yml');
+              $tab[basename($tp, '.yml')]=basename($tp, '.yml');
             }
           }
           return $tab;

@@ -57,7 +57,8 @@ $ips='';
 $medecin_traitant_declare='false';
 $prenom_1180='';
 $nom_1180='';
-if($relations = $patient->getRelationsWithPros()) {
+$patient->setRelationType('relationPatientPraticien');
+if($relations = $patient->getRelations(['identite'])) {
   foreach($relations as $v) {
     if($v['typeRelation']=='MTD' or $v['typeRelation']=='MT') {
       $medecin_traitant_declare='true';

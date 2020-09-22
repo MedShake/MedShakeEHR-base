@@ -37,12 +37,20 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
   $formExport = new msExportData;
   if(!empty($_POST)) {
 
+    $formExport->setFormID($_POST['formID']);
+
     $data=new msData;
-    $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType']);
+    $p['page']['dataTypeinfos']=$data->getDataType($_POST['dataTypeID'], ['id','groupe', 'formValues', 'formType', 'validationRules']);
+    $p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
+
+    $formExport->setRegistreID($p['page']['dataTypeinfos']['registreID']);
 
     if($p['page']['dataTypeinfos']['groupe']!='typecs' or $p['page']['dataTypeinfos']['formType']!='select') die("Ce formulaire n'autorise pas l'export de données");
 
-    $sortTab=array('id','patient_id', 'praticien_id', 'date_saisie', 'date_effective', 'date_modification');
+    $sortTab=array('id','parent_id','patient_peopleExportID', 'patient_consentementRegistre', 'patientGroupe_peopleExportID', 'praticien_peopleExportID', 'praticienGroupe_peopleExportID', 'date_saisie', 'date_effective', 'date_modification');
+
+    $formExport->addToDataAdminPratList('peopleExportID');
+    $formExport->addToDataAdminPatientList('peopleExportID');
 
     foreach($_POST as $k=>$v) {
       $kParts=explode('_', $k);
@@ -52,9 +60,6 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 
       if($k=='dataTypeID' and is_numeric($v)) {
         $formExport->setDataTypeIDs($v);
-      }
-      elseif($k=='formID' and is_numeric($v)) {
-        $formExport->setFormID($v);
       }
       elseif($kType=='patient') {
         $formExport->addToDataAdminPatientList($kKey);
@@ -69,7 +74,7 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
         $sortTab[]='data_'.$kKey;
       }
       elseif($kType=='pratliste' and is_numeric($kKey)) {
-        if ($p['config']['droitExportPeutExporterAutresData'] == 'true' or $p['user']['id'] == $kKey) {
+        if ($p['config']['droitExportPeutExporterToutesDataGroupes'] == 'true' or $p['user']['id'] == $kKey) {
           $formExport->addToPratList($kKey);
         }
       }
@@ -86,6 +91,37 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
         $formExport->setOptionSelect($v);
       }
     }
+
+    if($p['config']['optionGeExportPratListSelection'] == 'false') {
+      // on va chercher si le user est admin registre : si oui = tous les prats
+      $adminReg = new msPeopleRelationsDroits;
+      $adminReg->setToID($p['user']['id']);
+      $p['page']['isRegistryAdmin'] = false;
+      if($userRegistriesAdmin = $adminReg->getRegistriesWherePeopleIsAdmin()) {
+        if(in_array($p['page']['dataTypeinfos']['registreID'],$userRegistriesAdmin)) {
+          $formExport->setCanExportAll(true);
+        }
+      }
+
+      // sinon on va regarder si autorisé à exporter les datas groupe
+      if($p['page']['isRegistryAdmin'] == false and $p['config']['droitExportPeutExporterToutesDataGroupes'] == 'true') {
+        $sibling = new msPeopleRelations;
+        $sibling->setToID($p['user']['id']);
+        $sibling->setRelationType('relationPraticienGroupe');
+        $formExport->addToPratList($p['user']['id']);
+        if($pratsID=$sibling->getSiblingIDs()) {
+          foreach($pratsID as $pratID) {
+            $formExport->addToPratList($pratID);
+          }
+        }
+      }
+
+      // sinon on va regarder si autorisé à exporter ses datas de groupe
+      elseif($p['page']['isRegistryAdmin'] == false and $p['config']['droitExportPeutExporterPropresData'] == 'true') {
+        $formExport->addToPratList($p['user']['id']);
+      }
+    }
+
     $formExport->setSortTab($sortTab);
   }
 

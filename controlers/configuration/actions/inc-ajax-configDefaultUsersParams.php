@@ -30,7 +30,8 @@ if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur")
 
 $booleans=array(
           'twigEnvironnementAutoescape',
-          'twigEnvironnementCache'
+          'twigEnvironnementCache',
+          'twigDebug'
           );
 
 $toyaml=array(
@@ -51,7 +52,8 @@ $toyaml=array(
         'sqlVarPassword'=>'',
         'templatesFolder'=>'',
         'twigEnvironnementCache'=>'',
-        'twigEnvironnementAutoescape'=>''
+        'twigEnvironnementAutoescape'=>'',
+        'twigDebug'=>''
         );
 
 foreach ($toyaml as $k=>$v) {

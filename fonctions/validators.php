@@ -89,4 +89,12 @@ GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) 
 		return FALSE;
 	}, 'Le champ {field} ne peut être vide en même temps que certains autres');
 
+GUMP::add_validator("alpha_numeric_dash", function($field, $input, $param = NULL) {
+		return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $input[$field]) > 0;
+	}, 'Le champ {field} ne peut contenir que des caratères alphanumériques, tiret et undescore');
+
+GUMP::add_validator("max_numeric_current_year", function($field, $input, $param = NULL) {
+		return $input[$field] <= date('Y');
+	}, 'Le champ {field} ne peut être supérieur à l\'année en cours');
+
 ?>

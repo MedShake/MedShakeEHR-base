@@ -34,18 +34,28 @@
 {% endif %}
 {{ page.proData.firstname }}
 {% if page.proData.lastname and page.proData.birthname %}
-  {{ page.proData.lastname }} <small>(né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})</small>
+  {{ page.proData.lastname }} (né{% if page.proData.administrativeGenderCode == 'F' %}e{% endif %} {{ page.proData.birthname }})
 {% elseif page.proData.lastname %}
   {{ page.proData.lastname }}
 {% else %}
   {{ page.proData.birthname }}
 {% endif %}
- {{ page.proData.job }}
+ - {{ page.proData.job }}
  - {{ config.designAppName }}
 {% endblock %}
 
-{% block head %}
+{% block jsFiles %}
   {{ parent() }}
+  {% if config.optionGeActiverGroupes == 'true' %}
+    <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/relations.js?{{ modules.base }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block jsEmbed %}
+  {{ parent() }}
+  $(document).ready(function() {
+    if ($('#bodyTabRelationPraticienGroupes').length) setTimeout(getRelationsPraticienGroupesTab($('#identitePatient').attr("data-patientID")), 200);
+  });
 {% endblock %}
 
 {% block body %}
@@ -54,7 +64,7 @@
 <div class="alert alert-danger" role="alert">Ce dossier est marqué comme supprimé !</div>
 {% endif %}
 
-<h1 id="identitePatient" data-patientID="{{ page.proData.id }}">
+<h1 id="identitePatient" data-patientID="{{ page.proDataID }}">
   {% if page.proData.titre %}
     {{ page.proData.titre }}
   {% endif %}
@@ -69,154 +79,295 @@
    <small class="text-muted">{{ page.proData.job }}</small>
 </h1>
 
-  <div class="row mt-3">
-      <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">
-                <i class="fas fa-user-md fa-fw fa-lg text-danger"></i>
-                Informations professionnelles</div>
-              <div class="card-body d-flex justify-content-between">
-                <span>
-                  Informations professionnelles sur ce praticien
-                </span>
-                <span>
-                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"><i class="fas fa-pencil-alt"></i> Infos pros
-                  </a>
-                </span>
-              </div>
-
-              <table class="table table-sm mb-0 table-hover ">
-                {% if page.proData.serviceAdressePro or page.proData.etablissementAdressePro %}<tr><td>
-                  {% if  page.proData.serviceAdressePro %}{{ page.proDataLabel.serviceAdressePro }}{% endif %}
-                  {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
-                  {% if  page.proData.etablissementAdressePro %}{{ page.proDataLabel.etablissementAdressePro }}{% endif %}
-                  <td><td>
-                  {% if  page.proData.serviceAdressePro %}{{ page.proData.serviceAdressePro }} {% endif %}
-                  {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
-                  {% if  page.proData.etablissementAdressePro %}{{ page.proData.etablissementAdressePro }}{% endif %}
-                </td></tr>{% endif %} {# service / etablissement #}
-                {% if page.proData.numAdressePro or page.proData.rueAdressePro or page.proData.codePostalPro or page.proData.villeAdressePro %}<tr><td>Adresse professionnelle<td><td>
-                  {% if  page.proData.numAdressePro %}{{ page.proData.numAdressePro }} {% endif %}
-                  {% if  page.proData.rueAdressePro %}{{ page.proData.rueAdressePro }} {% endif %}
-                  {% if  page.proData.codePostalPro %}{{ page.proData.codePostalPro }} {% endif %}
-                  {% if  page.proData.villeAdressePro %}{{ page.proData.villeAdressePro }}{% endif %}
-                  {% if  page.proData.paysAdressePro_label %} - {{ page.proData.paysAdressePro_label }}{% endif %}
-                </td></tr>{% endif %} {# Adresse pro #}
-                {% if page.proData.telPro %}<tr>
-                  <td>{{ page.proDataLabel.telPro }}<td>
-                  <td>
-                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
-                    {{ page.proData.telPro }}
-                    {% if config.click2callService is not empty %}</span>{% endif %}
-                  </td>
-                </tr>{% endif %} {# tel pro #}
-                {% if page.proData.telPro2 %}<tr>
-                  <td>{{ page.proDataLabel.telPro2 }}<td>
-                  <td>
-                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
-                    {{ page.proData.telPro2 }}
-                    {% if config.click2callService is not empty %}</span>{% endif %}
-                  </td>
-                </tr>{% endif %} {# tel pro #}
-                {% if page.proData.mobilePhonePro %}<tr>
-                  <td>{{ page.proDataLabel.mobilePhonePro }}<td>
-                  <td>
-                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
-                    {{ page.proData.mobilePhonePro }}
-                    {% if config.click2callService is not empty %}</span>{% endif %}
-                  </td>
-                </tr>{% endif %} {# tel mob pro #}
-                {% if page.proData.faxPro %}<tr><td>{{ page.proDataLabel.faxPro }}<td><td>{{ page.proData.faxPro }}</td></tr>{% endif %} {# fax pro #}
-                {% if page.proData.emailApicrypt %}<tr><td>{{ page.proDataLabel.emailApicrypt }}<td><td>{{ page.proData.emailApicrypt }}</td></tr>{% endif %} {# email apicrypt #}
-                {% if page.proData.profesionnalEmail %}<tr><td>{{ page.proDataLabel.profesionnalEmail }}<td><td>{{ page.proData.profesionnalEmail }}</td></tr>{% endif %} {# email pro #}
-                {% if page.proData.notesPro %}<tr><td>{{ page.proDataLabel.notesPro }}<td><td>{{ page.proData.notesPro|nl2br }}</td></tr>{% endif %} {# notes pros #}
-              </table>
-
-              <div class="card-footer">&nbsp;</div>
-            </div>
-            {% if page.patientsConnus %}
-              <div class="card mt-4 px-0 col-md-12">
-                <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Patients connus</div>
-                <div class="card-body">
-                  Patients reliés à ce praticien
-                </div>
-
-                <table class="table table-sm mb-0 table-striped table-hover">
-          				<thead>
-          					<tr>
-          						<th></th>
-          						<th class="col-md-10">Identité</th>
-          						<th></th>
-          					</tr>
-          				</thead>
-          				<tbody>
-                    {% for v in page.patientsConnus %}
-                    <tr style="cursor:pointer" onclick="window.location=$(this).find('a').attr('href');">
-                      <td>
-                        <a title="Afficher le dossier" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.patientID }}/"><span class="fas fa-folder-open" aria-hidden="true"></span></a>
-                      </td>
-                      <td>{{ v.nom }} {{ v.prenom }}</td>
-                      <td class="text-right">
-                        <a title="Éditer les relations du patient" class="btn btn-outline-secondary btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.patientID }}/"><span class="fas fa-link" aria-hidden="true"></span></a>
-                      </td>
-
-                    </tr>
-                    {% endfor %}
-          				</tbody>
-
-          			</table>
-
-                <div class="card-footer">&nbsp;</div>
-              </div>
+<div class="row mt-3">
+  <div class="col-12 col-md-6">
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between">
+        <div class="font-weight-bold">
+          <i class="fas fa-user-md fa-fw fa-lg {% if page.proData.isUser %}text-danger{% else %}text-info{% endif %}"></i>
+          Informations professionnelles
+        </div>
+        <div>
+          {% if user.rank == 'admin' or page.proDataID == user.id or page.proData.parentID ==  user.id %}
+          <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.proDataID }}/"  title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body d-flex justify-content-between">
+        <div>
+          Informations professionnelles sur ce praticien {% if page.proData.isUser %} et utilisateur{% endif %}
+        </div>
+        <div>
+          {% if page.proData.isUser == false and config.droitDossierPeutTransformerPraticienEnUtilisateur == 'true' and config.optionGeLoginPassAttribution == 'random' %}
+          <form class="ajaxForm reload" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/userCreate/" method="post">
+  			    <input type="hidden" name="formIN" value="baseNewUserFromPeople">
+            <input type="hidden" name="preUserID" value="{{ page.proDataID }}" >
+            <input type="hidden" name="p_username" value="{{ page.loginUsername }}" >
+            <input type="hidden" name="p_template" value="{{ config.optionGeLoginCreationDefaultTemplate }}" >
+            <input type="hidden" name="p_password" value="" >
+            <input type="hidden" name="p_module" value="{{ config.optionGeLoginCreationDefaultModule }}" >
+            <button type="submit" class="btn btn-sm btn-danger"
+            {% if page.proData.profesionnalEmail is empty and page.proData.personalEmail is empty %} disabled title="Indiquez une adresse email pro ou perso pour ce praticien où il recevra login et mot de passe" ><i class="fas fa-exclamation-triangle"></i>
+            {% else %}
+            ><i class="fas fa-user-md"></i>
             {% endif %}
+             Créer accès utilisateur</button>
+			    </form>
+          {% endif %}
+        </div>
       </div>
 
-    {% if config.PraticienPeutEtrePatient == 'true' %}
-      <div class="col-md-6 mt-4 mt-md-0">
-            <div class="card">
-              <div class="card-header font-weight-bold"><i class="fas fa-user fa-fw fa-lg text-primary"></i> Informations personnelles</div>
-              <div class="card-body d-flex justify-content-between">
-                <span>Informations personnelles sur ce praticien</span>
-                <span>
-                  <a class="btn btn-sm btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/">
-                    <i class="fas fa-pencil-alt"></i> Infos persos
-                  </a>
-                </span>
-              </div>
+      <table class="table table-sm mb-0 table-hover ">
+        {% if page.proData.serviceAdressePro or page.proData.etablissementAdressePro %}<tr><td>
+          {% if  page.proData.serviceAdressePro %}{{ page.proDataLabel.serviceAdressePro }}{% endif %}
+          {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
+          {% if  page.proData.etablissementAdressePro %}{{ page.proDataLabel.etablissementAdressePro }}{% endif %}
+          <td><td>
+          {% if  page.proData.serviceAdressePro %}{{ page.proData.serviceAdressePro }} {% endif %}
+          {% if page.proData.serviceAdressePro and page.proData.etablissementAdressePro %} - {% endif %}
+          {% if  page.proData.etablissementAdressePro %}{{ page.proData.etablissementAdressePro }}{% endif %}
+        </td></tr>{% endif %} {# service / etablissement #}
+        {% if page.proData.numAdressePro or page.proData.rueAdressePro or page.proData.codePostalPro or page.proData.villeAdressePro %}<tr><td>Adresse professionnelle<td><td>
+          {% if  page.proData.numAdressePro %}{{ page.proData.numAdressePro }} {% endif %}
+          {% if  page.proData.rueAdressePro %}{{ page.proData.rueAdressePro }} {% endif %}
+          {% if  page.proData.codePostalPro %}{{ page.proData.codePostalPro }} {% endif %}
+          {% if  page.proData.villeAdressePro %}{{ page.proData.villeAdressePro }}{% endif %}
+          {% if  page.proData.paysAdressePro_label %} - {{ page.proData.paysAdressePro_label }}{% endif %}
+        </td></tr>{% endif %} {# Adresse pro #}
+        {% if page.proData.telPro %}<tr>
+          <td>{{ page.proDataLabel.telPro }}<td>
+          <td>
+            {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+            {{ page.proData.telPro }}
+            {% if config.click2callService is not empty %}</span>{% endif %}
+          </td>
+        </tr>{% endif %} {# tel pro #}
+        {% if page.proData.telPro2 %}<tr>
+          <td>{{ page.proDataLabel.telPro2 }}<td>
+          <td>
+            {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+            {{ page.proData.telPro2 }}
+            {% if config.click2callService is not empty %}</span>{% endif %}
+          </td>
+        </tr>{% endif %} {# tel pro #}
+        {% if page.proData.mobilePhonePro %}<tr>
+          <td>{{ page.proDataLabel.mobilePhonePro }}<td>
+          <td>
+            {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+            {{ page.proData.mobilePhonePro }}
+            {% if config.click2callService is not empty %}</span>{% endif %}
+          </td>
+        </tr>{% endif %} {# tel mob pro #}
+        {% if page.proData.faxPro %}<tr><td>{{ page.proDataLabel.faxPro }}<td><td>{{ page.proData.faxPro }}</td></tr>{% endif %} {# fax pro #}
+        {% if page.proData.emailApicrypt %}<tr><td>{{ page.proDataLabel.emailApicrypt }}<td><td>{{ page.proData.emailApicrypt }}</td></tr>{% endif %} {# email apicrypt #}
+        {% if page.proData.profesionnalEmail %}<tr><td>{{ page.proDataLabel.profesionnalEmail }}<td><td>{{ page.proData.profesionnalEmail }}</td></tr>{% endif %} {# email pro #}
+        {% if page.proData.notesPro %}<tr><td>{{ page.proDataLabel.notesPro }}<td><td>{{ page.proData.notesPro|nl2br }}</td></tr>{% endif %} {# notes pros #}
+      </table>
 
-              <table class="table table-sm mb-0 table-hover ">
-                {% if page.proData.birthdate %}<tr><td>{{ page.proDataLabel.birthdate }}<td><td>{{ page.proData.birthdate }}</td></tr>{% endif %} {# ddn #}
-                {% if page.proData.streetNumber or page.proData.street or page.proData.postalCodePerso or page.proData.city %}<tr><td>Adresse personnelle<td><td>
-                  {% if  page.proData.streetNumber %}{{ page.proData.streetNumber }} {% endif %}
-                  {% if  page.proData.street %}{{ page.proData.street }} {% endif %}
-                  {% if  page.proData.postalCodePerso %}{{ page.proData.postalCodePerso }} {% endif %}
-                  {% if  page.proData.city %}{{ page.proData.city }}{% endif %}
-                  {% if  page.proData.country_label %} - {{ page.proData.country_label }}{% endif %}
-                </td></tr>{% endif %} {# Adresse perso #}
-                {% if page.proData.mobilePhone %}<tr>
-                  <td>{{ page.proDataLabel.mobilePhone }}<td>
-                  <td>
-                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
-                    {{ page.proData.mobilePhone }}
-                    {% if config.click2callService is not empty %}</span>{% endif %}
-                  </td>
-                </tr>{% endif %} {# tel mob perso #}
-                {% if page.proData.homePhone %}<tr>
-                  <td>{{ page.proDataLabel.homePhone }}<td>
-                  <td>
-                    {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
-                    {{ page.proData.homePhone }}
-                    {% if config.click2callService is not empty %}</span>{% endif %}
-                  </td>
-                </tr>{% endif %} {# tel perso #}
-                {% if page.proData.personalEmail %}<tr><td>{{ page.proDataLabel.personalEmail }}<td><td>{{ page.proData.personalEmail }}</td></tr>{% endif %} {# email perso #}
-                {% if page.proData.notes %}<tr><td>{{ page.proDataLabel.notes }}<td><td>{{ page.proData.notes|nl2br }}</td></tr>{% endif %} {# notes perso #}
-              </table>
-              <div class="card-footer">&nbsp;</div>
-            </div>
+      <div class="card-footer">&nbsp;</div>
+    </div>
 
+    {% if page.patientsConnus %}
+      <div class="card mb-4">
+        <div class="card-header font-weight-bold"><i class="fas fa-users fa-fw fa-lg text-secondary"></i> Patients connus</div>
+        <div class="card-body">
+          Patients reliés à ce praticien
+        </div>
+
+        <table class="table table-sm mb-0 table-hover">
+  				<tbody>
+            {% for v in page.patientsConnus %}
+            <tr style="cursor:pointer" onclick="window.location=$(this).find('a').attr('href');">
+              <td>
+                <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ v.peopleID }}/">
+                  <i class="fas fa-user fa-fw"></i>
+                </a>
+              {{ v.identiteComplete }} - {{ v.ageCalcule }}</td>
+
+              <td class="text-right">
+                <a title="Éditer les relations du patient" class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ v.peopleID }}/">
+                  <i class="fas fa-link fa-fw"></i>
+                </a>
+              </td>
+
+            </tr>
+            {% endfor %}
+  				</tbody>
+
+  			</table>
+
+        <div class="card-footer">&nbsp;</div>
       </div>
     {% endif %}
+  </div>
+
+  <div class="col-12 col-md-6">
+    {% if config.PraticienPeutEtrePatient == 'true' %}
+      <div class="card mb-4">
+          <div class="card-header d-flex justify-content-between">
+            <div class="font-weight-bold">
+              <i class="fas fa-user fa-fw fa-lg text-primary"></i> Informations personnelles
+            </div>
+            <div>
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/edit/{{ page.proDataID }}/"  title="Modifier">
+                <i class="fas fa-pencil-alt fa-fw"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body ">
+            Informations personnelles sur ce praticien
+          </div>
+
+          <table class="table table-sm mb-0 table-hover ">
+            {% if page.proData.birthdate %}<tr><td>{{ page.proDataLabel.birthdate }}<td><td>{{ page.proData.birthdate }}</td></tr>{% endif %} {# ddn #}
+            {% if page.proData.streetNumber or page.proData.street or page.proData.postalCodePerso or page.proData.city %}<tr><td>Adresse personnelle<td><td>
+              {% if  page.proData.streetNumber %}{{ page.proData.streetNumber }} {% endif %}
+              {% if  page.proData.street %}{{ page.proData.street }} {% endif %}
+              {% if  page.proData.postalCodePerso %}{{ page.proData.postalCodePerso }} {% endif %}
+              {% if  page.proData.city %}{{ page.proData.city }}{% endif %}
+              {% if  page.proData.country_label %} - {{ page.proData.country_label }}{% endif %}
+            </td></tr>{% endif %} {# Adresse perso #}
+            {% if page.proData.mobilePhone %}<tr>
+              <td>{{ page.proDataLabel.mobilePhone }}<td>
+              <td>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ page.proData.mobilePhone }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </td>
+            </tr>{% endif %} {# tel mob perso #}
+            {% if page.proData.homePhone %}<tr>
+              <td>{{ page.proDataLabel.homePhone }}<td>
+              <td>
+                {% if config.click2callService is not empty %}<span class="click2call">{% endif %}
+                {{ page.proData.homePhone }}
+                {% if config.click2callService is not empty %}</span>{% endif %}
+              </td>
+            </tr>{% endif %} {# tel perso #}
+            {% if page.proData.personalEmail %}<tr><td>{{ page.proDataLabel.personalEmail }}<td><td>{{ page.proData.personalEmail }}</td></tr>{% endif %} {# email perso #}
+            {% if page.proData.notes %}<tr><td>{{ page.proDataLabel.notes }}<td><td>{{ page.proData.notes|nl2br }}</td></tr>{% endif %} {# notes perso #}
+          </table>
+          <div class="card-footer">&nbsp;</div>
+        </div>
+    {% endif %}
+
+    {% if config.optionGeActiverRegistres == 'true' and page.posteAdminRegistre|length > 0 %}
+      <div class="card mb-4">
+          <div class="card-header font-weight-bold d-flex justify-content-between">
+            <div  class="font-weight-bold">
+              <i class="fas fa-user-graduate fa-fw fa-lg text-success"></i>
+              Administrateur registre
+            </div>
+            <div>
+              {% if user.rank == 'admin' %}
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationRegistrePraticien/{{ page.proDataID }}/" title="Historique">
+                <i class="fas fa-history fa-fw"></i>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            {% if page.posteAdminRegistre|length > 1 %}
+            Administrateur des registres
+            {% else %}
+            Administrateur du registre
+            {% endif %}
+          </div>
+
+          <table class="table table-sm mb-0 table-hover">
+    				<tbody>
+              {% for v in page.posteAdminRegistre %}
+              <tr class="cursor-pointer"  onclick="window.location=$(this).find('a').attr('href');">
+                <td>
+                  <a title="Afficher le dossier" class="btn btn-light btn-sm mr-3" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registre/{{ v.peopleID }}/">
+                    <i class="fas fa-archive fa-fw"></i>
+                  </a>
+                  {{ v.registryname }}
+                </td>
+              </tr>
+              {% endfor %}
+    				</tbody>
+    			</table>
+
+          <div class="card-footer text-right">
+            &nbsp;
+          </div>
+        </div>
+    {% endif %}
+
+    {% if config.optionGeActiverGroupes == 'true' %}
+      <div class="card mb-4">
+          <div class="card-header font-weight-bold d-flex justify-content-between">
+            <div  class="font-weight-bold">
+              <i class="fas fa-hospital-alt fa-fw fa-lg text-secondary"></i>
+              Groupes
+            </div>
+            <div>
+              {% if page.proData.canModifyGroups %}
+                <a href="#" class="text-muted cursor-pointer" data-toggle="collapse" data-target=".collapseGroupeGestion" title="Modifier"><i class="fas fa-pencil-alt fa-fw"></i></a>
+              {% endif %}
+              {% if user.rank == 'admin' %}
+              <a class="text-muted" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRelations/relationPraticienGroupe/{{ page.proDataID }}/" title="Historique">
+                <i class="fas fa-history fa-fw"></i>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>Groupes intégrés par ce praticien {% if config.droitGroupePeutVoirTousGroupes != 'true' %}(Vous n'êtes autorisé à voir que les groupes auxquels vous êtes intégré){% endif %}</div>
+              <div>
+                {% if page.proData.canModifyGroups and page.proDataID != user.id %}
+                <form class="ajaxForm reload assignMyOwnGroups d-none" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/ajax/autoAssignOwnGroupsToUser/" method="post" >
+                  <input type="hidden" name="proID" value="{{ page.proDataID }}">
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="fas fa-clone"></i>
+                    Assigner mes propres groupes
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+            <div class="collapseGroupeGestion collapse">
+              {% if config.groupesNbMaxGroupesParPro > 0 %}
+                <div class="alert alert-info mt-2" role="alert">
+                  <i class="fas fa-exclamation-circle fa-lg mr-2"></i> Limité à {{ config.groupesNbMaxGroupesParPro }} groupe{% if config.groupesNbMaxGroupesParPro > 1 %}s{% endif %} par praticien
+                </div>
+              {% endif %}
+              <form class="form-inline my-2 d-flex">
+                <div class="form-group flex-grow-1">
+                  <div class="input-group input-group-sm flex-grow-1">
+                    <input class="form-control form-control-sm flex-grow-1 searchPeopleID" type="text" placeholder="nom du groupe" data-ajax="getRelationsGroupes" autocomplete="off"/>
+                    {{ f.select ({
+                    'select' : {
+                      'class' : 'toStatutRelation',
+                      'values' : page.preRelationPraticienGroupe.formValues,
+                      'valueDefaut' : el.value.preValue,
+                      'autocomplete' : 'off' } }) }}
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-sm btn-secondary addRelation" data-typeRelation="relationPraticienGroupe" data-peopleID="{{ page.proDataID }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                    </div>
+                  </div>
+                </div>
+                {% if config.droitDossierPeutCreerPraticien == 'true' %}
+                  <a class="btn btn-sm btn-outline-secondary ml-4" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupe/create/"><i class="fas fa-hospital-alt mr-1"></i> Nouveau groupe</a>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+
+          <table class="table table-sm mb-0 table-hover">
+            <tbody id="bodyTabRelationPraticienGroupes">
+            </tbody>
+          </table>
+
+          <div class="card-footer text-right">
+            &nbsp;
+          </div>
+        </div>
+    {% endif %}
+
+  </div>
 </div>
 
 

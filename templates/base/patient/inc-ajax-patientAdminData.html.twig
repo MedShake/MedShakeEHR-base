@@ -49,7 +49,9 @@
         {% if page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m'] == 0 and page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d'] == 0 %}
           <i class="fas fa-birthday-cake text-danger" title="Joyeux anniversaire !"></i>
         {% endif %}
-        {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        <span id="patientBirthdate" data-birthYear="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['birthYear']|e }}">
+          {{ page['patient']['administrativeDatas']['birthdate']['value']|e }}
+        </span>
         -
       {% endif %}
       {% if page['patient']['administrativeDatas']['deathdate']['value'] != '' %}
@@ -59,7 +61,9 @@
         <span title="{{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['deathAge']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['deathAge']['ageDisplay']|e }}</span>
       {% else %}
         {# age #}
-        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">{{ page['patient']['administrativeDatas']['birthdate']['age']|e }}</span>
+        <span title="{{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['y']|e }}A {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['m']|e }}M {{ page['patient']['administrativeDatas']['birthdate']['ageFormats']['ageComposantes']['d']|e }}J">
+          {{ page['patient']['administrativeDatas']['birthdate']['age']|e }}
+        </span>
 
       {% endif %}
        -
@@ -71,13 +75,13 @@
 
         <div class="btn-group">
           {% if page['patient']['administrativeDatas']['notes']['value'] %}
-            <button id="voirNotesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
+            <button data-toggle="collapse" data-target="#notesPatient" type="button" class="btn btn-light btn-sm" title="Voir les notes">
                 <i class="far fa-comment-alt text-danger"></i>
             </button>
           {% endif %}
 
           <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editAdmin" title="Édition des données administratives"><span class="fas fa-pencil-alt" aria-hidden="true"></span></button>
-          {% if config.transmissionsPeutCreer == 'true' %}
+          {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
             <button type="button" class="btn btn-light btn-sm newTransmission" data-toggle="modal" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
           {% endif %}
         </div>
@@ -138,9 +142,8 @@
         </button>
         {% for v in page.correspondants %}
         <div class="btn-group">
-          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.pratID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
-
-            {% if v.titre %}{{ v.titre }} {% endif %}{{ v.prenom }} {{ v.nom }}
+          <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/{{ v.peopleID }}/" title="{{ v.typeRelationTxt|e('html_attr') }}">
+            {% if v.titre %}{{ v.titre }} {% endif %}{{ v.identiteUsuelle }}
             {% if v.typeRelation == 'MTD' %}<sup><i class="fas fa-star fa-sm"></i></sup>{% endif %}
           </a>
           <button type="button" class="btn btn-sm btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
@@ -199,9 +202,8 @@
     {% endif %}
   </div>
 </div>
-<div class="col-12">
-  <div id="notesPatient" class="card bg-light p-2" style="display: none;">
+<div id="notesPatient" class="col-12 collapse">
+  <div class="card bg-light p-2">
     {{ page['patient']['administrativeDatas']['notes']['value']|e|nl2br }}
   </div>
-
 </div>

@@ -38,12 +38,16 @@ class msSqlGenerate
   protected $_actes_cat_values;
   protected $_configuration_fields;
   protected $_configuration_values;
+  protected $_data_cat_fields_array;
   protected $_data_cat_fields;
   protected $_data_cat_values;
+  protected $_data_types_fields_array;
   protected $_data_types_fields;
   protected $_data_types_values;
+  protected $_forms_fields_array;
   protected $_forms_fields;
   protected $_forms_values;
+  protected $_forms_cat_fields_array;
   protected $_forms_cat_fields;
   protected $_forms_cat_values;
   protected $_form_basic_fields;
@@ -58,6 +62,7 @@ class msSqlGenerate
   protected $_system_values;
   protected $_tablesSql=[];
 
+  protected $_addUpdateOnDupicate = false;
 
   public function __construct() {
       global $p;
@@ -70,6 +75,14 @@ class msSqlGenerate
  */
   public function setBdd($bdd) {
     return $this->_bdd=$bdd;
+  }
+
+/**
+ * Définir l'ajout de la syntaxe "on duplicate update" pour les insert
+ * @param bool $addUpdateOnDupicate true / false
+ */
+  public function setAddUpdateOnDuplicate($addUpdateOnDupicate) {
+    $this->_addUpdateOnDupicate = $addUpdateOnDupicate;
   }
 
 /**
@@ -240,6 +253,7 @@ class msSqlGenerate
     unset($v['id']);
     $catID=$v['cat'];
     if(isset($v['cat'])) $v['cat']='@catID';
+    if(!isset($this->_forms_fields_array)) $this->_forms_fields_array=array_keys($v);
     if(!isset($this->_forms_fields)) $this->_forms_fields=$this->_getSqlFieldsPart($v);
     if(!isset($this->_forms_values[$catID][$v['internalName']])) $this->_forms_values[$catID][$v['internalName']]=$this->_getSqlValuesPart($v);
 
@@ -248,6 +262,7 @@ class msSqlGenerate
     unset($v['id']);
     $v['fromID']='1';
     $v['creationDate']="2019-01-01 00:00:00";
+    if(!isset($this->_forms_cat_fields_array)) $this->_forms_cat_fields_array=array_keys($v);
     if(!isset($this->_forms_cat_fields)) $this->_forms_cat_fields=$this->_getSqlFieldsPart($v);
     if(!isset($this->_forms_cat_values[$v['name']])) $this->_forms_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
 
@@ -273,6 +288,7 @@ class msSqlGenerate
         unset($v['id']);
         $v['fromID']='1';
         $v['creationDate']="2019-01-01 00:00:00";
+        if(!isset($this->_data_cat_fields_array)) $this->_data_cat_fields_array=array_keys($v);
         if(!isset($this->_data_cat_fields)) $this->_data_cat_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_cat_values[$v['name']])) $this->_data_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
       }
@@ -286,6 +302,7 @@ class msSqlGenerate
         $v['fromID']='1';
         $v['creationDate']="2019-01-01 00:00:00";
         if(isset($v['cat'])) $v['cat']='@catID';
+        if(!isset($this->_data_types_fields_array)) $this->_data_types_fields_array=array_keys($v);
         if(!isset($this->_data_types_fields)) $this->_data_types_fields=$this->_getSqlFieldsPart($v);
         if(!isset($this->_data_types_values[$catID][$v['name']])) $this->_data_types_values[$catID][$v['name']]=$this->_getSqlValuesPart($v);
       }
@@ -344,7 +361,17 @@ class msSqlGenerate
       asort($this->_data_cat_values);
       $string.="-- data_cat\n";
       $string.="INSERT IGNORE INTO `data_cat` ".$this->_data_cat_fields." VALUES\n";
-      $string.=implode(",\n", $this->_data_cat_values).";\n\n";
+      $string.=implode(",\n", $this->_data_cat_values);
+      if($this->_addUpdateOnDupicate == true) {
+        $string.="\nON DUPLICATE KEY UPDATE ";
+        $up=[];
+        foreach($this->_data_cat_fields_array as $v) {
+          $up[]= $v."=values(".$v.")";
+        }
+        $string.= implode(", ", $up).";\n\n";
+      } else {
+        $string.=";\n\n";
+      }
     }
 
     //data_types
@@ -361,7 +388,22 @@ class msSqlGenerate
           $tabTypes[$catName].="SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='".$catName."');\n";
         }
         $tabTypes[$catName].="INSERT IGNORE INTO `data_types` ".$this->_data_types_fields." VALUES\n";
-        $tabTypes[$catName].=implode(",\n", $this->_data_types_values[$cat]).";\n\n";
+        $tabTypes[$catName].=implode(",\n", $this->_data_types_values[$cat]);
+
+        if($this->_addUpdateOnDupicate == true) {
+          $tabTypes[$catName].="\nON DUPLICATE KEY UPDATE ";
+          $up=[];
+          foreach($this->_data_types_fields_array as $v) {
+            if($v == 'cat') {
+              $up[] = "cat=@catID";
+            } else {
+              $up[] = $v."=values(".$v.")";
+            }
+          }
+          $tabTypes[$catName].= implode(", ", $up).";\n\n";
+        } else {
+          $tabTypes[$catName].=";\n\n";
+        }
       }
       ksort($tabTypes);
       $string.=implode("\n", $tabTypes);
@@ -381,7 +423,17 @@ class msSqlGenerate
       asort($this->_forms_cat_values);
       $string.="-- forms_cat\n";
       $string.="INSERT IGNORE INTO `forms_cat` ".$this->_forms_cat_fields." VALUES\n";
-      $string.=implode(",\n", $this->_forms_cat_values).";\n\n";
+      $string.=implode(",\n", $this->_forms_cat_values);
+      if($this->_addUpdateOnDupicate == true) {
+        $string.="\nON DUPLICATE KEY UPDATE ";
+        $up=[];
+        foreach($this->_forms_cat_fields_array as $v) {
+          $up[]= $v."=values(".$v.")";
+        }
+        $string.= implode(", ", $up).";\n\n";
+      } else {
+        $string.=";\n\n";
+      }
     }
 
     //forms
@@ -393,7 +445,22 @@ class msSqlGenerate
         $catName = msSQL::sqlUniqueChamp("select name from $this->_bdd.forms_cat where id = '".$cat."' ");
         $tabForms[$catName]="SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='".$catName."');\n";
         $tabForms[$catName].="INSERT IGNORE INTO `forms` ".$this->_forms_fields." VALUES\n";
-        $tabForms[$catName].=implode(",\n", $this->_forms_values[$cat]).";\n\n";
+        $tabForms[$catName].=implode(",\n", $this->_forms_values[$cat]);
+
+        if($this->_addUpdateOnDupicate == true) {
+          $tabForms[$catName].="\nON DUPLICATE KEY UPDATE ";
+          $up=[];
+          foreach($this->_forms_fields_array as $v) {
+            if($v == 'cat') {
+              $up[] = "cat=@catID";
+            } else {
+              $up[] = $v."=values(".$v.")";
+            }
+          }
+          $tabForms[$catName].= implode(", ", $up).";\n\n";
+        } else {
+          $tabForms[$catName].=";\n\n";
+        }
       }
       ksort($tabForms);
       $string.=implode("\n", $tabForms);

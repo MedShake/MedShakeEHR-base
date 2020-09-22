@@ -32,6 +32,13 @@ class msExportData
  * @var int
  */
   private $_formID;
+
+/**
+ * ID du registre concerné par l'export
+ * @var int
+ */
+  private $_registreID;
+
 /**
  * Id du/des data types qui implémentent le formulaire
  * @var array
@@ -97,6 +104,18 @@ class msExportData
 
   private $_tabCorrespondances;
 
+  private $_forbiddenDataAdminPatientList=[];
+  private $_forbiddenDataAdminPratList=[];
+  private $_forbiddenFormFieldList=[];
+
+  private $_substituteByPeopleExportIdFormFieldList=[];
+
+  private $_relationsPratGroupe=[];
+  private $_relationsPatientGroupe=[];
+
+  private $_canExportAll=false;
+
+  private $_patientsIncludedInRegistry;
 
 /**
  * Définir les instance du formulaire à exporter
@@ -107,6 +126,14 @@ class msExportData
       $this->_dataTypeIDs[]=$dataTypeID;
     }
 
+/**
+ * Définir le registreID concerné par l'export
+ * @param int $registreID registreID
+ */
+    public function setRegistreID($registreID) {
+      if(!is_numeric($registreID)) throw new Exception('RegistreID is not numeric');
+      $this->_registreID = $registreID;
+    }
 
 /**
  * Définir le numéro du formulaire
@@ -114,8 +141,30 @@ class msExportData
  */
     public function setFormID($formID)
     {
+      global $p;
       if (is_numeric($formID)) {
-        return $this->_formID = $formID;
+        $this->_formID = $formID;
+
+        // champs interdits d'export dans le form
+        $form=new msForm;
+        $form->setFormID($this->_formID);
+        $this->_forbiddenFormFieldList=$form->getFormDataToNeverExport();
+
+    		//champs à substituer par le peopleExportID dans le form
+    		$this->_substituteByPeopleExportIdFormFieldList=$form->getFormDataToSubstituteByPeopleExportId();
+
+        //champs interdits dans les data administratives patient
+        $form=new msForm;
+        $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+        $this->_forbiddenDataAdminPatientList=$form->getFormDataToNeverExport();
+
+        //champs interdits dans les data administratives praticien
+        $form=new msForm;
+        $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+        $this->_forbiddenDataAdminPratList=$form->getFormDataToNeverExport();
+
+        return $this->_formID;
+
       } else {
         throw new Exception('formID is not numeric');
       }
@@ -176,11 +225,22 @@ class msExportData
     }
 
 /**
+ * Définir le fait que l'export concerne tous les fromID
+ * @param boolean $canExportAll true/false
+ */
+    public function setCanExportAll($canExportAll) {
+      if(!is_bool($canExportAll)) {
+        throw new Exception('CanExportAll n\'est pas valide');
+      }
+      $this->_canExportAll=$canExportAll;
+    }
+
+/**
  * Ajouter un champ administratif patient à exporter
  * @param string $val data type name
  */
     public function addToDataAdminPatientList($val) {
-      if(!in_array($val, $this->_dataAdminPatientList)) $this->_dataAdminPatientList[]=$val;
+      if(!in_array($val, $this->_dataAdminPatientList) and !in_array($val, $this->_forbiddenDataAdminPatientList)) $this->_dataAdminPatientList[]=$val;
     }
 
 /**
@@ -188,7 +248,7 @@ class msExportData
  * @param string $val data type name
  */
     public function addToDataAdminPratList($val) {
-      if(!in_array($val, $this->_dataAdminPratList)) $this->_dataAdminPratList[]=$val;
+      if(!in_array($val, $this->_dataAdminPratList) and !in_array($val, $this->_forbiddenDataAdminPratList)) $this->_dataAdminPratList[]=$val;
     }
 
 /**
@@ -196,7 +256,7 @@ class msExportData
  * @param string $val data type name
  */
     public function addToFormFieldList($val) {
-      if(!in_array($val, $this->_formFieldList)) $this->_formFieldList[]=$val;
+      if(!in_array($val, $this->_formFieldList)  and !in_array($val, $this->_forbiddenFormFieldList)) $this->_formFieldList[]=$val;
     }
 
 /**
@@ -211,8 +271,17 @@ class msExportData
  * Obtenir la liste des instances de formulaires exportables
  * @return array tableau par catID
  */
-    public function getExportabledList() {
-      if($data =  msSQL::sql2tab("select id, label, cat, formValues from data_types where groupe='typecs' and formType='select' order by displayOrder")) {
+    public function getExportabledList($namePrefix=[]) {
+      if(!empty($namePrefix)) {
+        foreach($namePrefix as $prefix) {
+          $wherePrefix[] = ' name like "'.$prefix.'%" ';
+        }
+        $wherePrefix = ' and ('.implode(' or ', $wherePrefix).')';
+      } else {
+        $wherePrefix ='';
+      }
+
+      if($data =  msSQL::sql2tab("select id, label, cat, formValues from data_types where groupe='typecs' and formType='select' ".$wherePrefix." order by displayOrder")) {
         foreach($data as $k=>$v) {
           $tab[$v['cat']][]=$v;
         }
@@ -297,7 +366,20 @@ class msExportData
       } else {
         $toIdToExclude = '';
       }
-      return $this->_allObjetsID=msSQL::sql2tabSimple("select `id` from `objets_data` where `typeID` in ('".implode("', '", $this->_dataTypeIDs)."') and `fromID` in ('".implode("', '", $this->_pratList)."') ".$toIdToExclude." ".$this->_formatDateParameters()." and `outdated`='' and `deleted`=''");
+      if($this->_canExportAll == true) {
+        $fromIdwhere = "";
+      } else {
+        $fromIdwhere = "and fromID in ('".implode("', '", $this->_pratList)."')";
+      }
+
+      $toIdwhere = '';
+      if($p['config']['optionGeActiverRegistres'] == 'true' and $p['config']['optionGeExportDataConsentementOff'] != 'true' and isset($this->_registreID)) {
+        if(!empty($this->_getAllPatientsIncludedInRegistry())) {
+          $toIdwhere = " and toID in ('".implode("', '", $this->_patientsIncludedInRegistry)."') ";
+        }
+      }
+
+      return $this->_allObjetsID=msSQL::sql2tabSimple("select id from objets_data where typeID in ('".implode("', '", $this->_dataTypeIDs)."') ".$fromIdwhere.$toIdwhere." ".$toIdToExclude." ".$this->_formatDateParameters()." and outdated='' and deleted=''");
     }
 
 /**
@@ -305,13 +387,21 @@ class msExportData
  * @return array données admin de chaque prat
  */
     private function _getAllPratAdminData() {
+      global $p;
       if(empty($this->getDataAdminPratList())) return [];
 
       if($this->_allPratID = msSQL::sql2tabSimple("select distinct(fromID) from objets_data where id in ('".implode("', '", $this->_allObjetsID)."')")) {
-        $people = new msPeople;
+        $people = new msPeopleRelations;
         foreach($this->_allPratID as $PratID) {
           $people->setToID($PratID);
           $dataPrat=$people->getSimpleAdminDatasByName($this->getDataAdminPratList());
+
+          // création exportID si manquant
+          if(!isset($dataPrat['peopleExportID'])) {
+            $people->setFromID($p['user']['id']);
+            $dataPrat['peopleExportID']=$people->setPeopleExportID();
+          }
+
           foreach($this->getDataAdminPratList() as $v) {
             if($this->_optionSelect=="selectValue" and isset($this->_tabCorrespondances['praticien_'.$v][$dataPrat[$v]])) {
               $this->_pratAdminData[$PratID]['praticien_'.$v]=$this->_tabCorrespondances['praticien_'.$v][$dataPrat[$v]];
@@ -321,6 +411,20 @@ class msExportData
               $this->_pratAdminData[$PratID]['praticien_'.$v]='';
             }
           }
+
+          //groupes du praticien
+          if($p['config']['optionGeActiverGroupes'] == 'true') {
+            if(!isset($this->_relationsPratGroupe[$PratID])) {
+              $people->setRelationType('relationPraticienGroupe');
+              $this->_relationsPratGroupe[$PratID] = $people->getRelations(['peopleExportID']);
+
+              $this->_pratAdminData[$PratID]['praticienGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
+            } else {
+
+              $this->_pratAdminData[$PratID]['praticienGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPratGroupe[$PratID],'peopleExportID')));
+            }
+          }
+
         }
         return $this->_pratAdminData;
       }
@@ -332,10 +436,19 @@ class msExportData
  * @return array            données admin patient
  */
     private function _getPatientAdminData($patientID) {
+      global $p;
       if(empty($this->getDataAdminPatientList())) return [];
-      $people = new msPeople;
+      $people = new msPeopleRelations;
       $people->setToID($patientID);
       $dataPatient=$people->getSimpleAdminDatasByName($this->getDataAdminPatientList());
+
+      // création exportID si manquant
+      if(!isset($dataPatient['peopleExportID'])) {
+        global $p;
+        $people->setFromID($p['user']['id']);
+        $dataPatient['peopleExportID']=$people->setPeopleExportID();
+      }
+
       foreach($this->getDataAdminPatientList() as $v) {
         if($this->_optionSelect=="selectValue" and isset($this->_tabCorrespondances['patient_'.$v][$dataPatient[$v]])) {
           $patient['patient_'.$v]=$this->_tabCorrespondances['patient_'.$v][$dataPatient[$v]];
@@ -345,7 +458,43 @@ class msExportData
           $patient['patient_'.$v]='';
         }
       }
+
+      //groupes du patient
+      if($p['config']['optionGeActiverGroupes'] == 'true') {
+        if(!isset($this->_relationsPatientGroupe[$patientID])) {
+          $people->setRelationType('relationPatientGroupe');
+          $this->_relationsPatientGroupe[$patientID] = $people->getRelations(['peopleExportID']);
+
+          $patient['patientGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPatientGroupe[$patientID],'peopleExportID')));
+        } else {
+
+          $patient['patientGroupe_peopleExportID'] = implode(' - ', array_filter(array_column($this->_relationsPatientGroupe[$patientID],'peopleExportID')));
+        }
+      }
+
       return $patient;
+    }
+
+/**
+ * Obtenir les peopleID des patients avec consentement positif au registre
+ * @return array tableau des peopleID
+ */
+    private function _getAllPatientsIncludedInRegistry() {
+      global $p;
+      if(isset($this->_patientsIncludedInRegistry)) return $this->_patientsIncludedInRegistry;
+      if($p['config']['optionGeActiverRegistres'] == 'true' and isset($this->_registreID)) {
+        $relation = new msPeopleRelations;
+        $relation->setToID($this->_registreID);
+        $relation->setRelationType('relationRegistrePatient');
+        if($inclusRegistre = $relation->getRelations([], [], ['inclus'])) {
+          return $this->_patientsIncludedInRegistry = array_column($inclusRegistre, 'peopleID');
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
+
     }
 
 /**
@@ -354,6 +503,12 @@ class msExportData
  */
     private function _getAllObjetsAndChildsData()
     {
+      global $p;
+
+      if($p['config']['optionGeActiverRegistres'] == 'true' and isset($this->_registreID)) {
+        $this->_getAllPatientsIncludedInRegistry();
+      }
+
       $tab=[];
       $data = msSQL::sql2tabKey("select o.id, o.value, o.instance, o.typeID, o.fromID, o.toID, o.creationDate, o.registerDate, o.updateDate, t.name
       from objets_data as o
@@ -363,12 +518,16 @@ class msExportData
         foreach($data as $k=>$v) {
           if(in_array($v['typeID'], $this->_dataTypeIDs)) {
             $tab[$k]['id']=$k;
-            $tab[$k]['praticien_id']=$v['fromID'];
-            $tab[$k]['patient_id']=$v['toID'];
+            $tab[$k]['parent_id']=$v['instance'];
             $tab[$k]['date_effective']=$v['creationDate'];
             $tab[$k]['date_saisie']=$v['registerDate'];
             $tab[$k]['date_modification']=$v['updateDate'];
             if(isset($this->_pratAdminData[$v['fromID']])) $tab[$k]=$tab[$k]+$this->_pratAdminData[$v['fromID']];
+            if(isset($this->_patientsIncludedInRegistry) and in_array($v['toID'], $this->_patientsIncludedInRegistry)) {
+              $tab[$k]['patient_consentementRegistre']='oui';
+            } else {
+              $tab[$k]['patient_consentementRegistre']='non';
+            }
             $tab[$k]=$tab[$k]+$this->_getPatientAdminData($v['toID']);
           } else {
             if($this->_optionSelect=="selectValue" and isset($this->_tabCorrespondances['data_'.$v['name']][$v['value']])) {
@@ -387,6 +546,30 @@ class msExportData
         foreach($tab as $k=>$v) {
           $tab[$k] = array_merge(array_flip($this->_sortTab), $tab[$k]);
         }
+
+    		// substitution des peopleID par peopleExportID
+    		if(!empty($this->_substituteByPeopleExportIdFormFieldList)) {
+    			$idToChange=[];
+    			foreach($this->_substituteByPeopleExportIdFormFieldList as $champ) {
+    				$idToChange=array_merge($idToChange, array_column($tab,'data_'.$champ));
+    			}
+    			$idToChange=array_unique($idToChange);
+    			foreach($idToChange as $idToSwitch) {
+    				if(is_numeric($idToSwitch) and !isset($this->_pratAdminData[$idToSwitch]['peopleExportID'])) {
+    					$pratToSwitch = new msPeople;
+    					$pratToSwitch->setToID($idToSwitch);
+    		            if(!$this->_pratAdminData[$idToSwitch]['peopleExportID']=@$pratToSwitch->getSimpleAdminDatasByName(['peopleExportID'])['peopleExportID']) {
+    						$pratToSwitch->setFromID($p['user']['id']);
+    						$this->_pratAdminData[$idToSwitch]['peopleExportID']=$pratToSwitch->setPeopleExportID();
+    					}
+    				}
+    			}
+    			foreach($tab as $k=>$v) {
+    				foreach($this->_substituteByPeopleExportIdFormFieldList as $champ) {
+    					$tab[$k]['data_'.$champ]=$this->_pratAdminData[$tab[$k]['data_'.$champ]]['peopleExportID'];
+    				}
+    			}
+    		}
       }
       return $tab;
     }

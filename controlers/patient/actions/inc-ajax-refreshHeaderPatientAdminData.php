@@ -33,7 +33,8 @@ $patient = new msPeopleRelations();
 $patient->setToID($_POST['patientID']);
 
 //vérifier les droits
-if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $patient->getFromID()!=$p['user']['id']) {
+$droits = new msPeopleDroits($p['user']['id']);
+if(!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
   $template="forbidden";
   return;
 }
@@ -49,4 +50,6 @@ if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
 }
 
 //les correspondants et liens familiaux
-$p['page']['correspondants']=$patient->getRelationsWithPros(['emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+$patient->setRelationType('relationPatientPraticien');
+$patient->setReturnedPeopleTypes(['pro']);
+$p['page']['correspondants']=$patient->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);

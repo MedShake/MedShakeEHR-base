@@ -77,7 +77,7 @@ if ($tabTypes=msSQL::sql2tab("select p.id, p.label as optionmenu , c.label as ca
 }
 
 // impression par défaut nb lignes prescriptions
-if($p['config']['utiliserLap'] == 'true' or $p['config']['utiliserLapExterne'] == 'true' ) {
+if($p['config']['optionGeActiverLapInterne'] == 'true' or $p['config']['optionGeActiverLapExterne'] == 'true' ) {
   $p['page']['courrier']['ordoImpressionNbLignes'] = 'n';
 } else {
   $p['page']['courrier']['ordoImpressionNbLignes'] = 'o';

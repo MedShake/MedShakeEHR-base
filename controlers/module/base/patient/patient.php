@@ -35,7 +35,7 @@ $p['page']['formData_baseATCD']=$form_baseATCD->getForm();
 $p['page']['formJavascript']['baseATCD']=$form_baseATCD->getFormJavascript();
 
 // si LAP activé : allergie et atcd structurés
-if($p['config']['utiliserLap'] == 'true') {
+if($p['config']['optionGeActiverLapInterne'] == 'true') {
 
     // gestion atcd structurés
     $listeChampsAtcd=array('atcdMedicChir');

@@ -54,7 +54,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
@@ -110,7 +110,7 @@ function sendmail($pa)
     return $pa;
 }
 
-$users=msPeople::getUsersListForService('mailRappelActiver');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvMail');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné

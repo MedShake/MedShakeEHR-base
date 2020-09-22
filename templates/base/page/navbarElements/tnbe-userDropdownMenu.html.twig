@@ -1,0 +1,60 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément menu utilisateur
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<li class="nav-item dropdown">
+ <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">{{ user.prenom }}
+   {{ user.nom }}
+ </a>
+ <div class="dropdown-menu dropdown-menu-right">
+   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ user.id }}/">
+     <i class="fas fa-user-edit fa-fw text-muted mr-1"></i>
+     Edition profil
+   </a>
+   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userParameters/">
+     <i class="fas fa-user-cog fa-fw text-muted mr-1"></i>
+     Paramètres utilisateur
+   </a>
+   {% if config.optionGeActiverPhonecapture == 'true' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/user/userPhoneCaptureAccess/">
+       <i class="fas fa-mobile-alt fa-fw text-muted mr-1"></i>
+       Activer PhoneCapture
+     </a>
+   {% endif %}
+   {% if user.rank == 'admin' %}
+     <div role="separator" class="dropdown-divider"></div>
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">
+       <i class="fas fa-cogs fa-fw text-muted mr-1"></i>
+       Configuration
+     </a>
+   {% endif %}
+   <div role="separator" class="dropdown-divider"></div>
+   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/login/logOutDo/">
+     <i class="fas fa-power-off fa-fw text-muted mr-1"></i>
+     Déconnexion
+   </a>
+ </div>
+</li>

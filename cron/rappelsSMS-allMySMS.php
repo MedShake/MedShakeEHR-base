@@ -54,13 +54,13 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-$users=msPeople::getUsersListForService('smsRappelActiver');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvSMS');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné

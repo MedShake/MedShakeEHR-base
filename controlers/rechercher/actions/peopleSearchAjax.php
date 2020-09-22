@@ -21,14 +21,25 @@
  */
 
 /**
- * People : ajax > retirer une relation patient <-> praticien
+ * Patients > ajax : requêtes ajax
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$relation = new msPeopleRelations;
-$relation->setToID($_POST['ID1']);
-$relation->setFromID($p['user']['id']);
-$relation->setRelationDeleted($_POST['ID2']);
+$debug='';
+$m=$match['params']['m'];
 
-exit (json_encode(array('ok')));
+$acceptedModes=array(
+    'patientsListByCrit', // Générer liste des patients
+    'patientsSendSign', // envoyer à la signature
+    'switchPraticienListe', // ajouter/ retirer de la liste des praticiens
+    'markDeleted', // marquer un dossier comme effacé
+    'unmarkDeleted', // marquer un dossier comme à nouveau utilisable
+    'peopleSimilarSearch', // rechercher
+);
+
+if (!in_array($m, $acceptedModes)) {
+    die;
+}
+
+include('inc-ajax-'.$m.'.php');

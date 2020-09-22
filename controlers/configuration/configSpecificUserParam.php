@@ -41,6 +41,7 @@ $prat->setToID($p['page']['userID']);
 $p['page']['userData']=$prat->getSimpleAdminDatasByName();
 $module=$prat->getModule();
 
+$p['page']['userParams']=[];
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
     foreach($data as $k=>$v) {
         if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
@@ -66,3 +67,6 @@ foreach($p['page']['availableParams'] as $k=>$v) {
   $p['page']['availableParams'][$k]['saniCat']=msTools::sanitizeFilename($v['cat']);
 }
 $p['page']['availableCats']=msConfiguration::getListOfParametersCat();
+
+// templates user
+$p['page']['userTemplates']=msConfiguration::getUserTemplatesList();

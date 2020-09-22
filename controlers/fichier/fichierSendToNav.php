@@ -32,8 +32,9 @@ $fichier=new msStockage();
 $fichier->setObjetID($match['params']['fichierID']);
 if ($fichier->testDocExist()) {
 
-    //vérification droits
-    if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' and $fichier->getFromID() != $p['user']['id']) {
+    //vérifier les droits
+    $droits = new msPeopleDroits($p['user']['id']);
+    if(!$droits->checkUserCanSeePatientData($fichier->getToID())) {
       $template="forbidden";
       return;
     }

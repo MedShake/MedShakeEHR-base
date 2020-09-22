@@ -34,6 +34,8 @@ if(isset($_POST['patientID'])) {
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($patientID);
+$liensPrat->setReturnedPeopleTypes(['pro']);
 
 header('Content-Type: application/json');
-exit(json_encode($liensPrat->getRelationsWithPros()));
+$liensPrat->setRelationType('relationPatientPraticien');
+exit(json_encode($liensPrat->getRelations(['identite','titre'])));

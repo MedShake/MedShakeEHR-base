@@ -52,7 +52,7 @@ spl_autoload_register(function ($class) {
 require $homepath.'fonctions/compatibilite.php';
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']=yaml_parse_file($homepath.'config/config.yml');
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
@@ -64,8 +64,9 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base et sortie des versions des modules
-if (!count($p['modules']=msSQL::sql2tabKey("select name, value FROM `system`", 'name', 'value'))) {
+
+/////////// Sortie des versions des modules
+if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
     msTools::redirection('/install.php');
 }
 
@@ -77,11 +78,12 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
+$match = msSystem::getRoutes(['public']);
+
+///////// Maintenance
+if (msSystem::getSystemState()=='maintenance') {
+    msTools::redirection('/maintenancePublic.html');
+}
 
 ///////// Controler else -> 404
 if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
@@ -91,8 +93,11 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
     if (is_file($homepath.'controlers/module/'.$match['target'].'.php')) {
         include $homepath.'controlers/module/'.$match['target'].'.php';
     }
+} else if ($match and is_file($homepath.'controlers/module/'.$match['target'].'.php')) {
+    // Permet d'ajouter un controler via un module même si celui-ci n'existe pas dans MedShakeEHR-base
+    include $homepath.'controlers/module/'.$match['target'].'.php';
 } else {
-    //$template='problem';
+    $template='404';
 }
 
 //////// View if defined
@@ -110,25 +115,4 @@ if (isset($template)) {
     $getHtml = new msGetHtml();
     $getHtml->set_template($template);
     echo $getHtml->genererHtml();
-}
-
-//////// Debug
-if (!isset($debug)) {
-    $debug=null;
-}
-
-if ($debug=='y' and $p['user']['id']=='1') {
-    echo '<pre style="margin-top : 50px;">';
-    //echo '$p[\'config\'] :';
-    //print_r($p['config']);
-    echo '$p[\'page\'] :';
-    print_r($p['page']);
-    echo '$p[\'user\'] :';
-    print_r($p['user']);
-    echo '$MATCH :';
-    print_r($match);
-    echo '$_COOKIE :';
-    print_r($_COOKIE);
-    echo '$_SESSION :';
-    print_r($_SESSION);
 }

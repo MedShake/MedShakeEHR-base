@@ -27,6 +27,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+   $template="forbidden";
+   return;
+}
 $debug='';
 $template='configShowTagsForCr';
 
@@ -38,11 +43,12 @@ foreach($tagsValues as $k=>$v) {
   if(!is_numeric($k)) $tagListe[$k]=$v;
 }
 $tagsKeys=array_keys($tagListe);
+unset($tagsKeys['peopleExportID']);
 
 $tagsInfos=msSQL::sql2tabKey("select dt.name, dt.label, dt.id, dt.cat, dc.label as catName
 from data_types as dt
 left join data_cat as dc on dt.cat=dc.id
-where dt.name in ('".implode('\',\'', $tagsKeys)."')", 'name');
+where dt.name in ('".implode('\',\'', $tagsKeys)."')  and dt.name != 'peopleExportID'", 'name');
 
 
 

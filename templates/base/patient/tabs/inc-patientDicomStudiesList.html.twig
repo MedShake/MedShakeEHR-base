@@ -33,9 +33,11 @@
     <button class="btn btn-outline-secondary prepareEcho mr-2" title="Préparer l'acquisition d'images pour ce patient via un appareil d'examen">
       <i class="fas fa-radiation fa-lg fa-fw"></i> Appareil
     </button>
-    <button class="btn btn-outline-secondary prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture">
-      <i class="fas fa-mobile-alt fa-lg fa-fw"></i> Phonecapture
-    </button>
+    {% if config.optionGeActiverPhonecapture == 'true' %}
+      <button class="btn btn-outline-secondary prepareReceptionDoc dicom" title="Préparer l'acquisition d'images pour ce patient via phonecapture">
+        <i class="fas fa-mobile-alt fa-lg fa-fw"></i> Phonecapture
+      </button>
+    {% endif %}
 
   </div>
     <div class="col-2 text-right pr-0">

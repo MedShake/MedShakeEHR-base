@@ -31,7 +31,7 @@ $debug='';
 $template="historiqueRappelsSMS";
 
 // prats possibles
-$p['page']['pratsInConfig']=msPeople::getUsersListForService('smsRappelActiver');
+$p['page']['pratsInConfig']=msPeople::getUsersListForService('optionGeActiverRappelsRdvSMS');
 
 // prat concerné
 if(isset($_POST['pratID']) and is_numeric($_POST['pratID']) and array_key_exists($_POST['pratID'], $p['page']['pratsInConfig'])) {

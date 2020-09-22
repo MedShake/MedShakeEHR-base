@@ -50,18 +50,26 @@ if (array_key_exists($mimetype, $acceptedtypes)) {
     //support
     $supportID=$patient->createNewObjetByTypeName('docPorteur',  $corps);
 
-    //non fonctionnel car non supporté par l'uploader ...
-    // if(isset($_POST['titre'])) {
-    //   echo $_POST['titre'];
-    //   msObjet::setTitleObjet($supportID, $_POST['titre']);
-    // }
-
     //nom original
     $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
     //type
     $patient->createNewObjetByTypeName('docType', $ext, $supportID);
     //titre
-    $patient->setTitleObjet($supportID, $fichier['name']);
+    if(isset($_POST['titre']) and !empty(trim($_POST['titre']))) {
+      $patient->setTitleObjet($supportID, $_POST['titre']);
+    } else {
+      $patient->setTitleObjet($supportID, $fichier['name']);
+    }
+
+    // docRegistre
+    if($p['config']['optionGeActiverRegistres'] == 'true' and isset($_POST['docRegistre']) and is_numeric($_POST['docRegistre'])) {
+      $registre = new msPeople;
+      $registre->setToID($_POST['docRegistre']);
+      if($registre->getType() == 'registre') {
+        $patient->createNewObjetByTypeName('docRegistre', $_POST['docRegistre'], $supportID);
+      }
+    }
+
     //folder
     $folder=msStockage::getFolder($supportID);
 

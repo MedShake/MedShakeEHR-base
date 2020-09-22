@@ -127,6 +127,7 @@
 		{% if v.input.readonly %} readonly {% endif %}
     {% if v.input.required == 'required' %} required {% endif %}
 		{% if v.input.tabindex is not empty %} tabindex="{{ v.input.tabindex }}" {% endif %}
+		{% if v.input.maxlength is not empty %} maxlength="{{ v.input.maxlength }}" {% endif %}
     {% if v.input.datatypeid %} data-typeid="{{ v.input.datatypeid }}" {% endif %}
 		{% if v.input.internalName %} data-internalName="{{ v.input.internalName }}" {% endif %}
 		{{ v.input.add }} />
@@ -145,10 +146,29 @@
 			</div>
 		{% endif %}
 
+		{% if v.label.helpTxt is not empty %}
+			<small {% if v.input.id %} id="{{ v.input.id }}HelpTxt"{% endif %} class="form-text text-muted">
+				{{ v.label.helpTxt }}
+			</small>
+		{% endif %}
+
 	{% endif %}
 {% endmacro %}
 
-
+{# hidden #}
+{% macro hidden(v) %}
+		<input type="{{ v.hidden.type }}"
+		{% if v.hidden.id %} id="{{ v.hidden.id }}" {% endif %}
+		{% if v.hidden.name %} name="{{ v.hidden.name }}" {% endif %}
+		{% if v.hidden.value != 'noPreValue' %} value="{{ v.hidden.value|e('html_attr') }}"
+		{% elseif v.hidden.value == 'noPreValue' and  v.hidden.defaut != '' %} value="{{ v.hidden.defaut|e('html_attr') }}"
+		{% endif %}
+		{% if v.hidden.autocomplete %} autocomplete="{{ v.hidden.autocomplete }}" {% endif %}
+		{% if v.hidden.dataAcTypeID %} {{ v.hidden.dataAcTypeID }} {% endif %}
+		{% if v.hidden.datatypeid %} data-typeid="{{ v.hidden.datatypeid }}" {% endif %}
+		{% if v.hidden.internalName %} data-internalName="{{ v.hidden.internalName }}" {% endif %}
+		{{ v.hidden.add }} />
+{% endmacro %}
 
 {# select #}
 {% macro select(v) %}
@@ -220,12 +240,18 @@
 		{{ v.select.after }}
 	{% endif %}
 
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
+	{% endif %}
+
 {% endmacro %}
 
 
 {# radio #}
 {% macro radio(v) %}
-
+	<div id="{{ v.radio.id }}">
 	{% if 'notInline' in v.radio.class %}
 
 		{# si un label existe #}
@@ -265,7 +291,7 @@
 		{% endfor %}
 		</div>
 	{% endif %}
-
+	</div>
 {% endmacro %}
 
 
@@ -307,6 +333,12 @@
 
 	{% if v.select.after %}
 		{{ v.select.after }}
+	{% endif %}
+
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
 	{% endif %}
 
 {% endmacro %}
@@ -354,6 +386,12 @@
 		{{ v.select.after }}
 	{% endif %}
 
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.select.id %} id="{{ v.select.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
+	{% endif %}
+
 {% endmacro %}
 
 
@@ -390,6 +428,12 @@
 
 	{% if v.textarea.after %}
 		{{ v.textarea.after }}
+	{% endif %}
+
+	{% if v.label.helpTxt is not empty %}
+		<small {% if v.textarea.id %} id="{{ v.textarea.id }}HelpTxt"{% endif %} class="form-text text-muted">
+			{{ v.label.helpTxt }}
+		</small>
 	{% endif %}
 
 {% endmacro %}
@@ -472,7 +516,7 @@
 						{% else %}
 
 
-							{% if el.value.formType in ['text','email','tel','password', 'number', 'hidden','range','reset'] %}
+							{% if el.value.formType in ['text','email','tel','password', 'number', 'range','reset'] %}
 								<div class="form-group">
 								{{ f.input ({
 									'input' : {
@@ -485,6 +529,7 @@
 										'defaut' : el.value.formValues,
 										'required' : el.value.required,
 										'tabindex' : el.value.tabindex,
+										'maxlength' : el.value.maxlength,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
 										'datatypeid' : el.value.id,
@@ -501,9 +546,25 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
+
+								{% elseif el.value.formType == 'hidden' %}
+									{{ f.hidden ({
+										'hidden' : {
+											'type' : 'hidden',
+											'name' : el.value.name,
+											'id' : 'id_' ~ el.value.internalName ~ '_id',
+											'value' : el.value.preValue,
+											'defaut' : el.value.formValues,
+											'datatypeid' : el.value.id,
+											'autocomplete' : 'off',
+											'dataAcTypeID' : el.value.dataAcTypeID,
+											'internalName' : el.value.internalName,
+										},
+									}) }}
 
 								{% elseif el.value.formType in ['checkbox', 'switch'] %}
 									<div class="form-group">
@@ -552,6 +613,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
@@ -578,6 +640,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								</div>
@@ -616,6 +679,9 @@
 										'placeholder' : el.value.placeholder,
 										'datatypeid' : el.value.id,
 										'autocomplete' : 'off',
+										'min' : el.value.min,
+										'max' : el.value.max,
+										'step' : el.value.step,
 										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
 										'readonly' : el.value.readonly,
@@ -631,6 +697,7 @@
 									'label' : {
 										'label' : el.value.label,
 										'class' : el.value.classLabel,
+										'helpTxt': el.value.helpTxt,
 									}
 								}) }}
 								<span id="id_{{ el.value.internalName }}_idHelp" class="help-block"></span>

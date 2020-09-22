@@ -30,7 +30,7 @@
 $debug='';
 $template="lapMonographie";
 
-if($p['config']['utiliserLap'] != 'true') die("Le LAP n'est pas activé");
+if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
 $mono=new msLapMonographie();
 $mono->setSpe($match['params']['spe']);

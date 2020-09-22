@@ -35,9 +35,13 @@ $template="peopleNew";
 $p['page']['porp']=$match['params']['porp'];
 
 if ($p['page']['porp']=='patient') {
-    $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
 } elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
-    $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
+} elseif ($p['page']['porp']=='groupe' and $p['config']['droitGroupePeutCreerGroupe'] == 'true') {
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
+} elseif ($p['page']['porp']=='registre' and $p['config']['droitRegistrePeutCreerRegistre'] == 'true') {
+  $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
 } else {
   $template="forbidden";
   return;
@@ -48,8 +52,7 @@ if($template != "forbidden") {
   $formpatient->setFormIDbyName($p['page']['formIN']);
   if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
       $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
-  }
-  if (isset($_POST)) {
+  } elseif (isset($_POST)) {
       $formpatient->setPrevalues($_POST);
   }
 
@@ -70,6 +73,7 @@ if($template != "forbidden") {
   }
 
   $p['page']['form']=$formpatient->getForm();
+  $formpatient->addHiddenInput($p['page']['form'],['peopleType'=>$p['page']['porp']]);
   $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
   $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 }
