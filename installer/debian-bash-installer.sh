@@ -147,6 +147,7 @@ mariadbInstall() {
     read -p "Choix du nom de l'admin de mysql : " mysqladmin
     read -s -r -p "Choix du mot de passe admin de mysql : " mysqlpass 
     echo
+    service mysql start
     mysql <<EOF
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
     DELETE FROM mysql.user WHERE User='';
