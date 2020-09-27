@@ -132,6 +132,7 @@ if($template!=''): ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <title>
       MedShakeEHR : Pre-installation</title>
@@ -186,20 +187,21 @@ if($template!=''): ?>
     }, false);
   </script>
   <body>
+    <div class="container-fluid">
+
 
 <?php
 if ($template=='bienvenue') :
 ?>
       <h1>Installateur de MedShakeEHR</h1>
       <div id="inst">
-        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
+        <p>Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
           <strong>Ne fermez pas cette page, et ne la rechargez pas non plus!</strong></p>
         <p>Définissez ci-dessous le dossier où MedShakeEHR doit être installé.<br>
-          <strong> - Cet emplacement ne doit pas être accessible au réseau</strong><br>
+          <strong> - Cet emplacement ne doit pas être accessible via le web</strong><br>
           <strong> - L'utilisateur www-data doit avoir les droits d'écriture sur cet emplacement, ainsi que sur le dossier <code><?=getcwd()?></code>.</p>
-        <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
+        <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" class="form-inline">
           <input name="bienvenue" type="hidden"/>
-          <input id="dest" name="destination" type="text" value="/opt/MedShakeEHR" style="border:solid 1px #ccc"/>
           <?php if (isset($_GET['v'])) { ?><input name="v" type="hidden" value="<?=$_GET['v']?>"/> <?php } ?>
           <input id="dest" class="form-control mr-2" name="destination" type="text" value="<?=dirname(getcwd())?>" />
           <button type="submit" class="btn btn-light" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
@@ -231,6 +233,7 @@ else :
 <?php
 endif;
 ?>
+</div>
   </body>
 </html>
 <?php
