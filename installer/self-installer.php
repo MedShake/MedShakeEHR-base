@@ -57,22 +57,28 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
         } else {
             file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
             $dossier.=($dossier[strlen($dossier)-1])!='/' ? '/' : '';
-            //récupération de la dernière version release
-            $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
-            curl_setopt($ch, CURLOPT_USERAGENT, "linux");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $res=json_decode(curl_exec($ch), true);
-            curl_close($ch);
+
+            if(!isset($_POST['v'])) {
+              //récupération de la dernière version release
+              $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
+              curl_setopt($ch, CURLOPT_USERAGENT, "linux");
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              $res=json_decode(curl_exec($ch), true);
+              curl_close($ch);
+              $releaseTagName = $res['tag_name'];
+            } else {
+              $releaseTagName = $_POST['v'];
+            }
             //téléchargement de la dernière release
-            file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/'.$res['tag_name'].'.zip', 'r'));
+            file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/'.$releaseTagName.'.zip', 'r'));
             $zip = new ZipArchive;
             if ($zip->open("/tmp/medshake.zip"))  {
                 $zip->extractTo('/tmp/');
                 unlink("/tmp/medshake.zip");
                 //deplacement du contenu de public_html
-                $dossierdezip='/tmp/MedShakeEHR-base-'.$res['tag_name'];
+                $dossierdezip='/tmp/MedShakeEHR-base-'.$releaseTagName;
                 if (!is_dir($dossierdezip)) {
-                    $dossierdezip='/tmp/MedShakeEHR-base-'.str_replace('v','',$res['tag_name']);
+                    $dossierdezip='/tmp/MedShakeEHR-base-'.str_replace('v','',$releaseTagName);
                 }
                 foreach (scandir($dossierdezip.'/public_html') as $f) {
                     if ($f !='.' and $f !='..') {
@@ -105,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                     $htaccess.=file_get_contents($dossierweb."/.htaccess");
                     file_put_contents($dossierweb."/.htaccess", $htaccess);
                     //lancement de la partie configuration
-                    header('Location: '.str_replace('self-installer', 'install',$_SERVER['REQUEST_URI']));
+                    header('Location: '.$dossierweb."/install.php");
                     die();
                 } else {
                     $ret=explode('<br>', $ret);
@@ -194,6 +200,8 @@ if ($template=='bienvenue') :
         <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
           <input name="bienvenue" type="hidden"/>
           <input id="dest" name="destination" type="text" value="/opt/MedShakeEHR" style="border:solid 1px #ccc"/>
+          <?php if (isset($_GET['v'])) { ?><input name="v" type="hidden" value="<?=$_GET['v']?>"/> <?php } ?>
+          <input id="dest" class="form-control mr-2" name="destination" type="text" value="<?=dirname(getcwd())?>" />
           <button type="submit" class="btn btn-light" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
         </form>
       </div>
