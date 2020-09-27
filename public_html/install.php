@@ -567,7 +567,7 @@ if (! $iscli) {
               <div class="alert alert-dark" role="alert">
                 <div class="form-check">
                   <input name="sqlNotCreatDb" type="checkbox" class="form-check-input"/>
-                  <label class="form-check-label">Ne pas créer la base de donnée</br>(seulement si vous avez déjà créer la base de donnée et l'utilisateur pour MedShakeEHR)</label>
+                  <label class="form-check-label">Ne pas créer la base de donnée</br>(seulement si vous avez déjà créé la base de données et l'utilisateur pour MedShakeEHR)</label>
                 </div>
               </div>
               <div class="form-group">
