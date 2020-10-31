@@ -47,7 +47,7 @@ if ($validation === false) {
 
 } else {
 
-    // class et méthodes du module qui viennent agie en complément.
+    // class et méthodes du module qui viennent agir en complément.
     $class='msMod'.ucfirst($form->getFormUniqueRawField($formIN, 'module')).'Forms';
     $method_post_generic='doPostPostFormGeneric';
 
@@ -109,7 +109,7 @@ if ($validation === false) {
     if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
         $prevData=msSQL::sql2tabKey("SELECT dt.name AS name, od.id FROM objets_data as od
           LEFT JOIN data_types AS dt ON od.typeID=dt.id and od.outdated='' and od.deleted=''
-          WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."'", "name", "id");
+          WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."' and dt.groupe='medical'", "name", "id");
     }
 
 

@@ -89,7 +89,7 @@
      if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
          $prevData=msSQL::sql2tabKey("SELECT dt.name AS name, od.id FROM objets_data as od
            LEFT JOIN data_types AS dt ON od.typeID=dt.id and od.outdated='' and od.deleted=''
-           WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."'", "name", "id");
+           WHERE od.instance='".msSQL::cleanVar($_POST['objetID'])."' and dt.groupe='medical'", "name", "id");
      }
 
      //on traite chaque POST
