@@ -144,7 +144,11 @@ class msGetHtml
 
 		// filtre pour la verification de l'existence d'un fichier (utile dans la surcharge du menu principal)
 		$fileExist = new \Twig\TwigFilter('file_exist', function ($string) {
-			return file_exists($string);
+			foreach ($this->_templatesDirectories as $template) {
+				if (file_exists($template.$string))
+					return true;
+			}
+			return false;
 		});
 
 		$twig->addFilter($fileExist);
@@ -198,7 +202,11 @@ class msGetHtml
 
 		// filtre pour la verification de l'existence d'un fichier (utile dans la surcharge du menu principal)
 		$fileExist = new \Twig\TwigFilter('file_exist', function ($string) {
-			return file_exists($string);
+			foreach ($this->_templatesDirectories as $template) {
+				if (file_exists($template.$string))
+					return true;
+			}
+			return false;
 		});
 
 		$twig->addFilter($fileExist);
