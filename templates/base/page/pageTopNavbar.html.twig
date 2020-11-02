@@ -43,10 +43,10 @@
           {# génération du menu principal #}
           {% if page.topNavBarSections is not empty %}
             {% for section in page.topNavBarSections %}
-                {% if 'tnbe-'~ section|trim ~'.html.twig'|file_exist %}
+                {% if ('tnbe-'~ section|trim ~'.html.twig')|file_exist %}
                     {% include('tnbe-'~ section|trim ~'.html.twig') %}
                 {% else %}
-                    {% if "../../" ~ user.module ~ '/page/navbarElements/tnbe-'~ section|trim ~'.html.twig'|file_exist %}
+                    {% if ("../../" ~ user.module ~ '/page/navbarElements/tnbe-'~ section|trim ~'.html.twig')|file_exist %}
                         {% include("../../" ~ user.module ~ '/page/navbarElements/tnbe-'~ section|trim ~'.html.twig') %}
                     {% endif %}
                 {% endif %}
