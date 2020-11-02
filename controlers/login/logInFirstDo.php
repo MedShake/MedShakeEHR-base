@@ -44,8 +44,11 @@ $form->setContextualValidationRule('verifPassword',['equalsfield,p_password']);
 $validation=$form->getValidation();
 
 if ($validation === false) {
-  msTools::redirRoute('userLogInFirst');
+	msTools::redirRoute('userLogInFirst');
 } else {
+	// compléter la config par défaut
+	$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
 	if(isset($p['config']['optionGeLoginCreationDefaultModule']) and !empty($p['config']['optionGeLoginCreationDefaultModule'])) {
 		$defaultModule = $p['config']['optionGeLoginCreationDefaultModule'];
 	} else {

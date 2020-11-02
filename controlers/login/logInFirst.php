@@ -34,6 +34,9 @@ if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") !=
   msTools::redirRoute('userLogIn');
 }
 
+// compléter la config par défaut
+$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
 $form = new msForm();
 $form->setFormIDbyName($p['page']['formIN']='baseFirstLogin');
 $p['page']['form']=$form->getForm();
