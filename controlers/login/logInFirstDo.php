@@ -46,11 +46,17 @@ $validation=$form->getValidation();
 if ($validation === false) {
   msTools::redirRoute('userLogInFirst');
 } else {
+	if(isset($p['config']['optionGeLoginCreationDefaultModule']) and !empty($p['config']['optionGeLoginCreationDefaultModule'])) {
+		$defaultModule = $p['config']['optionGeLoginCreationDefaultModule'];
+	} else {
+		$defaultModule = 'base';
+	}
+
     $data=array(
         'name' => $_POST['p_username'],
         'type' => 'pro',
         'rank' => 'admin',
-        'module' => 'base',
+        'module' => $defaultModule,
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 1
     );
