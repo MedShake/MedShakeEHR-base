@@ -142,7 +142,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('relation', 'relationGroupeRegistre', '', 'Relation groupe registre', 'relation groupe registre', '', '', 'select', '\'membre\': \'Membre\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('relation', 'relationPatientGroupe', '', 'Relation patient groupes', 'relation patient groupes', '', '', 'select', '\'membre\': \'membre\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('relation', 'relationRegistrePraticien', '', 'Relation praticien registre', 'relation praticien registre', '', '', 'select', '\'admin\': \'Administrateur\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
-('relation', 'relationRegistrePatient', '', 'Relation registre patient', 'relation registre patient', '', '', 'select', '\'inclus\': \'inclus\'\n\'exclu\':\'exclu\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
+('relation', 'relationRegistrePatient', '', 'Relation registre patient', 'relation registre patient', '', '', 'select', '\'inclus\': \'inclus\'\n\'exclu\': \'exclu\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataAdminGroupe');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
