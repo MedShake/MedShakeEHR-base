@@ -61,17 +61,21 @@
         <span class="fas fa-folder-open" aria-hidden="true"></span>
         Dossier patient
       </a>
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
-        <span class="fas fa-link" aria-hidden="true"></span>
-        Éditer les relations
-      </a>
+      {% if config.optionGePraticienMontrerPatientsLies == 'true' %}
+        <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
+          <span class="fas fa-link" aria-hidden="true"></span>
+          Éditer les relations
+        </a>
+      {% endif %}
     </div>
-    <div class="col-xl-5 col-6 text-right">
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.patient.id }}/">
-        <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-        Editer infos pros
-      </a>
-    </div>
+    {% if config.PraticienPeutEtrePatient == 'true' %}
+      <div class="col-xl-5 col-6 text-right">
+        <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.patient.id }}/">
+          <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+          Editer infos pros
+        </a>
+      </div>
+    {% endif %}
   </div>
 
   <ul class="nav nav-tabs col-xl-10 col-12" id="infosTab" role="tablist">
