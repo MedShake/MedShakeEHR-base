@@ -142,18 +142,20 @@ apacheInstall() {
 
 # Configuration MariaDB
 mariadbInstall() {
-    read -s -r -p "Choix du mot de passe root de mysql : " mysqlrootpass
+    read -s -r -p "Choix du mot de passe administrateur (root) de la base de données : " mysqlRootPswd
     echo
-    read -p "Choix du nom de l'admin de mysql : " mysqladmin
-    read -s -r -p "Choix du mot de passe admin de mysql : " mysqlpass 
+    read -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
+    read -s -r -p "Choix du mot de passe utilisateur de la base de données : " mysqlUserPswd 
     echo
     service mysql start
     mysql <<EOF
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+    CREATE DATABASE medshakeehr;
+    GRANT ALL ON medshakeehr.* TO "${mysqlUser}"@'localhost' IDENTIFIED BY "${mysqlUserPswd}" WITH GRANT OPTION;
     FLUSH PRIVILEGES;
-    GRANT ALL ON *.* TO "${mysqladmin}"@'localhost' IDENTIFIED BY "${mysqlpass}" WITH GRANT OPTION;
+
 EOF
 }
 
