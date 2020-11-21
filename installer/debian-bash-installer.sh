@@ -21,12 +21,10 @@
 #
 # @author Michaël Val
 
-# Choix dossier d'installation.
-selectPath() {
+selectMsehrPath() {
     read -p "Choix du dossier d'installation (ex: /home/ehr) : " msehrPath
 }
 
-# Choix des paquets à installer
 selectPackages() {
     echo "Installation des dépendances de MedShakeEHR minimales, tapez 1 [défaut]"
     echo "Installation de MedShakeEHR avec Orthanc (Phonecapture, Echographe ...), tapez 2"
@@ -34,10 +32,10 @@ selectPackages() {
     read -p "Choix : " selectInstall
     case $selectInstall in
         "1" )
-            msehrDep=$msehrMin 
+            msehrDep=$msehrDepMin 
             packagesInstall ;;
         "2" )
-            msehrDep="${msehrMin} ${extraDicom}"
+            msehrDep="${msehrDepMin} ${extraDicom}"
             packagesInstall ;;
         "3" ) 
 		 ;;
@@ -47,38 +45,34 @@ selectPackages() {
     esac 
 }
 
-# Installer les paquets
 packagesInstall(){
 	apt update && apt upgrade -y && apt install -y $msehrDep
 }
 
-# Choix de configurer le serveur LAMP
-selectLamp() {
-read -p "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1, vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : " selectLamp
-case $selectLamp in
+selectLampConfig() {
+read -p "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1, vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : " selectLampConfig
+case $selectLampConfig in
     "1" )
         certGen
-        apacheInstall
-        mariadbInstall ;;       
+        apacheConfig
+        mariadbConfig ;;       
     "2" )
         selectdomain
         certGen
-        apacheInstall
-        mariadbInstall ;;
+        apacheConfig
+        mariadbConfig ;;
     "3" ) 
 	 ;;
     * ) 
         echo "Mauvaise valeur saisie"
-        selectLamp ;;
+        selectLampConfig ;;
 esac 
 }
 
-# Choix du certificat
 selectdomain() {
     read -p "Choix du domaine (ex: msehr.local) : " msehrDom
 }
 
-# Génération d'un certificat ssl
 certGen() {
     mkdir /etc/ssl/$msehrDom
     cd /etc/ssl/$msehrDom
@@ -87,8 +81,7 @@ certGen() {
     openssl x509 -req -days 3650 -in $msehrDom.csr -signkey $msehrDom.key -out $msehrDom.crt
 }
 
-# Configuration d'Apache
-apacheInstall() {
+apacheConfig() {
     ## Configuration vhost http
     echo "<VirtualHost *:80>
         ServerName $msehrDom
@@ -121,13 +114,10 @@ apacheInstall() {
     </VirtualHost> 
         " >> /etc/apache2/sites-available/$msehrDom-ssl.conf
 
-    ## Activation des modules Apache
     a2enmod rewrite headers ssl
 
-    ## Désactivation des sites par défaut Apache
     a2dissite 000-default.conf default-ssl.conf
 
-    ## Activation du vhost
     a2ensite $msehrDom $msehrDom-ssl
 
     ## Réglage php.ini
@@ -136,12 +126,10 @@ apacheInstall() {
 	sed -i 's/post_max_size = 8M/post_max_size = 20M/' /etc/php/$vphp/apache2/php.ini
 	sed -i 's/;max_input_vars = 1000/max_input_vars = 10000/' /etc/php/$vphp/apache2/php.ini
 
-    ## Relancer Apache
     service apache2 restart
 }   
 
-# Configuration MariaDB
-mariadbInstall() {
+mariadbConfig() {
     read -s -r -p "Choix du mot de passe administrateur (root) de la base de données : " mysqlRootPswd
     echo
     read -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
@@ -159,59 +147,50 @@ mariadbInstall() {
 EOF
 }
 
-# Choix de la version de MedShakeEHR
-selectVersion() {
+selectMsehrVersion() {
     read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2, ne rien installer tapez 3 : " selectv
     case $selectv in
     "1" )
         msehrLatest ;;  
     "2" )
-        selectMsehrV ;;
+        selectMsehrVersion ;;
     "3" )
          ;;
     * ) 
         echo "Mauvaise valeur saisie"
-        selectVersion ;;
+        selectMsehrVersion ;;
 esac 
 }
 
-# Récupération de la dernière version de MedShakeEHR
 msehrLatest() {
     vversion=$(curl --silent "https://api.github.com/repos/MedShake/MedShakeEHR-base/releases/latest" |
         grep '"tag_name":' |                                                          
         sed -E 's/.*"([^"]+)".*/\1/')
 }	
 
-# Récupération d'une version de MedShakeEHR
-selectMsehrV() {
+selectMsehrVersion() {
     read -p "Tapez la version sous la forme vX.X.X : " vversion
 }	
 
-# Installation de MedShakeEHR     
 msehrInstall() {
     wget --no-check-certificate https://github.com/MedShake/MedShakeEHR-base/archive/$vversion.zip -P /tmp
 
-    ## Extraction du zip
     unzip -q -o -d /tmp /tmp/$vversion.zip 
 
-    ## Création des répertoires de MedShakeEHR avec les bons droits
     mkdir -p $msehrPath/public_html
     version=$(echo $vversion | cut -f2 -d "v")
     mv -f /tmp/MedShakeEHR-base-$version/* $msehrPath
     sed -i "1iSetEnv MEDSHAKEEHRPATH $msehrPath" $msehrPath/public_html/.htaccess
 
-    ## Réglages des bons droits utilisateurs
     chown www-data:www-data -R $msehrPath
     chmod 755 $msehrPath $msehrPath/public_html
 
-    ## Installation des dépendances avec composer
     cd $msehrPath
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
     cd $msehrPath/public_html
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
 }  
 
-# Choix du nettoyage
 selectRemoveInstallFiles() {
 read -p "Si vous souhaitez détruire les fichiers d'installation tapez 1, si vous souhaitez les conserver tapez 2" selectRemove
 case $selectRemove in
@@ -225,12 +204,10 @@ case $selectRemove in
 esac
 }
     
-# Nettoyage
 removeInstallFiles() {
     rm -r /tmp/$vversion.zip /tmp/MedShakeEHR-base-$version /tmp/debian-bash-installer.sh
 }
 
-# Sélection de l'installation.
 selectInstall(){
     echo "Bienvenue, ce script va vous guider lors de l'installation de MedShakeEHR. Si vous avez besoin d'aide au cours de l'installation : https://c-medshakeehr.fr/doc"
     read -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : " persoInstall
@@ -238,16 +215,16 @@ selectInstall(){
         "1" )
             packagesInstall
             certGen
-            apacheInstall
-            mariadbInstall
+            apacheConfig
+            mariadbConfig
             msehrLatest
             msehrInstall
             removeInstallFiles ;;
         "2" )
-            selectPath
+            selectMsehrPath
             selectPackages
-            selectLamp
-            selectVersion
+            selectLampConfig
+            selectMsehrVersion
             msehrInstall
             selectRemoveInstallFiles ;;
         * ) 
@@ -259,9 +236,9 @@ selectInstall(){
 # Variables globales par défauts.
 msehrPath=/home/ehr
 msehrDom=msehr.local
-msehrMin="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
+msehrDepMin="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
 extraDicom="orthanc"
-msehrDep=$msehrMin
+msehrDep=$msehrDepMin
 
 clear
 selectInstall
