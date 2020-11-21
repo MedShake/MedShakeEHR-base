@@ -39,7 +39,7 @@ if (!isset($_POST['actAsAjax'])) {
 }
 
 // vérification des droits
-if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien']!='true') {
+if ($match['params']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien']!='true' and $_POST['patientID']!=$p['user']['id']) {
   die("Action interdite");
 } elseif ($match['params']['porp']=='registre' and $p['config']['droitRegistrePeutCreerRegistre'] != 'true') {
   die("Action interdite");
