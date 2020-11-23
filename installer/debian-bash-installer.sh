@@ -130,11 +130,23 @@ apacheConfig() {
 }   
 
 mariadbConfig() {
-    read -s -r -p "Choix du mot de passe administrateur (root) de la base de données : " mysqlRootPswd
+    while true; do
+        read -s -r -p "Choix du mot de passe administrateur (root) de la base de données : " mysqlRootPswd
+        echo
+        read -s -r -p "Confirmation du mot de passe : " mysqlRootPswd1
+        [ "$mysqlRootPswd" = "$mysqlRootPswd1" ] && break || echo "Essayez encore"
+        echo
+    done
     echo
     read -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
-    read -s -r -p "Choix du mot de passe utilisateur de la base de données : " mysqlUserPswd 
     echo
+    while true; do
+        read -s -r -p "Choix du mot de passe utilisateur de la base de données : " mysqlUserPswd 
+        echo
+        read -s -r -p "Confirmation du mot de passe : " mysqlUserPswd1
+        echo
+        [ "$mysqlUserPswd" = "$mysqlUserPswd1" ] && break || echo "Essayez encore"
+    done
     service mysql start
     mysql <<EOF
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
