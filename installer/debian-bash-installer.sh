@@ -131,7 +131,7 @@ apacheConfig() {
 
 mariadbConfig() {
     while true; do
-        read -s -r -p "Choix du mot de passe administrateur (root) de la base de données : " mysqlRootPswd
+        read -s -r -p "Choix du mot de passe administrateur (root) de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlRootPswd
         echo
         read -s -r -p "Confirmation du mot de passe : " mysqlRootPswd1
         [ "$mysqlRootPswd" = "$mysqlRootPswd1" ] && break || echo "Essayez encore"
@@ -141,7 +141,7 @@ mariadbConfig() {
     read -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
     echo
     while true; do
-        read -s -r -p "Choix du mot de passe utilisateur de la base de données : " mysqlUserPswd 
+        read -s -r -p "Choix du mot de passe utilisateur de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlUserPswd 
         echo
         read -s -r -p "Confirmation du mot de passe : " mysqlUserPswd1
         echo
@@ -149,17 +149,17 @@ mariadbConfig() {
     done
     service mysql start
     mysql <<EOF
-    SET PASSWORD FOR 'root'@'localhost' = PASSWORD("${mysqlrootpass}");
+    SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${mysqlrootpass}');
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
     CREATE DATABASE medshakeehr;
-    GRANT ALL ON medshakeehr.* TO "${mysqlUser}"@'localhost' IDENTIFIED BY "${mysqlUserPswd}" WITH GRANT OPTION;
+    GRANT ALL ON medshakeehr.* TO '${mysqlUser}'@'localhost' IDENTIFIED BY '${mysqlUserPswd}' WITH GRANT OPTION;
     FLUSH PRIVILEGES;
 
 EOF
 }
 
-selectMsehrVersion() {
+selectCustomMsehrVersion() {
     read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2, ne rien installer tapez 3 : " selectv
     case $selectv in
     "1" )
@@ -170,7 +170,7 @@ selectMsehrVersion() {
          ;;
     * ) 
         echo "Mauvaise valeur saisie"
-        selectMsehrVersion ;;
+        selectCustomMsehrVersion ;;
 esac 
 }
 
@@ -236,7 +236,7 @@ selectInstall(){
             selectMsehrPath
             selectPackages
             selectLampConfig
-            selectMsehrVersion
+            selectCustomMsehrVersion
             msehrInstall
             selectRemoveInstallFiles ;;
         * ) 
