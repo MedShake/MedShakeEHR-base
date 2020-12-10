@@ -85,25 +85,18 @@ apacheConfig() {
     ## Configuration vhost http
     echo "<VirtualHost *:80>
         ServerName $msehrDom
-        ServerAlias msehr ehr medshakeehr MedShakeEHR $msehrDom
-        DocumentRoot "$msehrPath/public_html"
-        <Directory "$msehrPath/public_html">
-            Options FollowSymLinks
-            AllowOverride all
-            Require all granted
-        </Directory>
-        ErrorLog /var/log/apache2/error.$msehrDom.log
-        CustomLog /var/log/apache2/access.$msehrDom.log combined
-    </VirtualHost> 
-    " > /etc/apache2/sites-available/$msehrDom.conf
+        ServerAlias msehr ehr medshakeehr MedShakeEHR
+        RedirectMatch     permanent ^(.*)$ https://$msehrDom\$1
+    </VirtualHost>
 
-    ## Configuration vhost https
-    echo "<VirtualHost *:443>
+    <VirtualHost *:443>
         ServerName $msehrDom
-        ServerAlias msehr ehr medshakeehr MedShakeEHR $msehrDom
+        ServerAlias msehr ehr medshakeehr MedShakeEHR
         DocumentRoot "$msehrPath/public_html"
-            SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
-            SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
+        RewriteEngine On
+        SSLEngine On
+        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
+        SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
         <Directory "$msehrPath/public_html">
             Options FollowSymLinks
             AllowOverride all
@@ -111,14 +104,14 @@ apacheConfig() {
         </Directory>
         ErrorLog /var/log/apache2/error.$msehrDom.log
         CustomLog /var/log/apache2/access.$msehrDom.log combined
-    </VirtualHost> 
-        " >> /etc/apache2/sites-available/$msehrDom-ssl.conf
+    </VirtualHost>
+    " > /etc/apache2/sites-available/$msehrDom.conf
 
     a2enmod rewrite headers ssl
 
     a2dissite 000-default.conf default-ssl.conf
 
-    a2ensite $msehrDom $msehrDom-ssl
+    a2ensite $msehrDom 
 
     ## Réglage php.ini
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)
