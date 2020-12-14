@@ -22,14 +22,16 @@
 # @author Michaël Val
 
 selectMsehrPath() {
-    read -p "Choix du dossier d'installation (ex: /home/ehr) : " msehrPath
+    read -e -i "$msehrPath" -p "Choix du dossier d'installation [défaut : /opt/ehr] : " input
+    msehrPath="${input:-$msehrPath}"
 }
 
 selectPackages() {
     echo "Installation des dépendances de MedShakeEHR minimales, tapez 1 [défaut]"
     echo "Installation de MedShakeEHR avec Orthanc (Phonecapture, Echographe ...), tapez 2"
     echo "Ne rien installer, tapez 3"
-    read -p "Choix : " selectInstall
+    read -e -i "$selectInstall" -p "Choix : " input
+    selectInstall="${input:-$selectInstall}"
     case $selectInstall in
         "1" )
             msehrDep=$msehrDepMin 
@@ -50,7 +52,8 @@ packagesInstall(){
 }
 
 selectLampConfig() {
-read -p "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1, vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : " selectLampConfig
+read -e -i "$selectLampConfig" -p "Vous souhaitez que le serveur LAMP soit configuré par défaut, tapez 1 [défaut], vous voulez configurer le serveur LAMP tapez 2, si vous l'avez déjà configuré tapez 3 : " input
+selectLampConfig="${input:-$selectLampConfig}"
 case $selectLampConfig in
     "1" )
         certGen
@@ -70,13 +73,14 @@ esac
 }
 
 selectdomain() {
-    read -p "Choix du domaine (ex: msehr.local) : " msehrDom
+    read -e -i "$msehrDom" -p "Choix du domaine [défaut : msehr.local] : " input
+    msehrDom="${input:-$msehrDom}"
 }
 
 certGen() {
     mkdir /etc/ssl/$msehrDom
     cd /etc/ssl/$msehrDom
-    openssl genrsa -out $msehrDom.key 2048
+    openssl genrsa -out $msehrDom.key 4096
     openssl req -new -key $msehrDom.key -out $msehrDom.csr
     openssl x509 -req -days 3650 -in $msehrDom.csr -signkey $msehrDom.key -out $msehrDom.crt
 }
@@ -85,25 +89,18 @@ apacheConfig() {
     ## Configuration vhost http
     echo "<VirtualHost *:80>
         ServerName $msehrDom
-        ServerAlias msehr ehr medshakeehr MedShakeEHR $msehrDom
-        DocumentRoot "$msehrPath/public_html"
-        <Directory "$msehrPath/public_html">
-            Options FollowSymLinks
-            AllowOverride all
-            Require all granted
-        </Directory>
-        ErrorLog /var/log/apache2/error.$msehrDom.log
-        CustomLog /var/log/apache2/access.$msehrDom.log combined
-    </VirtualHost> 
-    " > /etc/apache2/sites-available/$msehrDom.conf
+        ServerAlias msehr ehr medshakeehr MedShakeEHR
+        RedirectMatch     permanent ^(.*)$ https://$msehrDom\$1
+    </VirtualHost>
 
-    ## Configuration vhost https
-    echo "<VirtualHost *:443>
+    <VirtualHost *:443>
         ServerName $msehrDom
-        ServerAlias msehr ehr medshakeehr MedShakeEHR $msehrDom
+        ServerAlias msehr ehr medshakeehr MedShakeEHR
         DocumentRoot "$msehrPath/public_html"
-            SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
-            SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
+        RewriteEngine On
+        SSLEngine On
+        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
+        SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
         <Directory "$msehrPath/public_html">
             Options FollowSymLinks
             AllowOverride all
@@ -111,14 +108,14 @@ apacheConfig() {
         </Directory>
         ErrorLog /var/log/apache2/error.$msehrDom.log
         CustomLog /var/log/apache2/access.$msehrDom.log combined
-    </VirtualHost> 
-        " >> /etc/apache2/sites-available/$msehrDom-ssl.conf
+    </VirtualHost>
+    " > /etc/apache2/sites-available/$msehrDom.conf
 
     a2enmod rewrite headers ssl
 
     a2dissite 000-default.conf default-ssl.conf
 
-    a2ensite $msehrDom $msehrDom-ssl
+    a2ensite $msehrDom 
 
     ## Réglage php.ini
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)
@@ -159,38 +156,41 @@ mariadbConfig() {
 EOF
 }
 
-selectCustomMsehrVersion() {
-    read -p "Vous voulez installer la dernière version stable tapez 1, vous voulez installer une autre version tapez 2, ne rien installer tapez 3 : " selectv
-    case $selectv in
+selectVersion() {
+    read -e -i "$selectVersion" -p "Vous voulez installer la dernière version stable tapez 1 [défaut], vous voulez installer une autre version tapez 2, ne rien installer tapez 3 : " input
+    selectVersion="${input:-$selectVersion}"
+    case $selectVersion in
     "1" )
         msehrLatest ;;  
     "2" )
         selectMsehrVersion ;;
     "3" )
-         ;;
+        ;;
     * ) 
         echo "Mauvaise valeur saisie"
-        selectCustomMsehrVersion ;;
+        selectVersion ;;
 esac 
 }
 
 msehrLatest() {
-    vversion=$(curl --silent "https://api.github.com/repos/MedShake/MedShakeEHR-base/releases/latest" |
+    vRelease=$(curl --silent "https://api.github.com/repos/MedShake/MedShakeEHR-base/releases/latest" |
         grep '"tag_name":' |                                                          
         sed -E 's/.*"([^"]+)".*/\1/')
+        msehrInstall
 }	
 
 selectMsehrVersion() {
-    read -p "Tapez la version sous la forme vX.X.X : " vversion
+    read -p "Tapez la version sous la forme vX.X.X : " vRelease
+    msehrInstall
 }	
 
 msehrInstall() {
-    wget --no-check-certificate https://github.com/MedShake/MedShakeEHR-base/archive/$vversion.zip -P /tmp
+    wget --no-check-certificate https://github.com/MedShake/MedShakeEHR-base/archive/$vRelease.zip -P /tmp
 
-    unzip -q -o -d /tmp /tmp/$vversion.zip 
+    unzip -q -o -d /tmp /tmp/$vRelease.zip 
 
     mkdir -p $msehrPath/public_html
-    version=$(echo $vversion | cut -f2 -d "v")
+    version=$(echo $vRelease | cut -f2 -d "v")
     mv -f /tmp/MedShakeEHR-base-$version/* $msehrPath
     sed -i "1iSetEnv MEDSHAKEEHRPATH $msehrPath" $msehrPath/public_html/.htaccess
 
@@ -201,15 +201,17 @@ msehrInstall() {
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
     cd $msehrPath/public_html
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
+    selectRemoveInstallFiles
 }  
 
 selectRemoveInstallFiles() {
-read -p "Si vous souhaitez détruire les fichiers d'installation tapez 1, si vous souhaitez les conserver tapez 2" selectRemove
+read -e -i "$selectRemove" -p "Si vous souhaitez détruire les fichiers d'installation tapez 1 [défaut], si vous souhaitez les conserver tapez 2 : " input
+selectRemove="${input:-$selectRemove}"
 case $selectRemove in
     "1" )
         removeInstallFiles ;;
     "2" ) 
-	 ;;
+	    ;;
     * ) 
         echo "Mauvaise valeur saisie"
         selectRemoveInstallFiles ;;
@@ -217,12 +219,13 @@ esac
 }
     
 removeInstallFiles() {
-    rm -r /tmp/$vversion.zip /tmp/MedShakeEHR-base-$version /tmp/debian-bash-installer.sh
+    rm -r /tmp/$vRelease.zip /tmp/MedShakeEHR-base-$version /tmp/debian-bash-installer.sh
 }
 
 selectInstall(){
     echo "Bienvenue, ce script va vous guider lors de l'installation de MedShakeEHR. Si vous avez besoin d'aide au cours de l'installation : https://c-medshakeehr.fr/doc"
-    read -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 ou personnaliser l'installation, tapez 2 : " persoInstall
+    read -e -i "$persoInstall" -p "Pour commencer, si vous souhaitez installer MedShakeEHR avec ses valeurs par défaut, tapez 1 [défaut] ou personnaliser l'installation, tapez 2 : " input
+    persoInstall="${input:-$persoInstall}"
     case $persoInstall in
         "1" )
             packagesInstall
@@ -236,9 +239,7 @@ selectInstall(){
             selectMsehrPath
             selectPackages
             selectLampConfig
-            selectCustomMsehrVersion
-            msehrInstall
-            selectRemoveInstallFiles ;;
+            selectVersion ;;
         * ) 
             echo "Mauvaise valeur saisie"
             selectInstall ;;    
@@ -246,11 +247,15 @@ selectInstall(){
 }
 
 # Variables globales par défauts.
-msehrPath=/home/ehr
+persoInstall=1
+msehrPath=/opt/ehr
+selectInstall=1
+selectLampConfig=1
 msehrDom=msehr.local
+selectVersion=1
+selectRemove=1
 msehrDepMin="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
 extraDicom="orthanc"
-msehrDep=$msehrDepMin
 
 clear
 selectInstall
