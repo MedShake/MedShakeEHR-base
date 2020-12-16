@@ -232,6 +232,11 @@
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/accesHttp/">Logs des accès (http)
           </a>
         </li>
+        {% if config.smsProvider %}
+        <li class="list-group-item">
+          Crédits SMS : {{ page.creditsSMS }}
+        </li>
+        {% endif %}
       </ul>
 
       <h2 class="mt-4 mb-2">Backups</h2>
