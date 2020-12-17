@@ -34,10 +34,9 @@ selectPackages() {
     selectInstall="${input:-$selectInstall}"
     case $selectInstall in
         "1" )
-            msehrDep=$msehrDepMin 
             packagesInstall ;;
         "2" )
-            msehrDep="${msehrDepMin} ${extraDicom}"
+            msehrDep="${msehrDep} ${extraDicom}"
             packagesInstall ;;
         "3" ) 
 		 ;;
@@ -135,6 +134,9 @@ mariadbConfig() {
         echo
     done
     echo
+    read -e -i "$msehrDbName" -p "Choix du nom de la base de donnée (défaut : medshakeehr) : " input
+    msehrDbName="${input:-$msehrDbName}"
+    echo
     read -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
     echo
     while true; do
@@ -149,10 +151,9 @@ mariadbConfig() {
     SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${mysqlrootpass}');
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-    CREATE DATABASE medshakeehr;
-    GRANT ALL ON medshakeehr.* TO '${mysqlUser}'@'localhost' IDENTIFIED BY '${mysqlUserPswd}' WITH GRANT OPTION;
+    CREATE DATABASE $msehrDbName;
+    GRANT ALL ON $msehrDbName.* TO '${mysqlUser}'@'localhost' IDENTIFIED BY '${mysqlUserPswd}' WITH GRANT OPTION;
     FLUSH PRIVILEGES;
-
 EOF
 }
 
@@ -233,8 +234,7 @@ selectInstall(){
             apacheConfig
             mariadbConfig
             msehrLatest
-            msehrInstall
-            removeInstallFiles ;;
+            msehrInstall ;;
         "2" )
             selectMsehrPath
             selectPackages
@@ -252,9 +252,10 @@ msehrPath=/opt/ehr
 selectInstall=1
 selectLampConfig=1
 msehrDom=msehr.local
+msehrDbName=medshakeehr
 selectVersion=1
 selectRemove=1
-msehrDepMin="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
+msehrDep="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
 extraDicom="orthanc"
 
 clear
