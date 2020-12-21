@@ -81,7 +81,7 @@ certGen() {
     cd /etc/ssl/$msehrDom
     openssl genrsa -out $msehrDom.key 4096
     openssl req -new -key $msehrDom.key -out $msehrDom.csr
-    openssl x509 -req -days 3650 -in $msehrDom.csr -signkey $msehrDom.key -out $msehrDom.crt
+    openssl x509 -req -days 3650 -in $msehrDom.csr -signkey $msehrDom.key -out $msehrDom.pem
 }
 
 apacheConfig() {
@@ -98,7 +98,7 @@ apacheConfig() {
         DocumentRoot "$msehrPath/public_html"
         RewriteEngine On
         SSLEngine On
-        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
+        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.pem
         SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
         <Directory "$msehrPath/public_html">
             Options FollowSymLinks
@@ -148,7 +148,7 @@ mariadbConfig() {
     done
     service mysql start
     mysql <<EOF
-    SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${mysqlrootpass}');
+    SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${mysqlRootPswd}');
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
     CREATE DATABASE $msehrDbName;
@@ -166,7 +166,7 @@ selectVersion() {
     "2" )
         selectMsehrVersion ;;
     "3" )
-        ;;
+        selectRemoveInstallFiles ;;
     * ) 
         echo "Mauvaise valeur saisie"
         selectVersion ;;
@@ -212,7 +212,7 @@ case $selectRemove in
     "1" )
         removeInstallFiles ;;
     "2" ) 
-	    ;;
+	    echo "Pensez à configurer votre pare-feu et les mises à jours, plus d'infos sur https://c-medshakeehr.fr/doc.";;
     * ) 
         echo "Mauvaise valeur saisie"
         selectRemoveInstallFiles ;;
@@ -221,6 +221,7 @@ esac
     
 removeInstallFiles() {
     rm -r /tmp/$vRelease.zip /tmp/MedShakeEHR-base-$version /tmp/debian-bash-installer.sh
+    echo "Pensez à configurer votre pare-feu et les mises à jours, plus d'infos sur https://c-medshakeehr.fr/doc"
 }
 
 selectInstall(){
@@ -233,8 +234,7 @@ selectInstall(){
             certGen
             apacheConfig
             mariadbConfig
-            msehrLatest
-            msehrInstall ;;
+            msehrLatest ;;
         "2" )
             selectMsehrPath
             selectPackages
