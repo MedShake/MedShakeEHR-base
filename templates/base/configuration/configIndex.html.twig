@@ -58,6 +58,30 @@
   </div>
   {% endif %}
 
+  {% if page.alerteAdminer %}
+  <div class="alert alert-danger my-4" role="alert">
+    <div class="d-inline-block mr-4 align-top">
+      <i class="fas fa-exclamation-triangle fa-5x"></i>
+    </div>
+    <div  class="d-inline-block">
+      <strong>Attention ! L'accès à la base de données via Adminer est activé !</strong>
+      <br>Effacez ce script impérativement dès qu'il n'est plus utile !
+      <p class="my-2">
+        <form class="d-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/bddEdit.php" target="_blank" method="post">
+          <input type="hidden" name="auth[driver]" value="server">
+          <input type="hidden" name="auth[server]" value="{{ config.sqlServeur }}">
+          <input type="hidden" name="auth[username]" value="{{ config.sqlUser }}">
+          <input type="hidden" name="auth[password]" value="{{ config.sqlPass }}">
+          <input type="hidden" name="auth[db]" value="{{ config.sqlBase }}">
+          <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-database"></i> Login</button>
+        </form>
+
+        <a class="btn btn-sm btn-danger ml-3" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAdminerRemove/"><i class="fas fa-trash-alt"></i> Effacer</a>
+      </div>
+    </p>
+  </div>
+  {% endif %}
+
   <ul class="nav nav-tabs mt-3 font-weight-bold" role="tablist">
     <li role="presentation" class="nav-item">
       <a href="#cc" class="nav-link active" aria-controls="cc" role="tab" data-toggle="tab"><i class="fas fa-cog fa-fw"></i> Paramètres courants</a>
@@ -239,11 +263,20 @@
         {% endif %}
       </ul>
 
-      <h2 class="mt-4 mb-2">Backups</h2>
+      <h2 class="mt-4 mb-2">SQL et Backups</h2>
       <ul class="list-group">
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/configBackups/">Listes des backups SQL
           </a>
+        </li>
+        <li class="list-group-item">
+          {% if page.alerteAdminer %}
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAdminerRemove/">Retirer Adminer
+            </a>
+          {% else %}
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configAdminerInstall/">Installer Adminer pour accéder à la base SQL
+            </a>
+          {% endif %}
         </li>
       </ul>
 

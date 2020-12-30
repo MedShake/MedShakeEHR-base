@@ -41,7 +41,9 @@ $acceptedModes=array(
     'configDicomRmWl', // supprimer tous les fichiers worklist actifs
     'configToggleSystemState', // activer / désactiver le mode maintenance
     'configRestartApicrypt2', // relancer le service Apicrypt2
-    'configUserApplyTemplate' // appliquer un template de droits à utilisateur existant
+    'configUserApplyTemplate', // appliquer un template de droits à utilisateur existant
+	'configAdminerInstall', // installer Adminer dernière version
+	'configAdminerRemove', // retirer Adminer
 );
 
 if (!in_array($m, $acceptedModes)) {
