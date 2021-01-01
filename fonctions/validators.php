@@ -47,6 +47,12 @@ GUMP::add_validator("phone", function($field, $input, $param = NULL) {
 		if ($find!='1') return FALSE; else return TRUE;
 	}, 'Le champ {field} n\'est pas un numéro de téléphone valide');
 
+GUMP::add_validator("genericPhone", function($field, $input, $param = NULL) {
+		if (empty($input[$field])) return TRUE;
+		$find=preg_match('/^(\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$/i', $input[$field]);
+		if ($find!='1') return FALSE; else return TRUE;
+	}, 'Le champ {field} n\'est pas un numéro de téléphone international valide');
+
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
 		if (msSQL::sqlUniqueChamp("select $field from $param where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
