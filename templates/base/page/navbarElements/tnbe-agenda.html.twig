@@ -28,7 +28,7 @@
 
 {% if config.optionGeActiverAgenda == 'true' %}
   {% if config.agendaDistantLink %}
-   <li class="nav-item">
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agenda"{% endif %}>
      <a class="nav-link" href="{{ config.agendaDistantLink }}" target="agenda">
        {% if config.designTopMenuStyle == 'icones' %}
          <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
@@ -41,7 +41,7 @@
    </li>
   {% elseif page.agendaUsers|length == 1 %}
    {% for k, v in page.agendaUsers %}
-     <li class="nav-item">
+     <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agenda"{% endif %}>
        <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">
          {% if config.designTopMenuStyle == 'icones' %}
            <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
@@ -54,14 +54,14 @@
      </li>
    {% endfor %}
   {% elseif page.agendaUsers %}
-   <li class="nav-item dropdown">
+   <li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agendas"{% endif %}>
      <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
        {% if config.designTopMenuStyle == 'icones' %}
          <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
          <span class="d-lg-none">
-           Agenda</span>
+           Agendas</span>
        {% else %}
-         Agenda
+         Agendas
        {% endif %}
      </a>
      <div class="dropdown-menu">

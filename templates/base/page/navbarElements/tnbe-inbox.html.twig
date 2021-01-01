@@ -28,7 +28,7 @@
 
 {% if config.optionGeActiverInboxApicrypt == 'true' %}
   {% if config.apicryptAdresse is not empty or config.apicryptInboxMailForUserID is not empty or config.apicryptInboxMailForUserID is same as(0) %}
-   <li class="nav-item">
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Boite de réception"{% endif %}>
      <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">
        {% if config.designTopMenuStyle == 'icones' %}
          <i class="fas fa-at fa-lg d-none d-lg-inline"></i>

@@ -26,7 +26,7 @@
  #}
 
 {% if config.droitStatsPeutVoirStatsGenerales == 'true' %}
- <li class="nav-item"  title="Statistiques et historiques">
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Statistiques et historiques"{% endif %}>
    <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/statistiques/">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-chart-line fa-lg d-none d-lg-inline"></i>

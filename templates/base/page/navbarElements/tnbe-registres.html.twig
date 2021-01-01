@@ -26,7 +26,7 @@
  #}
 
 {% if config.optionGeActiverRegistres == 'true' %}
- <li class="nav-item">
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Registres"{% endif %}>
    <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registres/">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-archive fa-lg d-none d-lg-inline"></i>

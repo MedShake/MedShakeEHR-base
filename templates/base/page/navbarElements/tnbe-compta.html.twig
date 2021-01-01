@@ -27,7 +27,7 @@
  #}
 
 {% if config.optionGeActiverCompta == 'true' %}
-  <li class="nav-item dropdown">
+  <li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Comptabilité"{% endif %}>
    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-euro-sign fa-lg d-none d-lg-inline"></i>

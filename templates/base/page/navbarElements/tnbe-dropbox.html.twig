@@ -26,7 +26,7 @@
  #}
 
 {% if config.optionGeActiverDropbox == 'true' %}
- <li class="nav-item">
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Boite de dépôt"{% endif %}>
    <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dropbox/">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-inbox fa-lg d-none d-lg-inline"></i>

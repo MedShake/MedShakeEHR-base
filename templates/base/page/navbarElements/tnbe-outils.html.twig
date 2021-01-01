@@ -26,7 +26,7 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
-<li class="nav-item dropdown">
+<li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Outils"{% endif %}>
  <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
    {% if config.designTopMenuStyle == 'icones' %}
      <i class="fas fa-toolbox fa-lg d-none d-lg-inline {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}text-danger{% endif %}"></i>

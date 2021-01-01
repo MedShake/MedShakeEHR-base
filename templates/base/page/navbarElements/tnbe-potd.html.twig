@@ -25,7 +25,7 @@
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
-<li class="nav-item dropdown {% if page.patientsOfTheDay is empty %}d-none{% endif %}" id="patientsOfTheDayMenu" >
+<li class="nav-item dropdown {% if page.patientsOfTheDay is empty %}d-none{% endif %}" id="patientsOfTheDayMenu"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Patients du jour"{% endif %} >
  <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
    {% if config.designTopMenuStyle == 'icones' %}
      <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>

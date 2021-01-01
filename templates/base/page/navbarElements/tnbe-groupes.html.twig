@@ -26,7 +26,7 @@
  #}
 
 {% if config.optionGeActiverGroupes == 'true' %}
- <li class="nav-item">
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Groupes"{% endif %}>
    <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/groupes/">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-hospital-alt fa-lg d-none d-lg-inline"></i>

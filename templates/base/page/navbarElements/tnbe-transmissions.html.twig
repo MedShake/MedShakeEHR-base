@@ -26,7 +26,7 @@
  #}
 {% if config.optionGeActiverTransmissions == 'true' %}
   {% if config.transmissionsPeutVoir == 'true' %}
-   <li class="nav-item">
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Transmissions"{% endif %}>
      <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">
        {% if config.designTopMenuStyle == 'icones' %}
          {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}

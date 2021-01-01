@@ -26,7 +26,7 @@
  # @contrib fr33z00 <https://github.com/fr33z00>
  #}
 
- <li class="nav-item">
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Patients"{% endif %}>
    <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patients/" accesskey="=">
      {% if config.designTopMenuStyle == 'icones' %}
        <i class="fas fa-user fa-lg d-none d-lg-inline"></i>
