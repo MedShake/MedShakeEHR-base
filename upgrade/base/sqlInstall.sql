@@ -862,6 +862,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('designTopMenuInboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
 ('designTopMenuSections', 'default', '0', '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
 ('designTopMenuStyle', 'default', '0', '', 'Ergonomie et design', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
+('designTopMenuTooltipDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'si true, affiche les infos bulles sur icones du menu supérieur', 'false'),
 ('designTopMenuTransmissionsColorIconeImportant', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
 ('designTopMenuTransmissionsColorIconeUrgent', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
 ('designTopMenuTransmissionsCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true'),
@@ -1103,5 +1104,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v7.0.0'),
+('base', 'module', 'v7.1.0'),
 ('state', 'system', 'normal');
