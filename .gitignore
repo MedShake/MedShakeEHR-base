@@ -1,0 +1,16 @@
+
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+.vagrant/
+*.box
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+MedShakeEHR-base.zip
+secrets.yml
