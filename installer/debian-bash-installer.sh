@@ -37,7 +37,8 @@ selectPackages() {
             packagesInstall ;;
         "2" )
             msehrDep="${msehrDep} ${extraDicom}"
-            packagesInstall ;;
+            packagesInstall
+            orthancConfig ;;
         "3" ) 
 		 ;;
         * ) 
@@ -48,6 +49,20 @@ selectPackages() {
 
 packagesInstall(){
 	apt update && apt upgrade -y && apt install -y $msehrDep
+}
+
+orthancConfig(){
+    read -p "Choix du nom de l'utilisateur d'Orthanc : " orthancUser
+    echo
+    while true; do
+        read -s -r -p "Choix du mot de passe utilisateur d'Orthanc (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " orthancPswd
+        echo
+        read -s -r -p "Confirmation du mot de passe : " orthancPswd1
+        echo
+        [ "$orthancPswd" = "$orthancPswd1" ] && break || echo "Essayez encore"
+    done
+    sed -i 's/"AuthenticationEnabled" : false,/"AuthenticationEnabled" : true,/' /etc/orthanc/orthanc.json
+    sed -i "s|// \"alice\" : \"alicePassword\"|\"$orthancUser\" : \"$orthancPswd\"|" /etc/orthanc/orthanc.json
 }
 
 selectLampConfig() {
@@ -193,8 +208,7 @@ msehrInstall() {
     mkdir -p $msehrPath/public_html
     version=$(echo $vRelease | cut -f2 -d "v")
     mv -f /tmp/MedShakeEHR-base-$version/* $msehrPath
-    sed -i "1iSetEnv MEDSHAKEEHRPATH $msehrPath" $msehrPath/public_html/.htaccess
-
+    
     chown www-data:www-data -R $msehrPath
     chmod 755 $msehrPath $msehrPath/public_html
 
@@ -202,6 +216,10 @@ msehrInstall() {
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
     cd $msehrPath/public_html
     su www-data -s/bin/bash -c 'composer install --no-interaction -o'
+    echo "$msehrPath
+    " > $msehrPath/public_html/MEDSHAKEEHRPATH
+    su www-data -s/bin/bash -c  "php $msehrPath/public_html/install.php -N -s localhost -d $msehrDbName -u $mysqlUser -p $mysqlUserPswd -r https -D $msehrDom"
+
     selectRemoveInstallFiles
 }  
 
