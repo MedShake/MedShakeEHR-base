@@ -40,15 +40,23 @@
         group: root
         mode: 0644
 
+    - name: sync sources with working directory
+      copy: 
+        src: /vagrant/
+        dest: /opt/ehr 
+        remote_src: yes 
+        directory_mode: yes
+      when: stage == "testing"
+
     - name: Creating MEDSHAKEEHRPATH file
       copy:
-        dest: /vagrant/public_html/MEDSHAKEEHRPATH
+        dest: /opt/ehr/public_html/MEDSHAKEEHRPATH
         content: |
-          /vagrant
+          /opt/ehr
         
     - name: Add good permissions and ownership to medshakeehr folder
       ansible.builtin.file:
-        path: /vagrant
+        path: /opt/ehr
         state: directory
         recurse: yes
         owner: www-data
@@ -58,17 +66,12 @@
     - name: Composer upgrade on /ehr
       composer:
         command: upgrade
-        working_dir: /vagrant
+        working_dir: /opt/ehr
     
     - name: Composer upgrade on /ehr/public_html
       composer:
         command: upgrade
-        working_dir: /vagrant/public_html
-
-    - name: Print return information from the previous task
-      ansible.builtin.debug:
-        var: result
-        verbosity: 3
+        working_dir: /opt/ehr/public_html
 
     - name: Setup php.ini configuration.
       template:
@@ -218,7 +221,7 @@
     
     - name:  check if config.yml exist
       stat:
-        path: /vagrant/config/config.yml
+        path: /opt/ehr/config/config.yml
       register: ymlconfig 
       
     - name: Run msehr-cli

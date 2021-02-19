@@ -8,12 +8,12 @@
 <VirtualHost *:443>
 	ServerName {{ domain }}
 	ServerAlias msehr ehr medshakeehr MedShakeEHR 
-	DocumentRoot /vagrant/public_html
+	DocumentRoot /opt/ehr/public_html
 	RewriteEngine On
 	SSLEngine On
     SSLCertificateFile /etc/ssl/{{ domain }}/{{ domain }}.pem
     SSLCertificateKeyFile /etc/ssl/{{ domain }}/{{ domain }}.key
-	<Directory /vagrant/public_html>
+	<Directory /opt/ehr/public_html>
 		Options FollowSymLinks
 		AllowOverride all
 		Require all granted
