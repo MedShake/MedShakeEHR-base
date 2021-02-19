@@ -26,6 +26,7 @@
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 ini_set('display_errors', 1);
@@ -36,7 +37,7 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 */
 function print_help() {
   echo <<< EOT
-Script d'installation en mode ligne de commande pour MedshakeEHR
+Script d'installation en mode ligne de commande pour MedShakeEHR
 
   Utilisation:
   php ./install.php -R <rootuser> -P <rootpass> -s <sqlhost> -d <database>
@@ -47,28 +48,31 @@ Script d'installation en mode ligne de commande pour MedshakeEHR
                     [ -f <urlsuffix> ] [ -S <storpath> ] [ -B <backpath> ]
                     [ -n <numport> ]
 
-  -h|--help                           Affiche cett aide
+  -h|--help                           Afficher cette aide
   -R|--sqlrootid    <rootuser>        Nom d'utilisateur root MySQL
   -P|--sqlrootpw    <rootpass>        Mot de passe utilisateur root MySQL
-  -N|--sqlnocreatdb                   Ne pas crée la base de donnée sql et
-  -s|--sqlserver    <sqlhost>         Server SQL
-  -d|--database     <database>        Nom de base de donnée SQL
-  -u|--sqluser      <sqluser>         Nom d'utilisateur SQL
-  -p|--sqlpass      <sqlpass>         Mot de passe utilisateur SQL
-                                      l'utilisateur pour MedshakeEHR
-                                      (seulement si crée a l'avence)
-  -r|--protcol      <protocol>        Protocol utilisé pour la connexion
-                                      MedshakeEHR (http|https)
-  -D|--domaine      <domain>          Nom de domaine utilisé a accèder à
-                                      MedshakeEHR ('localhost' par défaut)
-  -n|--port         <numport>         Préciser port du serveur web (si difféent
+  -N|--sqlnocreatdb                   Ne pas créer la base de données MySQL
+  -s|--sqlserver    <sqlhost>         IP du Server MySQL
+  -d|--database     <database>        Nom de la base de données MySQL pour
+                                      MedShakeEHR
+  -u|--sqluser      <sqluser>         Nom d'utilisateur MySQL pour
+                                      MedShakeEHR
+                                      (seulement si créé à l'avance)
+  -p|--sqlpass      <sqlpass>         Mot de passe utilisateur MySQL
+                                      pour MedshakeEHR
+                                      (seulement si crée à l'avance)
+  -r|--protocol     <protocol>        Protocole utilisé pour la connexion
+                                      MedShakeEHR (http|https)
+  -D|--domain       <domain>          Nom de domaine utilisé pour accéder à
+                                      MedShakeEHR ('localhost' par défaut)
+  -n|--port         <numport>         Préciser port du serveur web (si différent
                                       de 80 ou 443)
-  -f|--sufix        <urlsuffix>       Suffix url (installation sous dossier web)
-                                      ('http' par default)
+  -f|--suffix       <urlsuffix>       Suffix url (installation sous dossier web)
+                                      ('http' par défaut)
   -S|--storage      <storpath>        Chemin du dossier de stockage
-                                      ('stockage' par defaut)
+                                      ('stockage' par défaut)
   -B|--backup       <backpath>        Chemin du dossier de sauvegarde
-                                      ('backup' par defaut)
+                                      ('backup' par défaut)
 \n
 EOT;
 }
@@ -132,7 +136,7 @@ function read_args() {
         break;
 
       case '-D':
-      case '--domaine':
+      case '--domain':
         array_shift($argv);
         $arrParam['host'] = array_shift($argv);
         break;
@@ -144,7 +148,7 @@ function read_args() {
         break;
 
       case '-f':
-      case '--sufix':
+      case '--suffix':
         array_shift($argv);
         $arrParam['urlHostSuffixe'] = array_shift($argv);
         break;
