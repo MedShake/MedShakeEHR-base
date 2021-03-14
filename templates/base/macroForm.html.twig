@@ -208,6 +208,7 @@
 	{% if v.select.datatypeid %} data-typeid="{{ v.select.datatypeid }}" {% endif %}
 	{% if v.select.autocomplete %} autocomplete="{{ v.select.autocomplete }}" {% endif %}
 	{% if v.select.disabled %} disabled="{{ v.select.disabled }}" {% endif %}
+	{% if v.select.required %} required="{{ v.select.required }}" {% endif %}
 	{% if v.select.internalName %} data-internalName="{{ v.select.internalName }}" {% endif %}
 	{{ v.select.add }}
 	{% if v.select.valueDefaut is not iterable %}data-defautValue="{{ v.select.valueDefaut|e('html_attr') }}"{% endif %}
@@ -269,7 +270,11 @@
 
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio">
-				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
+				<input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input"
+                        {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %}
+                        {% if v.radio.required %} required="{{ v.radio.required }}" {% endif %}
+                        {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off"
+                        {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 				<label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
@@ -291,7 +296,11 @@
 
 		{% for key,value in v.radio.values %}
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input" {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %} {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off" {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
+			  <input type="radio" id="{{ v.radio.id }}{{ loop.index }}" name="{{ v.radio.name }}" value="{{ key|e('html_attr') }}" class="custom-control-input"
+                      {% if v.radio.disabled %} disabled="{{ v.radio.disabled }}" {% endif %}
+                      {% if v.radio.required %} required="{{ v.radio.required }}" {% endif %}
+                      {% if v.radio.valueDefaut == key %} checked="checked" {% endif %} autocomplete="off"
+                      {% if v.radio.tabindex is not empty %} tabindex="{{ v.radio.tabindex }}" {% endif %}>
 			  <label class="custom-control-label" for="{{ v.radio.id }}{{ loop.index }}">{{ value|e }}</label>
 			</div>
 		{% endfor %}
@@ -635,6 +644,7 @@
 										'values' : el.value.formValues,
 										'valueDefaut' : el.value.preValue,
 										'readonly' : el.value.readonly,
+										'required' : el.value.required,
 										'placeholder' : el.value.placeholder,
 										'tabindex' : el.value.tabindex,
 										'disabled' : el.value.disabled,
@@ -663,6 +673,7 @@
 											'values' : el.value.formValues,
 											'valueDefaut' : el.value.preValue,
 											'readonly' : el.value.readonly,
+											'required' : el.value.required,
 											'tabindex' : el.value.tabindex,
 											'disabled' : el.value.disabled,
 											'datatypeid' : el.value.id,
