@@ -215,7 +215,7 @@
 	>
 
 	{% if v.select.valueDefaut is iterable %}
-        {% if v.select.placeholder is not empty %}
+        {% if v.select.placeholder is not empty and v.select.valueDefaut == "noPreValue" %}
             <option value="" disabled hidden selected>{{ v.select.placeholder|e }}</option>
         {% endif %}
 
