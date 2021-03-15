@@ -266,7 +266,7 @@ class msSMSallMySMS
 	public function ajoutDestinataire($tel, $params = [])
 	{
 		$tel = trim(str_ireplace(array(' ', '/', '.'), '', $tel));
-		if (strlen($tel) == 10) {
+		if (preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/mix', $tel) === 1) {
 			$destinataire['mobilePhone'] = $tel;
 			if (count($params) > 0) {
 
@@ -630,7 +630,7 @@ class msSMSallMySMS
 
 			$array_data = array(
 				'text' => $this->_campaign_data['DATA']['MESSAGE'] . " \r\nStop au 36180",
-				'to' => preg_replace('/\s+/', '', str_replace("+", "", $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"])),
+				'to' => str_replace("+", "", $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"]),
 				'from' => $this->_campaign_data['DATA']['TPOA'],
 				'campaignName' => $this->_campaign_data['DATA']['CAMPAIGN_NAME'],
 				'alerting' => 1,
