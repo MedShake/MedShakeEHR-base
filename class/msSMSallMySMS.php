@@ -630,7 +630,7 @@ class msSMSallMySMS
 
 			$array_data = array(
 				'text' => $this->_campaign_data['DATA']['MESSAGE'] . " \r\nStop au 36180",
-				'to' => $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"],
+				'to' => preg_replace('/\s+/', '', str_replace("+", "", $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"])),
 				'from' => $this->_campaign_data['DATA']['TPOA'],
 				'campaignName' => $this->_campaign_data['DATA']['CAMPAIGN_NAME'],
 				'alerting' => 1,
