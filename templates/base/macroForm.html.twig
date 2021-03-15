@@ -215,11 +215,11 @@
 	{% if v.select.tabindex is not empty %} tabindex="{{ v.select.tabindex }}" {% endif %}
 	>
 
-	{% if v.select.valueDefaut is iterable %}
         {% if v.select.placeholder is not empty and v.select.valueDefaut == "noPreValue" %}
             <option value="" disabled hidden selected>{{ v.select.placeholder|e }}</option>
         {% endif %}
 
+        {% if v.select.valueDefaut is iterable %}
 		{% for key,value in v.select.valueDefaut %}
 			<option value="{{ key|e('html_attr') }}">{{ value|e }}</option>
 		{% endfor %}
