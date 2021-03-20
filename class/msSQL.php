@@ -47,7 +47,7 @@ class msSQL
           die('Echec de connexion à la base de données');
       } else {
           $mysqli->query('SELECT @password:="'.$mysqli->real_escape_string($p['config']['sqlVarPassword']).'"');
-          $mysqli->query("SET time_zone = '+01:00'");
+          if(isset($p['config']['sqlTimeZone'])) $mysqli->query("SET time_zone = '".$p['config']['sqlTimeZone']."'");
           return $mysqli;
       }
   }
