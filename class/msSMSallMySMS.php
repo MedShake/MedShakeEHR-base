@@ -407,7 +407,7 @@ class msSMSallMySMS
 		//log json
 		$logFileDirectory = $this->_directory4log . date('Y/m/d/', $this->_timestamp4log);
 		msTools::checkAndBuildTargetDir($logFileDirectory);
-		file_put_contents($logFileDirectory . $this->_filename4log, $tab);
+		file_put_contents($logFileDirectory . $this->_filename4log, $tab, FILE_APPEND);
 
 	}
 
@@ -442,7 +442,7 @@ class msSMSallMySMS
 				$acks = $this->getAcksRecep($data['campaignId']);
 				if (is_array($acks)) {
 					$data['acks'] = $acks;
-					file_put_contents($logFile, json_encode($data));
+					file_put_contents($logFile, json_encode($data), FILE_APPEND);
 					return $acks;
 				} else {
 					return null;
