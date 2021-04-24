@@ -662,10 +662,14 @@ class msSMSallMySMS
 			curl_close($ch);
 
 			if ($err || $responseCode != 201) {
-				$result = [];
-				$result['status'] = '0';
-				$result['statusText'] = "Une erreur s'est produite lors de l'envoi.";
-				$result = json_encode($result);
+				$apiResponse = [];
+				$apiResponse['status'] = '0';
+				$apiResponse['statusText'] = "Une erreur s'est produite lors de l'envoi.";
+
+				if (isset($result['description']) && !empty($result['description']))
+					$apiResponse['statusText'] .= "Description : ".$result['description'];
+
+				$result = json_encode($apiResponse);
 			}
 		} else {
 			$result = [];
