@@ -40,8 +40,8 @@ $praticien = new msPeople();
 $praticien->setToID($_POST['pratID']);
 $pratData = $praticien->getLabelForSimpleAdminDatas($praticien->getSimpleAdminDatasByName());
 
-$adeli = $pratData['adeli'];
-$rpps = $pratData['rpps'];
+if (!empty($pratData['adeli'])) $adeli = $pratData['adeli'];
+if (!empty($pratData['rpps'])) $rpps = $pratData['rpps'];
 
 $rpps_generated = 0;
 $adeli_generated = 0;
