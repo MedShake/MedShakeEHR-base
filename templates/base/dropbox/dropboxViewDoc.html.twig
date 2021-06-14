@@ -120,7 +120,8 @@
 
     <div class="form-group col-9 offset-3">
       <label for="titreOptionnel">Titre (optionnel)</label>
-      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.boxParams.filesDefaultTitle }}">
+      {# le js dans onchange="" permet de récupérer le titre du document avec la dans le champ hidden "dropboxDocTitle" du formulaire "CreerPatient" #}
+      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.boxParams.filesDefaultTitle }}" onchange="document.getElementById('creerPatient_doctitre').value = this.value;">
     </div>
   </div>
   <div class="row mb-4">
@@ -129,6 +130,26 @@
       </button>
     </div>
   </div>
+</form>
+
+<form id="CreerPatient" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post">
+
+    <input type="hidden" name="createFromDropbox" value="1"/>
+    <input type="hidden" name="dropboxFilename" value="{{ page.fileData.filename }}"/>
+    <input type="hidden" name="dropboxBox" value="{{ page.boxParams.id }}"/>
+    <input id="creerPatient_doctitre" name="dropboxDocTitle" type="hidden" value="{{ page.boxParams.filesDefaultTitle }}">
+
+    <input name="lastname" type="hidden" value="{{ page.dataFromFilename.lastname|e|upper }}">
+    <input name="birthname" type="hidden" value="{{ page.dataFromFilename.birthname|e|upper }}">
+    <input name="firstname" type="hidden" value="{{ page.dataFromFilename.firstname|e|capitalize }}">
+    <input name="birthdate" type="hidden" value="{{ page.dataFromFilename.birthdate|e|capitalize }}">
+    <input name="nss" type="hidden" value="{{ page.dataFromFilename.nss|e }}">
+
+    <div class="row mb-4">
+        <div class="col text-right">
+            <input class="btn btn-primary" type="submit" value="Nouveau patient avec les éléments du fichier" title="Crée un nouvau patient avec les information issue du fichier et classe en même temps le fichier dans son dossier">
+        </div>
+    </div>
 </form>
 
 <div class="card mb-3">

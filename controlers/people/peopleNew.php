@@ -76,4 +76,16 @@ if($template != "forbidden") {
   $formpatient->addHiddenInput($p['page']['form'],['peopleType'=>$p['page']['porp']]);
   $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
   $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
+
+  // Champs récupérer si formulaire de création d'un nouveau patient est appelé depuis la boîte de dépot avec le boutton "Nouvau patient avec les éléments du fichier"
+  if (!empty($_POST['createFromDropbox']) && $_POST['createFromDropbox'] == 1) {
+    $p['page']['createFromDropbox'] = 1;
+    $p['page']['form']['addHidden']['createFromDropbox'] = 1;
+    $p['page']['form']['addHidden']['dropboxFilename'] = $_POST['dropboxFilename'];
+    $p['page']['form']['addHidden']['dropboxBox'] = $_POST['dropboxBox'];
+    $p['page']['form']['addHidden']['dropboxDocTitle'] = $_POST['dropboxDocTitle'];
+  } else {
+    $p['page']['createFromDropbox'] = 0;
+  }
+
 }
