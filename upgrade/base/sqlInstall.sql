@@ -636,7 +636,7 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='divers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'notesPro', 'notes pros', 'Notes pros', 'Zone de notes pros', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10');
+('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='docForm');

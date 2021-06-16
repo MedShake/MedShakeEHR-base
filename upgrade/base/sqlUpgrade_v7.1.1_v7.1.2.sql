@@ -4,7 +4,7 @@ UPDATE `system` SET `value`='v7.1.2' WHERE `name`='base' and `groupe`='module';
 -- data_types
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='divers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10');
+('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10');
 
 -- forms
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='patientforms');
