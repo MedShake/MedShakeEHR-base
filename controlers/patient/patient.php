@@ -167,8 +167,13 @@ $correspondants = new msPeopleRelations;
 $correspondants->setToID($match['params']['patient']);
 $correspondants->setReturnedPeopleTypes(['pro']);
 $correspondants->setRelationType('relationPatientPraticien');
-$p['page']['correspondants']=$correspondants->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
-
+$p['page']['correspondants']=$correspondants->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro', 'preferedSendingMethod']);
+$p['page']['voirCorrespondantsAvecEnvoiPrefere'] = 'false';
+foreach ($p['page']['correspondants'] as $c) {
+	if ($c['preferedSendingMethod'] !== 'NONE') {
+		$p['page']['voirCorrespondantsAvecEnvoiPrefere'] = true;
+	}
+}
 
 // Transmissions
 if($p['config']['optionGeActiverTransmissions'] == 'true') {

@@ -691,7 +691,7 @@ class msCourrier
  * @param  array $data data patient
  * @return array       array de data calculées
  */
-    private function _formatIdentites($data) {
+    static private function _formatIdentites($data) {
 
       $data=array_filter($data);
 
