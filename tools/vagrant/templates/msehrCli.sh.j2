@@ -1,0 +1,8 @@
+#! /bin/bash
+
+msehrDbName={{ sqlDbName }}
+mysqlUser={{ sqlUserAccount }}
+mysqlUserPswd={{ sqlUserPassword }}
+msehrDom={{ domain }}
+export MEDSHAKEEHRPATH=/opt/ehr
+su www-data -s/bin/bash -c  "php /opt/ehr/public_html/install.php -N -s localhost -d $msehrDbName -u $mysqlUser -p $mysqlUserPswd -r https -D $msehrDom"
