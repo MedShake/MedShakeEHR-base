@@ -173,7 +173,7 @@ class msData extends msDataCat
  * @param  array $col colonnes SQL à retourner
  * @return array      array
  */
-    public function getDataType($id, $col=['*'])
+    static public function getDataType($id, $col=['*'])
     {
         if (!is_numeric($id)) throw new Exception('ID is not numeric');
         return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from data_types where id='".$id."'");
@@ -186,7 +186,7 @@ class msData extends msDataCat
  * @param  array $col colonnes SQL à retourner
  * @return array      array
  */
-    public function getDataTypeByName($name, $col=['*'])
+    static public function getDataTypeByName($name, $col=['*'])
     {
         return msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($col))." from data_types where name='".msSQL::cleanVar($name)."'");
 

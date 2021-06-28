@@ -1103,6 +1103,7 @@ function sendFormToMailDiv(el) {
       patientID: $('#identitePatient').attr("data-patientID"),
       objetID: el.attr('data-objetID'),
       mailType: el.attr('data-mailtype'),
+      correspondantID: el.attr('data-correspondantID'),
     },
     dataType: "html",
     success: function(data) {

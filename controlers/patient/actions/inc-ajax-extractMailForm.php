@@ -54,10 +54,23 @@ if ($_POST['mailType']=='ns') {
     //les correspondants et liens familiaux
     $to->setRelationType('relationPatientPraticien');
     $p['page']['correspondants']=$to->getRelations(['identite', 'emailApicrypt'], ['emailApicrypt']);
+	if (isset($_POST['correspondantID'])) {
+		$correspondantArrIdx = array_search($_POST['correspondantID'], array_column($p['page']['correspondants'], 'peopleID'));
+		if ($correspondantArrIdx !== false && isset($p['page']['correspondants'][$correspondantArrIdx])) {
+			$preValues['mailToApicrypt'] = $p['page']['correspondants'][$correspondantArrIdx]['emailApicrypt'];
+		}
+	}
 } elseif ($_POST['mailType']=='ecofax') {
     $catModelesMails=false;
     $to->setRelationType('relationPatientPraticien');
     $p['page']['correspondants']=$to->getRelations(['identite', 'faxPro'], ['faxPro']);
+	if (isset($_POST['correspondantID'])) {
+		$correspondantArrIdx = array_search($_POST['correspondantID'], array_column($p['page']['correspondants'], 'peopleID'));
+		if ($correspondantArrIdx !== false && isset($p['page']['correspondants'][$correspondantArrIdx])) {
+			$preValues['mailToEcofaxName'] = $p['page']['correspondants'][$correspondantArrIdx]['identiteUsuelle'];
+			$preValues['mailToEcofaxNumber'] = $p['page']['correspondants'][$correspondantArrIdx]['faxPro'];
+		}
+	}
 } else {
     $catModelesMails=false;
 }

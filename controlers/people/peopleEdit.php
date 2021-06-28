@@ -120,6 +120,20 @@ if ($p['page']['porp']=='pro') {
     $optionsInject['PSCodeStructureExercice']=array_column($codes, 'displayName', 'code');
     $optionsInject['PSCodeStructureExercice']=[''=>'Autre valeur : cliquer le stylo pour éditer']+$optionsInject['PSCodeStructureExercice'];
   }
+
+  //choix pour la méthode d'envoie préféré du praticien
+  if (!empty($p['config']['apicryptAdresse']) || !empty($p['config']['faxService'])) {
+
+	  //récupération des choix par défaut
+      $optionsInject['preferedSendingMethod'] = Spyc::YAMLLoad(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
+	  if (!empty($p['config']['apicryptAdresse'])) {
+		  $optionsInject['preferedSendingMethod']['APICRYPT'] = 'Apicrypt';
+	  }
+	  if (!empty($p['config']['faxService'])) {
+		  $optionsInject['preferedSendingMethod']['FAX'] = 'Fax';
+	  }
+  }
+
   if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
 }
 

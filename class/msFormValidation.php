@@ -219,8 +219,8 @@ class msFormValidation extends msForm
                     if ($type['formType']=="select") {
 
                         //forcage des <option>
-                        if(isset($this->_optionsForSelect[$type['name']])) {
-                            $type['formValues']=$this->_optionsForSelect[$type['name']];
+                        if(isset($this->_optionsForSelect[$type['internalName']])) {
+                            $type['formValues']=$this->_optionsForSelect[$type['internalName']];
                         }
                         // ou valeur par défaut du type
                         else {
