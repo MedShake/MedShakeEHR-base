@@ -94,7 +94,7 @@ class msClicRDV
         return msSQL::sql2tabKey("SELECT dt.name,od.value
         FROM data_types AS dt left join objets_data AS od
         ON od.typeID=dt.id AND od.toID='".$this->_userID."' AND od.outdated='' AND od.deleted=''
-        WHERE dt.groupe='user'", 'name', 'value');
+        WHERE dt.groupe='admin'", 'name', 'value');
     }
 
     //liste des patients qui ont un id clic connu
