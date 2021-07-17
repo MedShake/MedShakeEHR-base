@@ -213,9 +213,9 @@ msehrInstall() {
     chmod 755 $msehrPath $msehrPath/public_html
 
     cd $msehrPath
-    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
+    su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
     cd $msehrPath/public_html
-    su www-data -s/bin/bash -c 'composer install --no-interaction -o'
+    su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
     echo "$msehrPath
     " > $msehrPath/public_html/MEDSHAKEEHRPATH
     su www-data -s/bin/bash -c  "php $msehrPath/public_html/install.php -N -s localhost -d $msehrDbName -u $mysqlUser -p $mysqlUserPswd -r https -D $msehrDom"
@@ -273,7 +273,7 @@ msehrDom=msehr.local
 msehrDbName=medshakeehr
 selectVersion=1
 selectRemove=1
-msehrDep="ntp apache2 php mariadb-server ghostscript imagemagick pdftk git curl composer php-gd php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-yaml"
+msehrDep="apache2 composer curl ghostscript git imagemagick mariadb-server ntp pdftk php php-curl php-gd php-imagick php-imap php-intl php-mysql php-soap php-xml php-yaml php-zip"
 extraDicom="orthanc"
 
 clear
