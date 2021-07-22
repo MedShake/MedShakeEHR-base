@@ -134,7 +134,7 @@ class msClicRDV
     */
     public function sendEvent($event) {
         try {
-            $params=$this->_getUserParams();
+            $params = msConfiguration::getCatParametersForUser('clicRDV', array('id'=>$this->_userID,'module'=>''));
             if (!array_key_exists('clicRdvUserId', $params)) {
                 return false;
             }
@@ -229,7 +229,7 @@ class msClicRDV
     */
     public function modEvent($event) {
         try {
-            $params=$this->_getUserParams();
+            $params = msConfiguration::getCatParametersForUser('clicRDV', array('id'=>$this->_userID,'module'=>''));
             if (!array_key_exists('clicRdvUserId', $params)) {
                 return false;
             }
@@ -268,7 +268,7 @@ class msClicRDV
     */
     public function delEvent($event) {
         try {
-            $params=$this->_getUserParams();
+            $params = msConfiguration::getCatParametersForUser('clicRDV', array('id'=>$this->_userID,'module'=>''));
             if (!array_key_exists('clicRdvUserId', $params)) {
                 return false;
             }
@@ -301,7 +301,7 @@ class msClicRDV
 
     public function syncEvents() {
         try {
-            $params=$this->_getUserParams();
+            $params = msConfiguration::getCatParametersForUser('clicRDV', array('id'=>$this->_userID,'module'=>''));
             if (!array_key_exists('clicRdvUserId', $params) or !$params['clicRdvUserId']) {
                 return false;
             }
