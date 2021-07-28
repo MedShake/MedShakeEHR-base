@@ -216,7 +216,7 @@ class msMotSuivi {
 		$sql .= ' LEFT JOIN `objets_data` AS ln ON ln.toID = ms.fromID AND ln.typeID = '.$dataTypeIDs['lastname'].' AND ln.outdated = \'\' AND ln.deleted = \'\'';
 		$sql .= ' LEFT JOIN `objets_data` AS bn ON bn.toID = ms.fromID AND bn.typeID = '.$dataTypeIDs['birthname'].' AND bn.outdated = \'\' AND bn.deleted = \'\'';
 		$sql .= ' LEFT JOIN `objets_data` AS fn ON fn.toID = ms.fromID AND fn.typeID = '.$dataTypeIDs['firstname'].' AND fn.outdated = \'\' AND fn.deleted = \'\'';
-		$sql .= ' WHERE ms.toID = '.$toID.' ORDER BY ms.dateTime DESC';
+		$sql .= ' WHERE ms.toID = '.$toID.' ORDER BY ms.dateTime DESC, id DESC';
 		if ($nb_elem >= 0) $sql .= ' LIMIT '.$nb_elem;
 
 		$res = msSQL::sql2tab($sql);
