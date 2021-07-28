@@ -1,0 +1,67 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patient : modale pour ajouter et modifier un mot de suivi
+ #
+ # @author 2021     DEMAREST Maxime <maxime@indelog.fr>
+ #
+#}
+{% if config.optionsDossierPatientActiverMotSuivi %}
+<div id="modalMotSuivi" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centred" role="document">
+    <div class="modal-content">
+      <form id="formMotSuivi" method="POST" action="">
+
+        <div class="modal-header">
+          <input type="hidden" name="ID" value="0">
+          <input type="hidden" name="toID" value="{{ page.patient.id }}">
+          <input type="hidden" name="action" value="create">
+          <h4 class="modal-title font-weight-bold">
+            <span id="modalMotSuviTitreNouveau">Nouveau mot de suivi</span>
+            <span id="modalMotSuiviTitreModifier" hidden="hidden">Modifier le mot suivi</span>
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="font-weight-bold">Mot</label>
+                <input name="texte" type="text" class="form-control" aria-label="Mot de suivi" placeholder="Texte du mot de suivi.." required="required">
+            </div>
+            <div class="form-group">
+                <label class="font-weight-bold">Date et heure</label>
+                <div class="input-group date mb-3" id="datepickMotSuivi">
+                  <input type="text" class="form-control" name="dateTime">
+              </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abandonner</button>
+            <button type="submint" class="btn btn-primary">Enregister</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}

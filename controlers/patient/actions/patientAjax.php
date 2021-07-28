@@ -66,6 +66,7 @@ $acceptedModes=array(
     'lapExternePrepare', // préparer le LAP externe
     'lapExterneCheckOrdo', // vérifier la dispo d'une ordo produite par le LAP externe
     'rotateDoc', // rotation image dans aperçu ligne historique
+	'saveMotSuivi', // création | mise à jour | supression | liste d'un mot de suivi
 );
 
 

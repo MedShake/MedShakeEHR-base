@@ -185,3 +185,8 @@ if($p['config']['optionGeActiverCompta'] == 'true') {
   $data=new msData;
   $p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));
 }
+
+// Mot de suivi
+if ($p['config']['optionsDossierPatientActiverMotSuivi'] == 'true') {
+	$p['page']['lignesMotSuivi'] = msMotSuivi::getList($match['params']['patient']);
+}

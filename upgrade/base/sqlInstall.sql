@@ -368,6 +368,18 @@ CREATE TABLE IF NOT EXISTS `transmissions_to` (
   PRIMARY KEY (`sujetID`,`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- création de la table motsuivi
+CREATE TABLE IF NOT EXISTS `motsuivi` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fromID` INT(11) UNSIGNED NOT NULL,
+  `toID` int(11) UNSIGNED NOT NULL,
+  `dateTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `texte` texte,
+  PRIMARY KEY (`id`),
+  KEY `fromID` (`fromID`),
+  KEY `fromID` (`toID`),
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- actes_cat
 INSERT IGNORE INTO `actes_cat` (`name`, `label`, `description`, `module`, `fromID`, `creationDate`, `displayOrder`) VALUES
 ('catConsult', 'Consultations', '', 'base', 1, '2019-01-01 00:00:00', '1');
@@ -934,6 +946,8 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('optionDossierPatientActiverCourriersCertificats', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, activer courriers et certificats', 'true'),
 ('optionDossierPatientActiverGestionALD', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, gérer les ALD', 'true'),
 ('optionDossierPatientInhiberHistoriquesParDefaut', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, déactive la production des informations pour les historiques par défaut', 'false'),
+('optionsDossierPatientActiverMotSuivi', 'default', '0', '', 'Options dossier patient', 'true/false', 'activier / désactiver le mot suivi sur le dossier d\'un patient', 'false'),
+('optionsDossierPatientNbMotSuiviAfficher', 'default', '0', '', 'Options dossier patient', 'int', 'nombre de mot suivi à afficher par défaut sur un dossier patient', '6'),
 ('optionGeActiverAgenda', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion agenda', 'true'),
 ('optionGeActiverApiRest', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de l\'API REST', 'true'),
 ('optionGeActiverCompta', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion compta', 'true'),
@@ -955,6 +969,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false'),
 ('optionGeExportDataConsentementOff', 'default', '0', '', 'Options', 'true/false', 'si true, exporter les données avec consentement non accepté ou retiré', 'true'),
 ('optionGeExportPratListSelection', 'default', '0', '', 'Options', 'true/false', 'si true, sélection possible des datas à exporter par liste praticiens, sinon auto déterminée par droits utilisateur courant', 'true'),
+('optionsActiverMotSuivi', 'default', '0', '', 'Options', 'true/false', 'activier / désactiver le mot suivi sur le dossier d\'un patient', 'false'),
 ('optionGeLogin2FA', 'default', '0', '', 'Login', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false'),
 ('optionGeLoginCreationDefaultModule', 'default', '0', '', 'Login', 'texte', 'module par défaut pour création nouvel utilisateur', 'base'),
 ('optionGeLoginCreationDefaultTemplate', 'default', '0', '', 'Login', 'texte', 'template par défaut pour création nouvel utilisateur', ''),
