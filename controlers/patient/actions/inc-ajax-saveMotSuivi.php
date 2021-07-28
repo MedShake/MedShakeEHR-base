@@ -38,7 +38,7 @@ function returnJson(bool $status, string $message, array $data = []) {
 	exit();
 }
 
-if ($p['config']['optionsDossierPatientActiverMotSuivi'] == false) {
+if ($p['config']['optionsDossierPatientActiverMotSuivi'] == 'false') {
 
 	$ret_arr['statut'] = 'error';
 	$ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activé pour cette utilisateur.");
