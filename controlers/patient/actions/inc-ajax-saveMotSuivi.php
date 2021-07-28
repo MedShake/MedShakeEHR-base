@@ -57,7 +57,7 @@ switch ($_POST['action']) {
 		$gump->validation_rules(array(
 			'toID' => 'required|numeric',
 			'dateTime' => 'required|date,d/m/Y H:i',
-			'texte' => 'required',
+			'texte' => 'required|max_len,224',
 		));
 		$gump->filter_rules(array(
 			'texte' => 'trim|sanitize_string',
@@ -81,7 +81,7 @@ switch ($_POST['action']) {
 		$gump->validation_rules(array(
 			'ID' => 'required|numeric',
 			'dateTime' => 'required|date,d/m/Y H:i',
-			'texte' => 'required',
+			'texte' => 'required|max_len,224',
 		));
 		$gump->filter_rules(array(
 			'texte' => 'trim|sanitize_string',

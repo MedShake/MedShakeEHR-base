@@ -175,7 +175,8 @@ class msMotSuivi {
 	 * @return	string				Texte du mot suivi filté
 	 */
 	public function setTexte(string $texte) {
-		$this->_texte = trim(filter_var($texte, FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+		// Chaine de texte limité à 255 caractères (stockage en base VARCHAR(255))
+		$this->_texte = substr(trim(filter_var($texte, FILTER_SANITIZE_FULL_SPECIAL_CHARS)), 0, 255);
 		return true;
 	}
 

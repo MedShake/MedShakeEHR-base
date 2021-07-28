@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `motsuivi` (
   `fromID` INT(11) UNSIGNED NOT NULL,
   `toID` INT(11) UNSIGNED NOT NULL,
   `dateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `texte` text,
+  `texte` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fromID` (`fromID`),
   KEY `toID` (`toID`)
