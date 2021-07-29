@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2017-2021
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -23,7 +23,8 @@
 /**
  * people : voir les infos sur un pro
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author	Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib	DEMAREST Maxime		<maxime@indelog.fr>
  */
 
 $debug='';
@@ -103,4 +104,15 @@ if($p['config']['optionGeActiverRegistres'] == 'true') {
 
 if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
   $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'], @$p['page']['proData']['lastname'], @$p['page']['proData']['birthname']);
+}
+
+// Tag universel pour une fiche pro
+if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+	$univTagsTypeID = msUnivTags::getTypeIdByName('pros');
+	$univTagsTypeActif = msUnivTags::getIfTypeIsActif($univTagsTypeID);
+	if ($univTagsTypeActif) {
+		$p['page']['univTagsListHtml'] = msUnivTags::getListHtml($univTagsTypeID, $p['page']['proDataID'], 'show');
+		$p['page']['univTags']['typeDroitAjoRet'] = msUnivTags::checkTypeDroitAjoRet($univTagsTypeID);
+		$p['page']['univTags']['typeDroitCreSup'] = msUnivTags::checkTypeDroitCreSup($univTagsTypeID);
+	}
 }

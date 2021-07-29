@@ -1,0 +1,22 @@
+/* CSS pour les tags universel */
+
+.univTagsTableLineType:hover {
+	cursor: pointer;
+}
+
+.univTagsTag {
+	border: 0.1em solid #6D6D6D;
+	border-radius: 10px 0px 10px 0px;
+	box-shadow: 0.1em 0.3em 0.3em #555;
+}
+
+.univTagsTagEditBtn {
+	color: inherit;
+	background-color: inherit;
+	border: none;
+	padding: 0;
+}
+
+#univTagsContainer .dropdown{
+	width: 100%;
+}

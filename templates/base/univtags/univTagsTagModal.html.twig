@@ -1,0 +1,72 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2021      DEMAREST Maxime <maxime@indelog.fr>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : Modal pour la création et la modificaton des tags universelle
+ #
+ # @author DEMAREST Maxime <maxime@indelog.fr>
+ #}
+
+<div id="modalUnivTag" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <form id="formUnivTag" method="POST" action="">
+      <input type="hidden" name="id" value="{{ page.univTags.tagID }}">
+      <input type="hidden" name="typeID" value="{{ page.univTags.typeID }}">
+      <input type="hidden" name="toID" value="{{ page.univTags.toID }}">
+      <input type="hidden" name="contexte" value="{{ page.univTags.contexte }}">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          {% if page.univTags.tagID > 0 %}
+              <h5 class="modal-title">Modification de l'étiquette</h5>
+          {% else %}
+              <h5 class="modal-title">Nouvelle étiquette {{ page.univTags.typeName }}</h5>
+          {% endif %}
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="font-weight-bold">Nom</label>
+            <input name="name" type="text" class="form-control" placeholder="Nom du tag.." title="Nom de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.name|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
+          </div>
+          <div class="form-group">
+            <label class="font-weight-bold">Déscription</label>
+            <input name="description" type="text" class="form-control" placeholder="Déscription pour le Tag..." title="Déscription de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.description|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
+          </div>
+          <div class="form-group ">
+            <label class="font-weight-bold">Couleur</label>
+            <input name="color" type="color" value="{{ page.univTags.tagProp.color|default('#B6B6B6') }}" class="form-control" autocomplete="off" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          {% if page.univTags.tagID %}
+              <button type="button" class="btn btn-danger" title="Suprime cette étiquette" onclick="formUnivTagValid(this, 1) "{{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>Suprimer</button>
+          {% endif %}
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Abandoner</button>
+          <button type="button" class="btn btn-primary" onclick="formUnivTagValid(this)" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>Valider</button>
+        </div>
+    
+      </div>
+    </form>
+  </div>
+</div>

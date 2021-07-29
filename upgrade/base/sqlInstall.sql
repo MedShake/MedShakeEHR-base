@@ -368,6 +368,52 @@ CREATE TABLE IF NOT EXISTS `transmissions_to` (
   PRIMARY KEY (`sujetID`,`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-------------------------------------------
+-- Tables pour le système de tags universel
+-------------------------------------------
+
+-- Création de la table tags
+CREATE TABLE IF NOT EXISTS `univtags_tag` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`typeID` INT UNSIGNED NOT NULL,
+	`name` VARCHAR(64) NOT NULL,
+	`description` VARCHAR(256),
+	`color` VARCHAR(7) NOT NULL DEFAULT '#B6B6B6',
+	PRIMARY KEY (`id`),
+	KEY `typeID` (`typeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Création de la table pour les type de tags
+CREATE TABLE IF NOT EXISTS `univtags_type` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(64) NOT NULL,
+	`description` VARCHAR(255) NOT NULL,
+	`actif` BOOLEAN NOT NULL DEFAULT true,
+	`droitCreSup` VARCHAR(128) NOT NULL,
+	`droitAjoRet` VARCHAR(128) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Table de jointure tags <->  patient (tags pour un dossier médical)
+CREATE TABLE IF NOT EXISTS `univtags_join` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`tagID` INT NOT NULL,
+	`toID` INT NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY `tagID` (`tagID`),
+	KEY `toID` (`toID`),
+	CONSTRAINT UniqUnivTagsJoin UNIQUE(`tagID`, `toID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Ajoute le type de tag pour le dossier patient
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer');
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser un fiche pro.', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
+
+-----------------------------------------------
+-- Fin tables pour le système de tags universel
+-----------------------------------------------
+
 -- actes_cat
 INSERT IGNORE INTO `actes_cat` (`name`, `label`, `description`, `module`, `fromID`, `creationDate`, `displayOrder`) VALUES
 ('catConsult', 'Consultations', '', 'base', 1, '2019-01-01 00:00:00', '1');
@@ -1092,6 +1138,14 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 ('base', 'baseUserParametersClicRdv', 'Paramètres utilisateur clicRDV', 'Paramètres utilisateur clicRDV', 'data_types', 'admin', 'post', '/user/ajax/userParametersClicRdv/', @catID, 'public', 'global:\n  formClass:\'ajaxForm\'\nstructure:\n row1:\n  col1: \n    head: \"Compte clicRDV\"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL, NULL, NULL, NULL),
 ('base', 'baseUserParametersPassword', 'Changement mot de passe utilisateur', 'Changement mot de passe utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersPassword/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - currentPassword,required                   		#6    Mot de passe actuel\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe', NULL, NULL, NULL, NULL),
 ('base', 'baseUserPasswordRecovery', 'Nouveau password après perte', 'saisie d\'un nouveau password en zone publique après perte', 'data_types', 'admin', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - password,required                          		#1789 Mot de passe\n      - verifPassword                              		#1791 Confirmation du mot de passe', '', '', '', '$(document).ready(function() {\r\n  $(\"#treatNewPass\").on(\"click\", function(e) {\r\n    e.preventDefault();\r\n    password = $(\'#id_password_id\').val();\r\n    verifPassword = $(\'#id_verifPassword_id\').val();\r\n	randStringControl = $(\'input[name=\"randStringControl\"]\').val();\r\n\r\n    $.ajax({\r\n      url: urlBase + \'/public/ajax/publicLostPasswordNewPassTreat/\',\r\n      type: \'post\',\r\n      data: {\r\n        p_password: password,\r\n        p_verifPassword: verifPassword,\r\n        randStringControl: randStringControl,\r\n      },\r\n      dataType: \"json\",\r\n      success: function(data) {\r\n        \r\n       if (data.status == \'ok\') {\r\n         $(\'i.fa-lock\').addClass(\'text-success fa-unlock\').removeClass(\'text-warning fa-lock\');\r\n         $(\'#newPassAskForm\').addClass(\'d-none\');\r\n         $(\'#newPassTreatConfirmation\').removeClass(\'d-none\');\r\n       } else {\r\n         $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide\').removeClass(\'d-none\');\r\n         $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide ul\').html(\'\');\r\n         $.each(data.msg, function(index, value) {\r\n           $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide ul\').append(\'<li>\' + value + \'</li>\');\r\n         });\r\n         $(\'#newPassAskForm .is-invalid\').removeClass(\'is-invalid\');\r\n         $.each(data.code, function(index, value) {\r\n           $(\'#newPassAskForm *[name=\"\' + value + \'\"]\').addClass(\'is-invalid\');\r\n         });\r\n       }        \r\n        \r\n\r\n      },\r\n      error: function() {\r\n        alert(\'Problème, rechargez la page !\');\r\n      }\r\n    });\r\n\r\n  });\r\n});');
+
+-- Ajoute de nouvelle option de de configuration pour les tags universelle
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
+('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activier / désactiver l\'utilisation des tags universel', 'true'),
+('droitUnivTagPatientPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un dossier patient', 'true'),
+('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossier patients', 'true'),
+('droitUnivTagProPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un pro', 'true'),
+('droitUnivTagProPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les pro', 'true');
 
 -- people
 INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `secret2fa`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`, `lastLostPassDate`, `lastLostPassRandStr`) VALUES
