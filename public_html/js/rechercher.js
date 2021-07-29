@@ -329,6 +329,7 @@ function selectListingRow(listingRow) {
  * @return {void}
  */
 function updateListingPatients() {
+  var univTagsFilter = $('.univTagsSelectFilter').serializeArray();
   $.ajax({
     url: urlBase + '/patients/ajax/patientsListByCrit/',
     type: 'post',
@@ -339,6 +340,7 @@ function updateListingPatients() {
       autreCrit: $('#autreCrit option:selected').val(),
       autreCritVal: $('#autreCritVal').val(),
       patientsPropres: $('#patientsPropres').is(':checked'),
+	  univTagsFilter: univTagsFilter,
     },
     dataType: "html",
     success: function(data) {

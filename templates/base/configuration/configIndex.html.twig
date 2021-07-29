@@ -115,6 +115,11 @@
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/cron/">Tâches planifiées</a>
         </li>
+        {% if config.optionGeActiverUnivTags == 'true' %}
+        <li class="list-group-item">
+          <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/univtags/config/">Tags universel</a>
+        </li>
+        {% endif %}
       </ul>
 
       <h2 class="mt-4 mb-2">Utilisateurs</h2>
