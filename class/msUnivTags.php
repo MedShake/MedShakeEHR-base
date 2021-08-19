@@ -664,7 +664,6 @@ Class msUnivTags {
 		$p['page']['univTags']['contexte'] = $contexte;
 		$p['page']['univTags']['typeName'] = self::getTypeNameById($typeID);
 		// Si le tagID est supérieur à 0 fetch le tag pour récupérer ses propriété
-		$p['page']['univTags']['tagListe'] = msUnivTags::getList($typeID);
 		if ($tagID > 0) {
 			$tag = new self;
 			$tagProp = $tag->fetch($tagID);
@@ -683,6 +682,7 @@ Class msUnivTags {
 	 *							corespondre à ce que produit la méthode
 	 *							la méthode `getList()`.
 	 * @return	string			HTML.
+	 */
 	public static function getTagsCircleHtml(array $list)
 	{
 		$ret = '';
