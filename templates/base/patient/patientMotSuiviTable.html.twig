@@ -38,7 +38,7 @@
     <tbody id="lignesMotSuivi">
     {% for lm in page.lignesMotSuivi %}
         <tr id="ligneMotSuivi-{{ lm.ID }}">
-            <td class="motSuivi-texte w-100 px-2">{{ lm.texte }}</td>
+            <td class="motSuivi-texte w-100 px-2">{{ lm.texte|nl2br }}</td>
             <td style="white-space: nowrap;" class="px-2">{{ lm.firstname }}&nbsp;{{ lm.lastname|default(lm.birthname) }}</td>
             <td style="white-space: nowrap;" class="motSuivi-dateTime px-2">{{ lm.dateTime }}</td>
             <td class="px-2"><div class="btn-group">

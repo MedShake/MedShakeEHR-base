@@ -920,6 +920,7 @@ $(document).ready(function() {
 
   //Met la valeur du champ date à maintenant au clique sur nouveau mot suivi
   $('#bntNouveauMotSuivi').on('click', function(event) {
+    cleanModalMotSuivi();
     var currentDate = new Date();
     var year = currentDate.getFullYear().toString();
     var month = (currentDate.getMonth()+1).toString().padStart(2,0);
@@ -1901,7 +1902,7 @@ function activeWatchChange(parentTarget) {
  * @return {void}
  */
 function cleanModalMotSuivi() {
-  $('#formMotSuivi input[name=texte]').val('');
+  $('#formMotSuivi textarea[name=texte]').val('');
   $('#formMotSuivi input[name=dateTime]').val('');
   $('#formMotSuivi input[name=ID]').val(0);
   $('#modalMotSuiviTitreModifier').attr('hidden', 'hidden');
@@ -1921,7 +1922,7 @@ function callModalUpdateMotSuivi(elem) {
   var formMotSuivi = $('#formMotSuivi');
   $('#formMotSuivi input[name=ID]').val(motID);
   $('#formMotSuivi input[name=action]').val('update');
-  $('#formMotSuivi input[name=texte]').val(motTexte);
+  $('#formMotSuivi textarea[name=texte]').val(motTexte);
   $('#formMotSuivi input[name=dateTime]').val(motDateTime);
   $('#modalMotSuviTitreNouveau').attr('hidden', 'hidden');
   $('#modalMotSuiviTitreModifier').removeAttr('hidden');
