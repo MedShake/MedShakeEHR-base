@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `univtags_tag` (
 	`description` VARCHAR(256),
 	`color` VARCHAR(7) NOT NULL DEFAULT '#B6B6B6',
 	PRIMARY KEY (`id`),
-	KEY `typeID` (`typeID`)
+	KEY `typeID` (`typeID`),
+	CONSTRAINT UniqUnivTagTypeName UNIQUE(`typeID`, `name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Création de la table pour les type de tags

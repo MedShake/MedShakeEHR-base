@@ -112,6 +112,21 @@ Class msUnivTags {
 	private $_droitAjoRet;
 
 	/**
+	 * Vérifier si un tag ne possède pas déjà un nom pour un même typeId
+	 * (le name doit être unique pour un typeID donnée).
+	 * @return	bool	`true` si le nom existe autrement `false`
+	 */
+	private function checkTypeNameExist()
+	{
+		if (empty($this->_typeID)) throw new Exception(__METHOD__.' : $this->_typeID non définit');
+		if (empty($this->_name)) throw new Exception(__METHOD__.' : $this->_name non définit');
+		$sql = 'SELECT `id` FROM '.self::TABLE_TAGS.' WHERE `name` = "'.$this->_name.'" AND `typeID` = "'.$this->_typeID.'"';
+		$resql = msSQL::sqlQuery($sql);
+		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql sur la vérification de l\'exisance du typeID');
+		return ($resql->num_rows > 0);
+	}
+
+	/**
 	 * Céer un nouveau TAG en fonction des propriétés définies.
 	 * @return Array	Tableau des propriété du tag nouvellement créé.
 	 */
@@ -122,11 +137,7 @@ Class msUnivTags {
 		if (empty($this->_color)) throw new Exception(__METHOD__.' : $this->_color non définit');
 
 		// Vérifie si aucun autre tag commporte le name avec ce typeID
-		// (le name doit être unique pour un typeID donnée)
-		$sql = 'SELECT `id` FROM '.self::TABLE_TAGS.' WHERE `name` = "'.$this->_name.'" AND `typeID` = "'.$this->_typeID.'"';
-		$resql = msSQL::sqlQuery($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql sur la vérification de l\'exisance du typeID');
-		else if ($resql->num_rows > 0) throw new Exception('Une étiquette portant déjà ce nom existe pour ce type.');
+		if ($this->checkTypeNameExist()) throw new Exception('Une étiquette portant déjà ce nom existe pour ce type.');
 
 		$data = array(
 			'typeID' => $this->_typeID,
@@ -145,6 +156,9 @@ Class msUnivTags {
 	 */
 	public function update() {
 		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+
+		// Vérifie si aucun autre tag commporte le name avec ce typeID
+		if ($this->checkTypeNameExist()) throw new Exception('Une étiquette portant déjà ce nom existe pour ce type.');
 
 		$data = msSQL::cleanArray(array(
 			'name' => $this->_name,
