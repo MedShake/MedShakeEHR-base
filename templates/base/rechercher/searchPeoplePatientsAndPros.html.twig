@@ -71,6 +71,7 @@ associer patient
 <div class="card card-body bg-light my-4">
   <form id="formRecherchePatients">
 
+    {% if page.univTags.filterSearchHTML is not empty %}
     <div class="form-row mt-2">
       {# Insertion des champ pour filter en fonction des tags universel #}
       {% if page.univTags is not empty %}
@@ -80,6 +81,7 @@ associer patient
       </div>
       {% endif %}
     </div>
+    {% endif %}
 
     <div class="form-row align-items-center">
 
