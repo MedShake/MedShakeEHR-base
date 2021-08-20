@@ -38,6 +38,10 @@ class msPeopleSearch
   private $_restricDossiersGroupes = false;
   private $_restricDossiersPratGroupes = false;
   private $_restricGroupesEstMembre = false;
+  /**
+   * @var $_univTagsFilter	Liste des ids de tags sur les quels filter les résultat
+   */
+  private $_univTagsFilter = array();
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -134,6 +138,15 @@ class msPeopleSearch
   public function setLimitNumber($limitNumber) {
     if(!is_numeric($limitNumber)) throw new Exception('LimitNumber is not numeric');
     $this->_limitNumber=$limitNumber;
+  }
+
+/**
+ * Définir la liste des ids de tags sur les quels filter les résultat
+ * @param	array	$tagsFilter	Liste des ID de tags sur les quels filter
+ */
+  public function setUnviTagsFilter(array $tagsFilter) {
+    // @TODO /!\ CLEAN $tagsFilter !!!
+    $this->_univTagsFilter = $tagsFilter;
   }
 
 /**
@@ -302,6 +315,11 @@ class msPeopleSearch
 
         }
     }
+
+    // Ajout du filtre sur les tag universel
+    if (!empty($this->_univTagsFilter))
+      $sp['where'][] .= 'p.id IN (SELECT DISTINCT toID FROM univtags_join AS uj LEFT JOIN univtags_tag AS ut ON ut.id = uj.tagID WHERE tagID in ('.implode(',', $this->_univTagsFilter).') GROUP BY toID HAVING(COUNT(tagID)) = '.count($this->_univTagsFilter).') ';
+
     return $sp['where'];
 
   }

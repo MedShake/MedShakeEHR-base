@@ -49,20 +49,29 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
     $docAsSigner->setFromID($p['user']['id']);
     $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
-	// intégration tags universel
+	// intégration tags universel pour filter sur un patient
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
-		if (!msUnivTags::getIfTypeIsActif($univTagsTypeID)) unset($univTagsTypeID);
+		if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			if (!empty($_POST['univTagsFilter'])) $univTagsFilter = array_column($_POST['univTagsFilter'], 'value');
+		} else {
+			unset($univTagsTypeID);
+		}
 	}
 
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
 
-	// intégration tags universel
+	// intégration tags universel pour filter sur un pro
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 		$univTagsTypeID = msUnivTags::getTypeIdByName('pros');
-		if (!msUnivTags::getIfTypeIsActif($univTagsTypeID)) unset($univTagsTypeID);
+		if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			if (!empty($_POST['univTagsFilter'])) $univTagsFilter = array_column($_POST['univTagsFilter'], 'value');
+		} else {
+			unset($univTagsTypeID);
+		}
 	}
+
 } elseif ($_POST['porp']=='groupe') {
     $formIN=$p['config']['formFormulaireListingGroupes'];
 } elseif ($_POST['porp']=='registre') {
@@ -184,6 +193,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $dataGet = new msData;
     $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
 
+	// si des id de tags pour filter la recherche sont présent on les ajoute à la recherche
+	if (!empty($univTagsFilter)) $mss->setUnviTagsFilter($univTagsFilter);
+
     $p['page']['sqlString']=$sql=$mss->getSql();
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
@@ -241,35 +253,14 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
             }
         }
 
-		// Insert les tags universelle si ils sont actif et le type de tag concerné est actif
-		if (!empty($univTagsTypeID)) {
+		// Si les tags universel sont actif, ajoute une colone sur le tableau afin de voir les tags atachés
+		if (!empty($univTagsTypeID) && !empty($p['page']['outputTableHead'])) {
 			$p['page']['outputTableHead'][] = 'Étiquettes';
-			if (!empty($_POST['univTagsFilter'])) $univTagsFilter = array_column($_POST['univTagsFilter'], 'value');
 
 			foreach ($p['page']['outputTableRow'] as $k=>$v) {
 				$univTagsList = msUnivTags::getList($univTagsTypeID, $k, true);
-				sort($univTagsList);
-
-				// Filtre les résultat de la recherche en fonction des tags séléctionés
-				if (!empty($univTagsFilter)) {
-					$univTagsTagIDs = array_column($univTagsList, 'id');
-					sort($univTagsTypeID);
-					$univTagsInFliter = array_intersect($univTagsFilter, $univTagsTagIDs);
-					if ($univTagsFilter != $univTagsInFliter) { // ceci fait un et à la séléction
-						unset($p['page']['outputTableRow'][$k]);
-						continue;
-					}
-					// TODO faut il impementer un "ou" pour la séléction
-					//if (empty($univTagsInFliter)) { // ceci fait un ou à la séléction
-						//unset($p['page']['outputTableRow'][$k]);
-						//continue;
-					//}
-				}
 				$p['page']['outputTableRow'][$k][] = '<span>'.msUnivTags::getTagsCircleHtml($univTagsList).'</span>';
 			}
-			// Si pas de résultat purge l'entête du tableau pour afficher le message de résultat non trouvé
-
-			if (empty($p['page']['outputTableRow'])) unset($p['page']['outputTableHead']);
 		}
     }
 }
