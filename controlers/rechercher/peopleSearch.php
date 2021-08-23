@@ -50,7 +50,7 @@ $form = new msForm;
 if($p['page']['porp'] == 'pro') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-} elseif($p['page']['porp'] == 'patient') {
+} elseif($p['page']['porp'] == 'patient' || $p['page']['porp'] == 'externe') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 } elseif($p['page']['porp'] == 'groupe') {
