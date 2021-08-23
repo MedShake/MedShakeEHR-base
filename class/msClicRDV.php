@@ -91,10 +91,7 @@ class msClicRDV
     }
 
     private function _getUserParams() {
-        return msSQL::sql2tabKey("SELECT dt.name,od.value
-        FROM data_types AS dt left join objets_data AS od
-        ON od.typeID=dt.id AND od.toID='".$this->_userID."' AND od.outdated='' AND od.deleted=''
-        WHERE dt.groupe='user'", 'name', 'value');
+		return msConfiguration::getCatParametersForUser('clicRDV', array('id'=>$this->_userID,'module'=>''));
     }
 
     //liste des patients qui ont un id clic connu
