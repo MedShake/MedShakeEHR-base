@@ -62,11 +62,7 @@
           <td class="d-none d-sm-table-cell">
 
             {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod == patientID) or page.porp == 'externe' %}
-              <form action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}" method="POST">
-                <intput type="hidden" name="externalPatientID" value=""/>
-                <intput type="hidden" name="internalPatientID" value="{{ patientID }}"/>
-                <button type="submit" class="btn btn-light btn-sm" title="Lier à ce dossier"><i class="fas fa-paperclip fa-fw"></i></button>
-              </form>
+              <button type="button" class="extAsPatient btn btn-light btn-sm" title="Lier à ce dossier" data-externID="{{ page.externalPatientID }}" data-patientID="{{ patientID }}"><i class="fas fa-paperclip fa-fw"></i></button>
             {% elseif page['outputType'][patientID]['type']=='pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}
               <a class="btn btn-danger btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Utilisateur du logiciel">
                 <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>

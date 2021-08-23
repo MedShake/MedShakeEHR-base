@@ -71,6 +71,9 @@ associer patient
 	<div class="row ">
 
 	  <form id="formRecherchePatients" class="form-inline col-12 col-xl-9 mx-0 row my-xl-2">
+      {% if page.porp == 'externe' %}
+        <input id="externalPatientID" type="hidden" name="externalPatientID" value="{{ page.patient.id }}">
+      {% endif %}
 	    <div class="form-group col-12 my-2 my-xl-0 m-0 p-0 col-xl-2">
 	      {{ f.input ({
 		      'input' : {
