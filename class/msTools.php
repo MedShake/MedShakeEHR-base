@@ -557,7 +557,12 @@ class msTools
             return 0;
         } else {
             $generator = new Picqer\Barcode\BarcodeGeneratorSVG();
-            if (file_put_contents($barcodedir.'barecode-'.$type.'-'.$code.'.svg', $generator->getBarcode($code, $generator::TYPE_CODE_128))) {
+			$codebarre_svg = $generator->getBarcode($code, $generator::TYPE_CODE_128);
+			// Nétoie de deux première ligne du svg généré. Elles contiennent
+			// la version xml et le DOCTYPE ce qui gène quant on veut
+			// réinjecter le svg directement dans le html.
+			$codebarre_svg = implode(PHP_EOL, array_slice(explode(PHP_EOL, $codebarre_svg),2));
+            if (file_put_contents($barcodedir.'barecode-'.$type.'-'.$code.'.svg', $codebarre_svg)) {
                 return true;
             } else {
                 throw new Exception('Echec de la création du fichier '.$barcodedir.'barecode-'.$type.'-'.$code.'.svg');
