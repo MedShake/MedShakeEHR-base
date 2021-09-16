@@ -111,6 +111,11 @@ if ($validation === false) {
             if (isset($in)) {
                 if (!empty(trim($v)) and !empty(trim($in))) {
                     $objet->createNewObjetByTypeName($in, $v);
+					// Génération automatique d'un SVG pour le code barre rpps et adeli si activé
+					if ($p['config']['activGenBarreCode'] == 'true' && ($in === 'rpps' || $in === 'adeli')) {
+						$res = msTools::genBareCodeFile('rpps', $v);
+						$res = msTools::genBareCodeFile('adeli', $v);
+					}
                 } elseif (isset($_POST['patientID']) and empty(trim($v)) and !empty(trim($in))) {
                     if(isset($patient->getSimpleAdminDatasByName([$in])[$in])) {
                       $objet->createNewObjetByTypeName($in, $v);
