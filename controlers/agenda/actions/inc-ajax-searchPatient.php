@@ -34,7 +34,7 @@ $a_json = array();
 // prénoms très commun :
 //   (ex : MARIE Françoise (nom + prenom) <> Marie Françoise (prénom seul))
 // en donnant le prossiblité de préciser la recherche en spéparant les nom et
-// prénom par un "|". Dans le cas le nom est le premier terme et le prénom le
+// prénom par un ":". Dans le cas le nom est le premier terme et le prénom le
 // second.
 $split_term = explode(':', $term);
 if (count($split_term) > 1) {
