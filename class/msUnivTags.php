@@ -121,6 +121,11 @@ Class msUnivTags {
 		if (empty($this->_typeID)) throw new Exception(__METHOD__.' : $this->_typeID non définit');
 		if (empty($this->_name)) throw new Exception(__METHOD__.' : $this->_name non définit');
 		$sql = 'SELECT `id` FROM '.self::TABLE_TAGS.' WHERE `name` = "'.$this->_name.'" AND `typeID` = "'.$this->_typeID.'"';
+		// Si le tag possède une id, on update, if faut donc exclure son propre
+		// nom de la liste.
+		if (!empty($this->_id)) {
+			$sql .= ' AND `id` != '.$this->_id;
+		}
 		$resql = msSQL::sqlQuery($sql);
 		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql sur la vérification de l\'exisance du typeID');
 		return ($resql->num_rows > 0);

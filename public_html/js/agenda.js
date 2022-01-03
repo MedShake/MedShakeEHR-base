@@ -697,7 +697,14 @@ $(document).ready(function() {
       $("#patientInfo").show();
       $("#patientLinksPro").show();
     }
-  });
+  }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+    var elemLi = $("<li>")
+      .attr( "data-value", item.value )
+      .append('<div>' + item.label + '&nbsp' + item.tagParams.circle + '</div>')
+      .appendTo(ul);
+    return elemLi;
+  }
+  ;
 
   ////////////////////////////////////////////////////////////////////////
   ///////// action par défaut sur clic
@@ -788,6 +795,9 @@ function getPatientAdminData(patientID) {
           }
         }
       });
+      if (data.tagsHtml !== 'undefined') {
+        $("#patientFormTab").prepend(data.tagsHtml);
+      }
       getHistoriquePatient(patientID);
       autosize.update($('#id_notes_id'));
     },
@@ -909,6 +919,9 @@ function nettoyer() {
   $('button.addRelation').attr('data-peopleID', '');
 
   $(".fc-bg.selected").removeClass("selected");
+
+  // Supimer la liste des tags si présente
+  $('.univTagsTagListe').remove();
 }
 
 /**
