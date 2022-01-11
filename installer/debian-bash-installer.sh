@@ -131,6 +131,9 @@ apacheConfig() {
 
     a2ensite $msehrDom 
 
+    sed -i 's/ServerTokens OS/ServerTokens Prod/' /etc/apache2/conf-available/security.conf
+    sed -i 's/ServerSignature On/ServerSignature Off/' /etc/apache2/conf-available/security.conf
+
     ## Réglage php.ini
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)
 	sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/' /etc/php/$vphp/apache2/php.ini
