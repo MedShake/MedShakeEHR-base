@@ -145,6 +145,22 @@
         - "{{ domain }}"
       notify: Restart Apache
 
+    - name: Set ServerTokens Prod
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerTokens OS'
+        line: ServerTokens Prod
+        state: present
+      notify: Restart Apache
+
+    - name: Set ServerSignature Off
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerSignature On'
+        line: ServerSignature Off
+        state: present
+      notify: Restart Apache  
+
     - name: Set the root password 
       mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}"
 
