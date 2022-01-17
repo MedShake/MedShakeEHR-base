@@ -21,7 +21,7 @@
  */
 
 /**
- * Mister les dossiers supprimés
+ * Lister les dossiers supprimés
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
@@ -30,8 +30,18 @@ $template="peopleListDeleted";
 $debug='';
 
 //ajustement en fonction des droits
-if($p['config']['droitDossierPeutVoirTousPatients'] != 'true' ) {
+if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true' ) {
   $where=' and p.fromID='.$p['user']['id'];
+
+} elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+  // fratrie praticiens
+  $frat = new msPeopleRelations;
+  $frat->setToID($p['user']['id']);
+  $frat->setRelationType('relationPraticienGroupe');
+  $ids = $frat->getSiblingIDs();
+  $ids[] = $p['user']['id'];
+  $where = " and p.fromID in ('".implode("', '", $ids)."')";
+
 } else {
   $where='';
 }

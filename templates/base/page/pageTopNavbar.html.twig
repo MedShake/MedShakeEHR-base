@@ -1,0 +1,80 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2019
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar générale
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+{% import "macroForm.html.twig" as f %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="z-index:100">
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a href="" class="navbar-brand">{{ config.designAppName }}</a>
+
+  <div class="collapse navbar-collapse" id="top-navbar">
+    {% if user.id > 0 %}
+
+      {# Menu de navigation / peut être supprimé #}
+      {% if noMenuInBar is empty %}
+        <ul class="navbar-nav mr-auto">
+
+          {# génération du menu principal #}
+          {% if page.topNavBarSections is not empty %}
+            {% for section in page.topNavBarSections %}
+                {% if ('tnbe-'~ section|trim ~'.html.twig')|file_exist %}
+                    {% include('tnbe-'~ section|trim ~'.html.twig') %}
+                {% else %}
+                    {% if ("../../" ~ user.module ~ '/page/navbarElements/tnbe-'~ section|trim ~'.html.twig')|file_exist %}
+                        {% include("../../" ~ user.module ~ '/page/navbarElements/tnbe-'~ section|trim ~'.html.twig') %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% if user.rank == 'admin' and config.systemState == "maintenance" %}
+            <form class="form-inline">
+              <div class="dropdown ml-4">
+                <button class="btn btn-sm btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Mode maintenance actif
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/actions/configToggleSystemState/"><i class="fas fa-sign-out-alt fa-fw text-muted mr-1"></i> Sortir du mode maintenance</a>
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/"><i class="fas fa-cogs fa-fw text-muted mr-1"></i> Accès configuration</a>
+                  <div class="dropdown-divider"></div>
+                  <div class="dropdown-item disabled">Seuls les administrateurs peuvent parcourir le logiciel.<br>Les autres utilisateurs sont renvoyés vers une page d'attente.</div>
+                </div>
+              </div>
+            </form>
+          {% endif %}
+        </ul>
+
+        <ul class="nav navbar-nav ml-md-auto">
+          {% include('tnbe-userDropdownMenu.html.twig') %}
+        </ul>
+      {% endif %}
+    {% endif %}
+  </div>
+
+</nav>

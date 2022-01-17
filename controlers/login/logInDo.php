@@ -74,9 +74,9 @@ if ($validation === false) {
 
         unset($_SESSION['form'][$formIN]);
 
-        if ('admin'==msSQL::sqlUniqueChamp("SELECT rank FROM people WHERE name='".msSQL::cleanVar($_POST['p_username'])."' limit 1") and
-            'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM system WHERE name='state' and groupe='system'")) {
-            msTools::redirRoute('configUpdates');
+        if ('admin'==msSQL::sqlUniqueChamp("SELECT `rank` FROM people WHERE name='".msSQL::cleanVar($_POST['p_username'])."' limit 1") and
+            'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE name='state' and groupe='system'")) {
+            msTools::redirection('/configuration/applyUpdates/');
         }
         msTools::redirection('/patients/');
     } else {

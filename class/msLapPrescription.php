@@ -506,19 +506,19 @@ class msLapPrescription extends msLap
 
 
       // on cherche d'abord pour le patient en cours, même prat
-      if($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and toID='".$this->_toID."' and fromID='".$this->_fromID."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1")) {}
+      if($idLigneMedic = msSQL::sqlUniqueChamp("select `instance` from `objets_data` where `typeID`='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and `toID`='".$this->_toID."' and `fromID`='".$this->_fromID."' and `value`='".msSQL::cleanVar($this->_speThe)."' order by `id` desc limit 1")) {}
       // autre patient même prat
-      elseif($idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and fromID='".$this->_fromID."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1")) {}
+      elseif($idLigneMedic = msSQL::sqlUniqueChamp("select `instance` from `objets_data` where `typeID`='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and `fromID`='".$this->_fromID."' and `value`='".msSQL::cleanVar($this->_speThe)."' order by `id` desc limit 1")) {}
       // autre prat
       else {
-        $idLigneMedic = msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and value='".msSQL::cleanVar($this->_speThe)."' order by id desc limit 1");
+        $idLigneMedic = msSQL::sqlUniqueChamp("select `instance` from `objets_data` where `typeID`='".$name2typeID['lapMedicamentSpecialiteCodeTheriaque']."' and `value`='".msSQL::cleanVar($this->_speThe)."' order by `id` desc limit 1");
       }
 
       if($idLigneMedic > 0) {
 
-        $idLignePres = msSQL::sqlUniqueChamp("select instance from objets_data where id='".$idLigneMedic."'  limit 1");
-        $infosMedic = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLigneMedic."'  limit 1"), TRUE);
-        $infosLignePres = json_decode(msSQL::sqlUniqueChamp("select value from objets_data where id='".$idLignePres."'  limit 1"), TRUE);
+        $idLignePres = msSQL::sqlUniqueChamp("select `instance` from `objets_data` where `id`='".$idLigneMedic."'  limit 1");
+        $infosMedic = json_decode(msSQL::sqlUniqueChamp("select `value` from `objets_data` where `id`='".$idLigneMedic."'  limit 1"), TRUE);
+        $infosLignePres = json_decode(msSQL::sqlUniqueChamp("select `value` from `objets_data` where `id`='".$idLignePres."'  limit 1"), TRUE);
 
         if(!empty($infosMedic) and !empty($infosLignePres)) {
           if(isset($infosMedic['uniteUtiliseeOrigine'])) $tab['uniteUtiliseeOrigine']=$infosMedic['uniteUtiliseeOrigine'];

@@ -39,7 +39,8 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getcwd().'/';
+if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
+else $homepath=preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
 require $homepath.'vendor/autoload.php';
@@ -52,7 +53,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion

@@ -1,0 +1,128 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > page web racine
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+{% import "macroForm.html.twig" as f %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head{% if page.ogHead %} {{ page.ogHead }} {% endif %}>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+        <meta name="Description" content="{% block metaDescription %}{% endblock %}"/>
+        <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
+
+        {# css #}
+        {% block cssFiles %}
+        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+        {% endblock %}
+
+        {# js #}
+        {% block jsFiles %}
+        <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+        <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/FezVrasta/popper.js/dist/umd/popper.min.js?{{ modules.base }}"></script>
+        <script type="text/javascript" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/moment/moment/min/moment.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general/modal-functions.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/general/modal-events.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/dennyferra/TypeWatch/jquery.typewatch.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/danielm/uploader/dist/js/jquery.dm-uploader.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js?{{ modules.base }}"></script>
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/autosize.min.js?{{ modules.base }}"></script>
+        {% endblock %}
+
+        <script>
+          {% block jsEmbed %}
+          var urlBase = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}';
+          {% if config.optionGeActiverPhonecapture == 'true' %}
+            var phoneCaptureUrlAcces = '{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/phonecapture/';
+          {% endif %}
+          var refreshDelayPOTD = parseInt({{ config.agendaRefreshDelayMenuPOTD }});
+          var targetMenuPOTD = '';
+          {% endblock %}
+        </script>
+
+        <style>
+          {% block cssEmbed %}
+          #top-navbar {max-height:calc(100vh - 100px) !important}
+          {% if config.designTopMenuStyle == 'icones' %}#top-navbar .nav-item {min-width: 47px; text-align:center;}{% endif %}
+          {% endblock %}
+        </style>
+
+
+        {% block head %}{% endblock %}
+    </head>
+
+    <body {% block bodyTagAdd %} {% endblock %}>
+
+        <div class="container-fluid">
+          <div class="row fixed-top" style="z-index:20000">
+            <div id="alert_section" class="col-md-auto mx-auto"></div>
+          </div>
+        </div>
+
+        {# navbar générale #}
+        {% include 'pageTopNavbar.html.twig' %}
+
+        <div class="container-fluid" role="main" style="padding-top:70px; padding-bottom : 50px;">
+            {% block body %}{% endblock %}
+        </div>
+
+
+        {# modals #}
+        {% block modals %}{% endblock %}
+
+        {# click2call #}
+        {% if config.click2callService is not empty %}
+          {% include 'inc-modal-click2call.html.twig' %}
+        {% endif %}
+
+        {# modal avec spinner #}
+        <div class="modal" id="waitingModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center border-0 bg-transparent">
+              <div class="modal-body">
+                <div class=" text-center text-warning">
+                  <i class="fas fa-spinner fa-10x fa-spin"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

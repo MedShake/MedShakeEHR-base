@@ -45,6 +45,7 @@
        'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
        'module'=>$p['page']['modules'],
      ));
+     $formModal->setPrevalues(['template'=> $p['config']['optionGeLoginCreationDefaultTemplate'], 'module'=> $p['config']['optionGeLoginCreationDefaultModule']]);
      $p['page']['formModal']=$formModal->getForm();
 
      if($p['config']['optionGeLoginPassAttribution'] == 'random') {

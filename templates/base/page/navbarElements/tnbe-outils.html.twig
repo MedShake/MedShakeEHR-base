@@ -1,0 +1,117 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément outils (outils)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+<li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Outils"{% endif %}>
+ <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+   {% if config.designTopMenuStyle == 'icones' %}
+     <i class="fas fa-toolbox fa-lg d-none d-lg-inline {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}text-danger{% endif %}"></i>
+     <span class="d-lg-none">
+       Outils</span>
+   {% else %}
+     Outils
+     {% if page.creditsSMS < config.smsSeuilCreditsAlerte and config.smsProvider %}
+       <span class="badge badge-danger">!!!</span>
+     {% endif %}
+   {% endif %}
+ </a>
+
+ <div class="dropdown-menu">
+   {% if config.optionGeActiverLapInterne == 'true' or config.VoirRouletteObstetricale == 'true' %}
+     <h6 class="dropdown-header">Outils</h6>
+   {% endif %}
+   {% if config.optionGeActiverLapInterne == 'true' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/lap/">
+       <i class="fas fa-pills fa-fw text-muted mr-1"></i>
+       LAP et BDM
+     </a>
+   {% endif %}
+   {% if config.VoirRouletteObstetricale == 'true' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/roulette-obstetricale/" target="rouletteObs">
+       <i class="fas fa-circle-notch fa-fw text-muted mr-1"></i>
+       Roulette obstétricale
+     </a>
+   {% endif %}
+   {% if config.faxService == 'ecofaxOVH' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/envoyer-fax/">
+       <i class="fas fa-fax fa-fw text-muted mr-1"></i>
+       Envoyer un fax
+     </a>
+   {% endif %}
+   {% if config.optionGeActiverLapInterne == 'true' or config.VoirRouletteObstetricale == 'true' %}
+     <div role="separator" class="dropdown-divider"></div>
+   {% endif %}
+   {% if config.smsProvider or config.mailRappelDaysBeforeRDV %}
+     <h6 class="dropdown-header">Historique rappels RDV</h6>
+
+     {% if config.mailRappelDaysBeforeRDV %}
+       <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsMail/">
+         <i class="fas fa-bell fa-fw text-muted mr-1"></i>
+         Rappels email
+       </a>
+     {% endif %}
+     {% if config.smsProvider %}
+       <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueRappelsSMS/">
+         <i class="far fa-bell fa-fw text-muted mr-1"></i>
+         Rappels SMS
+       </a>
+       <a class="dropdown-item disabled{% if page.creditsSMS < config.smsSeuilCreditsAlerte %} text-danger font-weight-bold{% endif %}" href="#">
+         <i class="far fa-fw text-muted mr-1"></i>
+         <span class="small">Crédits :
+           {{ page.creditsSMS }}
+           SMS</span>
+       </a>
+     {% endif %}
+     <div class="dropdown-divider"></div>
+   {% endif %}
+   <h6 class="dropdown-header">Patients</h6>
+   {% if config.smtpHost or config.apicryptSmtpHost %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueGeneralMailSend/">
+       <i class="fas fa-paper-plane fa-fw text-muted mr-1"></i>
+       Mails envoyés
+     </a>
+   {% endif %}
+   <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/">
+     <i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>
+     Dossiers supprimés
+   </a>
+   {% if config.droitExportPeutExporterToutesDataGroupes == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/export-data/">
+       <i class="fas fa-database fa-fw text-muted mr-1"></i>
+       Export de données
+     </a>
+   {% endif %}
+   {% if config.droitStatsPeutVoirStatsGenerales == 'true' %}
+     <div class="dropdown-divider"></div>
+     <h6 class="dropdown-header">Statistiques</h6>
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/statistiques/">
+       <i class="fas fa-chart-line fa-fw text-muted mr-1"></i>
+       Statistiques générales
+     </a>
+   {% endif %}
+ </div>
+</li>

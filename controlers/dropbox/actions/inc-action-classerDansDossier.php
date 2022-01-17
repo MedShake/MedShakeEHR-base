@@ -27,7 +27,7 @@
  */
 
 if(!is_numeric($_POST['patientID'])) die;
-if($p['config']['dropboxActiver'] != 'true') die;
+if($p['config']['optionGeActiverDropbox'] != 'true') die;
 if(!isset($_POST['box']) or !isset($_POST['filename'])) die;
 if(!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
 

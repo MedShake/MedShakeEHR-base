@@ -137,7 +137,7 @@ class msForm
             $this->_formIN=$formName;
             return $this->_formID = $formID;
         } else {
-            throw new Exception('Formulaire non trouvé à partir de son nom');
+            throw new Exception('Formulaire '.$formName.' non trouvé à partir de son nom');
         }
     }
 
@@ -217,6 +217,30 @@ class msForm
         return false;
       }
     }
+
+/**
+ * Retirer des options après génération du form dans un chmap select
+ * @param  array $form     formulaire array php (post getForm())
+ * @param  string $name     nom du data_type
+ * @param  array  $toRemove array des option à retirer (name)
+ * @return void
+ */
+    public function removeOptionInSelectForm(&$form, $name, $toRemove=[]) {
+      foreach($toRemove as $optionToRemove) {
+        unset($form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value']['formValues'][$optionToRemove]);
+      }
+    }
+
+/**
+ * Obtenir les options d'un select à partir du form généré en array php
+ * @param  array $form formulaire post getForm()
+ * @param  string $name nom du data_type
+ * @return array       array value => label
+ */
+    public function getOptionInSelectForm($form, $name) {
+      return $form['structure'][$this->_log[$name][0]][$this->_log[$name][1]]['elements'][$this->_log[$name][2]]['value']['formValues'];
+    }
+
 
 /**
  * Retirer un champ du formulaire après sa création
@@ -387,11 +411,38 @@ class msForm
           throw new Exception('formID is not defined');
       }
       if($options = $this->getFormRawData(['options'])['options']) {
-        return Spyc::YAMLLoad($options);
+        return yaml_parse($options);
       } else {
         return [];
       }
 
+    }
+
+/**
+ * Obtenir les types déclarés comme NON exportables dans le formulaire
+ * @return array tableau des data_types
+ */
+    public function getFormDataToNeverExport() {
+      if($notExport = $this->getFormOptions()) {
+        if(isset($notExport['optionsExport']['neverExportData']) and !empty($notExport['optionsExport']['neverExportData'])) {
+          return $notExport['optionsExport']['neverExportData'];
+        }
+      }
+      return [];
+
+    }
+
+/**
+ * Obtenir les types déclarés comme à substituer par le peopleExportID anonyme
+ * @return array tableau des data_types
+ */
+    public function getFormDataToSubstituteByPeopleExportId() {
+      if($toSubstituteByPeopleExportId = $this->getFormOptions()) {
+        if(isset($toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID']) and !empty($toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID'])) {
+          return $toSubstituteByPeopleExportId['optionsExport']['substituteByPeopleExportID'];
+        }
+      }
+      return [];
     }
 
 /**
@@ -630,7 +681,7 @@ class msForm
                             'value'=>$match[1]
                         );
                 //label
-              } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
+                } else if (preg_match('#label{([^}]+)}(,class={(.*)})?#i', $v, $match)) {
                     if(!isset($match[3])) $match[3]='';
                     if(empty(trim($match[1]))) $match[1]='&nbsp;';
                     $r['structure'][$rowNumber][$colNumber]['elements'][]=array(
@@ -689,14 +740,23 @@ class msForm
                         if (preg_match('#^classLabel={(.*)}$#i', $h, $match)) {
                             $type['classLabel'].=' '.$match[1];
                         }
-                        if (preg_match('#plus={(.*)}#i', $h, $match)) {
+                        if (preg_match('#^plus={(.*)}#i', $h, $match)) {
                             $type['plus']=$match[1];
                         }
-                        if (preg_match('#plusg={(.*)}#i', $h, $match)) {
+                        if (preg_match('#^plusg={(.*)}#i', $h, $match)) {
                             $type['plusg']=$match[1];
                         }
-                        if (preg_match('#tabindex=([0-9]+)#i', $h, $match)) {
+                        if (preg_match('#^label={(.+)}#i', $h, $match)) {
+                            $type['label']=$match[1];
+                        }
+                        if (preg_match('#^helpTxt={(.+)}#i', $h, $match)) {
+                            $type['helpTxt']=$match[1];
+                        }
+                        if (preg_match('#^tabindex=([0-9]+)#i', $h, $match)) {
                             $type['tabindex']=$match[1];
+                        }
+                        if (preg_match('#^maxlength=([0-9]+)#i', $h, $match)) {
+                            $type['maxlength']=$match[1];
                         }
                     }
 
@@ -743,6 +803,18 @@ class msForm
                             if (preg_match('#max=([0-9]+)#i', $h, $match)) {
                                 $type['max']=$match[1];
                             } elseif (preg_match('#min=([0-9]+)#i', $h, $match)) {
+                                $type['min']=$match[1];
+                            } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
+                                $type['step']=$match[1];
+                            }
+                        }
+
+                    //traitement spécifique aux dates
+                    } elseif ($type['formType']=="number" or $type['formType']=="date") {
+                        foreach ($bloc as $h) {
+                            if (preg_match('#max=([0-9\-]+)#i', $h, $match)) {
+                                $type['max']=$match[1];
+                            } elseif (preg_match('#min=([0-9\-]+)#i', $h, $match)) {
                                 $type['min']=$match[1];
                             } elseif (preg_match('#step=([0-9]+)#i', $h, $match)) {
                                 $type['step']=$match[1];

@@ -52,5 +52,5 @@ if ($p['config']['droitStatsPeutVoirStatsGenerales'] != 'true') {
   }
 
   // patients
-  $p['page']['dossiers']=msSQL::sql2tabKey("SELECT count(id) as nb, type FROM people where id not in ('".implode("', '", $statsExclusionPatients)."') group by type", 'type', 'nb');
+  $p['page']['dossiers']=msSQL::sql2tabKey("SELECT count(id) as nb, `type` FROM `people` where `id` not in ('".implode("', '", $statsExclusionPatients)."') group by `type`", 'type', 'nb');
 }

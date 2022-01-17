@@ -1,0 +1,41 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément patients du jour (potd)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<li class="nav-item dropdown {% if page.patientsOfTheDay is empty %}d-none{% endif %}" id="patientsOfTheDayMenu"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Patients du jour"{% endif %} >
+ <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+   {% if config.designTopMenuStyle == 'icones' %}
+     <i class="fas fa-clock fa-lg d-none d-lg-inline"></i>
+     <span class="d-lg-none">
+       Aujourd'hui</span>
+   {% else %}
+     Aujourd'hui
+   {% endif %}
+ </a>
+ <div class="dropdown-menu">
+   {% include('pageTopNavbarPatientsOfTheDay.html.twig') %}
+ </div>
+</li>

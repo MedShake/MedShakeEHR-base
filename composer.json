@@ -1,16 +1,17 @@
 {
   "require": {
-    "twig/twig": "^3.0.0",
+    "twig/twig": "^3.0.3",
     "altorouter/altorouter": "2.0.1",
     "mustangostang/spyc": "0.6.3",
     "wixel/gump": "1.5.7",
-    "dompdf/dompdf": "0.8.3",
-    "phpmailer/phpmailer": "6.1.3",
-    "atrapalo/URLcrypt": "1.0.1",
+    "dompdf/dompdf": "0.8.5",
+    "phpmailer/phpmailer": "6.5.1",
+    "atrapalo/urlcrypt": "1.0.1",
     "webit/eval-math": "1.0.1",
     "ovh/ovh": "v2.0.1",
     "box/spout": "2.7.3",
-    "setasign/fpdi-fpdf": "v2.2.0",
-    "spomky-labs/otphp": "^10.0"
+    "setasign/fpdi-fpdf": "v2.3.0",
+    "spomky-labs/otphp": "^10.0",
+    "picqer/php-barcode-generator":  "v2.0.1"
   }
 }

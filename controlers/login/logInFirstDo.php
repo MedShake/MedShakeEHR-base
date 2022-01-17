@@ -29,7 +29,7 @@
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro'") != "0") {
+if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") != "0") {
   msTools::redirRoute('userLogIn');
 }
 
@@ -44,13 +44,22 @@ $form->setContextualValidationRule('verifPassword',['equalsfield,p_password']);
 $validation=$form->getValidation();
 
 if ($validation === false) {
-  msTools::redirRoute('userLogInFirst');
+	msTools::redirRoute('userLogInFirst');
 } else {
+	// compléter la config par défaut
+	$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
+	if(isset($p['config']['optionGeLoginCreationDefaultModule']) and !empty($p['config']['optionGeLoginCreationDefaultModule'])) {
+		$defaultModule = $p['config']['optionGeLoginCreationDefaultModule'];
+	} else {
+		$defaultModule = 'base';
+	}
+
     $data=array(
         'name' => $_POST['p_username'],
         'type' => 'pro',
         'rank' => 'admin',
-        'module' => 'base',
+        'module' => $defaultModule,
         'registerDate' => date("Y/m/d H:i:s"),
         'fromID' => 1
     );

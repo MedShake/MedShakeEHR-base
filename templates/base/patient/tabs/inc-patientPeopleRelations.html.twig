@@ -34,17 +34,15 @@
         <form class="form-inline my-2 d-flex">
           <div class="form-group flex-grow-1">
             <div class="input-group flex-grow-1">
-              <input class="form-control flex-grow-1" type="text" placeholder="Identité" id="searchPratID" autocomplete="off"/>
+              <input class="form-control flex-grow-1 searchPeopleID" type="text" placeholder="Identité" data-ajax="getRelationsPraticiens" autocomplete="off"/>
               {{ f.select ({
               'select' : {
-                'name' : 'preRelationPatientPrat',
-                'id' : 'preRelationPatientPratID',
-                'class' : '',
+                'class' : 'toStatutRelation',
                 'values' : page.preRelationPatientPrat.formValues,
                 'valueDefaut' : el.value.preValue,
                 'autocomplete' : 'off' } }) }}
               <div class="input-group-append">
-                <button type="submit" id="addRelationPatientPrat" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+                <button type="submit" class="btn btn-primary addRelation" data-typeRelation="relationPatientPraticien" data-peopleID="{{ page.patient.id }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
               </div>
             </div>
           </div>
@@ -57,7 +55,7 @@
       </div>
 
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0">
 				<thead>
 					<tr>
 						<th></th>
@@ -68,8 +66,8 @@
 				</thead>
 				<tbody id="bodyTabRelationPatientPrat">
 				</tbody>
-
 			</table>
+      <script>setTimeout(getRelationsPatientPraticiensTab($('#identitePatient').attr("data-patientID")), 200);</script>
     </div>
   </div>
 
@@ -80,23 +78,21 @@
 			<div class="card-body">
 				<form class="form-inline d-flex">
             <div class="input-group my-2 flex-grow-1">
-  						<input class="form-control" type="text" placeholder="Identité" id="searchPatientID" autocomplete="off"/>
+  						<input class="form-control searchPeopleID" type="text" data-ajax="getRelationsPatients" placeholder="Identité" autocomplete="off"/>
 				      {{ f.select ({
               'select' : {
-                'name' : 'preRelationPatientPatient',
-                'id' : 'preRelationPatientPatientID',
-                'class' : 'form-control',
+                'class' : 'toStatutRelation',
                 'values' : page.preRelationPatientPatient.formValues,
                 'valueDefaut' : el.value.preValue,
                 'autocomplete' : 'off' } }) }}
               <div class="input-group-append">
-					      <button type="submit" id="addRelationPatientPatients" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Ajouter</button>
+					      <button type="submit" class="btn btn-primary addRelation" data-typeRelation="relationPatientPatient" data-peopleID="{{ page.patient.id }}"><i class="fas fa-plus mr-1"></i> Ajouter</button>
               </div>
   					</div>
 				</form>
 			</div>
 
-      <table class="table table-sm mb-0 table-striped">
+      <table class="table table-sm mb-0">
 				<thead>
 					<tr>
 						<th></th>
@@ -106,10 +102,9 @@
 						<th></th>
 					</tr>
 				</thead>
-				<tbody id="bodyTabRelationPatientPatients">
-				</tbody>
-
+				<tbody id="bodyTabRelationPatientPatients"> </tbody>
 			</table>
+      <script>setTimeout(getRelationsPatientPatientsTab($('#identitePatient').attr("data-patientID")), 200);</script>
 		</div>
 	</div>
 

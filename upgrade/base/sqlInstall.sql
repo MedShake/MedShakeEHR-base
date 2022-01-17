@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `objets_data` (
 CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
-  `type` enum('patient','pro','externe','service','deleted','groupe','destroyed') NOT NULL DEFAULT 'patient',
+  `type` enum('patient','pro','externe','service','deleted','groupe','destroyed','registre') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
   `module` varchar(20) DEFAULT 'base',
   `pass` varbinary(1000) DEFAULT NULL,
@@ -386,6 +386,8 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('admin', 'activity', 'Activités', 'Activités professionnelles et de loisir', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'addressPerso', 'Adresse personnelle', 'datas de l\'adresse personnelle', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'adressPro', 'Adresse professionnelle', 'Data de l\'adresse professionnelle', 'base', '1', '2019-01-01 00:00:00'),
+('admin', 'catDataAdminGroupe', 'Datas groupe', 'datas relatives à l\'identification d\'un groupe', 'base', '1', '2019-01-01 00:00:00'),
+('admin', 'catDataAdminRegistre', 'Datas registre', 'datas relatives à l\'identification d\'un registre', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'catMarqueursAdminDossiers', 'Marqueurs', 'marqueurs dossiers', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'contact', 'Contact', 'Moyens de contact', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'divers', 'Divers', 'Divers', 'base', '1', '2019-01-01 00:00:00'),
@@ -427,7 +429,8 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('typecs', 'csAutres', 'Autres', 'autres', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csBase', 'Consultations', 'consultations possibles', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'declencheur', 'Déclencheur', '', 'base', '1', '2019-01-01 00:00:00'),
-('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', '1', '2019-01-01 00:00:00');
+('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', '1', '2019-01-01 00:00:00'),
+('admin', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', '1', '2019-01-01 00:00:00');
 
 -- data_types
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='activity');
@@ -498,6 +501,20 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('medical', 'atcdStrucNotes', 'notes concernant cet antécédent', 'Notes', 'notes concernant l\'atcd', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '0');
 
 
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataAdminGroupe');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'groupname', 'nom du groupe', 'Nom du groupe', 'nom du groupe', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataAdminRegistre');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'registryAuthorisationDate', '', 'Date d\'autorisation du registre', 'date d\'autorisation du registre', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'registryAuthorisationEndDate', '', 'Date de fin d\'autorisation du registre', 'date de fin d\'autorisation du registre', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'registryPrefixTech', '', 'Préfixe technique', 'préfixe technique pour qualifier les éléments de structuration du registre', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '12'),
+('admin', 'registryState', '', 'État du registre', 'état du registre', '', '', 'select', '\'actif\' : \'registre actif\'\n\'suspendu\' : \'registre suspendu\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '4'),
+('admin', 'registryname', 'nom du registre', 'Nom du registre', 'nom du registre', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+
+
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catDataTransversesFormCs');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('medical', 'codeTechniqueExamen', '', 'Acte lié à l\'examen réalisé', 'code acte caractérisant l\'examen fait via le formulaire qui l\'emploie', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
@@ -507,7 +524,8 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catMarqueurs
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('admin', 'administratifMarqueurDestruction', '', 'Dossier détruit', 'marqueur pour la destruction d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '11'),
 ('admin', 'administratifMarqueurPasRdv', '', 'Ne pas donner de rendez-vous', '', '', '', 'switch', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('admin', 'administratifMarqueurSuppression', '', 'Dossier supprimé', 'marqueur pour la suppression d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+('admin', 'administratifMarqueurSuppression', '', 'Dossier supprimé', 'marqueur pour la suppression d\'un dossier', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'peopleExportID', '', 'Id aléatoire export', 'id aléatoire export', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='catModelesCertificats');
@@ -537,6 +555,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('system', 'ageCalcule', '', 'Age calculé', 'Age calculé (formulaire d\'affichage)', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('system', 'currentPassword', 'Mot de passe actuel', 'Mot de passe actuel', 'Mot de passe actuel de l\'utilisateur', 'required', 'Le mot de passe actuel est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'date', '', 'Début de période', '', '', '', 'date', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
+('system', 'identite', '', 'Identité', 'LASTNAME Firstname (BIRTHNAME) (formulaire d\'affichage)', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('system', 'module', '', 'Module', 'module', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'otpCode', 'code otp', 'code otp', 'code otp', '', 'Le code otp est manquant', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'password', 'mot de passe', 'Mot de passe', 'mot de passe utilisateur', '', 'Le mot de passe est manquant', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
@@ -544,6 +563,16 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('system', 'template', '', 'Template', 'template', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'username', 'nom d\'utilisateur', 'Nom d\'utilisateur', 'nom d\'utilisateur', 'required', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1'),
 ('system', 'verifPassword', 'confirmation du mot de passe', 'Confirmation du mot de passe', 'Confirmation du mot de passe utilisateur', 'required', 'La confirmation du mot de passe est manquante', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '86400', '1');
+
+
+SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='clicRDV');
+INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'clicRdvCalId', 'Agenda', 'Agenda', 'Agenda sélectionné', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '4'),
+('admin', 'clicRdvConsultId', 'Consultations', 'Consultations', 'Correspondance entre consultations', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '5'),
+('admin', 'clicRdvGroupId', 'Groupe', 'Groupe', 'Groupe Sélectionné', '', '', 'select', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '3'),
+('admin', 'clicRdvPassword', 'Mot de passe', 'Mot de passe', 'Mot de passe (chiffré)', '', '', 'password', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '2'),
+('admin', 'clicRdvUserId', 'identifiant', 'identifiant', 'email@address.com', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
+
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='contact');
@@ -613,6 +642,7 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='docForm');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('doc', 'docOriginalName', '', 'Nom original', 'nom original du document', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('doc', 'docOrigine', '', 'Origine du document', 'origine du document : interne ou externe(null)', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('doc', 'docRegistre', '', 'Registre lié au document', 'registre lié au document', '', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('doc', 'docTitle', '', 'Titre', 'titre du document', '', '', '', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('doc', 'docType', '', 'Type du document', 'type du document importé', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
@@ -716,6 +746,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('admin', 'adeli', 'adeli', 'Adeli', 'n° adeli', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'nReseau', '', 'Numéro de réseau', 'numéro de réseau (dépistage)', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'nss', '', 'Numéro de sécu', 'numéro de sécurité sociale', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'nmu', '', 'Numéro de mutuelle', 'numéro de mutelle', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'rpps', 'rpps', 'RPPS', 'rpps', 'numeric', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
@@ -769,14 +800,20 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='relationRelations');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('relation', 'relationExternePatient', '', 'Relation externe patient', 'relation externe patient', '', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('relation', 'relationGroupeRegistre', '', 'Relation groupe registre', 'relation groupe registre', '', '', 'select', '\'membre\': \'Membre\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('relation', 'relationID', '', 'Porteur de relation', 'porteur de relation entre patients ou entre patients et praticiens', '', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('relation', 'relationPatientGroupe', '', 'Relation patient groupes', 'relation patient groupes', '', '', 'select', '\'membre\': \'membre\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('relation', 'relationPatientPatient', '', 'Relation patient patient', 'relation patient patient', '', '', 'select', '\'conjoint\': \'conjoint\'\n\'enfant\': \'parent\'\n\'parent\': \'enfant\'\n\'grand parent\': \'petit enfant\'\n\'petit enfant\': \'grand parent\'\n\'sœur / frère\': \'sœur / frère\' \n\'tante / oncle\': \'nièce / neveu\' \n\'nièce / neveu\': \'tante / oncle\' \n\'cousin\': \'cousin\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
-('relation', 'relationPatientPraticien', '', 'Relation patient praticien', 'relation patient  praticien', '', '', 'select', '\'MTD\': \'Médecin traitant déclaré\'\n\'MT\': \'Médecin traitant\'\n\'MS\': \'Médecin spécialiste\'\n\'Autre\': \'Autre correspondant\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
+('relation', 'relationPatientPraticien', '', 'Relation patient praticien', 'relation patient  praticien', '', '', 'select', '\'MTD\': \'Médecin traitant déclaré\'\n\'MT\': \'Médecin traitant\'\n\'MS\': \'Médecin spécialiste\'\n\'Autre\': \'Autre correspondant\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('relation', 'relationPraticienGroupe', '', 'Relation praticien groupe', 'relation praticien groupe', '', '', 'select', '\'membre\': \'Membre\'\n\'admin\': \'Administrateur\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('relation', 'relationRegistrePatient', '', 'Relation registre patient', 'relation registre patient', '', '', 'select', '\'inclus\': \'inclus\'\n\'exclu\': \'exclu\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('relation', 'relationRegistrePraticien', '', 'Relation praticien registre', 'relation praticien registre', '', '', 'select', '\'admin\': \'Administrateur\'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
 
 -- configuration
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'default', '0', '', 'Options', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'default', '0', '', 'Options', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
+('activGenBarreCode', 'default', '0', '', 'Options', 'true/false', 'Activer ou non la fonctionnalité permettant de générer les codes barres RPPS et ADELI.', 'true'),
 ('administratifComptaPeutVoirRecettesDe', 'default', '0', '', 'Règlements', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('administratifPeutAvoirAgenda', 'default', '0', '', 'Options', 'true/false', 'peut avoir un agenda à son nom', 'true'),
 ('administratifPeutAvoirFacturesTypes', 'default', '0', '', 'Règlements', 'true/false', 'peut avoir des factures types à son nom', 'false'),
@@ -834,7 +871,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('designInboxMailsSortOrder', 'default', '0', '', 'Ergonomie et design', 'texte', 'sens du tri des mails en colonne latérale : date ascendante (asc) ou descendante (desc) ', 'desc'),
 ('designTopMenuDropboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de fichier dans la boite de dépôt', 'true'),
 ('designTopMenuInboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
+('designTopMenuSections', 'default', '0', '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
 ('designTopMenuStyle', 'default', '0', '', 'Ergonomie et design', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
+('designTopMenuTooltipDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'si true, affiche les infos bulles sur icones du menu supérieur', 'false'),
 ('designTopMenuTransmissionsColorIconeImportant', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
 ('designTopMenuTransmissionsColorIconeUrgent', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
 ('designTopMenuTransmissionsCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true'),
@@ -846,23 +885,39 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('dicomProtocol', 'default', '0', '', 'DICOM', 'texte', 'http:// ou https:// ', 'http://'),
 ('dicomWorkListDirectory', 'default', '0', '', 'DICOM', 'dossier', 'chemin du répertoire où Orthanc va récupérer le fichier dicom worklist généré par MedShakeEHR pour le passer à l\'appareil d\'imagerie', ''),
 ('dicomWorkingDirectory', 'default', '0', '', 'DICOM', 'dossier', 'répertoire de travail local où on peut rapatrier des images à partir d\'Orthanc pour les parcourir ou les traiter (pdf, zip ...). Utiliser en général le même répertoire que celui indiqué dans workingDirectory des paramètres généraux. Doit être en zone web accessible', ''),
+('droitDossierPeutAssignerPropresGroupesPraticienFils', 'default', '0', '', 'Droits', 'true/false', 'si true, peut assigner ses propres appartenances aux groupes à un praticien créé par lui-même', 'false'),
 ('droitDossierPeutCreerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des dossiers praticiens', 'true'),
+('droitDossierPeutRechercherParPeopleExportID', 'default', '0', '', 'Droits', 'true/false', 'si true, autorisation à rechercher par peopleExportID', 'false'),
 ('droitDossierPeutRetirerPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut retirer le statut praticien à un dossier (retour à patient, réciproque de droitDossierPeutCreerPraticien)', 'true'),
 ('droitDossierPeutSupPatient', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers patients (non définitivement)', 'true'),
 ('droitDossierPeutSupPraticien', 'default', '0', '', 'Droits', 'true/false', 'si true, peut supprimer des dossiers praticiens (non définitivement)', 'true'),
-('droitDossierPeutVoirTousPatients', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les dossiers créés par les autres praticiens', 'true'),
-('droitExportPeutExporterAutresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens', 'false'),
+('droitDossierPeutTransformerPraticienEnUtilisateur', 'default', '0', '', 'Droits', 'true/false', 'si true, peut rendre utilisateur un praticien', 'false'),
+('droitDossierPeutVoirUniquementPatientsGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les dossiers créés par les autres praticiens des groupes', 'false'),
+('droitDossierPeutVoirUniquementPatientsPropres', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les dossiers créés par les autres praticiens', 'false'),
+('droitDossierPeutVoirUniquementPraticiensGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir uniquement les praticiens appartenant aux mêmes groupes', 'false'),
 ('droitExportPeutExporterPropresData', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter ses propres datas', 'true'),
+('droitExportPeutExporterToutesDataGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens de ses groupes', 'false'),
+('droitGroupePeutCreerGroupe', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des groupes', 'false'),
+('droitGroupePeutVoirTousGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les groupes ', 'false'),
+('droitRegistrePeutCreerRegistre', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des registres', 'false'),
+('droitRegistrePeutGererAdministrateurs', 'default', '0', '', 'Droits', 'true/false', 'si true, peut gérer les administrateurs registres', 'false'),
+('droitRegistrePeutGererGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut gérer les groupes participant à un registre', 'false'),
 ('droitStatsPeutVoirStatsGenerales', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir les statistiques générales', 'true'),
 ('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false'),
 ('dropboxOptions', 'default', '0', '', 'Dropbox', 'textarea', 'options pour les fonctions de dropbox externe', ''),
 ('ecofaxMyNumber', 'default', '0', '', 'Fax', 'n° fax', 'numéro du fax en réception, ex: 0900000000', ''),
 ('ecofaxPassword', 'default', '0', '', 'Fax', 'texte', 'mot de passe du service de fax', ''),
 ('faxService', 'default', '0', '', 'Fax', 'vide/ecofaxOVH', 'si non vide, active le service tiers concerné', ''),
-('formFormulaireListingPatients', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour le listing patients', 'baseListingPatients'),
-('formFormulaireListingPraticiens', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour le listing praticiens', 'baseListingPro'),
-('formFormulaireNouveauPatient', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau patient', 'baseNewPatient'),
-('formFormulaireNouveauPraticien', 'default', '0', '', 'Options', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau praticien', 'baseNewPro'),
+('formFormulaireListingGroupes', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour le listing groupes', 'baseListingGroupes'),
+('formFormulaireListingPatients', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour le listing patients', 'baseListingPatients'),
+('formFormulaireListingPraticiens', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour le listing praticiens', 'baseListingPro'),
+('formFormulaireListingRegistres', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour le listing registres', 'baseListingRegistres'),
+('formFormulaireNouveauGroupe', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau groupe', 'baseNewGroupe'),
+('formFormulaireNouveauPatient', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau patient', 'baseNewPatient'),
+('formFormulaireNouveauPraticien', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau praticien', 'baseNewPro'),
+('formFormulaireNouveauRegistre', 'default', '0', '', 'Formulaires système', 'texte', 'nom du formulaire à utiliser pour la création d\'un nouveau registre', 'baseNewRegistre'),
+('groupesAutoAttachProGroupsToPatient', 'default', '0', '', 'Groupes', 'true/false', 'si true, attacher automatiquement les groupes du praticien aux patients créés', ''),
+('groupesNbMaxGroupesParPro', 'default', '0', '', 'Groupes', 'nombre', 'nombre maximal de groupes qu\'un praticien peut intégrer (0 = non limité)', '1'),
 ('lapActiverAllergiesStrucSur', 'default', '0', '', 'LAP', 'texte', 'champs sur lesquels activer les Allergies structurées', ''),
 ('lapActiverAtcdStrucSur', 'default', '0', '', 'LAP', 'texte', 'champs sur lesquels activer les atcd structurés', ''),
 ('lapAlertPatientAllaitementSup3Ans', 'default', '0', '', 'LAP', 'true/false', 'alerte pour allaitement sup à 3 ans à l\'entrée dans le LAP', 'true'),
@@ -876,13 +931,38 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('mailRappelDaysBeforeRDV', 'default', '0', '', 'Rappels mail', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel', '3'),
 ('mailRappelLogCampaignDirectory', 'default', '0', '', 'Rappels mail', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par mail', ''),
 ('mailRappelMessage', 'default', '0', '', 'Rappels mail', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\\n\\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\\n\\nMerci de votre confiance,\\nÀ bientôt !\\n\\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
+('optionDossierPatientActiverCourriersCertificats', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, activer courriers et certificats', 'true'),
+('optionDossierPatientActiverGestionALD', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, gérer les ALD', 'true'),
+('optionDossierPatientInhiberHistoriquesParDefaut', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, déactive la production des informations pour les historiques par défaut', 'false'),
+('optionGeActiverAgenda', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion agenda', 'true'),
+('optionGeActiverApiRest', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de l\'API REST', 'true'),
+('optionGeActiverCompta', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion compta', 'true'),
+('optionGeActiverDicom', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des fonctions liées au DICOM (nécessite Orthanc)', 'true'),
+('optionGeActiverDropbox', 'default', '0', '', 'Activation services', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false'),
+('optionGeActiverGroupes', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion des groupes praticiens', 'false'),
+('optionGeActiverInboxApicrypt', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la inbox Apicrypt', 'true'),
+('optionGeActiverLapExterne', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver l\'utilisation d\'un LAP externe', 'false'),
+('optionGeActiverLapInterne', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver le LAP', 'false'),
+('optionGeActiverPhonecapture', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de phonecapture (nécessite DICOM)', 'true'),
+('optionGeActiverRappelsRdvMail', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver les rappels par mail', 'false'),
+('optionGeActiverRappelsRdvSMS', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver les rappels par SMS', 'false'),
+('optionGeActiverRegistres', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion de registres', 'false'),
+('optionGeActiverSignatureNumerique', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des fonctions de signature numérique de documents', 'true'),
+('optionGeActiverTransmissions', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des transmissions', 'true'),
+('optionGeActiverVitaleLecture', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver les services liés à la carte vitale', 'false'),
 ('optionGeAdminActiverLiensRendreUtilisateur', 'default', '0', '', 'Options', 'true/false', 'si true, l\'administrateur peut transformer des patients ou praticiens en utilisateur via les listings publiques', 'false'),
+('optionGeCreationAutoPeopleExportID', 'default', '0', '', 'Options', 'true/false', 'si true, création automatique d\'un peopleExportID', 'true'),
 ('optionGeDestructionDataDossierPatient', 'default', '0', '', 'Options', 'true/false', 'si true, les options de destruction physique des dossiers patients sont activées', 'false'),
-('optionGeLogin2FA', 'default', '0', '', 'Options', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false'),
-('optionGeLoginPassAttribution', 'default', '0', '', 'Options', 'texte', 'méthode d\'attribution des mots de passe utilisateur : admin / random', 'admin'),
-('optionGeLoginPassMinLongueur', 'default', '0', '', 'Options', 'int', 'longueur minimale autorisée du mot de passe utilisateur', '10'),
-('optionGeLoginPassOnlineRecovery', 'default', '0', '', 'Options', 'true/false', 'possibilité de réinitialiser son mot de passe perdu via email ', 'false'),
+('optionGeExportDataConsentementOff', 'default', '0', '', 'Options', 'true/false', 'si true, exporter les données avec consentement non accepté ou retiré', 'true'),
+('optionGeExportPratListSelection', 'default', '0', '', 'Options', 'true/false', 'si true, sélection possible des datas à exporter par liste praticiens, sinon auto déterminée par droits utilisateur courant', 'true'),
+('optionGeLogin2FA', 'default', '0', '', 'Login', 'true/false', 'si true, activation du login à double facteur d\'authentification', 'false'),
+('optionGeLoginCreationDefaultModule', 'default', '0', '', 'Login', 'texte', 'module par défaut pour création nouvel utilisateur', 'base'),
+('optionGeLoginCreationDefaultTemplate', 'default', '0', '', 'Login', 'texte', 'template par défaut pour création nouvel utilisateur', ''),
+('optionGeLoginPassAttribution', 'default', '0', '', 'Login', 'texte', 'méthode d\'attribution des mots de passe utilisateur : admin / random', 'admin'),
+('optionGeLoginPassMinLongueur', 'default', '0', '', 'Login', 'int', 'longueur minimale autorisée du mot de passe utilisateur', '10'),
+('optionGeLoginPassOnlineRecovery', 'default', '0', '', 'Login', 'true/false', 'possibilité de réinitialiser son mot de passe perdu via email ', 'false'),
 ('optionGePatientOuvrirApresCreation', 'default', '0', '', 'Options', 'dossier / liens', 'où rediriger après création d\'un nouveau patient', 'liens'),
+('optionGePraticienMontrerPatientsLies', 'default', '0', '', 'Options', 'true/false', 'si true, montrer les patients liés au praticien sur la fiche pro', 'true'),
 ('ovhApplicationKey', 'default', '0', '', 'Click2call', 'string', 'OVH Application Key', ''),
 ('ovhApplicationSecret', 'default', '0', '', 'Click2call', 'string', 'OVH Application Secret', ''),
 ('ovhConsumerKey', 'default', '0', '', 'Click2call', 'string', 'OVH Consumer Key', ''),
@@ -903,6 +983,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('smsRappelMessage', 'default', '0', '', 'Rappels SMS', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien'),
 ('smsSeuilCreditsAlerte', 'default', '0', '', 'Rappels SMS', 'nombre', 'prévenir dans l\'interface du logiciel si crédit inférieur ou égale à', '150'),
 ('smsTpoa', 'default', '0', '', 'Rappels SMS', 'texte', 'La balise #praticien sera automatiquement remplacée dans le message envoyé', 'Dr #praticien'),
+('smsTypeRdvPourRappel', 'default', '0', '', 'Rappels SMS', 'vide/text', 'N\'envoyer les rappels SMS que pour les types de rendez-vous listés (placer les types de RDV entre "[]" et séparés par des virgules, ex : "[C1],[C2]"), laisser vide pour envoyer des rappels pour tous les types de rendez-vous.', ''),
 ('smtpDefautSujet', 'default', '0', '', 'Mail', 'texte', 'titre par défaut du mail expédié', 'Document vous concernant'),
 ('smtpFrom', 'default', '0', '', 'Mail', 'email', 'adresse de l’expéditeur des messages, ex: user@domain.net', ''),
 ('smtpFromName', 'default', '0', '', 'Mail', 'texte', 'nom en clair de l\'expéditeur des messages', ''),
@@ -959,8 +1040,10 @@ INSERT IGNORE INTO `forms_cat` (`name`, `label`, `description`, `type`, `fromID`
 -- forms
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='displayforms');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
-('base', 'baseListingPatients', 'Listing des patients', 'description des colonnes affichées en résultat d\'une recherche patient', 'data_types', 'admin', 'post', '', @catID, 'public', 'col1:\r\n    head: \"Date de naissance\" \r\n    blocseparator: \" - \"\r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\n        - ageCalcule                               		#1799 Age calculé\ncol2:\r\n    head: \"Tel\" \r\n    blocseparator: \" - \"\r\n    bloc: \r\n        - mobilePhone,click2call                   		#7    Téléphone mobile\n        - homePhone,click2call                     		#10   Téléphone domicile\ncol3:\r\n    head: \"Email\"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol4:\r\n    head: \"Ville\"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville', '', '', '', ''),
-('base', 'baseListingPro', 'Listing des praticiens', 'description des colonnes affichées en résultat d\'une recherche praticien', 'data_types', 'admin', 'post', '', @catID, 'public', 'col1:\r\n    head: \"Activité pro\" \r\n    bloc: \r\n        - job                                      		#19   Activité professionnelle\ncol2:\r\n    head: \"Tel\" \r\n    bloc: \r\n        - telPro,click2call                                   		#57   Téléphone professionnel\ncol3:\r\n    head: \"Fax\" \r\n    bloc: \r\n        - faxPro                                   		#58   Fax professionnel\ncol4:\r\n    head: \"Email\"\r\n    blocseparator: \" - \"\r\n    bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - personalEmail                            		#4    Email personnelle\ncol5:\r\n    head: \"Ville\"\r\n    bloc:\r\n        - villeAdressePro,text-uppercase           		#56   Ville', NULL, '', NULL, NULL);
+('base', 'baseListingGroupes', 'Listing des groupes', 'description des colonnes affichées en résultat d\'une recherche groupes', 'data_types', 'medical', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'col1:\r\n    head: \"Nom du centre\" \r\n    bloc: \r\n        - groupname                                		#16412 Nom du groupe\ncol2:\r\n    head: \"Pays\"\r\n    bloc:\r\n        - country,text-uppercase                   		#1656 Pays\ncol3:\r\n    head: \"Ville\"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville', '', '', '', ''),
+('base', 'baseListingPatients', 'Listing des patients', 'description des colonnes affichées en résultat d\'une recherche patient', 'data_types', 'admin', 'post', '', @catID, 'public', 'col1:\r\n    head: \"Identité\" \r\n    blocseparator: \" - \"\r\n    bloc: \r\n        - identite                                 		#16413 Identité\ncol2:\r\n    head: \"Date de naissance\" \r\n    blocseparator: \" - \"\r\n    bloc: \r\n        - birthdate                                		#8    Date de naissance\n        - ageCalcule                               		#1799 Age calculé\ncol3:\r\n    head: \"Tel\" \r\n    blocseparator: \" - \"\r\n    bloc: \r\n        - mobilePhone,click2call                   		#7    Téléphone mobile\n        - homePhone,click2call                     		#10   Téléphone domicile\ncol4:\r\n    head: \"Email\"\r\n    bloc:\r\n        - personalEmail                            		#4    Email personnelle\ncol5:\r\n    head: \"Ville\"\r\n    bloc:\r\n        - city,text-uppercase                      		#12   Ville', '', '', '', ''),
+('base', 'baseListingPro', 'Listing des praticiens', 'description des colonnes affichées en résultat d\'une recherche praticien', 'data_types', 'admin', 'post', '', @catID, 'public', 'col1:\r\n    head: \"Identité\" \r\n    bloc: \r\n        - identite                                 		#16413 Identité\ncol2:\r\n    head: \"Activité pro\" \r\n    bloc: \r\n        - job                                      		#19   Activité professionnelle\ncol3:\r\n    head: \"Tel\" \r\n    bloc: \r\n        - telPro,click2call                        		#57   Téléphone professionnel\ncol4:\r\n    head: \"Fax\" \r\n    bloc: \r\n        - faxPro                                   		#58   Fax professionnel\ncol5:\r\n    head: \"Email\"\r\n    blocseparator: \" - \"\r\n    bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - personalEmail                            		#4    Email personnelle\n\r\ncol6:\r\n    head: \"Pays\"\r\n    bloc:\r\n        - paysAdressePro,text-uppercase            		#1657 Pays\n\r\ncol7:\r\n    head: \"Ville\"\r\n    bloc:\r\n        - villeAdressePro,text-uppercase           		#56   Ville', NULL, '', NULL, NULL),
+('base', 'baseListingRegistres', 'Listing des registres', 'description des colonnes affichées en résultat d\'une recherche registres', 'data_types', 'medical', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'col1:\r\n    head: \"Nom du registre\" \r\n    bloc: \r\n        - registryname                             		#16415 Nom du registre\n        \r\ncol2:\r\n    head: \"État du registre\" \r\n    bloc:         \r\n        - registryState                            		#16421 État du registre', '', '', '', '');
 
 
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='formATCD');
@@ -983,8 +1066,10 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 SET @catID = (SELECT forms_cat.id FROM forms_cat WHERE forms_cat.name='patientforms');
 INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `dataset`, `groupe`, `formMethod`, `formAction`, `cat`, `type`, `yamlStructure`, `options`, `printModel`, `cda`, `javascript`) VALUES
 ('base', 'baseModalNewPatient', 'Formulaire patient pour agenda', 'formulaire patient pour agenda', 'data_types', 'admin', 'post', '', @catID, 'public', 'global:\r\n  noFormTags: true\r\nstructure:\r\n  row1:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - administrativeGenderCode,nolabel         		#14   Sexe\n  row2:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - birthname,required,nolabel,class={font-weight-bold},autocomplete,data-acTypeID=lastname:birthname 		#1    Nom de naissance\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - lastname,nolabel,class={font-weight-bold},autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n  row3:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - firstname,nolabel,class={font-weight-bold},required,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n  row4:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - birthdate,nolabel,required,class=pick-years 		#8    Date de naissance\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - nss,nolabel,class=updatable,plus={<i class=\"far fa-address-card\"></i>} 		#180  Numéro de sécu\n  row5:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:                          \r\n        - personalEmail,nolabel,class=updatable    		#4    Email personnelle\n  row6:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 6\r\n      bloc:                          \r\n        - mobilePhone,nolabel,class=updatable      		#7    Téléphone mobile\n    col2:\r\n      size: 6\r\n      bloc:                          \r\n        - homePhone,nolabel,class=updatable        		#10   Téléphone domicile\n\r\n  row7:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 4\r\n      bloc: \r\n        - streetNumber,nolabel,class=updatable     		#9    n°\n        - postalCodePerso,nolabel,class=updatable  		#13   Code postal\n    col2:\r\n      size: 8\r\n      bloc: \r\n        - street,nolabel,autocomplete,data-acTypeID=street:rueAdressePro,class=updatable 		#11   Voie\n        - city,nolabel,autocomplete,data-acTypeID=city:villeAdressePro,class=updatable 		#12   Ville\n  row8:\r\n    class: \'my-0\'\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,nolabel,rows=2,class=updatable     		#21   Notes', NULL, '', NULL, NULL),
-('base', 'baseNewPatient', 'Formulaire nouveau patient', 'formulaire d\'enregistrement d\'un nouveau patient', 'data_types', 'admin', 'post', '/patient/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - birthname,required,autocomplete,data-acTypeID=lastname:birthname 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,required,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n        - birthdate,class=pick-year                		#8    Date de naissance\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\n        - nss                                      		#180  Numéro de sécu\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    n°\n        - street,autocomplete,data-acTypeID=street:rueAdressePro 		#11   Voie\n        - postalCodePerso                          		#13   Code postal\n        - city,autocomplete,data-acTypeID=city:villeAdressePro 		#12   Ville\n        - deathdate                                		#516  Date de décès\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=3                             		#21   Notes', NULL, '', NULL, '$(document).ready(function() {\r\n\r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPatient textarea\')); \r\n\r\n  // modal edit data admin patient\r\n  $(\'#editAdmin\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#editAdmin textarea\'));\r\n  });\r\n  \r\n});'),
+('base', 'baseNewGroupe', 'Formulaire de création d\'un groupe', 'formulaire de création d\'un nouveau groupe', 'data_types', 'admin', 'post', '/groupe/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      size: 4\r\n      bloc:                          \r\n        - groupname,required                       		#16412 Nom du groupe\n    col2:                            \r\n      size: 4\r\n      bloc:                          \r\n        - country                                  		#1656 Pays\n    col3:                            \r\n      size: 4\r\n      bloc:                          \r\n        - city                                     		#12   Ville', '', '', '', ''),
+('base', 'baseNewPatient', 'Formulaire nouveau patient', 'formulaire d\'enregistrement d\'un nouveau patient', 'data_types', 'admin', 'post', '/patient/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - birthname,required,autocomplete,data-acTypeID=lastname:birthname 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,required,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n        - birthdate,class=pick-year                		#8    Date de naissance\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\n        - nss                                      		#180  Numéro de sécu\n        - nmu                                      		#251  Numéro de mutuelle\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    n°\n        - street,autocomplete,data-acTypeID=street:rueAdressePro 		#11   Voie\n        - postalCodePerso                          		#13   Code postal\n        - city,autocomplete,data-acTypeID=city:villeAdressePro 		#12   Ville\n        - deathdate                                		#516  Date de décès\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=3                             		#21   Notes', NULL, '', NULL, '$(document).ready(function() {\r\n\r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPatient textarea\')); \r\n\r\n  // modal edit data admin patient\r\n  $(\'#editAdmin\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#editAdmin textarea\'));\r\n  });\r\n  \r\n});'),
 ('base', 'baseNewPro', 'Formulaire nouveau pro', 'formulaire d\'enregistrement d\'un nouveau pro', 'data_types', 'admin', 'post', '/pro/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      head: \'Etat civil\'            \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - job,autocomplete,rows=1                         		#19   Activité professionnelle\n        - titre,autocomplete                       		#51   Titre\n        - birthname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n\r\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - emailApicrypt                            		#59   Email apicrypt\n        - profesionnalEmail                        		#5    Email professionnelle\n        - personalEmail                            		#4    Email personnelle\n        - telPro                                   		#57   Téléphone professionnel\n        - telPro2                                  		#248  Téléphone professionnel 2\n        - mobilePhonePro                           		#247  Téléphone mobile pro.\n        - faxPro                                   		#58   Fax professionnel\n    col3:\r\n      head: \'Adresse professionnelle\'\r\n      size: 4\r\n      bloc: \r\n        - numAdressePro                            		#54   Numéro\n        - rueAdressePro,autocomplete,data-acTypeID=street:rueAdressePro 		#55   Rue\n        - codePostalPro                            		#53   Code postal\n        - villeAdressePro,autocomplete,data-acTypeID=city:villeAdressePro 		#56   Ville\n        - serviceAdressePro,autocomplete           		#249  Service\n        - etablissementAdressePro,autocomplete     		#250  Établissement\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notesPro,rows=3                          		#443  Notes pros\n\r\n  row3:\r\n    col1:\r\n      size: 4\r\n      bloc:\r\n        - rpps                                     		#103  RPPS\n        - PSIdNat                                  		#1602 Identifiant national praticien santé\n    col2:\r\n      size: 4\r\n      bloc:\r\n        - adeli                                    		#104  Adeli\n        - PSCodeProSpe,plus={<i class=\"fas fa-pen\"></i>} 		#1603 Code normé de la profession/spécialité du praticien\n    col3:\r\n      size: 4\r\n      bloc:\r\n        - nReseau                                  		#477  Numéro de réseau\n        - PSCodeStructureExercice,plus={<i class=\"fas fa-pen\"></i>} 		#1604 Code normé de la structure d exercice du praticien', NULL, '', '', '$(document).ready(function() {\r\n\r\n   // modal edit data admin patient\r\n  $(\'#newPro\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#newPro textarea\'));\r\n  });\r\n  \r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPro textarea\')); \r\n\r\n});'),
+('base', 'baseNewRegistre', 'Formulaire nouveau registre', 'formulaire nouveau registre', 'data_types', 'admin', 'post', '/registre/register/', @catID, 'public',  'structure:\r\n  row1:                              \r\n    col1:                            \r\n      size: col-12\r\n      bloc:                          \r\n        - registryname,required                    		#293  Nom du registre\n  row2:                              \r\n    col1:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationDate,required       		#291  Date d autorisation du registre\n    col2:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationEndDate             		#292  Date de fin d autorisation du registre\n    col3:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryState                            		#294  État du registre\n        \r\n  row3:                              \r\n    col1:                            \r\n      size: col-6 col-md-4\r\n      bloc:                          \r\n        - registryPrefixTech                       		#295  Préfixe technique', '', '', '', ''),
 ('base', 'basePeopleComplement', 'Formulaire patient/pro complémentaire', 'formulaire patient/pro complémentaire', 'data_types', 'admin', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - pgpPublicKey,rows=20,class={text-monospace} 		#1787 Clef publique PGP', '', '', '', '');
 
 
@@ -1030,5 +1115,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v6.6.0'),
+('base', 'module', 'v7.1.1'),
 ('state', 'system', 'normal');

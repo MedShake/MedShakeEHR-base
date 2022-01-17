@@ -140,7 +140,7 @@ class msClicRDV
             }
             //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
             // tant pis... le rdv sera donc envoyé à la prochaine synchro
-            if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
+            if (msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE groupe='lock' and name='clicRDV'")=='true') {
                 return false;
             }
             msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
@@ -235,7 +235,7 @@ class msClicRDV
             }
             //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
             // tant pis... le rdv sera donc envoyé à la prochaine synchro
-            if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
+            if (msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE groupe='lock' and name='clicRDV'")=='true') {
                 return false;
             }
             //si l'événement n'a pas été synchronisé, on ne peut rien faire
@@ -278,7 +278,7 @@ class msClicRDV
             }
             //si one n'arrive pas à acquérir le lock, c'est que la synchro est en cours.
             // tant pis... le rdv sera donc envoyé à la prochaine synchro
-            if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
+            if (msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE groupe='lock' and name='clicRDV'")=='true') {
                 return false;
             }
             msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'lock', 'value'=>'true'));
@@ -305,7 +305,7 @@ class msClicRDV
             if (!array_key_exists('clicRdvUserId', $params) or !$params['clicRdvUserId']) {
                 return false;
             }
-            if (msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='lock' and name='clicRDV'")=='true') {
+            if (msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE groupe='lock' and name='clicRDV'")=='true') {
                 return false;
             }
             //acquisition du lock
@@ -315,7 +315,7 @@ class msClicRDV
             $this->_calID=explode(':', $params['clicRdvCalId'])[0];
             $interventions=json_decode($params['clicRdvConsultId'], true);
             $clicRDVservice=msSQL::sqlUniqueChamp("SELECT id FROM people WHERE name='clicRDV'");
-            $lastupdate=msSQL::sqlUniqueChamp("SELECT value FROM system WHERE groupe='cron' and name='clicRDV'");
+            $lastupdate=msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE groupe='cron' and name='clicRDV'");
             $startdate=date("Y-m-d H:i:s");
             $enddate=(date("Y-m-d H:i:s", strtotime("+2 year")));
             $searchString='&results=all&calendar_id='.$this->_calID.

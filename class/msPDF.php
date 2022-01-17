@@ -387,6 +387,13 @@ class msPDF
             //si c'est un courrier
             if ($this->_type=='courrier') {
 
+              // permet de charger les tags page.courrier dans les template twig
+              $courrier = new msCourrier();
+              $courrier->setPatientID($this->_toID);
+	      $courrier->setFromID($this->_fromID);
+	      if (!empty($this->_objetID)) $courrier->setObjetID($this->_objetID);
+              $this->_courrierData=$courrier->getCourrierData();
+
               //on déclare le modèle de page
               if (!isset($this->_pageHeader)) {
                   $this->_pageHeader = $this->makeWithTwig($p['config']['templateCourrierHeadAndFoot']);
@@ -634,7 +641,7 @@ class msPDF
             $modePrint='standard';
             $this->_courrierData['ordoImpressionNbLignes']='o';
 
-            if($p['config']['utiliserLap'] == 'true' or $p['config']['utiliserLapExterne'] == 'true' ) {
+            if($p['config']['optionGeActiverLapInterne'] == 'true' or $p['config']['optionGeActiverLapExterne'] == 'true' ) {
               $this->_courrierData['ordoImpressionNbLignes'] = 'n';
             } else {
               $this->_courrierData['ordoImpressionNbLignes'] = 'o';

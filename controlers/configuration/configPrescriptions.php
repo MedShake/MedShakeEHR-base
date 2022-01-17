@@ -71,5 +71,5 @@
      }
 
 
-     $p['page']['catList']=msSQL::sql2tabKey("select id, label from prescriptions_cat where type='nonlap' order by label", 'id', 'label');
+     $p['page']['catList']=msSQL::sql2tabKey("select `id`, `label` from `prescriptions_cat` where `type`='nonlap' order by `label`", 'id', 'label');
  }

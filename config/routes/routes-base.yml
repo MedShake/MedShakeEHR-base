@@ -1,0 +1,105 @@
+#
+# This file is part of MedShakeEHR.
+#
+# Copyright (c) 2017
+# Bertrand Boutillier <b.boutillier@gmail.com>
+# http://www.medshake.net
+#
+# MedShakeEHR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# MedShakeEHR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#######################################
+#
+# Routes : bases
+#
+#######################################
+
+root: ['GET', '/', 'index']
+
+#Ajax general
+ajaxGetAutocompleteFormValues: ['GET|POST', '/ajax/[a:m]/[:type]?/[:setTypes]?/[:linkedTypes]?/', 'actions/ajax']
+ajaxGeneral: ['GET|POST', '/ajax/[a:m]/', 'actions/ajax']
+
+#chercher patients / pros
+peopleSearchAjax: ['GET|POST', '/[today|patient|pro:porp]s/ajax/[a:m]/', 'rechercher/actions/peopleSearchAjax']
+peopleSearch: ['GET', '/[today|patient|pro:porp]s/', 'rechercher/peopleSearch']
+
+#créer / éditer patient/pros
+peopleAjax: ['GET|POST', '/people/ajax/[a:m]/', 'people/actions/peopleAjax']
+peopleActions: ['GET|POST', '/people/actions/[a:m]/', 'people/actions/peopleActions']
+peopleRegister: ['GET|POST', '/[patient|pro:porp]/register/', 'people/actions/peopleActions']
+peopleNew: ['GET|POST', '/[patient|pro:porp]/create/', 'people/peopleNew']
+peopleEdit: ['GET', '/[patient|pro:porp]/edit/[i:patient]/', 'people/peopleEdit']
+peopleListDeleted: ['GET', '/people/deleted/', 'people/peopleListDeleted']
+#peopleFusion: ['GET', '/people/fusion/[i:pID1]?/[i:pID2]?/', 'people/peopleFusion']
+
+# relations
+peopleRelations: ['GET|POST', '/patient/relations/[i:patient]/', 'people/peopleRelations']
+
+# pro : voir fiche praticien
+proView: ['GET', '/pro/[i:proID]/', 'people/proView']
+
+#dossier patient
+patientAjaxIgnoreEmpty: ['GET|POST', '/patient/ajax/[saveCsForm:m]/[ignoreEmpty:ignoreEmpty]/', 'patient/actions/patientAjax']
+patientAjax: ['GET|POST', '/patient/ajax/[a:m]/', 'patient/actions/patientAjax']
+patientActions: ['GET|POST', '/patient/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'patient/actions/patientActions']
+patientTabs: ['GET|POST', '/patient/[i:patientID]/tab/[a:tab]/', 'patient/patientTabs']
+patient: ['GET', '/patient/[i:patient]/', 'patient/patient']
+
+#logs
+logsActions: ['GET|POST', '/logs/actions/[a:m]/', 'logs/actions/logsActions']
+logsAjax: ['GET|POST', '/logs/ajax/[a:m]/', 'logs/actions/logsAjax']
+logs: ['GET', '/logs/[i:patient]?/[i:typeID]?/[i:instance]?/', 'logs/logs']
+historiquePrint: ['GET', '/logs/historiquePrint/[i:objetID]/', 'logs/historiquePrint']
+historiqueMailSend: ['GET', '/logs/historiqueMailSend/[i:objetID]/', 'logs/historiqueMailSend']
+historiqueMailSendGeneral: ['GET', '/logs/historiqueGeneralMailSend/[i:user]?/[i:start]?/', 'logs/historiqueMailSendGeneral']
+historiqueMailSendToPatient: ['GET', '/logs/historiqueMailSendToPatient/[i:patientID]/', 'logs/historiqueMailSendToPatient']
+historiqueRappelsSMS: ['GET|POST', '/logs/historiqueRappelsSMS/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsSMS']
+historiqueRappelsMail: ['GET|POST', '/logs/historiqueRappelsMail/[:date]?/[i:pratID]?/', 'logs/historiqueRappelsMail']
+logsAgenda: ['GET', '/logs/agenda/[i:agenda]?/[i:event]?/', 'logs/logsAgenda']
+historiqueDataType: ['GET', '/logs/historique/[a:dataType]/[i:page]?/', 'logs/historiqueDataType']
+historiqueContextDataType: ['GET', '/logs/historique/[i:patientID]/[a:dataType]/[i:instance]?/', 'logs/historiqueContextDataType']
+historiqueAccesHttp: ['GET', '/logs/accesHttp/', 'logs/historiqueAccesHttp']
+historiqueRelations: ['GET', '/logs/historiqueRelations/[a:type]/[i:peopleID]/', 'logs/historiqueRelations']
+
+#pdf
+printAjax: ['GET|POST', '/print/ajax/[a:m]/', 'print/actions/printAjax']
+makePDFCr: ['GET|POST', '/makepdf/[i:patient]/[cr|ordo|ordoLAP|ordoLapExt|reglement:printType]/[i:examen]/[anonyme:anonyme]?/', 'print/pdfMake']
+makePDFCourrier: ['GET|POST', '/makepdf/[i:patient]/[courrier:printType]/[i:modele]/[i:examen]?/', 'print/pdfMake']
+showPDF: ['GET|POST', '/showpdf/[i:objetID]/', 'print/pdfShow']
+duplicataPDF: ['GET|POST', '/duplicata/[i:objetID]/', 'print/pdfDuplicata']
+pdfMakeFromHistory: ['GET|POST', '/makepdf/[i:patient]/fromHistory/[i:versionID]/', 'print/pdfMakeFromHistory']
+
+#CDA
+cdaShow: ['GET|POST', '/showcda/[i:objetID]/', 'cda/cdaShow']
+
+#fichier (extraire vers navigateur)
+fichierSendToNav: ['GET|POST', '/fichier/[i:fichierID]/', 'fichier/fichierSendToNav']
+
+#outils
+outilsAjax: ['POST', '/outils/ajax/[a:m]/', 'outils/actions/outilsAjax']
+outilsActions: ['POST|GET', '/outils/actions/[a:m]/', 'outils/actions/outilsActions']
+outilsRouletteObs: ['POST|GET', '/outils/roulette-obstetricale/', 'outils/outilsRouletteObs']
+outilsExportData: ['POST|GET', '/outils/export-data/[i:dataTypeID]?/', 'outils/exportData']
+outilsStatsGenerales: ['POST|GET', '/outils/statistiques/', 'outils/statsGenerales']
+outilsFaxAutonome: ['POST|GET', '/outils/envoyer-fax/', 'outils/outilsFaxAutonome']
+
+# User
+userAjax: ['POST|GET', '/user/ajax/[a:m]/', 'user/actions/userAjax']
+userActions: ['POST|GET', '/user/actions/[a:m]/', 'user/actions/userActions']
+userParameters: ['GET', '/user/userParameters/', 'user/userParameters']
+
+#routes pour le module (! on part de controlers/module/ cette fois !)
+moduleAjax: ['POST', '/module/ajax/[a:m]/', 'actions/moduleAjax']
+moduleActions: ['POST|GET', '/module/actions/[a:m]/[i:patientID]?/[i:objetID]?/', 'actions/moduleActions']

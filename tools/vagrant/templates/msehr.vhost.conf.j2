@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+	ServerName {{ domain }}
+	ServerAlias msehr ehr medshakeehr MedShakeEHR
+	RedirectMatch     permanent ^(.*)$ https://{{ domain }}$1
+
+</VirtualHost> 
+
+<VirtualHost *:443>
+	ServerName {{ domain }}
+	ServerAlias msehr ehr medshakeehr MedShakeEHR 
+	DocumentRoot /opt/ehr/public_html
+	RewriteEngine On
+	SSLEngine On
+    SSLCertificateFile /etc/ssl/{{ domain }}/{{ domain }}.pem
+    SSLCertificateKeyFile /etc/ssl/{{ domain }}/{{ domain }}.key
+	<Directory /opt/ehr/public_html>
+		Options FollowSymLinks
+		AllowOverride all
+		Require all granted
+	</Directory>
+	ErrorLog /var/log/apache2/error.{{ domain }}.log
+	CustomLog /var/log/apache2/access.{{ domain }}.log combined
+</VirtualHost> 

@@ -31,12 +31,12 @@ if(!is_numeric($_POST['patientID'])) die;
 
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
-$p['page']['prat']=$prat->getSimpleAdminDatasByName()();
+$p['page']['prat']=$prat->getSimpleAdminDatasByName();
 $p['page']['prat']['pratID']=$p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatasByName()();
+$p['page']['patient']=$patient->getSimpleAdminDatasByName();
 $p['page']['patient']['id']=$_POST['patientID'];
 $p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
 

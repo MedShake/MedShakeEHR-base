@@ -59,7 +59,7 @@ if (!is_file($homepath.'config/config.yml')) {
     msTools::redirection('/install.php');
 }
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']=yaml_parse_file($homepath.'config/config.yml');
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
     $p['config']['host']=$_SERVER['SERVER_ADDR'];
@@ -70,48 +70,61 @@ $p['homepath']=$homepath;
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-/////////// Vérification de l'état de la base et sortie des versions des modules
-if (empty($p['modules']=msModules::getInstalledModulesVersions(true))) {
+/////////// État système
+$p['config']['systemState']=msSystem::getSystemState();
+
+/////////// Sortie des versions des modules
+if (empty($p['modules']=msModules::getInstalledModulesVersions())) {
     msTools::redirection('/install.php');
 }
 /////////// Validators loader
 define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
 require $homepath.'fonctions/validators.php';
 
-/////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
 
 ///////// user
 $p['user']=null;
 $p['user']['id']=null;
 $p['user']['module']='base';
-if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM people WHERE type='pro' AND name!=''") == "0") {
+
+if (msSystem::getProUserCount() == 0) {
+
+    $match = msSystem::getRoutes(['login']);
+
     if ($match['target']!='login/logInFirst' and $match['target']!='login/logInFirstDo') {
         msTools::redirRoute('userLogInFirst');
     }
 } elseif (isset($_COOKIE['userName'])) {
     $iUser = new msUser;
     $p['user']=$iUser->userIdentification();
-    if ($p['user']['rank']!='admin' and $p['modules']['state']=='maintenance') {
-        msTools::redirection('/maintenance.html');
-    }
+
     if (isset($p['user']['id'])) {
         $p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
     }
+
+    $match = msSystem::getRoutes();
+
+    if ($p['user']['rank']!='admin' and $p['config']['systemState']=='maintenance') {
+        msTools::redirection('/maintenance.html');
+    }
+
     if ($p['config']['optionGeLogin2FA'] == 'true' and !$iUser->check2faValidKey() and $match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest' and $match['target']!='login/logInSet2fa') {
       $iUser->doLogout();
       msTools::redirRoute('userLogIn');
     }
 } else {
+    if(msConfiguration::getDefaultParameterValue('optionGeActiverApiRest') == 'true') {
+      $match = msSystem::getRoutes(['login', 'apiRest']);
+    } else {
+      $match = msSystem::getRoutes(['login']);
+    }
+
     if ($match['target']!='login/logIn' and $match['target']!='login/logInDo' and $match['target']!='rest/rest') {
-        msTools::redirRoute('userLogIn');
+        msTools::redirection('/login/');
     }
     // compléter la config par défaut
     $p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
+
 }
 
 // simplification pour étiquetage des dossiers patients test
@@ -135,8 +148,18 @@ if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
         http_response_code(404);
         die;
     }
-} elseif ($match and is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php')) {
-    include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+} elseif ($match and (is_file($homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php') ||
+        is_file($homepath.'controlers/module/'.$match['target'].'.php'))) {
+
+    // Gestion des controlers additionnels des modules (controlers non existant dans MedShakeEHR-base)
+    if (isset($p['user']['id'])) {
+        include $homepath.'controlers/module/'.$p['user']['module'].'/'.$match['target'].'.php';
+    } else {
+        include $homepath.'controlers/module/'.$match['target'].'.php';
+    }
+
+} elseif(isset($p['user']['id'])) {
+    $template ='404';
 }
 
 //////// View if defined
@@ -148,33 +171,29 @@ if (isset($template)) {
 
     if (isset($p['user']['id'])) {
       //inbox number of messages
-      if($p['config']['designTopMenuInboxCountDisplay'] == 'true') {
-        if(!empty($p['config']['apicryptInboxMailForUserID'])) {
-          $apicryptInboxMailForUserID=explode(',', $p['config']['apicryptInboxMailForUserID']);
-          $apicryptInboxMailForUserID[]=$p['user']['id'];
-          $apicryptInboxMailForUserID=implode("','", $apicryptInboxMailForUserID);
-        } else {
-          $apicryptInboxMailForUserID=$p['user']['id'];
-        }
-        $p['page']['inbox']['numberOfMsg']=msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in ('".$apicryptInboxMailForUserID."') ");
+      if($p['config']['optionGeActiverInboxApicrypt'] == 'true' and $p['config']['designTopMenuInboxCountDisplay'] == 'true') {
+        $p['page']['inbox']['numberOfMsg']=msInbox::getInboxUnreadMessages();
       }
 
       // dropbox
-      if($p['config']['dropboxActiver'] == 'true') {
+      if($p['config']['optionGeActiverDropbox'] == 'true') {
         if(!isset($dropbox) or !is_a($dropbox, 'msDropbox')) $dropbox = new msDropbox;
         $p['page']['dropboxNbFiles'] = $dropbox->getTotalFilesInBoxes();
       }
 
       //transmissions non lues
-      if($p['config']['transmissionsPeutVoir'] == 'true') {
+      if($p['config']['optionGeActiverTransmissions'] == 'true' and $p['config']['transmissionsPeutVoir'] == 'true') {
         $transCompter=new msTransmissions;
         $transCompter->setUserID($p['user']['id']);
         $p['page']['transmissionsNbNonLues']=$transCompter->getNbTransmissionsNonLuesParPrio();
       }
 
       // patients of the day
-      $events = new msAgenda();
-      $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
+      if($p['config']['optionGeActiverAgenda'] == 'true') {
+        $events = new msAgenda();
+        if(!isset($p['page'])) $p['page']=[];
+        $p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
+      }
 
       // crédits SMS
       if (is_file($p['config']['workingDirectory'].$p['config']['smsCreditsFile'])) {
@@ -182,8 +201,13 @@ if (isset($template)) {
       }
 
       //utilisateurs pouvant avoir un agenda
-      $agendaUsers= new msPeople();
-      $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+      if($p['config']['optionGeActiverAgenda'] == 'true') {
+        $agendaUsers= new msPeople();
+        $p['page']['agendaUsers']=$agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+      }
+
+      // barre de navigation sup.
+      $p['page']['topNavBarSections'] = yaml_parse($p['config']['designTopMenuSections']);
     }
 
 
@@ -210,12 +234,8 @@ if (!isset($debug)) {
     $debug=null;
 }
 
-//and $p['user']['id']=='1'
-
 if ($debug=='y' and $p['user']['id']=='3') {
     echo '<pre style="margin-top : 50px;">';
-    //echo '$p[\'config\'] :';
-    //print_r($p['config']);
     echo '$p[\'page\'] :';
     print_r($p['page']);
     echo '$p[\'user\'] :';

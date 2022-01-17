@@ -48,7 +48,7 @@
       <li class="nav-item">
         <a id="ongletGraph" class="nav-link" href="#tabGraph" aria-controls="tabGraph" aria-selected="true" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-chart-line fa-lg mr-2"></i>Biométrie</a>
       </li>
-      {% if config.utiliserLap == 'true' %}
+      {% if config.optionGeActiverLapInterne == 'true' %}
       <li class="nav-item">
         <a id="ongletLAP" class="nav-link" href="#tabLAP" aria-controls="tabLAP" aria-selected="false" role="tab" data-toggle="tab" accesskey="{% set ak = ak + 1 %}{{ ak }}"><i class="fas fa-pills fa-lg mr-2"></i>LAP</a>
       </li>
@@ -80,7 +80,7 @@
       </div>
 
       {# tab lap #}
-      {% if config.utiliserLap == 'true' %}
+      {% if config.optionGeActiverLapInterne == 'true' %}
       <div id="tabLAP" class="tab-pane" role="tabpanel">
         {% include('inc-tabLAP.html.twig') %}
       </div>

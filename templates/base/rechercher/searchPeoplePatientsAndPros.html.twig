@@ -1,0 +1,220 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : listing recherche patients / pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} :
+{% if page.porp in ['patient', 'today'] %}
+patients
+{% elseif page.porp == 'pro' %}
+praticiens
+{% elseif page.porp == 'externe' %}
+associer patient
+{% endif %}{% endblock %}
+
+{% block jsFiles %}
+	{{ parent() }}
+	{# JS Transmissions #}
+	{% if config.transmissionsPeutCreer == 'true' %}
+		<script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
+	{% endif %}
+	{% if config.optionGeActiverVitaleLecture =='true' %}
+		<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
+	{% endif %}
+	<script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/rechercher.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block cssEmbed %}
+	{{ parent() }}
+	.openPatient td:nth-child(-n+7) {
+		cursor: pointer;
+	}
+{% endblock %}
+
+{% block body %}
+{% if page.porp == 'patient'%}
+<h1>Patients</h1>
+{% elseif page.porp == 'today' %}
+<h1>Patients du jour</h1>
+{% elseif page.porp == 'pro' %}
+<h1>Praticiens</h1>
+{% elseif page.porp == 'externe' %}
+<h1>Associer un patient externe à un patient MedShakeEHR</h1>
+{% endif %}
+
+<div class="card card-body bg-light my-4">
+	<div class="row ">
+
+	  <form id="formRecherchePatients" class="form-inline col-12 col-xl-9 mx-0 row my-xl-2">
+	    <div class="form-group col-12 my-2 my-xl-0 m-0 p-0 col-xl-2">
+	      {{ f.input ({
+		      'input' : {
+			      'type' : 'text',
+			      'id' : 'd2',
+			      'name' : 'lastname',
+	          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
+			      'placeholder' : 'Nom',
+			      'class' : 'form-control col-12 searchupdate',
+			      'autocomplete' : 'off',
+			      'datatypeid' : '2'
+		      },
+		      'label' : {
+			      'position' : 'before',
+		      }
+	      }) }}
+	    </div>
+
+			<div class="form-group col-12 my-2 my-xl-0 m-0 p-0 pl-xl-3 col-xl-2">
+				{{ f.input ({
+					'input' : {
+						'type' : 'text',
+						'id' : 'd3',
+						'name' : 'firstname',
+						'value' : page.patient.administrativeDatas.firstname|default(''),
+						'placeholder' : 'Prénom',
+						'class' : 'form-control col-12 searchupdate',
+						'autocomplete' : 'off',
+						'datatypeid' : '2'
+					},
+					'label' : {
+						'position' : 'before',
+					}
+				}) }}
+			</div>
+
+	    <div class="col-12 my-2 my-xl-0 mx-0 p-0 pl-xl-4 col-xl-5">
+	      <div class="input-group mx-0">
+	        {{ f.input ({
+	          'input' : {
+		          'id' : 'autreCritVal',
+		          'type' : 'text',
+		          'name' : 'autre',
+	            'placeholder': 'Autre critère',
+		          'class' : 'form-control searchupdate',
+							'autocomplete' : 'off',
+	          },
+	          'label' : {
+		          'position' : 'before',
+		          'label' : '',
+	          }
+	        }) }}
+	        <div class="input-group-append" style="max-width:50%">
+	          {{ f.selectOptgroup ({
+	            'select' : {
+		            'id' : 'autreCrit',
+		            'name' : 'autre',
+		            'class' : 'custom-select input-group-text form-control',
+		            'values' : page.tabTypes,
+	        	    'valueDefaut' : 'birthdate',
+								'autocomplete' : 'off',
+	            },
+	            'label' : {
+		            'position' : 'before',
+		            'label' : '',
+	            }
+	          }) }}
+	        </div>
+	      </div>
+	    </div>
+			<div class="col-12 col-xl-3 my-2 my-xl-0 mx-0 p-0 pl-xl-4">
+				<div class="custom-control custom-checkbox justify-content-start
+				{% if page.porp != 'patient' and config.droitDossierPeutVoirUniquementPatientsPropres != 'true' %}
+					d-none
+				{% endif %}
+				">
+  				<input type="checkbox" class="custom-control-input searchupdate" id="patientsPropres">
+  				<label style="justify-content: left" class="custom-control-label" for="patientsPropres">Patients propres uniquement</label>
+				</div>
+			</div>
+	  </form>
+
+	  <div class="col-12 col-xl-3 text-right my-xl-2">
+
+	  {% if page.porp in ['patient', 'today'] %}
+			{% if page.porp == 'patient' and config.optionGeActiverVitaleLecture =='true' %}
+				<button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>
+			{% endif %}
+			<div class="btn-group  my-xl-1">
+	    	<a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/"><i class="fas fa-plus"></i> Nouveau patient</a>
+				{% if config.droitDossierPeutSupPatient == 'true' %}
+					<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	    			<span class="sr-only">Toggle Dropdown</span>
+				  </button>
+				  <div class="dropdown-menu dropdown-menu-right">
+				    <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/"><i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>Récupérer un dossier supprimé</a>
+				  </div>
+				{% endif %}
+			</div>
+	  {% elseif page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true' %}
+			<div class="btn-group my-lg-1">
+	    	<a class="btn btn-primary float-right" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/create/"><i class="fas fa-plus"></i> Nouveau praticien</a>
+				{% if config.droitDossierPeutSupPraticien == 'true' %}
+					<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/people/deleted/"><i class="fas fa-trash-restore fa-fw text-muted mr-1"></i>Récupérer un dossier supprimé</a>
+					</div>
+				{% endif %}
+			</div>
+	  {% endif %}
+	  </div>
+	</div>
+</div>
+
+<div class="row mt-3">
+	<div id="listing" data-porp="{{ page.porp }}" class="col">
+	</div>
+</div>
+
+{% if page.porp == 'externe' %}
+	<div>
+	  <button class="btn btn-primary extToNew" data-externID={{ page.patient.id }} role="button"><i class="fas fa-plus"></i> Créer nouveau patient</button>
+	</div>
+{% endif %}
+
+{% endblock %}
+
+{% block modals %}
+	{# modal nouvelle transmission #}
+	{% if config.transmissionsPeutCreer == 'true' %}
+	  {# modal nouvelle transmission #}
+	  {% include 'inc-transmissionsNouvelleModal.html.twig' %}
+	{% endif %}
+
+	{# modal résultat lecture CPS Vitale  #}
+	{% if config.optionGeActiverVitaleLecture =='true' %}
+		{% include 'inc-modalLectureCpsVitale.html.twig' %}
+	{% endif %}
+
+	{# modal rendre utilisateur #}
+	{% if user.rank == 'admin' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
+		{% include 'inc-modalRendreUtilisateur.html.twig' %}
+	{% endif %}
+
+{% endblock %}

@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <http://www.github.com/fr33z00>
+ * @contrib Maxime DEMAREST <maxime@indelog>
  */
 class msTools
 {
@@ -55,7 +56,7 @@ class msTools
       global $p, $routes;
 
       if (!$routeAbrev or !array_key_exists($routeAbrev, $routes)) {
-          $routeAbrev='siteIndex';
+          $routeAbrev='root';
       }
 
       if ($type=='301') {
@@ -143,6 +144,16 @@ class msTools
       return $values;
   }
 
+/**
+ * Retirer les éléments d'un array avec une liste de clefs
+ * @param  array $tab  array à traiter
+ * @param  array  $keys liste des clefs
+ */
+  public static function arrayRemoveByKey(&$tab, $keys=[] ) {
+    foreach($keys as $key){
+      unset($tab[$key]);
+    }
+  }
 
 /**
  * Valider une date du calendrier
@@ -525,5 +536,38 @@ class msTools
        return false;
      }
    }
+/**
+ * Générer un code-barres au format svg
+ * @param  string  $type       type de code rpps ou adeli
+ * @param  string  $code       code à générer
+ * @return boolean             true if created, false if exisit
+ */
+    public static function genBareCodeFile($type, $code) {
+        global $p;
+        $created = false;
+
+        # checks
+        if (! in_array($type, array('rpps', 'adeli'))) {
+            throw new Exception('Le type de code doit être \'rpps\' ou \'adeli\'');
+        }
+        $barcodedir = $p['config']['stockageLocation'].'barecode/';
+        self::checkAndBuildTargetDir($barcodedir, $rights=0755);
+
+        if (file_exists($barcodedir.'barecode-'.$type.'-'.$code.'.svg')) {
+            return 0;
+        } else {
+            $generator = new Picqer\Barcode\BarcodeGeneratorSVG();
+			$codebarre_svg = $generator->getBarcode($code, $generator::TYPE_CODE_128);
+			// Nétoie de deux première ligne du svg généré. Elles contiennent
+			// la version xml et le DOCTYPE ce qui gène quant on veut
+			// réinjecter le svg directement dans le html.
+			$codebarre_svg = implode(PHP_EOL, array_slice(explode(PHP_EOL, $codebarre_svg),2));
+            if (file_put_contents($barcodedir.'barecode-'.$type.'-'.$code.'.svg', $codebarre_svg)) {
+                return true;
+            } else {
+                throw new Exception('Echec de la création du fichier '.$barcodedir.'barecode-'.$type.'-'.$code.'.svg');
+            }
+        }
+    }
 
 }

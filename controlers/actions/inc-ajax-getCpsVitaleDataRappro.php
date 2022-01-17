@@ -27,7 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['vitaleActiver'] == 'true' and !empty($p['config']['vitaleService'])) {
+if($p['config']['optionGeActiverVitaleLecture'] == 'true' and !empty($p['config']['vitaleService'])) {
 
   $vitale = new msVitale;
   exit($vitale->getJsonCpsVitalDataWithPeopleID());

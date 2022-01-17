@@ -1,0 +1,94 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > people : editer un registre
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}{{ config.designAppName }} : édition des données d'un registre{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
+  <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/people.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block body %}
+
+  <h1 id="identitePatient" data-patientid="{{ page.patient.id }}">
+    Édition des données administratives de
+    {{ page.patient.registryname }}
+
+    <small>(#{{ page.patient.id }})</small>
+  </h1>
+
+
+
+  <div class="row my-4">
+    <div class="col-xl-5 col-6">
+      <a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/registre/{{ page.patient.id }}/">
+        <i class="fas fa-archive"></i>
+        Voir fiche
+      </a>
+    </div>
+  </div>
+
+
+
+  <ul class="nav nav-tabs col-xl-10 col-12" id="infosTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active font-weight-bold" id="principales-tab" data-toggle="tab" href="#principales" role="tab" >Informations principales</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="autres-tab" data-toggle="tab" href="#autres" role="tab" ><i class="fas fa-plus"></i></a>
+    </li>
+  </ul>
+
+  <div class="tab-content border-left border-bottom border-right col-xl-10 col-12 p-4  bg-light" id="myTabContent">
+    <div class="tab-pane fade show active checkboxFixValue" id="principales" role="tabpanel">
+
+      {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
+
+      {{ f.formbuilder(page.form , page.formIN , session) }}
+
+      {% if page['formJavascript'][page.formIN] is not empty %}
+        <script>
+         {{ page['formJavascript'][page.formIN] }}
+        </script>
+      {% endif %}
+    </div>
+
+    <div class="tab-pane fade changeObserv" id="autres" role="tabpanel" aria-labelledby="profile-tab">
+      {{ f.formbuilder(page.form2 , page.formIN2 , session) }}
+
+      {% if page['formJavascript'][page.formIN2] is not empty %}
+        <script>
+         {{ page['formJavascript'][page.formIN2] }}
+        </script>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément compta (compta)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% if config.optionGeActiverCompta == 'true' %}
+  <li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Comptabilité"{% endif %}>
+   <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+     {% if config.designTopMenuStyle == 'icones' %}
+       <i class="fas fa-euro-sign fa-lg d-none d-lg-inline"></i>
+       <span class="d-lg-none">
+         Comptabilité</span>
+     {% else %}
+       Comptabilité
+     {% endif %}
+   </a>
+   <div class="dropdown-menu">
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/aujourdhui/">
+       <i class="fas fa-cash-register fa-fw text-muted mr-1"></i>
+       Règlements du jour
+     </a>
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/">
+       <i class="fas fa-chart-line fa-fw text-muted mr-1"></i>
+       Recettes</a>
+     <div class="dropdown-divider"></div>
+     <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/compta/memo-tarifs/">
+       <i class="fas fa-sticky-note fa-fw text-muted mr-1"></i>
+       Mémo tarifaire
+     </a>
+   </div>
+  </li>
+{% endif %}

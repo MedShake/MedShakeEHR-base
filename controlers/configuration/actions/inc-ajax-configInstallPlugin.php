@@ -42,6 +42,24 @@ function includePhp($file, $suffixe) {
   }
 }
 
+if(!empty($p['config']['sqlServeur'])) {
+  $sqlParams = array(
+    'sqlServeur'=> $p['config']['sqlServeur'],
+    'sqlUser' => $p['config']['sqlUser'],
+    'sqlPass' => $p['config']['sqlPass'],
+    'sqlBase' => $p['config']['sqlBase']
+  );
+
+} elseif(!empty($_SERVER['RDS_HOSTNAME'])) {
+  $sqlParams = array(
+    'sqlServeur'=> $_SERVER['RDS_HOSTNAME'],
+    'sqlUser' => $_SERVER['RDS_USERNAME'],
+    'sqlPass' => $_SERVER['RDS_PASSWORD'],
+    'sqlBase' => $_SERVER['RDS_DB_NAME']
+  );
+} else {
+  die();
+}
 
 $fichier=$_FILES['file'];
 $mimetype=msTools::getmimetype($fichier['tmp_name']);
@@ -120,7 +138,7 @@ if(key_exists($pluginName, $installedPlugins)) {
     uksort($sqlUpdateFiles, 'version_compare');
     foreach ($sqlUpdateFiles as $file) {
         includePhp($file, '_pre');
-        exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' 2>&1 < '.$file, $output);
+        exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).' -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
         includePhp($file, '_post');
     }
   }
@@ -129,7 +147,7 @@ if(key_exists($pluginName, $installedPlugins)) {
 // installation
 else {
   $fileSqlInstall = $p['homepath'].'config/plugins/'.$pluginName.'/sqlInstall.sql';
-  exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' 2>&1 < '.$fileSqlInstall, $output);
+  exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).' -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$fileSqlInstall, $output);
 }
 
 exit("ok");

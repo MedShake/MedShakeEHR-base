@@ -28,13 +28,13 @@
 
 $debug='';
 
-if($p['config']['dropboxActiver'] != 'true') {
+if($p['config']['optionGeActiverDropbox'] != 'true') {
   die();
 }
 
 $dropbox = new msDropbox;
 
-if($p['config']['dropboxActiver'] != 'true') die;
+if($p['config']['optionGeActiverDropbox'] != 'true') die;
 if(!isset($match['params']['box']) or !isset($match['params']['filename'])) die;
 
 $dropbox = new msDropbox;

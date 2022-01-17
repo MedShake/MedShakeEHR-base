@@ -41,10 +41,11 @@ $prat->setToID($p['page']['userID']);
 $p['page']['userData']=$prat->getSimpleAdminDatasByName();
 $module=$prat->getModule();
 
+$p['page']['userParams']=[];
 if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
     foreach($data as $k=>$v) {
         if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
-            $v['formValues']=msSQL::sql2tabKey("SELECT id, name FROM people WHERE name!='' and type='pro'", "id", "name");
+            $v['formValues']=msSQL::sql2tabKey("SELECT `id`, `name` FROM `people` WHERE `name`!='' and `type`='pro'", "id", "name");
             unset($v['formValues'][$p['page']['userID']]);
             if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
                 $v['formValues']['0']='';
@@ -66,3 +67,6 @@ foreach($p['page']['availableParams'] as $k=>$v) {
   $p['page']['availableParams'][$k]['saniCat']=msTools::sanitizeFilename($v['cat']);
 }
 $p['page']['availableCats']=msConfiguration::getListOfParametersCat();
+
+// templates user
+$p['page']['userTemplates']=msConfiguration::getUserTemplatesList();

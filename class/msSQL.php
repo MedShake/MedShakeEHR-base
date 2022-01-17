@@ -37,12 +37,17 @@ class msSQL
   public static function sqlConnect()
   {
       global $p;
-      $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
+      if(!empty($p['config']['sqlServeur'])) {
+        $mysqli = new mysqli($p['config']['sqlServeur'], $p['config']['sqlUser'], $p['config']['sqlPass'], $p['config']['sqlBase']);
+      } elseif(!empty($_SERVER['RDS_HOSTNAME'])) {
+        $mysqli = new mysqli($_SERVER['RDS_HOSTNAME'], $_SERVER['RDS_USERNAME'], $_SERVER['RDS_PASSWORD'], $_SERVER['RDS_DB_NAME'], $_SERVER['RDS_PORT']);
+      }
       $mysqli->set_charset("utf8");
       if (mysqli_connect_errno()) {
           die('Echec de connexion à la base de données');
       } else {
           $mysqli->query('SELECT @password:="'.$mysqli->real_escape_string($p['config']['sqlVarPassword']).'"');
+          if(isset($p['config']['sqlTimeZone'])) $mysqli->query("SET time_zone = '".$p['config']['sqlTimeZone']."'");
           return $mysqli;
       }
   }
@@ -208,9 +213,9 @@ class msSQL
           }
           $cols[]=$key;
           $valeurs[]='\''.$val.'\'';
-          $dupli[]=$key.'=VALUES('.$key.')';
+		  $dupli[]='`'.$key.'`=VALUES(`'.$key.'`)';
       }
-      if (self::sqlQuery("insert into ".self::cleanVar($table)." (".implode(',', $cols).") values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
+      if (self::sqlQuery("insert into `".self::cleanVar($table)."` (`".implode('`, `', $cols)."`) values (".implode(',', $valeurs).") ON DUPLICATE KEY UPDATE ".implode(', ', $dupli)." ;")) {
           return $mysqli->insert_id;
       } else {
           return false;
@@ -224,7 +229,7 @@ class msSQL
  * @return array        tableau des valeurs
  */
   public static function sqlEnumList($table, $field) {
-    if($row = self::sqlUnique("SHOW FIELDS FROM ".self::cleanVar($table)." where Field = '".self::cleanVar($field)."'")) {
+    if($row = self::sqlUnique("SHOW FIELDS FROM `".self::cleanVar($table)."` where Field = '".self::cleanVar($field)."'")) {
       preg_match('#^enum\((.*?)\)$#ism', $row['Type'], $matches);
       $enum = str_getcsv($matches[1], ",", "'");
       return $enum;

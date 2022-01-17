@@ -27,12 +27,19 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- $patient = new msObjet();
- $patient->setFromID($p['user']['id']);
- $patient->setToID($_POST['patientID']);
- if ($patient->createNewObjet($_POST['typeID'], $_POST['value'], $_POST['instance']) > 0) {
-     $return['status']='ok';
-     echo json_encode($return);
- } else {
-     http_response_code(401);
- }
+//vérifier les droits utilisateur
+$droits = new msPeopleDroits($p['user']['id']);
+if(!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
+ http_response_code(401);
+ die();
+}
+
+$patient = new msObjet();
+$patient->setFromID($p['user']['id']);
+$patient->setToID($_POST['patientID']);
+if ($patient->createNewObjet($_POST['typeID'], $_POST['value'], $_POST['instance']) > 0) {
+   $return['status']='ok';
+   echo json_encode($return);
+} else {
+   http_response_code(401);
+}

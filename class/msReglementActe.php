@@ -72,7 +72,7 @@ class msReglementActe extends msReglement
     if(isset($this->_acteType)) return $this->_acteType;
     if(preg_match('#[A-Z]{4}[0-9]{3}#i',$this->_acteCode)) {
       return $this->_acteType='CCAM';
-    } elseif($type = msSQL::sqlUniqueChamp("select type from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and type ='NGAP' limit 1 ")) {
+    } elseif($type = msSQL::sqlUniqueChamp("select `type` from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type` ='NGAP' limit 1 ")) {
       return $this->_acteType=$type;
     } else {
       return $this->_acteType='Libre';
@@ -178,7 +178,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and  type='CCAM' and activite='".$this->_acteActivite."' and phase='".$this->_actePhase."' limit 1")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='CCAM' and `activite`='".$this->_acteActivite."' and `phase`='".$this->_actePhase."' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
@@ -192,7 +192,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeModifCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and  type='mCCAM'")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='mCCAM'")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
@@ -206,10 +206,10 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeNgapData($cols=['*'], $strict=FALSE) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and type='NGAP' and codeProf='".msSQL::cleanVar($this->_secteurTarifaireNgap)."' limit 1")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='NGAP' and `codeProf`='".msSQL::cleanVar($this->_secteurTarifaireNgap)."' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
-    } elseif ($strict == FALSE and $d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and type='NGAP' limit 1")) {
+    } elseif ($strict == FALSE and $d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='NGAP' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
@@ -223,7 +223,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeLibreData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from actes_base where code='".msSQL::cleanVar($this->_acteCode)."' and type='Libre'")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='Libre'")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {

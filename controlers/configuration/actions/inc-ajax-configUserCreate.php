@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] != 'true') {die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");}
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
@@ -35,7 +35,7 @@ $form = new msFormValidation();
 $form->setformIDbyName($_POST['formIN']);
 $form->setPostdatas($_POST);
 $form->setContextualValidationErrorsMsg(false);
-$form->setContextualValidationRule('username',['checkUniqueUsername','alpha_dash','max_len,25']);
+$form->setContextualValidationRule('username',['checkUniqueUsername','alpha_numeric_dash','max_len,25']);
 if($p['config']['optionGeLoginPassAttribution'] == 'admin') {
   $form->setContextualValidationRule('password',['checkPasswordLength']);
 } elseif($p['config']['optionGeLoginPassAttribution'] == 'random' and $_POST['formIN'] =="baseNewUser") {
@@ -54,7 +54,7 @@ if ($validation === false) {
   )));
 
 } else {
-  $module=isset($_POST['p_modules'])?$_POST['p_modules']:'base';
+  $module=isset($_POST['p_module'])?$_POST['p_module']:'base';
   $user=$p['user']['id']?:1;
 
   $data=array(
@@ -104,9 +104,9 @@ if ($validation === false) {
     }
 
     // application du template si précisé
-    if(isset($_POST['p_userTemplate']) and !empty($_POST['p_userTemplate'])) {
+    if(isset($_POST['p_template']) and !empty($_POST['p_template'])) {
       $directory=$homepath.'config/userTemplates/';
-      $fichier=basename($_POST['p_userTemplate']).'.yml';
+      $fichier=basename($_POST['p_template']).'.yml';
       if(is_file($directory.$fichier)) {
         $dataTp = Spyc::YAMLLoad($directory.$fichier);
         if(is_array($dataTp) and !empty($dataTp)) {

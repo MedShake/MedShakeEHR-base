@@ -57,22 +57,28 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
         } else {
             file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
             $dossier.=($dossier[strlen($dossier)-1])!='/' ? '/' : '';
-            //récupération de la dernière version release
-            $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
-            curl_setopt($ch, CURLOPT_USERAGENT, "linux");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $res=json_decode(curl_exec($ch), true);
-            curl_close($ch);
+
+            if(!isset($_POST['v'])) {
+              //récupération de la dernière version release
+              $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
+              curl_setopt($ch, CURLOPT_USERAGENT, "linux");
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+              $res=json_decode(curl_exec($ch), true);
+              curl_close($ch);
+              $releaseTagName = $res['tag_name'];
+            } else {
+              $releaseTagName = $_POST['v'];
+            }
             //téléchargement de la dernière release
-            file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/'.$res['tag_name'].'.zip', 'r'));
+            file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/'.$releaseTagName.'.zip', 'r'));
             $zip = new ZipArchive;
             if ($zip->open("/tmp/medshake.zip"))  {
                 $zip->extractTo('/tmp/');
                 unlink("/tmp/medshake.zip");
                 //deplacement du contenu de public_html
-                $dossierdezip='/tmp/MedShakeEHR-base-'.$res['tag_name'];
+                $dossierdezip='/tmp/MedShakeEHR-base-'.$releaseTagName;
                 if (!is_dir($dossierdezip)) {
-                    $dossierdezip='/tmp/MedShakeEHR-base-'.str_replace('v','',$res['tag_name']);
+                    $dossierdezip='/tmp/MedShakeEHR-base-'.str_replace('v','',$releaseTagName);
                 }
                 foreach (scandir($dossierdezip.'/public_html') as $f) {
                     if ($f !='.' and $f !='..') {
@@ -105,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                     $htaccess.=file_get_contents($dossierweb."/.htaccess");
                     file_put_contents($dossierweb."/.htaccess", $htaccess);
                     //lancement de la partie configuration
-                    header('Location: '.str_replace('self-installer', 'install',$_SERVER['REQUEST_URI']));
+                    header('Location: '.$dossierweb."/install.php");
                     die();
                 } else {
                     $ret=explode('<br>', $ret);
@@ -126,6 +132,7 @@ if($template!=''): ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <title>
       MedShakeEHR : Pre-installation</title>
@@ -180,20 +187,23 @@ if($template!=''): ?>
     }, false);
   </script>
   <body>
+    <div class="container-fluid">
+
 
 <?php
 if ($template=='bienvenue') :
 ?>
       <h1>Installateur de MedShakeEHR</h1>
       <div id="inst">
-        <p style="margin-top:50px">Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
+        <p>Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
           <strong>Ne fermez pas cette page, et ne la rechargez pas non plus!</strong></p>
         <p>Définissez ci-dessous le dossier où MedShakeEHR doit être installé.<br>
-          <strong> - Cet emplacement ne doit pas être accessible au réseau</strong><br>
+          <strong> - Cet emplacement ne doit pas être accessible via le web</strong><br>
           <strong> - L'utilisateur www-data doit avoir les droits d'écriture sur cet emplacement, ainsi que sur le dossier <code><?=getcwd()?></code>.</p>
-        <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" style="margin-top:50px;">
+        <form	action="<?=$_SERVER['REQUEST_URI']?>" method="post" class="form-inline">
           <input name="bienvenue" type="hidden"/>
-          <input id="dest" name="destination" type="text" value="/opt/MedShakeEHR" style="border:solid 1px #ccc"/>
+          <?php if (isset($_GET['v'])) { ?><input name="v" type="hidden" value="<?=$_GET['v']?>"/> <?php } ?>
+          <input id="dest" class="form-control mr-2" name="destination" type="text" value="<?=dirname(getcwd())?>" />
           <button type="submit" class="btn btn-light" onclick="document.querySelector('#inst').style.display='none';document.querySelector('.svgcontainer').className+=' svganim';">Suivant</button>
         </form>
       </div>
@@ -223,6 +233,7 @@ else :
 <?php
 endif;
 ?>
+</div>
   </body>
 </html>
 <?php

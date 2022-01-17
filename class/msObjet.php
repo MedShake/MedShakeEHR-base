@@ -219,7 +219,7 @@ public function getToID()
           return msSQL::sql2tabKey("select o.*, t.name
           from objets_data as o
           left join data_types as t on o.typeID=t.id
-          where o.typeID in ('".implode(', ', $name2typeID)."') and o.instance='".$this->_ID."' and o.outdated='' and o.deleted='' ", $by);
+          where o.typeID in ('".implode("', '", $name2typeID)."') and o.instance='".$this->_ID."' and o.outdated='' and o.deleted='' ", $by);
         }
     }
 
@@ -406,9 +406,43 @@ public function getToID()
           if($lastID=msSQL::sqlInsert('objets_data', $pd)) {
               msSQL::sqlQuery("update objets_data set deleted='y', deletedByID='".$this->_fromID."' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID);
           }
+
+      } elseif ($d['groupe']=='admin') {
+
+          // création d'un nouvel enregistrement uniquement si la valeur est modifiée ou si elle est inexistante. Les auteurs de mise à jour ne sont donc pas consignés tant que la valeur est identique.
+          // but : ne pas loguer de simples données administratives si elles n'évoluent pas véritablement
+
+          //on regarde le précédent du même parent
+          $precedent=msSQL::sqlUnique("select id, value, CASE WHEN DATE_ADD(creationDate, INTERVAL ".$d['durationLife']." SECOND) > NOW() THEN '' ELSE 'y' END as outdated, fromID
+          from objets_data
+          where typeID='".$typeID."'
+          and toID = '".$this->_toID."'
+          and instance = '".$parentID."'
+          and outdated = '' and deleted = ''
+          order by id desc limit 1");
+
+          // insert si
+          if ((isset($precedent['id']) and $value != $precedent['value']) or !isset($precedent['id'])) {
+
+            // on met jour si on est dans la période de durée de vie et auteur identique
+            if (isset($precedent['id']) and $precedent['outdated'] == '' and $precedent['fromID']==$this->_fromID) {
+                $pd['id']=$precedent['id'];
+                $pd['updateDate'] = date("Y-m-d H:i:s");
+            }
+
+            $lastID=msSQL::sqlInsert('objets_data', $pd);
+
+            msSQL::sqlQuery("update objets_data set outdated='y' where typeID='".$typeID."' and toID='".$this->_toID."' and id < ".$lastID." and instance='".$parentID."' ");
+          }
+
+          if (isset($precedent['id']) and !isset($lastID)) {
+            $lastID = $precedent['id'];
+          }
+
+
       }
 
-      // types : admin / medical / dicom
+      // types : medical / dicom
       else {
 
           // cas général : création d'un nouvel objet uniquement si auteur différent ou si durée de vie dépassée (ou si précédent effacé),
@@ -561,18 +595,29 @@ public function getToID()
 /**
  * Obtenir la liste des ID pour un type donnée et un patient donné
  * @param  string $name name du type
+ * @param  string $parentId instance
  * @return array       tableau id=>date création
  */
-    public function getListObjetsIdFromName($name) {
+    public function getListObjetsIdFromName($name, $parentId = '') {
       if (!isset($this->_toID)) {
           throw new Exception('toID is not defined');
       }
+      if (!empty($parentId) and !is_numeric($parentId)) {
+          throw new Exception('ParentID is not numeric');
+      }
+
+      if (is_numeric($parentId)) {
+          $whereInstance = ' and pd.instance="'.$parentId.'"';
+      } else {
+          $whereInstance = '';
+      }
+
       $name2typeID=new msData;
 
       if($name2typeID=$name2typeID->getTypeIDsFromName([$name])) {
         if($data=msSQL::sql2tabKey("select pd.id, pd.creationDate
         from objets_data as pd
-        where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated=''
+        where pd.toID='".$this->_toID."' and pd.typeID = '".$name2typeID[$name]."' and pd.deleted='' and pd.outdated='' ".$whereInstance."
         order by  pd.creationDate", 'id', 'creationDate')) {
           return $data;
         }
@@ -683,4 +728,23 @@ public function getToID()
         WHERE o.toID = '".$this->_toID."' AND o.typeID = '".$typeID."' and o.instance='".$instance."'
         order by o.registerDate desc");
     }
+
+/**
+ * Obtenir les valeurs d'un data type
+ * @param  string $name data_type
+ * @return array       array des différentes valeurs non outdated non deleted
+ */
+    public function getDataTypePatientActiveValues($name) {
+      if (!isset($this->_toID)) throw new Exception('toID is not defined');
+
+      $typeID=msData::getTypeIDFromName($name);
+
+      $tab = (array) msSQL::sql2tabSimple("SELECT o.value
+        FROM objets_data as o
+        WHERE o.toID = '".$this->_toID."' AND o.typeID = '".$typeID."' and o.outdated = '' and o.deleted = ''");
+      $tab = array_unique($tab);
+      return $tab;
+    }
+
+
 }

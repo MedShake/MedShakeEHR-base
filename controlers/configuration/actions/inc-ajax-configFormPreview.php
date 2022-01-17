@@ -38,21 +38,27 @@ $p['page']['form']=$form->getForm();
 if(!empty($p['page']['form'])) {
   $sqlGen = new msSqlGenerate;
   $sqlGen=$sqlGen->getSqlForForm($form->getFormIN());
+
+  $sqlGenUpdate = new msSqlGenerate;
+  $sqlGenUpdate->setAddUpdateOnDuplicate(true);
+  $sqlGenUpdate=$sqlGenUpdate->getSqlForForm($form->getFormIN());
+
   $basicTemplateCode=$form->getFlatBasicTemplateCode();
 
   $html = new msGetHtml;
   $html->set_template('configFormPreviewAjax.html.twig');
   $html = $html->genererHtmlVar($p);
 } else {
-  $sqlGen="Formulaire d'affichage - données non disponibles";
-  $basicTemplateCode="Formulaire d'affichage - données non disponibles";
+  $sqlGen="Données non disponibles";
+  $basicTemplateCode="Données non disponibles";
   $html='<div class="alert alert-info" role="alert">
-      Formulaire d\'affichage - aperçu non disponible !
+      Aperçu non disponible : stucture non présente ou correspondant à un formulaire d\'affichage
       </div>';
 }
 
 exit(json_encode(array(
   'htmlFormPreview'=>$html,
   'basicTemplateCode'=>$basicTemplateCode,
-  'sqlGen'=>$sqlGen
+  'sqlGen'=>$sqlGen,
+  'sqlGenUpdate'=>$sqlGenUpdate
 )));

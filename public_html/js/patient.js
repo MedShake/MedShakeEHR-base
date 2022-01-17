@@ -134,7 +134,7 @@ $(document).ready(function() {
   activeWatchChange('.changeObserv');
   activeWatchChange('.changeObservByTypeName');
 
-  $(".datepick").on("dp.change", function(e) {
+  $(".changeObserv .datepick, .changeObservByTypeName .datepick").on("dp.change", function(e) {
     patientID = $('#identitePatient').attr("data-patientID");
     typeID = $(this).children('input').attr("data-typeID");
     if (e.date) value = e.date.format('L');
@@ -352,7 +352,14 @@ $(document).ready(function() {
   //bouton de nouvelle consultation
   $("body").on("click", ".addNewCS, .editCS", function(e) {
     e.preventDefault();
-    if ($('#nouvelleCs').html() != '') {
+
+    if($(this).attr('data-targetdiv')) {
+      targetDiv = $('#'+ $(this).attr('data-targetdiv'));
+    } else {
+      targetDiv = $('#nouvelleCs');
+    }
+
+    if (targetDiv.html() != '') {
       if (confirm('Voulez-vous remplacer le contenu de la consultation en cours ?')) {
         sendFormToCsDiv($(this));
       }
@@ -473,7 +480,8 @@ $(document).ready(function() {
   ///////// Observations fermeture actions non terminées
 
   //close button zone newCS
-  $('body').on("click", "#cleanNewCS, .addNewCS", function(e) {
+  $('body').on("click", "#cleanNewCS, .addNewCS, .cleanNewCS", function(e) {
+    $(this).parents('div.nouvelleCs').html('');
     $('#nouvelleCs').html('');
     $(window).unbind("beforeunload");
   });
@@ -650,21 +658,20 @@ $(document).ready(function() {
   ////////////////////////////////////////////////////////////////////////
   ///////// Observations diverses dont celles concernant la partie identité patient
 
-  //Voir les notes sur le patient
-  $('body').on("click", "#voirNotesPatient", function(e) {
-    e.preventDefault();
-    $('#notesPatient').toggle();
-  });
-
   //Editer relation patient
   $('body').on("click", "button.editerRelationsPatient", function(e) {
     e.preventDefault();
     $('#ongletLiensPatient').tab('show');
   });
 
-  //fermeture modal data admin patient
-  $("button.modalAdminClose").on("click", function(e) {
-    ajaxModalPatientAdminCloseAndRefreshHeader();
+  //changer les infos admin patient en modal
+  $('body').on("click", "#editAdmin button.modal-save", function(e) {
+    var modal = '#' + $(this).attr("data-modal");
+    var form = '#' + $(this).attr("data-form");
+    ajaxModalSave(form, modal, function() {
+      $(modal).modal('hide');
+      ajaxModalPatientAdminCloseAndRefreshHeader();
+    });
   });
 
   //Ouvrir le LAP
@@ -967,6 +974,12 @@ function sendFormToCsDiv(el) {
   //destruction préventive lignes de détails historiques
   if (el.attr('data-objetID') > 0) $('tr.detObjet' + el.attr('data-objetID')).remove();
 
+  if(el.attr('data-targetdiv')) {
+    targetDiv = $('#'+ el.attr('data-targetdiv'));
+  } else {
+    targetDiv = $('#nouvelleCs');
+  }
+
   $.ajax({
     url: urlBase + '/patient/ajax/extractCsForm/',
     type: 'post',
@@ -981,7 +994,7 @@ function sendFormToCsDiv(el) {
     },
     dataType: "html",
     success: function(data) {
-      $('#nouvelleCs').html(data);
+      targetDiv.html(data);
       $.getScriptOnce(urlBase + "/js/module/formsScripts/" + el.attr('data-formtocall') + ".js");
       scrollTo(scrollDestination.nouvelleCs, scrollDestination.delai);
       // pour éviter de perdre des données

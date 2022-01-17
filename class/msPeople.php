@@ -126,7 +126,7 @@ class msPeople
  */
     public function setType($t)
     {
-        if (in_array($t, array('patient', 'pro', 'externe'))) {
+        if (in_array($t, array('patient', 'pro', 'externe', 'groupe', 'registre'))) {
             return $this->_type = $t;
         } else {
             throw new Exception('Type n\'est pas d\'une valeur autorisée');
@@ -141,7 +141,7 @@ class msPeople
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
-        return $this->_type = msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
+        return $this->_type = msSQL::sqlUniqueChamp("SELECT `type` FROM `people` WHERE `id`='".$this->_toID."' limit 1");
     }
 
 /**
@@ -152,7 +152,7 @@ class msPeople
         if (!is_numeric($this->_toID)) {
             throw new Exception('ToID is not numeric');
         }
-        return msSQL::sqlUniqueChamp("SELECT type='externe' FROM people WHERE id='".$this->_toID."' limit 1")==1;
+        return msSQL::sqlUniqueChamp("SELECT `type`='externe' FROM `people` WHERE `id`='".$this->_toID."' limit 1")==1;
     }
 
 /**
@@ -179,15 +179,32 @@ class msPeople
     }
 
 /**
- * Obtenir le type du dossier
- * @return string patient / pro / deleted / externe ...
+ * Définir et sauvegarder en base le peopleExportID pour l'export anonymisé
  */
-    public function getPeopleType() {
-        if (!is_numeric($this->_toID)) {
-            throw new Exception('ToID is not numeric');
-        }
-        return msSQL::sqlUniqueChamp("SELECT type FROM people WHERE id='".$this->_toID."' limit 1");
+    public function setPeopleExportID() {
+      if (!is_numeric($this->_toID)) {
+          throw new Exception('ToID is not numeric');
+      }
+      $peopleExportID = msTools::getRandomStr(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+
+      $name2typeID = new msData();
+      $name2typeID = $name2typeID->getTypeIDsFromName(['peopleExportID']);
+      if($data=msSQL::sqlUniqueChamp("select pd.id
+      from objets_data as pd
+      where pd.typeID = '".$name2typeID['peopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
+      order by pd.id desc
+      limit 1")) {
+        $this->setPeopleExportID();
+      } else {
+        $obj = new msObjet;
+        $obj->setToID($this->_toID);
+        $obj->setFromID($this->_fromID);
+        $obj->createNewObjetByTypeName('peopleExportID', $peopleExportID);
+        return $peopleExportID;
+      }
+
     }
+
 
 /**
  * Obtenir les données administratives d'un individu (version complète)
@@ -250,6 +267,14 @@ class msPeople
             throw new Exception('ToID is not numeric');
         }
 
+        if(in_array('identite', $typesName)) {
+          if(!in_array('birthname', $typesName)) $typesName[]='birthname';
+          if(!in_array('lastname', $typesName)) $typesName[]='lastname';
+          if(!in_array('firstname', $typesName)) $typesName[]='firstname';
+          if(!in_array('administrativeGenderCode', $typesName)) $typesName[]='administrativeGenderCode';
+          if(!in_array('birthdate', $typesName)) $typesName[]='birthdate';
+        }
+
         if(!empty($typesName)) {
           $typesSelect=" and t.name in ('".implode("', '",$typesName)."')";
         } else {
@@ -262,6 +287,11 @@ class msPeople
 			  where d.toID='".$this->_toID."' and d.outdated='' and d.deleted='' and t.groupe='admin'".$typesSelect. " order by t.displayOrder", "name", "value");
 
         if(isset($tab['birthdate'])) $this->_birthdate=$tab['birthdate'];
+
+        if(in_array('identite', $typesName)) {
+          unset($tab['identite']);
+          $tab = array_merge($tab, msCourrier::getIdentiteTags($tab));
+        }
 
         return $tab;
     }
@@ -302,7 +332,7 @@ class msPeople
  * @param  string $service service spécifique
  * @return array          tableau userID=>identité
  */
-  public function getUsersListForService($service)
+  public static function getUsersListForService($service)
   {
       $name2typeID = new msData();
       $name2typeID = $name2typeID->getTypeIDsFromName([$service, 'firstname', 'lastname', 'birthname']);
@@ -512,7 +542,7 @@ class msPeople
  * @return array Array multi.
  */
     public function getToday() {
-      return $this->_getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
+      return $this->getHistoriqueData(0, 0, 'and DATE(p.creationDate) = CURDATE()');
     }
 
 /**
@@ -521,7 +551,7 @@ class msPeople
  */
     public function getHistorique() {
       $tab=[];
-      if($data = $this->_getHistoriqueData()) {
+      if($data = $this->getHistoriqueData()) {
         foreach ($data as $v) {
             $tab[$v['creationYear']][]=$v;
         }
@@ -535,7 +565,7 @@ class msPeople
  * @return array          data historique de l'objetID
  */
     public function getHistoriqueObjet($objetID) {
-      if($data = $this->_getHistoriqueData(0, 1, '', (array)$objetID)) {
+      if($data = $this->getHistoriqueData(0, 1, '', (array)$objetID)) {
         return $data[0];
       } else {
         return [];
@@ -543,14 +573,34 @@ class msPeople
     }
 
 /**
+ * Obtenir les éléments d'historique pour une instance
+ * @param  int $instance instance ( = parentID)
+ * @return array            data historique
+ */
+    public function getHistoriqueInstance($instance) {
+      if($data = $this->getHistoriqueData(0, 0, '', [], $instance)) {
+        foreach ($data as $v) {
+            $tab[$v['creationYear']][]=$v;
+        }
+        return $tab;
+      } else {
+        return [];
+      }
+    }
+
+
+/**
  * Obtenir un historique suivant paramètres
  * @param  integer $limitStart      premier argument pour limit sql
  * @param  integer $limitNb         second argument pour limit sql
  * @param  string  $datesPrecisions string sql pour restriction plage dates
  * @param  array   $objetIDs        réduire le retour aux objetIDs de l'array
+ * @param  int     $instance        instance spécifique
+ * @param  array   $dataGroups      restriction à certains groupes
+ * @param  array   $critDataTypeAnnexes      critères sur data type [name=>valeur]
  * @return array                   data d'historique
  */
-    private function _getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[]) {
+    public function getHistoriqueData($limitStart=0, $limitNb=0, $datesPrecisions='', $objetIDs=[], $instance=0, $dataGroups=[], $critDataTypeAnnexes=[]) {
       global $p;
 
       if (!is_numeric($this->_toID)) {
@@ -561,6 +611,19 @@ class msPeople
         $limitSql = 'limit '.$limitStart.','.$limitNb;
       } else {
         $limitSql = '';
+      }
+
+      if(is_numeric($instance) and $instance > 0) {
+        $whereInstance = " and p.instance = '".$instance."'";
+      } else {
+        $whereInstance = '';
+      }
+
+      if(!empty($dataGroups)) {
+        $dataGroups = msSQL::cleanArray($dataGroups);
+        $whereDataGroups = " and t.groupe in ('".implode("', '", $dataGroups)."') ";
+      } else {
+        $whereDataGroups = '';
       }
 
       if(isset($objetIDs) and is_array($objetIDs) and !empty($objetIDs)) {
@@ -579,12 +642,26 @@ class msPeople
       $lapCompSql = '';
       $lapExtCompSql = '';
 
-      if($p['config']['utiliserLap'] == 'true') {
+      if($p['config']['optionGeActiverLapInterne'] == 'true') {
         $lapCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapOrdonnance']."') ";
       }
-      if($p['config']['utiliserLapExterne'] == 'true') {
+      if($p['config']['optionGeActiverLapExterne'] == 'true') {
         $lapExtCompSql = " or (t.groupe = 'ordo' and  t.id='".$name2typeID['lapExtOrdonnance']."') ";
       }
+
+      // crit Annexes sur valeur data type
+      $critAnLeftJoin=[];
+      $critAnWhere=[];
+      if(!empty($critDataTypeAnnexes)) {
+        $i=1;
+        foreach($critDataTypeAnnexes as $k=>$v) {
+          $critAnLeftJoin[]="left join objets_data as critA".$i." on critA".$i.".instance = p.id";
+          $critAnWhere[]="critA".$i.".value = '".msSQL::cleanVar($v)."'";
+        }
+      }
+      $critAnLeftJoin=implode("\n", $critAnLeftJoin);
+      $critAnWhere=implode(" and ", $critAnWhere);
+      if(!empty($critAnWhere)) $critAnWhere = ' and '.$critAnWhere;
 
       return msSQL::sql2tab("select p.id, p.fromID, p.toID, p.instance as parentID, p.important, p.titre, p.registerDate, p.creationDate,  DATE_FORMAT(p.creationDate,'%Y') as creationYear,  p.updateDate, t.id as typeCS, t.name, t.module as module, t.groupe, t.label, t.formValues as formName, t.placeholder as signaturePatient, n1.value as prenom, f.printModel, mail.instance as sendMail, doc.value as fileext, doc2.value as docOrigine, img.value as dicomStudy,
       CASE WHEN DATE_ADD(p.creationDate, INTERVAL t.durationLife second) < NOW() THEN 'copy' ELSE 'update' END as iconeType, CASE WHEN n2.value != '' THEN n2.value  ELSE bn.value END as nom
@@ -598,6 +675,7 @@ class msPeople
       left join objets_data as doc2 on doc2.instance=p.id and doc2.typeID='".$name2typeID['docOrigine']."'
       left join objets_data as img on img.instance=p.id and img.typeID='".$name2typeID['dicomStudyID']."'
       left join forms as f on f.internalName=t.formValues
+      ".$critAnLeftJoin."
       where ((t.groupe in ('typeCS', 'courrier') and t.cat != '".$catIdHorsHistoriques."' )
         or (t.groupe = 'doc' and  t.id='".$name2typeID['docPorteur']."')
         or (t.groupe = 'ordo' and  t.id in ('".implode("','", $porteursOrdoIds)."'))
@@ -605,7 +683,7 @@ class msPeople
         ".$lapExtCompSql."
         or (t.groupe = 'reglement' and  t.id in ('".implode("','", $porteursReglementIds)."'))
         or (t.groupe='mail' and t.id='".$name2typeID['mailPorteur']."' and p.instance='0'))
-      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."'".$objetIDsSql."
+      and p.toID='".$this->_toID."' and p.outdated='' and p.deleted='' ".$datesPrecisions." and t.id!='".$name2typeID['csAtcdStrucDeclaration']."' ".$objetIDsSql." ".$whereInstance." ".$whereDataGroups.$critAnWhere."
       group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
       order by p.creationDate desc ".$limitSql);
     }
@@ -616,8 +694,16 @@ class msPeople
  */
     public function getAge()
     {
-      if(isset($this->_ageFormats['ageDisplay'])) return $this->_ageFormats['ageDisplay'];
-      else return $this->getAgeFormats()['ageDisplay'];
+      if(isset($this->_ageFormats['ageDisplay'])) {
+        return $this->_ageFormats['ageDisplay'];
+      } else {
+        $ageFormats = $this->getAgeFormats();
+        if(isset($ageFormats['ageDisplay'])) {
+          return $ageFormats['ageDisplay'];
+        } else {
+          return '';
+        }
+      }
     }
 
 /**
@@ -726,6 +812,7 @@ class msPeople
 
           return $this->_ageFormats = array(
             'birthdate'=>$birthdate,
+            'birthYear'=>$dtNaissance->format('Y'),
             'ageDisplay'=>$ageDisplay,
             'ageTotalDays'=>$interval->format('%a'),
             'ageTotalYears'=>$interval->format('%y'),

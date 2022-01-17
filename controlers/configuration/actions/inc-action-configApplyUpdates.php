@@ -43,11 +43,29 @@ function includePhp($file, $suffixe) {
   }
 }
 
+if(!empty($p['config']['sqlServeur'])) {
+  $sqlParams = array(
+    'sqlServeur'=> $p['config']['sqlServeur'],
+    'sqlUser' => $p['config']['sqlUser'],
+    'sqlPass' => $p['config']['sqlPass'],
+    'sqlBase' => $p['config']['sqlBase']
+  );
+
+} elseif(!empty($_SERVER['RDS_HOSTNAME'])) {
+  $sqlParams = array(
+    'sqlServeur'=> $_SERVER['RDS_HOSTNAME'],
+    'sqlUser' => $_SERVER['RDS_USERNAME'],
+    'sqlPass' => $_SERVER['RDS_PASSWORD'],
+    'sqlBase' => $_SERVER['RDS_DB_NAME']
+  );
+} else {
+  die();
+}
 
 $formIN=$_POST['formIN'];
 unset($_SESSION['form'][$formIN]);
 
-$modules=msSQL::sql2tabKey("SELECT name, value as version FROM system WHERE groupe='module'", "name");
+$modules=msSQL::sql2tabKey("SELECT name, value as version FROM `system` WHERE groupe='module'", "name");
 
 $availableInstalls=scandir($p['homepath'].'upgrade/');
 $installFiles=[];
@@ -73,14 +91,14 @@ foreach ($modules as $module) {
 }
 //s'il y a des patches à appliquer
 if (count($installFiles) or count($moduleUpdateFiles)) {
-    msSQL::sqlQuery("UPDATE system SET value='maintenance' WHERE name='state' and groupe='system'");
+    msSQL::sqlQuery("UPDATE `system` SET value='maintenance' WHERE name='state' and groupe='system'");
     //on fait une sauvegarde de la base
-    exec('mysqldump -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' '.escapeshellarg($p['config']['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$p['config']['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql'));
+    exec('mysqldump -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' '.escapeshellarg($sqlParams['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$sqlParams['sqlBase'].'_'.date('Y-m-d_H:i:s').'-avant_update.sql'));
     //puis on applique les patches en commençant par ceux de base s'il y en a
     if (array_key_exists('base', $moduleUpdateFiles)) {
         foreach ($moduleUpdateFiles['base'] as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
         unset($moduleUpdateFiles['base']);
@@ -88,7 +106,7 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     foreach ($moduleUpdateFiles as $k=>$module) {
         foreach ($module as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
     }
@@ -96,12 +114,12 @@ if (count($installFiles) or count($moduleUpdateFiles)) {
     foreach ($installFiles as $k=>$module) {
         foreach ($module as $file) {
             includePhp($file, '_pre');
-            exec('mysql -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($p['config']['sqlBase']).' 2>&1 < '.$file, $output);
+            exec('mysql -h'.escapeshellarg($sqlParams['sqlServeur']).'  -u '.escapeshellarg($sqlParams['sqlUser']).' -p'.escapeshellarg($sqlParams['sqlPass']).' --default-character-set=utf8 '.escapeshellarg($sqlParams['sqlBase']).' 2>&1 < '.$file, $output);
             includePhp($file, '_post');
         }
     }
 }
-msSQL::sqlQuery("UPDATE system SET value='normal' WHERE name='state' and groupe='system'");
+msSQL::sqlQuery("UPDATE `system` SET value='normal' WHERE name='state' and groupe='system'");
 
 if (isset($output) and is_array($output)) {
     foreach($output as $k=>$message) {

@@ -52,7 +52,7 @@ spl_autoload_register(function ($class) {
 require $homepath.'fonctions/compatibilite.php';
 
 /////////// Config loader
-$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['config']=yaml_parse_file($homepath.'config/config.yml');
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
@@ -69,11 +69,7 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$router = new AltoRouter();
-$routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
-$router->addRoutes($routes);
-$router->setBasePath($p['config']['urlHostSuffixe']);
-$match = $router->match();
+$match = msSystem::getRoutes(['phonecapture']);
 
 ///////// user
 if (isset($_COOKIE['userIdPc'])) {
@@ -92,7 +88,7 @@ if (isset($_COOKIE['userIdPc'])) {
 }
 
 ///////// Controler else -> 404
-if ($match and is_file($homepath.'controlers/'.$match['target'].'.php')) {
+if ($match and is_file($homepath.'controlers/'.$match['target'].'.php') and $p['config']['optionGeActiverPhonecapture'] == 'true') {
     include $homepath.'controlers/'.$match['target'].'.php';
 
     // complément lié au module installé

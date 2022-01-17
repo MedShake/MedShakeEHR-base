@@ -1,0 +1,46 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément boite de dépôt (dropbox)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% if config.optionGeActiverDropbox == 'true' %}
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Boite de dépôt"{% endif %}>
+   <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dropbox/">
+     {% if config.designTopMenuStyle == 'icones' %}
+       <i class="fas fa-inbox fa-lg d-none d-lg-inline"></i>
+       <span class="d-lg-none">
+         Boite de dépôt</span>
+       {% if page.dropboxNbFiles > 0 and config.designTopMenuDropboxCountDisplay == 'true' %}
+         <span class="badge text-white badgeBoiteDepot" style="margin-left: -5px">{{ page.dropboxNbFiles }}</span>
+       {% endif %}
+     {% else %}
+       Boite de dépôt
+       {% if page.dropboxNbFiles > 0 and config.designTopMenuDropboxCountDisplay == 'true' %}
+         <span class="badge badge-light badgeBoiteDepot">{{ page.dropboxNbFiles }}</span>
+       {% endif %}
+     {% endif %}
+   </a>
+ </li>
+{% endif %}

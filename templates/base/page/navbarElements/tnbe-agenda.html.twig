@@ -1,0 +1,83 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément agenda (agenda)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% if config.optionGeActiverAgenda == 'true' %}
+  {% if config.agendaDistantLink %}
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agenda"{% endif %}>
+     <a class="nav-link" href="{{ config.agendaDistantLink }}" target="agenda">
+       {% if config.designTopMenuStyle == 'icones' %}
+         <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
+         <span class="d-lg-none">
+           Agenda</span>
+       {% else %}
+         Agenda
+       {% endif %}
+     </a>
+   </li>
+  {% elseif page.agendaUsers|length == 1 %}
+   {% for k, v in page.agendaUsers %}
+     <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agenda"{% endif %}>
+       <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/" target="agenda">
+         {% if config.designTopMenuStyle == 'icones' %}
+           <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
+           <span class="d-lg-none">
+             Agenda</span>
+         {% else %}
+           Agenda
+         {% endif %}
+       </a>
+     </li>
+   {% endfor %}
+  {% elseif page.agendaUsers %}
+   <li class="nav-item dropdown"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Agendas"{% endif %}>
+     <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false">
+       {% if config.designTopMenuStyle == 'icones' %}
+         <i class="fas fa-calendar-alt fa-lg d-none d-lg-inline"></i>
+         <span class="d-lg-none">
+           Agendas</span>
+       {% else %}
+         Agendas
+       {% endif %}
+     </a>
+     <div class="dropdown-menu">
+       {% if user.id in page.agendaUsers | keys %}
+         <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/" target="agenda">{{ page.agendaUsers[user.id] }}</a>
+         <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ user.id }}/">{{ page.agendaUsers[user.id] }}</a>
+
+         <div class="dropdown-divider"></div>
+       {% endif %}
+       {% for k, v in page.agendaUsers %}
+         {% if k != user.id %}
+           <a class="d-none d-lg-block dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+           <a class="d-lg-none dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/agenda/{{ k }}/">{{ v }}</a>
+         {% endif %}
+       {% endfor %}
+     </div>
+   </li>
+  {% endif %}
+{% endif %}

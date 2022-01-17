@@ -1,0 +1,40 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément exporter (exporter)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% if config.droitExportPeutExporterToutesDataGroupes == 'true' or config.droitExportPeutExporterPropresData == 'true' %}
+ <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Export de données"{% endif %}>
+   <a class="nav-link" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/outils/export-data/">
+     {% if config.designTopMenuStyle == 'icones' %}
+       <i class="fas fa-database fa-lg d-none d-lg-inline"></i>
+       <span class="d-lg-none">
+         Export de données</span>
+     {% else %}
+       Export de données
+     {% endif %}
+   </a>
+ </li>
+{% endif %}

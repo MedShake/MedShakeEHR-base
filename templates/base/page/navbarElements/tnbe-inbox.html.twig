@@ -1,0 +1,49 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément boite apicrypt (inbox)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ #}
+
+{% if config.optionGeActiverInboxApicrypt == 'true' %}
+  {% if config.apicryptAdresse is not empty or config.apicryptInboxMailForUserID is not empty or config.apicryptInboxMailForUserID is same as(0) %}
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Boite de réception"{% endif %}>
+     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/inbox/">
+       {% if config.designTopMenuStyle == 'icones' %}
+         <i class="fas fa-at fa-lg d-none d-lg-inline"></i>
+         <span class="d-lg-none">
+           Boite de réception</span>
+         {% if page.inbox.numberOfMsg > 0 and config.designTopMenuInboxCountDisplay == 'true' %}
+           <span class="badge text-white" style="margin-left: -5px">{{ page.inbox.numberOfMsg }}</span>
+         {% endif %}
+       {% else %}
+         Boite de réception
+         {% if page.inbox.numberOfMsg > 0 and config.designTopMenuInboxCountDisplay == 'true' %}
+           <span class="badge badge-light">{{ page.inbox.numberOfMsg }}</span>
+         {% endif %}
+       {% endif %}
+     </a>
+   </li>
+  {% endif %}
+{% endif %}

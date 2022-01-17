@@ -141,7 +141,7 @@
 
       // modules php
       $modulesPHP = get_loaded_extensions();
-      $modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'soap', 'dom', 'gnupg'];
+      $modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'soap', 'dom', 'gnupg', 'yaml'];
       sort($modulesPHPrequis);
       foreach($modulesPHPrequis as $mod) {
         if(in_array($mod, $modulesPHP)) {

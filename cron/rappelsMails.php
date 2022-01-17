@@ -40,7 +40,8 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getcwd().'/';
+if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
+else $homepath=preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
 require $homepath.'vendor/autoload.php';
@@ -53,7 +54,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
@@ -92,7 +93,11 @@ function sendmail($pa)
     $mail->addAddress($pa['email'], $pa['identite']);
     $mail->Subject = 'Rappel rdv le '.$pa['jourRdv'].' à '.$pa['heureRdv'];
 
-    $msgRappel=str_replace("#praticien", $pa['praticien'], str_replace("#jourRdv", $pa['jourRdv'], str_replace('#heureRdv', $pa['heureRdv'], $p['config']['mailRappelMessage'])));
+    $msgRappel=$p['config']['mailRappelMessage'];
+    $msgRappel=str_replace("#praticien", $pa['praticien'], $msgRappel);
+    $msgRappel=str_replace("#jourRdv", $pa['jourRdv'], $msgRappel);
+    $msgRappel=str_replace('#heureRdv', $pa['heureRdv'], $msgRappel);
+    $msgRappel=str_replace('\n', PHP_EOL, $msgRappel);
 
     $mail->Body = nl2br($msgRappel);
     $mail->AltBody = $msgRappel;
@@ -105,7 +110,7 @@ function sendmail($pa)
     return $pa;
 }
 
-$users=msPeople::getUsersListForService('mailRappelActiver');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvMail');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
@@ -128,7 +133,18 @@ foreach ($users as $userID=>$value) {
 
         $listeEmail=msSQL::sql2tabKey("select toID, value from objets_data where toId in ('".implode("', '", $listeID)."') and typeID='".msData::getTypeIDFromName('personalEmail')."' and deleted='' and outdated='' ", 'toID', 'value');
 
-        $date_sms=date("d/m/y", $tsJourRDV);
+        $date_email=date("d/m/y", $tsJourRDV);
+
+        $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
+        $logFile=$logFileDirectory.'RappelsRDV.json';
+
+        openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        // Ne pas re-émmetre le rapel de rendez-vous si celui existe déjà
+        if (file_exists(($logFile))) {
+            syslog(LOG_WARNING, $logFile.' exite déjà. Ce rappel de rendez par email ne sera pas re-émis.');
+            exit(64);
+            closelog();
+        }
 
         $dejaInclus=[];
         foreach ($patientsList as $patient) {
@@ -140,7 +156,7 @@ foreach ($users as $userID=>$value) {
                       'praticien'=>$value,
                       'id'=>$patient['id'],
                       'typeCs'=>$patient['type'],
-                      'jourRdv'=>$date_sms,
+                      'jourRdv'=>$date_email,
                       'heureRdv'=>$patient['heure'],
                       'identite'=>$patient['identite'],
                       'email'=>$listeEmail[$patient['id']]
@@ -152,9 +168,14 @@ foreach ($users as $userID=>$value) {
         }
 
         //log json
-        $logFileDirectory=$p['config']['mailRappelLogCampaignDirectory'].date('Y/m/d/');
         msTools::checkAndBuildTargetDir($logFileDirectory);
-        file_put_contents($logFileDirectory.'RappelsRDV.json', json_encode($log));
+        if (!empty($log)) {
+            file_put_contents($logFile, json_encode($log));
+            syslog(LOG_INFO, $logFile.' crée. Rapel de rendez-vous pour le praticien '.$value.' est expédié le '.$date_email.'.');
+        } else {
+            syslog(LOG_INFO, 'Aucun destinataire pour le rapel de rendez par email pour '.$value.' à la date du '.$date_email.'.');
+        }
+        closelog();
 
     }
 }

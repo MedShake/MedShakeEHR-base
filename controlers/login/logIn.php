@@ -31,7 +31,7 @@ $debug='';
 $template="login";
 
 // vérifications et ajustement saut de version majeure  
-$versionBase = msSQL::sqlUniqueChamp("SELECT value AS version FROM system WHERE name='base'");
+$versionBase = msSQL::sqlUniqueChamp("SELECT value AS version FROM `system` WHERE name='base'");
 if(version_compare($versionBase, 'v6.0.0', '<')) {
   include($homepath.'/scripts/jumpv5tov6.php');
 }

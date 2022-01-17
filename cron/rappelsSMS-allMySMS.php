@@ -40,7 +40,8 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-$homepath=getcwd().'/';
+if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
+else $homepath=preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
 require $homepath.'vendor/autoload.php';
@@ -53,24 +54,27 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
 $mysqli=msSQL::sqlConnect();
 
-$users=msPeople::getUsersListForService('smsRappelActiver');
+$users=msPeople::getUsersListForService('optionGeActiverRappelsRdvSMS');
 
 foreach ($users as $userID=>$value) {
     /////////// config pour l'utilisateur concerné
     $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
+
+	if (! empty($p['config']['smsTypeRdvPourRappel']))
+		$smsTypeRdvPourRappel = explode(',', $p['config']['smsTypeRdvPourRappel']);
 
     $tsJourRDV=time()+($p['config']['smsDaysBeforeRDV']*24*60*60);
 
     $campaignSMS = new msSMSallMySMS();
 
     $campaignSMS->set_campaign_name("RappelsRDV".date('Ymd', $tsJourRDV));
-    $campaignSMS->set_message(str_replace("#praticien", $value, str_replace("#jourRdv", "#param_1#", str_replace('#heureRdv', "#param_2#", $p['config']['smsRappelMessage']))));
+    $campaignSMS->set_message(str_replace("#praticien", $value, str_replace("#jourRdv", "#param1#", str_replace('#heureRdv', "#param2#", $p['config']['smsRappelMessage']))));
     $campaignSMS->set_tpoa(iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', str_replace("#praticien", $value, $p['config']['smsTpoa'])));
 
     // Si fonctionnement avec source externe, adapter l'url
@@ -81,6 +85,14 @@ foreach ($users as $userID=>$value) {
     $events = new msAgenda();
     $events->set_userID($userID);
     $patientsList=$events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
+
+	// Si smsTypeRdvPourRappel est défini et que le rdv n'est pas dans la liste des rdv pour appel retirer le patient de la liste
+	if (! empty($smsTypeRdvPourRappel) && is_array($patientsList)) {
+		$nbPatients = count($patientsList);
+		for ($i=0 ; $i<$nbPatients ; $i++) {
+			if (! in_array($patientsList[$i]['type'], $smsTypeRdvPourRappel)) unset($patientsList[$i]);
+		}
+	}
 
     $campaignSMS->set_addData4log(array('patientsList'=>$patientsList, 'tsJourdRDV'=>$tsJourRDV));
 
@@ -96,15 +108,23 @@ foreach ($users as $userID=>$value) {
             if (isset($listeTel[$patient['id']])) {
                 $telNumber=str_ireplace(array(' ', '/', '.'), '', $listeTel[$patient['id']]);
                 if (!in_array($telNumber, $numDejaInclus)) {
-                    $campaignSMS->ajoutDestinataire($telNumber, array('PARAM_1'=>$date_sms , 'PARAM_2'=>$patient['heure']));
+                    $campaignSMS->ajoutDestinataire($telNumber, array('param1'=>$date_sms , 'param2'=>$patient['heure']));
                 }
                 $numDejaInclus[]=$telNumber;
             }
         }
 
-        $campaignSMS->sendCampaign();
         $campaignSMS->set_filename4log('RappelsRDV.json');
-        $campaignSMS->logCampaign();
-        $campaignSMS->logCreditsRestants();
+        $campaignSMS->set_timestamp4log(time());
+        openlog('MedShakeEHR', LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        syslog(LOG_INFO, 'Evoie du rappel de rendez vous sms pour la campagne : '.$campaignSMS->get_fullpath4log());
+        $resu = $campaignSMS->sendCampaign();
+        if (!empty($resu)) {
+            $campaignSMS->logCampaign();
+            $campaignSMS->logCreditsRestants();
+        } else {
+            syslog(LOG_WARNING, $campaignSMS->get_fullpath4log().' exite, la campagne sms ne sera pas re-expedier une seconde fois');
+        }
+        closelog();
     }
 }

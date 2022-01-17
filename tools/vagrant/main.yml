@@ -1,0 +1,238 @@
+---
+- hosts: msehr
+  become: yes
+  vars_files:
+    - secrets.yml
+
+  tasks:
+    - name: Set timezone 
+      timezone:
+        name: "{{ timezone }}"
+    
+    - name: Install packages
+      apt: 
+        name: "{{ msehrPackages }}"
+        update_cache: yes 
+        state: latest
+
+    - name: 
+      ufw:
+        state: enabled
+        rule: allow
+        name: '{{ item }}'
+      loop:
+        - OpenSSH
+        - WWW Full
+
+    - name: create APT auto-upgrades configuration
+      template:
+        src: templates/20auto-upgrades.j2
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        owner: root
+        group: root
+        mode: 0644
+      
+    - name: create unattended-upgrades configuration
+      template:
+        src: templates/50unattended-upgrades.j2
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: sync sources with working directory
+      copy: 
+        src: /vagrant/
+        dest: /opt/ehr 
+        remote_src: yes 
+        directory_mode: yes
+      when: stage == "testing"
+
+    - name: Creating MEDSHAKEEHRPATH file
+      copy:
+        dest: /opt/ehr/public_html/MEDSHAKEEHRPATH
+        content: |
+          /opt/ehr
+        
+    - name: Add good permissions and ownership to medshakeehr folder
+      ansible.builtin.file:
+        path: /opt/ehr
+        state: directory
+        recurse: yes
+        owner: www-data
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Composer upgrade on /ehr
+      shell: cd /opt/ehr && composer upgrade --no-cache   
+      become: yes
+      become_user: www-data
+
+    - name: Composer upgrade on /ehr/public_html
+      shell: cd /opt/ehr/public_html && composer upgrade --no-cache   
+      become: yes
+      become_user: www-data
+
+    - name: Setup php.ini configuration.
+      template:
+        src: templates/php.ini.j2
+        dest: "/etc/php/7.4/apache2/php.ini"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Creates SSL directory
+      file:
+        path: "/etc/ssl/{{ domain }}"
+        state: directory
+        recurse: yes
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: create private key
+      openssl_privatekey:
+        path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
+
+    - name: Generate an OpenSSL Certificate Signing Request with Subject information
+      openssl_csr:
+        path: "/etc/ssl/{{ domain }}/{{ domain }}.csr"
+        privatekey_path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
+        country_name: "{{ countryName }}"
+        locality_name: "{{ localityName }}"
+        organization_name: "{{ organizationName }}"
+        email_address: "{{ emailAdress }}"
+        common_name: "{{ domain }}"
+        state: present
+
+    - name: Generate a Self Signed OpenSSL certificate
+      openssl_certificate:
+        path: "/etc/ssl/{{ domain }}/{{ domain }}.pem"
+        privatekey_path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
+        csr_path: "/etc/ssl/{{ domain }}/{{ domain }}.csr"
+        provider: selfsigned
+        valid_in: 315360000 
+        state: present
+      
+    - name: Setup vhosts configuration.
+      template:
+        src: templates/msehr.vhost.conf.j2
+        dest: "/etc/apache2/sites-available/{{ domain }}.conf"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Enabled mod_rewrite, mod_headers and mod_ssl
+      apache2_module: 
+        state: present
+        name: "{{ item }}" 
+      with_items:
+        - headers
+        - rewrite
+        - ssl
+      notify: Restart Apache
+
+    - name: deregister default vhosts
+      command: a2dissite {{item}} 
+      with_items:
+        - 000-default.conf 
+        - default-ssl.conf
+      notify: Restart Apache
+
+    - name: register default vhosts
+      command: a2ensite {{item}} 
+      with_items:
+        - "{{ domain }}"
+      notify: Restart Apache
+
+    - name: Set ServerTokens Prod
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerTokens OS'
+        line: ServerTokens Prod
+        state: present
+      notify: Restart Apache
+
+    - name: Set ServerSignature Off
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerSignature On'
+        line: ServerSignature Off
+        state: present
+      notify: Restart Apache  
+
+    - name: Set the root password 
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}"
+
+    - name: Secure the root user for IPV6 localhost (::1)
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}" host="::1"
+
+    - name: Secure the root user for IPV4 localhost (127.0.0.1)
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}" host="127.0.0.1"
+
+    - name: Secure the root user for localhost domain
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}" host="localhost"
+
+    - name: Secure the root user for server_hostname domain
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}" host="{{ ansible_fqdn }}"
+
+    - name: Deletes anonymous server user
+      mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user="" host_all=yes state=absent
+
+    - name: Removes the test database
+      mysql_db: login_user=root login_password="{{ sqlRootPassword }}" db=test state=absent
+
+    - name: Create database user with password and all database privileges and 'WITH GRANT OPTION'
+      mysql_user:
+        name: "{{ sqlUserAccount }}"
+        password: "{{ sqlUserPassword }}"
+        login_user: root
+        login_password: "{{ sqlRootPassword }}"
+        priv: 'medshakeehr.*:ALL,GRANT'
+        state: present    
+
+    - name: Ensure MedShakeEHR database is present.
+      mysql_db:
+        name: "{{ sqlDbName }}"
+        login_user: "{{ sqlUserAccount }}"
+        login_password: "{{ sqlUserPassword }}"
+        collation: utf8_general_ci
+        encoding: utf8
+        state: present
+
+    - name: Gather package facts
+      package_facts:
+        manager: apt
+
+    - name: Setup orthanc configuration.
+      template:
+        src: templates/orthanc.conf.j2
+        dest: "/etc/orthanc/orthanc.json"
+        owner: root
+        group: root
+        mode: 0644
+      when: "'orthanc' in ansible_facts.packages"
+
+    - name: install template for msehr-cli
+      template:
+        src: templates/msehrCli.sh.j2
+        dest: /tmp/msehrCli.sh
+        owner: root
+        group: root
+        mode: '0755'
+    
+    - name:  check if config.yml exist
+      stat:
+        path: /opt/ehr/config/config.yml
+      register: ymlconfig 
+      
+    - name: Run msehr-cli
+      command: /tmp/msehrCli.sh
+      when: not ymlconfig.stat.exists
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+

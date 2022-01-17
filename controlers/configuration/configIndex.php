@@ -58,4 +58,15 @@ if (!msUser::checkUserIsAdmin()) {
     if(class_exists('msApicrypt2')) {
       $p['page']['apicrypt2present'] = true;
     }
+
+	if (is_file($homepath.'public_html/bddEdit.php')) {
+	  if (@is_writable($homepath.'public_html/bddEdit.php')) {
+		$p['page']['alerteAdminer']=true;
+	  } else {
+		$p['page']['alerteAdminer']=false;
+	  }
+	  $p['page']['alerteAdminer']=true;
+	} else {
+	  $p['page']['alerteAdminer']=false;
+	}
 }

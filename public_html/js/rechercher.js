@@ -43,6 +43,11 @@ $(document).ready(function() {
     }
   });
 
+  $("input[type='checkbox'].searchupdate").on("click", function(e) {
+      updateListingPatients();
+      listingRow = 0;
+  });
+
   $(document).on("keydown", function(e) {
     if (e.keyCode == 40) { //down
       listingRow++;
@@ -98,19 +103,26 @@ $(document).ready(function() {
     $('#lectureCpsVitale').modal('hide');
     indexVitale = $(this).attr('data-indexVitale');
 
+    // TODO utiliser le NIR bénéficiaire (chmap [104][9]) par default pour la recheche si fournis ?
+    //$('#autreCrit').val('nss');
+
     dataVitale[indexVitale]['firstname'] = ucfirst(dataVitale[indexVitale]['firstname']);
     //$('#autreCritVal').val(dataVitale[indexVitale]['nss']);
     if(dataVitale[indexVitale]['birthname'] && dataVitale[indexVitale]['lastname']) {
       $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['lastname']);
     } else if (dataVitale[indexVitale]['birthname']) {
-      console.log($('input[name="lastname"]'));
       $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['birthname']);
     } else if (dataVitale[indexVitale]['lastname']) {
       $('#formRecherchePatients input[name="lastname"]').val(dataVitale[indexVitale]['lastname']);
     }
     $('#formRecherchePatients input[name="firstname"]').val(dataVitale[indexVitale]['firstname']);
 
-    //$('#autreCrit').val('nss');
+    // Si la date de naissance est fournis l'utiliser aussi comme critaire de recherche
+    if (dataVitale[indexVitale]['birthdate']) {
+      $('#formRecherchePatients input[name="autre"]').val(dataVitale[indexVitale]['birthdate']);
+      $('#formRecherchePatients select[name="autre"]').val('birthdate');
+    }
+
     $('#autreCritVal').trigger('keyup');
 
   });
@@ -326,6 +338,7 @@ function updateListingPatients() {
       d3: $('#d3').val(),
       autreCrit: $('#autreCrit option:selected').val(),
       autreCritVal: $('#autreCritVal').val(),
+      patientsPropres: $('#patientsPropres').is(':checked'),
     },
     dataType: "html",
     success: function(data) {

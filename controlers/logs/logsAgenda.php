@@ -78,8 +78,8 @@ if (!msUser::checkUserIsAdmin()) {
           $p['page']['last'][$v['date']][]=$v;
       }
   }
-  //dernies rdv modifiés
-  if ($lastUpdate=msSQL::sql2tab("select l.eventID, l.userID as agendaID, l.date, l.operation, l.olddata, l.fromID, a.patientid as patientID, a.type as type, a.start, a.end, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree,
+  //derniers rdv modifiés
+  if ($lastUpdate=msSQL::sql2tab("select l.eventID, l.userID as agendaID, l.date, l.operation, l.olddata, l.fromID, a.patientid as patientID, a.`type` as `type`, a.start, a.end, TIMESTAMPDIFF(MINUTE,a.start,a.end) as duree,
   CASE WHEN n.value != '' THEN n.value ELSE bn.value END as patientNom, p.value as patientPrenom,
   CASE WHEN n1.value != '' THEN n1.value ELSE bn1.value END as auteurNom, p1.value as auteurPrenom
     from agenda_changelog as l

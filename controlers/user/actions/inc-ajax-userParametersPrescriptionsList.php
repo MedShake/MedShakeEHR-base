@@ -30,7 +30,7 @@
  if ($tabTypes=msSQL::sql2tab("select p.* , c.name as catName, c.label as catLabel
       from prescriptions as p
       left join prescriptions_cat as c on c.id=p.cat
-      where p.toID in ('0', '".$p['user']['id']."') and c.type='nonlap'
+      where p.toID in ('0', '".$p['user']['id']."') and c.`type`='nonlap'
       group by p.id
       order by c.label asc, p.label asc")) {
      foreach ($tabTypes as $v) {
@@ -39,7 +39,7 @@
  }
 
 
- $p['page']['catList']=msSQL::sql2tabKey("select id, label from prescriptions_cat where type='nonlap' order by label", 'id', 'label');
+ $p['page']['catList']=msSQL::sql2tabKey("select `id`, `label` from `prescriptions_cat` where `type`='nonlap' order by `label`", 'id', 'label');
 
 $html = new msGetHtml;
 $html->set_template('inc-ajax-tabUserParametersPresList.html.twig');

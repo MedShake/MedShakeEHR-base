@@ -1,0 +1,110 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : options pour ligne de patient ou de pro
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+<div class="btn-group">
+ {% if page.porp != 'externe' and (page['outputType'][patientID]['type']!='externe' or patientID in page.extToInt|keys) %}
+
+   {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
+     <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/" title="Édition des données administratives">
+       <i class="fas fa-pencil-alt"></i>
+     </a>
+   {% endif %}
+   {% if page.porp != 'pro' %}
+     <a class="btn btn-light btn-sm d-none d-sm-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/" title="Édition des relations">
+       <i class="fas fa-link"></i>
+     </a>
+     {% if page.modelesDocASigner|length == 1 %}
+       <button class="btn btn-light btn-sm sendSign d-none d-sm-inline-block" type="button" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ page.modelesDocASigner[0]['id'] }}" title="Faire signer {{ page.modelesDocASigner[0]['label']|e('html_attr') }}">
+         <i class="fas fa-edit"></i>
+       </button>
+     {% elseif page.modelesDocASigner|length > 1 %}
+       <div class="btn-group" role="group">
+         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           <i class="fas fa-edit"></i>
+         </button>
+         <div class="dropdown-menu dropdown-menu-right">
+           {% for docSign in page.modelesDocASigner %}
+           <a class="dropdown-item sendSign" href="#" data-signPeriphName="{{ config.signPeriphName }}" data-patientID="{{ patientIDmod }}" data-typeID="{{ docSign.id }}">{{ docSign.label }}</a>
+           {% endfor %}
+         </div>
+       </div>
+     {% endif %}
+
+     {% if config.transmissionsPeutCreer == 'true' %}
+       <button type="button" class="btn btn-light btn-sm newTransmission" data-patientID="{{ patientIDmod }}" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
+     {% endif %}
+   {% endif %}
+   <div class="btn-group">
+     <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <i class="fas fa-ellipsis-h"></i>
+     </button>
+     <div class="dropdown-menu dropdown-menu-right">
+       {% if (page.porp == 'pro' and config.droitDossierPeutCreerPraticien == 'true') or page.porp == 'patient' or patientIDmod == user.id %}
+         <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/edit/{{ patientIDmod }}/">
+           <i class="fas fa-pencil-alt fa-fw text-muted mr-1"></i> Éditer
+         </a>
+       {% endif %}
+       {% if page['outputType'][patientID]['type'] == 'patient' %}
+         <a class="dropdown-item d-block d-sm-none" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/relations/{{ patientIDmod }}/">
+           <i class="fas fa-link fa-fw text-muted mr-1"></i> Relations
+         </a>
+       {% endif %}
+       {% if config.PraticienPeutEtrePatient == 'true' and config.droitDossierPeutCreerPraticien == 'true' %}
+         {% if page['outputType'][patientID]['type'] != 'pro' %}
+           <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
+             <i class="fas fa-user-md fa-fw text-muted mr-1"></i> Ajouter à la liste Praticiens
+           </a>
+         {% elseif config.droitDossierPeutRetirerPraticien == 'true' %}
+           <a class="dropdown-item switchPraticienListe" data-patientID="{{ patientIDmod }}" href="#">
+             <i class="fas fa-user-slash fa-fw text-muted mr-1"></i> Retirer de la liste Praticiens
+           </a>
+         {% endif %}
+       {% endif %}
+       {% if config.smtpTracking and page['outputType'][patientID]['type'] == 'patient' %}
+         <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSendToPatient/{{ patientIDmod }}/" >
+             <i class="fas fa-envelope fa-fw text-muted mr-1"></i> Historique des mails envoyés
+         </a>
+       {% endif %}
+       {% if user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isNotUser' and config.optionGeAdminActiverLiensRendreUtilisateur == 'true' %}
+         <a class="dropdown-item rendreUtilisateur" href="#" >
+             <i class="fas fa-user fa-fw text-muted mr-1"></i> Rendre utilisateur
+         </a>
+       {% elseif user.rank == 'admin' and page['outputType'][patientID]['isUser'] == 'isUser' %}
+            <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/user-param/{{ patientID }}/" >
+                <i class="fas fa-user-cog fa-fw text-muted mr-1"></i> Configuration utilisateur
+            </a>
+       {% endif %}
+       {% if (config.droitDossierPeutSupPatient =='true' and page['outputType'][patientID]['type'] == 'patient') or (config.droitDossierPeutSupPraticien =='true' and page['outputType'][patientID]['type'] == 'pro') %}
+         <a class="dropdown-item markDeleted" data-patientID="{{ patientIDmod }}" href="#">
+           <i class="fas fa-trash-alt fa-fw text-muted mr-1"></i> Supprimer
+         </a>
+       {% endif %}
+     </div>
+   </div>
+ {% endif %}
+</div>

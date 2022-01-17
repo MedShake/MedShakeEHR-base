@@ -70,16 +70,16 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'agendaLocalPatientsOfTheDay'=>'patientsOfTheDay.json',
     'agendaNumberForPatientsOfTheDay'=>'0',
     'agendaModePanneauLateral'=>'true',
-    'mailRappelActiver'=>'false',
+    'optionGeActiverRappelsRdvMail'=>'false',
     'mailRappelDaysBeforeRDV'=>'3',
     'mailRappelMessage'=>'Bonjour,\n\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\n\nMerci de votre confiance,\nÀ bientôt !\n\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.',
-    'smsRappelActiver'=>'false',
+    'optionGeActiverRappelsRdvSMS'=>'false',
     'smsRappelMessage'=>'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien',
     'smsDaysBeforeRDV'=>'3',
     'smsCreditsFile'=>'creditsSMS.txt',
     'smsSeuilCreditsAlerte'=>'150',
     'smsTpoa'=>'Dr #praticien',
-    'utiliserLap'=>'false',
+    'optionGeActiverLapInterne'=>'false',
     'theriaqueShowMedicHospi'=>'true',
     'theriaqueShowMedicNonComer'=>'false',
     'lapAlertPatientTermeGrossesseSup46'=>'true',
@@ -87,7 +87,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'lapSearchResultsSortBy'=>'nom',
     'lapSearchDefaultType'=>'dci',
     'lapPrintAllergyRisk'=>'true',
-    'vitaleActiver'=>'false',
+    'optionGeActiverVitaleLecture'=>'false',
     'designTopMenuStyle'=>'icones',
     'designTopMenuInboxCountDisplay'=>'true',
     'designTopMenuTransmissionsCountDisplay'=>'true',
@@ -98,11 +98,11 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'signPeriphName'=>'default',
     'administratifSecteurHonorairesNgap'=>'mspe',
     'droitExportPeutExporterPropresData'=>'true',
-    'droitExportPeutExporterAutresData'=>'false',
+    'droitExportPeutExporterToutesDataGroupes'=>'false',
     'droitStatsPeutVoirStatsGenerales'=>'true',
     'statsExclusionCats'=>'catTypeCsATCD,csAutres,declencheur',
     'droitDossierPeutCreerPraticien'=>'true',
-    'droitDossierPeutVoirTousPatients'=>'true',
+    'droitDossierPeutVoirUniquementPatientsPropres'=>'false',
     'optionGeAdminActiverLiensRendreUtilisateur'=>'false',
     'droitDossierPeutSupPraticien'=>'true',
     'droitDossierPeutSupPatient'=>'true',
@@ -110,8 +110,10 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'vitaleMode'=>'simple',
     'formFormulaireListingPatients'=>'baseListingPatients',
     'formFormulaireListingPraticiens'=>'baseListingPro',
+    'formFormulaireListingRegistres'=>'baseListingRegistres',
     'formFormulaireNouveauPatient'=>'baseNewPatient',
     'formFormulaireNouveauPraticien'=>'baseNewPro',
+    'formFormulaireNouveauRegistre'=>'baseNewRegistre',
     'designAppName'=>'MedShakeEHR',
     'optionGePatientOuvrirApresCreation'=>'liens',
     'transmissionsPeutCreer'=>'true',
@@ -127,12 +129,45 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionGeDestructionDataDossierPatient'=>'false',
     'dicomPort'=>'8042',
     'dicomProtocol'=>'http://',
-    'utiliserLapExterne'=>'false',
+    'optionGeActiverLapExterne'=>'false',
     'utiliserLapExterneName'=>'',
     'optionGeLoginPassAttribution'=>'admin',
     'optionGeLoginPassOnlineRecovery'=>'false',
-    'dropboxActiver'=>'false',
+    'optionGeActiverDropbox'=>'false',
     'designTopMenuDropboxCountDisplay'=>'true',
+    'formFormulaireListingGroupes'=>'baseListingGroupes',
+    'droitGroupePeutCreerGroupe'=>'false',
+    'formFormulaireNouveauGroupe'=>'baseNewGroupe',
+    'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
+    'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
+    'designTopMenuSections'=>"- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils",
+    'optionGeActiverAgenda'=>'true',
+    'optionGeActiverCompta'=>'true',
+    'optionGeActiverInboxApicrypt'=>'true',
+    'optionGeActiverApiRest'=>'true',
+    'optionGeActiverTransmissions'=>'true',
+    'optionGeActiverPhonecapture'=>'true',
+    'optionGeActiverDicom'=>'true',
+    'droitRegistrePeutCreerRegistre'=>'false',
+    'droitGroupePeutVoirTousGroupes'=>'false',
+    'optionGeLoginCreationDefaultModule'=>'base',
+    'optionGeLoginCreationDefaultTemplate'=>'',
+    'optionGePraticienMontrerPatientsLies'=>'true',
+    'droitDossierPeutTransformerPraticienEnUtilisateur'=>'false',
+    'droitDossierPeutAssignerPropresGroupesPraticienFils'=>'false',
+    'optionGeCreationAutoPeopleExportID'=>'true',
+    'optionGeExportPratListSelection'=>'true',
+    'optionGeActiverRegistres'=>'false',
+    'droitRegistrePeutGererGroupes'=>'false',
+    'droitRegistrePeutGererAdministrateurs'=>'false',
+    'optionGeActiverGroupes'=>'false',
+    'groupesNbMaxGroupesParPro'=>'1',
+    'optionGeActiverSignatureNumerique'=>'true',
+    'optionDossierPatientActiverGestionALD'=>'true',
+    'optionDossierPatientActiverCourriersCertificats'=>'true',
+    'optionDossierPatientInhiberHistoriquesParDefaut'=>'false',
+    'droitDossierPeutRechercherParPeopleExportID'=>'false',
+    'optionGeExportDataConsentementOff'=>'true',
   ];
 
   protected function _getSpecifSql() {
@@ -189,7 +224,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     }
 
     // complément data_cat
-    if($catData=msSQL::sql2tab("select * from $this->_bdd.data_cat where type='base'")) {
+    if($catData=msSQL::sql2tab("select * from $this->_bdd.data_cat where `type`='base'")) {
     foreach($catData as $v) {
         unset($v['id']);
         $v['fromID']='1';
@@ -200,13 +235,13 @@ class msModBaseSqlGenerate extends msSqlGenerate
     }
 
     // complément system
-    $system=msSQL::sqlUnique("select * from $this->_bdd.system where name='state' and groupe='system' limit 1");
+    $system=msSQL::sqlUnique("select * from $this->_bdd.`system` where name='state' and groupe='system' limit 1");
     unset($system['id']);
     if(isset($this->_system_fields)) $this->_system_fields=$this->_getSqlFieldsPart($system);
     $this->_system_values[]=$this->_getSqlValuesPart($system);
 
     // people services
-    if($services=msSQL::sql2tab("select * from $this->_bdd.people where type='service' and module='base'")) {
+    if($services=msSQL::sql2tab("select * from $this->_bdd.people where `type`='service' and `module`='base'")) {
       foreach($services as $service) {
         unset($service['id']);
         $service['pass']='';

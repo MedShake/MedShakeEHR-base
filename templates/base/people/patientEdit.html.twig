@@ -55,40 +55,30 @@
   </h1>
 
 
-  <div class="row mt-3">
+  <div class="row my-4">
     <div class="col-xl-5 col-6">
       <a class="btn btn-primary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ page.patient.id }}/">
         <span class="fas fa-folder-open" aria-hidden="true"></span>
         Dossier patient
       </a>
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
-        <span class="fas fa-link" aria-hidden="true"></span>
-        Éditer les relations
-      </a>
+      {% if config.optionGePraticienMontrerPatientsLies == 'true' %}
+        <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/relations/{{ page.patient.id }}/">
+          <span class="fas fa-link" aria-hidden="true"></span>
+          Éditer les relations
+        </a>
+      {% endif %}
     </div>
-    <div class="col-xl-5 col-6 text-right">
-      <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.patient.id }}/">
-        <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-        Editer infos pros
-      </a>
-    </div>
+    {% if config.PraticienPeutEtrePatient == 'true' %}
+      <div class="col-xl-5 col-6 text-right">
+        <a class="btn btn-outline-secondary" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/pro/edit/{{ page.patient.id }}/">
+          <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+          Editer infos pros
+        </a>
+      </div>
+    {% endif %}
   </div>
 
-
-  {% if session['form'][page.formIN]['validationErrorsMsg'] %}
-    <div class="alert alert-danger mt-3" role="alert">
-      Merci de considérer les informations suivantes et de corriger les champs concernés :
-      <ul>
-        {% for message in session['form'][page.formIN]['validationErrorsMsg'] %}
-          {% if message %}
-            <li>{{ message }}</li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
-  <ul class="nav nav-tabs mt-4 col-xl-10 col-12" id="infosTab" role="tablist">
+  <ul class="nav nav-tabs col-xl-10 col-12" id="infosTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active font-weight-bold" id="principales-tab" data-toggle="tab" href="#principales" role="tab" >Informations principales</a>
     </li>
@@ -98,7 +88,10 @@
   </ul>
 
   <div class="tab-content border-left border-bottom border-right col-xl-10 col-12 p-4  bg-light" id="myTabContent">
-    <div class="tab-pane fade show active changeObserv" id="principales" role="tabpanel">
+    <div class="tab-pane fade show active checkboxFixValue" id="principales" role="tabpanel">
+
+        {{ f.errorFormDiv( session['form'][page.formIN]['validationErrorsMsg'] ) }}
+
         {{ f.formbuilder(page.form , page.formIN , session) }}
 
         {% if page['formJavascript'][page.formIN] is not empty %}

@@ -1,0 +1,62 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2020
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > navbar élément transmissions (transmissions)
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+{% if config.optionGeActiverTransmissions == 'true' %}
+  {% if config.transmissionsPeutVoir == 'true' %}
+   <li class="nav-item"{% if config.designTopMenuTooltipDisplay == 'true' %} title="Transmissions"{% endif %}>
+     <a class="nav-link" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/transmissions/">
+       {% if config.designTopMenuStyle == 'icones' %}
+         {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
+           {% set transCompClass = 'text-danger' %}
+         {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
+           {% set transCompClass = 'text-warning' %}
+         {% else %}
+           {% set transCompClass = '' %}
+         {% endif %}
+
+         <i class="fas fa-comments fa-lg d-none d-lg-inline {{ transCompClass }}"></i>
+         <span class="d-lg-none">
+           Transmissions</span>
+         {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
+           <span class="badge text-white" style="margin-left: -5px">{{ page.transmissionsNbNonLues.toutes }}</span>
+         {% endif %}
+       {% else %}
+         {% if config.designTopMenuTransmissionsColorIconeUrgent == 'true' and page.transmissionsNbNonLues.urgentes > 0 %}
+           {% set transCompClass = 'badge-danger' %}
+         {% elseif config.designTopMenuTransmissionsColorIconeImportant == 'true' and page.transmissionsNbNonLues.importantes > 0 %}
+           {% set transCompClass = 'badge-warning' %}
+         {% else %}
+           {% set transCompClass = 'badge-light' %}
+         {% endif %}
+         Transmissions
+         {% if page.transmissionsNbNonLues.toutes > 0 and config.designTopMenuTransmissionsCountDisplay == 'true' %}
+           <span class="badge {{ transCompClass }}">{{ page.transmissionsNbNonLues.toutes }}</span>
+         {% endif %}
+       {% endif %}
+     </a>
+   </li>
+  {% endif %}
+{% endif %}

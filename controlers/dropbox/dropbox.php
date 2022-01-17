@@ -28,7 +28,7 @@
 
 $debug='';
 
-if($p['config']['dropboxActiver'] != 'true') {
+if($p['config']['optionGeActiverDropbox'] != 'true') {
   $template="forbidden";
   return;
 }
