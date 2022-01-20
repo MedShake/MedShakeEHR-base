@@ -1,8 +1,7 @@
 #
 # This file is part of MedShakeEHR.
 #
-# Copyright (c) 2017
-# Bertrand Boutillier <b.boutillier@gmail.com>
+# Copyright (c) 2021      DEMAREST Maxime <maxime@indelog.fr>
 # http://www.medshake.net
 #
 # MedShakeEHR is free software: you can redistribute it and/or modify
@@ -18,23 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
 #
+#######################################
+#
+# @author DEMAREST Maxime <maxime@indelog.fr>
 #
 #######################################
 #
-# Routes : inclusion de jeux de routes suivant paramètres de configuration
-# (si true inclusion)
+# Routes : univtags
 #
 #######################################
 
-optionGeActiverAgenda: agenda
-optionGeActiverApiRest: apiRest
-optionGeActiverCompta: compta
-optionGeActiverDicom: dicom
-optionGeActiverDropbox: dropbox
-optionGeActiverGroupes: groupes
-optionGeActiverInboxApicrypt: inbox
-optionGeActiverLapInterne: lapInterne
-optionGeActiverPhonecapture: phonecapture
-optionGeActiverRegistres: registres
-optionGeActiverTransmissions: transmissions
-optionGeActiverUnivTags: univtags
+# tags universel
+univtagsConfig: ['GET', '/univtags/config/', 'univtags/config']
+univtagsAjax: ['GET|POST', '/univtags/ajax/[a:a]/', 'univtags/ajax']

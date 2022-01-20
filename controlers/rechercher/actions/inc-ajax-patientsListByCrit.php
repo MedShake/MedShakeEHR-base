@@ -49,8 +49,29 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
     $docAsSigner->setFromID($p['user']['id']);
     $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
+	// intégration tags universel pour filter sur un patient
+	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+		if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			if (!empty($_POST['univTagsFilter'])) $univTagsFilter = array_column($_POST['univTagsFilter'], 'value');
+		} else {
+			unset($univTagsTypeID);
+		}
+	}
+
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
+
+	// intégration tags universel pour filter sur un pro
+	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+		$univTagsTypeID = msUnivTags::getTypeIdByName('pros');
+		if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			if (!empty($_POST['univTagsFilter'])) $univTagsFilter = array_column($_POST['univTagsFilter'], 'value');
+		} else {
+			unset($univTagsTypeID);
+		}
+	}
+
 } elseif ($_POST['porp']=='groupe') {
     $formIN=$p['config']['formFormulaireListingGroupes'];
 } elseif ($_POST['porp']=='registre') {
@@ -172,6 +193,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $dataGet = new msData;
     $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
 
+	// si des id de tags pour filter la recherche sont présent on les ajoute à la recherche
+	if (!empty($univTagsFilter)) $mss->setUnviTagsFilter($univTagsFilter);
+
     $p['page']['sqlString']=$sql=$mss->getSql();
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {
         for ($i=1;$i<=$col;$i++) {
@@ -228,5 +252,15 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
                 $p['page']['outputType'][$patientID]['isUser']=$data[$patientID]['isUser'];
             }
         }
+
+		// Si les tags universel sont actif, ajoute une colone sur le tableau afin de voir les tags atachés
+		if (!empty($univTagsTypeID) && !empty($p['page']['outputTableHead'])) {
+			$p['page']['outputTableHead'][] = 'Étiquettes';
+
+			foreach ($p['page']['outputTableRow'] as $k=>$v) {
+				$univTagsList = msUnivTags::getList($univTagsTypeID, $k, true);
+				$p['page']['outputTableRow'][$k][] = '<span>'.msUnivTags::getTagsCircleHtml($univTagsList).'</span>';
+			}
+		}
     }
 }

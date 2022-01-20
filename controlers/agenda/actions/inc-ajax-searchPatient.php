@@ -59,11 +59,31 @@ $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
+	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+		if (!msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			unset($univTagsTypeID);
+		}
+	};
+
  	foreach ($data as $k=>$v) {
+
+		// Tag universel pour le dossier médical d'un patient
+		// permet de récupérer les pastille de couleur pour les afficher dans
+		// les résultat de la recherche.
+		$tagParams = array();
+		if (!empty($univTagsTypeID)) {
+			$tagParams = msUnivTags::getList($univTagsTypeID, $v['peopleID'], true);
+			$tagParams['circle'] = $tagCircle = msUnivTags::getTagsCircleHtml($tagParams);
+		};
+
+		// Si le patient possède des tags le recherche pour afficher la
+		// patstille dans les résultat de recherche.
  		$a_json[]=array(
  			'label'=>trim($v['identite']).' '.$v['birthdate'],
  			'value'=>trim($v['identite']),
  			'patientID'=>$v['peopleID'],
+			'tagParams'=>$tagParams,
  		);
  	}
 }
