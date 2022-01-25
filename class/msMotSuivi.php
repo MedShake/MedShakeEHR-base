@@ -176,7 +176,7 @@ class msMotSuivi {
 	 */
 	public function setTexte(string $texte) {
 		// Chaine de texte limité à 255 caractères (stockage en base VARCHAR(255))
-		$this->_texte = substr(trim(filter_var($texte, FILTER_SANITIZE_FULL_SPECIAL_CHARS)), 0, 255);
+		$this->_texte = substr(trim(filter_var($texte, FILTER_SANITIZE_STRING)), 0, 255);
 		return true;
 	}
 
