@@ -21,9 +21,9 @@
  */
 
 /**
- * Patient > action : ajouter un nouvau mot suivi
+ * Patient > action : gérer les mots de suivis
  *
- * @author 2021      DEMAREST Maxime <maxime@indelog.fr>
+ * @author 2021-2022      DEMAREST Maxime <maxime@indelog.fr>
  */
 
 function returnJson(bool $status, string $message, array $data = []) {
@@ -39,11 +39,9 @@ function returnJson(bool $status, string $message, array $data = []) {
 }
 
 if ($p['config']['optionsDossierPatientActiverMotSuivi'] == 'false') {
-
     $ret_arr['statut'] = 'error';
     $ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activé pour cette utilisateur.");
     returnJson($ret_arr, "L'option optionsDossierPatientActiverMotSuivi n'est pas activé pour cette utilisateur.");
-
 }
 
 $tabReturn = array();
@@ -133,12 +131,13 @@ case 'delete':
 case 'list':
     $gump->validation_rules(array(
         'toID' => 'required|numeric',
-        'getAll' => 'required|boolean',
+        'nb' => 'required|numeric',
     ));
     $validated_data = $gump->run($_POST);
     if ($validated_data) {
         try {
-            $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID'], (filter_var($validated_data['getAll'], FILTER_VALIDATE_BOOLEAN) ? -1 : 0));
+            $nb_total = msMotSuivi::getNbTotal($validated_data['toID']);
+            $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID'], $validated_data['nb']);
             returnJson(true, 'Liste actualisé.', $data);
         } catch (Exception $e) {
             returnJson(false, $e->getMessage());

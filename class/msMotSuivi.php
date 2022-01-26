@@ -239,9 +239,42 @@ class msMotSuivi {
     public static function getListHtmlTab(int $toID, int $nb_elem = 0) {
         global $p;
         if (empty($p['page'])) $p['page'] = array();
-        $p['page']['lignesMotSuivi'] = self::getList($toID, $nb_elem);
+        $lignes = self::getList($toID, $nb_elem);
+        $nb_lignes = count($lignes);
+        $total = self::getNbTotal($toID);
+        $see_all = (count($lignes) >= $total);
+        $nb_restant = ($total - $nb_lignes);
+        $nb_prochain = (int) $p['config']['optionsDossierPatientNbMotSuiviAfficher'];
+        $nb_precedent = $nb_lignes + $nb_prochain;
+        if ($nb_restant < $nb_prochain) {
+            $text_afficher_suivant = 'Afficher tout.';
+        } else {
+            $text_afficher_suivant = 'Afficher les ' . $nb_prochain . ' précédent.';
+        }
+        $p['page']['motSuivi'] = array();
+        $p['page']['motSuivi']['lignes'] = $lignes;
+        $p['page']['motSuivi']['nbLignes'] = $nb_lignes;
+        $p['page']['motSuivi']['total'] = $total;
+        $p['page']['motSuivi']['seeAll'] = $see_all;
+        $p['page']['motSuivi']['nbProchain'] = $nb_prochain;
+        $p['page']['motSuivi']['nbPrecedent'] = $nb_precedent;
+        $p['page']['motSuivi']['textAfficherSuivant'] = $text_afficher_suivant;
         $getHtml = new msGetHtml();
         $getHtml->set_template('patientMotSuiviTable');
         return $getHtml->genererHtml();
+    }
+
+    /**
+     * Obtenir le nombre total de mot de suivis pour le dossier patient.
+     * @param	int		$toID		Id de l'individu pour lequel retourner la
+     *								liste de mot suivi.
+     * @return	int				    Nombre total de mot de suivis.
+     */
+    public static function getNbTotal(int $toID) {
+        global $p;
+        $sql  = 'SELECT COUNT(toID) as total FROM `motsuivi` WHERE toID = ' . $toID . ' GROUP BY `toID`';
+        $res = msSQL::sql2tab($sql);
+        $total = (is_null($res[0]['total'])) ? 0 : (int) $res[0]['total'];
+        return $total;
     }
 }

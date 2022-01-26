@@ -24,7 +24,7 @@
  # @author 2021      DEMAREST Maxime <maxime@indelog.fr>
  #}
 
-{% if page.lignesMotSuivi is empty %}
+{% if page.motSuivi.lignes is empty %}
     <tr><td>Aucun mot de suivi pour ce patient</td></tr>
 {% else %}
     <thead>
@@ -36,7 +36,7 @@
         </tr>
     </thead>
     <tbody id="lignesMotSuivi">
-    {% for lm in page.lignesMotSuivi %}
+    {% for lm in page.motSuivi.lignes %}
         <tr id="ligneMotSuivi-{{ lm.ID }}">
             <td class="motSuivi-texte w-100 px-2">{{ lm.texte|nl2br }}</td>
             <td style="white-space: nowrap;" class="px-2">{{ lm.firstname }}&nbsp;{{ lm.lastname|default(lm.birthname) }}</td>
@@ -50,4 +50,11 @@
         </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+    {% if not page.motSuivi.seeAll %}
+        <tr>
+            <td colspan="4" class="text-center table-active">{{ page.motSuivi.nbLignes }}/{{ page.motSuivi.total }} &nbsp<a href="javascript:function f(e){e.preventDefault();}" title="{{ page.motSuivi.textAfficherSuivant }}" onclick="getTableMotSuivi({{ page.motSuivi.nbPrecedent }})">{{ page.motSuivi.textAfficherSuivant }}</a></td>
+        </tr>
+    {% endif %}
+    </tfoot>
 {% endif %}

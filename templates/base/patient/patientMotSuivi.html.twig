@@ -29,17 +29,12 @@
     <div class="card-header font-weight-bold">
         <span class="far fa-fw fa-sticky-note"></span>&nbsp;Mots de suivi
         <div class="float-right">
-            <div class="d-inline-block form-group form-check px-2" title="Sinon seul les {{ config.optionsDossierPatientNbMotSuiviAfficher }} derniers sont affichés">
-                <input type="checkbox" class="form-check-input" id="motSuiviAfficherTout" name="motSuiviAfficherTout" data-toID="{{ page.patient.id }}">
-                <label class="form-check-label" for="motSuiviAfficherTout">Afficher tout</label>
-            </div>
             <button id="bntNouveauMotSuivi" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalMotSuivi" title="Ajouter un nouveau mot suivi">Nouveau</button>
         </div>
     </div>
 
     <div class="mx-1">
         <table id="tableMotSuivi" class="table table-sm mb-0 table-hover ">
-            {% include 'patientMotSuiviTable.html.twig' %}
         </table>
     </div>
 </div>

@@ -886,7 +886,7 @@ $(document).ready(function() {
     var formDatas = $('#formMotSuivi :input').serializeArray();
     $.ajax({
       type: 'POST',
-      url: '/patient/ajax/saveMotSuivi/',
+      url: '/patient/ajax/motSuivi/',
       data: formDatas,
       dataType: 'json',
       success: function(data) {
@@ -931,31 +931,8 @@ $(document).ready(function() {
     $('#formMotSuivi input[name=dateTime]').val(dateString);
   });
 
-  // Affiche ou non tout les mot suivi si la case est coché
-  $(motSuiviAfficherTout).on('click', function(event) {
-    var getAll = event.target.checked;
-    var toID = event.target.dataset.toid;
-    $.ajax({
-      type: 'POST',
-      url: '/patient/ajax/saveMotSuivi/',
-      data: {toID: toID, getAll: getAll, action: 'list'},
-      dataType: 'json',
-      success: function(data) {
-        switch (data.status) {
-          case 'ok':
-            $('#tableMotSuivi').html(data.data.html);
-            alert_popup('success', data.message);
-            break;
-          case 'error':
-            alert_popup('danger', data.message);
-            break;
-        };
-      },
-      error: function(data) {
-        alert_popup('danger', 'Problème, rechargez la page !');
-      },
-    });
-  });
+  // Obient la liste initial au chargement de la page du dossier patient
+  getTableMotSuivi();
 
 });
 
@@ -1937,7 +1914,7 @@ function callDeleteMotSuvi(elem) {
   if (ok) {
     $.ajax({
       type: 'POST',
-      url: '/patient/ajax/saveMotSuivi/',
+      url: '/patient/ajax/motSuivi/',
       data: {ID: motID, action: 'delete'},
       dataType: 'json',
       success: function(data) {
@@ -1956,4 +1933,35 @@ function callDeleteMotSuvi(elem) {
       },
     });
   }
+}
+
+/**
+ * Amènage la modal de création de mot suivi pour modification.
+ * Appelé au clique sur le bouton modifier d'une ligne de mot suivi.
+ * @param  {int} nb Nombre de mot à afficher, 0 obtien le nombre configuré
+ *                  par le paramètre optionsDossierPatientNbMotSuiviAfficher
+ * @return {void}
+ */
+function getTableMotSuivi(nb = 0) {
+  toID = $('#identitePatient').attr("data-patientID");
+  $.ajax({
+    type: 'POST',
+    url: '/patient/ajax/motSuivi/',
+    data: {toID: toID, nb: nb, action: 'list'},
+    dataType: 'json',
+    success: function(data) {
+      switch (data.status) {
+        case 'ok':
+          $('#tableMotSuivi').html(data.data.html);
+          alert_popup('success', data.message);
+          break;
+        case 'error':
+          alert_popup('danger', data.message);
+          break;
+      };
+    },
+    error: function(data) {
+      alert_popup('danger', 'Problème, rechargez la page !');
+    },
+  });
 }
