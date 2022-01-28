@@ -53,7 +53,7 @@
     <tfoot>
     {% if not page.motSuivi.seeAll %}
         <tr>
-            <td colspan="4" class="text-center table-active">{{ page.motSuivi.nbLignes }}/{{ page.motSuivi.total }} &nbsp<a href="javascript:function f(e){e.preventDefault();}" title="{{ page.motSuivi.textAfficherSuivant }}" onclick="getTableMotSuivi({{ page.motSuivi.nbPrecedent }})">{{ page.motSuivi.textAfficherSuivant }}</a></td>
+            <td colspan="4" class="text-center table-active">{{ page.motSuivi.nbLignes }}/{{ page.motSuivi.total }} &nbsp<button type="button" class="btn btn-link" title="{{ page.motSuivi.textAfficherSuivant }}" onclick="getTableMotSuivi({{ page.motSuivi.nbPrecedent }})">{{ page.motSuivi.textAfficherSuivant }}</button></td>
         </tr>
     {% endif %}
     </tfoot>
