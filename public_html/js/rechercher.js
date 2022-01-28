@@ -333,7 +333,6 @@ function updateListingPatients(getNextResult = false) {
   var currentNbOfResultsDisplayed = getNextResult ? $('#listing>table>tbody>tr').length : 0;
   if (getNextResult) {
     var currentNbOfResultsDisplayed = $('#listing>table>tbody>tr').length;
-  } else {
   }
   $.ajax({
     url: urlBase + '/patients/ajax/patientsListByCrit/',
@@ -345,7 +344,6 @@ function updateListingPatients(getNextResult = false) {
       autreCrit: $('#autreCrit option:selected').val(),
       autreCritVal: $('#autreCritVal').val(),
       patientsPropres: $('#patientsPropres').is(':checked'),
-      searchLimit: $('#searchLimit').val(),
       univTagsFilter: univTagsFilter,
       currentNbOfResultsDisplayed: currentNbOfResultsDisplayed,
     },
