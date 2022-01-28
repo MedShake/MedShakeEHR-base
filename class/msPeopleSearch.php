@@ -151,9 +151,13 @@ class msPeopleSearch
 
 /**
  * Obtenir la chaîne SQL de recherche
- * @return string requète sql
+ * @param  bool     $only_get_total     Au lieux de retourner la requette sql
+ *                                      de recherche, retourne un requette qui
+ *                                      permet d'obtenir ne nombre total de
+ *                                      résultat possible.
+ * @return string                       requète sql
  */
-  public function getSql() {
+  public function getSql($only_get_total = false) {
     global $p;
 
     $restrictionUser = '';
@@ -208,12 +212,19 @@ class msPeopleSearch
       $orderBy = 'order by trim(identite)';
     }
 
-    return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
-    '.implode(', ', $this->_makeSqlSelect()).'
-    from people as p
-    '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
-    limit '.$this->_limitStart.','.$this->_limitNumber;
+    if ($only_get_total) {
+        $sql  = 'SELECT COUNT(p.id) FROM people as p ';
+        $sql .= implode(' ', $this->_makeSqlJoin()) . ' ' . $restricPatientGroupeJoin;
+        $sql .= 'WHERE p.type IN ("' . implode('", "', $this->_peopleType) . '") AND ' . implode( ' AND ', $this->_makeSqlWhere()) . ' ' . $restricPatientGroupeWhere . implode(' ', $this->_whereClauses) . ' ' . $restrictionUser;
+    } else {
+        $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
+        '.implode(', ', $this->_makeSqlSelect()).'
+        from people as p
+        '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
+        where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
+        limit '.$this->_limitStart.','.$this->_limitNumber;
+    }
+    return $sql;
   }
 
 /**

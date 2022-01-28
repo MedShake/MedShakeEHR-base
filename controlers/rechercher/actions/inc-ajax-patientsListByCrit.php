@@ -25,11 +25,20 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @contrib DEMAREST Maxime  <maxime@indelog.fr>
  */
 
 $debug='';
 
-$template="listing";
+// Si currentNbOfResults vaut plus que 0 alors c'est que nous voulons obtenir
+// la suite des résultat. Dans ce cas, il faut seulement retourner le html
+// pour les lignes du tableau et non le tableau en entier.
+$p['page']['currentNbOfResultsDisplayed'] = filter_var($_POST['currentNbOfResultsDisplayed'], FILTER_VALIDATE_INT) ? (int) $_POST['currentNbOfResultsDisplayed'] : 0;
+if ($p['page']['currentNbOfResultsDisplayed'] > 0) {
+    $template = 'listing-det';
+} else {
+    $template = 'listing';
+}
 
 // si groupe, on vérifie que l'option générale est ON et on termine sinon
 if($_POST['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
@@ -193,8 +202,17 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
     $dataGet = new msData;
     $selectConversions = $dataGet->getSelectOptionValueByTypeName($colRetour);
 
-	// si des id de tags pour filter la recherche sont présent on les ajoute à la recherche
-	if (!empty($univTagsFilter)) $mss->setUnviTagsFilter($univTagsFilter);
+    // si des id de tags pour filter la recherche sont présent on les ajoute à la recherche
+    if (!empty($univTagsFilter)) $mss->setUnviTagsFilter($univTagsFilter);
+
+    // offet des résultat si on affiche la suite du listing
+    $mss->setLimitStart($p['page']['currentNbOfResultsDisplayed']);
+
+    // Obtenir le nombre total de résultat potentiel (utilisé pour la
+    // pagination du tableau).
+    $p['page']['sqlForTotal'] = $sql = $mss->getSql(true);
+    $data = msSQL::sqlUniqueChamp($sql);
+    $p['page']['totalNbOfResultsDisplayed'] = $data ? $data : 0;
 
     $p['page']['sqlString']=$sql=$mss->getSql();
     if ($data=msSQL::sql2tabKey($sql, 'peopleID')) {

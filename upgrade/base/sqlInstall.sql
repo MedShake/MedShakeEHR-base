@@ -1170,5 +1170,5 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v7.1.1'),
+('base', 'module', 'v7.2.0'),
 ('state', 'system', 'normal');

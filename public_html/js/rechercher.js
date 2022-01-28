@@ -26,8 +26,8 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-
 $(document).ready(function() {
+
   updateListingPatients();
 
   //focus sur nom
@@ -328,8 +328,13 @@ function selectListingRow(listingRow) {
  * Obtenir le listing patient
  * @return {void}
  */
-function updateListingPatients() {
+function updateListingPatients(getNextResult = false) {
   var univTagsFilter = $('.univTagsSelectFilter').serializeArray();
+  var currentNbOfResultsDisplayed = getNextResult ? $('#listing>table>tbody>tr').length : 0;
+  if (getNextResult) {
+    var currentNbOfResultsDisplayed = $('#listing>table>tbody>tr').length;
+  } else {
+  }
   $.ajax({
     url: urlBase + '/patients/ajax/patientsListByCrit/',
     type: 'post',
@@ -340,17 +345,27 @@ function updateListingPatients() {
       autreCrit: $('#autreCrit option:selected').val(),
       autreCritVal: $('#autreCritVal').val(),
       patientsPropres: $('#patientsPropres').is(':checked'),
-	  univTagsFilter: univTagsFilter,
+      searchLimit: $('#searchLimit').val(),
+      univTagsFilter: univTagsFilter,
+      currentNbOfResultsDisplayed: currentNbOfResultsDisplayed,
     },
     dataType: "html",
     success: function(data) {
-      $('#listing').html(data);
+      if (currentNbOfResultsDisplayed > 0) {
+        $('#listing>table>tbody').append(data);
+      } else {
+        $('#listing').html(data);
+      }
+      $('#nbResultsDisplayed')[0].innerText = $('#listing>table>tbody>tr').length;
+      // NOTE : totalNbOfResultsDisplayed fait partis du scope global et est initialisé dans le template listing.html.twig
+      if (totalNbOfResultsDisplayed <= $('#listing>table>tbody>tr').length) {
+        $('#listing>table>caption').hide();
+      }
       listingRow = 0;
       selectListingRow(listingRow);
     },
     error: function() {
       alert_popup("danger", 'Problème, rechargez la page !');
-
     }
   });
 
