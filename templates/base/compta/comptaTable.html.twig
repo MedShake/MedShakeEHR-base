@@ -68,12 +68,13 @@
                       <a class="btn btn-sm btn-light" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/{{ reg.toID }}/" title="Voir dossier"><span class="fas fa-folder-open"></span></a>
                       <strong>{{ reg.prenom|e }}
                           {{ reg.nom|e }}</strong>
-{                     % if reg.regleNumeroCheque %}N° :
- 72                       {{ reg.regleNumeroCheque|e }}{% endif %}
- 73                   {% if reg.regleBanqueCheque %}Banque :
- 74                       {{ reg.regleBanqueCheque|e }}{% endif %}
- 75                   {% if reg.regleIdentiteCheque %}réglé par
- 76                       {{ reg.regleIdentiteCheque|e }}{% endif %}             
+                      {% if reg.regleNumeroCheque %}N° :
+                          {{ reg.regleNumeroCheque|e }}{% endif %}
+                      {% if reg.regleBanqueCheque %}Banque :
+                          {{ reg.regleBanqueCheque|e }}{% endif %}
+                      {% if reg.regleIdentiteCheque %}réglé par
+                          {{ reg.regleIdentiteCheque|e }}{% endif %}
+  
                   </td>
                   <td class="text-right">
                       <button type="button" class="btn  btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ reg.label|e('html_attr') }}">
