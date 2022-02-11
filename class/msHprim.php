@@ -224,7 +224,13 @@ class msHprim
               break;
 
               case "7":
-              $d['ddn'] = fgets($file);
+              $d['ddn'] = trim(fgets($file));
+              $test_date = DateTime::createFromFormat('Y-m-d', $d['ddn']);
+              // Si date fournis au format Y-m-d, la convertis au format d/m/Y
+              if ($test_date && $test_date->format('Y-m-d') == $d['ddn']) {
+                  $d['ddn'] = $test_date->format('d/m/Y');
+              }
+
               break;
 
               case "8":
@@ -247,7 +253,13 @@ class msHprim
               break;
 
               case "10":
-              $d['dateDossier'] = substr(fgets($file), 0, 15);
+              $d['dateDossier'] = trim(substr(fgets($file), 0, 15));
+              $test_date = DateTime::createFromFormat('Y-m-d', $d['dateDossier']);
+              // Si date fournis au format Y-m-d, la convertis au format d/m/Y
+              if ($test_date && $test_date->format('Y-m-d') == $d['dateDossier']) {
+                  $d['dateDossier'] = $test_date->format('d/m/Y');
+              }
+
               break;
 
               case "11":
