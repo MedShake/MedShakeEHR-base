@@ -214,7 +214,7 @@ msehrInstall() {
     chmod 755 $msehrPath $msehrPath/public_html
 
     cd $msehrPath
-    su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
+    su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o --ignore-platform-req php'
     cd $msehrPath/public_html
     su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
     echo "$msehrPath
