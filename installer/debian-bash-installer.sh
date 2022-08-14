@@ -94,9 +94,7 @@ selectdomain() {
 certGen() {
     mkdir /etc/ssl/$msehrDom
     cd /etc/ssl/$msehrDom
-    openssl genrsa -out $msehrDom.key 4096
-    openssl req -new -key $msehrDom.key -out $msehrDom.csr
-    openssl x509 -req -days 3650 -in $msehrDom.csr -signkey $msehrDom.key -out $msehrDom.pem
+    openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout $msehrDom.key -out $msehrDom.crt -subj "/CN=$msehrDom" -addext "subjectAltName=DNS:$msehrDom"
 }
 
 apacheConfig() {
@@ -113,7 +111,7 @@ apacheConfig() {
         DocumentRoot "$msehrPath/public_html"
         RewriteEngine On
         SSLEngine On
-        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.pem
+        SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
         SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
         <Directory "$msehrPath/public_html">
             Options FollowSymLinks
@@ -130,6 +128,9 @@ apacheConfig() {
     a2dissite 000-default.conf default-ssl.conf
 
     a2ensite $msehrDom 
+
+    sed -i 's/ServerTokens OS/ServerTokens Prod/' /etc/apache2/conf-available/security.conf
+    sed -i 's/ServerSignature On/ServerSignature Off/' /etc/apache2/conf-available/security.conf
 
     ## Réglage php.ini
 	vphp=$(php -r "echo PHP_VERSION;" | cut -c1-3)

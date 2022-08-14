@@ -7,10 +7,10 @@
         {
             "type": "package",
             "package": {
-                "name": "mattbryson/TouchSwipe-Jquery-Plugin",
+                "name": "mattbryson/touchswipe-jquery-plugin",
                 "version": "1.6.18",
                 "source": {
-                    "url": "https://github.com/mattbryson/TouchSwipe-Jquery-Plugin.git",
+                    "url": "https://github.com/mattbryson/touchswipe-jquery-plugin.git",
                     "type": "git",
                     "reference": "1.6.18"
                 }
@@ -19,10 +19,10 @@
         {
             "type": "package",
             "package": {
-                "name": "FezVrasta/popper.js",
+                "name": "fezvrasta/popper.js",
                 "version": "v1.14.4",
                 "source": {
-                    "url": "https://github.com/FezVrasta/popper.js.git",
+                    "url": "https://github.com/fezvrasta/popper.js.git",
                     "type": "git",
                     "reference": "v1.14.4"
                 }
@@ -31,10 +31,10 @@
         {
             "type": "package",
             "package": {
-                "name": "dennyferra/TypeWatch",
+                "name": "dennyferra/typewatch",
                 "version": "3.0.0",
                 "source": {
-                    "url": "https://github.com/dennyferra/TypeWatch.git",
+                    "url": "https://github.com/dennyferra/typewatch.git",
                     "type": "git",
                     "reference": "3.0.0"
                 }
