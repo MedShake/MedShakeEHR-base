@@ -3,7 +3,7 @@
     "twig/twig": "^3.0.3",
     "altorouter/altorouter": "2.0.1",
     "mustangostang/spyc": "0.6.3",
-    "wixel/gump": "1.5.7",
+    "wixel/gump": "1.12.2",
     "dompdf/dompdf": "2.0.0",
     "phpmailer/phpmailer": "6.5.1",
     "atrapalo/urlcrypt": "1.0.1",
