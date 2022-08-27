@@ -219,11 +219,11 @@
       register: ymlconfig 
       
     - name: Execute MedShakeEHR cli installation script
-      shell: "/usr/bin/php {{ msehrPath }}/public_html/install.php -s localhost -N -d {{ sqlDbName }} -u {{ sqlUserAccount }} -p \"{{ sqlUserPassword }}\" -r https -D {{ domain }}"
+      shell: "/usr/bin/php /opt/ehr/public_html/install.php -s localhost -N -d {{ sqlDbName }} -u {{ sqlUserAccount }} -p \"{{ sqlUserPassword }}\" -r https -D {{ domain }}"
       become: true
       become_user: www-data
       environment:
-        MEDSHAKEEHRPATH: "{{ msehrPath }}"
+        MEDSHAKEEHRPATH: "/opt/ehr/"
       when: not ymlconfig.stat.exists
 
   handlers:
