@@ -374,7 +374,7 @@ $(document).ready(function() {
     $('#ongletDossierMedical').tab('show');
     if ($('#newCourrier').html() != '') {
       if (confirm('Voulez-vous remplacer le contenu du courrier en cours ?')) {
-        tinymce.get(("editeurCourrier")).remove();
+        tinymce.get("editeurCourrier").remove();
 				sendFormToCourrierDiv($(this));
       }
     } else {
