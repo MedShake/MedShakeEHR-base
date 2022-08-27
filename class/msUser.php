@@ -295,16 +295,16 @@ class msUser
  * Effectuer un logout
  * @return void
  */
-    public static function doLogout()
-    {
-        global $p;
-        setcookie("userName", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
-        setcookie("apacheLogUserID", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
-        setcookie("userPass", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
-        setcookie("userIdPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
-        setcookie("userPassPc", '', (time()-$p['config']['cookieDuree']), "/", $p['config']['cookieDomain']);
-        unset($_SESSION);
-    }
+	public static function doLogout()
+	{
+		global $p;
+		setcookie("userName", '', (time()-5), "/", $p['config']['cookieDomain']);
+		setcookie("apacheLogUserID", '', (time()-5), "/", $p['config']['cookieDomain']);
+		setcookie("userPass", '', (time()-5), "/", $p['config']['cookieDomain']);
+		setcookie("userIdPc", '', (time()-5), "/", $p['config']['cookieDomain']);
+		setcookie("userPassPc", '', (time()-5), "/", $p['config']['cookieDomain']);
+		unset($_SESSION);
+	}
 
 /**
  * Mettre à jour la password d'un utilisateur
