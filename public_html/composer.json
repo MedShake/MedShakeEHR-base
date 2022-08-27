@@ -1,6 +1,9 @@
 {
     "config": {
-      "vendor-dir":"thirdparty"
+      "vendor-dir":"thirdparty",
+      "allow-plugins": {
+        "robloach/component-installer": true
+      }
     },
     "repositories": [
 
