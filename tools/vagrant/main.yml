@@ -64,26 +64,22 @@
         mode: '0755'
 
     - name: Composer upgrade on /ehr
-      composer:
-        command: upgrade
-        working_dir: /opt/ehr
-    
+      shell: cd /opt/ehr && composer upgrade --no-cache   
+      become: yes
+      become_user: www-data
+
     - name: Composer upgrade on /ehr/public_html
-      composer:
-        command: upgrade
-        working_dir: /opt/ehr/public_html
+      shell: cd /opt/ehr/public_html && composer upgrade --no-cache   
+      become: yes
+      become_user: www-data
 
     - name: Setup php.ini configuration.
       template:
         src: templates/php.ini.j2
-        dest: "/etc/php/7.3/apache2/php.ini"
+        dest: "/etc/php/7.4/apache2/php.ini"
         owner: root
         group: root
         mode: 0644
-
-    - name: install pyOpenSSL
-      pip:
-        name: pyOpenSSL
 
     - name: Creates SSL directory
       file:
@@ -107,6 +103,7 @@
         organization_name: "{{ organizationName }}"
         email_address: "{{ emailAdress }}"
         common_name: "{{ domain }}"
+        state: present
 
     - name: Generate a Self Signed OpenSSL certificate
       openssl_certificate:
@@ -115,6 +112,7 @@
         csr_path: "/etc/ssl/{{ domain }}/{{ domain }}.csr"
         provider: selfsigned
         valid_in: 315360000 
+        state: present
       
     - name: Setup vhosts configuration.
       template:
@@ -146,6 +144,22 @@
       with_items:
         - "{{ domain }}"
       notify: Restart Apache
+
+    - name: Set ServerTokens Prod
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerTokens OS'
+        line: ServerTokens Prod
+        state: present
+      notify: Restart Apache
+
+    - name: Set ServerSignature Off
+      lineinfile:
+        path: /etc/apache2/conf-available/security.conf
+        regexp: '^ServerSignature On'
+        line: ServerSignature Off
+        state: present
+      notify: Restart Apache  
 
     - name: Set the root password 
       mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}"
@@ -198,18 +212,6 @@
         group: root
         mode: 0644
       when: "'orthanc' in ansible_facts.packages"
-
-    - name: remove pyOpenSSL
-      pip:
-        name: pyOpenSSL
-        state: absent
-
-    - name: remove pip
-      apt: 
-        name: python-pip
-        state: absent
-        autoclean: yes
-        autoremove: yes
 
     - name: install template for msehr-cli
       template:

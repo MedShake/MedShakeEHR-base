@@ -30,12 +30,30 @@
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
-$mss->setNameSearchMode('BnFnOrLnFn');
-$mss->setPeopleType(['pro','patient']);
-$criteres = array(
-    'birthname'=>$term,
-  );
+// Permet d'affiner les résultat sur des nom qui peuvent resembler à des
+// prénoms très commun :
+//   (ex : MARIE Françoise (nom + prenom) <> Marie Françoise (prénom seul))
+// en donnant le prossiblité de préciser la recherche en spéparant les nom et
+// prénom par un ":". Dans le cas le nom est le premier terme et le prénom le
+// second.
+$split_term = explode(':', $term);
+if (count($split_term) > 1) {
+	$mss=new msPeopleSearch;
+	$mss->setPeopleType(['pro','patient']);
+	$criteres = array(
+		'birthname'=>trim($split_term[0]),
+		'lastname'=>trim($split_term[0]),
+		'firstname'=>trim($split_term[1]),
+	  );
+} else {
+	$mss=new msPeopleSearch;
+	$mss->setNameSearchMode('BnFnOrLnFn');
+	$mss->setPeopleType(['pro','patient']);
+	$criteres = array(
+		'birthname'=>$term,
+	  );
+}
+
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);

@@ -121,9 +121,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='relationExternePatient' and od.toID in ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
     } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient'] == 'true'){
-        $mss->setPeopleType(['pro','patient']);
+        $mss->setPeopleType(['pro','patient','externe']);
     } else {
-        $mss->setPeopleType(['patient']);
+        $mss->setPeopleType(['patient','externe']);
     }
 
     //restrictions sur retours

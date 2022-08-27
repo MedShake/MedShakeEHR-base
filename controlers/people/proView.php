@@ -104,3 +104,18 @@ if($p['config']['optionGeActiverRegistres'] == 'true') {
 if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
   $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'], @$p['page']['proData']['lastname'], @$p['page']['proData']['birthname']);
 }
+
+// Retrouve le svg pour le code bare svg et adeli si il existe
+if ($p['config']['activGenBarreCode'] == 'true') {
+	$barcodedir = $p['config']['stockageLocation'].'barecode/';
+	// Retrouve le svg pour le RPPS
+	if (file_exists($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg'))
+		$p['page']['svgRPPS'] =  file_get_contents($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg');
+	else
+		$p['page']['svgRPPS'] = '';
+	// Retrouve le svg pour le ADELI
+	if (file_exists($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg'))
+		$p['page']['svgADELI'] =  file_get_contents($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg');
+	else
+		$p['page']['svgADELI'] = '';
+}
