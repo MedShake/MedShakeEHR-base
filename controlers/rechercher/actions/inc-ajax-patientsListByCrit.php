@@ -49,6 +49,8 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
     $docAsSigner->setFromID($p['user']['id']);
     $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
+	if ($_POST['porp'] == 'externe' && !empty($_POST['externalPatientID'])) $p['page']['externalPatientID'] = $_POST['externalPatientID'];
+
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
 } elseif ($_POST['porp']=='groupe') {
