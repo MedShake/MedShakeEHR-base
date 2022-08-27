@@ -111,7 +111,7 @@
         privatekey_path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
         csr_path: "/etc/ssl/{{ domain }}/{{ domain }}.csr"
         provider: selfsigned
-        valid_in: 315360000 
+        selfsigned_not_after: +3650d
         state: present
       
     - name: Setup vhosts configuration.
@@ -212,22 +212,18 @@
         group: root
         mode: 0644
       when: "'orthanc' in ansible_facts.packages"
-
-    - name: install template for msehr-cli
-      template:
-        src: templates/msehrCli.sh.j2
-        dest: /tmp/msehrCli.sh
-        owner: root
-        group: root
-        mode: '0755'
     
     - name:  check if config.yml exist
       stat:
         path: /opt/ehr/config/config.yml
       register: ymlconfig 
       
-    - name: Run msehr-cli
-      command: /tmp/msehrCli.sh
+    - name: Execute MedShakeEHR cli installation script
+      shell: "/usr/bin/php {{ msehrPath }}/public_html/install.php -s localhost -N -d {{ sqlDbName }} -u {{ sqlUserAccount }} -p \"{{ sqlUserPassword }}\" -r https -D {{ domain }}"
+      become: true
+      become_user: www-data
+      environment:
+        MEDSHAKEEHRPATH: "{{ msehrPath }}"
       when: not ymlconfig.stat.exists
 
   handlers:
