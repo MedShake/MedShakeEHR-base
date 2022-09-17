@@ -1,7 +1,7 @@
 {#
  # This file is part of MedShakeEHR.
  #
- # Copyright (c) 2017
+ # Copyright (c) 2017-2021
  # Bertrand Boutillier <b.boutillier@gmail.com>
  # http://www.medshake.net
  #
@@ -22,8 +22,9 @@
 /##
  # Template > people : voir les infos sur un pro
  #
- # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @contrib fr33z00 <https://github.com/fr33z00>
+ # @author  Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00             <https://github.com/fr33z00>
+ # @contrib DEMAREST Maxime     <maxime@indelog.fr>
  #}
 
 {% extends "page.html.twig" %}
@@ -78,6 +79,25 @@
   {% endif %}
    <small class="text-muted">{{ page.proData.job }}</small>
 </h1>
+
+{# univtag pros #}
+{% if page.univTagsListHtml is not empty %}
+<div class="card">
+  <div class="card-header d-flex flex-row justify-content-between">
+    <h5>Étiquettes du professionel</h5>
+
+    {% if page.univTags.typeDroitAjoRet %}
+    <div class="custom-control custom-switch">
+      <input id="univTagsSetTag" type="checkbox" class="custom-control-input" onclick="getTagsList({{ page.univTags.typeID }}, {{ page.univTags.toID }}, (this.checked ? 'select' : 'show'));" autocomplete="off">
+      <label class="custom-control-label" for="univTagsSetTag">Séléctioner des étiquettes</label>
+    </div>
+    {% endif %}
+  </div>
+  <div class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}" class="card-body p-1">
+    {{ page.univTagsListHtml }}
+  </div>
+</div>
+{% endif %}
 
 <div class="row mt-3">
   <div class="col-12 col-md-6">

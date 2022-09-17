@@ -196,3 +196,14 @@ if($p['config']['optionGeActiverCompta'] == 'true') {
   $data=new msData;
   $p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));
 }
+
+// Tag universel pour le dossier médical d'un patient
+if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+	$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+	$univTagsTypeActif = msUnivTags::getIfTypeIsActif($univTagsTypeID);
+	if ($univTagsTypeActif) {
+		$p['page']['univTagsListHtml'] = msUnivTags::getListHtml($univTagsTypeID, $p['page']['patient']['id'], 'show');
+		$p['page']['univTags']['typeDroitAjoRet'] = msUnivTags::checkTypeDroitAjoRet($univTagsTypeID);
+		$p['page']['univTags']['typeDroitCreSup'] = msUnivTags::checkTypeDroitCreSup($univTagsTypeID);
+	}
+}

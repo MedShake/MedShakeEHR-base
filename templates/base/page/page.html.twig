@@ -1,7 +1,7 @@
 {#
  # This file is part of MedShakeEHR.
  #
- # Copyright (c) 2017
+ # Copyright (c) 2017-2021
  # Bertrand Boutillier <b.boutillier@gmail.com>
  # http://www.medshake.net
  #
@@ -43,6 +43,9 @@
         {% block cssFiles %}
         <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
+        {% if config.optionGeActiverUnivTags == 'true' %}
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/css/univtags.css" rel="stylesheet"/>
+        {% endif %}
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
         <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet"/>
         {% endblock %}
@@ -63,6 +66,9 @@
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/lrsjng/kjua/dist/kjua.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/joequery/stupid-table-plugin/stupidtable.min.js?{{ modules.base }}"></script>
         <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/autosize.min.js?{{ modules.base }}"></script>
+        {% if config.optionGeActiverUnivTags == 'true' %}
+        <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/univtags/main.js?{{ modules.base }}"></script>
+        {% endif %}
         {% endblock %}
 
         <script>

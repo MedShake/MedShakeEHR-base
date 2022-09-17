@@ -81,6 +81,9 @@ configUserTemplatesEdit: ['GET', '/configuration/user-templates/edit/[*:fichier]
 # configuration crons
 configCron: ['GET', '/configuration/cron/', 'configuration/configCronJobs']
 
+# configuration pour les tags universelle
+configTags: ['GET', '/configuration/tags/', 'configuration/configUnivTags']
+
 # configuration apply updates
 configUpdates: ['GET', '/configuration/applyUpdates/', 'configuration/configApplyUpdates']
 

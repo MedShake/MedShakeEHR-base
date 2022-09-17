@@ -2,8 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
- * Bertrand Boutillier <b.boutillier@gmail.com>
+ * Copyright (c) 2021      DEMAREST Maxime <maxime@indelog.fr>
  * http://www.medshake.net
  *
  * MedShakeEHR is free software: you can redistribute it and/or modify
@@ -21,19 +20,18 @@
  */
 
 /**
- * Agenda : obtenir les infos administratives patient
+ * Config : gérer les tags universelle
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @author DEMAREST Maxime <maxime@indelog.fr>
  */
 
-$patient = new msPeople();
-$patient->setToID($_POST['patientID']);
-$datas = $patient->getSimpleAdminDatasByName();
-if ($p['config']['optionGeActiverUnivTags'] == 'true') {
-	$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
-	if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
-		$datas['tagsHtml'] = msUnivTags::getListHtml($univTagsTypeID, $_POST['patientID'], 'show');
-	}
+ //admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+    $template="forbidden";
+    return;
 }
-header('Content-Type: application/json');
-echo json_encode($datas);
+
+$template='univTagsConfig';
+$debug='';
+
+$p['page']['univTagsTypeList'] = msUnivTags::getTypeList();

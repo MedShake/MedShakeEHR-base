@@ -38,6 +38,10 @@ class msPeopleSearch
   private $_restricDossiersGroupes = false;
   private $_restricDossiersPratGroupes = false;
   private $_restricGroupesEstMembre = false;
+  /**
+   * @var $_univTagsFilter	Liste des ids de tags sur les quels filter les résultat
+   */
+  private $_univTagsFilter = array();
 
 /**
  * Définir une restriction pour ne retourner que ses propres dossiers patients
@@ -137,10 +141,23 @@ class msPeopleSearch
   }
 
 /**
- * Obtenir la chaîne SQL de recherche
- * @return string requète sql
+ * Définir la liste des ids de tags sur les quels filter les résultat
+ * @param	array	$tagsFilter	Liste des ID de tags sur les quels filter
  */
-  public function getSql() {
+  public function setUnviTagsFilter(array $tagsFilter) {
+    // @TODO /!\ CLEAN $tagsFilter !!!
+    $this->_univTagsFilter = $tagsFilter;
+  }
+
+/**
+ * Obtenir la chaîne SQL de recherche
+ * @param  bool     $only_get_total     Au lieux de retourner la requette sql
+ *                                      de recherche, retourne un requette qui
+ *                                      permet d'obtenir ne nombre total de
+ *                                      résultat possible.
+ * @return string                       requète sql
+ */
+  public function getSql($only_get_total = false) {
     global $p;
 
     $restrictionUser = '';
@@ -195,12 +212,19 @@ class msPeopleSearch
       $orderBy = 'order by trim(identite)';
     }
 
-    return $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
-    '.implode(', ', $this->_makeSqlSelect()).'
-    from people as p
-    '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
-    where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
-    limit '.$this->_limitStart.','.$this->_limitNumber;
+    if ($only_get_total) {
+        $sql  = 'SELECT COUNT(p.id) FROM people as p ';
+        $sql .= implode(' ', $this->_makeSqlJoin()) . ' ' . $restricPatientGroupeJoin;
+        $sql .= 'WHERE p.type IN ("' . implode('", "', $this->_peopleType) . '") AND ' . implode( ' AND ', $this->_makeSqlWhere()) . ' ' . $restricPatientGroupeWhere . implode(' ', $this->_whereClauses) . ' ' . $restrictionUser;
+    } else {
+        $sql='select p.type, p.id as peopleID, CASE WHEN LENGTH(TRIM(p.name)) > 0  and LENGTH(TRIM(p.pass)) > 0 THEN "isUser" ELSE "isNotUser" END as isUser,
+        '.implode(', ', $this->_makeSqlSelect()).'
+        from people as p
+        '.implode(' ', $this->_makeSqlJoin()). ' '.$restricPatientGroupeJoin.'
+        where p.type in ("'.implode('", "', $this->_peopleType).'") and '.implode( ' and ', $this->_makeSqlWhere()).' '.$restricPatientGroupeWhere.implode(' ', $this->_whereClauses).' '.$restrictionUser.' '.$orderBy.'
+        limit '.$this->_limitStart.','.$this->_limitNumber;
+    }
+    return $sql;
   }
 
 /**
@@ -302,6 +326,11 @@ class msPeopleSearch
 
         }
     }
+
+    // Ajout du filtre sur les tag universel
+    if (!empty($this->_univTagsFilter))
+      $sp['where'][] .= 'p.id IN (SELECT DISTINCT toID FROM univtags_join AS uj LEFT JOIN univtags_tag AS ut ON ut.id = uj.tagID WHERE tagID in ('.implode(',', $this->_univTagsFilter).') GROUP BY toID HAVING(COUNT(tagID)) = '.count($this->_univTagsFilter).') ';
+
     return $sp['where'];
 
   }

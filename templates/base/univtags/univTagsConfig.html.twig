@@ -1,0 +1,82 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2021      DEMAREST Maxime <maxime@indelog.fr>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : template pour la page de gestion des tags universelle
+ #
+ # @author DEMAREST Maxime <maxime@indelog.fr>
+ #}
+
+{% extends "page.html.twig" %}
+{% block title %}{{ config.designAppName }} : configuration{% endblock %}
+
+{% block head %}
+  {{ parent() }}
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
+  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/univtags/config.js?{{ modules.base }}"></script>
+{% endblock %}
+
+{% block body %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#cc">Paramètres courants</a>
+    </li>
+  </ol>
+
+  <h1>Configuration de l'étiquetage universel</h1>
+
+  <table class="table table-sm mb-0 table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th>#ID</th>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Actif</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if page.univTagsTypeList is empty %}
+        <tr class="table-danger"><td colspan="5">Aucun type d'étiquette n'a été trouvé. Cela peut venir d'une erreur SQL ou d'une absence de type d'étiquette en base.</td></tr>
+      {% else %}
+        {% for type in page.univTagsTypeList %}
+          <tr class="table-primary univTagsTableLineType" data-typeID="{{ type.id }}" onmouseout="this.classList.replace('table-active','table-primary')" onmouseover="this.classList.replace('table-primary','table-active')">
+            <td class="unviTagsTypeShowIndicator" data-typeID="{{ type.id }}" data-showed="false" onclick="univTagsGetList({{ type.id }}, this)">
+                <span class="far fa-plus-square" data-typeID="{{ type.id }}"></span>
+                <span class="far fa-minus-square d-none" data-typeID="{{ type.id }}"></span>
+            </td>
+            <td>#{{ type.id }}</td>
+            <td>{{ type.name }}</td>
+            <td>{{ type.description }}</td>
+            <td class="text-center">
+                <input type="checkbox" name="activeUnivtagType[{{ type.id }}]" data-id="{{ type.id }}" class="chkbx-active-univtag-type" {% if type.actif == '1' %}checked{% endif %} value="{{ type.actif }}" autocomplete="off" onclick="univTagsConfigSetTypeActif({{ type.id }}, this)">
+            </td>
+          </tr>
+          <tr><td class="univTagsContainer d-none" data-typeID="{{ type.id }}" colspan="5"></td></tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+
+{% endblock %}
