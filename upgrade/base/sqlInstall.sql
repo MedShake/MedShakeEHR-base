@@ -368,10 +368,6 @@ CREATE TABLE IF NOT EXISTS `transmissions_to` (
   PRIMARY KEY (`sujetID`,`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--------------------------------------------
--- Tables pour le système de tags universel
--------------------------------------------
-
 -- Création de la table tags
 CREATE TABLE IF NOT EXISTS `univtags_tag` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -396,25 +392,16 @@ CREATE TABLE IF NOT EXISTS `univtags_type` (
 	UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- Table de jointure tags <->  patient (tags pour un dossier médical)
+-- Table de jointure tags patient (tags pour un dossier médical)
 CREATE TABLE IF NOT EXISTS `univtags_join` (
-	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`tagID` INT NOT NULL,
-	`toID` INT NOT NULL,
-	PRIMARY KEY (`id`),
-	KEY `tagID` (`tagID`),
-	KEY `toID` (`toID`),
-	CONSTRAINT UniqUnivTagsJoin UNIQUE(`tagID`, `toID`)
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `tagID` int NOT NULL,
+  `toID` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UniqUnivTagsJoin` (`tagID`,`toID`),
+  KEY `tagID` (`tagID`),
+  KEY `toID` (`toID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- Ajoute le type de tag pour le dossier patient
-INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer');
-INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser un fiche pro.', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
-
------------------------------------------------
--- Fin tables pour le système de tags universel
------------------------------------------------
-
 
 -- création de la table motsuivi
 CREATE TABLE IF NOT EXISTS `motsuivi` (
@@ -424,10 +411,12 @@ CREATE TABLE IF NOT EXISTS `motsuivi` (
   `dateTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `texte` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fromID` (`fromID`),
-  KEY `fromID` (`toID`),
+  KEY `fromID` (`fromID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- Ajoute le type de tag pour le dossier patient
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer');
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser un fiche pro.', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
 
 -- actes_cat
 INSERT IGNORE INTO `actes_cat` (`name`, `label`, `description`, `module`, `fromID`, `creationDate`, `displayOrder`) VALUES
@@ -635,7 +624,6 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('admin', 'clicRdvUserId', 'identifiant', 'identifiant', 'email@address.com', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
-
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='contact');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('admin', 'emailApicrypt', 'adresse mail apicript', 'Email apicrypt', 'Email apicrypt', 'valid_email', '', 'email', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
@@ -697,7 +685,7 @@ SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='divers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
 ('admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'notesPro', 'notes pros', 'Notes pros', 'Zone de notes pros', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10'),
+('admin', 'preferedSendingMethod', '', 'Méthode d\'envoi préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d\'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10'),
 ('admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', @catID, '1', '2018-01-01 00:00:00', '3600', '1');
 
 

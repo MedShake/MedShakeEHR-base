@@ -182,7 +182,7 @@ function read_args() {
 }
 
 /**
- * récupère les paramètres d'installation poster par le formulaire
+ * récupère les paramètres d'installation postés par le formulaire
  * @return array paramètres d'installation
  */
 function get_post() {
@@ -200,12 +200,12 @@ function get_post() {
 }
 
 /**
-* récupère les paramètres d'installation poster par le formulaire
+* récupère les paramètres d'installation postés par le formulaire
 * @return boolean true if OK, false if KO
 */
 function check_and_create_base_config() {
   global $conf, $homepath;
-  // Ne pas crée la base de donnée si il est préciser qu'on la crée en amon
+  // Ne pas créer la base de donnée s'il est précisé qu'on l'a créée en amont
   if (empty($conf['sqlNotCreatDb']))
   {
     $mysqli = new mysqli($conf['sqlServeur'], $conf['sqlRootId'], $conf['sqlRootPwd']);
@@ -226,7 +226,7 @@ function check_and_create_base_config() {
         echo("Echec lors de l'attribution des droits sur la base de données MySQL\n");
         return false;
     }
-  } else { // Verifier si la base et et l'utilisateur medshake existe
+  } else { // Verifier si la base et l'utilisateur medshake existent
     $mysqli = new mysqli($conf['sqlServeur'], $conf['sqlUser'], $conf['sqlPass'], $conf['sqlBase']);
     if (mysqli_connect_errno()) {
       echo("Echec de connexion à la base de données.\nVérifiez vos paramètres de connexion.\n".$mysqli->connect_errno." : ".$mysqli->connect_error."\n");
@@ -257,7 +257,7 @@ function check_and_create_base_config() {
 }
 
 /**
- * récupère les paramètres d'installation poster par le formulaire
+ * récupère les paramètres d'installation postés par le formulaire
  * @configParam   array      Paramètre de configuration pour l'installateur
  * @return        array      Tableau de message d'erreur
  */
@@ -270,7 +270,7 @@ function check_config_param($params) {
   elseif ($params['protocol'] <> 'http://' && $params['protocol'] <> 'https://')
     $errMsgs['protocol'] = "Le protocol doit être http ou https.";
 
-  // Paramètres de création de la base de donnée
+  // Paramètres de création de la base de données
   if (!empty($params['sqlNotCreatDb']) && (!empty($params['sqlRootId']) || !empty($params['sqlRootPwd']))) {
     $errMsgs['creatAndNotCreatDB'] = "Ne pas fournir les identifants root pour la création de la base de donnée si l'option pour ne pas la créer est activé.";
   } elseif (empty($params['sqlNotCreatDb']) && (empty($params['sqlRootId']) || empty($params['sqlRootPwd']))) {
@@ -388,7 +388,7 @@ if ($iscli || ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['configForm'])
     else die();
   }
 
-  // Surcharge les paramettre par defaut
+  // Surcharge les parametres par defaut
   foreach($argParams as $k=>$v) {
     // Ne pas enrgister le paramettre 'port' (il est enregister dans 'host')
     if ($k == 'port') $break;
@@ -397,7 +397,7 @@ if ($iscli || ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['configForm'])
 
 }
 $template='';
-// Si le fichier de configuration est absent le crée
+// Si le fichier de configuration est absent le créer
 if (!is_file($homepath.'config/config.yml')) {
   if (!$iscli && $_SERVER['REQUEST_METHOD']=='GET') {
       $template="bienvenue";
@@ -426,13 +426,13 @@ if (is_file($homepath.'config/config.yml')) {
       $mysqli=msSQL::sqlConnect();
 
       /////////// Validators loader
-      define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));
+      define("PASSWORDLENGTH", 8);
       require $homepath.'fonctions/validators.php';
 
       /////////// Router
       if (!$iscli) {
         $router = new AltoRouter();
-        $routes=Spyc::YAMLLoad($homepath.'config/routes.yml');
+        $routes=Spyc::YAMLLoad($homepath.'config/routes/routes-base.yml') + Spyc::YAMLLoad($homepath.'config/routes/routes-login.yml');
         $router->addRoutes($routes);
         $router->setBasePath($p['config']['urlHostSuffixe']);
         $match = $router->match();
@@ -498,8 +498,8 @@ if (! $iscli) {
       <script>
         $(document).ready(function() {
 
-          // Si nous ne voulons pas que l'instalateur crée la base de
-          // donnée, désactive les champs adequats
+          // Si nous ne voulons pas que l'installateur crée la base de
+          // données, désactive les champs adequats
           $('input[name=sqlNotCreatDb]').on("change", function() {
             if(this.checked) {
               $('input[name=sqlRootId]').prop("disabled", true);
