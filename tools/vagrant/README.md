@@ -13,13 +13,16 @@ nano secrets.yml
 ```
 
 - Taper la commande suivante `vagrant up`.
-- A la fin de l'exécution de la commande, ouvrir le navigateur se rendre à l'adresse suivante `http://55.55.55.5/install.php`.
+- A la fin de l'exécution de la commande, ouvrir le navigateur se rendre à l'adresse suivante `http://192.168.56.4/install.php`.
 - Vous pouvez finir la configuration de MedShakeEHR.
 - Dans l'écran de configuration rapide cochez la case : `Ne pas créer la base de donnée`
 - Le nom d'utilisateur et le mot de passe utilisateur correspondent à ce que vous avez choisi pour les variables `sqlUserAccount:` et `sqlUserPassword:`
 - [Documentation de MedShakeEHR](https://www.logiciel-cabinet-medical.fr/documentation-technique/)
 
 ## Modifications de la configuration
+- si vous avez installé au préalable `vagrant-hostsupdater`, vous pouvez directement taper msehr.local dans la barre d'adresse.
+- si vous avez libvirt et virtualbox d'installés sur la même machine, précisez `--provider virtualbox` ou `--provider libvirt`. 
+- pour libvirt je vous conseille de changer l'adresse du `private network` pour éviter les conflits avec virtualbox
 - Pour arrêter la machine virtuelle taper `vagrant halt`.
 - Pour détruire les fichiers de la machine virtuelle taper `vagrant destroy`.
 - Vous pouvez modifier, les caractéristiques (ip, nombre de CPU, RAM, nom, distribution ...etc) de votre machine virtuelle dans `Vagrantfile`. Par exemple utiliser un `public network`

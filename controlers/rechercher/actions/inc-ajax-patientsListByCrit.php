@@ -58,6 +58,7 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
     $docAsSigner->setFromID($p['user']['id']);
     $p['page']['modelesDocASigner']=$docAsSigner->getPossibleDocToSign();
 
+
 	// intégration tags universel pour filter sur un patient
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
@@ -67,6 +68,9 @@ if ($_POST['porp']=='patient' or $_POST['porp']=='externe' or $_POST['porp']=='t
 			unset($univTagsTypeID);
 		}
 	}
+
+	if ($_POST['porp'] == 'externe' && !empty($_POST['externalPatientID'])) $p['page']['externalPatientID'] = $_POST['externalPatientID'];
+
 
 } elseif ($_POST['porp']=='pro') {
     $formIN=$p['config']['formFormulaireListingPraticiens'];
@@ -149,9 +153,9 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
               ON od.typeID=dt.id AND od.outdated='' AND od.deleted=''
               WHERE dt.name='relationExternePatient' and od.toID in ('".implode("', '", array_column($todays, 'id'))."')", 'toID', 'value');
     } elseif (array_key_exists('PraticienPeutEtrePatient', $p['config']) and $p['config']['PraticienPeutEtrePatient'] == 'true'){
-        $mss->setPeopleType(['pro','patient']);
+        $mss->setPeopleType(['pro','patient','externe']);
     } else {
-        $mss->setPeopleType(['patient']);
+        $mss->setPeopleType(['patient','externe']);
     }
 
     //restrictions sur retours

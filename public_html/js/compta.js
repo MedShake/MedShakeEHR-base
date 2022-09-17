@@ -94,10 +94,10 @@ $(document).ready(function() {
     } else if (choix == 'lastweek') {
       $('#beginPeriodeID').val(moment().subtract(1, 'weeks').startOf('week').format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().subtract(1, 'weeks').endOf('week').format('DD/MM/gggg'));
-    } else if (choix == 'impayesannee') {
+    } else if (choix in {'thisyear':0, 'impayesannee':0}) {
       $('#beginPeriodeID').val(moment().startOf('year').format('DD/MM/gggg'));
       $('#endPeriodeID').val(moment().format('DD/MM/gggg'));
-    } else if (choix == 'bilanannee') {
+    } else if (choix in {'lastyear':0, 'bilanannee':0}) {
       $('#beginPeriodeID').val(moment().subtract(1, 'years').format('01/01/gggg'));
       $('#endPeriodeID').val(moment().subtract(1, 'years').format('31/12/gggg'));
     }

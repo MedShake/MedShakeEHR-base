@@ -1,7 +1,7 @@
 ---
 - hosts: msehr
   become: yes
-  vars_files:
+  vars_files: 
     - secrets.yml
 
   tasks:
@@ -48,12 +48,6 @@
         directory_mode: yes
       when: stage == "testing"
 
-    - name: Creating MEDSHAKEEHRPATH file
-      copy:
-        dest: /opt/ehr/public_html/MEDSHAKEEHRPATH
-        content: |
-          /opt/ehr
-        
     - name: Add good permissions and ownership to medshakeehr folder
       ansible.builtin.file:
         path: /opt/ehr
@@ -62,6 +56,21 @@
         owner: www-data
         group: "{{ user }}"
         mode: '0755'
+
+    - name:  check if MedShakeEHR exist
+      stat:
+        path: opt/ehr/public_html
+      register: msehr 
+
+    - name: Creating MEDSHAKEEHRPATH file
+      copy:
+        dest: /opt/ehr/public_html/MEDSHAKEEHRPATH
+        content: |
+          /opt/ehr
+        owner: www-data
+        group: "{{user}}"
+        mode: '0755'
+      when: not msehr.stat.exists 
 
     - name: Composer upgrade on /ehr
       shell: cd /opt/ehr && composer upgrade --no-cache   
@@ -93,6 +102,8 @@
     - name: create private key
       openssl_privatekey:
         path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
+        size: 4096
+        state: present
 
     - name: Generate an OpenSSL Certificate Signing Request with Subject information
       openssl_csr:
@@ -103,6 +114,7 @@
         organization_name: "{{ organizationName }}"
         email_address: "{{ emailAdress }}"
         common_name: "{{ domain }}"
+        subject_alt_name: 'DNS:"{{ domain }}"'
         state: present
 
     - name: Generate a Self Signed OpenSSL certificate
@@ -111,7 +123,7 @@
         privatekey_path: "/etc/ssl/{{ domain }}/{{ domain }}.key"
         csr_path: "/etc/ssl/{{ domain }}/{{ domain }}.csr"
         provider: selfsigned
-        valid_in: 315360000 
+        selfsigned_not_after: +3650d
         state: present
       
     - name: Setup vhosts configuration.
@@ -159,7 +171,7 @@
         regexp: '^ServerSignature On'
         line: ServerSignature Off
         state: present
-      notify: Restart Apache  
+      notify: Restart Apache
 
     - name: Set the root password 
       mysql_user: login_user=root login_password="{{ sqlRootPassword }}" user=root password="{{ sqlRootPassword }}"
@@ -212,22 +224,18 @@
         group: root
         mode: 0644
       when: "'orthanc' in ansible_facts.packages"
-
-    - name: install template for msehr-cli
-      template:
-        src: templates/msehrCli.sh.j2
-        dest: /tmp/msehrCli.sh
-        owner: root
-        group: root
-        mode: '0755'
     
     - name:  check if config.yml exist
       stat:
         path: /opt/ehr/config/config.yml
       register: ymlconfig 
       
-    - name: Run msehr-cli
-      command: /tmp/msehrCli.sh
+    - name: Execute MedShakeEHR cli installation script
+      shell: "/usr/bin/php /opt/ehr/public_html/install.php -s localhost -N -d {{ sqlDbName }} -u {{ sqlUserAccount }} -p \"{{ sqlUserPassword }}\" -r https -D {{ domain }}"
+      become: true
+      become_user: www-data
+      environment:
+        MEDSHAKEEHRPATH: /opt/ehr
       when: not ymlconfig.stat.exists
 
   handlers:

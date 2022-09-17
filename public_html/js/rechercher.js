@@ -255,6 +255,7 @@ $(document).ready(function() {
  */
   $('body').on("click", ".extAsPatient", function(e) {
     e.preventDefault();
+    e.stopPropagation();
     var externID = $('.extToNew').attr("data-externid");
     var patientID = $(this).attr("data-patientid");
     $.ajax({
@@ -346,6 +347,7 @@ function updateListingPatients(getNextResult = false) {
       patientsPropres: $('#patientsPropres').is(':checked'),
       univTagsFilter: univTagsFilter,
       currentNbOfResultsDisplayed: currentNbOfResultsDisplayed,
+      externalPatientID: $('#externalPatientID').val()
     },
     dataType: "html",
     success: function(data) {

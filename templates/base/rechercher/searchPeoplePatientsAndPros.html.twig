@@ -65,7 +65,7 @@ associer patient
 {% elseif page.porp == 'pro' %}
 <h1>Praticiens</h1>
 {% elseif page.porp == 'externe' %}
-<h1>Associer un patient externe à un patient MedShakeEHR</h1>
+<h1>Associer le patient externe <i>{{ page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname) }} {{ page.patient.administrativeDatas.firstname }}</i> à un patient MedShakeEHR</h1>
 {% endif %}
 
 <div class="card card-body bg-light my-4">

@@ -46,12 +46,12 @@ if($p['page']['porp'] == 'registre' and $p['config']['optionGeActiverRegistres']
     return;
 }
 
-// Template et liste des types par catégorie avec retriction aux types employés dans le form de création
+// Template et liste des types par catégorie avec restriction aux types employés dans le form de création
 $form = new msForm;
 if($p['page']['porp'] == 'pro') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-} elseif($p['page']['porp'] == 'patient') {
+} elseif($p['page']['porp'] == 'patient' || $p['page']['porp'] == 'externe' || $p['page']['porp'] == 'today') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 } elseif($p['page']['porp'] == 'groupe') {

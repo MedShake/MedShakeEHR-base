@@ -33,6 +33,7 @@ if(!is_numeric($_POST['mailID'])) die;
 
 $p['page']['mail']=msSQL::sqlUnique("select id, txtFileName, mailHeaderInfos, txtDatetime, hprimExpediteur, hprimAllSerialize, pjNombre, pjSerializeName, archived, assoToID from inbox where id='".$_POST['mailID']."'");
 $p['page']['mail']['hprimAllSerialize']=unserialize($p['page']['mail']['hprimAllSerialize']);
+$p['page']['mail']['isValidHprim'] = msHprim::checkIfValidHprimHeaderData($p['page']['mail']['hprimAllSerialize']);
 $p['page']['mail']['pjSerializeName']=unserialize($p['page']['mail']['pjSerializeName']);
 $p['page']['mail']['mailHeaderInfos']=unserialize($p['page']['mail']['mailHeaderInfos']);
 
@@ -40,7 +41,11 @@ $p['page']['mail']['corps']=msInbox::getMessageBody($p['config']['apicryptChemin
 //hprim
 $p['page']['mail']['bioHprim'] = msHprim::parseSourceHprim($p['page']['mail']['corps']);
 
-$p['page']['mail']['patientsPossibles']=msHprim::getPossiblePatients($p['page']['mail']['hprimAllSerialize'],$p['page']['mail']['assoToID']);
+if ($p['page']['mail']['isValidHprim']) {
+    $p['page']['mail']['patientsPossibles'] = msHprim::getPossiblePatients($p['page']['mail']['hprimAllSerialize'],$p['page']['mail']['assoToID']);
+} else {
+    $p['page']['mail']['patientsPossibles'] = array();
+}
 
 $p['page']['mail']['relativePathForPJ']=str_replace($p['config']['webDirectory'], '', $p['config']['apicryptCheminInbox']);
 

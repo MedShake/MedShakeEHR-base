@@ -1,6 +1,9 @@
 {
     "config": {
-      "vendor-dir":"thirdparty"
+      "vendor-dir":"thirdparty",
+      "allow-plugins": {
+        "robloach/component-installer": true
+      }
     },
     "repositories": [
 
@@ -128,11 +131,11 @@
             "type": "package",
             "package": {
                 "name": "fr33z00/panzoom",
-                "version": "v3.2.2.1+1touch",
+                "version": "v3.2.2.1+1Touch",
                 "source": {
                     "url": "https://github.com/fr33z00/jquery.panzoom.git",
                     "type": "git",
-                    "reference": "v3.2.2.1+1touch"
+                    "reference": "v3.2.2.1+1Touch"
                 }
             }
         },
@@ -170,7 +173,7 @@
         "moment/moment": "2.24.0",
         "dimsemenov/magnific-popup": "1.1.0",
         "dennyferra/typewatch": "3.0.0",
-        "tinymce/tinymce": "4.9.5",
+        "tinymce/tinymce": "6.1.2",
         "jquery/jquery": "3.4.1",
         "danielm/uploader": "v1.0.2",
         "brinley/jsignature": "2.1.3",
@@ -184,6 +187,6 @@
         "joequery/stupid-table-plugin": "1.1.3",
         "thebingservices/codemirror": "v5.10.0",
         "fortawesome/font-awesome": "^5.13",
-        "fr33z00/panzoom": "v3.2.2.1+1touch"
+        "fr33z00/panzoom": "v3.2.2.1+1Touch"
     }
 }
