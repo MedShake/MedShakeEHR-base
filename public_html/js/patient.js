@@ -857,6 +857,82 @@ $(document).ready(function() {
     });
   });
 
+  ////////////////////////////////////////////////////////////////////////
+  ///////// Gestion des mots suivi
+
+  // datepicker bootstrap
+  $('#datepickMotSuivi').on("click", function() {
+    $(this).data("DateTimePicker").toggle();
+  }).datetimepicker({
+	  locale: 'fr',
+	  format: 'DD/MM/Y HH:mm',
+	  sideBySide: true,
+	  icons: {
+      time: 'far fa-clock',
+      date: 'fa fa-calendar',
+      up: 'fa fa-chevron-up',
+      down: 'fa fa-chevron-down',
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-crosshairs',
+      clear: 'fa fa-trash',
+      close: 'fa fa-times',
+	  },
+	});
+
+  // Attape l'action de validation d'un nouveau mot suivi
+	$('#formMotSuivi').submit(function(event) {
+    event.preventDefault();
+    var formDatas = $('#formMotSuivi :input').serializeArray();
+    $.ajax({
+      type: 'POST',
+      url: '/patient/ajax/motSuivi/',
+      data: formDatas,
+      dataType: 'json',
+      success: function(data) {
+        switch (data.status) {
+          case 'ok':
+            $('#tableMotSuivi').html(data.data.html);
+            cleanModalMotSuivi();
+            alert_popup('success', data.message);
+            break;
+          case 'error':
+            alert_popup('danger', data.message);
+            break;
+        };
+      },
+      error: function(data) {
+        alert_popup('danger', 'Problème, rechargez la page !');
+      },
+    });
+    $('#modalMotSuivi').modal('hide');
+  });
+
+  // Nétoie le contenu de la modal mot suivi quant on la ferme
+  $('#modalMotSuivi').on('hidden.bs.modal', function(event) {
+    cleanModalMotSuivi();
+  });
+
+  // Focus sur le champ texte du mot suivi quand la modal est affiché
+  $('#modalMotSuivi').on('shown.bs.modal', function(event) {
+    $('#formMotSuivi input[name=texte]').focus();
+  });
+
+  //Met la valeur du champ date à maintenant au clique sur nouveau mot suivi
+  $('#bntNouveauMotSuivi').on('click', function(event) {
+    cleanModalMotSuivi();
+    var currentDate = new Date();
+    var year = currentDate.getFullYear().toString();
+    var month = (currentDate.getMonth()+1).toString().padStart(2,0);
+    var day = currentDate.getDate().toString().padStart(2,0);
+    var hour = currentDate.getHours().toString().padStart(2,0);
+    var min  = currentDate.getMinutes().toString().padStart(2,0);
+    var dateString = day+'/'+month+'/'+year+' '+hour+':'+min;
+    $('#formMotSuivi input[name=dateTime]').val(dateString);
+  });
+
+  // Obient la liste initial au chargement de la page du dossier patient
+  getTableMotSuivi();
 
 });
 
@@ -1792,5 +1868,100 @@ function activeWatchChange(parentTarget) {
     source = $(this);
     instance = $(this).closest("form").attr("data-instance");
     setPeopleData(value, patientID, typeID, source, instance);
+  });
+}
+
+////////////////////////////////////////////////////////////////////////
+///////// Fonction relatives aux mots suivi
+
+/**
+ * Nétoie les champ de la modal de mot suivi
+ * @return {void}
+ */
+function cleanModalMotSuivi() {
+  $('#formMotSuivi textarea[name=texte]').val('');
+  $('#formMotSuivi input[name=dateTime]').val('');
+  $('#formMotSuivi input[name=ID]').val(0);
+  $('#modalMotSuiviTitreModifier').attr('hidden', 'hidden');
+  $('#modalMotSuviTitreNouveau').removeAttr('hidden');
+  $('#formMotSuivi input[name=action]').val('create');
+}
+
+/**
+ * Amènage la modal de création de mot suivi pour modification.
+ * Appelé au clique sur le bouton modifier d'une ligne de mot suivi.
+ * @return {void}
+ */
+function callModalUpdateMotSuivi(elem) {
+  var motID = $(elem).attr('data-id');
+  var motTexte = $('#ligneMotSuivi-'+motID+' .motSuivi-texte')[0].textContent;
+  var motDateTime = $('#ligneMotSuivi-'+motID+' .motSuivi-dateTime')[0].textContent;
+  var formMotSuivi = $('#formMotSuivi');
+  $('#formMotSuivi input[name=ID]').val(motID);
+  $('#formMotSuivi input[name=action]').val('update');
+  $('#formMotSuivi textarea[name=texte]').val(motTexte);
+  $('#formMotSuivi input[name=dateTime]').val(motDateTime);
+  $('#modalMotSuviTitreNouveau').attr('hidden', 'hidden');
+  $('#modalMotSuiviTitreModifier').removeAttr('hidden');
+  $('#modalMotSuivi').modal('show');
+}
+
+function callDeleteMotSuvi(elem) {
+  var motID = $(elem).attr('data-id');
+  var motTexte = $('#ligneMotSuivi-'+motID+' .motSuivi-texte')[0].textContent;
+  var motDateTime = $('#ligneMotSuivi-'+motID+' .motSuivi-dateTime')[0].textContent;
+  var ok = confirm('Confirmer vous la supression du mot de suivi du "'+motDateTime+'" avec le contenus :\n\n'+motTexte);
+  if (ok) {
+    $.ajax({
+      type: 'POST',
+      url: '/patient/ajax/motSuivi/',
+      data: {ID: motID, action: 'delete'},
+      dataType: 'json',
+      success: function(data) {
+        switch (data.status) {
+          case 'ok':
+            $('#tableMotSuivi').html(data.data.html);
+            alert_popup('success', data.message);
+            break;
+          case 'error':
+            alert_popup('danger', data.message);
+            break;
+        };
+      },
+      error: function(data) {
+        alert_popup('danger', 'Problème, rechargez la page !');
+      },
+    });
+  }
+}
+
+/**
+ * Amènage la modal de création de mot suivi pour modification.
+ * Appelé au clique sur le bouton modifier d'une ligne de mot suivi.
+ * @param  {int} nb Nombre de mot à afficher, 0 obtien le nombre configuré
+ *                  par le paramètre optionsDossierPatientNbMotSuiviAfficher
+ * @return {void}
+ */
+function getTableMotSuivi(nb = 0) {
+  toID = $('#identitePatient').attr("data-patientID");
+  $.ajax({
+    type: 'POST',
+    url: '/patient/ajax/motSuivi/',
+    data: {toID: toID, nb: nb, action: 'list'},
+    dataType: 'json',
+    success: function(data) {
+      switch (data.status) {
+        case 'ok':
+          $('#tableMotSuivi').html(data.data.html);
+          alert_popup('success', data.message);
+          break;
+        case 'error':
+          alert_popup('danger', data.message);
+          break;
+      };
+    },
+    error: function(data) {
+      alert_popup('danger', 'Problème, rechargez la page !');
+    },
   });
 }
