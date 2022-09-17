@@ -64,20 +64,23 @@ associer patient
 {% elseif page.porp == 'pro' %}
 <h1>Praticiens</h1>
 {% elseif page.porp == 'externe' %}
-<h1>Associer un patient externe à un patient MedShakeEHR</h1>
+<h1>Associer le patient externe <i>{{ page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname) }} {{ page.patient.administrativeDatas.firstname }}</i> à un patient MedShakeEHR</h1>
 {% endif %}
 
 <div class="card card-body bg-light my-4">
 	<div class="row ">
 
 	  <form id="formRecherchePatients" class="form-inline col-12 col-xl-9 mx-0 row my-xl-2">
+      {% if page.porp == 'externe' %}
+        <input id="externalPatientID" type="hidden" name="externalPatientID" value="{{ page.patient.id }}">
+      {% endif %}
 	    <div class="form-group col-12 my-2 my-xl-0 m-0 p-0 col-xl-2">
 	      {{ f.input ({
 		      'input' : {
 			      'type' : 'text',
 			      'id' : 'd2',
 			      'name' : 'lastname',
-	          'value' : (page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
+	          'value' : page.porp=='externe'?'':(page.patient.administrativeDatas.lastname|default(page.patient.administrativeDatas.birthname|default('')))|trim,
 			      'placeholder' : 'Nom',
 			      'class' : 'form-control col-12 searchupdate',
 			      'autocomplete' : 'off',
@@ -95,7 +98,7 @@ associer patient
 						'type' : 'text',
 						'id' : 'd3',
 						'name' : 'firstname',
-						'value' : page.patient.administrativeDatas.firstname|default(''),
+						'value' : page.porp=='externe'?'':page.patient.administrativeDatas.firstname|default(''),
 						'placeholder' : 'Prénom',
 						'class' : 'form-control col-12 searchupdate',
 						'autocomplete' : 'off',

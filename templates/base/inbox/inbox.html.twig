@@ -93,7 +93,7 @@
             </tr>
             {% for mail in mails %}
               <tr class="small mailClicView{% if parentLoop == '1' and loop.index == '1' %} table-success{% elseif mail.archived == 'c' %} table-warning{% endif %}" data-mailid="{{ mail.id }}" data-status="{{ mail.archived }}">
-                {% if mail.hprimIdentite %}
+                {% if mail.isValidHprim %}
                   <td class="font-weight-bold">
                     {{ mail.hprimIdentite|e }}
                   </td>
