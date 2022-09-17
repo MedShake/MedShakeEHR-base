@@ -48,7 +48,7 @@ selectPackages() {
 }
 
 packagesInstall(){
-	apt update && apt upgrade -y && apt install -y "$msehrDep"
+	apt update && apt upgrade -y && apt install -y $msehrDep
 }
 
 orthancConfig(){
@@ -274,7 +274,7 @@ msehrDom=msehr.local
 msehrDbName=medshakeehr
 selectVersion=1
 selectRemove=1
-msehrDep="apache2 composer curl ghostscript git imagemagick mariadb-server ntp pdftk php php-{curl,gd,imagick,imap,intl,mysql,soap,xml,yaml,zip}"
+msehrDep="apache2 composer curl ghostscript git imagemagick mariadb-server ntp pdftk php php-bcmath php-curl php-gd php-imagick php-imap php-intl php-mysql php-soap php-xml php-yaml php-zip"
 extraDicom="orthanc"
 
 clear
