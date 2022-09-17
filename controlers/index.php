@@ -34,7 +34,7 @@ if ($p['config']['agendaDistantLink']=='') {
         $agenda->set_userID($p['user']['id']);
     }
     $todays=$agenda->getPatientsOfTheDay();
-    if (count($todays)) {
+    if (is_countable($todays) ? count($todays) : 0) {
         msTools::redirection('/todays/');
     }
 }

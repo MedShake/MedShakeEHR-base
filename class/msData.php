@@ -302,7 +302,7 @@ class msData extends msDataCat
         }
 
         $action = "tbs_".msData::getNameFromTypeID($this->_typeID);
-        if (isset($p['user'])) {
+        if (isset($p['user']) && isset($p['user']['module'])) {
             $moduleClass="msMod".ucfirst($p['user']['module'])."DataSave";
         }
         if (isset($moduleClass) and method_exists($moduleClass, $action)) {

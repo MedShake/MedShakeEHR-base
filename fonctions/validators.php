@@ -48,10 +48,10 @@ GUMP::add_validator("phone", function($field, $input, $param = NULL) {
 	}, 'Le champ {field} n\'est pas un numéro de téléphone valide');
 
 GUMP::add_validator("genericPhone", function($field, $input, $param = NULL) {
-		if (empty($input[$field])) return TRUE;
-		$find=preg_match('/^(\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$/i', $input[$field]);
-		if ($find!='1') return FALSE; else return TRUE;
-	}, 'Le champ {field} n\'est pas un numéro de téléphone international valide');
+	if (empty($input[$field])) return TRUE;
+	$find=preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/mix', $input[$field]);
+	if ($find!='1') return FALSE; else return TRUE;
+}, 'Le champ {field} n\'est pas un numéro de téléphone international valide');
 
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
@@ -94,10 +94,6 @@ GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) 
 		}
 		return FALSE;
 	}, 'Le champ {field} ne peut être vide en même temps que certains autres');
-
-GUMP::add_validator("alpha_numeric_dash", function($field, $input, $param = NULL) {
-		return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $input[$field]) > 0;
-	}, 'Le champ {field} ne peut contenir que des caratères alphanumériques, tiret et undescore');
 
 GUMP::add_validator("max_numeric_current_year", function($field, $input, $param = NULL) {
 		return $input[$field] <= date('Y');

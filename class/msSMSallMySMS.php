@@ -266,7 +266,7 @@ class msSMSallMySMS
 	public function ajoutDestinataire($tel, $params = [])
 	{
 		$tel = trim(str_ireplace(array(' ', '/', '.'), '', $tel));
-		if (strlen($tel) == 10) {
+		if (preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/mix', $tel) === 1) {
 			$destinataire['mobilePhone'] = $tel;
 			if (count($params) > 0) {
 
@@ -407,7 +407,7 @@ class msSMSallMySMS
 		//log json
 		$logFileDirectory = $this->_directory4log . date('Y/m/d/', $this->_timestamp4log);
 		msTools::checkAndBuildTargetDir($logFileDirectory);
-		file_put_contents($logFileDirectory . $this->_filename4log, $tab);
+		file_put_contents($logFileDirectory . $this->_filename4log, $tab, FILE_APPEND);
 
 	}
 
@@ -442,7 +442,7 @@ class msSMSallMySMS
 				$acks = $this->getAcksRecep($data['campaignId']);
 				if (is_array($acks)) {
 					$data['acks'] = $acks;
-					file_put_contents($logFile, json_encode($data));
+					file_put_contents($logFile, json_encode($data), FILE_APPEND);
 					return $acks;
 				} else {
 					return null;
@@ -630,7 +630,7 @@ class msSMSallMySMS
 
 			$array_data = array(
 				'text' => $this->_campaign_data['DATA']['MESSAGE'] . " \r\nStop au 36180",
-				'to' => $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"],
+				'to' => str_replace("+", "", $this->_campaign_data['DATA']['SMS'][0]["mobilePhone"]),
 				'from' => $this->_campaign_data['DATA']['TPOA'],
 				'campaignName' => $this->_campaign_data['DATA']['CAMPAIGN_NAME'],
 				'alerting' => 1,
@@ -662,10 +662,14 @@ class msSMSallMySMS
 			curl_close($ch);
 
 			if ($err || $responseCode != 201) {
-				$result = [];
-				$result['status'] = '0';
-				$result['statusText'] = "Une erreur s'est produite lors de l'envoi.";
-				$result = json_encode($result);
+				$apiResponse = [];
+				$apiResponse['status'] = '0';
+				$apiResponse['statusText'] = "Une erreur s'est produite lors de l'envoi.";
+
+				if (isset($result['description']) && !empty($result['description']))
+					$apiResponse['statusText'] .= "Description : ".$result['description'];
+
+				$result = json_encode($apiResponse);
 			}
 		} else {
 			$result = [];

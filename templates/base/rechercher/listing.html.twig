@@ -62,9 +62,7 @@
           <td class="d-none d-sm-table-cell">
 
             {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod == patientID) or page.porp == 'externe' %}
-              <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à ce dossier">
-                <i class="fas fa-paperclip fa-fw"></i>
-              </a>
+              <button type="button" class="extAsPatient btn btn-light btn-sm" title="Lier à ce dossier" data-externID="{{ page.externalPatientID }}" data-patientID="{{ patientID }}"><i class="fas fa-paperclip fa-fw"></i></button>
             {% elseif page['outputType'][patientID]['type']=='pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}
               <a class="btn btn-danger btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Utilisateur du logiciel">
                 <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
