@@ -932,7 +932,7 @@ $(document).ready(function() {
   });
 
   // Obient la liste initial au chargement de la page du dossier patient
-  getTableMotSuivi();
+  if ($('#tableMotSuivi').length) getTableMotSuivi();
 
 });
 
