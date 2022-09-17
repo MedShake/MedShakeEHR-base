@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
       v.cpus = 2
     end
   config.vm.provider "libvirt" do |lb|
+      # for ubuntu2204 1024
       lb.memory = 512
       lb.cpus = 2
     end

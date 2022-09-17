@@ -82,10 +82,14 @@
       become: yes
       become_user: www-data
 
+    - name: register php version
+      shell: 'php -r "echo PHP_VERSION;" | cut -c1-3'
+      register: php_version
+
     - name: Setup php.ini configuration.
       template:
         src: templates/php.ini.j2
-        dest: "/etc/php/7.4/apache2/php.ini"
+        dest: "/etc/php/{{ php_version.stdout }}/apache2/php.ini"
         owner: root
         group: root
         mode: 0644
