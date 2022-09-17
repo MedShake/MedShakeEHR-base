@@ -125,9 +125,9 @@ class msReglementActe extends msReglement
       if($d = $this->_getActeLibreData(['dataYaml'])) {
         $tarif =  $d['dataYaml']['tarifBase'];
       }
-
     }
-    if(is_numeric($tarif)) {
+
+    if(isset($tarif) and is_numeric($tarif)) {
       return number_format($tarif, 2, '.', '');
     } else {
       return '';
@@ -192,7 +192,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeModifCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='mCCAM'")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='mCCAM' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
@@ -223,7 +223,7 @@ class msReglementActe extends msReglement
  * @return array       data acte
  */
   private function _getActeLibreData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='Libre'")) {
+    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='Libre' limit 1")) {
       if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
       return $d;
     } else {
