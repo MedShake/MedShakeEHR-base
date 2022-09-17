@@ -97,6 +97,88 @@ class msHprim
         }
     }
 
+  /**
+   * Tenter de trouver si un message contient un entête HPRIM valide a moyens
+   * de plusieurs test.
+   * @param  $array   Tableau contenant les entêtes hprim d'un message
+   *                  obtenus avec self::getHprimHeaderData()
+   * @return bool     `true` si ça resemble à une entête hprim, sinon `false`
+   * @see    self::getHprimHeaderData()
+   */
+  public static function checkIfValidHprimHeaderData(array $hprim_data) {
+      /**
+       * Ce système est une ébauche...
+       * Chaque test permet d'ajouteur et de retirer un certain nombre de
+       * point sur un score total qui permet de définir si un message contient
+       * une entête hprim ou non.
+       */
+      $score = 0;
+      $score_min  = 10;
+      // Les score pour les tests sont évaluer au doit mouillé et devrons
+      // sûrement être ajustés.
+
+      // Test si le paramètre codePatient est présent
+      if (!empty($hprim_data['codePatient']) || $hprim_data['codePatient'] != '.') {
+          // Et que le code patient resemble à un code
+          preg_match('/(^[A-z0-9-_\/]*$)/', $hprim_data['codePatient'], $matches);
+          $score += (!empty($matches)) ? 3 : -1;
+      }
+      //var_dump('[codePatient] ' . $hprim_data['codePatient'] . ': ' . $score);
+
+      // TEST Si les nom et prénon sont présent
+      $score += (!empty($hprim_data['nom'])) ? +1 : -1;
+      //var_dump('[nom] ' . $hprim_data['nom'] . ': ' . $score);
+      $score += (!empty($hprim_data['prenom'])) ? +1 : -1;
+      //var_dump('[prenom] ' . $hprim_data['prenom'] . ': ' . $score);
+
+
+      // Test si le code postal ressemble à un code postal si il est présent
+      // TODO : Attention, seul les codes postaux français sont pris en compte
+      //        (d'ou le score de 1)
+      if  (!empty($hprim_data['cp']) || $hprim_data['cp'] != '.') {
+          preg_match('/(^[0-9]{1}[1-9]{1}[0-9]{3}$)/', $hprim_data['cp'], $matches);
+          $score += (!empty($matches)) ? 1 : -1;
+      }
+      //var_dump('[cp] ' . $hprim_data['cp'] . ' : ' . $score);
+
+      // Test si la date de naissance est saisis et si c'est le cas, test is
+      // elle est vallide
+      if (!empty($hprim_data['ddn']) || $hprim_data['ddn'] != '.') {
+          // TODO : Est-il sûre que la date soit toujours au format 'd/m/Y' ?
+          $test_date = DateTime::createFromFormat('d/m/Y', $hprim_data['ddn']);
+          if ($test_date && $test_date->format('d/m/Y') == $hprim_data['ddn']) {
+              $score += 8;
+          } else {
+              $score -= 8;
+          }
+      }
+      //var_dump('[ddn] ' . $hprim_data['ddn'] . ' : ' . $score);
+
+
+      // Si il y a un nss saisis, test si celluis ci possède un format valide
+      if (!empty($hprim_data['nss']) || $hprim_data['nss'] != '.') {
+          preg_match('/(^[123478]{1}[0-9]{2}[01]{1}[0-9]{1}[0-9]{1}[0-9AB]{1}[0-9]{6}[0-9]{0,2}$)/', $hprim_data['nss'], $matches);
+          $score += (!empty($matches)) ? 3 : -3;
+      }
+      //var_dump('[nss] ' . $hprim_data['nss'] . ' : ' . $score);
+
+      // Test si la date d'expédition du dossier est présente est si c'est le
+      // cas, test si elle est valide.
+      if (!empty($hprim_data['dateDossier']) || $hprim_data['dateDossier'] != '.') {
+          // TODO : Est-il sûre que la date soit toujours au format 'd/m/Y' ?
+          $test_date = DateTime::createFromFormat('d/m/Y', $hprim_data['dateDossier']);
+          if ($test_date && $test_date->format('d/m/Y') == $hprim_data['dateDossier']) {
+              $score += 4;
+          } else {
+              $score -= 4;
+          }
+      }
+      //var_dump('[dateDossier] ' . $hprim_data['dateDossier'] . ' : ' . $score);
+
+      //var_dump($score);
+      return ($score >= $score_min) ? true : false;
+  }
+
 /**
  * Parser en-tête HPRIM d'un fichier txt
  * @param  string $file fichier avec chemin complet
@@ -142,7 +224,13 @@ class msHprim
               break;
 
               case "7":
-              $d['ddn'] = fgets($file);
+              $d['ddn'] = trim(fgets($file));
+              $test_date = DateTime::createFromFormat('Y-m-d', $d['ddn']);
+              // Si date fournis au format Y-m-d, la convertis au format d/m/Y
+              if ($test_date && $test_date->format('Y-m-d') == $d['ddn']) {
+                  $d['ddn'] = $test_date->format('d/m/Y');
+              }
+
               break;
 
               case "8":
@@ -165,7 +253,13 @@ class msHprim
               break;
 
               case "10":
-              $d['dateDossier'] = substr(fgets($file), 0, 15);
+              $d['dateDossier'] = trim(substr(fgets($file), 0, 15));
+              $test_date = DateTime::createFromFormat('Y-m-d', $d['dateDossier']);
+              // Si date fournis au format Y-m-d, la convertis au format d/m/Y
+              if ($test_date && $test_date->format('Y-m-d') == $d['dateDossier']) {
+                  $d['dateDossier'] = $test_date->format('d/m/Y');
+              }
+
               break;
 
               case "11":

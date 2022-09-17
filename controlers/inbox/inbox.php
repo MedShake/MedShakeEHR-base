@@ -43,11 +43,12 @@ if($p['config']['designInboxMailsSortOrder'] == 'asc') {
   $p['page']['sort']='desc';
 }
 
-if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%Y-%m-%d') as day, hprimIdentite, hprimExpediteur, pjNombre, archived
-from inbox
-where archived!='y' and mailForUserID in ('".$apicryptInboxMailForUserID."')
-order by txtDatetime ".$p['page']['sort'].", txtNumOrdre ".$p['page']['sort'])) {
+if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%Y-%m-%d') as day, hprimIdentite, hprimExpediteur, hprimAllSerialize, pjNombre, archived
+    from inbox
+    where archived!='y' and mailForUserID in ('".$apicryptInboxMailForUserID."')
+    order by txtDatetime ".$p['page']['sort'].", txtNumOrdre ".$p['page']['sort'])) {
     foreach ($mails as $mail) {
-        $p['page']['inbox']['mails'][$mail['day']][]=$mail;
+        $mail['isValidHprim'] = msHprim::checkIfValidHprimHeaderData(unserialize($mail['hprimAllSerialize']));
+        $p['page']['inbox']['mails'][$mail['day']][] = $mail;
     }
 }
