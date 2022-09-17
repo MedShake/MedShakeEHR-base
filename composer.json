@@ -1,20 +1,4 @@
 {
-
-  "repositories": [
-    {
-      "type": "package",
-      "package": {
-          "name": "medshake/urlcrypt",
-          "version": "1.0.0",
-          "source": {
-              "url": "https://github.com/MedShake/URLcrypt.git",
-              "type": "git",
-              "reference": "master"
-          }
-      }
-    }
-  ],
-
   "require": {
     "twig/twig": "^3.0.3",
     "altorouter/altorouter": "2.0.2",
@@ -27,7 +11,6 @@
     "box/spout": "2.7.3",
     "setasign/fpdi-fpdf": "v2.3.0",
     "spomky-labs/otphp": "^10.0",
-    "picqer/php-barcode-generator":  "v2.2.4",
-    "medshake/urlcrypt": "^1"
+    "picqer/php-barcode-generator":  "v2.2.4"
   }
 }
