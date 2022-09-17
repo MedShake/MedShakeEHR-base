@@ -185,13 +185,13 @@ class msPeople
       if (!is_numeric($this->_toID)) {
           throw new Exception('ToID is not numeric');
       }
-      $peopleExportID = msTools::getRandomStr(4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+      $peopleExportID = msTools::getRandomStr(6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
       $name2typeID = new msData();
       $name2typeID = $name2typeID->getTypeIDsFromName(['peopleExportID']);
-      if($data=msSQL::sqlUniqueChamp("select pd.id
+      if(msSQL::sqlUniqueChamp("select pd.id
       from objets_data as pd
-      where pd.typeID = '".$name2typeID['peopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value== '".$peopleExportID."'
+      where pd.typeID = '".$name2typeID['peopleExportID']."' and pd.deleted='' and pd.outdated='' and pd.value = '".$peopleExportID."'
       order by pd.id desc
       limit 1")) {
         $this->setPeopleExportID();
