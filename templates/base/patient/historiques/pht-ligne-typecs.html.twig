@@ -107,6 +107,28 @@
                   </a>
                 </li>
               {% endif %}
+
+              {# relations avec mode d'envoi préféré #}
+              {% if page.voirCorrespondantsAvecEnvoiPrefere %}
+                <li role="separator" class="dropdown-divider"></li>
+                <li class="dropdown-header" title="Méthode d'envoi péféré">Correspondant</li>
+                {% for correspandant in page.correspondants %}
+                  {% if correspandant.preferedSendingMethod == 'APICRYPT' and correspandant.emailApicrypt and config.apicryptAdresse %}
+                    <li>
+                      <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt" data-correspondantID="{{ correspandant.peopleID }}" title="{{ correspandant.typeRelationTxt }} / envoi préféré par Apicrypt">
+                        <i class="fas fa-lock fa-fw text-muted mr-1"></i><span>{{ correspandant.identiteUsuelle }}</span>
+                      </a>
+                    </li>
+                  {% elseif correspandant.preferedSendingMethod == 'FAX' and correspandant.faxPro and config.faxService %}
+                    <li>
+                      <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax" data-correspondantID="{{ correspandant.peopleID }}" title="{{ correspandant.typeRelationTxt }} / envoi préféré par Fax">
+                        <i class="fas fa-fax fa-fw text-muted mr-1"></i><span >{{ correspandant.identiteUsuelle }}</span>
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
             </ul>
           </div>
         {% endif %}

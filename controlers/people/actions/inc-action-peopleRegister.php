@@ -64,6 +64,20 @@ if ($match['params']['porp']=='pro' and !$actAsAjax) {
     $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
     $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
   }
+
+  //choix pour la méthode d'envoie préféré du praticien
+  if (!empty($p['config']['apicryptAdresse']) || !empty($p['config']['faxService'])) {
+
+	  //récupération des choix par défaut
+      $optionsInject['preferedSendingMethod'] = Spyc::YAMLLoad(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
+	  if (!empty($p['config']['apicryptAdresse'])) {
+		  $optionsInject['preferedSendingMethod']['APICRYPT'] = 'Apicrypt';
+	  }
+	  if (!empty($p['config']['faxService'])) {
+		  $optionsInject['preferedSendingMethod']['FAX'] = 'Fax';
+	  }
+  }
+
   if(!empty($optionsInject)) $form->setOptionsForSelect($optionsInject);
 }
 
