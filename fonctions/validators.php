@@ -59,13 +59,13 @@ GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 	}, 'Le champ {field} contient une valeur déjà utilisée');
 
 GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
-		msTools::validateDate($input[$field], $param);
+		msTools::validateDate($input[$field], $param[0]);
 	}, 'Le champ {field} ne contient pas une date valide');
 
 GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return FALSE;
 		$checkLogin = new msUser;
-		return $checkLogin->checkLoginByUserID($param, $input[$field]);
+		return $checkLogin->checkLoginByUserID($param[0], $input[$field]);
 	}, 'Le champ {field} n\'est pas correct');
 
 GUMP::add_validator("checkPasswordLength", function($field, $input, $param = NULL) {
@@ -86,7 +86,7 @@ GUMP::add_validator("checkUniqueUsername", function($field, $input, $param = NUL
 
 GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) {
 		if(!empty($input[$field])) return TRUE;
-		$params = explode(';', $param);
+		$params = explode(';', $param[0]);
 		if(!empty($params)) {
 			foreach($params as $pa) {
 				if(!empty($input['p_'.$pa])) return TRUE;
