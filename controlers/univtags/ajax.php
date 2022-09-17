@@ -20,7 +20,7 @@
  */
 
 /**
- * Config : ajax pour gestion des tags universel
+ * Config : ajax pour gestion des tags universels
  *
  * @author DEMAREST Maxime <maxime@indelog.fr>
  */

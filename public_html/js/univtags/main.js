@@ -105,7 +105,7 @@ function formUnivTagValid(btn, del = false) {
           var univTagsContainer = $('.univTagsContainer[data-typeID="'+data.data.typeID+'"]');
           univTagsContainer.empty();
           $(data.data.tagsListHtml).appendTo(univTagsContainer);
-          // sur la page de configuration des tags universelle passe les ligne du tableau
+          // sur la page de configuration des tags universels passe les lignes du tableau
           // relative au type de tag en visible
           var showIndicator = $('.unviTagsTypeShowIndicator[data-typeID="'+data.data.typeID+'"]')
           if (showIndicator.length > 0) {

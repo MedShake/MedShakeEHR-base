@@ -54,7 +54,7 @@ Class msUnivTags {
 
 
 	/**
-	 * @const TABLE_TAGS Nom de la table pour le stockage des tags universel.
+	 * @const TABLE_TAGS Nom de la table pour le stockage des tags universels.
 	 */
 	const TABLE_TAGS = 'univtags_tag';
 	/**

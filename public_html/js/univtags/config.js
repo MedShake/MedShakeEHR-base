@@ -19,7 +19,7 @@
  */
 
 /**
- * Fonctions JS pour la page de configuration des tags universel
+ * Fonctions JS pour la page de configuration des tags universels
  *
  * @author DEMAREST Maxime <maxime@indelog.fr>
  */

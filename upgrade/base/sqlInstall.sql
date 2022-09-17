@@ -1150,7 +1150,7 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 
 -- Ajoute de nouvelle option de de configuration pour les tags universelle
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
-('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activier / désactiver l\'utilisation des tags universel', 'true'),
+('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activier / désactiver l\'utilisation des tags universels', 'true'),
 ('droitUnivTagPatientPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un dossier patient', 'true'),
 ('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossier patients', 'true'),
 ('droitUnivTagProPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un pro', 'true'),
