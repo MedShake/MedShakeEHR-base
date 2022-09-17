@@ -21,6 +21,7 @@
 
 /**
  * @author	DEMAREST Maxime <maxime@indelog.fr>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  * @brief	Class pour gérer les tags universel.
  * @details	Les tags universel permettent de de disposer d'une fonction
  *			d'étiquetage commune à tout les élément de MedShakeEHR la plus
@@ -266,8 +267,9 @@ Class msUnivTags {
      * @return	string					La couleur défini.
 	 */
 	public function setColor(string $color) {
-		if (filter_var($color, FILTER_VALIDATE_REGEXP, array('option'=>'/^#[0-9A-Fa-f]{6}$/')))
+		if (!filter_var($color, FILTER_VALIDATE_REGEXP, array('options'=>["regexp"=>'/^#[0-9A-Fa-f]{6}$/']))) {
 			throw new Exception(__METHOD__.' : couleur='.$color.' n\'est pas dans le format de coleur attendus (/^#[0-9A-Fa-f]{6}$/)');
+		}
 		$this->_color = strtoupper($color);
 		return $this->_color;
 	}
