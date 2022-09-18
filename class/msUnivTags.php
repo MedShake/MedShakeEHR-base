@@ -197,7 +197,7 @@ Class msUnivTags {
 		$resql = msSQL::sqlQuery($sql);
 		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql supression tags');
 		unset($this->_id);
-		return void;
+		return true;
 	}
 
 	/**
