@@ -24,6 +24,7 @@
  * Gestion des mot de suivi
  *
  * @author 2021      DEMAREST Maxime <maxime@indelog.fr>
+ * @contrib 2022	 Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
 class msMotSuivi {
@@ -101,7 +102,7 @@ class msMotSuivi {
     }
 
     /**
-     * Suprimer un mot suivi
+     * Supprimer un mot suivi
      * @return mysqli_result
      */
     public function delete()
@@ -114,7 +115,7 @@ class msMotSuivi {
     }
 
     /**
-     * Retrouver un mot suivi en base de donnée
+     * Retrouver un mot suivi en base de données
      * @param	int		id		identifiant du mot suivi à retourner
      * @return	bool			true si le mot est trouvé sinon false
      */
@@ -240,16 +241,16 @@ class msMotSuivi {
         global $p;
         if (empty($p['page'])) $p['page'] = array();
         $lignes = self::getList($toID, $nb_elem);
-        $nb_lignes = count($lignes);
+        if(is_countable($lignes)) {$nb_lignes = count($lignes);} else {$nb_lignes=0;};
         $total = self::getNbTotal($toID);
-        $see_all = (count($lignes) >= $total);
+        $see_all = ($nb_lignes >= $total);
         $nb_restant = ($total - $nb_lignes);
         $nb_prochain = (int) $p['config']['optionsDossierPatientNbMotSuiviAfficher'];
         $nb_precedent = $nb_lignes + $nb_prochain;
         if ($nb_restant < $nb_prochain) {
-            $text_afficher_suivant = 'Afficher tout.';
+            $text_afficher_suivant = 'Afficher tout';
         } else {
-            $text_afficher_suivant = 'Afficher les ' . $nb_prochain . ' précédent.';
+            $text_afficher_suivant = 'Afficher les ' . $nb_prochain . ' précédents';
         }
         $p['page']['motSuivi'] = array();
         $p['page']['motSuivi']['lignes'] = $lignes;
@@ -273,8 +274,7 @@ class msMotSuivi {
     public static function getNbTotal(int $toID) {
         global $p;
         $sql  = 'SELECT COUNT(toID) as total FROM `motsuivi` WHERE toID = ' . $toID . ' GROUP BY `toID`';
-        $res = msSQL::sql2tab($sql);
-        $total = (is_null($res[0]['total'])) ? 0 : (int) $res[0]['total'];
+        $total = (int) msSQL::sqlUniqueChamp($sql);
         return $total;
     }
 }
