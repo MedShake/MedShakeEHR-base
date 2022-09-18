@@ -181,7 +181,9 @@
 {% include 'inc-patientModal-changerDateEffet.html.twig' %}
 
 {# modal d'ajout de mot suivi #}
-{% include 'inc-patientModal-motSuivi.html.twig' %}
+{% if config.optionsDossierPatientActiverMotSuivi == 'true' %}
+  {% include 'inc-patientModal-motSuivi.html.twig' %}
+{% endif %}
 
 {# modal phonecapture #}
 {% if config.optionGeActiverPhonecapture == 'true' %}
