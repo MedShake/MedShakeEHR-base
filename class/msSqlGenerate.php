@@ -60,6 +60,8 @@ class msSqlGenerate
   protected $_prescriptions_values;
   protected $_system_fields;
   protected $_system_values;
+  protected $_univtags_type_fields;
+  protected $_univtags_type_values;
   protected $_tablesSql=[];
 
   protected $_addUpdateOnDupicate = false;
@@ -514,6 +516,14 @@ class msSqlGenerate
       $string.="INSERT IGNORE INTO `system` ".$this->_system_fields." VALUES\n";
       $string.=implode(",\n", $this->_system_values).";\n\n";
     }
+
+	//univtags_type
+	if(isset($this->_univtags_type_values) and !empty($this->_univtags_type_values)) {
+		asort($this->_univtags_type_values);
+		$string.="-- univtags_type\n";
+		$string.="INSERT IGNORE INTO `univtags_type` ".$this->_univtags_type_fields." VALUES\n";
+		$string.=implode(",\n", $this->_univtags_type_values).";\n\n";
+	}
 
     return $string;
 
