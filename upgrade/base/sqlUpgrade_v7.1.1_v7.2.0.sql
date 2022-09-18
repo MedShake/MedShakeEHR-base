@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS `motsuivi` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- actout des options relative au mot de suivi
-INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionsDossierPatientActiverMotSuivi', 'default', '0', '', 'Options dossier patient', 'true/false', 'activer / désactiver le mot suivi sur le dossier d\'un patient', 'false');
-INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionsDossierPatientNbMotSuiviAfficher', 'default', '0', '', 'Options dossier patient', 'int', 'nombre de mot suivi à afficher par défaut sur un dossier patient', '6');
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionsDossierPatientActiverMotSuivi', 'default', '0', '', 'Options dossier patient', 'true/false', 'activer / désactiver les mots de suivi dans le dossier d\'un patient', 'false');
+INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('optionsDossierPatientNbMotSuiviAfficher', 'default', '0', '', 'Options dossier patient', 'int', 'nombre de mots de suivi à afficher par défaut dans un dossier patient', '6');
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES ('droitMotSuiviPeutModifierSuprimerDunAutre', 'default', '0', '', 'Droits', 'true/false', 'si coché, l\'utilisateur peut supprimer et modifier un mot de suivi crée par un autre', 'false');
 
 
@@ -56,20 +56,20 @@ CREATE TABLE IF NOT EXISTS `univtags_join` (
 
 -- Ajoute le type de tag pour le dossier patient
 INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer');
-INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser une fiche pro.', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser une fiche d\'un praticien', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
 
 -- Ajoute de nouvelle option de de configuration pour les tags universelle
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
 ('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver l\'utilisation des tags universels', 'false'),
 ('droitUnivTagPatientPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un dossier patient', 'true'),
-('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossier patients', 'true'),
+('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossiers patients', 'true'),
 ('droitUnivTagProPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un pro', 'true'),
 ('droitUnivTagProPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les pro', 'true');
 
 -- data_types
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='divers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
-('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d\'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10'),
+('admin', 'preferedSendingMethod', '', 'Méthode d\'envoie préférée', 'Permet de choisir la méthode d\'envoi préférée pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d\'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10'),
 ('admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', @catID, '1', '2018-01-01 00:00:00', '3600', '1');
 
 -- forms
