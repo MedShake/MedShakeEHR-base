@@ -21,7 +21,6 @@
 
 /**
  * @author	DEMAREST Maxime <maxime@indelog.fr>
- * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  * @brief	Class pour gérer les tags universel.
  * @details	Les tags universel permettent de de disposer d'une fonction
  *			d'étiquetage commune à tout les élément de MedShakeEHR la plus
@@ -55,11 +54,11 @@ Class msUnivTags {
 
 
 	/**
-	 * @const TABLE_TAGS Nom de la table pour le stockage des tags universels.
+	 * @const TABLE_TAGS Nom de la table pour le stockage des tags universel.
 	 */
 	const TABLE_TAGS = 'univtags_tag';
 	/**
-	 * @const TABLE_TYPE Nom de la table utilisé pour la déscription des
+	 * @const TABLE_TYPE Nom de la table utilisé pour la description des
 	 *		  types de tags universel.
 	 */
 	const TABLE_TYPE = 'univtags_type';
@@ -250,9 +249,9 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Défini la déscription du tag.
-	 * @param	string		$description	Déscription du tag.
-	 * @return	string						La déscription du tag définit.
+	 * Défini la description du tag.
+	 * @param	string		$description	Description du tag.
+	 * @return	string						La description du tag définit.
 	 */
 	public function setDescription(string $description) {
 		if (empty($description)) throw new Exception(__METHOD__.' : $description ne doit pas être vide.');
@@ -302,7 +301,7 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Retroune la déscription du tag.
+	 * Retroune la description du tag.
 	 * @return	string		description du tag.
 	 */
 	public function getDescription() {
@@ -699,7 +698,7 @@ Class msUnivTags {
 	/**
 	 * Obtenir le HTML générant une liste de pastilles colorées afin d'avoir
 	 * un vue compacte des tags atacĥées sur un élément.
-	 * @param	array	$list	Array de tags atachés à l'élément. Doit
+	 * @param	array	$list	Array de tags attachés à l'élément. Doit
 	 *							corespondre à ce que produit la méthode
 	 *							la méthode `getList()`.
 	 * @return	string			HTML.

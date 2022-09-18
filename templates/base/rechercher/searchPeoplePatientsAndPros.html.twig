@@ -71,21 +71,16 @@ associer patient
 <div class="card card-body bg-light my-4">
   <form id="formRecherchePatients">
 
-    {% if page.univTags.filterSearchHTML is not empty %}
-    <div class="form-row mt-2">
-      {# Insertion des champ pour filter en fonction des tags universels #}
-      {% if page.univTags is not empty %}
-      <div class="d-flex flex-row">
-        <div class="p-2 font-italic">Filter les résultats en fonction des étiquettes séléctionées :</div>
-        <div class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}">{{ page.univTags.filterSearchHTML }}</div>
+    {% if page.univTags.tagListe is not empty %}
+      <div class="mb-2">
+        {# Insertion des champs pour filter en fonction des tags universels #}
+        <span class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}">{{ page.univTags.filterSearchHTML }}</span>
       </div>
-      {% endif %}
-    </div>
     {% endif %}
 
     <div class="form-row align-items-center">
 
-      <div class="col-auto mt-2">
+      <div class="col-auto">
         {{ f.input ({
           'input' : {
             'type' : 'text',
@@ -103,7 +98,7 @@ associer patient
         }) }}
       </div>
 
-      <div class="col-auto mt-2">
+      <div class="col-auto">
         {{ f.input ({
           'input' : {
             'type' : 'text',
@@ -121,7 +116,7 @@ associer patient
         }) }}
       </div>
 
-      <div class="col-auto mt-2">
+      <div class="col-auto">
         <div class="input-group">
           {{ f.input ({
             'input' : {
@@ -156,7 +151,7 @@ associer patient
         </div>
       </div>
 
-      <div class="col-auto mt-2">
+      <div class="col-auto">
           <div class="custom-control custom-checkbox justify-content-start
           {% if page.porp != 'patient' and config.droitDossierPeutVoirUniquementPatientsPropres != 'true' %}
               d-none
@@ -167,7 +162,7 @@ associer patient
           </div>
       </div>
 
-      <div class="col-auto mt-2 ml-auto">
+      <div class="col-auto ml-auto">
         {% if page.porp in ['patient', 'today'] %}
           {% if page.porp == 'patient' and config.optionGeActiverVitaleLecture =='true' %}
             <button type="button" class="btn btn-success lireCpsVitale"><i class="fas fa-user"></i> Vitale</button>

@@ -143,7 +143,7 @@ class msMotSuivi {
     }
 
     /**
-     * Retourner l'id l'individu pour le quel est ataché le mot suivi
+     * Retourner l'id l'individu pour le quel est attaché le mot suivi
      * @return int
      */
     public function getToID() {

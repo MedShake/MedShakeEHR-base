@@ -84,7 +84,7 @@ function formUnivTagValid(btn, del = false) {
   var tagID = formDatas.find((o) => {return o['name'] === 'id'}).value;
   // action de supression du tag
   if (del) {
-    var ok = confirm('Confirmer vous la demande de supression de cette étiquette (/!\\ elle sera retiré de tout les éléments au quel elle est atachée) ?');
+    var ok = confirm('Confirmer vous la demande de supression de cette étiquette (/!\\ elle sera retiré de tout les éléments au quel elle est attachée) ?');
     if (!ok) { return null };
     var action = 'delTag';
   } else {

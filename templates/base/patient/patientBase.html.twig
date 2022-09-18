@@ -152,20 +152,16 @@
 
     {# univtag patient #}
     {% if page.univTagsListHtml is not empty %}
-    <div class="card">
-      <div class="card-header d-flex flex-row justify-content-between">
-        <h5>Étiquette du patient</h5>
-        {% if page.univTags.typeDroitAjoRet %}
-        <div class="custom-control custom-switch">
+      {% if page.univTags.typeDroitAjoRet %}
+
+        <div class="custom-control custom-switch mt-n4 text-right">
           <input id="univTagsSetTag" type="checkbox" class="custom-control-input" onclick="getTagsList({{ page.univTags.typeID }}, {{ page.univTags.toID }}, (this.checked ? 'select' : 'show'));" autocomplete="off">
-          <label class="custom-control-label" for="univTagsSetTag">Séléctioner des étiquettes</label>
+          <label class="custom-control-label" for="univTagsSetTag"><i class="fas fa-tags fa-fw"></i></label>
         </div>
-        {% endif %}
-      </div>
-      <div class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}" class="card-body p-1">
+      {% endif %}
+      <div class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}">
         {{ page.univTagsListHtml }}
       </div>
-    </div>
     {% endif %}
 
 {% endblock %}

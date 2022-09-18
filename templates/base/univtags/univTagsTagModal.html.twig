@@ -46,11 +46,11 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="font-weight-bold">Nom</label>
-            <input name="name" type="text" class="form-control" placeholder="Nom du tag.." title="Nom de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.name|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
+            <input name="name" type="text" class="form-control" placeholder="Nom de l'étiquette" title="Nom de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.name|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
           </div>
           <div class="form-group">
-            <label class="font-weight-bold">Déscription</label>
-            <input name="description" type="text" class="form-control" placeholder="Déscription pour le Tag..." title="Déscription de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.description|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
+            <label class="font-weight-bold">Description</label>
+            <input name="description" type="text" class="form-control" placeholder="Description de l'étiquette" title="Description de l'étiquette..." required="required" maxlength="64" value="{{ page.univTags.tagProp.description|default('') }}" {{ page.univTags.typeDroitCreSup ? '' : 'disabled' }}>
           </div>
           <div class="form-group ">
             <label class="font-weight-bold">Couleur</label>

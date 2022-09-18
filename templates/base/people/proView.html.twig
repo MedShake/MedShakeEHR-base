@@ -84,16 +84,16 @@
 {% if page.univTagsListHtml is not empty %}
 <div class="card">
   <div class="card-header d-flex flex-row justify-content-between">
-    <h5>Étiquettes du professionel</h5>
+    <div class="font-weight-bold"><i class="fas fa-tags fa-fw fa-lg mr-1"></i>Étiquettes du professionnel</div>
 
     {% if page.univTags.typeDroitAjoRet %}
     <div class="custom-control custom-switch">
       <input id="univTagsSetTag" type="checkbox" class="custom-control-input" onclick="getTagsList({{ page.univTags.typeID }}, {{ page.univTags.toID }}, (this.checked ? 'select' : 'show'));" autocomplete="off">
-      <label class="custom-control-label" for="univTagsSetTag">Séléctioner des étiquettes</label>
+      <label class="custom-control-label" for="univTagsSetTag">Modifier</label>
     </div>
     {% endif %}
   </div>
-  <div class="univTagsContainer" data-typeID="{{ page.univTags.typeID }}" class="card-body p-1">
+  <div class="card-body univTagsContainer" data-typeID="{{ page.univTags.typeID }}">
     {{ page.univTagsListHtml }}
   </div>
 </div>

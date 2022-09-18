@@ -19,33 +19,34 @@
  #/
 
 /##
- # Template > Config : template pour la page de gestion des tags universels
+ # Template > Config : template pour la page de gestion des tags universelle
  #
  # @author DEMAREST Maxime <maxime@indelog.fr>
+ # @contrib Bertrand BOUTILLIER <b.boutillier@gmail.com>
  #}
 
-<div class="univTagsTagListe d-flex flex-row flex-wrap" data-typeID="{{ page.univTags.typeID }}" data-contexte="{{ page.univTags.contexte }}">
-{% if page.univTags.tagListe is empty %}
-  <div class="m-2 p-2 font-weight-bold">Aucune étiquette trouvée</div>
-{% else %}
+<div class="univTagsTagListe d-flex flex-row justify-content-between" data-typeID="{{ page.univTags.typeID }}" data-contexte="{{ page.univTags.contexte }}">
+{% if page.univTags.tagListe is not empty %}
+  <div>
   {% for tag in page.univTags.tagListe %}
-    <div class="univTagsTag m-1 py-1 px-2 font-weight-bold small font-weight-bold" data-id="{{ tag.id }}" title="{{ tag.description }}" style="color:{{ tag.textcolor }}; background-color:{{ tag.color }};">
-    <span>{{ tag.name }}</span>
+    <span class="badge badge-pill" data-id="{{ tag.id }}" title="{{ tag.description }}" style="color:{{ tag.textcolor }}; background-color:{{ tag.color }};">
+    {{ tag.name }}
     {% if page.univTags.showEditBtn %}
-      <button type="button" class="univTagsTagEditBtn fas fa-pencil-alt ml-1" title="Modifier cette étiquette" data-typeID="{{ tag.typeID }}" data-tagID="{{ tag.id }}" data-toID="{{ page.univTags.toID }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, {{ tag.id }}, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}');"></button>
+      <i type="button" class="fas fa-pencil-alt ml-1" title="Modifier cette étiquette" data-typeID="{{ tag.typeID }}" data-tagID="{{ tag.id }}" data-toID="{{ page.univTags.toID }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, {{ tag.id }}, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}');"></i>
     {% endif %}
     {% if page.univTags.showSelectSetTo %}
       <input class="ml-1" type="checkbox" data-tagID="{{ tag.id }}" title="Ajouter ou retirer l'étiquette" data-toID="{{ page.univTags.toID }}"{% if tag.toID == page.univTags.toID %}checked="checked"{% endif %} onchange="univTagsSetTo(this)">
     {% endif %}
     {% if page.univTags.showSelectFilterSearch %}
-      <input class="univTagsSelectFilter ml-1" type="checkbox" title="Filtrer les résultat de la recherche avec cette étiquette" name="univtag[{{ tag.id }}]" value="{{ tag.id }}" onchange="updateListingPatients()">
+      <input class="univTagsSelectFilter ml-1" type="checkbox" title="Filtrer les résultats de la recherche avec cette étiquette" name="univtag[{{ tag.id }}]" value="{{ tag.id }}" onchange="updateListingPatients()">
     {% endif %}
-    </div>
+    </span>
   {% endfor %}
+  </div>
 {% endif %}
 {% if page.univTags.showNewBtn %}
-<div class="mt-1 ml-2">
-  <button type="button" class="univTagsNewTag btn btn-primary btn-sm" data-typeID="{{ type.id }}" data-tagID="0" data-toID="0" data-contexte="{{ page.univTags.contexte }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, 0, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}')" title="Créer une nouvelle étiquette {{ type.name }}"><span class="univTagsNewTag fa fa-plus mr-1"></span>Ajouter</button>
-</div>
+
+  <button type="button" class="btn btn-primary btn-sm" data-typeID="{{ type.id }}" data-tagID="0" data-toID="0" data-contexte="{{ page.univTags.contexte }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, 0, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}')" title="Créer une nouvelle étiquette {{ type.name }}"><span class="fa fa-plus mr-1"></span>Ajouter</button>
+
 {% endif %}
 </div>

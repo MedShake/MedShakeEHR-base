@@ -263,7 +263,7 @@ switch ($action) {
 					'tagIDs' => $univTag->getID(),
 					'toID' => $toID,
 				);
-				returnJson(true, 'Tags ataché', $retData);
+				returnJson(true, 'Tags attaché', $retData);
 			} catch (Exception $e) {
 				returnJson(false, $e->getMessage());
 			}

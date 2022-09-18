@@ -275,7 +275,7 @@ if ($form=msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
             }
         }
 
-		// Si les tags universel sont actif, ajoute une colone sur le tableau afin de voir les tags atachés
+		// Si les tags universel sont actif, ajoute une colone sur le tableau afin de voir les tags attachés
 		if (!empty($univTagsTypeID) && !empty($p['page']['outputTableHead'])) {
 			$p['page']['outputTableHead'][] = 'Étiquettes';
 
