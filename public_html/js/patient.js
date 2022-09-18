@@ -1953,7 +1953,6 @@ function getTableMotSuivi(nb = 0) {
       switch (data.status) {
         case 'ok':
           $('#tableMotSuivi').html(data.data.html);
-          if(action != 'list') alert_popup('success', data.message);
           break;
         case 'error':
           alert_popup('danger', data.message);
