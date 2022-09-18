@@ -24,85 +24,88 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
+{% set tag = page.courrier %}
 
+<html>
+	<head>
+		<style>
+			@page {
+				margin: 170pt 50pt 40pt 50pt;
+				font-family: Helvetica;
+			}
+			#header {
+				position: fixed;
+				left: 0;
+				top: -100pt;
+				right: 0;
+				height: 100pt;
+				margin-bottom: 0;
+				border-bottom: 1pt solid #777;
+			}
 
-    <html>
-        <head>
-            <style>
-                @page {
-                    margin: 170pt 50pt 40pt 50pt;
-                    font-family: Helvetica;
-                }
-                #header {
-                    position: fixed;
-                    left: 0;
-                    top: -150pt;
-                    right: 0;
-                    height: 140pt;
-                    margin-bottom: 40pt;
-                    border-bottom: 1pt solid #777;
-                }
+			h2 {
+				margin-top: 4pt;
+			}
 
-                h2 {
-                  margin-top : 4pt;
-                }
+			h3 {
+				margin: 12pt 0 5pt;
+				padding: 0;
+			}
 
-                h3 {
-                  margin : 12pt 0 5pt 0;
-                  padding : 0;
-                }
+			h4 {
+				margin: 10pt 0 3pt;
+				padding: 0;
+			}
 
-                h4 {
-                  margin : 10pt 0 3pt 0;
-                  padding : 0;
-                }
+			ul {
+				margin: 0 0 0 10pt;
+				padding: 0;
+			}
 
-                ul {
-                  margin : 0 0 0 10pt;
-                  padding : 0;
-                }
+			.gras {
+				font-weight: bold;
+			}
+			.centrer {
+				text-align: center;
+			}
+			.t6 {
+				font-size: 6pt;
+			}
+			.t8 {
+				font-size: 8pt;
+			}
+			.t9 {
+				font-size: 9pt;
+			}
+			.t10 {
+				font-size: 10pt;
+			}
+			.t12 {
+				font-size: 12pt;
+			}
+		</style>
+		<body>
 
-                .gras {
-                    font-weight: bold;
-                }
-                .centrer {
-                  text-align : center;
-                }
-                .t6 {
-                  font-size : 6pt;
-                }
-                .t8 {
-                  font-size : 8pt;
-                }
-                .t9 {
-                  font-size : 9pt;
-                }
-                .t10 {
-                  font-size : 10pt;
-                }
-                .t12 {
-                  font-size : 12pt;
-                }
+			<div id="header">
+				<span class="gras" style="font-size : 16pt;">Dr {{ tag.AuteurInitial_identiteUsuelleTitre }}</span><br>
+				Conventionnée secteur 2<br><br>
+				<div class="t8" style="position : fixed; left : 0; top : -60pt; display : inline-block; vertical-align : bottom; margin : 0; padding : 0">
+					<br>
+					N°ADELI : {{ tag.AuteurInitial_adeli  }}
+					<br>
+					RPPS : {{ tag.AuteurInitial_rpps  }}
+					<br>
+					Stephen.STANGE@medical.apicrypt.org
+				</div>
 
-            </style>
-            <body>
+				<div class="t8" style="position : fixed; right : 0; top : -60pt; display : inline-block; width : 35%; vertical-align : bottom; text-align : right;padding : 0; margin : 0;">
+					{{ tag.AuteurInitial_etablissementAdressePro }}<br>
+                    {{ tag.AuteurInitial_adresseProLigne1 }}<br>
+                    {{ tag.AuteurInitial_adresseProLigne2 }}<br>
+                    Consultations sur RDV : {{ tag.AuteurInitial_telPro }}<br>
+                    En cas d’urgence, composez le 15
+				</div>
+			</div>
 
-                <div id="header">
-                  <div class="t8" style="display : inline-block; width : 65%;vertical-align : bottom;">
-                      <span class="gras" style="font-size : 16pt;">Docteur Stephen STRANGE</span><br>
-                      Conventionnée secteur 2<br><br>
-
-                      N°ADELI : <br>
-                      RPPS : <br>
-                      Stephen.STANGE@medical.apicrypt.org
-                  </div>
-
-                  <div class="t8" style=" display : inline-block; width : 35%; vertical-align : bottom; text-align : right;padding-top : 88pt;">177 A, Bleecker Street<br>
-                      New York<br>
-                      Consultations sur RDV : 02 00 00 00 00<br>
-                      En cas d’urgence, composez le 15
-                  </div>
-                </div>
-
-                <!-- stop head -->
-                <div class="t9">
+			<!-- stop head -->
+			<div class="t9">

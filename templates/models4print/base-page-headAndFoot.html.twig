@@ -25,87 +25,92 @@
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  #}
 
+{% set tag = page.courrier %}
 
-    <html>
-        <head>
-            <style>
-                @page {
-                    margin: 190pt 50pt 100pt;
-                    font-family: Helvetica;
-                }
-                #header {
-                    position: fixed;
-                    left: 0;
-                    top: -160pt;
-                    right: 0;
-                    height: 150pt;
-                    margin-bottom: 40pt;
-                    border-bottom: 1pt solid #777;
-                }
-                #footer {
-                    position: fixed;
-                    left: 0;
-                    bottom: -110pt;
-                    right: 0;
-                    height: 100pt;
-                    font-size: 8pt;
-                    padding-top: 10pt;
-                    border-top: 1pt solid #777;
-                }
+<html>
+	<head>
+		<style>
+			@page {
+				margin: 170pt 50pt 40pt;
+				font-family: Helvetica;
+			}
+			#header {
+				position: fixed;
+				left: 0;
+				top: -100pt;
+				right: 0;
+				height: 100pt;
+				margin-bottom: 0;
+				border-bottom: 1pt solid #777;
+			}
+			#footer {
+				position: fixed;
+				left: 0;
+				bottom: -60pt;
+				right: 0;
+				height: 100pt;
+				font-size: 8pt;
+				padding-top: 10pt;
+				border-top: 1pt solid #777;
+			}
 
-                #footer p {
-                    display: inline-block;
-                    width: 30%;
-                    text-align: center;
-                    vertical-align: top;
-                }
+			#footer p {
+				position: fixed;
+        width : 200pt;
+        text-align: center;
+			}
 
-                .gras {
-                    font-weight: bold;
-                }
-                .centrer {
-                  text-align : center;
-                }
-                .t6 {
-                  font-size : 6pt;
-                }
-                .t8 {
-                  font-size : 8pt;
-                }
-                .t9 {
-                  font-size : 9pt;
-                }
-                .t10 {
-                  font-size : 10pt;
-                }
-                .t12 {
-                  font-size : 12pt;
-                }
 
-            </style>
-            <body>
 
-              <div id="header">
-                  <div class="t8" style="display : inline-block; width : 65%;vertical-align : bottom;">
-                      <span class="gras" style="font-size : 16pt;">Docteur Stephen STRANGE</span><br>
-                      Conventionnée secteur 2<br><br>
+			.gras {
+				font-weight: bold;
+			}
+			.centrer {
+				text-align: center;
+			}
+			.t6 {
+				font-size: 6pt;
+			}
+			.t8 {
+				font-size: 8pt;
+			}
+			.t9 {
+				font-size: 9pt;
+			}
+			.t10 {
+				font-size: 10pt;
+			}
+			.t12 {
+				font-size: 12pt;
+			}
+		</style>
+		<body>
 
-                      N°ADELI : <br>
-                      RPPS : <br>
-                      Stephen.STANGE@medical.apicrypt.org
-                  </div>
+			<div id="header">
+				<span class="gras" style="font-size : 16pt;">Dr {{ tag.AuteurInitial_identiteUsuelleTitre	}}</span><br>
+				Conventionnée secteur 2<br><br>
+				<div class="t8" style="position : fixed; left : 0; top : -60pt; display : inline-block; vertical-align : bottom; margin : 0; padding : 0">
+					<br>
+					N°ADELI : {{ tag.AuteurInitial_adeli  }}
+					<br>
+					RPPS : {{ tag.AuteurInitial_rpps  }}
+					<br>
+					Stephen.STANGE@medical.apicrypt.org
+				</div>
 
-                  <div class="t8" style=" display : inline-block; width : 35%; vertical-align : bottom; text-align : right;padding-top : 88pt;">177 A, Bleecker Street<br>
-                      New York<br>
-                      Consultations sur RDV : 02 00 00 00 00<br>
-                      En cas d’urgence, composez le 15
-                  </div>
-              </div>
-                <div id="footer">
-                    <p>RPPS<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/rpps.jpg" style="width : 130px; height : 40px"></p>
-                    <p>ADELI<br><img src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/img/adeli.jpg" style="width : 130px; height : 40px"></p>
-                    <p><br>Membre d’une AGA, règlement par chèque accepté.</p>
-                </div>
+				<div class="t8" style="position : fixed; right : 0; top : -60pt; display : inline-block; width : 35%; vertical-align : bottom; text-align : right;padding : 0; margin : 0;">
+					          {{ tag.AuteurInitial_etablissementAdressePro }}<br>
+                    {{ tag.AuteurInitial_adresseProLigne1 }}<br>
+                    {{ tag.AuteurInitial_adresseProLigne2 }}<br>
+                    Consultations sur RDV : {{ tag.AuteurInitial_telPro }}<br>
+                    En cas d’urgence, composez le 15
+				</div>
+			</div>
+			<div id="footer">
+          <p class="barrecode" style="left : 0">RPPS<br><img src="/{{ config.urlHostSuffixe }}/{{ config.stockageLocation }}barecode/barecode-rpps-{{ tag.AuteurInitial_rpps  }}.svg" style="width : 130px; height : 40px"><br>{{ tag.AuteurInitial_rpps  }}</p>
+          <p class="barrecode" style="right : 0">ADELI<br><img src="/{{ config.urlHostSuffixe }}/{{ config.stockageLocation }}barecode/barecode-adeli-{{ tag.AuteurInitial_adeli  }}.svg" style="width : 130px; height : 40px"><br>{{ tag.AuteurInitial_adeli  }}</p>
+		</div>
 
-                <!-- stop head -->
-                <div class="t9">
+			<!-- stop head -->
+			<div class="t9">
+
