@@ -266,6 +266,7 @@ class msPDF
  */
     public function showPDF()
     {
+		global $p;
         $dompdf = new Dompdf();
 		$dompdf->getOptions()->setChroot($p['homepath']);
         $dompdf->loadHtml($this->_contenuFinalPDF);
