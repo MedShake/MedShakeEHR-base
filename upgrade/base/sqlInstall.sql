@@ -1,25 +1,24 @@
-
 -- création de la table actes
 CREATE TABLE IF NOT EXISTS `actes` (
-  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
-  `cat` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
+  `cat` tinyint unsigned NOT NULL DEFAULT '0',
   `label` varchar(250) NOT NULL,
   `shortLabel` varchar(255) DEFAULT NULL,
   `details` text NOT NULL,
   `flagImportant` tinyint(1) NOT NULL DEFAULT '0',
   `flagCmu` tinyint(1) NOT NULL DEFAULT '0',
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(6) NOT NULL DEFAULT '0',
+  `fromID` smallint unsigned NOT NULL,
+  `toID` mediumint NOT NULL DEFAULT '0',
   `creationDate` datetime NOT NULL DEFAULT '2018-01-01 00:00:00',
   `active` enum('oui','non') NOT NULL DEFAULT 'oui',
   PRIMARY KEY (`id`),
   KEY `toID` (`toID`),
   KEY `cat` (`cat`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table actes_base
 CREATE TABLE IF NOT EXISTS `actes_base` (
-  `id` mediumint(6) unsigned NOT NULL AUTO_INCREMENT,
+  `id` mediumint unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(7) NOT NULL,
   `activite` tinyint(1) NOT NULL DEFAULT '1',
   `phase` tinyint(1) NOT NULL DEFAULT '0',
@@ -28,39 +27,39 @@ CREATE TABLE IF NOT EXISTS `actes_base` (
   `type` enum('NGAP','CCAM','Libre','mCCAM') NOT NULL DEFAULT 'CCAM',
   `dataYaml` text,
   `tarifUnit` enum('euro','pourcent') NOT NULL DEFAULT 'euro',
-  `fromID` mediumint(7) unsigned NOT NULL DEFAULT '1',
+  `fromID` mediumint unsigned NOT NULL DEFAULT '1',
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `code` (`code`,`activite`,`phase`,`type`,`codeProf`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table actes_cat
 CREATE TABLE IF NOT EXISTS `actes_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `id` smallint NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
   `module` varchar(20) NOT NULL DEFAULT 'base',
-  `fromID` smallint(5) unsigned NOT NULL,
+  `fromID` smallint unsigned NOT NULL,
   `creationDate` datetime NOT NULL,
-  `displayOrder` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `displayOrder` smallint unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table agenda
 CREATE TABLE IF NOT EXISTS `agenda` (
-  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `externid` int(10) unsigned DEFAULT NULL,
-  `userid` smallint(5) unsigned NOT NULL DEFAULT '3',
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `externid` int unsigned DEFAULT NULL,
+  `userid` smallint unsigned NOT NULL DEFAULT '3',
   `start` datetime DEFAULT NULL,
   `end` datetime DEFAULT NULL,
   `type` varchar(10) DEFAULT NULL,
   `dateAdd` datetime DEFAULT NULL,
   `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `patientid` mediumint(6) unsigned DEFAULT NULL,
-  `fromID` mediumint(6) unsigned DEFAULT NULL,
+  `patientid` mediumint unsigned DEFAULT NULL,
+  `fromID` mediumint unsigned DEFAULT NULL,
   `statut` enum('actif','deleted') DEFAULT 'actif',
   `absente` enum('non','oui') DEFAULT 'non',
   `attente` enum('non','oui') NOT NULL DEFAULT 'non',
@@ -71,27 +70,27 @@ CREATE TABLE IF NOT EXISTS `agenda` (
   KEY `userid` (`userid`),
   KEY `typeEtUserid` (`type`,`userid`),
   KEY `start` (`start`,`userid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table agenda_changelog
 CREATE TABLE IF NOT EXISTS `agenda_changelog` (
-  `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
-  `eventID` int(12) unsigned NOT NULL,
-  `userID` smallint(5) unsigned NOT NULL,
-  `fromID` smallint(5) unsigned NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `eventID` int unsigned NOT NULL,
+  `userID` smallint unsigned NOT NULL,
+  `fromID` smallint unsigned NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `operation` enum('edit','move','delete','missing','waiting') NOT NULL,
   `olddata` mediumblob,
   PRIMARY KEY (`id`),
   KEY `eventID` (`eventID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table configuration
 CREATE TABLE IF NOT EXISTS `configuration` (
-  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `level` enum('default','module','user') DEFAULT 'default',
-  `toID` int(11) unsigned NOT NULL DEFAULT '0',
+  `toID` int unsigned NOT NULL DEFAULT '0',
   `module` varchar(20) NOT NULL DEFAULT '',
   `cat` varchar(30) DEFAULT NULL,
   `type` varchar(30) DEFAULT NULL,
@@ -99,25 +98,25 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   `value` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nameLevel` (`name`,`level`,`module`,`toID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table data_cat
 CREATE TABLE IF NOT EXISTS `data_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `id` smallint NOT NULL AUTO_INCREMENT,
   `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
   `type` enum('base','module','user') NOT NULL DEFAULT 'base',
-  `fromID` smallint(5) unsigned NOT NULL,
+  `fromID` smallint unsigned NOT NULL,
   `creationDate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table data_types
 CREATE TABLE IF NOT EXISTS `data_types` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `groupe` enum('admin','medical','typecs','mail','doc','courrier','ordo','reglement','dicom','user','relation','system') NOT NULL DEFAULT 'admin',
   `name` varchar(60) NOT NULL,
   `placeholder` varchar(255) DEFAULT NULL,
@@ -128,36 +127,36 @@ CREATE TABLE IF NOT EXISTS `data_types` (
   `formType` enum('','date','email','number','select','submit','tel','text','textarea','password','checkbox','hidden','range','radio','reset','switch') NOT NULL DEFAULT '',
   `formValues` text,
   `module` varchar(20) NOT NULL DEFAULT 'base',
-  `cat` smallint(5) unsigned NOT NULL,
-  `fromID` smallint(5) unsigned DEFAULT NULL,
+  `cat` smallint unsigned NOT NULL,
+  `fromID` smallint unsigned DEFAULT NULL,
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `durationLife` int(9) unsigned NOT NULL DEFAULT '86400',
-  `displayOrder` smallint(4) NOT NULL DEFAULT '1',
+  `durationLife` int unsigned NOT NULL DEFAULT '86400',
+  `displayOrder` smallint NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `groupe` (`groupe`),
   KEY `cat` (`cat`),
   KEY `groupe_2` (`groupe`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table dicomTags
 CREATE TABLE IF NOT EXISTS `dicomTags` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `dicomTag` varchar(150) NOT NULL,
   `typeName` varchar(60) DEFAULT NULL,
   `dicomCodeMeaning` varchar(255) DEFAULT NULL,
   `dicomUnits` varchar(255) DEFAULT NULL,
   `returnValue` enum('min','max','avg') NOT NULL DEFAULT 'avg',
-  `roundDecimal` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `roundDecimal` tinyint unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `dicomTag` (`dicomTag`,`typeName`),
   KEY `dicomTag_2` (`dicomTag`),
   KEY `typeName` (`typeName`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table forms
 CREATE TABLE IF NOT EXISTS `forms` (
-  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `module` varchar(20) NOT NULL DEFAULT 'base',
   `internalName` varchar(60) NOT NULL,
   `name` varchar(60) NOT NULL,
@@ -166,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `forms` (
   `groupe` enum('admin','medical','mail','doc','courrier','ordo','reglement','relation') NOT NULL DEFAULT 'medical',
   `formMethod` enum('post','get') NOT NULL DEFAULT 'post',
   `formAction` varchar(255) DEFAULT '/patient/ajax/saveCsForm/',
-  `cat` smallint(4) DEFAULT NULL,
+  `cat` smallint DEFAULT NULL,
   `type` enum('public','private') NOT NULL DEFAULT 'public',
   `yamlStructure` text,
   `options` text,
@@ -175,28 +174,28 @@ CREATE TABLE IF NOT EXISTS `forms` (
   `javascript` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `internalName` (`internalName`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table forms_cat
 CREATE TABLE IF NOT EXISTS `forms_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `id` smallint NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
   `type` enum('base','user') NOT NULL DEFAULT 'user',
-  `fromID` smallint(5) unsigned NOT NULL,
+  `fromID` smallint unsigned NOT NULL,
   `creationDate` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table hprim
 CREATE TABLE IF NOT EXISTS `hprim` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` smallint(5) unsigned NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fromID` smallint unsigned NOT NULL,
+  `toID` smallint unsigned NOT NULL,
   `date` date DEFAULT '1000-01-01',
-  `objetID` int(11) NOT NULL,
+  `objetID` int NOT NULL,
   `label` varchar(255) NOT NULL,
   `labelStandard` varchar(255) NOT NULL,
   `typeResultat` varchar(2) NOT NULL,
@@ -210,39 +209,51 @@ CREATE TABLE IF NOT EXISTS `hprim` (
   `normaleInfAutreU` varchar(20) NOT NULL,
   `normalSupAutreU` varchar(20) NOT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table inbox
 CREATE TABLE IF NOT EXISTS `inbox` (
-  `id` int(7) unsigned NOT NULL AUTO_INCREMENT,
-  `mailForUserID` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `mailForUserID` smallint unsigned NOT NULL DEFAULT '0',
   `txtFileName` varchar(30) NOT NULL,
   `mailHeaderInfos` blob,
   `txtDatetime` datetime NOT NULL,
-  `txtNumOrdre` int(9) unsigned NOT NULL,
+  `txtNumOrdre` int unsigned NOT NULL,
   `hprimIdentite` varchar(250) NOT NULL,
   `hprimExpediteur` varchar(250) NOT NULL,
   `hprimCodePatient` varchar(250) NOT NULL,
   `hprimDateDossier` varchar(30) NOT NULL,
   `hprimAllSerialize` blob NOT NULL,
-  `pjNombre` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `pjNombre` tinyint unsigned NOT NULL DEFAULT '0',
   `pjSerializeName` blob NOT NULL,
   `archived` enum('y','c','n') NOT NULL DEFAULT 'n',
-  `assoToID` mediumint(7) unsigned DEFAULT NULL,
+  `assoToID` mediumint unsigned DEFAULT NULL,
   PRIMARY KEY (`txtFileName`,`mailForUserID`) USING BTREE,
   UNIQUE KEY `id` (`id`),
   KEY `archived` (`archived`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+
+-- création de la table motsuivi
+CREATE TABLE IF NOT EXISTS `motsuivi` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fromID` int unsigned NOT NULL,
+  `toID` int unsigned NOT NULL,
+  `dateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `texte` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fromID` (`fromID`),
+  KEY `toID` (`toID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table objets_data
 CREATE TABLE IF NOT EXISTS `objets_data` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `fromID` int(11) unsigned NOT NULL DEFAULT '0',
-  `byID` int(11) unsigned DEFAULT NULL,
-  `toID` int(11) unsigned NOT NULL DEFAULT '0',
-  `typeID` int(11) unsigned NOT NULL DEFAULT '0',
-  `parentTypeID` int(11) unsigned DEFAULT '0',
-  `instance` int(11) unsigned NOT NULL DEFAULT '0',
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fromID` int unsigned NOT NULL DEFAULT '0',
+  `byID` int unsigned DEFAULT NULL,
+  `toID` int unsigned NOT NULL DEFAULT '0',
+  `typeID` int unsigned NOT NULL DEFAULT '0',
+  `parentTypeID` int unsigned DEFAULT '0',
+  `instance` int unsigned NOT NULL DEFAULT '0',
   `registerDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -251,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `objets_data` (
   `important` enum('n','y') DEFAULT 'n',
   `titre` varchar(255) NOT NULL DEFAULT '',
   `deleted` enum('','y') NOT NULL DEFAULT '',
-  `deletedByID` int(11) DEFAULT NULL,
+  `deletedByID` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `toID_typeID` (`toID`,`typeID`),
   KEY `typeID` (`typeID`),
@@ -260,11 +271,11 @@ CREATE TABLE IF NOT EXISTS `objets_data` (
   KEY `toID` (`toID`),
   KEY `toID_2` (`toID`,`outdated`,`deleted`),
   KEY `typeIDetValue` (`typeID`,`value`(15))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table people
 CREATE TABLE IF NOT EXISTS `people` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `type` enum('patient','pro','externe','service','deleted','groupe','destroyed','registre') NOT NULL DEFAULT 'patient',
   `rank` enum('','admin') DEFAULT NULL,
@@ -272,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `pass` varbinary(1000) DEFAULT NULL,
   `secret2fa` varbinary(1000) DEFAULT NULL,
   `registerDate` datetime DEFAULT NULL,
-  `fromID` smallint(5) DEFAULT NULL,
+  `fromID` smallint DEFAULT NULL,
   `lastLogIP` varchar(50) DEFAULT NULL,
   `lastLogDate` datetime DEFAULT NULL,
   `lastLogFingerprint` varchar(50) DEFAULT NULL,
@@ -281,45 +292,45 @@ CREATE TABLE IF NOT EXISTS `people` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `type` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table prescriptions
 CREATE TABLE IF NOT EXISTS `prescriptions` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `cat` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `id` smallint NOT NULL AUTO_INCREMENT,
+  `cat` smallint unsigned NOT NULL DEFAULT '0',
   `label` varchar(250) NOT NULL,
   `description` text NOT NULL,
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(7) unsigned NOT NULL DEFAULT '0',
+  `fromID` smallint unsigned NOT NULL,
+  `toID` mediumint unsigned NOT NULL DEFAULT '0',
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `toID` (`toID`),
   KEY `cat` (`cat`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table prescriptions_cat
 CREATE TABLE IF NOT EXISTS `prescriptions_cat` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `id` smallint NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
   `description` varchar(255) NOT NULL,
   `type` enum('nonlap','lap') NOT NULL DEFAULT 'nonlap',
-  `fromID` smallint(5) unsigned NOT NULL,
-  `toID` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `fromID` smallint unsigned NOT NULL,
+  `toID` mediumint unsigned NOT NULL DEFAULT '0',
   `creationDate` datetime NOT NULL,
-  `displayOrder` tinyint(2) unsigned NOT NULL DEFAULT '1',
+  `displayOrder` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `displayOrder` (`displayOrder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table printed
 CREATE TABLE IF NOT EXISTS `printed` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `fromID` int(11) unsigned NOT NULL,
-  `toID` int(11) unsigned NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fromID` int unsigned NOT NULL,
+  `toID` int unsigned NOT NULL,
   `type` enum('cr','ordo','courrier','ordoLAP','ordoLapExt') NOT NULL DEFAULT 'cr',
-  `objetID` int(11) unsigned DEFAULT NULL,
+  `objetID` int unsigned DEFAULT NULL,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
   `value` text NOT NULL,
@@ -328,26 +339,26 @@ CREATE TABLE IF NOT EXISTS `printed` (
   `anonyme` enum('','y') DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `examenID` (`objetID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table system
 CREATE TABLE IF NOT EXISTS `system` (
-  `id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `groupe` enum('system','module','cron','lock','plugin') DEFAULT 'system',
   `value` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nameGroupe` (`name`,`groupe`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table transmissions
 CREATE TABLE IF NOT EXISTS `transmissions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `fromID` mediumint(6) unsigned DEFAULT NULL,
-  `aboutID` int(6) unsigned DEFAULT NULL,
-  `sujetID` int(10) unsigned DEFAULT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fromID` mediumint unsigned DEFAULT NULL,
+  `aboutID` int unsigned DEFAULT NULL,
+  `sujetID` int unsigned DEFAULT NULL,
   `statut` enum('open','deleted') NOT NULL DEFAULT 'open',
-  `priorite` tinyint(3) unsigned DEFAULT NULL,
+  `priorite` tinyint unsigned DEFAULT NULL,
   `registerDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `sujet` varchar(255) DEFAULT NULL,
@@ -356,43 +367,19 @@ CREATE TABLE IF NOT EXISTS `transmissions` (
   KEY `fromID` (`fromID`),
   KEY `aboutID` (`aboutID`),
   KEY `sujetID` (`sujetID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- création de la table transmissions_to
 CREATE TABLE IF NOT EXISTS `transmissions_to` (
-  `sujetID` int(7) unsigned NOT NULL,
-  `toID` mediumint(6) unsigned NOT NULL,
+  `sujetID` int unsigned NOT NULL,
+  `toID` mediumint unsigned NOT NULL,
   `destinataire` enum('oui','non') NOT NULL DEFAULT 'non',
   `statut` enum('open','checked','deleted') NOT NULL DEFAULT 'open',
   `dateLecture` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`sujetID`,`toID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
--- Création de la table tags
-CREATE TABLE IF NOT EXISTS `univtags_tag` (
-	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`typeID` INT UNSIGNED NOT NULL,
-	`name` VARCHAR(64) NOT NULL,
-	`description` VARCHAR(256),
-	`color` VARCHAR(7) NOT NULL DEFAULT '#B6B6B6',
-	PRIMARY KEY (`id`),
-	KEY `typeID` (`typeID`),
-	CONSTRAINT UniqUnivTagTypeName UNIQUE(`typeID`, `name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- Création de la table pour les type de tags
-CREATE TABLE IF NOT EXISTS `univtags_type` (
-	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`name` VARCHAR(64) NOT NULL,
-	`description` VARCHAR(255) NOT NULL,
-	`actif` BOOLEAN NOT NULL DEFAULT true,
-	`droitCreSup` VARCHAR(128) NOT NULL,
-	`droitAjoRet` VARCHAR(128) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- Table de jointure tags patient (tags pour un dossier médical)
+-- création de la table univtags_join
 CREATE TABLE IF NOT EXISTS `univtags_join` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `tagID` int NOT NULL,
@@ -401,35 +388,54 @@ CREATE TABLE IF NOT EXISTS `univtags_join` (
   UNIQUE KEY `UniqUnivTagsJoin` (`tagID`,`toID`),
   KEY `tagID` (`tagID`),
   KEY `toID` (`toID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
--- création de la table motsuivi
-CREATE TABLE IF NOT EXISTS `motsuivi` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `fromID` INT(11) UNSIGNED NOT NULL,
-  `toID` int(11) UNSIGNED NOT NULL,
-  `dateTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `texte` VARCHAR(255) NOT NULL,
+-- création de la table univtags_tag
+CREATE TABLE IF NOT EXISTS `univtags_tag` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `typeID` int unsigned NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `color` varchar(7) NOT NULL DEFAULT '#B6B6B6',
   PRIMARY KEY (`id`),
-  KEY `fromID` (`fromID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  UNIQUE KEY `UniqUnivTagTypeName` (`typeID`,`name`),
+  KEY `typeID` (`typeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
--- Ajoute le type de tag pour le dossier patient
-INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer');
-INSERT IGNORE INTO `univtags_type` (`name`, `description`, `droitCreSup`, `droitAjoRet`) VALUES ('pros', 'Étiquettes pour catégoriser une fiche pro.', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
+-- création de la table univtags_type
+CREATE TABLE IF NOT EXISTS `univtags_type` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `actif` tinyint(1) NOT NULL DEFAULT '1',
+  `droitCreSup` varchar(128) NOT NULL,
+  `droitAjoRet` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
 -- actes_cat
 INSERT IGNORE INTO `actes_cat` (`name`, `label`, `description`, `module`, `fromID`, `creationDate`, `displayOrder`) VALUES
-('catConsult', 'Consultations', '', 'base', 1, '2019-01-01 00:00:00', '1');
+('catConsult', 'Consultations', '', 'base', 1, '2019-01-01 00:00:00', '1'),
+('catGynobsActesContra', 'DIU & implant', '', 'base', 1, '2019-01-01 00:00:00', '3');
 
 -- actes_base
 INSERT IGNORE INTO `actes_base` (`code`, `activite`, `phase`, `codeProf`, `label`, `type`, `dataYaml`, `tarifUnit`, `fromID`, `creationDate`) VALUES
-('Consult', '1', '0', NULL, 'Consultation libre exemple', 'Libre', 'tarifBase: 50', 'euro', 1, '2019-01-01 00:00:00');
+('CS', '1', '0', 'mgo', 'Consultation au cabinet par le médecin spécialiste qualifié et le médecin spécialiste qualifié en médecine générale', 'NGAP', 'tarifParZone:\n  metro: 23\n  971: 27.6\n  972: 27.6\n  973: 27.6\n  974: 27.6\n  976: 27.6', 'euro', 1, '2019-01-01 00:00:00'),
+('Consult', '1', '0', NULL, 'Consultation libre exemple', 'Libre', 'tarifBase: 50', 'euro', 1, '2019-01-01 00:00:00'),
+('JKHD001', '1', '0', NULL, 'Prélèvement cervicovaginal', 'CCAM', 'tarifParGrilleTarifaire:\n  CodeGrilleT1: 12.46\n  CodeGrilleT2: 9.64\n  CodeGrilleT0: 9.64\n  CodeGrilleT3: 12.46\n  CodeGrilleT4: 9.64\n  CodeGrilleT5: 12.46\n  CodeGrilleT6: 9.64\n  CodeGrilleT7: 12.46\n  CodeGrilleT8: 9.64\n  CodeGrilleT9: 12.46\n  CodeGrilleT10: 9.64\n  CodeGrilleT11: 12.46\n  CodeGrilleT12: 9.64\n  CodeGrilleT13: 9.64\n  CodeGrilleT14: 9.64\n  CodeGrilleT15: 12.46\n  CodeGrilleT16: 12.46\nmodificateursParConventionPs: [ ]\nmajorationsDom:\n  971: 1\n  972: 1\n  973: 1\n  974: 1', 'euro', 1, '2019-01-01 00:00:00'),
+('MCS', '1', '0', NULL, 'Majoration de coordination spécialiste', 'NGAP', 'tarifParZone:\n  metro: 5\n  971: 5\n  972: 5\n  973: 5\n  974: 5\n  976: 5', 'euro', 1, '2019-01-01 00:00:00'),
+('MPC', '1', '0', NULL, 'Majoration forfaitaire transitoire', 'NGAP', 'tarifParZone:\n  metro: 2\n  971: 2\n  972: 2\n  973: 2\n  974: 2\n  976: 2', 'euro', 1, '2019-01-01 00:00:00');
 
 -- actes
 SET @catID = (SELECT actes_cat.id FROM actes_cat WHERE actes_cat.name='catConsult');
 INSERT IGNORE INTO `actes` (`cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`, `active`) VALUES
 (@catID, 'Consultation de base', 'Cs base', 'Consult:\r\n  pourcents: 100\r\n  depassement: 15 \r\n', '1', '0', 1, '0', '2019-01-01 00:00:00', 'oui');
+
+
+SET @catID = (SELECT actes_cat.id FROM actes_cat WHERE actes_cat.name='catGynobsActesContra');
+INSERT IGNORE INTO `actes` (`cat`, `label`, `shortLabel`, `details`, `flagImportant`, `flagCmu`, `fromID`, `toID`, `creationDate`, `active`) VALUES
+(@catID, 'Consultation gynécologique et FCV', 'Cs gynéco et FCV', 'CS:\n  pourcents: 100\n  depassement: 2.54 \nMCS:\n  pourcents: 100\n  depassement: 0\nMPC:\n  pourcents: 100\n  depassement: 0\nJKHD001:\n  pourcents: 100\n  depassement: 0', '1', '0', 1, '0', '2019-01-01 00:00:00', 'oui');
 
 -- data_cat
 INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`, `fromID`, `creationDate`) VALUES
@@ -439,6 +445,7 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('admin', 'catDataAdminGroupe', 'Datas groupe', 'datas relatives à l\'identification d\'un groupe', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'catDataAdminRegistre', 'Datas registre', 'datas relatives à l\'identification d\'un registre', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'catMarqueursAdminDossiers', 'Marqueurs', 'marqueurs dossiers', 'base', '1', '2019-01-01 00:00:00'),
+('admin', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'contact', 'Contact', 'Moyens de contact', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'divers', 'Divers', 'Divers', 'base', '1', '2019-01-01 00:00:00'),
 ('admin', 'identity', 'Etat civil', 'Datas relatives à l\'identité d\'une personne', 'base', '1', '2019-01-01 00:00:00'),
@@ -479,8 +486,7 @@ INSERT IGNORE INTO `data_cat` (`groupe`, `name`, `label`, `description`, `type`,
 ('typecs', 'csAutres', 'Autres', 'autres', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'csBase', 'Consultations', 'consultations possibles', 'base', '1', '2019-01-01 00:00:00'),
 ('typecs', 'declencheur', 'Déclencheur', '', 'base', '1', '2019-01-01 00:00:00'),
-('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', '1', '2019-01-01 00:00:00'),
-('admin', 'clicRDV', 'clicRDV', 'Paramètres pour clicRDV', 'base', '1', '2019-01-01 00:00:00');
+('typecs', 'declencheursHorsHistoriques', 'Déclencheurs hors historiques', 'ne donnent pas de ligne dans les historiques', 'base', '1', '2019-01-01 00:00:00');
 
 -- data_types
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='activity');
@@ -683,10 +689,10 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='divers');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'notes', 'notes', 'Notes', 'Zone de notes', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'notesPro', 'notes pros', 'Notes pros', 'Zone de notes pros', '', '', 'textarea', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('admin', 'preferedSendingMethod', '', 'Méthode d\'envoi préféré', 'Permet de choisir la méthode de d\'envoi préféré pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d\'envoi préféré\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10'),
-('admin', 'clicRdvPatientId', 'ID patient', 'ID patient', 'ID patient', '', '', 'text', '', 'base', @catID, '1', '2018-01-01 00:00:00', '3600', '1');
+('admin', 'preferedSendingMethod', '', 'Méthode d\'envoi préférée', 'Permet de choisir la méthode de d\'envoi préférée pour le transfert d\'un document patient', '', '', 'select', '\'NONE\' : \'Aucune méthode d\'envoi préférée\'', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '10');
 
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='docForm');
@@ -796,8 +802,8 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('admin', 'PSIdNat', '', 'Identifiant national praticien santé', 'identifiant national praticien santé', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'adeli', 'adeli', 'Adeli', 'n° adeli', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'nReseau', '', 'Numéro de réseau', 'numéro de réseau (dépistage)', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
-('admin', 'nss', '', 'Numéro de sécu', 'numéro de sécurité sociale', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'nmu', '', 'Numéro de mutuelle', 'numéro de mutelle', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
+('admin', 'nss', '', 'Numéro de sécu', 'numéro de sécurité sociale', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1'),
 ('admin', 'rpps', 'rpps', 'RPPS', 'rpps', 'numeric', '', 'number', '', 'base', @catID, '1', '2019-01-01 00:00:00', '3600', '1');
 
 
@@ -829,6 +835,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='reglementItems');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
+('reglement', 'regleBanqueCheque', 'Banque', 'Nom de la Banque', 'Nom de la Banque du chèque', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleCB', '', 'CB', 'montant versé en CB', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleCheque', '', 'Chèque', 'montant versé en chèque', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleDepaCejour', '', 'Dépassement', 'dépassement pratiqué ce jour', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
@@ -838,6 +845,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('reglement', 'regleFseData', '', 'FSE data', 'data de la FSE générée par service tiers', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleIdentiteCheque', 'n° de chèque, nom du payeur si différent du patient,...', 'Informations paiement', 'Information complémentaires sur le paiement', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleModulCejour', '', 'Modulation', 'modulation appliquée ce jour', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
+('reglement', 'regleNumeroCheque', 'n° de chèque', 'n° de chèque', 'n° de chèque', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleSecteurGeoTarifaire', '', 'Secteur géographique tarifaire', 'secteur géographique tarifaire', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleSecteurHonoraires', '', 'Secteur tarifaire', 'secteur tarifaire appliqué', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleSecteurHonorairesNgap', '', 'Secteur tarifaire NGAP', 'secteur tarifaire NGAP appliqué', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
@@ -845,9 +853,8 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 ('reglement', 'regleSituationPatient', '', 'Situation du patient', 'situation du patient : cmu / tp / tout venant', '', '', 'select', '\'G\' : \'Tout venant\'\n\'CMU\' : \'CMU\'\n\'TP\' : \'Tiers payant AMO\'\n\'TP ALD DEP\' : \'ALD : tiers payant AVEC dépassement \'\n\'TP ALD\' : \'ALD : tiers payant SANS dépassement \'', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleTarifLibreCejour', '', 'Tarif', 'tarif appliqué ce jour', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
 ('reglement', 'regleTarifSSCejour', '', 'Tarif SS', 'tarif SS appliqué ce jour', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
-('reglement', 'regleTiersPayeur', '', 'Tiers', 'part du tiers', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
-('reglement', 'regleBanqueCheque', 'Banque', 'Nom de la Banque', 'Nom de la Banque du chèque', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1'),
-('reglement', 'regleNumeroCheque', 'n° de chèque', 'n° de chèque', 'n° de chèque', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
+('reglement', 'regleTiersPayeur', '', 'Tiers', 'part du tiers', '', '', 'text', '', 'base', @catID, '1', '2019-01-01 00:00:00', '1576800000', '1');
+
 
 SET @catID = (SELECT data_cat.id FROM data_cat WHERE data_cat.name='relationRelations');
 INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `description`, `validationRules`, `validationErrorMsg`, `formType`, `formValues`, `module`, `cat`, `fromID`, `creationDate`, `durationLife`, `displayOrder`) VALUES
@@ -865,7 +872,7 @@ INSERT IGNORE INTO `data_types` (`groupe`, `name`, `placeholder`, `label`, `desc
 INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
 ('PraticienPeutEtrePatient', 'default', '0', '', 'Options', 'true/false', 'si false, le praticien peut toujours avoir une fiche patient séparée', 'true'),
 ('VoirRouletteObstetricale', 'default', '0', '', 'Options', 'true/false', 'activer le lien roulette obstétricale du menu Outils', 'true'),
-('activGenBarreCode', 'default', '0', '', 'Options', 'true/false', 'Activer ou non la fonctionnalité permettant de générer les codes barres RPPS et ADELI.', 'true'),
+('activGenBarreCode', 'default', '0', '', 'Options', 'true/false', 'Activer ou non la fonctionnalité permettant de générer les codes barres RPPS et ADELI.', ''),
 ('administratifComptaPeutVoirRecettesDe', 'default', '0', '', 'Règlements', 'liste', 'ID des utilisateurs, séparés par des virgules (sans espace)', ''),
 ('administratifPeutAvoirAgenda', 'default', '0', '', 'Options', 'true/false', 'peut avoir un agenda à son nom', 'true'),
 ('administratifPeutAvoirFacturesTypes', 'default', '0', '', 'Règlements', 'true/false', 'peut avoir des factures types à son nom', 'false'),
@@ -923,9 +930,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('designInboxMailsSortOrder', 'default', '0', '', 'Ergonomie et design', 'texte', 'sens du tri des mails en colonne latérale : date ascendante (asc) ou descendante (desc) ', 'desc'),
 ('designTopMenuDropboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de fichier dans la boite de dépôt', 'true'),
 ('designTopMenuInboxCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
-('designTopMenuSections', 'default', '0', '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
+('designTopMenuSections', 'default', '0', '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- podt\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
 ('designTopMenuStyle', 'default', '0', '', 'Ergonomie et design', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
-('designTopMenuTooltipDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'si true, affiche les infos bulles sur icones du menu supérieur', 'false'),
+('designTopMenuTooltipDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'si true, affiche les infos bulles sur icones du menu supérieur', ''),
 ('designTopMenuTransmissionsColorIconeImportant', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
 ('designTopMenuTransmissionsColorIconeUrgent', 'default', '0', '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission urgente non lue', 'true'),
 ('designTopMenuTransmissionsCountDisplay', 'default', '0', '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de transmissions non lues', 'true'),
@@ -951,11 +958,16 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('droitExportPeutExporterToutesDataGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut exporter les datas générées par les autres praticiens de ses groupes', 'false'),
 ('droitGroupePeutCreerGroupe', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des groupes', 'false'),
 ('droitGroupePeutVoirTousGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir tous les groupes ', 'false'),
+('droitMotSuiviPeutModifierSuprimerDunAutre', 'default', '0', '', 'Droits', 'true/false', 'si coché, l\'utilisateur peut supprimer et modifier un mot de suivi créé par un autre', 'false'),
 ('droitRegistrePeutCreerRegistre', 'default', '0', '', 'Droits', 'true/false', 'si true, peut créer des registres', 'false'),
 ('droitRegistrePeutGererAdministrateurs', 'default', '0', '', 'Droits', 'true/false', 'si true, peut gérer les administrateurs registres', 'false'),
 ('droitRegistrePeutGererGroupes', 'default', '0', '', 'Droits', 'true/false', 'si true, peut gérer les groupes participant à un registre', 'false'),
 ('droitStatsPeutVoirStatsGenerales', 'default', '0', '', 'Droits', 'true/false', 'si true, peut voir les statistiques générales', 'true'),
-('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', 'false'),
+('droitUnivTagPatientPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un dossier patient', 'true'),
+('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossiers patients', 'true'),
+('droitUnivTagProPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un pro', 'true'),
+('droitUnivTagProPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les pro', 'true'),
+('dropboxActiver', 'default', '0', '', 'Dropbox', 'true/false', 'permet d\'activer les fonctions de dropbox externe', ''),
 ('dropboxOptions', 'default', '0', '', 'Dropbox', 'textarea', 'options pour les fonctions de dropbox externe', ''),
 ('ecofaxMyNumber', 'default', '0', '', 'Fax', 'n° fax', 'numéro du fax en réception, ex: 0900000000', ''),
 ('ecofaxPassword', 'default', '0', '', 'Fax', 'texte', 'mot de passe du service de fax', ''),
@@ -979,15 +991,13 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('lapPrintAllergyRisk', 'default', '0', '', 'LAP', 'true/false', 'imprimer les risques allergiques détectés', 'true'),
 ('lapSearchDefaultType', 'default', '0', '', 'LAP', 'texte', 'mode de recherche par défaut des médicaments', 'dci'),
 ('lapSearchResultsSortBy', 'default', '0', '', 'LAP', 'texte', 'ordre préférentiel d\'affichage des médicaments', 'nom'),
-('mailRappelActiver', 'default', '0', '', 'Rappels mail', 'true/false', 'activer / désactiver les rappels par mail', 'false'),
+('mailRappelActiver', 'default', '0', '', 'Rappels mail', 'true/false', 'activer / désactiver les rappels par mail', ''),
 ('mailRappelDaysBeforeRDV', 'default', '0', '', 'Rappels mail', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel', '3'),
 ('mailRappelLogCampaignDirectory', 'default', '0', '', 'Rappels mail', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par mail', ''),
 ('mailRappelMessage', 'default', '0', '', 'Rappels mail', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Bonjour,\\n\\nNous vous rappelons votre RDV du #jourRdv à #heureRdv avec le Dr #praticien.\\nNotez bien qu’aucun autre rendez-vous ne sera donné à un patient n’ayant pas honoré le premier.\\n\\nMerci de votre confiance,\\nÀ bientôt !\\n\\nP.S. : Ceci est un mail automatique, merci de ne pas répondre.'),
 ('optionDossierPatientActiverCourriersCertificats', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, activer courriers et certificats', 'true'),
 ('optionDossierPatientActiverGestionALD', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, gérer les ALD', 'true'),
 ('optionDossierPatientInhiberHistoriquesParDefaut', 'default', '0', '', 'Options dossier patient', 'true/false', 'si true, déactive la production des informations pour les historiques par défaut', 'false'),
-('optionsDossierPatientActiverMotSuivi', 'default', '0', '', 'Options dossier patient', 'true/false', 'activer / désactiver le mot suivi sur le dossier d\'un patient', 'false'),
-('optionsDossierPatientNbMotSuiviAfficher', 'default', '0', '', 'Options dossier patient', 'int', 'nombre de mot suivi à afficher par défaut sur un dossier patient', '6'),
 ('optionGeActiverAgenda', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion agenda', 'true'),
 ('optionGeActiverApiRest', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de l\'API REST', 'true'),
 ('optionGeActiverCompta', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion compta', 'true'),
@@ -1003,6 +1013,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('optionGeActiverRegistres', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation de la gestion de registres', 'false'),
 ('optionGeActiverSignatureNumerique', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des fonctions de signature numérique de documents', 'true'),
 ('optionGeActiverTransmissions', 'default', '0', '', 'Activation services', 'true/false', 'si true, activation des transmissions', 'true'),
+('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver l\'utilisation des tags universels', 'false'),
 ('optionGeActiverVitaleLecture', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver les services liés à la carte vitale', 'false'),
 ('optionGeAdminActiverLiensRendreUtilisateur', 'default', '0', '', 'Options', 'true/false', 'si true, l\'administrateur peut transformer des patients ou praticiens en utilisateur via les listings publiques', 'false'),
 ('optionGeCreationAutoPeopleExportID', 'default', '0', '', 'Options', 'true/false', 'si true, création automatique d\'un peopleExportID', 'true'),
@@ -1017,6 +1028,9 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('optionGeLoginPassOnlineRecovery', 'default', '0', '', 'Login', 'true/false', 'possibilité de réinitialiser son mot de passe perdu via email ', 'false'),
 ('optionGePatientOuvrirApresCreation', 'default', '0', '', 'Options', 'dossier / liens', 'où rediriger après création d\'un nouveau patient', 'liens'),
 ('optionGePraticienMontrerPatientsLies', 'default', '0', '', 'Options', 'true/false', 'si true, montrer les patients liés au praticien sur la fiche pro', 'true'),
+('optionsActiverMotSuivi', 'default', '0', '', 'Options', 'true/false', 'activer / désactiver le mot suivi sur le dossier d\'un patient', ''),
+('optionsDossierPatientActiverMotSuivi', 'default', '0', '', 'Options dossier patient', 'true/false', 'activer / désactiver les mots de suivi dans le dossier patient', 'false'),
+('optionsDossierPatientNbMotSuiviAfficher', 'default', '0', '', 'Options dossier patient', 'int', 'nombre de mots de suivi à afficher par défaut dans un dossier patient', '6'),
 ('ovhApplicationKey', 'default', '0', '', 'Click2call', 'string', 'OVH Application Key', ''),
 ('ovhApplicationSecret', 'default', '0', '', 'Click2call', 'string', 'OVH Application Secret', ''),
 ('ovhConsumerKey', 'default', '0', '', 'Click2call', 'string', 'OVH Consumer Key', ''),
@@ -1033,11 +1047,11 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('smsDaysBeforeRDV', 'default', '0', '', 'Rappels SMS', 'nombre', 'nombre de jours avant le rendez-vous pour l\'expédition du rappel SMS', '3'),
 ('smsLogCampaignDirectory', 'default', '0', '', 'Rappels SMS', 'dossier', 'chemin du répertoire où on va loguer les rappels de rendez-vous par SMS', ''),
 ('smsProvider', 'default', '0', '', 'Rappels SMS', 'url/ip', 'active le service tiers concerné', ''),
-('smsRappelActiver', 'default', '0', '', 'Rappels SMS', 'true/false', 'activer / désactiver les rappels par SMS', 'false'),
+('smsRappelActiver', 'default', '0', '', 'Rappels SMS', 'true/false', 'activer / désactiver les rappels par SMS', ''),
 ('smsRappelMessage', 'default', '0', '', 'Rappels SMS', 'textarea', 'Les balises #heureRdv, #jourRdv et #praticien seront automatiquement remplacées dans le message envoyé', 'Rappel: Vous avez rdv à #heureRdv le #jourRdv avec le Dr #praticien'),
 ('smsSeuilCreditsAlerte', 'default', '0', '', 'Rappels SMS', 'nombre', 'prévenir dans l\'interface du logiciel si crédit inférieur ou égale à', '150'),
 ('smsTpoa', 'default', '0', '', 'Rappels SMS', 'texte', 'La balise #praticien sera automatiquement remplacée dans le message envoyé', 'Dr #praticien'),
-('smsTypeRdvPourRappel', 'default', '0', '', 'Rappels SMS', 'vide/text', 'N\'envoyer les rappels SMS que pour les types de rendez-vous listés (placer les types de RDV entre "[]" et séparés par des virgules, ex : "[C1],[C2]"), laisser vide pour envoyer des rappels pour tous les types de rendez-vous.', ''),
+('smsTypeRdvPourRappel', 'default', '0', '', 'Rappels SMS', 'vide/text', 'N\'envoyer les rappels SMS que pour les types de rendez-vous listés (placer les types de RDV entre \"[]\" et séparés par des virgules, ex : \"[C1],[C2]\"), laisser vide pour envoyer des rappels pour tous les types de rendez-vous.', ''),
 ('smtpDefautSujet', 'default', '0', '', 'Mail', 'texte', 'titre par défaut du mail expédié', 'Document vous concernant'),
 ('smtpFrom', 'default', '0', '', 'Mail', 'email', 'adresse de l’expéditeur des messages, ex: user@domain.net', ''),
 ('smtpFromName', 'default', '0', '', 'Mail', 'texte', 'nom en clair de l\'expéditeur des messages', ''),
@@ -1071,10 +1085,10 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('transmissionsPeutRecevoir', 'default', '0', '', 'Transmissions', 'true/false', 'peut recevoir des transmissions', 'true'),
 ('transmissionsPeutVoir', 'default', '0', '', 'Transmissions', 'true/false', 'peut accéder aux transmissions', 'true'),
 ('transmissionsPurgerNbJours', 'default', '0', '', 'Transmissions', 'nombre entier', 'nombre de jours sans update après lequel une transmission sera supprimée de la base de données (0 = jamais)', '365'),
-('utiliserLap', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver le LAP', 'false'),
-('utiliserLapExterne', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver l\'utilisation d\'un LAP externe', 'false'),
+('utiliserLap', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver le LAP', ''),
+('utiliserLapExterne', 'default', '0', '', 'LAP', 'true/false', 'activer / désactiver l\'utilisation d\'un LAP externe', ''),
 ('utiliserLapExterneName', 'default', '0', '', 'LAP', 'texte', 'nom du LAP externe', ''),
-('vitaleActiver', 'default', '0', '', 'Vitale', 'true/false', 'activer / désactiver les services liés à la carte vitale', 'false'),
+('vitaleActiver', 'default', '0', '', 'Vitale', 'true/false', 'activer / désactiver les services liés à la carte vitale', ''),
 ('vitaleHoteLecteurIP', 'default', '0', '', 'Vitale', 'texte', 'IP sur le réseau interne de la machine supportant le lecteur', ''),
 ('vitaleMode', 'default', '0', '', 'Vitale', 'texte', 'simple / complet', 'simple'),
 ('vitaleNomRessourceLecteur', 'default', '0', '', 'Vitale', 'texte', 'nomRessourceLecteur', ''),
@@ -1123,7 +1137,7 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 ('base', 'baseNewGroupe', 'Formulaire de création d\'un groupe', 'formulaire de création d\'un nouveau groupe', 'data_types', 'admin', 'post', '/groupe/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      size: 4\r\n      bloc:                          \r\n        - groupname,required                       		#16412 Nom du groupe\n    col2:                            \r\n      size: 4\r\n      bloc:                          \r\n        - country                                  		#1656 Pays\n    col3:                            \r\n      size: 4\r\n      bloc:                          \r\n        - city                                     		#12   Ville', '', '', '', ''),
 ('base', 'baseNewPatient', 'Formulaire nouveau patient', 'formulaire d\'enregistrement d\'un nouveau patient', 'data_types', 'admin', 'post', '/patient/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      head: \'Etat civil\'             \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#14   Sexe\n        - birthname,required,autocomplete,data-acTypeID=lastname:birthname 		#1    Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#2    Nom d usage\n        - firstname,required,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#3    Prénom\n        - birthdate,class=pick-year                		#8    Date de naissance\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - personalEmail                            		#4    Email personnelle\n        - mobilePhone                              		#7    Téléphone mobile\n        - homePhone                                		#10   Téléphone domicile\n        - nss                                      		#180  Numéro de sécu\n        - nmu                                      		#251  Numéro de mutuelle\n    col3:\r\n      head: \'Adresse personnelle\'\r\n      size: 4\r\n      bloc: \r\n        - streetNumber                             		#9    n°\n        - street,autocomplete,data-acTypeID=street:rueAdressePro 		#11   Voie\n        - postalCodePerso                          		#13   Code postal\n        - city,autocomplete,data-acTypeID=city:villeAdressePro 		#12   Ville\n        - deathdate                                		#516  Date de décès\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notes,rows=3                             		#21   Notes', NULL, '', NULL, '$(document).ready(function() {\r\n\r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPatient textarea\')); \r\n\r\n  // modal edit data admin patient\r\n  $(\'#editAdmin\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#editAdmin textarea\'));\r\n  });\r\n  \r\n});'),
 ('base', 'baseNewPro', 'Formulaire nouveau pro', 'formulaire d\'enregistrement d\'un nouveau pro', 'data_types', 'admin', 'post', '/pro/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      head: \'Etat civil\'            \r\n      size: 4\r\n      bloc:                          \r\n        - administrativeGenderCode                 		#102  Sexe\n        - job,autocomplete,rows=1                  		#1    Activité professionnelle\n        - titre,autocomplete                       		#109  Titre\n        - birthname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#104  Nom de naissance\n        - lastname,autocomplete,data-acTypeID=lastname:birthname 		#107  Nom d usage\n        - firstname,autocomplete,data-acTypeID=firstname:othersfirstname:igPrenomFA:igPrenomFB:igPrenomFC 		#106  Prénom\n\r\n    col2:\r\n      head: \'Contact\'\r\n      size: 4\r\n      bloc:\r\n        - emailApicrypt                            		#61   Email apicrypt\n        - profesionnalEmail                        		#68   Email professionnelle\n        - personalEmail                            		#66   Email personnelle\n        - telPro                                   		#69   Téléphone professionnel\n        - telPro2                                  		#70   Téléphone professionnel 2\n        - mobilePhonePro                           		#65   Téléphone mobile pro.\n        - faxPro                                   		#62   Fax professionnel\n    col3:\r\n      head: \'Adresse professionnelle\'\r\n      size: 4\r\n      bloc: \r\n        - numAdressePro                            		#10   n°\n        - rueAdressePro,autocomplete,data-acTypeID=street:rueAdressePro 		#12   Voie\n        - codePostalPro                            		#8    Code postal\n        - villeAdressePro,autocomplete,data-acTypeID=city:villeAdressePro 		#14   Ville\n        - serviceAdressePro,autocomplete           		#13   Service\n        - etablissementAdressePro,autocomplete     		#9    Établissement\n  row2:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - notesPro,rows=3                          		#87   Notes pros\n\r\n  row3:\r\n    col1:\r\n      size: 4\r\n      bloc:\r\n        - rpps                                     		#150  RPPS\n        - PSIdNat                                  		#145  Identifiant national praticien santé\n    col2:\r\n      size: 4\r\n      bloc:\r\n        - adeli                                    		#146  Adeli\n        - PSCodeProSpe,plus={<i class=\"fas fa-pen\"></i>} 		#143  Code normé de la profession/spécialité du praticien\n    col3:\r\n      size: 4\r\n      bloc:\r\n        - nReseau                                  		#147  Numéro de réseau\n        - PSCodeStructureExercice,plus={<i class=\"fas fa-pen\"></i>} 		#144  Code normé de la structure d exercice du praticien\n  row4:\r\n    col1:\r\n      size: 12\r\n      bloc:\r\n        - preferedSendingMethod                    		#519  Méthode d envoie préféré', '', '', '', '$(document).ready(function() {\r\n\r\n   // modal edit data admin patient\r\n  $(\'#newPro\').on(\'shown.bs.modal\', function (e) {\r\n    autosize.update($(\'#newPro textarea\'));\r\n  });\r\n  \r\n  //ajutement auto des textarea en hauteur\r\n  autosize($(\'#formName_baseNewPro textarea\')); \r\n\r\n});'),
-('base', 'baseNewRegistre', 'Formulaire nouveau registre', 'formulaire nouveau registre', 'data_types', 'admin', 'post', '/registre/register/', @catID, 'public',  'structure:\r\n  row1:                              \r\n    col1:                            \r\n      size: col-12\r\n      bloc:                          \r\n        - registryname,required                    		#293  Nom du registre\n  row2:                              \r\n    col1:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationDate,required       		#291  Date d autorisation du registre\n    col2:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationEndDate             		#292  Date de fin d autorisation du registre\n    col3:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryState                            		#294  État du registre\n        \r\n  row3:                              \r\n    col1:                            \r\n      size: col-6 col-md-4\r\n      bloc:                          \r\n        - registryPrefixTech                       		#295  Préfixe technique', '', '', '', ''),
+('base', 'baseNewRegistre', 'Formulaire nouveau registre', 'formulaire nouveau registre', 'data_types', 'admin', 'post', '/registre/register/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                            \r\n      size: col-12\r\n      bloc:                          \r\n        - registryname,required                    		#293  Nom du registre\n  row2:                              \r\n    col1:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationDate,required       		#291  Date d autorisation du registre\n    col2:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryAuthorisationEndDate             		#292  Date de fin d autorisation du registre\n    col3:                            \r\n      size: col-12 col-md-3\r\n      bloc:                          \r\n        - registryState                            		#294  État du registre\n        \r\n  row3:                              \r\n    col1:                            \r\n      size: col-6 col-md-4\r\n      bloc:                          \r\n        - registryPrefixTech                       		#295  Préfixe technique', '', '', '', ''),
 ('base', 'basePeopleComplement', 'Formulaire patient/pro complémentaire', 'formulaire patient/pro complémentaire', 'data_types', 'admin', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'structure:\r\n  row1:                              \r\n    col1:                              \r\n      size: 12\r\n      bloc:                          \r\n        - pgpPublicKey,rows=20,class={text-monospace} 		#1787 Clef publique PGP', '', '', '', '');
 
 
@@ -1146,14 +1160,6 @@ INSERT IGNORE INTO `forms` (`module`, `internalName`, `name`, `description`, `da
 ('base', 'baseUserParametersClicRdv', 'Paramètres utilisateur clicRDV', 'Paramètres utilisateur clicRDV', 'data_types', 'admin', 'post', '/user/ajax/userParametersClicRdv/', @catID, 'public', 'global:\n  formClass:\'ajaxForm\'\nstructure:\n row1:\n  col1: \n    head: \"Compte clicRDV\"\n    size: 3\n    bloc:\n      - clicRdvUserId\n      - clicRdvPassword\n      - clicRdvGroupId\n      - clicRdvCalId\n      - clicRdvConsultId,nolabel', NULL, NULL, NULL, NULL),
 ('base', 'baseUserParametersPassword', 'Changement mot de passe utilisateur', 'Changement mot de passe utilisateur', 'data_types', 'admin', 'post', '/user/actions/userParametersPassword/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - currentPassword,required                   		#6    Mot de passe actuel\n      - password,required                          		#2    Mot de passe\n      - verifPassword,required                     		#5    Confirmation du mot de passe', NULL, NULL, NULL, NULL),
 ('base', 'baseUserPasswordRecovery', 'Nouveau password après perte', 'saisie d\'un nouveau password en zone publique après perte', 'data_types', 'admin', 'post', '/patient/ajax/saveCsForm/', @catID, 'public', 'structure:\r\n row1:\r\n  col1: \r\n    size: col-12\r\n    bloc:\r\n      - password,required                          		#1789 Mot de passe\n      - verifPassword                              		#1791 Confirmation du mot de passe', '', '', '', '$(document).ready(function() {\r\n  $(\"#treatNewPass\").on(\"click\", function(e) {\r\n    e.preventDefault();\r\n    password = $(\'#id_password_id\').val();\r\n    verifPassword = $(\'#id_verifPassword_id\').val();\r\n	randStringControl = $(\'input[name=\"randStringControl\"]\').val();\r\n\r\n    $.ajax({\r\n      url: urlBase + \'/public/ajax/publicLostPasswordNewPassTreat/\',\r\n      type: \'post\',\r\n      data: {\r\n        p_password: password,\r\n        p_verifPassword: verifPassword,\r\n        randStringControl: randStringControl,\r\n      },\r\n      dataType: \"json\",\r\n      success: function(data) {\r\n        \r\n       if (data.status == \'ok\') {\r\n         $(\'i.fa-lock\').addClass(\'text-success fa-unlock\').removeClass(\'text-warning fa-lock\');\r\n         $(\'#newPassAskForm\').addClass(\'d-none\');\r\n         $(\'#newPassTreatConfirmation\').removeClass(\'d-none\');\r\n       } else {\r\n         $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide\').removeClass(\'d-none\');\r\n         $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide ul\').html(\'\');\r\n         $.each(data.msg, function(index, value) {\r\n           $(\'#newPassAskForm div.alert.cleanAndHideOnModalHide ul\').append(\'<li>\' + value + \'</li>\');\r\n         });\r\n         $(\'#newPassAskForm .is-invalid\').removeClass(\'is-invalid\');\r\n         $.each(data.code, function(index, value) {\r\n           $(\'#newPassAskForm *[name=\"\' + value + \'\"]\').addClass(\'is-invalid\');\r\n         });\r\n       }        \r\n        \r\n\r\n      },\r\n      error: function() {\r\n        alert(\'Problème, rechargez la page !\');\r\n      }\r\n    });\r\n\r\n  });\r\n});');
-
--- Ajoute de nouvelle option de de configuration pour les tags universelle
-INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `type`, `description`, `value`) VALUES
-('optionGeActiverUnivTags', 'default', '0', '', 'Activation services', 'true/false', 'activer / désactiver l\'utilisation des tags universels', 'false'),
-('droitUnivTagPatientPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un dossier patient', 'true'),
-('droitUnivTagPatientPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les dossier patients', 'true'),
-('droitUnivTagProPeutAjouterRetirer', 'default', '0', '', 'Droits', 'true/false', 'peut ajouter ou retirer une étiquette sur un pro', 'true'),
-('droitUnivTagProPeutCreerSuprimer', 'default', '0', '', 'Droits', 'true/false', 'peut créer et supprimer des étiquettes pour les pro', 'true');
 
 -- people
 INSERT IGNORE INTO `people` (`name`, `type`, `rank`, `module`, `pass`, `secret2fa`, `registerDate`, `fromID`, `lastLogIP`, `lastLogDate`, `lastLogFingerprint`, `lastLostPassDate`, `lastLostPassRandStr`) VALUES
@@ -1179,3 +1185,9 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
 ('base', 'module', 'v7.2.0'),
 ('state', 'system', 'normal');
+
+-- univtags_type
+INSERT IGNORE INTO `univtags_type` (`name`, `description`, `actif`, `droitCreSup`, `droitAjoRet`) VALUES
+('patients', 'Étiquettes pour catégoriser le dossier médical d\'un patient', '1', 'droitUnivTagPatientPeutCreerSuprimer', 'droitUnivTagPatientPeutAjouterRetirer'),
+('pros', 'Étiquettes pour catégoriser une fiche pro.', '1', 'droitUnivTagProPeutCreerSuprimer', 'droitUnivTagProPeutAjouterRetirer');
+
