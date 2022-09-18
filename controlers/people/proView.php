@@ -110,12 +110,12 @@ if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') 
 if ($p['config']['activGenBarreCode'] == 'true') {
 	$barcodedir = $p['config']['stockageLocation'].'barecode/';
 	// Retrouve le svg pour le RPPS
-	if (file_exists($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg'))
+	if (isset($p['page']['proData']['rpps']) and file_exists($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg'))
 		$p['page']['svgRPPS'] =  file_get_contents($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg');
 	else
 		$p['page']['svgRPPS'] = '';
 	// Retrouve le svg pour le ADELI
-	if (file_exists($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg'))
+	if (isset($p['page']['proData']['adeli']) and file_exists($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg'))
 		$p['page']['svgADELI'] =  file_get_contents($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg');
 	else
 		$p['page']['svgADELI'] = '';
