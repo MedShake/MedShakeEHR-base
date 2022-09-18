@@ -40,8 +40,8 @@ function returnJson(bool $status, string $message, array $data = []) {
 
 if ($p['config']['optionsDossierPatientActiverMotSuivi'] == 'false') {
     $ret_arr['statut'] = 'error';
-    $ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activé pour cette utilisateur.");
-    returnJson($ret_arr, "L'option optionsDossierPatientActiverMotSuivi n'est pas activé pour cette utilisateur.");
+    $ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
+    returnJson($ret_arr, "L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
 }
 
 $tabReturn = array();
@@ -67,7 +67,7 @@ case 'create':
             $motSuivi->setDateTime($validated_data['dateTime']);
             $motSuivi->create($fromID, $validated_data['toID']);
             $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID']);
-            returnJson(true, 'Mot suivi crée.', $data);
+            returnJson(true, 'Mot de suivi créé.', $data);
         } catch (Exception $e) {
             returnJson(false, $e->getMessage());
         }
@@ -99,7 +99,7 @@ case 'update':
             $motSuivi->update();
             $data['html'] = msMotSuivi::getListHtmlTab($toID);
 
-            returnJson(true, 'Mot suivi modifié.', $data);
+            returnJson(true, 'Mot de suivi modifié.', $data);
         } catch (Exception $e) {
             returnJson(false, $e->getMessage());
         }
@@ -117,10 +117,10 @@ case 'delete':
             $fromID = $motSuivi->getFromID();
             // Si l'utilisateur n'a pas le droit de modififier un mot suivi qui n'est pas le sien
             if ($p['user']['id'] != $fromID && !filter_var($p['config']['droitMotSuiviPeutModifierSuprimerDunAutre'], FILTER_VALIDATE_BOOLEAN))
-                returnJson(false, 'Cette utilisateur ne peut pas suprimer un mot suivi qui n\'est pas le sien');
+                returnJson(false, 'Cette utilisateur ne peut pas supprimer un mot suivi qui n\'est pas le sien');
             $motSuivi->delete();
             $data['html'] = msMotSuivi::getListHtmlTab($toID);
-            returnJson(true, 'Mot suivi suprimé.', $data);
+            returnJson(true, 'Mot de suivi supprimé.', $data);
         } catch (Exception $e) {
             returnJson(false, $e->getMessage());
         }
@@ -138,7 +138,7 @@ case 'list':
         try {
             $nb_total = msMotSuivi::getNbTotal($validated_data['toID']);
             $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID'], $validated_data['nb']);
-            returnJson(true, 'Liste actualisé.', $data);
+            returnJson(true, 'Liste actualisée.', $data);
         } catch (Exception $e) {
             returnJson(false, $e->getMessage());
         }

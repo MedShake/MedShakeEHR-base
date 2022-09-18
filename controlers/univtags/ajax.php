@@ -164,7 +164,7 @@ switch ($action) {
 					'toID' => $data['toID'],
 					'tagsListHtml' => msUnivTags::getListHtml($typeID, $data['toID'], $data['contexte']),
 				);
-				returnJson(true, 'Tag suprimé', $retData);
+				returnJson(true, 'Tag supprimé', $retData);
 			} catch (Exception $e) {
 				returnJson(false, $e->getMessage());
 			}
@@ -188,7 +188,7 @@ switch ($action) {
 					'contexte' => $data['contexte'],
 					'tagsListHtml' => msUnivTags::getListHtml($data['typeID'], $data['toID'], $data['contexte']),
 				);
-				returnJson(true, 'Liste actualisé', $retData);
+				returnJson(true, 'Liste actualisée', $retData);
 			} catch (Exception $e) {
 				returnJson(false, $e->getMessage());
 			}

@@ -37,7 +37,7 @@
  *			droits indiqués par les champs suivant de la table des type de
  *			tags :
  *				`droitCreSup` =>	Pour déterminier si un utilisateur peut
- *									créer, suprimer ou modifier un tag pour
+ *									créer, supprimer ou modifier un tag pour
  *									un type doné.
  *				`droitAjoRet` =>	Pour déterminer si un utilisateur peut
  *									ajouter ou retirer un tag sur un élément.
@@ -100,7 +100,7 @@ Class msUnivTags {
 
 	/**
 	 * @var $_droitCreSup Nom du droit dans la configuration Medshake pour
-	 *                    créer et suprimer les tags en fonction leurs type.
+	 *                    créer et supprimer les tags en fonction leurs type.
 	 */
 	private $_droitCreSup;
 
@@ -180,7 +180,7 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Suprime le tag instancié.
+	 * Supprime le tag instancié.
 	 * @return	void
 	 */
 	public function delete() {
@@ -400,9 +400,9 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Retourne si l'utilisateur peut modifier ou suprimer le tag (dépendament
+	 * Retourne si l'utilisateur peut modifier ou supprimer le tag (dépendament
 	 * du paramètre de configuraton défini pour ce type de tag).
-	 * @return	bool	`true` si l'utilisateur peut modifier ou suprimer le tag
+	 * @return	bool	`true` si l'utilisateur peut modifier ou supprimer le tag
 	 *					`false` si non.
 	 */
 	public function checkDroitCreSup() {
@@ -440,7 +440,7 @@ Class msUnivTags {
 	 *										'droitCreeSup'	=> nom du paramètre de
 	 *														   configuration déterminant
 	 *														   si un utilisateur peut
-	 *														   créer, suprimer, modifier
+	 *														   créer, supprimer, modifier
 	 *														   un tag de ce type.
 	 *										'roitAjoRet'	=> nom du paramètre de
 	 *														   configuration déterminant
@@ -524,7 +524,7 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Vérifie si l'utilisateur peut créer, modifier ou suprimer les tags du
+	 * Vérifie si l'utilisateur peut créer, modifier ou supprimer les tags du
 	 * type d'on l'ID est fourni en argument.
 	 * @param	int		$typeID		ID du type.
 	 * @return	bool				`true` si l'utilisatuer peut autrement `false`.
