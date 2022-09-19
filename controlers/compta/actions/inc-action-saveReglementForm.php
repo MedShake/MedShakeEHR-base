@@ -56,8 +56,7 @@ if (count($_POST)>0 and is_numeric($_POST['objetID'])) {
 
     $supportID = $_POST['objetID'];
 
-	if(($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']) $paiementComplet = 'n'; else $paiementComplet = 'y';
-    $important=array('id'=>$supportID, 'important'=>$paiementComplet);
+	$important=array('id'=>$supportID, 'important'=>($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
 
     if (($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) <= $_POST['apayer']) {
