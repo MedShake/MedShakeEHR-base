@@ -48,7 +48,7 @@ if ($zip->open($fichier['tmp_name'])) {
           'groupe'=>'system'
         );
         msSQL::sqlInsert('system', $dataMaintenance);
-        if ($zip->extractTo($p['homepath'])) {
+        if (@$zip->extractTo($p['homepath'])) {
             $zip->close();
             if ($p['config']['webDirectory']!=$p['homepath'].'public_html/') {
                 exec('cp -r '.$p['homepath'].'public_html/* '.$p['config']['webDirectory']);
