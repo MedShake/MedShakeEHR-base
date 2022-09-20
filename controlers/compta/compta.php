@@ -149,7 +149,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
         where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')"
       .($impayes?"and important='y'":"")."
       )
-  order by id asc
+  order by creationDate asc, id asc
   ")) {
 
 

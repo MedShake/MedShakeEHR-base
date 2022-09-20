@@ -84,7 +84,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
     select pd2.id from objets_data as pd2
     where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
 
-  order by id asc
+  order by creationDate asc, id asc
   ")) {
 
 
