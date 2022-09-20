@@ -55,7 +55,7 @@ GUMP::add_validator("genericPhone", function($field, $input, $param = NULL) {
 
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
-		if (msSQL::sqlUniqueChamp("select $field from $param where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
+		if (msSQL::sqlUniqueChamp("select $field from ".$param[0]." where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
 	}, 'Le champ {field} contient une valeur déjà utilisée');
 
 GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
