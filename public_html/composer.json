@@ -47,11 +47,11 @@
             "type": "package",
             "package": {
                 "name": "jquery/jquery",
-                "version": "3.4.1",
+                "version": "3.6.1",
                 "source": {
                     "url": "https://github.com/jquery/jquery.git",
                     "type": "git",
-                    "reference": "3.4.1"
+                    "reference": "3.6.1"
                 }
             }
         },
@@ -174,7 +174,7 @@
         "dimsemenov/magnific-popup": "1.1.0",
         "dennyferra/typewatch": "3.0.0",
         "tinymce/tinymce": "6.1.2",
-        "jquery/jquery": "3.4.1",
+        "jquery/jquery": "3.6.1",
         "danielm/uploader": "v1.0.2",
         "brinley/jsignature": "2.1.3",
         "fullcalendar/fullcalendar": "3.10.1",
