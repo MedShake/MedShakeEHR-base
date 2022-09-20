@@ -26,7 +26,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+ $(document).ready(function() {
 
   updateListingPatients();
 
@@ -356,7 +356,7 @@ function updateListingPatients(getNextResult = false) {
       } else {
         $('#listing').html(data);
       }
-      $('#nbResultsDisplayed')[0].innerText = $('#listing>table>tbody>tr').length;
+      if($('#nbResultsDisplayed').length) $('#nbResultsDisplayed')[0].innerText = $('#listing>table>tbody>tr').length;
       // NOTE : totalNbOfResultsDisplayed fait partis du scope global et est initialisé dans le template listing.html.twig
       if (totalNbOfResultsDisplayed <= $('#listing>table>tbody>tr').length) {
         $('#listing>table>caption').hide();
