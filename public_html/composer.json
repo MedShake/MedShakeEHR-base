@@ -2,8 +2,10 @@
     "config": {
       "vendor-dir":"thirdparty",
       "allow-plugins": {
-        "robloach/component-installer": true
-      }
+            "robloach/component-installer": true,
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true
+        }
     },
     "repositories": [
 
@@ -177,7 +179,7 @@
         "jquery/jquery": "3.6.1",
         "danielm/uploader": "v1.0.2",
         "brinley/jsignature": "2.1.3",
-        "fullcalendar/fullcalendar": "3.10.1",
+        "fullcalendar/fullcalendar": "3.10.5",
         "swisnl/jquery-contextmenu": "2.5.0",
         "lrsjng/kjua": "v0.1.2",
         "chaijs/chai": "1.9.0",
