@@ -100,7 +100,7 @@
       </tbody>
     </table>
 
-    <form class="form-inline">
+    <form class="form w-25">
       <div class="input-group my-3">
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -121,7 +121,7 @@
     <div class="form-group col-9 offset-3">
       <label for="titreOptionnel">Titre (optionnel)</label>
       {# le js dans onchange="" permet de récupérer le titre du document avec la dans le champ hidden "dropboxDocTitle" du formulaire "CreerPatient" #}
-      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="titre du document" value="{{ page.boxParams.filesDefaultTitle }}" onchange="document.getElementById('creerPatient_doctitre').value = this.value;">
+      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="Titre du document" value="{{ page.boxParams.filesDefaultTitle }}" onchange="document.getElementById('creerPatient_doctitre').value = this.value;">
     </div>
   </div>
   <div class="row mb-4">
@@ -147,7 +147,7 @@
 
     <div class="row mb-4">
         <div class="col text-right">
-            <input class="btn btn-primary" type="submit" value="Nouveau patient avec les éléments du fichier" title="Crée un nouvau patient avec les information issue du fichier et classe en même temps le fichier dans son dossier">
+            <input class="btn btn-primary" type="submit" value="Nouveau patient avec les éléments du fichier" title="Créer un nouveau patient avec les informations issues du fichier et le classer en même temps dans son dossier">
         </div>
     </div>
 </form>
@@ -185,7 +185,7 @@
         </object>
       {% endif %}
   {% else %}
-      Ce document n'est pas prévisalisable.
+      Ce document n'est pas prévisualisable.
   {% endif %}
   </div>
 </div>
