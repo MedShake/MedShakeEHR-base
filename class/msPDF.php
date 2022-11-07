@@ -266,7 +266,9 @@ class msPDF
  */
     public function showPDF()
     {
+		global $p;
         $dompdf = new Dompdf();
+		$dompdf->getOptions()->setChroot($p['homepath']);
         $dompdf->loadHtml($this->_contenuFinalPDF);
         $dompdf->setPaper($this->_paperSize, $this->_paperOrientation);
         $dompdf->render();
@@ -286,6 +288,7 @@ class msPDF
 
         // PDF issu de la construction HTML (dompdf)
         $dompdf = new Dompdf();
+		$dompdf->getOptions()->setChroot($p['homepath']);
         $dompdf->loadHtml($this->_contenuFinalPDF);
         $dompdf->setPaper($this->_paperSize, $this->_paperOrientation);
         $dompdf->render();

@@ -29,6 +29,11 @@
 if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 if(!is_numeric($_POST['formID'])) die();
 
+$htmlFormPreview='';
+$basicTemplateCode='';
+$sqlGen='';
+$sqlGenUpdate='';
+
 //formulaire
 $forceAllTemplates="oui";
 $form = new msForm();

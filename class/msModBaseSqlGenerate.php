@@ -140,7 +140,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'formFormulaireNouveauGroupe'=>'baseNewGroupe',
     'droitDossierPeutVoirUniquementPatientsGroupes'=>'false',
     'droitDossierPeutVoirUniquementPraticiensGroupes'=>'false',
-    'designTopMenuSections'=>"- agenda\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils",
+    'designTopMenuSections'=>"- agenda\n- podt\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils",
     'optionGeActiverAgenda'=>'true',
     'optionGeActiverCompta'=>'true',
     'optionGeActiverInboxApicrypt'=>'true',
@@ -168,6 +168,14 @@ class msModBaseSqlGenerate extends msSqlGenerate
     'optionDossierPatientInhiberHistoriquesParDefaut'=>'false',
     'droitDossierPeutRechercherParPeopleExportID'=>'false',
     'optionGeExportDataConsentementOff'=>'true',
+	'optionGeActiverUnivTags'=>'false',
+	'droitUnivTagPatientPeutAjouterRetirer'=>'true',
+	'droitUnivTagPatientPeutCreerSuprimer'=>'true',
+	'droitUnivTagProPeutAjouterRetirer'=>'true',
+	'droitUnivTagProPeutCreerSuprimer'=>'true',
+	'optionsDossierPatientActiverMotSuivi'=>'false',
+	'optionsDossierPatientNbMotSuiviAfficher'=>'6',
+	'droitMotSuiviPeutModifierSuprimerDunAutre'=>'false'
   ];
 
   protected function _getSpecifSql() {
@@ -187,6 +195,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
       'forms_cat',
       'hprim',
       'inbox',
+	  'motsuivi',
       'objets_data',
       'people',
       'prescriptions',
@@ -194,7 +203,10 @@ class msModBaseSqlGenerate extends msSqlGenerate
       'printed',
       'system',
       'transmissions',
-      'transmissions_to'
+      'transmissions_to',
+	  'univtags_join',
+	  'univtags_tag',
+	  'univtags_type'
     );
     foreach($tablesList as $t) {
       $this->_getTableStructure($t);
@@ -280,6 +292,16 @@ class msModBaseSqlGenerate extends msSqlGenerate
         if(!isset($this->_prescriptions_cat_values[$v['name']])) $this->_prescriptions_cat_values[$v['name']]=$this->_getSqlValuesPart($v);
       }
     }
+
+	// univtags_type
+	if($univtags_types=msSQL::sql2tab("select * from $this->_bdd.univtags_type where `name` in ('patients', 'pros') ")) {
+		foreach($univtags_types as $univtags_type) {
+			unset($univtags_type['id']);
+			if(!isset($this->_univtags_type_fields)) $this->_univtags_type_fields=$this->_getSqlFieldsPart($univtags_type);
+			$this->_univtags_type_values[]=$this->_getSqlValuesPart($univtags_type);
+		}
+	}
+
 
   }
 

@@ -27,6 +27,17 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
+foreach (['regleCheque', 'regleCB', 'regleEspeces'] as $param) {
+	if (!isset($_POST[$param])) {
+	  $_POST[$param]=0;
+	} else {
+	  $_POST[$param]=(float)$_POST[$param];
+	}
+}
+if (!isset($_POST['regleIdentiteCheque'])) {
+	$_POST['regleIdentiteChequeparam']='';
+}
+
 if(is_numeric($_POST['porteur'])) $data=msSQL::sqlUnique("SELECT module, formValues as reglementForm FROM data_types WHERE id=".$_POST['porteur']);
 if (!in_array($data['reglementForm'], ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
       $hook=$p['homepath'].'/controlers/module/'.$data['module'].'/compta/actions/inc-hook-saveReglementForm.php';
@@ -45,13 +56,7 @@ if (count($_POST)>0 and is_numeric($_POST['objetID'])) {
 
     $supportID = $_POST['objetID'];
 
-    foreach (['regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleIdentiteCheque'] as $param) {
-        if (!isset($_POST[$param])) {
-          $_POST[$param]='';
-        }
-    }
-
-    $important=array('id'=>$supportID, 'important'=>($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']?'y':'n');
+	$important=array('id'=>$supportID, 'important'=>($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) < $_POST['apayer']?'y':'n');
     msSQL::sqlInsert('objets_data', $important);
 
     if (($_POST['regleCheque']+$_POST['regleCB']+$_POST['regleEspeces']) <= $_POST['apayer']) {

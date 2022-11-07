@@ -128,6 +128,21 @@ Nouveau registre
 </div>
 {% endif %}
 
+{% if page.createFromDropbox == 1 %}
+<div class="row">
+	<div class="col-xl-8 col-12">
+        <div class="alert alert-info" role="alert">
+            <h4>Patient crée à partir des informations présentent dans le nom d'un fichier de la boîte de dépot :</h4>
+            <ul class="list-unstyled">
+                <li><strong>Boîte de dépot : </strong>{{ page.form.addHidden.dropboxBox }}</li>
+                <li><strong>Nom du fichier : </strong>{{ page.form.addHidden.dropboxFilename }}</li>
+                <li><strong>Titre du document : </strong>{{ page.form.addHidden.dropboxDocTitle }}</li>
+            </ul>
+            <p><u>Le fichier sera automatiquement ajouté au dossier du patient et supprimé de la boîte de dépot.</u></p>
+        </div>
+	</div>
+</div>
+{% endif %}
 
 <div class="row">
 	<div class="col-xl-8 col-12">

@@ -27,14 +27,12 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $template='userPhoneCaptureAccess';
 
- $urlCrypt = new Atrapalo\UrlCrypt\UrlCrypt();
+$debug = '';
+$template = 'userPhoneCaptureAccess';
 
- $toEncrypt=$p['user']['id'].'&&'.time();
- $key=bin2hex($p['config']['fingerprint']);
+$toEncrypt = $p['user']['id'] . '&&' . time();
 
- $encrypted = $urlCrypt->encrypt($toEncrypt, $key);
+$encrypted = msTools::encryptDecryptAES256('encrypt', $toEncrypt);
 
- $p['page']['urlDestination']=$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/phonecapture/login/'.urlencode($encrypted).'/';
+$p['page']['urlDestination'] = $p['config']['protocol'] . $p['config']['host'] . $p['config']['urlHostSuffixe'] . '/phonecapture/login/' . urlencode($encrypted) . '/';

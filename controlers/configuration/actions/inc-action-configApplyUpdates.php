@@ -133,4 +133,4 @@ if (isset($output) and is_array($output)) {
     }
 }
 unset($_SESSION['form'][$formIN]);
-msTools::redirRoute('configModules');
+msTools::redirection('/configuration/modules/');

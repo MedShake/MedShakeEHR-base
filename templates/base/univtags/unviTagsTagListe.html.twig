@@ -1,0 +1,52 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2021      DEMAREST Maxime <maxime@indelog.fr>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : template pour la page de gestion des tags universelle
+ #
+ # @author DEMAREST Maxime <maxime@indelog.fr>
+ # @contrib Bertrand BOUTILLIER <b.boutillier@gmail.com>
+ #}
+
+<div class="univTagsTagListe d-flex flex-row justify-content-between" data-typeID="{{ page.univTags.typeID }}" data-contexte="{{ page.univTags.contexte }}">
+{% if page.univTags.tagListe is not empty %}
+  <div>
+  {% for tag in page.univTags.tagListe %}
+    <span class="badge badge-pill" data-id="{{ tag.id }}" title="{{ tag.description }}" style="color:{{ tag.textcolor }}; background-color:{{ tag.color }};">
+    {{ tag.name }}
+    {% if page.univTags.showEditBtn %}
+      <i type="button" class="fas fa-pencil-alt ml-1" title="Modifier cette étiquette" data-typeID="{{ tag.typeID }}" data-tagID="{{ tag.id }}" data-toID="{{ page.univTags.toID }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, {{ tag.id }}, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}');"></i>
+    {% endif %}
+    {% if page.univTags.showSelectSetTo %}
+      <input class="ml-1" type="checkbox" data-tagID="{{ tag.id }}" title="Ajouter ou retirer l'étiquette" data-toID="{{ page.univTags.toID }}"{% if tag.toID == page.univTags.toID %}checked="checked"{% endif %} onchange="univTagsSetTo(this)">
+    {% endif %}
+    {% if page.univTags.showSelectFilterSearch %}
+      <input class="univTagsSelectFilter ml-1" type="checkbox" title="Filtrer les résultats de la recherche avec cette étiquette" name="univtag[{{ tag.id }}]" value="{{ tag.id }}" onchange="updateListingPatients()">
+    {% endif %}
+    </span>
+  {% endfor %}
+  </div>
+{% endif %}
+{% if page.univTags.showNewBtn %}
+
+  <button type="button" class="btn btn-primary btn-sm" data-typeID="{{ type.id }}" data-tagID="0" data-toID="0" data-contexte="{{ page.univTags.contexte }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, 0, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}')" title="Créer une nouvelle étiquette {{ type.name }}"><span class="fa fa-plus mr-1"></span>Ajouter</button>
+
+{% endif %}
+</div>

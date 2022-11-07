@@ -1,7 +1,7 @@
 {#
  # This file is part of MedShakeEHR.
  #
- # Copyright (c) 2017
+ # Copyright (c) 2017-2021
  # Bertrand Boutillier <b.boutillier@gmail.com>
  # http://www.medshake.net
  #
@@ -22,8 +22,9 @@
 /##
  # Template > people : voir les infos sur un pro
  #
- # @author Bertrand Boutillier <b.boutillier@gmail.com>
- # @contrib fr33z00 <https://github.com/fr33z00>
+ # @author  Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00             <https://github.com/fr33z00>
+ # @contrib DEMAREST Maxime     <maxime@indelog.fr>
  #}
 
 {% extends "page.html.twig" %}
@@ -78,6 +79,25 @@
   {% endif %}
    <small class="text-muted">{{ page.proData.job }}</small>
 </h1>
+
+{# univtag pros #}
+{% if page.univTagsListHtml is not empty %}
+<div class="card">
+  <div class="card-header d-flex flex-row justify-content-between">
+    <div class="font-weight-bold"><i class="fas fa-tags fa-fw fa-lg mr-1 text-secondary"></i>Étiquettes du professionnel</div>
+
+    {% if page.univTags.typeDroitAjoRet %}
+    <div class="custom-control custom-switch">
+      <input id="univTagsSetTag" type="checkbox" class="custom-control-input" onclick="getTagsList({{ page.univTags.typeID }}, {{ page.univTags.toID }}, (this.checked ? 'select' : 'show'));" autocomplete="off">
+      <label class="custom-control-label" for="univTagsSetTag">Modifier</label>
+    </div>
+    {% endif %}
+  </div>
+  <div class="card-body univTagsContainer" data-typeID="{{ page.univTags.typeID }}">
+    {{ page.univTagsListHtml }}
+  </div>
+</div>
+{% endif %}
 
 <div class="row mt-3">
   <div class="col-12 col-md-6">
@@ -170,9 +190,9 @@
         <div class="row" data-num-row="1">
 
           <div class="col-md-6">
-            <div class="text-center">
+            <div class="text-center small">
               {% if page.svgRPPS is empty %}
-                Code barre RPPS non généré.<br/><i class="text-muted">Si le numéro est fourni, revalider le formulaire des données professionnel va générer le code barre.</i>
+                Code barre RPPS non généré.<br/><i class="text-muted">Si le numéro est fourni, revalider le formulaire des données professionnelles va générer le code barre.</i>
               {% else %}
                 {{ page.svgRPPS }}
                 <p>Code-barres RPPS :<br/><i>(n° {{ page.proData.rpps }})</i></p>
@@ -181,9 +201,9 @@
           </div>
 
           <div class="col-md-6">
-            <div class="text-center">
+            <div class="text-center small">
               {% if page.svgADELI is empty %}
-                Code barre ADELI non généré.<br/><i class="text-muted">Si le numéro est fourni, revalider le formulaire des données professionnel va générer le code barre.</i>
+                Code barre ADELI non généré.<br/><i class="text-muted">Si le numéro est fourni, revalider le formulaire des données professionnelles va générer le code barre.</i>
               {% else %}
                 {{ page.svgADELI }}
                 <p>Code-barres ADELI :<br/><i>(n° {{ page.proData.adeli }})</i></p>

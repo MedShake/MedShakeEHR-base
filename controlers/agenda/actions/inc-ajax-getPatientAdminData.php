@@ -28,5 +28,12 @@
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
+$datas = $patient->getSimpleAdminDatasByName();
+if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+	$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+	if (msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+		$datas['tagsHtml'] = msUnivTags::getListHtml($univTagsTypeID, $_POST['patientID'], 'show');
+	}
+}
 header('Content-Type: application/json');
-echo json_encode($patient->getSimpleAdminDatasByName());
+echo json_encode($datas);

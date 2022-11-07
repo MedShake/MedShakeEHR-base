@@ -84,8 +84,9 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
     select pd2.id from objets_data as pd2
     where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) = CURDATE() and pd2.deleted='' and pd2.fromID in ('".implode("','", array_keys($p['page']['pratsAuto']))."'))
 
-  order by creationDate asc
+  order by creationDate asc, id asc
   ")) {
+
 
 
     //constituer le tableau
@@ -97,22 +98,25 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.fromID, pd.id, pd.typeID, pd.value, p
         }
     }
 
+
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
 
-      $v['regleCheque']=(float)$v['regleCheque'];
-      $v['regleCB']=(float)$v['regleCB'];
-      $v['regleEspeces']=(float)$v['regleEspeces'];
-      $v['regleTiersPayeur']=(float)$v['regleTiersPayeur'];
-      $v['regleFacture']=(float)$v['regleFacture'];
+      if(isset($v['regleCheque'])) $v['regleCheque']=(float)$v['regleCheque']; else $v['regleCheque'] = 0;
+      if(isset($v['regleCB']))$v['regleCB']=(float)$v['regleCB']; else $v['regleCB'] = 0;
+      if(isset($v['regleEspeces']))$v['regleEspeces']=(float)$v['regleEspeces']; else $v['regleEspeces'] = 0;
+      if(isset($v['regleTiersPayeur']))$v['regleTiersPayeur']=(float)$v['regleTiersPayeur']; else $v['regleTiersPayeur'] = 0;
+      if(isset($v['regleFacture']))$v['regleFacture']=(float)$v['regleFacture']; else $v['regleFacture'] = 0;
 
       $tabReg[$k]['dejaPaye']=number_format($v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'], 2,'.','');
       $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);
       $tabReg[$k]['resteAPaye']=number_format($v['regleFacture']-$tabReg[$k]['dejaPaye'], 2,'.','');
     }
 
+
     //séparer en paiement complété et paiement à faire
     foreach ($tabReg as $k=>$v) {
+	  if(!isset($tabReg[$k]['regleFacture'])) $tabReg[$k]['regleFacture']=null;
       if($tabReg[$k]['dejaPaye'] != $tabReg[$k]['regleFacture']) $p['page']['tabRegNC'][$k]=$tabReg[$k]; else $p['page']['tabRegC'][$k]=$tabReg[$k];
     }
 }

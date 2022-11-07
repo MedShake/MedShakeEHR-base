@@ -1,0 +1,84 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2022
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > patients : résultat recherche patients / pro : ligne contenant les résultats de la recherche
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib fr33z00 <https://github.com/fr33z00>
+ # @contrib DEMAREST Maxime <maxime@indelog.fr>
+ #}
+
+{% for patientID, tab in page.outputTableRow %}
+  {% if page.porp == 'externe' %}
+    <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">
+  {% else %}
+    {% set patientIDmod = page['outputType'][patientID]['type']=='externe' and patientID in page.extToInt|keys ? page.extToInt[patientID] : patientID %}
+    <tr class="openPatient {% if page['outputType'][patientID]['type'] == 'dcd' %} dcd{% endif %}{% if loop.index == 1 %} table-active{% endif %}" data-url="/{{ porpurl }}/{{ patientIDmod }}/" data-patientid="{{ patientID }}">
+  {% endif %}
+    <td class="d-none d-sm-table-cell">
+
+      {% if (page['outputType'][patientID]['type']=='externe' and patientIDmod == patientID) or page.porp == 'externe' %}
+        <a class="btn btn-light btn-sm" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Lier à ce dossier">
+          <i class="fas fa-paperclip fa-fw"></i>
+        </a>
+      {% elseif page['outputType'][patientID]['type']=='pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}
+        <a class="btn btn-danger btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Utilisateur du logiciel">
+          <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+        </a>
+      {% elseif page['outputType'][patientID]['type']=='pro' %}
+        <a class="btn {% if page.porp == 'pro' and page['outputType'][patientID]['isUser'] == 'isUser' %}btn-danger{% else %}btn-info{% endif %} btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Profesionnel santé">
+          <i class="fas fa-user-md fa-fw" aria-hidden="true"></i>
+        </a>
+      {% elseif page['outputType'][patientID]['type']=='groupe' %}
+        <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Groupe praticiens">
+          <i class="fas fa-hospital-alt fa-fw"  aria-hidden="true"></i>
+        </a>
+      {% elseif page['outputType'][patientID]['type']=='registre' %}
+        <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="Registre">
+          <i class="fas fa-archive fa-fw"  aria-hidden="true"></i>
+        </a>
+      {% else %}
+        <a class="btn btn-secondary btn-sm ouvrirDossier" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/{{ porpurl }}/{{ patientIDmod }}/" title="{% if page['outputType'][patientID]['type'] == 'dcd' %}Patient décédé{% else %}Patient{% endif %}">
+          <i class="fas {% if page['outputType'][patientID]['type'] == 'dcd' %}fa-cross{% else %}fa-user{% endif %} fa-fw" {% if loop.index <= 9 %}accesskey="{{ loop.index }}"{% endif %}></i>
+        </a>
+      {% endif %}
+    </td>
+
+    {% for k, p in tab %}
+      {% if loop.first %}
+        <td class="d-table-cell">{{ p }}</td>
+      {% else %}
+        <td class="d-none d-lg-table-cell">{{ p }}</td>
+      {% endif %}
+    {% endfor %}
+
+    <td class="text-right">
+      {% if page['outputType'][patientID]['type'] == 'registre' %}
+        {% include('inc-listing-registre.html.twig') %}
+      {% elseif page['outputType'][patientID]['type'] == 'groupe' %}
+        {% include('inc-listing-groupe.html.twig') %}
+      {% else %}
+        {% include('inc-listing-patient&pro.html.twig') %}
+      {% endif %}
+    </td>
+  </tr>
+{% endfor %}

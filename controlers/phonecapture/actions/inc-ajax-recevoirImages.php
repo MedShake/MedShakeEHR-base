@@ -28,7 +28,7 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$type = isset($_POST['pngBase64']) ? "png" : isset($_POST['jpgBase64']) ? "jpeg" : false;
+$type = isset($_POST['pngBase64']) ? "png" : (isset($_POST['jpgBase64']) ? "jpeg" : false);
 if ($type !== false) {
 
     // récupérer data prat & patient

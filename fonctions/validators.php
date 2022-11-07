@@ -55,17 +55,17 @@ GUMP::add_validator("genericPhone", function($field, $input, $param = NULL) {
 
 GUMP::add_validator("presence_bdd", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return TRUE;
-		if (msSQL::sqlUniqueChamp("select $field from $param where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
+		if (msSQL::sqlUniqueChamp("select $field from ".$param[0]." where $field='".msSQL::cleanVar($input[$field])."' limit 1") ) return FALSE;
 	}, 'Le champ {field} contient une valeur déjà utilisée');
 
 GUMP::add_validator("validedate", function($field, $input, $param = NULL) {
-		msTools::validateDate($input[$field], $param);
+		msTools::validateDate($input[$field], $param[0]);
 	}, 'Le champ {field} ne contient pas une date valide');
 
 GUMP::add_validator("checkPasswordValidity", function($field, $input, $param = NULL) {
 		if (empty($input[$field])) return FALSE;
 		$checkLogin = new msUser;
-		return $checkLogin->checkLoginByUserID($param, $input[$field]);
+		return $checkLogin->checkLoginByUserID($param[0], $input[$field]);
 	}, 'Le champ {field} n\'est pas correct');
 
 GUMP::add_validator("checkPasswordLength", function($field, $input, $param = NULL) {
@@ -86,7 +86,7 @@ GUMP::add_validator("checkUniqueUsername", function($field, $input, $param = NUL
 
 GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) {
 		if(!empty($input[$field])) return TRUE;
-		$params = explode(';', $param);
+		$params = explode(';', $param[0]);
 		if(!empty($params)) {
 			foreach($params as $pa) {
 				if(!empty($input['p_'.$pa])) return TRUE;
@@ -94,10 +94,6 @@ GUMP::add_validator("checkNotAllEmpty", function($field, $input, $param = NULL) 
 		}
 		return FALSE;
 	}, 'Le champ {field} ne peut être vide en même temps que certains autres');
-
-GUMP::add_validator("alpha_numeric_dash", function($field, $input, $param = NULL) {
-		return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $input[$field]) > 0;
-	}, 'Le champ {field} ne peut contenir que des caratères alphanumériques, tiret et undescore');
 
 GUMP::add_validator("max_numeric_current_year", function($field, $input, $param = NULL) {
 		return $input[$field] <= date('Y');

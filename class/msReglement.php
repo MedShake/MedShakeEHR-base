@@ -399,6 +399,7 @@ class msReglement
         $acte->setSecteurTarifaireNgap($this->_secteurTarifaireNgap);
         $acte->setSecteurTarifaireGeo($this->_secteurTarifaireGeo);
         $acteTarif = $acte->getActeTarifBase();
+		if(empty($acteTarif)) $acteTarif=null;
 
         if (!is_array($val)) {
             $data['details'][$key]=array('tarif'=>'0', 'depassement'=>'0', 'total'=>'0');

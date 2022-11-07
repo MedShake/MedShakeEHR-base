@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
                 }
                 chdir($dossier);
                 //telechargement de composer
-                file_put_contents("composer.phar", fopen("https://getcomposer.org/download/1.6.3/composer.phar", 'r'));
+                file_put_contents("composer.phar", fopen("https://getcomposer.org/download/2.4.2/composer.phar", 'r'));
                 chmod("composer.phar", 0774);
                 exec('COMPOSER_HOME="/tmp/" php ./composer.phar install 2>&1', $ret);
                 json_encode($ret);

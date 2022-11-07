@@ -2,7 +2,7 @@
 /*
  * This file is part of MedShakeEHR.
  *
- * Copyright (c) 2017
+ * Copyright (c) 2017-2021
  * Bertrand Boutillier <b.boutillier@gmail.com>
  * http://www.medshake.net
  *
@@ -23,8 +23,9 @@
 /**
  * Patients : listing patients ou pros
  *
- * @author Bertrand Boutillier <b.boutillier@gmail.com>
- * @contrib fr33z00 <https://github.com/fr33z00>
+ * @author	Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib fr33z00				<https://github.com/fr33z00>
+ * @contrib DEMAREST Maxime		<maxime@indelog.fr>
  */
 
 $debug='';
@@ -45,12 +46,12 @@ if($p['page']['porp'] == 'registre' and $p['config']['optionGeActiverRegistres']
     return;
 }
 
-// Template et liste des types par catégorie avec retriction aux types employés dans le form de création
+// Template et liste des types par catégorie avec restriction aux types employés dans le form de création
 $form = new msForm;
 if($p['page']['porp'] == 'pro') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-} elseif($p['page']['porp'] == 'patient') {
+} elseif($p['page']['porp'] == 'patient' || $p['page']['porp'] == 'externe' || $p['page']['porp'] == 'today') {
   $template="searchPeoplePatientsAndPros";
   $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
 } elseif($p['page']['porp'] == 'groupe') {
@@ -108,4 +109,19 @@ if (msUser::checkUserIsAdmin() and in_array($p['page']['porp'], ['patient', 'pro
     $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
   }
   $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
+}
+
+// Filtre de recherche avec les TAGs universel
+if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+	$p['page']['univTags'] = array();
+	switch ($p['page']['porp']) {
+		case 'patient':
+			$p['page']['univTags']['typeID'] = msUnivTags::getTypeIdByName('patients');
+			break;
+		case 'pro':
+			$p['page']['univTags']['typeID'] = msUnivTags::getTypeIdByName('pros');
+			break;
+	}
+	if (! empty($p['page']['univTags']['typeID']) && msUnivTags::getIfTypeIsActif($p['page']['univTags']['typeID']))
+		$p['page']['univTags']['filterSearchHTML'] = msUnivTags::getListHtml($p['page']['univTags']['typeID'], 0, 'search');
 }

@@ -30,11 +30,11 @@
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-// Permet d'affiner les résultat sur des nom qui peuvent resembler à des
+// Permet d'affiner les résultat sur des noms qui peuvent resembler à des
 // prénoms très commun :
 //   (ex : MARIE Françoise (nom + prenom) <> Marie Françoise (prénom seul))
-// en donnant le prossiblité de préciser la recherche en spéparant les nom et
-// prénom par un ":". Dans le cas le nom est le premier terme et le prénom le
+// en donnant le prossiblité de préciser la recherche en séparrant les noms et
+// prénoms par un ":". Dans le cas le nom est le premier terme et le prénom le
 // second.
 $split_term = explode(':', $term);
 if (count($split_term) > 1) {
@@ -59,11 +59,32 @@ $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
 if ($data=msSQL::sql2tab($mss->getSql())) {
 
+	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+		if (!msUnivTags::getIfTypeIsActif($univTagsTypeID)) {
+			unset($univTagsTypeID);
+		}
+	};
+
  	foreach ($data as $k=>$v) {
+
+		// Tag universel pour le dossier médical d'un patient
+		// permet de récupérer les pastille de couleur pour les afficher dans
+		// les résultat de la recherche.
+		$tagParams = array();
+		$tagParams['circle']='';
+		if (!empty($univTagsTypeID)) {
+			$tagParams = msUnivTags::getList($univTagsTypeID, $v['peopleID'], true);
+			$tagParams['circle'] = $tagCircle = msUnivTags::getTagsCircleHtml($tagParams);
+		};
+
+		// Si le patient possède des tags le recherche pour afficher la
+		// patstille dans les résultat de recherche.
  		$a_json[]=array(
  			'label'=>trim($v['identite']).' '.$v['birthdate'],
  			'value'=>trim($v['identite']),
  			'patientID'=>$v['peopleID'],
+			'tagParams'=>$tagParams,
  		);
  	}
 }

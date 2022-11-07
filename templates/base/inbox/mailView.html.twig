@@ -67,37 +67,43 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>HPRIM</th>
-                    <td>{{ page.mail.hprimAllSerialize.nom|e }}</td>
-                    <td>{{ page.mail.hprimAllSerialize.prenom|e }}</td>
-                    <td>{{ page.mail.hprimAllSerialize.ddn|e }}</td>
-                    <td>
-                        <small>{{ page.mail.hprimAllSerialize.adresse1 }}
-                            {% if page.mail.hprimAllSerialize.adresse2 != page.mail.hprimAllSerialize.adresse1 and page.mail.hprimAllSerialize.adresse2 %}
-                                {{ page.mail.hprimAllSerialize.adresse2 }}
-                            {% endif %}
-                            {{ page.mail.hprimAllSerialize.cp|e }}
-                            {{ page.mail.hprimAllSerialize.ville|e }}</small>
-                    </td>
-                    <td>
-                        <small>{{ page.mail.hprimAllSerialize.nss|e }}</small>
-                    </td>
-                    <td>
-                      <form class="d-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post" target="_blank">
-                        <input type="hidden" name="birthname" value="{{ page.mail.hprimAllSerialize.nom|e }}">
-                        <input type="hidden" name="firstname" value="{{ page.mail.hprimAllSerialize.prenom|e }}">
-                        <input type="hidden" name="birthdate" value="{{ page.mail.hprimAllSerialize.ddn|e }}">
-                        <input type="hidden" name="postalCodePerso" value="{{ page.mail.hprimAllSerialize.cp|e }}">
-                        <input type="hidden" name="street" value="{{ page.mail.hprimAllSerialize.street|e }}">
-                        <input type="hidden" name="streetNumber" value="{{ page.mail.hprimAllSerialize.streetNumber|e }}">
-                        <input type="hidden" name="city" value="{{ page.mail.hprimAllSerialize.ville|e }}">
-                        <input type="hidden" name="nss" value="{{ page.mail.hprimAllSerialize.nss|e }}">
-                        <input type="hidden" name="administrativeGenderCode" value="{{ page.mail.hprimAllSerialize.administrativeGenderCode|e }}">
-                        <button type="submit" class="btn btn-sm btn-light" title="Créer le dossier"><i class="fas fa-user-plus"></i></button>
-                      </form>
-                    </td>
-                </tr>
+                {% if page.mail.isValidHprim %}
+                    <tr>
+                        <th>HPRIM</th>
+                        <td>{{ page.mail.hprimAllSerialize.nom|e }}</td>
+                        <td>{{ page.mail.hprimAllSerialize.prenom|e }}</td>
+                        <td>{{ page.mail.hprimAllSerialize.ddn|e }}</td>
+                        <td>
+                            <small>{{ page.mail.hprimAllSerialize.adresse1 }}
+                                {% if page.mail.hprimAllSerialize.adresse2 != page.mail.hprimAllSerialize.adresse1 and page.mail.hprimAllSerialize.adresse2 %}
+                                    {{ page.mail.hprimAllSerialize.adresse2 }}
+                                {% endif %}
+                                {{ page.mail.hprimAllSerialize.cp|e }}
+                                {{ page.mail.hprimAllSerialize.ville|e }}</small>
+                        </td>
+                        <td>
+                            <small>{{ page.mail.hprimAllSerialize.nss|e }}</small>
+                        </td>
+                        <td>
+                          <form class="d-inline" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post" target="_blank">
+                            <input type="hidden" name="birthname" value="{{ page.mail.hprimAllSerialize.nom|e }}">
+                            <input type="hidden" name="firstname" value="{{ page.mail.hprimAllSerialize.prenom|e }}">
+                            <input type="hidden" name="birthdate" value="{{ page.mail.hprimAllSerialize.ddn|e }}">
+                            <input type="hidden" name="postalCodePerso" value="{{ page.mail.hprimAllSerialize.cp|e }}">
+                            <input type="hidden" name="street" value="{{ page.mail.hprimAllSerialize.street|e }}">
+                            <input type="hidden" name="streetNumber" value="{{ page.mail.hprimAllSerialize.streetNumber|e }}">
+                            <input type="hidden" name="city" value="{{ page.mail.hprimAllSerialize.ville|e }}">
+                            <input type="hidden" name="nss" value="{{ page.mail.hprimAllSerialize.nss|e }}">
+                            <input type="hidden" name="administrativeGenderCode" value="{{ page.mail.hprimAllSerialize.administrativeGenderCode|e }}">
+                            <button type="submit" class="btn btn-sm btn-light" title="Créer le dossier"><i class="fas fa-user-plus"></i></button>
+                          </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th colspan="7">- message sans données HPRIM -</th>
+                    </tr>
+                {% endif %}
                 {% for k, v in page.mail.patientsPossibles %}
 
                     <tr class="patietSelect {% if loop.index0 == 0 %} table-success gras{% endif %}" data-patientID="{{ v.id }}" {% if v.patientType == 'deleted' %}style="text-decoration: line-through"{% endif %}>

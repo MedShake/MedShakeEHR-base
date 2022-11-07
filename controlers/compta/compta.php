@@ -73,6 +73,8 @@ $p['page']['periode']['quickOptions']=array(
 "lastweek"=>"Semaine dernière",
 "thismonth"=>"Ce mois",
 "lastmonth"=>"Mois dernier",
+"thisyear"=>"Cette année",
+"lastyear"=>"Année dernière",
 "bilanmois"=>"Bilan mois dernier",
 "bilanannee"=>"Bilan année dernière",
 "impayesmois"=>"Impayés mois",
@@ -147,7 +149,7 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
         where pd2.typeID in ('".implode("','", $porteursReglementIds)."') and DATE(pd2.creationDate) >= '".$beginPeriode->format("Y-m-d")."' and DATE(pd2.creationDate) <= '".$endPeriode->format("Y-m-d")."' and pd2.deleted='' and pd2.fromID in ('".implode("','", $p['page']['pratsSelect'])."')"
       .($impayes?"and important='y'":"")."
       )
-  order by creationDate asc
+  order by creationDate asc, id asc
   ")) {
 
 
@@ -170,11 +172,11 @@ if ($lr=msSQL::sql2tab("select pd.toID, pd.id, pd.typeID, pd.value, pd.creationD
     //faire quelques calculs
     foreach ($tabReg as $k=>$v) {
 
-        $v['regleCheque']=(float)$v['regleCheque'];
-        $v['regleCB']=(float)$v['regleCB'];
-        $v['regleEspeces']=(float)$v['regleEspeces'];
-        $v['regleTiersPayeur']=(float)$v['regleTiersPayeur'];
-        $v['regleFacture']=(float)$v['regleFacture'];
+		if(isset($v['regleCheque'])) $v['regleCheque']=(float)$v['regleCheque']; else $v['regleCheque'] = 0;
+		if(isset($v['regleCB']))$v['regleCB']=(float)$v['regleCB']; else $v['regleCB'] = 0;
+		if(isset($v['regleEspeces']))$v['regleEspeces']=(float)$v['regleEspeces']; else $v['regleEspeces'] = 0;
+		if(isset($v['regleTiersPayeur']))$v['regleTiersPayeur']=(float)$v['regleTiersPayeur']; else $v['regleTiersPayeur'] = 0;
+		if(isset($v['regleFacture']))$v['regleFacture']=(float)$v['regleFacture']; else $v['regleFacture'] = 0;
 
         $tabReg[$k]['dejaPaye']=$v['regleCheque']+$v['regleCB']+$v['regleEspeces']+$v['regleTiersPayeur'];
         $tabReg[$k]['dejaPayeTab']=array('dejaCheque'=>$v['regleCheque'], 'dejaCB'=>$v['regleCB'], 'dejaEspeces'=>$v['regleEspeces']);

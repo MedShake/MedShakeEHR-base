@@ -129,8 +129,8 @@ class msFormValidation extends msForm
         if (!empty($r['filter'])) {
             $gump->filter_rules($r['filter']);
         }
-        if (!empty($r['correspondances'])) {
-            $gump->set_field_names($r['correspondances']);
+		if (!empty($r['correspondances'])) {
+            $gump->set_field_names(array_filter($r['correspondances']));
         }
 
         $validated_data = $gump->run($flatPOST);

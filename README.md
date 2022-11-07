@@ -4,6 +4,11 @@ Consultez [www.logiciel-cabinet-medical.fr](http://www.logiciel-cabinet-medical.
 Un [groupe de discussion](https://groups.google.com/forum/#!forum/medshakeehr) est disponible pour les questions techniques.
 
 # MedShakeEHR-base
+[![latest medshakeehr-osteo tag][latest-tag]][latest-link]
+
+[latest-tag]: https://img.shields.io/github/v/release/MedShake/MedshakeEHR-base?display_name=tag&label=version
+[latest-link]: https://github.com/MedShake/MedShakeEHR-base/releases/latest
+
 Base pour MedShakeEHR, logiciel modulaire, universel, open source pour les praticiens santé.
 
 ## Avertissements

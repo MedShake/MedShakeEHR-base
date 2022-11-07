@@ -26,7 +26,7 @@
  * @contrib fr33z00 <https://www.github.com/fr33z00>
  */
 
-$(document).ready(function() {
+ $(document).ready(function() {
 
   $(document).on('focusin', function(e) {
     if ($(e.target).closest(".mce-window").length) {
@@ -37,7 +37,7 @@ $(document).ready(function() {
   //close button zone newCourrier
   $('#newCourrier').on("click", "#cleanNewCourrier", function(e) {
     $(window).unbind("beforeunload");
-    $("#editeurCourrier").tinymce().remove();
+    tinymce.get('editeurCourrier').remove();
     $('#newCourrier').html('');
   });
 
@@ -50,7 +50,7 @@ $(document).ready(function() {
       getHistoriqueToday();
       $('#newCourrier').html('');
     }, 500);
-    $("#editeurCourrier").tinymce().remove();
+    tinymce.get('editeurCourrier').remove();
     $('#invisible_form').submit();
 
   });

@@ -95,7 +95,7 @@ if ($zip->open($fichier['tmp_name'])) {
 
     // décompaction
     if ($pluginName != false and count($pluginZipContent)>0) {
-        if ($zip->extractTo($p['homepath'])) {
+        if (@$zip->extractTo($p['homepath'])) {
             // log des fichiers extraits
             $pluginFilesInstalled = $p['homepath'].'config/plugins/'.$pluginName.'/unzipFiles_'.$pluginInfos['version'].'.txt';
             file_put_contents($pluginFilesInstalled, implode("\n", $pluginZipContent));

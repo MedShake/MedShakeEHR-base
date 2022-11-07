@@ -1,0 +1,60 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2017
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+/##
+ # Template > patient : lignes du tableau pour les mot suivi
+ #
+ # @author 2021      DEMAREST Maxime <maxime@indelog.fr>
+ #}
+
+{% if page.motSuivi.lignes is empty %}
+    <tr><td>Aucun mot de suivi pour ce patient</td></tr>
+{% else %}
+    <thead>
+        <tr>
+            <th>Mot</th>
+            <th>Auteur</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="lignesMotSuivi">
+    {% for lm in page.motSuivi.lignes %}
+        <tr id="ligneMotSuivi-{{ lm.ID }}">
+            <td class="motSuivi-texte w-100 px-2">{{ lm.texte|nl2br }}</td>
+            <td style="white-space: nowrap;" class="px-2">{{ lm.firstname }}&nbsp;{{ lm.lastname|default(lm.birthname) }}</td>
+            <td style="white-space: nowrap;" class="motSuivi-dateTime px-2">{{ lm.dateTime }}</td>
+            <td class="px-2"><div class="btn-group">
+              {% if (lm.fromID == user.id) or (config.droitMotSuiviPeutModifierSuprimerDunAutre == 'true') %}
+                  <button title="Modifier" class="btn btn-light btn-sm d-none d-lg-inline-block" type="button" data-id="{{ lm.ID }}" onclick="callModalUpdateMotSuivi(this)"><span class="fas fa-pencil-alt fa-fw"></span></button>
+                  <button title="Suprimer" class="btn btn-light btn-sm d-none d-lg-inline-block" type="button" data-id="{{ lm.ID }}" onclick="callDeleteMotSuvi(this)"><span class="fas fa-trash-alt fa-fw"></span></button>
+              {% endif %}
+            </div></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% if not page.motSuivi.seeAll %}
+        <tr>
+            <td colspan="4" class="text-center"><button type="button" class="btn btn-light btn-sm" title="{{ page.motSuivi.textAfficherSuivant }}" onclick="getTableMotSuivi({{ page.motSuivi.nbPrecedent }})">Mots {{ page.motSuivi.nbLignes }} / {{ page.motSuivi.total }} - {{ page.motSuivi.textAfficherSuivant }}</button></td>
+        </tr>
+    {% endif %}
+    </tfoot>
+{% endif %}

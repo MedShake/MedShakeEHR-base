@@ -1,7 +1,3 @@
-# Do not save a specific config instance as it break legacy way of setting up 
-config/config.yml
-# Do not save generated environment variables values as it contains environment specific & sensible values
-config/env.sh
 
 *~
 .fuse_hidden*

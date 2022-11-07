@@ -40,6 +40,13 @@
       {# Div d'import de nouveau doc #}
       <div id="newDoc" class="row toclear">{% include 'importDocForm.html.twig' %}</div>
 
+      {# mot suivi #}
+      {% if config.optionsDossierPatientActiverMotSuivi == 'true' %}
+        <div id="motsSuivi" class="row">
+          {% include 'patientMotSuivi.html.twig' %}
+        </div>
+      {% endif %}
+
       {# historique du jour #}
       <div id="historiqueToday" class="row">
         {% include 'patientHistoriqueToday.html.twig' %}

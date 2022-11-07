@@ -144,11 +144,6 @@ $p['page']['thanks'][
   'url'=>'https://visionmedia.github.io/mocha/'
 );
 $p['page']['thanks'][
-  'URLCrypt']=array(
-  'description'=>'PHP library to securely encode and decode short pieces of arbitrary binary data in URLs',
-  'url'=>'https://github.com/atrapalo/URLcrypt'
-);
-$p['page']['thanks'][
   'Stupid jQuery Table Sort']=array(
   'description'=>'This is a stupid jQuery table sorting plugin',
   'url'=>'https://github.com/joequery/Stupid-Table-Plugin'

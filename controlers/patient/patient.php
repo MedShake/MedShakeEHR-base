@@ -76,41 +76,47 @@ if ($externe and !$internePatient) {
     // on cherche à identifier le patient interne par le téléphone et l'email
     $data=$p['page']['patient']['administrativeDatas'];
     $keys=['mobilePhone', 'homePhone', 'telPro', 'personalEmail', 'profesionnalEmail'];
-    foreach($keys as $v) {
-        if(!array_key_exists($v, $data)) {
-          $data[$v]['value']='**********';
-        }
-    }
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName($keys);
+	foreach($keys as $v) {
+		if(!array_key_exists($v, $data)) {
+		  $data[$v]['value']='**********';
+		}
+	}
 
-    $candidats=array();
-    $candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
-               ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']['value']."')
-               OR (od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']['value']."')");
+	$name2typeID = new msData();
+	$name2typeID = $name2typeID->getTypeIDsFromName($keys);
 
-    $candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
-               ON od.toID=p.id AND p.type!='externe' AND od.outdated='' AND od.deleted=''
-               WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']['value']."'");
+	$candidats=array();
 
-    // si on a pu identifier le patient de façon unique, on associe directement et on charge les données du patient interne
-    if ((($candidats['phone'] and ($c1=count($candidats['phone']))==1) or ($candidats['email'] and ($c2=count($candidats['email']))==1)) and
-        (!isset($c1) or !isset($c2) or $candidats['phone'][0]==$candidats['email'][0])) {
-        $internePatient=isset($c1)?$candidats['phone'][0]:$candidats['email'][0];
-        $obj=new msObjet();
-        $obj->setToID($p['page']['patient']['id']);
-        $obj->setFromID($p['user']['id']);
-        $obj->createNewObjetByTypeName('relationExternePatient', $internePatient);
-        msTools::redirection('/patient/'.$internePatient.'/');
-    } else {
-        //sinon, on affiche la page de recherche patient
-        $p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
-        $p['page']['porp']="externe";
-        include $p['homepath'].'controlers/rechercher/patients.php';
-        $match['target']='';
-        return;
-    }
+	$candidats['phone']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
+		ON od.toID=p.id  AND od.outdated='' AND od.deleted=''
+		WHERE
+		(
+			(od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['mobilePhone']['value']."')
+			OR
+			(od.typeID IN ('".$name2typeID['mobilePhone']."', '".$name2typeID['homePhone']."', '".$name2typeID['telPro']."') AND od.value LIKE '".$data['homePhone']['value']."')
+		)
+		AND p.type!='externe'");
+	$candidats['email']=msSQL::sql2tabSimple("SELECT od.toID FROM objets_data AS od left join people AS p
+		ON od.toID=p.id AND od.outdated='' AND od.deleted=''
+		WHERE typeID IN('".$name2typeID['personalEmail']."', '".$name2typeID['profesionnalEmail']."') and value = '".$data['personalEmail']['value']."' AND p.type!='externe'");
+
+	//si on a pu identifier le patient de façon unique, on associe directement et on charge les données du patient interne
+	if ((($candidats['phone'] and ($c1=count($candidats['phone']))==1) or ($candidats['email'] and ($c2=count($candidats['email']))==1)) and
+		(!isset($c1) or !isset($c2) or $candidats['phone'][0]==$candidats['email'][0])) {
+		$internePatient=isset($c1)?$candidats['phone'][0]:$candidats['email'][0];
+		$obj=new msObjet();
+		$obj->setToID($p['page']['patient']['id']);
+		$obj->setFromID($p['user']['id']);
+		$obj->createNewObjetByTypeName('relationExternePatient', $internePatient);
+		msTools::redirection('/patient/'.$internePatient.'/');
+	} else {
+		//sinon, on affiche la page de recherche patient
+		$p['page']['patient']['administrativeDatas']=$patient->getSimpleAdminDatasByName();
+		$p['page']['porp']="externe";
+		include $p['homepath'].'controlers/rechercher/peopleSearch.php';
+		$match['target']='';
+		return;
+	}
 }
 
 // le formulaire d'édition de ses données admin
@@ -167,8 +173,13 @@ $correspondants = new msPeopleRelations;
 $correspondants->setToID($match['params']['patient']);
 $correspondants->setReturnedPeopleTypes(['pro']);
 $correspondants->setRelationType('relationPatientPraticien');
-$p['page']['correspondants']=$correspondants->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
-
+$p['page']['correspondants']=$correspondants->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro', 'preferedSendingMethod']);
+$p['page']['voirCorrespondantsAvecEnvoiPrefere'] = 'false';
+foreach ($p['page']['correspondants'] as $c) {
+	if ($c['preferedSendingMethod'] !== 'NONE') {
+		$p['page']['voirCorrespondantsAvecEnvoiPrefere'] = true;
+	}
+}
 
 // Transmissions
 if($p['config']['optionGeActiverTransmissions'] == 'true') {
@@ -184,4 +195,15 @@ if($p['config']['optionGeActiverTransmissions'] == 'true') {
 if($p['config']['optionGeActiverCompta'] == 'true') {
   $data=new msData;
   $p['page']['formReglement']=$data->getDataTypesFromNameList(explode(',',$p['config']['administratifReglementFormulaires']), array('id', 'module', 'label', 'description', 'formValues'));
+}
+
+// Tag universel pour le dossier médical d'un patient
+if ($p['config']['optionGeActiverUnivTags'] == 'true') {
+	$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
+	$univTagsTypeActif = msUnivTags::getIfTypeIsActif($univTagsTypeID);
+	if ($univTagsTypeActif) {
+		$p['page']['univTagsListHtml'] = msUnivTags::getListHtml($univTagsTypeID, $p['page']['patient']['id'], 'show');
+		$p['page']['univTags']['typeDroitAjoRet'] = msUnivTags::checkTypeDroitAjoRet($univTagsTypeID);
+		$p['page']['univTags']['typeDroitCreSup'] = msUnivTags::checkTypeDroitCreSup($univTagsTypeID);
+	}
 }
