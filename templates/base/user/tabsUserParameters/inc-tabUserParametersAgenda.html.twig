@@ -193,19 +193,13 @@
                 <input class="form-control form-control-sm" name="desc_{{ k }}" type="text" value="{{ v.descriptif }}" autocomplete="off">
               </td>
               <td>
-                <div class="input-group input-group-sm colorpicker" data-toggle="false">
-                  <input class="form-control" name="back_{{ k }}" type="text" value="{{ v.backgroundColor }}" autocomplete="off">
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.backgroundColor }}"></i></span>
-                  </div>
+                <div class="input-group input-group-sm" data-toggle="false">
+                  <input class="form-control" name="back_{{ k }}" type="color" value="{{ v.backgroundColor }}" autocomplete="off">
                 </div>
               </td>
               <td>
-                <div class="input-group input-group-sm colorpicker" data-toggle="false">
-                  <input class="form-control" name="border_{{ k }}" type="text" value="{{ v.borderColor }}" autocomplete="off">
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i style="width:16px;height:16px;background-color:{{ v.borderColor }}"></i></span>
-                  </div>
+                <div class="input-group input-group-sm" data-toggle="false">
+                  <input class="form-control" name="border_{{ k }}" type="color" value="{{ v.borderColor }}" autocomplete="off">
                 </div>
               </td>
               <td>

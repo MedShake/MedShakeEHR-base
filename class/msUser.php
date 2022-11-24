@@ -163,6 +163,7 @@ class msUser
  */
     public function checkLogin($userName, $pass)
     {
+		$userlogin=array('id'=>'','name'=>'', 'pass'=>'');
         $userlogin=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass,
         CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa from people where name='".msSQL::cleanVar($userName)."' limit 1");
         if (password_verify($pass, $userlogin['pass'])) {

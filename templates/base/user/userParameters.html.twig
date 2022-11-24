@@ -32,12 +32,10 @@
 
 {% block cssFiles %}
   {{ parent() }}
-  <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" rel="stylesheet">
 {% endblock %}
 
 {% block jsFiles %}
   {{ parent() }}
-  <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/farbelous/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/userParametersAgenda.js?{{ modules.base }}"></script>
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/userParametersPrescriptions.js?{{ modules.base }}"></script>
 {% endblock %}

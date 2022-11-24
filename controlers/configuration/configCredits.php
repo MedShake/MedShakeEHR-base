@@ -69,11 +69,6 @@ $p['page']['thanks'][
   'url'=>'http://eonasdan.github.io/bootstrap-datetimepicker/'
 );
 $p['page']['thanks'][
-  'Bootstrap 3 colorpicker v3']=array(
-  'description'=>'colorpicker for Bootstrap',
-  'url'=>'https://farbelous.github.io/bootstrap-colorpicker/'
-);
-$p['page']['thanks'][
   'Moment.js']=array(
   'description'=>'Parse, validate, manipulate, and display dates and times in JavaScript',
   'url'=>'http://momentjs.com/'
