@@ -1,5 +1,5 @@
-# We will go for a Eoan waiting from Focal
-FROM ubuntu:eoan
+# We will go for a Ubunty Jammy
+FROM ubuntu:jammy
 LABEL description="MedShake EHR dockerized"
 LABEL maintainer="bugeaud@gmail.com"
 
@@ -12,6 +12,8 @@ ENV APP_PATH /app
 ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base
 ENV MEDSHAKEEHRPUBLICPATH $APP_PATH/MedShakeEHR-base/public_html
 
+# Ensure no interractive term is used to avoid errors
+ENV DEBIAN_FRONTEND noninteractive
 
 # Create the APP directory and move to it
 ADD --chown=www-data:www-data . $MEDSHAKEEHRPATH
@@ -58,36 +60,40 @@ RUN apt --assume-yes install pdftk
 
 WORKDIR $APP_PATH
 
-# Get & install PHP Composer
-# First install curl as it is required anyway to fetch extensions 
+# Install curl as it is required anyway to fetch extensions 
 RUN apt --assume-yes install curl
-# Solution 1 : PHAR download
-#RUN curl -sf -L https://getcomposer.org/download/1.6.5/composer.phar \
-#	&& chmod 0774 /tmp/composer.phar \
-#	&& php /tmp/composer.phar install
-# Solution 2 : Setup script (Composer recommanded way)
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('sha384', 'composer-setup.php') === 'e0012edf3e80b6978849f5eff0d4b4e4c79ff1609dd1e613307e16318854d24ae64f26d17af3ef0bf7cfb710ca74755a') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-RUN php composer-setup.php
-RUN php -r "unlink('composer-setup.php');"
+
+# Install PHP Composer thru bin inside latest docker image
+
+COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
 # Test the composer & set that root exec is fine as we are in a container
 # Let's suppress the warning we are using root as we are inside Docker
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN php composer.phar --version --no-interaction 
+RUN composer --version --no-interaction 
 
 # Fetch the PHP Extension installer for Docker
 RUN curl -sf -L -O https://github.com/docker-library/php/blob/master/docker-php-ext-install \
 	&& chmod 0774 docker-php-ext-install
 
 # Install some more PhP's dependencies
-RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql mariadb-client
+RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-bcmath mariadb-client
+
+WORKDIR $MEDSHAKEEHRPATH
+
+# Ensure PHP composer has a fresh cache
+RUN composer clear-cache
+
+# Ensure updating the PHP composer dependencies
+RUN composer update
 
 # Install the MedShakeEHR Base PhP's dependencies
-RUN php composer.phar install -d ./MedShakeEHR-base
+#RUN composer install -d ./MedShakeEHR-base
+RUN composer install
 
 # Install MedShakeEHR's Web dependencies
-RUN php composer.phar install -d ./MedShakeEHR-base/public_html
+#RUN composer install -d ./MedShakeEHR-base/public_html
+RUN composer install -d ./public_html
 
 WORKDIR $APP_PATH
 # Check which .ini files are used
