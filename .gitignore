@@ -17,3 +17,6 @@ secrets.yml
 config/env.sh
 config/config.yml
 
+upgrade/*
+!upgrade/base
+!upgrade/base/*
