@@ -148,7 +148,7 @@ execSQLScript(){
 login(){
  local userName=$1
  local userPassword=$2
- echo "$(tput setaf 10)FINE$(tput sgr0) Login with user" $userName
+ echo "$(tput setaf 10)FINE$(tput sgr0) Login with user \'$userName\' \'$userPassword\'"
  curl -Liv -c /tmp/ehr-cookie.txt -H "Accept-Language: en,fr" -d "formIN=baseLogin" -d "p_username=$userName" -d "p_password=$userPassword" http://$EHR_SERVER_NAME/login/logInDo/
  echo "$(tput setaf 10)FINE$(tput sgr0) User logged in and session cookies stored for later auto-login"
 }
@@ -239,6 +239,6 @@ echo "$(tput setaf 10)FINE$(tput sgr0) Calling procedure $calledProcedure with p
 
 # Those two lines are required to be  written in any script using this library
 #
-$calledProcedure "$@"
+eval $calledProcedure $@
 echo "$(tput setaf 10)DONE$(tput sgr0) Called $calledProcedure"
 
