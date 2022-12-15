@@ -5,7 +5,7 @@ chmod -R 755 ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
 chown -R www-data:www-data ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
 
 # FIXED: Prevent file error write access . TODO see alternative solution
-chmod a+w ~/work ~/work/worklist
+chmod a+w ~/ehr/work ~/ehr/work/worklist
 echo "$(tput setaf 10)DONE$(tput sgr0) File structure checked"
 # Make sure that some classic DNS are use to make Docker's DNS behave as expected
 # See https://github.com/michaelgrosner/tribeca/issues/184
