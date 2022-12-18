@@ -12,7 +12,8 @@ echo "$(tput setaf 10)DONE$(tput sgr0) File structure checked"
 # This issue was noted Closed, but is actually not fixed as per mid-2018
 export DAEMON_CONF=/etc/docker/daemon.json
 if test -n "$(find /var/lib/dhcp/ -maxdepth 1 -name 'dhclient*.leases' -print -quit)" ; then
- export DNS_SERVER_REAL_FIRST=`cat /var/lib/dhcp/dhclient*.leases | grep dhcp-server-identifier | grep -m1 -Eow "([^ ]*);$" | sed s'/.$//'`
+DNS_SERVER_REAL_FIRST=`cat /var/lib/dhcp/dhclient*.leases | grep dhcp-server-identifier | grep -m1 -Eow "([^ ]*);$" | sed s'/.$//'`
+export DNS_SERVER_REAL_FIRST
  if grep -q $DNS_SERVER_REAL_FIRST $DAEMON_CONF ;  then
    echo "$(tput setaf 11)TODO$(tput sgr0) $DNS_SERVER_REAL_FIRST DNS Looks like already set in $DAEMON_CONF. Please make sure it is set as first DNS server in the dns property." 
  else
