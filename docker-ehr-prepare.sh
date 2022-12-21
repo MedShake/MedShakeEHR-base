@@ -5,14 +5,15 @@ chmod -R 755 ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
 chown -R www-data:www-data ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
 
 # FIXED: Prevent file error write access . TODO see alternative solution
-chmod a+w ~/work ~/work/worklist
+chmod a+w ~/ehr/work ~/ehr/work/worklist
 echo "$(tput setaf 10)DONE$(tput sgr0) File structure checked"
 # Make sure that some classic DNS are use to make Docker's DNS behave as expected
 # See https://github.com/michaelgrosner/tribeca/issues/184
 # This issue was noted Closed, but is actually not fixed as per mid-2018
 export DAEMON_CONF=/etc/docker/daemon.json
 if test -n "$(find /var/lib/dhcp/ -maxdepth 1 -name 'dhclient*.leases' -print -quit)" ; then
- export DNS_SERVER_REAL_FIRST=`cat /var/lib/dhcp/dhclient*.leases | grep dhcp-server-identifier | grep -m1 -Eow "([^ ]*);$" | sed s'/.$//'`
+DNS_SERVER_REAL_FIRST=`cat /var/lib/dhcp/dhclient*.leases | grep dhcp-server-identifier | grep -m1 -Eow "([^ ]*);$" | sed s'/.$//'`
+export DNS_SERVER_REAL_FIRST
  if grep -q $DNS_SERVER_REAL_FIRST $DAEMON_CONF ;  then
    echo "$(tput setaf 11)TODO$(tput sgr0) $DNS_SERVER_REAL_FIRST DNS Looks like already set in $DAEMON_CONF. Please make sure it is set as first DNS server in the dns property." 
  else

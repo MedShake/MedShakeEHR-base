@@ -82,13 +82,18 @@ NB: Le point et l'espace avant la commande sont obligatoires pour permettre la b
 
 > ./docker-ehr-build.sh
 
-8- Launch the application (create + start)
-8- Lancer l'application (create + start)
+8- Set the EHR environment variables
+8- Positioner les variables d'environement EHR
 
-> ./docker-compose up
+> . ~/ehr/env.sh
 
-9- An EHR instance is ready :
-9- Vous avez une instance de EHR de disponible :
+9- Launch the application (create + start)
+9- Lancer l'application (create + start)
+
+> ~/ehr/ehr-up.sh
+
+10- An EHR instance is ready :
+10- Vous avez une instance de EHR de disponible :
 
 >http://$EHR_SERVER_NAME/
 
@@ -97,7 +102,7 @@ Y suivre les instructions ...
 
 ## Docker Compose
 
-A ready to use Docker Compose setup is propose with the following containers :
+A ready to use Docker Compose setup is proposed with the following containers :
 Une configuration Docker Compose prête à l'emploi est proposée qui dispose des conteneurs suivants :
 - db : the DBMS for EHR / le SGBD de EHR
 - web : the web front / le frontal web
@@ -105,40 +110,44 @@ Une configuration Docker Compose prête à l'emploi est proposée qui dispose de
 An additional myadmin container can be enabled to perform some database maintenance duty.
 Un conteneur myadmin additionel peut être activé pour effectuer des tâches de maintenances sur la base.
 
-To start the containers
-Pour démarrer les conteneurs
+To create/start the containers
+Pour créer/démarrer les conteneurs
 
-> docker-compose start
+> ~/ehr/ehr-up.sh
 
-To remove the containers (this will not remove ~ehr/data)
-Pour supprimer les conteneurs (ne supprime pas ~ehr/data)
+To stop the containers (this will not remove ~/ehr/data)
+Pour arrêter les conteneurs (ne supprime pas ~/ehr/data)
 
-> docker-compose rm
+> ~/ehr/ehr-down.sh
 
 To list the containers :
 Pour lister les conteneurs :
 
 > docker-compose ps
 
-From another terminal, access the "web" container's shell (here the db) :
-Depuis un autre terminal, accèder à l'invite du conteneur "web" (ici le db)
+From another terminal, from the EHR directory (~/ehr/), access a shell from the EHR desired container (here the "web" container) :
+Depuis un autre terminal, depuis le répertoire EHR (~/ehr/), accèder à l'invite du conteneurEHR  désiré (ici le conteneur "web") :
 
-> docker exec -it medshakeehrbase_web_1 /bin/bash
+>  docker exec -it $(docker-compose ps -q web) "/bin/bash"
 
-NOTE : most changes on files  will not be retained if starting a new container fresh from the image.
-NB : la plus part des changements sur des fichiers ne seront pas concervés si un nouveau conteneur est créé à partir de l'impage.
+Or you might  use from the docker-ehr-shell script provided in the EHR base source code : 
+Ou vous pourriez aussi utiliser le script docker-ehr-shell fourni dans les sources de EHR base :
+> .../MedShakeEHR-base/utils/docker-ehr-shell.sh web
+
+NOTE : most changes on files will not be retained if starting a new container fresh from the image.
+NB : la plus part des changements sur des fichiers ne seront pas concervés si un nouveau conteneur est créé à partir de l'image.
 
 ## Single container Install / Installation dans un conteneur unique
 
 There is also an alpha Docker-in-Docker (dind) single container configuration existing thru the Dockerfile file.
 Il existe également une installation Docker-in-Docker (dind) de disponible via le fichier Dockerfile.
 
-To use it follow the docker's procedure, but at step 8 instead of launching docker-compose :
-Pour l'utiliser, suivre la procédure pour docker, mais à l'étape 8 au lieu d'utiliser docker-compose :
+To use it follow the docker compose procedure, but at step 6 to build, use :
+Pour l'utiliser, suivre la procédure pour docker, mais à l'étape 6 pour construire, utiliser  :
 
 > ./docker-ehr-single-build.sh
 
-Then, you can run the dind setup :
+Then, instead of th you can run the dind setup :
 Ensuite, vous pouvez lancer la configuration dind :
 
 > ./docker-ehr-single-run.sh
