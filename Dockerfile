@@ -8,14 +8,14 @@ LABEL maintainer="bugeaud@gmail.com"
 # Set some environement variables required
 ENV APP_PATH /app
 ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base/
-ENV SCREENDIR ~/ehr/screen/
+ENV SCREENDIR /root/ehr/screen/
 
 # Create the application directory from the local
 ADD . $MEDSHAKEEHRPATH
 #WORKDIR $MEDSHAKEEHRPATH
 
 # Create the mount point to avoid right errors
-#RUN mkdir $SCREENDIR -m 700
+RUN mkdir -p $SCREENDIR -m 700
 
 # Check system is fresh and clean
 RUN apk update && apk upgrade
@@ -45,8 +45,8 @@ RUN pip install docker-compose supervisor
 WORKDIR $MEDSHAKEEHRPATH
 
 #RUN dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375
-# Config docker compose as a service
-RUN docker-compose config --service
+# Config docker compose as a service $$$
+RUN docker-compose config --services
 
 # Create the sub-containers
 #RUN docker-compose up --build -d
@@ -68,7 +68,7 @@ EXPOSE 8080/tcp
 #EXPOSE 3606/tcp
 EXPOSE 443/tcp
 
-VOLUME ~/ehr/
+VOLUME /root/ehr/
 #VOLUME ~/ehr/screen
 
 # Create the screen lauching a docker daemon and a docker compose from known UNIX socket location
