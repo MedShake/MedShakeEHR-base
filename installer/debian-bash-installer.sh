@@ -55,11 +55,14 @@ orthancConfig(){
     read -r -p "Choix du nom de l'utilisateur d'Orthanc : " orthancUser
     echo
     while true; do
-        read -s -r -p "Choix du mot de passe utilisateur d'Orthanc (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " orthancPswd
-        echo
+        while true; do
+            read -s -r -p "Choix du mot de passe utilisateur d'Orthanc (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " orthancPswd
+            echo
+            [[ $orthancPswd != *@($caracteres_interdits)* ]] && break || echo "Mot de passe utilisateur d'Orthanc invalide: ne pas inclure de caractères interdits. Veuillez choisir un nouveau mot de passe."
+        done
         read -s -r -p "Confirmation du mot de passe : " orthancPswd1
         echo
-        [ "$orthancPswd" = "$orthancPswd1" ] && break || echo "Essayez encore"
+        [ "$orthancPswd" = "$orthancPswd1" ] && break || echo "Mot de passe non correspondant: veuillez reessayez."
     done
     sed -i 's/"AuthenticationEnabled" : false,/"AuthenticationEnabled" : true,/' /etc/orthanc/orthanc.json
     sed -i "s|// \"alice\" : \"alicePassword\"|\"$orthancUser\" : \"$orthancPswd\"|" /etc/orthanc/orthanc.json
@@ -143,11 +146,14 @@ apacheConfig() {
 
 mariadbConfig() {
     while true; do
-        read -s -r -p "Choix du mot de passe administrateur (root) de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlRootPswd
-        echo
+        while true; do
+            read -s -r -p "Choix du mot de passe administrateur (root) de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlRootPswd
+            echo
+            [[ $mysqlRootPswd != *@($caracteres_interdits)* ]] && break || echo "Mot de passe administrateur root invalide: ne pas inclure de caractères interdits. Veuillez choisir un nouveau mot de passe."
+        done
         read -r -s -p "Confirmation du mot de passe : " mysqlRootPswd1
-        [ "$mysqlRootPswd" = "$mysqlRootPswd1" ] && break || echo "Essayez encore"
         echo
+        [ "$mysqlRootPswd" = "$mysqlRootPswd1" ] && break || echo "Mot de passe non correspondant: veuillez reessayez."
     done
     echo
     read -er -i "$msehrDbName" -p "Choix du nom de la base de donnée (défaut : medshakeehr) : " input
@@ -156,11 +162,14 @@ mariadbConfig() {
     read -r -p "Choix du nom de l'utilisateur de la base de données : " mysqlUser
     echo
     while true; do
-        read -r -s -p "Choix du mot de passe utilisateur de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlUserPswd 
-        echo
+        while true; do
+            read -r -s -p "Choix du mot de passe utilisateur de la base de données (ne pas utiliser les caractères : \"'$,[]*?{}~#%\<,>|^; ) : " mysqlUserPswd 
+            echo
+            [[ $mysqlUserPswd != *@($caracteres_interdits)* ]] && break || echo "Mot de passe utilisateur invalide: ne pas inclure les caractères interdits. Veuillez choisir un nouveau mot de passe."
+        done
         read -r -s -p "Confirmation du mot de passe : " mysqlUserPswd1
         echo
-        [ "$mysqlUserPswd" = "$mysqlUserPswd1" ] && break || echo "Essayez encore"
+        [ "$mysqlUserPswd" = "$mysqlUserPswd1" ] && break || echo "Mot de passe non correspondant: veuillez reessayez."
     done
     service mysql start
     mysql <<EOF
@@ -266,6 +275,7 @@ selectInstall(){
 }
 
 # Variables globales par défauts.
+caracteres_interdits="\"|\'|\$|\,|\[|\]|\*|\?|\{|\}|\~|\#|\%|\<|\>|\||\^|\;"
 persoInstall=1
 msehrPath=/opt/ehr
 selectInstall=1
