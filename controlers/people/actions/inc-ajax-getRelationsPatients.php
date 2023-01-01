@@ -32,6 +32,11 @@ $a_json = array();
 $mss=new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['pro','patient']);
+if($p['config']['PraticienPeutEtrePatient'] == 'true') {
+	$mss->setPeopleType(['pro','patient']);
+} else {
+	$mss->setPeopleType(['patient']);
+}
 $criteres = array(
    'birthname'=>$term,
  );
