@@ -69,7 +69,7 @@ class msLog
  * @param string $userIP IP
  */
   public function setUserIP($userIP) {
-    if(!preg_match("#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#",$userIP)) throw new Exception("UserIP n'est pas valide");
+	if(!filter_var($userIP, FILTER_VALIDATE_IP)) throw new Exception("UserIP n'est pas valide");
     return $this->_userIP = $userIP;
   }
 
