@@ -84,7 +84,7 @@ class msUser
         if (!isset($_COOKIE['userPass'])) {
             return msUser::cleanBadAuth();
         }
-        $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
+        $fingerprint_partiel = msSQL::cleanVar($_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT']);
 
         $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank`, module,
          CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa
