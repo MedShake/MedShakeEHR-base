@@ -124,15 +124,12 @@ $(document).ready(function() {
 function calculSpe(c) {
   ddr = $('#DDRID').val();
   ddt = $('#DDTID').val();
-  if (c == 'IVGMedVille') {
-    dc = moment(ddr, "DD-MM-YYYY").add(4, 'weeks').format('dddd D MMMM YYYY');
-    fc = moment(ddr, "DD-MM-YYYY").add(7, 'weeks').format('dddd D MMMM YYYY');
-  } else if (c == 'IVGMedCH') {
+  if (c == 'IVGMed') {
     dc = moment(ddr, "DD-MM-YYYY").add(4, 'weeks').format('dddd D MMMM YYYY');
     fc = moment(ddr, "DD-MM-YYYY").add(9, 'weeks').format('dddd D MMMM YYYY');
   } else if (c == 'IVGChir') {
     dc = moment(ddr, "DD-MM-YYYY").add(4, 'weeks').format('dddd D MMMM YYYY');
-    fc = moment(ddr, "DD-MM-YYYY").add(14, 'weeks').format('dddd D MMMM YYYY');
+    fc = moment(ddr, "DD-MM-YYYY").add(16, 'weeks').format('dddd D MMMM YYYY');
   } else if (c == 'T21COMBI') {
     dc = moment(ddr, "DD-MM-YYYY").add(11, 'weeks').format('dddd D MMMM YYYY');
     fc = moment(ddr, "DD-MM-YYYY").add(13, 'weeks').add(6, 'days').format('dddd D MMMM YYYY');
