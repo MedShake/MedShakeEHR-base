@@ -376,10 +376,11 @@ function lapOrdoAnalyseResBrut() {
 function saveOrdo(action) {
 
   // on impose l'analyse avant si non faite
-  if (ordoDejaAnalysee != true) {
+  if (lapModeFonctionnement != 'BDPM' && ordoDejaAnalysee != true) {
     analyserPrescription();
     return;
   }
+	
 
   var ordo = {
     ordoMedicsG: ordoMedicsG,

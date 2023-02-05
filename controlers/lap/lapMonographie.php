@@ -32,6 +32,10 @@ $template="lapMonographie";
 
 if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
+if($p['config']['theriaqueMode'] == 'BDPM') {
+	header('Location: https://base-donnees-publique.medicaments.gouv.fr/extrait.php?specid=' . $match['params']['spe']);
+}
+
 $mono=new msLapMonographie();
 $mono->setSpe($match['params']['spe']);
 $p['page']['spe']=$match['params']['spe'];

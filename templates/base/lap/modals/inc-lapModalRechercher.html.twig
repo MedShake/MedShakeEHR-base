@@ -116,9 +116,16 @@
                     <select id="voieUtilisee" class="custom-select custom-select-sm"></select>
                   </div>
                   <div class="form-group">
-                    <button type="button" class="btn btn-info btn-sm btn-block voirPosologies">
-                      <span class="fas fa-book" aria-hidden="true"></span>
+                    {% if config.theriaqueMode == 'BDPM' %}
+
+                      <a class="btn btn-info btn-sm btn-block voirPosologiesExterne" target="_blank" href="" role="button"><span class="fas fa-book" aria-hidden="true"></span>
+                      Indications & posologies</button></a>
+
+                    {% else %}
+                      <button type="button" class="btn btn-info btn-sm btn-block voirPosologies">
+                        <span class="fas fa-book" aria-hidden="true"></span>
                       Indications & posologies</button>
+                    {% endif %}
                   </div>
                 </div>
               </div>

@@ -66,11 +66,11 @@
               <span class="fas fa-plus" aria-hidden="true"></span>
               Nouvelle prescription</button>
 
-            <div class="btn-group mr-1">
-              <button type="button" class="btn btn-secondary analyserPrescription">
+            <div class="btn-group mr-1" {% if config.theriaqueMode == 'BDPM' %}title="Non disponible dans cette configuration"{% endif %}>
+              <button type="button" class="btn btn-secondary analyserPrescription" {% if config.theriaqueMode == 'BDPM' %}disabled{% endif %}>
                 <span class="fas fa-sync-alt" aria-hidden="true"></span>
                 Analyser</button>
-              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if config.theriaqueMode == 'BDPM' %}disabled{% endif %}>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
               <div class="dropdown-menu mr-1">
@@ -128,7 +128,7 @@
                 <a href="#" class="dropdown-item ordoLiveRestore">
                   <span class="fas fa-fire-extinguisher fa-fw text-muted mr-1" aria-hidden="true"></span>
                   Récupération d'urgence</a>
-                {% if user.rank == 'admin' %}
+                {% if user.rank == 'admin' and config.theriaqueMode in ['PG', 'WS'] %}
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item lapOrdoAnalyseResBrut">Voir data brutes analyse Thériaque</a>
                 {% endif %}

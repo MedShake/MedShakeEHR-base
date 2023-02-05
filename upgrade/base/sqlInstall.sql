@@ -85,6 +85,83 @@ CREATE TABLE IF NOT EXISTS `agenda_changelog` (
   KEY `eventID` (`eventID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
 
+-- création de la table bdpm_compositions
+CREATE TABLE IF NOT EXISTS `bdpm_compositions` (
+  `codeCIS` int(10) unsigned NOT NULL,
+  `elementPharmaceutique` varchar(500) NOT NULL,
+  `codeSubstance` int(10) unsigned NOT NULL,
+  `denomination` varchar(500) DEFAULT NULL,
+  `dosage` varchar(250) DEFAULT NULL,
+  `dosageRef` varchar(250) DEFAULT NULL,
+  `nature` enum('SA','FT') NOT NULL,
+  `numLiaison` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`codeCIS`,`elementPharmaceutique`,`codeSubstance`,`numLiaison`),
+  KEY `codeCIS` (`codeCIS`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- création de la table bdpm_conditions
+CREATE TABLE IF NOT EXISTS `bdpm_conditions` (
+  `codeCIS` int(11) NOT NULL,
+  `condition` varchar(255) NOT NULL,
+  PRIMARY KEY (`codeCIS`,`condition`),
+  KEY `COL 1` (`codeCIS`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- création de la table bdpm_groupesGeneriques
+CREATE TABLE IF NOT EXISTS `bdpm_groupesGeneriques` (
+  `idGroupe` int(10) unsigned NOT NULL,
+  `libelle` text NOT NULL,
+  `codeCIS` int(10) unsigned DEFAULT NULL,
+  `typeGene` smallint(5) unsigned DEFAULT NULL,
+  `numOrdre` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`idGroupe`,`numOrdre`),
+  KEY `idGroupe` (`idGroupe`),
+  KEY `codeCIS` (`codeCIS`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- création de la table bdpm_presentations
+CREATE TABLE IF NOT EXISTS `bdpm_presentations` (
+  `codeCIS` int(10) unsigned DEFAULT NULL,
+  `codeCIP7` int(10) unsigned DEFAULT NULL,
+  `libelle` varchar(600) DEFAULT NULL,
+  `statutAdministratif` varchar(60) DEFAULT NULL,
+  `etatCommercialisation` varchar(200) DEFAULT NULL,
+  `dateCommercialisation` varchar(10) DEFAULT NULL,
+  `codeCIP13` varchar(13) NOT NULL,
+  `agrementCol` enum('oui','non','inconnu') DEFAULT NULL,
+  `txRembouSS` varchar(10) DEFAULT NULL,
+  `prix1` varchar(9) DEFAULT NULL,
+  `prix2` varchar(9) DEFAULT NULL,
+  `prix3` varchar(9) DEFAULT NULL,
+  `indicRembour` text DEFAULT NULL,
+  PRIMARY KEY (`codeCIP13`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- création de la table bdpm_specialites
+CREATE TABLE IF NOT EXISTS `bdpm_specialites` (
+  `codeCIS` int(10) unsigned NOT NULL,
+  `denomination` varchar(500) DEFAULT NULL,
+  `formePharma` varchar(255) DEFAULT NULL,
+  `voiesAdmin` varchar(255) DEFAULT NULL,
+  `statutAdminAMM` varchar(255) DEFAULT NULL,
+  `typeProcedAMM` varchar(255) DEFAULT NULL,
+  `etatCommercialisation` varchar(255) DEFAULT NULL,
+  `dateAMM` varchar(10) DEFAULT NULL,
+  `statutBdm` varchar(50) DEFAULT NULL,
+  `numAutoEU` varchar(50) DEFAULT NULL,
+  `tituAMM` varchar(500) DEFAULT NULL,
+  `surveillanceRenforcee` enum('Oui','Non') DEFAULT NULL,
+  PRIMARY KEY (`codeCIS`),
+  FULLTEXT KEY `denomination` (`denomination`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- création de la table bdpm_updates
+CREATE TABLE IF NOT EXISTS `bdpm_updates` (
+  `fileName` varchar(50) NOT NULL DEFAULT '',
+  `fileLastParse` datetime DEFAULT NULL,
+  PRIMARY KEY (`fileName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
 -- création de la table configuration
 CREATE TABLE IF NOT EXISTS `configuration` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,

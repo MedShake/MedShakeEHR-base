@@ -62,7 +62,9 @@ class msLap
              $this->_classTheriaque='msTheriaqueWS';
          } elseif ($p['config']['theriaqueMode']=='PG') {
              $this->_classTheriaque='msTheriaquePG';
-         }
+         } elseif ($p['config']['theriaqueMode']=='BDPM') {
+			$this->_classTheriaque='msBDPM';
+		 }
          $this->_the = new $this->_classTheriaque;
      }
 
@@ -506,23 +508,25 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
               $colonne = 'code_sq_pk';
           } elseif ($p['config']['theriaqueMode'] == 'PG') {
               $colonne = 'sac_code_sq_pk';
-          }
+          } else {
+			$colonne = 'sac_code_sq_pk';
+		  }
 
 
           $substances = explode('+',$txt);
           if(!empty($substances)) {
             foreach($substances as $k=>$substance) {
               $subsTab=$this->getSubstances(trim($substance), $type);
-
               if(empty($subsTab)) continue;
               $subs=implode(",", array_column($subsTab, $colonne));
-              $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
+			  $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
               if(!empty($tabSpe)) {
                 $tabSpe=$this->_prepareData($tabSpe);
                 $tabSpes[$k]=array_column($tabSpe, 'sp_code_sq_pk');
               }
             }
           }
+
           if(!empty($tabSpes)) {
             if(count($tabSpes)>1) {
               $intersectionTab = call_user_func_array('array_intersect', $tabSpes);
@@ -547,7 +551,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         if (strlen($txt)>=3) {
             $rd=[];
             if ($data=$this->_the->get_the_spe_txt($txt, $monovir)) {
-                $rd=$this->_prepareData($data);
+				$rd=$this->_prepareData($data);
                 // natural sorting => confié maintenant à jquey stupid table
                 //msTools::array_natsort_by('sp_nom', $rd);
                 if (!empty($rd)) {
