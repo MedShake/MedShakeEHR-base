@@ -34,8 +34,8 @@ class msBDPM {
 
   public function get_the_infos() {
     return $data[0]=array(
-		'vers' => 'bdpm',
-		'date_ext' => ''
+		'vers' => 'Base de données publique des médicaments',
+		'date_ext' => msSQL::sqlUniqueChamp("SELECT fileLastParse FROM bdpm_updates order by fileLastParse desc limit 1;")
 	);
   }
 
@@ -43,47 +43,62 @@ class msBDPM {
   ////// 2. les spécialités
 
   public function get_the_spe_txt($libprod, $monovir) {
-    return  msSQL::sql2tab("select
-		s.codeCIS as sp_code_sq_pk,
-		s.etatCommercialisation as statut_lab,
-		SUBSTRING_INDEX(s.denomination, ', ', 1) as sp_nom,
-		s.codeCIS as sp_nl,
-		s.denomination as sp_nomlong,
-		'".msSQL::cleanVar($monovir)."' as mono_vir,
-		g.idGroupe as sp_gsp_code_fk,
-		'' as sp_catc_code_fk,
-		'' as sp_cipucd,
-		'' as sp_cipucd13
-		from bdpm_specialites as s
-		left join bdpm_groupesGeneriques as g on g.codeCIS = s.codeCIS
-		where s.denomination like '".msSQL::cleanVar($libprod)."'
-		order by s.denomination
-		limit 150
-	");
+
+	if($monovir == '0') {
+		return  msSQL::sql2tab("select
+			codeSPE as sp_code_sq_pk,
+			etatCommercialisation as statut_lab,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nom,
+			codeCIS as sp_nl,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nomlong,
+			monovir as mono_vir,
+			codeSPE as sp_gsp_code_fk,
+			'' as sp_catc_code_fk,
+			'' as sp_cipucd,
+			'' as sp_cipucd13
+			from bdpm_specialitesVirtuelles
+			where monovir = '0' and denomination like '".msSQL::cleanVar($libprod)."'
+			order by denomination
+			limit 150
+			");
+	} elseif ($monovir == '1') {
+		return  msSQL::sql2tab("select
+			codeSPE as sp_code_sq_pk,
+			etatCommercialisation as statut_lab,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nom,
+			codeCIS as sp_nl,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nomlong,
+			monovir as mono_vir,
+			codeSPE as sp_gsp_code_fk,
+			'' as sp_catc_code_fk,
+			'' as sp_cipucd,
+			'' as sp_cipucd13
+			from bdpm_specialitesVirtuelles
+			where monovir = '1' and denomination like '".msSQL::cleanVar($libprod)."'
+			order by denomination
+			limit 150
+		");
+	} elseif ($monovir == '3') {
+		return  msSQL::sql2tab("select
+			codeSPE as sp_code_sq_pk,
+			etatCommercialisation as statut_lab,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nom,
+			codeCIS as sp_nl,
+			SUBSTRING_INDEX(denomination, ', ', 1) as sp_nomlong,
+			monovir as mono_vir,
+			codeSPE as sp_gsp_code_fk,
+			'' as sp_catc_code_fk,
+			'' as sp_cipucd,
+			'' as sp_cipucd13
+			from bdpm_specialitesVirtuelles
+			where denomination like '".msSQL::cleanVar($libprod)."'
+			order by denomination
+			limit 150
+		");
+	}
   }
 
   public function get_the_specialite($codeid,$vartyp,$monovir) {
-
-    return  msSQL::sql2tab("select
-		s.codeCIS as sp_code_sq_pk,
-		s.etatCommercialisation as statut_lab,
-		SUBSTRING_INDEX(s.denomination, ', ', 1) as sp_nom,
-		s.codeCIS as sp_nl,
-		s.denomination as sp_nomlong,
-		'".msSQL::cleanVar($monovir)."' as mono_vir,
-		g.idGroupe as sp_gsp_code_fk,
-		'' as sp_catc_code_fk,
-		'' as sp_cipucd,
-		'' as sp_cipucd13
-		from bdpm_specialites as s
-		left join bdpm_groupesGeneriques as g on g.codeCIS = s.codeCIS
-		where s.codeCIS = '".msSQL::cleanVar($codeid)."'
-		limit 1
-	");
-  }
-
-  public function get_the_specialite_multi_codeid($codeid,$vartyp,$monovir) {
-
 	if($vartyp === 1) {
 		return  msSQL::sql2tab("select
 			s.codeCIS as sp_code_sq_pk,
@@ -91,23 +106,52 @@ class msBDPM {
 			SUBSTRING_INDEX(s.denomination, ', ', 1) as sp_nom,
 			s.codeCIS as sp_nl,
 			s.denomination as sp_nomlong,
-			'".msSQL::cleanVar($monovir)."' as mono_vir,
-			g.idGroupe as sp_gsp_code_fk,
+			s.monovir as mono_vir,
+			s.codeSPE as sp_gsp_code_fk,
 			'' as sp_catc_code_fk,
 			'' as sp_cipucd,
 			'' as sp_cipucd13
-			from bdpm_specialites as s
+			from bdpm_specialitesVirtuelles as s
 			left join bdpm_groupesGeneriques as g on g.codeCIS = s.codeCIS
-			where s.codeCIS in (".msSQL::cleanVar($codeid).")
+			where s.codeSPE = '".msSQL::cleanVar($codeid)."'
+			limit 1
 		");
+	}
+  }
+
+  public function get_the_specialite_multi_codeid($codeid,$vartyp,$monovir) {
+
+	if($vartyp === 1) {
+		if(!isset($monovir) or $monovir == 0 or $monovir === 0) {
+			$monovirSearch = "and monovir = '0'";
+		} elseif($monovir == 1 or $monovir === 1) {
+			$monovirSearch = "and monovir = '1'";
+		} else {
+			$monovirSearch = '';
+		}
+		return  msSQL::sql2tab("select
+			s.codeCIS as sp_code_sq_pk,
+			s.etatCommercialisation as statut_lab,
+			SUBSTRING_INDEX(s.denomination, ', ', 1) as sp_nom,
+			s.codeCIS as sp_nl,
+			s.denomination as sp_nomlong,
+			s.monovir as mono_vir,
+			s.codeSPE as sp_gsp_code_fk,
+			'' as sp_catc_code_fk,
+			'' as sp_cipucd,
+			'' as sp_cipucd13
+			from bdpm_specialitesVirtuelles as s
+			left join bdpm_groupesGeneriques as g on g.codeCIS = s.codeCIS
+			where s.codeSPE in (".msSQL::cleanVar($codeid).") ".$monovirSearch."
+		");
+
     } elseif($vartyp == 7) {
 		return  msSQL::sql2tab("select
 			c.codeCIS as sp_code_sq_pk,
 			c.denomination as sp_nom
 			from bdpm_compositions as c
 			left join bdpm_groupesGeneriques as g on g.codeCIS = c.codeCIS
-			where c.codeSubstance in ('".msSQL::cleanVar($codeid)."')
-
+			where c.codeSubstance in (".msSQL::cleanVar($codeid).")
 		");
 	}
 
@@ -117,8 +161,8 @@ class msBDPM {
 	$data = [];
 	$data = msSQL::sqlUniqueChamp("select
 		voiesAdmin
-		from bdpm_specialites
-		where codeCIS = '".msSQL::cleanVar($codeid)."'
+		from bdpm_specialitesVirtuelles
+		where codeSPE = '".msSQL::cleanVar($codeid)."'
 	");
 	$data = explode(';', $data);
 	$retour = [];
@@ -192,9 +236,10 @@ class msBDPM {
 		return  msSQL::sql2tab("select
 			'A' as typsubst,
 			codeSubstance as codesubst,
-			1 as dosesubst,
+			dosage as dosesubst,
 			CONCAT(dosage, ' pour ', dosageRef) as udosesubst,
-			c.denomination as libsubst
+			c.denomination as libsubst,
+			CONCAT(denomination, ' ', dosage) as denominationDosage
 			from bdpm_compositions as c
 			where nature = 'SA' and codeCIS = '".msSQL::cleanVar($codeid)."'
 		");
@@ -346,11 +391,8 @@ class msBDPM {
   public function get_the_presentation_v2($codeid,$typid) {
 
 	if($typid == 2 or $typid == 4) {
+
 		return msSQL::sql2tab("select
-			CASE
-				WHEN con.condition = \"réservé à l'usage HOSPITALIER\" THEN 'OUI'
-				ELSE 'NON'
-			END as reservhop,
 			p.codeCIP13 as pre_code_pk,
 			p.codeCIS as pre_sp_code_fk,
 			p.libelle as pre_adm,
@@ -360,18 +402,15 @@ class msBDPM {
 			END as pre_etat_commer,
 			p.dateCommercialisation as pre_datecommer,
 			p.codeCIP13 as pre_ean_ref,
-			s.formePharma as pre_nat
-			from bdpm_presentations as p
-			left join bdpm_conditions as con on con.codeCIS = p.codeCIS and con.condition = \"réservé à l'usage HOSPITALIER\"
+			s.formePharma as pre_nat,
+			reservhop
+			from bdpm_presentationsVirtuelles as p
 			left join bdpm_specialites as s on s.codeCIS = p.codeCIS
 			where p.codeCIP13 = '".msSQL::cleanVar($codeid)."'
 		");
 	} else {
+
 		return msSQL::sql2tab("select
-			CASE
-				WHEN con.condition = \"réservé à l'usage HOSPITALIER\" THEN 'OUI'
-				ELSE 'NON'
-			END as reservhop,
 			p.codeCIP13 as pre_code_pk,
 			p.codeCIS as pre_sp_code_fk,
 			p.libelle as pre_adm,
@@ -381,11 +420,11 @@ class msBDPM {
 			END as pre_etat_commer,
 			p.dateCommercialisation as pre_datecommer,
 			p.codeCIP13 as pre_ean_ref,
-			s.formePharma as pre_nat
-			from bdpm_presentations as p
-			left join bdpm_conditions as con on con.codeCIS = p.codeCIS and con.condition = \"réservé à l'usage HOSPITALIER\"
+			s.formePharma as pre_nat,
+			reservhop
+			from bdpm_presentationsVirtuelles as p
 			left join bdpm_specialites as s on s.codeCIS = p.codeCIS
-			where p.codeCIS = '".msSQL::cleanVar($codeid)."'
+			where p.codeSPE = '".msSQL::cleanVar($codeid)."'
 		");
 	}
   }
@@ -419,14 +458,14 @@ class msBDPM {
 		return msSQL::sql2tab("select
 			REPLACE(txRembouSS, ' ', '') as info_1,
 			indicRembour as texte
-			from bdpm_presentations
+			from bdpm_presentationsVirtuelles
 			where codeCIP13 = '".msSQL::cleanVar($codecip)."'
 		");
 	} elseif($vartype == 1) {
 		return msSQL::sql2tab("select
 			REPLACE(txRembouSS, ' ', '') as info_1,
 			indicRembour as texte
-			from bdpm_presentations
+			from bdpm_presentationsVirtuelles
 			where codeCIP7 = '".msSQL::cleanVar($codecip)."'
 		");
 	}
@@ -601,15 +640,21 @@ class msBDPM {
   ////// 39. unités possibles pour une spécialité
 
   public function get_the_unite($codeid, $typid) {
-	$data = msSQL::sql2tab("select
-		codeCIS as code_spe,
-		elementPharmaceutique as unite_prise,
-		denomination as substance
-		from bdpm_compositions
-		where codeCIS = '".msSQL::cleanVar($codeid)."'
-	");
-	foreach($data as $k=>$v) {
-		$data[$k]['unite_prise'] = $this->_convertUnitePrise($v['unite_prise']);
+	$data=[];
+	if($typid == 0) {
+		$codeid = msSQL::sqlUniqueChamp("select codeCIS from bdpm_specialitesVirtuelles where codeSPE = '".msSQL::cleanVar($codeid)."' limit 1");
+	}
+
+	if($data = msSQL::sql2tab("select
+		c.codeCIS as code_spe,
+		c.elementPharmaceutique as unite_prise,
+		c.denomination as substance
+		from bdpm_compositions as c
+		where c.codeCIS = '".msSQL::cleanVar($codeid)."'
+	")) {
+		foreach($data as $k=>$v) {
+			$data[$k]['unite_prise'] = $this->_convertUnitePrise($v['unite_prise']);
+		}
 	}
 	return $data;
   }
@@ -618,6 +663,7 @@ class msBDPM {
 	$convert = [
 		'solution buvable en gouttes'=>'goutte',
 		'solution buvable en ampoules'=>'ampoule',
+		'solution buvable'=> 'goutte',
 		'émulsion'=>'application',
 		'crème'=>'application',
 		'pommade'=>'application',
@@ -659,15 +705,23 @@ class msBDPM {
   public function get_the_denomination_commune($typid, $var, $dc) {
 	if($typid == 2) {
 		if($data = msSQL::sql2tab("select
-		g.codeCIS as code,
-		g.codeCIS as speRef,
-		g.libelle as text_info,
-		1 as prescription_dc,
-		SUBSTRING_INDEX(g.libelle, ' - ', 1) as libelle
-		from bdpm_groupesGeneriques as g
-		where g.idGroupe = '".msSQL::cleanVar($var)."' and typeGene = 0
-		limit 1")) {
+				g.codeCIS as code,
+				g.codeCIS as speRef,
+				g.libelle as text_info,
+				1 as prescription_dc,
+				SUBSTRING_INDEX(g.libelle, ' - ', 1) as libelle
+				from bdpm_groupesGeneriques as g
+				where g.codeCIS = '".msSQL::cleanVar($var)."' and typeGene = 0
+				limit 1")) {
 			return $data;
+		} elseif($substances = $this->get_the_sub_spe($var, 2)) {
+			return $data=array( 0 => array(
+				'code' => $var,
+				'speRef' => '',
+				'prescription_dc' => 1,
+				'text_info' => '',
+				'libelle' => implode(' + ' , array_column($substances, 'denominationDosage'))
+			));
 		} else {
 			return $data=array( 0 => array(
 				'code' => '',
@@ -709,7 +763,7 @@ class msBDPM {
 		return msSQL::sql2tab("select
 			p.codeCIS as code,
 			REPLACE(p.prix1, ',', '.' ) as prix
-			from bdpm_presentations as p
+			from bdpm_presentationsVirtuelles as p
 			where p.prix1 != '' and p.codeCIS in (".msSQL::cleanVar($list_code).");
 		");
 	}

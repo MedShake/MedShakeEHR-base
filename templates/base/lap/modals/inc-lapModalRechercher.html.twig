@@ -69,8 +69,8 @@
                         <option {% if config.lapSearchDefaultType == 'dcispe' %} selected="selected"{% endif %} value="dcispe">Médicaments virtuels + Spécialités commerciales</option>
                         <option {% if config.lapSearchDefaultType == 'spe' %} selected="selected"{% endif %} value="spe">Spécialités commerciales</option>
                         <option {% if config.lapSearchDefaultType == 'suba' %} selected="selected"{% endif %} value="suba">Substances actives</option>
-                        <option {% if config.lapSearchDefaultType == 'atc' %} selected="selected"{% endif %} value="atc">Code ATC</option>
-                        <option {% if config.lapSearchDefaultType == 'indications' %} selected="selected"{% endif %} value="indications">Indications</option>
+                        <option {% if config.theriaqueMode == 'BDPM' %}disabled="disabled" {% endif %}{% if config.lapSearchDefaultType == 'atc' %} selected="selected"{% endif %} value="atc">Code ATC</option>
+                        <option {% if config.theriaqueMode == 'BDPM' %}disabled="disabled" {% endif %}{% if config.lapSearchDefaultType == 'indications' %} selected="selected"{% endif %} value="indications">Indications</option>
                       </select>
                       <span id="typeRechercheMedicHB" class="form-text small">Lieu de recherche du texte indiqué</span>
                     </div>
@@ -92,6 +92,11 @@
             <div class="row">
               <div id="rechercheResultats" tabindex="1" class="col p-0" style="outline: 0;"></div>
             </div>
+			{% if config.theriaqueMode == 'BDPM' %}	
+			<div class="alert alert-danger" role="alert">
+				Mode de démonstation avec la <a href="https://base-donnees-publique.medicaments.gouv.fr" class="alert-link">Base de données publique des médicaments</a>. Résultats de recherche incomplets. Ne pas utiliser en production.
+			</div>
+			{% endif %}
           </div>
 
           {# Onglet Prescrire #}

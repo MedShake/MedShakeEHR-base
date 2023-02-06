@@ -126,7 +126,7 @@ class msLapPrescription extends msLap
     }
 
 /**
- * Définir medic viruel ou pas
+ * Définir medic virtuel ou pas
  * @param string $v medic virt
  * @return string medic virt
  */

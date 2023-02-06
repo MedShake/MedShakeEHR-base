@@ -126,7 +126,7 @@ class msLap
  * Obtenir la DC à partir de la spécialité dont info prescriptibilité en DC ou non
  * @param  int $typid type de recherche (1 : toutes les DC, 2: par code, 3: libellé)
  * @param  string $var   chaine/code à recherche
- * @param  int $dc    param de sélecction (0 : uniquement prescriptible en DC, 1: tout)
+ * @param  int $dc    param de sélection (0 : uniquement prescriptible en DC, 1: tout)
  * @return array        array de retour de la DC
  */
     public function getDC($typid, $var, $dc)
@@ -479,7 +479,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         global $p;
         if (strlen($txt)>=3) {
           $subsTab=[];
-          if($intersectionTab=$this->getCodesSpesListBySub ($txt, $type, $monovir)) {
+          if($intersectionTab=$this->getCodesSpesListBySub($txt, $type, $monovir)) {
             if ($data=$this->_the->get_the_specialite_multi_codeid(implode(",", $intersectionTab), 1, $monovir)) {
                 $rd=$this->_prepareData($data);
                 if (!empty($rd)) {
@@ -526,7 +526,6 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
               }
             }
           }
-
           if(!empty($tabSpes)) {
             if(count($tabSpes)>1) {
               $intersectionTab = call_user_func_array('array_intersect', $tabSpes);
@@ -552,13 +551,13 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
             $rd=[];
             if ($data=$this->_the->get_the_spe_txt($txt, $monovir)) {
 				$rd=$this->_prepareData($data);
-                // natural sorting => confié maintenant à jquey stupid table
+				// natural sorting => confié maintenant à jquery stupid table
                 //msTools::array_natsort_by('sp_nom', $rd);
-                if (!empty($rd)) {
-                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
-                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
-                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
-                }
+				if (!empty($rd)) $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+				if (!empty($rd)) {
+					$this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+					$this->getStatutDelivrance($rd, 'sp_code_sq_pk');
+				}
                 return $rd;
             }
         }
