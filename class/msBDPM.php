@@ -664,6 +664,7 @@ class msBDPM {
 		'solution buvable en gouttes'=>'goutte',
 		'solution buvable en ampoules'=>'ampoule',
 		'solution buvable'=> 'goutte',
+		'solution'=> 'goutte',
 		'émulsion'=>'application',
 		'crème'=>'application',
 		'pommade'=>'application',
