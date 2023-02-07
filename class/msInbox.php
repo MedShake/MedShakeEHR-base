@@ -80,8 +80,8 @@ class msInbox
     public static function getMessageBody($file)
     {
         $content=file_get_contents($file);
-        if (!mb_detect_encoding($content, 'utf-8', true)) {
-            $content = utf8_encode($content);
+        if (!mb_detect_encoding($content, 'UTF-8', true)) {
+			$content = mb_convert_encoding($content, 'UTF-8' , mb_detect_encoding($content, null, false));
         }
         $content=str_replace("\n\n\n", "\n\n", $content);
         $content=preg_replace("#((\n\s*){3,10})+#i", "\n\n", $content);

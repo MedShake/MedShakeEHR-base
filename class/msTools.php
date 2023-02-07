@@ -266,8 +266,8 @@ class msTools
 	{
 		if (is_array($array)) {
 			array_walk_recursive($array, function (&$item, $key) {
-				if (!mb_detect_encoding($item, 'utf-8', true)) {
-					$item = utf8_encode($item);
+				if (!mb_detect_encoding($item, 'UTF-8', true)) {
+					$item = mb_convert_encoding($item, 'UTF-8', mb_detect_encoding($item, null, false));
 				}
 			});
 		}
@@ -284,8 +284,8 @@ class msTools
 	{
 		if (!$destination) $destination = $source;
 		$contenu = file_get_contents($source);
-		if (!mb_detect_encoding($contenu, 'utf-8', true)) {
-			$contenu = utf8_encode($contenu);
+		if (!mb_detect_encoding($contenu, 'UTF-8', true)) {
+			$contenu = mb_convert_encoding($contenu, 'UTF-8' , mb_detect_encoding($contenu, null, false));
 			return (bool)file_put_contents($destination, $contenu);
 		} elseif ($destination != $source) {
 			return (bool)file_put_contents($destination, $contenu);

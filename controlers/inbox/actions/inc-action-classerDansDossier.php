@@ -36,8 +36,8 @@ if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteu
     $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
 
     $corps=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$data['txtFileName']);
-    if (!mb_detect_encoding($corps, 'utf-8', true)) {
-        $corps = utf8_encode($corps);
+    if (!mb_detect_encoding($corps, 'UTF-8', true)) {
+		$corps = mb_convert_encoding($corps, 'UTF-8', mb_detect_encoding($corps, null, false));
     }
     $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
