@@ -95,6 +95,9 @@ RUN composer install
 #RUN composer install -d ./MedShakeEHR-base/public_html
 RUN composer install -d ./public_html
 
+# Remove public install file
+RUN rm -f ./public_html/install.php
+
 WORKDIR $APP_PATH
 # Check which .ini files are used
 RUN php --ini
