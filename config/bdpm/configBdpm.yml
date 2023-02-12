@@ -1,0 +1,49 @@
+#
+# This file is part of MedShakeEHR.
+#
+# Copyright (c) 2023
+# Bertrand Boutillier <b.boutillier@gmail.com>
+# http://www.medshake.net
+#
+# MedShakeEHR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# MedShakeEHR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#######################################
+#
+# Base de données publique des médicaments : data pour la mise à jour
+# https://base-donnees-publique.medicaments.gouv.fr/telechargement.php
+#
+#######################################
+
+dataBdpm:
+  bdpm_groupesGeneriques:
+    file: "CIS_GENER_bdpm.txt"
+    url: "https://base-donnees-publique.medicaments.gouv.fr/telechargement.php?fichier=CIS_GENER_bdpm.txt"
+    finligne: "\r\n"
+  bdpm_compositions:
+    file: "CIS_COMPO_bdpm.txt"
+    url: "https://base-donnees-publique.medicaments.gouv.fr/telechargement.php?fichier=CIS_COMPO_bdpm.txt"
+    finligne: "\r\n"
+  bdpm_conditions:
+    file: "CIS_CPD_bdpm.txt"
+    url: "https://base-donnees-publique.medicaments.gouv.fr/telechargement.php?fichier=CIS_CPD_bdpm.txt"
+    finligne: "\r\n"
+  bdpm_presentations:
+    file: "CIS_CIP_bdpm.txt"
+    url: "https://base-donnees-publique.medicaments.gouv.fr/telechargement.php?fichier=CIS_CIP_bdpm.txt"
+    finligne: "\n"
+  bdpm_specialites:
+    file: "CIS_bdpm.txt"
+    url: "https://base-donnees-publique.medicaments.gouv.fr/telechargement.php?fichier=CIS_bdpm.txt"
+    finligne: "\r\n"

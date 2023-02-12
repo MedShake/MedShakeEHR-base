@@ -94,7 +94,7 @@ class msLapSAM
     global $p;
     if($xml=file_get_contents($this->_xmlUrl)) {
       $xml=str_replace(['encoding="iso-8859-1"', 'encoding="windows-1252"'], 'encoding="UTF8"', $xml);
-      $xml=utf8_encode($xml);
+	  $xml = mb_convert_encoding($xml, 'UTF-8' , ['ISO-8859-1', 'Windows-1252']);
       msTools::checkAndBuildTargetDir($p['homepath'].'ressources/SAM/');
       return file_put_contents($p['homepath'].'ressources/SAM/SAM.xml', $xml);
     } else {

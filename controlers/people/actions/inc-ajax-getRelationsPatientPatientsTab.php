@@ -37,5 +37,9 @@ $liensFam->setToID($patientID);
 
 header('Content-Type: application/json');
 $liensFam->setRelationType('relationPatientPatient');
-$liensFam->setReturnedPeopleTypes(['patient']);
+if($p['config']['PraticienPeutEtrePatient'] == 'true') {
+	$liensFam->setReturnedPeopleTypes(['patient','pro']);
+} else {
+	$liensFam->setReturnedPeopleTypes(['patient']);
+}
 exit(json_encode($liensFam->getRelations(['identite', 'ageCalcule'])));

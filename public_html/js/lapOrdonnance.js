@@ -64,11 +64,6 @@ var ordoDejaAnalysee;
  */
 var analyseWithNoRestriction = false;
 
-/**
- * Version Thériaque
- * @type {String}
- */
-var ordoVersionTheriaque;
 
 $(document).ready(function() {
 
@@ -325,7 +320,6 @@ function analyserPrescription() {
       incrusterRisqueAllergique(data.lignesRisqueAllergique);
       $('#modalLapAlerte').modal('show')
       ordoDejaAnalysee = true;
-      ordoVersionTheriaque = data.versionTheriaque;
     },
     error: function() {
       console.log("Analyse ordonnance : PROBLEME");
@@ -376,10 +370,11 @@ function lapOrdoAnalyseResBrut() {
 function saveOrdo(action) {
 
   // on impose l'analyse avant si non faite
-  if (ordoDejaAnalysee != true) {
+  if (lapModeFonctionnement != 'BDPM' && ordoDejaAnalysee != true) {
     analyserPrescription();
     return;
   }
+	
 
   var ordo = {
     ordoMedicsG: ordoMedicsG,
@@ -397,8 +392,7 @@ function saveOrdo(action) {
     data: {
       ordo: ordo,
       patientID: $('#identitePatient').attr("data-patientID"),
-      ordoName: $('#ordoName').val(),
-      versionTheriaque: ordoVersionTheriaque
+      ordoName: $('#ordoName').val()
     },
     dataType: "json",
     success: function(data) {
@@ -548,7 +542,7 @@ function construireOrdonnance(ordoData, tabMedicsG, tabMedicsALD, parentdestinat
   }
   $('div.placeForVersionTheriaque').remove();
   if (ordoData != undefined && ordoData.value != undefined && ordoData.value.versionTheriaque != undefined) {
-    $(parentdestination).append('<div class="small mt-2 placeForVersionTheriaque">Version Thériaque : ' + ordoData['value']['versionTheriaque'] + '</div>');
+    $(parentdestination).append('<div class="small mt-2 placeForVersionTheriaque">Base médicamenteuse : ' + ordoData['value']['versionTheriaque']['vers'] + ' ' + ordoData['value']['versionTheriaque']['date_ext'] + '</div>');
   }
 
   $(function() {

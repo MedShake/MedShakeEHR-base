@@ -77,7 +77,7 @@ RUN curl -sf -L -O https://github.com/docker-library/php/blob/master/docker-php-
 	&& chmod 0774 docker-php-ext-install
 
 # Install some more PhP's dependencies
-RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-zip php-xml php-imagick php-imap php-soap php-mysql php-bcmath mariadb-client
+RUN apt --assume-yes install php-gd php-dom php-mbstring php-intl php-curl php-zip php-xml php-gnupg php-imagick php-imap php-soap php-mysql php-bcmath php-yaml mariadb-client
 
 WORKDIR $MEDSHAKEEHRPATH
 

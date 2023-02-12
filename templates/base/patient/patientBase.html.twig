@@ -73,6 +73,7 @@
   {% if config.optionGeActiverLapInterne == 'true' %}
     lapAlertPatientTermeGrossesseSup46 = {{ config.lapAlertPatientTermeGrossesseSup46 }};
     lapAlertPatientAllaitementSup3Ans = {{ config.lapAlertPatientAllaitementSup3Ans }};
+    lapModeFonctionnement = '{{ config.theriaqueMode }}';
   {% endif %}
 {% endblock %}
 

@@ -53,7 +53,7 @@ if(!empty($_POST['ordo']['ordoMedicsG'])) {
   }
 }
 //enregistrement de versionTheriaque + liste SAMs dans value porteur ordo
-$ordoValue=array('versionTheriaque'=>$_POST['versionTheriaque']);
+$ordoValue=array('versionTheriaque'=>$lap->getTheriaqueInfos());
 if($samsList=$lap->getSamsListInOrdo()) {
   if(!empty($samsList)) $ordoValue['sams']=$samsList;
 }

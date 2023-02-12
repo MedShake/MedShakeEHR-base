@@ -148,8 +148,13 @@ class msPeopleRelations extends msPeople
         return false;
       }
 
-      elseif($this->_relationType == 'relationPatientPatient' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
-        return false;
+      elseif($this->_relationType == 'relationPatientPatient') {
+		if($p['config']['PraticienPeutEtrePatient'] != 'true' and ($toIdType!='patient' or $this->_withIdType != 'patient')) {
+			return false;
+		}
+		elseif($p['config']['PraticienPeutEtrePatient'] == 'true' and (!in_array($toIdType, ['patient','pro']) or !in_array($this->_withIdType, ['patient','pro']))) {
+			return false;
+		}
       }
 
       elseif($this->_relationType == 'relationPraticienGroupe') {

@@ -84,7 +84,7 @@ class msUser
         if (!isset($_COOKIE['userPass'])) {
             return msUser::cleanBadAuth();
         }
-        $fingerprint_partiel = $_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT'];
+        $fingerprint_partiel = msSQL::cleanVar($_SERVER['HTTP_ACCEPT_LANGUAGE'].$p['config']['fingerprint'].$_SERVER['HTTP_USER_AGENT']);
 
         $user=msSQL::sqlUnique("select id, name, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank`, module,
          CASE WHEN secret2fa is null THEN null ELSE CAST(AES_DECRYPT(secret2fa,@password) AS CHAR(110)) END as secret2fa
@@ -136,8 +136,8 @@ class msUser
         } else {
             $duration=msConfiguration::getParameterValue('phonecaptureCookieDuration');
             $domain=msConfiguration::getParameterValue('cookieDomain');
-            setcookie("userIdPc", '', (time()-$duration), "/", $domain);
-            setcookie("userPassPc", '', (time()-$duration), "/", $domain);
+            setcookie("userIdPc", '', (time()-$duration), "/", $domain, true, true);
+            setcookie("userPassPc", '', (time()-$duration), "/", $domain, true, true);
             unset($_SESSION);
             return null;
         }
@@ -407,9 +407,10 @@ class msUser
         }
         global $p;
         $userPass=password_hash($this->_userPass,PASSWORD_DEFAULT);
-        setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
-        setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
-        setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], false, true);
+		if(!empty($_SERVER['HTTPS'])) {$securecookie = true;} else {$securecookie = false;}
+        setcookie("userName", $this->_userName, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], $securecookie, true);
+        setcookie("apacheLogUserID", $this->_userID, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], $securecookie, true);
+        setcookie("userPass", $userPass, (time()+$p['config']['cookieDuration']), "/", $p['config']['cookieDomain'], $securecookie, true);
     }
 
 /**

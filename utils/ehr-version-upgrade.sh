@@ -167,7 +167,7 @@ execPHPEntity(){
  #local userPassword=$4
  #local webInstance=$(fetchWebDockerKey)
  #echo "$(tput setaf 10)FINE$(tput sgr0) About to login with user" $userName
- #curl -Liv -c /tmp/ehr-cookie.txt -d "formIN=baseLogin" -d "p_username=$userName" -d "p_password=$userPassword" http://med1.medgence.com/login/logInDo/
+ #curl -Liv -c /tmp/ehr-cookie.txt -d "formIN=baseLogin" -d "p_username=$userName" -d "p_password=$userPassword" http://localhost/login/logInDo/
  echo "$(tput setaf 10)FINE$(tput sgr0) About to call" $entity
  curl -Liv -b /tmp/ehr-cookie.txt -H "Accept-Language: en,fr" http://$EHR_SERVER_NAME/configuration/exec/$module/$entity/
 }

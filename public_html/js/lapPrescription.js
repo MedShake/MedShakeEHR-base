@@ -742,6 +742,11 @@ function lapInstallPrescription(tab) {
       // placer le nom de la spé
       $('#prescriptionHumanMedicName').html(medicData['nomUtileFinal']);
 
+			// lien vers monographie externe (si BDPM)
+			if ($('a.voirPosologiesExterne').length) {
+				$('a.voirPosologiesExterne').attr('href', urlBase + '/lap/monographie/' + medicData['speThe'] + '/');
+			}
+
       // voies d'administration
       $.each(data['medicData']['voiesPossibles'], function(index, value) {
         if (preSelectedCodeVoie == value['codevoie']) {

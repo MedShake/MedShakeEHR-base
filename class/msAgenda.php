@@ -728,12 +728,14 @@ class msAgenda
           $typesRdv = yaml_parse_file($p['homepath'].'config/agendas/typesRdv'.$this->_userID.'.yml');
           if($all == true) {
             return $typesRdv;
-          } else {
+          } elseif(is_array($typesRdv)) {
             foreach($typesRdv as $k=>$v) {
               if(isset($v['utilisable']) and $v['utilisable']=="non") unset($typesRdv[$k]);
             }
             return $typesRdv;
-          }
+          } else {
+			return [];
+		  }
         } else {
           return array(
             '[C]'=> array(

@@ -364,8 +364,8 @@ class msSend
 
       $mime=msTools::getmimetype($attachment);
       $contenu=file_get_contents($attachment);
-      if (!mb_detect_encoding($contenu, 'utf-8', true) and $mime == 'text/plain') {
-          $contenu = utf8_encode($contenu);
+      if (!mb_detect_encoding($contenu, 'UTF-8', true) and $mime == 'text/plain') {
+          $contenu = mb_convert_encoding($contenu, 'UTF-8' , mb_detect_encoding($contenu, null, false));
       }
       $contenu=base64_encode($contenu);
 

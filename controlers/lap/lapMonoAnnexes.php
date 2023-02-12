@@ -31,6 +31,10 @@ $template="lapMonoAnnexes";
 
 if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
+if($p['config']['theriaqueMode'] == 'BDPM') {
+	die("Ces informations ne sont pas disponibles dans cette configuration.");
+}
+
 $mono=new msLapMonographie();
 
 $p['page']['spe']=$match['params']['spe'];

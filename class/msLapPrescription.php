@@ -126,7 +126,7 @@ class msLapPrescription extends msLap
     }
 
 /**
- * Définir medic viruel ou pas
+ * Définir medic virtuel ou pas
  * @param string $v medic virt
  * @return string medic virt
  */
@@ -671,6 +671,9 @@ class msLapPrescription extends msLap
  */
     public function getSamList4Spe($code) {
       global $p;
+
+	  if ($p['config']['theriaqueMode']=='BDPM') return $rd=[]; //en dur
+
       if(is_file($p['homepath'].'ressources/SAM/samSpeCorrespondances')) {
         $filecontent = file_get_contents($p['homepath'].'ressources/SAM/samSpeCorrespondances');
         $tabCorrespondance = unserialize($filecontent);

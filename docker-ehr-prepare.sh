@@ -1,8 +1,8 @@
 #!/bin/sh
 # Prepare some local folder structure to ensure volume sharing with containers
-mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var ~/ehr/security/ca ~/ehr/dicom/ ~/ehr/work/store ~/ehr/work/worklist ~/ehr/backup ~/ehr/apicrypt ~/ehr/template/
+mkdir -p -m 700 ~/ehr/data ~/ehr/log/apache2 ~/ehr/screen ~/ehr/security/tls/letsencrypt/etc ~/ehr/security/tls/letsencrypt/var ~/ehr/security/ca ~/ehr/dicom/ ~/ehr/work/store ~/ehr/work/worklist ~/ehr/backup ~/ehr/apicrypt ~/ehr/template/ ~/ehr/agenda/
 chmod -R 755 ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
-chown -R www-data:www-data ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log
+chown -R www-data:www-data ~/ehr/template ~/ehr/work ~/ehr/security/tls ~/ehr/log ~/ehr/agenda
 
 # FIXED: Prevent file error write access . TODO see alternative solution
 chmod a+w ~/ehr/work ~/ehr/work/worklist
