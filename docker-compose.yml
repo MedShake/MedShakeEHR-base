@@ -3,6 +3,9 @@ version: '2'
 services:
     web:
         image: medshake-ehr-web:latest
+        build:
+            context: .
+            dockerfile: Dockerfile-web
         ports:
             - "80:80"
         volumes:
@@ -23,6 +26,9 @@ services:
             - EHR_FINGERPRINT=${EHR_FINGERPRINT}
     db:
         image: medshake-ehr-db:latest
+        build:
+            context: .
+            dockerfile: Dockerfile-db
         volumes:
             - ~/ehr/data:/var/lib/mysql
 #        ports:
