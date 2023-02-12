@@ -62,7 +62,9 @@ class msLap
              $this->_classTheriaque='msTheriaqueWS';
          } elseif ($p['config']['theriaqueMode']=='PG') {
              $this->_classTheriaque='msTheriaquePG';
-         }
+         } elseif ($p['config']['theriaqueMode']=='BDPM') {
+			$this->_classTheriaque='msBDPM';
+		 }
          $this->_the = new $this->_classTheriaque;
      }
 
@@ -124,7 +126,7 @@ class msLap
  * Obtenir la DC à partir de la spécialité dont info prescriptibilité en DC ou non
  * @param  int $typid type de recherche (1 : toutes les DC, 2: par code, 3: libellé)
  * @param  string $var   chaine/code à recherche
- * @param  int $dc    param de sélecction (0 : uniquement prescriptible en DC, 1: tout)
+ * @param  int $dc    param de sélection (0 : uniquement prescriptible en DC, 1: tout)
  * @return array        array de retour de la DC
  */
     public function getDC($typid, $var, $dc)
@@ -477,7 +479,7 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         global $p;
         if (strlen($txt)>=3) {
           $subsTab=[];
-          if($intersectionTab=$this->getCodesSpesListBySub ($txt, $type, $monovir)) {
+          if($intersectionTab=$this->getCodesSpesListBySub($txt, $type, $monovir)) {
             if ($data=$this->_the->get_the_specialite_multi_codeid(implode(",", $intersectionTab), 1, $monovir)) {
                 $rd=$this->_prepareData($data);
                 if (!empty($rd)) {
@@ -506,17 +508,18 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
               $colonne = 'code_sq_pk';
           } elseif ($p['config']['theriaqueMode'] == 'PG') {
               $colonne = 'sac_code_sq_pk';
-          }
+          } else {
+			$colonne = 'sac_code_sq_pk';
+		  }
 
 
           $substances = explode('+',$txt);
           if(!empty($substances)) {
             foreach($substances as $k=>$substance) {
               $subsTab=$this->getSubstances(trim($substance), $type);
-
               if(empty($subsTab)) continue;
               $subs=implode(",", array_column($subsTab, $colonne));
-              $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
+			  $tabSpe=$this->_the->get_the_specialite_multi_codeid($subs, 7, $monovir);
               if(!empty($tabSpe)) {
                 $tabSpe=$this->_prepareData($tabSpe);
                 $tabSpes[$k]=array_column($tabSpe, 'sp_code_sq_pk');
@@ -547,14 +550,14 @@ protected function _get_the_presentation($codeTheriaque, $typCode)
         if (strlen($txt)>=3) {
             $rd=[];
             if ($data=$this->_the->get_the_spe_txt($txt, $monovir)) {
-                $rd=$this->_prepareData($data);
-                // natural sorting => confié maintenant à jquey stupid table
+				$rd=$this->_prepareData($data);
+				// natural sorting => confié maintenant à jquery stupid table
                 //msTools::array_natsort_by('sp_nom', $rd);
-                if (!empty($rd)) {
-                    $this->getPresentations($rd, 'sp_code_sq_pk', 1);
-                    $this->attacherPrixMedic($rd, 'sp_code_sq_pk');
-                    $this->getStatutDelivrance($rd, 'sp_code_sq_pk');
-                }
+				if (!empty($rd)) $this->getPresentations($rd, 'sp_code_sq_pk', 1);
+				if (!empty($rd)) {
+					$this->attacherPrixMedic($rd, 'sp_code_sq_pk');
+					$this->getStatutDelivrance($rd, 'sp_code_sq_pk');
+				}
                 return $rd;
             }
         }

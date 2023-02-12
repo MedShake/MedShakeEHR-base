@@ -72,7 +72,12 @@
               <td >
                 <ul class="list-unstyled small">
                 {% for suba in medic.suba %}
-                    <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ suba.codesubst }}/1/" target="_blank" class="font-weight-bold">{{ suba.libsubst }}</a> {% if suba.dosesubst > 0 %}{{ suba.dosesubst|number_format(2, ',', '') }} {{ suba.udosesubst }}{% endif %}</li>
+                    <li><a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/lap/monographie/sub/{{ suba.codesubst }}/1/" target="_blank" class="font-weight-bold">{{ suba.libsubst }}</a> 
+                    {% if suba.dosesubst > 0 and config.theriaqueMode != 'BDPM'  %}
+                      {{ suba.dosesubst|number_format(2, ',', '') }} {{ suba.udosesubst }}
+                    {% elseif config.theriaqueMode == 'BDPM' %}
+                      {{ suba.udosesubst }}
+                    {% endif %}</li>
                 {% endfor %}
                 </ul>
               </td>
