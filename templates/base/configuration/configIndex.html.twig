@@ -287,6 +287,12 @@
 
       <h2 class="mt-4 mb-2">Ressources externes</h2>
       <ul class="list-group">
+        {% if config.theriaqueMode == 'BDPM' %}
+          <li class="list-group-item">
+            <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/bdpm/">Base de données publique des médicaments
+            </a>
+          </li>
+        {% endif %}
         <li class="list-group-item">
           <a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/refreshSams/">Rafraichir le XML HAS des SAMs
           </a>

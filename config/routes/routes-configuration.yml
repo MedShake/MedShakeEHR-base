@@ -96,6 +96,7 @@ configPlugins: ['GET', '/configuration/plugins/', 'configuration/configPlugins']
 
 # configuration LAP
 configLapGetSAMS: ['GET', '/configuration/refreshSams/', 'configuration/configLapGetSAMS']
+configLapBDPM: ['GET', '/configuration/bdpm/', 'configuration/configLapBDPM']
 
 # configuration voir jeux de valeurs
 configJdvShow: ['GET', '/configuration/configJdvShow/', 'configuration/configJdvShow']

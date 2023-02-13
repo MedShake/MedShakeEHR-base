@@ -1,0 +1,98 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2023
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > Config : LAP => afficher les données de la BDPM si présente
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+{% extends "page.html.twig" %}
+{% import "macroForm.html.twig" as f %}
+{% block title %}
+	{{ config.designAppName }}
+	: informations BDPM
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item">
+			<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/">Configuration</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/configuration/#journaux">Journaux et informations techniques</a>
+		</li>
+		<li class="breadcrumb-item active">
+			Informations Base de données publique des médicaments
+		</li>
+	</ol>
+
+	<h1>Informations Base de données publique des médicaments</h1>
+
+	<div class="alert alert-danger font-weight-bold" role="alert">
+		Le support de la Base de données publique des médicaments est assuré ici à but unique de démonstration du module de prescription MedShakeEHR.<br>NE PAS UTILISER EN PRODUCTION !
+	</div>
+
+
+	<h2 class="my-4">Source</h2>
+	<p>
+		<a href="https://base-donnees-publique.medicaments.gouv.fr" target="_blank">Base de données publique des médicaments</a>
+	</p>
+
+	<h2 class="my-4">Fichiers exploités</h2>
+
+	<table class="table table-sm mb-0 table-hover ">
+		<thead class="thead-light">
+			<tr>
+				<th>
+					Fichier
+				</th>
+				<th>
+					Dernier import
+				</th>
+				<th>
+					Table SQL
+				</th>
+				<th>
+					Copie locale de la version en base
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for table, v in page.dataBdpm %}
+				<tr>
+					<td>{{ v.file }}</td>
+					<td>{{ v.fileLastParsing }}</td>
+					<td>{{ table }}</td>
+					<td>{{ v.filePath }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+{% endblock %}

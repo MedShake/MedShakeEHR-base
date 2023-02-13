@@ -236,3 +236,8 @@
 
   </div>
 </div>
+{% if config.theriaqueMode == 'BDPM' %}
+	<div class="alert alert-warning text-center" role="alert">
+		Le support de la  Base de données publique des médicaments <a class="alert-link" href="https://base-donnees-publique.medicaments.gouv.fr/" target="_blank"><i class="fas fa-external-link-alt"></i></a> est assuré ici à but unique de démonstration.<br>NE PAS UTILISER EN PRODUCTION !
+	</div>
+{% endif %}
