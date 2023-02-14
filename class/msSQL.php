@@ -345,9 +345,8 @@ class msSQL
 		}
 
 		$sql = "insert into `" . self::cleanVar($table) . "` (`" . implode('`, `', $cols) . "`) values (" . implode(',', $valeurs) . ") ON DUPLICATE KEY UPDATE " . implode(', ', $dupli) . " ;";
-		$stmt = $pdo->prepare($sql);
-		if ($stmt->execute()) {
-			return $pdo->lastInsertId();
+		if ($pdo->exec($sql)) {
+			return (int)$pdo->lastInsertId();
 		} else {
 			return false;
 		}
