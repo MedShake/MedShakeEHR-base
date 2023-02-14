@@ -250,25 +250,69 @@ class msSQL
 	}
 
 	/**
-	 * Obtenir les éléments pour la requète préparée avec clause WHERE ... IN
+	 * Vérifier qu'un tableau de noms de colonne est bien valide (syntaxe "as" comprise)
+	 *
+	 * @param array $queryCols colonnes demandées (syntaxe nomValide as nouveauNom supportée)
+	 * @param array $colsInTable colonnes connue de la table
+	 * @return bool
+	 */
+	public static function sqlValidQueryCols($queryCols, $colsInTable)
+	{
+		foreach ($queryCols as $value) {
+			if ((is_string($value) and (in_array($value, $colsInTable)) or preg_match('#^(' . implode('|', $colsInTable) . ')\s+as\s+[a-zA-Z_][a-zA-Z0-9_]*$#i', $value))) {
+				continue;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Obtenir les éléments pour la requête préparée avec clause WHERE ... IN
 	 *
 	 * @param array $data data qui vont passer dans la clause where ... in (...)
 	 * @param string $prefix prefix à appliquer aux tags à générer
 	 * @return array in => la chaine à placer dans IN(), execute => le tableau des marqueurs à merger
 	 */
-	public static function sqlGetTagsForWhereIn($data, $prefix = 'tag') {
+	public static function sqlGetTagsForWhereIn($data, $prefix = 'tag')
+	{
 
-		if(!empty($data)) {
+		if (!empty($data)) {
 			$executeArray = [];
-			foreach($data as $k=>$v) {
-				$executeArray[$prefix.$k] = $v;
+			foreach ($data as $k => $v) {
+				$executeArray[$prefix . $k] = $v;
 			}
 
-			$tagsInString = ':'.implode(', :', array_keys($executeArray));
+			$tagsInString = ':' . implode(', :', array_keys($executeArray));
 		}
 		return ['execute' => $executeArray, 'in' => $tagsInString];
 	}
 
+	/**
+	 * Vérifier si une chaine est une possible clause valide pour ORDER BY
+	 *
+	 * @param string $orderByString
+	 * @return bool
+	 */
+	public static function sqlIsValidOrderByString($orderByString)
+	{
+		if (empty($orderByString)) return true;
+
+		$regex = "/^[a-zA-Z0-9_,\s]+$/";
+		if (!preg_match($regex, $orderByString)) {
+			return false;
+		}
+
+		$dangerous_keywords = array("SELECT", "DROP", "TRUNCATE", "DELETE", "UPDATE", "INSERT");
+		foreach ($dangerous_keywords as $keyword) {
+			if (stripos($orderByString, $keyword) !== false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * Insérer dans une table ou mettre à jour
