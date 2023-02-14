@@ -26,6 +26,8 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
 class msCourrier
@@ -302,8 +304,15 @@ class msCourrier
         // le dev de cette fonctionnalité a été financée par Mallaury T. (France)
         $data=new msData();
         $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
+		$marqueurs = [];
+		$marqueurs['creationDate'] = $this->_objetData['creationDate'];
+		$marqueurs['objetID'] = $this->_objetData['id'];
+		$marqueurs['fromID'] = $this->_objetData['fromID'];
+		$sqlImplode = msSQL::sqlGetTagsForWhereIn($porteursReglementIds, 'posteursReg');
+		$marqueurs = array_merge($marqueurs, $sqlImplode['execute']);
+
         if($factureID = msSQL::sqlUniqueChamp("select count(id) from objets_data
-        where typeID in ('".implode("','", $porteursReglementIds)."') and DATE(creationDate) = DATE('".$this->_objetData['creationDate']."') and id <= '".$this->_objetData['id']."' and fromID = '".$this->_objetData['fromID']."'")) {
+        where typeID in (" .$sqlImplode['in']. ") and DATE(creationDate) = DATE( :creationDate ) and id <=  :objetID and fromID = :fromID ", $marqueurs)) {
           $factureID=str_pad($factureID, 3, "0", STR_PAD_LEFT);
           $tabRetour['factureID']=$factureID;
           $dateF = DateTime::createFromFormat('Y-m-d H:i:s', $this->_objetData['creationDate']);
@@ -657,7 +666,7 @@ class msCourrier
         if ($data=msSQL::sql2tabKey("select dt.id, dt.name, od.value
         from objets_data as od
         join data_types as dt on dt.id=od.typeID and groupe='medical'
-        where od.instance='".$instance."' and od.outdated='' and od.deleted=''", 'name')) {
+        where od.instance= :instance and od.outdated='' and od.deleted=''", 'name', '', ['instance' => $instance])) {
           foreach($data as $k=>$v) {
             $tab[$k]=$v['value'];
             $tab[$v['id']]=$v['value'];
