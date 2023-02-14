@@ -845,7 +845,8 @@ class msAgenda
 		];
 
 		if (!empty($inTypes)) {
-			$marqueurs = array_merge($marqueurs, msSQL::sqlGetTagsForWhereIn($inTypes, 'type'));
+			$sqlInParam = msSQL::sqlGetTagsForWhereIn($inTypes, 'type');
+			$marqueurs = array_merge($marqueurs, $sqlInParam['execute']);
 			$whereIn = " and type in (" . $sqlInParam['in'] . ") ";
 		} else {
 			$whereIn = '';
