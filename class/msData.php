@@ -219,12 +219,14 @@ class msData extends msDataCat
 
 		if (!empty($listArray)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($listArray, 'data');
-		}
 
-		return msSQL::sql2tab(
-			"select " . implode(', ', $col) . " from data_types where name in (" . $sqlImplode['in'] . ") order by displayOrder, label",
-			$sqlImplode['execute']
-		);
+			return msSQL::sql2tab(
+				"select " . implode(', ', $col) . " from data_types where name in (" . $sqlImplode['in'] . ") order by displayOrder, label",
+				$sqlImplode['execute']
+			);
+		} else {
+			return null;
+		}
 	}
 
 
@@ -273,9 +275,11 @@ class msData extends msDataCat
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
-		}
 
-		return msSQL::sql2tabKey("select label, id from data_types where id in (" . $sqlImplode['in'] . ")", 'id', 'label', $sqlImplode['execute']);
+			return msSQL::sql2tabKey("select label, id from data_types where id in (" . $sqlImplode['in'] . ")", 'id', 'label', $sqlImplode['execute']);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -287,9 +291,11 @@ class msData extends msDataCat
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
-		}
 
-		return msSQL::sql2tabKey("select label, name from data_types where name in (" . $sqlImplode['in'] . ") order by displayOrder", 'name', 'label', $sqlImplode['execute']);
+			return msSQL::sql2tabKey("select label, name from data_types where name in (" . $sqlImplode['in'] . ") order by displayOrder", 'name', 'label', $sqlImplode['execute']);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -301,9 +307,11 @@ class msData extends msDataCat
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
-		}
 
-		return msSQL::sql2tabKey("select name, id from data_types where name in (" . $sqlImplode['in'] . ")", 'name', 'id', $sqlImplode['execute']);
+			return msSQL::sql2tabKey("select name, id from data_types where name in (" . $sqlImplode['in'] . ")", 'name', 'id', $sqlImplode['execute']);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -315,8 +323,10 @@ class msData extends msDataCat
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
+			return msSQL::sql2tabKey("select name, id from data_types where id in (" . $sqlImplode['in'] . ")", 'id', 'name', $sqlImplode['execute']);
+		} else {
+			return null;
 		}
-		return msSQL::sql2tabKey("select name, id from data_types where id in (" . $sqlImplode['in'] . ")", 'id', 'name', $sqlImplode['execute']);
 	}
 
 	/**
@@ -349,16 +359,17 @@ class msData extends msDataCat
 	{
 		if (!empty($typeIDsArray)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($typeIDsArray, 'dataID');
-		}
 
-		$tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in (" . $sqlImplode['in'] . ")", "id", "formValues", $sqlImplode['execute']);
-		if (is_array($tab)) {
-			foreach ($tab as $k => $v) {
-				$tab[$k] = Spyc::YAMLLoad($v);
+			$tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in (" . $sqlImplode['in'] . ")", "id", "formValues", $sqlImplode['execute']);
+			if (is_array($tab)) {
+				foreach ($tab as $k => $v) {
+					$tab[$k] = Spyc::YAMLLoad($v);
+				}
 			}
+			return $tab;
+		} else {
+			return null;
 		}
-
-		return $tab;
 	}
 
 	/**
@@ -370,16 +381,17 @@ class msData extends msDataCat
 	{
 		if (!empty($typeArray)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($typeArray, 'dataID');
-		}
 
-		$tab = msSQL::sql2tabKey("select name, formValues from data_types where formType in ('select', 'radio') and name in (" . $sqlImplode['in'] . ")", "name", "formValues", $sqlImplode['execute']);
-		if (is_array($tab)) {
-			foreach ($tab as $k => $v) {
-				$tab[$k] = Spyc::YAMLLoad($v);
+			$tab = msSQL::sql2tabKey("select name, formValues from data_types where formType in ('select', 'radio') and name in (" . $sqlImplode['in'] . ")", "name", "formValues", $sqlImplode['execute']);
+			if (is_array($tab)) {
+				foreach ($tab as $k => $v) {
+					$tab[$k] = Spyc::YAMLLoad($v);
+				}
 			}
+			return $tab;
+		} else {
+			return null;
 		}
-
-		return $tab;
 	}
 
 	/**

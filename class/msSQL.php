@@ -334,18 +334,20 @@ class msSQL
 			throw new Exception('Nom de colonne invalide pour la table ' . $table);
 		}
 
+		$i = 0;
 		foreach ($data as $key => $val) {
-			$key = self::cleanVar($key);
 			$val = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, "UTF-8");
-			$val = self::cleanVar($val);
 
 			$cols[] = $key;
-			$valeurs[] = '\'' . $val . '\'';
+			$marqueurs['mar' . $i] = $val;
 			$dupli[] = '`' . $key . '`=VALUES(`' . $key . '`)';
+			$i++;
 		}
 
-		$sql = "insert into `" . self::cleanVar($table) . "` (`" . implode('`, `', $cols) . "`) values (" . implode(',', $valeurs) . ") ON DUPLICATE KEY UPDATE " . implode(', ', $dupli) . " ;";
-		if ($pdo->exec($sql)) {
+		$sql = "insert into `" . $table . "` (`" . implode('`, `', $cols) . "`) values (:" . implode(', :', array_keys($marqueurs)) . ") ON DUPLICATE KEY UPDATE " . implode(', ', $dupli) . " ;";
+
+		$stmt = $pdo->prepare($sql);
+		if ($stmt->execute($marqueurs)) {
 			return (int)$pdo->lastInsertId();
 		} else {
 			return false;
