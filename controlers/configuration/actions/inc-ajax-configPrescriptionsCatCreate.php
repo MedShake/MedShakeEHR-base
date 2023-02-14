@@ -24,45 +24,49 @@
  * Config > ajax : créer une catégorie de prescriptions types
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 //check & validate datas
-$gump=new GUMP('fr');
+$gump = new GUMP('fr');
 $_POST = $gump->sanitize($_POST);
 
 unset($_POST['groupe']);
 
 if (isset($_POST['id'])) {
-    $gump->validation_rules(array(
-            'id'=> 'required|numeric',
-            'name'=> 'required|alpha_numeric',
-            'label'     => 'required',
-        ));
+	$gump->validation_rules(array(
+		'id' => 'required|numeric',
+		'name' => 'required|alpha_numeric',
+		'label'     => 'required',
+	));
 } else {
-    $gump->validation_rules(array(
-            'name'=> 'required|alpha_numeric|presence_bdd,prescriptions_cat',
-            'label'     => 'required',
-        ));
+	$gump->validation_rules(array(
+		'name' => 'required|alpha_numeric|presence_bdd,prescriptions_cat',
+		'label'     => 'required',
+	));
 }
 
 $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
-    $return['status']='failed';
-    $errors = $gump->get_errors_array();
-    $return['msg']=$errors;
-    $return['code']=array_keys($errors);
+	$return['status'] = 'failed';
+	$errors = $gump->get_errors_array();
+	$return['msg'] = $errors;
+	$return['code'] = array_keys($errors);
 } else {
-    $validated_data['fromID']=$p['user']['id'];
-    $validated_data['creationDate']=date("Y-m-d H:i:s");
+	$validated_data['fromID'] = $p['user']['id'];
+	$validated_data['creationDate'] = date("Y-m-d H:i:s");
 
-    if (msSQL::sqlInsert('prescriptions_cat', $validated_data) > 0) {
-        $return['status']='ok';
-    } else {
-        $return['status']='failed';
-        $return['msg']=mysqli_error($mysqli);
-    }
+	if (msSQL::sqlInsert('prescriptions_cat', $validated_data) > 0) {
+		$return['status'] = 'ok';
+	} else {
+		$return['status'] = 'failed';
+		$return['msg'] = implode(' - ', $pdo->errorInfo());
+	}
 }
 echo json_encode($return);

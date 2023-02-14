@@ -24,45 +24,49 @@
  * Config > ajax : associer un tag Dicom à un typeName
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 //check & validate datas
-$gump=new GUMP('fr');
+$gump = new GUMP('fr');
 unset($_POST['groupe']);
 $_POST = $gump->sanitize($_POST);
 
 if (isset($_POST['id'])) {
-    $gump->validation_rules(array(
-            'id'=> 'required|numeric',
-            'dicomTag'=> 'required',
-            'typeName'=> 'required',
-            'returnValue' => 'required',
-            'roundDecimal' => 'required|numeric'
-        ));
+	$gump->validation_rules(array(
+		'id' => 'required|numeric',
+		'dicomTag' => 'required',
+		'typeName' => 'required',
+		'returnValue' => 'required',
+		'roundDecimal' => 'required|numeric'
+	));
 } else {
-    $gump->validation_rules(array(
-            'dicomTag'=> 'required',
-            'typeName'=> 'required',
-            'returnValue' => 'required',
-            'roundDecimal' => 'required|numeric'
-        ));
+	$gump->validation_rules(array(
+		'dicomTag' => 'required',
+		'typeName' => 'required',
+		'returnValue' => 'required',
+		'roundDecimal' => 'required|numeric'
+	));
 }
 
 $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
-    $return['status']='failed';
-    $errors = $gump->get_errors_array();
-    $return['msg']=$errors;
-    $return['code']=array_keys($errors);
+	$return['status'] = 'failed';
+	$errors = $gump->get_errors_array();
+	$return['msg'] = $errors;
+	$return['code'] = array_keys($errors);
 } else {
-    if (msSQL::sqlInsert('dicomTags', $validated_data) > 0) {
-        $return['status']='ok';
-    } else {
-        $return['status']='failed';
-        $return['msg']=mysqli_error($mysqli);
-    }
+	if (msSQL::sqlInsert('dicomTags', $validated_data) > 0) {
+		$return['status'] = 'ok';
+	} else {
+		$return['status'] = 'failed';
+		$return['msg'] = implode(' - ', $pdo->errorInfo());
+	}
 }
 echo json_encode($return);

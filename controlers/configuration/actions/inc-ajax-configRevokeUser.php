@@ -24,12 +24,16 @@
  * Config : Enlever un utilisateur (sans enlever ses fiches)
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-if(!isset($_POST['id']) or !is_numeric($_POST['id'])) die("Error");
+if (!isset($_POST['id']) or !is_numeric($_POST['id'])) die("Error");
 
-msSQL::sqlQuery("UPDATE people set `rank`='', name=NULL, pass='' WHERE id='".$_POST['id']."'");
+msSQL::sqlQuery("UPDATE people set rank='', name=NULL, pass='' WHERE id = :id", ['id' => $_POST['id']]);
 
 echo json_encode(array('ok'));
