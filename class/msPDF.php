@@ -375,7 +375,7 @@ class msPDF
 			$data['serializedTags'] = serialize($this->_courrierData);
 		}
 
-		msSQL::sqlInsert('printed', $data, false);
+		msSQL::sqlInsert('printed', $data);
 	}
 
 	/**

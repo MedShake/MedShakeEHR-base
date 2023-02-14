@@ -320,10 +320,9 @@ class msSQL
 	 *
 	 * @param  string  $table     table concernée
 	 * @param  array  $data      array champ => valeur à injecter
-	 * @param  bool $trashHTML deprecated
 	 * @return int|bool             last insert id ou false
 	 */
-	public static function sqlInsert($table, $data, $trashHTML = true)
+	public static function sqlInsert($table, $data)
 	{
 		global $pdo;
 		if (!self::sqlVerifyTableExist($table)) {
