@@ -28,76 +28,76 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['agendaChiffreParMail']=array(
-        'task' => 'Agenda de secours',
-        'defaults' => array('m'=>'0','h'=>'23','M'=>'*','dom'=>'*','dow'=>'0,1,2,3,4,5'),
-        'description' => 'Envoi de son agenda futur chiffré GPG à l\'utilisateur, par mail');
-    return;
+	$p['page']['availableCrons']['agendaChiffreParMail'] = array(
+		'task' => 'Agenda de secours',
+		'defaults' => array('m' => '0', 'h' => '23', 'M' => '*', 'dom' => '*', 'dow' => '0,1,2,3,4,5'),
+		'description' => 'Envoi de son agenda futur chiffré GPG à l\'utilisateur, par mail'
+	);
+	return;
 }
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['configDefault'] = $p['config'] = yaml_parse_file($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
 /////////// SQL connexion
-$pdo=msSQL::sqlConnect();
+$pdo = msSQL::sqlConnect();
 
 
-$users=msPeople::getUsersListForService('agendaEnvoyerChiffreParMail');
+$users = msPeople::getUsersListForService('agendaEnvoyerChiffreParMail');
 
-foreach ($users as $userID=>$value) {
-    /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
+foreach ($users as $userID => $value) {
+	/////////// config pour l'utilisateur concerné
+	$p['config'] = array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id' => $userID]));
 
-    if(empty($p['config']['agendaEnvoyerChiffreTo'])) continue;
+	if (empty($p['config']['agendaEnvoyerChiffreTo'])) continue;
 
-    $ag = new msAgenda;
-    $ag->set_userID($userID);
-    $ag->setStartDate(date('Y-m-d 00:00:00'));
-    $ag->setEndDate(date('Y-m-d 00:00:00',(time()+60*60*24*365*20)));
-    $agenda = $ag->getAgendaInFlatHumanTxt();
+	$ag = new msAgenda;
+	$ag->set_userID($userID);
+	$ag->setStartDate(date('Y-m-d 00:00:00'));
+	$ag->setEndDate(date('Y-m-d 00:00:00', (time() + 60 * 60 * 24 * 365 * 20)));
+	$agenda = $ag->getAgendaInFlatHumanTxt();
 
-    if(empty($agenda)) continue;
+	if (empty($agenda)) continue;
 
-    $gpg = new msGnupg;
-    $gpg->setPeopleID($userID);
-    $blocGPG = $gpg->chiffrerTexte($agenda);
+	$gpg = new msGnupg;
+	$gpg->setPeopleID($userID);
+	$blocGPG = $gpg->chiffrerTexte($agenda);
 
-    if(empty($blocGPG)) continue;
+	if (empty($blocGPG)) continue;
 
-    $tempfile=$p['config']['workingDirectory'].$userID.'/agendaSecours.txt.gpg';
-    msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$userID);
-    file_put_contents($tempfile, $blocGPG);
+	$tempfile = $p['config']['workingDirectory'] . $userID . '/agendaSecours.txt.gpg';
+	msTools::checkAndBuildTargetDir($p['config']['workingDirectory'] . $userID);
+	file_put_contents($tempfile, $blocGPG);
 
-    $send = new msSend;
-    $send->setSendType('ns');
-    $send->setSendService($p['config']['smtpTracking']);
-    $send->setTo(explode(',', $p['config']['agendaEnvoyerChiffreTo']));
-    $send->setFrom($p['config']['smtpFrom']);
-    $send->setFromName($p['config']['smtpFromName']);
-    $send->setSubject("Agenda de secours au ".date("d/m/Y H:i:s"));
-    $send->setAttachments($tempfile);
-    $send->setAttachmentsBaseName('agendaDeSecours');
-    $send->setBody("Agenda de secours au ".date("d/m/Y H:i:s"));
-    $send->send();
+	$send = new msSend;
+	$send->setSendType('ns');
+	$send->setSendService($p['config']['smtpTracking']);
+	$send->setTo(explode(',', $p['config']['agendaEnvoyerChiffreTo']));
+	$send->setFrom($p['config']['smtpFrom']);
+	$send->setFromName($p['config']['smtpFromName']);
+	$send->setSubject("Agenda de secours au " . date("d/m/Y H:i:s"));
+	$send->setAttachments($tempfile);
+	$send->setAttachmentsBaseName('agendaDeSecours');
+	$send->setBody("Agenda de secours au " . date("d/m/Y H:i:s"));
+	$send->send();
 
-    unlink($tempfile);
-
+	unlink($tempfile);
 }

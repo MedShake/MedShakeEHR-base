@@ -35,45 +35,46 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['patientsOfTheDay']=array(
-        'task' => 'Patients du jour',
-        'defaults' => array('m'=>'0','h'=>'8','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Enregistre la liste des patients du jour depuis une source externe.');
-    return;
+	$p['page']['availableCrons']['patientsOfTheDay'] = array(
+		'task' => 'Patients du jour',
+		'defaults' => array('m' => '0', 'h' => '8', 'M' => '*', 'dom' => '*', 'dow' => '1,2,3,4,5,6'),
+		'description' => 'Enregistre la liste des patients du jour depuis une source externe.'
+	);
+	return;
 }
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 ////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['configDefault'] = $p['config'] = yaml_parse_file($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
 /////////// SQL connexion
-$pdo=msSQL::sqlConnect();
+$pdo = msSQL::sqlConnect();
 
-$users=msPeople::getUsersWithSpecificParam('agendaDistantPatientsOfTheDay');
+$users = msPeople::getUsersWithSpecificParam('agendaDistantPatientsOfTheDay');
 
-foreach ($users as $userID=>$value) {
-    /////////// config pour l'utilisateur concerné
-    $p['config']=array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id'=>$userID]));
+foreach ($users as $userID => $value) {
+	/////////// config pour l'utilisateur concerné
+	$p['config'] = array_merge($p['configDefault'], msConfiguration::getAllParametersForUser(['id' => $userID]));
 
-    /// enregistre le fichier sous le nom déterminé en config
-    if(isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
-      msExternalData::fileSaveLocal($p['config']['agendaDistantPatientsOfTheDay'], $p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
-    }
+	/// enregistre le fichier sous le nom déterminé en config
+	if (isset($p['config']['agendaDistantPatientsOfTheDay']) and isset($p['config']['agendaLocalPatientsOfTheDay'])) {
+		msExternalData::fileSaveLocal($p['config']['agendaDistantPatientsOfTheDay'], $p['config']['workingDirectory'] . $p['config']['agendaLocalPatientsOfTheDay']);
+	}
 }
