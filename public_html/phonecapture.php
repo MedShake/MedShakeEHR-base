@@ -62,7 +62,7 @@ if ($p['config']['host']=='') {
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 /////////// Validators loader
 define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLoginPassMinLongueur'));

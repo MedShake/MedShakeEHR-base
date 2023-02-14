@@ -22,7 +22,7 @@
 
 /**
  * Conversion des templates d'impression : remplace tag.IdNumérique en tag.NomDeVariable
- * PARAMETRAGE DU DIRECTORY INDISPENSABE => $directory ci-dessous 
+ * PARAMETRAGE DU DIRECTORY INDISPENSABE => $directory ci-dessous
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
@@ -49,7 +49,7 @@ spl_autoload_register(function ($class) {
 require $homepath.'config/config.php';
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 
 $directory = $p['config']['templatesPdfFolder'];

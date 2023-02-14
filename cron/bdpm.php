@@ -60,7 +60,7 @@ $p['homepath']=$homepath;
 
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 ///// Data à récupérer
 $bdpm=yaml_parse_file($homepath.'config/bdpm/configBdpm.yml');

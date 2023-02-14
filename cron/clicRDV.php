@@ -57,7 +57,7 @@ $p['config']=yaml_parse_file($homepath.'config/config.yml');
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 
 $clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');

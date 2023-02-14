@@ -423,7 +423,7 @@ if (is_file($homepath.'config/config.yml')) {
       $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
 
       /////////// SQL connexion
-      $mysqli=msSQL::sqlConnect();
+      $pdo=msSQL::sqlConnect();
 
       /////////// Validators loader
       define("PASSWORDLENGTH", 8);

@@ -68,7 +68,7 @@ if ($p['config']['host']=='') {
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 /////////// État système
 $p['config']['systemState']=msSystem::getSystemState();

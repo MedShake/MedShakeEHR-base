@@ -62,7 +62,7 @@ if ($p['config']['host']=='') {
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 
 /////////// Sortie des versions des modules

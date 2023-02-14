@@ -46,7 +46,7 @@ spl_autoload_register(function ($class) {
 require $homepath.'config/config.php';
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 // conversion des Formulaires
 

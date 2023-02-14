@@ -63,7 +63,7 @@ $p['homepath']=$homepath;
 
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 
 $users=msPeople::getUsersWithSpecificParam('apicryptAdresse');
