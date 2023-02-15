@@ -36,11 +36,11 @@ $agenda->delEvent();
 header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
-    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-delEvent.php';
-    if (is_file($hook)) {
-        $event=$agenda->getEventByID($_POST['eventid']);
-        include($hook);
-   }
+	$hook = $p['homepath'] . 'controlers/services/' . $p['config']['agendaService'] . '/inc-ajax-delEvent.php';
+	if (is_file($hook)) {
+		$event = $agenda->getEventByID($_POST['eventid']);
+		include($hook);
+	}
 }
 
-echo json_encode(array("status"=>"ok"));
+echo json_encode(array("status" => "ok"));

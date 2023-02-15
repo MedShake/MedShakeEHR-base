@@ -28,18 +28,18 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'saveReglementForm' // enregistrer un réglement
+$acceptedModes = array(
+	'saveReglementForm' // enregistrer un réglement
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 
 // enregistrer un réglement
-if ($m=='saveReglementForm') {
-    include('inc-action-saveReglementForm.php');
+if ($m == 'saveReglementForm') {
+	include('inc-action-saveReglementForm.php');
 }

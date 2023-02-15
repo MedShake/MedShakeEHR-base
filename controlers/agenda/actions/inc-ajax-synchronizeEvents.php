@@ -29,10 +29,10 @@
 header('Content-Type: application/json');
 //hook pour service externe
 if (isset($p['config']['agendaService'])) {
-    $hook=$p['homepath'].'controlers/services/'.$p['config']['agendaService'].'/inc-ajax-synchronizeEvents.php';
-    if (is_file($hook)) {
-        include($hook);
-    }
+	$hook = $p['homepath'] . 'controlers/services/' . $p['config']['agendaService'] . '/inc-ajax-synchronizeEvents.php';
+	if (is_file($hook)) {
+		include($hook);
+	}
 }
 
-echo json_encode(array("status"=>"ok"));
+echo json_encode(array("status" => "ok"));
