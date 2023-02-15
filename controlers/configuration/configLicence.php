@@ -27,5 +27,4 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$template='configLicence';
-
+$template = 'configLicence';

@@ -27,21 +27,21 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configForms";
-     $p['page']['groupe']=isset($match['params']['groupe'])?$match['params']['groupe']:'';
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configForms";
+	$p['page']['groupe'] = isset($match['params']['groupe']) ? $match['params']['groupe'] : '';
+	$debug = '';
 
-        // liste des forms par catégorie
-        $listForms=new msForms;
-        $p['page']['tabTypes']=$listForms->getFormsListByCatName();
+	// liste des forms par catégorie
+	$listForms = new msForms;
+	$p['page']['tabTypes'] = $listForms->getFormsListByCatName();
 
-        // liste des catégories
-        $p['page']['catList']=$listForms->getCatListByID();
+	// liste des catégories
+	$p['page']['catList'] = $listForms->getCatListByID();
 
-        //liste des modules
-        $p['page']['modules']=msModules::getInstalledModulesNames();
- }
+	//liste des modules
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
+}

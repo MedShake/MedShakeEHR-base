@@ -28,35 +28,35 @@
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
+	$template = "forbidden";
 } else {
-    $template="configBackups";
-    $debug='';
+	$template = "configBackups";
+	$debug = '';
 
-    //test autorisation de lecture du dossier template
-    if (is_readable($p['config']['backupLocation'])) {
-        $p['page']['backupsDirAutorisationLecture'] = true;
-    } else {
-        $p['page']['backupsDirAutorisationLecture'] = false;
-    }
+	//test autorisation de lecture du dossier template
+	if (is_readable($p['config']['backupLocation'])) {
+		$p['page']['backupsDirAutorisationLecture'] = true;
+	} else {
+		$p['page']['backupsDirAutorisationLecture'] = false;
+	}
 
-    //test autorisation d'écriture du dossier template
-    if (is_writable($p['config']['backupLocation'])) {
-        $p['page']['backupsDirAutorisationEcriture'] = true;
-    } else {
-        $p['page']['backupsDirAutorisationEcriture'] = false;
-    }
+	//test autorisation d'écriture du dossier template
+	if (is_writable($p['config']['backupLocation'])) {
+		$p['page']['backupsDirAutorisationEcriture'] = true;
+	} else {
+		$p['page']['backupsDirAutorisationEcriture'] = false;
+	}
 
-    if ($p['page']['backupsDirAutorisationLecture'] == true) {
-        $files = array_diff(scandir($p['config']['backupLocation']), array('.', '..'));
+	if ($p['page']['backupsDirAutorisationLecture'] == true) {
+		$files = array_diff(scandir($p['config']['backupLocation']), array('.', '..'));
 
-        if ($files) {
-            foreach ($files as $k=>$v) {
-                $p['page']['backups']['files'][$k]=array(
-                   'name'=>$v,
-                   'size'=>msTools::getFileSize($p['config']['backupLocation'].$v)
-                 );
-            }
-        }
-    }
+		if ($files) {
+			foreach ($files as $k => $v) {
+				$p['page']['backups']['files'][$k] = array(
+					'name' => $v,
+					'size' => msTools::getFileSize($p['config']['backupLocation'] . $v)
+				);
+			}
+		}
+	}
 }

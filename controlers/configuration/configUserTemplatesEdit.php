@@ -27,32 +27,32 @@
  */
 
 
- //admin uniquement
+//admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
-    return;
+	$template = "forbidden";
+	return;
 }
 
-$template="configUserTemplatesEdit";
-$debug='';
+$template = "configUserTemplatesEdit";
+$debug = '';
 
-$fichier=urldecode($match['params']['fichier']);
-$fichier=basename($fichier);
+$fichier = urldecode($match['params']['fichier']);
+$fichier = basename($fichier);
 
 //vérification fichier existe
-$directory=$homepath.'config/userTemplates/';
-if (!is_file($directory.$fichier)) {
-    die("Ce fichier n'existe pas");
+$directory = $homepath . 'config/userTemplates/';
+if (!is_file($directory . $fichier)) {
+	die("Ce fichier n'existe pas");
 } else {
 
-    //test autorisation d'écriture du dossier template
-    if (is_writable($directory)) {
-        $p['page']['templatesDirAutorisationEcriture'] = true;
-    } else {
-        $p['page']['templatesDirAutorisationEcriture'] = false;
-    }
+	//test autorisation d'écriture du dossier template
+	if (is_writable($directory)) {
+		$p['page']['templatesDirAutorisationEcriture'] = true;
+	} else {
+		$p['page']['templatesDirAutorisationEcriture'] = false;
+	}
 
-    $p['page']['fichier']['name']=$fichier;
-    $p['page']['fichier']['chemin']=$directory;
-    $p['page']['fichier']['code']= file_get_contents($directory.$fichier);
+	$p['page']['fichier']['name'] = $fichier;
+	$p['page']['fichier']['chemin'] = $directory;
+	$p['page']['fichier']['code'] = file_get_contents($directory . $fichier);
 }

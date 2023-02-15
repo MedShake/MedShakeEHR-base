@@ -28,45 +28,45 @@
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
+	$template = "forbidden";
 } else {
-    $template="configIndex";
-    $debug='';
+	$template = "configIndex";
+	$debug = '';
 
-    if (is_file($homepath.'public_html/install.php')) {
-      $p['page']['alerteInstall']=true;
-      if (@is_writable($homepath.'public_html/install.php')) {
-        $p['page']['alerteInstallW']=true;
-      } else {
-        $p['page']['alerteInstallW']=false;
-      }
-    } else {
-      $p['page']['alerteInstall']=false;
-    }
-
-    if (is_file($homepath.'public_html/self-installer.php')) {
-      if (@is_writable($homepath.'public_html/self-installer.php')) {
-        $p['page']['alerteInstallSelfW']=true;
-      } else {
-        $p['page']['alerteInstallSelfW']=false;
-      }
-      $p['page']['alerteInstallSelf']=true;
-    } else {
-      $p['page']['alerteInstallSelf']=false;
-    }
-
-    if(class_exists('msApicrypt2')) {
-      $p['page']['apicrypt2present'] = true;
-    }
-
-	if (is_file($homepath.'public_html/bddEdit.php')) {
-	  if (@is_writable($homepath.'public_html/bddEdit.php')) {
-		$p['page']['alerteAdminer']=true;
-	  } else {
-		$p['page']['alerteAdminer']=false;
-	  }
-	  $p['page']['alerteAdminer']=true;
+	if (is_file($homepath . 'public_html/install.php')) {
+		$p['page']['alerteInstall'] = true;
+		if (@is_writable($homepath . 'public_html/install.php')) {
+			$p['page']['alerteInstallW'] = true;
+		} else {
+			$p['page']['alerteInstallW'] = false;
+		}
 	} else {
-	  $p['page']['alerteAdminer']=false;
+		$p['page']['alerteInstall'] = false;
+	}
+
+	if (is_file($homepath . 'public_html/self-installer.php')) {
+		if (@is_writable($homepath . 'public_html/self-installer.php')) {
+			$p['page']['alerteInstallSelfW'] = true;
+		} else {
+			$p['page']['alerteInstallSelfW'] = false;
+		}
+		$p['page']['alerteInstallSelf'] = true;
+	} else {
+		$p['page']['alerteInstallSelf'] = false;
+	}
+
+	if (class_exists('msApicrypt2')) {
+		$p['page']['apicrypt2present'] = true;
+	}
+
+	if (is_file($homepath . 'public_html/bddEdit.php')) {
+		if (@is_writable($homepath . 'public_html/bddEdit.php')) {
+			$p['page']['alerteAdminer'] = true;
+		} else {
+			$p['page']['alerteAdminer'] = false;
+		}
+		$p['page']['alerteAdminer'] = true;
+	} else {
+		$p['page']['alerteAdminer'] = false;
 	}
 }

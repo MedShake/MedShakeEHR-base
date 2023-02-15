@@ -26,11 +26,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 header('Content-Description: File Transfer');
 header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename=' . $match['params']['moduleName'].'.sql');
+header('Content-Disposition: attachment; filename=' . $match['params']['moduleName'] . '.sql');
 header('Content-Transfer-Encoding: binary');
 header('Connection: Keep-Alive');
 header('Expires: 0');
@@ -38,11 +40,11 @@ header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Pragma: public');
 //header('Content-Length: ' . $size);
 
-$class= 'msMod'.ucfirst($match['params']['moduleName']).'SqlGenerate';
+$class = 'msMod' . ucfirst($match['params']['moduleName']) . 'SqlGenerate';
 
-if(class_exists($class)) {
-  $sqlGen = new $class;
+if (class_exists($class)) {
+	$sqlGen = new $class;
 } else {
-  $sqlGen = new msSqlGenerate;
+	$sqlGen = new msSqlGenerate;
 }
 echo $sqlGen->getSqlForModule($match['params']['moduleName']);

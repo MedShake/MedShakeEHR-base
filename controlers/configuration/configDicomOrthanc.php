@@ -26,18 +26,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDicomOrthanc";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configDicomOrthanc";
+	$debug = '';
 
-     $dc = new msDicom;
-     $p['page']['orthancSystemInfo'] = $dc->getOrthancSystemInfo();
-     $p['page']['orthancStats'] = $dc->getOrthancStats();
+	$dc = new msDicom;
+	$p['page']['orthancSystemInfo'] = $dc->getOrthancSystemInfo();
+	$p['page']['orthancStats'] = $dc->getOrthancStats();
 
-     // fichiers worklist présents
-     $p['page']['wlfiles']=array_diff(scandir($p['config']['dicomWorkListDirectory']), array('..', '.'));
-
- }
+	// fichiers worklist présents
+	$p['page']['wlfiles'] = array_diff(scandir($p['config']['dicomWorkListDirectory']), array('..', '.'));
+}

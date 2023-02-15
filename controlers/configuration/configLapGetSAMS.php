@@ -26,19 +26,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
- } else {
-   $debug='';
-   $template="configLapGetSAMS";
-   $sam = new msLapSAM;
-   $sam->getTheXmlFile();
-   $sam->getSamXmlFileContent();
-   $p['page']['xmlUrl']=$sam->getTheXmlUrl();
-   $p['page']['samsList']=$sam->getSamListInXml();
-   $p['page']['codesParSams']=$sam->getCodesSpeBySAM();
-   $sam->setFileCodesSpeBySAM();
-
-
- }
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$debug = '';
+	$template = "configLapGetSAMS";
+	$sam = new msLapSAM;
+	$sam->getTheXmlFile();
+	$sam->getSamXmlFileContent();
+	$p['page']['xmlUrl'] = $sam->getTheXmlUrl();
+	$p['page']['samsList'] = $sam->getSamListInXml();
+	$p['page']['codesParSams'] = $sam->getCodesSpeBySAM();
+	$sam->setFileCodesSpeBySAM();
+}
