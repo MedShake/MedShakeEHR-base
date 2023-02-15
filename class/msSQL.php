@@ -76,7 +76,7 @@ class msSQL
 	 * @param  array $var array
 	 * @return string      variable échappée SANS quotes périphériques
 	 */
-	public static function cleanArray($array)
+	public static function cleanArray(array $array): array
 	{
 		array_map(function ($v) {
 			global $pdo;

@@ -287,7 +287,7 @@ class msData extends msDataCat
 	 * @param  array $ar array de name
 	 * @return array     array name=>label
 	 */
-	public function getLabelFromTypeName($ar = ['1'])
+	public function getLabelFromTypeName($ar = ['1']): ?array
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
@@ -303,7 +303,7 @@ class msData extends msDataCat
 	 * @param  array $ar array de name
 	 * @return array     array name=>typeID
 	 */
-	public static function getTypeIDsFromName($ar = ['1'])
+	public static function getTypeIDsFromName($ar = ['1']): ?array
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
@@ -319,7 +319,7 @@ class msData extends msDataCat
 	 * @param  array $ar array de typeID
 	 * @return array     array typeID=>name
 	 */
-	public function getNamesFromTypeIDs($ar = ['-1'])
+	public function getNamesFromTypeIDs($ar = ['-1']): ?array
 	{
 		if (!empty($ar)) {
 			$sqlImplode = msSQL::sqlGetTagsForWhereIn($ar, 'dataID');
