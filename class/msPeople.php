@@ -632,13 +632,13 @@ class msPeople
 	}
 
 	/**
-	 * Obtenir les data pour l'historique d'un objetID spécique
+	 * Obtenir les data pour l'historique d'un objetID spécifique
 	 * @param  int $objetID objetID
 	 * @return array          data historique de l'objetID
 	 */
 	public function getHistoriqueObjet($objetID)
 	{
-		if ($data = $this->getHistoriqueData(0, 1, '', (array)$objetID)) {
+		if ($data = $this->getHistoriqueData(0, 1, '', [$objetID])) {
 			return $data[0];
 		} else {
 			return [];
@@ -714,11 +714,14 @@ class msPeople
 		}
 
 		$data = new msData();
-		$marqueurs['porteursOrdoIds'] = implode(', ', array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id'));
-		$marqueurs['porteursReglementIds'] = implode(', ', array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id'));
+
+		$implodePorteurOrdo = msSQL::sqlGetTagsForWhereIn(array_column($data->getDataTypesFromCatName('porteursOrdo', ['id']), 'id'), 'portOrdo');
+
+		$implodePorteurReg = msSQL::sqlGetTagsForWhereIn(array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id'), 'portReg');
+
 		$name2typeID = $data->getTypeIDsFromName(['mailPorteur', 'docPorteur', 'docType', 'docOrigine', 'dicomStudyID', 'firstname', 'lastname', 'birthname', 'csAtcdStrucDeclaration', 'lapOrdonnance', 'lapExtOrdonnance']);
 
-		$marqueurs = array_merge($marqueurs, $name2typeID);
+		$marqueurs = array_merge($marqueurs, $name2typeID, $implodePorteurReg['execute'], $implodePorteurOrdo['execute']);
 
 		$marqueurs['catIdHorsHistoriques'] = msDataCat::getCatIDFromName('declencheursHorsHistoriques');
 
@@ -768,10 +771,10 @@ class msPeople
 		" . $critAnLeftJoin . "
 		where ((t.groupe in ('typeCS', 'courrier') and t.cat != :catIdHorsHistoriques )
 		  or (t.groupe = 'doc' and  t.id= :docPorteur )
-		  or (t.groupe = 'ordo' and  t.id in ( :porteursOrdoIds ))
+		  or (t.groupe = 'ordo' and  t.id in ( " . $implodePorteurOrdo['in'] . " ))
 		  " . $lapCompSql . "
 		  " . $lapExtCompSql . "
-		  or (t.groupe = 'reglement' and  t.id in ( :porteursReglementIds ))
+		  or (t.groupe = 'reglement' and  t.id in ( " . $implodePorteurReg['in'] . " ))
 		  or (t.groupe='mail' and t.id = :mailPorteur and p.instance='0'))
 		and p.toID= :toID and p.outdated='' and p.deleted='' " . $datesPrecisions . " and t.id!= :csAtcdStrucDeclaration " . $objetIDsSql . " " . $whereInstance . " " . $whereDataGroups . $critAnWhere . "
 		group by p.id, bn.value, n1.value, n2.value, mail.instance, doc.value, doc2.value, img.value, f.id
