@@ -25,38 +25,40 @@
  * (action via Orthanc, cf class msDicom)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 
-$debug='';
-$template='viewPatient';
+$debug = '';
+$template = 'viewPatient';
 
 //le patient
 $patient = new msPeople();
 $patient->setToID($match['params']['patientID']);
-$p['page']['patient']['id']=$match['params']['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+$p['page']['patient']['id'] = $match['params']['patientID'];
+$p['page']['patient']['administrativeDatas'] = $patient->getAdministrativesDatas();
+$p['page']['patient']['administrativeDatas'][8]['age'] = $patient->getAge();
 
 //l'examen
 $dc = new msDicom();
 $dc->setToID($match['params']['patientID']);
-$p['page']['studiesDcData']=$dc->getAllStudiesFromPatientDcData();
+$p['page']['studiesDcData'] = $dc->getAllStudiesFromPatientDcData();
 if (!isset($p['page']['studiesDcData']['HttpError'])) {
 
-  //on complète les data dicom avec un datetime facilement exploitable
-  foreach ($p['page']['studiesDcData'] as $k=>$v) {
-      $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
-  }
+	//on complète les data dicom avec un datetime facilement exploitable
+	foreach ($p['page']['studiesDcData'] as $k => $v) {
+		$p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'] . 'T' . round($v['MainDicomTags']['StudyTime']);
+	}
 
-  //on cherche les examens EHR qui peuvent être attachés.
-  if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$p['page']['patient']['id']."' ", 'instance', 'value')) {
-      foreach ($d as $k=>$v) {
-          $ob = new msObjet();
-          $ob->setObjetID($k);
-          $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
-      }
-  }
+	//on cherche les examens EHR qui peuvent être attachés.
+	if ($d = msSQL::sql2tabKey("SELECT value, instance from objets_data where typeID = :typeID and toID = :toID ", 'instance', 'value', ['typeID' => msData::getTypeIDFromName('dicomStudyID'), 'toID' => $p['page']['patient']['id']])) {
+		foreach ($d as $k => $v) {
+			$ob = new msObjet();
+			$ob->setObjetID($k);
+			$p['page']['studiesDcDataRapro'][$v] = $ob->getCompleteObjetDataByID();
+		}
+	}
 } else {
-    unset($p['page']['studiesDcData']);
+	unset($p['page']['studiesDcData']);
 }
