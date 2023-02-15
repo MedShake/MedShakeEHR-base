@@ -28,9 +28,9 @@
  */
 
 //patient
-$patient= new msPeople();
+$patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['courrier']=$patient->getSimpleAdminDatas();
+$p['page']['courrier'] = $patient->getSimpleAdminDatas();
 
 
 // dicom
@@ -38,19 +38,19 @@ $dc = new msDicom();
 $dc->setToID($_POST['patientID']);
 $dc->setDcStudyID($_POST['dcStudyID']);
 $data = $dc->getStudyDcData();
-$dcStudyDate=$data['MainDicomTags']['StudyDate'].'T'.round($data['MainDicomTags']['StudyTime']);
+$dcStudyDate = $data['MainDicomTags']['StudyDate'] . 'T' . round($data['MainDicomTags']['StudyTime']);
 
 // images
-foreach ($_POST['images'] as $k=>$v) {
-    $p['page']['courrier']['images'][]=$p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$_POST['dcStudyID'].'/'.$v.'.png';
+foreach ($_POST['images'] as $k => $v) {
+	$p['page']['courrier']['images'][] = $p['config']['dicomWorkingDirectory'] . $p['user']['id'] . '/' . $_POST['dcStudyID'] . '/' . $v . '.png';
 }
 
 //forger la description TXT pour le support
-$nbImages=count($_POST['images']);
-$txt="Pdf de ".$nbImages." images(s) de l'étude ".$_POST['dcStudyID']." du ".date("d/m/Y H:i", strtotime($dcStudyDate))." :\n";
+$nbImages = count($_POST['images']);
+$txt = "Pdf de " . $nbImages . " images(s) de l'étude " . $_POST['dcStudyID'] . " du " . date("d/m/Y H:i", strtotime($dcStudyDate)) . " :\n";
 // images
-foreach ($_POST['images'] as $k=>$v) {
-    $txt.='- '.$v.".png\n";
+foreach ($_POST['images'] as $k => $v) {
+	$txt .= '- ' . $v . ".png\n";
 }
 
 // nouveau document support
@@ -58,29 +58,29 @@ $doc = new msObjet();
 $doc->setFromID($p['user']['id']);
 $doc->setToID($_POST['patientID']);
 
-if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
+if ($supportID = $doc->createNewObjetByTypeName('docPorteur', $txt)) {
 
-    //type et origine
-    $doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
-    $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
+	//type et origine
+	$doc->createNewObjetByTypeName('docType', 'pdf', $supportID);
+	$doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
-    //titre doc
-    $doc->setTitleObjet($supportID, 'pdf '.$nbImages.' images du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
+	//titre doc
+	$doc->setTitleObjet($supportID, 'pdf ' . $nbImages . ' images du ' . date("d/m/Y H:i", strtotime($dcStudyDate)));
 
-    //nouveau pdf
-    $pdf= new msPDF();
+	//nouveau pdf
+	$pdf = new msPDF();
 
-    $pdf->setFromID($p['user']['id']);
-    $pdf->setToID($_POST['patientID']);
-    $pdf->setType('doc');
-    $pdf->setObjetID($supportID);
-    $pdf->setOptimizeWithGS(TRUE);
+	$pdf->setFromID($p['user']['id']);
+	$pdf->setToID($_POST['patientID']);
+	$pdf->setType('doc');
+	$pdf->setObjetID($supportID);
+	$pdf->setOptimizeWithGS(TRUE);
 
-    $pdf->setPageHeader($pdf->makeWithTwig('base-page-headAndNoFoot.html.twig'));
-    $pdf->setBodyFromPost($pdf->makeWithTwig('rapportImagesDicom.html.twig'));
+	$pdf->setPageHeader($pdf->makeWithTwig('base-page-headAndNoFoot.html.twig'));
+	$pdf->setBodyFromPost($pdf->makeWithTwig('rapportImagesDicom.html.twig'));
 
-    $pdf->makePDF();
-    $pdf->savePDF();
+	$pdf->makePDF();
+	$pdf->savePDF();
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+	msTools::redirection('/patient/' . $_POST['patientID'] . '/');
 }

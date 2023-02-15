@@ -27,33 +27,33 @@
  */
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
 
 
-$acceptedModes=array(
-    'makePdfWithDcImages', // faire un pdf avec les images Dicom
-    'makeZipWithDcImages', // faire un zip avec les images Dicom
+$acceptedModes = array(
+	'makePdfWithDcImages', // faire un pdf avec les images Dicom
+	'makeZipWithDcImages', // faire un zip avec les images Dicom
 );
 
 //surcharge par valeur du bouton submit
 if (isset($_POST['submitValue'])) {
-    if (in_array($_POST['submitValue'], $acceptedModes)) {
-        $m=$_POST['submitValue'];
-    }
+	if (in_array($_POST['submitValue'], $acceptedModes)) {
+		$m = $_POST['submitValue'];
+	}
 }
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 
 // Enregistrer la consultation
-if ($m=='makePdfWithDcImages') {
-    include('inc-action-makePdfWithDcImages.php');
+if ($m == 'makePdfWithDcImages') {
+	include('inc-action-makePdfWithDcImages.php');
 }
 
 // Enregistrer la consultation
-elseif ($m=='makeZipWithDcImages') {
-    include('inc-action-makeZipWithDcImages.php');
+elseif ($m == 'makeZipWithDcImages') {
+	include('inc-action-makeZipWithDcImages.php');
 }
