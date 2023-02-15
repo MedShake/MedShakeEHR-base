@@ -25,54 +25,62 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-$template="comptaMemoTarifs";
-$debug='';
+$template = "comptaMemoTarifs";
+$debug = '';
 
 //utilisateurs différents qui peuvent enregistrer des recettes
-$autoUsers= new msPeople();
-if($p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirRecettes')) {
+$autoUsers = new msPeople();
+if ($p['page']['users'] = $autoUsers->getUsersListForService('administratifPeutAvoirRecettes')) {
 
-  $where[]="a.toID='0'";
+	$marqueurs = [];
+	$where[] = "a.toID='0'";
 
-  // sélection du user
-  if (isset($match['params']['user'])) {
-    $p['page']['selectUser']=$match['params']['user'];
-    if (is_numeric($p['page']['selectUser'])) {
-       $where[]="a.toID='".$p['page']['selectUser']."'";
-    }
-  } else {
-    reset($p['page']['users']);
-    $p['page']['selectUser']=key($p['page']['users']);
-    $where[]="a.toID='".$p['page']['selectUser']."'";
-  }
-  // params du user
-  $userOb = new msPeople;
-  $userOb->setToID($p['page']['selectUser']);
-  $module = $userOb->getModule();
-  $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>$p['page']['selectUser'], 'module'=>$module));
-  $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>$p['page']['selectUser'], 'module'=>$module));
-  $secteurGeo=msConfiguration::getParameterValue('administratifSecteurGeoTarifaire', array('id'=>$p['page']['selectUser'], 'module'=>$module));
-  $reglement = new msReglement();
-  $reglement->setSecteurTarifaire($secteur);
-  $reglement->setSecteurTarifaireNgap($secteurNgap);
-  $reglement->setSecteurTarifaireGeo($secteurGeo);
+	// sélection du user
+	if (isset($match['params']['user'])) {
+		$p['page']['selectUser'] = $match['params']['user'];
+		if (is_numeric($p['page']['selectUser'])) {
+			$where[] = "a.toID= :where1 ";
+			$marqueurs['where1'] = $p['page']['selectUser'];
+		}
+	} else {
+		reset($p['page']['users']);
+		$p['page']['selectUser'] = key($p['page']['users']);
+		$where[] = "a.toID= :where2 ";
+		$marqueurs['where2'] = $p['page']['selectUser'];
+	}
+	// params du user
+	$userOb = new msPeople;
+	$userOb->setToID($p['page']['selectUser']);
+	$module = $userOb->getModule();
+	$secteur = msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id' => $p['page']['selectUser'], 'module' => $module));
+	$secteurNgap = msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id' => $p['page']['selectUser'], 'module' => $module));
+	$secteurGeo = msConfiguration::getParameterValue('administratifSecteurGeoTarifaire', array('id' => $p['page']['selectUser'], 'module' => $module));
+	$reglement = new msReglement();
+	$reglement->setSecteurTarifaire($secteur);
+	$reglement->setSecteurTarifaireNgap($secteurNgap);
+	$reglement->setSecteurTarifaireGeo($secteurGeo);
 
+	$marqueurs['module'] = $module;
 
-  if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
-  		from actes as a
-  		left join actes_cat as c on c.id=a.cat
-      where (".implode(' or ', $where).") and c.module='".$module."' and a.active='oui'
-  		group by a.id
-  		order by c.displayOrder, c.label asc, a.label asc")) {
-     foreach ($tabTypes as $v) {
-         $reglement->setFactureTypeID($v['id']);
-         $reglement->setFactureTypeData($v);
-         $p['page']['secteurs'][$v['catName']]=$secteur;
-         $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
-     }
-  }
-  // liste des catégories
-  $p['page']['catList']=msSQL::sql2tabKey("select id, label from actes_cat where module='".$module."' order by label", 'id', 'label');
+	$sql = "select a.* , c.name as catName, c.label as catLabel, c.module as catModule
+	from actes as a
+	left join actes_cat as c on c.id=a.cat
+	where (" . implode(' or ', $where) . ") and c.module= :module and a.active='oui'
+	group by a.id
+	order by c.displayOrder, c.label asc, a.label asc";
+
+	if ($tabTypes = msSQL::sql2tab($sql, $marqueurs)) {
+		foreach ($tabTypes as $v) {
+			$reglement->setFactureTypeID($v['id']);
+			$reglement->setFactureTypeData($v);
+			$p['page']['secteurs'][$v['catName']] = $secteur;
+			$p['page']['tabTypes'][$v['catName']][] = $reglement->getCalculateFactureTypeData();
+		}
+	}
+	// liste des catégories
+	$p['page']['catList'] = msSQL::sql2tabKey("select id, label from actes_cat where module='" . $module . "' order by label", 'id', 'label');
 }
