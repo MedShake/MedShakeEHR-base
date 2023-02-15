@@ -26,15 +26,15 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'classerDansDossier',
+$acceptedModes = array(
+	'classerDansDossier',
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
-include('inc-action-'.$m.'.php');
+include('inc-action-' . $m . '.php');

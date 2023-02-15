@@ -25,22 +25,22 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
- if($p['config']['optionGeActiverDropbox'] != 'true') die;
- if(!isset($_POST['box']) or !isset($_POST['filename'])) die;
- if(!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
+if ($p['config']['optionGeActiverDropbox'] != 'true') die;
+if (!isset($_POST['box']) or !isset($_POST['filename'])) die;
+if (!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
 
- $dropbox = new msDropbox;
- $dropbox->setCurrentBoxId($_POST['box']);
- $p['page']['boxParams'] = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['box']];
+$dropbox = new msDropbox;
+$dropbox->setCurrentBoxId($_POST['box']);
+$p['page']['boxParams'] = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['box']];
 
- if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
-   $dropbox->setCurrentFilename($_POST['filename']);
-   $p['page']['fileData'] = $dropbox->getCurrentFileData();
+if ($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
+	$dropbox->setCurrentFilename($_POST['filename']);
+	$p['page']['fileData'] = $dropbox->getCurrentFileData();
 
-   if(unlink($p['page']['fileData']['fullpath'])) {
-     exit(json_encode(['status'=>'ok']));
-   } else {
-     exit(json_encode(['status'=>'ko']));
-   }
- }
-exit(json_encode(['status'=>'ko']));
+	if (unlink($p['page']['fileData']['fullpath'])) {
+		exit(json_encode(['status' => 'ok']));
+	} else {
+		exit(json_encode(['status' => 'ko']));
+	}
+}
+exit(json_encode(['status' => 'ko']));

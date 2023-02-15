@@ -25,24 +25,24 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
+$debug = '';
 $template = 'dropboxViewDoc';
 
-if($p['config']['optionGeActiverDropbox'] != 'true') die;
-if(!isset($_POST['box']) or !isset($_POST['filename'])) die;
-if(!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
+if ($p['config']['optionGeActiverDropbox'] != 'true') die;
+if (!isset($_POST['box']) or !isset($_POST['filename'])) die;
+if (!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
 
 $dropbox = new msDropbox;
 $dropbox->setCurrentBoxId($_POST['box']);
 $p['page']['boxParams'] = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['box']];
 $p['page']['boxParams']['id'] = $_POST['box'];
 
-if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
-  $dropbox->setCurrentFilename($_POST['filename']);
-  $p['page']['dataFromFilename']=$dropbox->getDataFromFilename();
-  $p['page']['patientsPossibles'] = $dropbox->getPossiblePatients();
-  $p['page']['fileData'] = $dropbox->getCurrentFileData();
-  $p['page']['fileData']['filename'] = $_POST['filename'];
+if ($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
+	$dropbox->setCurrentFilename($_POST['filename']);
+	$p['page']['dataFromFilename'] = $dropbox->getDataFromFilename();
+	$p['page']['patientsPossibles'] = $dropbox->getPossiblePatients();
+	$p['page']['fileData'] = $dropbox->getCurrentFileData();
+	$p['page']['fileData']['filename'] = $_POST['filename'];
 } else {
-  die("Ce fichier n'existe pas dans la boite de dépôt");
+	die("Ce fichier n'existe pas dans la boite de dépôt");
 }

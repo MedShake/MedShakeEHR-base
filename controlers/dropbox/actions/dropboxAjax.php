@@ -26,18 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'viewDoc', // Voir un doc
-    'getPatients', // Obtenir liste patients sur recherche
-    'delDoc',
-    'rotateDoc',
+$acceptedModes = array(
+	'viewDoc', // Voir un doc
+	'getPatients', // Obtenir liste patients sur recherche
+	'delDoc',
+	'rotateDoc',
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
-include('inc-ajax-'.$m.'.php');
+include('inc-ajax-' . $m . '.php');
