@@ -27,9 +27,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverVitaleLecture'] == 'true' and !empty($p['config']['vitaleService'])) {
-
-  $vitale = new msVitale;
-  exit($vitale->getJsonCpsVitaleDataFromExternalMod());
-
+if ($p['config']['optionGeActiverVitaleLecture'] == 'true' and !empty($p['config']['vitaleService'])) {
+	$vitale = new msVitale;
+	exit($vitale->getJsonCpsVitaleDataFromExternalMod());
 }

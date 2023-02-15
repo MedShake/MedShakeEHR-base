@@ -31,24 +31,24 @@ header('Content-Type: application/json');
 // Utiliser pour faciliter le debugage avec xdebug
 //header('Content-Type: text/html');
 
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'getAutocompleteFormValues', // Autocomplete des forms
-    'getAutocompleteLinkType', // Autocomplete plus évolué
-    'setPeopleData', // Enregistrer des données patient
-    'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée
-    'mailTracking', // Retourner les infos de tracking d'un mail
-    'getAutocompleteCodeNgapOrCcamData', // Retourner les infos sur un acte NGAP ou CCAM
-    'getCpsVitaleData', // Obtenir les infos de la carte Vitale
-    'getCpsVitaleDataRappro', // Obtenir les infos de la carte Vitale rapprochées aux ID patients
-    'makeClick2Call', // lancer un appel click2call
-    'getPatientsOfTheDay', // obtenir le html pour le menu patients of the day
-    'getBareCodeGenerator', // obtenir les codes bare généré
+$acceptedModes = array(
+	'getAutocompleteFormValues', // Autocomplete des forms
+	'getAutocompleteLinkType', // Autocomplete plus évolué
+	'setPeopleData', // Enregistrer des données patient
+	'setPeopleDataByTypeName', // Enregistrer des données patient par nom du type de donnée
+	'mailTracking', // Retourner les infos de tracking d'un mail
+	'getAutocompleteCodeNgapOrCcamData', // Retourner les infos sur un acte NGAP ou CCAM
+	'getCpsVitaleData', // Obtenir les infos de la carte Vitale
+	'getCpsVitaleDataRappro', // Obtenir les infos de la carte Vitale rapprochées aux ID patients
+	'makeClick2Call', // lancer un appel click2call
+	'getPatientsOfTheDay', // obtenir le html pour le menu patients of the day
+	'getBareCodeGenerator', // obtenir les codes bare généré
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 } else {
-    include('inc-ajax-'.$m.'.php');
+	include('inc-ajax-' . $m . '.php');
 }

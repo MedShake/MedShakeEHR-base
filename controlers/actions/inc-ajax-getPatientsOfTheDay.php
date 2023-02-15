@@ -28,19 +28,19 @@
 
 // patients of the day
 $events = new msAgenda();
-$p['page']=[];
-$p['page']=array_merge($p['page'], $events->getDataForPotdMenu());
+$p['page'] = [];
+$p['page'] = array_merge($p['page'], $events->getDataForPotdMenu());
 
-if($_POST['targetMenuPOTD']=='_blank') {
-  $p['page']['targetMenuPOTD']='_blank';
+if ($_POST['targetMenuPOTD'] == '_blank') {
+	$p['page']['targetMenuPOTD'] = '_blank';
 }
 
 $html = new msGetHtml;
 $html->set_template('pageTopNavbarPatientsOfTheDay.html.twig');
 $html = $html->genererHtmlVar($p);
 
-$data=array(
-  'html'=>$html,
-  'displayMenu'=>empty($p['page']['patientsOfTheDay'])?false:true
+$data = array(
+	'html' => $html,
+	'displayMenu' => empty($p['page']['patientsOfTheDay']) ? false : true
 );
 exit(json_encode($data));

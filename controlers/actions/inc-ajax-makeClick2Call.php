@@ -28,23 +28,25 @@
 
 use \Ovh\Api;
 
-$number2call = (string)trim(str_replace(' ', '',$_POST['number2call']));
+$number2call = (string)trim(str_replace(' ', '', $_POST['number2call']));
 
-$ovh = new Api( $p['config']['ovhApplicationKey'],  // Application Key
-               $p['config']['ovhApplicationSecret'],  // Application Secret
-               'ovh-eu',      // Endpoint of API OVH Europe
-               $p['config']['ovhConsumerKey']); // Consumer Key
+$ovh = new Api(
+	$p['config']['ovhApplicationKey'],  // Application Key
+	$p['config']['ovhApplicationSecret'],  // Application Secret
+	'ovh-eu',      // Endpoint of API OVH Europe
+	$p['config']['ovhConsumerKey']
+); // Consumer Key
 
 
-$result = $ovh->post('/telephony/'.$p['config']['ovhTelecomBillingAccount'].'/line/'.$p['config']['ovhTelecomServiceName'].'/click2Call', array(
-   'calledNumber' => (string)$number2call, // Required:  (type: string)
-   'callingNumber' => $p['config']['ovhTelecomCallingNumber'], //  (type: string)
-   'intercom' => false, // Activate the calling number in intercom mode automatically (pick up and speaker automatic activation). (type: boolean)
+$result = $ovh->post('/telephony/' . $p['config']['ovhTelecomBillingAccount'] . '/line/' . $p['config']['ovhTelecomServiceName'] . '/click2Call', array(
+	'calledNumber' => (string)$number2call, // Required:  (type: string)
+	'callingNumber' => $p['config']['ovhTelecomCallingNumber'], //  (type: string)
+	'intercom' => false, // Activate the calling number in intercom mode automatically (pick up and speaker automatic activation). (type: boolean)
 ));
 
-if($result == null ) {
-  echo json_encode(['statut'=>'ok', 'calledNumber'=>$number2call]);
+if ($result == null) {
+	echo json_encode(['statut' => 'ok', 'calledNumber' => $number2call]);
 } else {
-  echo json_encode(['statut'=>$result]);
+	echo json_encode(['statut' => $result]);
 }
 die();
