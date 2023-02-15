@@ -27,23 +27,25 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 // si pas de fichier à supprimer
 if (!isset($_POST['file'])) {
-    die;
+	die;
 }
 
 // détermination du répertoire
-$user=array('id'=>$_POST['userID'], 'module'=>'');
-$directory=msConfiguration::getParameterValue('apicryptCheminVersClefs', $user);
+$user = array('id' => $_POST['userID'], 'module' => '');
+$directory = msConfiguration::getParameterValue('apicryptCheminVersClefs', $user);
 
-if (is_file($directory.'Clefs/'.$_POST['file'])) {
-    if (unlink($directory.'Clefs/'.$_POST['file'])) {
-        echo json_encode(array('ok'));
-    } else {
-        http_response_code(404);
-    }
+if (is_file($directory . 'Clefs/' . $_POST['file'])) {
+	if (unlink($directory . 'Clefs/' . $_POST['file'])) {
+		echo json_encode(array('ok'));
+	} else {
+		http_response_code(404);
+	}
 } else {
-    http_response_code(404);
+	http_response_code(404);
 }

@@ -28,11 +28,13 @@
  * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 if (!isset($_POST['id']) or !isset($_POST['module'])) {
-    die;
+	die;
 }
-msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'module'=>$_POST['module']));
+msSQL::sqlInsert('people', array('id' => $_POST['id'], 'module' => $_POST['module']));
 
 echo json_encode(array('ok'));

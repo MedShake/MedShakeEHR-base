@@ -27,6 +27,6 @@
  */
 
 // on ne ferme pas à l'admin stricte car c'est un bienfait général de supprimer ces fichiers :D
-@unlink($homepath.'public_html/bddEdit.php');
+@unlink($homepath . 'public_html/bddEdit.php');
 
 msTools::redirection('/configuration/');

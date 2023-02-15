@@ -26,44 +26,46 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
-if(!is_numeric($_POST['formID'])) die();
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
+if (!is_numeric($_POST['formID'])) die();
 
-$htmlFormPreview='';
-$basicTemplateCode='';
-$sqlGen='';
-$sqlGenUpdate='';
+$htmlFormPreview = '';
+$basicTemplateCode = '';
+$sqlGen = '';
+$sqlGenUpdate = '';
 
 //formulaire
-$forceAllTemplates="oui";
+$forceAllTemplates = "oui";
 $form = new msForm();
 $form->setFormID($_POST['formID']);
-$p['page']['form']=$form->getForm();
+$p['page']['form'] = $form->getForm();
 
-if(!empty($p['page']['form'])) {
-  $sqlGen = new msSqlGenerate;
-  $sqlGen=$sqlGen->getSqlForForm($form->getFormIN());
+if (!empty($p['page']['form'])) {
+	$sqlGen = new msSqlGenerate;
+	$sqlGen = $sqlGen->getSqlForForm($form->getFormIN());
 
-  $sqlGenUpdate = new msSqlGenerate;
-  $sqlGenUpdate->setAddUpdateOnDuplicate(true);
-  $sqlGenUpdate=$sqlGenUpdate->getSqlForForm($form->getFormIN());
+	$sqlGenUpdate = new msSqlGenerate;
+	$sqlGenUpdate->setAddUpdateOnDuplicate(true);
+	$sqlGenUpdate = $sqlGenUpdate->getSqlForForm($form->getFormIN());
 
-  $basicTemplateCode=$form->getFlatBasicTemplateCode();
+	$basicTemplateCode = $form->getFlatBasicTemplateCode();
 
-  $html = new msGetHtml;
-  $html->set_template('configFormPreviewAjax.html.twig');
-  $html = $html->genererHtmlVar($p);
+	$html = new msGetHtml;
+	$html->set_template('configFormPreviewAjax.html.twig');
+	$html = $html->genererHtmlVar($p);
 } else {
-  $sqlGen="Données non disponibles";
-  $basicTemplateCode="Données non disponibles";
-  $html='<div class="alert alert-info" role="alert">
+	$sqlGen = "Données non disponibles";
+	$basicTemplateCode = "Données non disponibles";
+	$html = '<div class="alert alert-info" role="alert">
       Aperçu non disponible : stucture non présente ou correspondant à un formulaire d\'affichage
       </div>';
 }
 
 exit(json_encode(array(
-  'htmlFormPreview'=>$html,
-  'basicTemplateCode'=>$basicTemplateCode,
-  'sqlGen'=>$sqlGen,
-  'sqlGenUpdate'=>$sqlGenUpdate
+	'htmlFormPreview' => $html,
+	'basicTemplateCode' => $basicTemplateCode,
+	'sqlGen' => $sqlGen,
+	'sqlGenUpdate' => $sqlGenUpdate
 )));

@@ -27,18 +27,20 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-$userID=$_POST['userID'];
+$userID = $_POST['userID'];
 unset($_POST['userID']);
 
 if (is_array($_POST)) {
-    foreach ($_POST as $k => $v) {
-        if (is_array($v)) {
-            msConfiguration::setUserParameterValue($k, implode(',',$v), $userID);
-        } else if (strpos(strtolower($k), 'password')===false or $v!=str_repeat('*',strlen($v))) {
-            msConfiguration::setUserParameterValue($k, $v, $userID);
-        }
-    }
+	foreach ($_POST as $k => $v) {
+		if (is_array($v)) {
+			msConfiguration::setUserParameterValue($k, implode(',', $v), $userID);
+		} else if (strpos(strtolower($k), 'password') === false or $v != str_repeat('*', strlen($v))) {
+			msConfiguration::setUserParameterValue($k, $v, $userID);
+		}
+	}
 }
 echo json_encode("ok");

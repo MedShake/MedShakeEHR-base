@@ -30,26 +30,26 @@
 
 header('Content-Type: application/json');
 
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'configUserCreate', //Créer un user
-    'configApplyUpdates', // Appliquer les updates
-    'configTemplatePDFSave', // sauvegarder un template PDF
-    'configUserTemplatesSave', // sauver un template user
-    'configRemoveInstallFiles', // supprimer les fichies d'installation
-    'configDicomRmWl', // supprimer tous les fichiers worklist actifs
-    'configToggleSystemState', // activer / désactiver le mode maintenance
-    'configRestartApicrypt2', // relancer le service Apicrypt2
-    'configUserApplyTemplate', // appliquer un template de droits à utilisateur existant
+$acceptedModes = array(
+	'configUserCreate', //Créer un user
+	'configApplyUpdates', // Appliquer les updates
+	'configTemplatePDFSave', // sauvegarder un template PDF
+	'configUserTemplatesSave', // sauver un template user
+	'configRemoveInstallFiles', // supprimer les fichies d'installation
+	'configDicomRmWl', // supprimer tous les fichiers worklist actifs
+	'configToggleSystemState', // activer / désactiver le mode maintenance
+	'configRestartApicrypt2', // relancer le service Apicrypt2
+	'configUserApplyTemplate', // appliquer un template de droits à utilisateur existant
 	'configAdminerInstall', // installer Adminer dernière version
 	'configAdminerRemove', // retirer Adminer
 );
 
 if (!in_array($m, $acceptedModes)) {
-  die;
+	die;
 } else {
-  include('inc-action-'.$m.'.php');
+	include('inc-action-' . $m . '.php');
 }
 
 die();

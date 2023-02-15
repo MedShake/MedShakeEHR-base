@@ -27,64 +27,64 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-if($p['config']['optionGeLoginPassAttribution'] == 'random') {
-  //check & validate datas
-  $gump=new GUMP('fr');
-  $_POST = $gump->sanitize($_POST);
-  $gump->validation_rules(array(
-    'id'=> 'required|numeric',
-  ));
-  $gump->filter_rules(array(
-    'id'=> 'trim',
-  ));
+if ($p['config']['optionGeLoginPassAttribution'] == 'random') {
+	//check & validate datas
+	$gump = new GUMP('fr');
+	$_POST = $gump->sanitize($_POST);
+	$gump->validation_rules(array(
+		'id' => 'required|numeric',
+	));
+	$gump->filter_rules(array(
+		'id' => 'trim',
+	));
 
-  $validated_data = $gump->run($_POST);
+	$validated_data = $gump->run($_POST);
 
-  if ($validated_data === false) {
-    exit(json_encode([
-      'status'=>'erreur',
-      'msg'=>implode('; ',$gump->get_errors_array())
-    ]));
-  } else {
-    $randomPassword = msTools::getRandomStr($p['config']['optionGeLoginPassMinLongueur']);
-    msUser::setUserNewPassword($_POST['id'], $randomPassword);
-    msUser::mailUserNewPassword($_POST['id'], $randomPassword);
+	if ($validated_data === false) {
+		exit(json_encode([
+			'status' => 'erreur',
+			'msg' => implode('; ', $gump->get_errors_array())
+		]));
+	} else {
+		$randomPassword = msTools::getRandomStr($p['config']['optionGeLoginPassMinLongueur']);
+		msUser::setUserNewPassword($_POST['id'], $randomPassword);
+		msUser::mailUserNewPassword($_POST['id'], $randomPassword);
 
-    exit(json_encode([
-      'status'=>'ok',
-      'msg'=>''
-    ]));
-  }
-
-
+		exit(json_encode([
+			'status' => 'ok',
+			'msg' => ''
+		]));
+	}
 } else {
-  //check & validate datas
-  $gump=new GUMP('fr');
-  $_POST = $gump->sanitize($_POST);
-  $gump->validation_rules(array(
-    'id'=> 'required|numeric',
-    'password'=> 'required|checkPasswordLength',
-  ));
+	//check & validate datas
+	$gump = new GUMP('fr');
+	$_POST = $gump->sanitize($_POST);
+	$gump->validation_rules(array(
+		'id' => 'required|numeric',
+		'password' => 'required|checkPasswordLength',
+	));
 
-  $gump->filter_rules(array(
-    'id'=> 'trim',
-    'password'=> 'trim',
-  ));
+	$gump->filter_rules(array(
+		'id' => 'trim',
+		'password' => 'trim',
+	));
 
-  $validated_data = $gump->run($_POST);
+	$validated_data = $gump->run($_POST);
 
-  if ($validated_data === false) {
-    exit(json_encode([
-      'status'=>'erreur',
-      'msg'=>implode('; ',$gump->get_errors_array())
-    ]));
-  } else {
-    msUser::setUserNewPassword($_POST['id'], $_POST['password']);
-    exit(json_encode([
-      'status'=>'ok',
-      'msg'=>''
-    ]));
-  }
+	if ($validated_data === false) {
+		exit(json_encode([
+			'status' => 'erreur',
+			'msg' => implode('; ', $gump->get_errors_array())
+		]));
+	} else {
+		msUser::setUserNewPassword($_POST['id'], $_POST['password']);
+		exit(json_encode([
+			'status' => 'ok',
+			'msg' => ''
+		]));
+	}
 }

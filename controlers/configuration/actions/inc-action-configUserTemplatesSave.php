@@ -26,23 +26,25 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-$directory=$homepath.'config/userTemplates/';
-$fichier=basename($_POST['fichier'],'.yml');
-$fichier=$fichier.'.yml';
+$directory = $homepath . 'config/userTemplates/';
+$fichier = basename($_POST['fichier'], '.yml');
+$fichier = $fichier . '.yml';
 
-$gotoSaveOnly='/configuration/user-templates/edit/'.$fichier.'/';
-$gotoSaveAndEnd='/configuration/user-templates/';
+$gotoSaveOnly = '/configuration/user-templates/edit/' . $fichier . '/';
+$gotoSaveAndEnd = '/configuration/user-templates/';
 
 //construction du répertoire si besoin
 msTools::checkAndBuildTargetDir($directory);
 
-file_put_contents($directory.$fichier, $_POST['code']);
+file_put_contents($directory . $fichier, $_POST['code']);
 
 if (isset($_POST['saveAndEnd'])) {
-    $goto=$gotoSaveAndEnd;
+	$goto = $gotoSaveAndEnd;
 } else {
-    $goto=$gotoSaveOnly;
+	$goto = $gotoSaveOnly;
 }
 msTools::redirection($goto);

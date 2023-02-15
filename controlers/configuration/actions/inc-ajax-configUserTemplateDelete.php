@@ -26,22 +26,24 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 // si pas de fichier à supprimer
 if (!isset($_POST['file'])) {
-    die;
+	die;
 }
 
-$directory=$homepath.'config/userTemplates/';
-$fichier=basename($_POST['file']);
+$directory = $homepath . 'config/userTemplates/';
+$fichier = basename($_POST['file']);
 
-if (is_file($directory.'/'.$fichier)) {
-    if (unlink($directory.'/'.$fichier)) {
-        echo json_encode(array('ok'));
-    } else {
-        http_response_code(404);
-    }
+if (is_file($directory . '/' . $fichier)) {
+	if (unlink($directory . '/' . $fichier)) {
+		echo json_encode(array('ok'));
+	} else {
+		http_response_code(404);
+	}
 } else {
-    http_response_code(404);
+	http_response_code(404);
 }

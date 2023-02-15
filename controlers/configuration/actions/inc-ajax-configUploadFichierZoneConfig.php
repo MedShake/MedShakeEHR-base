@@ -27,17 +27,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-$fichier=$_FILES['file'];
-if(!isset($_POST['destination'])) die;
-if(strpos($_POST['destination'], $homepath) !== 0) die();
+$fichier = $_FILES['file'];
+if (!isset($_POST['destination'])) die;
+if (strpos($_POST['destination'], $homepath) !== 0) die();
 
 //creation folder si besoin
 msTools::checkAndBuildTargetDir($_POST['destination']);
-if(!is_dir($_POST['destination'])) die;
+if (!is_dir($_POST['destination'])) die;
 
-$destination_file = $_POST['destination'].basename($fichier['name']);
+$destination_file = $_POST['destination'] . basename($fichier['name']);
 move_uploaded_file($fichier['tmp_name'], $destination_file);
 
 die();
