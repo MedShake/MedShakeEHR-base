@@ -24,22 +24,24 @@
  * Config : gérer les catégories du modèle de données
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
+	$template = "forbidden";
 } else {
-   $template="configDataCat";
-   $debug='';
+	$template = "configDataCat";
+	$debug = '';
 
-   $p['page']['groupe']=$match['params']['groupe'];
-   if(!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
+	$p['page']['groupe'] = $match['params']['groupe'];
+	if (!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
 
-   $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(t.id) as enfants
+	$p['page']['tabCat'] = msSQL::sql2tabKey("select c.*, count(t.id) as enfants
 		from data_cat as c
 		left join data_types as t on c.id=t.cat
-		where c.groupe='".msSQL::cleanVar($p['page']['groupe'])."'
+		where c.groupe= :groupe
 		group by c.id
-		order by c.label asc", 'id');
+		order by c.label asc", 'id', '', ['groupe' => $p['page']['groupe']]);
 }

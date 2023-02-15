@@ -25,38 +25,40 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $debug='';
-     $template="configFormEdit";
-     $p['page']['formID']=$match['params']['form'];
-     if (!is_numeric($p['page']['formID'])) {
-         die();
-     }
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$debug = '';
+	$template = "configFormEdit";
+	$p['page']['formID'] = $match['params']['form'];
+	if (!is_numeric($p['page']['formID'])) {
+		die();
+	}
 
 
-    //sortie du formulaire et préparation à son exploitation par le templates
-    $form = new msForm;
-    $form->setFormID($p['page']['formID']);
-    if ($p['page']['form']=$form->getFormRawData()) {
-        $p['page']['tabCat']=msForms::getCatListByID();
-        $p['page']['form']['catName']=$form->getCatNameFromCatID($p['page']['form']['cat']);
+	//sortie du formulaire et préparation à son exploitation par le templates
+	$form = new msForm;
+	$form->setFormID($p['page']['formID']);
+	if ($p['page']['form'] = $form->getFormRawData()) {
+		$p['page']['tabCat'] = msForms::getCatListByID();
+		$p['page']['form']['catName'] = $form->getCatNameFromCatID($p['page']['form']['cat']);
 
-        // liste des types par catégorie
-        if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel
+		// liste des types par catégorie
+		if ($tabTypes = msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel
     		from data_types as t
     		left join data_cat as c on c.id=t.cat
-    		where t.id > 0 and t.groupe = '".$p['page']['form']['groupe']."'
-    		order by c.label asc, t.label asc")) {
-            foreach ($tabTypes as $v) {
-                $p['page']['tabTypes'][$v['catName']][]=$v;
-            }
-        }
-        //liste des modules
-        $p['page']['modules']=msModules::getInstalledModulesNames();
-    }
- }
+    		where t.id > 0 and t.groupe = :groupe
+    		order by c.label asc, t.label asc", ['groupe' => $p['page']['form']['groupe']])) {
+			foreach ($tabTypes as $v) {
+				$p['page']['tabTypes'][$v['catName']][] = $v;
+			}
+		}
+		//liste des modules
+		$p['page']['modules'] = msModules::getInstalledModulesNames();
+	}
+}

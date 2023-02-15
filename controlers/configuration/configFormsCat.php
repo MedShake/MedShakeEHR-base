@@ -24,18 +24,20 @@
  * Config : catégories des formulaires
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configFormsCat";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configFormsCat";
+	$debug = '';
 
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(t.id) as enfants
+	$p['page']['tabCat'] = msSQL::sql2tabKey("select c.*, count(t.id) as enfants
 			from forms_cat as c
 			left join forms as t on c.id=t.cat
 			group by c.id
 			order by c.label asc", 'id');
- }
+}

@@ -25,21 +25,23 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configActesCat";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configActesCat";
+	$debug = '';
 
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(a.id) as enfants
+	$p['page']['tabCat'] = msSQL::sql2tabKey("select c.*, count(a.id) as enfants
 			from actes_cat as c
 			left join actes as a on c.id=a.cat
 			group by c.id
 			order by c.displayOrder, c.label asc", 'id');
 
-      //liste des modules
-      $p['page']['modules']=msModules::getInstalledModulesNames();
- }
+	//liste des modules
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
+}

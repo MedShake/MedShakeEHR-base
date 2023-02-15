@@ -25,67 +25,81 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configActes";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configActes";
+	$debug = '';
 
-     //utilisateurs différents
-     $autoUsers= new msPeople();
-     $p['page']['users']=$autoUsers->getUsersListForService('administratifPeutAvoirFacturesTypes');
-     if(is_array($p['page']['users'])) $p['page']['users']=array('0'=>'Tous')+$p['page']['users']; else {$p['page']['users']=array('0'=>'Tous');}
+	//utilisateurs différents
+	$autoUsers = new msPeople();
+	$p['page']['users'] = $autoUsers->getUsersListForService('administratifPeutAvoirFacturesTypes');
+	if (is_array($p['page']['users'])) $p['page']['users'] = array('0' => 'Tous') + $p['page']['users'];
+	else {
+		$p['page']['users'] = array('0' => 'Tous');
+	}
+
+	$marqueurs = [];
+
+	// si user
+	if (isset($match['params']['user'])) {
+		$p['page']['selectUser'] = $match['params']['user'];
+		if (is_numeric($p['page']['selectUser'])) {
+			$where[] = "a.toID = :selectUser ";
+			$marqueurs['selectUser'] = $p['page']['selectUser'];
+		}
+	} else {
+		$where[] = "a.toID = '0'";
+		$p['page']['selectUser'] = 0;
+	}
 
 
-     // si user
-     if (isset($match['params']['user'])) {
-         $p['page']['selectUser']=$match['params']['user'];
-         if (is_numeric($p['page']['selectUser'])) {
-             $where[]="a.toID='".$p['page']['selectUser']."'";
-         }
+	// si catégorie
+	if (isset($match['params']['cat'])) {
+		$cat = $match['params']['cat'];
+		if (is_numeric($cat)) {
+			$where[] = "a.cat = :cat ";
+			$marqueurs['cat'] = $cat;
+		}
+	}
 
-     } else {
-         $where[]="a.toID='0'";
-         $p['page']['selectUser']=0;
-     }
+	if ($tabTypes = msSQL::sql2tab(
+		"SELECT a.* , c.name as catName, c.label as catLabel, c.module as catModule
+		from actes as a
+		left join actes_cat as c on c.id=a.cat
+        where " . implode(' and ', $where) . "
+		group by a.id
+		order by c.module, c.displayOrder, c.label asc, a.label asc",
+		$marqueurs
+	)) {
+		foreach ($tabTypes as $v) {
+			$reglement = new msReglement();
+			$secteur = msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id' => '', 'module' => $v['catModule']));
+			$reglement->setSecteurTarifaire((int)$secteur);
+			$secteurNgap = msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id' => '', 'module' => $v['catModule']));
+			$reglement->setSecteurTarifaireNgap($secteurNgap);
+			$reglement->setFactureTypeID($v['id']);
+			$reglement->setFactureTypeData($v);
+			$p['page']['secteurs'][$v['catName']] = $secteur;
+			$p['page']['tabTypes'][$v['catName']][] = $reglement->getCalculateFactureTypeData();
+		}
+	}
 
+	// liste des catégories
+	$p['page']['catList'] = msSQL::sql2tabKey("select id, concat(label, ' (module ',module, ')') as label from actes_cat order by label", 'id', 'label');
 
-     // si catégorie
-     if (isset($match['params']['cat'])) {
-         $cat=$match['params']['cat'];
-         if (is_numeric($cat)) {
-             $where[]="a.cat='".$cat."'";
-         }
-     }
+	//utilisation de chaque facture type
+	$data = new msData();
+	$porteursReglementIds = array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
 
-     if ($tabTypes=msSQL::sql2tab("select a.* , c.name as catName, c.label as catLabel, c.module as catModule
-					from actes as a
-					left join actes_cat as c on c.id=a.cat
-          where ".implode(' and ', $where)."
-					group by a.id
-					order by c.module, c.displayOrder, c.label asc, a.label asc")) {
-         foreach ($tabTypes as $v) {
-             $reglement = new msReglement();
-             $secteur=msConfiguration::getParameterValue('administratifSecteurHonorairesCcam', array('id'=>'', 'module'=>$v['catModule']));
-             $reglement->setSecteurTarifaire((int)$secteur);
-             $secteurNgap=msConfiguration::getParameterValue('administratifSecteurHonorairesNgap', array('id'=>'', 'module'=>$v['catModule']));
-             $reglement->setSecteurTarifaireNgap($secteurNgap);
-             $reglement->setFactureTypeID($v['id']);
-             $reglement->setFactureTypeData($v);
-             $p['page']['secteurs'][$v['catName']]=$secteur;
-             $p['page']['tabTypes'][$v['catName']][]=$reglement->getCalculateFactureTypeData();
-         }
-     }
+	$sqlImplode = msSQL::sqlGetTagsForWhereIn($porteursReglementIds, 'porteurReg');
 
-     // liste des catégories
-     $p['page']['catList']=msSQL::sql2tabKey("select id, concat(label, ' (module ',module, ')') as label from actes_cat order by label", 'id', 'label');
+	$sql = "SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in (" . $sqlImplode['in'] . ") and deleted='' group by parentTypeID";
 
-     //utilisation de chaque facture type
-     $data=new msData();
-     $porteursReglementIds=array_column($data->getDataTypesFromCatName('porteursReglement', ['id']), 'id');
-     $p['page']['utilisationParFacture']=msSQL::sql2tabKey("SELECT count(id) as nb, parentTypeID FROM objets_data WHERE typeID in ('".implode("','", $porteursReglementIds)."') and deleted='' group by parentTypeID", 'parentTypeID', 'nb');
-
- }
+	$p['page']['utilisationParFacture'] = msSQL::sql2tabKey($sql, 'parentTypeID', 'nb', $sqlImplode['execute']);
+}
