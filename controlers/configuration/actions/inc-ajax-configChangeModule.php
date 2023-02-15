@@ -24,9 +24,11 @@
  * Config : changement de module utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
 
 if (!isset($_POST['id']) or !isset($_POST['module'])) {
     die;
