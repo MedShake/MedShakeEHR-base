@@ -24,7 +24,10 @@
  * LAP : ajax > obtenir le json de la prescription type
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
-$debug='';
-if(!is_numeric($_POST['id'])) die;
-echo msSQL::sqlUniqueChamp("select description from prescriptions where id ='".msSQL::cleanVar($_POST['id'])."' limit 1");
+
+$debug = '';
+if (!is_numeric($_POST['id'])) die;
+echo msSQL::sqlUniqueChamp("SELECT description from prescriptions where id = :id limit 1", ['id' => $_POST['id']]);

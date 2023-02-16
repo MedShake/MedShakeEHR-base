@@ -24,10 +24,12 @@
  * LAP : ajax > supprimer une prescription type
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-if(!is_numeric($_POST['id'])) die;
-if(msSQL::sqlQuery("delete from prescriptions where toID='".$p['user']['id']."' and id='".msSQL::cleanVar($_POST['id'])."' limit 1 ")) {
-  echo json_encode(['statut'=>'ok']);
+$debug = '';
+if (!is_numeric($_POST['id'])) die;
+if (msSQL::sqlQuery("DELETE from prescriptions where toID = :toID and id = :id limit 1 ", ['toID' => $p['user']['id'], 'id' => $_POST['id']])) {
+	echo json_encode(['statut' => 'ok']);
 }
