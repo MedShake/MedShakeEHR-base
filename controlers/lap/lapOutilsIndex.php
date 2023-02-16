@@ -26,17 +26,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $template="lapOutilsIndex";
+$debug = '';
+$template = "lapOutilsIndex";
 
- // version de la BdM
- $lap = new msLap;
- $p['page']['infosTheriaque']=$lap->getTheriaqueInfos();
+// version de la BdM
+$lap = new msLap;
+$p['page']['infosTheriaque'] = $lap->getTheriaqueInfos();
 
- //version de MedShake
- $p['page']['modules']=msModules::getInstalledModulesNamesAndVersions();
+//version de MedShake
+$p['page']['modules'] = msModules::getInstalledModulesNamesAndVersions();
 
- // liste des SAMs gérés
- $lapSams = new msLapSAM;
- $lapSams->getSamXmlFileContent();
- $p['page']['lap']['samsList']=$lapSams->getSamListInXml();
+// liste des SAMs gérés
+$lapSams = new msLapSAM;
+$lapSams->getSamXmlFileContent();
+$p['page']['lap']['samsList'] = $lapSams->getSamListInXml();

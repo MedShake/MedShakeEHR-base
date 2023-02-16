@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- // select TT chronique actif
+// select TT chronique actif
 $lap = new msLapOrdo();
 $lap->setToID($_POST['patientID']);
 echo json_encode($lap->getTTenCours());

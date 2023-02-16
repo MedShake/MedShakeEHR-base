@@ -26,6 +26,6 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$lap=new msLapOrdo();
+$lap = new msLapOrdo();
 $lap->setOrdonnanceID($_POST['ordonnanceID']);
 echo json_encode($lap->getOrdonnance());

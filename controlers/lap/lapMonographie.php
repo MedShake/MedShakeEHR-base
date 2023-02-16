@@ -27,17 +27,18 @@
  */
 
 
-$debug='';
-$template="lapMonographie";
+$debug = '';
+$template = "lapMonographie";
 
-if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
+if ($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
-if($p['config']['theriaqueMode'] == 'BDPM') {
+if ($p['config']['theriaqueMode'] == 'BDPM') {
 	header('Location: https://base-donnees-publique.medicaments.gouv.fr/extrait.php?specid=' . $match['params']['spe']);
 }
 
-$mono=new msLapMonographie();
+$mono = new msLapMonographie();
 $mono->setSpe($match['params']['spe']);
-$p['page']['spe']=$match['params']['spe'];
-if(isset($match['params']['section'])) $p['page']['section']=$match['params']['section']; else $p['page']['section']='administratif';
-$p['page']['speData']=$mono->getSpeData();
+$p['page']['spe'] = $match['params']['spe'];
+if (isset($match['params']['section'])) $p['page']['section'] = $match['params']['section'];
+else $p['page']['section'] = 'administratif';
+$p['page']['speData'] = $mono->getSpeData();

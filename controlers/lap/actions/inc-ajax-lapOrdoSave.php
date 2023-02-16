@@ -31,33 +31,33 @@ $ordo->setFromID($p['user']['id']);
 $ordo->setToID($_POST['patientID']);
 
 // Créer porteur ordonnance
-$ordoID=$ordo->createNewObjetByTypeName('lapOrdonnance', '');
+$ordoID = $ordo->createNewObjetByTypeName('lapOrdonnance', '');
 // enregistrer nom de l'ordo.
-if(!empty($_POST['ordoName'])) $ordo->setTitleObjet($ordoID, $_POST['ordoName']);
+if (!empty($_POST['ordoName'])) $ordo->setTitleObjet($ordoID, $_POST['ordoName']);
 
 $lap = new msLapOrdo();
 $lap->setToID($_POST['patientID']);
 $lap->setOrdonnanceID($ordoID);
 
 // Création des lignes ALD
-if(!empty($_POST['ordo']['ordoMedicsALD'])) {
-  foreach($_POST['ordo']['ordoMedicsALD'] as $ligneALD) {
-    $lap->saveLignePrescription($ligneALD);
-  }
+if (!empty($_POST['ordo']['ordoMedicsALD'])) {
+	foreach ($_POST['ordo']['ordoMedicsALD'] as $ligneALD) {
+		$lap->saveLignePrescription($ligneALD);
+	}
 }
 
 // Création des lignes générales
-if(!empty($_POST['ordo']['ordoMedicsG'])) {
-  foreach($_POST['ordo']['ordoMedicsG'] as $ligneG) {
-    $lap->saveLignePrescription($ligneG);
-  }
+if (!empty($_POST['ordo']['ordoMedicsG'])) {
+	foreach ($_POST['ordo']['ordoMedicsG'] as $ligneG) {
+		$lap->saveLignePrescription($ligneG);
+	}
 }
 //enregistrement de versionTheriaque + liste SAMs dans value porteur ordo
-$ordoValue=array('versionTheriaque'=>$lap->getTheriaqueInfos());
-if($samsList=$lap->getSamsListInOrdo()) {
-  if(!empty($samsList)) $ordoValue['sams']=$samsList;
+$ordoValue = array('versionTheriaque' => $lap->getTheriaqueInfos());
+if ($samsList = $lap->getSamsListInOrdo()) {
+	if (!empty($samsList)) $ordoValue['sams'] = $samsList;
 }
-$ordoValue=json_encode($ordoValue);
-$ordo->createNewObjetByTypeName('lapOrdonnance', $ordoValue, '0','0',$ordoID);
+$ordoValue = json_encode($ordoValue);
+$ordo->createNewObjetByTypeName('lapOrdonnance', $ordoValue, '0', '0', $ordoID);
 
-echo json_encode(array('ordoID'=>$ordoID));
+echo json_encode(array('ordoID' => $ordoID));

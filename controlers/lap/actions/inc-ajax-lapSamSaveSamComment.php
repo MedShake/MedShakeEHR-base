@@ -26,19 +26,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
 $sam = new msLapSAM;
 $sam->setFromID($p['user']['id']);
 $sam->setToID($_POST['patientID']);
 $sam->setSamID($_POST['samID']);
-if($objetID = $sam->setSamComment($_POST['comment'], $_POST['objetID'])) {
-  echo json_encode(array(
-    'objetID'=>$objetID,
-    'statut'=>'ok',
-  ));
+if ($objetID = $sam->setSamComment($_POST['comment'], $_POST['objetID'])) {
+	echo json_encode(array(
+		'objetID' => $objetID,
+		'statut' => 'ok',
+	));
 } else {
-  echo json_encode(array(
-    'statut'=>'ko',
-  ));
+	echo json_encode(array(
+		'statut' => 'ko',
+	));
 }

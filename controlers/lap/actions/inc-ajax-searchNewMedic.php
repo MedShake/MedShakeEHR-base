@@ -25,28 +25,28 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
-$template='inc-lapSearchMedicTableResults';
+
+$debug = '';
+$template = 'inc-lapSearchMedicTableResults';
 
 
-$lap=new msLap;
+$lap = new msLap;
 
-if($_POST['typeRecherche'] == 'dci' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '1');
-} elseif ($_POST['typeRecherche'] == 'dcispe' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '3');
-} elseif ($_POST['typeRecherche'] == 'spe' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '0');
-} elseif ($_POST['typeRecherche'] == 'suba' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicBySub($_POST['term'].'%', 1 ,$_POST['retourRecherche']);
-} elseif ($_POST['typeRecherche'] == 'atc' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
-} elseif ($_POST['typeRecherche'] == 'indications' ) {
-  $p['page']['listeIndics']=$lap->getIndicsByTxt($_POST['term']);
-  if (isset($_POST['listeCodesIndics']) and !empty($_POST['listeCodesIndics'])) {
-    $p['page']['medicListeSpe']=$lap->getMedicByCodeIndic($_POST['listeCodesIndics'], $_POST['retourRecherche']);
-  }
-
+if ($_POST['typeRecherche'] == 'dci') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '1');
+} elseif ($_POST['typeRecherche'] == 'dcispe') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '3');
+} elseif ($_POST['typeRecherche'] == 'spe') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '0');
+} elseif ($_POST['typeRecherche'] == 'suba') {
+	$p['page']['medicListeSpe'] = $lap->getMedicBySub($_POST['term'] . '%', 1, $_POST['retourRecherche']);
+} elseif ($_POST['typeRecherche'] == 'atc') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
+} elseif ($_POST['typeRecherche'] == 'indications') {
+	$p['page']['listeIndics'] = $lap->getIndicsByTxt($_POST['term']);
+	if (isset($_POST['listeCodesIndics']) and !empty($_POST['listeCodesIndics'])) {
+		$p['page']['medicListeSpe'] = $lap->getMedicByCodeIndic($_POST['listeCodesIndics'], $_POST['retourRecherche']);
+	}
 }
 
-$p['page']['listeCodeSpeTrouve']=$lap->getListeCodeSpeTrouve();
+$p['page']['listeCodeSpeTrouve'] = $lap->getListeCodeSpeTrouve();

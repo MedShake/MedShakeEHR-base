@@ -25,7 +25,8 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
 header('Content-Type: application/json');
-$file=$p['config']['workingDirectory'].'/'.$p['user']['id'].'/ordoLive.json';
+$file = $p['config']['workingDirectory'] . '/' . $p['user']['id'] . '/ordoLive.json';
 file_put_contents($file, json_encode($_POST['ordoLive']));
 echo json_encode($_POST['ordoLive']);

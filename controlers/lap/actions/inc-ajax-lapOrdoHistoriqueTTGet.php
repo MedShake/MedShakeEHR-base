@@ -26,10 +26,10 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="inc-lapOrdosHistoriqueTTGet";
-$lap=new msLapOrdo();
+$debug = '';
+$template = "inc-lapOrdosHistoriqueTTGet";
+$lap = new msLapOrdo();
 $lap->setToID($_POST['patientID']);
-$p['page']['histoTTannee']=$_POST['year'];
-$p['page']['histoTTannees']=$lap->getHistoriqueAnneesDistinctesMedics();
-$p['page']['histoTT']=$lap->getHistoriqueTT($p['page']['histoTTannee']);
+$p['page']['histoTTannee'] = $_POST['year'];
+$p['page']['histoTTannees'] = $lap->getHistoriqueAnneesDistinctesMedics();
+$p['page']['histoTT'] = $lap->getHistoriqueTT($p['page']['histoTTannee']);

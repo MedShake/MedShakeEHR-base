@@ -25,27 +25,28 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
-$template='inc-lapOutilsSearchMedicTableResults';
+
+$debug = '';
+$template = 'inc-lapOutilsSearchMedicTableResults';
 
 
-$lap=new msLap;
+$lap = new msLap;
 
-if($_POST['typeRecherche'] == 'dci' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '1');
-} elseif ($_POST['typeRecherche'] == 'dcispe' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '3');
-} elseif ($_POST['typeRecherche'] == 'spe' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByName(str_replace(' ', '%',$_POST['term']).'%', '0');
-} elseif ($_POST['typeRecherche'] == 'suba' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicBySub($_POST['term'].'%', 1 ,$_POST['retourRecherche']);
-} elseif ($_POST['typeRecherche'] == 'atc' ) {
-  $p['page']['medicListeSpe']=$lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
+if ($_POST['typeRecherche'] == 'dci') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '1');
+} elseif ($_POST['typeRecherche'] == 'dcispe') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '3');
+} elseif ($_POST['typeRecherche'] == 'spe') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByName(str_replace(' ', '%', $_POST['term']) . '%', '0');
+} elseif ($_POST['typeRecherche'] == 'suba') {
+	$p['page']['medicListeSpe'] = $lap->getMedicBySub($_POST['term'] . '%', 1, $_POST['retourRecherche']);
+} elseif ($_POST['typeRecherche'] == 'atc') {
+	$p['page']['medicListeSpe'] = $lap->getMedicByATC($_POST['term'], $_POST['retourRecherche']);
 }
 
-$p['page']['listeCodeSpeTrouve']=$lap->getListeCodeSpeTrouve();
-if(!empty($p['page']['listeCodeSpeTrouve'])) {
-  foreach($p['page']['listeCodeSpeTrouve'] as $codeSpe) {
-    $p['page']['suba'][$codeSpe]=$lap->getSubtancesActivesTab($codeSpe);
-  }
+$p['page']['listeCodeSpeTrouve'] = $lap->getListeCodeSpeTrouve();
+if (!empty($p['page']['listeCodeSpeTrouve'])) {
+	foreach ($p['page']['listeCodeSpeTrouve'] as $codeSpe) {
+		$p['page']['suba'][$codeSpe] = $lap->getSubtancesActivesTab($codeSpe);
+	}
 }

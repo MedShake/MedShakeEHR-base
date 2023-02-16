@@ -26,14 +26,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-//print_r($_POST);
 
 // sortie de l'objet patient
-$lapPatient=new msLapPatient;
+$lapPatient = new msLapPatient;
 $lapPatient->setToID($_POST['patientID']);
 
 //sortie de l'analyse Thériaque pour l'ordo courante
-$lapOrdo= new msLapAnalysePres;
+$lapOrdo = new msLapAnalysePres;
 $lapOrdo->setToID($_POST['patientID']);
 $lapOrdo->setObjetPatient($lapPatient->getPatientObjetTheriaque());
 $lapOrdo->setOrdonnanceContenu($_POST['ordo']);
@@ -41,11 +40,11 @@ $lapOrdo->getObjetsFromOrdo();
 $lapOrdo->getObjetsFromTTenCours();
 
 
-$prescription=$lapOrdo->getObjetPrescription();
-$posologie=$lapOrdo->getObjetPosoPres();
+$prescription = $lapOrdo->getObjetPrescription();
+$posologie = $lapOrdo->getObjetPosoPres();
 $lapOrdo->getAnalyseTheriaque();
-$retourAnalyseBrute=$lapOrdo->getBrutAnalyseResults();
-$retourAnalyseFormate=$lapOrdo->getFormateAnalyseResults();
+$retourAnalyseBrute = $lapOrdo->getBrutAnalyseResults();
+$retourAnalyseFormate = $lapOrdo->getFormateAnalyseResults();
 
 echo '<ul class="nav nav-tabs" style="margin-bottom: 10px">
   <li class="nav-item active"><a class="nav-link active" href="#patient" role="tab" data-toggle="tab">Patient</a></li>

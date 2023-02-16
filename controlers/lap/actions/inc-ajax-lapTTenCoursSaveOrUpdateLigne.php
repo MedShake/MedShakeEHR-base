@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
- $lap = new msLapOrdo();
- $lap->setToID($_POST['patientID']);
- $lap->saveLignePrescription($_POST['ligne']);
+
+$lap = new msLapOrdo();
+$lap->setToID($_POST['patientID']);
+$lap->saveLignePrescription($_POST['ligne']);

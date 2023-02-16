@@ -27,17 +27,17 @@
  */
 
 header('Content-Type: application/json');
- $patient = new msObjet();
- $patient->setFromID($p['user']['id']);
- $patient->setToID($_POST['patientID']);
+$patient = new msObjet();
+$patient->setFromID($p['user']['id']);
+$patient->setToID($_POST['patientID']);
 
- if ($supportID=$patient->createNewObjetByTypeName('allergieCodeTheriaque', $_POST['codeAller'], $_POST['parentID'])) {
-     $patient->createNewObjetByTypeName('allergieLibelleTheriaque', $_POST['libelleAller'], $supportID);
-     echo json_encode(array(
-       "statut"=>'ok',
-       "libelle"=>$_POST['libelleAller'],
-       "code"=>$_POST['codeAller']
-     ));
- } else {
-     echo json_encode(array("statut"=>'error'));
- }
+if ($supportID = $patient->createNewObjetByTypeName('allergieCodeTheriaque', $_POST['codeAller'], $_POST['parentID'])) {
+	$patient->createNewObjetByTypeName('allergieLibelleTheriaque', $_POST['libelleAller'], $supportID);
+	echo json_encode(array(
+		"statut" => 'ok',
+		"libelle" => $_POST['libelleAller'],
+		"code" => $_POST['codeAller']
+	));
+} else {
+	echo json_encode(array("statut" => 'error'));
+}

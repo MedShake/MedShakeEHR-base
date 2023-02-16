@@ -26,13 +26,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- header('Content-Type: application/json');
- $patient = new msObjet();
- $patient->setFromID($p['user']['id']);
- $patient->setToID($_POST['patientID']);
- $patient->setObjetID($_POST['objetID']);
- if ($patient->setDeletedObjetAndSons()) {
-     echo json_encode(array("statut"=>'ok'));
- } else {
-     echo json_encode(array("statut"=>'error'));
- }
+header('Content-Type: application/json');
+$patient = new msObjet();
+$patient->setFromID($p['user']['id']);
+$patient->setToID($_POST['patientID']);
+$patient->setObjetID($_POST['objetID']);
+if ($patient->setDeletedObjetAndSons()) {
+	echo json_encode(array("statut" => 'ok'));
+} else {
+	echo json_encode(array("statut" => 'error'));
+}

@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
 $sams = new msLapSAM;
 $sams->setFromID($p['user']['id']);
@@ -34,30 +34,28 @@ $sams->setToID($_POST['patientID']);
 
 $samsArray = array_unique($_POST['sams']);
 
-if(count($samsArray) > 0) {
+if (count($samsArray) > 0) {
 
-  foreach($samsArray as $sam) {
-    $sams->setSamID($sam);
-    if($data = $sams->getSamData()) {
-      $p['page']['sams'][$sam] = $data;
-      $p['page']['sams'][$sam]['co'] = $sams->getSamCommentForPatient();
-    }
+	foreach ($samsArray as $sam) {
+		$sams->setSamID($sam);
+		if ($data = $sams->getSamData()) {
+			$p['page']['sams'][$sam] = $data;
+			$p['page']['sams'][$sam]['co'] = $sams->getSamCommentForPatient();
+		}
+	}
+	$p['page']['zone'] = $_POST['zone'];
+	$html = new msGetHtml;
+	$html->set_template('inc-lapSamsZone.html.twig');
+	$html = $html->genererHtmlVar($p);
 
-  }
-  $p['page']['zone']=$_POST['zone'];
-  $html = new msGetHtml;
-  $html->set_template('inc-lapSamsZone.html.twig');
-  $html = $html->genererHtmlVar($p);
-
-  $samsInSamsZone = array_keys($p['page']['sams']);
-
+	$samsInSamsZone = array_keys($p['page']['sams']);
 } else {
-  $html='';
-  $samsInSamsZone=[];
+	$html = '';
+	$samsInSamsZone = [];
 }
 
 echo json_encode(array(
-  'zone'=>$_POST['zone'],
-  'html'=>$html,
-  'samsInSamsZone'=>$samsInSamsZone
+	'zone' => $_POST['zone'],
+	'html' => $html,
+	'samsInSamsZone' => $samsInSamsZone
 ));

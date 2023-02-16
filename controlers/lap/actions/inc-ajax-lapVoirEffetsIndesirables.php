@@ -25,15 +25,15 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
+$debug = '';
 //$template='inc-lapSearchMedicTableResults';
 
 $lap = new msLap;
-$p['page']['spe']=$lap->getSpecialiteByCode($_POST['codeSpe'], 1, 3)[0];
-$p['page']['eiCli']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],1),'texteffet');
-$p['page']['eiParaCli']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],2),'texteffet');
-$p['page']['eiCliSd']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],3),'texteffet');
-$p['page']['eiParaCliSd']=array_column($lap->getEffetsIndesirables($_POST['codeSpe'],4),'texteffet');
+$p['page']['spe'] = $lap->getSpecialiteByCode($_POST['codeSpe'], 1, 3)[0];
+$p['page']['eiCli'] = array_column($lap->getEffetsIndesirables($_POST['codeSpe'], 1), 'texteffet');
+$p['page']['eiParaCli'] = array_column($lap->getEffetsIndesirables($_POST['codeSpe'], 2), 'texteffet');
+$p['page']['eiCliSd'] = array_column($lap->getEffetsIndesirables($_POST['codeSpe'], 3), 'texteffet');
+$p['page']['eiParaCliSd'] = array_column($lap->getEffetsIndesirables($_POST['codeSpe'], 4), 'texteffet');
 
 sort($p['page']['eiCli']);
 
@@ -42,6 +42,6 @@ $html->set_template('inc-lapInfosMedicEI');
 $html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
-  'html'=>$html,
-  'titreModal'=>$p['page']['spe']['sp_nomlong']
+	'html' => $html,
+	'titreModal' => $p['page']['spe']['sp_nomlong']
 ));

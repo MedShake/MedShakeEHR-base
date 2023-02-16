@@ -25,15 +25,16 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
 
-$lap=new msLap;
-$p['page']['medic']=$lap->getResultatsDet($_POST['codesSpe']);
+$debug = '';
+
+$lap = new msLap;
+$p['page']['medic'] = $lap->getResultatsDet($_POST['codesSpe']);
 
 $html = new msGetHtml;
 $html->set_template('inc-lapSearchMedicTableResultsDetails.html.twig');
 $html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
-  'html'=>$html,
+	'html' => $html,
 ));

@@ -25,5 +25,6 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$template='inc-lapOrdonnanceLigne.html.twig';
-$p['page']=$_POST;
+
+$template = 'inc-lapOrdonnanceLigne.html.twig';
+$p['page'] = $_POST;
