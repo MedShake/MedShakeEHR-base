@@ -25,55 +25,57 @@
  * (mais archiver tout de même)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(!is_numeric($match['params']['mailID'])) die;
+if (!is_numeric($match['params']['mailID'])) die;
 
 //sortir data hprim
-if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id='".$match['params']['mailID']."' ")) {
-    $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
-    $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
+if ($data = msSQL::sqlUnique("SELECT txtFileName, hprimAllSerialize, pjSerializeName from inbox where id = :id ", ['id' => $match['params']['mailID']])) {
+	$pj['pjSerializeName'] = unserialize($data['pjSerializeName']);
+	$sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
-    if (count($pj['pjSerializeName'])>0) {
-        foreach ($pj['pjSerializeName'] as $file) {
+	if (count($pj['pjSerializeName']) > 0) {
+		foreach ($pj['pjSerializeName'] as $file) {
 
-            //source
-            $source=$p['config']['apicryptCheminInbox'].$sourceFolder.'/'.$file;
+			//source
+			$source = $p['config']['apicryptCheminInbox'] . $sourceFolder . '/' . $file;
 
-            if (is_file($source)) {
+			if (is_file($source)) {
 
-                //extension
-                $mimetype=msTools::getmimetype($source);
-                if ($mimetype=='application/pdf') {
-                    $ext='pdf';
-                } elseif ($mimetype=='text/plain') {
-                    $ext='txt';
-                }
+				//extension
+				$mimetype = msTools::getmimetype($source);
+				if ($mimetype == 'application/pdf') {
+					$ext = 'pdf';
+				} elseif ($mimetype == 'text/plain') {
+					$ext = 'txt';
+				}
 
 
-                ////////////////////////////
-                // stockage archives
-                $finaldir=$p['config']['apicryptCheminArchivesInbox'].$p['user']['id'].'/'.date('Y').'/'.date('m').'/'.date('d').'/'.$sourceFolder.'/';
-                msTools::checkAndBuildTargetDir($finaldir);
+				////////////////////////////
+				// stockage archives
+				$finaldir = $p['config']['apicryptCheminArchivesInbox'] . $p['user']['id'] . '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/' . $sourceFolder . '/';
+				msTools::checkAndBuildTargetDir($finaldir);
 
-                copy($source, $finaldir.$file);
+				copy($source, $finaldir . $file);
 
-                unlink($source);
-            }
-        }
+				unlink($source);
+			}
+		}
 
-        rmdir($p['config']['apicryptCheminInbox'].$sourceFolder.'/');
-    }
+		rmdir($p['config']['apicryptCheminInbox'] . $sourceFolder . '/');
+	}
 
-    ////////////////////////////
-    // stockage archives du txt
-    $ddir=$p['config']['apicryptCheminArchivesInbox'].$p['user']['id'].'/'.date('Y').'/'.date('m').'/'.date('d').'/';
-    msTools::checkAndBuildTargetDir($ddir);
+	////////////////////////////
+	// stockage archives du txt
+	$ddir = $p['config']['apicryptCheminArchivesInbox'] . $p['user']['id'] . '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
+	msTools::checkAndBuildTargetDir($ddir);
 
-    copy($p['config']['apicryptCheminInbox'].$data['txtFileName'], $ddir.$data['txtFileName']);
+	copy($p['config']['apicryptCheminInbox'] . $data['txtFileName'], $ddir . $data['txtFileName']);
 
-    unlink($p['config']['apicryptCheminInbox'].$data['txtFileName']);
-    msSQL::sqlQuery("update inbox set archived='y' where id='".$match['params']['mailID']."' limit 1");
+	unlink($p['config']['apicryptCheminInbox'] . $data['txtFileName']);
+	msSQL::sqlQuery("UPDATE inbox set archived = 'y' where id = :id limit 1", ['id' => $match['params']['mailID']]);
 }
 
 msTools::redirection('/inbox/');

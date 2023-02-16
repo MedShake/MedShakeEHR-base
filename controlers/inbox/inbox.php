@@ -24,31 +24,36 @@
  * Inbox : la page inbox
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-$template="inbox";
+$debug = '';
+$template = "inbox";
 
-if(!empty($p['config']['apicryptInboxMailForUserID'])) {
-  $apicryptInboxMailForUserID=explode(',', $p['config']['apicryptInboxMailForUserID']);
-  $apicryptInboxMailForUserID[]=$p['user']['id'];
-  $apicryptInboxMailForUserID=implode("','", $apicryptInboxMailForUserID);
+$apicryptInboxMailForUserID = [];
+
+if (!empty($p['config']['apicryptInboxMailForUserID'])) {
+	$apicryptInboxMailForUserID = explode(',', $p['config']['apicryptInboxMailForUserID']);
+	$apicryptInboxMailForUserID[] = $p['user']['id'];
 } else {
-  $apicryptInboxMailForUserID=$p['user']['id'];
+	$apicryptInboxMailForUserID[] = $p['user']['id'];
 }
 
-if($p['config']['designInboxMailsSortOrder'] == 'asc') {
-  $p['page']['sort']='asc';
+if ($p['config']['designInboxMailsSortOrder'] == 'asc') {
+	$p['page']['sort'] = 'asc';
 } else {
-  $p['page']['sort']='desc';
+	$p['page']['sort'] = 'desc';
 }
 
-if ($mails=msSQL::sql2tab("select id, txtFileName, DATE_FORMAT(txtDatetime, '%Y-%m-%d') as day, hprimIdentite, hprimExpediteur, hprimAllSerialize, pjNombre, archived
+$sqlImplode = msSQL::sqlGetTagsForWhereIn($apicryptInboxMailForUserID, 'mailForUserID');
+
+if ($mails = msSQL::sql2tab("SELECT id, txtFileName, DATE_FORMAT(txtDatetime, '%Y-%m-%d') as day, hprimIdentite, hprimExpediteur, hprimAllSerialize, pjNombre, archived
     from inbox
-    where archived!='y' and mailForUserID in ('".$apicryptInboxMailForUserID."')
-    order by txtDatetime ".$p['page']['sort'].", txtNumOrdre ".$p['page']['sort'])) {
-    foreach ($mails as $mail) {
-        $mail['isValidHprim'] = msHprim::checkIfValidHprimHeaderData(unserialize($mail['hprimAllSerialize']));
-        $p['page']['inbox']['mails'][$mail['day']][] = $mail;
-    }
+    where archived!='y' and mailForUserID in (" . $sqlImplode['in'] . ")
+    order by txtDatetime " . $p['page']['sort'] . ", txtNumOrdre " . $p['page']['sort'], $sqlImplode['execute'])) {
+	foreach ($mails as $mail) {
+		$mail['isValidHprim'] = msHprim::checkIfValidHprimHeaderData(unserialize($mail['hprimAllSerialize']));
+		$p['page']['inbox']['mails'][$mail['day']][] = $mail;
+	}
 }
