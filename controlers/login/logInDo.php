@@ -25,67 +25,70 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
 
-$formIN=$_POST['formIN'];
+$formIN = $_POST['formIN'];
 
 //construc validation rules
 $form = new msFormValidation();
 $form->setformIDbyName($formIN);
 $form->setPostdatas($_POST);
-$validation=$form->getValidation();
+$validation = $form->getValidation();
 
 if ($validation === false) {
 
-    msTools::redirRoute('userLogIn');
-
+	msTools::redirRoute('userLogIn');
 } else {
 
-    //check login
-    $user = new msUser();
-    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-        $message='Nous n\'avons pas trouvé d\'utilisateur correspondant ou le mot de passe est incorrect';
-        if (!is_array($_SESSION['form'][$formIN]['validationErrorsMsg']) or !in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
-            $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
-        }
-        $validation = false;
-    }
+	//check login
+	$user = new msUser();
+	if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
+		$message = 'Nous n\'avons pas trouvé d\'utilisateur correspondant ou le mot de passe est incorrect';
+		if (!is_array($_SESSION['form'][$formIN]['validationErrorsMsg']) or !in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) {
+			$_SESSION['form'][$formIN]['validationErrorsMsg'][] = $message;
+		}
+		$validation = false;
+	}
 
-    //vérifier 2fa
-    if($validation != false and $p['config']['optionGeLogin2FA'] == 'true') {
-      if(!$user->check2faValidKey()) {
-        // redirection vers création de la clef et affichage
-        $user->doLogin();
-        unset($_SESSION['form'][$formIN]);
-        msTools::redirection('/login/set2fa/');
-      } else {
-        if(!$user->check2fa((string)$_POST['p_otpCode'])) {
-          $message="L'authentification OTP a échoué";
-          if(!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) $_SESSION['form'][$formIN]['validationErrorsMsg'][]=$message;
-          $validation = false;
-        }
-      }
-    }
+	//vérifier 2fa
+	if ($validation != false and $p['config']['optionGeLogin2FA'] == 'true') {
+		if (!$user->check2faValidKey()) {
+			// redirection vers création de la clef et affichage
+			$user->doLogin();
+			unset($_SESSION['form'][$formIN]);
+			msTools::redirection('/login/set2fa/');
+		} else {
+			if (!$user->check2fa((string)$_POST['p_otpCode'])) {
+				$message = "L'authentification OTP a échoué";
+				if (!in_array($message, $_SESSION['form'][$formIN]['validationErrorsMsg'])) $_SESSION['form'][$formIN]['validationErrorsMsg'][] = $message;
+				$validation = false;
+			}
+		}
+	}
 
-    //do login
-    if ($validation != false) {
-        $user->doLogin();
+	//do login
+	if ($validation != false) {
+		$user->doLogin();
 
-        unset($_SESSION['form'][$formIN]);
+		unset($_SESSION['form'][$formIN]);
 
-        if ('admin'==msSQL::sqlUniqueChamp("SELECT `rank` FROM people WHERE name='".msSQL::cleanVar($_POST['p_username'])."' limit 1") and
-            'maintenance'==msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE name='state' and groupe='system'")) {
-            msTools::redirection('/configuration/applyUpdates/');
-        }
-        msTools::redirection('/patients/');
-    } else {
-        // Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
-        openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-        syslog(LOG_WARNING, "MedShakeEHR - echec de connexion depuis {$_SERVER['REMOTE_ADDR']}");
-        closelog();
+		if (
+			'admin' == msSQL::sqlUniqueChamp("SELECT `rank` FROM people WHERE name= :p_username limit 1", ['p_username' => $_POST['p_username']]) and
+			'maintenance' == msSQL::sqlUniqueChamp("SELECT value FROM `system` WHERE name='state' and groupe='system'")
+		) {
+			msTools::redirection('/configuration/applyUpdates/');
+		}
+		msTools::redirection('/patients/');
+	} else {
+		// Echec de connexion: on écrit dans le log à destination éventuelle de fail2ban, si configuré
+		openlog("MedShakeEHR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+		syslog(LOG_WARNING, "MedShakeEHR - echec de connexion depuis {$_SERVER['REMOTE_ADDR']}");
+		closelog();
 
-        $form->savePostValues2Session();
-        msTools::redirRoute('userLogIn');
-    }
+		$form->savePostValues2Session();
+		msTools::redirRoute('userLogIn');
+	}
 }

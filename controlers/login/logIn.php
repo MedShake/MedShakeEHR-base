@@ -27,19 +27,13 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
-$template="login";
-
-// vérifications et ajustement saut de version majeure  
-$versionBase = msSQL::sqlUniqueChamp("SELECT value AS version FROM `system` WHERE name='base'");
-if(version_compare($versionBase, 'v6.0.0', '<')) {
-  include($homepath.'/scripts/jumpv5tov6.php');
-}
+$debug = '';
+$template = "login";
 
 $formLogin = new msForm();
-$formLogin->setFormIDbyName($p['page']['formIN']='baseLogin');
-$p['page']['form']=$formLogin->getForm();
+$formLogin->setFormIDbyName($p['page']['formIN'] = 'baseLogin');
+$p['page']['form'] = $formLogin->getForm();
 
-if($p['config']['optionGeLogin2FA'] == 'false') {
-  $formLogin->removeFieldFromForm($p['page']['form'], 'otpCode');
+if ($p['config']['optionGeLogin2FA'] == 'false') {
+	$formLogin->removeFieldFromForm($p['page']['form'], 'otpCode');
 }
