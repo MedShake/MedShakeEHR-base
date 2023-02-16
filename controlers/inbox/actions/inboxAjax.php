@@ -26,17 +26,17 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
 
-$acceptedModes=array(
-    'viewMail', // Voir un mail
-    'getPatients',
+$acceptedModes = array(
+	'viewMail', // Voir un mail
+	'getPatients',
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
-include('inc-ajax-'.$m.'.php');
+include('inc-ajax-' . $m . '.php');

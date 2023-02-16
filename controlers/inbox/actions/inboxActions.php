@@ -27,17 +27,17 @@
  */
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'classerDansDossier', // Classer comme document dans un dossier patient
-    'suppSansClasser', //supprimer un message sans le classer
-    'suppInbox', //supprimer un message déjà classé
-    'sortMails' // inverser l'ordre de tri chronologique des mails
+$acceptedModes = array(
+	'classerDansDossier', // Classer comme document dans un dossier patient
+	'suppSansClasser', //supprimer un message sans le classer
+	'suppInbox', //supprimer un message déjà classé
+	'sortMails' // inverser l'ordre de tri chronologique des mails
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 } else {
-    include('inc-action-'.$m.'.php');
+	include('inc-action-' . $m . '.php');
 }
