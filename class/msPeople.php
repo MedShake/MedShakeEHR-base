@@ -77,7 +77,7 @@ class msPeople
 	public static function checkPeopleExist($id)
 	{
 		if (!is_numeric($id)) return false;
-		if (msSQL::sqlUniqueChamp("SELECT id FROM people WHERE id='" . $id . "' limit 1")) {
+		if (msSQL::sqlUniqueChamp("SELECT id FROM people WHERE id = :id limit 1", ['id' => $id])) {
 			return true;
 		} else {
 			return false;
