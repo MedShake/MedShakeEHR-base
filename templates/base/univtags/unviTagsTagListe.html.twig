@@ -29,18 +29,18 @@
 {% if page.univTags.tagListe is not empty %}
   <div>
   {% for tag in page.univTags.tagListe %}
-    <span class="badge badge-pill" data-id="{{ tag.id }}" title="{{ tag.description }}" style="color:{{ tag.textcolor }}; background-color:{{ tag.color }};">
-    {{ tag.name }}
+    <div class="badge badge-pill" data-id="{{ tag.id }}" title="{{ tag.description }}" style="color:{{ tag.textcolor }}; background-color:{{ tag.color }};">
+    <label for="tagID{{ tag.id }}" class="m-1">{{ tag.name }}</label>
     {% if page.univTags.showEditBtn %}
       <i type="button" class="fas fa-pencil-alt ml-1" title="Modifier cette étiquette" data-typeID="{{ tag.typeID }}" data-tagID="{{ tag.id }}" data-toID="{{ page.univTags.toID }}" onclick="getModalUnivTag({{ page.univTags.typeID }}, {{ tag.id }}, {{ page.univTags.toID }}, '{{ page.univTags.contexte }}');"></i>
     {% endif %}
     {% if page.univTags.showSelectSetTo %}
-      <input class="ml-1" type="checkbox" data-tagID="{{ tag.id }}" title="Ajouter ou retirer l'étiquette" data-toID="{{ page.univTags.toID }}"{% if tag.toID == page.univTags.toID %}checked="checked"{% endif %} onchange="univTagsSetTo(this)">
+      <input class="ml-1" type="checkbox" id="tagID{{ tag.id }}" data-tagID="{{ tag.id }}" title="Ajouter ou retirer l'étiquette" data-toID="{{ page.univTags.toID }}"{% if tag.toID == page.univTags.toID %}checked="checked"{% endif %} onchange="univTagsSetTo(this)">
     {% endif %}
     {% if page.univTags.showSelectFilterSearch %}
-      <input class="univTagsSelectFilter ml-1" type="checkbox" title="Filtrer les résultats de la recherche avec cette étiquette" name="univtag[{{ tag.id }}]" value="{{ tag.id }}" onchange="updateListingPatients()">
+      <input class="univTagsSelectFilter ml-1" type="checkbox" title="Filtrer les résultats de la recherche avec cette étiquette" name="univtag[{{ tag.id }}]" value="{{ tag.id }}" id="tagID{{ tag.id }}" onchange="updateListingPatients()">
     {% endif %}
-    </span>
+    </div>
   {% endfor %}
   </div>
 {% endif %}
