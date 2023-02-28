@@ -28,17 +28,17 @@
 
 
 
- $log = new msLog;
- $log->setFile(getenv("MEDSHAKEEHRLOGFILE"));
- if(!empty($_POST['userID'])) $log->setUserID($_POST['userID']);
- if(!empty($_POST['userIP'])) $log->setUserIP($_POST['userIP']);
- if(!empty($_POST['dateStart'])) $log->setDateStart($_POST['dateStart']);
- if(!empty($_POST['dateStartOperator'])) $log->setDateStartOperator($_POST['dateStartOperator']);
- if(!empty($_POST['heureStart'])) $log->setHeureStart($_POST['heureStart']);
- if(!empty($_POST['dateEnd'])) $log->setDateEnd($_POST['dateEnd']);
- if(!empty($_POST['dateEndOperator'])) $log->setDateEndOperator($_POST['dateEndOperator']);
- if(!empty($_POST['heureEnd'])) $log->setHeureEnd($_POST['heureEnd']);
- if(!empty($_POST['urlPattern'])) $log->setUrlPattern($_POST['urlPattern']);
- if(!empty($_POST['nbLignes'])) $log->setNbLignes($_POST['nbLignes']);
+$log = new msLog;
+$log->setFile(getenv("MEDSHAKEEHRLOGFILE"));
+if (!empty($_POST['userID'])) $log->setUserID($_POST['userID']);
+if (!empty($_POST['userIP'])) $log->setUserIP($_POST['userIP']);
+if (!empty($_POST['dateStart'])) $log->setDateStart($_POST['dateStart']);
+if (!empty($_POST['dateStartOperator'])) $log->setDateStartOperator($_POST['dateStartOperator']);
+if (!empty($_POST['heureStart'])) $log->setHeureStart($_POST['heureStart']);
+if (!empty($_POST['dateEnd'])) $log->setDateEnd($_POST['dateEnd']);
+if (!empty($_POST['dateEndOperator'])) $log->setDateEndOperator($_POST['dateEndOperator']);
+if (!empty($_POST['heureEnd'])) $log->setHeureEnd($_POST['heureEnd']);
+if (!empty($_POST['urlPattern'])) $log->setUrlPattern($_POST['urlPattern']);
+if (!empty($_POST['nbLignes'])) $log->setNbLignes($_POST['nbLignes']);
 
- exit(json_encode($log->getDataWithAwk()));
+exit(json_encode($log->getDataWithAwk()));

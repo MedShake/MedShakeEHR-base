@@ -28,33 +28,29 @@
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
-   return;
+	$template = "forbidden";
+	return;
 }
 
-$debug='';
-$template='historiqueContextDataType';
+$debug = '';
+$template = 'historiqueContextDataType';
 $typeName = $match['params']['dataType'];
 
-if(isset($match['params']['instance'])) {
-  $instance = $match['params']['instance'];
+if (isset($match['params']['instance'])) {
+	$instance = $match['params']['instance'];
 } else {
-  $instance = 0;
+	$instance = 0;
 }
 
 
 $dataType = new msData;
-if($dataType->checkDataTypeExistByName($typeName)) {
-  $typeID = $dataType->getTypeIDFromName($typeName);
-  $p['page']['dataType'] = $dataType->getDataTypeByName($typeName);
-  $p['page']['typeLabel'] = $dataType->getLabelFromTypeID([$typeID])[$typeID];
-  $p['page']['typeName'] = $typeName;
-  $obj = new msObjet;
-  $obj->setToID($match['params']['patientID']);
-  $p['page']['histo']=$obj->getDataTypeContextualHistoric($typeName, $instance);
-
-
-
+if ($dataType->checkDataTypeExistByName($typeName)) {
+	$typeID = $dataType->getTypeIDFromName($typeName);
+	$p['page']['dataType'] = $dataType->getDataTypeByName($typeName);
+	$p['page']['typeLabel'] = $dataType->getLabelFromTypeID([$typeID])[$typeID];
+	$p['page']['typeName'] = $typeName;
+	$obj = new msObjet;
+	$obj->setToID($match['params']['patientID']);
+	$p['page']['histo'] = $obj->getDataTypeContextualHistoric($typeName, $instance);
 } else {
-
 }

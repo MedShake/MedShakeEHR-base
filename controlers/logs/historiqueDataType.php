@@ -29,40 +29,38 @@
 
 //vérification droits
 if ($p['config']['droitStatsPeutVoirStatsGenerales'] != 'true' or $p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
- $template="forbidden";
- return;
+	$template = "forbidden";
+	return;
 }
 
-$debug='';
-$template='historiqueDataType';
+$debug = '';
+$template = 'historiqueDataType';
 $typeName = $match['params']['dataType'];
 
-if(isset($match['params']['page'])) {
-  $page = $match['params']['page'];
+if (isset($match['params']['page'])) {
+	$page = $match['params']['page'];
 } else {
-  $page = 0;
+	$page = 0;
 }
-$nbParPage=20;
-$start = $page*$nbParPage;
+$nbParPage = 20;
+$start = $page * $nbParPage;
 
 $dataType = new msData;
-if($dataType->checkDataTypeExistByName($typeName)) {
-  $typeID = $dataType->getTypeIDFromName($typeName);
-  $p['page']['typeLabel'] = $dataType->getLabelFromTypeID([$typeID])[$typeID];
-  $p['page']['typeName'] = $typeName;
-  $obj = new msObjet;
+if ($dataType->checkDataTypeExistByName($typeName)) {
+	$typeID = $dataType->getTypeIDFromName($typeName);
+	$p['page']['typeLabel'] = $dataType->getLabelFromTypeID([$typeID])[$typeID];
+	$p['page']['typeName'] = $typeName;
+	$obj = new msObjet;
 
-  $p['page']['page']=$page;
-  $p['page']['pageaff']=$page+1;
-  $p['page']['totalObj']=$obj->getNumberOfObjetOfType($typeName, '', '', false );
-  $p['page']['nbpages']=ceil($p['page']['totalObj']/$nbParPage);
-  $p['page']['listeObj']=$obj->getHistoriqueDataType($typeName, $start,$nbParPage);
+	$p['page']['page'] = $page;
+	$p['page']['pageaff'] = $page + 1;
+	$p['page']['totalObj'] = $obj->getNumberOfObjetOfType($typeName, '', '', false);
+	$p['page']['nbpages'] = ceil($p['page']['totalObj'] / $nbParPage);
+	$p['page']['listeObj'] = $obj->getHistoriqueDataType($typeName, $start, $nbParPage);
 
-  $p['page']['pageLoopFirst']=$page-5;
-  $p['page']['pageLoopLast']=$page+5;
-  if($p['page']['pageLoopFirst'] <= 1) $p['page']['pageLoopFirst']=2;
-  if($p['page']['pageLoopLast'] >= $p['page']['nbpages']) $p['page']['pageLoopLast']=$p['page']['nbpages']-1;
-
+	$p['page']['pageLoopFirst'] = $page - 5;
+	$p['page']['pageLoopLast'] = $page + 5;
+	if ($p['page']['pageLoopFirst'] <= 1) $p['page']['pageLoopFirst'] = 2;
+	if ($p['page']['pageLoopLast'] >= $p['page']['nbpages']) $p['page']['pageLoopLast'] = $p['page']['nbpages'] - 1;
 } else {
-
 }
