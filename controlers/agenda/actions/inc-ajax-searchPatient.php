@@ -57,7 +57,7 @@ if (count($split_term) > 1) {
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
-if ($data = msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');

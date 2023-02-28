@@ -24,25 +24,27 @@
  * Patients > ajax : marquer un dossier comme à nouveau utilisable
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(is_numeric($_POST['patientID'])) {
+if (is_numeric($_POST['patientID'])) {
 
 
-  // création d'un marqueur pour sauvegarde de l'info
-  // on place en valeur le type du dossier + motif converti en yaml
+	// création d'un marqueur pour sauvegarde de l'info
+	// on place en valeur le type du dossier + motif converti en yaml
 
-  $administratifMarqueurSuppressionID=msData::getTypeIDFromName('administratifMarqueurSuppression');
-  $value=msSQL::sqlUniqueChamp("select value from objets_data where toID='".$_POST['patientID']."' and typeID='".$administratifMarqueurSuppressionID."' order by id desc limit 1");
-  $value = Spyc::YAMLLoad($value);
+	$administratifMarqueurSuppressionID = msData::getTypeIDFromName('administratifMarqueurSuppression');
+	$value = msSQL::sqlUniqueChamp("SELECT value from objets_data where toID = :toID and typeID = :administratifMarqueurSuppression order by id desc limit 1", ['toID' => $_POST['patientID'], 'administratifMarqueurSuppression' => $administratifMarqueurSuppressionID]);
+	$value = Spyc::YAMLLoad($value);
 
-  // on marque le dossier dans people
-  $data=array(
-    'id'=>$_POST['patientID'],
-    'type'=>$value['typeDossier']
-  );
-  msSQL::sqlInsert('people', $data);
+	// on marque le dossier dans people
+	$data = array(
+		'id' => $_POST['patientID'],
+		'type' => $value['typeDossier']
+	);
+	msSQL::sqlInsert('people', $data);
 
-  // on marque deleted/outdated le marqueur
-  msSQL::sqlQuery("update objets_data set outdated='y', deleted='y', deletedByID='".$p['user']['id']."' where toID='".msSQL::cleanVar($_POST['patientID'])."' and typeID='".$administratifMarqueurSuppressionID."'");
+	// on marque deleted/outdated le marqueur
+	msSQL::sqlQuery("update objets_data set outdated='y', deleted='y', deletedByID='" . $p['user']['id'] . "' where toID='" . msSQL::cleanVar($_POST['patientID']) . "' and typeID='" . $administratifMarqueurSuppressionID . "'");
 }

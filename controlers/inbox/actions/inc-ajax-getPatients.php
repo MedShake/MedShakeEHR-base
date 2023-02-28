@@ -48,7 +48,7 @@ if ($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
 	$mss->setRestricDossiersGroupes(true);
 }
 
-if ($data = msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	foreach ($data as $k => $v) {
 		foreach ($v as $clef => $val) {

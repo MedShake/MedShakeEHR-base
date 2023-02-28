@@ -47,7 +47,7 @@ if ($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroup
 	$mss->setRestricGroupesEstMembre(true);
 }
 
-if ($data = msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	foreach ($data as $k => $v) {
 		$label = $v['groupname'] . ' (' . $v['city'] . ' - ' . $v['country'] . ')';

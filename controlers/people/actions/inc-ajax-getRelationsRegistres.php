@@ -42,7 +42,7 @@ $criteres = array(
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['registryname']);
 $mss->setLimitNumber(20);
-if ($data = msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	foreach ($data as $k => $v) {
 		$label = $v['registryname'];

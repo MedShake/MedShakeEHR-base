@@ -24,30 +24,32 @@
  * Patients > ajax : obtenir un listing de people similaires
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType([$_POST['peopleType']]);
 
-if($_POST['peopleType'] == 'patient' or $_POST['peopleType'] == 'pro') {
-  $criteres = array(
-    'birthname'=>$_POST['p_birthname'],
-    'lastname'=>$_POST['p_lastname'],
-    'firstname'=>$_POST['p_firstname'],
-  );
-  $colsRetour = ['identite', 'birthdate'];
-} elseif($_POST['peopleType'] == 'groupe') {
-  $criteres = array(
-    'groupname'=>$_POST['p_groupname'],
-  );
-  $colsRetour = ['groupname', 'country', 'city'];
-} elseif($_POST['peopleType'] == 'registre') {
-  $criteres = array(
-    'registryname'=>$_POST['p_registryname'],
-  );
-  $colsRetour = ['registryname'];
+if ($_POST['peopleType'] == 'patient' or $_POST['peopleType'] == 'pro') {
+	$criteres = array(
+		'birthname' => $_POST['p_birthname'],
+		'lastname' => $_POST['p_lastname'],
+		'firstname' => $_POST['p_firstname'],
+	);
+	$colsRetour = ['identite', 'birthdate'];
+} elseif ($_POST['peopleType'] == 'groupe') {
+	$criteres = array(
+		'groupname' => $_POST['p_groupname'],
+	);
+	$colsRetour = ['groupname', 'country', 'city'];
+} elseif ($_POST['peopleType'] == 'registre') {
+	$criteres = array(
+		'registryname' => $_POST['p_registryname'],
+	);
+	$colsRetour = ['registryname'];
 }
 
 $mss->setCriteresRecherche($criteres);
@@ -55,38 +57,37 @@ $mss->setColonnesRetour($colsRetour);
 $mss->setLimitNumber(20);
 
 //restrictions sur retours si droits limités
-if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
- $mss->setRestricDossiersPropres(true);
-} elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
- $mss->setRestricDossiersGroupes(true);
+if ($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
+	$mss->setRestricDossiersPropres(true);
+} elseif ($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+	$mss->setRestricDossiersGroupes(true);
 }
 
 $a_json = array();
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
-	foreach ($data as $k=>$v) {
+	foreach ($data as $k => $v) {
 
 
-    if($_POST['peopleType'] == 'patient' or $_POST['peopleType'] == 'pro') {
-      $a_json[]=array(
-  			'label'=>trim($v['identite']).' - '.$v['birthdate'],
-  			'type'=>$_POST['peopleType'],
-  			'id'=>$v['peopleID'],
-  		);
-    } elseif($_POST['peopleType'] == 'groupe') {
-      $a_json[]=array(
-  			'label'=>trim($v['groupname'].' (<small>'.$v['city'].' - '.$v['country'].')</small>'),
-  			'type'=>$_POST['peopleType'],
-  			'id'=>$v['peopleID'],
-  		);
-    } elseif($_POST['peopleType'] == 'registre') {
-      $a_json[]=array(
-  			'label'=>trim($v['registryname']),
-  			'type'=>$_POST['peopleType'],
-  			'id'=>$v['peopleID'],
-  		);
-    }
-
+		if ($_POST['peopleType'] == 'patient' or $_POST['peopleType'] == 'pro') {
+			$a_json[] = array(
+				'label' => trim($v['identite']) . ' - ' . $v['birthdate'],
+				'type' => $_POST['peopleType'],
+				'id' => $v['peopleID'],
+			);
+		} elseif ($_POST['peopleType'] == 'groupe') {
+			$a_json[] = array(
+				'label' => trim($v['groupname'] . ' (<small>' . $v['city'] . ' - ' . $v['country'] . ')</small>'),
+				'type' => $_POST['peopleType'],
+				'id' => $v['peopleID'],
+			);
+		} elseif ($_POST['peopleType'] == 'registre') {
+			$a_json[] = array(
+				'label' => trim($v['registryname']),
+				'type' => $_POST['peopleType'],
+				'id' => $v['peopleID'],
+			);
+		}
 	}
 }
 

@@ -26,20 +26,20 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'patientsListByCrit', // Générer liste des patients
-    'patientsSendSign', // envoyer à la signature
-    'switchPraticienListe', // ajouter/ retirer de la liste des praticiens
-    'markDeleted', // marquer un dossier comme effacé
-    'unmarkDeleted', // marquer un dossier comme à nouveau utilisable
-    'peopleSimilarSearch', // rechercher
+$acceptedModes = array(
+	'patientsListByCrit', // Générer liste des patients
+	'patientsSendSign', // envoyer à la signature
+	'switchPraticienListe', // ajouter/ retirer de la liste des praticiens
+	'markDeleted', // marquer un dossier comme effacé
+	'unmarkDeleted', // marquer un dossier comme à nouveau utilisable
+	'peopleSimilarSearch', // rechercher
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
-include('inc-ajax-'.$m.'.php');
+include('inc-ajax-' . $m . '.php');
