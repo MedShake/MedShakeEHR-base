@@ -31,22 +31,23 @@ header('Content-Type: application/json');
 $data = new msPeople();
 $data->setToID($_POST['patientID']);
 
-$datas = array('taSystolique','taDiastolique','spO2','freqCardiaque');
-$p['page']['distinctYears']=[];
-foreach($datas as $dat) {
-    $la = $data->getDataHistoricalValuesDistinctYears($dat);
-    if(is_array($la)) $p['page']['distinctYears']=array_merge($p['page']['distinctYears'] , $la);
-    $d[$dat] = $data->getDataHistoricalValues($dat, $_POST['year'].'-01-01 00:00:00', $_POST['year'].'-12-31 23:59:59');
-    if(!empty($d[$dat])) {
-        foreach($d[$dat] as $date=>$v) {
-          $mois=strftime('%B', mktime(0, 0, 0, explode('-',$v['dateonly'])[1], 1, 2018));
-          $p['page']['histoData'][$mois][$v['dateonly']][$dat][$v['timeonly']]=$v;
-        }
-    }
+$datas = array('taSystolique', 'taDiastolique', 'spO2', 'freqCardiaque');
+$p['page']['distinctYears'] = [];
+foreach ($datas as $dat) {
+	$la = $data->getDataHistoricalValuesDistinctYears($dat);
+	if (is_array($la)) $p['page']['distinctYears'] = array_merge($p['page']['distinctYears'], $la);
+	$d[$dat] = $data->getDataHistoricalValues($dat, $_POST['year'] . '-01-01 00:00:00', $_POST['year'] . '-12-31 23:59:59');
+	if (!empty($d[$dat])) {
+		foreach ($d[$dat] as $date => $v) {
+			$mois = date('F', mktime(0, 0, 0, explode('-', $v['dateonly'])[1], 1, 2018));
+			$mois = msTools::getFrenchMonthName($mois);
+			$p['page']['histoData'][$mois][$v['dateonly']][$dat][$v['timeonly']] = $v;
+		}
+	}
 }
 
-$p['page']['selectedYear']=$_POST['year'];
-$p['page']['distinctYears']=array_unique($p['page']['distinctYears']);
+$p['page']['selectedYear'] = $_POST['year'];
+$p['page']['distinctYears'] = array_unique($p['page']['distinctYears']);
 rsort($p['page']['distinctYears']);
 
 $html = new msGetHtml;
@@ -54,6 +55,6 @@ $html->set_template('inc-patientBiometrieCardio.html.twig');
 $html = $html->genererHtmlVar($p);
 
 exit(json_encode(array(
-  'html'=>$html,
-  'statut'=>'ok'
+	'html' => $html,
+	'statut' => 'ok'
 )));

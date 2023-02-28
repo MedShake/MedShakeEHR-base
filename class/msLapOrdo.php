@@ -359,7 +359,7 @@ class msLapOrdo extends msLap
             krsort($final[$mois]);
           }
           foreach($final as $mois=>$data) {
-            $final[strftime('%B', mktime(0, 0, 0, $mois, 1, 2018))]=$data;
+            $final[msTools::getFrenchMonthName(date('F', mktime(0, 0, 0, $mois, 1, 2018)))]=$data;
             unset($final[$mois]);
           }
         }

@@ -33,6 +33,6 @@ $p['page']['histoOrdoAnnee'] = $_POST['year'];
 $p['page']['histoOrdoAnnees'] = $lap->getHistoriqueAnneesDistinctesOrdos();
 if ($ordos = $lap->getHistoriqueOrdos($p['page']['histoOrdoAnnee'])) {
 	foreach ($ordos as $ordo) {
-		$p['page']['ordos'][strftime('%B', mktime(0, 0, 0, $ordo['mois'], 1, 2018))][] = $ordo;
+		$p['page']['ordos'][msTools::getFrenchMonthName(date('F', mktime(0, 0, 0, $ordo['mois'], 1, 2018)))][] = $ordo;
 	}
 }
