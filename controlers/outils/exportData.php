@@ -28,71 +28,69 @@
 
 //vérification droits
 if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
-  $template="forbidden";
+	$template = "forbidden";
 } else {
-  $template="exportData";
-  $debug='';
+	$template = "exportData";
+	$debug = '';
 
-  // si formulaire non sélectionnés
-  if(!isset($match['params']['dataTypeID'])) {
-    $listForms=new msExportData;
+	// si formulaire non sélectionnés
+	if (!isset($match['params']['dataTypeID'])) {
+		$listForms = new msExportData;
 
-    $p['page']['listeCats']=msData::getCatListFromGroupe(['typecs'],['id','label']);
-    $p['page']['listeForms']=$listForms->getExportabledList();
-  }
+		$p['page']['listeCats'] = msData::getCatListFromGroupe(['typecs'], ['id', 'label']);
+		$p['page']['listeForms'] = $listForms->getExportabledList();
+	}
 
-  // si formulaire sélectionné
-  elseif(isset($match['params']['dataTypeID']) and is_numeric($match['params']['dataTypeID'])) {
+	// si formulaire sélectionné
+	elseif (isset($match['params']['dataTypeID']) and is_numeric($match['params']['dataTypeID'])) {
 
-    $data=new msData;
-    $p['page']['dataTypeinfos']=$data->getDataType($match['params']['dataTypeID']);
-    $p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
+		$data = new msData;
+		$p['page']['dataTypeinfos'] = $data->getDataType($match['params']['dataTypeID']);
+		$p['page']['dataTypeinfos']['registreID'] = $p['page']['dataTypeinfos']['validationRules'];
 
-    $p['page']['dataTypeinfos']['catLabel']=$data->getCatLabelFromCatID($p['page']['dataTypeinfos']['cat']);
+		$p['page']['dataTypeinfos']['catLabel'] = $data->getCatLabelFromCatID($p['page']['dataTypeinfos']['cat']);
 
-    if($p['page']['dataTypeinfos']['groupe']=='typecs' and $p['page']['dataTypeinfos']['formType']=='select') {
+		if ($p['page']['dataTypeinfos']['groupe'] == 'typecs' and $p['page']['dataTypeinfos']['formType'] == 'select') {
 
-      // informations et champs dans le form
-      $form=new msForm;
-      $form->setFormIDbyName($p['page']['dataTypeinfos']['formValues']);
-      $p['page']['formInfos']=$form->getFormRawData(['id','name', 'description']);
-      $p['page']['dataFields']=$form->formExtractDistinctTypes();
-      msTools::arrayRemoveByKey($p['page']['dataFields'], $form->getFormDataToNeverExport());
-      $p['page']['dataFields']=$data->getLabelFromTypeName(array_keys($p['page']['dataFields']));
+			// informations et champs dans le form
+			$form = new msForm;
+			$form->setFormIDbyName($p['page']['dataTypeinfos']['formValues']);
+			$p['page']['formInfos'] = $form->getFormRawData(['id', 'name', 'description']);
+			$p['page']['dataFields'] = $form->formExtractDistinctTypes();
+			msTools::arrayRemoveByKey($p['page']['dataFields'], $form->getFormDataToNeverExport());
+			$p['page']['dataFields'] = $data->getLabelFromTypeName(array_keys($p['page']['dataFields']));
 
-      //champs dans les data administratives patient
-      $form=new msForm;
-      $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
-      $p['page']['dataFieldsAdmin']=$form->formExtractDistinctTypes();
-      msTools::arrayRemoveByKey($p['page']['dataFieldsAdmin'], $form->getFormDataToNeverExport());
-      $p['page']['dataFieldsAdmin']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdmin']));
+			//champs dans les data administratives patient
+			$form = new msForm;
+			$form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+			$p['page']['dataFieldsAdmin'] = $form->formExtractDistinctTypes();
+			msTools::arrayRemoveByKey($p['page']['dataFieldsAdmin'], $form->getFormDataToNeverExport());
+			$p['page']['dataFieldsAdmin'] = $data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdmin']));
 
-      //champs dans les data administratives praticien
-      $form=new msForm;
-      $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-      $p['page']['dataFieldsAdminPro']=$form->formExtractDistinctTypes();
-      msTools::arrayRemoveByKey($p['page']['dataFieldsAdminPro'], $form->getFormDataToNeverExport());
-      $p['page']['dataFieldsAdminPro']=$data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdminPro']));
+			//champs dans les data administratives praticien
+			$form = new msForm;
+			$form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+			$p['page']['dataFieldsAdminPro'] = $form->formExtractDistinctTypes();
+			msTools::arrayRemoveByKey($p['page']['dataFieldsAdminPro'], $form->getFormDataToNeverExport());
+			$p['page']['dataFieldsAdminPro'] = $data->getLabelFromTypeName(array_keys($p['page']['dataFieldsAdminPro']));
 
-      //liste praticiens
-      if($p['config']['optionGeExportPratListSelection'] == 'true') {
-        $p['page']['prat']=msPeopleSearch::getUsersList();
-      } else {
+			//liste praticiens
+			if ($p['config']['optionGeExportPratListSelection'] == 'true') {
+				$p['page']['prat'] = msPeopleSearch::getUsersList();
+			} else {
 
-        // on va chercher si le user est admin registre : si oui = tous les prats
-        $adminReg = new msPeopleRelationsDroits;
-        $adminReg->setToID($p['user']['id']);
-        $p['page']['isRegistryAdmin'] = false;
-        if($userRegistriesAdmin = $adminReg->getRegistriesWherePeopleIsAdmin()) {
-          if(in_array($p['page']['dataTypeinfos']['registreID'],$userRegistriesAdmin)) {
-            $p['page']['isRegistryAdmin'] = true;
-          }
-        }
-
-      }
-
-    } else {
-      msTools::redirection('/outils/export-data/', '401');
-    }
-  }
+				// on va chercher si le user est admin registre : si oui = tous les prats
+				$adminReg = new msPeopleRelationsDroits;
+				$adminReg->setToID($p['user']['id']);
+				$p['page']['isRegistryAdmin'] = false;
+				if ($userRegistriesAdmin = $adminReg->getRegistriesWherePeopleIsAdmin()) {
+					if (in_array($p['page']['dataTypeinfos']['registreID'], $userRegistriesAdmin)) {
+						$p['page']['isRegistryAdmin'] = true;
+					}
+				}
+			}
+		} else {
+			msTools::redirection('/outils/export-data/', '401');
+		}
+	}
 }

@@ -28,18 +28,18 @@
 
 
 
-$fichier=$_FILES['file'];
-$destinationDir=$p['config']['dicomWorkingDirectory'].$p['user']['id'].'/';
+$fichier = $_FILES['file'];
+$destinationDir = $p['config']['dicomWorkingDirectory'] . $p['user']['id'] . '/';
 msTools::checkAndBuildTargetDir($destinationDir);
-if(!is_dir($destinationDir)) die;
+if (!is_dir($destinationDir)) die;
 
-$mimetype=msTools::getmimetype($fichier['tmp_name']);
-$acceptedtypes=array(
-  'application/pdf'=>'pdf',
+$mimetype = msTools::getmimetype($fichier['tmp_name']);
+$acceptedtypes = array(
+	'application/pdf' => 'pdf',
 );
 if (array_key_exists($mimetype, $acceptedtypes)) {
-  $ext=$acceptedtypes[$mimetype];
-  $destination_file = $destinationDir.'pdf2fax.pdf';
-  move_uploaded_file($fichier['tmp_name'], $destination_file);
+	$ext = $acceptedtypes[$mimetype];
+	$destination_file = $destinationDir . 'pdf2fax.pdf';
+	move_uploaded_file($fichier['tmp_name'], $destination_file);
 }
 die();

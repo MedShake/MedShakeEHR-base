@@ -28,18 +28,18 @@
 
 
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'outilsFaxUploadDoc', // uploader le pdf à faxer
-    'outilsFaxRemoveDoc' // sup le pdf à faxer 
+$acceptedModes = array(
+	'outilsFaxUploadDoc', // uploader le pdf à faxer
+	'outilsFaxRemoveDoc' // sup le pdf à faxer
 );
 
 //inclusion
-$fileToInclude=$p['homepath'].'controlers/outils/actions/inc-ajax-'.$m.'.php';
-if(in_array($m, $acceptedModes) and is_file($fileToInclude)) {
-    include($fileToInclude);
+$fileToInclude = $p['homepath'] . 'controlers/outils/actions/inc-ajax-' . $m . '.php';
+if (in_array($m, $acceptedModes) and is_file($fileToInclude)) {
+	include($fileToInclude);
 } else {
-    die();
+	die();
 }

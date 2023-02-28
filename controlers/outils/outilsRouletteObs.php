@@ -27,5 +27,5 @@
  */
 
 
- $template="outilsRouletteObs";
- $debug='';
+$template = "outilsRouletteObs";
+$debug = '';

@@ -29,7 +29,7 @@
 
 // le formulaire latéral ATCD
 $form_baseATCD = new msForm();
-$form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD']='baseATCD');
+$form_baseATCD->setFormIDbyName($p['page']['formName_baseATCD'] = 'baseATCD');
 $form_baseATCD->getPrevaluesForPatient($p['page']['patient']['id']);
-$p['page']['formData_baseATCD']=$form_baseATCD->getForm();
-$p['page']['formJavascript']['baseATCD']=$form_baseATCD->getFormJavascript();
+$p['page']['formData_baseATCD'] = $form_baseATCD->getForm();
+$p['page']['formJavascript']['baseATCD'] = $form_baseATCD->getFormJavascript();
