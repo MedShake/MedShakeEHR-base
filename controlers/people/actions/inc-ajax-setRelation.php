@@ -35,14 +35,14 @@ $relation->setWithID($_POST['withID']);
 $relation->setRelationType($_POST['relationType']);
 
 header('Content-Type: application/json');
-if($relation->checkRelationExist()) {
-  exit(json_encode(array('status'=>'exist')));
+if ($relation->checkRelationExist()) {
+	exit(json_encode(array('status' => 'exist')));
 }
-if($relation->checkMaxGroupeRestriction()) {
-  exit(json_encode(array('status'=>'reachmaxgroups')));
+if ($relation->checkMaxGroupeRestriction()) {
+	exit(json_encode(array('status' => 'reachmaxgroups')));
 }
-if($relation->setRelation()) {
-  exit(json_encode(array('status'=>'ok')));
+if ($relation->setRelation()) {
+	exit(json_encode(array('status' => 'ok')));
 } else {
-  exit(json_encode(array('status'=>'ko')));
+	exit(json_encode(array('status' => 'ko')));
 }

@@ -26,30 +26,30 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if($p['config']['optionGeActiverRegistres'] != 'true') {
-   die();
- }
+if ($p['config']['optionGeActiverRegistres'] != 'true') {
+	die();
+}
 
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['registre']);
 $criteres = array(
-  'registryname'=>$term,
+	'registryname' => $term,
 );
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['registryname']);
 $mss->setLimitNumber(20);
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql())) {
 
-	foreach ($data as $k=>$v) {
-    $label = $v['registryname'];
-		$a_json[]=array(
-			'label'=>trim($label),
-			'value'=>trim($label),
-			'id'=>$v['peopleID'],
+	foreach ($data as $k => $v) {
+		$label = $v['registryname'];
+		$a_json[] = array(
+			'label' => trim($label),
+			'value' => trim($label),
+			'id' => $v['peopleID'],
 		);
 	}
 }

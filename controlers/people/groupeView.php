@@ -26,43 +26,43 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template='groupeView';
+$debug = '';
+$template = 'groupeView';
 
-if(!is_numeric($match['params']['groupeID'])) die;
-$p['page']['groupeDataID']=$match['params']['groupeID'];
+if (!is_numeric($match['params']['groupeID'])) die;
+$p['page']['groupeDataID'] = $match['params']['groupeID'];
 
 $groupe = new msPeopleRelationsDroits;
 $groupe->setToID($p['page']['groupeDataID']);
-$p['page']['groupeData']['dossierType']=$groupe->getType();
+$p['page']['groupeData']['dossierType'] = $groupe->getType();
 
 // position de l'utilisateur courant // groupe et ajust si admin général
 $p['page']['userPositionInGroup'] = $groupe->getCurrentUserStatusInGroup();
-if($p['user']['rank'] == 'admin') $p['page']['userPositionInGroup'] = 'admin';
+if ($p['user']['rank'] == 'admin') $p['page']['userPositionInGroup'] = 'admin';
 
-if($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGeActiverGroupes'] != 'true') {
-  $template = "404";
-  return;
+if ($p['page']['groupeData']['dossierType'] != 'groupe' or $p['config']['optionGeActiverGroupes'] != 'true') {
+	$template = "404";
+	return;
 }
 
-if($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
-  $userGroups = new msPeopleRelations();
-  $userGroups->setToID($p['user']['id']);
-  $userGroups->setRelationType('relationPraticienGroupe');
-  if($userGroups = $userGroups->getRelations()) {
-    if(!in_array($p['page']['groupeDataID'], array_column($userGroups,'peopleID'))) {
-      $template = "forbidden";
-      return;
-    }
-  }
+if ($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+	$userGroups = new msPeopleRelations();
+	$userGroups->setToID($p['user']['id']);
+	$userGroups->setRelationType('relationPraticienGroupe');
+	if ($userGroups = $userGroups->getRelations()) {
+		if (!in_array($p['page']['groupeDataID'], array_column($userGroups, 'peopleID'))) {
+			$template = "forbidden";
+			return;
+		}
+	}
 }
 
-$p['page']['groupeData']=$groupe->getLabelForSimpleAdminDatas($groupe->getSimpleAdminDatasByName());
+$p['page']['groupeData'] = $groupe->getLabelForSimpleAdminDatas($groupe->getSimpleAdminDatasByName());
 
 // création exportID si manquant
-if(!isset($p['page']['groupeData']['peopleExportID']) and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
-  $groupe->setFromID($p['user']['id']);
-  $groupe->setPeopleExportID();
+if (!isset($p['page']['groupeData']['peopleExportID']) and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
+	$groupe->setFromID($p['user']['id']);
+	$groupe->setPeopleExportID();
 }
 unset($p['page']['groupeData']['peopleExportID']);
 
@@ -73,19 +73,18 @@ $p['page']['groupeDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['pag
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationPraticienGroupe');
 $options = $data->getSelectOptionValue(array($typeID));
-foreach($options[$typeID] as $k=>$v) {
-  $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
+foreach ($options[$typeID] as $k => $v) {
+	$p['page']['preRelationPraticienGroupe']['formValues'][$k] = $v;
 }
 
 // gestion registre
-if($p['config']['optionGeActiverRegistres'] == 'true') {
+if ($p['config']['optionGeActiverRegistres'] == 'true') {
 
-  //sortir les choix de relations groupe <-> registre
-  $data = new msData();
-  $typeID = $data->getTypeIDFromName('relationGroupeRegistre');
-  $options = $data->getSelectOptionValue(array($typeID));
-  foreach($options[$typeID] as $k=>$v) {
-    $p['page']['preRelationGroupeRegistre']['formValues'][$k]=$v;
-  }
-
+	//sortir les choix de relations groupe <-> registre
+	$data = new msData();
+	$typeID = $data->getTypeIDFromName('relationGroupeRegistre');
+	$options = $data->getSelectOptionValue(array($typeID));
+	foreach ($options[$typeID] as $k => $v) {
+		$p['page']['preRelationGroupeRegistre']['formValues'][$k] = $v;
+	}
 }

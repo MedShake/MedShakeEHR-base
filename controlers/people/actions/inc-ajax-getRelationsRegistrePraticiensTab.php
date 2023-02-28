@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverRegistres'] != 'true') {
- die();
+if ($p['config']['optionGeActiverRegistres'] != 'true') {
+	die();
 }
 
-if(isset($_POST['registreID'])) {
-  $registreID=$_POST['registreID'];
-} elseif(isset($_GET['registreID'])) {
-  $registreID=$_GET['registreID'];
+if (isset($_POST['registreID'])) {
+	$registreID = $_POST['registreID'];
+} elseif (isset($_GET['registreID'])) {
+	$registreID = $_GET['registreID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($registreID);
@@ -41,6 +41,6 @@ $liensPrat->setToID($registreID);
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationRegistrePraticien');
 $liensPrat->setReturnedPeopleTypes(['pro']);
-$praticiens = $liensPrat->getRelations(['identite','titre']);
+$praticiens = $liensPrat->getRelations(['identite', 'titre']);
 
 exit(json_encode(array_merge($praticiens)));

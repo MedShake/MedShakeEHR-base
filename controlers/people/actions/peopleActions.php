@@ -28,18 +28,18 @@
 
 
 //$debug='';
-if(isset($match['params']['m'])) $m=$match['params']['m'];
+if (isset($match['params']['m'])) $m = $match['params']['m'];
 
 //compatibilité avec l'url /people/register/
-if(isset($match['params']['porp'])) $m='peopleRegister';
+if (isset($match['params']['porp'])) $m = 'peopleRegister';
 
 //modes acceptés et die() si non connu
-$acceptedModes=array(
-    'peopleRegister', // sauver un nouveau patient / pro
+$acceptedModes = array(
+	'peopleRegister', // sauver un nouveau patient / pro
 );
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 //inclusion
-include('inc-action-'.$m.'.php');
+include('inc-action-' . $m . '.php');

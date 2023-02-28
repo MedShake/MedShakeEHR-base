@@ -31,8 +31,8 @@ $relation = new msPeopleRelations;
 $relation->setToID($_POST['ID1']);
 $relation->setFromID($p['user']['id']);
 $relation->setWithID($_POST['ID2']);
-if($relation->setRelationDeleted()) {
-  exit (json_encode(['status'=>'ok']));
+if ($relation->setRelationDeleted()) {
+	exit(json_encode(['status' => 'ok']));
 } else {
-  exit (json_encode(['status'=>'ko']));
+	exit(json_encode(['status' => 'ko']));
 }

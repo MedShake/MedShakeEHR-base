@@ -29,32 +29,32 @@
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['pro']);
 $criteres = array(
-  'birthname'=>$term,
+	'birthname' => $term,
 );
 
-if($p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
-  $mss->setRestricDossiersPratGroupes(true);
+if ($p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
+	$mss->setRestricDossiersPratGroupes(true);
 }
 
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['identite', 'titre']);
 $mss->setLimitNumber(20);
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql())) {
 
-	foreach ($data as $k=>$v) {
-    if(!empty($v['titre'])) {
-      $label = $v['titre'].' '.$v['identite'];
-    } else {
-      $label = $v['identite'];
-    }
-		$a_json[]=array(
-			'label'=>trim($label),
-			'value'=>trim($label),
-			'id'=>$v['peopleID'],
+	foreach ($data as $k => $v) {
+		if (!empty($v['titre'])) {
+			$label = $v['titre'] . ' ' . $v['identite'];
+		} else {
+			$label = $v['identite'];
+		}
+		$a_json[] = array(
+			'label' => trim($label),
+			'value' => trim($label),
+			'id' => $v['peopleID'],
 		);
 	}
 }

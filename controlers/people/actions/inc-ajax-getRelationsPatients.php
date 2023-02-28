@@ -29,35 +29,35 @@
 $term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
-$mss->setPeopleType(['pro','patient']);
-if($p['config']['PraticienPeutEtrePatient'] == 'true') {
-	$mss->setPeopleType(['pro','patient']);
+$mss->setPeopleType(['pro', 'patient']);
+if ($p['config']['PraticienPeutEtrePatient'] == 'true') {
+	$mss->setPeopleType(['pro', 'patient']);
 } else {
 	$mss->setPeopleType(['patient']);
 }
 $criteres = array(
-   'birthname'=>$term,
- );
+	'birthname' => $term,
+);
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
 
 //restrictions sur retours si droits limités
-if($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
-  $mss->setRestricDossiersPropres(true);
-} elseif($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
-  $mss->setRestricDossiersGroupes(true);
+if ($p['config']['droitDossierPeutVoirUniquementPatientsPropres'] == 'true') {
+	$mss->setRestricDossiersPropres(true);
+} elseif ($p['config']['droitDossierPeutVoirUniquementPatientsGroupes'] == 'true') {
+	$mss->setRestricDossiersGroupes(true);
 }
 
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql())) {
 
-	foreach ($data as $k=>$v) {
-		$a_json[]=array(
-			'label'=>trim($v['identite']).' - '.$v['birthdate'],
-			'value'=>trim($v['identite']),
-			'id'=>$v['peopleID'],
+	foreach ($data as $k => $v) {
+		$a_json[] = array(
+			'label' => trim($v['identite']) . ' - ' . $v['birthdate'],
+			'value' => trim($v['identite']),
+			'id' => $v['peopleID'],
 		);
 	}
 }

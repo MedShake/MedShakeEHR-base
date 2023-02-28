@@ -26,18 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverRegistres'] != 'true') {
-die();
+if ($p['config']['optionGeActiverRegistres'] != 'true') {
+	die();
 }
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
-die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-if(isset($_POST['registreID'])) {
-  $registreID=$_POST['registreID'];
-} elseif(isset($_GET['registreID'])) {
-  $registreID=$_GET['registreID'];
+if (isset($_POST['registreID'])) {
+	$registreID = $_POST['registreID'];
+} elseif (isset($_GET['registreID'])) {
+	$registreID = $_GET['registreID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($registreID);
@@ -45,21 +45,21 @@ $liensPrat->setToID($registreID);
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationGroupeRegistre');
 $liensPrat->setReturnedPeopleTypes(['groupe']);
-$groupes = $liensPrat->getRelations(['groupname', 'city','country']);
+$groupes = $liensPrat->getRelations(['groupname', 'city', 'country']);
 msTools::array_unatsort_by('groupname', $groupes);
 
-if($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
-  $userGroups = new msPeopleRelations();
-  $userGroups->setToID($p['user']['id']);
-  $userGroups->setRelationType('relationPraticienGroupe');
-  if($userGroups = $userGroups->getRelations()) {
-    $intersection=array_intersect(array_column($groupes, 'peopleID'), array_column($userGroups, 'peopleID'));
-    foreach($groupes as $k=>$v) {
-      if(!in_array($v['peopleID'], $intersection)) {
-        unset($groupes[$k]);
-      }
-    }
-  }
+if ($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+	$userGroups = new msPeopleRelations();
+	$userGroups->setToID($p['user']['id']);
+	$userGroups->setRelationType('relationPraticienGroupe');
+	if ($userGroups = $userGroups->getRelations()) {
+		$intersection = array_intersect(array_column($groupes, 'peopleID'), array_column($userGroups, 'peopleID'));
+		foreach ($groupes as $k => $v) {
+			if (!in_array($v['peopleID'], $intersection)) {
+				unset($groupes[$k]);
+			}
+		}
+	}
 }
 
 exit(json_encode(array_merge($groupes)));

@@ -28,46 +28,46 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="peopleRelations";
+$debug = '';
+$template = "peopleRelations";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patient']);
-$p['page']['patient']=$patient->getSimpleAdminDatasByName();
-$p['page']['patient']['id']=$match['params']['patient'];
+$p['page']['patient'] = $patient->getSimpleAdminDatasByName();
+$p['page']['patient']['id'] = $match['params']['patient'];
 
 //vérifier les droits
 $droits = new msPeopleDroits($p['user']['id']);
-if(!$droits->checkUserCanSeePatientData($match['params']['patient'])) {
-  $template="forbidden";
-  return;
+if (!$droits->checkUserCanSeePatientData($match['params']['patient'])) {
+	$template = "forbidden";
+	return;
 }
 
 //sortir les choix de relations patient<->prat
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationPatientPraticien');
 $options = $data->getSelectOptionValue(array($typeID));
-$p['page']['preRelationPatientPrat']['formValues']=$options[$typeID];
+$p['page']['preRelationPatientPrat']['formValues'] = $options[$typeID];
 
 //sortir les choix de relations patient<->patient
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationPatientPatient');
 $options = $data->getSelectOptionValue(array($typeID));
-foreach($options[$typeID] as $k=>$v) {
-  $p['page']['preRelationPatientPatient']['formValues'][$k]=$k;
+foreach ($options[$typeID] as $k => $v) {
+	$p['page']['preRelationPatientPatient']['formValues'][$k] = $k;
 }
 
 //formulaire de création praticien en modal
 $formPro = new msForm();
 $formPro->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
 if (isset($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues'])) {
-    $formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
+	$formPro->setPrevalues($_SESSION['form'][$p['config']['formFormulaireNouveauPraticien']]['formValues']);
 }
-$p['page']['form']=$formPro->getForm();
+$p['page']['form'] = $formPro->getForm();
 //ajout champs cachés au form
-$p['page']['form']['addHidden']=array(
-  'actAsAjax'=>'true',
-  'porp'=>'pro'
+$p['page']['form']['addHidden'] = array(
+	'actAsAjax' => 'true',
+	'porp' => 'pro'
 );
 //modifier action pour url ajax
-$p['page']['form']['global']['formAction']='/people/actions/peopleRegister/';
+$p['page']['form']['global']['formAction'] = '/people/actions/peopleRegister/';

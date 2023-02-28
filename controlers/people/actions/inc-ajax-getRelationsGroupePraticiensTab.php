@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
- die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-if(isset($_POST['groupeID'])) {
-  $groupeID=$_POST['groupeID'];
-} elseif(isset($_GET['groupeID'])) {
-  $groupeID=$_GET['groupeID'];
+if (isset($_POST['groupeID'])) {
+	$groupeID = $_POST['groupeID'];
+} elseif (isset($_GET['groupeID'])) {
+	$groupeID = $_GET['groupeID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($groupeID);
@@ -41,6 +41,6 @@ $liensPrat->setToID($groupeID);
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationPraticienGroupe');
 $liensPrat->setReturnedPeopleTypes(['pro']);
-$praticiens = $liensPrat->getRelations(['identite','titre']);
+$praticiens = $liensPrat->getRelations(['identite', 'titre']);
 
 exit(json_encode(array_merge($praticiens)));

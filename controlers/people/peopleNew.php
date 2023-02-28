@@ -29,63 +29,62 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
-$template="peopleNew";
+$debug = '';
+$template = "peopleNew";
 
-$p['page']['porp']=$match['params']['porp'];
+$p['page']['porp'] = $match['params']['porp'];
 
-if ($p['page']['porp']=='patient') {
-  $p['page']['formIN']=$p['config']['formFormulaireNouveauPatient'];
-} elseif ($p['page']['porp']=='pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
-  $p['page']['formIN']=$p['config']['formFormulaireNouveauPraticien'];
-} elseif ($p['page']['porp']=='groupe' and $p['config']['droitGroupePeutCreerGroupe'] == 'true') {
-  $p['page']['formIN']=$p['config']['formFormulaireNouveauGroupe'];
-} elseif ($p['page']['porp']=='registre' and $p['config']['droitRegistrePeutCreerRegistre'] == 'true') {
-  $p['page']['formIN']=$p['config']['formFormulaireNouveauRegistre'];
+if ($p['page']['porp'] == 'patient') {
+	$p['page']['formIN'] = $p['config']['formFormulaireNouveauPatient'];
+} elseif ($p['page']['porp'] == 'pro' and $p['config']['droitDossierPeutCreerPraticien'] == 'true') {
+	$p['page']['formIN'] = $p['config']['formFormulaireNouveauPraticien'];
+} elseif ($p['page']['porp'] == 'groupe' and $p['config']['droitGroupePeutCreerGroupe'] == 'true') {
+	$p['page']['formIN'] = $p['config']['formFormulaireNouveauGroupe'];
+} elseif ($p['page']['porp'] == 'registre' and $p['config']['droitRegistrePeutCreerRegistre'] == 'true') {
+	$p['page']['formIN'] = $p['config']['formFormulaireNouveauRegistre'];
 } else {
-  $template="forbidden";
-  return;
+	$template = "forbidden";
+	return;
 }
 
-if($template != "forbidden") {
-  $formpatient = new msForm();
-  $formpatient->setFormIDbyName($p['page']['formIN']);
-  if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
-      $formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
-  } elseif (isset($_POST)) {
-      $formpatient->setPrevalues($_POST);
-  }
+if ($template != "forbidden") {
+	$formpatient = new msForm();
+	$formpatient->setFormIDbyName($p['page']['formIN']);
+	if (isset($_SESSION['form'][$p['page']['formIN']]['formValues'])) {
+		$formpatient->setPrevalues($_SESSION['form'][$p['page']['formIN']]['formValues']);
+	} elseif (isset($_POST)) {
+		$formpatient->setPrevalues($_POST);
+	}
 
-  //si formulaire pro
-  if ($p['page']['porp']=='pro') {
+	//si formulaire pro
+	if ($p['page']['porp'] == 'pro') {
 
-    //si jeux de valeurs normées présents
-    if(is_file($p['homepath'].'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
-      $codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-      $optionsInject['PSCodeProSpe']=['Z'=>''] + array_column($codes, 'displayName', 'code');
-    }
+		//si jeux de valeurs normées présents
+		if (is_file($p['homepath'] . 'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
+			$codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+			$optionsInject['PSCodeProSpe'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
+		}
 
-    if(is_file($p['homepath'].'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
-      $codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-      $optionsInject['PSCodeStructureExercice']=['Z'=>''] + array_column($codes, 'displayName', 'code');
-    }
-    if(!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
-  }
+		if (is_file($p['homepath'] . 'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
+			$codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+			$optionsInject['PSCodeStructureExercice'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
+		}
+		if (!empty($optionsInject)) $formpatient->setOptionsForSelect($optionsInject);
+	}
 
-  $p['page']['form']=$formpatient->getForm();
-  $formpatient->addHiddenInput($p['page']['form'],['peopleType'=>$p['page']['porp']]);
-  $p['page']['formJavascript'][$p['page']['formIN']]=$formpatient->getFormJavascript();
-  $formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
+	$p['page']['form'] = $formpatient->getForm();
+	$formpatient->addHiddenInput($p['page']['form'], ['peopleType' => $p['page']['porp']]);
+	$p['page']['formJavascript'][$p['page']['formIN']] = $formpatient->getFormJavascript();
+	$formpatient->addSubmitToForm($p['page']['form'], 'btn-primary btn-block');
 
-  // Champs récupérer si formulaire de création d'un nouveau patient est appelé depuis la boîte de dépot avec le boutton "Nouvau patient avec les éléments du fichier"
-  if (!empty($_POST['createFromDropbox']) && $_POST['createFromDropbox'] == 1) {
-    $p['page']['createFromDropbox'] = 1;
-    $p['page']['form']['addHidden']['createFromDropbox'] = 1;
-    $p['page']['form']['addHidden']['dropboxFilename'] = $_POST['dropboxFilename'];
-    $p['page']['form']['addHidden']['dropboxBox'] = $_POST['dropboxBox'];
-    $p['page']['form']['addHidden']['dropboxDocTitle'] = $_POST['dropboxDocTitle'];
-  } else {
-    $p['page']['createFromDropbox'] = 0;
-  }
-
+	// Champs récupérer si formulaire de création d'un nouveau patient est appelé depuis la boîte de dépot avec le boutton "Nouvau patient avec les éléments du fichier"
+	if (!empty($_POST['createFromDropbox']) && $_POST['createFromDropbox'] == 1) {
+		$p['page']['createFromDropbox'] = 1;
+		$p['page']['form']['addHidden']['createFromDropbox'] = 1;
+		$p['page']['form']['addHidden']['dropboxFilename'] = $_POST['dropboxFilename'];
+		$p['page']['form']['addHidden']['dropboxBox'] = $_POST['dropboxBox'];
+		$p['page']['form']['addHidden']['dropboxDocTitle'] = $_POST['dropboxDocTitle'];
+	} else {
+		$p['page']['createFromDropbox'] = 0;
+	}
 }

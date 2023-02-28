@@ -26,19 +26,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template='peopleDestroyed';
+$debug = '';
+$template = 'peopleDestroyed';
 
-$gump=new GUMP('fr');
+$gump = new GUMP('fr');
 $_POST = $gump->sanitize($_POST);
 $gump->validation_rules(array(
-  'peopleID'=> 'required|numeric',
-  'p_password'=> 'required|checkPasswordValidity,'.$p['user']['id'],
+	'peopleID' => 'required|numeric',
+	'p_password' => 'required|checkPasswordValidity,' . $p['user']['id'],
 ));
 
 $gump->filter_rules(array(
-  'id'=> 'trim',
-  'p_password'=> 'trim',
+	'id' => 'trim',
+	'p_password' => 'trim',
 ));
 
 $gump->set_field_name("p_password", "Mot de passe");
@@ -46,22 +46,22 @@ $gump->set_field_name("p_password", "Mot de passe");
 $validated_data = $gump->run($_POST);
 
 if ($validated_data === false) {
-  $return['status']='failed';
-  $errors = $gump->get_errors_array();
-  $return['msg']=$errors;
-  $return['code']=array_keys($errors);
+	$return['status'] = 'failed';
+	$errors = $gump->get_errors_array();
+	$return['msg'] = $errors;
+	$return['code'] = array_keys($errors);
 } else {
 
-  $peopleDel = new msPeopleDestroy();
-  $peopleDel->setToID($_POST['peopleID']);
-  $peopleDel->setFromID($p['user']['id']);
-  if($peopleDel->getDestroyAutorisation()) {
-    $peopleDel->destroyPeopleData();
-    $return['status']='ok';
-  } else {
-    $return['status']='failed';
-    $return['msg'] = $peopleDel->getBlockingReasons();
-  }
+	$peopleDel = new msPeopleDestroy();
+	$peopleDel->setToID($_POST['peopleID']);
+	$peopleDel->setFromID($p['user']['id']);
+	if ($peopleDel->getDestroyAutorisation()) {
+		$peopleDel->destroyPeopleData();
+		$return['status'] = 'ok';
+	} else {
+		$return['status'] = 'failed';
+		$return['msg'] = $peopleDel->getBlockingReasons();
+	}
 }
 
 exit(json_encode($return));

@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
- die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-if(isset($_POST['pratID'])) {
-  $pratID=$_POST['pratID'];
-} elseif(isset($_GET['pratID'])) {
-  $pratID=$_GET['pratID'];
+if (isset($_POST['pratID'])) {
+	$pratID = $_POST['pratID'];
+} elseif (isset($_GET['pratID'])) {
+	$pratID = $_GET['pratID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($pratID);
@@ -41,21 +41,21 @@ $liensPrat->setToID($pratID);
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationPraticienGroupe');
 $liensPrat->setReturnedPeopleTypes(['groupe']);
-$groupes = $liensPrat->getRelations(['groupname', 'city','country']);
+$groupes = $liensPrat->getRelations(['groupname', 'city', 'country']);
 msTools::array_unatsort_by('groupname', $groupes);
 
-if($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
-  $userGroups = new msPeopleRelations();
-  $userGroups->setToID($p['user']['id']);
-  $userGroups->setRelationType('relationPraticienGroupe');
-  if($userGroups = $userGroups->getRelations()) {
-    $intersection=array_intersect(array_column($groupes, 'peopleID'), array_column($userGroups, 'peopleID'));
-    foreach($groupes as $k=>$v) {
-      if(!in_array($v['peopleID'], $intersection)) {
-        unset($groupes[$k]);
-      }
-    }
-  }
+if ($p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+	$userGroups = new msPeopleRelations();
+	$userGroups->setToID($p['user']['id']);
+	$userGroups->setRelationType('relationPraticienGroupe');
+	if ($userGroups = $userGroups->getRelations()) {
+		$intersection = array_intersect(array_column($groupes, 'peopleID'), array_column($userGroups, 'peopleID'));
+		foreach ($groupes as $k => $v) {
+			if (!in_array($v['peopleID'], $intersection)) {
+				unset($groupes[$k]);
+			}
+		}
+	}
 }
 
 exit(json_encode(array_merge($groupes)));
