@@ -25,16 +25,18 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
+$debug = '';
 
 //template
-$template="patientCsForm";
+$template = "patientCsForm";
 $formIN = $p['page']['formIN'] = $_POST['formIN'];
 
-if(!isset($_POST['csID'])) {
-  $_POST['csID']=msSQL::sqlUniqueChamp("select id from data_types where groupe='typecs' and formValues='".msSQL::cleanVar($_POST['formIN'])."' limit 1");
+if (!isset($_POST['csID'])) {
+	$_POST['csID'] = msSQL::sqlUniqueChamp("SELECT id from data_types where groupe='typecs' and formValues= :formValues limit 1", ['formValues' => $_POST['formIN']]);
 }
 
 // formulaire
@@ -43,66 +45,66 @@ $p['page']['formInfos'] = $formInfos->getDataType($_POST['csID'], array('label')
 
 // module du formulaire
 $formModule = new msForm;
-$p['page']['formInfos']['module']=$formModule->getFormUniqueRawField($formIN, 'module');
+$p['page']['formInfos']['module'] = $formModule->getFormUniqueRawField($formIN, 'module');
 
 // class du module étendant potentiellement msForm
-$class='msMod'.ucfirst($p['page']['formInfos']['module']).'Forms';
-$method_pre='doPreGetForm_'.$formIN;
-$method_post='doPostGetForm_'.$formIN;
+$class = 'msMod' . ucfirst($p['page']['formInfos']['module']) . 'Forms';
+$method_pre = 'doPreGetForm_' . $formIN;
+$method_post = 'doPostGetForm_' . $formIN;
 
 // instancier la bonne class pour travailler sur le form
-if(class_exists($class)) {
-  $form = new $class;
+if (class_exists($class)) {
+	$form = new $class;
 } else {
-  $form = new msForm();
+	$form = new msForm();
 }
 
 $form->setFormIDbyName($formIN);
 
 //chargement des values si demandé
 if (isset($_POST['prevalues'])) {
-    if ($_POST['prevalues']=='yes') {
-        $form->setInstance($_POST['objetID']);
-        $form->setTypesSupForPrevaluesExtraction(['codeTechniqueExamen']);
-        $form->getPrevaluesForPatient($_POST['patientID']);
-    }
+	if ($_POST['prevalues'] == 'yes') {
+		$form->setInstance($_POST['objetID']);
+		$form->setTypesSupForPrevaluesExtraction(['codeTechniqueExamen']);
+		$form->getPrevaluesForPatient($_POST['patientID']);
+	}
 }
 
 // méthode sépcifique au module et form : pre
-if(method_exists($class,$method_pre)) {
-  $form->$method_pre();
+if (method_exists($class, $method_pre)) {
+	$form->$method_pre();
 }
 
-$p['page']['form']=$form->getForm();
+$p['page']['form'] = $form->getForm();
 
-if($_POST['mode'] == 'update' or $_POST['mode'] == 'create' ) $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
+if ($_POST['mode'] == 'update' or $_POST['mode'] == 'create') $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 // retrait des options d'un champ select qui doit prévenir le duplication
-if($_POST['mode'] == 'create' ) {
-  $typePreventDupl = $form->getFormOptions();
-  if(isset($typePreventDupl['typeToPreventDuplicate'])) {
-    $objDup = new msObjet;
-    $objDup->setToID($_POST['patientID']);
-    $optionsDejaUtilisees = $objDup->getDataTypePatientActiveValues($typePreventDupl['typeToPreventDuplicate']);
-    $form->removeOptionInSelectForm($p['page']['form'], $typePreventDupl['typeToPreventDuplicate'], $optionsDejaUtilisees);
-  }
+if ($_POST['mode'] == 'create') {
+	$typePreventDupl = $form->getFormOptions();
+	if (isset($typePreventDupl['typeToPreventDuplicate'])) {
+		$objDup = new msObjet;
+		$objDup->setToID($_POST['patientID']);
+		$optionsDejaUtilisees = $objDup->getDataTypePatientActiveValues($typePreventDupl['typeToPreventDuplicate']);
+		$form->removeOptionInSelectForm($p['page']['form'], $typePreventDupl['typeToPreventDuplicate'], $optionsDejaUtilisees);
+	}
 }
 
 //ajout champs cachés au form
-$p['page']['form']['addHidden']=array(
-  'patientID'=>$_POST['patientID'],
-  'parentID'=>$_POST['parentID'],
-  'csID'=>$_POST['csID'],
-  'mode'=>$_POST['mode']
+$p['page']['form']['addHidden'] = array(
+	'patientID' => $_POST['patientID'],
+	'parentID' => $_POST['parentID'],
+	'csID' => $_POST['csID'],
+	'mode' => $_POST['mode']
 );
 if (isset($_POST['objetID'])) {
-    $p['page']['form']['addHidden']['objetID']=$_POST['objetID'];
+	$p['page']['form']['addHidden']['objetID'] = $_POST['objetID'];
 }
 
-$p['page']['formJavascript']=$form->getFormJavascript();
+$p['page']['formJavascript'] = $form->getFormJavascript();
 
 
 // méthode spécifique au module et form : post
-if(method_exists($class,$method_post)) {
-  $form->$method_post();
+if (method_exists($class, $method_post)) {
+	$form->$method_post();
 }

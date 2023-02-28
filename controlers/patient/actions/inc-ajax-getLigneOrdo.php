@@ -24,9 +24,11 @@
  * Patient > ajax : obtenir une ligne pour l'ordonnance
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(!is_numeric($_POST['ligneID'])) die;
+if (!is_numeric($_POST['ligneID'])) die;
 
-$template="ligneOrdoForm";
-$p['page']['ligneOrdo']=msSQL::sqlUnique("select id, description, label, concat(id,'_',UNIX_TIMESTAMP(),'_0') as formname from prescriptions where id='".$_POST['ligneID']."' limit 1");
+$template = "ligneOrdoForm";
+$p['page']['ligneOrdo'] = msSQL::sqlUnique("select id, description, label, concat(id,'_',UNIX_TIMESTAMP(),'_0') as formname from prescriptions where id= :id limit 1", ['id' => $_POST['ligneID']]);

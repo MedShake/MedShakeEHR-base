@@ -25,59 +25,62 @@
  * ou en fonction de la studyID passée en POST
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
 
 $dc = new msDicomSR();
 $dc->setToID($_POST['patientID']);
 
-if(isset($_POST['studyID'])) {
-  $dc->setDcStudyID($_POST['studyID']);
-  $dc->getSRinstanceFromStudy();
+if (isset($_POST['studyID'])) {
+	$dc->setDcStudyID($_POST['studyID']);
+	$dc->getSRinstanceFromStudy();
 } else {
-  $dc->getLastSRinstanceFromPatientID();
+	$dc->getLastSRinstanceFromPatientID();
 }
 
-if ($dataSR=$dc->getSrData()) {
-    $keysSR=array_keys($dataSR);
+if ($dataSR = $dc->getSrData()) {
+	$keysSR = array_keys($dataSR);
 
-    foreach ($dataSR as $k=>$v) {
-        foreach ($v['calculateValues'] as $kk=>$vv) {
-            $tabSR[$k.'.'.$kk]=$vv;
-        }
-    }
+	foreach ($dataSR as $k => $v) {
+		foreach ($v['calculateValues'] as $kk => $vv) {
+			$tabSR[$k . '.' . $kk] = $vv;
+		}
+	}
 
+	$sqlImplode = msSQL::sqlGetTagsForWhereIn($keysSR, 'tagSR');
 
-    if ($corres=msSQL::sql2tabKey("select d.id, dc.dicomTag, dc.returnValue, dc.roundDecimal
+	if ($corres = msSQL::sql2tabKey("SELECT d.id, dc.dicomTag, dc.returnValue, dc.roundDecimal
       from dicomTags as dc
       left join data_types as d on d.name = dc.typeName
-      where dc.dicomTag in ('".implode("','", $keysSR)."') and dc.typeName !=''", 'id')) {
-        foreach ($corres as $k=>$v) {
-            if ($k>0) {
-                if (isset($tabSR[$v['dicomTag'].'.'.$v['returnValue']])) {
-                    $data['data'][$k]=round($tabSR[$v['dicomTag'].'.'.$v['returnValue']], $v['roundDecimal']);
-                    $data['debug'][$k]=$v['returnValue'];
-                } elseif (isset($tabSR[$v['dicomTag'].'.bv'])) {
-                    $data['data'][$k]=round($tabSR[$v['dicomTag'].'.bv'], $v['roundDecimal']);
-                    $data['debug'][$k]='bv';
-                } elseif (isset($tabSR[$v['dicomTag'].'.defaut'])) {
-                    $data['data'][$k]=round($tabSR[$v['dicomTag'].'.defaut'], $v['roundDecimal']);
-                    $data['debug'][$k]='defaut';
-                }
-            }
-        }
-        $data['find']=true;
-        $data['dicom']=array(
-          'study'=>$dc->getDcStudyID(),
-          'serie'=>$dc->getDcSerieID(),
-          'instance'=>$dc->getDcInstanceID()
-        );
-    } else {
-        $data['find']=false;
-    }
+      where dc.dicomTag in (" . $sqlImplode['in'] . ") and dc.typeName !=''", 'id', '', $sqlImplode['execute'])) {
+		foreach ($corres as $k => $v) {
+			if ($k > 0) {
+				if (isset($tabSR[$v['dicomTag'] . '.' . $v['returnValue']])) {
+					$data['data'][$k] = round($tabSR[$v['dicomTag'] . '.' . $v['returnValue']], $v['roundDecimal']);
+					$data['debug'][$k] = $v['returnValue'];
+				} elseif (isset($tabSR[$v['dicomTag'] . '.bv'])) {
+					$data['data'][$k] = round($tabSR[$v['dicomTag'] . '.bv'], $v['roundDecimal']);
+					$data['debug'][$k] = 'bv';
+				} elseif (isset($tabSR[$v['dicomTag'] . '.defaut'])) {
+					$data['data'][$k] = round($tabSR[$v['dicomTag'] . '.defaut'], $v['roundDecimal']);
+					$data['debug'][$k] = 'defaut';
+				}
+			}
+		}
+		$data['find'] = true;
+		$data['dicom'] = array(
+			'study' => $dc->getDcStudyID(),
+			'serie' => $dc->getDcSerieID(),
+			'instance' => $dc->getDcInstanceID()
+		);
+	} else {
+		$data['find'] = false;
+	}
 } else {
-    $data['find']=false;
+	$data['find'] = false;
 }
 
 header('Content-Type: application/json');

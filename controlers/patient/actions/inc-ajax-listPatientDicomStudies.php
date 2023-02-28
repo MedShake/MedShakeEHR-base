@@ -24,6 +24,8 @@
  * Patient > ajax : lister les dernières études dicom du patient
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
  if(!is_numeric($_POST['patientID'])) die;
@@ -34,7 +36,11 @@
  if (!isset($p['page']['studiesDcData']['HttpError'])) {
 
    //on cherche les examens EHR qui peuvent être attachés.
-   if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$_POST['patientID']."' ", 'instance', 'value')) {
+   $marqueurs = [
+	'patientID' => $_POST['patientID'],
+	'dicomStudyID' => msData::getTypeIDFromName('dicomStudyID')
+   ];
+   if ($d=msSQL::sql2tabKey("SELECT value, instance from objets_data where typeID = :dicomStudyID and toID = :patientID ", 'instance', 'value', $marqueurs)) {
        foreach ($d as $k=>$v) {
            $ob = new msObjet();
            $ob->setObjetID($k);
