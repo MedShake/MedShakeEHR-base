@@ -141,13 +141,14 @@ class msPeopleSearch
   }
 
 /**
- * Définir la liste des ids de tags sur les quels filter les résultat
- * @param	array	$tagsFilter	Liste des ID de tags sur les quels filter
+ * Définir la liste des ids de tags sur lesquels filtrer les résultats
+ * @param	array	$tagsFilter	Liste des ID de tags sur lesquels filtrer
  */
-  public function setUnviTagsFilter(array $tagsFilter) {
-    // @TODO /!\ CLEAN $tagsFilter !!!
-    $this->_univTagsFilter = $tagsFilter;
-  }
+public function setUnviTagsFilter(array $tagsFilter)
+{
+	$this->_univTagsFilter = msSQL::cleanArray($tagsFilter);
+}
+
 
 /**
  * Obtenir la chaîne SQL de recherche
