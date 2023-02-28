@@ -24,78 +24,93 @@
  * Logs : présente l'historique général des mails envoyés
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-$template="historiqueMailSendGeneral";
+$debug = '';
+$template = "historiqueMailSendGeneral";
 
 
 if (!isset($match['params']['user'])) {
-    $p['page']['expediteurID']=0;
-    $where = null;
+	$p['page']['expediteurID'] = 0;
+	$where = null;
 } elseif ($match['params']['user'] == 0) {
-    $p['page']['expediteurID']=0;
-    $where = null;
+	$p['page']['expediteurID'] = 0;
+	$where = null;
 } else {
-    $p['page']['expediteurID']=$match['params']['user'];
-    if(is_numeric($p['page']['expediteurID'])) $where = "m.fromID='".$p['page']['expediteurID']."' and";
+	$p['page']['expediteurID'] = $match['params']['user'];
+	if (is_numeric($p['page']['expediteurID'])) $where = "m.fromID='" . $p['page']['expediteurID'] . "' and";
 }
 
-$nbParPage=12;
-if (!isset($match['params']['start'])) {
-    $startSQL=0;
-    $p['page']['nextStart']=-1;
-    $p['page']['previousStart']=$startSQL+$nbParPage;
+$nbParPage = 12;
+if (!isset($match['params']['start']) or !is_numeric($match['params']['start'])) {
+	$startSQL = 0;
+	$p['page']['nextStart'] = -1;
+	$p['page']['previousStart'] = $startSQL + $nbParPage;
 } else {
-    $startSQL=$match['params']['start'];
-    $p['page']['nextStart']=$startSQL-$nbParPage;
-    $p['page']['previousStart']=$startSQL+$nbParPage;
+	$startSQL = $match['params']['start'];
+	$p['page']['nextStart'] = $startSQL - $nbParPage;
+	$p['page']['previousStart'] = $startSQL + $nbParPage;
 }
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID-> getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber', 'firstname', 'lastname', 'birthname']);
+$name2typeID = $name2typeID->getTypeIDsFromName(['mailPorteur', 'mailTo', 'mailFrom', 'mailSujet', 'mailTrackingID', 'mailToEcofaxNumber', 'firstname', 'lastname', 'birthname']);
+
+$marqueurs = array(
+	'mailTo' => $name2typeID['mailTo'],
+	'mailToEcofaxNumber' => $name2typeID['mailToEcofaxNumber'],
+	'mailPorteur' => $name2typeID['mailPorteur']
+);
 
 
-if ($mails=msSQL::sql2tab("select m.id from objets_data as m
-  join objets_data as mto on mto.instance=m.id and mto.typeID='".$name2typeID['mailTo']."'
-  left join objets_data as mtof on mtof.instance=m.id and mtof.typeID='".$name2typeID['mailToEcofaxNumber']."'
-  where ".$where." m.typeID='".$name2typeID['mailPorteur']."' and mtof.id is null and m.deleted = ''
+if ($mails = msSQL::sql2tab("SELECT m.id from objets_data as m
+  join objets_data as mto on mto.instance=m.id and mto.typeID = :mailTo
+  left join objets_data as mtof on mtof.instance=m.id and mtof.typeID = :mailToEcofaxNumber
+  where " . $where . " m.typeID = :mailPorteur and mtof.id is null and m.deleted = ''
   group by m.id
-  order by m.creationDate desc limit $startSQL,$nbParPage")) {
-    foreach ($mails as $mail) {
-        $ob = new msObjet();
-        $ob->setObjetID($mail['id']);
-        $objs[$mail['id']] = $ob->getObjetAndSons();
-    }
+  order by m.creationDate desc limit $startSQL,$nbParPage", $marqueurs)) {
+	foreach ($mails as $mail) {
+		$ob = new msObjet();
+		$ob->setObjetID($mail['id']);
+		$objs[$mail['id']] = $ob->getObjetAndSons();
+	}
 
-    foreach ($objs as $k=>$v) {
-        if(isset($v[$name2typeID['mailTo']]['toID'])){
-          $patient = new msPeople();
-          $patient->setToID($v[$name2typeID['mailTo']]['toID']);
-          $patientData = $patient->getSimpleAdminDatasByName();
-        } else {
-          $patientData = null;
-        }
-        $p['page']['mailListe'][]=@array(
-        'mailid'=>$k,
-        'patient'=>$patientData,
-        'date'=>$v[$name2typeID['mailTo']]['creationDate'],
-        'to'=>$v[$name2typeID['mailTo']]['value'],
-        'toID'=>$v[$name2typeID['mailTo']]['toID'],
-        'fromID'=>$v[$name2typeID['mailTo']]['fromID'],
-        'from'=>$v[$name2typeID['mailFrom']]['value'],
-        'sujet'=>$v[$name2typeID['mailSujet']]['value'],
-        'mailTrackingID'=>$v[$name2typeID['mailTrackingID']]['value'],
-      );
-    }
+	foreach ($objs as $k => $v) {
+		if (isset($v[$name2typeID['mailTo']]['toID'])) {
+			$patient = new msPeople();
+			$patient->setToID($v[$name2typeID['mailTo']]['toID']);
+			$patientData = $patient->getSimpleAdminDatasByName();
+		} else {
+			$patientData = null;
+		}
+		$p['page']['mailListe'][] = @array(
+			'mailid' => $k,
+			'patient' => $patientData,
+			'date' => $v[$name2typeID['mailTo']]['creationDate'],
+			'to' => $v[$name2typeID['mailTo']]['value'],
+			'toID' => $v[$name2typeID['mailTo']]['toID'],
+			'fromID' => $v[$name2typeID['mailTo']]['fromID'],
+			'from' => $v[$name2typeID['mailFrom']]['value'],
+			'sujet' => $v[$name2typeID['mailSujet']]['value'],
+			'mailTrackingID' => $v[$name2typeID['mailTrackingID']]['value'],
+		);
+	}
 }
 
-$p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id,
+$marqueurs = array(
+	'lastname' => $name2typeID['lastname'],
+	'firstname' => $name2typeID['firstname'],
+	'birthname' => $name2typeID['birthname'],
+	'mailPorteur' => $name2typeID['mailPorteur']
+);
+
+$p['page']['expediteurs'] = msSQL::sql2tabKey("select m.fromID as id,
   CASE WHEN n.value != '' THEN concat(p.value, ' ', n.value) ELSE concat(p.value, ' ', bn.value) END as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-  left join objets_data as p on p.toID=m.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-  left join objets_data as bn on bn.toID=m.fromID and bn.typeID='".$name2typeID['birthname']."' and bn.outdated='' and bn.deleted=''
-  where m.typeID='".$name2typeID['mailPorteur']."'
+  left join objets_data as n on n.toID=m.fromID and n.typeID= :lastname and n.outdated='' and n.deleted=''
+  left join objets_data as p on p.toID=m.fromID and p.typeID= :firstname and p.outdated='' and p.deleted=''
+  left join objets_data as bn on bn.toID=m.fromID and bn.typeID= :birthname and bn.outdated='' and bn.deleted=''
+  where m.typeID= :mailPorteur
   group by m.fromID, bn.value, p.value, n.value
-  order by n.value", "id", "identite");
+  order by n.value", "id", "identite", $marqueurs);

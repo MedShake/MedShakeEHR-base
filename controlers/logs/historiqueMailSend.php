@@ -24,33 +24,36 @@
  * Logs : présente l'historique d'envoi par mail d'un document
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-$template="historiqueMailSend";
+$debug = '';
+$template = "historiqueMailSend";
 
 $name2typeID = new msData();
 $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'mailPorteur']);
 
-if ($mailsListe=msSQL::sql2tabSimple("select id from objets_data where instance='".$match['params']['objetID']."' and typeID='".$name2typeID['mailPorteur']."' order by creationDate desc")) {
+if ($mailsListe = msSQL::sql2tabSimple("SELECT id from objets_data where instance= :instance and typeID=:typeID order by creationDate desc", ['instance' => $match['params']['objetID'], 'typeID' => $name2typeID['mailPorteur']])) {
 
-    $mailsElements=msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
+	$sqlImplode = msSQL::sqlGetTagsForWhereIn($mailsListe, 'inst');
+	$mailsElements = msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
     from objets_data as o
     left join data_types as t on o.typeID=t.id
-    where o.instance in (".implode(',', $mailsListe).") ");
+    where o.instance in (" . $sqlImplode['in'] . ") ", $sqlImplode['execute']);
 
-    foreach ($mailsElements as $k=>$v) {
-        $p['page']['patientID']=$v['toID'];
-        $p['page']['mailListe'][$v['instance']][$v['name']]=$v['value'];
-        $p['page']['mailListe'][$v['instance']]['creationDate']=$v['creationDate'];
-        $p['page']['mailListe'][$v['instance']]['expediteurID']=$v['fromID'];
-    }
+	foreach ($mailsElements as $k => $v) {
+		$p['page']['patientID'] = $v['toID'];
+		$p['page']['mailListe'][$v['instance']][$v['name']] = $v['value'];
+		$p['page']['mailListe'][$v['instance']]['creationDate'] = $v['creationDate'];
+		$p['page']['mailListe'][$v['instance']]['expediteurID'] = $v['fromID'];
+	}
 }
 
-$p['page']['expediteurs']=msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
+$p['page']['expediteurs'] = msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID='".$name2typeID['lastname']."' and n.outdated='' and n.deleted=''
-  left join objets_data as p on p.toID=m.fromID and p.typeID='".$name2typeID['firstname']."' and p.outdated='' and p.deleted=''
-  where m.typeID='".$name2typeID['mailPorteur']."'
+  left join objets_data as n on n.toID=m.fromID and n.typeID='" . $name2typeID['lastname'] . "' and n.outdated='' and n.deleted=''
+  left join objets_data as p on p.toID=m.fromID and p.typeID='" . $name2typeID['firstname'] . "' and p.outdated='' and p.deleted=''
+  where m.typeID='" . $name2typeID['mailPorteur'] . "'
   group by m.fromID, p.value, n.value
-  order by n.value", "id", "identite");
+  order by n.value", "id", "identite", $name2typeID);
