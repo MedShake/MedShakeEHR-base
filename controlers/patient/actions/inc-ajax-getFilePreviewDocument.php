@@ -28,14 +28,14 @@
 
 if (is_numeric($_GET['objetID'])) {
 
-    $preview = new msModBaseObjetPreview;
-    $preview->setObjetID($_GET['objetID']);
-    $objetGroupe=$preview->getObjetGroupe();
-    $objetName=$preview->getObjetName();
-    $objetModule=$preview->getObjetModule();
+	$preview = new msModBaseObjetPreview;
+	$preview->setObjetID($_GET['objetID']);
+	$objetGroupe = $preview->getObjetGroupe();
+	$objetName = $preview->getObjetName();
+	$objetModule = $preview->getObjetModule();
 
-    if ($objetGroupe=="doc") {
-        echo $preview->getFilePreviewDocument();
-    }
-    exit();
+	if ($objetGroupe == "doc") {
+		echo $preview->getFilePreviewDocument();
+	}
+	exit();
 }

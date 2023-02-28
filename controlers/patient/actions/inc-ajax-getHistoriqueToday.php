@@ -27,15 +27,15 @@
  */
 
 
-$debug='';
+$debug = '';
 
 //template
-$template="patientHistoriqueToday";
+$template = "patientHistoriqueToday";
 
 //le patient
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
+$p['page']['patient']['id'] = $_POST['patientID'];
 
 //historique du jour du dossier du patient
-$p['page']['patient']['today']=$patient->getToday();
+$p['page']['patient']['today'] = $patient->getToday();

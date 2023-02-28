@@ -28,21 +28,20 @@
 
 header('Content-Type: application/json');
 
-if(!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
 
-$classLapExt = 'msLapExt'.ucfirst($p['config']['utiliserLapExterneName']);
+$classLapExt = 'msLapExt' . ucfirst($p['config']['utiliserLapExterneName']);
 
-if(method_exists($classLapExt, 'checkAndTreatOrdo')) {
-  $lapExt = new $classLapExt;
-  $lapExt->setPatientID($_POST['patientID']);
-  $statut = $lapExt->checkAndTreatOrdo();
+if (method_exists($classLapExt, 'checkAndTreatOrdo')) {
+	$lapExt = new $classLapExt;
+	$lapExt->setPatientID($_POST['patientID']);
+	$statut = $lapExt->checkAndTreatOrdo();
 
-  $lapExt->cleanAtEnd();
+	$lapExt->cleanAtEnd();
 
-  exit(json_encode(array(
-    'statut'=>$statut
-  )));
-
+	exit(json_encode(array(
+		'statut' => $statut
+	)));
 } else {
-  die();
+	die();
 }

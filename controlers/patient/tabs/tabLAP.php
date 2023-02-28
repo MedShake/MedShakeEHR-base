@@ -26,23 +26,23 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $template="inc-tabLAP";
+$debug = '';
+$template = "inc-tabLAP";
 
- if($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
+if ($p['config']['optionGeActiverLapInterne'] != 'true') die("Le LAP n'est pas activé");
 
- $p['page']['patient']['id']=$match['params']['patientID'];
- $patient=new msPeople();
- $patient->setToID($match['params']['patientID']);
+$p['page']['patient']['id'] = $match['params']['patientID'];
+$patient = new msPeople();
+$patient->setToID($match['params']['patientID']);
 
- $lapPatient=new msLapPatient;
- $lapPatient->setToID($match['params']['patientID']);
- $p['page']['patientAdminData']=$lapPatient->getPatientAdminData();
- $p['page']['patientBasicPhysio']=$lapPatient->getPatientBasicPhysioDataControle();
- $p['page']['patientAllergies']=$patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
- $p['page']['patientALD']=$patient->getALD();
- if(!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
-  foreach(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
-    $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
-  }
- }
+$lapPatient = new msLapPatient;
+$lapPatient->setToID($match['params']['patientID']);
+$p['page']['patientAdminData'] = $lapPatient->getPatientAdminData();
+$p['page']['patientBasicPhysio'] = $lapPatient->getPatientBasicPhysioDataControle();
+$p['page']['patientAllergies'] = $patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
+$p['page']['patientALD'] = $patient->getALD();
+if (!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
+	foreach (explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
+		$p['page']['patientATCD'][$v] = $patient->getAtcdStruc($v);
+	}
+}

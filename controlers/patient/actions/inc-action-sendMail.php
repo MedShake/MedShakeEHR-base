@@ -27,40 +27,40 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- // Apicrypt 1 & 2
- if ($_POST['mailType']=='apicrypt') {
-   if(isset($p['config']['apicryptVersion']) and $p['config']['apicryptVersion']==2) {
-     $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'2.php';
-   } else {
-     $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'.php';
-   }
- }
+// Apicrypt 1 & 2
+if ($_POST['mailType'] == 'apicrypt') {
+	if (isset($p['config']['apicryptVersion']) and $p['config']['apicryptVersion'] == 2) {
+		$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '2.php';
+	} else {
+		$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '.php';
+	}
+}
 
- // Mail non sécurisé
- elseif ($_POST['mailType']=='ns') {
-     // Fichier correspondant au type d'envoi ET au type de service mail
-   $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'-'.$p['config']['smtpTracking'].'.php';
+// Mail non sécurisé
+elseif ($_POST['mailType'] == 'ns') {
+	// Fichier correspondant au type d'envoi ET au type de service mail
+	$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '-' . $p['config']['smtpTracking'] . '.php';
 
-   // Régression au type d'envoi uniquement
-   if (!is_file($fileToInclude)) {
-       $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'.php';
-   }
- }
+	// Régression au type d'envoi uniquement
+	if (!is_file($fileToInclude)) {
+		$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '.php';
+	}
+}
 
- // Fax en ligne
- elseif ($_POST['mailType']=='ecofax') {
-     // Fichier correspondant au type d'envoi ET au type de service fax
-   $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'-'.$p['config']['faxService'].'.php';
+// Fax en ligne
+elseif ($_POST['mailType'] == 'ecofax') {
+	// Fichier correspondant au type d'envoi ET au type de service fax
+	$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '-' . $p['config']['faxService'] . '.php';
 
-   // Régression au type d'envoi uniquement
-   if (!is_file($fileToInclude)) {
-       $fileToInclude=$p['homepath'].'controlers/patient/actions/inc-action-sendMail-'.$_POST['mailType'].'.php';
-   }
- }
+	// Régression au type d'envoi uniquement
+	if (!is_file($fileToInclude)) {
+		$fileToInclude = $p['homepath'] . 'controlers/patient/actions/inc-action-sendMail-' . $_POST['mailType'] . '.php';
+	}
+}
 
 // Inclusion après vérification
 if (is_file($fileToInclude)) {
-    include($fileToInclude);
+	include($fileToInclude);
 } else {
-    die('Erreur: Pas d\'action correspondante');
+	die('Erreur: Pas d\'action correspondante');
 }

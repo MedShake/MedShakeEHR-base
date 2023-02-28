@@ -26,16 +26,16 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if(!is_numeric($_POST['objetID'])) die;
+if (!is_numeric($_POST['objetID'])) die;
 
-if ($_POST['importanceActu']=='n') {
-    $importance='y';
+if ($_POST['importanceActu'] == 'n') {
+	$importance = 'y';
 } else {
-    $importance='n';
+	$importance = 'n';
 }
 
-$data=array(
-  'id'=>$_POST['objetID'],
-  'important'=>$importance
+$data = array(
+	'id' => $_POST['objetID'],
+	'important' => $importance
 );
 msSQL::sqlInsert('objets_data', $data);

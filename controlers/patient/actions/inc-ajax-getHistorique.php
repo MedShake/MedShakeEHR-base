@@ -27,15 +27,15 @@
  */
 
 
-$debug='';
+$debug = '';
 
 //template
-$template="patientHistoriqueMedical";
+$template = "patientHistoriqueMedical";
 
 //le patient
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']['id']=$_POST['patientID'];
+$p['page']['patient']['id'] = $_POST['patientID'];
 
 //historique complet des consultation du patient
-$p['page']['patient']['historique']=$patient->getHistorique();
+$p['page']['patient']['historique'] = $patient->getHistorique();

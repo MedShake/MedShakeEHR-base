@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$detsinataireFAX=trim(str_replace(' ','',$_POST['mailToEcofaxNumber'])).'@ecofax.fr';
+$detsinataireFAX = trim(str_replace(' ', '', $_POST['mailToEcofaxNumber'])) . '@ecofax.fr';
 
 $mail = new PHPMailer\PHPMailer\PHPMailer;
 $mail->CharSet = 'UTF-8';
@@ -36,27 +36,27 @@ $mail->Host = $p['config']['smtpHost'];
 $mail->SMTPAuth = true;
 $mail->Username = $p['config']['smtpUsername'];
 $mail->Password = $p['config']['smtpPassword'];
-if($p['config']['smtpOptions'] == 'on') {
-  $mail->SMTPOptions = array(
-    'ssl' => array(
-      'verify_peer' => false,
-      'verify_peer_name' => false,
-      'allow_self_signed' => true
-    )
-  );
+if ($p['config']['smtpOptions'] == 'on') {
+	$mail->SMTPOptions = array(
+		'ssl' => array(
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+			'allow_self_signed' => true
+		)
+	);
 }
-if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
+if (!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
 $mail->Port = $p['config']['smtpPort'];
 
 
 //obtenir le chemin complet de la pj
 if (isset($_POST['objetID'])) {
-    $doc = new msStockage;
-    $doc->setObjetID($_POST['objetID']);
-    $sourceFile=$doc->getPathToDoc();
-    $ext=$doc->getFileExtOfDoc();
+	$doc = new msStockage;
+	$doc->setObjetID($_POST['objetID']);
+	$sourceFile = $doc->getPathToDoc();
+	$ext = $doc->getFileExtOfDoc();
 } else {
-  $sourceFile='';
+	$sourceFile = '';
 }
 
 
@@ -67,42 +67,42 @@ $mail->setFrom($p['config']['smtpFrom']);
 $mail->addAddress($detsinataireFAX);
 
 if (is_file($sourceFile)) {
-    $mail->addAttachment($sourceFile, "document.".$ext);
+	$mail->addAttachment($sourceFile, "document." . $ext);
 }
-$mail->Body    =  'password : '.$p['config']['ecofaxPassword'];
+$mail->Body    =  'password : ' . $p['config']['ecofaxPassword'];
 $mail->AltBody = $mail->Body;
 
 
 if (!$mail->send()) {
-    echo 'Le message n\'a pu être envoyé.';
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
+	echo 'Le message n\'a pu être envoyé.';
+	echo 'Mailer Error: ' . $mail->ErrorInfo;
 } else {
-    //echo 'envoyé !';
+	//echo 'envoyé !';
 
-    //logs
-    $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
-    $patient->setToID($_POST['patientID']);
+	//logs
+	$patient = new msObjet();
+	$patient->setFromID($p['user']['id']);
+	$patient->setToID($_POST['patientID']);
 
-    //support (avec PJ ou sans)
-    if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
-    } else {
-        $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
-    }
+	//support (avec PJ ou sans)
+	if (isset($_POST['objetID'])) {
+		$supportID = $patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
+	} else {
+		$supportID = $patient->createNewObjetByTypeName('mailPorteur', '');
+	}
 
-    //from
-    $patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], $supportID);
-    //to
-    $patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, $supportID);
-    //numero destinataire
-    $patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], $supportID);
-    //numero destinataire
-    $patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], $supportID);
-    //pj ID
-    if (isset($_POST['objetID'])) {
-        $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
-    }
+	//from
+	$patient->createNewObjetByTypeName('mailFrom', $p['config']['smtpFrom'], $supportID);
+	//to
+	$patient->createNewObjetByTypeName('mailTo', $detsinataireFAX, $supportID);
+	//numero destinataire
+	$patient->createNewObjetByTypeName('mailToEcofaxNumber', $_POST['mailToEcofaxNumber'], $supportID);
+	//numero destinataire
+	$patient->createNewObjetByTypeName('mailToEcofaxName', $_POST['mailToEcofaxName'], $supportID);
+	//pj ID
+	if (isset($_POST['objetID'])) {
+		$patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
+	}
 
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
+	msTools::redirection('/patient/' . $_POST['patientID'] . '/');
 }

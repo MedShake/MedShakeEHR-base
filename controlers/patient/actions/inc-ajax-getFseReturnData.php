@@ -32,50 +32,49 @@ $paiem->setObjetID($_GET['objetID']);
 $dataPaiem = $paiem->getObjetAndSons('name');
 
 
-if(isset($dataPaiem['regleFseData'])) {
-  // sortir de la boucle JS
-  $data['status']='end';
+if (isset($dataPaiem['regleFseData'])) {
+	// sortir de la boucle JS
+	$data['status'] = 'end';
 
-  $dataregFse=json_decode($dataPaiem['regleFseData']['value'], true)[0];
+	$dataregFse = json_decode($dataPaiem['regleFseData']['value'], true)[0];
 
-  //actes FSE
-  if(isset($dataregFse)) {
-    foreach($dataregFse['dataDetail'] as $acte) {
-      if($acte['is_ligne_ok'] == 1) {
-        $actes['actesOK'][]=$acte['code_prestation'];
-      } else {
-        $actes['actesKO'][]=$acte['code_prestation'];
-      }
-    }
-    if(!empty($actes['actesOK'])) $data['actesFSE']=implode(' + ', $actes['actesOK']);
-  }
+	//actes FSE
+	if (isset($dataregFse)) {
+		foreach ($dataregFse['dataDetail'] as $acte) {
+			if ($acte['is_ligne_ok'] == 1) {
+				$actes['actesOK'][] = $acte['code_prestation'];
+			} else {
+				$actes['actesKO'][] = $acte['code_prestation'];
+			}
+		}
+		if (!empty($actes['actesOK'])) $data['actesFSE'] = implode(' + ', $actes['actesOK']);
+	}
 
-  //actes règlement
-  if(isset($dataPaiem['regleDetailsActes'])) {
-    $dataPaiem['regleDetailsActes']['value'] = json_decode($dataPaiem['regleDetailsActes']['value'], TRUE);
-    $data['actesEHR']=implode(' + ', array_column($dataPaiem['regleDetailsActes']['value'], 'acte'));
-  }
+	//actes règlement
+	if (isset($dataPaiem['regleDetailsActes'])) {
+		$dataPaiem['regleDetailsActes']['value'] = json_decode($dataPaiem['regleDetailsActes']['value'], TRUE);
+		$data['actesEHR'] = implode(' + ', array_column($dataPaiem['regleDetailsActes']['value'], 'acte'));
+	}
 
-  // montant total
-  $data['totalFSE'] = (float)$dataregFse['montant_total_facture'];
-  $data['totalEHR'] = (float)$dataPaiem['regleFacture']['value'];
-  if(($data['totalFSE'] - $data['totalEHR']) != 0) {
-    $data['totalError']=true;
-  } else {
-    $data['totalError']=false;
-  }
+	// montant total
+	$data['totalFSE'] = (float)$dataregFse['montant_total_facture'];
+	$data['totalEHR'] = (float)$dataPaiem['regleFacture']['value'];
+	if (($data['totalFSE'] - $data['totalEHR']) != 0) {
+		$data['totalError'] = true;
+	} else {
+		$data['totalError'] = false;
+	}
 
-  // à payer :
-  $data['aPayerFSE'] = (float)$dataregFse['montant_part_assure'];
-  $data['aPayerEHR'] = (float)$dataPaiem['regleFacture']['value']-(float)$dataPaiem['regleTiersPayeur']['value'];
-  if(($data['aPayerFSE'] - $data['aPayerEHR']) != 0) {
-    $data['aPayerError']=true;
-  } else {
-    $data['aPayerError']=false;
-  }
-
+	// à payer :
+	$data['aPayerFSE'] = (float)$dataregFse['montant_part_assure'];
+	$data['aPayerEHR'] = (float)$dataPaiem['regleFacture']['value'] - (float)$dataPaiem['regleTiersPayeur']['value'];
+	if (($data['aPayerFSE'] - $data['aPayerEHR']) != 0) {
+		$data['aPayerError'] = true;
+	} else {
+		$data['aPayerError'] = false;
+	}
 } else {
-  $data['status']='wait';
+	$data['status'] = 'wait';
 }
 
 

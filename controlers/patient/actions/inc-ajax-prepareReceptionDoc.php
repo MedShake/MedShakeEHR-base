@@ -27,28 +27,28 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if(!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
 
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
-$p['page']['prat']=$prat->getSimpleAdminDatasByName();
-$p['page']['prat']['pratID']=$p['user']['id'];
+$p['page']['prat'] = $prat->getSimpleAdminDatasByName();
+$p['page']['prat']['pratID'] = $p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatasByName();
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
+$p['page']['patient'] = $patient->getSimpleAdminDatasByName();
+$p['page']['patient']['id'] = $_POST['patientID'];
+$p['page']['patient']['dicomPatientID'] = $p['config']['dicomPrefixIdPatient'] . $_POST['patientID'];
 
 //inclusion si présence dans module installé du fichier sépcifique
-if (is_file($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php')) {
-    include($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareReceptionDoc.php');
+if (is_file($p['homepath'] . 'controlers/module/' . $p['user']['module'] . '/patient/actions/inc-ajax-prepareReceptionDoc.php')) {
+	include($p['homepath'] . 'controlers/module/' . $p['user']['module'] . '/patient/actions/inc-ajax-prepareReceptionDoc.php');
 }
 
 // Vérification répertoire de travail
-msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
+msTools::checkAndBuildTargetDir($p['config']['workingDirectory'] . $p['user']['id'] . '/');
 
 //data patient pour phonecapture
-$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient'], 'saveAs'=>'doc'));
-file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
+$jsondata = json_encode(array('prat' => $p['page']['prat'], 'patient' => $p['page']['patient'], 'saveAs' => 'doc'));
+file_put_contents($p['config']['workingDirectory'] . $p['user']['id'] . '/workList.json', $jsondata);
 die();

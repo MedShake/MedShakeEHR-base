@@ -27,64 +27,65 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if(!isset($_FILES['file']) or !is_numeric($_POST['patientID'])) die;
+if (!isset($_FILES['file']) or !is_numeric($_POST['patientID'])) die;
 
-$fichier=$_FILES['file'];
-$mimetype=msTools::getmimetype($fichier['tmp_name']);
-$acceptedtypes=array(
-    'application/pdf'=>'pdf',
-    'text/plain'=>'txt',
-    'image/png'=>'png',
-    'image/jpeg'=>'jpg'
-    );
+$fichier = $_FILES['file'];
+$mimetype = msTools::getmimetype($fichier['tmp_name']);
+$acceptedtypes = array(
+	'application/pdf' => 'pdf',
+	'text/plain' => 'txt',
+	'image/png' => 'png',
+	'image/jpeg' => 'jpg'
+);
 if (array_key_exists($mimetype, $acceptedtypes)) {
-    $ext=$acceptedtypes[$mimetype];
+	$ext = $acceptedtypes[$mimetype];
 
-    $patient = new msObjet();
-    $patient->setFromID($p['user']['id']);
-    $patient->setToID($_POST['patientID']);
+	$patient = new msObjet();
+	$patient->setFromID($p['user']['id']);
+	$patient->setToID($_POST['patientID']);
 
-    //si txt alors on chope le contenu
-    if($ext=='txt') $corps=msInbox::getMessageBody($fichier['tmp_name']); else $corps='';
+	//si txt alors on chope le contenu
+	if ($ext == 'txt') $corps = msInbox::getMessageBody($fichier['tmp_name']);
+	else $corps = '';
 
-    //support
-    $supportID=$patient->createNewObjetByTypeName('docPorteur',  $corps);
+	//support
+	$supportID = $patient->createNewObjetByTypeName('docPorteur',  $corps);
 
-    //nom original
-    $patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
-    //type
-    $patient->createNewObjetByTypeName('docType', $ext, $supportID);
-    //titre
-    if(isset($_POST['titre']) and !empty(trim($_POST['titre']))) {
-      $patient->setTitleObjet($supportID, $_POST['titre']);
-    } else {
-      $patient->setTitleObjet($supportID, $fichier['name']);
-    }
+	//nom original
+	$patient->createNewObjetByTypeName('docOriginalName', $fichier['name'], $supportID);
+	//type
+	$patient->createNewObjetByTypeName('docType', $ext, $supportID);
+	//titre
+	if (isset($_POST['titre']) and !empty(trim($_POST['titre']))) {
+		$patient->setTitleObjet($supportID, $_POST['titre']);
+	} else {
+		$patient->setTitleObjet($supportID, $fichier['name']);
+	}
 
-    // docRegistre
-    if($p['config']['optionGeActiverRegistres'] == 'true' and isset($_POST['docRegistre']) and is_numeric($_POST['docRegistre'])) {
-      $registre = new msPeople;
-      $registre->setToID($_POST['docRegistre']);
-      if($registre->getType() == 'registre') {
-        $patient->createNewObjetByTypeName('docRegistre', $_POST['docRegistre'], $supportID);
-      }
-    }
+	// docRegistre
+	if ($p['config']['optionGeActiverRegistres'] == 'true' and isset($_POST['docRegistre']) and is_numeric($_POST['docRegistre'])) {
+		$registre = new msPeople;
+		$registre->setToID($_POST['docRegistre']);
+		if ($registre->getType() == 'registre') {
+			$patient->createNewObjetByTypeName('docRegistre', $_POST['docRegistre'], $supportID);
+		}
+	}
 
-    //folder
-    $folder=msStockage::getFolder($supportID);
+	//folder
+	$folder = msStockage::getFolder($supportID);
 
-    //creation folder si besoin
-    msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
+	//creation folder si besoin
+	msTools::checkAndBuildTargetDir($p['config']['stockageLocation'] . $folder . '/');
 
-    $destination_file = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-    if(msTools::commandExist('gs') and $ext=='pdf') {
-      $tempFile = $p['config']['workingDirectory'].$supportID.'.pdf';
-      move_uploaded_file($fichier['tmp_name'], $tempFile);
-      msPDF::optimizeWithGS($tempFile, $destination_file);
-      unlink($tempFile);
-    } else {
-      move_uploaded_file($fichier['tmp_name'], $destination_file);
-    }
+	$destination_file = $p['config']['stockageLocation'] . $folder . '/' . $supportID . '.' . $ext;
+	if (msTools::commandExist('gs') and $ext == 'pdf') {
+		$tempFile = $p['config']['workingDirectory'] . $supportID . '.pdf';
+		move_uploaded_file($fichier['tmp_name'], $tempFile);
+		msPDF::optimizeWithGS($tempFile, $destination_file);
+		unlink($tempFile);
+	} else {
+		move_uploaded_file($fichier['tmp_name'], $destination_file);
+	}
 }
 
 die();

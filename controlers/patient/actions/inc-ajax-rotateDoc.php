@@ -27,19 +27,18 @@
  */
 
 
-$fichier=new msStockage();
+$fichier = new msStockage();
 $fichier->setObjetID($_POST['fichierID']);
 if ($fichier->testDocExist()) {
-  $source = $fichier->getPathToDoc();
-  $mimetype=msTools::getmimetype($source);
-  if(explode('/', $mimetype)[0] == 'image') {
+	$source = $fichier->getPathToDoc();
+	$mimetype = msTools::getmimetype($source);
+	if (explode('/', $mimetype)[0] == 'image') {
 
-    if(isset($_POST['direction']) and $_POST['direction'] == 'left' ) {
-      msImageTools::rotate90($source, $source, 'left');
-    } else {
-      msImageTools::rotate90($source, $source);
-    }
-  }
-  exit();
-
+		if (isset($_POST['direction']) and $_POST['direction'] == 'left') {
+			msImageTools::rotate90($source, $source, 'left');
+		} else {
+			msImageTools::rotate90($source, $source);
+		}
+	}
+	exit();
 }

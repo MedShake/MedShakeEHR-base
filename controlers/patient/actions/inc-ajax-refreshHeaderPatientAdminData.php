@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-ajax-patientAdminData";
+$template = "inc-ajax-patientAdminData";
 
 //le patient
 $patient = new msPeopleRelations();
@@ -34,22 +34,22 @@ $patient->setToID($_POST['patientID']);
 
 //vérifier les droits
 $droits = new msPeopleDroits($p['user']['id']);
-if(!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
-  $template="forbidden";
-  return;
+if (!$droits->checkUserCanSeePatientData($_POST['patientID'])) {
+	$template = "forbidden";
+	return;
 }
 
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas']['birthdate']['ageFormats']=$patient->getAgeFormats();
-$p['page']['patient']['administrativeDatas']['birthdate']['age']=$patient->getAge();
-if(isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
-  if(msTools::validateDate($p['page']['patient']['administrativeDatas']['deathdate']['value'], "d/m/Y")) {
-    $p['page']['patient']['administrativeDatas']['deathAge']=$patient->getDeathAge();
-  }
+$p['page']['patient']['id'] = $_POST['patientID'];
+$p['page']['patient']['administrativeDatas'] = $patient->getAdministrativesDatas();
+$p['page']['patient']['administrativeDatas']['birthdate']['ageFormats'] = $patient->getAgeFormats();
+$p['page']['patient']['administrativeDatas']['birthdate']['age'] = $patient->getAge();
+if (isset($p['page']['patient']['administrativeDatas']['deathdate'])) {
+	if (msTools::validateDate($p['page']['patient']['administrativeDatas']['deathdate']['value'], "d/m/Y")) {
+		$p['page']['patient']['administrativeDatas']['deathAge'] = $patient->getDeathAge();
+	}
 }
 
 //les correspondants et liens familiaux
 $patient->setRelationType('relationPatientPraticien');
 $patient->setReturnedPeopleTypes(['pro']);
-$p['page']['correspondants']=$patient->getRelations(['identite','titre','emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);
+$p['page']['correspondants'] = $patient->getRelations(['identite', 'titre', 'emailApicrypt', 'faxPro', 'profesionnalEmail', 'telPro', 'telPro2', 'mobilePhonePro']);

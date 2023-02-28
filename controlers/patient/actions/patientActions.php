@@ -29,16 +29,16 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'saveCsForm', // sauver une consultation
-    'saveOrdoForm', // sauver une ordonnance
-    'sendMail' // envoyer un mail
+$acceptedModes = array(
+	'saveCsForm', // sauver une consultation
+	'saveOrdoForm', // sauver une ordonnance
+	'sendMail' // envoyer un mail
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 } else {
-    include('inc-action-'.$m.'.php');
+	include('inc-action-' . $m . '.php');
 }
