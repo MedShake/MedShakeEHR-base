@@ -83,7 +83,7 @@
       <a class="addNewReglement btn btn-primary mr-2 {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %}" type="button" {% if config.administratifPeutAvoirRecettes != 'true' %}disabled{% endif %} data-porteur="{{ page.formReglement[0]['id'] }}" data-module="{{ page.formReglement[0]['module'] }}" data-reglementForm="{{ page.formReglement[0]['formValues'] }}" href="#" title="Règlement"><i class="fas fa-euro-sign fa-lg fa-fw"></i></a>
     {% endif %}
 
-    {% if page.patient.ALD is empty %}
+    {% if page.patient.ALD is empty and config.optionDossierPatientActiverGestionALD == 'true' %}
       <button class="btn btn-outline-primary addNewCS mr-2" type="button" data-parentid="0" data-formtocall="aldDeclaration" data-mode="create" title="Saisir une ALD"><i class="fas fa-plus fa-sm fa-fw"></i> ALD</button>
     {% endif %}
 

@@ -143,7 +143,7 @@ if($p['config']['optionDossierPatientInhiberHistoriquesParDefaut'] != 'true') {
 }
 
 //les ALD du patient
-if($p['config']['optionGeActiverSignatureNumerique'] == 'true') {
+if($p['config']['optionDossierPatientActiverGestionALD'] == 'true') {
   $p['page']['patient']['ALD']=$patient->getALD();
 }
 
