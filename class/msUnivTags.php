@@ -21,36 +21,41 @@
 
 /**
  * @author	DEMAREST Maxime <maxime@indelog.fr>
- * @brief	Class pour gérer les tags universel.
- * @details	Les tags universel permettent de de disposer d'une fonction
- *			d'étiquetage commune à tout les élément de MedShakeEHR la plus
- *			indépandante possible du fonctionnement des élément tagués
- *			permétant de grouper facilement ces élément ainsi que de
- *			filter des résultat de recherches sur ceux ci.
- *			Chaque type d'élément pouvant être tagués est idenfifié à
- *			l'aide de type de tags définit dans la table indiqué par la
- *			constante de class `TABLE_TYPE`. Par example un type de tag
- *			peut être définit pour corresondre aux patients alors qu'un
- *			autre sera définit pour à un pro ou encore à un rendez vous de
- *			l'agenda. Chaque type de tags peut être indépandament activé
+ * @brief	Class pour gérer les tags universels.
+ * @details	Les tags universels permettent de disposer d'une fonction
+ *			d'étiquetage commune à tous les éléments de MedShakeEHR la plus
+ *			indépendante possible du fonctionnement des éléments tagués
+ *			permettant de grouper facilement ces éléments ainsi que de
+ *			filtrer des résultats de recherches sur ceux-ci.
+ *			Chaque type d'élément pouvant être tagué est identifié à
+ *			l'aide de type de tags défini dans la table indiqué par la
+ *			constante de class `TABLE_TYPE`. Par exemple un type de tag
+ *			peut être défini pour correspondre aux patients alors qu'un
+ *			autre sera définit pour à un pro ou encore à un rendez-vous de
+ *			l'agenda. Chaque type de tags peut être indépendamment activé
  *			ou désactivé. Chaque type de tag possède ses propres
- *			droits indiqués par les champs suivant de la table des type de
+ *			droits indiqués par les champs suivants de la table des types de
  *			tags :
- *				`droitCreSup` =>	Pour déterminier si un utilisateur peut
+ *				`droitCreSup` =>	Pour déterminer si un utilisateur peut
  *									créer, supprimer ou modifier un tag pour
- *									un type doné.
+ *									un type donné.
  *				`droitAjoRet` =>	Pour déterminer si un utilisateur peut
  *									ajouter ou retirer un tag sur un élément.
- *			Chaque droit indiqué doit correspondre a un élément de type "Droit"
- *			dans les paramètre de configuration.
- *			Les tags sont liées à un élément via la table décrite dans la
- *			contante de class `TABLE_JOIN`. La liaison se fait entre l'id
- *			du tag et l'id de l'objet. La diférentiation entre les
- *			diférents type d'objet lié se fait à l'aide de l'id du type de
+ *			Chaque droit indiqué doit correspondre à un élément de type "Droit"
+ *			dans les paramètres de configuration.
+ *			Les tags sont liés à un élément via la table décrite dans la
+ *			constante de class `TABLE_JOIN`. La liaison se fait entre l'id
+ *			du tag et l'id de l'objet. La différenciation entre les
+ *			différents types d'objet lié se fait à l'aide de l'id du type de
  *			tag.
+ *
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-Class msUnivTags {
+class msUnivTags
+{
 
 
 	/**
@@ -118,28 +123,33 @@ Class msUnivTags {
 	 */
 	private function checkTypeNameExist()
 	{
-		if (empty($this->_typeID)) throw new Exception(__METHOD__.' : $this->_typeID non définit');
-		if (empty($this->_name)) throw new Exception(__METHOD__.' : $this->_name non définit');
-		$sql = 'SELECT `id` FROM '.self::TABLE_TAGS.' WHERE `name` = "'.$this->_name.'" AND `typeID` = "'.$this->_typeID.'"';
+		if (empty($this->_typeID)) throw new Exception(__METHOD__ . ' : $this->_typeID non définit');
+		if (empty($this->_name)) throw new Exception(__METHOD__ . ' : $this->_name non définit');
+
+		$sql = 'SELECT `id` FROM ' . self::TABLE_TAGS . ' WHERE `name` = :name AND `typeID` = :typeID';
+		$marqueurs = ['name' => $this->_name, 'typeID' => $this->_typeID];
+
 		// Si le tag possède une id, on update, if faut donc exclure son propre
 		// nom de la liste.
 		if (!empty($this->_id)) {
-			$sql .= ' AND `id` != '.$this->_id;
+			$sql .= ' AND `id` != ' . $this->_id;
+			$marqueurs['thisID'] = $this->_id;
 		}
-		$resql = msSQL::sqlQuery($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql sur la vérification de l\'exisance du typeID');
-		return ($resql->num_rows > 0);
+		$resql = msSQL::sqlQuery($sql, $marqueurs);
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : erreur sql sur la vérification de l\'exisance du typeID');
+		return (count($resql->fetchAll(PDO::FETCH_ASSOC)) > 0);
 	}
 
 	/**
 	 * Céer un nouveau TAG en fonction des propriétés définies.
-	 * @return Array	Tableau des propriété du tag nouvellement créé.
+	 * @return Array	Tableau des propriétés du tag nouvellement créé.
 	 */
-	public function create() {
-		if (empty($this->_typeID)) throw new Exception(__METHOD__.' : $this->_typeID non définit');
-		if (empty($this->_name)) throw new Exception(__METHOD__.' : $this->_name non définit');
-		if (empty($this->_description)) throw new Exception(__METHOD__.' : $this->_description non définit');
-		if (empty($this->_color)) throw new Exception(__METHOD__.' : $this->_color non définit');
+	public function create()
+	{
+		if (empty($this->_typeID)) throw new Exception(__METHOD__ . ' : $this->_typeID non définit');
+		if (empty($this->_name)) throw new Exception(__METHOD__ . ' : $this->_name non définit');
+		if (empty($this->_description)) throw new Exception(__METHOD__ . ' : $this->_description non définit');
+		if (empty($this->_color)) throw new Exception(__METHOD__ . ' : $this->_color non définit');
 
 		// Vérifie si aucun autre tag commporte le name avec ce typeID
 		if ($this->checkTypeNameExist()) throw new Exception('Une étiquette portant déjà ce nom existe pour ce type.');
@@ -151,31 +161,38 @@ Class msUnivTags {
 			'color' => $this->_color,
 		);
 		$res = msSQL::sqlInsert(self::TABLE_TAGS, $data);
-		if (! $res) throw new Exception(__METHOD__.' : échec insersion SQL');
+		if (!$res) throw new Exception(__METHOD__ . ' : échec insersion SQL');
 		return (int) $res;
 	}
 
 	/**
-	 * Met à jour un tags en fonction de ses propriété.
+	 * Met à jour un tags en fonction de ses propriétés.
 	 * @return	Array	Nouvelle propriété du tag.
 	 */
-	public function update() {
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+	public function update()
+	{
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 
 		// Vérifie si aucun autre tag commporte le name avec ce typeID
 		if ($this->checkTypeNameExist()) throw new Exception('Une étiquette portant déjà ce nom existe pour ce type.');
 
-		$data = msSQL::cleanArray(array(
+		$data = array(
 			'name' => $this->_name,
 			'description' => $this->_description,
 			'color' => $this->_color,
-		));
+		);
 
-		$setFields = array_map(function($k,$v) {return $k.' = "'.$v.'"';}, array_keys($data), $data);
-		$sql = 'UPDATE '.self::TABLE_TAGS.' SET '.implode(',', $setFields).' WHERE id = '.$this->_id;
-		$resql = msSQL::sqlQuery($sql);
+		$setFields = array_map(function ($k, $v) {
+			return $k . ' = :' . $k;
+		}, array_keys($data), $data);
 
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql update');
+		$marqueurs = $data;
+		$marqueurs['id'] = $this->_id;
+
+		$sql = 'UPDATE ' . self::TABLE_TAGS . ' SET ' . implode(',', $setFields) . ' WHERE id = :id';
+		$resql = msSQL::sqlQuery($sql, $marqueurs);
+
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : erreur sql update');
 		return $resql;
 	}
 
@@ -183,19 +200,17 @@ Class msUnivTags {
 	 * Supprime le tag instancié.
 	 * @return	void
 	 */
-	public function delete() {
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+	public function delete()
+	{
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 
-		// TODO remplacer ça par un delete cascade et une une clé étangère
-		// sur la table TABLE_JOIN ?  dabor supprimer les liaison ou est
-		// utilisé le tag dans TABLE_JOIN
-		$sql = 'DELETE FROM '.self::TABLE_JOIN.' WHERE tagID = '.$this->_id;
-		$resql = msSQL::sqlQuery($sql);
-		if (! $resql) throw new Exception(__METHOD__.' : erreur sql supression liaison tags');
+		$sql = 'DELETE FROM ' . self::TABLE_JOIN . ' WHERE tagID = :id';
+		$resql = msSQL::sqlQuery($sql, ['id' => $this->_id]);
+		if (!$resql) throw new Exception(__METHOD__ . ' : erreur sql supression liaison tags');
 
-		$sql = 'DELETE FROM '.self::TABLE_TAGS.' WHERE id = '.$this->_id;
-		$resql = msSQL::sqlQuery($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql supression tags');
+		$sql = 'DELETE FROM ' . self::TABLE_TAGS . ' WHERE id = :id';
+		$resql = msSQL::sqlQuery($sql, ['id' => $this->_id]);
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : erreur sql supression tags');
 		unset($this->_id);
 		return true;
 	}
@@ -205,13 +220,14 @@ Class msUnivTags {
 	 * @param	int		$id		ID du tag.
 	 * @return	Array			Tableau avec les propriétés du tag.
 	 */
-	public function fetch(int $id) {
+	public function fetch(int $id)
+	{
 		$sql  = 'SELECT tag.id AS id, tag.name AS name, tag.description AS description, tag.color AS color, type.id AS typeID, type.name AS typeName, type.droitCreSup AS droitCreSup, type.droitAjoRet AS droitAjoRet';
-	    $sql .=	' FROM '.self::TABLE_TAGS.' AS tag LEFT JOIN '.self::TABLE_TYPE.' AS type ON type.id = tag.typeID';
-		$sql .= ' WHERE tag.id = '.$id;
+		$sql .=	' FROM ' . self::TABLE_TAGS . ' AS tag LEFT JOIN ' . self::TABLE_TYPE . ' AS type ON type.id = tag.typeID';
+		$sql .= ' WHERE tag.id = :id';
 
-		$resql = msSQL::sqlUnique($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : échec select sql');
+		$resql = msSQL::sqlUnique($sql, ['id' => $id]);
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : échec select sql');
 
 		$this->_id = $resql['id'];
 		$this->_name = $resql['name'];
@@ -230,9 +246,10 @@ Class msUnivTags {
 	 * @param	int		$typeID		ID du type.
 	 * @return	int					Type ID défini.
 	 */
-	public function setTypeID(int $typeID) {
+	public function setTypeID(int $typeID)
+	{
 		// test si le type existe
-		if (! self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : typeID='.$typeID.' inexistant');
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : typeID=' . $typeID . ' inexistant');
 		$this->_typeID = $typeID;
 		return $this->_typeID;
 	}
@@ -242,9 +259,10 @@ Class msUnivTags {
 	 * @param	string		$name		Nom du tag.
 	 * @return	string					Le nom du tag défini.
 	 */
-	public function setName(string $name) {
-		if (empty($name)) throw new Exception(__METHOD__.' : $name ne doit pas être vide.');
-		$this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
+	public function setName(string $name)
+	{
+		if (empty($name)) throw new Exception(__METHOD__ . ' : $name ne doit pas être vide.');
+		$this->_name = trim(strip_tags($name));
 		return $this->_name;
 	}
 
@@ -253,9 +271,10 @@ Class msUnivTags {
 	 * @param	string		$description	Description du tag.
 	 * @return	string						La description du tag définit.
 	 */
-	public function setDescription(string $description) {
-		if (empty($description)) throw new Exception(__METHOD__.' : $description ne doit pas être vide.');
-		$this->_description = trim(filter_var($description, FILTER_SANITIZE_STRING));
+	public function setDescription(string $description)
+	{
+		if (empty($description)) throw new Exception(__METHOD__ . ' : $description ne doit pas être vide.');
+		$this->_description = trim(strip_tags($description));
 		return $this->_description;
 	}
 
@@ -263,11 +282,12 @@ Class msUnivTags {
 	 * Défini la couleur du tag.
 	 * @param	string		$color		Couleur au format héxadécimal
 	 *									(#FFFFFF).
-     * @return	string					La couleur défini.
+	 * @return	string					La couleur défini.
 	 */
-	public function setColor(string $color) {
-		if (!filter_var($color, FILTER_VALIDATE_REGEXP, array('options'=>["regexp"=>'/^#[0-9A-Fa-f]{6}$/']))) {
-			throw new Exception(__METHOD__.' : couleur='.$color.' n\'est pas dans le format de coleur attendus (/^#[0-9A-Fa-f]{6}$/)');
+	public function setColor(string $color)
+	{
+		if (!filter_var($color, FILTER_VALIDATE_REGEXP, array('options' => ["regexp" => '/^#[0-9A-Fa-f]{6}$/']))) {
+			throw new Exception(__METHOD__ . ' : couleur=' . $color . ' n\'est pas dans le format de coleur attendus (/^#[0-9A-Fa-f]{6}$/)');
 		}
 		$this->_color = strtoupper($color);
 		return $this->_color;
@@ -277,8 +297,9 @@ Class msUnivTags {
 	 * Retourne l'id d'un tag.
 	 * @return	int			ID du tag.
 	 */
-	public function getID() {
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+	public function getID()
+	{
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 		return $this->_id;
 	}
 
@@ -286,8 +307,9 @@ Class msUnivTags {
 	 * Retroune le typeID du tag.
 	 * @return	int			typID du tag.
 	 */
-	public function getTypeID() {
-		if (empty($this->_typeID)) throw new Exception(__METHOD__.' : $this->_typeID non définit');
+	public function getTypeID()
+	{
+		if (empty($this->_typeID)) throw new Exception(__METHOD__ . ' : $this->_typeID non définit');
 		return $this->_typeID;
 	}
 
@@ -295,8 +317,9 @@ Class msUnivTags {
 	 * Retourne le nom du tag.
 	 * @return	string		name du tag.
 	 */
-	public function getName() {
-		if (empty($this->_name)) throw new Exception(__METHOD__.' : $this->_name non définit');
+	public function getName()
+	{
+		if (empty($this->_name)) throw new Exception(__METHOD__ . ' : $this->_name non définit');
 		return $this->_name;
 	}
 
@@ -304,8 +327,9 @@ Class msUnivTags {
 	 * Retroune la description du tag.
 	 * @return	string		description du tag.
 	 */
-	public function getDescription() {
-		if (empty($this->_description)) throw new Exception(__METHOD__.' : $this->_description non définit');
+	public function getDescription()
+	{
+		if (empty($this->_description)) throw new Exception(__METHOD__ . ' : $this->_description non définit');
 		return $this->_description;
 	}
 
@@ -313,28 +337,29 @@ Class msUnivTags {
 	 * Retoure la couleur en héxadécimal du TAG.
 	 * @return	string		couleur du tag en héxadécimal (#FFFFFF).
 	 */
-	public function getColor() {
-		if (empty($this->_color)) throw new Exception(__METHOD__.' : $this->_color non définit');
+	public function getColor()
+	{
+		if (empty($this->_color)) throw new Exception(__METHOD__ . ' : $this->_color non définit');
 		return $this->_color;
 	}
 
 	/**
 	 * Obtenir un liste de tags pour un type et un possesseur.
-	 * @param	int		$typeID		Id du type de tag pour le quel la liste.
-	 *								doit être récupéré.
-	 * @param	int		$toID		Id du possèseur du tag. Dépend du typeID.
-	 *								Si `0` la liste général pour le type est
-	 *								obtenu.
-	 * @param	bool	$onlyTo		Si vrais uniquement les tag du possésseur
+	 * @param	int		$typeID		Id du type de tag pour lequel la liste.
+	 *								doit être récupérée.
+	 * @param	int		$toID		Id du possesseur du tag. Dépend du typeID.
+	 *								Si `0` la liste générale pour le type est
+	 *								obtenue.
+	 * @param	bool	$onlyTo		Si vrai uniquement les tags du possesseur
 	 *								selon son type id sont retourné, autrement
-	 *								tout les tags pour le typeID sont retourné.
-	 * @return  array				Tableau ou chaque élément rerésente un tag
-	 *								et ses propriété. Les propriétés retourné
+	 *								tous les tags pour le typeID sont retournés.
+	 * @return  array				Tableau où chaque élément représente un tag
+	 *								et ses propriétés. Les propriétés retournées
 	 *								pour chaque tag sont :
 	 *									'id' =>				Id du tag.
 	 *									'name' =>			Nom du tag.
 	 *									'description' =>	Description du tag.
-	 *									'color' =>			Couleur héxadécimal
+	 *									'color' =>			Couleur hexadécimale
 	 *														du tag.
 	 *									'typeID' =>			ID du type de tag.
 	 *									'typeName' =>		Nom du type de tag.
@@ -345,21 +370,24 @@ Class msUnivTags {
 	 *														vaut `0`.
 	 *									'textcolor' =>		Couleur pour le texte
 	 *														du tag (noire ou blanc)
-	 *														dépandante de la couleur
+	 *														dépendante de la couleur
 	 *														du tag.
 	 */
 	public static function getList(int $typeID, int $toID, bool $onlyTo  = false)
 	{
-		if (! self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : type non existant typeID='.$typeID);
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : type non existant typeID=' . $typeID);
+
 		$sql  = 'SELECT tag.id AS id, tag.name AS name, tag.description AS description, tag.color AS color, type.id AS typeID, type.name AS typeName, uj.toID AS toID';
-	    $sql .=	' FROM '.self::TABLE_TAGS.' AS tag LEFT JOIN '.self::TABLE_TYPE.' AS type ON type.id = tag.typeID';
-		$sql .= ' LEFT JOIN '.self::TABLE_JOIN.' AS uj ON uj.tagID = tag.id AND uj.toID = '.$toID;
-		$sql .= ' WHERE tag.typeID = '.$typeID;
-		if ($toID > 0 && $onlyTo) $sql .= ' AND uj.toID = '.$toID;
+		$sql .=	' FROM ' . self::TABLE_TAGS . ' AS tag LEFT JOIN ' . self::TABLE_TYPE . ' AS type ON type.id = tag.typeID';
+		$sql .= ' LEFT JOIN ' . self::TABLE_JOIN . ' AS uj ON uj.tagID = tag.id AND uj.toID = :toID';
+		$sql .= ' WHERE tag.typeID = :typeID';
+		if ($toID > 0 && $onlyTo) $sql .= ' AND uj.toID = :toID';
 		$sql .= ' ORDER BY tag.id ASC';
-		$res = msSQL::sql2tab($sql);
-		if (is_array($res) && count($res)>0) {
-			for ($i=0;$i<count($res);$i++) {
+
+		$res = msSQL::sql2tab($sql, ['toID' => $toID, 'typeID' => $typeID]);
+
+		if (is_array($res) && count($res) > 0) {
+			for ($i = 0; $i < count($res); $i++) {
 				$res[$i]['textcolor'] = self::tagTextColor($res[$i]['color']);
 			}
 		}
@@ -368,34 +396,34 @@ Class msUnivTags {
 
 	/**
 	 * Tag un élément
-	 * @param	int		$toID		ID de l'élément sur le quel ajouter le tag.
-	 * @return	int					ID de l'élément sur le quel à été ajouté
+	 * @param	int		$toID		ID de l'élément sur lequel ajouter le tag.
+	 * @return	int					ID de l'élément sur lequel à été ajouté
 	 *								le tag.
 	 */
 	public function setTagTo(int $toID)
 	{
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 		$data = array(
 			'tagID' => $this->_id,
 			'toID' => $toID,
 		);
 		$res = msSQL::sqlInsert(self::TABLE_JOIN, $data);
-		if (empty($res)) throw new Exception(__METHOD__.' : Échec de l\'insertion SQL');
+		if (empty($res)) throw new Exception(__METHOD__ . ' : Échec de l\'insertion SQL');
 		return $toID;
 	}
 
 	/**
 	 * Retirer le tag d'un élément
-	 * @param	int		$toID		ID de l'élément sur le quel retirer le tag.
-	 * @return	int					ID de l'élément sur le quel le tag à été
+	 * @param	int		$toID		ID de l'élément sur lequel retirer le tag.
+	 * @return	int					ID de l'élément sur lequel le tag à été
 	 *								retiré.
 	 */
 	public function removeTagTo(int $toID)
 	{
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
-		$sql = 'DELETE FROM '.self::TABLE_JOIN.' WHERE `tagID` = '.$this->_id.' AND `toID` = '.$toID;
-		//// TODO check si erreur sur DELETE (sur v7.2 ne peut pas diférencier un retour null d'une erreur avec msSQL::sqlQuery())
-		msSQL::sqlQuery($sql);
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
+		$sql = 'DELETE FROM ' . self::TABLE_JOIN . ' WHERE `tagID` = :tagID AND `toID` = :toID';
+
+		msSQL::sqlQuery($sql, ['tagID' => $this->_id, 'toID' => $toID]);
 		return $toID;
 	}
 
@@ -405,8 +433,9 @@ Class msUnivTags {
 	 * @return	bool	`true` si l'utilisateur peut modifier ou supprimer le tag
 	 *					`false` si non.
 	 */
-	public function checkDroitCreSup() {
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+	public function checkDroitCreSup()
+	{
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 		global $p;
 		return filter_var($p['config'][$this->_droitCreSup], FILTER_VALIDATE_BOOLEAN);
 	}
@@ -417,8 +446,9 @@ Class msUnivTags {
 	 * @return	bool	`true` si l'utilisateur peut ajouter ou retirer le tag
 	 *					d'un élément, `false` si non.
 	 */
-	public function checkDroitAjoRet() {
-		if (empty($this->_id)) throw new Exception(__METHOD__.' : $this->_id non définit');
+	public function checkDroitAjoRet()
+	{
+		if (empty($this->_id)) throw new Exception(__METHOD__ . ' : $this->_id non définit');
 		global $p;
 		return filter_var($p['config'][$this->_droitAjoRet], FILTER_VALIDATE_BOOLEAN);
 	}
@@ -428,12 +458,12 @@ Class msUnivTags {
 	 *******************************/
 
 	/**
-	 * Obtenir la liste de type de tag.
-	 * @param	bool	$onlyActif		Si vrai, seulement la liste des type
-	 *									actif sera retourné.
-	 * @return	array					Tableau avec la liste de type de tag.
+	 * Obtenir la liste des types de tags.
+	 * @param	bool	$onlyActif		Si vrai, seulement la liste des types
+	 *									actifs sera retournée.
+	 * @return	array					Tableau avec la liste des types de tags.
 	 *									Chaque élément du tableau comporte
-	 *									les propriété suivantes :
+	 *									les propriétés suivantes :
 	 *										'id'			=> ID du type.
 	 *										'description'	=> Description du type.
 	 *										'actif'			=> 1 si actif autrement 0
@@ -442,7 +472,7 @@ Class msUnivTags {
 	 *														   si un utilisateur peut
 	 *														   créer, supprimer, modifier
 	 *														   un tag de ce type.
-	 *										'roitAjoRet'	=> nom du paramètre de
+	 *										'droitAjoRet'	=> nom du paramètre de
 	 *														   configuration déterminant
 	 *														   si un utilisateur peut
 	 *														   ajouter ou retirer
@@ -450,7 +480,7 @@ Class msUnivTags {
 	 */
 	public static function getTypeList($onlyActif = false)
 	{
-		$sql = 'SELECT `id`, `name`, `description`, `actif`, `droitCreSup`, `droitAjoRet` FROM '.self::TABLE_TYPE;
+		$sql = 'SELECT `id`, `name`, `description`, `actif`, `droitCreSup`, `droitAjoRet` FROM ' . self::TABLE_TYPE;
 		if ($onlyActif) $sql .= ' WHERE `actif`';
 		$res = msSQL::sql2tab($sql);
 		return $res;
@@ -461,10 +491,11 @@ Class msUnivTags {
 	 * @param	int		$typeID		ID du type de tag.
 	 * @return	string				Nom du type de tag.
 	 */
-	public static function getTypeNameById(int $typeID) {
-		$sql = 'SELECT `name` FROM '.self::TABLE_TYPE.' WHERE `id` = '.$typeID;
-		$res = msSQL::sqlUniqueChamp($sql);
-		if (is_null($res)) throw new Exception(__METHOD__.' : aucun type avec id='.$typeID);
+	public static function getTypeNameById(int $typeID)
+	{
+		$sql = 'SELECT `name` FROM ' . self::TABLE_TYPE . ' WHERE `id` = :typeID';
+		$res = msSQL::sqlUniqueChamp($sql, ['typeID' => $typeID]);
+		if (is_null($res)) throw new Exception(__METHOD__ . ' : aucun type avec id=' . $typeID);
 		return $res;
 	}
 
@@ -473,10 +504,11 @@ Class msUnivTags {
 	 * @param	string		$typeName	Nome du type.
 	 * @return	int						ID du type.
 	 */
-	public static function getTypeIdByName(string $typeName) {
-		$sql = 'SELECT `id` FROM '.self::TABLE_TYPE.' WHERE `name` = "'.msSQL::cleanVar($typeName).'"';
-		$res = msSQL::sqlUniqueChamp($sql);
-		if (is_null($res)) throw new Exception(__METHOD__.' : aucun type avec name="'.$typeName.'"');
+	public static function getTypeIdByName(string $typeName)
+	{
+		$sql = 'SELECT `id` FROM ' . self::TABLE_TYPE . ' WHERE `name` = :typeName';
+		$res = msSQL::sqlUniqueChamp($sql, ['typeName' => $typeName]);
+		if (is_null($res)) throw new Exception(__METHOD__ . ' : aucun type avec name="' . $typeName . '"');
 		return (int) $res;
 	}
 
@@ -487,10 +519,10 @@ Class msUnivTags {
 	 */
 	public static function checkTypeExist(int $typeID)
 	{
-		$sql = 'SELECT `id` FROM '.self::TABLE_TYPE.' WHERE `id` = '.$typeID;
-		$resql = msSQL::sqlQuery($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql');
-		return filter_var($resql->num_rows, FILTER_VALIDATE_BOOLEAN);
+		$sql = 'SELECT `id` FROM ' . self::TABLE_TYPE . ' WHERE `id` = :id';
+		$resql = msSQL::sqlQuery($sql, ['id' => $typeID]);
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : erreur sql');
+		return filter_var(count($resql->fetchAll(PDO::FETCH_ASSOC)), FILTER_VALIDATE_BOOLEAN);
 	}
 
 	/**
@@ -500,15 +532,15 @@ Class msUnivTags {
 	 */
 	public static function getIfTypeIsActif(int $typeID)
 	{
-		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : Type de tag non existant');
-		$sql = 'SELECT `actif` FROM '.self::TABLE_TYPE.' WHERE `id` = '.$typeID;
-		$res = msSQL::sqlUniqueChamp($sql);
-		if (is_null($res)) throw new Exception(__METHOD__.' : erreur requette sql.');
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : Type de tag non existant');
+		$sql = 'SELECT `actif` FROM ' . self::TABLE_TYPE . ' WHERE `id` = :id';
+		$res = msSQL::sqlUniqueChamp($sql, ['id' => $typeID]);
+		if (is_null($res)) throw new Exception(__METHOD__ . ' : erreur requette sql.');
 		return filter_var($res, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	/**
-     * Activer ou désactiver un type de tag.
+	 * Activer ou désactiver un type de tag.
 	 * @param	int		$typeID		L'ID du type.
 	 * @param	bool	$actif		`true` pour activer le type, `false` pour
 	 *								le désactiver.
@@ -516,40 +548,42 @@ Class msUnivTags {
 	 */
 	public static function setTypeActif(int $typeID, bool $actif)
 	{
-		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : Type de tag non existant');
-		$sql = 'UPDATE '.self::TABLE_TYPE.' SET `actif` = "'.((int)$actif).'" WHERE `id` = '.$typeID;
-		$resql = msSQL::sqlQuery($sql);
-		if (empty($resql)) throw new Exception(__METHOD__.' : erreur sql');
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : Type de tag non existant');
+		$sql = 'UPDATE ' . self::TABLE_TYPE . ' SET `actif` = :actif WHERE `id` = :id';
+		$resql = msSQL::sqlQuery($sql, ['actif' => (int)$actif, 'id' => $typeID]);
+		if (empty($resql)) throw new Exception(__METHOD__ . ' : erreur sql');
 		return $actif;
 	}
 
 	/**
 	 * Vérifie si l'utilisateur peut créer, modifier ou supprimer les tags du
-	 * type d'on l'ID est fourni en argument.
+	 * type dont l'ID est fourni en argument.
 	 * @param	int		$typeID		ID du type.
-	 * @return	bool				`true` si l'utilisatuer peut autrement `false`.
+	 * @return	bool				`true` si l'utilisatuer peut, autrement `false`.
 	 */
-	public static function checkTypeDroitCreSup(int $typeID) {
-		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : Type de tag non existant');
+	public static function checkTypeDroitCreSup(int $typeID)
+	{
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : Type de tag non existant');
 		global $p;
-		$sql = 'SELECT `droitCreSup` FROM '.self::TABLE_TYPE.' WHERE `id` = '.$typeID;
-		$res = msSQL::sqlUniqueChamp($sql);
-		if (is_null($res)) throw new Exception(__METHOD__.' : erreur requette sql.');
+		$sql = 'SELECT `droitCreSup` FROM ' . self::TABLE_TYPE . ' WHERE `id` = :id';
+		$res = msSQL::sqlUniqueChamp($sql, ["id" => $typeID]);
+		if (is_null($res)) throw new Exception(__METHOD__ . ' : erreur requette sql.');
 		return filter_var($p['config'][$res], FILTER_VALIDATE_BOOLEAN);
 	}
 
 	/**
-	 * Vérifie si l'utilisateur peut ajouter ou retirer des tags du type d'on
+	 * Vérifie si l'utilisateur peut ajouter ou retirer des tags du type dont
 	 * l'ID est fourni en argument.
 	 * @param	int		$typeID		ID du type.
-	 * @return	bool				`true` si l'utilisatuer peut autrement `false`.
+	 * @return	bool				`true` si l'utilisateur peut, autrement `false`.
 	 */
-	public static function checkTypeDroitAjoRet(int $typeID) {
-		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__.' : Type de tag non existant');
+	public static function checkTypeDroitAjoRet(int $typeID)
+	{
+		if (!self::checkTypeExist($typeID)) throw new Exception(__METHOD__ . ' : Type de tag non existant');
 		global $p;
-		$sql = 'SELECT `droitAjoRet` FROM '.self::TABLE_TYPE.' WHERE `id` = '.$typeID;
-		$res = msSQL::sqlUniqueChamp($sql);
-		if (is_null($res)) throw new Exception(__METHOD__.' : erreur requette sql.');
+		$sql = 'SELECT `droitAjoRet` FROM ' . self::TABLE_TYPE . ' WHERE `id` = :id';
+		$res = msSQL::sqlUniqueChamp($sql, ["id" => $typeID]);
+		if (is_null($res)) throw new Exception(__METHOD__ . ' : erreur requette sql.');
 		return filter_var($p['config'][$res], FILTER_VALIDATE_BOOLEAN);
 	}
 
@@ -560,47 +594,47 @@ Class msUnivTags {
 	/**
 	 * Retoune le HTML d'une liste de tag selon un type, un propriétaire et un
 	 * contexte.
-	 * @param	int		$typeID		ID du type pour le quel la liste doit être
+	 * @param	int		$typeID		ID du type pour lequel la liste doit être
 	 *								obtenus.
-	 * @param	int		$toID		Propriétaire des tags de la list. `0` si
-	 *								la liste est obtenus dans un contexte général.
-	 * @param	string	$context	Contexte pour le quel générer la liste de
+	 * @param	int		$toID		Propriétaire des tags de la liste. `0` si
+	 *								la liste est obtenue dans un contexte général.
+	 * @param	string	$context	Contexte pour lequel générer la liste de
 	 *								tag. Peut être l'un des cas suivant :
 	 *									'config'	:
-	 *										Page de configuration global des
-	 *										tags universel. $toID doit valoir
+	 *										Page de configuration globale des
+	 *										tags universels. $toID doit valoir
 	 *										`0` dans se contexte. La liste de tag
-	 *										généré comporte le bouton permetant
+	 *										généré comporte le bouton permettant
 	 *										de créer de nouveau tag pour le type
 	 *										est affiché ainsi que le bouton pour
-	 *										éditer chaque tags individuellement.
+	 *										éditer chaque tag individuellement.
 	 *									'show'		:
 	 *										Sur la fiche d'un élément, permet
-	 *										d'afficher la liste des tags lié.
+	 *										d'afficher la liste des tags liés.
 	 *										$toID doit valoir l'id du propriétaire.
-	 *										Seul les tags apartenant au propriétaire
-	 *										sont affiché.
-	 *										propriétataire
+	 *										Seuls les tags appartenant au propriétaire
+	 *										sont affichés.
+	 *										propriétaire
 	 *									'select'	:
 	 *										Sur la fiche d'un élément quand la
-	 *										séléction de tag est activé, permet
-	 *										de séléctioner les tags à ajouter ou
+	 *										sélection de tags est activée, permet
+	 *										de sélectionner les tags à ajouter ou
 	 *										retirer sur l'élément. $toID doit
 	 *										valoir l'id du propriétaire. Tout
-	 *										les tag du type en question sont
+	 *										les tags du type en question sont
 	 *										affichés. Le bouton de création de
 	 *										nouveau tag est afiché ainsi que le
-	 *										bouton pour éditer chaques tags
-	 *										individuelement et la checkbox
-	 *										permétant d'ajouter ou de retirer
+	 *										bouton pour éditer chaque tag
+	 *										individuellement et la checkbox
+	 *										permettant d'ajouter ou de retirer
 	 *										le tag sur un élément.
 	 *									'search'	:
-	 *										Forumlaire de recheche relatif au
-	 *										type, permet de filter les résultat
+	 *										Forumlaire de recherche relatif au
+	 *										type, permet de filtrer les résultats
 	 *										de la recherche en fonction des tags
-	 *										séléctionées. $toID doit valoir `0`.
-	 *										La chekck box permetant de séléctioner
-	 *										les tags sur les quel filter la recherche
+	 *										sélectionnés. $toID doit valoir `0`.
+	 *										La chekck box permettant de sélectionner
+	 *										les tags sur les quel filtrer la recherche
 	 *										est affiché.
 	 *	@return		string			HTML avec la liste des tags.
 	 */
@@ -613,7 +647,7 @@ Class msUnivTags {
 		$p['page']['univTags']['toID'] = $toID;
 		switch ($contexte) {
 			case 'config':
-				if ($toID > 0) throw new Exception(__METHOD__.' : $toID doit valoir 0 sur le contexte "config"');
+				if ($toID > 0) throw new Exception(__METHOD__ . ' : $toID doit valoir 0 sur le contexte "config"');
 				$p['page']['univTags']['showEditBtn'] = true;
 				$p['page']['univTags']['showNewBtn'] = true;
 				$p['page']['univTags']['showSelectSetTo'] = false;
@@ -621,7 +655,7 @@ Class msUnivTags {
 				$onlyTo = false;
 				break;
 			case 'show':
-				if ($toID < 1) throw new Exception(__METHOD__.' : $toID ne peut valloir 0 sur le contexte "show"');
+				if ($toID < 1) throw new Exception(__METHOD__ . ' : $toID ne peut valloir 0 sur le contexte "show"');
 				$p['page']['univTags']['showEditBtn'] = false;
 				$p['page']['univTags']['showNewBtn'] = false;
 				$p['page']['univTags']['showSelectSetTo'] = false;
@@ -629,7 +663,7 @@ Class msUnivTags {
 				$onlyTo = true;
 				break;
 			case 'select':
-				if ($toID < 1) throw new Exception(__METHOD__.' : $toID ne peut valloir 0 sur le contexte "select"');
+				if ($toID < 1) throw new Exception(__METHOD__ . ' : $toID ne peut valloir 0 sur le contexte "select"');
 				$p['page']['univTags']['showEditBtn'] = self::checkTypeDroitCreSup($typeID);
 				$p['page']['univTags']['showNewBtn'] = self::checkTypeDroitCreSup($typeID);
 				$p['page']['univTags']['showSelectSetTo'] = self::checkTypeDroitAjoRet($typeID);
@@ -637,7 +671,7 @@ Class msUnivTags {
 				$onlyTo = false;
 				break;
 			case 'search':
-				if ($toID > 0) throw new Exception(__METHOD__.' : $toID doit valoir 0 sur le contexte "search"');
+				if ($toID > 0) throw new Exception(__METHOD__ . ' : $toID doit valoir 0 sur le contexte "search"');
 				$p['page']['univTags']['showEditBtn'] = false;
 				$p['page']['univTags']['showNewBtn'] = false;
 				$p['page']['univTags']['showSelectSetTo'] = false;
@@ -645,7 +679,7 @@ Class msUnivTags {
 				$onlyTo = false;
 				break;
 			default:
-				throw new Exception(__METHOD__.' : contexte='.$contexte.' inconus');
+				throw new Exception(__METHOD__ . ' : contexte=' . $contexte . ' inconus');
 		}
 		$p['page']['univTags']['contexte'] = $contexte;
 		$p['page']['univTags']['tagListe'] = msUnivTags::getList($typeID, $toID, $onlyTo);
@@ -655,23 +689,23 @@ Class msUnivTags {
 	}
 
 	/**
-	 * Retourne le HTML pour la modal permetant de créer ou éditer un tag.
+	 * Retourne le HTML pour la modal permettant de créer ou éditer un tag.
 	 * @param	int		$typeID		ID du type de tag.
 	 * @param	int		$tagID		ID du tag à éditer, si c'est un création
 	 *								doit valoir `0`.
-	 * @param	int		$toID		Si la modal est apelé depuis la fiche d'un
-	 *								élément doit avoir l'id de cette élément.
-	 *								Si la modal est apelé depuis un contexte
+	 * @param	int		$toID		Si la modal est appelée depuis la fiche d'un
+	 *								élément doit avoir l'id de cet élément.
+	 *								Si la modal est appelée depuis un contexte
 	 *								général comme la page de configuration doit
 	 *								valoir `0`. Permet de faire suive le
-	 *								propriétaire du tage à la validation du
-	 *								formulaire pour générer la liste actualisé
+	 *								propriétaire du tag à la validation du
+	 *								formulaire pour générer la liste actualisée
 	 *								adéquate.
-	 * @param	string	$contexte	Contexte dans le quel la modal est apelé.
-	 *								Doit corespondre aux contexte de la méthode
+	 * @param	string	$contexte	Contexte dans lequel la modal est appelée.
+	 *								Doit correspondre aux contextes de la méthode
 	 *								`getListHtml()`. Permet de faire suive le
 	 *								contexte à la validation du formulaire pour
-	 *								génére la liste actualisé adéquate.
+	 *								générer la liste actualisée adéquate.
 	 */
 	public static function getModalHtml(int $typeID, int $tagID, int $toID, $contexte)
 	{
@@ -697,10 +731,10 @@ Class msUnivTags {
 
 	/**
 	 * Obtenir le HTML générant une liste de pastilles colorées afin d'avoir
-	 * un vue compacte des tags atacĥées sur un élément.
+	 * une vue compacte des tags atacĥés à un élément.
 	 * @param	array	$list	Array de tags attachés à l'élément. Doit
 	 *							corespondre à ce que produit la méthode
-	 *							la méthode `getList()`.
+	 *							`getList()`.
 	 * @return	string			HTML.
 	 */
 	public static function getTagsCircleHtml(array $list)
@@ -709,9 +743,9 @@ Class msUnivTags {
 		// @TODO check list content
 		if (!empty($list)) {
 			foreach ($list as $tag) {
-				$ret .= '<span title="'.$tag['name'].' : '.$tag['description'].'" data-typeID="'.$tag['typeID'].'" data-toID="'.$tag['toID'].'">';
+				$ret .= '<span title="' . $tag['name'] . ' : ' . $tag['description'] . '" data-typeID="' . $tag['typeID'] . '" data-toID="' . $tag['toID'] . '">';
 				$ret .= '<svg height="22" width="22">';
-				$ret .= '<circle cx="11" cy="11" r="10" stroke="#B3B3B3" stroke-width="1" fill="'.$tag['color'].'" />';
+				$ret .= '<circle cx="11" cy="11" r="10" stroke="#B3B3B3" stroke-width="1" fill="' . $tag['color'] . '" />';
 				$ret .= '</svg>';
 				$ret .= '</span>';
 			}
@@ -725,21 +759,20 @@ Class msUnivTags {
 
 	/**
 	 * Retourne la couleur noire ou blache en héxadécimal selon la
-	 * luminosité de la couleur héxadécimal passé en argument.
+	 * luminosité de la couleur héxadécimale passée en argument.
 	 * @param	string		$color	Couleur à analyser au format héxadécimal
 	 *								(#FFFFFF).
-	 * @return	string				Couleur noire ou blache en héxadécimal.
+	 * @return	string				Couleur noire ou blanche en héxadécimal.
 	 */
-	private static function tagTextColor(string $color) {
+	private static function tagTextColor(string $color)
+	{
 		$r = hexdec(substr($color, 1, 2));
 		$b = hexdec(substr($color, 3, 2));
 		$g = hexdec(substr($color, 5, 2));
 		$max = max($r, $g, $b);
 		$min = min($r, $g, $b);
-		$l = ($max + $min) /2;
+		$l = ($max + $min) / 2;
 		if ($l > 120) return '#000000';
 		else return '#FFFFFF';
 	}
-
 }
-
