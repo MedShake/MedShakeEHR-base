@@ -815,7 +815,7 @@ class msObjet
         left join objets_data as n1 on n1.toID=o.fromID and n1.typeID = :firstname and n1.outdated='' and n1.deleted=''
         left join objets_data as n2 on n2.toID=o.fromID and n2.typeID = :lastname and n2.outdated='' and n2.deleted=''
         left join objets_data as bn on bn.toID=o.fromID and bn.typeID = :birthname and bn.outdated='' and bn.deleted=''
-        WHERE o.toID = :thisToID AND o.typeID = :typeID: and o.instance = :$instance
+        WHERE o.toID = :thisToID AND o.typeID = :typeID and o.instance = :instance
         order by o.registerDate desc", $marqueurs);
 	}
 
