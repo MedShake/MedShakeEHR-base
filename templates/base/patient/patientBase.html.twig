@@ -92,7 +92,7 @@
   <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/patient.js?{{ modules.base }}"></script>
 
   {# JS Transmissions #}
-  {% if config.transmissionsPeutCreer == 'true' %}
+  {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
     <script defer="defer" src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/transmissions_functions.js?{{ modules.base }}"></script>
   {% endif %}
 
@@ -225,7 +225,7 @@
 {% endif %}
 
 {# modals spécifiques Transmissions #}
-{% if config.transmissionsPeutCreer == 'true' %}
+{% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
   {# modal nouvelle transmission #}
   {% include 'inc-transmissionsNouvelleModal.html.twig' %}
 {% endif %}

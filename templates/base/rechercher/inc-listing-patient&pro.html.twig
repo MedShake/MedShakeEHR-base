@@ -55,7 +55,7 @@
        </div>
      {% endif %}
 
-     {% if config.transmissionsPeutCreer == 'true' %}
+     {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
        <button type="button" class="btn btn-light btn-sm newTransmission" data-patientID="{{ patientIDmod }}" title="Rédiger une transmission à propos de ce patient"><i class="far fa-comments"></i></button>
      {% endif %}
    {% endif %}

@@ -91,7 +91,7 @@
                   </a>
                 </li>
               {% endif %}
-              {% if config.transmissionsPeutCreer == 'true' %}
+              {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
                 <li role="separator" class="dropdown-divider"></li>
                 <li>
                   <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">
@@ -197,7 +197,7 @@
                   </a>
                 </li>
               {% endif %}
-              {% if config.transmissionsPeutCreer == 'true' %}
+              {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
                 <li class="d-block d-lg-none">
                   <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">
                     <i class="far fa-comments fa-fw text-muted mr-1"></i> Créer une transmission
