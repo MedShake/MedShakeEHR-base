@@ -24,67 +24,71 @@
  * Inbox mail
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 
 class msInbox
 {
 
-/**
- * Nombre de messages non lus dans la inbox utilisateur
- * @return int nombre de messages non lus
- */
-  public static function getInboxUnreadMessages() {
-    global $p;
-    if(!empty($p['config']['apicryptInboxMailForUserID'])) {
-      $apicryptInboxMailForUserID=explode(',', $p['config']['apicryptInboxMailForUserID']);
-      $apicryptInboxMailForUserID[]=$p['user']['id'];
-      $apicryptInboxMailForUserID=implode("','", $apicryptInboxMailForUserID);
-    } else {
-      $apicryptInboxMailForUserID=$p['user']['id'];
-    }
-    return (int) msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in ('".$apicryptInboxMailForUserID."') ");
-  }
+	/**
+	 * Nombre de messages non lus dans la inbox utilisateur
+	 * @return int nombre de messages non lus
+	 */
+	public static function getInboxUnreadMessages()
+	{
+		global $p;
+		$apicryptInboxMailForUserID = [];
+		if (!empty($p['config']['apicryptInboxMailForUserID'])) {
+			$apicryptInboxMailForUserID = explode(',', $p['config']['apicryptInboxMailForUserID']);
+			$apicryptInboxMailForUserID[] = $p['user']['id'];
+		} else {
+			$apicryptInboxMailForUserID[] = $p['user']['id'];
+		}
+		$sqlImplode = msSQL::sqlGetTagsForWhereIn($apicryptInboxMailForUserID, 'idapi');
+		return (int) msSQL::sqlUniqueChamp("select count(txtFileName) from inbox where archived='n' and mailForUserID in (" . $sqlImplode['in'] . ") ", $sqlImplode['execute']);
+	}
 
 
-/**
- * Parser le nom d'un fichier txt de la inbox pour extraire datetime et num ordre
- * Pas de rapport réel avec HPRIM
- * @param  string $filename Nom du fichier
- * @return array           Array avec datetime=> et numOrdre=>
- */
-    public static function getFileDataFromName($filename)
-    {
-        $data=array();
-        $Y=substr($filename, 0, 4);
-        $m=substr($filename, 4, 2);
-        $d=substr($filename, 6, 2);
-        $H=substr($filename, 9, 2);
-        $i=substr($filename, 11, 2);
-        $s=substr($filename, 13, 2);
+	/**
+	 * Parser le nom d'un fichier txt de la inbox pour extraire datetime et num ordre
+	 * Pas de rapport réel avec HPRIM
+	 * @param  string $filename Nom du fichier
+	 * @return array           Array avec datetime=> et numOrdre=>
+	 */
+	public static function getFileDataFromName($filename)
+	{
+		$data = array();
+		$Y = substr($filename, 0, 4);
+		$m = substr($filename, 4, 2);
+		$d = substr($filename, 6, 2);
+		$H = substr($filename, 9, 2);
+		$i = substr($filename, 11, 2);
+		$s = substr($filename, 13, 2);
 
-        $data['numOrdre']=explode('-', $filename);
-        $data['numOrdre']=explode('.',$data['numOrdre'][2]);
-        $data['numOrdre']=$data['numOrdre'][0];
+		$data['numOrdre'] = explode('-', $filename);
+		$data['numOrdre'] = explode('.', $data['numOrdre'][2]);
+		$data['numOrdre'] = $data['numOrdre'][0];
 
-        $data['datetime']=$Y.'-'.$m.'-'.$d.' '.$H.':'.$m.':'.$s;
+		$data['datetime'] = $Y . '-' . $m . '-' . $d . ' ' . $H . ':' . $m . ':' . $s;
 
-        return $data;
-    }
+		return $data;
+	}
 
-/**
- * Obtenir le contenu d'un fichier txt
- * @param  string $file fichier et chemn complet
- * @return string       txt (utf8)
- */
-    public static function getMessageBody($file)
-    {
-        $content=file_get_contents($file);
-        if (!mb_detect_encoding($content, 'UTF-8', true)) {
-			$content = mb_convert_encoding($content, 'UTF-8' , mb_detect_encoding($content, null, false));
-        }
-        $content=str_replace("\n\n\n", "\n\n", $content);
-        $content=preg_replace("#((\n\s*){3,10})+#i", "\n\n", $content);
-        return trim($content);
-    }
+	/**
+	 * Obtenir le contenu d'un fichier txt
+	 * @param  string $file fichier et chemn complet
+	 * @return string       txt (utf8)
+	 */
+	public static function getMessageBody($file)
+	{
+		$content = file_get_contents($file);
+		if (!mb_detect_encoding($content, 'UTF-8', true)) {
+			$content = mb_convert_encoding($content, 'UTF-8', mb_detect_encoding($content, null, false));
+		}
+		$content = str_replace("\n\n\n", "\n\n", $content);
+		$content = preg_replace("#((\n\s*){3,10})+#i", "\n\n", $content);
+		return trim($content);
+	}
 }

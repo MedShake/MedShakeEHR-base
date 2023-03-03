@@ -24,6 +24,8 @@
  * Plugins
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 class msPlugins

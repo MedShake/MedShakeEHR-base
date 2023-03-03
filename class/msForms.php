@@ -24,106 +24,122 @@
  * Manipulation des formulaires et des catégories de formulaires
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 class msForms
 {
 
-/**
- * Type privé ou public du formulaire
- * @var string
- */
-  private $_formsType='public';
-/**
- * Catégorie du formulaire
- * @var int
- */
-  private $_catID;
+	/**
+	 * Type privé ou public du formulaire
+	 * @var string
+	 */
+	private $_formsType = 'public';
+	/**
+	 * Catégorie du formulaire
+	 * @var int
+	 */
+	private $_catID;
 
-/**
- * Définir le FormsType
- * @param string $formsType public/private
- */
-  public function setFormsType($formsType) {
-    if(!in_array($formsType, ['public', 'private'])) {
-      throw new Exception('FormsType n\'a pas une valeur correcte');
-    }
-    return $this->_formsType=$formsType;
-  }
+	/**
+	 * Définir le FormsType
+	 * @param string $formsType public/private
+	 */
+	public function setFormsType($formsType)
+	{
+		if (!in_array($formsType, ['public', 'private'])) {
+			throw new Exception('FormsType n\'a pas une valeur correcte');
+		}
+		return $this->_formsType = $formsType;
+	}
 
-/**
- * Définir la catégorie des formulaires
- * @param int $catID catID
- */
-  public function setCatID($catID) {
-    if(!is_numeric($catID)) {
-      throw new Exception('CatID n\'a pas une valeur correcte');
-    }
-    $this->_catID=$catID;
-  }
+	/**
+	 * Définir la catégorie des formulaires
+	 * @param int $catID catID
+	 */
+	public function setCatID($catID)
+	{
+		if (!is_numeric($catID)) {
+			throw new Exception('CatID n\'a pas une valeur correcte');
+		}
+		$this->_catID = $catID;
+	}
 
-/**
- * Obtenir la liste des formulaires par name de catégorie
- * @param  string $orderBy chaine de recherche
- * @return array          formulaires
- */
-  public function getFormsListByCatName($orderBy = 'c.label asc, f.module, f.id asc') {
-    return $this->_getFormsListByCat('name', $orderBy);
-  }
+	/**
+	 * Obtenir la liste des formulaires par name de catégorie
+	 * @param  string $orderBy chaine de recherche
+	 * @return array          formulaires
+	 */
+	public function getFormsListByCatName($orderBy = 'c.label asc, f.module, f.id asc')
+	{
+		return $this->_getFormsListByCat('name', $orderBy);
+	}
 
-/**
- * Obtenir la liste des formulaires par id de catégorie
- * @param  string $orderBy chaine de tri
- * @return array          formulaires
- */
-  public function getFormsListByCatID($orderBy = 'c.label asc, f.module, f.id asc') {
-    return $this->_getFormsListByCat('id', $orderBy);
-  }
+	/**
+	 * Obtenir la liste des formulaires par id de catégorie
+	 * @param  string $orderBy chaine de tri
+	 * @return array          formulaires
+	 */
+	public function getFormsListByCatID($orderBy = 'c.label asc, f.module, f.id asc')
+	{
+		return $this->_getFormsListByCat('id', $orderBy);
+	}
 
-/**
- * Obtenir la liste des formulaires par catégories
- * @param  string $type    type de retour : par name ou id de cat
- * @param  string $orderBy chaine de tri
- * @return array          array pas cat
- */
-  private function _getFormsListByCat($type, $orderBy = 'c.label asc, f.module, f.id asc') {
-    $tab=[];
+	/**
+	 * Obtenir la liste des formulaires par catégories
+	 * @param  string $type    type de retour : par name ou id de cat
+	 * @param  string $orderBy chaine de tri
+	 * @return array          array pas cat
+	 */
+	private function _getFormsListByCat($type, $orderBy = 'c.label asc, f.module, f.id asc')
+	{
+		if (!msSQL::sqlIsValidOrderByString($orderBy)) {
+			throw new Exception("La clause ORDER BY semble invalide");
+		}
 
-    if(isset($this->_catID)) {
-      $catID=" and f.cat = '".$this->_catID."'";
-    } else {
-      $catID=null;
-    }
-    if ($tabTypes=msSQL::sql2tab("select f.id, f.internalName, f.name, f.description, f.module, c.name as catName, c.label as catLabel, c.id as catID
+		$tab = [];
+		$marqueurs = [
+			'thisFormType' => $this->_formsType
+		];
+
+		if (isset($this->_catID)) {
+			$catID = " and f.cat = :thisCatID ";
+			$marqueurs['thisCatID'] = $this->_catID;
+		} else {
+			$catID = null;
+		}
+		if ($tabTypes = msSQL::sql2tab("SELECT f.id, f.internalName, f.name, f.description, f.module, c.name as catName, c.label as catLabel, c.id as catID
         from forms as f
         left join forms_cat as c on c.id=f.cat
-        where f.id > 0 and f.type='".$this->_formsType."' ".$catID."
+        where f.id > 0 and f.type = :thisFormType " . $catID . "
         group by f.id
-        order by ".$orderBy)) {
-        foreach ($tabTypes as $v) {
-            if($type=='name') {
-              $tab[$v['catName']][]=$v;
-            } else {
-              $tab[$v['catID']][]=$v;
-            }
-        }
-    }
-    return $tab;
-  }
+        order by " . $orderBy, $marqueurs)) {
+			foreach ($tabTypes as $v) {
+				if ($type == 'name') {
+					$tab[$v['catName']][] = $v;
+				} else {
+					$tab[$v['catID']][] = $v;
+				}
+			}
+		}
+		return $tab;
+	}
 
-/**
- * Obtenir la liste des catégories par ID
- * @return array cat par ID
- */
-  public static function getCatListByID() {
-    return msSQL::sql2tabKey("select id, label from forms_cat order by label", 'id', 'label');
-  }
+	/**
+	 * Obtenir la liste des catégories par ID
+	 * @return array cat par ID
+	 */
+	public static function getCatListByID()
+	{
+		return msSQL::sql2tabKey("SELECT id, label from forms_cat order by label", 'id', 'label');
+	}
 
-/**
- * Obtenir la liste des catégories par name
- * @return array cat par name
- */
-  public static function getCatListByName() {
-    return msSQL::sql2tabKey("select internalName, label from forms_cat order by label", 'internalName', 'label');
-  }
-
+	/**
+	 * Obtenir la liste des catégories par name
+	 * @return array cat par name
+	 */
+	public static function getCatListByName()
+	{
+		return msSQL::sql2tabKey("SELECT internalName, label from forms_cat order by label", 'internalName', 'label');
+	}
 }
