@@ -285,8 +285,9 @@ class msSQL
 			}
 
 			$tagsInString = ':' . implode(', :', array_keys($executeArray));
+			return ['execute' => $executeArray, 'in' => $tagsInString];
 		}
-		return ['execute' => $executeArray, 'in' => $tagsInString];
+		return ['execute' => [], 'in' => "''"];
 	}
 
 	/**
