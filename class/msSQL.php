@@ -299,7 +299,7 @@ class msSQL
 	{
 		if (empty($orderByString)) return true;
 
-		$regex = "/^[a-zA-Z0-9_,\s]+$/";
+		$regex = "/^[a-zA-Z0-9_,\s\.]+$/";
 		if (!preg_match($regex, $orderByString)) {
 			return false;
 		}
