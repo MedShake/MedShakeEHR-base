@@ -304,28 +304,29 @@ class msReglement
 /**
  * Définir les secteurs tarifaires en fonction du contexte de règlement
  */
-    public function setSecteursTarifaires() {
+	public function setSecteursTarifaires()
+	{
       global $p;
 
-      $data=new msData();
-      $name2typeID=$data->getTypeIDsFromName(['regleSecteurGeoTarifaire', 'regleSecteurHonoraires', 'regleSecteurIK', 'regleSecteurHonorairesNgap']);
-      if(isset($this->prevalues[$name2typeID['regleSecteurHonoraires']])) {
-        $this->setSecteurTarifaire($this->prevalues[$name2typeID['regleSecteurHonoraires']]);
+		$data = new msData();
+		$name2typeID = $data->getTypeIDsFromName(['regleSecteurGeoTarifaire', 'regleSecteurHonoraires', 'regleSecteurIK', 'regleSecteurHonorairesNgap']);
+		if (isset($this->_prevalues[$name2typeID['regleSecteurHonoraires']])) {
+			$this->setSecteurTarifaire($this->_prevalues[$name2typeID['regleSecteurHonoraires']]);
       } else {
         $this->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
       }
-      if(isset($this->prevalues[$name2typeID['regleSecteurHonorairesNgap']])) {
-        $this->setSecteurTarifaireNgap($this->prevalues[$name2typeID['regleSecteurHonorairesNgap']]);
+		if (isset($this->_prevalues[$name2typeID['regleSecteurHonorairesNgap']])) {
+			$this->setSecteurTarifaireNgap($this->_prevalues[$name2typeID['regleSecteurHonorairesNgap']]);
       } else {
         $this->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
       }
-      if(isset($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']])) {
-        $this->setSecteurTarifaireGeo($this->prevalues[$name2typeID['regleSecteurGeoTarifaire']]);
+		if (isset($this->_prevalues[$name2typeID['regleSecteurGeoTarifaire']])) {
+			$this->setSecteurTarifaireGeo($this->_prevalues[$name2typeID['regleSecteurGeoTarifaire']]);
       } else {
         $this->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
       }
-      if(isset($this->prevalues[$name2typeID['regleSecteurIK']])) {
-        $this->setSecteurIK($this->prevalues[$name2typeID['regleSecteurIK']]);
+		if (isset($this->_prevalues[$name2typeID['regleSecteurIK']])) {
+			$this->setSecteurIK($this->_prevalues[$name2typeID['regleSecteurIK']]);
       } else {
         $this->setSecteurIK($p['config']['administratifSecteurIK']);
       }
