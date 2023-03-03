@@ -197,6 +197,8 @@ class msModBaseSqlGenerate extends msSqlGenerate
 			'bdpm_presentations',
 			'bdpm_specialites',
 			'bdpm_updates',
+			'bdpm_presentationsVirtuelles',
+			'bdpm_specialitesVirtuelles',
 			'configuration',
 			'data_cat',
 			'data_types',
