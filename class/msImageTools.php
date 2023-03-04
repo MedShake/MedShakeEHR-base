@@ -30,13 +30,17 @@
 class msImageTools
 {
 
-  public static function rotate90($source, $dest, $direction='right') {
-    if(!is_file($source)) return false;
-    $image = new Imagick($source);
-    if($direction == 'left') {$angle=-90;} else {$angle=90;}
-    $image->rotateimage("#000", $angle);
-    $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
-    return $image->writeImage($dest);
-  }
-
+	public static function rotate90($source, $dest, $direction = 'right')
+	{
+		if (!is_file($source)) return false;
+		$image = new Imagick($source);
+		if ($direction == 'left') {
+			$angle = -90;
+		} else {
+			$angle = 90;
+		}
+		$image->rotateimage("#000", $angle);
+		$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
+		return $image->writeImage($dest);
+	}
 }
