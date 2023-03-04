@@ -24,17 +24,18 @@
  * Fabriquer un PDF à partir d'une version sauvegardée en table printed
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-if(!is_numeric($match['params']['versionID'])) die();
-if(!is_numeric($match['params']['patient'])) die();
+$debug = '';
+if (!is_numeric($match['params']['versionID'])) die();
+if (!is_numeric($match['params']['patient'])) die();
 
-if ($contenuFinalPDF=msSQL::sqlUniqueChamp("select value from printed where id='".$match['params']['versionID']."' and toID='".$match['params']['patient']."' limit 1")) {
+if ($contenuFinalPDF = msSQL::sqlUniqueChamp("SELECT value from printed where id = :versionID and toID = :patientID limit 1", ['versionID' => $match['params']['versionID'], 'patientID' => $match['params']['patient']])) {
 
-  $doc = new msPDF;
-  $doc->setContenuFinalPDF($contenuFinalPDF);
-  $doc->showPDF();
-  die();
-
+	$doc = new msPDF;
+	$doc->setContenuFinalPDF($contenuFinalPDF);
+	$doc->showPDF();
+	die();
 }

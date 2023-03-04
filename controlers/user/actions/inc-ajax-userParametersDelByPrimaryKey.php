@@ -24,49 +24,51 @@
  * Paramètres utilisateur > ajax : supprimer une entrée via la primary key
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$acceptedTables=array(
-    'prescriptions',
-    'actes',
-    'prescriptions_cat',
-    'actes_cat',
-    'actes_base',
+$acceptedTables = array(
+	'prescriptions',
+	'actes',
+	'prescriptions_cat',
+	'actes_cat',
+	'actes_base',
 );
 
-$table=msSQL::cleanVar($_POST['table']);
-$id=msSQL::cleanVar($_POST['id']);
+$table = msSQL::cleanVar($_POST['table']);
+$id = msSQL::cleanVar($_POST['id']);
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
-    $do=false;
+	$do = false;
 }
 
 //conditions by table
-$do=false;
-if ($table=='prescriptions') {
-    $do=true;
-    if (msSQL::sqlUniqueChamp("select count(id) from objets_data where parentTypeID='$id'")==0) {
-        $do=true;
-    }
-} elseif ($table=='prescriptions_cat') {
-    if (msSQL::sqlUniqueChamp("select count(cat) from prescriptions where cat='$id'")==0) {
-        $do=true;
-    }
-} elseif ($table=='actes') {
-    $do=true;
-    if (msSQL::sqlUniqueChamp("select count(id) from objets_data where parentTypeID='$id'")==0) {
-        $do=true;
-    }
-} elseif ($table=='actes_cat') {
-    if (msSQL::sqlUniqueChamp("select count(cat) from actes where cat='$id'")==0) {
-        $do=true;
-    }
+$do = false;
+if ($table == 'prescriptions') {
+	$do = true;
+	if (msSQL::sqlUniqueChamp("SELECT count(id) from objets_data where parentTypeID = :id", ['id' => $id]) == 0) {
+		$do = true;
+	}
+} elseif ($table == 'prescriptions_cat') {
+	if (msSQL::sqlUniqueChamp("SELECT count(cat) from prescriptions where cat = :id", ['id' => $id]) == 0) {
+		$do = true;
+	}
+} elseif ($table == 'actes') {
+	$do = true;
+	if (msSQL::sqlUniqueChamp("SELECT count(id) from objets_data where parentTypeID = :id", ['id' => $id]) == 0) {
+		$do = true;
+	}
+} elseif ($table == 'actes_cat') {
+	if (msSQL::sqlUniqueChamp("SELECT count(cat) from actes where cat = :id", ['id' => $id]) == 0) {
+		$do = true;
+	}
 }
 
 // do it if you can !
 if ($do) {
-    msSQL::sqlQuery("delete from $table where toID='".$p['user']['id']."' and id = '$id' limit 1");
-    $return['status']='ok';
-    echo json_encode($return);
+	msSQL::sqlQuery("DELETE from " . $table . " where toID = :userID and id = :id limit 1", ['userID' => $p['user']['id'], 'id' => $id]);
+	$return['status'] = 'ok';
+	echo json_encode($return);
 } else {
-    http_response_code(401);
+	http_response_code(401);
 }

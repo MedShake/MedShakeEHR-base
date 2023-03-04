@@ -24,26 +24,28 @@
  * Paramètres utilisateur > > ajax : lister les catégories de prescriptions types
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$tab['lap']=[];
-$tab['nonlap']=[];
+$tab['lap'] = [];
+$tab['nonlap'] = [];
 
 // Catégories des prescriptions types
-if($tabCatPres=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
+if ($tabCatPres = msSQL::sql2tabKey("SELECT c.*, count(p.id) as enfants
 from prescriptions_cat as c
 left join prescriptions as p on c.id=p.cat
-where c.toID in ('0','".$p['user']['id']."')
+where c.toID in ('0','" . $p['user']['id'] . "')
 group by c.id
-order by c.displayOrder asc, c.label asc", 'id')) {
+order by c.displayOrder asc, c.label asc", 'id', '', ['userID' => $p['user']['id']])) {
 
-  foreach($tabCatPres as $k=>$v) {
-    $tab[$v['type']][]=$v;
-  }
-  $p['page']['tabCatPres']=array(
-    'nonlap'=>$tab['nonlap'],
-    'lap'=>$tab['lap']
-  );
+	foreach ($tabCatPres as $k => $v) {
+		$tab[$v['type']][] = $v;
+	}
+	$p['page']['tabCatPres'] = array(
+		'nonlap' => $tab['nonlap'],
+		'lap' => $tab['lap']
+	);
 }
 
 $html = new msGetHtml;
@@ -51,7 +53,7 @@ $html->set_template('inc-ajax-tabUserParametersPresCatList.html.twig');
 $html = $html->genererHtmlVar($p);
 
 echo json_encode(array(
-  'html'=>$html,
-  'catLap'=>$tab['lap'],
-  'catNonLap'=>$tab['nonlap'],
+	'html' => $html,
+	'catLap' => $tab['lap'],
+	'catNonLap' => $tab['nonlap'],
 ));
