@@ -98,9 +98,11 @@ foreach ($users as $userID => $value) {
 	$campaignSMS->set_addData4log(array('patientsList' => $patientsList, 'tsJourdRDV' => $tsJourRDV));
 
 	if (is_array($patientsList)) {
-		$listeID = array_column($patientsList, 'id');
+		$sqlImplode = array_column($patientsList, 'id');
+		$marqueurs = $sqlImplode['execute'];
+		$marqueurs['mobilePhone'] = msData::getTypeIDFromName('mobilePhone');
 
-		$listeTel = msSQL::sql2tabKey("select toID, value from objets_data where toId in ('" . implode("', '", $listeID) . "') and typeID='" . msData::getTypeIDFromName('mobilePhone') . "' and deleted='' and outdated='' ", 'toID', 'value');
+		$listeTel = msSQL::sql2tabKey("select toID, value from objets_data where toId in (" . $sqlImplode['in'] . ") and typeID = :mobilePhone and deleted='' and outdated='' ", 'toID', 'value', $marqueurs);
 
 		$date_sms = date("d/m/y", $tsJourRDV);
 

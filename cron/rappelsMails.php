@@ -130,9 +130,11 @@ foreach ($users as $userID => $value) {
 	$patientsList = $events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
 
 	if (is_array($patientsList) and !empty($patientsList)) {
-		$listeID = array_column($patientsList, 'id');
+		$sqlImplode = array_column($patientsList, 'id');
+		$marqueurs = $sqlImplode['execute'];
+		$marqueurs['personalEmail'] = msData::getTypeIDFromName('personalEmail');
 
-		$listeEmail = msSQL::sql2tabKey("select toID, value from objets_data where toId in ('" . implode("', '", $listeID) . "') and typeID='" . msData::getTypeIDFromName('personalEmail') . "' and deleted='' and outdated='' ", 'toID', 'value');
+		$listeEmail = msSQL::sql2tabKey("select toID, value from objets_data where toId in (" . $sqlImplode['in'] . ") and typeID = :personalEmail and deleted='' and outdated='' ", 'toID', 'value', $marqueurs);
 
 		$date_email = date("d/m/y", $tsJourRDV);
 
