@@ -596,15 +596,14 @@ class msSqlGenerate
 		if (!preg_match("/^[a-zA-Z_][a-zA-Z0-9_]{0,63}$/", $t)) {
 			throw new Exception("Nom de table invalide");
 		}
-		$tab = msSQL::sqlUnique("SHOW CREATE TABLE $this->_bdd." . msSQL::cleanVar($t));
+		$tab = msSQL::sqlUnique("SHOW CREATE TABLE $this->_bdd." . $t);
 		if (isset($tab['Create Table'])) {
 			$tab['Create Table'] = preg_replace('#AUTO_INCREMENT=[0-9]+ #i', '', $tab['Create Table']);
 			$tab['Create Table'] = str_replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', $tab['Create Table']);
 			$this->_tablesSql[$tab['Table']] = $tab['Create Table'] . ';';
-		} elseif(isset($tab['Create View'])) {
+		} elseif (isset($tab['Create View'])) {
 			$tab['Create View'] = preg_replace('#DEFINER=.* SQL SECURITY#', ' SQL SECURITY', $tab['Create View']);
-			$this->_tablesSql[$tab['View']] = "DROP VIEW IF EXISTS `".$t."`;\n".$tab['Create View'] . ';';
+			$this->_tablesSql[$tab['View']] = "DROP VIEW IF EXISTS `" . $t . "`;\n" . $tab['Create View'] . ';';
 		}
-
 	}
 }

@@ -142,7 +142,7 @@ class msUser
 
 		$userID = msSQL::cleanVar($_COOKIE['userIdPc']);
 		$user = msSQL::sqlUnique(
-			"select id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank` from people where id= :userID LIMIT 1",
+			"SELECT id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank` from people where id= :userID LIMIT 1",
 			['userID' => $userID]
 		);
 
