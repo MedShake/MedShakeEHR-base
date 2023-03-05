@@ -59,7 +59,7 @@ class msSQL
 	}
 
 	/**
-	 * Nettoyer une variable avant insertion en bdd
+	 * DEPRECATED Nettoyer une variable avant insertion en bdd
 	 * @param  string $var variable
 	 * @return string      variable échappée SANS quotes périphériques
 	 */

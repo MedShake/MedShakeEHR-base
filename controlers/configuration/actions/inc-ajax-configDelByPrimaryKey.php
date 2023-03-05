@@ -44,7 +44,7 @@ $acceptedTables = array(
 	'dicomTags'
 );
 
-$id = msSQL::cleanVar($_POST['id']);
+$id = $_POST['id'];
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
 	http_response_code(401);
 	die();

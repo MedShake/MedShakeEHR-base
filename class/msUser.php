@@ -140,7 +140,11 @@ class msUser
 			return msUser::cleanBadAuth();
 		}
 
-		$userID = msSQL::cleanVar($_COOKIE['userIdPc']);
+		$userID = $_COOKIE['userIdPc'];
+		if (!is_numeric($userID)) {
+			throw new Exception('userID is not numeric');
+		}
+
 		$user = msSQL::sqlUnique(
 			"SELECT id, CAST(AES_DECRYPT(pass,@password) AS CHAR(100)) as pass, `rank` from people where id= :userID LIMIT 1",
 			['userID' => $userID]

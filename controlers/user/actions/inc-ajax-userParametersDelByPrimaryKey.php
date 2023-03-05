@@ -36,15 +36,16 @@ $acceptedTables = array(
 	'actes_base',
 );
 
-$table = msSQL::cleanVar($_POST['table']);
-$id = msSQL::cleanVar($_POST['id']);
+$table = $_POST['table'];
+$id = $_POST['id'];
+$do = false;
+
+// conditions variables entrée script
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
 	$do = false;
 }
-
 //conditions by table
-$do = false;
-if ($table == 'prescriptions') {
+elseif ($table == 'prescriptions') {
 	$do = true;
 	if (msSQL::sqlUniqueChamp("SELECT count(id) from objets_data where parentTypeID = :id", ['id' => $id]) == 0) {
 		$do = true;
@@ -65,7 +66,7 @@ if ($table == 'prescriptions') {
 }
 
 // do it if you can !
-if ($do) {
+if ($do === true) {
 	msSQL::sqlQuery("DELETE from " . $table . " where toID = :userID and id = :id limit 1", ['userID' => $p['user']['id'], 'id' => $id]);
 	$return['status'] = 'ok';
 	echo json_encode($return);

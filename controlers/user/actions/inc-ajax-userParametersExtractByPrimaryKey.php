@@ -37,8 +37,8 @@ $acceptedTables = array(
 );
 
 $do = true;
-$table = msSQL::cleanVar($_POST['table']);
-$id = msSQL::cleanVar($_POST['id']);
+$table = $_POST['table'];
+$id = $_POST['id'];
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
 	$do = false;
 }

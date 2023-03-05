@@ -28,9 +28,28 @@
  * SQLPREPOK
  */
 
+$valeurs = array(
+	'type' => $match['params']['type'],
+	'term' => $_GET['term'],
+	'setTypes' => $match['params']['setTypes']
+);
+
+$is_valid = GUMP::is_valid($valeurs, [
+	'type' => 'required|alpha_numeric',
+	'term' => 'required|sqlSearch',
+	'setTypes' => 'alpha_numeric_colon'
+]);
+if ($is_valid !== true) {
+	return;
+}
+
 $data = new msData();
 $name2typeId = $data->getTypeIDsFromName([$match['params']['type']]);
 $type = $name2typeId[$match['params']['type']];
+
+if (!is_numeric($type)) {
+	return;
+}
 
 if (isset($match['params']['setTypes'])) {
 	$searchTypes = $data->getTypeIDsFromName(explode(':', $match['params']['setTypes']));
@@ -38,7 +57,7 @@ if (isset($match['params']['setTypes'])) {
 		if (is_numeric($v)) $concatValue[] = " COALESCE(d" . $v . ".value, '')";
 	}
 } else {
-	if (is_numeric($type)) $searchTypes[] = $type;
+	$searchTypes[] = $type;
 }
 
 $joinleft = [];
@@ -69,7 +88,7 @@ $sql = "SELECT trim(concat(" . implode(', " ",', $concatValue) . ")) as value, t
 from objets_data as do
 " . implode(" ", $joinleft) . "
 where do.typeID in (" . $sqlImplode['in'] . ") and trim(concat(" . implode(', " ",', $concatLabel) . ")) like :term
-and d" . msSQL::cleanVar($type) . ".value is not null
+and d" . $type . ".value is not null
 group by " . implode(",", $groupby) . " limit 25";
 
 $data = msSQL::sql2tab($sql, $marqueurs);
