@@ -44,6 +44,9 @@ $acceptedTables = array(
 	'dicomTags'
 );
 
+$id = $_POST['id'];
+$table = $_POST['table'];
+
 $do = true;
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
 	$do = false;
