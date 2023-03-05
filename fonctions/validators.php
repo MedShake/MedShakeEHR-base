@@ -117,3 +117,17 @@ GUMP::add_validator("sqlIdentiteSearch", function ($field, $input, $param = NULL
 	if ($find != '1') return FALSE;
 	else return TRUE;
 }, 'Le champ {field} a une mauvaise syntaxe');
+
+GUMP::add_validator("sqlSearch", function ($field, $input, $param = NULL) {
+	if (empty($input[$field])) return TRUE;
+	$find = preg_match('/^([0-9a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\'\-%_\ ])+$/i', $input[$field]);
+	if ($find != '1') return FALSE;
+	else return TRUE;
+}, 'Le champ {field} a une mauvaise syntaxe');
+
+GUMP::add_validator("alpha_numeric_colon", function ($field, $input, $param = NULL) {
+	if (empty($input[$field])) return TRUE;
+	$find = preg_match('/^([0-9a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ:])+$/i', $input[$field]);
+	if ($find != '1') return FALSE;
+	else return TRUE;
+}, 'Le champ {field} a une mauvaise syntaxe');
