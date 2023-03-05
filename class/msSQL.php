@@ -72,7 +72,7 @@ class msSQL
 	}
 
 	/**
-	 * Nettoyer un array avant utilisation sur string SQL
+	 * Nettoyer un array avant utilisation sur string SQL DEPRECATED
 	 * @param  array $var array
 	 * @return string      variable échappée SANS quotes périphériques
 	 */

@@ -315,7 +315,7 @@ class msExportData
 	 */
 	public function getDataAdminPatientList()
 	{
-		return $this->_dataAdminPatientList = msSQL::cleanArray($this->_dataAdminPatientList);
+		return $this->_dataAdminPatientList = $this->_dataAdminPatientList;
 	}
 
 	/**
@@ -324,7 +324,7 @@ class msExportData
 	 */
 	public function getDataAdminPratList()
 	{
-		return $this->_dataAdminPratList = msSQL::cleanArray($this->_dataAdminPratList);
+		return $this->_dataAdminPratList = $this->_dataAdminPratList;
 	}
 
 	/**
@@ -333,7 +333,7 @@ class msExportData
 	 */
 	public function getFormFieldList()
 	{
-		return $this->_formFieldList = msSQL::cleanArray($this->_formFieldList);
+		return $this->_formFieldList = $this->_formFieldList;
 	}
 
 	/**
