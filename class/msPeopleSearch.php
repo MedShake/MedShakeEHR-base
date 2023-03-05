@@ -386,10 +386,10 @@ class msPeopleSearch
 	 */
 	public static function getUsersList($orderBy = '')
 	{
-		if (empty($orderBy)) {
-			$orderBy = 'pp.id';
+		if (!empty($orderBy) and msSQL::sqlIsValidOrderByString($orderBy)) {
+			$orderBy = $orderBy;
 		} else {
-			$orderBy = msSQL::cleanVar($orderBy);
+			$orderBy = 'pp.id';
 		}
 		$name2typeID = new msData();
 		$marqueurs = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'birthname']);
