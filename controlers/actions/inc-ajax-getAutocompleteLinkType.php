@@ -62,13 +62,16 @@ if (!empty($concatLabel)) {
 	$concatLabel = array_replace(array_flip($originalOrderLabel), $concatLabel);
 }
 
+$sqlImplode = msSQL::sqlGetTagsForWhereIn($searchTypes, 'st');
+$marqueurs = array_merge($sqlImplode['execute'], ['term' => '%' . $_GET['term'] . '%']);
+
 $sql = "SELECT trim(concat(" . implode(', " ",', $concatValue) . ")) as value, trim(concat(" . implode(', " ",', $concatLabel) . ")) as label, " . implode(",", $sel) . "
 from objets_data as do
 " . implode(" ", $joinleft) . "
-where do.typeID in ('" . implode("','", msSQL::cleanArray($searchTypes)) . "') and trim(concat(" . implode(', " ",', $concatLabel) . ")) like :term
+where do.typeID in (" . $sqlImplode['in'] . ") and trim(concat(" . implode(', " ",', $concatLabel) . ")) like :term
 and d" . msSQL::cleanVar($type) . ".value is not null
 group by " . implode(",", $groupby) . " limit 25";
 
-$data = msSQL::sql2tab($sql, ['term' => '%' . $_GET['term'] . '%']);
+$data = msSQL::sql2tab($sql, $marqueurs);
 
 echo json_encode($data);
