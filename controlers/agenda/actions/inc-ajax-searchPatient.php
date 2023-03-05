@@ -27,7 +27,6 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
 // Permet d'affiner les résultat sur des noms qui peuvent resembler à des
@@ -36,7 +35,7 @@ $a_json = array();
 // en donnant le prossiblité de préciser la recherche en séparrant les noms et
 // prénoms par un ":". Dans le cas le nom est le premier terme et le prénom le
 // second.
-$split_term = explode(':', $term);
+$split_term = explode(':', $_GET['term']);
 if (count($split_term) > 1) {
 	$mss = new msPeopleSearch;
 	$mss->setPeopleType(['pro', 'patient']);
@@ -50,13 +49,23 @@ if (count($split_term) > 1) {
 	$mss->setNameSearchMode('BnFnOrLnFn');
 	$mss->setPeopleType(['pro', 'patient']);
 	$criteres = array(
-		'birthname' => $term,
+		'birthname' => $_GET['term'],
 	);
+}
+
+$is_valid = GUMP::is_valid($criteres, [
+	'birthname' => 'sqlIdentiteSearch|max_len,60',
+	'lastname' => 'sqlIdentiteSearch|max_len,60',
+	'firstname' => 'sqlIdentiteSearch|max_len,60',
+]);
+if ($is_valid !== true) {
+	return;
 }
 
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
+
 if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {

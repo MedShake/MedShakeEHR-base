@@ -26,15 +26,21 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
 $mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['pro']);
 $criteres = array(
-	'birthname' => $term,
+	'birthname' => $_GET['term'],
 );
+
+$is_valid = GUMP::is_valid($criteres, [
+	'birthname' => 'sqlIdentiteSearch|max_len,60',
+]);
+if ($is_valid !== true) {
+	return;
+}
 
 if ($p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
 	$mss->setRestricDossiersPratGroupes(true);

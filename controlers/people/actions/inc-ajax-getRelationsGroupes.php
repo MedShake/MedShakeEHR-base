@@ -30,15 +30,22 @@ if ($p['config']['optionGeActiverGroupes'] != 'true') {
 	die();
 }
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
 $mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['groupe']);
 $criteres = array(
-	'groupname' => $term,
+	'groupname' => $_GET['term'],
 );
+
+$is_valid = GUMP::is_valid($criteres, [
+	'groupname' => 'sqlIdentiteSearch|max_len,255',
+]);
+if ($is_valid !== true) {
+	return;
+}
+
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['groupname', 'city', 'country']);
 $mss->setLimitNumber(20);

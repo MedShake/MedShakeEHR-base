@@ -39,17 +39,33 @@ if ($_POST['peopleType'] == 'patient' or $_POST['peopleType'] == 'pro') {
 		'lastname' => $_POST['p_lastname'],
 		'firstname' => $_POST['p_firstname'],
 	);
+	$validationsRules = [
+		'birthname' => 'sqlIdentiteSearch|max_len,60',
+		'lastname' => 'sqlIdentiteSearch|max_len,60',
+		'firstname' => 'sqlIdentiteSearch|max_len,60',
+	];
 	$colsRetour = ['identite', 'birthdate'];
 } elseif ($_POST['peopleType'] == 'groupe') {
 	$criteres = array(
 		'groupname' => $_POST['p_groupname'],
 	);
+	$validationsRules = [
+		'groupname' => 'sqlIdentiteSearch|max_len,255'
+	];
 	$colsRetour = ['groupname', 'country', 'city'];
 } elseif ($_POST['peopleType'] == 'registre') {
 	$criteres = array(
 		'registryname' => $_POST['p_registryname'],
 	);
+	$validationsRules = [
+		'registryname' => 'sqlIdentiteSearch|max_len,255'
+	];
 	$colsRetour = ['registryname'];
+}
+
+$is_valid = GUMP::is_valid($criteres, $validationsRules);
+if ($is_valid !== true) {
+	return;
 }
 
 $mss->setCriteresRecherche($criteres);

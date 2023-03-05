@@ -99,4 +99,9 @@ GUMP::add_validator("max_numeric_current_year", function($field, $input, $param 
 		return $input[$field] <= date('Y');
 	}, 'Le champ {field} ne peut être supérieur à l\'année en cours');
 
-?>
+GUMP::add_validator("sqlIdentiteSearch", function ($field, $input, $param = NULL) {
+	if (empty($input[$field])) return TRUE;
+	$find = preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\'\-%_\ ])+$/i', $input[$field]);
+	if ($find != '1') return FALSE;
+	else return TRUE;
+}, 'Le champ {field} a une mauvaise syntaxe');
