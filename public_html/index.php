@@ -59,7 +59,7 @@ if (!is_file($homepath . 'config/config.yml')) {
 	msTools::redirection('/install.php');
 }
 /////////// Config loader
-$p['config'] = yaml_parse_file($homepath . 'config/config.yml');
+$p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host'] == '') {
 	$p['config']['host'] = $_SERVER['SERVER_ADDR'];

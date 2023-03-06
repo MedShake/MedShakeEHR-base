@@ -34,7 +34,7 @@ if (!msUser::checkUserIsAdmin() or $p['config']['theriaqueMode'] != 'BDPM') {
 } else {
 	$template = "configLapBDPM";
 
-	if ($bdpm = yaml_parse_file($homepath . 'config/bdpm/configBdpm.yml')) {
+	if ($bdpm = msYAML::yamlFileRead($homepath . 'config/bdpm/configBdpm.yml')) {
 
 		$dirRessourcesBdpm = $homepath . 'ressources/bdpm/';
 

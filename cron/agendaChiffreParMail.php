@@ -54,7 +54,7 @@ spl_autoload_register(function ($class) {
 
 
 /////////// Config loader
-$p['configDefault'] = $p['config'] = yaml_parse_file($homepath . 'config/config.yml');
+$p['configDefault'] = $p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
 $p['homepath'] = $homepath;
 
 /////////// SQL connexion

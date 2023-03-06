@@ -414,7 +414,7 @@ class msAgenda
 		global $p;
 		if (!isset($this->_tabTypeRdv)) {
 			if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
-				$this->_tabTypeRdv = yaml_parse_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
+				$this->_tabTypeRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
 			} else {
 				$this->_tabTypeRdv = array(
 					'[C]' => array(
@@ -761,7 +761,7 @@ class msAgenda
 	{
 		global $p;
 		if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
-			$typesRdv = yaml_parse_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
+			$typesRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
 			if ($all == true) {
 				return $typesRdv;
 			} elseif (is_array($typesRdv)) {

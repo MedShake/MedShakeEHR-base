@@ -91,13 +91,13 @@ class msSystem
 			$routes[] = 'login';
 			if (isset($p['user']['rank']) and $p['user']['rank'] == 'admin') $routes[] = 'configuration';
 
-			$inclusionsRules = yaml_parse_file($p['homepath'] . 'config/routes/routesInclusionRules.yml');
+			$inclusionsRules = msYAML::yamlFileRead($p['homepath'] . 'config/routes/routesInclusionRules.yml');
 
 			/* fichier additionnel pour les modules */
 			foreach ($installedModules as $module) {
 				$file = $p['homepath'] . 'config/routes/' . $module . '/routesInclusionRules.yml';
 				if ($module != 'base' and is_file($file)) {
-					$inclusionsRules = array_merge($inclusionsRules, yaml_parse_file($file));
+					$inclusionsRules = array_merge($inclusionsRules, msYAML::yamlFileRead($file));
 				}
 			}
 
@@ -112,7 +112,7 @@ class msSystem
 		foreach ($routes as $route) {
 			$file = $p['homepath'] . 'config/routes/routes-' . $route . '.yml';
 			if (is_file($file)) {
-				$routes = yaml_parse_file($file);
+				$routes = msYAML::yamlFileRead($file);
 				$router->addRoutes($routes);
 			}
 
@@ -120,7 +120,7 @@ class msSystem
 			foreach ($installedModules as $module) {
 				$file = $p['homepath'] . 'config/routes/' . $module . '/routes-' . $route . '.yml';
 				if ($module != "base" and is_file($file)) {
-					$routes = yaml_parse_file($file);
+					$routes = msYAML::yamlFileRead($file);
 					$router->addRoutes($routes);
 				}
 			}
