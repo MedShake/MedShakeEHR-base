@@ -34,10 +34,6 @@
 
 
 // Actes
-msSQL::sqlQuery("ALTER TABLE `actes` CHANGE `label` `label` VARCHAR(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
-msSQL::sqlQuery("ALTER TABLE `actes` CHANGE `details` `details` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
-msSQL::sqlQuery("ALTER TABLE `actes` CHANGE `fromID` `fromID` SMALLINT(5) UNSIGNED NULL DEFAULT NULL; ");
-
 if ($tabData = msSQL::sql2tabKey("SELECT id, details FROM `actes` WHERE details != '';", 'id', 'details')) {
 	foreach ($tabData as $id => $value) {
 		if (@yaml_parse($value) === false) {
@@ -50,8 +46,6 @@ if ($tabData = msSQL::sql2tabKey("SELECT id, details FROM `actes` WHERE details 
 }
 
 // Actes bases
-msSQL::sqlQuery("ALTER TABLE `actes_base` CHANGE `code` `code` VARCHAR(7) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
-
 if ($tabData = msSQL::sql2tabKey("SELECT id, dataYaml FROM `actes_base` WHERE dataYaml != '';", 'id', 'dataYaml')) {
 	foreach ($tabData as $id => $value) {
 		if (@yaml_parse($value) === false) {
@@ -64,8 +58,6 @@ if ($tabData = msSQL::sql2tabKey("SELECT id, dataYaml FROM `actes_base` WHERE da
 }
 
 // Configuration
-msSQL::sqlQuery("ALTER TABLE `configuration` CHANGE `name` `name` VARCHAR(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
-
 if ($tabData = msSQL::sql2tabKey("SELECT id, `value` FROM `configuration` WHERE name in ('designTopMenuSections', 'dropboxOptions')", 'id', 'value')) {
 	foreach ($tabData as $id => $value) {
 		if (@yaml_parse($value) === false) {
@@ -78,9 +70,6 @@ if ($tabData = msSQL::sql2tabKey("SELECT id, `value` FROM `configuration` WHERE 
 }
 
 // Data types de type select et radio
-msSQL::sqlQuery("ALTER TABLE `data_types` CHANGE `cat` `cat` SMALLINT(5) UNSIGNED NULL DEFAULT NULL");
-msSQL::sqlQuery("ALTER TABLE `data_types` CHANGE `name` `name` VARCHAR(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL");
-
 if ($tabData = msSQL::sql2tabKey("SELECT id, formValues FROM `data_types` WHERE formType in ('select', 'radio') and formValues != ''", 'id', 'formValues')) {
 	foreach ($tabData as $id => $value) {
 		if (@yaml_parse($value) === false) {
@@ -93,10 +82,6 @@ if ($tabData = msSQL::sql2tabKey("SELECT id, formValues FROM `data_types` WHERE 
 }
 
 // Forms
-msSQL::sqlQuery("ALTER TABLE `forms` CHANGE `internalName` `internalName` VARCHAR(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL;");
-msSQL::sqlQuery("ALTER TABLE `forms` CHANGE `name` `name` VARCHAR(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL;");
-msSQL::sqlQuery("ALTER TABLE `forms` CHANGE `description` `description` VARCHAR(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL;");
-
 if ($tabData = msSQL::sql2tabKey("SELECT id, yamlStructure FROM `forms` WHERE yamlStructure !=''", 'id', 'yamlStructure')) {
 	foreach ($tabData as $id => $value) {
 		if (@yaml_parse($value) === false) {
