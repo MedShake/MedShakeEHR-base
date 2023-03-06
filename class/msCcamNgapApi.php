@@ -127,11 +127,11 @@ class msCcamNgapApi
 				$scrap['modificateursApplicables'] = $newDataMa;
 			}
 
-			$data = Spyc::YAMLDump(array(
+			$data = msYAML::yamlArrayToYaml(array(
 				'tarifParGrilleTarifaire' => $newData,
 				'modificateursParGrilleTarifaire' => $scrap['modificateursApplicables'],
 				'majorationsDom' => $scrap['majorationsDom'],
-			), false, 0, TRUE);
+			));
 			$data = preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
 
 			$data2return = array(
@@ -144,7 +144,7 @@ class msCcamNgapApi
 			);
 		} elseif ($this->_acteType == 'NGAP') {
 
-			$data = Spyc::YAMLDump(array(
+			$data = msYAML::yamlArrayToYaml(array(
 				'tarifParZone' => array(
 					'metro' => $scrap['tarifMetro'],
 					'971' => $scrap['tarif971'],
@@ -153,7 +153,7 @@ class msCcamNgapApi
 					'974' => $scrap['tarif974'],
 					'976' => $scrap['tarif976']
 				)
-			), false, 0, TRUE);
+			));
 
 			$data = preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
 
@@ -188,7 +188,7 @@ class msCcamNgapApi
 				);
 			}
 
-			$data = Spyc::YAMLDump(array('tarifParGrilleTarifaire' => $dataRet), false, 0, TRUE);
+			$data = msYAML::yamlArrayToYaml(array('tarifParGrilleTarifaire' => $dataRet));
 			$data = preg_replace("#: '([0-9]+),([0-9]+)'#", ": $1.$2", $data);
 
 			$data2return = array(

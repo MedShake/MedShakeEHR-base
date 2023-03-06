@@ -132,7 +132,7 @@ class msCDA
 		$ob->setID($this->_objetID);
 		if ($formIN = $ob->getOriginFormNameFromObjetID()) {
 			if ($datYaml = msForm::getFormUniqueRawField($formIN, 'cda')) {
-				$d = Spyc::YAMLLoad($datYaml);
+				$d = msYAML::yamlYamlToArray($datYaml);
 
 				$this->_template = $d['template'];
 

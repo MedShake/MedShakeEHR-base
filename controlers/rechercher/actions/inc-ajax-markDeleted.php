@@ -38,7 +38,7 @@ if (is_numeric($_POST['patientID'])) {
 	if (($p['config']['droitDossierPeutSupPatient'] == 'true' and $value['typeDossier'] == 'patient') or ($p['config']['droitDossierPeutSupPraticien'] == 'true' and $value['typeDossier'] == 'pro')) {
 
 		$value['motif'] = $_POST['motif'];
-		$value = Spyc::YAMLDump($value);
+		$value = msYAML::yamlArrayToYaml($value);
 
 		$marqueur = new msObjet();
 		$marqueur->setFromID($p['user']['id']);

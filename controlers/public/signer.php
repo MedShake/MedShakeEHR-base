@@ -26,34 +26,34 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="signer";
+$template = "signer";
 
-if(isset($match['params']['signPeriphName'])) {
-  $signPeriphName=$match['params']['signPeriphName'];
+if (isset($match['params']['signPeriphName'])) {
+	$signPeriphName = $match['params']['signPeriphName'];
 } else {
-  $signPeriphName=$p['config']['signPeriphName'];
+	$signPeriphName = $p['config']['signPeriphName'];
 }
 
-$p['page']['signPeriphName']=$signPeriphName;
+$p['page']['signPeriphName'] = $signPeriphName;
 
-if (is_file($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt')) {
-  $p['page']['docasigner']=Spyc::YAMLLoad($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt');
+if (is_file($p['config']['workingDirectory'] . 'signData-' . $signPeriphName . '.txt')) {
+	$p['page']['docasigner'] = msYAML::yamlFileRead($p['config']['workingDirectory'] . 'signData-' . $signPeriphName . '.txt');
 } else {
-  die('Les données sur la signature à réaliser ne sont pas disponibles.');
+	die('Les données sur la signature à réaliser ne sont pas disponibles.');
 }
 
 if (!isset($p['page']['docasigner']['patientID'])) {
-  die('Le patient n\'est pas défini.');
+	die('Le patient n\'est pas défini.');
 } else {
-  $courrier = new msCourrier();
-  $courrier->setPatientID($p['page']['docasigner']['patientID']);
-  if(isset($p['page']['docasigner']['objetID'])) {
-    $courrier->setObjetID($p['page']['docasigner']['objetID']);
-    $p['page']['courrier']=$courrier->getDataByObjetID();
-  } elseif (is_numeric($p['page']['docasigner']['patientID'])) {
-    $courrier->setFromID($p['page']['docasigner']['fromID']);
-    $p['page']['courrier']=$courrier->getCourrierData();
-  } else {
-    die('Le patient n\'est pas défini');
-  }
+	$courrier = new msCourrier();
+	$courrier->setPatientID($p['page']['docasigner']['patientID']);
+	if (isset($p['page']['docasigner']['objetID'])) {
+		$courrier->setObjetID($p['page']['docasigner']['objetID']);
+		$p['page']['courrier'] = $courrier->getDataByObjetID();
+	} elseif (is_numeric($p['page']['docasigner']['patientID'])) {
+		$courrier->setFromID($p['page']['docasigner']['fromID']);
+		$p['page']['courrier'] = $courrier->getCourrierData();
+	} else {
+		die('Le patient n\'est pas défini');
+	}
 }

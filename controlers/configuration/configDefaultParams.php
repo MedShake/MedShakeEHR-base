@@ -35,7 +35,7 @@ if (!msUser::checkUserIsAdmin()) {
 $debug = '';
 $template = 'configDefaultParams';
 // extraction des paramètres réels si besoin (host / cookieDomain qui peuvent changer si IP dynamique par exemple)
-$p['configInYml'] = Spyc::YAMLLoad($homepath . 'config/config.yml');
+$p['configInYml'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
 $p['page']['params'] = array(
 	array('cat' => 'Serveur', 'type' => 'texte', 'name' => 'protocol', 'value' => $p['config']['protocol'], 'readonly' => true),
 	array('cat' => 'Serveur', 'type' => 'texte', 'name' => 'host', 'value' => $p['configInYml']['host'], 'readonly' => true),

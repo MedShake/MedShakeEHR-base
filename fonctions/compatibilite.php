@@ -28,24 +28,11 @@
 
 
 if (!function_exists('array_key_first')) {
-    function array_key_first(array $arr) {
-        foreach($arr as $key => $unused) {
-            return $key;
-        }
-        return NULL;
-    }
+	function array_key_first(array $arr)
+	{
+		foreach ($arr as $key => $unused) {
+			return $key;
+		}
+		return NULL;
+	}
 }
-
-if (!function_exists('yaml_parse_file')) {
-    function yaml_parse_file(string $str) {
-      return  Spyc::YAMLLoad($str);
-    }
-}
-
-if (!function_exists('yaml_parse')) {
-    function yaml_parse(string $str) {
-      return  Spyc::YAMLLoad($str);
-    }
-}
-
-?>

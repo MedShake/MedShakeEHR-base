@@ -56,7 +56,7 @@ if (!msUser::checkUserIsAdmin()) {
 	$tab = [];
 	if ($details = msSQL::sql2tabSimple("select `details` from `actes`")) {
 		foreach ($details as $det) {
-			$det = Spyc::YAMLLoad($det);
+			$det = msYAML::yamlYamlToArray($det);
 			$det = array_keys($det);
 
 			foreach ($det as $code) {

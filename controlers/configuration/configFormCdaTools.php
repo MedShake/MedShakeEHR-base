@@ -31,7 +31,7 @@ function treatDataType(&$t)
 {
 	global $formc;
 	if ($t['formType'] == 'select') {
-		$t['formValues'] = Spyc::YAMLLoad($t['formValues']);
+		$t['formValues'] = msYAML::yamlYamlToArray($t['formValues']);
 		$t['formValues'] = array_filter($t['formValues']);
 		$t['keyValues'] = array_keys($t['formValues']);
 	} elseif ($t['formType'] == 'number') {
@@ -79,7 +79,7 @@ if (!msUser::checkUserIsAdmin()) {
 	$formc = new msForm;
 	$formc->setFormID($p['page']['formID']);
 	$formCda = $formc->getFormRawData(['cda'])['cda'];
-	$formCda = Spyc::YAMLLoad($formCda);
+	$formCda = msYAML::yamlYamlToArray($formCda);
 
 	if (isset($formCda['actesPossibles'], $formCda['clinicalDocument']['documentationOf']['serviceEvent']['paramConditionServiceEvent'])) {
 

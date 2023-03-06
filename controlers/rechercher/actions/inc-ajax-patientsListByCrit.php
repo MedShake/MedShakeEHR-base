@@ -96,7 +96,7 @@ $p['page']['porp'] = $_POST['porp'];
 
 
 if ($form = msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
-	$form = Spyc::YAMLLoad($form);
+	$form = msYAML::yamlYamlToArray($form);
 
 	//all type
 	$col = count($form);

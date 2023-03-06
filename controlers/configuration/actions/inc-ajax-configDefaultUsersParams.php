@@ -71,7 +71,7 @@ foreach ($toyaml as $k => $v) {
 		unset($_POST[$k]);
 	}
 }
-file_put_contents($p['homepath'] . 'config/config.yml', Spyc::YAMLDump($toyaml, false, 0, true));
+file_put_contents($p['homepath'] . 'config/config.yml', msYAML::yamlArrayToYaml($toyaml));
 
 $sql = "UPDATE configuration SET value = :value WHERE name = :name AND level = 'default' LIMIT 1";
 $stmt = $pdo->prepare($sql);

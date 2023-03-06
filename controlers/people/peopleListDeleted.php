@@ -72,7 +72,7 @@ group by p.id, bn1.id, o.id, o2.id, m.id, bn2.id, o3.id, o4.id
 order by p.id", $name2typeID)) {
 
 	foreach ($p['page']['users'] as $k => $v) {
-		if (isset($v['mvalue'])) $value = Spyc::YAMLLoad($v['mvalue']);
+		if (isset($v['mvalue'])) $value = msYAML::yamlYamlToArray($v['mvalue']);
 		if (isset($value['typeDossier'])) $p['page']['users'][$k]['typeDossier'] = $value['typeDossier'];
 		if (isset($value['motif'])) $p['page']['users'][$k]['motif'] = $value['motif'];
 	}

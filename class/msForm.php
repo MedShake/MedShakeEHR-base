@@ -465,7 +465,7 @@ class msForm
 			throw new Exception('formID is not defined');
 		}
 		if ($options = $this->getFormRawData(['options'])['options']) {
-			return yaml_parse($options);
+			return msYAML::yamlYamlToArray($options);
 		} else {
 			return [];
 		}
@@ -573,11 +573,11 @@ class msForm
 
 			$this->_formYamlStructure = $formyaml['yamlStructure'];
 
-			$form = Spyc::YAMLLoad($formyaml['yamlStructure']);
+			$form = msYAML::yamlYamlToArray($formyaml['yamlStructure']);
 			$form['global']['formAction'] = $formyaml['formAction'];
 			$form['global']['formMethod'] = $formyaml['formMethod'];
 			if (!empty($formyaml['cda'])) {
-				$this->_cdaData = $form['cda'] = Spyc::YAMLLoad($formyaml['cda']);
+				$this->_cdaData = $form['cda'] = msYAML::yamlYamlToArray($formyaml['cda']);
 			} else {
 				$this->_cdaData = $form['cda'] = NULL;
 			}
@@ -831,12 +831,12 @@ class msForm
 						}
 						// sinon valeur du type
 						else {
-							$type['formValues'] = Spyc::YAMLLoad($type['formValues']);
+							$type['formValues'] = msYAML::yamlYamlToArray($type['formValues']);
 						}
 
 						//traitement spécifique au radio
 					} elseif ($type['formType'] == "radio") {
-						$type['formValues'] = Spyc::YAMLLoad($type['formValues']);
+						$type['formValues'] = msYAML::yamlYamlToArray($type['formValues']);
 
 						//traitement spécifique au textarea
 					} elseif ($type['formType'] == "textarea") {

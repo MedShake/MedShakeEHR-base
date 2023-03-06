@@ -85,7 +85,7 @@ if ($zip->open($fichier['tmp_name'])) {
 	if (!is_string($pluginName) or strlen($pluginName) > 30 or strlen($pluginName) < 3) die("Erreur: le nom du plugin ne peut être déterminé ou est invalide");
 
 	// infos plugin
-	$pluginInfos = Spyc::YAMLLoad($zip->getFromName('config/plugins/' . $pluginName . '/aboutPlugin' . ucfirst($pluginName) . '.yml'));
+	$pluginInfos = msYAML::yamlFileRead($zip->getFromName('config/plugins/' . $pluginName . '/aboutPlugin' . ucfirst($pluginName) . '.yml'));
 	if (!isset($pluginInfos['version'])) die("Erreur: numéro de version du plugin manquant");
 
 	// liste fichiers

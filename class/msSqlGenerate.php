@@ -224,7 +224,7 @@ class msSqlGenerate
 				$this->_actes_values[$catName][] = $this->_getSqlValuesPart($acte);
 
 				//collecter actes NGAP/CCAM
-				$details = Spyc::YAMLLoad($acte['details']);
+				$details = msYAML::yamlYamlToArray($acte['details']);
 				if (is_array($details)) {
 					$collecteCcamNgap = array_merge($collecteCcamNgap, array_keys($details));
 				}

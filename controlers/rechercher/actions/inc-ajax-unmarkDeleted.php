@@ -36,7 +36,7 @@ if (is_numeric($_POST['patientID'])) {
 
 	$administratifMarqueurSuppressionID = msData::getTypeIDFromName('administratifMarqueurSuppression');
 	$value = msSQL::sqlUniqueChamp("SELECT value from objets_data where toID = :toID and typeID = :administratifMarqueurSuppression order by id desc limit 1", ['toID' => $_POST['patientID'], 'administratifMarqueurSuppression' => $administratifMarqueurSuppressionID]);
-	$value = Spyc::YAMLLoad($value);
+	$value = msYAML::yamlYamlToArray($value);
 
 	// on marque le dossier dans people
 	$data = array(

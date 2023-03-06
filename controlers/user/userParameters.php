@@ -59,7 +59,7 @@ if (!is_array($usersWithAgenda) or !array_key_exists($p['user']['id'], $usersWit
  ************/
 //paramètres de l'agenda
 if (is_file($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.yml')) {
-	$p['page']['agenda'] = Spyc::YAMLLoad($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.yml');
+	$p['page']['agenda'] = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.yml');
 } else {
 	$p['page']['agenda'] = array(
 		'minTime' => '08:00', 'maxTime' => '20:00', 'slotDuration' => '00:20',
@@ -78,7 +78,7 @@ if (is_file($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.yml'
  ************/
 // types de rendez-vous
 if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $p['user']['id'] . '.yml')) {
-	$consults = Spyc::YAMLLoad($p['homepath'] . 'config/agendas/typesRdv' . $p['user']['id'] . '.yml');
+	$consults = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $p['user']['id'] . '.yml');
 	$usedTypes = msSQL::sql2tabSimple("SELECT DISTINCT(type) FROM agenda");
 	foreach ($consults as $k => $v) {
 		if (is_array($usedTypes) and in_array($k, $usedTypes)) {

@@ -122,7 +122,7 @@ if ($p['page']['porp'] == 'pro') {
 	if (!empty($p['config']['apicryptAdresse']) || !empty($p['config']['faxService'])) {
 
 		//récupération des choix par défaut
-		$optionsInject['preferedSendingMethod'] = Spyc::YAMLLoad(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
+		$optionsInject['preferedSendingMethod'] = msYAML::yamlYamlToArray(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
 		if (!empty($p['config']['apicryptAdresse'])) {
 			$optionsInject['preferedSendingMethod']['APICRYPT'] = 'Apicrypt';
 		}

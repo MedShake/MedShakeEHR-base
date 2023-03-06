@@ -363,7 +363,7 @@ class msData extends msDataCat
 			$tab = msSQL::sql2tabKey("select id, formValues from data_types where formType in ('select', 'radio') and id in (" . $sqlImplode['in'] . ")", "id", "formValues", $sqlImplode['execute']);
 			if (is_array($tab)) {
 				foreach ($tab as $k => $v) {
-					$tab[$k] = Spyc::YAMLLoad($v);
+					$tab[$k] = msYAML::yamlYamlToArray($v);
 				}
 			}
 			return $tab;
@@ -385,7 +385,7 @@ class msData extends msDataCat
 			$tab = msSQL::sql2tabKey("select name, formValues from data_types where formType in ('select', 'radio') and name in (" . $sqlImplode['in'] . ")", "name", "formValues", $sqlImplode['execute']);
 			if (is_array($tab)) {
 				foreach ($tab as $k => $v) {
-					$tab[$k] = Spyc::YAMLLoad($v);
+					$tab[$k] = msYAML::yamlYamlToArray($v);
 				}
 			}
 			return $tab;

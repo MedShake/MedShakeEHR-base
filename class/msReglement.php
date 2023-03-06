@@ -254,7 +254,7 @@ class msReglement
 	public function setFactureTypeData($factureTypeData)
 	{
 		if (!is_array($factureTypeData['details'])) {
-			$factureTypeData['details'] = Spyc::YAMLLoad($factureTypeData['details']);
+			$factureTypeData['details'] = msYAML::yamlYamlToArray($factureTypeData['details']);
 		}
 		if (!isset($factureTypeData['syntheseActes'])) {
 			$factureTypeData['syntheseActes'] = $this->_getFactureTypeSyntheseActes($factureTypeData['details']);
@@ -282,7 +282,7 @@ class msReglement
 				$v['numIndexFSE'] = $k + 1;
 
 				//on récupère détails
-				$v['details'] = Spyc::YAMLLoad($v['details']);
+				$v['details'] = msYAML::yamlYamlToArray($v['details']);
 
 				//on fabrique la syntheseActes
 				$v['syntheseActes'] = $this->_getFactureTypeSyntheseActes($v['details']);
@@ -382,7 +382,7 @@ class msReglement
 			throw new Exception('FactureTypeID is not set');
 		}
 		$data = msSQL::sqlUnique("SELECT id, label, details, flagCmu from actes where id = :factureTypeID limit 1", ['factureTypeID' => $this->_factureTypeID]);
-		$data['details'] = Spyc::YAMLLoad($data['details']);
+		$data['details'] = msYAML::yamlYamlToArray($data['details']);
 		$data['syntheseActes'] = $this->_getFactureTypeSyntheseActes($data['details']);
 		$this->_factureTypeData = $data;
 		return $data;
@@ -527,7 +527,7 @@ class msReglement
 		$modifs = [];
 		if ($modifs = msSQL::sql2tabKey("SELECT * from `actes_base` where `type` = 'mCCAM' ", 'code')) {
 			foreach ($modifs as $k => $v) {
-				$modifs[$k]['dataYaml'] = Spyc::YAMLLoad($v['dataYaml']);
+				$modifs[$k]['dataYaml'] = msYAML::yamlYamlToArray($v['dataYaml']);
 				if (isset($modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT' . $this->_secteurTarifaire])) {
 					if ($v['tarifUnit'] == 'euro') {
 						$modifs[$k]['tarif'] = $modifs[$k]['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT' . $this->_secteurTarifaire]['forfait'];

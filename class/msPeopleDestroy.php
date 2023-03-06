@@ -230,7 +230,7 @@ class msPeopleDestroy extends msPeople
 			'ip' => $_SERVER['REMOTE_ADDR'],
 			'date' => date('Y-m-d H-i-s')
 		);
-		$value = Spyc::YAMLDump($value);
+		$value = msYAML::yamlArrayToYaml($value);
 
 		$marqueur = new msObjet();
 		$marqueur->setFromID($p['user']['id']);

@@ -57,4 +57,4 @@ if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
 	$tab['template'] = $cour->getPrintModel($data['template']);
 }
 
-file_put_contents($p['config']['workingDirectory'] . 'signData-' . $signPeriphName . '.txt', Spyc::YAMLDump($tab, false, 0, true));
+msYAML::yamlFileWrite($p['config']['workingDirectory'] . 'signData-' . $signPeriphName . '.txt', $tab);

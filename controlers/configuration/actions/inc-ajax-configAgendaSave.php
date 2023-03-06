@@ -60,7 +60,7 @@ if ($_POST['userID'] > 0 and in_array($_POST['userID'], array_keys($autorisedUse
 		}
 	} else {
 		file_put_contents($p['homepath'] . 'config/agendas/agenda' . $_POST['userID'] . '.yml', $_POST['configAgenda']);
-		$params = Spyc::YAMLLoad($p['homepath'] . 'config/agendas/agenda' . $_POST['userID'] . '.yml');
+		$params = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/agenda' . $_POST['userID'] . '.yml');
 
 		$js = array();
 		$js[] = "businessHours = [\n";

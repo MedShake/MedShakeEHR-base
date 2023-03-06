@@ -31,7 +31,6 @@
 
 class msReglementActe extends msReglement
 {
-
 	private $_acteCode;
 	private $_acteType;
 	private $_acteActivite = 1;
@@ -193,7 +192,7 @@ class msReglementActe extends msReglement
 			'phase' => $this->_actePhase
 		];
 		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='CCAM' and `activite`= :activite and `phase`= :phase limit 1", $marqueurs)) {
-			if (isset($d['dataYaml'])) $d['dataYaml'] = Spyc::YAMLLoad($d['dataYaml']);
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
 			return $d;
 		} else {
 			return false;
@@ -213,7 +212,7 @@ class msReglementActe extends msReglement
 		}
 
 		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='mCCAM' limit 1", ['code' => $this->_acteCode])) {
-			if (isset($d['dataYaml'])) $d['dataYaml'] = Spyc::YAMLLoad($d['dataYaml']);
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
 			return $d;
 		} else {
 			return false;
@@ -232,10 +231,10 @@ class msReglementActe extends msReglement
 		}
 
 		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='NGAP' and `codeProf` = :secteurTarifaireNgap limit 1", ['code' => $this->_acteCode, 'secteurTarifaireNgap' => $this->_secteurTarifaireNgap])) {
-			if (isset($d['dataYaml'])) $d['dataYaml'] = Spyc::YAMLLoad($d['dataYaml']);
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
 			return $d;
 		} elseif ($strict == FALSE and $d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='NGAP' limit 1", ['code' => $this->_acteCode])) {
-			if (isset($d['dataYaml'])) $d['dataYaml'] = Spyc::YAMLLoad($d['dataYaml']);
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
 			return $d;
 		} else {
 			return false;
@@ -254,7 +253,7 @@ class msReglementActe extends msReglement
 		}
 
 		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='Libre' limit 1", ['code' => $this->_acteCode])) {
-			if (isset($d['dataYaml'])) $d['dataYaml'] = Spyc::YAMLLoad($d['dataYaml']);
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
 			return $d;
 		} else {
 			return false;

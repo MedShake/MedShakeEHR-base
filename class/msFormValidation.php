@@ -226,7 +226,7 @@ class msFormValidation extends msForm
 						}
 						// ou valeur par défaut du type
 						else {
-							$type['formValues'] = Spyc::YAMLLoad($type['formValues']);
+							$type['formValues'] = msYAML::yamlYamlToArray($type['formValues']);
 						}
 						if (!empty($type['formValues'])) {
 							$r['validation'][$type['name']][] = 'contains_list,' . implode(';', array_keys($type['formValues']));
