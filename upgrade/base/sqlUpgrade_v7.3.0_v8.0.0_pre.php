@@ -32,6 +32,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
+
 // Actes
 msSQL::sqlQuery("ALTER TABLE `actes` CHANGE `label` `label` VARCHAR(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
 msSQL::sqlQuery("ALTER TABLE `actes` CHANGE `details` `details` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL; ");
@@ -127,4 +128,41 @@ if ($tabData = msSQL::sql2tabKey("SELECT id, options FROM `forms` WHERE options 
 		}
 		msSQL::sqlInsert('forms', ['id' => $id, 'options' => yaml_emit($value, YAML_UTF8_ENCODING, YAML_LN_BREAK)]);
 	}
+}
+
+// Fichiers Agenda
+$agendaUsers = new msPeople();
+$agendaUsers = $agendaUsers->getUsersListForService('administratifPeutAvoirAgenda');
+if (!empty($agendaUsers)) {
+	foreach ($agendaUsers as $id => $v) {
+		if (is_file($p['homepath'] . 'config/agendas/agenda' . $id . '.yml')) {
+			$value = file_get_contents($p['homepath'] . 'config/agendas/agenda' . $id . '.yml');
+			$value = Spyc::YAMLLoad($value);
+			msYAML::yamlFileWrite($p['homepath'] . 'config/agendas/agenda' . $id . '.yml', $value);
+		}
+
+		if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $id . '.yml')) {
+			$value = file_get_contents($p['homepath'] . 'config/agendas/typesRdv' . $id . '.yml');
+			$value = Spyc::YAMLLoad($value);
+			msYAML::yamlFileWrite($p['homepath'] . 'config/agendas/typesRdv' . $id . '.yml', $value);
+		}
+	}
+}
+
+// Users templates
+if ($listeTemplates = array_diff(scandir($homepath . 'config/userTemplates/'), array('..', '.'))) {
+	foreach ($listeTemplates as $k => $tptes) {
+		if (is_file($homepath . 'config/userTemplates/' . $tptes)) {
+			$value = file_get_contents($homepath . 'config/userTemplates/' . $tptes);
+			$value = Spyc::YAMLLoad($value);
+			msYAML::yamlFileWrite($homepath . 'config/userTemplates/' . $tptes, $value);
+		}
+	}
+}
+
+// Traitement fichiers particuliers
+if (is_file($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml')) {
+	$value = file_get_contents($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml');
+	$value = Spyc::YAMLLoad($value);
+	msYAML::yamlFileWrite($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml', $value);
 }
