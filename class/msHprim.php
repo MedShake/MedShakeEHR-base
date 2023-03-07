@@ -105,7 +105,9 @@ class msHprim
    * @return bool     `true` si ça resemble à une entête hprim, sinon `false`
    * @see    self::getHprimHeaderData()
    */
-  public static function checkIfValidHprimHeaderData(array $hprim_data) {
+  public static function checkIfValidHprimHeaderData($hprim_data) {
+	  if(!is_array($hprim_data)) return false;
+
       /**
        * Ce système est une ébauche...
        * Chaque test permet d'ajouteur et de retirer un certain nombre de
