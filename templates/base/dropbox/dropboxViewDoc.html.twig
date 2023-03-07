@@ -62,7 +62,20 @@
           <td>
             <small>{{ page.dataFromFilename.nss|e }}</small>
           </td>
-          <td></td>
+          <td>
+            <form id="CreerPatient" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post">
+                <input type="hidden" name="createFromDropbox" value="1"/>
+                <input type="hidden" name="dropboxFilename" value="{{ page.fileData.filename }}"/>
+                <input type="hidden" name="dropboxBox" value="{{ page.boxParams.id }}"/>
+                <input id="creerPatient_doctitre" name="dropboxDocTitle" type="hidden" value="{{ page.boxParams.filesDefaultTitle }}">
+                <input name="lastname" type="hidden" value="{{ page.dataFromFilename.lastname|e|upper }}">
+                <input name="birthname" type="hidden" value="{{ page.dataFromFilename.birthname|e|upper }}">
+                <input name="firstname" type="hidden" value="{{ page.dataFromFilename.firstname|e|capitalize }}">
+                <input name="birthdate" type="hidden" value="{{ page.dataFromFilename.birthdate|e|capitalize }}">
+                <input name="nss" type="hidden" value="{{ page.dataFromFilename.nss|e }}">
+                <button class="btn btn-outline-primary btn-sm" type="submit" value="Nouveau patient" title="Créer un nouveau patient avec les informations issues du fichier et le classer en même temps dans son dossier"><i class="fas fa-user-plus"></i></button>
+            </form>
+          </td>
         </tr>
         {% for k, v in page.patientsPossibles %}
 
@@ -78,7 +91,7 @@
               {% endif %}
             </td>
             <td>{{ v.firstname|e }}</td>
-            <td>{{ v.birthdate|e }}</td>
+            <td class="small">{{ v.birthdate|e }}</td>
             <td class="small">
               {{ v.streetNumber|e }}
               {{ v.street|e }}
@@ -100,56 +113,42 @@
       </tbody>
     </table>
 
-    <form class="form w-25">
-      <div class="input-group my-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fas fa-search"></i></span>
-        </div>
-        <input class="form-control" type="text" placeholder="Rechercher un autre patient" id="searchPeopleID" autocomplete="off"/>
+    <div class="row">
+      <div class="col col-6">
+        <form class="form">
+          <div class="input-group my-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+            <input class="form-control" type="text" placeholder="Rechercher un autre patient" id="searchPeopleID" autocomplete="off"/>
+          </div>
+        </form>
       </div>
-    </form>
-
+      <div class="col col-6 my-3 text-right">
+        <button class="btn btn-outline-primary" onclick="document.getElementById('creerPatient_doctitre').value = $('#titreOptionnel').val();document.getElementById('CreerPatient').submit();" value="Nouveau patient" title="Créer un nouveau patient avec les informations issues du fichier et le classer en même temps dans son dossier"><i class="fas fa-user-plus"></i> Créer patient et classer</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <form id="classerDansDossier" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/dropbox/actions/classerDansDossier/" {% if page.boxParams.endTarget == 'patient' %} target="_blank"{% endif %} method="post">
-  <div class="row mb-1">
+  <div class="row mb-5 align-items-end">
     <input type="hidden" name="filename" value="{{ page.fileData.filename }}"/>
     <input type="hidden" name="box" value="{{ page.boxParams.id }}"/>
     <input type="hidden" class="form-control" id="idConfirmPatientID" name="patientID" value="{{ page.patientsPossibles.0.id }}">
 
-    <div class="form-group col-9 offset-3">
+    <div class="form-group col-8 mb-0">
       <label for="titreOptionnel">Titre (optionnel)</label>
       {# le js dans onchange="" permet de récupérer le titre du document avec la dans le champ hidden "dropboxDocTitle" du formulaire "CreerPatient" #}
-      <input type="text" id="titreOptionnel" name="titre" class="form-control" placeholder="Titre du document" value="{{ page.boxParams.filesDefaultTitle }}" onchange="document.getElementById('creerPatient_doctitre').value = this.value;">
+      <input type="text" id="titreOptionnel" name="titre" class="form-control mb-0" placeholder="Titre du document" value="{{ page.boxParams.filesDefaultTitle }}" onchange="document.getElementById('creerPatient_doctitre').value = this.value;">
     </div>
+
+    <div class="col-4 text-right">
+        <button type="submit" id="submitBoutonClasser" class="btn btn-danger {% if page.patientsPossibles.0.id <= 0 %} d-none{% endif %}">Classer dans le dossier #<span id="submitIndicID">{{ page.patientsPossibles.0.id }}</span>
+        </button>
+    </div>
+
   </div>
-  <div class="row mb-4">
-    <div class="col text-right">
-      <button type="submit" id="submitBoutonClasser" class="btn btn-danger m-1{% if page.patientsPossibles.0.id <= 0 %} d-none{% endif %}">Classer dans le dossier #<span id="submitIndicID">{{ page.patientsPossibles.0.id }}</span>
-      </button>
-    </div>
-  </div>
-</form>
-
-<form id="CreerPatient" action="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/patient/create/" method="post">
-
-    <input type="hidden" name="createFromDropbox" value="1"/>
-    <input type="hidden" name="dropboxFilename" value="{{ page.fileData.filename }}"/>
-    <input type="hidden" name="dropboxBox" value="{{ page.boxParams.id }}"/>
-    <input id="creerPatient_doctitre" name="dropboxDocTitle" type="hidden" value="{{ page.boxParams.filesDefaultTitle }}">
-
-    <input name="lastname" type="hidden" value="{{ page.dataFromFilename.lastname|e|upper }}">
-    <input name="birthname" type="hidden" value="{{ page.dataFromFilename.birthname|e|upper }}">
-    <input name="firstname" type="hidden" value="{{ page.dataFromFilename.firstname|e|capitalize }}">
-    <input name="birthdate" type="hidden" value="{{ page.dataFromFilename.birthdate|e|capitalize }}">
-    <input name="nss" type="hidden" value="{{ page.dataFromFilename.nss|e }}">
-
-    <div class="row mb-4">
-        <div class="col text-right">
-            <input class="btn btn-primary" type="submit" value="Nouveau patient avec les éléments du fichier" title="Créer un nouveau patient avec les informations issues du fichier et le classer en même temps dans son dossier">
-        </div>
-    </div>
 </form>
 
 <div class="card mb-3">

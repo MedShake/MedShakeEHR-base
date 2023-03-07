@@ -62,6 +62,7 @@ registre
 				searchSimilarPeople();
 			}
 		});
+		searchSimilarPeople();
 	});
 
 	function searchSimilarPeople() {
@@ -132,13 +133,13 @@ Nouveau registre
 <div class="row">
 	<div class="col-xl-8 col-12">
         <div class="alert alert-info" role="alert">
-            <h4>Patient crée à partir des informations présentent dans le nom d'un fichier de la boîte de dépot :</h4>
+            <h5>Patient créé à partir des informations présentes dans le nom d'un fichier de la boîte de dépôt :</h5>
             <ul class="list-unstyled">
-                <li><strong>Boîte de dépot : </strong>{{ page.form.addHidden.dropboxBox }}</li>
-                <li><strong>Nom du fichier : </strong>{{ page.form.addHidden.dropboxFilename }}</li>
-                <li><strong>Titre du document : </strong>{{ page.form.addHidden.dropboxDocTitle }}</li>
+                <li class="d-inline-block mr-4"><strong>Boîte de dépôt : </strong>{{ page.form.addHidden.dropboxBox }}</li>
+				<li class="d-inline-block"><strong>Nom du fichier : </strong>{{ page.form.addHidden.dropboxFilename }}</li>
+                <li class=""><strong>Titre du document : </strong>{{ page.form.addHidden.dropboxDocTitle }}</li>
             </ul>
-            <p><u>Le fichier sera automatiquement ajouté au dossier du patient et supprimé de la boîte de dépot.</u></p>
+            <p><u>Le fichier sera automatiquement ajouté au dossier du patient et supprimé de la boîte de dépôt.</u></p>
         </div>
 	</div>
 </div>
