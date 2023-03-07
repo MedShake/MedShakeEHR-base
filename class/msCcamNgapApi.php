@@ -277,7 +277,13 @@ class msCcamNgapApi
 		} elseif ($httpCode == '200' and empty($result['data'])) {
 			return "Code non reconnu";
 		} else {
-			return implode('; ', $result['erreurs']) . ' (' . $httpCode . ')';
+			$erreurs = '';
+			if (isset($result['erreurs']) and is_array($result['erreurs'])) {
+				$erreurs = implode('; ', $result['erreurs']);
+			} elseif (isset($result['erreurs']) and is_string($result['erreurs'])) {
+				$erreurs = $result['erreurs'];
+			}
+			return $erreurs . ' (' . $httpCode . ')';
 		}
 	}
 }

@@ -37,21 +37,27 @@ $gump = new GUMP('fr');
 $_POST = $gump->sanitize($_POST);
 
 if (isset($_POST['id'])) {
-	$gump->validation_rules(array(
+	$validationsRules = array(
 		'id' => 'required|numeric',
 		'code' => 'required',
 		'activite' => 'required',
 		'phase' => 'required',
 		'type' => 'required',
-	));
+	);
 } else {
-	$gump->validation_rules(array(
+	$validationsRules = array(
 		'code' => 'required',
 		'activite' => 'required',
 		'phase' => 'required',
 		'type' => 'required',
-	));
+	);
 }
+
+if ($_POST['type'] == 'CCAM') {
+	$validationsRules['code'] = 'required|presence_bdd,actes_base';
+}
+
+$gump->validation_rules($validationsRules);
 
 $validated_data = $gump->run($_POST);
 
