@@ -4,7 +4,7 @@
     "altorouter/altorouter": "2.0.2",
     "mustangostang/spyc": "0.6.3",
     "wixel/gump": "1.12.2",
-    "dompdf/dompdf": "2.0.2",
+    "dompdf/dompdf": "^2.0.2",
     "phpmailer/phpmailer": "6.5.1",
     "webit/eval-math": "1.0.1",
     "ovh/ovh": "v2.0.1",
