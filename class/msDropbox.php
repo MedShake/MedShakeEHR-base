@@ -82,7 +82,7 @@ class msDropbox
 	public function getAllBoxesParametersCurrentUser()
 	{
 		global $p;
-		return $this->_allBoxesParameters = msYAML::yamlYamlToArray($p['config']['dropboxOptions']);
+		return $this->_allBoxesParameters = Spyc::YAMLLoad($p['config']['dropboxOptions']);
 	}
 
 	/**
@@ -162,21 +162,21 @@ class msDropbox
 		}
 	}
 
-	/**
-	 * Obtenir les patients possibles à pour le fichier courant
-	 * @return array array info admin des patients
-	 */
-	public function getPossiblePatients()
-	{
-		$data = $this->getDataFromFilename();
-		$ps = new msPeopleSearch;
-		$ps->setCriteresRecherche($data);
-		$ps->setColonnesRetour(array_merge(array_keys($data), ['streetNumber', 'street', 'postalCodePerso', 'city', 'birthname', 'lastname']));
-		$ps->setLimitStart(0);
-		$ps->setLimitNumber(5);
-		$ps->setPeopleType(['patient', 'pro']);
-		return $ps->getSimpleSearchPeople();
-	}
+/**
+ * Obtenir les patients possibles à pour le fichier courant
+ * @return array array info admin des patients
+ */
+  public function getPossiblePatients()
+  {
+    $data = $this->getDataFromFilename();
+    $ps = new msPeopleSearch;
+    $ps->setCriteresRecherche($data);
+    $ps->setColonnesRetour(array_merge(array_keys($data) , ['streetNumber', 'street', 'postalCodePerso', 'city', 'birthname', 'lastname']));
+    $ps->setLimitStart(0);
+    $ps->setLimitNumber(5);
+    $ps->setPeopleType(['patient', 'pro']);
+    return $ps->getSimpleSearchPeople();
+  }
 
 	/**
 	 * Obtenir les informations contenu dans le nom du fichier patient
