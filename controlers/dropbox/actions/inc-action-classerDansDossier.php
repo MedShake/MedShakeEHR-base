@@ -26,61 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if(!is_numeric($_POST['patientID'])) die;
-if($p['config']['optionGeActiverDropbox'] != 'true') die;
-if(!isset($_POST['box']) or !isset($_POST['filename'])) die;
-if(!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
+if (!is_numeric($_POST['patientID'])) die;
+if ($p['config']['optionGeActiverDropbox'] != 'true') die;
+if (!isset($_POST['box']) or !isset($_POST['filename'])) die;
+if (!is_string($_POST['box']) or !is_string($_POST['filename'])) die;
 
 $dropbox = new msDropbox;
-$dropbox->setCurrentBoxId($_POST['box']);
-$p['page']['boxParams'] = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['box']];
-
-if($dropbox->checkFileIsInCurrentBox($_POST['filename'])) {
-  $dropbox->setCurrentFilename($_POST['filename']);
-  $p['page']['fileData'] = $dropbox->getCurrentFileData();
-
-  //source
-  $source=$p['page']['fileData']['fullpath'];
-
-  //support
-  $patient = new msObjet();
-  $patient->setFromID($p['user']['id']);
-  $patient->setToID($_POST['patientID']);
-  $supportID=$patient->createNewObjetByTypeName('docPorteur', '');
-
-  //ajout d'un titre
-  if (isset($_POST['titre']) and !empty($_POST['titre'])) {
-      msObjet::setTitleObjet($supportID, $_POST['titre']);
-  }
-
-  //nom original
-  $patient->createNewObjetByTypeName('docOriginalName', $_POST['filename'], $supportID);
-  //type
-  $patient->createNewObjetByTypeName('docType', $p['page']['fileData']['ext'], $supportID);
-
-  //folder
-  $folder=msStockage::getFolder($supportID);
-
-  //creation folder si besoin
-  msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
-
-  $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$p['page']['fileData']['ext'];
-  if($p['page']['fileData']['ext']=='txt') {
-    msTools::convertPlainTextFileToUtf8($source, $destination);
-  } elseif(msTools::commandExist('gs') and $p['page']['fileData']['ext']=='pdf') {
-    msPDF::optimizeWithGS($source, $destination);
-  } else {
-    copy($source, $destination);
-  }
-
-  unlink($source);
-
-  if($p['page']['boxParams']['endTarget'] == 'patient') {
-    msTools::redirection('/patient/'.$_POST['patientID'].'/');
-  } else {
-    msTools::redirection('/dropbox/#'.$_POST['box']);
-  }
-
+if ($endTarget = $dropbox->rangerDropboxDocDansDossier($_POST['patientID'], $_POST['box'], $_POST['filename'], $_POST['titre'])) {
+	if (!is_bool($endTarget) and $endTarget == 'patient') {
+		msTools::redirection('/patient/' . $_POST['patientID'] . '/');
+	} else {
+		msTools::redirection('/dropbox/#' . $_POST['box']);
+	}
 } else {
-  die("Ce fichier n'existe pas dans la boite de dépôt");
+	die("Il existe un problème bloquant");
 }

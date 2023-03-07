@@ -139,52 +139,10 @@ if ($validation === false) {
         }
     }
 
-	// Ajout du fichier dropbox si le patient à été crée depuis les info d'un nom de fichier ($newPatientID n'existe que si le patient vient d'être crée)
-	// TODO Code redondant avec inc-action-classerDansDossier.php : Créer un méthode ou un fonction dédié
+	// Ajout du fichier dropbox si le patient a été créé depuis les infos d'un nom de fichier ($newPatientID n'existe que si le patient vient d'être créé)
 	if (!empty($newPatientID) && !empty($_POST['createFromDropbox']) && $_POST['createFromDropbox'] == 1) {
-		$dropbox = new msDropbox();
-		$dropbox->setCurrentBoxId($_POST['dropboxBox']);
-		$boxParams = $dropbox->getAllBoxesParametersCurrentUser()[$_POST['dropboxBox']];
-		if($dropbox->checkFileIsInCurrentBox($_POST['dropboxFilename'])) {
-			$dropbox->setCurrentFilename($_POST['dropboxFilename']);
-			$fileData = $dropbox->getCurrentFileData();
-
-			$source = $fileData['fullpath'];
-
-			// object data support pour le document
-			$support = new msObjet();
-			$support->setFromID($p['user']['id']);
-			$support->setToID($newPatientID);
-			$supportID=$support->createNewObjetByTypeName('docPorteur', '');
-
-			// Ajout du titre
-			if (!empty($_POST['dropboxDocTitle'])) {
-				msObjet::setTitleObjet($supportID, $_POST['dropboxDocTitle']);
-			}
-
-			//nom original
-			$support->createNewObjetByTypeName('docOriginalName', $_POST['dropboxFilename'], $supportID);
-			//type
-			$support->createNewObjetByTypeName('docType', $fileData['ext'], $supportID);
-
-			//folder
-			$folder = msStockage::getFolder($supportID);
-
-			//creation folder si besoin
-			msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
-
-			$destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$fileData['ext'];
-
-			if($fileData['ext']=='txt') {
-				msTools::convertPlainTextFileToUtf8($source, $destination);
-			} elseif(msTools::commandExist('gs') &&  $fileData['ext'] == 'pdf') {
-				msPDF::optimizeWithGS($source, $destination);
-			} else {
-				copy($source, $destination);
-			}
-
-			unlink($source);
-		}
+		$dropbox = new msDropbox;
+		$dropbox->rangerDropboxDocDansDossier($newPatientID, $_POST['dropboxBox'], $_POST['dropboxFilename'], $_POST['dropboxDocTitle']);
 	}
 
     // ajout des groupes du prat créateur au patient nouvellement créé

@@ -171,7 +171,7 @@ class msDropbox
 		$data = $this->getDataFromFilename();
 		$ps = new msPeopleSearch;
 		$ps->setCriteresRecherche($data);
-		$ps->setColonnesRetour(array_merge(array_keys($data), ['streetNumber', 'street', 'postalCodePerso', 'city', 'birthname', 'lastname']));
+		$ps->setColonnesRetour(array_merge(array_keys($data), ['streetNumber', 'street', 'postalCodePerso', 'city', 'birthname', 'lastname', 'birthdate']));
 		$ps->setLimitStart(0);
 		$ps->setLimitNumber(5);
 		$ps->setPeopleType(['patient', 'pro']);
@@ -201,6 +201,92 @@ class msDropbox
 			return $this->_currentFilenameData = $data;
 		} else {
 			return $this->_currentFilenameData = [];
+		}
+	}
+
+	/**
+	 * Ranger un document de la dropbox spécifiée dans une dossier patient
+	 *
+	 * @param string $patientID
+	 * @param string $dropboxBox
+	 * @param string $dropboxFilename
+	 * @param string $dropboxDocTitle
+	 * @return bool
+	 */
+	public function rangerDropboxDocDansDossier($patientID, $dropboxBox, $dropboxFilename, $dropboxDocTitle = '')
+	{
+		global $p;
+
+		if (!is_numeric($patientID)) {
+			throw new Exception("PatientID is not numeric");
+		}
+
+		if (!is_string($dropboxBox)) {
+			throw new Exception("$dropboxBox is not a string");
+		}
+
+		if (!is_string($dropboxFilename)) {
+			throw new Exception("$dropboxFilename is not a string");
+		}
+
+		if (!empty($dropboxDocTitle) and !is_string($dropboxDocTitle)) {
+			throw new Exception("$dropboxDocTitle is not a string");
+		}
+
+		$this->setCurrentBoxId($dropboxBox);
+		$this->getAllBoxesParametersCurrentUser();
+
+		if (!isset($this->_allBoxesParameters[$dropboxBox])) {
+			throw new Exception("La dropbox spécifiée n'existe pas");
+		}
+
+		if ($this->checkFileIsInCurrentBox($dropboxFilename)) {
+			$this->setCurrentFilename($dropboxFilename);
+			$fileData = $this->getCurrentFileData();
+
+			$source = $fileData['fullpath'];
+
+			// object data support pour le document
+			$support = new msObjet();
+			$support->setFromID($p['user']['id']);
+			$support->setToID($patientID);
+			$supportID = $support->createNewObjetByTypeName('docPorteur', '');
+
+			// Ajout du titre
+			if (!empty($dropboxDocTitle)) {
+				msObjet::setTitleObjet($supportID, $dropboxDocTitle);
+			}
+
+			//nom original
+			$support->createNewObjetByTypeName('docOriginalName', $dropboxFilename, $supportID);
+
+			//type
+			$support->createNewObjetByTypeName('docType', $fileData['ext'], $supportID);
+
+			//folder
+			$folder = msStockage::getFolder($supportID);
+
+			//creation folder si besoin
+			msTools::checkAndBuildTargetDir($p['config']['stockageLocation'] . $folder . '/');
+
+			$destination = $p['config']['stockageLocation'] . $folder . '/' . $supportID . '.' . $fileData['ext'];
+
+			if ($fileData['ext'] == 'txt') {
+				msTools::convertPlainTextFileToUtf8($source, $destination);
+			} elseif (msTools::commandExist('gs') &&  $fileData['ext'] == 'pdf') {
+				msPDF::optimizeWithGS($source, $destination);
+			} else {
+				copy($source, $destination);
+			}
+			unlink($source);
+
+			if (isset($this->_allBoxesParameters[$dropboxBox]['endTarget'])) {
+				return $this->_allBoxesParameters[$dropboxBox]['endTarget'];
+			} else {
+				return true;
+			}
+		} else {
+			throw new Exception("La dropbox ne contient pas le fichier demandé");
 		}
 	}
 
