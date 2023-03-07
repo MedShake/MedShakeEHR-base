@@ -32,7 +32,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>
     PhoneCapture
     </title>
@@ -94,7 +93,7 @@
       <div id="portrait" class="p-1 mb-2">
         <div class="row mb-2 p-0" style="line-height:17px">
           <div class="col-1 p-0">
-            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm" style="height:100%"><i class="fas fa-sync"></i></button>
+            <button onClick="window.location.reload()" class="btn btn-danger btn-sm"><i class="fas fa-sync"></i></button>
           </div>
           <div class="col-11 pl-2 pr-0">
             Prat.: {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }}<br>
@@ -124,14 +123,14 @@
       <div id="landscape" class="p-1">
         <div class="row mb-2">
           <div class="col-12 p-0">
-            <button onClick="window.location.reload()" id="logout" class="btn btn-danger btn-sm"><i class="fas fa-sync"></i></button>
+            <button onClick="window.location.reload()" class="btn btn-danger btn-sm"><i class="fas fa-sync"></i></button>
             Praticien : {{ page.data.prat.lastname|default(page.data.prat.birthname) }} {{ page.data.prat.firstname }} /
             Patient : <strong>{{ page.data.patient.lastname|default(page.data.patient.birthname) }} {{ page.data.patient.firstname }}</strong> ({{ page.data.patient.dicomPatientID }})
           </div>
         </div>
         <div class="row mb-2">
           <div class="videocontainer col-9">
-            <video style="width:100%"></video>
+            <video style="width:90%"></video>
             <canvas class="prevue" style="display:none"><canvas>
           </div>
           <div class="col-3">

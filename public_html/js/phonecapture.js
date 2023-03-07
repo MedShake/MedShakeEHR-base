@@ -26,38 +26,12 @@
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-var page = document.querySelector("#page");
-document.addEventListener("touchstart", function(e) {
-  if (e.targetTouches.length != 2)
-    return;
-  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-    if (page.requestFullscreen)
-      page.requestFullscreen();
-    else if (page.mozRequestFullScreen)
-      page.mozRequestFullScreen();
-    else if (page.webkitRequestFullscreen)
-      page.webkitRequestFullscreen();
-    else if (page.msRequestFullscreen)
-      page.msRequestFullscreen();
-  } else {
-    if (document.exitFullscreen)
-      document.exitFullscreen();
-    else if (document.webkitExitFullscreen)
-      document.webkitExitFullscreen();
-    else if (document.mozCancelFullScreen)
-      document.mozCancelFullScreen();
-    else if (document.msExitFullscreen)
-      document.msExitFullscreen();
-  }
-}, false);
-
 $(document).ready(function() {
 
   if ($('#landscape').length) {
 
     $('body').on('click', '#logout', function(e) {
       if (confirm("Si vous décidez de continuer, il faudra recommencer tout le processus d'identification pour ce périphérique.")) {
-
       } else {
         e.preventDefault();
       }
@@ -209,7 +183,7 @@ $(document).ready(function() {
         audio: false,
         video: {
           width: phonecaptureResolutionWidth,
-          height: phonecaptureResolutionWidth,
+          height: phonecaptureResolutionHeight,
           frameRate: 10,
           facingMode: {
             exact: 'environment'
