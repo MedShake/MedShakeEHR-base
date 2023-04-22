@@ -415,7 +415,7 @@ CREATE TABLE IF NOT EXISTS `printed` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `fromID` int unsigned NOT NULL,
   `toID` int unsigned NOT NULL,
-  `type` enum('cr','ordo','courrier','ordoLAP','ordoLapExt','doc') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'cr',
+  `type` enum('cr','ordo','courrier','ordoLAP','ordoLapExt','doc','reglement') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'cr',
   `objetID` int unsigned DEFAULT NULL,
   `creationDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
