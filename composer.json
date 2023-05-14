@@ -4,12 +4,26 @@
     "altorouter/altorouter": "2.0.2",
     "wixel/gump": "2.0.0",
     "dompdf/dompdf": "^2.0.0",
-    "phpmailer/phpmailer": "6.7.1",
+    "phpmailer/phpmailer": "^6.8.0",
     "webit/eval-math": "1.0.1",
     "ovh/ovh": "v2.0.1",
     "box/spout": "2.7.3",
     "setasign/fpdi-fpdf": "v2.3.0",
     "spomky-labs/otphp": "^10.0",
-    "picqer/php-barcode-generator":  "v2.2.4"
+    "picqer/php-barcode-generator":  "v2.2.4",
+    "php": ">=8.1.0",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "ext-imagick": "*",
+    "ext-imap": "*",
+    "ext-gnupg": "*",
+    "ext-intl": "*",
+    "ext-soap": "*",
+    "ext-xml": "*",
+    "ext-yaml": "*",
+    "ext-zip": "*",
+    "ext-bcmath": "*",
+    "ext-mbstring": "*"
   }
 }
